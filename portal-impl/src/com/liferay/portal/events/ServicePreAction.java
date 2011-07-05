@@ -30,7 +30,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.mobile.device.Device;
 import com.liferay.portal.kernel.mobile.device.DeviceDetectionUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.servlet.BrowserSnifferUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.ImageServletTokenUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -45,7 +44,6 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.model.ColorScheme;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
@@ -58,10 +56,7 @@ import com.liferay.portal.model.LayoutTypePortletConstants;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.RoleConstants;
-import com.liferay.portal.model.Theme;
 import com.liferay.portal.model.User;
-import com.liferay.portal.model.impl.ColorSchemeImpl;
-import com.liferay.portal.model.impl.ThemeImpl;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -77,14 +72,12 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.ServiceContextThreadLocal;
-import com.liferay.portal.service.ThemeLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.service.permission.LayoutPrototypePermissionUtil;
 import com.liferay.portal.service.permission.LayoutSetPrototypePermissionUtil;
 import com.liferay.portal.service.permission.OrganizationPermissionUtil;
-import com.liferay.portal.service.permission.PortalPermissionUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.service.permission.UserPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -1426,100 +1419,6 @@ public class ServicePreAction extends Action {
 		long scopeGroupId = PortalUtil.getScopeGroupId(request);
 		long parentGroupId = PortalUtil.getParentGroupId(scopeGroupId);
 
-		// Theme and color scheme
-
-		Theme theme = null;
-		ColorScheme colorScheme = null;
-
-		boolean wapTheme = BrowserSnifferUtil.isWap(request);
-
-		if ((layout != null) &&
-			group.isControlPanel()) {
-
-			String themeId = PrefsPropsUtil.getString(
-				companyId, PropsKeys.CONTROL_PANEL_LAYOUT_REGULAR_THEME_ID);
-			String colorSchemeId =
-				ColorSchemeImpl.getDefaultRegularColorSchemeId();
-
-			theme = ThemeLocalServiceUtil.getTheme(
-				companyId, themeId, wapTheme);
-			colorScheme = ThemeLocalServiceUtil.getColorScheme(
-				companyId, theme.getThemeId(), colorSchemeId, wapTheme);
-
-			if (!wapTheme && theme.isWapTheme()) {
-				theme = ThemeLocalServiceUtil.getTheme(
-					companyId,
-					PropsValues.CONTROL_PANEL_LAYOUT_REGULAR_THEME_ID, false);
-				colorScheme = ThemeLocalServiceUtil.getColorScheme(
-					companyId, theme.getThemeId(), colorSchemeId, false);
-			}
-		}
-		else if (layout != null) {
-			if (wapTheme) {
-				theme = layout.getWapTheme();
-				colorScheme = layout.getWapColorScheme();
-			}
-			else {
-				theme = layout.getTheme();
-				colorScheme = layout.getColorScheme();
-			}
-		}
-		else {
-			String themeId = null;
-			String colorSchemeId = null;
-
-			if (wapTheme) {
-				themeId = ThemeImpl.getDefaultWapThemeId(companyId);
-				colorSchemeId = ColorSchemeImpl.getDefaultWapColorSchemeId();
-			}
-			else {
-				themeId = ThemeImpl.getDefaultRegularThemeId(companyId);
-				colorSchemeId =
-					ColorSchemeImpl.getDefaultRegularColorSchemeId();
-			}
-
-			theme = ThemeLocalServiceUtil.getTheme(
-				companyId, themeId, wapTheme);
-			colorScheme = ThemeLocalServiceUtil.getColorScheme(
-				companyId, theme.getThemeId(), colorSchemeId, wapTheme);
-		}
-
-		request.setAttribute(WebKeys.THEME, theme);
-		request.setAttribute(WebKeys.COLOR_SCHEME, colorScheme);
-
-		boolean themeCssFastLoad = SessionParamUtil.getBoolean(
-			request, "css_fast_load", PropsValues.THEME_CSS_FAST_LOAD);
-		boolean themeImagesFastLoad = SessionParamUtil.getBoolean(
-			request, "images_fast_load", PropsValues.THEME_IMAGES_FAST_LOAD);
-
-		boolean themeJsBarebone = PropsValues.JAVASCRIPT_BAREBONE_ENABLED;
-
-		if (themeJsBarebone) {
-			if (signedIn) {
-				themeJsBarebone = false;
-			}
-		}
-
-		boolean themeJsFastLoad = SessionParamUtil.getBoolean(
-			request, "js_fast_load", PropsValues.JAVASCRIPT_FAST_LOAD);
-
-		String lifecycle = ParamUtil.getString(request, "p_p_lifecycle", "0");
-
-		lifecycle = ParamUtil.getString(request, "p_t_lifecycle", lifecycle);
-
-		boolean isolated = ParamUtil.getBoolean(request, "p_p_isolated");
-
-		String facebookCanvasPageURL = (String)request.getAttribute(
-			WebKeys.FACEBOOK_CANVAS_PAGE_URL);
-
-		boolean widget = false;
-
-		Boolean widgetObj = (Boolean)request.getAttribute(WebKeys.WIDGET);
-
-		if (widgetObj != null) {
-			widget = widgetObj.booleanValue();
-		}
-
 		// Theme display
 
 		ThemeDisplay themeDisplay = ThemeDisplayFactory.create();
@@ -1529,8 +1428,6 @@ public class ServicePreAction extends Action {
 
 		themeDisplay.setCDNHost(cdnHost);
 		themeDisplay.setPortalURL(portalURL);
-		themeDisplay.setFacebookCanvasPageURL(facebookCanvasPageURL);
-		themeDisplay.setWidget(widget);
 
 		themeDisplay.setCompany(company);
 		themeDisplay.setCompanyLogo(companyLogo);
@@ -1563,22 +1460,12 @@ public class ServicePreAction extends Action {
 		themeDisplay.setI18nPath(i18nPath);
 		themeDisplay.setTimeZone(timeZone);
 		themeDisplay.setDevice(device);
-		themeDisplay.setLookAndFeel(contextPath, theme, colorScheme);
-		themeDisplay.setThemeCssFastLoad(themeCssFastLoad);
-		themeDisplay.setThemeImagesFastLoad(themeImagesFastLoad);
-		themeDisplay.setThemeJsBarebone(themeJsBarebone);
-		themeDisplay.setThemeJsFastLoad(themeJsFastLoad);
 		themeDisplay.setServerName(request.getServerName());
 		themeDisplay.setServerPort(request.getServerPort());
 		themeDisplay.setSecure(PortalUtil.isSecure(request));
-		themeDisplay.setLifecycle(lifecycle);
-		themeDisplay.setLifecycleAction(lifecycle.equals("1"));
-		themeDisplay.setLifecycleRender(lifecycle.equals("0"));
-		themeDisplay.setLifecycleResource(lifecycle.equals("2"));
 		themeDisplay.setStateExclusive(LiferayWindowState.isExclusive(request));
 		themeDisplay.setStateMaximized(LiferayWindowState.isMaximized(request));
 		themeDisplay.setStatePopUp(LiferayWindowState.isPopUp(request));
-		themeDisplay.setIsolated(isolated);
 		themeDisplay.setPathApplet(contextPath.concat("/applets"));
 		themeDisplay.setPathCms(contextPath.concat("/cms"));
 		themeDisplay.setPathContext(contextPath);
