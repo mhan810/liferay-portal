@@ -39,6 +39,7 @@ import com.liferay.portal.lar.LayoutExporter;
 import com.liferay.portal.lar.LayoutImporter;
 import com.liferay.portal.lar.PortletExporter;
 import com.liferay.portal.lar.PortletImporter;
+import com.liferay.portal.mobile.model.DeviceProfile;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
@@ -439,6 +440,10 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		}
 	}
 
+	public Layout fetchLayout(long plid) throws SystemException {
+		return layoutPersistence.fetchByPrimaryKey(plid);
+	}
+
 	public long getDefaultPlid(long groupId) throws SystemException {
 		if (groupId > 0) {
 			List<Layout> layouts = layoutPersistence.findByGroupId(
@@ -799,6 +804,32 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		}
 
 		layoutSetLocalService.updatePageCount(groupId, privateLayout);
+	}
+
+	public Layout updateDeviceProfile(long plid, DeviceProfile deviceProfile)
+		throws SystemException {
+
+		long deviceProfileId = 0;
+
+		if (deviceProfile != null) {
+			deviceProfileId = deviceProfile.getDeviceProfileId();
+		}
+
+		return updateDeviceProfile(plid, deviceProfileId);
+	}
+
+	public Layout updateDeviceProfile(long plid, long deviceProfileId)
+		throws SystemException {
+
+		Layout layout = layoutPersistence.fetchByPrimaryKey(plid);
+
+		if (layout != null) {
+			layout.setDeviceProfileId(deviceProfileId);
+
+			layoutPersistence.update(layout, false);
+		}
+
+		return layout;
 	}
 
 	public Layout updateFriendlyURL(long plid, String friendlyURL)
