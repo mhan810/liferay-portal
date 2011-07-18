@@ -19,9 +19,12 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.mobile.NoSuchProfileRuleException;
 import com.liferay.portal.mobile.model.DeviceProfileRule;
+import com.liferay.portal.mobile.model.impl.DeviceProfileRuleModelImpl;
 import com.liferay.portal.service.persistence.BasePersistenceTestCase;
+import com.liferay.portal.util.PropsValues;
 
 import java.util.List;
 
@@ -67,6 +70,8 @@ public class DeviceProfileRulePersistenceTest extends BasePersistenceTestCase {
 
 		newDeviceProfileRule.setUuid(randomString());
 
+		newDeviceProfileRule.setGroupId(nextLong());
+
 		newDeviceProfileRule.setDeviceProfileId(nextLong());
 
 		newDeviceProfileRule.setName(randomString());
@@ -85,6 +90,8 @@ public class DeviceProfileRulePersistenceTest extends BasePersistenceTestCase {
 			newDeviceProfileRule.getUuid());
 		assertEquals(existingDeviceProfileRule.getDeviceProfileRuleId(),
 			newDeviceProfileRule.getDeviceProfileRuleId());
+		assertEquals(existingDeviceProfileRule.getGroupId(),
+			newDeviceProfileRule.getGroupId());
 		assertEquals(existingDeviceProfileRule.getDeviceProfileId(),
 			newDeviceProfileRule.getDeviceProfileId());
 		assertEquals(existingDeviceProfileRule.getName(),
@@ -203,6 +210,24 @@ public class DeviceProfileRulePersistenceTest extends BasePersistenceTestCase {
 		assertEquals(0, result.size());
 	}
 
+	public void testResetOriginalValues() throws Exception {
+		if (!PropsValues.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE) {
+			return;
+		}
+
+		DeviceProfileRule newDeviceProfileRule = addDeviceProfileRule();
+
+		_persistence.clearCache();
+
+		DeviceProfileRuleModelImpl existingDeviceProfileRuleModelImpl = (DeviceProfileRuleModelImpl)_persistence.findByPrimaryKey(newDeviceProfileRule.getPrimaryKey());
+
+		assertTrue(Validator.equals(
+				existingDeviceProfileRuleModelImpl.getUuid(),
+				existingDeviceProfileRuleModelImpl.getOriginalUuid()));
+		assertEquals(existingDeviceProfileRuleModelImpl.getGroupId(),
+			existingDeviceProfileRuleModelImpl.getOriginalGroupId());
+	}
+
 	protected DeviceProfileRule addDeviceProfileRule()
 		throws Exception {
 		long pk = nextLong();
@@ -210,6 +235,8 @@ public class DeviceProfileRulePersistenceTest extends BasePersistenceTestCase {
 		DeviceProfileRule deviceProfileRule = _persistence.create(pk);
 
 		deviceProfileRule.setUuid(randomString());
+
+		deviceProfileRule.setGroupId(nextLong());
 
 		deviceProfileRule.setDeviceProfileId(nextLong());
 

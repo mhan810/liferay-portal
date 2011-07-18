@@ -36,7 +36,7 @@ import com.liferay.portal.kernel.transaction.Transactional;
 @Transactional(isolation = Isolation.PORTAL, rollbackFor =  {
 	PortalException.class, SystemException.class})
 public interface DeviceProfileActionLocalService {
-	/**
+	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never modify or reference this interface directly. Always use {@link DeviceProfileActionLocalServiceUtil} to access the device profile action local service. Add custom service methods to {@link com.liferay.portal.mobile.service.impl.DeviceProfileActionLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
@@ -160,6 +160,21 @@ public interface DeviceProfileActionLocalService {
 			com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns the device profile action with the UUID in the group.
+	*
+	* @param uuid the UUID of device profile action
+	* @param groupId the group id of the device profile action
+	* @return the device profile action
+	* @throws PortalException if a device profile action with the UUID in the group could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portal.mobile.model.DeviceProfileAction getDeviceProfileActionByUuidAndGroupId(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Returns a range of all the device profile actions.
 	*
 	* <p>
@@ -225,7 +240,7 @@ public interface DeviceProfileActionLocalService {
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
 	public com.liferay.portal.mobile.model.DeviceProfileAction addDeviceProfileAction(
-		long deviceProfileId, long deviceProfileRuleId,
+		long groupId, long deviceProfileId, long deviceProfileRuleId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		java.lang.String type,
@@ -234,7 +249,7 @@ public interface DeviceProfileActionLocalService {
 			com.liferay.portal.kernel.exception.SystemException;
 
 	public com.liferay.portal.mobile.model.DeviceProfileAction addDeviceProfileAction(
-		long deviceProfileId, long deviceProfileRuleId,
+		long groupId, long deviceProfileId, long deviceProfileRuleId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		java.lang.String type, java.lang.String typeSettings)

@@ -65,13 +65,14 @@ public class DeviceProfileRuleModelImpl extends BaseModelImpl<DeviceProfileRule>
 	public static final Object[][] TABLE_COLUMNS = {
 			{ "uuid_", Types.VARCHAR },
 			{ "deviceProfileRuleId", Types.BIGINT },
+			{ "groupId", Types.BIGINT },
 			{ "deviceProfileId", Types.BIGINT },
 			{ "name", Types.VARCHAR },
 			{ "description", Types.VARCHAR },
 			{ "ruleType", Types.VARCHAR },
 			{ "ruleTypeSettings", Types.CLOB }
 		};
-	public static final String TABLE_SQL_CREATE = "create table DeviceProfileRule (uuid_ VARCHAR(75) null,deviceProfileRuleId LONG not null primary key,deviceProfileId LONG,name STRING null,description STRING null,ruleType VARCHAR(75) null,ruleTypeSettings TEXT null)";
+	public static final String TABLE_SQL_CREATE = "create table DeviceProfileRule (uuid_ VARCHAR(75) null,deviceProfileRuleId LONG not null primary key,groupId LONG,deviceProfileId LONG,name STRING null,description STRING null,ruleType VARCHAR(75) null,ruleTypeSettings TEXT null)";
 	public static final String TABLE_SQL_DROP = "drop table DeviceProfileRule";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
@@ -123,7 +124,15 @@ public class DeviceProfileRuleModelImpl extends BaseModelImpl<DeviceProfileRule>
 	}
 
 	public void setUuid(String uuid) {
+		if (_originalUuid == null) {
+			_originalUuid = _uuid;
+		}
+
 		_uuid = uuid;
+	}
+
+	public String getOriginalUuid() {
+		return GetterUtil.getString(_originalUuid);
 	}
 
 	public long getDeviceProfileRuleId() {
@@ -132,6 +141,24 @@ public class DeviceProfileRuleModelImpl extends BaseModelImpl<DeviceProfileRule>
 
 	public void setDeviceProfileRuleId(long deviceProfileRuleId) {
 		_deviceProfileRuleId = deviceProfileRuleId;
+	}
+
+	public long getGroupId() {
+		return _groupId;
+	}
+
+	public void setGroupId(long groupId) {
+		if (!_setOriginalGroupId) {
+			_setOriginalGroupId = true;
+
+			_originalGroupId = _groupId;
+		}
+
+		_groupId = groupId;
+	}
+
+	public long getOriginalGroupId() {
+		return _originalGroupId;
 	}
 
 	public long getDeviceProfileId() {
@@ -385,6 +412,7 @@ public class DeviceProfileRuleModelImpl extends BaseModelImpl<DeviceProfileRule>
 
 		deviceProfileRuleImpl.setUuid(getUuid());
 		deviceProfileRuleImpl.setDeviceProfileRuleId(getDeviceProfileRuleId());
+		deviceProfileRuleImpl.setGroupId(getGroupId());
 		deviceProfileRuleImpl.setDeviceProfileId(getDeviceProfileId());
 		deviceProfileRuleImpl.setName(getName());
 		deviceProfileRuleImpl.setDescription(getDescription());
@@ -442,6 +470,13 @@ public class DeviceProfileRuleModelImpl extends BaseModelImpl<DeviceProfileRule>
 
 	@Override
 	public void resetOriginalValues() {
+		DeviceProfileRuleModelImpl deviceProfileRuleModelImpl = this;
+
+		deviceProfileRuleModelImpl._originalUuid = deviceProfileRuleModelImpl._uuid;
+
+		deviceProfileRuleModelImpl._originalGroupId = deviceProfileRuleModelImpl._groupId;
+
+		deviceProfileRuleModelImpl._setOriginalGroupId = false;
 	}
 
 	@Override
@@ -457,6 +492,8 @@ public class DeviceProfileRuleModelImpl extends BaseModelImpl<DeviceProfileRule>
 		}
 
 		deviceProfileRuleCacheModel.deviceProfileRuleId = getDeviceProfileRuleId();
+
+		deviceProfileRuleCacheModel.groupId = getGroupId();
 
 		deviceProfileRuleCacheModel.deviceProfileId = getDeviceProfileId();
 
@@ -497,12 +534,14 @@ public class DeviceProfileRuleModelImpl extends BaseModelImpl<DeviceProfileRule>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
 		sb.append(", deviceProfileRuleId=");
 		sb.append(getDeviceProfileRuleId());
+		sb.append(", groupId=");
+		sb.append(getGroupId());
 		sb.append(", deviceProfileId=");
 		sb.append(getDeviceProfileId());
 		sb.append(", name=");
@@ -519,7 +558,7 @@ public class DeviceProfileRuleModelImpl extends BaseModelImpl<DeviceProfileRule>
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(28);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.portal.mobile.model.DeviceProfileRule");
@@ -532,6 +571,10 @@ public class DeviceProfileRuleModelImpl extends BaseModelImpl<DeviceProfileRule>
 		sb.append(
 			"<column><column-name>deviceProfileRuleId</column-name><column-value><![CDATA[");
 		sb.append(getDeviceProfileRuleId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>groupId</column-name><column-value><![CDATA[");
+		sb.append(getGroupId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>deviceProfileId</column-name><column-value><![CDATA[");
@@ -564,7 +607,11 @@ public class DeviceProfileRuleModelImpl extends BaseModelImpl<DeviceProfileRule>
 			DeviceProfileRule.class
 		};
 	private String _uuid;
+	private String _originalUuid;
 	private long _deviceProfileRuleId;
+	private long _groupId;
+	private long _originalGroupId;
+	private boolean _setOriginalGroupId;
 	private long _deviceProfileId;
 	private String _name;
 	private String _description;

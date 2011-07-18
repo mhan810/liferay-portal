@@ -3212,6 +3212,7 @@
 			<basic name="uuid">
 				<column name="UUID_" />
 			</basic>
+			<basic name="groupId" />
 			<basic name="name" />
 			<basic name="description" />
 			<transient name="descriptionMap" />
@@ -3226,6 +3227,7 @@
 			<basic name="uuid">
 				<column name="UUID_" />
 			</basic>
+			<basic name="groupId" />
 			<basic name="deviceProfileId" />
 			<basic name="deviceProfileRuleId" />
 			<basic name="name" />
@@ -3246,6 +3248,7 @@
 			<basic name="uuid">
 				<column name="UUID_" />
 			</basic>
+			<basic name="groupId" />
 			<basic name="deviceProfileId" />
 			<basic name="name" />
 			<basic name="description" />

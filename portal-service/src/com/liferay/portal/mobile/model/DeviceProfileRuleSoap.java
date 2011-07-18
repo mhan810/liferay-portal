@@ -31,6 +31,7 @@ public class DeviceProfileRuleSoap implements Serializable {
 
 		soapModel.setUuid(model.getUuid());
 		soapModel.setDeviceProfileRuleId(model.getDeviceProfileRuleId());
+		soapModel.setGroupId(model.getGroupId());
 		soapModel.setDeviceProfileId(model.getDeviceProfileId());
 		soapModel.setName(model.getName());
 		soapModel.setDescription(model.getDescription());
@@ -107,6 +108,14 @@ public class DeviceProfileRuleSoap implements Serializable {
 		_deviceProfileRuleId = deviceProfileRuleId;
 	}
 
+	public long getGroupId() {
+		return _groupId;
+	}
+
+	public void setGroupId(long groupId) {
+		_groupId = groupId;
+	}
+
 	public long getDeviceProfileId() {
 		return _deviceProfileId;
 	}
@@ -149,6 +158,7 @@ public class DeviceProfileRuleSoap implements Serializable {
 
 	private String _uuid;
 	private long _deviceProfileRuleId;
+	private long _groupId;
 	private long _deviceProfileId;
 	private String _name;
 	private String _description;

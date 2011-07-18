@@ -19,9 +19,12 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.mobile.NoSuchProfileActionException;
 import com.liferay.portal.mobile.model.DeviceProfileAction;
+import com.liferay.portal.mobile.model.impl.DeviceProfileActionModelImpl;
 import com.liferay.portal.service.persistence.BasePersistenceTestCase;
+import com.liferay.portal.util.PropsValues;
 
 import java.util.List;
 
@@ -67,6 +70,8 @@ public class DeviceProfileActionPersistenceTest extends BasePersistenceTestCase 
 
 		newDeviceProfileAction.setUuid(randomString());
 
+		newDeviceProfileAction.setGroupId(nextLong());
+
 		newDeviceProfileAction.setDeviceProfileId(nextLong());
 
 		newDeviceProfileAction.setDeviceProfileRuleId(nextLong());
@@ -87,6 +92,8 @@ public class DeviceProfileActionPersistenceTest extends BasePersistenceTestCase 
 			newDeviceProfileAction.getUuid());
 		assertEquals(existingDeviceProfileAction.getDeviceProfileActionId(),
 			newDeviceProfileAction.getDeviceProfileActionId());
+		assertEquals(existingDeviceProfileAction.getGroupId(),
+			newDeviceProfileAction.getGroupId());
 		assertEquals(existingDeviceProfileAction.getDeviceProfileId(),
 			newDeviceProfileAction.getDeviceProfileId());
 		assertEquals(existingDeviceProfileAction.getDeviceProfileRuleId(),
@@ -207,6 +214,24 @@ public class DeviceProfileActionPersistenceTest extends BasePersistenceTestCase 
 		assertEquals(0, result.size());
 	}
 
+	public void testResetOriginalValues() throws Exception {
+		if (!PropsValues.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE) {
+			return;
+		}
+
+		DeviceProfileAction newDeviceProfileAction = addDeviceProfileAction();
+
+		_persistence.clearCache();
+
+		DeviceProfileActionModelImpl existingDeviceProfileActionModelImpl = (DeviceProfileActionModelImpl)_persistence.findByPrimaryKey(newDeviceProfileAction.getPrimaryKey());
+
+		assertTrue(Validator.equals(
+				existingDeviceProfileActionModelImpl.getUuid(),
+				existingDeviceProfileActionModelImpl.getOriginalUuid()));
+		assertEquals(existingDeviceProfileActionModelImpl.getGroupId(),
+			existingDeviceProfileActionModelImpl.getOriginalGroupId());
+	}
+
 	protected DeviceProfileAction addDeviceProfileAction()
 		throws Exception {
 		long pk = nextLong();
@@ -214,6 +239,8 @@ public class DeviceProfileActionPersistenceTest extends BasePersistenceTestCase 
 		DeviceProfileAction deviceProfileAction = _persistence.create(pk);
 
 		deviceProfileAction.setUuid(randomString());
+
+		deviceProfileAction.setGroupId(nextLong());
 
 		deviceProfileAction.setDeviceProfileId(nextLong());
 

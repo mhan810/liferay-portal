@@ -36,7 +36,7 @@ import com.liferay.portal.kernel.transaction.Transactional;
 @Transactional(isolation = Isolation.PORTAL, rollbackFor =  {
 	PortalException.class, SystemException.class})
 public interface DeviceProfileLocalService {
-	/**
+	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never modify or reference this interface directly. Always use {@link DeviceProfileLocalServiceUtil} to access the device profile local service. Add custom service methods to {@link com.liferay.portal.mobile.service.impl.DeviceProfileLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
@@ -162,6 +162,21 @@ public interface DeviceProfileLocalService {
 			com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns the device profile with the UUID in the group.
+	*
+	* @param uuid the UUID of device profile
+	* @param groupId the group id of the device profile
+	* @return the device profile
+	* @throws PortalException if a device profile with the UUID in the group could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portal.mobile.model.DeviceProfile getDeviceProfileByUuidAndGroupId(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Returns a range of all the device profiles.
 	*
 	* <p>
@@ -227,13 +242,25 @@ public interface DeviceProfileLocalService {
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
 	public com.liferay.portal.mobile.model.DeviceProfile addDeviceProfile(
+		long groupId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	public int countByGroupId(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public com.liferay.portal.mobile.model.DeviceProfile fetchByPrimaryKey(
+	public com.liferay.portal.mobile.model.DeviceProfile fetchDeviceProfile(
 		long deviceProfileId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public java.util.Collection<com.liferay.portal.mobile.model.DeviceProfile> findByGroupId(
+		long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public java.util.Collection<com.liferay.portal.mobile.model.DeviceProfile> findByGroupId(
+		long groupId, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException;
 }

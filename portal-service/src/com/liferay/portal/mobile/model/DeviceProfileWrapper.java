@@ -91,6 +91,24 @@ public class DeviceProfileWrapper implements DeviceProfile {
 	}
 
 	/**
+	* Returns the group ID of this device profile.
+	*
+	* @return the group ID of this device profile
+	*/
+	public long getGroupId() {
+		return _deviceProfile.getGroupId();
+	}
+
+	/**
+	* Sets the group ID of this device profile.
+	*
+	* @param groupId the group ID of this device profile
+	*/
+	public void setGroupId(long groupId) {
+		_deviceProfile.setGroupId(groupId);
+	}
+
+	/**
 	* Returns the name of this device profile.
 	*
 	* @return the name of this device profile

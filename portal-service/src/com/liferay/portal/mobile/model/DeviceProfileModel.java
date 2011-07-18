@@ -90,6 +90,20 @@ public interface DeviceProfileModel extends BaseModel<DeviceProfile> {
 	public void setDeviceProfileId(long deviceProfileId);
 
 	/**
+	 * Returns the group ID of this device profile.
+	 *
+	 * @return the group ID of this device profile
+	 */
+	public long getGroupId();
+
+	/**
+	 * Sets the group ID of this device profile.
+	 *
+	 * @param groupId the group ID of this device profile
+	 */
+	public void setGroupId(long groupId);
+
+	/**
 	 * Returns the name of this device profile.
 	 *
 	 * @return the name of this device profile

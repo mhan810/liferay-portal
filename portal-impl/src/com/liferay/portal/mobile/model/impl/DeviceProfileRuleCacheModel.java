@@ -29,12 +29,14 @@ import com.liferay.portal.model.CacheModel;
 public class DeviceProfileRuleCacheModel implements CacheModel<DeviceProfileRule> {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
 		sb.append(", deviceProfileRuleId=");
 		sb.append(deviceProfileRuleId);
+		sb.append(", groupId=");
+		sb.append(groupId);
 		sb.append(", deviceProfileId=");
 		sb.append(deviceProfileId);
 		sb.append(", name=");
@@ -61,6 +63,7 @@ public class DeviceProfileRuleCacheModel implements CacheModel<DeviceProfileRule
 		}
 
 		deviceProfileRuleImpl.setDeviceProfileRuleId(deviceProfileRuleId);
+		deviceProfileRuleImpl.setGroupId(groupId);
 		deviceProfileRuleImpl.setDeviceProfileId(deviceProfileId);
 
 		if (name == null) {
@@ -98,6 +101,7 @@ public class DeviceProfileRuleCacheModel implements CacheModel<DeviceProfileRule
 
 	public String uuid;
 	public long deviceProfileRuleId;
+	public long groupId;
 	public long deviceProfileId;
 	public String name;
 	public String description;

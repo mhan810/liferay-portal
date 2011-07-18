@@ -32,7 +32,7 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @generated
  */
 public class DeviceProfileLocalServiceUtil {
-	/**
+	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.portal.mobile.service.impl.DeviceProfileLocalServiceImpl} and rerun ServiceBuilder to regenerate this class.
@@ -176,6 +176,22 @@ public class DeviceProfileLocalServiceUtil {
 	}
 
 	/**
+	* Returns the device profile with the UUID in the group.
+	*
+	* @param uuid the UUID of device profile
+	* @param groupId the group id of the device profile
+	* @return the device profile
+	* @throws PortalException if a device profile with the UUID in the group could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.mobile.model.DeviceProfile getDeviceProfileByUuidAndGroupId(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().getDeviceProfileByUuidAndGroupId(uuid, groupId);
+	}
+
+	/**
 	* Returns a range of all the device profiles.
 	*
 	* <p>
@@ -251,17 +267,35 @@ public class DeviceProfileLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.mobile.model.DeviceProfile addDeviceProfile(
+		long groupId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return getService().addDeviceProfile(nameMap, descriptionMap);
+		return getService().addDeviceProfile(groupId, nameMap, descriptionMap);
 	}
 
-	public static com.liferay.portal.mobile.model.DeviceProfile fetchByPrimaryKey(
+	public static int countByGroupId(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().countByGroupId(groupId);
+	}
+
+	public static com.liferay.portal.mobile.model.DeviceProfile fetchDeviceProfile(
 		long deviceProfileId)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().fetchByPrimaryKey(deviceProfileId);
+		return getService().fetchDeviceProfile(deviceProfileId);
+	}
+
+	public static java.util.Collection<com.liferay.portal.mobile.model.DeviceProfile> findByGroupId(
+		long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().findByGroupId(groupId);
+	}
+
+	public static java.util.Collection<com.liferay.portal.mobile.model.DeviceProfile> findByGroupId(
+		long groupId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().findByGroupId(groupId, start, end);
 	}
 
 	public static DeviceProfileLocalService getService() {

@@ -19,9 +19,12 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.mobile.NoSuchProfileException;
 import com.liferay.portal.mobile.model.DeviceProfile;
+import com.liferay.portal.mobile.model.impl.DeviceProfileModelImpl;
 import com.liferay.portal.service.persistence.BasePersistenceTestCase;
+import com.liferay.portal.util.PropsValues;
 
 import java.util.List;
 
@@ -67,6 +70,8 @@ public class DeviceProfilePersistenceTest extends BasePersistenceTestCase {
 
 		newDeviceProfile.setUuid(randomString());
 
+		newDeviceProfile.setGroupId(nextLong());
+
 		newDeviceProfile.setName(randomString());
 
 		newDeviceProfile.setDescription(randomString());
@@ -78,6 +83,8 @@ public class DeviceProfilePersistenceTest extends BasePersistenceTestCase {
 		assertEquals(existingDeviceProfile.getUuid(), newDeviceProfile.getUuid());
 		assertEquals(existingDeviceProfile.getDeviceProfileId(),
 			newDeviceProfile.getDeviceProfileId());
+		assertEquals(existingDeviceProfile.getGroupId(),
+			newDeviceProfile.getGroupId());
 		assertEquals(existingDeviceProfile.getName(), newDeviceProfile.getName());
 		assertEquals(existingDeviceProfile.getDescription(),
 			newDeviceProfile.getDescription());
@@ -189,12 +196,31 @@ public class DeviceProfilePersistenceTest extends BasePersistenceTestCase {
 		assertEquals(0, result.size());
 	}
 
+	public void testResetOriginalValues() throws Exception {
+		if (!PropsValues.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE) {
+			return;
+		}
+
+		DeviceProfile newDeviceProfile = addDeviceProfile();
+
+		_persistence.clearCache();
+
+		DeviceProfileModelImpl existingDeviceProfileModelImpl = (DeviceProfileModelImpl)_persistence.findByPrimaryKey(newDeviceProfile.getPrimaryKey());
+
+		assertTrue(Validator.equals(existingDeviceProfileModelImpl.getUuid(),
+				existingDeviceProfileModelImpl.getOriginalUuid()));
+		assertEquals(existingDeviceProfileModelImpl.getGroupId(),
+			existingDeviceProfileModelImpl.getOriginalGroupId());
+	}
+
 	protected DeviceProfile addDeviceProfile() throws Exception {
 		long pk = nextLong();
 
 		DeviceProfile deviceProfile = _persistence.create(pk);
 
 		deviceProfile.setUuid(randomString());
+
+		deviceProfile.setGroupId(nextLong());
 
 		deviceProfile.setName(randomString());
 

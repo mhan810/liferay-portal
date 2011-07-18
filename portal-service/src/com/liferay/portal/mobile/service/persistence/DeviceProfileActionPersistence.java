@@ -31,7 +31,7 @@ import com.liferay.portal.service.persistence.BasePersistence;
  * @generated
  */
 public interface DeviceProfileActionPersistence extends BasePersistence<DeviceProfileAction> {
-	/**
+	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never modify or reference this interface directly. Always use {@link DeviceProfileActionUtil} to access the device profile action persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this interface.
@@ -210,6 +210,45 @@ public interface DeviceProfileActionPersistence extends BasePersistence<DevicePr
 			com.liferay.portal.mobile.NoSuchProfileActionException;
 
 	/**
+	* Returns the device profile action where uuid = &#63; and groupId = &#63; or throws a {@link com.liferay.portal.mobile.NoSuchProfileActionException} if it could not be found.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @return the matching device profile action
+	* @throws com.liferay.portal.mobile.NoSuchProfileActionException if a matching device profile action could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portal.mobile.model.DeviceProfileAction findByUUID_G(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portal.mobile.NoSuchProfileActionException;
+
+	/**
+	* Returns the device profile action where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @return the matching device profile action, or <code>null</code> if a matching device profile action could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portal.mobile.model.DeviceProfileAction fetchByUUID_G(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the device profile action where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @param retrieveFromCache whether to use the finder cache
+	* @return the matching device profile action, or <code>null</code> if a matching device profile action could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portal.mobile.model.DeviceProfileAction fetchByUUID_G(
+		java.lang.String uuid, long groupId, boolean retrieveFromCache)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Returns all the device profile actions where deviceProfileRuleId = &#63;.
 	*
 	* @param deviceProfileRuleId the device profile rule ID
@@ -367,6 +406,17 @@ public interface DeviceProfileActionPersistence extends BasePersistence<DevicePr
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Removes the device profile action where uuid = &#63; and groupId = &#63; from the database.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @throws SystemException if a system exception occurred
+	*/
+	public void removeByUUID_G(java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portal.mobile.NoSuchProfileActionException;
+
+	/**
 	* Removes all the device profile actions where deviceProfileRuleId = &#63; from the database.
 	*
 	* @param deviceProfileRuleId the device profile rule ID
@@ -391,6 +441,17 @@ public interface DeviceProfileActionPersistence extends BasePersistence<DevicePr
 	* @throws SystemException if a system exception occurred
 	*/
 	public int countByUuid(java.lang.String uuid)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the number of device profile actions where uuid = &#63; and groupId = &#63;.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @return the number of matching device profile actions
+	* @throws SystemException if a system exception occurred
+	*/
+	public int countByUUID_G(java.lang.String uuid, long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**

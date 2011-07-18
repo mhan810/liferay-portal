@@ -100,8 +100,8 @@ public class DeviceServicePreAction extends Action {
 			long deviceProfileId = layout.getDeviceProfileId();
 
 			if (deviceProfileId != 0) {
-				deviceProfile = DeviceProfileLocalServiceUtil.fetchByPrimaryKey(
-					deviceProfileId);
+				deviceProfile = DeviceProfileLocalServiceUtil.
+					fetchDeviceProfile(deviceProfileId);
 
 				if (deviceProfile == null) {
 					if (_log.isInfoEnabled()) {
@@ -122,8 +122,8 @@ public class DeviceServicePreAction extends Action {
 			long deviceProfileId = layoutSet.getDeviceProfileId();
 
 			if (deviceProfileId != 0) {
-				deviceProfile = DeviceProfileLocalServiceUtil.fetchByPrimaryKey(
-					deviceProfileId);
+				deviceProfile = DeviceProfileLocalServiceUtil.
+					fetchDeviceProfile(deviceProfileId);
 
 				if (deviceProfile == null) {
 					if (_log.isInfoEnabled()) {

@@ -66,7 +66,7 @@ import java.util.List;
  */
 public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<DeviceProfileAction>
 	implements DeviceProfileActionPersistence {
-	/**
+	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never modify or reference this class directly. Always use {@link DeviceProfileActionUtil} to access the device profile action persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
@@ -80,7 +80,7 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 			"findByUuid",
 			new String[] {
 				String.class.getName(),
-
+				
 			"java.lang.Integer", "java.lang.Integer",
 				"com.liferay.portal.kernel.util.OrderByComparator"
 			});
@@ -88,13 +88,22 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 			DeviceProfileActionModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST, "countByUuid",
 			new String[] { String.class.getName() });
+	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DeviceProfileActionModelImpl.ENTITY_CACHE_ENABLED,
+			DeviceProfileActionModelImpl.FINDER_CACHE_ENABLED,
+			DeviceProfileActionImpl.class, FINDER_CLASS_NAME_ENTITY,
+			"fetchByUUID_G",
+			new String[] { String.class.getName(), Long.class.getName() });
+	public static final FinderPath FINDER_PATH_COUNT_BY_UUID_G = new FinderPath(DeviceProfileActionModelImpl.ENTITY_CACHE_ENABLED,
+			DeviceProfileActionModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST, "countByUUID_G",
+			new String[] { String.class.getName(), Long.class.getName() });
 	public static final FinderPath FINDER_PATH_FIND_BY_DEVICEPROFILERULEID = new FinderPath(DeviceProfileActionModelImpl.ENTITY_CACHE_ENABLED,
 			DeviceProfileActionModelImpl.FINDER_CACHE_ENABLED,
 			DeviceProfileActionImpl.class, FINDER_CLASS_NAME_LIST,
 			"findByDeviceProfileRuleId",
 			new String[] {
 				Long.class.getName(),
-
+				
 			"java.lang.Integer", "java.lang.Integer",
 				"com.liferay.portal.kernel.util.OrderByComparator"
 			});
@@ -119,6 +128,12 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 		EntityCacheUtil.putResult(DeviceProfileActionModelImpl.ENTITY_CACHE_ENABLED,
 			DeviceProfileActionImpl.class, deviceProfileAction.getPrimaryKey(),
 			deviceProfileAction);
+
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
+			new Object[] {
+				deviceProfileAction.getUuid(),
+				Long.valueOf(deviceProfileAction.getGroupId())
+			}, deviceProfileAction);
 
 		deviceProfileAction.resetOriginalValues();
 	}
@@ -168,6 +183,12 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 	public void clearCache(DeviceProfileAction deviceProfileAction) {
 		EntityCacheUtil.removeResult(DeviceProfileActionModelImpl.ENTITY_CACHE_ENABLED,
 			DeviceProfileActionImpl.class, deviceProfileAction.getPrimaryKey());
+
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
+			new Object[] {
+				deviceProfileAction.getUuid(),
+				Long.valueOf(deviceProfileAction.getGroupId())
+			});
 	}
 
 	/**
@@ -278,6 +299,14 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
 
+		DeviceProfileActionModelImpl deviceProfileActionModelImpl = (DeviceProfileActionModelImpl)deviceProfileAction;
+
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
+			new Object[] {
+				deviceProfileActionModelImpl.getUuid(),
+				Long.valueOf(deviceProfileActionModelImpl.getGroupId())
+			});
+
 		EntityCacheUtil.removeResult(DeviceProfileActionModelImpl.ENTITY_CACHE_ENABLED,
 			DeviceProfileActionImpl.class, deviceProfileAction.getPrimaryKey());
 
@@ -289,6 +318,10 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 		com.liferay.portal.mobile.model.DeviceProfileAction deviceProfileAction,
 		boolean merge) throws SystemException {
 		deviceProfileAction = toUnwrappedModel(deviceProfileAction);
+
+		boolean isNew = deviceProfileAction.isNew();
+
+		DeviceProfileActionModelImpl deviceProfileActionModelImpl = (DeviceProfileActionModelImpl)deviceProfileAction;
 
 		if (Validator.isNull(deviceProfileAction.getUuid())) {
 			String uuid = PortalUUIDUtil.generate();
@@ -318,6 +351,29 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 			DeviceProfileActionImpl.class, deviceProfileAction.getPrimaryKey(),
 			deviceProfileAction);
 
+		if (!isNew &&
+				(!Validator.equals(deviceProfileAction.getUuid(),
+					deviceProfileActionModelImpl.getOriginalUuid()) ||
+				(deviceProfileAction.getGroupId() != deviceProfileActionModelImpl.getOriginalGroupId()))) {
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
+				new Object[] {
+					deviceProfileActionModelImpl.getOriginalUuid(),
+					Long.valueOf(
+						deviceProfileActionModelImpl.getOriginalGroupId())
+				});
+		}
+
+		if (isNew ||
+				(!Validator.equals(deviceProfileAction.getUuid(),
+					deviceProfileActionModelImpl.getOriginalUuid()) ||
+				(deviceProfileAction.getGroupId() != deviceProfileActionModelImpl.getOriginalGroupId()))) {
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
+				new Object[] {
+					deviceProfileAction.getUuid(),
+					Long.valueOf(deviceProfileAction.getGroupId())
+				}, deviceProfileAction);
+		}
+
 		return deviceProfileAction;
 	}
 
@@ -334,6 +390,7 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 
 		deviceProfileActionImpl.setUuid(deviceProfileAction.getUuid());
 		deviceProfileActionImpl.setDeviceProfileActionId(deviceProfileAction.getDeviceProfileActionId());
+		deviceProfileActionImpl.setGroupId(deviceProfileAction.getGroupId());
 		deviceProfileActionImpl.setDeviceProfileId(deviceProfileAction.getDeviceProfileId());
 		deviceProfileActionImpl.setDeviceProfileRuleId(deviceProfileAction.getDeviceProfileRuleId());
 		deviceProfileActionImpl.setName(deviceProfileAction.getName());
@@ -493,7 +550,7 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 		int end, OrderByComparator orderByComparator) throws SystemException {
 		Object[] finderArgs = new Object[] {
 				uuid,
-
+				
 				String.valueOf(start), String.valueOf(end),
 				String.valueOf(orderByComparator)
 			};
@@ -803,6 +860,158 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 	}
 
 	/**
+	 * Returns the device profile action where uuid = &#63; and groupId = &#63; or throws a {@link com.liferay.portal.mobile.NoSuchProfileActionException} if it could not be found.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @return the matching device profile action
+	 * @throws com.liferay.portal.mobile.NoSuchProfileActionException if a matching device profile action could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DeviceProfileAction findByUUID_G(String uuid, long groupId)
+		throws NoSuchProfileActionException, SystemException {
+		DeviceProfileAction deviceProfileAction = fetchByUUID_G(uuid, groupId);
+
+		if (deviceProfileAction == null) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("uuid=");
+			msg.append(uuid);
+
+			msg.append(", groupId=");
+			msg.append(groupId);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(msg.toString());
+			}
+
+			throw new NoSuchProfileActionException(msg.toString());
+		}
+
+		return deviceProfileAction;
+	}
+
+	/**
+	 * Returns the device profile action where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @return the matching device profile action, or <code>null</code> if a matching device profile action could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DeviceProfileAction fetchByUUID_G(String uuid, long groupId)
+		throws SystemException {
+		return fetchByUUID_G(uuid, groupId, true);
+	}
+
+	/**
+	 * Returns the device profile action where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @param retrieveFromCache whether to use the finder cache
+	 * @return the matching device profile action, or <code>null</code> if a matching device profile action could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DeviceProfileAction fetchByUUID_G(String uuid, long groupId,
+		boolean retrieveFromCache) throws SystemException {
+		Object[] finderArgs = new Object[] { uuid, groupId };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_UUID_G,
+					finderArgs, this);
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_SELECT_DEVICEPROFILEACTION_WHERE);
+
+			if (uuid == null) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
+			}
+			else {
+				if (uuid.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (uuid != null) {
+					qPos.add(uuid);
+				}
+
+				qPos.add(groupId);
+
+				List<DeviceProfileAction> list = q.list();
+
+				result = list;
+
+				DeviceProfileAction deviceProfileAction = null;
+
+				if (list.isEmpty()) {
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
+						finderArgs, list);
+				}
+				else {
+					deviceProfileAction = list.get(0);
+
+					cacheResult(deviceProfileAction);
+
+					if ((deviceProfileAction.getUuid() == null) ||
+							!deviceProfileAction.getUuid().equals(uuid) ||
+							(deviceProfileAction.getGroupId() != groupId)) {
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
+							finderArgs, deviceProfileAction);
+					}
+				}
+
+				return deviceProfileAction;
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (result == null) {
+					FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
+						finderArgs);
+				}
+
+				closeSession(session);
+			}
+		}
+		else {
+			if (result instanceof List<?>) {
+				return null;
+			}
+			else {
+				return (DeviceProfileAction)result;
+			}
+		}
+	}
+
+	/**
 	 * Returns all the device profile actions where deviceProfileRuleId = &#63;.
 	 *
 	 * @param deviceProfileRuleId the device profile rule ID
@@ -852,7 +1061,7 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 		OrderByComparator orderByComparator) throws SystemException {
 		Object[] finderArgs = new Object[] {
 				deviceProfileRuleId,
-
+				
 				String.valueOf(start), String.valueOf(end),
 				String.valueOf(orderByComparator)
 			};
@@ -1262,6 +1471,20 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 	}
 
 	/**
+	 * Removes the device profile action where uuid = &#63; and groupId = &#63; from the database.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByUUID_G(String uuid, long groupId)
+		throws NoSuchProfileActionException, SystemException {
+		DeviceProfileAction deviceProfileAction = findByUUID_G(uuid, groupId);
+
+		deviceProfileActionPersistence.remove(deviceProfileAction);
+	}
+
+	/**
 	 * Removes all the device profile actions where deviceProfileRuleId = &#63; from the database.
 	 *
 	 * @param deviceProfileRuleId the device profile rule ID
@@ -1342,6 +1565,77 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 				}
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID,
+					finderArgs, count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of device profile actions where uuid = &#63; and groupId = &#63;.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @return the number of matching device profile actions
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByUUID_G(String uuid, long groupId)
+		throws SystemException {
+		Object[] finderArgs = new Object[] { uuid, groupId };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_UUID_G,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_DEVICEPROFILEACTION_WHERE);
+
+			if (uuid == null) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
+			}
+			else {
+				if (uuid.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (uuid != null) {
+					qPos.add(uuid);
+				}
+
+				qPos.add(groupId);
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G,
 					finderArgs, count);
 
 				closeSession(session);
@@ -1493,6 +1787,10 @@ public class DeviceProfileActionPersistenceImpl extends BasePersistenceImpl<Devi
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "deviceProfileAction.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "deviceProfileAction.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(deviceProfileAction.uuid IS NULL OR deviceProfileAction.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "deviceProfileAction.uuid IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "deviceProfileAction.uuid = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(deviceProfileAction.uuid IS NULL OR deviceProfileAction.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "deviceProfileAction.groupId = ?";
 	private static final String _FINDER_COLUMN_DEVICEPROFILERULEID_DEVICEPROFILERULEID_2 =
 		"deviceProfileAction.deviceProfileRuleId = ?";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "deviceProfileAction.";

@@ -70,7 +70,7 @@ import java.util.List;
  */
 public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProfile>
 	implements DeviceProfilePersistence {
-	/**
+	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never modify or reference this class directly. Always use {@link DeviceProfileUtil} to access the device profile persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
@@ -83,7 +83,7 @@ public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProf
 			DeviceProfileImpl.class, FINDER_CLASS_NAME_LIST, "findByUuid",
 			new String[] {
 				String.class.getName(),
-
+				
 			"java.lang.Integer", "java.lang.Integer",
 				"com.liferay.portal.kernel.util.OrderByComparator"
 			});
@@ -91,6 +91,27 @@ public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProf
 			DeviceProfileModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST, "countByUuid",
 			new String[] { String.class.getName() });
+	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DeviceProfileModelImpl.ENTITY_CACHE_ENABLED,
+			DeviceProfileModelImpl.FINDER_CACHE_ENABLED,
+			DeviceProfileImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
+			new String[] { String.class.getName(), Long.class.getName() });
+	public static final FinderPath FINDER_PATH_COUNT_BY_UUID_G = new FinderPath(DeviceProfileModelImpl.ENTITY_CACHE_ENABLED,
+			DeviceProfileModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST, "countByUUID_G",
+			new String[] { String.class.getName(), Long.class.getName() });
+	public static final FinderPath FINDER_PATH_FIND_BY_GROUPID = new FinderPath(DeviceProfileModelImpl.ENTITY_CACHE_ENABLED,
+			DeviceProfileModelImpl.FINDER_CACHE_ENABLED,
+			DeviceProfileImpl.class, FINDER_CLASS_NAME_LIST, "findByGroupId",
+			new String[] {
+				Long.class.getName(),
+				
+			"java.lang.Integer", "java.lang.Integer",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			});
+	public static final FinderPath FINDER_PATH_COUNT_BY_GROUPID = new FinderPath(DeviceProfileModelImpl.ENTITY_CACHE_ENABLED,
+			DeviceProfileModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST, "countByGroupId",
+			new String[] { Long.class.getName() });
 	public static final FinderPath FINDER_PATH_FIND_ALL = new FinderPath(DeviceProfileModelImpl.ENTITY_CACHE_ENABLED,
 			DeviceProfileModelImpl.FINDER_CACHE_ENABLED,
 			DeviceProfileImpl.class, FINDER_CLASS_NAME_LIST, "findAll",
@@ -108,6 +129,12 @@ public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProf
 		EntityCacheUtil.putResult(DeviceProfileModelImpl.ENTITY_CACHE_ENABLED,
 			DeviceProfileImpl.class, deviceProfile.getPrimaryKey(),
 			deviceProfile);
+
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
+			new Object[] {
+				deviceProfile.getUuid(),
+				Long.valueOf(deviceProfile.getGroupId())
+			}, deviceProfile);
 
 		deviceProfile.resetOriginalValues();
 	}
@@ -157,6 +184,12 @@ public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProf
 	public void clearCache(DeviceProfile deviceProfile) {
 		EntityCacheUtil.removeResult(DeviceProfileModelImpl.ENTITY_CACHE_ENABLED,
 			DeviceProfileImpl.class, deviceProfile.getPrimaryKey());
+
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
+			new Object[] {
+				deviceProfile.getUuid(),
+				Long.valueOf(deviceProfile.getGroupId())
+			});
 	}
 
 	/**
@@ -267,6 +300,14 @@ public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProf
 
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
 
+		DeviceProfileModelImpl deviceProfileModelImpl = (DeviceProfileModelImpl)deviceProfile;
+
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
+			new Object[] {
+				deviceProfileModelImpl.getUuid(),
+				Long.valueOf(deviceProfileModelImpl.getGroupId())
+			});
+
 		EntityCacheUtil.removeResult(DeviceProfileModelImpl.ENTITY_CACHE_ENABLED,
 			DeviceProfileImpl.class, deviceProfile.getPrimaryKey());
 
@@ -278,6 +319,10 @@ public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProf
 		com.liferay.portal.mobile.model.DeviceProfile deviceProfile,
 		boolean merge) throws SystemException {
 		deviceProfile = toUnwrappedModel(deviceProfile);
+
+		boolean isNew = deviceProfile.isNew();
+
+		DeviceProfileModelImpl deviceProfileModelImpl = (DeviceProfileModelImpl)deviceProfile;
 
 		if (Validator.isNull(deviceProfile.getUuid())) {
 			String uuid = PortalUUIDUtil.generate();
@@ -307,6 +352,28 @@ public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProf
 			DeviceProfileImpl.class, deviceProfile.getPrimaryKey(),
 			deviceProfile);
 
+		if (!isNew &&
+				(!Validator.equals(deviceProfile.getUuid(),
+					deviceProfileModelImpl.getOriginalUuid()) ||
+				(deviceProfile.getGroupId() != deviceProfileModelImpl.getOriginalGroupId()))) {
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
+				new Object[] {
+					deviceProfileModelImpl.getOriginalUuid(),
+					Long.valueOf(deviceProfileModelImpl.getOriginalGroupId())
+				});
+		}
+
+		if (isNew ||
+				(!Validator.equals(deviceProfile.getUuid(),
+					deviceProfileModelImpl.getOriginalUuid()) ||
+				(deviceProfile.getGroupId() != deviceProfileModelImpl.getOriginalGroupId()))) {
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
+				new Object[] {
+					deviceProfile.getUuid(),
+					Long.valueOf(deviceProfile.getGroupId())
+				}, deviceProfile);
+		}
+
 		return deviceProfile;
 	}
 
@@ -322,6 +389,7 @@ public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProf
 
 		deviceProfileImpl.setUuid(deviceProfile.getUuid());
 		deviceProfileImpl.setDeviceProfileId(deviceProfile.getDeviceProfileId());
+		deviceProfileImpl.setGroupId(deviceProfile.getGroupId());
 		deviceProfileImpl.setName(deviceProfile.getName());
 		deviceProfileImpl.setDescription(deviceProfile.getDescription());
 
@@ -476,7 +544,7 @@ public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProf
 		OrderByComparator orderByComparator) throws SystemException {
 		Object[] finderArgs = new Object[] {
 				uuid,
-
+				
 				String.valueOf(start), String.valueOf(end),
 				String.valueOf(orderByComparator)
 			};
@@ -784,6 +852,490 @@ public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProf
 	}
 
 	/**
+	 * Returns the device profile where uuid = &#63; and groupId = &#63; or throws a {@link com.liferay.portal.mobile.NoSuchProfileException} if it could not be found.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @return the matching device profile
+	 * @throws com.liferay.portal.mobile.NoSuchProfileException if a matching device profile could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DeviceProfile findByUUID_G(String uuid, long groupId)
+		throws NoSuchProfileException, SystemException {
+		DeviceProfile deviceProfile = fetchByUUID_G(uuid, groupId);
+
+		if (deviceProfile == null) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("uuid=");
+			msg.append(uuid);
+
+			msg.append(", groupId=");
+			msg.append(groupId);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(msg.toString());
+			}
+
+			throw new NoSuchProfileException(msg.toString());
+		}
+
+		return deviceProfile;
+	}
+
+	/**
+	 * Returns the device profile where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @return the matching device profile, or <code>null</code> if a matching device profile could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DeviceProfile fetchByUUID_G(String uuid, long groupId)
+		throws SystemException {
+		return fetchByUUID_G(uuid, groupId, true);
+	}
+
+	/**
+	 * Returns the device profile where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @param retrieveFromCache whether to use the finder cache
+	 * @return the matching device profile, or <code>null</code> if a matching device profile could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DeviceProfile fetchByUUID_G(String uuid, long groupId,
+		boolean retrieveFromCache) throws SystemException {
+		Object[] finderArgs = new Object[] { uuid, groupId };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_UUID_G,
+					finderArgs, this);
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_SELECT_DEVICEPROFILE_WHERE);
+
+			if (uuid == null) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
+			}
+			else {
+				if (uuid.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (uuid != null) {
+					qPos.add(uuid);
+				}
+
+				qPos.add(groupId);
+
+				List<DeviceProfile> list = q.list();
+
+				result = list;
+
+				DeviceProfile deviceProfile = null;
+
+				if (list.isEmpty()) {
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
+						finderArgs, list);
+				}
+				else {
+					deviceProfile = list.get(0);
+
+					cacheResult(deviceProfile);
+
+					if ((deviceProfile.getUuid() == null) ||
+							!deviceProfile.getUuid().equals(uuid) ||
+							(deviceProfile.getGroupId() != groupId)) {
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
+							finderArgs, deviceProfile);
+					}
+				}
+
+				return deviceProfile;
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (result == null) {
+					FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
+						finderArgs);
+				}
+
+				closeSession(session);
+			}
+		}
+		else {
+			if (result instanceof List<?>) {
+				return null;
+			}
+			else {
+				return (DeviceProfile)result;
+			}
+		}
+	}
+
+	/**
+	 * Returns all the device profiles where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @return the matching device profiles
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<DeviceProfile> findByGroupId(long groupId)
+		throws SystemException {
+		return findByGroupId(groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the device profiles where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of device profiles
+	 * @param end the upper bound of the range of device profiles (not inclusive)
+	 * @return the range of matching device profiles
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<DeviceProfile> findByGroupId(long groupId, int start, int end)
+		throws SystemException {
+		return findByGroupId(groupId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the device profiles where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of device profiles
+	 * @param end the upper bound of the range of device profiles (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching device profiles
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<DeviceProfile> findByGroupId(long groupId, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
+		Object[] finderArgs = new Object[] {
+				groupId,
+				
+				String.valueOf(start), String.valueOf(end),
+				String.valueOf(orderByComparator)
+			};
+
+		List<DeviceProfile> list = (List<DeviceProfile>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_GROUPID,
+				finderArgs, this);
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(3 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(2);
+			}
+
+			query.append(_SQL_SELECT_DEVICEPROFILE_WHERE);
+
+			query.append(_FINDER_COLUMN_GROUPID_GROUPID_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				list = (List<DeviceProfile>)QueryUtil.list(q, getDialect(),
+						start, end);
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (list == null) {
+					FinderCacheUtil.removeResult(FINDER_PATH_FIND_BY_GROUPID,
+						finderArgs);
+				}
+				else {
+					cacheResult(list);
+
+					FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_GROUPID,
+						finderArgs, list);
+				}
+
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first device profile in the ordered set where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching device profile
+	 * @throws com.liferay.portal.mobile.NoSuchProfileException if a matching device profile could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DeviceProfile findByGroupId_First(long groupId,
+		OrderByComparator orderByComparator)
+		throws NoSuchProfileException, SystemException {
+		List<DeviceProfile> list = findByGroupId(groupId, 0, 1,
+				orderByComparator);
+
+		if (list.isEmpty()) {
+			StringBundler msg = new StringBundler(4);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("groupId=");
+			msg.append(groupId);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			throw new NoSuchProfileException(msg.toString());
+		}
+		else {
+			return list.get(0);
+		}
+	}
+
+	/**
+	 * Returns the last device profile in the ordered set where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching device profile
+	 * @throws com.liferay.portal.mobile.NoSuchProfileException if a matching device profile could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DeviceProfile findByGroupId_Last(long groupId,
+		OrderByComparator orderByComparator)
+		throws NoSuchProfileException, SystemException {
+		int count = countByGroupId(groupId);
+
+		List<DeviceProfile> list = findByGroupId(groupId, count - 1, count,
+				orderByComparator);
+
+		if (list.isEmpty()) {
+			StringBundler msg = new StringBundler(4);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("groupId=");
+			msg.append(groupId);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			throw new NoSuchProfileException(msg.toString());
+		}
+		else {
+			return list.get(0);
+		}
+	}
+
+	/**
+	 * Returns the device profiles before and after the current device profile in the ordered set where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param deviceProfileId the primary key of the current device profile
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next device profile
+	 * @throws com.liferay.portal.mobile.NoSuchProfileException if a device profile with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DeviceProfile[] findByGroupId_PrevAndNext(long deviceProfileId,
+		long groupId, OrderByComparator orderByComparator)
+		throws NoSuchProfileException, SystemException {
+		DeviceProfile deviceProfile = findByPrimaryKey(deviceProfileId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			DeviceProfile[] array = new DeviceProfileImpl[3];
+
+			array[0] = getByGroupId_PrevAndNext(session, deviceProfile,
+					groupId, orderByComparator, true);
+
+			array[1] = deviceProfile;
+
+			array[2] = getByGroupId_PrevAndNext(session, deviceProfile,
+					groupId, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected DeviceProfile getByGroupId_PrevAndNext(Session session,
+		DeviceProfile deviceProfile, long groupId,
+		OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_DEVICEPROFILE_WHERE);
+
+		query.append(_FINDER_COLUMN_GROUPID_GROUPID_2);
+
+		if (orderByComparator != null) {
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			if (orderByFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByValues(deviceProfile);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<DeviceProfile> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
 	 * Returns all the device profiles.
 	 *
 	 * @return the device profiles
@@ -905,6 +1457,32 @@ public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProf
 	}
 
 	/**
+	 * Removes the device profile where uuid = &#63; and groupId = &#63; from the database.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByUUID_G(String uuid, long groupId)
+		throws NoSuchProfileException, SystemException {
+		DeviceProfile deviceProfile = findByUUID_G(uuid, groupId);
+
+		deviceProfilePersistence.remove(deviceProfile);
+	}
+
+	/**
+	 * Removes all the device profiles where groupId = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByGroupId(long groupId) throws SystemException {
+		for (DeviceProfile deviceProfile : findByGroupId(groupId)) {
+			deviceProfilePersistence.remove(deviceProfile);
+		}
+	}
+
+	/**
 	 * Removes all the device profiles from the database.
 	 *
 	 * @throws SystemException if a system exception occurred
@@ -971,6 +1549,130 @@ public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProf
 				}
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID,
+					finderArgs, count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of device profiles where uuid = &#63; and groupId = &#63;.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @return the number of matching device profiles
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByUUID_G(String uuid, long groupId)
+		throws SystemException {
+		Object[] finderArgs = new Object[] { uuid, groupId };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_UUID_G,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_DEVICEPROFILE_WHERE);
+
+			if (uuid == null) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
+			}
+			else {
+				if (uuid.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (uuid != null) {
+					qPos.add(uuid);
+				}
+
+				qPos.add(groupId);
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G,
+					finderArgs, count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of device profiles where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @return the number of matching device profiles
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByGroupId(long groupId) throws SystemException {
+		Object[] finderArgs = new Object[] { groupId };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_GROUPID,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_DEVICEPROFILE_WHERE);
+
+			query.append(_FINDER_COLUMN_GROUPID_GROUPID_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_GROUPID,
 					finderArgs, count);
 
 				closeSession(session);
@@ -1335,6 +2037,11 @@ public class DeviceProfilePersistenceImpl extends BasePersistenceImpl<DeviceProf
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "deviceProfile.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "deviceProfile.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(deviceProfile.uuid IS NULL OR deviceProfile.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "deviceProfile.uuid IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "deviceProfile.uuid = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(deviceProfile.uuid IS NULL OR deviceProfile.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "deviceProfile.groupId = ?";
+	private static final String _FINDER_COLUMN_GROUPID_GROUPID_2 = "deviceProfile.groupId = ?";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "deviceProfile.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DeviceProfile exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No DeviceProfile exists with the key {";

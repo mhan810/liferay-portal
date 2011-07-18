@@ -90,6 +90,20 @@ public interface DeviceProfileActionModel extends BaseModel<DeviceProfileAction>
 	public void setDeviceProfileActionId(long deviceProfileActionId);
 
 	/**
+	 * Returns the group ID of this device profile action.
+	 *
+	 * @return the group ID of this device profile action
+	 */
+	public long getGroupId();
+
+	/**
+	 * Sets the group ID of this device profile action.
+	 *
+	 * @param groupId the group ID of this device profile action
+	 */
+	public void setGroupId(long groupId);
+
+	/**
 	 * Returns the device profile ID of this device profile action.
 	 *
 	 * @return the device profile ID of this device profile action

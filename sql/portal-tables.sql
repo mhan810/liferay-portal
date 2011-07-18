@@ -646,6 +646,7 @@ create table DLFolder (
 create table DeviceProfile (
 	uuid_ VARCHAR(75) null,
 	deviceProfileId LONG not null primary key,
+	groupId LONG,
 	name STRING null,
 	description STRING null
 );
@@ -653,6 +654,7 @@ create table DeviceProfile (
 create table DeviceProfileAction (
 	uuid_ VARCHAR(75) null,
 	deviceProfileActionId LONG not null primary key,
+	groupId LONG,
 	deviceProfileId LONG,
 	deviceProfileRuleId LONG,
 	name STRING null,
@@ -664,6 +666,7 @@ create table DeviceProfileAction (
 create table DeviceProfileRule (
 	uuid_ VARCHAR(75) null,
 	deviceProfileRuleId LONG not null primary key,
+	groupId LONG,
 	deviceProfileId LONG,
 	name STRING null,
 	description STRING null,

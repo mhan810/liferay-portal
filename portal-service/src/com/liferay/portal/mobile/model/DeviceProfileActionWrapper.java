@@ -91,6 +91,24 @@ public class DeviceProfileActionWrapper implements DeviceProfileAction {
 	}
 
 	/**
+	* Returns the group ID of this device profile action.
+	*
+	* @return the group ID of this device profile action
+	*/
+	public long getGroupId() {
+		return _deviceProfileAction.getGroupId();
+	}
+
+	/**
+	* Sets the group ID of this device profile action.
+	*
+	* @param groupId the group ID of this device profile action
+	*/
+	public void setGroupId(long groupId) {
+		_deviceProfileAction.setGroupId(groupId);
+	}
+
+	/**
 	* Returns the device profile ID of this device profile action.
 	*
 	* @return the device profile ID of this device profile action

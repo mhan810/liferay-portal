@@ -15,6 +15,7 @@
 package com.liferay.portal.mobile.service.base;
 
 import com.liferay.counter.service.CounterLocalService;
+
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.IdentifiableBean;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
@@ -62,7 +63,7 @@ import javax.sql.DataSource;
  */
 public abstract class DeviceProfileRuleLocalServiceBaseImpl
 	implements DeviceProfileRuleLocalService, IdentifiableBean {
-	/**
+	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never modify or reference this class directly. Always use {@link com.liferay.portal.mobile.service.DeviceProfileRuleLocalServiceUtil} to access the device profile rule local service.
@@ -234,6 +235,20 @@ public abstract class DeviceProfileRuleLocalServiceBaseImpl
 	public DeviceProfileRule getDeviceProfileRule(long deviceProfileRuleId)
 		throws PortalException, SystemException {
 		return deviceProfileRulePersistence.findByPrimaryKey(deviceProfileRuleId);
+	}
+
+	/**
+	 * Returns the device profile rule with the UUID in the group.
+	 *
+	 * @param uuid the UUID of device profile rule
+	 * @param groupId the group id of the device profile rule
+	 * @return the device profile rule
+	 * @throws PortalException if a device profile rule with the UUID in the group could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DeviceProfileRule getDeviceProfileRuleByUuidAndGroupId(String uuid,
+		long groupId) throws PortalException, SystemException {
+		return deviceProfileRulePersistence.findByUUID_G(uuid, groupId);
 	}
 
 	/**

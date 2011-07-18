@@ -37,7 +37,7 @@ import java.util.List;
  * @generated
  */
 public class DeviceProfileRuleUtil {
-	/**
+	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never modify this class directly. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
@@ -320,6 +320,51 @@ public class DeviceProfileRuleUtil {
 	}
 
 	/**
+	* Returns the device profile rule where uuid = &#63; and groupId = &#63; or throws a {@link com.liferay.portal.mobile.NoSuchProfileRuleException} if it could not be found.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @return the matching device profile rule
+	* @throws com.liferay.portal.mobile.NoSuchProfileRuleException if a matching device profile rule could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.mobile.model.DeviceProfileRule findByUUID_G(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portal.mobile.NoSuchProfileRuleException {
+		return getPersistence().findByUUID_G(uuid, groupId);
+	}
+
+	/**
+	* Returns the device profile rule where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @return the matching device profile rule, or <code>null</code> if a matching device profile rule could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.mobile.model.DeviceProfileRule fetchByUUID_G(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().fetchByUUID_G(uuid, groupId);
+	}
+
+	/**
+	* Returns the device profile rule where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @param retrieveFromCache whether to use the finder cache
+	* @return the matching device profile rule, or <code>null</code> if a matching device profile rule could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.mobile.model.DeviceProfileRule fetchByUUID_G(
+		java.lang.String uuid, long groupId, boolean retrieveFromCache)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().fetchByUUID_G(uuid, groupId, retrieveFromCache);
+	}
+
+	/**
 	* Returns all the device profile rules where deviceProfileId = &#63;.
 	*
 	* @param deviceProfileId the device profile ID
@@ -506,6 +551,19 @@ public class DeviceProfileRuleUtil {
 	}
 
 	/**
+	* Removes the device profile rule where uuid = &#63; and groupId = &#63; from the database.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void removeByUUID_G(java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portal.mobile.NoSuchProfileRuleException {
+		getPersistence().removeByUUID_G(uuid, groupId);
+	}
+
+	/**
 	* Removes all the device profile rules where deviceProfileId = &#63; from the database.
 	*
 	* @param deviceProfileId the device profile ID
@@ -539,6 +597,19 @@ public class DeviceProfileRuleUtil {
 	}
 
 	/**
+	* Returns the number of device profile rules where uuid = &#63; and groupId = &#63;.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @return the number of matching device profile rules
+	* @throws SystemException if a system exception occurred
+	*/
+	public static int countByUUID_G(java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().countByUUID_G(uuid, groupId);
+	}
+
+	/**
 	* Returns the number of device profile rules where deviceProfileId = &#63;.
 	*
 	* @param deviceProfileId the device profile ID
@@ -559,6 +630,98 @@ public class DeviceProfileRuleUtil {
 	public static int countAll()
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getPersistence().countAll();
+	}
+
+	/**
+	* Returns all the device profile actions associated with the device profile rule.
+	*
+	* @param pk the primary key of the device profile rule
+	* @return the device profile actions associated with the device profile rule
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<com.liferay.portal.mobile.model.DeviceProfileAction> getDeviceProfileActions(
+		long pk) throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().getDeviceProfileActions(pk);
+	}
+
+	/**
+	* Returns a range of all the device profile actions associated with the device profile rule.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param pk the primary key of the device profile rule
+	* @param start the lower bound of the range of device profile rules
+	* @param end the upper bound of the range of device profile rules (not inclusive)
+	* @return the range of device profile actions associated with the device profile rule
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<com.liferay.portal.mobile.model.DeviceProfileAction> getDeviceProfileActions(
+		long pk, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().getDeviceProfileActions(pk, start, end);
+	}
+
+	/**
+	* Returns an ordered range of all the device profile actions associated with the device profile rule.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param pk the primary key of the device profile rule
+	* @param start the lower bound of the range of device profile rules
+	* @param end the upper bound of the range of device profile rules (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of device profile actions associated with the device profile rule
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<com.liferay.portal.mobile.model.DeviceProfileAction> getDeviceProfileActions(
+		long pk, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .getDeviceProfileActions(pk, start, end, orderByComparator);
+	}
+
+	/**
+	* Returns the number of device profile actions associated with the device profile rule.
+	*
+	* @param pk the primary key of the device profile rule
+	* @return the number of device profile actions associated with the device profile rule
+	* @throws SystemException if a system exception occurred
+	*/
+	public static int getDeviceProfileActionsSize(long pk)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().getDeviceProfileActionsSize(pk);
+	}
+
+	/**
+	* Returns <code>true</code> if the device profile action is associated with the device profile rule.
+	*
+	* @param pk the primary key of the device profile rule
+	* @param deviceProfileActionPK the primary key of the device profile action
+	* @return <code>true</code> if the device profile action is associated with the device profile rule; <code>false</code> otherwise
+	* @throws SystemException if a system exception occurred
+	*/
+	public static boolean containsDeviceProfileAction(long pk,
+		long deviceProfileActionPK)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .containsDeviceProfileAction(pk, deviceProfileActionPK);
+	}
+
+	/**
+	* Returns <code>true</code> if the device profile rule has any device profile actions associated with it.
+	*
+	* @param pk the primary key of the device profile rule to check for associations with device profile actions
+	* @return <code>true</code> if the device profile rule has any device profile actions associated with it; <code>false</code> otherwise
+	* @throws SystemException if a system exception occurred
+	*/
+	public static boolean containsDeviceProfileActions(long pk)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().containsDeviceProfileActions(pk);
 	}
 
 	public static DeviceProfileRulePersistence getPersistence() {

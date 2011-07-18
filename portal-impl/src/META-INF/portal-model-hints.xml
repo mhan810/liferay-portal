@@ -2476,6 +2476,7 @@
 	<model name="com.liferay.portal.mobile.model.DeviceProfile">
 		<field name="uuid" type="String" />
 		<field name="deviceProfileId" type="long" />
+		<field name="groupId" type="long" />
 		<field name="name" type="String" localized="true">
 			<hint name="display-width">150</hint>
 			<hint name="max-length">255</hint>
@@ -2488,6 +2489,7 @@
 	<model name="com.liferay.portal.mobile.model.DeviceProfileAction">
 		<field name="uuid" type="String" />
 		<field name="deviceProfileActionId" type="long" />
+		<field name="groupId" type="long" />
 		<field name="deviceProfileId" type="long" />
 		<field name="deviceProfileRuleId" type="long" />
 		<field name="name" type="String" localized="true">
@@ -2508,6 +2510,7 @@
 	<model name="com.liferay.portal.mobile.model.DeviceProfileRule">
 		<field name="uuid" type="String" />
 		<field name="deviceProfileRuleId" type="long" />
+		<field name="groupId" type="long" />
 		<field name="deviceProfileId" type="long" />
 		<field name="name" type="String" localized="true">
 			<hint name="display-width">150</hint>

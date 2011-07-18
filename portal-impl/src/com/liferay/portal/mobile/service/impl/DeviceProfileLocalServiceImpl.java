@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.mobile.model.DeviceProfile;
 import com.liferay.portal.mobile.service.base.DeviceProfileLocalServiceBaseImpl;
 
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 
@@ -40,17 +41,25 @@ public class DeviceProfileLocalServiceImpl
 	extends DeviceProfileLocalServiceBaseImpl {
 
 	public DeviceProfile addDeviceProfile(
-			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap)
+			long groupId, Map<Locale, String> nameMap,
+			Map<Locale, String> descriptionMap)
 		throws PortalException, SystemException{
 
 		long deviceProfileId = counterLocalService.increment();
 
 		DeviceProfile deviceProfile = createDeviceProfile(deviceProfileId);
 
+		deviceProfile.setGroupId(groupId);
 		deviceProfile.setNameMap(nameMap);
 		deviceProfile.setDescriptionMap(descriptionMap);
 
 		return updateDeviceProfile(deviceProfile, false);
+	}
+
+	public int countByGroupId(long groupId)
+		throws SystemException {
+
+		return deviceProfilePersistence.countByGroupId(groupId);
 	}
 
 	@Override
@@ -75,9 +84,22 @@ public class DeviceProfileLocalServiceImpl
 		}
 	}
 
-	public DeviceProfile fetchByPrimaryKey(long deviceProfileId)
+	public DeviceProfile fetchDeviceProfile(long deviceProfileId)
 		throws SystemException {
 
 		return deviceProfilePersistence.fetchByPrimaryKey(deviceProfileId);
+	}
+
+	public Collection<DeviceProfile> findByGroupId(long groupId)
+		throws SystemException {
+
+		return deviceProfilePersistence.findByGroupId(groupId);
+	}
+
+	public Collection<DeviceProfile> findByGroupId(
+			long groupId, int start, int end)
+		throws SystemException {
+
+		return deviceProfilePersistence.findByGroupId(groupId, start, end);
 	}
 }

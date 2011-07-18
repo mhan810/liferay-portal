@@ -43,7 +43,7 @@ public class DeviceProfileActionLocalServiceImpl
 	extends DeviceProfileActionLocalServiceBaseImpl {
 
 	public DeviceProfileAction addDeviceProfileAction(
-			long deviceProfileId, long deviceProfileRuleId,
+			long groupId, long deviceProfileId, long deviceProfileRuleId,
 			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
 			String type, UnicodeProperties typeSettingsProperties)
 		throws PortalException, SystemException {
@@ -51,12 +51,12 @@ public class DeviceProfileActionLocalServiceImpl
 		String typeSettings = typeSettingsProperties.toString();
 
 		return addDeviceProfileAction(
-			deviceProfileId, deviceProfileRuleId, nameMap, descriptionMap, type,
-			typeSettings);
+			groupId, deviceProfileId, deviceProfileRuleId, nameMap,
+			descriptionMap, type, typeSettings);
 	}
 
 	public DeviceProfileAction addDeviceProfileAction(
-			long deviceProfileId, long deviceProfileRuleId,
+			long groupId, long deviceProfileId, long deviceProfileRuleId,
 			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
 			String type, String typeSettings)
 		throws PortalException, SystemException {
@@ -66,6 +66,7 @@ public class DeviceProfileActionLocalServiceImpl
 		DeviceProfileAction deviceProfileAction =
 			deviceProfileActionPersistence.create(deviceProfileActionId);
 
+		deviceProfileAction.setGroupId(groupId);
 		deviceProfileAction.setDeviceProfileId(deviceProfileId);
 		deviceProfileAction.setDeviceProfileRuleId(deviceProfileRuleId);
 		deviceProfileAction.setNameMap(nameMap);

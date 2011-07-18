@@ -70,7 +70,7 @@ import java.util.List;
  */
 public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<DeviceProfileRule>
 	implements DeviceProfileRulePersistence {
-	/**
+	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never modify or reference this class directly. Always use {@link DeviceProfileRuleUtil} to access the device profile rule persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
@@ -83,7 +83,7 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 			DeviceProfileRuleImpl.class, FINDER_CLASS_NAME_LIST, "findByUuid",
 			new String[] {
 				String.class.getName(),
-
+				
 			"java.lang.Integer", "java.lang.Integer",
 				"com.liferay.portal.kernel.util.OrderByComparator"
 			});
@@ -91,13 +91,22 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 			DeviceProfileRuleModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST, "countByUuid",
 			new String[] { String.class.getName() });
+	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DeviceProfileRuleModelImpl.ENTITY_CACHE_ENABLED,
+			DeviceProfileRuleModelImpl.FINDER_CACHE_ENABLED,
+			DeviceProfileRuleImpl.class, FINDER_CLASS_NAME_ENTITY,
+			"fetchByUUID_G",
+			new String[] { String.class.getName(), Long.class.getName() });
+	public static final FinderPath FINDER_PATH_COUNT_BY_UUID_G = new FinderPath(DeviceProfileRuleModelImpl.ENTITY_CACHE_ENABLED,
+			DeviceProfileRuleModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST, "countByUUID_G",
+			new String[] { String.class.getName(), Long.class.getName() });
 	public static final FinderPath FINDER_PATH_FIND_BY_DEVICEPROFILEID = new FinderPath(DeviceProfileRuleModelImpl.ENTITY_CACHE_ENABLED,
 			DeviceProfileRuleModelImpl.FINDER_CACHE_ENABLED,
 			DeviceProfileRuleImpl.class, FINDER_CLASS_NAME_LIST,
 			"findByDeviceProfileId",
 			new String[] {
 				Long.class.getName(),
-
+				
 			"java.lang.Integer", "java.lang.Integer",
 				"com.liferay.portal.kernel.util.OrderByComparator"
 			});
@@ -122,6 +131,12 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 		EntityCacheUtil.putResult(DeviceProfileRuleModelImpl.ENTITY_CACHE_ENABLED,
 			DeviceProfileRuleImpl.class, deviceProfileRule.getPrimaryKey(),
 			deviceProfileRule);
+
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
+			new Object[] {
+				deviceProfileRule.getUuid(),
+				Long.valueOf(deviceProfileRule.getGroupId())
+			}, deviceProfileRule);
 
 		deviceProfileRule.resetOriginalValues();
 	}
@@ -171,6 +186,12 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 	public void clearCache(DeviceProfileRule deviceProfileRule) {
 		EntityCacheUtil.removeResult(DeviceProfileRuleModelImpl.ENTITY_CACHE_ENABLED,
 			DeviceProfileRuleImpl.class, deviceProfileRule.getPrimaryKey());
+
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
+			new Object[] {
+				deviceProfileRule.getUuid(),
+				Long.valueOf(deviceProfileRule.getGroupId())
+			});
 	}
 
 	/**
@@ -281,6 +302,14 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
 
+		DeviceProfileRuleModelImpl deviceProfileRuleModelImpl = (DeviceProfileRuleModelImpl)deviceProfileRule;
+
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
+			new Object[] {
+				deviceProfileRuleModelImpl.getUuid(),
+				Long.valueOf(deviceProfileRuleModelImpl.getGroupId())
+			});
+
 		EntityCacheUtil.removeResult(DeviceProfileRuleModelImpl.ENTITY_CACHE_ENABLED,
 			DeviceProfileRuleImpl.class, deviceProfileRule.getPrimaryKey());
 
@@ -292,6 +321,10 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 		com.liferay.portal.mobile.model.DeviceProfileRule deviceProfileRule,
 		boolean merge) throws SystemException {
 		deviceProfileRule = toUnwrappedModel(deviceProfileRule);
+
+		boolean isNew = deviceProfileRule.isNew();
+
+		DeviceProfileRuleModelImpl deviceProfileRuleModelImpl = (DeviceProfileRuleModelImpl)deviceProfileRule;
 
 		if (Validator.isNull(deviceProfileRule.getUuid())) {
 			String uuid = PortalUUIDUtil.generate();
@@ -321,6 +354,29 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 			DeviceProfileRuleImpl.class, deviceProfileRule.getPrimaryKey(),
 			deviceProfileRule);
 
+		if (!isNew &&
+				(!Validator.equals(deviceProfileRule.getUuid(),
+					deviceProfileRuleModelImpl.getOriginalUuid()) ||
+				(deviceProfileRule.getGroupId() != deviceProfileRuleModelImpl.getOriginalGroupId()))) {
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
+				new Object[] {
+					deviceProfileRuleModelImpl.getOriginalUuid(),
+					Long.valueOf(
+						deviceProfileRuleModelImpl.getOriginalGroupId())
+				});
+		}
+
+		if (isNew ||
+				(!Validator.equals(deviceProfileRule.getUuid(),
+					deviceProfileRuleModelImpl.getOriginalUuid()) ||
+				(deviceProfileRule.getGroupId() != deviceProfileRuleModelImpl.getOriginalGroupId()))) {
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
+				new Object[] {
+					deviceProfileRule.getUuid(),
+					Long.valueOf(deviceProfileRule.getGroupId())
+				}, deviceProfileRule);
+		}
+
 		return deviceProfileRule;
 	}
 
@@ -337,6 +393,7 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 
 		deviceProfileRuleImpl.setUuid(deviceProfileRule.getUuid());
 		deviceProfileRuleImpl.setDeviceProfileRuleId(deviceProfileRule.getDeviceProfileRuleId());
+		deviceProfileRuleImpl.setGroupId(deviceProfileRule.getGroupId());
 		deviceProfileRuleImpl.setDeviceProfileId(deviceProfileRule.getDeviceProfileId());
 		deviceProfileRuleImpl.setName(deviceProfileRule.getName());
 		deviceProfileRuleImpl.setDescription(deviceProfileRule.getDescription());
@@ -495,7 +552,7 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 		OrderByComparator orderByComparator) throws SystemException {
 		Object[] finderArgs = new Object[] {
 				uuid,
-
+				
 				String.valueOf(start), String.valueOf(end),
 				String.valueOf(orderByComparator)
 			};
@@ -804,6 +861,158 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 	}
 
 	/**
+	 * Returns the device profile rule where uuid = &#63; and groupId = &#63; or throws a {@link com.liferay.portal.mobile.NoSuchProfileRuleException} if it could not be found.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @return the matching device profile rule
+	 * @throws com.liferay.portal.mobile.NoSuchProfileRuleException if a matching device profile rule could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DeviceProfileRule findByUUID_G(String uuid, long groupId)
+		throws NoSuchProfileRuleException, SystemException {
+		DeviceProfileRule deviceProfileRule = fetchByUUID_G(uuid, groupId);
+
+		if (deviceProfileRule == null) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("uuid=");
+			msg.append(uuid);
+
+			msg.append(", groupId=");
+			msg.append(groupId);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(msg.toString());
+			}
+
+			throw new NoSuchProfileRuleException(msg.toString());
+		}
+
+		return deviceProfileRule;
+	}
+
+	/**
+	 * Returns the device profile rule where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @return the matching device profile rule, or <code>null</code> if a matching device profile rule could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DeviceProfileRule fetchByUUID_G(String uuid, long groupId)
+		throws SystemException {
+		return fetchByUUID_G(uuid, groupId, true);
+	}
+
+	/**
+	 * Returns the device profile rule where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @param retrieveFromCache whether to use the finder cache
+	 * @return the matching device profile rule, or <code>null</code> if a matching device profile rule could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DeviceProfileRule fetchByUUID_G(String uuid, long groupId,
+		boolean retrieveFromCache) throws SystemException {
+		Object[] finderArgs = new Object[] { uuid, groupId };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_UUID_G,
+					finderArgs, this);
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_SELECT_DEVICEPROFILERULE_WHERE);
+
+			if (uuid == null) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
+			}
+			else {
+				if (uuid.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (uuid != null) {
+					qPos.add(uuid);
+				}
+
+				qPos.add(groupId);
+
+				List<DeviceProfileRule> list = q.list();
+
+				result = list;
+
+				DeviceProfileRule deviceProfileRule = null;
+
+				if (list.isEmpty()) {
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
+						finderArgs, list);
+				}
+				else {
+					deviceProfileRule = list.get(0);
+
+					cacheResult(deviceProfileRule);
+
+					if ((deviceProfileRule.getUuid() == null) ||
+							!deviceProfileRule.getUuid().equals(uuid) ||
+							(deviceProfileRule.getGroupId() != groupId)) {
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
+							finderArgs, deviceProfileRule);
+					}
+				}
+
+				return deviceProfileRule;
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (result == null) {
+					FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
+						finderArgs);
+				}
+
+				closeSession(session);
+			}
+		}
+		else {
+			if (result instanceof List<?>) {
+				return null;
+			}
+			else {
+				return (DeviceProfileRule)result;
+			}
+		}
+	}
+
+	/**
 	 * Returns all the device profile rules where deviceProfileId = &#63;.
 	 *
 	 * @param deviceProfileId the device profile ID
@@ -853,7 +1062,7 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 		throws SystemException {
 		Object[] finderArgs = new Object[] {
 				deviceProfileId,
-
+				
 				String.valueOf(start), String.valueOf(end),
 				String.valueOf(orderByComparator)
 			};
@@ -1261,6 +1470,20 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 	}
 
 	/**
+	 * Removes the device profile rule where uuid = &#63; and groupId = &#63; from the database.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByUUID_G(String uuid, long groupId)
+		throws NoSuchProfileRuleException, SystemException {
+		DeviceProfileRule deviceProfileRule = findByUUID_G(uuid, groupId);
+
+		deviceProfileRulePersistence.remove(deviceProfileRule);
+	}
+
+	/**
 	 * Removes all the device profile rules where deviceProfileId = &#63; from the database.
 	 *
 	 * @param deviceProfileId the device profile ID
@@ -1341,6 +1564,77 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 				}
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID,
+					finderArgs, count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of device profile rules where uuid = &#63; and groupId = &#63;.
+	 *
+	 * @param uuid the uuid
+	 * @param groupId the group ID
+	 * @return the number of matching device profile rules
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByUUID_G(String uuid, long groupId)
+		throws SystemException {
+		Object[] finderArgs = new Object[] { uuid, groupId };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_UUID_G,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_DEVICEPROFILERULE_WHERE);
+
+			if (uuid == null) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
+			}
+			else {
+				if (uuid.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (uuid != null) {
+					qPos.add(uuid);
+				}
+
+				qPos.add(groupId);
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G,
 					finderArgs, count);
 
 				closeSession(session);
@@ -1760,6 +2054,10 @@ public class DeviceProfileRulePersistenceImpl extends BasePersistenceImpl<Device
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "deviceProfileRule.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "deviceProfileRule.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(deviceProfileRule.uuid IS NULL OR deviceProfileRule.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "deviceProfileRule.uuid IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "deviceProfileRule.uuid = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(deviceProfileRule.uuid IS NULL OR deviceProfileRule.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "deviceProfileRule.groupId = ?";
 	private static final String _FINDER_COLUMN_DEVICEPROFILEID_DEVICEPROFILEID_2 =
 		"deviceProfileRule.deviceProfileId = ?";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "deviceProfileRule.";

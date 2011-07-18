@@ -26,12 +26,17 @@
 
         <!-- Other fields -->
 
+        <column name="groupId" type="long" />
         <column name="name" type="String" localized="true" />
         <column name="description" type="String" localized="true" />
 
 		<!-- Relationships -->
 
 		<column name="deviceProfileRules" type="Collection" entity="DeviceProfileRule" mapping-key="deviceProfileId" />
+
+        <finder name="GroupId" return-type="Collection">
+            <finder-column name="groupId"></finder-column>
+        </finder>
 	</entity>
     <entity name="DeviceProfileRule" local-service="true" remote-service="false" uuid="true">
 
@@ -41,6 +46,7 @@
 
         <!-- Other fields -->
 
+        <column name="groupId" type="long" />
         <column name="deviceProfileId" type="long" />
         <column name="name" type="String" localized="true" />
         <column name="description" type="String" localized="true" />
@@ -65,6 +71,7 @@
 
         <!-- Other fields -->
 
+        <column name="groupId" type="long" />
         <column name="deviceProfileId" type="long" />
         <column name="deviceProfileRuleId" type="long" />
         <column name="name" type="String"  localized="true" />

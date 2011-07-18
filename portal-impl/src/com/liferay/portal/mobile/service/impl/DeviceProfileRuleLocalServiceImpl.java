@@ -43,7 +43,7 @@ public class DeviceProfileRuleLocalServiceImpl
 	extends DeviceProfileRuleLocalServiceBaseImpl {
 
 	public DeviceProfileRule addDeviceProfileRule(
-			long deviceProfileId, Map<Locale, String> nameMap,
+			long groupId, long deviceProfileId, Map<Locale, String> nameMap,
 			Map<Locale, String> descriptionMap, String rule,
 			UnicodeProperties ruleTypeSettingsProperties)
 		throws PortalException, SystemException {
@@ -51,12 +51,12 @@ public class DeviceProfileRuleLocalServiceImpl
 		String ruleTypeSettings = ruleTypeSettingsProperties.toString();
 
 		return addDeviceProfileRule(
-			deviceProfileId, nameMap, descriptionMap, rule,
+			groupId, deviceProfileId, nameMap, descriptionMap, rule,
 			ruleTypeSettings);
 	}
 
 	public DeviceProfileRule addDeviceProfileRule(
-			long deviceProfileId, Map<Locale, String> nameMap,
+			long groupId, long deviceProfileId, Map<Locale, String> nameMap,
 			Map<Locale, String> descriptionMap, String rule,
 			String ruleTypeSettings)
 		throws PortalException, SystemException {
@@ -66,9 +66,10 @@ public class DeviceProfileRuleLocalServiceImpl
 		DeviceProfileRule deviceProfileRule =
 			deviceProfileRulePersistence.create(deviceProfileRuleId);
 
+		deviceProfileRule.setGroupId(groupId);
+		deviceProfileRule.setDeviceProfileId(deviceProfileId);
 		deviceProfileRule.setNameMap(nameMap);
 		deviceProfileRule.setDescriptionMap(descriptionMap);
-		deviceProfileRule.setDeviceProfileId(deviceProfileId);
 		deviceProfileRule.setDeviceProfileRuleId(deviceProfileRuleId);
 		deviceProfileRule.setRuleType(rule);
 		deviceProfileRule.setRuleTypeSettings(ruleTypeSettings);

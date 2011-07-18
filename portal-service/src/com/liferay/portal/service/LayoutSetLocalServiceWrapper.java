@@ -248,8 +248,7 @@ public class LayoutSetLocalServiceWrapper implements LayoutSetLocalService {
 		_layoutSetLocalService.deleteLayoutSet(groupId, privateLayout);
 	}
 
-	public com.liferay.portal.model.LayoutSet fetchLayoutSet(
-		long layoutSetId)
+	public com.liferay.portal.model.LayoutSet fetchLayoutSet(long layoutSetId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _layoutSetLocalService.fetchLayoutSet(layoutSetId);
 	}

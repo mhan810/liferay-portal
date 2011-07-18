@@ -221,13 +221,17 @@ create index IX_EE29C715 on DLFolder (repositoryId);
 create index IX_CBC408D8 on DLFolder (uuid_);
 create unique index IX_3CC1DED2 on DLFolder (uuid_, groupId);
 
+create index IX_CB0CA771 on DeviceProfile (groupId);
 create index IX_3B57623B on DeviceProfile (uuid_);
+create unique index IX_A34964CF on DeviceProfile (uuid_, groupId);
 
 create index IX_458380AB on DeviceProfileAction (deviceProfileRuleId);
 create index IX_B7ADFAE5 on DeviceProfileAction (uuid_);
+create unique index IX_7BA2EB65 on DeviceProfileAction (uuid_, groupId);
 
 create index IX_9AC1B149 on DeviceProfileRule (deviceProfileId);
 create index IX_F560C81F on DeviceProfileRule (uuid_);
+create unique index IX_AE6A5F6B on DeviceProfileRule (uuid_, groupId);
 
 create index IX_1BB072CA on EmailAddress (companyId);
 create index IX_49D2DEC4 on EmailAddress (companyId, classNameId);

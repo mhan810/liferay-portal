@@ -37,7 +37,7 @@ import java.util.List;
  * @generated
  */
 public class DeviceProfileActionUtil {
-	/**
+	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never modify this class directly. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
@@ -321,6 +321,51 @@ public class DeviceProfileActionUtil {
 	}
 
 	/**
+	* Returns the device profile action where uuid = &#63; and groupId = &#63; or throws a {@link com.liferay.portal.mobile.NoSuchProfileActionException} if it could not be found.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @return the matching device profile action
+	* @throws com.liferay.portal.mobile.NoSuchProfileActionException if a matching device profile action could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.mobile.model.DeviceProfileAction findByUUID_G(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portal.mobile.NoSuchProfileActionException {
+		return getPersistence().findByUUID_G(uuid, groupId);
+	}
+
+	/**
+	* Returns the device profile action where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @return the matching device profile action, or <code>null</code> if a matching device profile action could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.mobile.model.DeviceProfileAction fetchByUUID_G(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().fetchByUUID_G(uuid, groupId);
+	}
+
+	/**
+	* Returns the device profile action where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @param retrieveFromCache whether to use the finder cache
+	* @return the matching device profile action, or <code>null</code> if a matching device profile action could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.mobile.model.DeviceProfileAction fetchByUUID_G(
+		java.lang.String uuid, long groupId, boolean retrieveFromCache)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().fetchByUUID_G(uuid, groupId, retrieveFromCache);
+	}
+
+	/**
 	* Returns all the device profile actions where deviceProfileRuleId = &#63;.
 	*
 	* @param deviceProfileRuleId the device profile rule ID
@@ -507,6 +552,19 @@ public class DeviceProfileActionUtil {
 	}
 
 	/**
+	* Removes the device profile action where uuid = &#63; and groupId = &#63; from the database.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void removeByUUID_G(java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portal.mobile.NoSuchProfileActionException {
+		getPersistence().removeByUUID_G(uuid, groupId);
+	}
+
+	/**
 	* Removes all the device profile actions where deviceProfileRuleId = &#63; from the database.
 	*
 	* @param deviceProfileRuleId the device profile rule ID
@@ -537,6 +595,19 @@ public class DeviceProfileActionUtil {
 	public static int countByUuid(java.lang.String uuid)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getPersistence().countByUuid(uuid);
+	}
+
+	/**
+	* Returns the number of device profile actions where uuid = &#63; and groupId = &#63;.
+	*
+	* @param uuid the uuid
+	* @param groupId the group ID
+	* @return the number of matching device profile actions
+	* @throws SystemException if a system exception occurred
+	*/
+	public static int countByUUID_G(java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().countByUUID_G(uuid, groupId);
 	}
 
 	/**

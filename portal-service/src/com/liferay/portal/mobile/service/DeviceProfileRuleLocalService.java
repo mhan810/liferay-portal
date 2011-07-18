@@ -36,7 +36,7 @@ import com.liferay.portal.kernel.transaction.Transactional;
 @Transactional(isolation = Isolation.PORTAL, rollbackFor =  {
 	PortalException.class, SystemException.class})
 public interface DeviceProfileRuleLocalService {
-	/**
+	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never modify or reference this interface directly. Always use {@link DeviceProfileRuleLocalServiceUtil} to access the device profile rule local service. Add custom service methods to {@link com.liferay.portal.mobile.service.impl.DeviceProfileRuleLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
@@ -160,6 +160,21 @@ public interface DeviceProfileRuleLocalService {
 			com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns the device profile rule with the UUID in the group.
+	*
+	* @param uuid the UUID of device profile rule
+	* @param groupId the group id of the device profile rule
+	* @return the device profile rule
+	* @throws PortalException if a device profile rule with the UUID in the group could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portal.mobile.model.DeviceProfileRule getDeviceProfileRuleByUuidAndGroupId(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Returns a range of all the device profile rules.
 	*
 	* <p>
@@ -225,7 +240,7 @@ public interface DeviceProfileRuleLocalService {
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
 	public com.liferay.portal.mobile.model.DeviceProfileRule addDeviceProfileRule(
-		long deviceProfileId,
+		long groupId, long deviceProfileId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		java.lang.String rule,
@@ -234,7 +249,7 @@ public interface DeviceProfileRuleLocalService {
 			com.liferay.portal.kernel.exception.SystemException;
 
 	public com.liferay.portal.mobile.model.DeviceProfileRule addDeviceProfileRule(
-		long deviceProfileId,
+		long groupId, long deviceProfileId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		java.lang.String rule, java.lang.String ruleTypeSettings)
