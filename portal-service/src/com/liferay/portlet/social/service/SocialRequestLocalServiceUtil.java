@@ -348,6 +348,13 @@ public class SocialRequestLocalServiceUtil {
 		return getService().getUserRequestsCount(userId, status);
 	}
 
+	public static com.liferay.portlet.social.model.SocialRequest getRequest(
+		long requestId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().getRequest(requestId);
+	}
+
 	public static boolean hasRequest(long userId, java.lang.String className,
 		long classPK, int type, int status)
 		throws com.liferay.portal.kernel.exception.SystemException {
