@@ -34,6 +34,14 @@ public interface Channel {
 	public void confirmDelivery(String notificationEventUuid)
 		throws ChannelException;
 
+	public void confirmDelivery(Collection<String> notificationEventUuids,
+			boolean archived)
+		throws ChannelException;
+
+	public void confirmDelivery(String notificationEventUuid,
+			boolean archived)
+		throws ChannelException;
+
 	public void flush() throws ChannelException;
 
 	public void flush(long timestamp) throws ChannelException;

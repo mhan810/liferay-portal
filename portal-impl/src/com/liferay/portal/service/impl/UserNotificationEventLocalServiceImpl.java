@@ -47,12 +47,13 @@ public class UserNotificationEventLocalServiceImpl
 		return addUserNotificationEvent(
 			userId, notificationEvent.getType(),
 			notificationEvent.getTimestamp(), notificationEvent.getDeliverBy(),
-			payloadJSONObject.toString(), serviceContext);
+			payloadJSONObject.toString(), notificationEvent.isArchived(),
+			serviceContext);
 	}
 
 	public UserNotificationEvent addUserNotificationEvent(
 			long userId, String type, long timestamp, long deliverBy,
-			String payload, ServiceContext serviceContext)
+			String payload, boolean archived, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
@@ -69,6 +70,7 @@ public class UserNotificationEventLocalServiceImpl
 		userNotificationEvent.setTimestamp(timestamp);
 		userNotificationEvent.setDeliverBy(deliverBy);
 		userNotificationEvent.setPayload(payload);
+		userNotificationEvent.setArchived(archived);
 
 		userNotificationEventPersistence.update(userNotificationEvent, false);
 
@@ -110,6 +112,58 @@ public class UserNotificationEventLocalServiceImpl
 		throws SystemException {
 
 		return userNotificationEventPersistence.findByUserId(userId);
+	}
+
+	public List<UserNotificationEvent> getUserNotificationEvents(
+			long userId, boolean archived)
+		throws SystemException {
+
+		return userNotificationEventPersistence.findByU_A(userId, archived);
+	}
+
+	public List<UserNotificationEvent> getUserNotificationEvents(
+			long userId, boolean archived, int start, int end)
+		throws SystemException {
+
+		return userNotificationEventPersistence.findByU_A(
+			userId, archived, start, end);
+	}
+
+	public UserNotificationEvent updateUserNotificationEvent(
+			NotificationEvent notificationEvent)
+		throws PortalException, SystemException {
+
+		JSONObject payloadJSONObject = notificationEvent.getPayload();
+
+		return updateUserNotificationEvent(
+			notificationEvent.getUuid(), notificationEvent.getType(),
+			notificationEvent.getDeliverBy(), payloadJSONObject.toString(),
+			notificationEvent.isArchived());
+	}
+
+	public UserNotificationEvent updateUserNotificationEvent(
+			String uuid, String type, long deliverBy, String payload,
+			boolean archived)
+		throws PortalException, SystemException {
+
+		List<UserNotificationEvent> userNotificationEvents =
+			userNotificationEventPersistence.findByUuid(uuid);
+
+		UserNotificationEvent userNotificationEvent = null;
+
+		if (!userNotificationEvents.isEmpty()) {
+			userNotificationEvent = userNotificationEvents.get(0);
+
+			userNotificationEvent.setType(type);
+			userNotificationEvent.setDeliverBy(deliverBy);
+			userNotificationEvent.setPayload(payload);
+			userNotificationEvent.setArchived(archived);
+
+			userNotificationEventPersistence.update(
+				userNotificationEvent, false);
+		}
+
+		return userNotificationEvent;
 	}
 
 }

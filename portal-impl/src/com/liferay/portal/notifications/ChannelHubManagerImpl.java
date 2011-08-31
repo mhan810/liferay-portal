@@ -39,9 +39,17 @@ public class ChannelHubManagerImpl implements ChannelHubManager {
 			long companyId, long userId, String notificationEventUuid)
 		throws ChannelException {
 
+		confirmDelivery(companyId, userId, notificationEventUuid, false);
+	}
+
+	public void confirmDelivery(
+			long companyId, long userId, String notificationEventUuid,
+			boolean archived)
+		throws ChannelException {
+
 		ChannelHub channelHub = getChannelHub(companyId);
 
-		channelHub.confirmDelivery(userId, notificationEventUuid);
+		channelHub.confirmDelivery(userId, notificationEventUuid, archived);
 	}
 
 	public Channel createChannel(long companyId, long userId)

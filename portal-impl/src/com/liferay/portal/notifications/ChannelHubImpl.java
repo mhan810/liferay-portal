@@ -64,17 +64,32 @@ public class ChannelHubImpl implements ChannelHub {
 			long userId, Collection<String> notificationEventUuids)
 		throws ChannelException {
 
-		Channel channel = getChannel(userId);
-
-		channel.confirmDelivery(notificationEventUuids);
+		confirmDelivery(userId, notificationEventUuids, false);
 	}
 
 	public void confirmDelivery(long userId, String notificationEventUuid)
 		throws ChannelException {
 
+		confirmDelivery(userId, notificationEventUuid, false);
+	}
+
+	public void confirmDelivery(
+			long userId, Collection<String> notificationEventUuids,
+			boolean archived)
+		throws ChannelException {
+
 		Channel channel = getChannel(userId);
 
-		channel.confirmDelivery(notificationEventUuid);
+		channel.confirmDelivery(notificationEventUuids, archived);
+	}
+
+	public void confirmDelivery(long userId, String notificationEventUuid,
+			boolean archived)
+		throws ChannelException {
+
+		Channel channel = getChannel(userId);
+
+		channel.confirmDelivery(notificationEventUuid, archived);
 	}
 
 	public Channel createChannel(long userId) throws ChannelException {
@@ -216,7 +231,7 @@ public class ChannelHubImpl implements ChannelHub {
 			long userId, NotificationEvent notificationEvent)
 		throws ChannelException {
 
-		Channel channel = getChannel(userId);
+		Channel channel = getChannel(userId, true);
 
 		channel.sendNotificationEvent(notificationEvent);
 	}

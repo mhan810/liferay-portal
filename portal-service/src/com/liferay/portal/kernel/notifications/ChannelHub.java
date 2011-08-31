@@ -35,6 +35,15 @@ public interface ChannelHub {
 	public void confirmDelivery(long userId, String notificationEventUuid)
 		throws ChannelException;
 
+	public void confirmDelivery(
+			long userId, Collection<String> notificationEventUuids,
+			boolean archived)
+		throws ChannelException;
+
+	public void confirmDelivery(long userId, String notificationEventUuid,
+			boolean archived)
+		throws ChannelException;
+
 	public Channel createChannel(long userId) throws ChannelException;
 
 	public void destroy() throws ChannelException;

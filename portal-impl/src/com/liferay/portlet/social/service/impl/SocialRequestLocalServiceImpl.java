@@ -163,6 +163,12 @@ public class SocialRequestLocalServiceImpl
 		return socialRequestPersistence.countByU_S(userId, status);
 	}
 
+	public SocialRequest getRequest(long requestId)
+		throws PortalException, SystemException {
+
+		return socialRequestPersistence.findByPrimaryKey(requestId);
+	}
+
 	public boolean hasRequest(
 			long userId, String className, long classPK, int type, int status)
 		throws SystemException {
