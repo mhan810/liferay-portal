@@ -44,12 +44,12 @@ public class ChannelHubManagerImpl implements ChannelHubManager {
 
 	public void confirmDelivery(
 			long companyId, long userId, String notificationEventUuid,
-			boolean archived)
+			boolean archive)
 		throws ChannelException {
 
 		ChannelHub channelHub = getChannelHub(companyId);
 
-		channelHub.confirmDelivery(userId, notificationEventUuid, archived);
+		channelHub.confirmDelivery(userId, notificationEventUuid, archive);
 	}
 
 	public Channel createChannel(long companyId, long userId)
@@ -79,6 +79,26 @@ public class ChannelHubManagerImpl implements ChannelHubManager {
 		ChannelHub channelHub = getChannelHub(companyId);
 
 		channelHub.destroyChannel(userId);
+	}
+
+	public void deleteUserNotificiationEvent(
+			long companyId, long userId, String notificationEventUuid)
+		throws ChannelException {
+
+		ChannelHub channelHub = getChannelHub(companyId);
+
+		channelHub.deleteUserNotificiationEvent(userId, notificationEventUuid);
+	}
+
+	public void deleteUserNotificiationEvents(
+			long companyId, long userId,
+			Collection<String> notificationEventUuids)
+		throws ChannelException {
+
+		ChannelHub channelHub = getChannelHub(companyId);
+
+		channelHub.deleteUserNotificiationEvents(
+			userId, notificationEventUuids);
 	}
 
 	public void destroyChannelHub(long companyId) throws ChannelException {

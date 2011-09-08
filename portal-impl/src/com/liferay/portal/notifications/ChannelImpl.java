@@ -45,6 +45,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Edward Han
  * @author Brian Wing Shun Chan
+ * @author Jonathan Lee
  */
 public class ChannelImpl extends BaseChannelImpl {
 
@@ -74,7 +75,7 @@ public class ChannelImpl extends BaseChannelImpl {
 	}
 
 	public void confirmDelivery(
-			Collection<String> notificationEventUuids, boolean archived)
+			Collection<String> notificationEventUuids, boolean archive)
 		throws ChannelException {
 
 		_reentrantLock.lock();
@@ -84,25 +85,18 @@ public class ChannelImpl extends BaseChannelImpl {
 				Map<String, NotificationEvent> unconfirmedNotificationEvents =
 					_getUnconfirmedNotificationEvents();
 
-				NotificationEvent notificationEvent =
-					unconfirmedNotificationEvents.remove(notificationEventUuid);
-
-				if (PropsValues.USER_NOTIFICATION_EVENT_CONFIRMATION_ENABLED &&
-					(notificationEvent != null) &&
-					archived) {
-
-					notificationEvent.setArchived(true);
-
-					UserNotificationEventLocalServiceUtil.
-						updateUserNotificationEvent(notificationEvent);
-				}
+				unconfirmedNotificationEvents.remove(notificationEventUuid);
 			}
 
-			if (PropsValues.USER_NOTIFICATION_EVENT_CONFIRMATION_ENABLED &&
-				!archived) {
-
-				UserNotificationEventLocalServiceUtil.
-					deleteUserNotificationEvents(notificationEventUuids);
+			if (PropsValues.USER_NOTIFICATION_EVENT_CONFIRMATION_ENABLED) {
+				if (archive) {
+					UserNotificationEventLocalServiceUtil.
+						updateUserNotificationEvent(notificationEventUuids);
+				}
+				else {
+					UserNotificationEventLocalServiceUtil.
+						deleteUserNotificationEvents(notificationEventUuids);
+				}
 			}
 		}
 		catch (Exception e) {
@@ -114,7 +108,7 @@ public class ChannelImpl extends BaseChannelImpl {
 		}
 	}
 
-	public void confirmDelivery(String notificationEventUuid, boolean archived)
+	public void confirmDelivery(String notificationEventUuid, boolean archive)
 		throws ChannelException {
 
 		_reentrantLock.lock();
@@ -123,28 +117,63 @@ public class ChannelImpl extends BaseChannelImpl {
 			Map<String, NotificationEvent> unconfirmedNotificationEvents =
 				_getUnconfirmedNotificationEvents();
 
-			NotificationEvent notificationEvent =
 				unconfirmedNotificationEvents.remove(notificationEventUuid);
 
 			if (PropsValues.USER_NOTIFICATION_EVENT_CONFIRMATION_ENABLED &&
 				(notificationEvent != null)) {
 
-				if (archived) {
-					notificationEvent.setArchived(true);
-
+				if (archive) {
 					UserNotificationEventLocalServiceUtil.
-						updateUserNotificationEvent(notificationEvent);
+						updateUserNotificationEvent(notificationEventUuid);
 				}
 				else {
 					UserNotificationEventLocalServiceUtil.
-						deleteUserNotificationEvent(
-							notificationEvent.getUuid());
+						deleteUserNotificationEvent(notificationEventUuid);
 				}
 			}
 		}
 		catch (Exception e) {
 			throw new ChannelException(
 				"Uanble to confirm delivery for " + notificationEventUuid , e);
+		}
+		finally {
+			_reentrantLock.unlock();
+		}
+	}
+
+	public void deleteUserNotificiationEvent (String notificationEventUuid)
+		throws ChannelException {
+
+		_reentrantLock.lock();
+
+		try {
+			UserNotificationEventLocalServiceUtil.
+				deleteUserNotificationEvent(notificationEventUuid);
+		}
+		catch (Exception e) {
+			throw new ChannelException(
+				"Uanble to delete Notification for " + notificationEventUuid ,
+				e);
+		}
+		finally {
+			_reentrantLock.unlock();
+		}
+	}
+
+	public void deleteUserNotificiationEvents (
+			Collection<String> notificationEventUuids)
+		throws ChannelException {
+
+		_reentrantLock.lock();
+
+		try {
+			UserNotificationEventLocalServiceUtil.
+				deleteUserNotificationEvent(notificationEventUuids);
+		}
+		catch (Exception e) {
+			throw new ChannelException(
+				"Uanble to delete Notifications for user " + getUserId() ,
+				e);
 		}
 		finally {
 			_reentrantLock.unlock();

@@ -130,20 +130,7 @@ public class UserNotificationEventLocalServiceImpl
 	}
 
 	public UserNotificationEvent updateUserNotificationEvent(
-			NotificationEvent notificationEvent)
-		throws PortalException, SystemException {
-
-		JSONObject payloadJSONObject = notificationEvent.getPayload();
-
-		return updateUserNotificationEvent(
-			notificationEvent.getUuid(), notificationEvent.getType(),
-			notificationEvent.getDeliverBy(), payloadJSONObject.toString(),
-			notificationEvent.isArchived());
-	}
-
-	public UserNotificationEvent updateUserNotificationEvent(
-			String uuid, String type, long deliverBy, String payload,
-			boolean archived)
+			String uuid, boolean archive)
 		throws PortalException, SystemException {
 
 		List<UserNotificationEvent> userNotificationEvents =
@@ -154,16 +141,28 @@ public class UserNotificationEventLocalServiceImpl
 		if (!userNotificationEvents.isEmpty()) {
 			userNotificationEvent = userNotificationEvents.get(0);
 
-			userNotificationEvent.setType(type);
-			userNotificationEvent.setDeliverBy(deliverBy);
-			userNotificationEvent.setPayload(payload);
-			userNotificationEvent.setArchived(archived);
+			userNotificationEvent.setArchived(archive);
 
 			userNotificationEventPersistence.update(
 				userNotificationEvent, false);
 		}
 
 		return userNotificationEvent;
+	}
+
+	public List<UserNotificationEvent> updateUserNotificationEvents(
+			Collection<String> uuids, boolean archive)
+		throws PortalException, SystemException {
+
+		List<UserNotificationEvent> userNotificationEvents =
+			new ArrayList<UserNotificationEvent>();
+
+		for (String uuid : uuids) {
+			userNotificationEvents.add(
+				updateUserNotificationEvent(uuid, archive));
+		}
+
+		return userNotificationEvents;
 	}
 
 }
