@@ -124,12 +124,42 @@ public class MDRActionLocalServiceImpl extends MDRActionLocalServiceBaseImpl {
 			classNameId, classPK, start, end);
 	}
 
+	public List<MDRAction> getActions(
+			String className, long classPK, long ruleGroupId)
+		throws SystemException {
+
+		long classNameId = PortalUtil.getClassNameId(className);
+
+		return mdrActionPersistence.findByC_C_R(
+			classNameId, classPK, ruleGroupId);
+	}
+
+	public List<MDRAction> getActions(
+			String className, long classPK, long ruleGroupId, int start,
+			int end)
+		throws SystemException {
+
+		long classNameId = PortalUtil.getClassNameId(className);
+
+		return mdrActionPersistence.findByC_C_R(
+			classNameId, classPK, ruleGroupId, start, end);
+	}
+
 	public int getActionsCount(String className, long classPK)
 		throws SystemException {
 
 		long classNameId = PortalUtil.getClassNameId(className);
 
 		return mdrActionPersistence.countByC_C(classNameId, classPK);
+	}
+
+	public int getActionsCount(String className, long classPK, long ruleGroupId)
+		throws SystemException {
+
+		long classNameId = PortalUtil.getClassNameId(className);
+
+		return mdrActionPersistence.countByC_C_R(
+			classNameId, classPK, ruleGroupId);
 	}
 
 	public MDRAction updateAction(

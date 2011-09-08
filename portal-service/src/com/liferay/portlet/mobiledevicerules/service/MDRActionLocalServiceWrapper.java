@@ -325,9 +325,29 @@ public class MDRActionLocalServiceWrapper implements MDRActionLocalService {
 		return _mdrActionLocalService.getActions(className, classPK, start, end);
 	}
 
+	public java.util.List<com.liferay.portlet.mobiledevicerules.model.MDRAction> getActions(
+		java.lang.String className, long classPK, long ruleGroupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _mdrActionLocalService.getActions(className, classPK, ruleGroupId);
+	}
+
+	public java.util.List<com.liferay.portlet.mobiledevicerules.model.MDRAction> getActions(
+		java.lang.String className, long classPK, long ruleGroupId, int start,
+		int end) throws com.liferay.portal.kernel.exception.SystemException {
+		return _mdrActionLocalService.getActions(className, classPK,
+			ruleGroupId, start, end);
+	}
+
 	public int getActionsCount(java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _mdrActionLocalService.getActionsCount(className, classPK);
+	}
+
+	public int getActionsCount(java.lang.String className, long classPK,
+		long ruleGroupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _mdrActionLocalService.getActionsCount(className, classPK,
+			ruleGroupId);
 	}
 
 	public com.liferay.portlet.mobiledevicerules.model.MDRAction updateAction(

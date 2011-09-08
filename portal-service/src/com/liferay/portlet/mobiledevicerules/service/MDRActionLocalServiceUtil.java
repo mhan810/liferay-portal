@@ -335,9 +335,28 @@ public class MDRActionLocalServiceUtil {
 		return getService().getActions(className, classPK, start, end);
 	}
 
+	public static java.util.List<com.liferay.portlet.mobiledevicerules.model.MDRAction> getActions(
+		java.lang.String className, long classPK, long ruleGroupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getActions(className, classPK, ruleGroupId);
+	}
+
+	public static java.util.List<com.liferay.portlet.mobiledevicerules.model.MDRAction> getActions(
+		java.lang.String className, long classPK, long ruleGroupId, int start,
+		int end) throws com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .getActions(className, classPK, ruleGroupId, start, end);
+	}
+
 	public static int getActionsCount(java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().getActionsCount(className, classPK);
+	}
+
+	public static int getActionsCount(java.lang.String className, long classPK,
+		long ruleGroupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getActionsCount(className, classPK, ruleGroupId);
 	}
 
 	public static com.liferay.portlet.mobiledevicerules.model.MDRAction updateAction(

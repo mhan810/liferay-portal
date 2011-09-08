@@ -32,7 +32,7 @@ import java.util.Date;
 public class MDRRuleGroupCacheModel implements CacheModel<MDRRuleGroup> {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -50,6 +50,8 @@ public class MDRRuleGroupCacheModel implements CacheModel<MDRRuleGroup> {
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
+		sb.append(", priority=");
+		sb.append(priority);
 		sb.append(", name=");
 		sb.append(name);
 		sb.append(", description=");
@@ -95,6 +97,8 @@ public class MDRRuleGroupCacheModel implements CacheModel<MDRRuleGroup> {
 			mdrRuleGroupImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
+		mdrRuleGroupImpl.setPriority(priority);
+
 		if (name == null) {
 			mdrRuleGroupImpl.setName(StringPool.BLANK);
 		}
@@ -122,6 +126,7 @@ public class MDRRuleGroupCacheModel implements CacheModel<MDRRuleGroup> {
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
+	public int priority;
 	public String name;
 	public String description;
 }

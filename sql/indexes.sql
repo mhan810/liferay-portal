@@ -452,6 +452,7 @@ create index IX_A28004B on MBThreadFlag (userId);
 create index IX_33781904 on MBThreadFlag (userId, threadId);
 
 create index IX_8D25AE4C on MDRAction (classNameId, classPK);
+create index IX_CA11D742 on MDRAction (classNameId, classPK, ruleGroupId);
 create index IX_A7610C37 on MDRAction (ruleGroupId);
 create index IX_77BB5E9D on MDRAction (uuid_);
 create unique index IX_75BE36AD on MDRAction (uuid_, groupId);

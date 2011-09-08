@@ -193,6 +193,20 @@ public interface MDRRuleGroupModel extends BaseModel<MDRRuleGroup>, GroupedModel
 	public void setModifiedDate(Date modifiedDate);
 
 	/**
+	 * Returns the priority of this m d r rule group.
+	 *
+	 * @return the priority of this m d r rule group
+	 */
+	public int getPriority();
+
+	/**
+	 * Sets the priority of this m d r rule group.
+	 *
+	 * @param priority the priority of this m d r rule group
+	 */
+	public void setPriority(int priority);
+
+	/**
 	 * Returns the name of this m d r rule group.
 	 *
 	 * @return the name of this m d r rule group

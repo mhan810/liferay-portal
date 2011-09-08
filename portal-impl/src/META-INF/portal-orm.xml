@@ -2649,6 +2649,7 @@
 			<basic name="modifiedDate">
 				<temporal>TIMESTAMP</temporal>
 			</basic>
+			<basic name="priority" />
 			<basic name="name" />
 			<basic name="description" />
 			<transient name="descriptionMap" />

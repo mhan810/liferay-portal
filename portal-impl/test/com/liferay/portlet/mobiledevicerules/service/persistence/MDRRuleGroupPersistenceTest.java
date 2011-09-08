@@ -84,6 +84,8 @@ public class MDRRuleGroupPersistenceTest extends BasePersistenceTestCase {
 
 		newMDRRuleGroup.setModifiedDate(nextDate());
 
+		newMDRRuleGroup.setPriority(nextInt());
+
 		newMDRRuleGroup.setName(randomString());
 
 		newMDRRuleGroup.setDescription(randomString());
@@ -109,6 +111,8 @@ public class MDRRuleGroupPersistenceTest extends BasePersistenceTestCase {
 		assertEquals(Time.getShortTimestamp(
 				existingMDRRuleGroup.getModifiedDate()),
 			Time.getShortTimestamp(newMDRRuleGroup.getModifiedDate()));
+		assertEquals(existingMDRRuleGroup.getPriority(),
+			newMDRRuleGroup.getPriority());
 		assertEquals(existingMDRRuleGroup.getName(), newMDRRuleGroup.getName());
 		assertEquals(existingMDRRuleGroup.getDescription(),
 			newMDRRuleGroup.getDescription());
@@ -252,6 +256,8 @@ public class MDRRuleGroupPersistenceTest extends BasePersistenceTestCase {
 		mdrRuleGroup.setCreateDate(nextDate());
 
 		mdrRuleGroup.setModifiedDate(nextDate());
+
+		mdrRuleGroup.setPriority(nextInt());
 
 		mdrRuleGroup.setName(randomString());
 
