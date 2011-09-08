@@ -79,10 +79,11 @@ public class MDRRuleGroupModelImpl extends BaseModelImpl<MDRRuleGroup>
 			{ "userName", Types.VARCHAR },
 			{ "createDate", Types.TIMESTAMP },
 			{ "modifiedDate", Types.TIMESTAMP },
+			{ "priority", Types.INTEGER },
 			{ "name", Types.VARCHAR },
 			{ "description", Types.VARCHAR }
 		};
-	public static final String TABLE_SQL_CREATE = "create table MDRRuleGroup (uuid_ VARCHAR(75) null,ruleGroupId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name STRING null,description STRING null)";
+	public static final String TABLE_SQL_CREATE = "create table MDRRuleGroup (uuid_ VARCHAR(75) null,ruleGroupId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,priority INTEGER,name STRING null,description STRING null)";
 	public static final String TABLE_SQL_DROP = "drop table MDRRuleGroup";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
@@ -111,6 +112,7 @@ public class MDRRuleGroupModelImpl extends BaseModelImpl<MDRRuleGroup>
 		model.setUserName(soapModel.getUserName());
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
+		model.setPriority(soapModel.getPriority());
 		model.setName(soapModel.getName());
 		model.setDescription(soapModel.getDescription());
 
@@ -269,6 +271,15 @@ public class MDRRuleGroupModelImpl extends BaseModelImpl<MDRRuleGroup>
 
 	public void setModifiedDate(Date modifiedDate) {
 		_modifiedDate = modifiedDate;
+	}
+
+	@JSON
+	public int getPriority() {
+		return _priority;
+	}
+
+	public void setPriority(int priority) {
+		_priority = priority;
 	}
 
 	@JSON
@@ -496,6 +507,7 @@ public class MDRRuleGroupModelImpl extends BaseModelImpl<MDRRuleGroup>
 		mdrRuleGroupImpl.setUserName(getUserName());
 		mdrRuleGroupImpl.setCreateDate(getCreateDate());
 		mdrRuleGroupImpl.setModifiedDate(getModifiedDate());
+		mdrRuleGroupImpl.setPriority(getPriority());
 		mdrRuleGroupImpl.setName(getName());
 		mdrRuleGroupImpl.setDescription(getDescription());
 
@@ -605,6 +617,8 @@ public class MDRRuleGroupModelImpl extends BaseModelImpl<MDRRuleGroup>
 			mdrRuleGroupCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
+		mdrRuleGroupCacheModel.priority = getPriority();
+
 		mdrRuleGroupCacheModel.name = getName();
 
 		String name = mdrRuleGroupCacheModel.name;
@@ -626,7 +640,7 @@ public class MDRRuleGroupModelImpl extends BaseModelImpl<MDRRuleGroup>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -644,6 +658,8 @@ public class MDRRuleGroupModelImpl extends BaseModelImpl<MDRRuleGroup>
 		sb.append(getCreateDate());
 		sb.append(", modifiedDate=");
 		sb.append(getModifiedDate());
+		sb.append(", priority=");
+		sb.append(getPriority());
 		sb.append(", name=");
 		sb.append(getName());
 		sb.append(", description=");
@@ -654,7 +670,7 @@ public class MDRRuleGroupModelImpl extends BaseModelImpl<MDRRuleGroup>
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(34);
+		StringBundler sb = new StringBundler(37);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup");
@@ -693,6 +709,10 @@ public class MDRRuleGroupModelImpl extends BaseModelImpl<MDRRuleGroup>
 		sb.append(getModifiedDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>priority</column-name><column-value><![CDATA[");
+		sb.append(getPriority());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>name</column-name><column-value><![CDATA[");
 		sb.append(getName());
 		sb.append("]]></column-value></column>");
@@ -722,6 +742,7 @@ public class MDRRuleGroupModelImpl extends BaseModelImpl<MDRRuleGroup>
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
+	private int _priority;
 	private String _name;
 	private String _description;
 	private transient ExpandoBridge _expandoBridge;

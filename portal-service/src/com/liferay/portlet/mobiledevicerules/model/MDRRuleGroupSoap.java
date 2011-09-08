@@ -39,6 +39,7 @@ public class MDRRuleGroupSoap implements Serializable {
 		soapModel.setUserName(model.getUserName());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
+		soapModel.setPriority(model.getPriority());
 		soapModel.setName(model.getName());
 		soapModel.setDescription(model.getDescription());
 
@@ -157,6 +158,14 @@ public class MDRRuleGroupSoap implements Serializable {
 		_modifiedDate = modifiedDate;
 	}
 
+	public int getPriority() {
+		return _priority;
+	}
+
+	public void setPriority(int priority) {
+		_priority = priority;
+	}
+
 	public String getName() {
 		return _name;
 	}
@@ -181,6 +190,7 @@ public class MDRRuleGroupSoap implements Serializable {
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
+	private int _priority;
 	private String _name;
 	private String _description;
 }

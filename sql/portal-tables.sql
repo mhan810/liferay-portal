@@ -1215,6 +1215,7 @@ create table MDRRuleGroup (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
+	priority INTEGER,
 	name STRING null,
 	description STRING null
 );

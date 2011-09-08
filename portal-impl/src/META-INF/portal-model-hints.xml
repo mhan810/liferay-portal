@@ -2005,6 +2005,7 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
+		<field name="priority" type="int" />
 		<field name="name" type="String" localized="true">
 			<hint name="display-width">150</hint>
 			<hint name="max-length">255</hint>

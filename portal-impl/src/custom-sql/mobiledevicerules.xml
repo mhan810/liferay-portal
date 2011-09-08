@@ -22,7 +22,7 @@
 				(groupId = ?) AND
 				(lower(name) LIKE ? [$AND_OR_NULL_CHECK$])
 			ORDER BY
-				MDRRuleGroup.name DESC
+				MDRRuleGroup.priority DESC
 		]]>
 	</sql>
 </custom-sql>

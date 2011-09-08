@@ -293,7 +293,22 @@ public interface MDRActionLocalService extends PersistedModelLocalService {
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portlet.mobiledevicerules.model.MDRAction> getActions(
+		java.lang.String className, long classPK, long ruleGroupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portlet.mobiledevicerules.model.MDRAction> getActions(
+		java.lang.String className, long classPK, long ruleGroupId, int start,
+		int end) throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getActionsCount(java.lang.String className, long classPK)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getActionsCount(java.lang.String className, long classPK,
+		long ruleGroupId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	public com.liferay.portlet.mobiledevicerules.model.MDRAction updateAction(
