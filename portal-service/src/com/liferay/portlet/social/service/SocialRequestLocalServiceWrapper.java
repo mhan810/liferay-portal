@@ -344,6 +344,13 @@ public class SocialRequestLocalServiceWrapper
 		return _socialRequestLocalService.getUserRequestsCount(userId, status);
 	}
 
+	public com.liferay.portlet.social.model.SocialRequest getRequest(
+		long requestId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _socialRequestLocalService.getRequest(requestId);
+	}
+
 	public boolean hasRequest(long userId, java.lang.String className,
 		long classPK, int type, int status)
 		throws com.liferay.portal.kernel.exception.SystemException {

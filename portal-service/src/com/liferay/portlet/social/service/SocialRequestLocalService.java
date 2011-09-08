@@ -303,6 +303,12 @@ public interface SocialRequestLocalService extends PersistedModelLocalService {
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portlet.social.model.SocialRequest getRequest(
+		long requestId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasRequest(long userId, java.lang.String className,
 		long classPK, int type, int status)
 		throws com.liferay.portal.kernel.exception.SystemException;
