@@ -313,20 +313,17 @@ public class UserNotificationEventLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.model.UserNotificationEvent updateUserNotificationEvent(
-		com.liferay.portal.kernel.notifications.NotificationEvent notificationEvent)
+		java.lang.String uuid, boolean archive)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return getService().updateUserNotificationEvent(notificationEvent);
+		return getService().updateUserNotificationEvent(uuid, archive);
 	}
 
-	public static com.liferay.portal.model.UserNotificationEvent updateUserNotificationEvent(
-		java.lang.String uuid, java.lang.String type, long deliverBy,
-		java.lang.String payload, boolean archived)
+	public static java.util.List<com.liferay.portal.model.UserNotificationEvent> updateUserNotificationEvents(
+		java.util.Collection<java.lang.String> uuids, boolean archive)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .updateUserNotificationEvent(uuid, type, deliverBy, payload,
-			archived);
+		return getService().updateUserNotificationEvents(uuids, archive);
 	}
 
 	public static UserNotificationEventLocalService getService() {
