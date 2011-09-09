@@ -28,12 +28,6 @@ public class MDRActionImpl extends MDRActionBaseImpl {
 	public MDRActionImpl() {
 	}
 
-	public MDRRuleGroup getMDRRuleGroup()
-		throws SystemException, PortalException {
-
-		return MDRRuleGroupLocalServiceUtil.getMDRRuleGroup(getRuleGroupId());
-	}
-
 	public UnicodeProperties getTypeSettingsProperties() {
 		if (_typeSettingsProperties == null) {
 			_typeSettingsProperties = new UnicodeProperties(true);
