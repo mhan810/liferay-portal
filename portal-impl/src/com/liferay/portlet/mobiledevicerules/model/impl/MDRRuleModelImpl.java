@@ -282,17 +282,7 @@ public class MDRRuleModelImpl extends BaseModelImpl<MDRRule>
 	}
 
 	public void setRuleGroupId(long ruleGroupId) {
-		if (!_setOriginalRuleGroupId) {
-			_setOriginalRuleGroupId = true;
-
-			_originalRuleGroupId = _ruleGroupId;
-		}
-
 		_ruleGroupId = ruleGroupId;
-	}
-
-	public long getOriginalRuleGroupId() {
-		return _originalRuleGroupId;
 	}
 
 	@JSON
@@ -612,10 +602,6 @@ public class MDRRuleModelImpl extends BaseModelImpl<MDRRule>
 		mdrRuleModelImpl._originalGroupId = mdrRuleModelImpl._groupId;
 
 		mdrRuleModelImpl._setOriginalGroupId = false;
-
-		mdrRuleModelImpl._originalRuleGroupId = mdrRuleModelImpl._ruleGroupId;
-
-		mdrRuleModelImpl._setOriginalRuleGroupId = false;
 	}
 
 	@Override
@@ -818,8 +804,6 @@ public class MDRRuleModelImpl extends BaseModelImpl<MDRRule>
 	private Date _createDate;
 	private Date _modifiedDate;
 	private long _ruleGroupId;
-	private long _originalRuleGroupId;
-	private boolean _setOriginalRuleGroupId;
 	private String _name;
 	private String _description;
 	private String _type;

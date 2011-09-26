@@ -1060,6 +1060,8 @@ Liferay.Service.registerClass(
 	{
 		addRuleGroupInstance: true,
 		deleteRuleGroupInstance: true,
+		getRuleGroupInstances: true,
+		getRuleGroupInstancesCount: true,
 		updateRuleGroupInstance: true
 	}
 );
