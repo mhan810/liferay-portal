@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.mobiledevicerules.action;
 
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.struts.PortletAction;
 
 import javax.portlet.PortletConfig;
@@ -35,6 +36,14 @@ public class SiteResourceAction extends PortletAction {
 			ActionMapping mapping, ActionForm form, PortletConfig portletConfig,
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
 		throws Exception {
+
+		long actionGroupId = ParamUtil.getLong(
+			resourceRequest, "actionGroupId");
+		long actionLayoutId = ParamUtil.getLong(
+			resourceRequest, "actionLayoutId");
+
+		resourceRequest.setAttribute("actionGroupId", actionGroupId);
+		resourceRequest.setAttribute("actionLayoutId", actionLayoutId);
 
 		PortletContext portletContext = portletConfig.getPortletContext();
 

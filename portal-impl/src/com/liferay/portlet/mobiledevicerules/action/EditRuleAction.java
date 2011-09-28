@@ -163,7 +163,7 @@ public class EditRuleAction extends PortletAction {
 
 	protected String getEditorJSP(String ruleType) {
 		if (ruleType.equals(SimpleRuleHandler.getHandlerType())) {
-			return _SIMPLE_RULE_EDIT_RJSP;
+			return _SIMPLE_RULE_EDIT_JSP;
 		}
 
 		return StringPool.BLANK;
@@ -239,7 +239,7 @@ public class EditRuleAction extends PortletAction {
 		}
 	}
 
-	private static final String _SIMPLE_RULE_EDIT_RJSP =
+	private static final String _SIMPLE_RULE_EDIT_JSP =
 		"/html/portlet/mobile_device_rules_admin/rule/simple_rule.jsp";
 
 }
