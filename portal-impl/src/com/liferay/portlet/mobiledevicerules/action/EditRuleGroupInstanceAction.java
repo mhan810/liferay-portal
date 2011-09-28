@@ -111,7 +111,7 @@ public class EditRuleGroupInstanceAction extends PortletAction {
 				ruleGroupInstanceId);
 
 		renderRequest.setAttribute(
-			WebKeys.MOBILE_DEVICE_RULES_RULE_INSTANCE, ruleGroupInstance);
+			WebKeys.MOBILE_DEVICE_RULES_RULE_GROUP_INSTANCE, ruleGroupInstance);
 
 		long ruleGroupId = BeanParamUtil.getLong(
 			ruleGroupInstance, renderRequest, "ruleGroupId");
