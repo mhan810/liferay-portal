@@ -64,11 +64,29 @@ public class AddAnnouncementsEntryContentNullTest extends BaseTestCase {
 		selenium.type("//input[@id='_84_url']",
 			RuntimeVariables.replace("http://www.liferay.com"));
 		selenium.saveScreenShotAndSource();
-		selenium.type("//textarea[@id='_84_content']",
-			RuntimeVariables.replace(""));
+
+		for (int second = 0;; second++) {
+			if (second >= 60) {
+				fail("timeout");
+			}
+
+			try {
+				if (selenium.isVisible(
+							"//td[@id='cke_contents__84_editor']/iframe")) {
+					break;
+				}
+			}
+			catch (Exception e) {
+			}
+
+			Thread.sleep(1000);
+		}
+
 		selenium.saveScreenShotAndSource();
-		selenium.keyPress("//select[@id='_84_expirationDateYear']",
-			RuntimeVariables.replace("\\34"));
+		selenium.selectFrame("//td[@id='cke_contents__84_editor']/iframe");
+		selenium.type("//body", RuntimeVariables.replace(""));
+		selenium.selectFrame("relative=top");
+		selenium.saveScreenShotAndSource();
 		selenium.clickAt("//input[@value='Save']",
 			RuntimeVariables.replace("Save"));
 		selenium.waitForPageToLoad("30000");

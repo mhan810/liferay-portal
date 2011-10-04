@@ -31,7 +31,7 @@ public class SelectTimeZonePacificStandardTimeCPMATest extends BaseTestCase {
 			}
 
 			try {
-				if (selenium.isElementPresent("link=Joe Bloggs")) {
+				if (selenium.isVisible("link=Joe Bloggs")) {
 					break;
 				}
 			}
@@ -84,6 +84,8 @@ public class SelectTimeZonePacificStandardTimeCPMATest extends BaseTestCase {
 		selenium.saveScreenShotAndSource();
 		selenium.select("//select[@name='_2_timeZoneId']",
 			RuntimeVariables.replace("(UTC -08:00) Pacific Standard Time"));
+		assertEquals("(UTC -08:00) Pacific Standard Time",
+			selenium.getSelectedLabel("//select[@name='_2_timeZoneId']"));
 		Thread.sleep(5000);
 		selenium.clickAt("//input[@value='Save']",
 			RuntimeVariables.replace("Save"));

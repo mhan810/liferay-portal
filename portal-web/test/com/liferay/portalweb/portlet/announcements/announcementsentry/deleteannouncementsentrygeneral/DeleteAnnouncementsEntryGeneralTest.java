@@ -47,9 +47,11 @@ public class DeleteAnnouncementsEntryGeneralTest extends BaseTestCase {
 		selenium.saveScreenShotAndSource();
 		assertEquals(RuntimeVariables.replace("Announcements Entry Title"),
 			selenium.getText("//h3[@class='entry-title']/a"));
-		assertEquals(RuntimeVariables.replace(
-				"General Announcements Entry Content"),
-			selenium.getText("//p[@class=' entry-content entry-type-general']"));
+		assertEquals(RuntimeVariables.replace("General"),
+			selenium.getText("//span[@class='entry-scope']"));
+		assertEquals(RuntimeVariables.replace("Announcements Entry Content"),
+			selenium.getText(
+				"//div[@class=' entry-content entry-type-general']/p"));
 		assertEquals(RuntimeVariables.replace("Delete"),
 			selenium.getText("//td[@class='delete-entry']/span/a/span"));
 		selenium.click(RuntimeVariables.replace(

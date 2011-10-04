@@ -30,7 +30,7 @@ public class TearDownTimeZoneTest extends BaseTestCase {
 			}
 
 			try {
-				if (selenium.isElementPresent("link=Joe Bloggs")) {
+				if (selenium.isVisible("link=Joe Bloggs")) {
 					break;
 				}
 			}
@@ -83,6 +83,8 @@ public class TearDownTimeZoneTest extends BaseTestCase {
 		selenium.saveScreenShotAndSource();
 		selenium.select("//select[@name='_2_timeZoneId']",
 			RuntimeVariables.replace("(UTC ) Coordinated Universal Time"));
+		assertEquals("(UTC ) Coordinated Universal Time",
+			selenium.getSelectedLabel("//select[@name='_2_timeZoneId']"));
 		Thread.sleep(5000);
 		selenium.clickAt("//input[@value='Save']",
 			RuntimeVariables.replace("Save"));
