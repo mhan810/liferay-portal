@@ -100,9 +100,12 @@ public class PortalLDAPUtil {
 
 		// Enable pooling
 
-		env.put("com.sun.jndi.ldap.connect.pool", "true");
-		env.put("com.sun.jndi.ldap.connect.pool.maxsize","50");
-		env.put("com.sun.jndi.ldap.connect.pool.timeout", "10000");
+		env.put("com.sun.jndi.ldap.connect.pool",
+			PropsValues.LDAP_CONNECT_POOL_ENABLED);
+		env.put("com.sun.jndi.ldap.connect.pool.maxsize",
+			PropsValues.LDAP_CONNECT_POOL_MAXSIZE);
+		env.put("com.sun.jndi.ldap.connect.pool.timeout",
+			PropsValues.LDAP_CONNECT_POOL_TIMEOUT);
 
 		LogUtil.debug(_log, env);
 

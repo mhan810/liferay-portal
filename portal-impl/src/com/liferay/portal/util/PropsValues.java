@@ -804,6 +804,12 @@ public class PropsValues {
 
 	public static final boolean LDAP_AUTH_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.LDAP_AUTH_ENABLED));
 
+	public static final String LDAP_CONNECT_POOL_ENABLED = PropsUtil.get(PropsKeys.LDAP_CONNECT_POOL_ENABLED);
+
+	public static final String LDAP_CONNECT_POOL_MAXSIZE = PropsUtil.get(PropsKeys.LDAP_CONNECT_POOL_MAXSIZE);
+
+	public static final String LDAP_CONNECT_POOL_TIMEOUT = PropsUtil.get(PropsKeys.LDAP_CONNECT_POOL_TIMEOUT);
+
 	public static final boolean LDAP_EXPORT_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.LDAP_EXPORT_ENABLED));
 
 	public static final boolean LDAP_EXPORT_GROUP_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.LDAP_EXPORT_GROUP_ENABLED));
