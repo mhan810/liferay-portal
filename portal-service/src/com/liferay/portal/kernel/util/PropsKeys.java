@@ -1107,6 +1107,12 @@ public interface PropsKeys {
 
 	public static final String LDAP_BASE_PROVIDER_URL = "ldap.base.provider.url";
 
+	public static final String LDAP_CONNECT_POOL_ENABLED = "ldap.connect.pool.enabled";
+
+	public static final String LDAP_CONNECT_POOL_MAXSIZE = "ldap.connect.pool.maxsize";
+
+	public static final String LDAP_CONNECT_POOL_TIMEOUT = "ldap.connect.pool.timeout";
+
 	public static final String LDAP_CONTACT_CUSTOM_MAPPINGS = "ldap.contact.custom.mappings";
 
 	public static final String LDAP_CONTACT_MAPPINGS = "ldap.contact.mappings";
