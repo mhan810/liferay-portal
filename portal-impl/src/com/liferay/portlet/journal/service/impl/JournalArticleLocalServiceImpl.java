@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
-import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -1962,12 +1961,8 @@ public class JournalArticleLocalServiceImpl
 				throw new ArticleVersionException();
 			}
 
-			if (DateUtil.compareTo(
-					oldArticle.getModifiedDate(), serviceContext.getFormDate())
-						> 0) {
-
-				throw new ArticleVersionException();
-			}
+			serviceContext.validateModifiedDate(
+				oldArticle, ArticleVersionException.class);
 
 			if (oldArticle.isApproved() || oldArticle.isExpired()) {
 				incrementVersion = true;
@@ -2151,12 +2146,8 @@ public class JournalArticleLocalServiceImpl
 		}
 
 		if (serviceContext != null) {
-			if (DateUtil.compareTo(
-					oldArticle.getModifiedDate(), serviceContext.getFormDate())
-						> 0) {
-
-				throw new ArticleVersionException();
-			}
+			serviceContext.validateModifiedDate(
+				oldArticle, ArticleVersionException.class);
 		}
 
 		JournalArticle article = null;

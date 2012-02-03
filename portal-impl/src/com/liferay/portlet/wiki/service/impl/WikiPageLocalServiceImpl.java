@@ -1232,6 +1232,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			throw new PageVersionException();
 		}
 
+		serviceContext.validateModifiedDate(
+			oldPage, PageVersionException.class);
+
 		long resourcePrimKey =
 			wikiPageResourceLocalService.getPageResourcePrimKey(nodeId, title);
 		long groupId = oldPage.getGroupId();

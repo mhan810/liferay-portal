@@ -19,9 +19,11 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.AuditedModel;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.PortletPreferencesIds;
 import com.liferay.portal.model.Role;
@@ -1177,6 +1179,26 @@ public class ServiceContext implements Cloneable, Serializable {
 		Locale locale = getLocale();
 
 		return LanguageUtil.format(locale, pattern, arguments);
+	}
+
+	public void validateModifiedDate(
+			AuditedModel auditedModel, Class<? extends PortalException> clazz)
+		throws PortalException {
+
+		int value = DateUtil.compareTo(
+			auditedModel.getModifiedDate(), _formDate);
+
+		if (value > 0) {
+			try {
+				throw clazz.newInstance();
+			}
+			catch (IllegalAccessException iae) {
+				throw new RuntimeException(iae);
+			}
+			catch (InstantiationException ie) {
+				throw new RuntimeException(ie);
+			}
+		}
 	}
 
 	private boolean _addGroupPermissions;
