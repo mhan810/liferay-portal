@@ -1816,6 +1816,11 @@
 			<forward name="portlet.staging_bar.error" path="portlet.staging_bar.error" />
 		</action>
 
+		<action path="/staging_bar/edit_workflow_task" type="com.liferay.portlet.workflowtasks.action.EditWorkflowTaskAction">
+			<forward name="portlet.workflow_tasks.edit_workflow_task" path="portlet.workflow_tasks.edit_workflow_task" />
+			<forward name="portlet.workflow_tasks.error" path="portlet.workflow_tasks.error" />
+		</action>
+
 		<action path="/staging_bar/merge_layout_set_branch" forward="portlet.staging_bar.merge_layout_set_branch" />
 
 		<action path="/staging_bar/view" forward="portlet.staging_bar.view" />

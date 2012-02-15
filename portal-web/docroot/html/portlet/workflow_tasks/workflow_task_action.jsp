@@ -21,6 +21,10 @@ String randomId = StringPool.BLANK;
 
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
+boolean showExpanded = GetterUtil.getBoolean((Boolean)request.getAttribute("showExpanded"), (row == null));
+boolean showWhenSingleIcon = GetterUtil.getBoolean((Boolean)request.getAttribute("showWhenSingleIcon"), (row == null));
+String menuMessage = (String)request.getAttribute("menuMessage");
+
 WorkflowTask workflowTask = null;
 
 if (row != null) {
@@ -37,7 +41,7 @@ else {
 long[] pooledActorsIds = WorkflowTaskManagerUtil.getPooledActorsIds(company.getCompanyId(), workflowTask.getWorkflowTaskId());
 %>
 
-<liferay-ui:icon-menu showExpanded="<%= (row == null) %>" showWhenSingleIcon="<%= (row == null) %>">
+<liferay-ui:icon-menu showExpanded="<%= showExpanded %>" showWhenSingleIcon="<%= showWhenSingleIcon %>" message="<%= menuMessage %>">
 	<c:if test="<%= !workflowTask.isCompleted() && _isAssignedToUser(workflowTask, user) %>">
 
 		<%
@@ -176,11 +180,6 @@ long[] pooledActorsIds = WorkflowTaskManagerUtil.getPooledActorsIds(company.getC
 		List<String> transitionNames = WorkflowTaskManagerUtil.getNextTransitionNames(company.getCompanyId(), user.getUserId(), workflowTask.getWorkflowTaskId());
 
 		for (String transitionName : transitionNames) {
-			String message = "proceed";
-
-			if (Validator.isNotNull(transitionName)) {
-				message = transitionName;
-			}
 		%>
 
 			Liferay.delegateClick('<portlet:namespace /><%= randomId + transitionName %>taskChangeStatusLink', onTaskClickFn);

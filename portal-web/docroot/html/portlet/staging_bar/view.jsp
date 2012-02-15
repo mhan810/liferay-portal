@@ -437,6 +437,32 @@ if (layout != null) {
 											<liferay-util:include page="/html/portlet/staging_bar/view_layout_revision_details.jsp" />
 										</div>
 
+										<%
+										boolean workflowEnabled = WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), scopeGroupId, LayoutRevision.class.getName());
+
+										boolean isRevisionInProgress = false;
+
+										if (workflowEnabled) {
+											isRevisionInProgress = StagingUtil.isRevisionInProgress(user.getUserId(), layoutRevision);
+										}
+										%>
+
+										<c:if test="<%= isRevisionInProgress %>">
+
+											<%
+											WorkflowTask task = StagingUtil.getLayoutRevisionWorkflowTask(user.getUserId(), layoutRevision);
+
+											request.setAttribute(WebKeys.WORKFLOW_TASK, task);
+											request.setAttribute("showWhenSingleIcon", true);
+											request.setAttribute("showExpanded", false);
+											request.setAttribute("menuMessage", "workflow");
+											%>
+
+											<div class="workflow-toolbar">
+												<liferay-util:include page="/html/portlet/workflow_tasks/workflow_task_action.jsp" />
+											</div>
+										</c:if>
+
 										<c:if test="<%= (layoutRevisions.size() <= 1) && (layoutRevision.getStatus() != WorkflowConstants.STATUS_INCOMPLETE) %>">
 											<liferay-ui:icon
 												cssClass="manage-layout-branches-tab"

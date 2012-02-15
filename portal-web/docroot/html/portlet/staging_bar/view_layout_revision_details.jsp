@@ -29,10 +29,21 @@ if (layoutSetBranch == null) {
 	layoutSetBranch = LayoutSetBranchLocalServiceUtil.getLayoutSetBranch(layoutRevision.getLayoutSetBranchId());
 }
 
+boolean workflowEnabled = WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), scopeGroupId, LayoutRevision.class.getName());
+
+boolean isRevisionInProgress = false;
+
+if (workflowEnabled) {
+	isRevisionInProgress = StagingUtil.isRevisionInProgress(user.getUserId(), layoutRevision);
+}
+
 String taglibHelpMessage = null;
 
 if (layoutRevision.isHead()) {
 	taglibHelpMessage = LanguageUtil.format(pageContext, "this-version-will-be-published-when-x-is-published-to-live", layoutSetBranch.getName());
+}
+else if (isRevisionInProgress) {
+	taglibHelpMessage = "you-are-currently-reviewing-this-page.you-can-make-changes-and-send-them-to-the-next-step-in-the-workflow-when-ready";
 }
 else {
 	taglibHelpMessage = "a-new-version-will-be-created-automatically-if-this-page-is-modified";
@@ -68,7 +79,7 @@ else {
 		}
 	);
 
-	<c:if test="<%= layoutRevision.hasChildren() %>">
+	<c:if test="<%= layoutRevision.hasChildren() && !isRevisionInProgress %>">
 
 		<%
 		List<LayoutRevision> childLayoutRevisions = layoutRevision.getChildren();
@@ -95,7 +106,7 @@ else {
 
 	</c:if>
 
-	<c:if test="<%= !layoutRevision.isMajor() && (layoutRevision.getParentLayoutRevisionId() != LayoutRevisionConstants.DEFAULT_PARENT_LAYOUT_REVISION_ID) %>">
+	<c:if test="<%= !layoutRevision.isMajor() && (layoutRevision.getParentLayoutRevisionId() != LayoutRevisionConstants.DEFAULT_PARENT_LAYOUT_REVISION_ID) && !isRevisionInProgress %>">
 		var undoButton = stagingBar.undoButton;
 
 		stagingBar.layoutRevisionToolbar.add(undoButton, 0);
@@ -108,7 +119,7 @@ else {
 		);
 	</c:if>
 
-	<c:if test="<%= !layoutRevision.isHead() && LayoutPermissionUtil.contains(permissionChecker, layoutRevision.getPlid(), ActionKeys.UPDATE) %>">
+	<c:if test="<%= !layoutRevision.isHead() && LayoutPermissionUtil.contains(permissionChecker, layoutRevision.getPlid(), ActionKeys.UPDATE) && !isRevisionInProgress %>">
 		stagingBar.layoutRevisionToolbar.add(
 			{
 				type: 'ToolbarSpacer'
@@ -120,8 +131,6 @@ else {
 
 				<%
 				List<LayoutRevision> pendingLayoutRevisions = LayoutRevisionLocalServiceUtil.getLayoutRevisions(layoutRevision.getLayoutSetBranchId(), layoutRevision.getPlid(), WorkflowConstants.STATUS_PENDING);
-
-				boolean workflowEnabled = WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), scopeGroupId, LayoutRevision.class.getName());
 				%>
 
 				<c:choose>
