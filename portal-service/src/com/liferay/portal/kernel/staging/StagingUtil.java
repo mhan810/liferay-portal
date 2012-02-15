@@ -17,9 +17,11 @@ package com.liferay.portal.kernel.staging;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.workflow.WorkflowTask;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutRevision;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
@@ -147,6 +149,14 @@ public class StagingUtil {
 			serviceContext);
 	}
 
+	public static WorkflowTask getLayoutRevisionWorkflowTask(
+				long userId, LayoutRevision layoutRevision)
+			throws PortalException, SystemException {
+
+			return getStaging().getLayoutRevisionWorkflowTask(
+				userId, layoutRevision);
+		}
+
 	public static Group getLiveGroup(long groupId)
 		throws PortalException, SystemException {
 
@@ -216,6 +226,13 @@ public class StagingUtil {
 
 	public static boolean isIncomplete(Layout layout, long layoutSetBranchId) {
 		return getStaging().isIncomplete(layout, layoutSetBranchId);
+	}
+
+	public static boolean isRevisionInProgress(
+			long userId, LayoutRevision layoutRevision)
+		throws PortalException, SystemException {
+
+		return getStaging().isRevisionInProgress(userId, layoutRevision);
 	}
 
 	public static void publishLayout(
