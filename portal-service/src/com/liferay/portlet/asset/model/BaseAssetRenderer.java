@@ -127,6 +127,10 @@ public abstract class BaseAssetRenderer implements AssetRenderer {
 		return false;
 	}
 
+	public boolean isRenderizable() {
+		return true;
+	}
+
 	protected long getControlPanelPlid(
 			LiferayPortletRequest liferayPortletRequest)
 		throws PortalException, SystemException {
