@@ -213,6 +213,11 @@
 						float: left;
 					}
 
+					.workflow-toolbar {
+						float: left;
+						margin-left: 1em;
+					}
+
 					.layout-revision-id {
 						font-size: 0.6em;
 					}

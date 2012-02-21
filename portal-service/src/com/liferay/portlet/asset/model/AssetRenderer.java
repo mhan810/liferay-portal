@@ -95,6 +95,8 @@ public interface AssetRenderer {
 
 	public boolean isPrintable();
 
+	public boolean isRenderizable();
+
 	public String render(
 			RenderRequest renderRequest, RenderResponse renderResponse,
 			String template)
