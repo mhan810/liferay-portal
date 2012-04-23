@@ -15,6 +15,7 @@
 package com.liferay.portal.json;
 
 import com.liferay.alloy.util.json.StringTransformer;
+import com.liferay.portal.json.jabsorb.serializer.LiferayJSONSerializer;
 import com.liferay.portal.json.jabsorb.serializer.LiferaySerializer;
 import com.liferay.portal.json.jabsorb.serializer.LocaleSerializer;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -44,7 +45,7 @@ public class JSONFactoryImpl implements JSONFactory {
 	public JSONFactoryImpl() {
 		JSONInit.init();
 
-		_jsonSerializer = new org.jabsorb.JSONSerializer();
+		_jsonSerializer = new LiferayJSONSerializer();
 
 		 try {
 			 _jsonSerializer.registerDefaultSerializers();
