@@ -14,24 +14,10 @@
 
 package com.liferay.portal.security;
 
-import java.lang.reflect.Method;
-
 /**
  * @author Igor Spasic
  */
-public class SecurityManager {
+public class SecurityException extends RuntimeException {
 
-	public static SecurityManager getInstance() {
-		if (_instance == null) {
-			_instance = new SecurityManager();
-		}
-		return _instance;
-	}
-
-
-	public void checkAccess(Method method) {
-	}
-
-	private static SecurityManager _instance;
 
 }
