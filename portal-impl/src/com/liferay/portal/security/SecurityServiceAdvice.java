@@ -1,16 +1,25 @@
 package com.liferay.portal.security;
 
-import org.aspectj.lang.ProceedingJoinPoint;
+import com.liferay.portal.spring.aop.ChainableMethodAdvice;
+import org.aopalliance.intercept.MethodInvocation;
+
+import java.lang.reflect.Method;
 
 /**
  * @author Igor Spasic
  */
-public class SecurityServiceAdvice {
+public class SecurityServiceAdvice extends ChainableMethodAdvice {
 
-	public Object invokeService(ProceedingJoinPoint pjp) throws Throwable {
+	@Override
+	public Object before(MethodInvocation methodInvocation) throws Throwable {
 
-		System.out.println("--------> invoking service: " + pjp.getTarget());
+		Method targetMethod = methodInvocation.getMethod();
 
-		return pjp.proceed();
+		PortalSecurityManager portalSecurityManager =
+			PortalSecurityManager.getInstance();
+
+		portalSecurityManager.checkAccess(targetMethod);
+
+		return null;
 	}
 }
