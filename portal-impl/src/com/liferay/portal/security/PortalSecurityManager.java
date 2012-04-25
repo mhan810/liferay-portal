@@ -16,6 +16,9 @@ package com.liferay.portal.security;
 
 import java.lang.reflect.Method;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Igor Spasic
  */
@@ -34,6 +37,7 @@ public class PortalSecurityManager {
 	/**
 	 * Marks thread to be remote. Needed to be called by any API
 	 * to turn on the access check.
+	 * Or, even better, called inside filter, on one place.
 	 */
 	public void setRemoteAccess() {
 		REMOTE_FLAG.set(Boolean.TRUE);
@@ -55,10 +59,51 @@ public class PortalSecurityManager {
 
 		System.out.println("---> remote call, check method: " + method);
 
+		SecureMethodData secureMethodData = _lookupSecureData(method);
+
+		Authentication requiredAuthentication =
+			secureMethodData.getAuthentication();
+
+		// TODO check if user is authenticated
+
 		REMOTE_FLAG.set(Boolean.FALSE);
 	}
 
-	private static PortalSecurityManager _instance;
+	/**
+	 * Lookups for method secure data.
+	 */
+	private SecureMethodData _lookupSecureData(Method method) {
+		SecureMethodData secureMethodData = _secureMethodDataCache.get(method);
+
+		if (secureMethodData != null) {
+			return secureMethodData;
+		}
+
+		secureMethodData = new SecureMethodData();
+
+		Secure secure = method.getAnnotation(Secure.class);
+
+		if (secure != null) {
+			secureMethodData.setAuthentication(secure.authentication());
+		}
+
+		_secureMethodDataCache.put(method, secureMethodData);
+
+		return secureMethodData;
+	}
+
+	private static class SecureMethodData {
+
+		public Authentication getAuthentication() {
+			return _authentication;
+		}
+
+		public void setAuthentication(Authentication authentication) {
+			this._authentication = authentication;
+		}
+
+		private Authentication _authentication = Authentication.PRIVATE;
+	}
 
 	private static final ThreadLocal<Boolean> REMOTE_FLAG
 		= new ThreadLocal<Boolean>() {
@@ -66,7 +111,15 @@ public class PortalSecurityManager {
 		@Override
 		protected Boolean initialValue() {
 			return Boolean.FALSE;
-         }
+		}
 	};
+
+	private static PortalSecurityManager _instance;
+
+	/**
+	 * Cache for varoius method data, read from annotation/configuration files.
+	 */
+	private Map<Method, SecureMethodData> _secureMethodDataCache =
+		new HashMap<Method, SecureMethodData>();
 
 }
