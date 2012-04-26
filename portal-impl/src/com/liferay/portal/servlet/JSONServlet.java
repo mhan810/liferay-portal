@@ -61,8 +61,6 @@ public class JSONServlet extends HttpServlet {
 		try {
 			resolveRemoteUser(request);
 
-			PortalSecurityManager.getInstance().setRemoteAccess();
-
 			if (_portletClassLoader == null) {
 				_jsonAction.execute(null, null, request, response);
 			}

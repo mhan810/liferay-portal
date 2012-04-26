@@ -14,13 +14,16 @@
 
 package com.liferay.portal.security;
 
+import com.liferay.portal.SecureMethodInvocationException;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
 
 import java.lang.reflect.Method;
-
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Igor Spasic
@@ -48,15 +51,12 @@ public class PortalSecurityManager {
 
 	/**
 	 * Checks is some method is allowed to be run.
-	 * Throws {@link SecurityException} if access is denied.
+	 * Throws {@link com.liferay.portal.SecureMethodInvocationException} if access is denied.
 	 * If method is checked, current thread will be marked as
 	 * local, to prevent further authentication.
 	 */
 	public void accept(Method method) {
-		Boolean isRemote = REMOTE_FLAG.get();
-
-		if (isRemote == null || !isRemote.booleanValue()) {
-			System.out.println("---> local call, not auth for: " + method);
+		if (!isRemoteCall(method)) {
 			return;
 		}
 
@@ -72,12 +72,33 @@ public class PortalSecurityManager {
 				PermissionThreadLocal.getPermissionChecker();
 
 			if (permissionChecker == null || !permissionChecker.isSignedIn()) {
-				throw new SecurityException(
+				throw new SecureMethodInvocationException(
 					"Access denied, user not authenticated.");
 			}
 		}
 
 		REMOTE_FLAG.set(Boolean.FALSE);
+	}
+
+	protected boolean isRemoteCall(Method method){
+
+		Boolean isRemote = REMOTE_FLAG.get();
+
+		if (isRemote == null || !isRemote.booleanValue()) {
+			return false;
+		}
+
+		// it's sufficient to check declaringClass because calls from
+		// ServiceUtil use always interface methods only
+		if(_localServiceInterfaces.contains(method.getDeclaringClass())){
+			return false;
+		}
+		if(method.getDeclaringClass().getName().endsWith(_LOCAL_SERVICE)){
+			_localServiceInterfaces.add(method.getDeclaringClass());
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -92,10 +113,10 @@ public class PortalSecurityManager {
 
 		secureMethodData = new SecureMethodData();
 
-		Secure secure = method.getAnnotation(Secure.class);
+		SecureMethod secureMethod = method.getAnnotation(SecureMethod.class);
 
-		if (secure != null) {
-			secureMethodData.setAuthentication(secure.authentication());
+		if (secureMethod != null) {
+			secureMethodData.setAuthentication(secureMethod.authentication());
 		}
 
 		_secureMethodDataCache.put(method, secureMethodData);
@@ -125,12 +146,20 @@ public class PortalSecurityManager {
 		}
 	};
 
+	private static final String _LOCAL_SERVICE = "LocalService";
+
 	private static PortalSecurityManager _instance;
 
 	/**
 	 * Cache for varoius method data, read from annotation/configuration files.
 	 */
 	private Map<Method, SecureMethodData> _secureMethodDataCache =
-		new HashMap<Method, SecureMethodData>();
+		Collections.synchronizedMap(new HashMap<Method, SecureMethodData>());
+
+	/**
+	 * Cache for localService interfaces
+	 */
+	private Set<Class> _localServiceInterfaces =
+		Collections.synchronizedSet(new HashSet<Class>());
 
 }

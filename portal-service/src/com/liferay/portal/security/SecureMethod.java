@@ -14,16 +14,20 @@
 
 package com.liferay.portal.security;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * @author Igor Spasic
  */
-public class SecurityException extends RuntimeException {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface SecureMethod {
 
-	public SecurityException() {
-		super();
-	}
+	Authentication authentication() default Authentication.PRIVATE;
 
-	public SecurityException(String message) {
-		super(message);
-	}
 }

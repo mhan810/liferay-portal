@@ -12,22 +12,18 @@
  * details.
  */
 
-package com.liferay.portal.security;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.liferay.portal;
 
 /**
  * @author Igor Spasic
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface Secure {
+public class SecureMethodInvocationException extends RuntimeException {
 
-	Authentication authentication() default Authentication.PRIVATE;
+	public SecureMethodInvocationException() {
+		super();
+	}
 
+	public SecureMethodInvocationException(String message) {
+		super(message);
+	}
 }

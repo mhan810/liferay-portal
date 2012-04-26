@@ -14,6 +14,7 @@
 
 package com.liferay.portal.servlet.filters.secure;
 
+import com.liferay.portal.SecureMethodInvocationException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
@@ -26,6 +27,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.PortalSecurityManager;
 import com.liferay.portal.security.auth.AuthSettingsUtil;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -267,7 +269,12 @@ public class SecureFilter extends BasePortalFilter {
 			}
 
 			if (request != null) {
-				processFilter(getClass(), request, response, filterChain);
+				try {
+					PortalSecurityManager.getInstance().setRemoteAccess();
+					processFilter(getClass(), request, response, filterChain);
+				} catch(SecureMethodInvocationException ex){
+					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				}
 			}
 		}
 	}
