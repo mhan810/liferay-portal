@@ -18,7 +18,7 @@ public class SecurityServiceAdvice extends ChainableMethodAdvice {
 		PortalSecurityManager portalSecurityManager =
 			PortalSecurityManager.getInstance();
 
-		portalSecurityManager.checkAccess(targetMethod);
+		portalSecurityManager.accept(targetMethod);
 
 		return null;
 	}

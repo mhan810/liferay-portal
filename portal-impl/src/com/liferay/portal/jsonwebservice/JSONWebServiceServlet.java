@@ -67,8 +67,6 @@ public class JSONWebServiceServlet extends JSONServlet {
 			HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
 
-		PortalSecurityManager.getInstance().setRemoteAccess();
-
 		if (PortalUtil.isMultipartRequest(request)) {
 			UploadServletRequest uploadServletRequest =
 				new UploadServletRequestImpl(request);

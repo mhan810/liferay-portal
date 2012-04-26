@@ -14,6 +14,9 @@
 
 package com.liferay.portal.security;
 
+import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.security.permission.PermissionThreadLocal;
+
 import java.lang.reflect.Method;
 
 import java.util.HashMap;
@@ -49,7 +52,7 @@ public class PortalSecurityManager {
 	 * If method is checked, current thread will be marked as
 	 * local, to prevent further authentication.
 	 */
-	public void checkAccess(Method method) {
+	public void accept(Method method) {
 		Boolean isRemote = REMOTE_FLAG.get();
 
 		if (isRemote == null || !isRemote.booleanValue()) {
@@ -64,7 +67,15 @@ public class PortalSecurityManager {
 		Authentication requiredAuthentication =
 			secureMethodData.getAuthentication();
 
-		// TODO check if user is authenticated
+		if (requiredAuthentication == Authentication.PRIVATE) {
+			PermissionChecker permissionChecker =
+				PermissionThreadLocal.getPermissionChecker();
+
+			if (permissionChecker == null || !permissionChecker.isSignedIn()) {
+				throw new SecurityException(
+					"Access denied, user not authenticated.");
+			}
+		}
 
 		REMOTE_FLAG.set(Boolean.FALSE);
 	}
