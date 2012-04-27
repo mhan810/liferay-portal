@@ -19,7 +19,6 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -90,11 +89,15 @@ public class PortalSecurityManager {
 
 		// it's sufficient to check declaringClass because calls from
 		// ServiceUtil use always interface methods only
-		if(_localServiceInterfaces.contains(method.getDeclaringClass())){
+		Class<?> declaringClass = method.getDeclaringClass();
+
+		if (_localServiceInterfaces.contains(declaringClass)) {
 			return false;
 		}
-		if(method.getDeclaringClass().getName().endsWith(_LOCAL_SERVICE)){
-			_localServiceInterfaces.add(method.getDeclaringClass());
+
+		if (declaringClass.getName().endsWith(_LOCAL_SERVICE)) {
+			_localServiceInterfaces.add(declaringClass);
+
 			return false;
 		}
 
@@ -151,15 +154,14 @@ public class PortalSecurityManager {
 	private static PortalSecurityManager _instance;
 
 	/**
-	 * Cache for varoius method data, read from annotation/configuration files.
+	 * Cache for various method data, read from annotation/configuration files.
 	 */
 	private Map<Method, SecureMethodData> _secureMethodDataCache =
-		Collections.synchronizedMap(new HashMap<Method, SecureMethodData>());
+		new HashMap<Method, SecureMethodData>();
 
 	/**
 	 * Cache for localService interfaces
 	 */
-	private Set<Class> _localServiceInterfaces =
-		Collections.synchronizedSet(new HashSet<Class>());
+	private Set<Class> _localServiceInterfaces = new HashSet<Class>();
 
 }
