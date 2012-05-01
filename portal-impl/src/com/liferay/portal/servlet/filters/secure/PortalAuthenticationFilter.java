@@ -17,6 +17,7 @@ package com.liferay.portal.servlet.filters.secure;
 import com.liferay.portal.SecureMethodInvocationException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.servlet.ProtectedServletRequest;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -95,7 +96,7 @@ public class PortalAuthenticationFilter extends BasePortalFilter {
 		AuthenticationResult result = pam.authenticate(
 			request, response, applyRequiredAuthenticators);
 
-		// if there were authenticators in the pipeline
+		// there was an authenticator in the pipeline
 		if(result != null){
 			if(result.getState() == AuthenticationResult.State.IN_PROGRESS){
 				return;
@@ -107,8 +108,21 @@ public class PortalAuthenticationFilter extends BasePortalFilter {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				return;
 			}
+
+			if(result.getState() == AuthenticationResult.State.SUCCESS){
+				request = new ProtectedServletRequest(request,
+					String.valueOf(result.getUserId()));
+			}
 		}
 
+		// we don't need to continue if optional authentication didn't
+		// changed current user
+		if(result == null && !applyRequiredAuthenticators){
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			return;
+		}
+
+		// call inner API
 		processFilter(getClass(), request, response, filterChain);
 	}
 
