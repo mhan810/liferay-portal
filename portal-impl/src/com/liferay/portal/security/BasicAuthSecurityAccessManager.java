@@ -30,9 +30,10 @@ import javax.servlet.http.HttpSession;
  */
 public class BasicAuthSecurityAccessManager implements SecurityAccessManager {
 
-	public long accept(HttpServletRequest request, HttpServletResponse response) {
+	public long accept(HttpServletRequest request, HttpServletResponse response,
+					   boolean required) {
 
-		// [1] check if user is already authenticated
+		// check if user is already authenticated
 		HttpSession session = request.getSession();
 
 		long userId = GetterUtil.getLong(
@@ -42,8 +43,7 @@ public class BasicAuthSecurityAccessManager implements SecurityAccessManager {
 			return userId;
 		}
 
-
-		// checks for basic-auth stuff
+		// checks for basic-auth info
 		try {
 			userId = PortalUtil.getBasicAuthUserId(request);
 		}
@@ -53,7 +53,9 @@ public class BasicAuthSecurityAccessManager implements SecurityAccessManager {
 
 		if (userId == 0) {
 			// user is denied
-			response.setHeader(HttpHeaders.WWW_AUTHENTICATE, _BASIC_REALM);
+			if (required) {
+				response.setHeader(HttpHeaders.WWW_AUTHENTICATE, _BASIC_REALM);
+			}
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		}
 		else {

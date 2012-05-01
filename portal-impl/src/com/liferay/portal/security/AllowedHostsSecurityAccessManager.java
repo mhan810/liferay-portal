@@ -33,7 +33,9 @@ import java.util.Set;
 public class AllowedHostsSecurityAccessManager
 	implements SecurityAccessManager {
 
-	public long accept(HttpServletRequest request, HttpServletResponse response) {
+	public long accept(HttpServletRequest request, HttpServletResponse response,
+					   boolean required) {
+
 		String remoteAddr = request.getRemoteAddr();
 
 		if (AuthSettingsUtil.isAccessAllowed(request, _hostsAllowed)) {

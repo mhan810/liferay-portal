@@ -58,14 +58,13 @@ public class PortalSecureFilter extends BasePortalFilter {
 		AuthenticationRule rule1 = new AuthenticationRule();
 
 		rule1.addPattern("/api/jsonws/*");
-		rule1.registerSecurityAccessManager(basicAuth);
-		rule1.setRequired(false);
+		rule1.registerSecurityAccessManager(allowedHosts);
 
 		AuthenticationRule rule2 = new AuthenticationRule();
 
 		rule2.addPattern("/api/jsonws/*");
-		rule2.registerSecurityAccessManager(allowedHosts);
-		rule2.setRequired(false);
+		rule2.registerSecurityAccessManager(basicAuth);
+		rule2.setRequired(true);
 
 		_authenticationRules.add(rule1);
 		_authenticationRules.add(rule2);
@@ -86,7 +85,8 @@ public class PortalSecureFilter extends BasePortalFilter {
 			// if user is authenticated, check if it is the same user
 			if (userId > 0) {
 				if (authenticatedUserId > 0 && userId != authenticatedUserId) {
-					throw new RuntimeException("different users authenticated!");
+					throw new RuntimeException(
+						"different user already authenticated!");
 				}
 
 				authenticatedUserId = userId;

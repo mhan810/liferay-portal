@@ -14,7 +14,6 @@
 
 package com.liferay.portal.security;
 
-import com.liferay.portal.SecureMethodInvocationException;
 import jodd.util.Wildcard;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +39,8 @@ public class AuthenticationRule {
 		long userId = 0;
 
 		try {
-			userId = _Security_accessManager.accept(request, response);
+			userId = _securityAccessManager.accept(
+				request, response, _required);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -49,12 +49,6 @@ public class AuthenticationRule {
 		if (userId != 0) {
 			// returns when A) request not consumed or B) user authenticated
 			return userId;
-		}
-
-		// user auth failed
-		if (_required) {
-			throw new SecureMethodInvocationException(
-				"Authentication required!");
 		}
 
 		return 0;
@@ -102,14 +96,14 @@ public class AuthenticationRule {
 	public void registerSecurityAccessManager
 	(SecurityAccessManager securityAccessManager) {
 
-		_Security_accessManager = securityAccessManager;
+		_securityAccessManager = securityAccessManager;
 	}
 
 	public void setRequired(boolean required) {
 		this._required = required;
 	}
 
-	private SecurityAccessManager _Security_accessManager;
+	private SecurityAccessManager _securityAccessManager;
 
 	private List<String> _patterns = new ArrayList<String>();
 

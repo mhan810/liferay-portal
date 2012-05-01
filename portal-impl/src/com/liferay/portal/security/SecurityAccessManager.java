@@ -37,9 +37,16 @@ public interface SecurityAccessManager {
 	 * <p>
 	 * If user is not authenticated at all, and request is not consumed,
 	 * returns -1. This also means access is granted.
+	 * <p>
+	 * If required, then filter checks user in the filter BEFORE we reach the
+	 * service layer. There is an additional check on service layer too.
+	 *
+	 * If optional, then public accessed requests do not throw exceptions
+	 * and are allowed; but due to service layer check, only public methods
+	 * can be invoked this way.
 	 */
-	public long accept(
-		HttpServletRequest request, HttpServletResponse response);
+	public long accept(HttpServletRequest request, HttpServletResponse response,
+		boolean required);
 
 
 }
