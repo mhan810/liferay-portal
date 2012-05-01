@@ -55,8 +55,11 @@ public class BasicAuthSecurityAccessManager implements SecurityAccessManager {
 			// user is denied
 			if (required) {
 				response.setHeader(HttpHeaders.WWW_AUTHENTICATE, _BASIC_REALM);
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			}
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			else {
+				userId = ACCESS_GRANTED;
+			}
 		}
 		else {
 			// user access is granted

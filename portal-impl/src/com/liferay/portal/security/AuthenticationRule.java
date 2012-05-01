@@ -46,12 +46,7 @@ public class AuthenticationRule {
 			e.printStackTrace();
 		}
 
-		if (userId != 0) {
-			// returns when A) request not consumed or B) user authenticated
-			return userId;
-		}
-
-		return 0;
+		return userId;
 	}
 
 	/**

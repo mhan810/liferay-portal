@@ -62,7 +62,7 @@ public class PortalSecureFilter extends BasePortalFilter {
 
 		AuthenticationRule rule2 = new AuthenticationRule();
 
-		rule2.addPattern("/api/jsonws/*");
+		rule2.addPattern("/api/jsonws/company/*");
 		rule2.registerSecurityAccessManager(basicAuth);
 		rule2.setRequired(true);
 
@@ -76,21 +76,25 @@ public class PortalSecureFilter extends BasePortalFilter {
 			FilterChain filterChain)
 		throws Exception {
 
-		long authenticatedUserId = 0;
+		long authenticatedUserId = -1;
 
 		// check all rules
 		for (AuthenticationRule rule : _authenticationRules) {
 			long userId = rule.accept(request, response);
 
-			// if user is authenticated, check if it is the same user
-			if (userId > 0) {
+			// if user is authenticated or denied, check if it is the same user
+			if (userId >= 0) {
 				if (authenticatedUserId > 0 && userId != authenticatedUserId) {
 					throw new RuntimeException(
 						"different user already authenticated!");
 				}
-
 				authenticatedUserId = userId;
 			}
+		}
+
+		if (authenticatedUserId == SecurityAccessManager.ACCESS_DENIED) {
+			throw new SecureMethodInvocationException(
+				"access denied: user is not authenticated");
 		}
 
 		if (authenticatedUserId > 0) {
