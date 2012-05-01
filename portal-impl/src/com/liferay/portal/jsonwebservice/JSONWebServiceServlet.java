@@ -178,7 +178,7 @@ public class JSONWebServiceServlet extends JSONServlet {
 	@Override
 	protected void resolveRemoteUser(HttpServletRequest request)
 		throws Exception {
-
+/*
 		UserResolver userResolver = new UserResolver(request);
 
 		CompanyThreadLocal.setCompanyId(userResolver.getCompanyId());
@@ -196,6 +196,7 @@ public class JSONWebServiceServlet extends JSONServlet {
 			request.setAttribute("user", user);
 			request.setAttribute("userId", user.getUserId());
 		}
+		*/
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

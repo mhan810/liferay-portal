@@ -14,6 +14,7 @@
 
 package com.liferay.portal.jsonwebservice;
 
+import com.liferay.portal.SecureMethodInvocationException;
 import com.liferay.portal.action.JSONServiceAction;
 import com.liferay.portal.jsonwebservice.action.JSONWebServiceInvokerAction;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -25,6 +26,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.util.PropsValues;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import javax.servlet.http.HttpServletRequest;
@@ -109,6 +111,15 @@ public class JSONWebServiceServiceAction extends JSONServiceAction {
 			else {
 				return JSONFactoryUtil.getNullJSON();
 			}
+		}
+		catch (InvocationTargetException e){
+			if(e.getCause() instanceof SecureMethodInvocationException){
+				throw (SecureMethodInvocationException) e.getCause();
+			}
+
+			_log.error(e, e);
+
+			return JSONFactoryUtil.serializeException(e);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
