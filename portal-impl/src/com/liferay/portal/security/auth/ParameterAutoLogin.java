@@ -33,8 +33,7 @@ import java.util.Map;
  */
 public class ParameterAutoLogin implements AutoLogin, PortalAuthenticator {
 
-	public AuthenticationResult authenticate(
-			AuthenticationContext authContext)
+	public AuthenticationResult authenticate(AuthenticationContext authContext)
 		throws AuthException {
 
 		AuthenticationResult result = new AuthenticationResult();

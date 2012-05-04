@@ -23,6 +23,28 @@ import java.util.Map;
  */
 public interface PortalAuthenticator {
 
+	/**
+	 * Performs authentication.<br />
+	 * <br />
+	 * Can return {@link AuthenticationResult} with
+	 * {@link AuthenticationResult.State} defining actual state:
+	 * <ul><li>{@link AuthenticationResult.State#SUCCESS} when user
+	 * was authenticated</li>
+	 * <li>{@link AuthenticationResult.State#INVALID_CREDENTIALS}
+	 * when user credentials are invalid</li>
+	 * <li>{@link AuthenticationResult.State#IN_PROGRESS} when
+	 * authentication is in progress and there is pending interaction with
+	 * browser</li></ul>
+	 * <br />
+	 * Can also return {@code null} when authentication is
+	 * not applicable and we want to continue in the pipeline.
+	 *
+	 * @param authenticationContext Current authentication context
+	 * @return null when authentication is not applicable right now,
+	 * {@link AuthenticationResult} otherwise
+	 * @throws AuthException represents some internal exception,
+	 * authentication is then interrupted
+	 */
 	public AuthenticationResult authenticate(
 			AuthenticationContext authenticationContext)
 		throws AuthException;

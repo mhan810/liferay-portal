@@ -58,7 +58,29 @@ import javax.servlet.http.HttpServletResponse;
  * @author Britt Courtney
  * @author Brian Wing Shun Chan
  */
-public class BasicAuthHeaderAutoLogin implements AutoLogin {
+public class BasicAuthHeaderAutoLogin implements AutoLogin, PortalAuthenticator {
+
+	public AuthenticationResult authenticate(AuthenticationContext authContext)
+		throws AuthException {
+
+		AuthenticationResult result = null;
+
+		try {
+			String[] loginResult = login(authContext.getRequest(),
+				authContext.getResponse());
+
+			if(loginResult != null){
+				result = new AuthenticationResult();
+				result.setState(AuthenticationResult.State.SUCCESS);
+				result.setUserId(Long.valueOf(loginResult[0]));
+				result.setPassword(loginResult[1]);
+			}
+		} catch (AutoLoginException e) {
+			throw new AuthException(e);
+		}
+
+		return result;
+	}
 
 	public String[] login(
 			HttpServletRequest request, HttpServletResponse response)
@@ -137,5 +159,4 @@ public class BasicAuthHeaderAutoLogin implements AutoLogin {
 
 	private static Log _log = LogFactoryUtil.getLog(
 		BasicAuthHeaderAutoLogin.class);
-
 }

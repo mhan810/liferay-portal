@@ -141,15 +141,18 @@ public class PortalAuthenticationManager {
 				result = authenticator.authenticate(
 					getAuthenticationContext());
 
-				switch (result.getState()){
-					// all authenticators must be successful
-					case SUCCESS: {
-						break;
-					}
-					// if any is in progress or fail => we return
-					case IN_PROGRESS:
-					case INVALID_CREDENTIALS: {
-						return result;
+				// result is not null - we want to process the result
+				if(result != null){
+					switch (result.getState()){
+						// all authenticators must be successful
+						case SUCCESS: {
+							break;
+						}
+						// if any is in progress or fail => we return
+						case IN_PROGRESS:
+						case INVALID_CREDENTIALS: {
+							return result;
+						}
 					}
 				}
 

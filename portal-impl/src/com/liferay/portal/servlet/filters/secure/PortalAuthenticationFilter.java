@@ -27,6 +27,7 @@ import com.liferay.portal.security.PortalAuthenticationManager;
 import com.liferay.portal.security.auth.AuthenticationConfig;
 import com.liferay.portal.security.auth.AuthenticationContext;
 import com.liferay.portal.security.auth.AuthenticationResult;
+import com.liferay.portal.security.auth.PortalAuthenticator;
 import com.liferay.portal.servlet.filters.BasePortalFilter;
 import com.liferay.portal.util.PropsValues;
 
@@ -34,100 +35,25 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
+ * Portal Authentication filter with 2 phase authentication.<br />
+ * <ul><li>1st phase is triggered before underlying API (pre-API call) and is
+ * responsible to invoke required authenticators. In this phase all
+ * required {@link PortalAuthenticator}s
+ * must be successful.</li>
+ * <li>2nd phase is called only on SecureMethodInvocationException (post-API
+ * call), when guest is trying to access method requiring authentication.
+ * First successful {@link PortalAuthenticator} initiates another call of the
+ * underlying API</li>
+ * </ul>
  * @author Tomas Polesovsky
  */
 public class PortalAuthenticationFilter extends BasePortalFilter {
 
-	@Override
-	protected void processFilter(
-			HttpServletRequest request, HttpServletResponse response,
-			FilterChain filterChain)
-		throws Exception {
-
-		AuthenticationConfig authenticationConfig =
-			new ServletFilterAuthenticationLoader().load(request,
-				getFilterConfig());
-
-		PortalAuthenticationManager pam =
-			PortalAuthenticationManager.getInstance();
-
-		AuthenticationContext authCtx = new AuthenticationContext();
-		authCtx.setAuthenticationConfig(authenticationConfig);
-		authCtx.setRequest(request);
-		authCtx.setResponse(response);
-
-		pam.setAuthenticationContext(authCtx);
-
-		if (applyHttps(request, response)) {
-			return;
-		}
-
-		if (PropsValues.PORTAL_JAAS_ENABLE) {
-			processFilter(getClass(), request, response, filterChain);
-			return;
-		}
-
-		try {
-			authenticate(pam, true, request, response, filterChain);
-		} catch (Throwable ex) {
-			Throwable cause = ex;
-
-			while(!(cause instanceof SecureMethodInvocationException) &&
-				cause.getCause() != null){
-
-				cause = cause.getCause();
-			}
-			if(!(cause instanceof SecureMethodInvocationException)){
-				throw new RuntimeException(ex);
-			}
-
-			authenticate(pam, false, request, response, filterChain);
-		}
-
-	}
-
-	protected void authenticate(PortalAuthenticationManager pam,
-			boolean applyRequiredAuthenticators, HttpServletRequest request,
-			HttpServletResponse response, FilterChain filterChain)
-		throws Exception {
-
-		AuthenticationResult result = pam.authenticate(
-			request, response, applyRequiredAuthenticators);
-
-		// there was an authenticator in the pipeline
-		if(result != null){
-			if(result.getState() == AuthenticationResult.State.IN_PROGRESS){
-				return;
-			}
-
-			if(result.getState() == AuthenticationResult.State.INVALID_CREDENTIALS
-				&& applyRequiredAuthenticators){
-
-				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-				return;
-			}
-
-			if(result.getState() == AuthenticationResult.State.SUCCESS){
-				request = new ProtectedServletRequest(request,
-					String.valueOf(result.getUserId()));
-			}
-		}
-
-		// we don't need to continue if optional authentication didn't
-		// changed current user
-		if(result == null && !applyRequiredAuthenticators){
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			return;
-		}
-
-		// call inner API
-		processFilter(getClass(), request, response, filterChain);
-	}
-
-
-	private boolean applyHttps(HttpServletRequest request,
+	protected boolean applyHttps(HttpServletRequest request,
 		   HttpServletResponse response)
 		throws IOException {
 
@@ -166,6 +92,108 @@ public class PortalAuthenticationFilter extends BasePortalFilter {
 		response.sendRedirect(redirectURL.toString());
 
 		return true;
+	}
+
+	protected void authenticate(boolean applyRequiredAuthenticators,
+			HttpServletRequest request, HttpServletResponse response,
+			FilterChain filterChain)
+		throws Exception {
+
+		PortalAuthenticationManager pam = PortalAuthenticationManager
+			.getInstance();
+
+		AuthenticationResult result = pam.authenticate(
+			request, response, applyRequiredAuthenticators);
+
+		// there was an authenticator in the pipeline
+		if(result != null){
+			if(result.getState() == AuthenticationResult.State.IN_PROGRESS){
+				return;
+			}
+
+			if(result.getState() ==
+				AuthenticationResult.State.INVALID_CREDENTIALS
+				&& applyRequiredAuthenticators){
+
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				return;
+			}
+
+			if(result.getState() == AuthenticationResult.State.SUCCESS){
+				request = new ProtectedServletRequest(request,
+					String.valueOf(result.getUserId()));
+			}
+		}
+
+		// we don't need to continue if optional authentication didn't
+		// changed current user
+		if(result == null && !applyRequiredAuthenticators){
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			return;
+		}
+
+		// call inner API
+		processFilter(getClass(), request, response, filterChain);
+	}
+
+	protected AuthenticationConfig initAuthenticationConfig(
+			HttpServletRequest request){
+
+		return new ServletFilterAuthenticationLoader().load(request);
+	}
+
+	protected void initAuthenticationContext(AuthenticationConfig config,
+			HttpServletRequest request, HttpServletResponse response){
+
+		PortalAuthenticationManager pam =
+			PortalAuthenticationManager.getInstance();
+
+		AuthenticationContext context = new AuthenticationContext();
+		context.setAuthenticationConfig(config);
+		context.setRequest(request);
+		context.setResponse(response);
+
+		pam.setAuthenticationContext(context);
+	}
+
+	@Override
+	protected void processFilter(
+			HttpServletRequest request, HttpServletResponse response,
+			FilterChain filterChain)
+		throws Exception {
+
+		AuthenticationConfig config = initAuthenticationConfig(request);
+
+		initAuthenticationContext(config, request, response);
+
+		if (applyHttps(request, response)) {
+			return;
+		}
+
+		if (PropsValues.PORTAL_JAAS_ENABLE) {
+			processFilter(getClass(), request, response, filterChain);
+			return;
+		}
+
+		try {
+			// 1st authentication phase
+			authenticate(true, request, response, filterChain);
+		} catch (Throwable ex) {
+			Throwable cause = ex;
+
+			while(!(cause instanceof SecureMethodInvocationException) &&
+				cause.getCause() != null){
+
+				cause = cause.getCause();
+			}
+			if(!(cause instanceof SecureMethodInvocationException)){
+				throw new RuntimeException(ex);
+			}
+
+			// 2nd authentication phase
+			authenticate(false, request, response, filterChain);
+		}
+
 	}
 
 	private static Log _log = LogFactoryUtil.getLog

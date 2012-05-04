@@ -1167,13 +1167,4 @@
 		<url-pattern>/api/secure/webdav/*</url-pattern>
 	</filter-mapping>
 
-	<filter>
-		<filter-name>Portal Servlet Filter</filter-name>
-		<filter-class>com.liferay.portal.security.PortalSecureFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>Portal Servlet Filter</filter-name>
-		<url-pattern>/api/jsonws/*</url-pattern>
-	</filter-mapping>
-
 </web-app>

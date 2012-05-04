@@ -16,6 +16,7 @@ package com.liferay.portal.security.auth;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @author Tomas Polesovsky
@@ -29,6 +30,10 @@ public class AuthenticationConfig {
 
 	public List<PortalAuthenticator> getRequiredAuthenticators(){
 		return _requiredAuthenticators;
+	}
+
+	public Properties getSettings(){
+		return this._settings;
 	}
 
 	public boolean isRemoteAccess() {
@@ -46,22 +51,17 @@ public class AuthenticationConfig {
 	public void setSecure(boolean secure){
 		this._secure = secure;
 	}
+
+	public void setSettings(Properties settings){
+		this._settings = settings;
+	}
+
 	private List<PortalAuthenticator> _optionalAuthenticators
 		= new ArrayList<PortalAuthenticator>();
-
 	private boolean _remoteAccess;
-
 	private List<PortalAuthenticator> _requiredAuthenticators
 		= new ArrayList<PortalAuthenticator>();
-
 	private boolean _secure;
-	private int _schema;
+	private Properties _settings;
 
-	public int getSchema() {
-		return _schema;
-	}
-
-	public void setSchema(int schema) {
-		this._schema = _schema;
-	}
 }

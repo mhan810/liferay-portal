@@ -14,50 +14,107 @@
 
 package com.liferay.portal.servlet.filters.secure;
 
+import com.liferay.portal.kernel.configuration.Filter;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.InstancePool;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.security.auth.AuthenticationConfig;
-import com.liferay.portal.security.auth.HttpBasicPortalAuthenticator;
-import com.liferay.portal.security.auth.ParameterAutoLogin;
 import com.liferay.portal.security.auth.PortalAuthenticator;
 
-import javax.servlet.FilterConfig;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @author Tomas Polesovsky
  */
 public class ServletFilterAuthenticationLoader {
 
-	public AuthenticationConfig load(HttpServletRequest request,
-		FilterConfig filterConfig){
 
-		AuthenticationConfig result = new AuthenticationConfig();
-
-		// TODO: load from configuration - filter config,
-		// based on request URL, portal.properties ...
-
-		if(request.getRequestURI().equals("/api/jsonws") ||
-			request.getRequestURI().equals("/api/jsonws/")){
-
-			// no auth - user is already signed or not
-			result.setRemoteAccess(true);
-		} else
-		if(request.getRequestURI().startsWith("/api/jsonws/")){
-			result.getOptionalAuthenticators().add(new ParameterAutoLogin());
-			result.getOptionalAuthenticators().add(
-				new HttpBasicPortalAuthenticator());
-
-			result.setRemoteAccess(true);
-		} else
-		if(request.getRequestURI().startsWith("/api/atom/")){
-			result.getRequiredAuthenticators().add(
-				new HttpBasicPortalAuthenticator());
-
-			result.setRemoteAccess(true);
+	public AuthenticationConfig load(HttpServletRequest request) {
+		List<AuthenticationRule> rules = loadConfiguration();
+		for(AuthenticationRule rule : rules){
+			if(rule.match(request)){
+				return rule.getAuthenticationConfig();
+			}
 		}
 
-			return result;
+		return null;
+	}
+
+
+	protected List<AuthenticationRule> loadConfiguration(){
+		// TODO: make it extensible for Hooks
+		List<AuthenticationRule> result = new ArrayList<AuthenticationRule>();
+
+		boolean finished = false;
+
+		for (int i = 0; i < Integer.MAX_VALUE && !finished; i++) {
+			String prefix = "portal.api.authentication.config["+i+"].";
+
+			Properties configProps = PropsUtil.getProperties(prefix, true);
+			if(configProps != null && configProps.size() > 0){
+				AuthenticationRule rule = loadConfiguration(configProps);
+				result.add(rule);
+			} else {
+				finished = true;
+			}
+		}
+
+		return result;
+	}
+
+	protected AuthenticationRule loadConfiguration(Properties configProps) {
+		if(configProps == null) {
+			return null;
+		}
+
+		AuthenticationRule rule = new AuthenticationRule();
+		AuthenticationConfig config = new AuthenticationConfig();
+		rule.registerAuthenticationConfig(config);
+		config.setSettings(configProps);
+
+		String[] urls = StringUtil.split(configProps.getProperty("urls"));
+		for(String url : urls){
+			rule.addPattern(url);
+		}
+
+		String[] requiredAuthenticators = StringUtil.split(
+				configProps.getProperty("authenticators.required"));
+		for(String authenticatorAlias : requiredAuthenticators){
+			String authenticatorClass = PropsUtil.get(
+				"portal.api.authentication.authenticators",
+				new Filter(authenticatorAlias));
+
+			PortalAuthenticator authenticatorObj =
+				(PortalAuthenticator) InstancePool.get(authenticatorClass);
+
+			config.getRequiredAuthenticators().add(authenticatorObj);
+		}
+
+		String[] optionalAuthenticators = StringUtil.split(
+			configProps.getProperty("authenticators.optional"));
+		for(String authenticatorAlias : optionalAuthenticators){
+			String authenticatorClass = PropsUtil.get(
+				"portal.api.authentication.authenticators",
+				new Filter(authenticatorAlias));
+
+			PortalAuthenticator authenticatorObj =
+				(PortalAuthenticator) InstancePool.get(authenticatorClass);
+
+			config.getOptionalAuthenticators().add(authenticatorObj);
+		}
+
+		boolean httpsRequired = GetterUtil.getBoolean(
+			configProps.getProperty("https.required"));
+		config.setSecure(httpsRequired);
+
+		boolean remoteEnabled = GetterUtil.getBoolean(
+			configProps.getProperty("remote"));
+		config.setRemoteAccess(remoteEnabled);
+
+		return rule;
 	}
 }
