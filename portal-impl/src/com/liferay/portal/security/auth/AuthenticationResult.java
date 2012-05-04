@@ -15,6 +15,13 @@
 package com.liferay.portal.security.auth;
 
 /**
+ * Result of the authentication. {@link PortalAuthenticator}s should set at
+ * least:<ul>
+ *     <li>{@link #setState(AuthenticationResult.State)} indicating the
+ *     result state</li>
+ *     <li>{@link #setUserId(long)} when user is authenticated - state is
+ *     {@link State#SUCCESS}</li>
+ * </ul>
  * @author Tomas Polesovsky
  */
 public class AuthenticationResult {

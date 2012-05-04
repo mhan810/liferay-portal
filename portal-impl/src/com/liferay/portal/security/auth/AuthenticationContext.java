@@ -21,31 +21,45 @@ import javax.servlet.http.HttpServletResponse;
  * @author Tomas Polesovsky
  */
 public class AuthenticationContext {
-	private HttpServletRequest _request;
-	private HttpServletResponse _response;
-	private AuthenticationConfig _authenticationConfig;
+
+	public AuthenticationConfig getAuthenticationConfig() {
+		return _authenticationConfig;
+	}
+
+	public Phase getAuthenticationPhase() {
+		return _authenticationPhase;
+	}
 
 	public HttpServletRequest getRequest() {
 		return _request;
-	}
-
-	public void setRequest(HttpServletRequest request) {
-		this._request = request;
 	}
 
 	public HttpServletResponse getResponse() {
 		return _response;
 	}
 
+	public void setAuthenticationConfig(AuthenticationConfig authenticationConfig) {
+		this._authenticationConfig = authenticationConfig;
+	}
+
+	public void setAuthenticationPhase(Phase authenticationPhase) {
+		this._authenticationPhase = authenticationPhase;
+	}
+
+	public void setRequest(HttpServletRequest request) {
+		this._request = request;
+	}
+
 	public void setResponse(HttpServletResponse response) {
 		this._response = response;
 	}
 
-	public AuthenticationConfig getAuthenticationConfig() {
-		return _authenticationConfig;
+	public enum Phase {
+		PHASE_1, PHASE_2
 	}
 
-	public void setAuthenticationConfig(AuthenticationConfig authenticationConfig) {
-		this._authenticationConfig = authenticationConfig;
-	}
+	private AuthenticationConfig _authenticationConfig;
+	private Phase _authenticationPhase;
+	private HttpServletRequest _request;
+	private HttpServletResponse _response;
 }

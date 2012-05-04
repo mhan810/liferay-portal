@@ -74,8 +74,14 @@ public class PortalAuthenticationManager {
 		}
 
 		if(requiredAuthenticator){
+			getAuthenticationContext().setAuthenticationPhase(
+				AuthenticationContext.Phase.PHASE_1);
+
 			result = authenticateRequiredPipeline();
 		} else {
+			getAuthenticationContext().setAuthenticationPhase(
+				AuthenticationContext.Phase.PHASE_2);
+
 			result = authenticateOptionalPipeline();
 		}
 
@@ -106,19 +112,22 @@ public class PortalAuthenticationManager {
 				result = authenticator.authenticate(
 					getAuthenticationContext());
 
-				switch (result.getState()){
-					// in optional pipeline it is sufficient
-					// to finish with first successful authenticator
-					case SUCCESS: {
-						createAuthorizationContext(result);
-						return result;
+				// we have the result so need to process it
+				if(result != null){
+					switch (result.getState()){
+						// in optional pipeline it is sufficient
+						// to finish with first successful authenticator
+						case SUCCESS: {
+							createAuthorizationContext(result);
+							return result;
+						}
+						case IN_PROGRESS: {
+							return result;
+						}
+						// no problem - let's try another authenticator
+						case INVALID_CREDENTIALS:
+						default: break;
 					}
-					case IN_PROGRESS: {
-						return result;
-					}
-					// no problem - let's try another authenticator
-					case INVALID_CREDENTIALS:
-					default: break;
 				}
 
 			} catch (AuthException e) {
