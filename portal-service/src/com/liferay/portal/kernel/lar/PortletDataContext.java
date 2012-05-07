@@ -136,6 +136,8 @@ public interface PortletDataContext extends Serializable {
 
 	public Map<String, String[]> getAssetTagNamesMap();
 
+	public Object getAttribute(String key);
+
 	public boolean getBooleanParameter(String namespace, String name);
 
 	public ClassLoader getClassLoader();
@@ -256,6 +258,10 @@ public interface PortletDataContext extends Serializable {
 	public boolean isWithinDateRange(Date modifiedDate);
 
 	public void putNotUniquePerLayout(String dataKey);
+
+	public void removeAttribute(String key);
+
+	public void setAttribute(String key, Object value);
 
 	public void setClassLoader(ClassLoader classLoader);
 
