@@ -14,6 +14,7 @@
 
 package com.liferay.portal.struts;
 
+import com.liferay.portal.SecureMethodInvocationException;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -65,6 +66,9 @@ public abstract class JSONAction extends Action {
 			else if (Validator.isNotNull(instance)) {
 				json = "var " + instance + "=" + json + ";";
 			}
+		}
+		catch (SecureMethodInvocationException e){
+			throw e;
 		}
 		catch (Exception e) {
 			PortalUtil.sendError(

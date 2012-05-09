@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.PortalSecurityManager;
 import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
@@ -176,7 +177,7 @@ public class JSONWebServiceServlet extends JSONServlet {
 	@Override
 	protected void resolveRemoteUser(HttpServletRequest request)
 		throws Exception {
-
+/*
 		UserResolver userResolver = new UserResolver(request);
 
 		CompanyThreadLocal.setCompanyId(userResolver.getCompanyId());
@@ -194,6 +195,7 @@ public class JSONWebServiceServlet extends JSONServlet {
 			request.setAttribute("user", user);
 			request.setAttribute("userId", user.getUserId());
 		}
+		*/
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
