@@ -30,11 +30,11 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.lar.LARExporter;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.struts.ActionConstants;
 import com.liferay.portal.struts.PortletAction;
@@ -171,9 +171,13 @@ public class ExportLayoutsAction extends PortletAction {
 				endDate = now;
 			}
 
-			file = LayoutServiceUtil.exportLayoutsAsFile(
+			LARExporter larExporter = new LARExporter();
+
+			larExporter.export(
 				groupId, privateLayout, layoutIds,
 				actionRequest.getParameterMap(), startDate, endDate);
+
+			file = larExporter.getDigestFile();
 
 			HttpServletRequest request = PortalUtil.getHttpServletRequest(
 				actionRequest);
@@ -181,8 +185,8 @@ public class ExportLayoutsAction extends PortletAction {
 				actionResponse);
 
 			ServletResponseUtil.sendFile(
-				request, response, fileName, new FileInputStream(file),
-				ContentTypes.APPLICATION_ZIP);
+				request, response, "digest.xml", new FileInputStream(file),
+				ContentTypes.TEXT_XML_UTF8);
 
 			setForward(actionRequest, ActionConstants.COMMON_NULL);
 		}
