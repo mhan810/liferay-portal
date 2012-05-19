@@ -26,11 +26,33 @@ import com.liferay.portal.util.PortalUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @author Minhchau Dang
  */
-public class ParameterAutoLogin implements AutoLogin {
+public class ParameterAutoLogin implements AutoLogin, PortalAuthenticator {
+
+	public AuthenticationResult authenticate(AuthenticationContext authContext)
+		throws AuthException {
+
+		AuthenticationResult result = new AuthenticationResult();
+
+		try {
+			String[] loginResult = login(authContext.getRequest(),
+				authContext.getResponse());
+
+			if(loginResult != null){
+				result.setState(AuthenticationResult.State.SUCCESS);
+				result.setUserId(Long.valueOf(loginResult[0]));
+				result.setPassword(loginResult[1]);
+			}
+		} catch (AutoLoginException e) {
+			throw new AuthException(e);
+		}
+
+		return result;
+	}
 
 	public String[] login(
 			HttpServletRequest request, HttpServletResponse response)

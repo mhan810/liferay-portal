@@ -14,12 +14,14 @@
 
 package com.liferay.portal.servlet;
 
+import com.liferay.portal.SecureMethodInvocationException;
 import com.liferay.portal.action.JSONServiceAction;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.PluginContextListener;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.PortalSecurityManager;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
@@ -78,6 +80,9 @@ public class JSONServlet extends HttpServlet {
 					currentThread.setContextClassLoader(contextClassLoader);
 				}
 			}
+		}
+		catch (SecureMethodInvocationException e){
+			throw new ServletException(e);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
