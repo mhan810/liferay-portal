@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
+import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutTypePortlet;
@@ -50,6 +51,7 @@ import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.PortletItem;
 import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletItemLocalServiceUtil;
@@ -59,6 +61,8 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portlet.PortletPreferencesImpl;
+import com.liferay.portlet.asset.NoSuchCategoryException;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import com.liferay.portlet.asset.model.AssetCategoryProperty;
@@ -72,6 +76,9 @@ import com.liferay.portlet.asset.service.AssetTagPropertyLocalServiceUtil;
 import com.liferay.portlet.asset.service.persistence.AssetCategoryUtil;
 import com.liferay.portlet.asset.service.persistence.AssetVocabularyUtil;
 import com.liferay.portlet.expando.model.ExpandoColumn;
+import com.liferay.portlet.journal.NoSuchStructureException;
+import com.liferay.portlet.journal.model.JournalStructure;
+import com.liferay.portlet.journal.service.JournalStructureLocalServiceUtil;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.ratings.model.RatingsEntry;
 import com.liferay.util.xml.DocUtil;
@@ -80,6 +87,7 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -131,6 +139,57 @@ public class PortletExporter {
 		finally {
 			ImportExportThreadLocal.setPortletExportInProcess(false);
 		}
+	}
+
+	protected String checkPortletPreferences(
+			long plid, String portletId, String xml)
+		throws Exception {
+
+		String rootPotletId = PortletConstants.getRootPortletId(portletId);
+
+		if (!rootPotletId.equals(PortletKeys.ASSET_PUBLISHER)) {
+			return xml;
+		}
+
+		PortletPreferencesImpl portletPreferences =
+			(PortletPreferencesImpl)PortletPreferencesFactoryUtil.
+				fromDefaultXML(xml);
+
+		Enumeration<String> enu = portletPreferences.getNames();
+
+		while (enu.hasMoreElements()) {
+			String name = enu.nextElement();
+
+			String value = GetterUtil.getString(
+				portletPreferences.getValue(name, StringPool.BLANK));
+
+			String prefix = "queryName";
+
+			if (value.equalsIgnoreCase("assetCategories") &&
+				name.startsWith(prefix)) {
+
+				String index = name.substring(prefix.length(), name.length());
+
+				String queryValuesName = "queryValues" + index;
+
+				replaceClassPKs(
+					queryValuesName, AssetCategory.class.getName(),
+					portletPreferences);
+			}
+			else if (
+				name.equals("anyClassTypeJournalArticleAssetRendererFactory") ||
+				name.equals("classTypeIdsJournalArticleAssetRendererFactory") ||
+				name.equals("classTypeIds")) {
+
+				replaceClassPKs(
+					name, JournalStructure.class.getName(), portletPreferences);
+			}
+			else if (name.equals("scopeIds") || name.equals("defaultScope")) {
+				replaceGlobalScopeId(name, portletPreferences, plid);
+			}
+		}
+
+		return PortletPreferencesFactoryUtil.toXML(portletPreferences);
 	}
 
 	protected File doExportPortletInfoAsFile(
@@ -1067,6 +1126,9 @@ public class PortletExporter {
 			preferencesXML = PortletConstants.DEFAULT_PREFERENCES;
 		}
 
+		preferencesXML = checkPortletPreferences(
+			plid, portletId, preferencesXML);
+
 		Document document = SAXReaderUtil.read(preferencesXML);
 
 		Element rootElement = document.getRootElement();
@@ -1364,6 +1426,100 @@ public class PortletExporter {
 		sb.append(".xml");
 
 		return sb.toString();
+	}
+
+	protected void replaceClassPKs(
+			String preferenceName, String clazz,
+			PortletPreferencesImpl portletPreferences)
+		throws Exception {
+
+		String[] oldValues = portletPreferences.getValues(preferenceName, null);
+
+		if (oldValues == null) {
+			return;
+		}
+
+		String[] newValues = new String[oldValues.length];
+
+		int i = 0;
+
+		for (String value : oldValues) {
+
+			String newValue = value;
+
+			for (String oldPK : StringUtil.split(value)) {
+				String newPK = null;
+
+				try {
+					if (AssetCategory.class.getName().equals(clazz)) {
+						AssetCategory category =
+							AssetCategoryLocalServiceUtil.getCategory(
+								Long.parseLong(oldPK));
+
+						newPK = category.getUuid();
+					}
+					else if (JournalStructure.class.getName().equals(clazz)) {
+						JournalStructure structure =
+							JournalStructureLocalServiceUtil.getStructure(
+								Long.parseLong(oldPK));
+
+						newPK = structure.getUuid();
+					}
+				}
+				catch (NoSuchStructureException nsse) {
+					if (_log.isWarnEnabled()) {
+						_log.warn(nsse.getMessage());
+					}
+				}
+				catch (NoSuchCategoryException nsce) {
+					if (_log.isWarnEnabled()) {
+						_log.warn(nsce.getMessage());
+					}
+				}
+				catch (NumberFormatException nfe) {
+				}
+
+				if (Validator.isNotNull(newPK)) {
+					newValue = newValue.replaceAll(oldPK, newPK);
+				}
+			}
+
+			newValues[i++] = newValue;
+		}
+
+		portletPreferences.setValues(preferenceName, newValues);
+	}
+
+	protected void replaceGlobalScopeId(
+			String preferenceName, PortletPreferencesImpl portletPreferences,
+			long plid)
+		throws Exception {
+
+		String[] oldValues = portletPreferences.getValues(preferenceName, null);
+
+		if (oldValues == null) {
+			return;
+		}
+
+		Layout layout = LayoutLocalServiceUtil.getLayout(plid);
+
+		Company company = CompanyLocalServiceUtil.getCompany(
+			layout.getCompanyId());
+
+		long globalScopeId = company.getGroup().getGroupId();
+
+		String toReplace = "Group_" + globalScopeId;
+
+		String[] newValues = new String[oldValues.length];
+
+		int i = 0;
+
+		for (String value : oldValues) {
+			newValues[i++] = StringUtil.replace(
+				value, toReplace, "Group_Company");
+		}
+
+		portletPreferences.setValues(preferenceName, newValues);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(PortletExporter.class);
