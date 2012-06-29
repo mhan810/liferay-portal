@@ -105,6 +105,7 @@ import com.liferay.portlet.wiki.model.impl.WikiPageImpl;
 
 import com.thoughtworks.xstream.XStream;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -142,7 +143,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 		_groupId = groupId;
 		_scopeGroupId = groupId;
 		_parameterMap = parameterMap;
-		_primaryKeys = primaryKeys;
+		_primaryKeys = new HashSet<String>();
 		_dataStrategy = null;
 		_userIdStrategy = null;
 		_startDate = startDate;
@@ -278,6 +279,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 			getPrimaryKeyString(className, classPK), assetTagNames);
 	}
 
+	@Deprecated
 	public void addClassedModel(
 			Element element, String path, ClassedModel classedModel,
 			String namespace)
@@ -327,6 +329,53 @@ public class PortletDataContextImpl implements PortletDataContext {
 		}
 
 		addZipEntry(path, classedModel);
+	}
+
+	// TODO review this method
+	public void addClassedModel(
+			String path, ClassedModel classedModel, String namespace)
+		throws PortalException, SystemException {
+
+		if (classedModel instanceof AuditedModel) {
+			AuditedModel auditedModel = (AuditedModel)classedModel;
+
+			auditedModel.setUserUuid(auditedModel.getUserUuid());
+		}
+
+		if (isResourceMain(classedModel)) {
+			Class<?> clazz = classedModel.getModelClass();
+			long classPK = getClassPK(classedModel);
+
+			addAssetLinks(clazz, classPK);
+			addExpando(path, classedModel);
+			addLocks(clazz, String.valueOf(classPK));
+			addPermissions(clazz, classPK);
+
+			boolean portletMetadataAll = getBooleanParameter(
+					namespace, PortletDataHandlerKeys.PORTLET_METADATA_ALL);
+
+			if (portletMetadataAll ||
+					getBooleanParameter(namespace, "categories")) {
+
+				addAssetCategories(clazz, classPK);
+			}
+
+			if (portletMetadataAll ||
+					getBooleanParameter(namespace, "comments")) {
+
+				addComments(clazz, classPK);
+			}
+
+			if (portletMetadataAll ||
+					getBooleanParameter(namespace, "ratings")) {
+
+				addRatingsEntries(clazz, classPK);
+			}
+
+			if (portletMetadataAll || getBooleanParameter(namespace, "tags")) {
+				addAssetTags(clazz, classPK);
+			}
+		}
 	}
 
 	public void addComments(Class<?> clazz, long classPK)
@@ -407,6 +456,27 @@ public class PortletDataContextImpl implements PortletDataContext {
 			element.addAttribute("expando-path", expandoPath);
 
 			addZipEntry(expandoPath, expandoBridgeAttributes);
+		}
+	}
+
+	public void addExpando(String path, ClassedModel classedModel)
+		throws PortalException, SystemException {
+
+		Class<?> clazz = classedModel.getModelClass();
+
+		String className = clazz.getName();
+
+		if (!_expandoColumnsMap.containsKey(className)) {
+			List<ExpandoColumn> expandoColumns =
+					ExpandoColumnLocalServiceUtil.getDefaultTableColumns(
+							_companyId, className);
+
+			for (ExpandoColumn expandoColumn : expandoColumns) {
+				addPermissions(
+						ExpandoColumn.class, expandoColumn.getColumnId());
+			}
+
+			_expandoColumnsMap.put(className, expandoColumns);
 		}
 	}
 
@@ -670,6 +740,10 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return _assetTagNamesMap;
 	}
 
+	public Object getAttribute(String key) {
+		return _attributes.get(key);
+	}
+
 	public boolean getBooleanParameter(String namespace, String name) {
 		boolean defaultValue = MapUtil.getBoolean(
 			getParameterMap(),
@@ -819,6 +893,14 @@ public class PortletDataContextImpl implements PortletDataContext {
 		}
 
 		return getZipReader().getEntryAsByteArray(path);
+	}
+
+	public File getZipEntryAsFile(String path) {
+		if (_portletDataContextListener != null) {
+			_portletDataContextListener.onGetZipEntry(path);
+		}
+
+		return getZipReader().getEntryAsFile(path);
 	}
 
 	public InputStream getZipEntryAsInputStream(String path) {
@@ -1223,6 +1305,18 @@ public class PortletDataContextImpl implements PortletDataContext {
 		_notUniquePerLayout.add(dataKey);
 	}
 
+	public void removeAttribute(String key) {
+		_attributes.remove(key);
+	}
+
+	public void setAttribute(String key, Object value) {
+		if (key == null) {
+			return;
+		}
+
+		_attributes.put(key, value);
+	}
+
 	public void setClassLoader(ClassLoader classLoader) {
 		_xStream.setClassLoader(classLoader);
 	}
@@ -1506,6 +1600,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 		new HashMap<String, String[]>();
 	private Map<String, String[]> _assetTagNamesMap =
 		new HashMap<String, String[]>();
+	private Map<String, Object> _attributes = new HashMap<String, Object>();
 	private Map<String, List<MBMessage>> _commentsMap =
 		new HashMap<String, List<MBMessage>>();
 	private long _companyId;
