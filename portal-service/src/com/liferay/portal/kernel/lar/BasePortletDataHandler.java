@@ -14,13 +14,17 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.lar.digest.LarDigest;
+
 import javax.portlet.PortletPreferences;
 
 /**
  * @author Brian Wing Shun Chan
+ * @author Mate Thurzo
  */
 public abstract class BasePortletDataHandler implements PortletDataHandler {
 
+	@Deprecated
 	public PortletPreferences deleteData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
@@ -35,6 +39,7 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		}
 	}
 
+	@Deprecated
 	public String exportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
@@ -69,6 +74,7 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		return new PortletDataHandlerControl[0];
 	}
 
+	@Deprecated
 	public PortletPreferences importData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences, String data)
@@ -99,6 +105,7 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		return _PUBLISH_TO_LIVE_BY_DEFAULT;
 	}
 
+	@Deprecated
 	protected PortletPreferences doDeleteData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
@@ -107,6 +114,7 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		return null;
 	}
 
+	@Deprecated
 	protected String doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
@@ -115,6 +123,7 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		return null;
 	}
 
+	@Deprecated
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences, String data)
