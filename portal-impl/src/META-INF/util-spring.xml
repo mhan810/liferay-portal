@@ -303,21 +303,6 @@
 	<bean id="com.liferay.portal.kernel.spring.util.SpringFactoryUtil" class="com.liferay.portal.kernel.spring.util.SpringFactoryUtil">
 		<property name="springFactory" ref="com.liferay.portal.kernel.spring.util.SpringFactory" />
 	</bean>
-	<bean id="com.liferay.portal.kernel.staging.LayoutStagingUtil" class="com.liferay.portal.kernel.staging.LayoutStagingUtil">
-		<property name="layoutStaging">
-			<bean class="com.liferay.portal.staging.LayoutStagingImpl" />
-		</property>
-	</bean>
-	<bean id="com.liferay.portal.kernel.staging.StagingUtil" class="com.liferay.portal.kernel.staging.StagingUtil">
-		<property name="staging">
-			<bean class="com.liferay.portal.staging.StagingImpl" />
-		</property>
-	</bean>
-	<bean id="com.liferay.portal.kernel.staging.permission.StagingPermissionUtil" class="com.liferay.portal.kernel.staging.permission.StagingPermissionUtil">
-		<property name="stagingPermission">
-			<bean class="com.liferay.portal.staging.permission.StagingPermissionImpl" />
-		</property>
-	</bean>
 	<bean id="com.liferay.portal.kernel.template.PortletDisplayTemplateHandlerRegistryUtil" class="com.liferay.portal.kernel.template.PortletDisplayTemplateHandlerRegistryUtil">
 		<property name="portletDisplayTemplateHandlerRegistry">
 			<bean class="com.liferay.portal.kernel.template.PortletDisplayTemplateHandlerRegistryImpl" />
