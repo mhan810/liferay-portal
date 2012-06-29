@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.zip;
 
+import java.io.File;
 import java.io.InputStream;
 
 import java.util.List;
@@ -30,6 +31,8 @@ public interface ZipReader {
 	public List<String> getEntries();
 
 	public byte[] getEntryAsByteArray(String name);
+
+	public File getEntryAsFile(String name);
 
 	public InputStream getEntryAsInputStream(String name);
 
