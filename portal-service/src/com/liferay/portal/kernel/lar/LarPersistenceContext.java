@@ -66,6 +66,8 @@ public interface LarPersistenceContext {
 
 	public ZipWriter getZipWriter();
 
+	public boolean hasDateRange();
+
 	public boolean isPrivateLayout();
 
 	public boolean isWithinDateRange(Date modifiedDate);

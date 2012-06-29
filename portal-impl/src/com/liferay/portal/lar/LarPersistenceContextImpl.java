@@ -86,6 +86,15 @@ public class LarPersistenceContextImpl implements LarPersistenceContext {
 		return (Boolean)getAttribute(ATTRIBUTE_NAME_PRIVATE_LAYOUT);
 	}
 
+	public boolean hasDateRange() {
+		if (getStartDate() != null) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 	public boolean isWithinDateRange(Date modifiedDate) {
 		if (!hasDateRange()) {
 			return true;
@@ -142,15 +151,6 @@ public class LarPersistenceContextImpl implements LarPersistenceContext {
 
 	public void setZipWriter(ZipWriter zipWriter) {
 		setAttribute(ATTRIBUTE_NAME_ZIP_WRITER, zipWriter);
-	}
-
-	private boolean hasDateRange() {
-		if (getStartDate() != null) {
-			return true;
-		}
-		else {
-			return false;
-		}
 	}
 
 	private Map<String, Object> _attributes = new HashMap<String, Object>();
