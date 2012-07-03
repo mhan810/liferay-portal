@@ -14,10 +14,20 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-/**
- * @author Daniel Kocsis
- */
-public interface JournalPortletLarPersistence extends PortletLarPersistence {
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.service.persistence.BaseDataHandler;
+import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 
-	public static final String _NAMESPACE = "journal";
+/**
+ * @author Mate Thurzo
+ */
+public interface BookmarksEntryDataHandler
+	extends BaseDataHandler<BookmarksEntry> {
+
+	public void deserialize(Document document);
+
+	public void doDigest(BookmarksEntry entry) throws Exception;
+
+	public BookmarksEntry getEntity(String classPK);
+
 }

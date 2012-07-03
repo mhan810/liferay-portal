@@ -14,12 +14,19 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-import com.liferay.portal.service.persistence.BaseLarPersistence;
-import com.liferay.portlet.journal.model.JournalStructure;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.model.Image;
+import com.liferay.portal.service.persistence.BaseDataHandler;
 
 /**
- * @author Daniel Kocsis
+ * @author Mate Thurzo
  */
-public interface JournalStructureLarPersistence
-	extends BaseLarPersistence<JournalStructure> {
+public interface ImageDataHandler extends BaseDataHandler<Image> {
+
+	public void deserialize(Document document);
+
+	public void doDigest(Image image) throws Exception;
+
+	public Image getEntity(String classPK);
+
 }

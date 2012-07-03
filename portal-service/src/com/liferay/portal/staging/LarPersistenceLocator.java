@@ -14,13 +14,13 @@
 
 package com.liferay.portal.staging;
 
-import com.liferay.portal.service.persistence.BaseLarPersistence;
+import com.liferay.portal.service.persistence.BaseDataHandler;
 
 /**
  * @author Mate Thurzo
  */
 public interface LarPersistenceLocator {
 
-	public BaseLarPersistence locate(String key);
+	public BaseDataHandler locate(String key);
 
 }

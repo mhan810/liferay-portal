@@ -14,12 +14,12 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-import com.liferay.portal.service.persistence.BaseLarPersistence;
+import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portlet.journal.model.JournalTemplate;
 
 /**
  * @author Daniel Kocsis
  */
-public interface JournalTemplateLarPersistence
-	extends BaseLarPersistence<JournalTemplate> {
+public interface JournalTemplateDataHandler
+	extends BaseDataHandler<JournalTemplate> {
 }
