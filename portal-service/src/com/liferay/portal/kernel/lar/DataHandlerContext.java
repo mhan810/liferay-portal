@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * @author Mate Thurzo
  */
-public interface LarPersistenceContext {
+public interface DataHandlerContext {
 
 	public static final String ATTRIBUTE_NAME_COMPANY_ID = "COMPANY_ID";
 

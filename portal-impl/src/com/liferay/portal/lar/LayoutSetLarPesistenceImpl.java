@@ -38,7 +38,7 @@ public class LayoutSetLarPesistenceImpl extends
 
 	@Override
 	protected void doImport(LarDigestItem item) throws Exception{
-		LarPersistenceContext context = getLarPersistenceContext();
+		DataHandlerContext context = getLarPersistenceContext();
 
 		Map parameterMap = context.getParameters();
 

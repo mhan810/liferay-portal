@@ -154,7 +154,7 @@ public class PortletExporter {
 		// ToDo: develop other portlets data handlers...
 
 		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
+			portlet.getLegacyPortletDataHandlerInstance();
 
 		if (portletDataHandler == null) {
 			return;
@@ -1155,7 +1155,7 @@ public class PortletExporter {
 		}
 
 		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
+			portlet.getLegacyPortletDataHandlerInstance();
 
 		if (portletDataHandler == null) {
 			return;

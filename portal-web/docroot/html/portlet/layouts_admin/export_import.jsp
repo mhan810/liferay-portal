@@ -60,7 +60,7 @@ for (Layout curLayout : LayoutLocalServiceUtil.getLayouts(liveGroupId, privateLa
 				continue;
 			}
 
-			PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+			PortletDataHandler portletDataHandler = portlet.getLegacyPortletDataHandlerInstance();
 
 			if ((portletDataHandler != null) && !portletIdsSet.contains(portlet.getRootPortletId())) {
 				portletIdsSet.add(portlet.getRootPortletId());

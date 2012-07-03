@@ -14,7 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-import com.liferay.portal.kernel.lar.LarPersistenceContext;
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.lar.digest.LarDigest;
@@ -36,7 +36,7 @@ public class BookmarksPortletDataHandlerImpl
 
 	@Override
 	public void doDigest(Portlet object) throws Exception {
-		LarPersistenceContext context =
+		DataHandlerContext context =
 			getLarPersistenceContext();
 
 		/*portletDataContext.addPermissions(
@@ -100,7 +100,7 @@ public class BookmarksPortletDataHandlerImpl
 	}
 
 	private void exportEntry(
-			BookmarksEntry entry, LarPersistenceContext context)
+			BookmarksEntry entry, DataHandlerContext context)
 		throws Exception {
 
 		if (!context.isWithinDateRange(entry.getModifiedDate())) {
@@ -117,7 +117,7 @@ public class BookmarksPortletDataHandlerImpl
 	}
 
 	private void exportFolder(
-			BookmarksFolder folder, LarPersistenceContext context)
+			BookmarksFolder folder, DataHandlerContext context)
 		throws Exception{
 
 		if (context.isWithinDateRange(folder.getModifiedDate())) {
