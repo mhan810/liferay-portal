@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.model.User;
@@ -38,9 +39,14 @@ public interface LarPersistenceContext {
 
 	public static final String ATTRIBUTE_NAME_SCOPE_GROUP_ID = "SCOPE_GROUP_ID";
 
+	public static final String ATTRIBUTE_NAME_SOURCE_GROUP_ID =
+		"SOURCE_GROUP_ID";
+
 	public static final String ATTRIBUTE_NAME_START_DATE = "START_DATE";
 
 	public static final String ATTRIBUTE_NAME_USER = "USER";
+
+	public static final String ATTRIBUTE_NAME_ZIP_READER = "ZIP_READER";
 
 	public static final String ATTRIBUTE_NAME_ZIP_WRITER = "ZIP_WRITER";
 
@@ -56,13 +62,21 @@ public interface LarPersistenceContext {
 
 	public LarDigest getLarDigest();
 
+	public Map<?, ?> getNewPrimaryKeysMap(Class<?> clazz);
+
+	public Map<?, ?> getNewPrimaryKeysMap(String className);
+
 	public Map<String, String[]> getParameters();
 
 	public long getScopeGroupId();
 
+	public long getSourceGroupId();
+
 	public Date getStartDate();
 
 	public User getUser();
+
+	public ZipReader getZipReader();
 
 	public ZipWriter getZipWriter();
 
@@ -88,9 +102,13 @@ public interface LarPersistenceContext {
 
 	public void setScopeGroupId(long scopeGroupId);
 
+	public void setSourceGroupId(long sourceGroupId);
+
 	public void setStartDate(Date startDate);
 
 	public void setUser(User user);
+
+	public void setZipReader(ZipReader zipReader);
 
 	public void setZipWriter(ZipWriter zipWriter);
 

@@ -18,12 +18,17 @@ import com.liferay.portal.kernel.lar.LarPersistenceContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.model.User;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,6 +67,22 @@ public class LarPersistenceContextImpl implements LarPersistenceContext {
 		return (LarDigest)getAttribute(ATTRIBUTE_NAME_LAR_DIGEST);
 	}
 
+	public Map<?, ?> getNewPrimaryKeysMap(Class<?> clazz) {
+		return getNewPrimaryKeysMap(clazz.getName());
+	}
+
+	public Map<?, ?> getNewPrimaryKeysMap(String className) {
+		Map<?, ?> map = _newPrimaryKeysMaps.get(className);
+
+		if (map == null) {
+			map = new HashMap<Object, Object>();
+
+			_newPrimaryKeysMaps.put(className, map);
+		}
+
+		return map;
+	}
+
 	public Map<String, String[]> getParameters() {
 		return _paramaters;
 	}
@@ -70,12 +91,20 @@ public class LarPersistenceContextImpl implements LarPersistenceContext {
 		return (Long)getAttribute(ATTRIBUTE_NAME_SCOPE_GROUP_ID);
 	}
 
+	public long getSourceGroupId() {
+		return (Long)getAttribute(ATTRIBUTE_NAME_SOURCE_GROUP_ID);
+	}
+
 	public Date getStartDate() {
 		return (Date)getAttribute(ATTRIBUTE_NAME_START_DATE);
 	}
 
 	public User getUser() {
 		return (User)getAttribute(ATTRIBUTE_NAME_USER);
+	}
+
+	public ZipReader getZipReader() {
+		return (ZipReader)getAttribute(ATTRIBUTE_NAME_ZIP_READER);
 	}
 
 	public ZipWriter getZipWriter() {
@@ -141,6 +170,10 @@ public class LarPersistenceContextImpl implements LarPersistenceContext {
 		setAttribute(ATTRIBUTE_NAME_SCOPE_GROUP_ID, scopeGroupId);
 	}
 
+	public void setSourceGroupId(long sourceGroupId) {
+		setAttribute(ATTRIBUTE_NAME_SOURCE_GROUP_ID, sourceGroupId);
+	}
+
 	public void setStartDate(Date startDate) {
 		setAttribute(ATTRIBUTE_NAME_START_DATE, startDate);
 	}
@@ -149,11 +182,17 @@ public class LarPersistenceContextImpl implements LarPersistenceContext {
 		setAttribute(ATTRIBUTE_NAME_USER, user);
 	}
 
+	public void setZipReader(ZipReader zipReader) {
+		setAttribute(ATTRIBUTE_NAME_ZIP_READER, zipReader);
+	}
+
 	public void setZipWriter(ZipWriter zipWriter) {
 		setAttribute(ATTRIBUTE_NAME_ZIP_WRITER, zipWriter);
 	}
 
 	private Map<String, Object> _attributes = new HashMap<String, Object>();
 	private Map<String, String[]> _paramaters;
+	private Map<String, Map<?, ?>> _newPrimaryKeysMaps =
+		new HashMap<String, Map<?, ?>>();
 
 }
