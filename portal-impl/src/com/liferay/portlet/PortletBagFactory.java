@@ -17,7 +17,6 @@ package com.liferay.portlet;
 import com.liferay.portal.dao.shard.ShardPollerProcessorWrapper;
 import com.liferay.portal.kernel.atom.AtomCollectionAdapter;
 import com.liferay.portal.kernel.atom.AtomCollectionAdapterRegistryUtil;
-import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.poller.PollerProcessor;
@@ -71,6 +70,7 @@ import com.liferay.portal.pop.POPServerUtil;
 import com.liferay.portal.security.pacl.PACLClassLoaderUtil;
 import com.liferay.portal.security.permission.PermissionPropagator;
 import com.liferay.portal.service.PortletLocalServiceUtil;
+import com.liferay.portal.service.persistence.lar.PortletDataHandler;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.xmlrpc.XmlRpcServlet;
@@ -146,8 +146,16 @@ public class PortletBagFactory {
 
 		URLEncoder urlEncoderInstance = newURLEncoder(portlet);
 
-		PortletDataHandler portletDataHandlerInstance = newPortletDataHandler(
-			portlet);
+		PortletDataHandler portletDataHandler = null;
+		com.liferay.portal.kernel.lar.PortletDataHandler legacyDataHandler =
+			null;
+
+		try {
+			legacyDataHandler = newLegacyPortletDataHandler(portlet);
+		}
+		catch (Exception e) {
+			portletDataHandler = newPortletDataHandler(portlet);
+		}
 
 		PortletDisplayTemplateHandler portletDisplayTemplateHandlerInstance =
 			newPortletDisplayTemplateHandler(portlet);
@@ -316,8 +324,8 @@ public class PortletBagFactory {
 		PortletBag portletBag = new PortletBagImpl(
 			portlet.getPortletId(), _servletContext, portletInstance,
 			configurationActionInstance, indexerInstances, openSearchInstance,
-			friendlyURLMapperInstance, urlEncoderInstance,
-			portletDataHandlerInstance, portletDisplayTemplateHandlerInstance,
+			friendlyURLMapperInstance, urlEncoderInstance, portletDataHandler,
+			legacyDataHandler, portletDisplayTemplateHandlerInstance,
 			portletLayoutListenerInstance, pollerProcessorInstance,
 			popMessageListenerInstance, socialActivityInterpreterInstance,
 			socialRequestInterpreterInstance, webDAVStorageInstance,
@@ -557,7 +565,7 @@ public class PortletBagFactory {
 			portlet.getPortletId(), socialActivityInterpreterInstance);
 
 		SocialActivityInterpreterLocalServiceUtil.addActivityInterpreter(
-			socialActivityInterpreterInstance);
+				socialActivityInterpreterInstance);
 
 		return socialActivityInterpreterInstance;
 	}
@@ -799,8 +807,8 @@ public class PortletBagFactory {
 			PollerProcessor.class, portlet.getPollerProcessorClass());
 
 		PollerProcessorUtil.addPollerProcessor(
-			portlet.getPortletId(),
-			new ShardPollerProcessorWrapper(pollerProcessorInstance));
+				portlet.getPortletId(),
+				new ShardPollerProcessorWrapper(pollerProcessorInstance));
 
 		return pollerProcessorInstance;
 	}
@@ -830,6 +838,18 @@ public class PortletBagFactory {
 
 		return (PortletDataHandler)newInstance(
 			PortletDataHandler.class, portlet.getPortletDataHandlerClass());
+	}
+
+	protected com.liferay.portal.kernel.lar.PortletDataHandler
+			newLegacyPortletDataHandler(Portlet portlet) throws Exception {
+
+		if (Validator.isNull(portlet.getPortletDataHandlerClass())) {
+			return null;
+		}
+
+		return (com.liferay.portal.kernel.lar.PortletDataHandler)newInstance(
+			com.liferay.portal.kernel.lar.PortletDataHandler.class,
+			portlet.getPortletDataHandlerClass());
 	}
 
 	protected PortletDisplayTemplateHandler newPortletDisplayTemplateHandler(
