@@ -15,15 +15,10 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.LarPersistenceContext;
-import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
+import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.lar.digest.LarDigest;
-import com.liferay.portal.lar.digest.LarDigestItem;
-import com.liferay.portal.lar.digest.LarDigestItemImpl;
-import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.Portlet;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.model.BookmarksFolderConstants;
@@ -35,9 +30,9 @@ import java.util.List;
 /**
  * @author Mate Thurzo
  */
-public class BookmarksPortletLarPersistenceImpl
-	extends PortletLarPersistenceImpl
-	implements BookmarksPortletLarPersistence {
+public class BookmarksPortletDataHandlerImpl
+	extends PortletDataHandlerImpl
+	implements BookmarksPortletDataHandler {
 
 	@Override
 	public void doDigest(Portlet object) throws Exception {
@@ -64,7 +59,47 @@ public class BookmarksPortletLarPersistenceImpl
 		}
 	}
 
-	protected void exportEntry(
+	@Override
+	public PortletDataHandlerControl[] getExportControls() {
+		return new PortletDataHandlerControl[] {
+			_foldersAndEntries
+		};
+	}
+
+	@Override
+	public PortletDataHandlerControl[] getExportMetadataControls() {
+		return new PortletDataHandlerControl[] {
+			new PortletDataHandlerBoolean(
+				_NAMESPACE, "bookmarks", true, _metadataControls)
+		};
+	}
+
+	@Override
+	public PortletDataHandlerControl[] getImportControls() {
+		return new PortletDataHandlerControl[] {
+			_foldersAndEntries
+		};
+	}
+
+	@Override
+	public PortletDataHandlerControl[] getImportMetadataControls() {
+		return new PortletDataHandlerControl[] {
+			new PortletDataHandlerBoolean(
+				_NAMESPACE, "bookmarks", true, _metadataControls)
+		};
+	}
+
+	@Override
+	public boolean isAlwaysExportable() {
+		return _ALWAYS_EXPORTABLE;
+	}
+
+	@Override
+	public boolean isPublishToLiveByDefault() {
+		return _PUBLISH_TO_LIVE_BY_DEFAULT;
+	}
+
+	private void exportEntry(
 			BookmarksEntry entry, LarPersistenceContext context)
 		throws Exception {
 
@@ -78,7 +113,7 @@ public class BookmarksPortletLarPersistenceImpl
 			exportParentFolder(context.getLarDigest(), parentForlderId);
 		}
 
-		bookmarksEntryLarPersistence.digest(entry);
+		bookmarksEntryDataHandler.digest(entry);
 	}
 
 	private void exportFolder(
@@ -89,14 +124,14 @@ public class BookmarksPortletLarPersistenceImpl
 			exportParentFolder(
 				context.getLarDigest(), folder.getParentFolderId());
 
-			bookmarksFolderLarPersistence.digest(folder);
+			bookmarksFolderDataHandler.digest(folder);
 		}
 
 		List<BookmarksEntry> entries = BookmarksEntryUtil.findByG_F(
 			folder.getGroupId(), folder.getFolderId());
 
 		for (BookmarksEntry entry : entries) {
-			bookmarksEntryLarPersistence.digest(entry);
+			bookmarksEntryDataHandler.digest(entry);
 		}
 	}
 
@@ -111,7 +146,24 @@ public class BookmarksPortletLarPersistenceImpl
 
 		exportParentFolder(larDigest, folder.getParentFolderId());
 
-		bookmarksFolderLarPersistence.digest(folder);
+		bookmarksFolderDataHandler.digest(folder);
 	}
+
+	private static final boolean _ALWAYS_EXPORTABLE = true;
+
+	private static final String _NAMESPACE = "bookmarks";
+
+	private static final boolean _PUBLISH_TO_LIVE_BY_DEFAULT = true;
+
+	private static PortletDataHandlerBoolean _foldersAndEntries =
+		new PortletDataHandlerBoolean(
+			_NAMESPACE, "folders-and-entries", true, true);
+
+	private static PortletDataHandlerControl[] _metadataControls =
+		new PortletDataHandlerControl[] {
+			new PortletDataHandlerBoolean(_NAMESPACE, "categories"),
+			new PortletDataHandlerBoolean(_NAMESPACE, "ratings"),
+			new PortletDataHandlerBoolean(_NAMESPACE, "tags")
+		};
 
 }

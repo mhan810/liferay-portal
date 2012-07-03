@@ -40,8 +40,8 @@ import com.liferay.portal.lar.digest.LarDigestImpl;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.*;
 import com.liferay.portal.service.*;
-import com.liferay.portal.service.persistence.BaseLarPersistence;
-import com.liferay.portal.service.persistence.lar.LayoutLarPersistence;
+import com.liferay.portal.service.persistence.BaseDataHandler;
+import com.liferay.portal.service.persistence.lar.LayoutDataHandler;
 import com.liferay.portal.theme.ThemeLoader;
 import com.liferay.portal.theme.ThemeLoaderFactory;
 import com.liferay.portal.util.PortletKeys;
@@ -55,7 +55,6 @@ import java.io.File;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -262,8 +261,8 @@ public class LARExporter {
 
 		// Layouts
 
-		LayoutLarPersistence layoutLarPersistence =
-			(LayoutLarPersistence)LarPersistenceLocatorUtil.locate(
+		LayoutDataHandler layoutLarPersistence =
+			(LayoutDataHandler)LarPersistenceLocatorUtil.locate(
 				Layout.class.getName());
 
 		for (Layout layout : layouts) {
@@ -294,11 +293,11 @@ public class LARExporter {
 			String type = item.getType();
 			String classPK = item.getClassPK();
 
-			BaseLarPersistence larPersistence =
+			BaseDataHandler dataHandler =
 				LarPersistenceLocatorUtil.locate(type);
 
-			if (larPersistence != null) {
-				larPersistence.serialize(classPK);
+			if (dataHandler != null) {
+				dataHandler.serialize(classPK);
 			}
 		}
 	}

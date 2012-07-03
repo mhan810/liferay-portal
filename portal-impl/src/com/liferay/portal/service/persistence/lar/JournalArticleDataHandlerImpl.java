@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-import com.liferay.portal.NoSuchImageException;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -28,26 +27,17 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.service.persistence.ImageUtil;
-import com.liferay.portal.service.persistence.impl.BaseLarPersistenceImpl;
+import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.documentlibrary.lar.DLPortletDataHandlerImpl;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleImage;
-import com.liferay.portlet.journal.model.JournalStructure;
-import com.liferay.portlet.journal.model.JournalTemplate;
-import com.liferay.portlet.journal.service.JournalStructureLocalServiceUtil;
-import com.liferay.portlet.journal.service.JournalTemplateLocalServiceUtil;
-import com.liferay.portlet.journal.service.persistence.JournalArticleImageUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,9 +49,9 @@ import java.util.regex.Pattern;
 /**
  * @author Mate Thurzo
  */
-public class JournalArticleLarPersistenceImpl
-	extends BaseLarPersistenceImpl<JournalArticle>
-	implements JournalArticleLarPersistence {
+public class JournalArticleDataHandlerImpl
+	extends BaseDataHandlerImpl<JournalArticle>
+	implements JournalArticleDataHandler {
 
 	@Override
 	public void doDigest(JournalArticle article) throws Exception {
@@ -126,7 +116,7 @@ public class JournalArticleLarPersistenceImpl
 		}
 
 		if (portletDataContext.getBooleanParameter(
-				JournalPortletLarPersistence._NAMESPACE, "images")) {
+				JournalPortletDataHandler._NAMESPACE, "images")) {
 
 			List<JournalArticleImage> articleImages =
 				JournalArticleImageUtil.findByG_A_V(
@@ -163,7 +153,7 @@ public class JournalArticleLarPersistenceImpl
 		article.setStatusByUserUuid(article.getStatusByUserUuid());
 
 		if (portletDataContext.getBooleanParameter(
-			JournalPortletLarPersistence._NAMESPACE, "embedded-assets")) {
+			JournalPortletDataHandler._NAMESPACE, "embedded-assets")) {
 
 			String content = exportReferencedContent(
 				portletDataContext, article.getContent(), JournalArticle.class);
@@ -173,7 +163,7 @@ public class JournalArticleLarPersistenceImpl
 
 		/*portletDataContext.addClassedModel(
 			articleElement, path, article,
-			JournalPortletLarPersistence._NAMESPACE);*/
+			JournalPortletDataHandler._NAMESPACE);*/
 	}
 
 	public String exportReferencedContent(
@@ -391,13 +381,13 @@ public class JournalArticleLarPersistenceImpl
 
 				if (fileEntry.isDefaultRepository()) {
 					// ToDo: check these static methods
-					path = DLPortletDataHandlerImpl.getFileEntryPath(
-						portletDataContext, fileEntry);
+					/*path = DLPortletDataHandlerImpl.getFileEntryPath(
+						portletDataContext, fileEntry);*/
 
 				}
 				else {
-					path = DLPortletDataHandlerImpl.getRepositoryEntryPath(
-						portletDataContext, fileEntry.getFileEntryId());
+					/*path = DLPortletDataHandlerImpl.getRepositoryEntryPath(
+						portletDataContext, fileEntry.getFileEntryId());*/
 				}
 
 				String dlReference = "[$dl-reference=" + path + "$]";
@@ -682,7 +672,7 @@ public class JournalArticleLarPersistenceImpl
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
-		JournalArticleLarPersistenceImpl.class);
+		JournalArticleDataHandlerImpl.class);
 
 	private static Pattern _exportLinksToLayoutPattern = Pattern.compile(
 		"\\[([0-9]+)@(public|private\\-[a-z]*)\\]");

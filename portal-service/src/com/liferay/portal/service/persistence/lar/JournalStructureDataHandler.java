@@ -14,21 +14,12 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.service.persistence.BaseLarPersistence;
-import com.liferay.portlet.bookmarks.model.BookmarksEntry;
+import com.liferay.portal.service.persistence.BaseDataHandler;
+import com.liferay.portlet.journal.model.JournalStructure;
 
 /**
- * @author Mate Thurzo
+ * @author Daniel Kocsis
  */
-public interface BookmarksEntryLarPersistence
-	extends BaseLarPersistence<BookmarksEntry> {
-
-	public void deserialize(Document document);
-
-	public void doDigest(BookmarksEntry entry) throws Exception;
-
-	public BookmarksEntry getEntity(String classPK);
-
+public interface JournalStructureDataHandler
+	extends BaseDataHandler<JournalStructure> {
 }

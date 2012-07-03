@@ -14,8 +14,6 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-import com.liferay.portal.kernel.lar.LarPersistenceContext;
-import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -24,7 +22,7 @@ import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
-import com.liferay.portal.service.persistence.impl.BaseLarPersistenceImpl;
+import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.service.BookmarksEntryLocalServiceUtil;
@@ -32,9 +30,9 @@ import com.liferay.portlet.bookmarks.service.BookmarksEntryLocalServiceUtil;
 /**
  * @author Mate Thurzo
  */
-public class BookmarksEntryLarPersistenceImpl
-	extends BaseLarPersistenceImpl<BookmarksEntry>
-	implements BookmarksEntryLarPersistence {
+public class BookmarksEntryDataHandlerImpl
+	extends BaseDataHandlerImpl<BookmarksEntry>
+	implements BookmarksEntryDataHandler {
 
 	public void deserialize(Document document) {
 	}

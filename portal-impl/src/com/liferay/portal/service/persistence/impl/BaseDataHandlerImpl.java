@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.LarPersistenceContext;
 import com.liferay.portal.kernel.lar.LarPersistenceContextThreadLocal;
-import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataContextListener;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -29,23 +28,20 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
-import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
 import com.liferay.portal.lar.XStreamWrapper;
-import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
-import com.liferay.portal.model.LayoutSet;
-import com.liferay.portal.service.persistence.BaseLarPersistence;
-import com.liferay.portal.service.persistence.lar.BookmarksEntryLarPersistence;
-import com.liferay.portal.service.persistence.lar.BookmarksFolderLarPersistence;
-import com.liferay.portal.service.persistence.lar.BookmarksPortletLarPersistence;
-import com.liferay.portal.service.persistence.lar.ImageLarPersistence;
-import com.liferay.portal.service.persistence.lar.PortletLarPersistence;
-import com.liferay.portal.service.persistence.lar.JournalStructureLarPersistence;
-import com.liferay.portal.service.persistence.lar.JournalTemplateLarPersistence;
+import com.liferay.portal.service.persistence.BaseDataHandler;
+import com.liferay.portal.service.persistence.lar.BookmarksEntryDataHandler;
+import com.liferay.portal.service.persistence.lar.BookmarksFolderDataHandler;
+import com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandler;
+import com.liferay.portal.service.persistence.lar.ImageDataHandler;
+import com.liferay.portal.service.persistence.lar.JournalArticleDataHandler;
+import com.liferay.portal.service.persistence.lar.JournalStructureDataHandler;
+import com.liferay.portal.service.persistence.lar.JournalTemplateDataHandler;
+import com.liferay.portal.service.persistence.lar.PortletDataHandler;
 import com.liferay.portlet.expando.model.ExpandoBridge;
-import com.liferay.portal.service.persistence.lar.JournalArticleLarPersistence;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,8 +54,8 @@ import java.util.Set;
 /**
  * @author Mate Thurzo
  */
-public class BaseLarPersistenceImpl<T extends BaseModel<T>>
-	implements BaseLarPersistence<T> {
+public class BaseDataHandlerImpl<T extends BaseModel<T>>
+	implements BaseDataHandler<T> {
 
 	public void addZipEntry(String path, T object) throws SystemException {
 		addZipEntry(path, toXML(object));
@@ -322,10 +318,6 @@ public class BaseLarPersistenceImpl<T extends BaseModel<T>>
 		return null;
 	}
 
-	public void setZipWriter(ZipWriter zipWriter) {
-		_zipWriter = zipWriter;
-	}
-
 	protected void doDigest(T object) throws Exception {
 		return;
 	}
@@ -383,27 +375,24 @@ public class BaseLarPersistenceImpl<T extends BaseModel<T>>
 		_storedPaths.add(path);
 	}
 
-	private Log _log = LogFactoryUtil.getLog(BaseLarPersistenceImpl.class);
+	private Log _log = LogFactoryUtil.getLog(BaseDataHandlerImpl.class);
 	private PortletDataContextListener _portletDataContextListener;
 	private static Set<String> _storedPaths = new HashSet<String>();
-	private static ZipWriter _zipWriter;
 	private XStreamWrapper _xStreamWrapper;
 
-	@BeanReference(type = JournalArticleLarPersistence.class)
-	protected JournalArticleLarPersistence journalArticleLarPersistence;
-	@BeanReference(type = JournalStructureLarPersistence.class)
-	protected JournalStructureLarPersistence journalStructureLarPersistence;
-	@BeanReference(type = JournalTemplateLarPersistence.class)
-	protected JournalTemplateLarPersistence journalTemplateLarPersistence;
-	@BeanReference(type = ImageLarPersistence.class)
-	protected ImageLarPersistence imageLarPersistence;
-	@BeanReference(type = BookmarksEntryLarPersistence.class)
-	protected BookmarksEntryLarPersistence bookmarksEntryLarPersistence;
-	@BeanReference(type = BookmarksFolderLarPersistence.class)
-	protected BookmarksFolderLarPersistence bookmarksFolderLarPersistence;
-	@BeanReference(type = BookmarksPortletLarPersistence.class)
-	protected BookmarksPortletLarPersistence bookmarksPortletLarPersistence;
-	@BeanReference(type = PortletLarPersistence.class)
-	protected PortletLarPersistence portletLarPersistence;
+	@BeanReference(type = JournalArticleDataHandler.class)
+	protected JournalArticleDataHandler journalArticleDataHandler;
+	@BeanReference(type = JournalStructureDataHandler.class)
+	protected JournalStructureDataHandler journalStructureDataHandler;
+	@BeanReference(type = JournalTemplateDataHandler.class)
+	protected JournalTemplateDataHandler journalTemplateDataHandler;
+	@BeanReference(type = ImageDataHandler.class)
+	protected ImageDataHandler imageDataHandler;
+	@BeanReference(type = BookmarksEntryDataHandler.class)
+	protected BookmarksEntryDataHandler bookmarksEntryDataHandler;
+	@BeanReference(type = BookmarksFolderDataHandler.class)
+	protected BookmarksFolderDataHandler bookmarksFolderDataHandler;
+	@BeanReference(type = BookmarksPortletDataHandler.class)
+	protected BookmarksPortletDataHandler bookmarksPortletDataHandler;
 
 }
