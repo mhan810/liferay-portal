@@ -194,7 +194,7 @@ public class PortletImporter {
 		}
 
 		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
+			portlet.getLegacyPortletDataHandlerInstance();
 
 		if (portletDataHandler == null) {
 			if (_log.isDebugEnabled()) {
@@ -1022,7 +1022,7 @@ public class PortletImporter {
 		}
 
 		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
+			portlet.getLegacyPortletDataHandlerInstance();
 
 		if (portletDataHandler == null) {
 			if (_log.isDebugEnabled()) {

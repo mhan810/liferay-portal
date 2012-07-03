@@ -38,10 +38,10 @@ public abstract class BaseLarPersistenceUtil {
 	}
 
 	public Map<String, String[]> getParameters() {
-		LarPersistenceContext larPersistenceContext =
-			LarPersistenceContextThreadLocal.getLarPersistenceContext();
+		DataHandlerContext context =
+			DataHandlerContextThreadLocal.getDataHandlerContext();
 
-		return larPersistenceContext.getParameters();
+		return context.getParameters();
 	}
 
 }

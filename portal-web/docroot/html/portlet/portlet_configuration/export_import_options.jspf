@@ -45,7 +45,7 @@
 			<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>" type="hidden" value="<%= false %>" />
 
 			<%
-			PortletDataHandler portletDataHandler = selPortlet.getPortletDataHandlerInstance();
+			PortletDataHandler portletDataHandler = selPortlet.getLegacyPortletDataHandlerInstance();
 			%>
 
 			<c:choose>
