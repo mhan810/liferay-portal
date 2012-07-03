@@ -26,12 +26,16 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
 import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.lar.digest.LarDigest;
+import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
+import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.service.persistence.BaseLarPersistence;
 import com.liferay.portal.service.persistence.lar.BookmarksEntryLarPersistence;
 import com.liferay.portal.service.persistence.lar.BookmarksFolderLarPersistence;
@@ -43,9 +47,11 @@ import com.liferay.portal.service.persistence.lar.JournalTemplateLarPersistence;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portal.service.persistence.lar.JournalArticleLarPersistence;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -151,6 +157,22 @@ public class BaseLarPersistenceImpl<T extends BaseModel<T>>
 		}
 	}
 
+	public Object fromXML(byte[] bytes) {
+		if ((bytes == null) || (bytes.length == 0)) {
+			return null;
+		}
+
+		return getXStreamWrapper().fromXML(new String(bytes));
+	}
+
+	public Object fromXML(String xml) {
+		if (Validator.isNull(xml)) {
+			return null;
+		}
+
+		return getXStreamWrapper().fromXML(xml);
+	}
+
 	public String getEntityPath(T object) {
 		if (object instanceof BaseModel) {
 			BaseModel<T> baseModel = (BaseModel<T>)object;
@@ -170,6 +192,62 @@ public class BaseLarPersistenceImpl<T extends BaseModel<T>>
 		}
 
 		return StringPool.BLANK;
+	}
+
+	public List<String> getZipEntries() {
+		return getZipReader().getEntries();
+	}
+
+	public byte[] getZipEntryAsByteArray(String path) {
+		if (_portletDataContextListener != null) {
+			_portletDataContextListener.onGetZipEntry(path);
+		}
+
+		return getZipReader().getEntryAsByteArray(path);
+	}
+
+	public File getZipEntryAsFile(String path) {
+		if (_portletDataContextListener != null) {
+			_portletDataContextListener.onGetZipEntry(path);
+		}
+
+		return getZipReader().getEntryAsFile(path);
+	}
+
+	public InputStream getZipEntryAsInputStream(String path) {
+		if (_portletDataContextListener != null) {
+			_portletDataContextListener.onGetZipEntry(path);
+		}
+
+		return getZipReader().getEntryAsInputStream(path);
+	}
+
+	public Object getZipEntryAsObject(String path) {
+		return fromXML(getZipEntryAsString(path));
+	}
+
+	public String getZipEntryAsString(String path) {
+		if (_portletDataContextListener != null) {
+			_portletDataContextListener.onGetZipEntry(path);
+		}
+
+		return getZipReader().getEntryAsString(path);
+	}
+
+	public List<String> getZipFolderEntries() {
+		return getZipFolderEntries(StringPool.SLASH);
+	}
+
+	public List<String> getZipFolderEntries(String path) {
+		return getZipReader().getFolderEntries(path);
+	}
+
+	public void importData(LarDigestItem item) {
+		try {
+			doImport(item);
+		}
+		catch (Exception e) {
+		}
 	}
 
 	public void serialize(String classPK) {
@@ -203,20 +281,7 @@ public class BaseLarPersistenceImpl<T extends BaseModel<T>>
 	}
 
 	public String toXML(Object object) {
-		String rv = null;
-
-		if (_xStreamWrapper != null) {
-			rv = _xStreamWrapper.toXML(object);
-		}
-		else {
-			Object o = PortalBeanLocatorUtil.locate("xStreamWrapper");
-
-			if (o != null) {
-				return ((XStreamWrapper)o).toXML(object);
-			}
-		}
-
-		return rv;
+		return getXStreamWrapper().toXML(object);
 	}
 
 	public void setXstreamWrapper(XStreamWrapper xstreamWrapper) {
@@ -224,7 +289,26 @@ public class BaseLarPersistenceImpl<T extends BaseModel<T>>
 	}
 
 	public XStreamWrapper getXStreamWrapper() {
+		if (_xStreamWrapper == null) {
+			Object o = PortalBeanLocatorUtil.locate("xStreamWrapper");
+
+			if (o != null) {
+				_xStreamWrapper = ((XStreamWrapper)o);
+			}
+		}
+
 		return _xStreamWrapper;
+	}
+
+	public ZipReader getZipReader() {
+		LarPersistenceContext context =
+			LarPersistenceContextThreadLocal.getLarPersistenceContext();
+
+		if (context != null) {
+			return context.getZipReader();
+		}
+
+		return null;
 	}
 
 	public ZipWriter getZipWriter() {
@@ -243,6 +327,10 @@ public class BaseLarPersistenceImpl<T extends BaseModel<T>>
 	}
 
 	protected void doDigest(T object) throws Exception {
+		return;
+	}
+
+	protected void doImport(LarDigestItem item) throws Exception{
 		return;
 	}
 
