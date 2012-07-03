@@ -84,6 +84,7 @@ public class LarDigestImpl implements LarDigest {
 		initElements();
 	}
 
+	public void addMetadata()
 	public void addMetaData(HashMap<String, String> metadata) throws Exception {
 		EndElement metadataEndElement = createEndElement(
 			LarDigesterConstants.NODE_METADATA_LABEL);
