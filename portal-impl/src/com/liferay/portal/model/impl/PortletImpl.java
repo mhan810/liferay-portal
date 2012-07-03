@@ -15,7 +15,6 @@
 package com.liferay.portal.model.impl;
 
 import com.liferay.portal.kernel.atom.AtomCollectionAdapter;
-import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.plugin.PluginPackage;
@@ -58,6 +57,7 @@ import com.liferay.portal.security.permission.PermissionPropagator;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
+import com.liferay.portal.service.persistence.lar.PortletDataHandler;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.ControlPanelEntry;
@@ -1163,11 +1163,6 @@ public class PortletImpl extends PortletBaseImpl {
 		return _portletDataHandlerClass;
 	}
 
-	/**
-	 * Returns the portlet data handler instance of the portlet.
-	 *
-	 * @return the portlet data handler instance of the portlet
-	 */
 	public PortletDataHandler getPortletDataHandlerInstance() {
 		if (Validator.isNull(getPortletDataHandlerClass())) {
 			return null;
@@ -1176,6 +1171,22 @@ public class PortletImpl extends PortletBaseImpl {
 		PortletBag portletBag = PortletBagPool.get(getRootPortletId());
 
 		return portletBag.getPortletDataHandlerInstance();
+	}
+	/**
+	 * Returns the portlet data handler instance of the portlet.
+	 *
+	 * @return the portlet data handler instance of the portlet
+	 */
+	public com.liferay.portal.kernel.lar.PortletDataHandler
+		getLegacyPortletDataHandlerInstance() {
+
+		if (Validator.isNull(getPortletDataHandlerClass())) {
+			return null;
+		}
+
+		PortletBag portletBag = PortletBagPool.get(getRootPortletId());
+
+		return portletBag.getLegacyPortletDataHandlerInstance();
 	}
 
 	/**

@@ -14,18 +14,15 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-import com.liferay.counter.service.CounterLocalServiceUtil;
-import com.liferay.portal.kernel.lar.LarPersistenceContext;
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.staging.LayoutStagingUtil;
-import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -36,7 +33,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.lar.PermissionImporter;
 import com.liferay.portal.lar.PortletImporter;
 import com.liferay.portal.lar.digest.LarDigest;
@@ -49,46 +45,29 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutRevision;
-import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutStagingHandler;
 import com.liferay.portal.model.LayoutTemplate;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.LayoutTypePortletConstants;
 import com.liferay.portal.model.Portlet;
-import com.liferay.portal.model.ResourceConstants;
-import com.liferay.portal.model.Role;
-import com.liferay.portal.model.RoleConstants;
-import com.liferay.portal.model.User;
-import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ImageLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
-import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.LayoutTemplateLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
-import com.liferay.portal.service.ResourceLocalServiceUtil;
-import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
-import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.service.persistence.LayoutRevisionUtil;
-import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
-import com.liferay.portlet.journal.service.JournalContentSearchLocalServiceUtil;
-import com.liferay.portlet.sites.util.SitesUtil;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Mate Thurzo
@@ -102,10 +81,10 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 	@Override
 	protected void doImport(LarDigestItem item) throws Exception {
 
-		// toDo: move methods from PortletDataContext to LarPersistenceContext
+		// toDo: move methods from PortletDataContext to DataHandlerContext
 		/*PortletDataContext portletDataContext = null;
 
-		LarPersistenceContext context = getLarPersistenceContext();
+		DataHandlerContext context = getDataHandlerContext();
 
 		Map parameterMap = context.getParameters();
 
@@ -518,7 +497,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 	@Override
 	public void doDigest(Layout layout) throws Exception {
-		LarPersistenceContext larPersistenceContext =
+		DataHandlerContext context =
 			getLarPersistenceContext();
 
 		String path = getEntityPath(layout);
@@ -579,16 +558,16 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				LayoutPrototypeLocalServiceUtil.
 					getLayoutPrototypeByUuidAndCompanyId(
 						layoutPrototypeUuid,
-						larPersistenceContext.getCompanyId());
+						context.getCompanyId());
 
 			//TODO digest layout prototype
 		}
 
 		boolean deleteLayout = MapUtil.getBoolean(
-				larPersistenceContext.getParameters(),
+				context.getParameters(),
 				"delete_" + layout.getPlid());
 
-		LarDigest digest = larPersistenceContext.getLarDigest();
+		LarDigest digest = context.getLarDigest();
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
@@ -647,7 +626,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 			if (linkToLayoutId > 0) {
 				Layout linkedToLayout = LayoutLocalServiceUtil.getLayout(
-					larPersistenceContext.getScopeGroupId(),
+					context.getScopeGroupId(),
 					layout.isPrivateLayout(), linkToLayoutId);
 
 				digest(linkedToLayout);
@@ -667,7 +646,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				String scopeLayoutUuid = GetterUtil.getString(
 					jxPreferences.getValue("lfrScopeLayoutUuid", null));
 
-				long scopeGroupId = larPersistenceContext.getScopeGroupId();
+				long scopeGroupId = context.getScopeGroupId();
 
 				if (Validator.isNotNull(scopeType)) {
 					Group scopeGroup = null;
@@ -682,7 +661,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 						scopeLayout = LayoutLocalServiceUtil.
 							fetchLayoutByUuidAndGroupId(
 								scopeLayoutUuid,
-								larPersistenceContext.getGroupId());
+								context.getGroupId());
 
 						if (scopeLayout == null) {
 							continue;

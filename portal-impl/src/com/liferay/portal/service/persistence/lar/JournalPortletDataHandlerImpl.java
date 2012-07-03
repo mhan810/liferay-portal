@@ -16,7 +16,7 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.lar.LarPersistenceContext;
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
@@ -47,7 +47,7 @@ public class JournalPortletDataHandlerImpl extends PortletDataHandlerImpl
 
 	@Override
 	protected void doDigest(Portlet portlet) throws Exception {
-		LarPersistenceContext context = getLarPersistenceContext();
+		DataHandlerContext context = getLarPersistenceContext();
 
 		/*portletDataContext.addPermissions(
 			"com.liferay.portlet.journal",

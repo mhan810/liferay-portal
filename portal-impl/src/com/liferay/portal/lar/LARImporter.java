@@ -87,7 +87,7 @@ public class LARImporter {
 		try {
 			ImportExportThreadLocal.setLayoutImportInProcess(true);
 
-			LarPersistenceContext context = _initLarPersistenceContext(
+			DataHandlerContext context = _initLarPersistenceContext(
 				groupId, parameterMap);
 
 			doImport(context, file);
@@ -101,7 +101,7 @@ public class LARImporter {
 		}
 	}
 
-	protected void doImport(LarPersistenceContext context, File file)
+	protected void doImport(DataHandlerContext context, File file)
 		throws Exception {
 
 		Map parameterMap = context.getParameters();
@@ -619,12 +619,12 @@ public class LARImporter {
 		LayoutSetLocalServiceUtil.updatePageCount(groupId, privateLayout);
 	}
 
-	private LarPersistenceContext _initLarPersistenceContext(
+	private DataHandlerContext _initLarPersistenceContext(
 			long groupId, Map<String, String[]> parameters)
 		throws Exception {
 
-		LarPersistenceContext context =
-			new LarPersistenceContextImpl();
+		DataHandlerContext context =
+			new DataHandlerContextImpl();
 
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 
@@ -634,8 +634,8 @@ public class LARImporter {
 
 		context.setParameters(parameters);
 
-		LarPersistenceContextThreadLocal.setLarPersistenceContext(
-			context);
+		DataHandlerContextThreadLocal.setDataHandlerContext(
+				context);
 
 		return context;
 	}

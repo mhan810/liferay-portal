@@ -14,27 +14,23 @@
 
 package com.liferay.portal.lar;
 
-import com.liferay.portal.kernel.lar.LarPersistenceContext;
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.model.User;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * @author Mate Thurzo
  */
-public class LarPersistenceContextImpl implements LarPersistenceContext {
+public class DataHandlerContextImpl implements DataHandlerContext {
 
 	public Object getAttribute(String key) {
 		return _attributes.get(key);

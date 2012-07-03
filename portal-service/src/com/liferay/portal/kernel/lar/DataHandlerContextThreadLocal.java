@@ -19,20 +19,18 @@ import com.liferay.portal.kernel.util.AutoResetThreadLocal;
 /**
  * @author Mate Thurzo
  */
-public class LarPersistenceContextThreadLocal {
+public class DataHandlerContextThreadLocal {
 
-	public static LarPersistenceContext getLarPersistenceContext() {
-		return _larPersistenceContext.get();
+	public static DataHandlerContext getDataHandlerContext() {
+		return _dataHandlerContext.get();
 	}
 
-	public static void setLarPersistenceContext(
-		LarPersistenceContext larPersistenceContext) {
-
-		_larPersistenceContext.set(larPersistenceContext);
+	public static void setDataHandlerContext(DataHandlerContext context) {
+		_dataHandlerContext.set(context);
 	}
 
-	private static ThreadLocal<LarPersistenceContext> _larPersistenceContext =
-		new AutoResetThreadLocal<LarPersistenceContext>(
-			LarPersistenceContextThreadLocal.class.getName(), null);
+	private static ThreadLocal<DataHandlerContext> _dataHandlerContext =
+		new AutoResetThreadLocal<DataHandlerContext>(
+			DataHandlerContextThreadLocal.class.getName(), null);
 
 }

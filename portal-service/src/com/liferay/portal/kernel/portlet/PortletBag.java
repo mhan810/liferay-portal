@@ -15,7 +15,6 @@
 package com.liferay.portal.kernel.portlet;
 
 import com.liferay.portal.kernel.atom.AtomCollectionAdapter;
-import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.poller.PollerProcessor;
 import com.liferay.portal.kernel.pop.MessageListener;
 import com.liferay.portal.kernel.search.Indexer;
@@ -27,6 +26,7 @@ import com.liferay.portal.kernel.webdav.WebDAVStorage;
 import com.liferay.portal.kernel.workflow.WorkflowHandler;
 import com.liferay.portal.kernel.xmlrpc.Method;
 import com.liferay.portal.security.permission.PermissionPropagator;
+import com.liferay.portal.service.persistence.lar.PortletDataHandler;
 import com.liferay.portlet.ControlPanelEntry;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.expando.model.CustomAttributesDisplay;
@@ -73,6 +73,9 @@ public interface PortletBag extends Cloneable {
 	public MessageListener getPopMessageListenerInstance();
 
 	public PortletDataHandler getPortletDataHandlerInstance();
+
+	public com.liferay.portal.kernel.lar.PortletDataHandler
+		getLegacyPortletDataHandlerInstance();
 
 	public PortletDisplayTemplateHandler
 		getPortletDisplayTemplateHandlerInstance();

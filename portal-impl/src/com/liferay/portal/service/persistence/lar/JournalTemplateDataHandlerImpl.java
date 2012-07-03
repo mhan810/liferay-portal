@@ -30,8 +30,8 @@ public class JournalTemplateDataHandlerImpl
 	@Override
 	public void digest(JournalTemplate template) throws Exception {
 		return;
-		/*LarPersistenceContext larPersistenceContext =
-			LarPersistenceContextThreadLocal.getLarPersistenceContext();
+		/*DataHandlerContext larPersistenceContext =
+			DataHandlerContextThreadLocal.getDataHandlerContext();
 
 		String path = getTemplatePath(template);
 

@@ -17,8 +17,8 @@ package com.liferay.portal.service.persistence.impl;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.lar.LarPersistenceContext;
-import com.liferay.portal.kernel.lar.LarPersistenceContextThreadLocal;
+import com.liferay.portal.kernel.lar.DataHandlerContext;
+import com.liferay.portal.kernel.lar.DataHandlerContextThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataContextListener;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -40,7 +40,6 @@ import com.liferay.portal.service.persistence.lar.ImageDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalArticleDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalStructureDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalTemplateDataHandler;
-import com.liferay.portal.service.persistence.lar.PortletDataHandler;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.File;
@@ -297,8 +296,8 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 	}
 
 	public ZipReader getZipReader() {
-		LarPersistenceContext context =
-			LarPersistenceContextThreadLocal.getLarPersistenceContext();
+		DataHandlerContext context =
+			DataHandlerContextThreadLocal.getDataHandlerContext();
 
 		if (context != null) {
 			return context.getZipReader();
@@ -308,8 +307,8 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 	}
 
 	public ZipWriter getZipWriter() {
-		LarPersistenceContext context =
-			LarPersistenceContextThreadLocal.getLarPersistenceContext();
+		DataHandlerContext context =
+			DataHandlerContextThreadLocal.getDataHandlerContext();
 
 		if (context != null) {
 			return context.getZipWriter();
@@ -332,8 +331,8 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		addZipEntry(path, object);
 	}
 
-	protected LarPersistenceContext getLarPersistenceContext() {
-		return LarPersistenceContextThreadLocal.getLarPersistenceContext();
+	protected DataHandlerContext getLarPersistenceContext() {
+		return DataHandlerContextThreadLocal.getDataHandlerContext();
 	}
 
 	protected String getLayoutPath(long layoutId) {
@@ -349,11 +348,11 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 	}
 
 	protected long getScopeGroupId() {
-		LarPersistenceContext larPersistenceContext =
+		DataHandlerContext context =
 			getLarPersistenceContext();
 
-		if (larPersistenceContext != null) {
-			return larPersistenceContext.getGroupId();
+		if (context != null) {
+			return context.getGroupId();
 		}
 
 		return 0;
