@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.lar.digest.LarDigest;
+import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.BaseModel;
 
 import java.io.InputStream;
@@ -47,6 +48,8 @@ public interface BaseLarPersistence<T extends BaseModel<T>> {
 	public void digest(T object) throws Exception;
 
 	public String getEntityPath(T object);
+
+	public void importData(LarDigestItem item);
 
 	public XStreamWrapper getXStreamWrapper();
 
