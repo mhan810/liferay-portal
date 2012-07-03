@@ -17,6 +17,11 @@
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.PortletPreferencesLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.PortletPreferencesLocalService)" />
 	</aop:config>
 
+	<bean id="baseDataHandler" abstract="true">
+		<property name="xstreamWrapper" ref="xStreamWrapper" />
+	</bean>
+	<bean id="xStreamWrapper" class="com.liferay.portal.lar.XStreamWrapperImpl" init-method="initWrapper" />
+
 	<bean id="com.liferay.portal.kernel.staging.LayoutStagingUtil" class="com.liferay.portal.kernel.staging.LayoutStagingUtil">
 		<property name="layoutStaging">
 			<bean class="com.liferay.portal.staging.LayoutStagingImpl" />
@@ -39,10 +44,10 @@
 	<bean id="com.liferay.portal.staging.LarPersistenceLocatorImpl" class="com.liferay.portal.staging.LarPersistenceLocatorImpl">
 		<property name="larPersistenceMapping">
 			<map key-type="java.lang.String" value-type="java.lang.String">
-				<entry key="com.liferay.portal.model.Layout" value="com.liferay.portal.service.persistence.lar.LayoutLarPersistence" />
-				<entry key="com.liferay.portlet.bookmarks.model.BookmarksEntry" value="com.liferay.portal.service.persistence.lar.BookmarksEntryLarPersistence" />
-				<entry key="com.liferay.portlet.bookmarks.model.BookmarksFolder" value="com.liferay.portal.service.persistence.lar.BookmarksFolderLarPersistence" />
-				<entry key="com.liferay.portlet.bookmarks" value="com.liferay.portal.service.persistence.lar.BookmarksPortletLarPersistence" />
+				<entry key="com.liferay.portal.model.Layout" value="com.liferay.portal.service.persistence.lar.LayoutDataHandler" />
+				<entry key="com.liferay.portlet.bookmarks.model.BookmarksEntry" value="com.liferay.portal.service.persistence.lar.BookmarksEntryDataHandler" />
+				<entry key="com.liferay.portlet.bookmarks.model.BookmarksFolder" value="com.liferay.portal.service.persistence.lar.BookmarksFolderDataHandler" />
+				<entry key="com.liferay.portlet.bookmarks" value="com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandler" />
 			</map>
 		</property>
 	</bean>

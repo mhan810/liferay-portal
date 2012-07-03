@@ -15,10 +15,10 @@
 package com.liferay.portal.lar;
 
 import com.liferay.portal.model.LayoutSet;
-import com.liferay.portal.service.persistence.BaseLarPersistence;
+import com.liferay.portal.service.persistence.BaseDataHandler;
 
 /**
  * @author Daniel Kocsis
  */
-public interface LayoutSetLarPesistence extends BaseLarPersistence<LayoutSet> {
+public interface LayoutSetLarPesistence extends BaseDataHandler<LayoutSet> {
 }

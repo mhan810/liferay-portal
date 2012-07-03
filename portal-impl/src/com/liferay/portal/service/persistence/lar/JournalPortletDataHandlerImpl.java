@@ -17,12 +17,10 @@ package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.lar.LarPersistenceContext;
-import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFeed;
@@ -43,8 +41,8 @@ import java.util.List;
 /**
  * @author Daniel Kocsis
  */
-public class JournalPortletLarPersistenceImpl extends PortletLarPersistenceImpl
-	implements JournalPortletLarPersistence {
+public class JournalPortletDataHandlerImpl extends PortletDataHandlerImpl
+	implements JournalPortletDataHandler {
 
 
 	@Override
@@ -62,7 +60,7 @@ public class JournalPortletLarPersistenceImpl extends PortletLarPersistenceImpl
 		for (JournalStructure structure : structures) {
 			if (context.isWithinDateRange(structure.getModifiedDate())) {
 
-				journalStructureLarPersistence.digest(structure);
+				journalStructureDataHandler.digest(structure);
 			}
 		}
 
@@ -72,7 +70,7 @@ public class JournalPortletLarPersistenceImpl extends PortletLarPersistenceImpl
 		for (JournalTemplate template : templates) {
 			if (context.isWithinDateRange(template.getModifiedDate())) {
 
-				journalTemplateLarPersistence.digest(template);
+				journalTemplateDataHandler.digest(template);
 			}
 		}
 
@@ -105,7 +103,7 @@ public class JournalPortletLarPersistenceImpl extends PortletLarPersistenceImpl
 				new ArticleIDComparator(true));
 
 			for (JournalArticle article : articles) {
-				journalArticleLarPersistence.digest(article);
+				journalArticleDataHandler.digest(article);
 			}
 		}
 	}
@@ -113,7 +111,7 @@ public class JournalPortletLarPersistenceImpl extends PortletLarPersistenceImpl
 	private static final boolean _ALWAYS_EXPORTABLE = true;
 
 	private static Log _log = LogFactoryUtil.getLog(
-		JournalPortletLarPersistenceImpl.class);
+		JournalPortletDataHandlerImpl.class);
 
 	private static PortletDataHandlerControl[] _metadataControls =
 		new PortletDataHandlerControl[] {

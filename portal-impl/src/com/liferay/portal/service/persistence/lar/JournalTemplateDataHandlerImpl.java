@@ -14,25 +14,18 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.lar.LarPersistenceContext;
-import com.liferay.portal.kernel.lar.LarPersistenceContextThreadLocal;
-import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.lar.digest.LarDigest;
-import com.liferay.portal.model.Image;
-import com.liferay.portal.service.persistence.ImageUtil;
-import com.liferay.portal.service.persistence.impl.BaseLarPersistenceImpl;
+import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.journal.model.JournalTemplate;
 
 /**
  * @author Daniel Kocsis
  */
-public class JournalTemplateLarPersistenceImpl
-	extends BaseLarPersistenceImpl<JournalTemplate>
-	implements JournalTemplateLarPersistence {
+public class JournalTemplateDataHandlerImpl
+	extends BaseDataHandlerImpl<JournalTemplate>
+	implements JournalTemplateDataHandler {
 
 	@Override
 	public void digest(JournalTemplate template) throws Exception {
@@ -61,7 +54,7 @@ public class JournalTemplateLarPersistenceImpl
 		}
 
 		if (larPersistenceContext.getBooleanParameter(
-				JournalPortletLarPersistence._NAMESPACE, "embedded-assets")) {
+				JournalPortletDataHandler._NAMESPACE, "embedded-assets")) {
 
 			String content =
 				journalArticleLarPersistence.exportReferencedContent(
@@ -73,7 +66,7 @@ public class JournalTemplateLarPersistenceImpl
 
 	/*	portletDataContext.addClassedModel(
 			templateElement, path, template,
-			JournalPortletLarPersistence._NAMESPACE);*/
+			JournalPortletDataHandler._NAMESPACE);*/
 	}
 
 	private String getTemplatePath(JournalTemplate template) {

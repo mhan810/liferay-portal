@@ -19,7 +19,7 @@ import com.liferay.portal.model.Portlet;
 /**
  * @author Mate Thurzo
  */
-public interface BookmarksPortletLarPersistence extends PortletLarPersistence {
+public interface BookmarksPortletDataHandler extends PortletDataHandler {
 
 	public void doDigest(Portlet portlet) throws Exception;
 

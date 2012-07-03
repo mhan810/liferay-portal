@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.staging;
 
-import com.liferay.portal.service.persistence.BaseLarPersistence;
+import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.staging.LarPersistenceLocator;
 
 /**
@@ -26,7 +26,7 @@ public class LarPersistenceLocatorUtil {
 		return _locator;
 	}
 
-	public static BaseLarPersistence locate(String key) {
+	public static BaseDataHandler locate(String key) {
 		return getLocator().locate(key);
 	}
 

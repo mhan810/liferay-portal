@@ -28,7 +28,7 @@ import java.io.InputStream;
 /**
  * @author Mate Thurzo
  */
-public interface BaseLarPersistence<T extends BaseModel<T>> {
+public interface BaseDataHandler<T extends BaseModel<T>> {
 
 	public static final String ROOT_PATH_GROUPS = "/groups/";
 
@@ -54,8 +54,6 @@ public interface BaseLarPersistence<T extends BaseModel<T>> {
 	public XStreamWrapper getXStreamWrapper();
 
 	public ZipWriter getZipWriter();
-
-	public void setZipWriter(ZipWriter zipWriter);
 
 	public void serialize(String classPK);
 

@@ -16,7 +16,7 @@ package com.liferay.portal.staging;
 
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.service.persistence.BaseLarPersistence;
+import com.liferay.portal.service.persistence.BaseDataHandler;
 
 import java.util.Map;
 
@@ -29,7 +29,7 @@ public class LarPersistenceLocatorImpl implements LarPersistenceLocator {
 		return _larPersistenceMapping;
 	}
 
-	public BaseLarPersistence locate(String key) {
+	public BaseDataHandler locate(String key) {
 		if (Validator.isNull(key)) {
 			return null;
 		}
@@ -42,8 +42,8 @@ public class LarPersistenceLocatorImpl implements LarPersistenceLocator {
 
 		Object obj = PortalBeanLocatorUtil.locate(beanId);
 
-		if (obj instanceof BaseLarPersistence) {
-			return (BaseLarPersistence)obj;
+		if (obj instanceof BaseDataHandler) {
+			return (BaseDataHandler)obj;
 		}
 
 		return null;

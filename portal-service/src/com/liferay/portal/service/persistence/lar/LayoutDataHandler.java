@@ -14,16 +14,14 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.model.Layout;
-import com.liferay.portal.service.persistence.BaseLarPersistence;
+import com.liferay.portal.service.persistence.BaseDataHandler;
 
 /**
  * @author Mate Thurzo
  */
-public interface LayoutLarPersistence extends BaseLarPersistence<Layout> {
+public interface LayoutDataHandler extends BaseDataHandler<Layout> {
 
 	public void deserialize(Document document);
 

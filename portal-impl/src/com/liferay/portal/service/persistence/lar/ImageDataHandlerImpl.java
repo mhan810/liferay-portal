@@ -14,19 +14,17 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.service.ImageLocalServiceUtil;
-import com.liferay.portal.service.persistence.impl.BaseLarPersistenceImpl;
+import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 
 /**
  * @author Mate Thurzo
  */
-public class ImageLarPersistenceImpl extends BaseLarPersistenceImpl<Image>
-	implements ImageLarPersistence {
+public class ImageDataHandlerImpl extends BaseDataHandlerImpl<Image>
+	implements ImageDataHandler {
 
 	public void deserialize(Document document) {
 	}

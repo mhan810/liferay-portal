@@ -15,16 +15,21 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.model.Portlet;
-import com.liferay.portal.service.persistence.BaseLarPersistence;
+import com.liferay.portal.service.persistence.BaseDataHandler;
+import com.liferay.portlet.journal.model.JournalArticle;
 
 /**
  * @author Mate Thurzo
  */
-public interface PortletLarPersistence extends BaseLarPersistence<Portlet> {
+public interface JournalArticleDataHandler
+	extends BaseDataHandler<JournalArticle> {
 
-	public void deserialize(Document document);
+	public String exportReferencedContent(
+			PortletDataContext portletDataContext, String content, Object clazz)
+		throws Exception;
+
+	public String getArticlePath(
+			PortletDataContext portletDataContext, JournalArticle article)
+		throws Exception;
 
 }

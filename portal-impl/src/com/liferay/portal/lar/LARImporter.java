@@ -59,7 +59,7 @@ import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
-import com.liferay.portal.service.persistence.BaseLarPersistence;
+import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -68,7 +68,6 @@ import org.apache.commons.lang.time.StopWatch;
 
 import java.io.File;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -395,7 +394,7 @@ public class LARImporter {
 		context.setAttribute("previousLayouts", previousLayouts);
 
 		for (LarDigestItem item : larDigest) {
-			BaseLarPersistence larPesistence =
+			BaseDataHandler larPesistence =
 				LarPersistenceLocatorUtil.locate(item.getType());
 
 			larPesistence.importData(item);
@@ -404,7 +403,7 @@ public class LARImporter {
 		Map<Long, Layout> newLayoutsMap =
 			(Map<Long, Layout>)context.getNewPrimaryKeysMap(Layout.class);
 
-		Element portletsElement = rootElement.element("portlets");
+		Element portletsElement = null; //rootElement.element("portlets");
 
 		List<Element> portletElements = portletsElement.elements("portlet");
 
