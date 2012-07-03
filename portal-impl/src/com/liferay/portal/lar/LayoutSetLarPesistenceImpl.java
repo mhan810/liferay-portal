@@ -17,18 +17,15 @@ package com.liferay.portal.lar;
 import com.liferay.portal.kernel.lar.*;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.LayoutSet;
-import com.liferay.portal.model.impl.ColorSchemeImpl;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
-import com.liferay.portal.service.persistence.impl.BaseLarPersistenceImpl;
+import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -36,7 +33,7 @@ import java.util.Map;
  * @author Daniel Kocsis
  */
 public class LayoutSetLarPesistenceImpl extends
-		BaseLarPersistenceImpl<LayoutSet>
+		BaseDataHandlerImpl<LayoutSet>
 	implements LayoutSetLarPesistence {
 
 	@Override

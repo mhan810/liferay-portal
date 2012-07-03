@@ -15,7 +15,6 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
-import com.liferay.portal.LARFileException;
 import com.liferay.portal.kernel.lar.LarPersistenceContext;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
@@ -38,7 +37,6 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.Node;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.lar.PermissionImporter;
 import com.liferay.portal.lar.PortletImporter;
 import com.liferay.portal.lar.digest.LarDigest;
@@ -77,11 +75,10 @@ import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.service.persistence.LayoutRevisionUtil;
 import com.liferay.portal.service.persistence.LayoutUtil;
-import com.liferay.portal.service.persistence.impl.BaseLarPersistenceImpl;
+import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
-import com.liferay.portlet.journal.lar.JournalPortletDataHandlerImpl;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalContentSearchLocalServiceUtil;
@@ -96,8 +93,8 @@ import java.util.Set;
 /**
  * @author Mate Thurzo
  */
-public class LayoutLarPersistenceImpl extends BaseLarPersistenceImpl<Layout>
-	implements LayoutLarPersistence {
+public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
+	implements LayoutDataHandler {
 
 	public static final String SAME_GROUP_FRIENDLY_URL =
 		"/[$SAME_GROUP_FRIENDLY_URL$]";
@@ -106,7 +103,7 @@ public class LayoutLarPersistenceImpl extends BaseLarPersistenceImpl<Layout>
 	protected void doImport(LarDigestItem item) throws Exception {
 
 		// toDo: move methods from PortletDataContext to LarPersistenceContext
-		PortletDataContext portletDataContext = null;
+		/*PortletDataContext portletDataContext = null;
 
 		LarPersistenceContext context = getLarPersistenceContext();
 
@@ -324,7 +321,7 @@ public class LayoutLarPersistenceImpl extends BaseLarPersistenceImpl<Layout>
 		String parentLayoutUuid = GetterUtil.getString(
 			layoutElement.attributeValue("parent-layout-uuid"));*/
 
-		if ((parentLayoutId != LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) &&
+		/*if ((parentLayoutId != LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) &&
 			(parentLayoutNode != null)) {
 
 			importData(null);
@@ -516,7 +513,7 @@ public class LayoutLarPersistenceImpl extends BaseLarPersistenceImpl<Layout>
 			portletDataContext, PortletKeys.LAYOUT_CONFIGURATION, null,
 			null);
 
-		context.setAttribute("newLayoutsMap", newLayoutsMap);
+		context.setAttribute("newLayoutsMap", newLayoutsMap);*/
 	}
 
 	@Override
@@ -613,7 +610,7 @@ public class LayoutLarPersistenceImpl extends BaseLarPersistenceImpl<Layout>
 			if (image != null) {
 				String iconPath = getLayoutIconPath(layout, image);
 
-				imageLarPersistence.digest(image);
+				imageDataHandler.digest(image);
 			}
 		}
 
@@ -712,7 +709,7 @@ public class LayoutLarPersistenceImpl extends BaseLarPersistenceImpl<Layout>
 					Portlet portlet = PortletLocalServiceUtil.getPortletById(
 						portletId);
 
-					bookmarksPortletLarPersistence.digest(portlet);
+					bookmarksPortletDataHandler.digest(portlet);
 				}
 			}
 		}
@@ -775,7 +772,7 @@ public class LayoutLarPersistenceImpl extends BaseLarPersistenceImpl<Layout>
 			return;
 		}
 
-		journalArticleLarPersistence.digest(article);
+		journalArticleDataHandler.digest(article);
 	}
 
 	private void fixTypeSettings(Layout layout) throws Exception {
@@ -865,8 +862,8 @@ public class LayoutLarPersistenceImpl extends BaseLarPersistenceImpl<Layout>
 			Element layoutElement)
 		throws Exception {
 
-		UnicodeProperties typeSettingsProperties =
-				layout.getTypeSettingsProperties();
+		/*UnicodeProperties typeSettingsProperties =
+			layout.getTypeSettingsProperties();
 
 		String articleId = typeSettingsProperties.getProperty(
 			"article-id", StringPool.BLANK);
@@ -910,6 +907,7 @@ public class LayoutLarPersistenceImpl extends BaseLarPersistenceImpl<Layout>
 		JournalContentSearchLocalServiceUtil.updateContentSearch(
 			portletDataContext.getScopeGroupId(), layout.isPrivateLayout(),
 			layout.getLayoutId(), StringPool.BLANK, articleId, true);
+			*/
 	}
 
 	private void mergePortlets(
@@ -1006,7 +1004,7 @@ public class LayoutLarPersistenceImpl extends BaseLarPersistenceImpl<Layout>
 	}
 
 	private static final Log _log =
-		LogFactoryUtil.getLog(LayoutLarPersistenceImpl.class);
+		LogFactoryUtil.getLog(LayoutDataHandlerImpl.class);
 
 	private PermissionImporter _permissionImporter = new PermissionImporter();
 	private PortletImporter _portletImporter = new PortletImporter();
