@@ -20,19 +20,24 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.DataHandlerContextThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataContextListener;
+import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.model.AuditedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
-import com.liferay.portal.model.Portlet;
+import com.liferay.portal.model.ResourcedModel;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.lar.BookmarksEntryDataHandler;
 import com.liferay.portal.service.persistence.lar.BookmarksFolderDataHandler;
@@ -41,11 +46,13 @@ import com.liferay.portal.service.persistence.lar.ImageDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalArticleDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalStructureDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalTemplateDataHandler;
+import com.liferay.portal.service.persistence.lar.PortletDataHandler;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -142,6 +149,18 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		ExpandoBridge expandoBridge = classedModel.getExpandoBridge();
 
 		addZipEntry(expandoPath, expandoBridge.getAttributes());
+	}
+
+	public ServiceContext createServiceContext(
+		Element element, ClassedModel classedModel, String namespace) {
+
+		return createServiceContext(element, null, classedModel, namespace);
+	}
+
+	public ServiceContext createServiceContext(
+		String path, ClassedModel classedModel, String namespace) {
+
+		return createServiceContext(null, path, classedModel, namespace);
 	}
 
 	public void digest(T object) throws Exception {
@@ -273,6 +292,106 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 	}
 
+	protected ServiceContext createServiceContext(
+			Element element, String path, ClassedModel classedModel,
+			String namespace) {
+
+		Class<?> clazz = classedModel.getModelClass();
+		long classPK = getClassPK(classedModel);
+
+		LarPersistenceContext context =
+			LarPersistenceContextThreadLocal.getLarPersistenceContext();
+
+		ServiceContext serviceContext = new ServiceContext();
+
+		// Theme display
+
+		serviceContext.setCompanyId(context.getCompanyId());
+		serviceContext.setScopeGroupId(getScopeGroupId());
+
+		// Dates
+
+		if (classedModel instanceof AuditedModel) {
+			AuditedModel auditedModel = (AuditedModel)classedModel;
+
+			serviceContext.setCreateDate(auditedModel.getCreateDate());
+			serviceContext.setModifiedDate(auditedModel.getModifiedDate());
+		}
+
+		// Permissions
+
+		if (!MapUtil.getBoolean(
+				context.getParameters(), PortletDataHandlerKeys.PERMISSIONS)) {
+
+			serviceContext.setAddGroupPermissions(true);
+			serviceContext.setAddGuestPermissions(true);
+		}
+
+		// Asset
+
+		boolean portletMetadataAll = context.getBooleanParameter(
+			namespace, PortletDataHandlerKeys.PORTLET_METADATA_ALL);
+
+		if (isResourceMain(classedModel)) {
+			if (portletMetadataAll ||
+				context.getBooleanParameter(namespace, "categories")) {
+
+				// toDo: add getAssetCategoryIds to context
+				//long[] assetCategoryIds = getAssetCategoryIds(clazz, classPK);
+
+				//serviceContext.setAssetCategoryIds(assetCategoryIds);
+			}
+
+			if (portletMetadataAll ||
+				context.getBooleanParameter(namespace, "tags")) {
+
+				// toDo: add getAssetTagNames to context
+				//String[] assetTagNames = getAssetTagNames(clazz, classPK);
+
+				//serviceContext.setAssetTagNames(assetTagNames);
+			}
+		}
+
+		// Expando
+
+		String expandoPath = null;
+
+		if (element != null) {
+			expandoPath = element.attributeValue("expando-path");
+		}
+		else {
+			expandoPath = getExpandoPath(path);
+		}
+
+		if (Validator.isNotNull(expandoPath)) {
+			try {
+				Map<String, Serializable> expandoBridgeAttributes =
+					(Map<String, Serializable>)getZipEntryAsObject(expandoPath);
+
+				serviceContext.setExpandoBridgeAttributes(
+					expandoBridgeAttributes);
+			}
+			catch (Exception e) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(e, e);
+				}
+			}
+		}
+
+		return serviceContext;
+	}
+
+	protected long getClassPK(ClassedModel classedModel) {
+		if (classedModel instanceof ResourcedModel) {
+			ResourcedModel resourcedModel = (ResourcedModel)classedModel;
+
+			return resourcedModel.getResourcePrimKey();
+		}
+		else {
+			return (Long)classedModel.getPrimaryKeyObj();
+		}
+	}
+
 	protected T getEntity(String classPK) {
 		return null;
 	}
@@ -333,6 +452,23 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		addZipEntry(path, object);
 	}
 
+	protected String getExpandoPath(String path) {
+		if (!isValidPath(path)) {
+			throw new IllegalArgumentException(
+				path + " is located outside of the lar");
+		}
+
+		int pos = path.lastIndexOf(".xml");
+
+		if (pos == -1) {
+			throw new IllegalArgumentException(
+				path + " does not end with .xml");
+		}
+
+		return path.substring(0, pos).concat("-expando").concat(
+			path.substring(pos));
+}
+
 	protected DataHandlerContext getDataHandlerContext() {
 		return DataHandlerContextThreadLocal.getDataHandlerContext();
 	}
@@ -358,6 +494,24 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 
 		return 0;
+	}
+
+	protected boolean isResourceMain(ClassedModel classedModel) {
+		if (classedModel instanceof ResourcedModel) {
+			ResourcedModel resourcedModel = (ResourcedModel)classedModel;
+
+			return resourcedModel.isResourceMain();
+		}
+
+		return true;
+	}
+
+	protected boolean isValidPath(String path) {
+		if (path.contains(StringPool.DOUBLE_PERIOD)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private Log _log = LogFactoryUtil.getLog(BaseDataHandlerImpl.class);
