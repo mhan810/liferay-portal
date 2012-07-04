@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.staging.DataHandlerLocatorUtil;
 import com.liferay.portal.kernel.staging.LayoutStagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
@@ -59,6 +60,7 @@ import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
+import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.LayoutRevisionUtil;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PropsValues;
@@ -498,11 +500,11 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 	@Override
 	public void doDigest(Layout layout) throws Exception {
 		DataHandlerContext context =
-			getLarPersistenceContext();
+			getDataHandlerContext();
 
 		String path = getEntityPath(layout);
 
-		if (isPathProcessed(path)) {
+		if (context.isPathProcessed(path)) {
 			return;
 		}
 
@@ -637,9 +639,12 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				(LayoutTypePortlet)layout.getLayoutType();
 
 			for (String portletId : layoutTypePortlet.getPortletIds()) {
+				Portlet portlet = PortletLocalServiceUtil.getPortletById(
+						portletId);
+
 				javax.portlet.PortletPreferences jxPreferences =
 					PortletPreferencesFactoryUtil.getLayoutPortletSetup(
-						layout, portletId);
+						layout, portlet.getPortletId());
 
 				String scopeType = GetterUtil.getString(
 					jxPreferences.getValue("lfrScopeType", null));
@@ -679,16 +684,12 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 					}
 				}
 
-				String key = PortletPermissionUtil.getPrimaryKey(
-					layout.getPlid(), portletId);
+				BaseDataHandler portletDataHandler =
+					DataHandlerLocatorUtil.locate(
+						portlet.getPortletDataHandlerClass());
 
-				// TODO remove hardcoded bookmarks value
-
-				if (portletId.equals("28")) {
-					Portlet portlet = PortletLocalServiceUtil.getPortletById(
-						portletId);
-
-					bookmarksPortletDataHandler.digest(portlet);
+				if (portletDataHandler != null) {
+					portletDataHandler.digest(portlet);
 				}
 			}
 		}

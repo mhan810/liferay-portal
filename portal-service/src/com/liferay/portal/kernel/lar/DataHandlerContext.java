@@ -50,6 +50,8 @@ public interface DataHandlerContext {
 
 	public static final String ATTRIBUTE_NAME_ZIP_WRITER = "ZIP_WRITER";
 
+	public void addProcessedPath(String path);
+
 	public Object getAttribute(String key);
 
 	public boolean getBooleanParameter(String namespace, String name);
@@ -81,6 +83,8 @@ public interface DataHandlerContext {
 	public ZipWriter getZipWriter();
 
 	public boolean hasDateRange();
+
+	public boolean isPathProcessed(String path);
 
 	public boolean isPrivateLayout();
 

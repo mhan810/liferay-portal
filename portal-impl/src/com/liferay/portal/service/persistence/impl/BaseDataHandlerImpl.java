@@ -32,6 +32,7 @@ import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
+import com.liferay.portal.model.Portlet;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.lar.BookmarksEntryDataHandler;
 import com.liferay.portal.service.persistence.lar.BookmarksFolderDataHandler;
@@ -146,6 +147,10 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 	public void digest(T object) throws Exception {
 		try {
 			doDigest(object);
+
+			String path = getEntityPath(object);
+
+			getDataHandlerContext().addProcessedPath(path);
 		}
 		catch (Exception e) {
 			_log.error(e);
@@ -177,6 +182,9 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 			StringBundler sb = new StringBundler();
 
+			sb.append(StringPool.FORWARD_SLASH);
+			sb.append("group");
+			sb.append(StringPool.FORWARD_SLASH);
 			sb.append(modelAttributes.get("groupId"));
 			sb.append(StringPool.FORWARD_SLASH);
 			sb.append(baseModel.getModelClassName());
@@ -255,16 +263,10 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 		String path = getEntityPath(object);
 
-		if (isPathProcessed(path)) {
-			return;
-		}
-
 		try {
 			doSerialize(object);
 
 			addExpando(object);
-
-			addProcessedPath(path);
 		}
 		catch (Exception e) {
 		}
@@ -331,7 +333,7 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		addZipEntry(path, object);
 	}
 
-	protected DataHandlerContext getLarPersistenceContext() {
+	protected DataHandlerContext getDataHandlerContext() {
 		return DataHandlerContextThreadLocal.getDataHandlerContext();
 	}
 
@@ -349,7 +351,7 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 	protected long getScopeGroupId() {
 		DataHandlerContext context =
-			getLarPersistenceContext();
+			getDataHandlerContext();
 
 		if (context != null) {
 			return context.getGroupId();
@@ -358,25 +360,8 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return 0;
 	}
 
-	protected boolean isPathProcessed(String path) {
-		if (_storedPaths.contains(path)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	protected boolean isPathNotProcessed(String path) {
-		return !isPathProcessed(path);
-	}
-
-	private void addProcessedPath(String path) {
-		_storedPaths.add(path);
-	}
-
 	private Log _log = LogFactoryUtil.getLog(BaseDataHandlerImpl.class);
 	private PortletDataContextListener _portletDataContextListener;
-	private static Set<String> _storedPaths = new HashSet<String>();
 	private XStreamWrapper _xStreamWrapper;
 
 	@BeanReference(type = JournalArticleDataHandler.class)
