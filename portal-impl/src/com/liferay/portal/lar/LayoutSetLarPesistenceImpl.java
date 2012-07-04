@@ -17,15 +17,18 @@ package com.liferay.portal.lar;
 import com.liferay.portal.kernel.lar.*;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.xml.Attribute;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -78,19 +81,12 @@ public class LayoutSetLarPesistenceImpl extends
 		}
 
 		// Look and feel
-		InputStream themeZip = null;
-
-		if (importTheme) {
-			//themeZip = portletDataContext.getZipEntryAsInputStream("theme.zip");
-		}
-
-		// Look and feel
 
 		String themeId = layoutSet.getThemeId();
 		String colorSchemeId = layoutSet.getColorSchemeId();
 
-		if (importThemeSettings) {
-		/*	Attribute themeIdAttribute = headerElement.attribute("theme-id");
+		/*if (importThemeSettings) {
+			Attribute themeIdAttribute = headerElement.attribute("theme-id");
 
 			if (themeIdAttribute != null) {
 				themeId = themeIdAttribute.getValue();
@@ -101,10 +97,10 @@ public class LayoutSetLarPesistenceImpl extends
 
 			if (colorSchemeIdAttribute != null) {
 				colorSchemeId = colorSchemeIdAttribute.getValue();
-			}    */
+			}
 		}
 
-		/*if (importLogo) {
+		if (importLogo) {
 			String logoPath = headerElement.attributeValue("logo-path");
 
 			byte[] iconBytes = portletDataContext.getZipEntryAsByteArray(
@@ -131,6 +127,13 @@ public class LayoutSetLarPesistenceImpl extends
 		}
 
 		String css = GetterUtil.getString(headerElement.elementText("css"));
+
+		// Look and feel
+		InputStream themeZip = null;
+
+		if (importTheme) {
+			themeZip = getZipEntryAsInputStream("theme.zip");
+		}
 
 		if (themeZip != null) {
 			String importThemeId = importTheme(layoutSet, themeZip);

@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import java.io.File;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -31,6 +32,9 @@ public interface LarDigest extends Iterable<LarDigestItem> {
 		throws Exception;
 
 	public void close() throws Exception;
+
+	public List<LarDigestItem> findDigestItems(
+		int action, String path, String type, String classPK);
 
 	public File getDigestFile();
 

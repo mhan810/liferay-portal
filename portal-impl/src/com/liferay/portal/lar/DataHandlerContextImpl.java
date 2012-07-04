@@ -87,8 +87,16 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		return map;
 	}
 
+	public long getOldPlid() {
+		return (Long)getAttribute(ATTRIBUTE_NAME_OLD_PLID);
+	}
+
 	public Map<String, String[]> getParameters() {
 		return _paramaters;
+	}
+
+	public long getPlid() {
+		return (Long)getAttribute(ATTRIBUTE_NAME_PLID);
 	}
 
 	public long getScopeGroupId() {
@@ -170,9 +178,17 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		setAttribute(ATTRIBUTE_NAME_LAR_DIGEST, digest);
 	}
 
+	public void setOldPlid(long oldPlid) {
+		setAttribute(ATTRIBUTE_NAME_OLD_PLID, oldPlid);
+	};
+
 	public void setParameters(Map<String, String[]> parameters) {
 		_paramaters = parameters;
 	}
+
+	public void setPlid(long plid) {
+		setAttribute(ATTRIBUTE_NAME_PLID, plid);
+	};
 
 	public void setPrivateLayout(boolean privateLayout) {
 		setAttribute(ATTRIBUTE_NAME_PRIVATE_LAYOUT, privateLayout);

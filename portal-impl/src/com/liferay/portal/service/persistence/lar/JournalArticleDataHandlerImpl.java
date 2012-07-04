@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -27,19 +28,25 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.RepositoryEntry;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.portlet.documentlibrary.lar.DLLegacyPortletDataHandlerImpl;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleImage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -181,6 +188,100 @@ public class JournalArticleDataHandlerImpl
 
 		return content;
 	}
+
+	public String importReferencedContent(
+			PortletDataContext portletDataContext, Element parentElement,
+			String content)
+		throws Exception {
+
+		content = importDLFileEntries(
+			portletDataContext, parentElement, content);
+
+		Group group = GroupLocalServiceUtil.getGroup(
+			portletDataContext.getScopeGroupId());
+
+		content = StringUtil.replace(
+			content, "@data_handler_group_friendly_url@",
+			group.getFriendlyURL());
+
+		content = importLinksToLayout(portletDataContext, content);
+
+		return content;
+	}
+
+	public void importReferencedData(
+			PortletDataContext portletDataContext, Element entityElement)
+		throws Exception {
+
+		Element dlRepositoriesElement = entityElement.element(
+			"dl-repositories");
+
+		List<Element> dlRepositoryElements = Collections.emptyList();
+
+		if (dlRepositoriesElement != null) {
+			dlRepositoryElements = dlRepositoriesElement.elements("repository");
+		}
+
+		for (Element repositoryElement : dlRepositoryElements) {
+			DLLegacyPortletDataHandlerImpl.importRepository(
+				portletDataContext, repositoryElement);
+		}
+
+		Element dlRepositoryEntriesElement = entityElement.element(
+			"dl-repository-entries");
+
+		List<Element> dlRepositoryEntryElements = Collections.emptyList();
+
+		if (dlRepositoryEntriesElement != null) {
+			dlRepositoryEntryElements = dlRepositoryEntriesElement.elements(
+				"repository-entry");
+		}
+
+		for (Element repositoryEntryElement : dlRepositoryEntryElements) {
+			DLLegacyPortletDataHandlerImpl.importRepositoryEntry(
+				portletDataContext, repositoryEntryElement);
+		}
+
+		Element dlFoldersElement = entityElement.element("dl-folders");
+
+		List<Element> dlFolderElements = Collections.emptyList();
+
+		if (dlFoldersElement != null) {
+			dlFolderElements = dlFoldersElement.elements("folder");
+		}
+
+		for (Element folderElement : dlFolderElements) {
+			DLLegacyPortletDataHandlerImpl.importFolder(
+				portletDataContext, folderElement);
+		}
+
+		Element dlFileEntriesElement = entityElement.element("dl-file-entries");
+
+		List<Element> dlFileEntryElements = Collections.emptyList();
+
+		if (dlFileEntriesElement != null) {
+			dlFileEntryElements = dlFileEntriesElement.elements("file-entry");
+		}
+
+		for (Element fileEntryElement : dlFileEntryElements) {
+			DLLegacyPortletDataHandlerImpl.importFileEntry(
+				portletDataContext, fileEntryElement);
+		}
+
+		Element dlFileRanksElement = entityElement.element("dl-file-ranks");
+
+		List<Element> dlFileRankElements = Collections.emptyList();
+
+		if (dlFileRanksElement != null) {
+			dlFileRankElements = dlFileRanksElement.elements("file-rank");
+		}
+
+		for (Element fileRankElement : dlFileRankElements) {
+			DLLegacyPortletDataHandlerImpl.importFileRank(
+				portletDataContext, fileRankElement);
+		}
+	}
+
 
 	public String getArticlePath(
 			PortletDataContext portletDataContext, JournalArticle article)
@@ -669,6 +770,171 @@ public class JournalArticleDataHandlerImpl
 		sb.append(article.getSmallImageType());
 
 		return sb.toString();
+	}
+
+	private String importDLFileEntries(
+			PortletDataContext portletDataContext, Element parentElement,
+			String content)
+		throws Exception {
+
+		List<Element> dlReferenceElements = parentElement.elements(
+			"dl-reference");
+
+		for (Element dlReferenceElement : dlReferenceElements) {
+			String dlReferencePath = dlReferenceElement.attributeValue("path");
+
+			String fileEntryUUID = null;
+
+			try {
+				Object zipEntryObject = portletDataContext.getZipEntryAsObject(
+					dlReferencePath);
+
+				if (zipEntryObject == null) {
+					if (_log.isWarnEnabled()) {
+						_log.warn("Unable to reference " + dlReferencePath);
+					}
+
+					continue;
+				}
+
+				boolean defaultRepository = GetterUtil.getBoolean(
+					dlReferenceElement.attributeValue("default-repository"));
+
+				if (defaultRepository) {
+					FileEntry fileEntry = (FileEntry)zipEntryObject;
+
+					fileEntryUUID = fileEntry.getUuid();
+				}
+				else {
+					RepositoryEntry repositoryEntry =
+						(RepositoryEntry)zipEntryObject;
+
+					fileEntryUUID = repositoryEntry.getUuid();
+				}
+			}
+			catch (Exception e) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(e, e);
+				}
+				else if (_log.isWarnEnabled()) {
+					_log.warn(e.getMessage());
+				}
+			}
+
+			if (fileEntryUUID == null) {
+				continue;
+			}
+
+			FileEntry fileEntry =
+				DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(
+					fileEntryUUID, portletDataContext.getGroupId());
+
+			if (fileEntry == null) {
+				continue;
+			}
+
+			String dlReference = "[$dl-reference=" + dlReferencePath + "$]";
+
+			String url = DLUtil.getPreviewURL(
+				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
+				false, false);
+
+			content = StringUtil.replace(content, dlReference, url);
+		}
+
+		return content;
+	}
+
+	private String importLinksToLayout(
+			PortletDataContext portletDataContext, String content)
+		throws Exception {
+
+		List<String> oldLinksToLayout = new ArrayList<String>();
+		List<String> newLinksToLayout = new ArrayList<String>();
+
+		Matcher matcher = _importLinksToLayoutPattern.matcher(content);
+
+		while (matcher.find()) {
+			long oldLayoutId = GetterUtil.getLong(matcher.group(1));
+
+			long newLayoutId = oldLayoutId;
+
+			String type = matcher.group(2);
+
+			boolean privateLayout = type.startsWith("private");
+
+			String layoutUuid = matcher.group(3);
+
+			String friendlyURL = matcher.group(4);
+
+			try {
+				Layout layout = LayoutUtil.fetchByUUID_G(
+					layoutUuid, portletDataContext.getScopeGroupId());
+
+				if (layout == null) {
+					layout = LayoutUtil.fetchByG_P_F(
+						portletDataContext.getScopeGroupId(), privateLayout,
+						friendlyURL);
+				}
+
+				if (layout == null) {
+					layout = LayoutUtil.fetchByG_P_L(
+						portletDataContext.getScopeGroupId(), privateLayout,
+						oldLayoutId);
+				}
+
+				if (layout == null) {
+					if (_log.isWarnEnabled()) {
+						StringBundler sb = new StringBundler(9);
+
+						sb.append("Unable to get layout with UUID ");
+						sb.append(layoutUuid);
+						sb.append(", friendly URL ");
+						sb.append(friendlyURL);
+						sb.append(", or ");
+						sb.append("layoutId ");
+						sb.append(oldLayoutId);
+						sb.append(" in group ");
+						sb.append(portletDataContext.getScopeGroupId());
+
+						_log.warn(sb.toString());
+					}
+				}
+				else {
+					newLayoutId = layout.getLayoutId();
+				}
+			}
+			catch (SystemException se) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Unable to get layout in group " +
+							portletDataContext.getScopeGroupId(), se);
+				}
+			}
+
+			String oldLinkToLayout = matcher.group(0);
+
+			StringBundler sb = new StringBundler(4);
+
+			sb.append(StringPool.AT);
+			sb.append(layoutUuid);
+			sb.append(StringPool.AT);
+			sb.append(friendlyURL);
+
+			String newLinkToLayout = StringUtil.replace(
+				oldLinkToLayout,
+				new String[] {sb.toString(), String.valueOf(oldLayoutId)},
+				new String[] {StringPool.BLANK, String.valueOf(newLayoutId)});
+
+			oldLinksToLayout.add(oldLinkToLayout);
+			newLinksToLayout.add(newLinkToLayout);
+		}
+
+		content = StringUtil.replace(
+			content, ArrayUtil.toStringArray(oldLinksToLayout.toArray()),
+			ArrayUtil.toStringArray(newLinksToLayout.toArray()));
+
+		return content;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
