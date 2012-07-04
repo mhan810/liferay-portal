@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
@@ -31,10 +32,11 @@ public class JournalStructureDataHandlerImpl
 
 	@Override
 	protected void doDigest(JournalStructure structure) throws Exception {
+		DataHandlerContext context = getDataHandlerContext();
 
-		String path = getStructurePath(structure);
+		String path = getEntityPath(structure);
 
-		if (isPathProcessed(path)) {
+		if (context.isPathProcessed(path)) {
 			return;
 		}
 
@@ -54,17 +56,5 @@ public class JournalStructureDataHandlerImpl
 
 		/*portletDataContext.addClassedModel(
 			path, structure, JournalPortletDataHandler._NAMESPACE);*/
-	}
-
-	private String getStructurePath(JournalStructure structure) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(getPortletPath(PortletKeys.JOURNAL));
-		sb.append("/structures/");
-		sb.append(structure.getUuid());
-		sb.append(".xml");
-
-		return sb.toString();
 	}
 }

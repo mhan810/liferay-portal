@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -40,11 +41,13 @@ public class BookmarksFolderDataHandlerImpl
 
 	@Override
 	public void doDigest(BookmarksFolder folder) throws Exception {
-		LarDigest digest = getLarPersistenceContext().getLarDigest();
+		DataHandlerContext context = getDataHandlerContext();
 
-		String path = getFolderPath(folder);
+		LarDigest digest = context.getLarDigest();
 
-		if (!isPathProcessed(path)) {
+		String path = getEntityPath(folder);
+
+		if (!context.isPathProcessed(path)) {
 			LarDigestItem digestItem = new LarDigestItemImpl();
 
 			digestItem.setAction(LarDigesterConstants.ACTION_ADD);
@@ -73,18 +76,6 @@ public class BookmarksFolderDataHandlerImpl
 		}
 
 		return null;
-	}
-
-	private String getFolderPath(BookmarksFolder folder) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(getPortletPath(PortletKeys.BOOKMARKS));
-		sb.append("/folders/");
-		sb.append(folder.getFolderId());
-		sb.append(".xml");
-
-		return sb.toString();
 	}
 
 }

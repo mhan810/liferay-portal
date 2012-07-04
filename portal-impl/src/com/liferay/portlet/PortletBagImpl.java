@@ -60,7 +60,6 @@ public class PortletBagImpl implements PortletBag {
 		List<Indexer> indexerInstances, OpenSearch openSearchInstance,
 		FriendlyURLMapper friendlyURLMapperInstance,
 		URLEncoder urlEncoderInstance,
-		PortletDataHandler portletDataHandlerInstance,
 		com.liferay.portal.kernel.lar.PortletDataHandler legacyDataHandler,
 		PortletDisplayTemplateHandler portletDisplayTemplateHandlerInstance,
 		PortletLayoutListener portletLayoutListenerInstance,
@@ -87,7 +86,6 @@ public class PortletBagImpl implements PortletBag {
 		_openSearchInstance = openSearchInstance;
 		_friendlyURLMapperInstance = friendlyURLMapperInstance;
 		_urlEncoderInstance = urlEncoderInstance;
-		_portletDataHandlerInstance = portletDataHandlerInstance;
 		_legacyPortletDataHandlerInstance = legacyDataHandler;
 		_portletDisplayTemplateHandlerInstance =
 			portletDisplayTemplateHandlerInstance;
@@ -115,8 +113,7 @@ public class PortletBagImpl implements PortletBag {
 			getPortletName(), getServletContext(), getPortletInstance(),
 			getConfigurationActionInstance(), getIndexerInstances(),
 			getOpenSearchInstance(), getFriendlyURLMapperInstance(),
-			getURLEncoderInstance(), getPortletDataHandlerInstance(),
-			getLegacyPortletDataHandlerInstance(),
+			getURLEncoderInstance(), getLegacyPortletDataHandlerInstance(),
 			getPortletDisplayTemplateHandlerInstance(),
 			getPortletLayoutListenerInstance(), getPollerProcessorInstance(),
 			getPopMessageListenerInstance(),
@@ -173,10 +170,6 @@ public class PortletBagImpl implements PortletBag {
 
 	public MessageListener getPopMessageListenerInstance() {
 		return _popMessageListenerInstance;
-	}
-
-	public PortletDataHandler getPortletDataHandlerInstance() {
-		return _portletDataHandlerInstance;
 	}
 
 	public com.liferay.portal.kernel.lar.PortletDataHandler
@@ -278,7 +271,6 @@ public class PortletBagImpl implements PortletBag {
 	private PermissionPropagator _permissionPropagatorInstance;
 	private PollerProcessor _pollerProcessorInstance;
 	private MessageListener _popMessageListenerInstance;
-	private PortletDataHandler _portletDataHandlerInstance;
 	private com.liferay.portal.kernel.lar.PortletDataHandler
 		_legacyPortletDataHandlerInstance;
 	private PortletDisplayTemplateHandler

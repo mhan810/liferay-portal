@@ -28,7 +28,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.staging.LarPersistenceLocatorUtil;
+import com.liferay.portal.kernel.staging.DataHandlerLocatorUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ReleaseInfo;
@@ -381,8 +381,8 @@ public class LARImporter {
 		Set<Long> newLayoutIds = new HashSet<Long>();
 
 		LayoutSetLarPesistence layoutSetLarPesistence =
-			(LayoutSetLarPesistence)LarPersistenceLocatorUtil.locate(
-				LayoutSet.class.getName());
+			(LayoutSetLarPesistence) DataHandlerLocatorUtil.locate(
+					LayoutSet.class.getName());
 
 		layoutSetLarPesistence.importData(null);
 
@@ -395,7 +395,7 @@ public class LARImporter {
 
 		for (LarDigestItem item : larDigest) {
 			BaseDataHandler larPesistence =
-				LarPersistenceLocatorUtil.locate(item.getType());
+				DataHandlerLocatorUtil.locate(item.getType());
 
 			larPesistence.importData(item);
 		}

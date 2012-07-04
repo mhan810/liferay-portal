@@ -15,15 +15,12 @@
 package com.liferay.portal.lar;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.lar.DataHandlerContext;
-import com.liferay.portal.kernel.lar.DataHandlerContextThreadLocal;
-import com.liferay.portal.kernel.lar.ImportExportThreadLocal;
-import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.*;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
-import com.liferay.portal.kernel.staging.LarPersistenceLocatorUtil;
+import com.liferay.portal.kernel.staging.DataHandlerLocatorUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ReleaseInfo;
@@ -40,8 +37,10 @@ import com.liferay.portal.lar.digest.LarDigestImpl;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.*;
 import com.liferay.portal.service.*;
+import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.lar.LayoutDataHandler;
+import com.liferay.portal.service.persistence.lar.PortletDataHandler;
 import com.liferay.portal.theme.ThemeLoader;
 import com.liferay.portal.theme.ThemeLoaderFactory;
 import com.liferay.portal.util.PortletKeys;
@@ -55,6 +54,7 @@ import java.io.File;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +77,7 @@ public class LARExporter {
 			ImportExportThreadLocal.setLayoutExportInProcess(true);
 
 			DataHandlerContext context = _initDataHandlerContext(
-				groupId, privateLayout, parameterMap);
+				groupId, privateLayout, parameterMap, startDate, endDate);
 
 			doCreateDigest(layoutIds, context);
 
@@ -87,9 +87,6 @@ public class LARExporter {
 			_log.error(e);
 
 			return null;
-		}
-		finally {
-			ImportExportThreadLocal.setLayoutExportInProcess(false);
 		}
 	}
 
@@ -215,8 +212,6 @@ public class LARExporter {
 
 		digest.addMetaData(metadata);
 
-		LayoutCache layoutCache = new LayoutCache();
-
 		Portlet layoutConfigurationPortlet =
 			PortletLocalServiceUtil.getPortletById(
 				group.getCompanyId(), PortletKeys.LAYOUT_CONFIGURATION);
@@ -235,43 +230,23 @@ public class LARExporter {
 				group.getGroupId(), privateLayout, layoutIds);
 		}
 
-		// TODO Always Exportable Portlets
+		// Always exportable portlets
 
-		/*List<Portlet> portlets = LayoutExporter.getAlwaysExportablePortlets(
-			companyId);
-
-		long plid = LayoutConstants.DEFAULT_PLID;
-
-		if (!layouts.isEmpty()) {
-			Layout firstLayout = layouts.get(0);
-
-			plid = firstLayout.getPlid();
-		}
-
-		if (group.isStagingGroup()) {
-			group = group.getLiveGroup();
-		}
+		List<Portlet> portlets = getAlwaysExportablePortlets(
+			group.getCompanyId());
 
 		for (Portlet portlet : portlets) {
-			String portletId = portlet.getRootPortletId();
-
-			if (!group.isStagedPortlet(portletId)) {
+			if (!group.isStagedPortlet(portlet.getPortletId())) {
 				continue;
 			}
 
-			String key = PortletPermissionUtil.getPrimaryKey(0, portletId);
+			BaseDataHandler portletDataHandler = DataHandlerLocatorUtil.locate(
+				portlet.getPortletDataHandlerClass());
 
-			if (portletIds.get(key) == null) {
-				portletIds.put(
-					key,
-					new Object[] {
-						portletId, plid, groupId, StringPool.BLANK,
-						StringPool.BLANK
-					});
+			if (portletDataHandler != null) {
+				portletDataHandler.digest(portlet);
 			}
-		}*/
-
-		// TODO End Always exportable portlets
+		}
 
 		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
 			group.getGroupId(), privateLayout);
@@ -279,8 +254,8 @@ public class LARExporter {
 		// Layouts
 
 		LayoutDataHandler layoutLarPersistence =
-			(LayoutDataHandler)LarPersistenceLocatorUtil.locate(
-				Layout.class.getName());
+			(LayoutDataHandler) DataHandlerLocatorUtil.locate(
+					Layout.class.getName());
 
 		for (Layout layout : layouts) {
 			layoutLarPersistence.digest(layout);
@@ -311,7 +286,7 @@ public class LARExporter {
 			String classPK = item.getClassPK();
 
 			BaseDataHandler dataHandler =
-				LarPersistenceLocatorUtil.locate(type);
+				DataHandlerLocatorUtil.locate(type);
 
 			if (dataHandler != null) {
 				dataHandler.serialize(classPK);
@@ -457,19 +432,61 @@ public class LARExporter {
 		}
 	}
 
+	public static List<Portlet> getAlwaysExportablePortlets(long companyId)
+			throws Exception {
+
+		List<Portlet> portlets = PortletLocalServiceUtil.getPortlets(companyId);
+
+		Iterator<Portlet> itr = portlets.iterator();
+
+		com.liferay.portal.kernel.lar.PortletDataHandler legacyDataHandler =
+			null;
+
+		while (itr.hasNext()) {
+			Portlet portlet = itr.next();
+
+			if (!portlet.isActive()) {
+				itr.remove();
+
+				continue;
+			}
+
+			BaseDataHandler dataHandler = DataHandlerLocatorUtil.locate(
+				portlet.getPortletDataHandlerClass());
+
+			if (dataHandler == null) {
+				itr.remove();
+
+				continue;
+			}
+			if (dataHandler != null) {
+				PortletDataHandler portletDataHandler =
+					(PortletDataHandler)dataHandler;
+
+				if (!portletDataHandler.isAlwaysExportable()) {
+					itr.remove();
+				}
+			}
+		}
+
+		return portlets;
+	}
+
 	private DataHandlerContext _initDataHandlerContext(
 			long groupId, boolean privateLayout,
-			Map<String, String[]> parameters)
+			Map<String, String[]> parameters, Date startDate, Date endDate)
 		throws Exception {
 
 		DataHandlerContext context = new DataHandlerContextImpl();
 
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 
-		context.setGroupId(groupId);
-		context.setScopeGroupId(groupId);
 		context.setCompanyId(group.getCompanyId());
+		context.setEndDate(endDate);
+		context.setGroupId(groupId);
 		context.setPrivateLayout(privateLayout);
+		context.setScopeGroupId(groupId);
+		context.setStartDate(startDate);
 
 		context.setParameters(parameters);
 

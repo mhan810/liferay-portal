@@ -23,10 +23,10 @@ import java.util.Map;
 /**
  * @author Mate Thurzo
  */
-public class LarPersistenceLocatorImpl implements LarPersistenceLocator {
+public class DataHandlerLocatorImpl implements DataHandlerLocator {
 
 	public Map<String, String> getLarPersistenceMapping() {
-		return _larPersistenceMapping;
+		return _dataHandlerMapping;
 	}
 
 	public BaseDataHandler locate(String key) {
@@ -34,11 +34,11 @@ public class LarPersistenceLocatorImpl implements LarPersistenceLocator {
 			return null;
 		}
 
-		if (!_larPersistenceMapping.containsKey(key)) {
+		if (!_dataHandlerMapping.containsKey(key)) {
 			return null;
 		}
 
-		String beanId = _larPersistenceMapping.get(key);
+		String beanId = _dataHandlerMapping.get(key);
 
 		Object obj = PortalBeanLocatorUtil.locate(beanId);
 
@@ -50,11 +50,11 @@ public class LarPersistenceLocatorImpl implements LarPersistenceLocator {
 	}
 
 	public void setLarPersistenceMapping(
-		Map<String, String> larPersistenceMapping) {
+		Map<String, String> dataHandlerMapping) {
 
-		_larPersistenceMapping = larPersistenceMapping;
+		_dataHandlerMapping = dataHandlerMapping;
 	}
 
-	private Map<String, String> _larPersistenceMapping;
+	private Map<String, String> _dataHandlerMapping;
 
 }
