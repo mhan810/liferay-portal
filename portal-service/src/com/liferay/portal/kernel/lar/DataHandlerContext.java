@@ -37,6 +37,10 @@ public interface DataHandlerContext {
 
 	public static final String ATTRIBUTE_NAME_PRIVATE_LAYOUT = "PRIVATE_LAYOUT";
 
+	public static final String ATTRIBUTE_NAME_PLID = "PLID";
+
+	public static final String ATTRIBUTE_NAME_OLD_PLID = "OLD_PLID";
+
 	public static final String ATTRIBUTE_NAME_SCOPE_GROUP_ID = "SCOPE_GROUP_ID";
 
 	public static final String ATTRIBUTE_NAME_SOURCE_GROUP_ID =
@@ -67,6 +71,10 @@ public interface DataHandlerContext {
 	public Map<?, ?> getNewPrimaryKeysMap(Class<?> clazz);
 
 	public Map<?, ?> getNewPrimaryKeysMap(String className);
+
+	public long getOldPlid();
+
+	public long getPlid();
 
 	public Map<String, String[]> getParameters();
 
@@ -99,6 +107,10 @@ public interface DataHandlerContext {
 	public void setGroupId(long groupId);
 
 	public void setLarDigest(LarDigest digest);
+
+	public void setOldPlid(long oldPlid);
+
+	public void setPlid(long plid);
 
 	public void setParameters(Map<String, String[]> parameters);
 

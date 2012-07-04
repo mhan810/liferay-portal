@@ -15,6 +15,7 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portlet.journal.model.JournalArticle;
 
@@ -30,6 +31,15 @@ public interface JournalArticleDataHandler
 
 	public String getArticlePath(
 			PortletDataContext portletDataContext, JournalArticle article)
+		throws Exception;
+
+	public String importReferencedContent(
+			PortletDataContext portletDataContext, Element parentElement,
+			String content)
+		throws Exception;
+
+	public void importReferencedData(
+			PortletDataContext portletDataContext, Element entityElement)
 		throws Exception;
 
 }
