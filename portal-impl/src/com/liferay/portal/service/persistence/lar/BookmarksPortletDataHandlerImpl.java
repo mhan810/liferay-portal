@@ -18,6 +18,9 @@ import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.lar.digest.LarDigest;
+import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigestItemImpl;
+import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
@@ -35,13 +38,24 @@ public class BookmarksPortletDataHandlerImpl
 	implements BookmarksPortletDataHandler {
 
 	@Override
-	public void doDigest(Portlet object) throws Exception {
+	public void doDigest(Portlet portlet) throws Exception {
 		DataHandlerContext context =
-			getLarPersistenceContext();
+			getDataHandlerContext();
 
 		/*portletDataContext.addPermissions(
 			"com.liferay.portlet.bookmarks",
 			portletDataContext.getScopeGroupId());*/
+
+		LarDigest digest = context.getLarDigest();
+
+		LarDigestItem item = new LarDigestItemImpl();
+
+		item.setAction(LarDigesterConstants.ACTION_ADD);
+		item.setType("com.liferay.portlet.bookmarks");
+		item.setClassPK(portlet.getPortletId());
+		item.setPath(getPortletPath(portlet.getPortletId()));
+
+		digest.write(item);
 
 		List<BookmarksFolder> folders = BookmarksFolderUtil.findByGroupId(
 			context.getScopeGroupId());

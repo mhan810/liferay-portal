@@ -25,12 +25,20 @@ import com.liferay.portal.model.User;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Mate Thurzo
  */
 public class DataHandlerContextImpl implements DataHandlerContext {
+
+	public void addProcessedPath(String path) {
+		if (!_storedPaths.contains(path)) {
+			_storedPaths.add(path);
+		}
+	}
 
 	public Object getAttribute(String key) {
 		return _attributes.get(key);
@@ -105,6 +113,14 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 
 	public ZipWriter getZipWriter() {
 		return (ZipWriter)getAttribute(ATTRIBUTE_NAME_ZIP_WRITER);
+	}
+
+	public boolean isPathProcessed(String path) {
+		if (_storedPaths.contains(path)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public boolean isPrivateLayout() {
@@ -188,6 +204,7 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 
 	private Map<String, Object> _attributes = new HashMap<String, Object>();
 	private Map<String, String[]> _paramaters;
+	private Set<String> _storedPaths = new HashSet<String>();
 	private Map<String, Map<?, ?>> _newPrimaryKeysMaps =
 		new HashMap<String, Map<?, ?>>();
 

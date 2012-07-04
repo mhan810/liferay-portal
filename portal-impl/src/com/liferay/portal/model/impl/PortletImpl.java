@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.OpenSearch;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
 import com.liferay.portal.kernel.servlet.URLEncoder;
+import com.liferay.portal.kernel.staging.DataHandlerLocatorUtil;
 import com.liferay.portal.kernel.template.PortletDisplayTemplateHandler;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -1168,10 +1169,10 @@ public class PortletImpl extends PortletBaseImpl {
 			return null;
 		}
 
-		PortletBag portletBag = PortletBagPool.get(getRootPortletId());
-
-		return portletBag.getPortletDataHandlerInstance();
+		return (PortletDataHandler)DataHandlerLocatorUtil.locate(
+			getPortletDataHandlerClass());
 	}
+
 	/**
 	 * Returns the portlet data handler instance of the portlet.
 	 *

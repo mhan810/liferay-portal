@@ -12,15 +12,28 @@
  * details.
  */
 
-package com.liferay.portal.staging;
+package com.liferay.portal.kernel.staging;
 
 import com.liferay.portal.service.persistence.BaseDataHandler;
+import com.liferay.portal.staging.DataHandlerLocator;
 
 /**
  * @author Mate Thurzo
  */
-public interface LarPersistenceLocator {
+public class DataHandlerLocatorUtil {
 
-	public BaseDataHandler locate(String key);
+	public static DataHandlerLocator getLocator() {
+		return _locator;
+	}
+
+	public static BaseDataHandler locate(String key) {
+		return getLocator().locate(key);
+	}
+
+	public void setLocator(DataHandlerLocator locator) {
+		_locator = locator;
+	}
+
+	private static DataHandlerLocator _locator;
 
 }
