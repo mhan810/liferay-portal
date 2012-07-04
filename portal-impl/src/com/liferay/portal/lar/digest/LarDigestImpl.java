@@ -19,8 +19,13 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.*;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.Node;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.xml.StAXReaderUtil;
 import com.liferay.portal.xml.StAXWriterUtil;
+import jcifs.dcerpc.msrpc.lsarpc;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,8 +33,10 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -59,27 +66,26 @@ public class LarDigestImpl implements LarDigest {
 	public LarDigestImpl() throws Exception {
 		this(null);
 
+		XMLOutputFactory xmlOutputFactory =
+			StAXWriterUtil.getXMLOutputFactory();
+
+		OutputStream outputStream = new FileOutputStream(_digestFile);
+
+		_xmlEventWriter = xmlOutputFactory.createXMLEventWriter(outputStream);
+
 		_xmlEventWriter.add(_xmlEventFactory.createStartDocument());
 
 		_xmlEventWriter.add(createStartElement("root"));
 	}
 
 	public LarDigestImpl(File digest) throws Exception {
-
 		_digestFile = digest;
+
+		_xmlEventFactory = XMLEventFactory.newInstance();
 
 		if (_digestFile == null) {
 			_digestFile = getDigestFile();
 		}
-
-		XMLOutputFactory xmlOutputFactory =
-			StAXWriterUtil.getXMLOutputFactory();
-
-		_xmlEventFactory = XMLEventFactory.newInstance();
-
-		OutputStream outputStream = new FileOutputStream(getDigestFile());
-
-		_xmlEventWriter = xmlOutputFactory.createXMLEventWriter(outputStream);
 
 		initElements();
 	}
@@ -118,6 +124,83 @@ public class LarDigestImpl implements LarDigest {
 		}
 
 		format(_digestFile);
+	}
+
+	public List<LarDigestItem> findDigestItems(
+		int action, String path, String type, String classPK) {
+
+		List result = new ArrayList<LarDigestItem>();
+
+		try {
+			if (_document == null) {
+				_document = SAXReaderUtil.read(getDigestString());
+			}
+
+			Element rootElement = _document.getRootElement();
+
+			StringBundler sb = new StringBundler("./item");
+
+			if (action > 0) {
+				sb = sb.append(StringPool.OPEN_BRACKET);
+				sb = sb.append(LarDigesterConstants.NODE_ACTION_LABEL);
+				sb = sb.append(StringPool.EQUAL);
+				sb = sb.append("'" + action + "'");
+				sb = sb.append(StringPool.CLOSE_BRACKET);
+			}
+
+			if (Validator.isNotNull(path)) {
+				sb = sb.append(StringPool.OPEN_BRACKET);
+				sb = sb.append(LarDigesterConstants.NODE_PATH_LABEL);
+				sb = sb.append(StringPool.EQUAL);
+				sb = sb.append("'" + path + "'");
+				sb = sb.append(StringPool.CLOSE_BRACKET);
+			}
+
+			if (Validator.isNotNull(type)) {
+				sb = sb.append(StringPool.OPEN_BRACKET);
+				sb = sb.append(LarDigesterConstants.NODE_TYPE_LABEL);
+				sb = sb.append(StringPool.EQUAL);
+				sb = sb.append("'" + type + "'");
+				sb = sb.append(StringPool.CLOSE_BRACKET);
+			}
+
+			if (Validator.isNotNull(classPK)) {
+				sb = sb.append(StringPool.OPEN_BRACKET);
+				sb = sb.append(LarDigesterConstants.NODE_CLASS_PK_LABEL);
+				sb = sb.append(StringPool.EQUAL);
+				sb = sb.append("'" + classPK + "'");
+				sb = sb.append(StringPool.CLOSE_BRACKET);
+			}
+
+			for (Node node : rootElement.selectNodes(sb.toString())) {
+				Element digestElement = (Element)node;
+
+				LarDigestItem digestItem = new LarDigestItemImpl();
+
+				Element element = digestElement.element(
+					LarDigesterConstants.NODE_ACTION_LABEL);
+				digestItem.setAction(GetterUtil.getInteger(element.getText()));
+
+				element = digestElement.element(
+					LarDigesterConstants.NODE_CLASS_PK_LABEL);
+				digestItem.setClassPK(element.getText());
+
+				element = digestElement.element(
+					LarDigesterConstants.NODE_PATH_LABEL);
+				digestItem.setPath(element.getText());
+
+				element = digestElement.element(
+					LarDigesterConstants.NODE_TYPE_LABEL);
+				digestItem.setType(element.getText());
+
+				result.add(digestItem);
+			}
+		}
+		catch (Exception ex) {
+			_log.warn(ex);
+		}
+
+		return result;
 	}
 
 	public File getDigestFile() {
@@ -372,6 +455,13 @@ public class LarDigestImpl implements LarDigest {
 	protected void write(int action, String path, String type, String classPK)
 		throws PortalException, XMLStreamException {
 
+		if (_xmlEventWriter == null) {
+			_log.warn(
+				"It is not allowed to write into an existing digest file!");
+
+			return;
+		}
+
 		try {
 			_xmlEventWriter.add(
 				getStartElement(LarDigesterConstants.NODE_DIGEST_ITEM_LABEL));
@@ -403,6 +493,7 @@ public class LarDigestImpl implements LarDigest {
 
 	private File _digestFile;
 
+	private Document _document;
 	private Map<String, EndElement> _endElements;
 	private Map<String, StartElement> _startElements;
 	private XMLEventFactory _xmlEventFactory;
