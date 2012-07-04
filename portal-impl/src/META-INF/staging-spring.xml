@@ -38,16 +38,16 @@
 		</property>
 	</bean>
 
-	<bean id="com.liferay.portal.kernel.staging.LarPersistenceLocator" class="com.liferay.portal.kernel.staging.LarPersistenceLocatorUtil">
+	<bean id="com.liferay.portal.kernel.staging.LarPersistenceLocator" class="com.liferay.portal.kernel.staging.DataHandlerLocatorUtil">
 		<property name="locator" ref="com.liferay.portal.staging.LarPersistenceLocatorImpl" />
 	</bean>
-	<bean id="com.liferay.portal.staging.LarPersistenceLocatorImpl" class="com.liferay.portal.staging.LarPersistenceLocatorImpl">
+	<bean id="com.liferay.portal.staging.LarPersistenceLocatorImpl" class="com.liferay.portal.staging.DataHandlerLocatorImpl">
 		<property name="larPersistenceMapping">
 			<map key-type="java.lang.String" value-type="java.lang.String">
 				<entry key="com.liferay.portal.model.Layout" value="com.liferay.portal.service.persistence.lar.LayoutDataHandler" />
 				<entry key="com.liferay.portlet.bookmarks.model.BookmarksEntry" value="com.liferay.portal.service.persistence.lar.BookmarksEntryDataHandler" />
 				<entry key="com.liferay.portlet.bookmarks.model.BookmarksFolder" value="com.liferay.portal.service.persistence.lar.BookmarksFolderDataHandler" />
-				<entry key="com.liferay.portlet.bookmarks" value="com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandler" />
+				<entry key="com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandlerImpl" value="com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandler" />
 			</map>
 		</property>
 	</bean>

@@ -708,15 +708,11 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		try {
 			LARExporter larExporter = new LARExporter();
-			//LayoutExporter layoutExporter = new LayoutExporter();
 
-			/*return layoutExporter.exportLayoutsAsFile(
-				groupId, privateLayout, null, parameterMap, startDate, endDate);
-			*/
+			larExporter.digest(
+				groupId, privateLayout, layoutIds, parameterMap,
+				startDate, endDate);
 
-			/*return layoutExporter.exportLayoutsAsFile(
-				groupId, privateLayout, null, parameterMap, startDate, endDate);
-			*/
 			return larExporter.export(
 				groupId, privateLayout, null, parameterMap, startDate, endDate);
 		}

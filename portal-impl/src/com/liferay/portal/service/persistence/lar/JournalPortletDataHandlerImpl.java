@@ -47,7 +47,7 @@ public class JournalPortletDataHandlerImpl extends PortletDataHandlerImpl
 
 	@Override
 	protected void doDigest(Portlet portlet) throws Exception {
-		DataHandlerContext context = getLarPersistenceContext();
+		DataHandlerContext context = getDataHandlerContext();
 
 		/*portletDataContext.addPermissions(
 			"com.liferay.portlet.journal",
