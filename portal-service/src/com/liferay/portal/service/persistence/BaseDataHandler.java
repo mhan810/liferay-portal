@@ -17,13 +17,18 @@ package com.liferay.portal.service.persistence;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.BaseModel;
+import com.liferay.portal.model.ClassedModel;
+import com.liferay.portal.service.ServiceContext;
 
+import java.io.File;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author Mate Thurzo
@@ -45,9 +50,35 @@ public interface BaseDataHandler<T extends BaseModel<T>> {
 	public void addZipEntry(String path, InputStream is)
 		throws SystemException;
 
+	public ServiceContext createServiceContext(
+		Element element, ClassedModel classedModel, String namespace);
+
+	public ServiceContext createServiceContext(
+		String path, ClassedModel classedModel, String namespace);
+
 	public void digest(T object) throws Exception;
 
+	public Object fromXML(byte[] bytes);
+
+	public Object fromXML(String xml);
+
 	public String getEntityPath(T object);
+
+	public List<String> getZipEntries();
+
+	public byte[] getZipEntryAsByteArray(String path);
+
+	public File getZipEntryAsFile(String path);
+
+	public InputStream getZipEntryAsInputStream(String path);
+
+	public Object getZipEntryAsObject(String path);
+
+	public String getZipEntryAsString(String path);
+
+	public List<String> getZipFolderEntries();
+
+	public List<String> getZipFolderEntries(String path);
 
 	public void importData(LarDigestItem item);
 
