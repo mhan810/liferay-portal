@@ -299,8 +299,8 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		Class<?> clazz = classedModel.getModelClass();
 		long classPK = getClassPK(classedModel);
 
-		LarPersistenceContext context =
-			LarPersistenceContextThreadLocal.getLarPersistenceContext();
+		DataHandlerContext context =
+			DataHandlerContextThreadLocal.getDataHandlerContext();
 
 		ServiceContext serviceContext = new ServiceContext();
 
@@ -473,12 +473,16 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return DataHandlerContextThreadLocal.getDataHandlerContext();
 	}
 
-	protected String getLayoutPath(long layoutId) {
-		return getRootPath() + ROOT_PATH_LAYOUTS + layoutId;
-	}
-
 	protected String getPortletPath(String portletId) {
-		return getRootPath() + ROOT_PATH_PORTLETS + portletId;
+		StringBundler sb = new StringBundler();
+
+		sb.append(getRootPath());
+		sb.append(ROOT_PATH_PORTLETS);
+		sb.append(portletId);
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(portletId + ".xml");
+
+		return sb.toString();
 	}
 
 	protected String getRootPath() {

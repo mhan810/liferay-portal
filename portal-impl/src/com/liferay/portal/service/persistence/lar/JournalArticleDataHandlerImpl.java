@@ -39,7 +39,7 @@ import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.documentlibrary.lar.DLLegacyPortletDataHandlerImpl;
+import com.liferay.portlet.documentlibrary.lar.DLPortletDataHandlerImpl;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -223,7 +223,7 @@ public class JournalArticleDataHandlerImpl
 		}
 
 		for (Element repositoryElement : dlRepositoryElements) {
-			DLLegacyPortletDataHandlerImpl.importRepository(
+			DLPortletDataHandlerImpl.importRepository(
 				portletDataContext, repositoryElement);
 		}
 
@@ -238,7 +238,7 @@ public class JournalArticleDataHandlerImpl
 		}
 
 		for (Element repositoryEntryElement : dlRepositoryEntryElements) {
-			DLLegacyPortletDataHandlerImpl.importRepositoryEntry(
+			DLPortletDataHandlerImpl.importRepositoryEntry(
 				portletDataContext, repositoryEntryElement);
 		}
 
@@ -251,7 +251,7 @@ public class JournalArticleDataHandlerImpl
 		}
 
 		for (Element folderElement : dlFolderElements) {
-			DLLegacyPortletDataHandlerImpl.importFolder(
+			DLPortletDataHandlerImpl.importFolder(
 				portletDataContext, folderElement);
 		}
 
@@ -264,7 +264,7 @@ public class JournalArticleDataHandlerImpl
 		}
 
 		for (Element fileEntryElement : dlFileEntryElements) {
-			DLLegacyPortletDataHandlerImpl.importFileEntry(
+			DLPortletDataHandlerImpl.importFileEntry(
 				portletDataContext, fileEntryElement);
 		}
 
@@ -277,7 +277,7 @@ public class JournalArticleDataHandlerImpl
 		}
 
 		for (Element fileRankElement : dlFileRankElements) {
-			DLLegacyPortletDataHandlerImpl.importFileRank(
+			DLPortletDataHandlerImpl.importFileRank(
 				portletDataContext, fileRankElement);
 		}
 	}

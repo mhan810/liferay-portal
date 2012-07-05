@@ -161,7 +161,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 		String path = item.getPath();
 
-		if (isPathProcessed(path)) {
+		if (context.isPathProcessed(path)) {
 			return;
 		}
 
@@ -526,6 +526,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		DataHandlerContext context =
 			getDataHandlerContext();
 
+		context.setPlid(layout.getPlid());
+
 		String path = getEntityPath(layout);
 
 		if (context.isPathProcessed(path)) {
@@ -612,8 +614,6 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				layout.getIconImageId());
 
 			if (image != null) {
-				String iconPath = getLayoutIconPath(layout, image);
-
 				imageDataHandler.digest(image);
 			}
 		}
@@ -651,9 +651,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 			if (linkToLayoutId > 0) {
 				Layout linkedToLayout = LayoutLocalServiceUtil.getLayout(
-					context.getScopeGroupId(),
+					context.getScopeGroupId(), layout.isPrivateLayout(),
 					linkToLayoutId);
-					layout.isPrivateLayout(), linkToLayoutId);
 
 				digest(linkedToLayout);
 			}
@@ -690,8 +689,6 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 						scopeLayout = LayoutLocalServiceUtil.
 							fetchLayoutByUuidAndGroupId(
 								scopeLayoutUuid, context.getGroupId());
-								scopeLayoutUuid,
-								context.getGroupId());
 
 						if (scopeLayout == null) {
 							continue;
@@ -718,6 +715,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				}
 			}
 		}
+
+		context.resetAttribute(DataHandlerContext.ATTRIBUTE_NAME_PLID);
 	}
 
 	@Override
@@ -847,19 +846,6 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		}
 
 		return portletIds;
-	}
-
-	private String getLayoutIconPath(Layout layout, Image image) {
-
-		StringBundler sb = new StringBundler(5);
-
-		sb.append(getLayoutPath(layout.getLayoutId()));
-		sb.append("/icons/");
-		sb.append(image.getImageId());
-		sb.append(StringPool.PERIOD);
-		sb.append(image.getType());
-
-		return sb.toString();
 	}
 
 	private void importJournalArticle(
