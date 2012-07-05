@@ -158,6 +158,10 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		}
 	}
 
+	public void resetAttribute(String key) {
+		_attributes.remove(key);
+	}
+
 	public void setAttribute(String key, Object value) {
 		_attributes.put(key, value);
 	}
