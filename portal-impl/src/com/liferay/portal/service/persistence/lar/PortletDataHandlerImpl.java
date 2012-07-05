@@ -14,7 +14,8 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-import com.liferay.portal.kernel.lar.LarPersistenceContext;
+import com.liferay.portal.NoSuchPortletPreferencesException;
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
@@ -29,11 +30,16 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
+import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Portlet;
+import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
+import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
+import com.liferay.portal.util.PortletKeys;
 
 import java.util.List;
 import java.util.Map;
@@ -48,9 +54,75 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 		return;
 	}
 
+	public void digest(Portlet portlet) throws Exception {
+		try {
+			DataHandlerContext context = getDataHandlerContext();
+
+			String path = getPortletPath(portlet.getPortletId());
+
+			if (context.isPathProcessed(path)) {
+				return;
+			}
+
+			doDigest(portlet);
+
+			doDigestPreferences(portlet);
+
+			getDataHandlerContext().addProcessedPath(path);
+		}
+		catch (Exception e) {
+			_log.error(e);
+		}
+	}
+
 	@Override
-	protected void doDigest(Portlet object) throws Exception {
+	protected void doDigest(Portlet portlet) throws Exception {
 		return;
+	}
+
+	protected void doDigestPreferences(Portlet portlet) throws Exception {
+		DataHandlerContext context = getDataHandlerContext();
+
+		Layout layout = LayoutLocalServiceUtil.getLayout(context.getPlid());
+
+		PortletPreferences portletPreferences = null;
+
+		if ((ownerType == PortletKeys.PREFS_OWNER_TYPE_COMPANY) ||
+			(ownerType == PortletKeys.PREFS_OWNER_TYPE_GROUP) ||
+			(ownerType == PortletKeys.PREFS_OWNER_TYPE_ARCHIVED)) {
+
+			plid = PortletKeys.PREFS_OWNER_ID_DEFAULT;
+		}
+
+		try {
+			portletPreferences =
+				PortletPreferencesLocalServiceUtil.getPortletPreferences(
+					ownerId, ownerType, plid, portletId);
+		}
+		catch (NoSuchPortletPreferencesException nsppe) {
+			return;
+		}
+
+		LayoutTypePortlet layoutTypePortlet = null;
+
+		if (layout != null) {
+			layoutTypePortlet = (LayoutTypePortlet)layout.getLayoutType();
+		}
+
+		exportPortletPreferences(
+			portletDataContext, PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, false, layout,
+			layout.getPlid(), portlet.getPortletId());
+
+		exportPortletPreferences(
+			portletDataContext, context.getScopeGroupId(),
+			PortletKeys.PREFS_OWNER_TYPE_GROUP, false, layout, layout.getPlid(),
+			portlet.getPortletId());
+
+		exportPortletPreferences(
+			portletDataContext, context.getCompanyId(),
+			PortletKeys.PREFS_OWNER_TYPE_COMPANY, false, layout,
+			layout.getPlid(), portlet.getPortletId());
 	}
 
 	@Override
@@ -59,7 +131,7 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 
 		//List<Element> portletElements = portletsElement.elements("portlet");
 
-		LarPersistenceContext context = getLarPersistenceContext();
+		DataHandlerContext context = getDataHandlerContext();
 
 		Map parameterMap = context.getParameters();
 

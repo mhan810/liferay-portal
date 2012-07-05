@@ -98,6 +98,8 @@ public interface DataHandlerContext {
 
 	public boolean isWithinDateRange(Date modifiedDate);
 
+	public void resetAttribute(String key);
+
 	public void setAttribute(String key, Object value);
 
 	public void setCompanyId(long companyId);
