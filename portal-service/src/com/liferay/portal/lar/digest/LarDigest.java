@@ -14,12 +14,10 @@
 
 package com.liferay.portal.lar.digest;
 
-import com.liferay.portal.kernel.exception.PortalException;
-
 import java.io.File;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -28,8 +26,7 @@ import javax.xml.stream.XMLStreamException;
  */
 public interface LarDigest extends Iterable<LarDigestItem> {
 
-	public void addMetaData(HashMap<String, String> metadata)
-		throws Exception;
+	public void addMetaData(Map<String, String> metadata) throws Exception;
 
 	public void close() throws Exception;
 
@@ -40,9 +37,8 @@ public interface LarDigest extends Iterable<LarDigestItem> {
 
 	public String getDigestString();
 
-	public HashMap<String, String> getMetaData() throws Exception;
+	public Map<String, String> getMetaData() throws Exception;
 
-	public void write(LarDigestItem digestItem)
-		throws PortalException, XMLStreamException;
+	public void write(LarDigestItem digestItem) throws Exception;
 
 }
