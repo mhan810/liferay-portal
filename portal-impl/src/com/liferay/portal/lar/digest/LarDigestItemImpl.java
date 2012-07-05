@@ -14,6 +14,9 @@
 
 package com.liferay.portal.lar.digest;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Mate Thurzo
  */
@@ -27,8 +30,16 @@ public class LarDigestItemImpl implements LarDigestItem {
 		return _classPK;
 	}
 
+	public Map<String, String> getMetadata() {
+		return _metadata;
+	}
+
 	public String getPath() {
 		return _path;
+	}
+
+	public Map<String, List<String>> getPermissions() {
+		return _permissions;
 	}
 
 	public String getType() {
@@ -43,8 +54,16 @@ public class LarDigestItemImpl implements LarDigestItem {
 		_classPK = classPK;
 	}
 
+	public void setMetadata(Map<String, String> metadata) {
+		_metadata = metadata;
+	}
+
 	public void setPath(String path) {
 		_path = path;
+	}
+
+	public void setPermissions(Map<String, List<String>> permissions) {
+		_permissions = permissions;
 	}
 
 	public void setType(String type) {
@@ -55,5 +74,7 @@ public class LarDigestItemImpl implements LarDigestItem {
 	private String _classPK;
 	private String _path;
 	private String _type;
+	private Map _metadata;
+	private Map _permissions;
 
 }

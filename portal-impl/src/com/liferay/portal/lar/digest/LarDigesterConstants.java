@@ -29,6 +29,8 @@ public class LarDigesterConstants {
 
 	public static final String NODE_ACTION_LABEL = "action";
 
+	public static final String NODE_ACTION_KEY_LABEL = "actionKey";
+
 	public static final String NODE_CLASS_PK_LABEL = "classPK";
 
 	public static final String NODE_DIGEST_ITEM_LABEL = "item";
@@ -38,6 +40,10 @@ public class LarDigesterConstants {
 	public static final String NODE_METADATA_SET_LABEL = "metadataSet";
 
 	public static final String NODE_PATH_LABEL = "path";
+
+	public static final String NODE_PERMISSION_LABEL = "permission";
+
+	public static final String NODE_PERMISSIONS_LABEL = "permissions";
 
 	public static final String NODE_TYPE_LABEL = "type";
 

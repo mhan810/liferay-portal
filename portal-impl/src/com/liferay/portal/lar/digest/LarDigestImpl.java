@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.xml.StAXReaderUtil;
 import com.liferay.portal.xml.StAXWriterUtil;
+import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
 import jcifs.dcerpc.msrpc.lsarpc;
 
 import java.io.File;
@@ -46,6 +47,7 @@ import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
@@ -71,11 +73,13 @@ public class LarDigestImpl implements LarDigest {
 
 		OutputStream outputStream = new FileOutputStream(_digestFile);
 
-		_xmlEventWriter = xmlOutputFactory.createXMLEventWriter(outputStream);
+		_xmlStreamWriter = xmlOutputFactory.createXMLStreamWriter(outputStream);
 
-		_xmlEventWriter.add(_xmlEventFactory.createStartDocument());
+		_xmlStreamWriter = new IndentingXMLStreamWriter(_xmlStreamWriter);
 
-		_xmlEventWriter.add(createStartElement("root"));
+		_xmlStreamWriter.writeStartDocument();
+
+		_xmlStreamWriter.writeStartElement("root");
 	}
 
 	public LarDigestImpl(File digest) throws Exception {
@@ -86,44 +90,54 @@ public class LarDigestImpl implements LarDigest {
 		if (_digestFile == null) {
 			_digestFile = getDigestFile();
 		}
-
-		initElements();
 	}
 
-	public void addMetaData(HashMap<String, String> metadata) throws Exception {
-		EndElement metadataEndElement = createEndElement(
-			LarDigesterConstants.NODE_METADATA_LABEL);
-		StartElement metadataStartElement = createStartElement(
-			LarDigesterConstants.NODE_METADATA_LABEL);
-
-		_xmlEventWriter.add(createStartElement(
-			LarDigesterConstants.NODE_METADATA_SET_LABEL));
+	public void addMetaData(Map<String, String> metadata) throws Exception {
+		_xmlStreamWriter.writeStartElement(
+			LarDigesterConstants.NODE_METADATA_SET_LABEL);
 
 		for (String key : metadata.keySet()) {
-			_xmlEventWriter.add(metadataStartElement);
-
-			XMLEvent event = _xmlEventFactory.createAttribute
-				(key, metadata.get(key));
-			_xmlEventWriter.add(event);
-
-			_xmlEventWriter.add(metadataEndElement);
+			_xmlStreamWriter.writeStartElement(
+				LarDigesterConstants.NODE_METADATA_LABEL);
+			_xmlStreamWriter.writeAttribute(key, metadata.get(key));
+			_xmlStreamWriter.writeEndElement();
 		}
 
-		_xmlEventWriter.add(createEndElement(
-			LarDigesterConstants.NODE_METADATA_SET_LABEL));
+		_xmlStreamWriter.writeEndElement();
+	}
+
+	public void addPermissions(Map<String, List<String>> permissions)
+		throws Exception {
+
+		_xmlStreamWriter.writeStartElement(
+			LarDigesterConstants.NODE_PERMISSIONS_LABEL);
+
+		for (String key : permissions.keySet()) {
+			_xmlStreamWriter.writeStartElement(
+				LarDigesterConstants.NODE_PERMISSION_LABEL);
+			for(String action : permissions.get(key)) {
+				_xmlStreamWriter.writeStartElement(
+					LarDigesterConstants.NODE_ACTION_KEY_LABEL);
+				_xmlStreamWriter.writeCharacters(action);
+				_xmlStreamWriter.writeEndElement();
+			}
+			_xmlStreamWriter.writeEndElement();
+		}
+
+		_xmlStreamWriter.writeEndElement();
 	}
 
 	public void close() throws Exception {
-		if (_xmlEventWriter != null) {
-			_xmlEventWriter.flush();
-			_xmlEventWriter.close();
+		if (_xmlStreamWriter != null) {
+			_xmlStreamWriter.writeEndElement();
+			_xmlStreamWriter.writeEndDocument();
+			_xmlStreamWriter.flush();
+			_xmlStreamWriter.close();
 		}
 
 		if (_xmlEventReader != null) {
 			_xmlEventReader.close();
 		}
-
-		format(_digestFile);
 	}
 
 	public List<LarDigestItem> findDigestItems(
@@ -229,7 +243,7 @@ public class LarDigestImpl implements LarDigest {
 		return null;
 	}
 
-	public HashMap<String, String> getMetaData() throws Exception {
+	public Map<String, String> getMetaData() throws Exception {
 		XMLEvent event = null;
 
 		HashMap<String, String> metadata = new HashMap<String, String>();
@@ -307,20 +321,48 @@ public class LarDigestImpl implements LarDigest {
 		}
 	}
 
-	public void write(LarDigestItem digestItem)
-		throws PortalException, XMLStreamException {
+	public void write(LarDigestItem digestItem) throws Exception {
 
-		write(
-			digestItem.getAction(), digestItem.getPath(), digestItem.getType(),
-			digestItem.getClassPK());
+		try {
+			_xmlStreamWriter.writeStartElement(
+					LarDigesterConstants.NODE_DIGEST_ITEM_LABEL);
+
+			addMetaData(digestItem.getMetadata());
+
+			addXmlNode(
+				LarDigesterConstants.NODE_PATH_LABEL, digestItem.getPath());
+
+			addXmlNode(
+				LarDigesterConstants.NODE_ACTION_LABEL,
+				StringUtil.valueOf(digestItem.getAction()));
+
+			addXmlNode(
+				LarDigesterConstants.NODE_TYPE_LABEL, digestItem.getType());
+
+			addXmlNode(
+				LarDigesterConstants.NODE_CLASS_PK_LABEL,
+				digestItem.getClassPK());
+
+			addPermissions(digestItem.getPermissions());
+
+			_xmlStreamWriter.writeEndElement();
+		}
+		finally {
+			try {
+				_xmlStreamWriter.flush();
+			}
+			catch (Exception ex) {
+				throw new PortalException(ex.getMessage());
+			}
+		}
 	}
 
 	protected void addXmlNode(String name, String value)
 		throws XMLStreamException {
 
-		_xmlEventWriter.add(getStartElement(name));
-		_xmlEventWriter.add(_xmlEventFactory.createCharacters(value));
-		_xmlEventWriter.add(getEndElement(name));
+		_xmlStreamWriter.writeStartElement(name);
+		_xmlStreamWriter.writeCharacters(value);
+		_xmlStreamWriter.writeEndElement();
 	}
 
 	protected EndElement createEndElement(String name) {
@@ -383,121 +425,13 @@ public class LarDigestImpl implements LarDigest {
 		}
 	}
 
-	protected EndElement getEndElement(String name) {
-		if ((_endElements == null) || _endElements.isEmpty()) {
-			return null;
-		}
-
-		return _endElements.get(name);
-	}
-
-	protected StartElement getStartElement(String name) {
-		if ((_startElements == null) || _startElements.isEmpty()) {
-			return null;
-		}
-
-		return _startElements.get(name);
-	}
-
-	protected void initElements() {
-		_endElements = new HashMap<String, EndElement>();
-		_startElements = new HashMap<String, StartElement>();
-
-		_endElements.put(
-			LarDigesterConstants.NODE_ACTION_LABEL,
-			createEndElement(LarDigesterConstants.NODE_ACTION_LABEL));
-
-		_startElements.put(
-			LarDigesterConstants.NODE_ACTION_LABEL,
-			createStartElement(LarDigesterConstants.NODE_ACTION_LABEL));
-
-		_endElements.put(
-			LarDigesterConstants.NODE_CLASS_PK_LABEL,
-			createEndElement(LarDigesterConstants.NODE_CLASS_PK_LABEL));
-
-		_startElements.put(
-			LarDigesterConstants.NODE_CLASS_PK_LABEL,
-			createStartElement(LarDigesterConstants.NODE_CLASS_PK_LABEL));
-
-		_endElements.put(
-			LarDigesterConstants.NODE_DIGEST_ITEM_LABEL,
-			createEndElement(LarDigesterConstants.NODE_DIGEST_ITEM_LABEL));
-
-		_startElements.put(
-			LarDigesterConstants.NODE_DIGEST_ITEM_LABEL,
-			createStartElement(LarDigesterConstants.NODE_DIGEST_ITEM_LABEL));
-
-		_endElements.put(
-			LarDigesterConstants.NODE_CLASS_PK_LABEL,
-			createEndElement(LarDigesterConstants.NODE_CLASS_PK_LABEL));
-
-		_startElements.put(
-			LarDigesterConstants.NODE_CLASS_PK_LABEL,
-			createStartElement(LarDigesterConstants.NODE_CLASS_PK_LABEL));
-
-		_endElements.put(
-			LarDigesterConstants.NODE_PATH_LABEL,
-			createEndElement(LarDigesterConstants.NODE_PATH_LABEL));
-
-		_startElements.put(
-			LarDigesterConstants.NODE_PATH_LABEL,
-			createStartElement(LarDigesterConstants.NODE_PATH_LABEL));
-
-		_endElements.put(
-			LarDigesterConstants.NODE_TYPE_LABEL,
-			createEndElement(LarDigesterConstants.NODE_TYPE_LABEL));
-
-		_startElements.put(
-			LarDigesterConstants.NODE_TYPE_LABEL,
-			createStartElement(LarDigesterConstants.NODE_TYPE_LABEL));
-	}
-
-	protected void write(int action, String path, String type, String classPK)
-		throws PortalException, XMLStreamException {
-
-		if (_xmlEventWriter == null) {
-			_log.warn(
-				"It is not allowed to write into an existing digest file!");
-
-			return;
-		}
-
-		try {
-			_xmlEventWriter.add(
-				getStartElement(LarDigesterConstants.NODE_DIGEST_ITEM_LABEL));
-
-			addXmlNode(LarDigesterConstants.NODE_PATH_LABEL, path);
-
-			addXmlNode(
-				LarDigesterConstants.NODE_ACTION_LABEL,
-				StringUtil.valueOf(action));
-
-			addXmlNode(LarDigesterConstants.NODE_TYPE_LABEL, type);
-
-			addXmlNode(LarDigesterConstants.NODE_CLASS_PK_LABEL, classPK);
-
-			_xmlEventWriter.add(
-				getEndElement(LarDigesterConstants.NODE_DIGEST_ITEM_LABEL));
-		}
-		finally {
-			try {
-				_xmlEventWriter.flush();
-			}
-			catch (Exception ex) {
-				throw new PortalException(ex.getMessage());
-			}
-		}
-	}
-
 	private static Log _log = LogFactoryUtil.getLog(LarDigest.class);
 
 	private File _digestFile;
-
 	private Document _document;
-	private Map<String, EndElement> _endElements;
-	private Map<String, StartElement> _startElements;
+
 	private XMLEventFactory _xmlEventFactory;
 	private XMLEventReader _xmlEventReader;
-	private XMLEventWriter _xmlEventWriter;
+	private XMLStreamWriter _xmlStreamWriter;
 
 }
