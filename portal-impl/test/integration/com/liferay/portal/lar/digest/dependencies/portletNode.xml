@@ -1,8 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?><root>
-    <item>
-        <path>here/i/am.xml</path>
-        <action>1</action>
-        <type>com.liferay.portal.model.Portlet</type>
-        <classPK>12345</classPK>
-    </item>
+<?xml version='1.0' encoding='UTF-8'?>
+<root>
+  <item>
+    <metadataSet>
+      <metadata test-metadata="test-value" />
+    </metadataSet>
+    <path>here/i/am.xml</path>
+    <action>1</action>
+    <type>javax.portlet.Portlet</type>
+    <classPK>12345</classPK>
+    <permissions>
+      <permission>
+        <actionKey>test-action</actionKey>
+      </permission>
+    </permissions>
+  </item>
 </root>
