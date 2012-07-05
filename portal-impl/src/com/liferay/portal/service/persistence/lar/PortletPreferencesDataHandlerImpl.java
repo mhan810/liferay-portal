@@ -14,16 +14,62 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.lar.digest.LarDigest;
+import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigestItemImpl;
+import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.PortletPreferences;
+import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 
 /**
  * @author Mate Thurzo
  */
-public class PortletPreferencesDataHandlerImpl extends BaseDataHandlerImpl<PortletPreferences> implements PortletPreferencesDataHandler {
+public class PortletPreferencesDataHandlerImpl
+	extends BaseDataHandlerImpl<PortletPreferences>
+	implements PortletPreferencesDataHandler {
 
 	@Override
-	protected void doDigest(PortletPreferences object) throws Exception {
-		return;
+	public void doDigest(PortletPreferences preferences) throws Exception {
+		DataHandlerContext context = getDataHandlerContext();
+
+		LarDigest digest = context.getLarDigest();
+
+		String path = getEntityPath(preferences);
+
+		if (!context.isPathProcessed(path)) {
+			LarDigestItem digestItem = new LarDigestItemImpl();
+
+			digestItem.setAction(LarDigesterConstants.ACTION_ADD);
+			digestItem.setPath(path);
+			digestItem.setType(PortletPreferences.class.getName());
+			digestItem.setClassPK(
+				StringUtil.valueOf(preferences.getPortletPreferencesId()));
+
+			digest.write(digestItem);
+		}
 	}
+
+	public PortletPreferences getEntity(String classPK) {
+		if (Validator.isNotNull(classPK)) {
+			try {
+				long preferencesId = Long.valueOf(classPK);
+
+				PortletPreferences preferences =
+					PortletPreferencesLocalServiceUtil.getPortletPreferences(
+						preferencesId);
+
+				return preferences;
+			}
+			catch (Exception e) {
+				return null;
+			}
+		}
+
+		return null;
+	}
+
 }
