@@ -1,22 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <root>
-    <metadataSet>
-        <metadata group-id="10426"/>
-        <metadata build-number="6200"/>
-        <metadata export-date="Mon, 02 Jul 2012 12:13:38 +0000"/>
-        <metadata private-layout="false"/>
-        <metadata type="layout-set"/>
-    </metadataSet>
-    <item>
-        <path>10426/com.liferay.portal.model.Layout/10431.xml</path>
-        <action>1</action>
-        <type>com.liferay.portal.model.Layout</type>
-        <classPK>10431</classPK>
-    </item>
-    <item>
-        <path>/groups/10426/portlets/28/entries/10614.xml</path>
-        <action>1</action>
-        <type>com.liferay.portlet.bookmarks.model.BookmarksEntry</type>
-        <classPK>10614</classPK>
-    </item>
-</root>
+  <metadataSet>
+    <metadata group-id="10426"/>
+    <metadata build-number="6200"/>
+    <metadata export-date="Mon, 02 Jul 2012 12:13:38 +0000"/>
+    <metadata private-layout="false"/>
+    <metadata type="layout-set"/>
+  </metadataSet>
+  <item>
+    <path>10426/com.liferay.portal.model.Layout/10431.xml</path>
+    <action>1</action>
+    <type>com.liferay.portal.model.Layout</type>
+    <classPK>10431</classPK>
+  </item>
+  <item>
+    <path>/groups/10426/portlets/28/entries/10614.xml</path>
+    <action>1</action>
+    <type>com.liferay.portlet.bookmarks.model.BookmarksEntry</type>
+    <classPK>10614</classPK>
+  </item></root>
