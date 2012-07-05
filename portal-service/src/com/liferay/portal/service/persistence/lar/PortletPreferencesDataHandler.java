@@ -14,32 +14,11 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
-import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.model.Portlet;
+import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 
 /**
  * @author Mate Thurzo
  */
-public interface PortletDataHandler extends BaseDataHandler<Portlet> {
-
-	public void deserialize(Document document);
-
-	public void digest(Portlet portlet) throws Exception;
-
-	public PortletDataHandlerControl[] getExportControls();
-
-	public PortletDataHandlerControl[] getExportMetadataControls();
-
-	public PortletDataHandlerControl[] getImportControls();
-
-	public PortletDataHandlerControl[] getImportMetadataControls();
-
-	public boolean isAlwaysExportable();
-
-	public boolean isAlwaysStaged();
-
-	public boolean isPublishToLiveByDefault();
-
+public interface PortletPreferencesDataHandler extends BaseDataHandler<PortletPreferences> {
 }
