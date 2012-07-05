@@ -22,7 +22,10 @@ import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -45,8 +48,6 @@ public class LarDigestTest extends PowerMockito {
 		LarDigest larDigest = new LarDigestImpl();
 		larDigest.close();
 
-		File digestFile = larDigest.getDigestFile();
-
 		String result = larDigest.getDigestString();
 
 		Assert.assertEquals(getTestFileContent("emptyLar.xml"), result);
@@ -63,10 +64,24 @@ public class LarDigestTest extends PowerMockito {
 		digestItem.setClassPK("12345");
 		digestItem.setType(Portlet.class.getName());
 
+		Map metadata = new HashMap<String, String>();
+
+		metadata.put("test-metadata", "test-value");
+
+		digestItem.setMetadata(metadata);
+
+		Map permissions = new HashMap<String, List<String>>();
+
+		List actionKeys = new ArrayList<String>();
+
+		actionKeys.add("test-action");
+
+		permissions.put("test-role", actionKeys);
+
+		digestItem.setPermissions(permissions);
+
 		larDigest.write(digestItem);
 		larDigest.close();
-
-		File digestFile = larDigest.getDigestFile();
 
 		String result = larDigest.getDigestString();
 
@@ -95,7 +110,14 @@ public class LarDigestTest extends PowerMockito {
 
 		LarDigestItem resultItem = result.get(0);
 
-		Assert.assertEquals(expectedItem, resultItem);
+		Assert.assertEquals(expectedItem.getAction(), resultItem.getAction());
+		Assert.assertEquals(expectedItem.getClassPK(), resultItem.getClassPK());
+		Assert.assertEquals(expectedItem.getPath(), resultItem.getPath());
+		Assert.assertEquals(expectedItem.getType(), resultItem.getType());
+		Assert.assertEquals(
+			expectedItem.getPermissions(), resultItem.getPermissions());
+		Assert.assertEquals(
+			expectedItem.getMetadata(), resultItem.getMetadata());
 
 		digest.close();
 	}
