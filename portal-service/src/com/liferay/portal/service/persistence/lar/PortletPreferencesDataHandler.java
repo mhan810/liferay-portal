@@ -20,5 +20,11 @@ import com.liferay.portal.service.persistence.BaseDataHandler;
 /**
  * @author Mate Thurzo
  */
-public interface PortletPreferencesDataHandler extends BaseDataHandler<PortletPreferences> {
+public interface PortletPreferencesDataHandler
+	extends BaseDataHandler<PortletPreferences> {
+
+	public void doDigest(PortletPreferences preferences) throws Exception;
+
+	public PortletPreferences getEntity(String classPK);
+
 }

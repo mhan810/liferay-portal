@@ -66,7 +66,18 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 
 			doDigest(portlet);
 
-			doDigestPreferences(portlet);
+			digestPortletPreferences(
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, false,
+				portlet.getPortletId());
+
+			digestPortletPreferences(
+				context.getScopeGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
+				false, portlet.getPortletId());
+
+			digestPortletPreferences(
+				context.getCompanyId(), PortletKeys.PREFS_OWNER_TYPE_COMPANY,
+				false, portlet.getPortletId());
 
 			getDataHandlerContext().addProcessedPath(path);
 		}
@@ -80,10 +91,14 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 		return;
 	}
 
-	protected void doDigestPreferences(Portlet portlet) throws Exception {
+	protected void digestPortletPreferences(
+			long ownerId, int ownerType, boolean defaultUser, String portletId)
+		throws Exception {
+
 		DataHandlerContext context = getDataHandlerContext();
 
-		Layout layout = LayoutLocalServiceUtil.getLayout(context.getPlid());
+		long plid = context.getPlid();
+		Layout layout = LayoutLocalServiceUtil.getLayout(plid);
 
 		PortletPreferences portletPreferences = null;
 
@@ -109,20 +124,11 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 			layoutTypePortlet = (LayoutTypePortlet)layout.getLayoutType();
 		}
 
-		exportPortletPreferences(
-			portletDataContext, PortletKeys.PREFS_OWNER_ID_DEFAULT,
-			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, false, layout,
-			layout.getPlid(), portlet.getPortletId());
+		if ((layoutTypePortlet == null) ||
+			layoutTypePortlet.hasPortletId(portletId)) {
 
-		exportPortletPreferences(
-			portletDataContext, context.getScopeGroupId(),
-			PortletKeys.PREFS_OWNER_TYPE_GROUP, false, layout, layout.getPlid(),
-			portlet.getPortletId());
-
-		exportPortletPreferences(
-			portletDataContext, context.getCompanyId(),
-			PortletKeys.PREFS_OWNER_TYPE_COMPANY, false, layout,
-			layout.getPlid(), portlet.getPortletId());
+			portletPreferencesDataHandler.digest(portletPreferences);
+		}
 	}
 
 	@Override
