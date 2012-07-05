@@ -47,6 +47,7 @@ import com.liferay.portal.service.persistence.lar.JournalArticleDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalStructureDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalTemplateDataHandler;
 import com.liferay.portal.service.persistence.lar.PortletDataHandler;
+import com.liferay.portal.service.persistence.lar.PortletPreferencesDataHandler;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.File;
@@ -536,5 +537,7 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 	protected BookmarksFolderDataHandler bookmarksFolderDataHandler;
 	@BeanReference(type = BookmarksPortletDataHandler.class)
 	protected BookmarksPortletDataHandler bookmarksPortletDataHandler;
+	@BeanReference(type = PortletPreferencesDataHandler.class)
+	protected PortletPreferencesDataHandler portletPreferencesDataHandler;
 
 }
