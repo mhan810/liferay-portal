@@ -42,8 +42,6 @@ import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
-import com.liferay.portal.lar.digest.LarDigest;
-import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.Company;
@@ -967,8 +965,8 @@ public class PortletExporter {
 			return;
 		}
 
-		PortletDataHandler portletDataHandler =
-			portlet.getLegacyPortletDataHandlerInstance();
+		PortletDataHandler portletDataHandler = null;
+			/*portlet.getPortletDataHandlerInstance();*/
 
 		if (portletDataHandler == null) {
 			return;
