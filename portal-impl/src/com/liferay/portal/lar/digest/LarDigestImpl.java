@@ -96,35 +96,52 @@ public class LarDigestImpl implements LarDigest {
 		_xmlStreamWriter.writeStartElement(
 			LarDigesterConstants.NODE_METADATA_SET_LABEL);
 
-		for (String key : metadata.keySet()) {
-			_xmlStreamWriter.writeStartElement(
-				LarDigesterConstants.NODE_METADATA_LABEL);
-			_xmlStreamWriter.writeAttribute(key, metadata.get(key));
+		try {
+			for (String key : metadata.keySet()) {
+				_xmlStreamWriter.writeStartElement(
+					LarDigesterConstants.NODE_METADATA_LABEL);
+				_xmlStreamWriter.writeAttribute(key, metadata.get(key));
+				_xmlStreamWriter.writeEndElement();
+			}
+		}
+		catch (Exception e) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Cannot add metadata to digest: " + e.getMessage());
+			}
+		}
+		finally {
 			_xmlStreamWriter.writeEndElement();
 		}
-
-		_xmlStreamWriter.writeEndElement();
 	}
 
 	public void addPermissions(Map<String, List<String>> permissions)
-		throws Exception {
+		throws Exception{
 
 		_xmlStreamWriter.writeStartElement(
 			LarDigesterConstants.NODE_PERMISSIONS_LABEL);
 
-		for (String key : permissions.keySet()) {
-			_xmlStreamWriter.writeStartElement(
-				LarDigesterConstants.NODE_PERMISSION_LABEL);
-			for(String action : permissions.get(key)) {
+		try {
+			for (String key : permissions.keySet()) {
 				_xmlStreamWriter.writeStartElement(
-					LarDigesterConstants.NODE_ACTION_KEY_LABEL);
-				_xmlStreamWriter.writeCharacters(action);
+					LarDigesterConstants.NODE_PERMISSION_LABEL);
+				for(String action : permissions.get(key)) {
+					_xmlStreamWriter.writeStartElement(
+						LarDigesterConstants.NODE_ACTION_KEY_LABEL);
+					_xmlStreamWriter.writeCharacters(action);
+					_xmlStreamWriter.writeEndElement();
+				}
 				_xmlStreamWriter.writeEndElement();
 			}
+		}
+		catch (Exception e) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Cannot add permissions to digest: " +
+					e.getMessage());
+			}
+		}
+		finally {
 			_xmlStreamWriter.writeEndElement();
 		}
-
-		_xmlStreamWriter.writeEndElement();
 	}
 
 	public void close() throws Exception {
@@ -325,7 +342,7 @@ public class LarDigestImpl implements LarDigest {
 
 		try {
 			_xmlStreamWriter.writeStartElement(
-					LarDigesterConstants.NODE_DIGEST_ITEM_LABEL);
+				LarDigesterConstants.NODE_DIGEST_ITEM_LABEL);
 
 			addMetaData(digestItem.getMetadata());
 

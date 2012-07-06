@@ -35,7 +35,6 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
@@ -70,7 +69,6 @@ import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
-import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.LayoutRevisionUtil;
 import com.liferay.portal.service.persistence.LayoutUtil;
@@ -591,12 +589,33 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		}
 
 		boolean deleteLayout = MapUtil.getBoolean(
-				context.getParameters(),
-				"delete_" + layout.getPlid());
+			context.getParameters(),
+			"delete_" + layout.getPlid());
 
 		LarDigest digest = context.getLarDigest();
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
+
+		// Layout permissions
+		boolean exportPermissions = MapUtil.getBoolean(
+			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
+
+		if (exportPermissions) {
+			String resourceName = Layout.class.getName();
+			String resourcePrimKey = String.valueOf(layout.getPlid());
+
+			/*exportPermissions(
+				layoutCache, companyId, groupId, resourceName, resourcePrimKey,
+				permissionsElement, false);*/
+
+			LayoutCache layoutCache = new LayoutCache();
+
+			Map permissionMap = digestPermissions(
+				layoutCache, context.getCompanyId(), context.getScopeGroupId(),
+				resourceName, resourcePrimKey, false);
+
+			digestItem.setPermissions(permissionMap);
+		}
 
 		if (deleteLayout) {
 			digestItem.setAction(LarDigesterConstants.ACTION_DELETE);
@@ -625,19 +644,6 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 		digest.write(digestItem);
 
-		/*_portletExporter.exportPortletData(
-			portletDataContext, layoutConfigurationPortlet, layout, null,
-			layoutElement);  */
-
-		// Layout permissions
-
-		/*if (exportPermissions) {
-			_permissionExporter.exportLayoutPermissions(
-					portletDataContext, layoutCache,
-					portletDataContext.getCompanyId(),
-					portletDataContext.getScopeGroupId(), layout, layoutElement);
-		}*/
-
 		if (layout.isTypeArticle()) {
 			exportJournalArticle(layout);
 		}
@@ -663,7 +669,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 			for (String portletId : layoutTypePortlet.getPortletIds()) {
 				Portlet portlet = PortletLocalServiceUtil.getPortletById(
-						portletId);
+					portletId);
 
 				javax.portlet.PortletPreferences jxPreferences =
 					PortletPreferencesFactoryUtil.getLayoutPortletSetup(
@@ -853,10 +859,10 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		throws Exception {
 
 		UnicodeProperties typeSettingsProperties =
-				layout.getTypeSettingsProperties();
+			layout.getTypeSettingsProperties();
 
 		String articleId = typeSettingsProperties.getProperty(
-				"article-id", StringPool.BLANK);
+			"article-id", StringPool.BLANK);
 
 		if (Validator.isNull(articleId)) {
 			return;
@@ -925,7 +931,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				layoutTemplateId);
 
 			String nestedColumnIds = newTypeSettingsProperties.getProperty(
-					LayoutTypePortletConstants.NESTED_COLUMN_IDS);
+				LayoutTypePortletConstants.NESTED_COLUMN_IDS);
 
 			if (Validator.isNotNull(nestedColumnIds)) {
 				previousTypeSettingsProperties.setProperty(
@@ -945,8 +951,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			}
 
 			LayoutTemplate newLayoutTemplate =
-					LayoutTemplateLocalServiceUtil.getLayoutTemplate(
-						layoutTemplateId, false, null);
+				LayoutTemplateLocalServiceUtil.getLayoutTemplate(
+					layoutTemplateId, false, null);
 
 			String[] newPortletIds = new String[0];
 
