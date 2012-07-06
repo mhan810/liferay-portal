@@ -462,4 +462,5 @@
 	<bean id="com.liferay.portal.service.persistence.lar.PortletDataHandler" class="com.liferay.portal.service.persistence.lar.PortletDataHandlerImpl" parent="baseDataHandler" />
 	<bean id="com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandler" class="com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandlerImpl" parent="com.liferay.portal.service.persistence.lar.PortletDataHandler" />
 	<bean id="com.liferay.portal.service.persistence.lar.ImageDataHandler" class="com.liferay.portal.service.persistence.lar.ImageDataHandlerImpl" parent="baseDataHandler" />
+	<bean id="com.liferay.portal.service.persistence.lar.PortletPreferencesDataHandler" class="com.liferay.portal.service.persistence.lar.PortletPreferencesDataHandlerImpl" parent="baseDataHandler" />
 </beans>
