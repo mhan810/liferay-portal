@@ -18,4 +18,19 @@
     <action>1</action>
     <type>com.liferay.portlet.bookmarks.model.BookmarksEntry</type>
     <classPK>10614</classPK>
-  </item></root>
+  </item>
+  <item>
+    <metadataSet>
+      <metadata test-metadata="test-value" />
+    </metadataSet>
+    <path>here/i/am.xml</path>
+    <action>1</action>
+    <type>javax.portlet.Portlet</type>
+    <classPK>12345</classPK>
+    <permissions>
+      <permission role-name="test-role">
+        <actionKey>test-action</actionKey>
+      </permission>
+    </permissions>
+  </item>
+</root>
