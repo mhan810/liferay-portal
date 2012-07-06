@@ -14,6 +14,8 @@
 
 package com.liferay.portal.lar.digest;
 
+import com.liferay.portal.kernel.xml.Document;
+
 import java.io.File;
 
 import java.util.List;
@@ -28,6 +30,9 @@ public interface LarDigest extends Iterable<LarDigestItem> {
 
 	public void addMetaData(Map<String, String> metadata) throws Exception;
 
+	public void addPermissions(Map<String, List<String>> permissions)
+		throws Exception;
+
 	public void close() throws Exception;
 
 	public List<LarDigestItem> findDigestItems(
@@ -37,7 +42,9 @@ public interface LarDigest extends Iterable<LarDigestItem> {
 
 	public String getDigestString();
 
-	public Map<String, String> getMetaData() throws Exception;
+	public Document getDocument();
+
+	public Map<String, String> getMetaData();
 
 	public void write(LarDigestItem digestItem) throws Exception;
 

@@ -15,11 +15,17 @@
 package com.liferay.portal.lar.digest;
 
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.xml.StAXReaderUtil;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
@@ -35,7 +41,11 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 		_xmlEventReader = digestXMLEventReader;
 	}
 
-	public boolean hasNext() {
+	public LarDigestIterator(XMLStreamReader digestXMLStreamReader) {
+		_xmlStreamReader = digestXMLStreamReader;
+	}
+
+	/*public boolean hasNext() {
 		try {
 			while (_xmlEventReader.hasNext()) {
 				XMLEvent nextEvent = _xmlEventReader.peek();
@@ -56,50 +66,113 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 		catch (Exception e) {
 			return false;
 		}
+	}  */
+
+	public boolean hasNext() {
+		try {
+			do {
+				if (_xmlStreamReader.isStartElement()) {
+					String nextStartElementName =
+						_xmlStreamReader.getLocalName();
+
+					if (nextStartElementName.equals(NODE_DIGEST_ITEM_LABEL)) {
+						return true;
+					}
+				}
+
+				_xmlStreamReader.next();
+			}
+			while (_xmlStreamReader.hasNext());
+
+			return false;
+		}
+		catch (Exception e) {
+			return false;
+		}
 	}
 
 	public LarDigestItem next() {
+		if(!hasNext()) {
+			return null;
+		}
+
 		try {
 			LarDigestItem item = new LarDigestItemImpl();
 
-			while (_xmlEventReader.hasNext()) {
-				XMLEvent event = _xmlEventReader.nextEvent();
+			Map metadata = new HashMap<String, String>();
+			Map<String, List<String>> permissions =
+				new HashMap<String, List<String>>();
 
-				String elementName = _getElementName(event);
+			while (_xmlStreamReader.hasNext()) {
+				String elementName = _xmlStreamReader.getLocalName();
 
-				if (event.isStartElement()) {
+				if (_xmlStreamReader.isStartElement()) {
 					if (elementName.equals(NODE_PATH_LABEL)) {
-
-						String path = StAXReaderUtil.read(_xmlEventReader);
-
-						item.setPath(path);
+						String elementText = _xmlStreamReader.getElementText();
+						item.setPath(elementText);
 					}
 					else if (elementName.equals(NODE_ACTION_LABEL)) {
-
-						String action = StAXReaderUtil.read(_xmlEventReader);
-						int actionCode = Integer.parseInt(action);
+						String elementText = _xmlStreamReader.getElementText();
+						int actionCode = Integer.parseInt(elementText);
 
 						item.setAction(actionCode);
 					}
 					else if (elementName.equals(NODE_TYPE_LABEL)) {
-
-						String type = StAXReaderUtil.read(_xmlEventReader);
-
-						item.setType(type);
+						String elementText = _xmlStreamReader.getElementText();
+						item.setType(elementText);
 					}
 					else if (elementName.equals(NODE_CLASS_PK_LABEL)) {
+						String elementText = _xmlStreamReader.getElementText();
+						item.setClassPK(elementText);
+					}
+					else if (elementName.equals(NODE_METADATA_LABEL)) {
+						metadata.put(_xmlStreamReader.getAttributeName(0),
+							_xmlStreamReader.getAttributeValue(0));
+					}
+					else if (elementName.equals(NODE_PERMISSION_LABEL)) {
+						String roleName = _xmlStreamReader.getAttributeValue(
+							null, ATTRIBUTE_NAME_ROLE);
 
-						String classPK = StAXReaderUtil.read(_xmlEventReader);
+						if (Validator.isNull(roleName)) {
+							continue;
+						}
 
-						item.setClassPK(classPK);
+						List actionNames = permissions.get(roleName);
+
+						if (actionNames == null) {
+							actionNames = new ArrayList<String>();
+							permissions.put(roleName, actionNames);
+						}
+
+						while(_xmlStreamReader.hasNext()) {
+							elementName = _xmlStreamReader.getLocalName();
+
+							if (_xmlStreamReader.isEndElement() &&
+								elementName.equals(NODE_PERMISSION_LABEL)) {
+
+								break;
+							}
+
+							if (_xmlStreamReader.isStartElement() &&
+								elementName.equals(NODE_ACTION_KEY_LABEL)) {
+
+								actionNames.add(
+									_xmlStreamReader.getElementText());
+							}
+
+							_xmlStreamReader.nextTag();
+						}
 					}
 				}
-				else if (event.isEndElement()) {
+				else if (_xmlStreamReader.isEndElement()) {
 					if (elementName.equals(NODE_DIGEST_ITEM_LABEL)) {
-
+						item.setMetadata(metadata);
+						item.setPermissions(permissions);
 						return item;
 					}
 				}
+
+				_xmlStreamReader.nextTag();
 			}
 
 			return null;
@@ -128,7 +201,7 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 		return StringPool.BLANK;
 	}
 
-	private LarDigestItem _nextItem;
 	private XMLEventReader _xmlEventReader;
+	private XMLStreamReader _xmlStreamReader;
 
 }
