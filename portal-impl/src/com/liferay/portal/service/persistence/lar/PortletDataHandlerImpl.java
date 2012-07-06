@@ -55,35 +55,24 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 	}
 
 	public void digest(Portlet portlet) throws Exception {
-		try {
-			DataHandlerContext context = getDataHandlerContext();
+		DataHandlerContext context = getDataHandlerContext();
 
-			String path = getPortletPath(portlet.getPortletId());
+		String path = getPortletPath(portlet.getPortletId());
 
-			if (context.isPathProcessed(path)) {
-				return;
-			}
+		doDigest(portlet);
 
-			doDigest(portlet);
+		digestPortletPreferences(
+			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, false,
+			portlet.getPortletId());
 
-			digestPortletPreferences(
-				PortletKeys.PREFS_OWNER_ID_DEFAULT,
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, false,
-				portlet.getPortletId());
+		digestPortletPreferences(
+			context.getScopeGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
+			false, portlet.getPortletId());
 
-			digestPortletPreferences(
-				context.getScopeGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
-				false, portlet.getPortletId());
-
-			digestPortletPreferences(
-				context.getCompanyId(), PortletKeys.PREFS_OWNER_TYPE_COMPANY,
-				false, portlet.getPortletId());
-
-			getDataHandlerContext().addProcessedPath(path);
-		}
-		catch (Exception e) {
-			_log.error(e);
-		}
+		digestPortletPreferences(
+			context.getCompanyId(), PortletKeys.PREFS_OWNER_TYPE_COMPANY,
+			false, portlet.getPortletId());
 	}
 
 	@Override
@@ -97,8 +86,19 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 
 		DataHandlerContext context = getDataHandlerContext();
 
-		long plid = context.getPlid();
-		Layout layout = LayoutLocalServiceUtil.getLayout(plid);
+		long plid = PortletKeys.PREFS_OWNER_ID_DEFAULT;
+		Layout layout = null;
+
+		try {
+			plid = context.getPlid();
+			layout = LayoutLocalServiceUtil.getLayout(plid);
+		}
+		catch (Exception e) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("No plid is available from context: " +
+					e.getMessage());
+			}
+		}
 
 		PortletPreferences portletPreferences = null;
 

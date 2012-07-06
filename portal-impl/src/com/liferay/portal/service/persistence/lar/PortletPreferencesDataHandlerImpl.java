@@ -15,6 +15,8 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.DataHandlerContext;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.lar.digest.LarDigest;
@@ -53,6 +55,7 @@ public class PortletPreferencesDataHandlerImpl
 		}
 	}
 
+	@Override
 	public PortletPreferences getEntity(String classPK) {
 		if (Validator.isNotNull(classPK)) {
 			try {
@@ -70,6 +73,20 @@ public class PortletPreferencesDataHandlerImpl
 		}
 
 		return null;
+	}
+
+	@Override
+	public String getEntityPath(PortletPreferences preferences) {
+		StringBundler sb = new StringBundler();
+
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append("preferences");
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(preferences.getPortletId());
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(preferences.getPortletId() + ".xml");
+
+		return sb.toString();
 	}
 
 }
