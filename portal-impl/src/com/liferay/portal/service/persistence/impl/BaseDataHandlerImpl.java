@@ -23,7 +23,9 @@ import com.liferay.portal.kernel.lar.PortletDataContextListener;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.PrimitiveLongList;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -31,12 +33,18 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
+import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.AuditedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
+import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.ResourcedModel;
+import com.liferay.portal.model.Role;
+import com.liferay.portal.model.RoleConstants;
+import com.liferay.portal.security.permission.ResourceActionsUtil;
+import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.lar.BookmarksEntryDataHandler;
@@ -54,6 +62,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -165,16 +174,11 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 	}
 
 	public void digest(T object) throws Exception {
-		try {
-			doDigest(object);
+		doDigest(object);
 
-			String path = getEntityPath(object);
+		String path = getEntityPath(object);
 
-			getDataHandlerContext().addProcessedPath(path);
-		}
-		catch (Exception e) {
-			_log.error(e);
-		}
+		getDataHandlerContext().addProcessedPath(path);
 	}
 
 	public Object fromXML(byte[] bytes) {
@@ -294,8 +298,8 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 	}
 
 	protected ServiceContext createServiceContext(
-			Element element, String path, ClassedModel classedModel,
-			String namespace) {
+		Element element, String path, ClassedModel classedModel,
+		String namespace) {
 
 		Class<?> clazz = classedModel.getModelClass();
 		long classPK = getClassPK(classedModel);
@@ -437,6 +441,62 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 
 		return null;
+	}
+
+	protected Map<String, List<String>> digestPermissions(
+			LayoutCache layoutCache, long companyId, long groupId,
+			String resourceName, String resourcePrimKey, boolean portletActions)
+		throws Exception {
+
+		List<Role> roles = layoutCache.getGroupRoles_5(groupId, resourceName);
+
+		List<String> actionIds = null;
+
+		if (portletActions) {
+			actionIds = ResourceActionsUtil.getPortletResourceActions(
+				resourceName);
+		}
+		else {
+			actionIds = ResourceActionsUtil.getModelResourceActions(
+				resourceName);
+		}
+
+		if (actionIds.isEmpty()) {
+			return null;
+		}
+
+		PrimitiveLongList roleIds = new PrimitiveLongList(roles.size());
+		Map<Long, Role> roleIdsToRoles = new HashMap<Long, Role>();
+
+		for (Role role : roles) {
+			String name = role.getName();
+
+			if (name.equals(RoleConstants.ADMINISTRATOR)) {
+				continue;
+			}
+
+			roleIds.add(role.getRoleId());
+			roleIdsToRoles.put(role.getRoleId(), role);
+		}
+
+		Map<Long, Set<String>> roleIdsToActionIds =
+			ResourcePermissionLocalServiceUtil.
+				getAvailableResourcePermissionActionIds(
+					companyId, resourceName, ResourceConstants.SCOPE_INDIVIDUAL,
+					resourcePrimKey, roleIds.getArray(), actionIds);
+
+		HashMap<String, List<String>> roleMap =
+			new HashMap<String, List<String>>();
+
+		for (Map.Entry<Long, Set<String>> entry :
+				roleIdsToActionIds.entrySet()) {
+
+			List<String> values = ListUtil.fromCollection(entry.getValue());
+
+			roleMap.put(String.valueOf(entry.getKey()), values);
+		}
+
+		return roleMap;
 	}
 
 	protected void doDigest(T object) throws Exception {
