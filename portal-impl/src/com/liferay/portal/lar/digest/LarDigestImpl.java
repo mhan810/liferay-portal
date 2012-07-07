@@ -92,7 +92,8 @@ public class LarDigestImpl implements LarDigest {
 		}
 		catch (Exception e) {
 			if (_log.isDebugEnabled()) {
-				_log.debug("Cannot add metadata to digest: " + e.getMessage());
+				_log.debug("Metadata is not available to digest: " +
+					e.getMessage());
 			}
 		}
 		finally {
@@ -106,27 +107,35 @@ public class LarDigestImpl implements LarDigest {
 		_xmlStreamWriter.writeStartElement(
 			LarDigesterConstants.NODE_PERMISSIONS_LABEL);
 
-		for (String key : permissions.keySet()) {
-			_xmlStreamWriter.writeStartElement(
-				LarDigesterConstants.NODE_PERMISSION_LABEL);
-			_xmlStreamWriter.writeAttribute(
-				LarDigesterConstants.ATTRIBUTE_NAME_ROLE, key);
-
-			List<String> actions = permissions.get(key);
-
-			if (actions == null) {
-				_xmlStreamWriter.writeEndElement();
-				break;
-			}
-
-			for(String action : actions) {
+		try {
+			for (String key : permissions.keySet()) {
 				_xmlStreamWriter.writeStartElement(
-					LarDigesterConstants.NODE_ACTION_KEY_LABEL);
-				_xmlStreamWriter.writeCharacters(action);
+					LarDigesterConstants.NODE_PERMISSION_LABEL);
+				_xmlStreamWriter.writeAttribute(
+					LarDigesterConstants.ATTRIBUTE_NAME_ROLE, key);
+
+				List<String> actions = permissions.get(key);
+
+				if (actions == null) {
+					_xmlStreamWriter.writeEndElement();
+					break;
+				}
+
+				for(String action : actions) {
+					_xmlStreamWriter.writeStartElement(
+						LarDigesterConstants.NODE_ACTION_KEY_LABEL);
+					_xmlStreamWriter.writeCharacters(action);
+					_xmlStreamWriter.writeEndElement();
+				}
+
 				_xmlStreamWriter.writeEndElement();
 			}
-
-			_xmlStreamWriter.writeEndElement();
+		}
+		catch (Exception e) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Permissions not available to digest: " +
+					e.getMessage());
+			}
 		}
 
 		_xmlStreamWriter.writeEndElement();

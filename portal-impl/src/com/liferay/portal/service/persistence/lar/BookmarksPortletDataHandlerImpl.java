@@ -17,6 +17,8 @@ package com.liferay.portal.service.persistence.lar;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
+import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
@@ -29,6 +31,7 @@ import com.liferay.portlet.bookmarks.service.persistence.BookmarksEntryUtil;
 import com.liferay.portlet.bookmarks.service.persistence.BookmarksFolderUtil;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Mate Thurzo
@@ -54,6 +57,16 @@ public class BookmarksPortletDataHandlerImpl
 		item.setType("com.liferay.portlet.bookmarks");
 		item.setClassPK(portlet.getPortletId());
 		item.setPath(getPortletPath(portlet.getPortletId()));
+
+		boolean exportPermissions = MapUtil.getBoolean(
+			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
+
+		if (exportPermissions) {
+			Map permissionsMap = digestEntityPermissions(
+				"com.liferay.portlet.bookmarks", context.getScopeGroupId());
+
+			item.setPermissions(permissionsMap);
+		}
 
 		digest.write(item);
 
