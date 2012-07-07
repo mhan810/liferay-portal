@@ -16,6 +16,7 @@ package com.liferay.portal.service.persistence.impl;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.DataHandlerContextThreadLocal;
@@ -23,6 +24,7 @@ import com.liferay.portal.kernel.lar.PortletDataContextListener;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
@@ -34,18 +36,26 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.LayoutCache;
+import com.liferay.portal.lar.PermissionExporter;
 import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.AuditedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.ResourcedModel;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
+import com.liferay.portal.model.Team;
 import com.liferay.portal.security.permission.ResourceActionsUtil;
+import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.ResourceBlockLocalServiceUtil;
+import com.liferay.portal.service.ResourceBlockPermissionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
+import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.TeamLocalServiceUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.lar.BookmarksEntryDataHandler;
 import com.liferay.portal.service.persistence.lar.BookmarksFolderDataHandler;
@@ -62,6 +72,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -499,6 +510,90 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return roleMap;
 	}
 
+	protected Map<String, List<String>> digestEntityPermissions(
+			String resourceName, long resourcePK)
+		throws Exception {
+
+		/*if (!MapUtil.getBoolean(
+				_parameterMap, PortletDataHandlerKeys.PERMISSIONS)) {
+
+			return;
+		}*/
+
+		DataHandlerContext context = getDataHandlerContext();
+
+		HashMap<String, List<String>> permissions =
+			new HashMap<String, List<String>>();
+
+		//List<KeyValuePair> permissions = new ArrayList<KeyValuePair>();
+
+		Group group = GroupLocalServiceUtil.getGroup(context.getGroupId());
+
+		List<Role> roles = RoleLocalServiceUtil.getRoles(
+			context.getCompanyId());
+
+		PrimitiveLongList roleIds = new PrimitiveLongList(roles.size());
+		Map<Long, String> roleIdsToNames = new HashMap<Long, String>();
+
+		for (Role role : roles) {
+			int type = role.getType();
+
+			if ((type == RoleConstants.TYPE_REGULAR) ||
+				((type == RoleConstants.TYPE_ORGANIZATION) &&
+					group.isOrganization()) ||
+				((type == RoleConstants.TYPE_SITE) &&
+					(group.isLayoutSetPrototype() || group.isSite()))) {
+
+				String name = role.getName();
+
+				roleIds.add(role.getRoleId());
+				roleIdsToNames.put(role.getRoleId(), name);
+			}
+			else if ((type == RoleConstants.TYPE_PROVIDER) && role.isTeam()) {
+				Team team = TeamLocalServiceUtil.getTeam(role.getClassPK());
+
+				if (team.getGroupId() == context.getGroupId()) {
+					String name =
+						PermissionExporter.ROLE_TEAM_PREFIX + team.getName();
+
+					roleIds.add(role.getRoleId());
+					roleIdsToNames.put(role.getRoleId(), name);
+				}
+			}
+		}
+
+		List<String> actionIds = ResourceActionsUtil.getModelResourceActions(
+			resourceName);
+
+		Map<Long, Set<String>> roleIdsToActionIds = getActionIds(
+			context.getCompanyId(), roleIds.getArray(), resourceName,
+			resourcePK, actionIds);
+
+		for (Map.Entry<Long, String> entry : roleIdsToNames.entrySet()) {
+			long roleId = entry.getKey();
+			String name = entry.getValue();
+
+			Set<String> availableActionIds = roleIdsToActionIds.get(roleId);
+
+			if ((availableActionIds == null) || availableActionIds.isEmpty()) {
+				continue;
+			}
+
+			/*KeyValuePair permission = new KeyValuePair(
+				name, StringUtil.merge(availableActionIds));*/
+
+			List<String> actionIdsList = ListUtil.fromCollection(
+				availableActionIds);
+
+			permissions.put(name, actionIdsList);
+		}
+
+		return permissions;
+
+		/*_permissionsMap.put(
+			getPrimaryKeyString(resourceName, resourcePK), permissions);*/
+	}
+
 	protected void doDigest(T object) throws Exception {
 		return;
 	}
@@ -511,6 +606,24 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		String path = getEntityPath(object);
 
 		addZipEntry(path, object);
+	}
+
+	protected Map<Long, Set<String>> getActionIds(
+			long companyId, long[] roleIds, String className, long primKey,
+			List<String> actionIds)
+		throws PortalException, SystemException {
+
+		if (ResourceBlockLocalServiceUtil.isSupported(className)) {
+			return ResourceBlockPermissionLocalServiceUtil.
+				getAvailableResourceBlockPermissionActionIds(
+					roleIds, className, primKey, actionIds);
+		}
+		else {
+			return ResourcePermissionLocalServiceUtil.
+				getAvailableResourcePermissionActionIds(
+					companyId, className, ResourceConstants.SCOPE_INDIVIDUAL,
+					String.valueOf(primKey), roleIds, actionIds);
+		}
 	}
 
 	protected String getExpandoPath(String path) {

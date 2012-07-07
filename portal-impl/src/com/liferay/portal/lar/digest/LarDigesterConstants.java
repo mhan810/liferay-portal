@@ -27,6 +27,8 @@ public class LarDigesterConstants {
 
 	public static final int ACTION_UPDATE = 3;
 
+	public static final String ATTRIBUTE_NAME_ROLE = "role-name";
+
 	public static final String NODE_ACTION_LABEL = "action";
 
 	public static final String NODE_ACTION_KEY_LABEL = "actionKey";
