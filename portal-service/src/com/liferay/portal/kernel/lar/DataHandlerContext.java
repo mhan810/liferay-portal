@@ -29,6 +29,8 @@ public interface DataHandlerContext {
 
 	public static final String ATTRIBUTE_NAME_COMPANY_ID = "COMPANY_ID";
 
+	public static final String ATTRIBUTE_NAME_DATA_STRATEGY = "DATA_STRATEGY";
+
 	public static final String ATTRIBUTE_NAME_END_DATE = "END_DATE";
 
 	public static final String ATTRIBUTE_NAME_GROUP_ID = "GROUP_ID";
@@ -49,6 +51,9 @@ public interface DataHandlerContext {
 	public static final String ATTRIBUTE_NAME_START_DATE = "START_DATE";
 
 	public static final String ATTRIBUTE_NAME_USER = "USER";
+
+	public static final String ATTRIBUTE_NAME_USER_ID_STRATEGY =
+		"USER_ID_STRATEGY";
 
 	public static final String ATTRIBUTE_NAME_ZIP_READER = "ZIP_READER";
 
@@ -84,7 +89,11 @@ public interface DataHandlerContext {
 
 	public Date getStartDate();
 
+	public String getDataStrategy();
+
 	public User getUser();
+
+	public UserIdStrategy getUserIdStrategy();
 
 	public ZipReader getZipReader();
 
@@ -124,7 +133,11 @@ public interface DataHandlerContext {
 
 	public void setStartDate(Date startDate);
 
+	public void setDataStrategy(String dataStrategy);
+
 	public void setUser(User user);
+
+	public void setUserIdStrategy(UserIdStrategy strategy);
 
 	public void setZipReader(ZipReader zipReader);
 
