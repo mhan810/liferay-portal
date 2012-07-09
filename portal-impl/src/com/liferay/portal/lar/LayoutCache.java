@@ -146,7 +146,7 @@ public class LayoutCache {
 		return roles;
 	}
 
-	protected List<Role> getGroupRoles_5(long groupId, String resourceName)
+	public List<Role> getGroupRoles_5(long groupId, String resourceName)
 		throws PortalException, SystemException {
 
 		List<Role> roles = groupRolesMap.get(groupId);

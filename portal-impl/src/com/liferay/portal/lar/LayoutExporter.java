@@ -43,6 +43,10 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
+import com.liferay.portal.lar.digest.LarDigest;
+import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigestItemImpl;
+import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.model.Layout;
@@ -131,7 +135,7 @@ public class LayoutExporter {
 			}
 
 			PortletDataHandler portletDataHandler =
-				portlet.getPortletDataHandlerInstance();
+				portlet.getLegacyPortletDataHandlerInstance();
 
 			if ((portletDataHandler == null) ||
 				!portletDataHandler.isAlwaysExportable()) {

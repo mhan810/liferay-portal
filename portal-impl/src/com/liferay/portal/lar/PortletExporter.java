@@ -42,6 +42,8 @@ import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
+import com.liferay.portal.lar.digest.LarDigestItemImpl;
+import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
@@ -963,8 +965,8 @@ public class PortletExporter {
 			return;
 		}
 
-		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
+		PortletDataHandler portletDataHandler = null;
+			/*portlet.getPortletDataHandlerInstance();*/
 
 		if (portletDataHandler == null) {
 			return;
@@ -1182,8 +1184,7 @@ public class PortletExporter {
 		}
 	}
 
-	protected void exportRatingsEntries(
-			PortletDataContext portletDataContext, Element parentElement)
+	protected void exportRatingsEntries(PortletDataContext portletDataContext)
 		throws Exception {
 
 		Document document = SAXReaderUtil.createDocument();
@@ -1224,6 +1225,14 @@ public class PortletExporter {
 		portletDataContext.addZipEntry(
 			portletDataContext.getRootPath() + "/ratings.xml",
 			document.formattedString());
+	}
+
+	@Deprecated
+	protected void exportRatingsEntries(
+			PortletDataContext portletDataContext, Element parentElement)
+		throws Exception {
+
+		exportRatingsEntries(portletDataContext);
 	}
 
 	protected String getAssetCategoryPath(

@@ -43,6 +43,7 @@ import javax.portlet.PortletPreferences;
  * @author Bruno Farache
  * @author Raymond Augé
  * @author Juan Fernández
+ * @author Mate Thurzo
  */
 public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 
@@ -193,6 +194,7 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 		return null;
 	}
 
+	@Deprecated
 	protected void exportEntry(
 			PortletDataContext portletDataContext, Element foldersElement,
 			Element entriesElement, BookmarksEntry entry)
@@ -217,6 +219,7 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 		}
 	}
 
+	@Deprecated
 	protected void exportFolder(
 			PortletDataContext portletDataContext, Element foldersElement,
 			Element entriesElement, BookmarksFolder folder)
@@ -245,6 +248,7 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 		}
 	}
 
+	@Deprecated
 	protected void exportParentFolder(
 			PortletDataContext portletDataContext, Element foldersElement,
 			long folderId)
@@ -269,6 +273,7 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 		}
 	}
 
+	@Deprecated
 	protected String getEntryPath(
 		PortletDataContext portletDataContext, BookmarksEntry entry) {
 
@@ -282,6 +287,7 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 		return sb.toString();
 	}
 
+	@Deprecated
 	protected String getFolderPath(
 		PortletDataContext portletDataContext, BookmarksFolder folder) {
 
@@ -295,6 +301,7 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 		return sb.toString();
 	}
 
+	@Deprecated
 	protected String getImportFolderPath(
 		PortletDataContext portletDataContext, long folderId) {
 
@@ -309,6 +316,7 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 		return sb.toString();
 	}
 
+	@Deprecated
 	protected void importEntry(
 			PortletDataContext portletDataContext, Element entryElement,
 			BookmarksEntry entry)
@@ -372,6 +380,7 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 		portletDataContext.importClassedModel(entry, importedEntry, _NAMESPACE);
 	}
 
+	@Deprecated
 	protected void importFolder(
 			PortletDataContext portletDataContext, String folderPath,
 			BookmarksFolder folder)
