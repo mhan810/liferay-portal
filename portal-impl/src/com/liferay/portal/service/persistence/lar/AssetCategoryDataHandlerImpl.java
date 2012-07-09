@@ -89,6 +89,11 @@ public class AssetCategoryDataHandlerImpl
 	}
 
 	@Override
+	public void doImport(LarDigestItem item) throws Exception {
+		return;
+	}
+
+	@Override
 	public AssetCategory getEntity(String classPK) {
 		if (Validator.isNull(classPK)) {
 			return null;

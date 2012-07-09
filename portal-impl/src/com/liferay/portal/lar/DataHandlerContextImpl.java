@@ -16,6 +16,7 @@ package com.liferay.portal.lar;
 
 import com.liferay.portal.kernel.lar.*;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
@@ -55,7 +56,7 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 	}
 
 	public long getCompanyId() {
-		return (Long)getAttribute(ATTRIBUTE_NAME_COMPANY_ID);
+		return GetterUtil.getLong(getAttribute(ATTRIBUTE_NAME_COMPANY_ID));
 	}
 
 	public Date getEndDate() {
@@ -63,7 +64,7 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 	}
 
 	public long getGroupId() {
-		return (Long)getAttribute(ATTRIBUTE_NAME_GROUP_ID);
+		return GetterUtil.getLong(getAttribute(ATTRIBUTE_NAME_GROUP_ID));
 	}
 
 	public LarDigest getLarDigest() {
@@ -87,7 +88,7 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 	}
 
 	public long getOldPlid() {
-		return (Long)getAttribute(ATTRIBUTE_NAME_OLD_PLID);
+		return GetterUtil.getLong(getAttribute(ATTRIBUTE_NAME_OLD_PLID));
 	}
 
 	public Map<String, String[]> getParameters() {
@@ -95,15 +96,15 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 	}
 
 	public long getPlid() {
-		return (Long)getAttribute(ATTRIBUTE_NAME_PLID);
+		return GetterUtil.getLong(getAttribute(ATTRIBUTE_NAME_PLID));
 	}
 
 	public long getScopeGroupId() {
-		return (Long)getAttribute(ATTRIBUTE_NAME_SCOPE_GROUP_ID);
+		return GetterUtil.getLong(getAttribute(ATTRIBUTE_NAME_SCOPE_GROUP_ID));
 	}
 
 	public long getSourceGroupId() {
-		return (Long)getAttribute(ATTRIBUTE_NAME_SOURCE_GROUP_ID);
+		return GetterUtil.getLong(getAttribute(ATTRIBUTE_NAME_SOURCE_GROUP_ID));
 	}
 
 	public Date getStartDate() {
@@ -111,11 +112,15 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 	}
 
 	public String getDataStrategy() {
-		return (String)getAttribute(ATTRIBUTE_NAME_DATA_STRATEGY);
+		return GetterUtil.getString(getAttribute(ATTRIBUTE_NAME_DATA_STRATEGY));
 	}
 
 	public User getUser() {
 		return (User)getAttribute(ATTRIBUTE_NAME_USER);
+	}
+
+	public long getUserId(String userUuid) {
+		return getUserIdStrategy().getUserId(userUuid);
 	}
 
 	public UserIdStrategy getUserIdStrategy() {
@@ -144,6 +149,27 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 
 	public boolean hasDateRange() {
 		if (getStartDate() != null) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean isDataStrategyMirror() {
+		if (getDataStrategy().equals(DATA_STRATEGY_MIRROR) ||
+			getDataStrategy().equals(DATA_STRATEGY_MIRROR_OVERWRITE)) {
+
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean isDataStrategyMirrorWithOverwriting() {
+		if (getDataStrategy().equals(DATA_STRATEGY_MIRROR_OVERWRITE)) {
+
 			return true;
 		}
 		else {

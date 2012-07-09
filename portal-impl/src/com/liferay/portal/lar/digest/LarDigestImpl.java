@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.xml.StAXReaderUtil;
 import com.liferay.portal.xml.StAXWriterUtil;
 
@@ -54,7 +55,7 @@ import javax.xml.stream.XMLStreamWriter;
 public class LarDigestImpl implements LarDigest {
 
 	public LarDigestImpl() throws Exception {
-		this(null);
+		_digestFile = getDigestFile();
 
 		XMLOutputFactory xmlOutputFactory =
 			StAXWriterUtil.getXMLOutputFactory();
@@ -70,12 +71,12 @@ public class LarDigestImpl implements LarDigest {
 		_xmlStreamWriter.writeStartElement("root");
 	}
 
-	public LarDigestImpl(File digest) throws Exception {
-		_digestFile = digest;
+	public LarDigestImpl(ZipReader zipReader) throws Exception {
+		String xml = zipReader.getEntryAsString("/digest.xml");
 
-		if (_digestFile == null) {
-			_digestFile = getDigestFile();
-		}
+		_digestFile = getDigestFile();
+
+		FileUtil.write(_digestFile, xml);
 	}
 
 	public void addMetaData(Map<String, String> metadata) throws Exception {
@@ -84,9 +85,15 @@ public class LarDigestImpl implements LarDigest {
 
 		try {
 			for (String key : metadata.keySet()) {
+				String metadataString = metadata.get(key);
+
+				if (Validator.isNull(metadataString)) {
+					continue;
+				}
+
 				_xmlStreamWriter.writeStartElement(
 					LarDigesterConstants.NODE_METADATA_LABEL);
-				_xmlStreamWriter.writeAttribute(key, metadata.get(key));
+				_xmlStreamWriter.writeAttribute(key, metadataString);
 				_xmlStreamWriter.writeEndElement();
 			}
 		}
@@ -96,9 +103,8 @@ public class LarDigestImpl implements LarDigest {
 					e.getMessage());
 			}
 		}
-		finally {
-			_xmlStreamWriter.writeEndElement();
-		}
+
+		_xmlStreamWriter.writeEndElement();
 	}
 
 	public void addPermissions(Map<String, List<String>> permissions)
@@ -109,19 +115,22 @@ public class LarDigestImpl implements LarDigest {
 
 		try {
 			for (String key : permissions.keySet()) {
+				List<String> actions = permissions.get(key);
+
+				if (actions == null) {
+					continue;
+				}
+
 				_xmlStreamWriter.writeStartElement(
 					LarDigesterConstants.NODE_PERMISSION_LABEL);
 				_xmlStreamWriter.writeAttribute(
 					LarDigesterConstants.ATTRIBUTE_NAME_ROLE, key);
 
-				List<String> actions = permissions.get(key);
-
-				if (actions == null) {
-					_xmlStreamWriter.writeEndElement();
-					break;
-				}
-
 				for (String action : actions) {
+					if (Validator.isNull(action)) {
+						continue;
+					}
+
 					_xmlStreamWriter.writeStartElement(
 						LarDigesterConstants.NODE_ACTION_KEY_LABEL);
 					_xmlStreamWriter.writeCharacters(action);
@@ -133,7 +142,7 @@ public class LarDigestImpl implements LarDigest {
 		}
 		catch (Exception e) {
 			if (_log.isDebugEnabled()) {
-				_log.debug("Permissions not available to digest: " +
+				_log.debug("Perimissions is not available to digest: " +
 					e.getMessage());
 			}
 		}
@@ -151,6 +160,10 @@ public class LarDigestImpl implements LarDigest {
 
 		if (_xmlStreamReader != null) {
 			_xmlStreamReader.close();
+		}
+
+		if (_digestFile != null) {
+			FileUtil.delete(_digestFile);
 		}
 	}
 
@@ -235,7 +248,7 @@ public class LarDigestImpl implements LarDigest {
 			catch (Exception e) {
 				if (_log.isDebugEnabled()) {
 					_log.debug("Cannot get the digest content as a String: " +
-						e.getMessage());
+							e.getMessage());
 				}
 
 				return null;
@@ -253,7 +266,7 @@ public class LarDigestImpl implements LarDigest {
 			catch (Exception e) {
 				if (_log.isDebugEnabled()) {
 					_log.debug("Cannot get the XML document of the digest: " +
-						e.getMessage());
+							e.getMessage());
 				}
 			}
 		}
@@ -262,7 +275,7 @@ public class LarDigestImpl implements LarDigest {
 	}
 
 	public Map<String, String> getMetaData() {
-		Element root = _document.getRootElement();
+		Element root = getDocument().getRootElement();
 
 		return getMetaData(root);
 	}

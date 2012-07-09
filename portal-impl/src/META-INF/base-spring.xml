@@ -16,6 +16,10 @@
 		<property name="dataSource" ref="liferayDataSource" />
 		<property name="sessionFactory" ref="liferaySessionFactory" />
 	</bean>
+	<bean id="baseDataHandler" abstract="true">
+		<property name="xstreamWrapper" ref="xStreamWrapper" />
+	</bean>
+	<bean id="xStreamWrapper" class="com.liferay.portal.lar.XStreamWrapperImpl" init-method="initWrapper" />
 	<bean id="serviceAdvice" class="com.liferay.portal.security.pacl.PACLAdvice">
 		<property name="nextMethodInterceptor" ref="asyncAdvice" />
 	</bean>
