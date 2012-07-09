@@ -25,11 +25,16 @@ import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
+import com.liferay.portlet.bookmarks.model.BookmarksFolder;
+import com.liferay.portlet.bookmarks.model.BookmarksFolderConstants;
 import com.liferay.portlet.bookmarks.service.BookmarksEntryLocalServiceUtil;
+import com.liferay.portlet.bookmarks.service.persistence.BookmarksEntryUtil;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -74,6 +79,74 @@ public class BookmarksEntryDataHandlerImpl
 		digest.write(digestItem);
 	}
 
+	@Override
+	public void doImport(LarDigestItem item) throws Exception {
+		DataHandlerContext context = getDataHandlerContext();
+
+		BookmarksEntry entry = (BookmarksEntry)getZipEntryAsObject(
+			item.getPath());
+
+		long userId = context.getUserId(entry.getUserUuid());
+
+		Map<Long, Long> folderIds =
+			(Map<Long, Long>)context.getNewPrimaryKeysMap(
+				BookmarksFolder.class);
+
+		long folderId = MapUtil.getLong(
+			folderIds, entry.getFolderId(), entry.getFolderId());
+
+		if ((folderId != BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) &&
+			(folderId == entry.getFolderId())) {
+
+
+			LarDigest digest = context.getLarDigest();
+
+			List<LarDigestItem> parentFolderItem = digest.findDigestItems(
+				0, null, BookmarksFolder.class.getName(),
+				StringUtil.valueOf(folderId));
+
+			bookmarksFolderDataHandler.importData(parentFolderItem.get(0));
+
+			folderId = MapUtil.getLong(
+				folderIds, entry.getFolderId(), entry.getFolderId());
+		}
+
+		ServiceContext serviceContext = createServiceContext(
+			item.getPath(), entry, _NAMESPACE);
+
+		BookmarksEntry importedEntry = null;
+
+		if (context.isDataStrategyMirror()) {
+			BookmarksEntry existingEntry = BookmarksEntryUtil.fetchByUUID_G(
+				entry.getUuid(), context.getScopeGroupId());
+
+			if (existingEntry == null) {
+				serviceContext.setUuid(entry.getUuid());
+
+				importedEntry = BookmarksEntryLocalServiceUtil.addEntry(
+					userId, context.getScopeGroupId(), folderId,
+					entry.getName(), entry.getUrl(), entry.getDescription(),
+					serviceContext);
+			}
+			else {
+				importedEntry = BookmarksEntryLocalServiceUtil.updateEntry(
+					userId, existingEntry.getEntryId(),
+					context.getScopeGroupId(), folderId,
+					entry.getName(), entry.getUrl(), entry.getDescription(),
+					serviceContext);
+			}
+		}
+		else {
+			importedEntry = BookmarksEntryLocalServiceUtil.addEntry(
+				userId, context.getScopeGroupId(), folderId,
+				entry.getName(), entry.getUrl(), entry.getDescription(),
+				serviceContext);
+		}
+
+		// toDo: getClassedModel again...
+		//context.importClassedModel(entry, importedEntry, _NAMESPACE);
+	}
+
 	public BookmarksEntry getEntity(String classPK) {
 		if (Validator.isNotNull(classPK)) {
 			try {
@@ -91,5 +164,7 @@ public class BookmarksEntryDataHandlerImpl
 
 		return null;
 	}
+
+	private static final String _NAMESPACE = "bookmarks";
 
 }

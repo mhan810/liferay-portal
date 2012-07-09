@@ -466,5 +466,6 @@
 	<bean id="com.liferay.portal.service.persistence.lar.AssetVocabularyDataHandler" class="com.liferay.portal.service.persistence.lar.AssetVocabuaryDataHandlerImpl" parent="baseDataHandler" />
 	<bean id="com.liferay.portal.service.persistence.lar.AssetCategoryDataHandler" class="com.liferay.portal.service.persistence.lar.AssetCategoryDataHandlerImpl" parent="baseDataHandler" />
 	<bean id="com.liferay.portal.service.persistence.lar.AssetCategoryPropertiesDataHandler" class="com.liferay.portal.service.persistence.lar.AssetCategoryPropertyDataHandlerImpl" parent="baseDataHandler" />
+	<bean id="com.liferay.portal.service.persistence.lar.AssetLinkDataHandler" class="com.liferay.portal.service.persistence.lar.AssetLinkDataHandlerImpl" parent="baseDataHandler" />
 	<bean id="com.liferay.portal.service.persistence.lar.LayoutSetDataHandler" class="com.liferay.portal.service.persistence.lar.LayoutSetDataHandlerImpl" parent="baseDataHandler" />
 </beans>

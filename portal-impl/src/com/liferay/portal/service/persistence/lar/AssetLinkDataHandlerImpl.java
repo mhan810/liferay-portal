@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portlet.asset.model.AssetLink;
 
@@ -27,6 +28,11 @@ public class AssetLinkDataHandlerImpl
 	@Override
 	public void doDigest(AssetLink assetLink) throws Exception {
 		return;
+	}
+
+	@Override
+	public void doImport(LarDigestItem item) throws Exception {
+		// toDo: implement
 	}
 
 	@Override

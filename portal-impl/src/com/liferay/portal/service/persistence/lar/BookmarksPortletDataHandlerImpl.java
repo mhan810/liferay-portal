@@ -19,10 +19,14 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
@@ -62,9 +66,9 @@ public class BookmarksPortletDataHandlerImpl
 		}
 
 		item.setAction(LarDigesterConstants.ACTION_ADD);
-		item.setType("com.liferay.portlet.bookmarks");
+		item.setType(portlet.getPortletDataHandlerClass());
 		item.setClassPK(portlet.getPortletId());
-		item.setPath(getPortletPath(portlet.getPortletId()));
+		item.setPath(getEntityPath(portlet));
 
 		if (exportPermissions) {
 			Map permissionsMap = digestEntityPermissions(
