@@ -57,6 +57,8 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.TeamLocalServiceUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
+import com.liferay.portal.service.persistence.lar.AssetCategoryDataHandler;
+import com.liferay.portal.service.persistence.lar.AssetVocabularyDataHandler;
 import com.liferay.portal.service.persistence.lar.BookmarksEntryDataHandler;
 import com.liferay.portal.service.persistence.lar.BookmarksFolderDataHandler;
 import com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandler;
@@ -408,7 +410,7 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 	}
 
-	protected T getEntity(String classPK) {
+	public T getEntity(String classPK) {
 		return null;
 	}
 
@@ -594,7 +596,7 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 			getPrimaryKeyString(resourceName, resourcePK), permissions);*/
 	}
 
-	protected void doDigest(T object) throws Exception {
+	public void doDigest(T object) throws Exception {
 		return;
 	}
 
@@ -712,5 +714,9 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 	protected BookmarksPortletDataHandler bookmarksPortletDataHandler;
 	@BeanReference(type = PortletPreferencesDataHandler.class)
 	protected PortletPreferencesDataHandler portletPreferencesDataHandler;
+	@BeanReference(type = AssetVocabularyDataHandler.class)
+	protected AssetVocabularyDataHandler assetVocabularyDataHandler;
+	@BeanReference(type = AssetCategoryDataHandler.class)
+	protected AssetCategoryDataHandler assetCategoryDataHandler;
 
 }

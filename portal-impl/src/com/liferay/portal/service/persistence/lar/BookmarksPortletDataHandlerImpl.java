@@ -42,12 +42,10 @@ public class BookmarksPortletDataHandlerImpl
 
 	@Override
 	public void doDigest(Portlet portlet) throws Exception {
-		DataHandlerContext context =
-			getDataHandlerContext();
+		DataHandlerContext context = getDataHandlerContext();
 
-		/*portletDataContext.addPermissions(
-			"com.liferay.portlet.bookmarks",
-			portletDataContext.getScopeGroupId());*/
+		boolean exportPermissions = MapUtil.getBoolean(
+			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
 
 		LarDigest digest = context.getLarDigest();
 
@@ -57,9 +55,6 @@ public class BookmarksPortletDataHandlerImpl
 		item.setType("com.liferay.portlet.bookmarks");
 		item.setClassPK(portlet.getPortletId());
 		item.setPath(getPortletPath(portlet.getPortletId()));
-
-		boolean exportPermissions = MapUtil.getBoolean(
-			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
 
 		if (exportPermissions) {
 			Map permissionsMap = digestEntityPermissions(

@@ -76,7 +76,7 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 	}
 
 	@Override
-	protected void doDigest(Portlet portlet) throws Exception {
+	public void doDigest(Portlet portlet) throws Exception {
 		return;
 	}
 

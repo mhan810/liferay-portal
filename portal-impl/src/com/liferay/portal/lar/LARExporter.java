@@ -39,6 +39,8 @@ import com.liferay.portal.model.*;
 import com.liferay.portal.service.*;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
+import com.liferay.portal.service.persistence.lar.AssetCategoryDataHandler;
+import com.liferay.portal.service.persistence.lar.AssetVocabularyDataHandler;
 import com.liferay.portal.service.persistence.lar.LayoutDataHandler;
 import com.liferay.portal.service.persistence.lar.PortletDataHandler;
 import com.liferay.portal.theme.ThemeLoader;
@@ -292,41 +294,33 @@ public class LARExporter {
 		}
 	}
 
-	protected void exportAssetCategories(PortletDataContext portletDataContext)
+	protected void digestAssetCategories(DataHandlerContext context)
 			throws Exception {
-
-		Document document = SAXReaderUtil.createDocument();
-
-		Element rootElement = document.addElement("categories-hierarchy");
-
-		Element assetVocabulariesElement = rootElement.addElement(
-			"vocabularies");
 
 		List<AssetVocabulary> assetVocabularies =
 			AssetVocabularyLocalServiceUtil.getGroupVocabularies(
-				portletDataContext.getGroupId());
+				context.getGroupId());
+
+		AssetVocabularyDataHandler vocabularyDataHandler =
+			(AssetVocabularyDataHandler)DataHandlerLocatorUtil.locate(
+				AssetVocabulary.class.getName());
 
 		for (AssetVocabulary assetVocabulary : assetVocabularies) {
-			_portletExporter.exportAssetVocabulary(
-				portletDataContext, assetVocabulariesElement, assetVocabulary);
+			vocabularyDataHandler.digest(assetVocabulary);
 		}
-
-		Element categoriesElement = rootElement.addElement("categories");
 
 		List<AssetCategory> assetCategories = AssetCategoryUtil.findByGroupId(
-				portletDataContext.getGroupId());
+			context.getGroupId());
+
+		AssetCategoryDataHandler categoryDataHandler =
+			(AssetCategoryDataHandler)DataHandlerLocatorUtil.locate(
+				AssetCategory.class.getName());
 
 		for (AssetCategory assetCategory : assetCategories) {
-			_portletExporter.exportAssetCategory(
-				portletDataContext, assetVocabulariesElement, categoriesElement,
-				assetCategory);
+			categoryDataHandler.digest(assetCategory);
 		}
 
-		_portletExporter.exportAssetCategories(portletDataContext, rootElement);
-
-		portletDataContext.addZipEntry(
-			portletDataContext.getRootPath() + "/categories-hierarchy.xml",
-			document.formattedString());
+		//_portletExporter.exportAssetCategories(portletDataContext, rootElement);
 	}
 
 	protected void exportTheme(LayoutSet layoutSet, ZipWriter zipWriter)
