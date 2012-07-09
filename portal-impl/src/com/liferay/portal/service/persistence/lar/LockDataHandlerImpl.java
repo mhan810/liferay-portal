@@ -55,6 +55,11 @@ public class LockDataHandlerImpl
 	}
 
 	@Override
+	public void doImport(LarDigestItem item) throws Exception {
+		// toDo: implement
+	}
+
+	@Override
 	public Lock getEntity(String classPK) {
 		if (Validator.isNull(classPK)) {
 			return null;

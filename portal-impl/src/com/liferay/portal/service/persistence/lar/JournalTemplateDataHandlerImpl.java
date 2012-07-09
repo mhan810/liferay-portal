@@ -16,6 +16,7 @@ package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.journal.model.JournalTemplate;
@@ -78,6 +79,11 @@ public class JournalTemplateDataHandlerImpl
 	@Override
 	public void doDigest(JournalTemplate object) throws Exception {
 		// TODO implement doDigest
+	}
+
+	@Override
+	public void doImport(LarDigestItem item) throws Exception {
+		// toDo: implement method
 	}
 
 	private String getTemplatePath(JournalTemplate template) {

@@ -96,7 +96,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		"/[$SAME_GROUP_FRIENDLY_URL$]";
 
 	@Override
-	protected void doImport(LarDigestItem item) throws Exception {
+	public void doImport(LarDigestItem item) throws Exception {
 
 		// toDo: move methods from PortletDataContext to DataHandlerContext
 		//PortletDataContext portletDataContext = null;
@@ -317,10 +317,15 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			0, null, Layout.class.getName(),
 			StringUtil.valueOf(parentLayoutId));
 
-		LarDigestItem parentLayoutItem = resultItems.get(0);
-
+		LarDigestItem parentLayoutItem = null;
 		String parentLayoutUuid = null;
-			//GetterUtil.getString(layoutElement.attributeValue("parent-layout-uuid"));
+
+		if (resultItems != null && !resultItems.isEmpty()) {
+			parentLayoutItem = resultItems.get(0);
+
+			Map<String, String> metadata = parentLayoutItem.getMetadata();
+			parentLayoutUuid = metadata.get("parent-layout-uuid");
+		}
 
 		if ((parentLayoutId != LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) &&
 			(parentLayoutItem != null)) {
@@ -466,12 +471,13 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		}
 
 		// toDo: we need an expando path here!
-		String expandoPath = null;
+	/*	String expandoPath = null;
 
 		ServiceContext serviceContext = createServiceContext(
 			expandoPath, importedLayout, null);
 
 		importedLayout.setExpandoBridgeAttributes(serviceContext);
+		*/
 
 		LayoutUtil.update(importedLayout, false);
 

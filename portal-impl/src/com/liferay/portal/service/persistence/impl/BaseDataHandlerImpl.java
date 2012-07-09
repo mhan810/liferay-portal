@@ -45,6 +45,7 @@ import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Lock;
+import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.ResourcedModel;
 import com.liferay.portal.model.Role;
@@ -88,6 +89,7 @@ import com.liferay.portlet.messageboards.service.persistence.MBDiscussionUtil;
 import com.liferay.portlet.ratings.model.RatingsEntry;
 import com.liferay.portlet.ratings.service.RatingsEntryLocalServiceUtil;
 import com.liferay.portal.service.persistence.lar.LayoutSetDataHandler;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -252,7 +254,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 			return null;
 		}
 
-		return getXStreamWrapper().fromXML(new String(bytes));
+		return getXstreamWrapper().fromXML(new String(bytes));
 	}
 
 	public Object fromXML(String xml) {
@@ -260,10 +262,16 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 			return null;
 		}
 
-		return getXStreamWrapper().fromXML(xml);
+		return getXstreamWrapper().fromXML(xml);
 	}
 
 	public String getEntityPath(T object) {
+		if (object instanceof Portlet) {
+			Portlet portlet = (Portlet)object;
+
+			return getPortletPath(portlet.getPortletId());
+		}
+
 		if (object instanceof BaseModel) {
 			BaseModel<T> baseModel = (BaseModel<T>)object;
 
@@ -467,14 +475,14 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	public abstract T getEntity(String classPK);
 
 	public String toXML(Object object) {
-		return getXStreamWrapper().toXML(object);
+		return getXstreamWrapper().toXML(object);
 	}
 
-	public void setXstreamWrapper(XStreamWrapper xstreamWrapper) {
-		_xStreamWrapper = xstreamWrapper;
+	public void setXstreamWrapper(XStreamWrapper xStreamWrapper) {
+		_xStreamWrapper = xStreamWrapper;
 	}
 
-	public XStreamWrapper getXStreamWrapper() {
+	public XStreamWrapper getXstreamWrapper() {
 		if (_xStreamWrapper == null) {
 			Object o = PortalBeanLocatorUtil.locate("xStreamWrapper");
 
@@ -580,7 +588,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		long classPK = getClassPK(object);
 
 		String[] tagNames = AssetTagLocalServiceUtil.getTagNames(
-			object.getClass().getName(), classPK);
+				object.getClass().getName(), classPK);
 
 		for (String tagName : tagNames) {
 			// TODO create AssetTagDataHandler
@@ -589,7 +597,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 	protected void digestComments(T object) throws Exception {
 		long classNameId = PortalUtil.getClassNameId(
-			object.getClass().getName());
+				object.getClass().getName());
 
 		long classPK = getClassPK(object);
 
@@ -689,7 +697,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 		List<RatingsEntry> ratingsEntries =
 			RatingsEntryLocalServiceUtil.getEntries(
-				object.getClass().getName(), classPK);
+					object.getClass().getName(), classPK);
 
 		if (ratingsEntries.size() == 0) {
 			return;
@@ -786,9 +794,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 	public abstract void doDigest(T object) throws Exception;
 
-	protected void doImport(LarDigestItem item) throws Exception{
-		return;
-	}
+	public abstract void doImport(LarDigestItem item)throws Exception;
 
 	protected void doSerialize(T object) throws Exception {
 		String path = getEntityPath(object);
@@ -856,14 +862,47 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	}
 
 	protected long getScopeGroupId() {
-		DataHandlerContext context =
-			getDataHandlerContext();
+		DataHandlerContext context = getDataHandlerContext();
 
 		if (context != null) {
 			return context.getGroupId();
 		}
 
 		return 0;
+	}
+
+	protected String getSourceLayoutPath(long layoutId) {
+		return getSourceRootPath() + ROOT_PATH_LAYOUTS + layoutId;
+	}
+
+	protected String getSourcePortletPath(String portletId) {
+		return getSourceRootPath() + ROOT_PATH_PORTLETS + portletId;
+	}
+
+	protected String getSourceRootPath() {
+		return ROOT_PATH_GROUPS + getSourceGroupId();
+	}
+
+	protected long getSourceGroupId() {
+		DataHandlerContext context =
+			getDataHandlerContext();
+
+		if (context != null) {
+			return context.getSourceGroupId();
+		}
+
+		return 0;
+	}
+
+	// toDo: develop importEntityPermissions
+	protected void importEntityPermissions(
+			Map<String, List<String>> permissionsMap)
+		throws Exception {
+	}
+
+	// toDo: develop importPermissions
+	protected void importPermissions(Map<String, List<String>> permissionsMap)
+		throws Exception {
 	}
 
 	protected boolean isResourceMain(ClassedModel classedModel) {

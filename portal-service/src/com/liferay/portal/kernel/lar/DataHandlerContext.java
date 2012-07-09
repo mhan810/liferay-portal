@@ -59,6 +59,14 @@ public interface DataHandlerContext {
 
 	public static final String ATTRIBUTE_NAME_ZIP_WRITER = "ZIP_WRITER";
 
+	public static final String DATA_STRATEGY_COPY_AS_NEW =
+		"DATA_STRATEGY_COPY_AS_NEW";
+
+	public static final String DATA_STRATEGY_MIRROR = "DATA_STRATEGY_MIRROR";
+
+	public static final String DATA_STRATEGY_MIRROR_OVERWRITE =
+		"DATA_STRATEGY_MIRROR_OVERWRITE";
+
 	public void addProcessedPath(String path);
 
 	public Object getAttribute(String key);
@@ -93,6 +101,8 @@ public interface DataHandlerContext {
 
 	public User getUser();
 
+	public long getUserId(String userUuid);
+
 	public UserIdStrategy getUserIdStrategy();
 
 	public ZipReader getZipReader();
@@ -100,6 +110,10 @@ public interface DataHandlerContext {
 	public ZipWriter getZipWriter();
 
 	public boolean hasDateRange();
+
+	public boolean isDataStrategyMirror();
+
+	public boolean isDataStrategyMirrorWithOverwriting();
 
 	public boolean isPathProcessed(String path);
 

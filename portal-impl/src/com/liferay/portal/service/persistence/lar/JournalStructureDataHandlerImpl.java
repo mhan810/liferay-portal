@@ -17,6 +17,7 @@ package com.liferay.portal.service.persistence.lar;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.journal.NoSuchStructureException;
@@ -56,6 +57,11 @@ public class JournalStructureDataHandlerImpl
 
 		/*portletDataContext.addClassedModel(
 			path, structure, JournalPortletDataHandler._NAMESPACE);*/
+	}
+
+	@Override
+	public void doImport(LarDigestItem item) throws Exception {
+		// toDo: implement method
 	}
 
 	@Override

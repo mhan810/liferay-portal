@@ -40,8 +40,6 @@ public interface LarDigest extends Iterable<LarDigestItem> {
 
 	public String getDigestString();
 
-	public Document getDocument();
-
 	public Map<String, String> getMetaData();
 
 	public void write(LarDigestItem digestItem) throws Exception;

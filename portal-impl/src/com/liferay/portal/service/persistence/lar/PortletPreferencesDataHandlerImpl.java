@@ -56,6 +56,11 @@ public class PortletPreferencesDataHandlerImpl
 	}
 
 	@Override
+	public void doImport(LarDigestItem item) throws Exception {
+		// toDo: implement method
+	}
+
+	@Override
 	public PortletPreferences getEntity(String classPK) {
 		if (Validator.isNotNull(classPK)) {
 			try {

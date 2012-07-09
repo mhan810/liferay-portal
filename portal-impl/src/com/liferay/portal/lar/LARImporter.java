@@ -54,6 +54,7 @@ import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.service.persistence.lar.PortletDataHandlerImpl;
@@ -64,6 +65,7 @@ import org.apache.commons.lang.time.StopWatch;
 
 import java.io.File;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -75,7 +77,7 @@ import java.util.Set;
  */
 public class LARImporter {
 
-	public void importa(
+	public void importLar(
 			long userId, long groupId, boolean privateLayout,
 			Map<String, String[]> parameterMap, File file)
 		throws Exception {
@@ -84,7 +86,7 @@ public class LARImporter {
 			ImportExportThreadLocal.setLayoutImportInProcess(true);
 
 			DataHandlerContext context = _initLarPersistenceContext(
-				groupId, parameterMap);
+				userId, groupId, privateLayout, parameterMap);
 
 			doImport(context, file);
 		}
@@ -153,18 +155,18 @@ public class LARImporter {
 
 		context.setUserIdStrategy(strategy);
 
-		// Manifest
+		String dataStrategy = MapUtil.getString(
+			parameterMap, PortletDataHandlerKeys.DATA_STRATEGY,
+			PortletDataHandlerKeys.DATA_STRATEGY_MIRROR);
 
-		File digestFile = zipReader.getEntryAsFile("/digest.xml");
+		context.setDataStrategy(dataStrategy);
 
-		if (digestFile == null) {
-			throw new LARFileException("manifest.xml not found in the LAR");
-		}
+		// Digest
 
 		LarDigest larDigest = null;
 
 		try {
-			larDigest = new LarDigestImpl(digestFile);
+			larDigest = new LarDigestImpl(zipReader);
 
 			context.setLarDigest(larDigest);
 		}
@@ -493,19 +495,22 @@ public class LARImporter {
 	}
 
 	private DataHandlerContext _initLarPersistenceContext(
-			long groupId, Map<String, String[]> parameters)
+			long userId, long groupId, boolean privateLayout,
+			Map<String, String[]> parameters)
 		throws Exception {
 
 		DataHandlerContext context =
 			new DataHandlerContextImpl();
 
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
+		User user = UserLocalServiceUtil.getUser(userId);
 
-		context.setGroupId(groupId);
-		context.setScopeGroupId(groupId);
 		context.setCompanyId(group.getCompanyId());
-
+		context.setGroupId(groupId);
 		context.setParameters(parameters);
+		context.setPrivateLayout(privateLayout);
+		context.setScopeGroupId(groupId);
+		context.setUser(user);
 
 		DataHandlerContextThreadLocal.setDataHandlerContext(
 			context);

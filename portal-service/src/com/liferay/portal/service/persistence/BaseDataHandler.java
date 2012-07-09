@@ -80,15 +80,15 @@ public interface BaseDataHandler<T extends BaseModel<T>> {
 
 	public List<String> getZipFolderEntries(String path);
 
-	public void importData(LarDigestItem item);
+	public void importData(LarDigestItem item) throws Exception;
 
-	public XStreamWrapper getXStreamWrapper();
+	public XStreamWrapper getXstreamWrapper();
 
 	public ZipWriter getZipWriter();
 
 	public void serialize(String classPK);
 
-	public void setXstreamWrapper(XStreamWrapper xstreamWrapper);
+	public void setXstreamWrapper(XStreamWrapper xStreamWrapper);
 
 	public String toXML(Object object);
 
