@@ -957,13 +957,17 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 		return _portlet.getPortletDataHandlerClass();
 	}
 
+	public com.liferay.portal.service.persistence.lar.PortletDataHandler getPortletDataHandlerInstance() {
+		return _portlet.getPortletDataHandlerInstance();
+	}
+
 	/**
 	* Returns the portlet data handler instance of the portlet.
 	*
 	* @return the portlet data handler instance of the portlet
 	*/
-	public com.liferay.portal.kernel.lar.PortletDataHandler getPortletDataHandlerInstance() {
-		return _portlet.getPortletDataHandlerInstance();
+	public com.liferay.portal.kernel.lar.PortletDataHandler getLegacyPortletDataHandlerInstance() {
+		return _portlet.getLegacyPortletDataHandlerInstance();
 	}
 
 	/**

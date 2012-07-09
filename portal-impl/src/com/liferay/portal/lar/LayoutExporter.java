@@ -131,7 +131,7 @@ public class LayoutExporter {
 			}
 
 			PortletDataHandler portletDataHandler =
-				portlet.getPortletDataHandlerInstance();
+				portlet.getLegacyPortletDataHandlerInstance();
 
 			if ((portletDataHandler == null) ||
 				!portletDataHandler.isAlwaysExportable()) {

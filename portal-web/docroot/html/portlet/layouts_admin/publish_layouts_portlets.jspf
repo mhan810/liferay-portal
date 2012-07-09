@@ -41,7 +41,7 @@ for (Layout curLayout : exportLayouts) {
 				continue;
 			}
 
-			PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+			PortletDataHandler portletDataHandler = portlet.getLegacyPortletDataHandlerInstance();
 
 			if ((portletDataHandler != null) && !portletIdsSet.contains(portlet.getRootPortletId())) {
 				portletIdsSet.add(portlet.getRootPortletId());
@@ -188,7 +188,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 								continue;
 							}
 
-							PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+							PortletDataHandler portletDataHandler = portlet.getLegacyPortletDataHandlerInstance();
 
 							try {
 								PortletDataHandlerControl[] controls = portletDataHandler.getExportControls();
@@ -268,7 +268,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 									continue;
 								}
 
-								PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+								PortletDataHandler portletDataHandler = portlet.getLegacyPortletDataHandlerInstance();
 
 								try {
 									PortletDataHandlerControl[] metadataControls = portletDataHandler.getExportMetadataControls();

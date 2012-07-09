@@ -15,7 +15,6 @@
 package com.liferay.portlet;
 
 import com.liferay.portal.kernel.atom.AtomCollectionAdapter;
-import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.poller.PollerProcessor;
 import com.liferay.portal.kernel.pop.MessageListener;
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
@@ -60,7 +59,7 @@ public class PortletBagImpl implements PortletBag {
 		List<Indexer> indexerInstances, OpenSearch openSearchInstance,
 		FriendlyURLMapper friendlyURLMapperInstance,
 		URLEncoder urlEncoderInstance,
-		PortletDataHandler portletDataHandlerInstance,
+		com.liferay.portal.kernel.lar.PortletDataHandler legacyDataHandler,
 		PortletDisplayTemplateHandler portletDisplayTemplateHandlerInstance,
 		PortletLayoutListener portletLayoutListenerInstance,
 		PollerProcessor pollerProcessorInstance,
@@ -86,7 +85,7 @@ public class PortletBagImpl implements PortletBag {
 		_openSearchInstance = openSearchInstance;
 		_friendlyURLMapperInstance = friendlyURLMapperInstance;
 		_urlEncoderInstance = urlEncoderInstance;
-		_portletDataHandlerInstance = portletDataHandlerInstance;
+		_legacyPortletDataHandlerInstance = legacyDataHandler;
 		_portletDisplayTemplateHandlerInstance =
 			portletDisplayTemplateHandlerInstance;
 		_portletLayoutListenerInstance = portletLayoutListenerInstance;
@@ -113,7 +112,7 @@ public class PortletBagImpl implements PortletBag {
 			getPortletName(), getServletContext(), getPortletInstance(),
 			getConfigurationActionInstance(), getIndexerInstances(),
 			getOpenSearchInstance(), getFriendlyURLMapperInstance(),
-			getURLEncoderInstance(), getPortletDataHandlerInstance(),
+			getURLEncoderInstance(), getLegacyPortletDataHandlerInstance(),
 			getPortletDisplayTemplateHandlerInstance(),
 			getPortletLayoutListenerInstance(), getPollerProcessorInstance(),
 			getPopMessageListenerInstance(),
@@ -172,8 +171,10 @@ public class PortletBagImpl implements PortletBag {
 		return _popMessageListenerInstance;
 	}
 
-	public PortletDataHandler getPortletDataHandlerInstance() {
-		return _portletDataHandlerInstance;
+	public com.liferay.portal.kernel.lar.PortletDataHandler
+		getLegacyPortletDataHandlerInstance() {
+
+		return _legacyPortletDataHandlerInstance;
 	}
 
 	public PortletDisplayTemplateHandler
@@ -269,7 +270,8 @@ public class PortletBagImpl implements PortletBag {
 	private PermissionPropagator _permissionPropagatorInstance;
 	private PollerProcessor _pollerProcessorInstance;
 	private MessageListener _popMessageListenerInstance;
-	private PortletDataHandler _portletDataHandlerInstance;
+	private com.liferay.portal.kernel.lar.PortletDataHandler
+		_legacyPortletDataHandlerInstance;
 	private PortletDisplayTemplateHandler
 		_portletDisplayTemplateHandlerInstance;
 	private Portlet _portletInstance;
