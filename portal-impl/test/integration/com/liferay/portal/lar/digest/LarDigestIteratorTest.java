@@ -66,9 +66,18 @@ public class LarDigestIteratorTest extends PowerMockito {
 
 					Assert.assertEquals(item.getClassPK(), "1000");
 
-					System.out.println(item.getMetadata());
+					Assert.assertEquals(item.getMetadata().size(), 2);
 
-					System.out.println(item.getPermissions());
+					Assert.assertEquals(item.getPermissions().size(), 2);
+
+					List<String> actions =
+						item.getPermissions().get("test-role1");
+
+					Assert.assertEquals(actions.size(), 3);
+
+					actions = item.getPermissions().get("test-role2");
+
+					Assert.assertEquals(actions.size(), 1);
 
 					break;
 				case LarDigesterConstants.ACTION_DELETE:
@@ -123,7 +132,10 @@ public class LarDigestIteratorTest extends PowerMockito {
 
 		Map metadata = new HashMap<String, String>();
 
-		item.setMetadata(null);
+		metadata.put("test-metadata1", "test-value");
+		metadata.put("test-metadata2", "test-value");
+
+		item.setMetadata(metadata);
 
 		Map permissions = new HashMap<String, List<String>>();
 
@@ -138,9 +150,10 @@ public class LarDigestIteratorTest extends PowerMockito {
 		permissions.put("test-role1", actionKeys);
 
 		actionKeys = new ArrayList<String>();
+
 		actionKeys.add("action1");
 
-		permissions.put("test-role2", null);
+		permissions.put("test-role2", actionKeys);
 
 		item.setPermissions(permissions);
 
@@ -165,8 +178,6 @@ public class LarDigestIteratorTest extends PowerMockito {
 		_larDigest.write(item);
 
 		_larDigest.close();
-
-		System.out.println(_larDigest.getDigestString());
 	}
 
 	private LarDigest _larDigest;

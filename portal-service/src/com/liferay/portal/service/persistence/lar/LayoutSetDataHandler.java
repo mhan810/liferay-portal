@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.lar;
+package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.service.persistence.BaseDataHandler;
@@ -20,5 +20,5 @@ import com.liferay.portal.service.persistence.BaseDataHandler;
 /**
  * @author Daniel Kocsis
  */
-public interface LayoutSetLarPesistence extends BaseDataHandler<LayoutSet> {
+public interface LayoutSetDataHandler extends BaseDataHandler<LayoutSet> {
 }

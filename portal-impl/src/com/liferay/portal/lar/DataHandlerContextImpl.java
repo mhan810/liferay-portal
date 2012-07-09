@@ -14,9 +14,8 @@
 
 package com.liferay.portal.lar;
 
-import com.liferay.portal.kernel.lar.DataHandlerContext;
-import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
-import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.lar.*;
+import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
@@ -111,8 +110,16 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		return (Date)getAttribute(ATTRIBUTE_NAME_START_DATE);
 	}
 
+	public String getDataStrategy() {
+		return (String)getAttribute(ATTRIBUTE_NAME_DATA_STRATEGY);
+	}
+
 	public User getUser() {
 		return (User)getAttribute(ATTRIBUTE_NAME_USER);
+	}
+
+	public UserIdStrategy getUserIdStrategy() {
+		return (UserIdStrategy)getAttribute(ATTRIBUTE_NAME_USER_ID_STRATEGY);
 	}
 
 	public ZipReader getZipReader() {
@@ -210,8 +217,16 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		setAttribute(ATTRIBUTE_NAME_START_DATE, startDate);
 	}
 
+	public void setDataStrategy(String dataStrategy) {
+		setAttribute(ATTRIBUTE_NAME_DATA_STRATEGY, dataStrategy);
+	}
+
 	public void setUser(User user) {
 		setAttribute(ATTRIBUTE_NAME_USER, user);
+	}
+
+	public void setUserIdStrategy(UserIdStrategy strategy) {
+		setAttribute(ATTRIBUTE_NAME_USER_ID_STRATEGY, strategy);
 	}
 
 	public void setZipReader(ZipReader zipReader) {
