@@ -46,12 +46,8 @@ public class JournalPortletDataHandlerImpl extends PortletDataHandlerImpl
 
 
 	@Override
-	protected void doDigest(Portlet portlet) throws Exception {
+	public void doDigest(Portlet portlet) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
-
-		/*portletDataContext.addPermissions(
-			"com.liferay.portlet.journal",
-			portletDataContext.getScopeGroupId());*/
 
 		List<JournalStructure> structures = JournalStructureUtil.findByGroupId(
 			context.getScopeGroupId(), QueryUtil.ALL_POS,
