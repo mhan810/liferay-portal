@@ -87,6 +87,7 @@ import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.persistence.MBDiscussionUtil;
 import com.liferay.portlet.ratings.model.RatingsEntry;
 import com.liferay.portlet.ratings.service.RatingsEntryLocalServiceUtil;
+import com.liferay.portal.service.persistence.lar.LayoutSetDataHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -909,5 +910,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	protected AssetCategoryDataHandler assetCategoryDataHandler;
 	@BeanReference(type = AssetLinkDataHandler.class)
 	protected AssetLinkDataHandler assetLinkDataHandler;
+	@BeanReference(type = LayoutSetDataHandler.class)
+	protected LayoutSetDataHandler layoutSetDataHandler;
 
 }
