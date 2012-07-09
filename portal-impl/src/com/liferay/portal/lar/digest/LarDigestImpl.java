@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.xml.StAXReaderUtil;
 import com.liferay.portal.xml.StAXWriterUtil;
+
 import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
 
 import java.io.File;
@@ -39,7 +40,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -121,7 +121,7 @@ public class LarDigestImpl implements LarDigest {
 					break;
 				}
 
-				for(String action : actions) {
+				for (String action : actions) {
 					_xmlStreamWriter.writeStartElement(
 						LarDigesterConstants.NODE_ACTION_KEY_LABEL);
 					_xmlStreamWriter.writeCharacters(action);
@@ -237,6 +237,7 @@ public class LarDigestImpl implements LarDigest {
 					_log.debug("Cannot get the digest content as a String: " +
 						e.getMessage());
 				}
+
 				return null;
 			}
 		}
@@ -260,7 +261,6 @@ public class LarDigestImpl implements LarDigest {
 		return _document;
 	}
 
-
 	public Map<String, String> getMetaData() {
 		Element root = _document.getRootElement();
 
@@ -282,6 +282,7 @@ public class LarDigestImpl implements LarDigest {
 			if (_log.isDebugEnabled()) {
 				_log.debug("Cannot get the digest iterator: " + e.getMessage());
 			}
+
 			return null;
 		}
 	}
@@ -400,7 +401,7 @@ public class LarDigestImpl implements LarDigest {
 
 			List actionNames = new ArrayList<String>();
 
-			for(Element actionName : actionNameElements) {
+			for (Element actionName : actionNameElements) {
 				actionNames.add(actionName.getText());
 			}
 

@@ -43,10 +43,10 @@
 		</property>
 	</bean>
 
-	<bean id="com.liferay.portal.kernel.staging.LarPersistenceLocator" class="com.liferay.portal.kernel.staging.DataHandlerLocatorUtil">
-		<property name="locator" ref="com.liferay.portal.staging.LarPersistenceLocatorImpl" />
+	<bean id="com.liferay.portal.kernel.staging.DataHandlerLocator" class="com.liferay.portal.kernel.staging.DataHandlerLocatorUtil">
+		<property name="locator" ref="com.liferay.portal.staging.DataHandlerLocatorImpl" />
 	</bean>
-	<bean id="com.liferay.portal.staging.LarPersistenceLocatorImpl" class="com.liferay.portal.staging.DataHandlerLocatorImpl">
+	<bean id="com.liferay.portal.staging.DataHandlerLocatorImpl" class="com.liferay.portal.staging.DataHandlerLocatorImpl">
 		<property name="larPersistenceMapping">
 			<map key-type="java.lang.String" value-type="java.lang.String">
 				<entry key="com.liferay.portal.model.Layout" value="com.liferay.portal.service.persistence.lar.LayoutDataHandler" />
@@ -54,6 +54,9 @@
 				<entry key="com.liferay.portlet.bookmarks.model.BookmarksFolder" value="com.liferay.portal.service.persistence.lar.BookmarksFolderDataHandler" />
 				<entry key="com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandlerImpl" value="com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandler" />
 				<entry key="com.liferay.portal.model.PortletPreferences" value="com.liferay.portal.service.persistence.lar.PortletPreferencesDataHandler" />
+				<entry key="com.liferay.portlet.asset.model.AssetVocabulary" value="com.liferay.portal.service.persistence.lar.AssetVocabuaryDataHandler" />
+				<entry key="com.liferay.portlet.asset.model.AssetCategory" value="com.liferay.portal.service.persistence.lar.AssetCategoryDataHandler" />
+				<entry key="com.liferay.portlet.asset.model.AssetCategoryProperty" value="com.liferay.portal.service.persistence.lar.AssetCategoryPropertyDataHandler" />
 			</map>
 		</property>
 	</bean>

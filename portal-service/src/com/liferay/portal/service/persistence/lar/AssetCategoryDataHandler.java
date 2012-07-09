@@ -15,16 +15,16 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.service.persistence.BaseDataHandler;
-import com.liferay.portlet.journal.model.JournalStructure;
+import com.liferay.portlet.asset.model.AssetCategory;
 
 /**
- * @author Daniel Kocsis
+ * @author Mate Thurzo
  */
-public interface JournalStructureDataHandler
-	extends BaseDataHandler<JournalStructure> {
+public interface AssetCategoryDataHandler
+	extends BaseDataHandler<AssetCategory> {
 
-	public void doDigest(JournalStructure journalStructure) throws Exception;
+	public void doDigest(AssetCategory assetCategory) throws Exception;
 
-	public JournalStructure getEntity(String classPK);
+	public AssetCategory getEntity(String classPK);
 
 }

@@ -69,6 +69,17 @@ public class JournalTemplateDataHandlerImpl
 			JournalPortletDataHandler._NAMESPACE);*/
 	}
 
+	@Override
+	public JournalTemplate getEntity(String classPK) {
+		// TODO implement getEntity
+		return null;
+	}
+
+	@Override
+	public void doDigest(JournalTemplate object) throws Exception {
+		// TODO implement doDigest
+	}
+
 	private String getTemplatePath(JournalTemplate template) {
 
 		StringBundler sb = new StringBundler(4);

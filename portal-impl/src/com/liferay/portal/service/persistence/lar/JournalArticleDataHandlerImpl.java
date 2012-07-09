@@ -60,6 +60,13 @@ public class JournalArticleDataHandlerImpl
 	extends BaseDataHandlerImpl<JournalArticle>
 	implements JournalArticleDataHandler {
 
+
+	@Override
+	public JournalArticle getEntity(String classPK) {
+		// TODO implement getEntity
+		return null;
+	}
+
 	@Override
 	public void doDigest(JournalArticle article) throws Exception {
 		return;
