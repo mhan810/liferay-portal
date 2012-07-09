@@ -15,21 +15,17 @@
 package com.liferay.portal.lar;
 
 import com.liferay.portal.kernel.lar.*;
+import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
-import com.liferay.portal.kernel.xml.Attribute;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -39,8 +35,20 @@ public class LayoutSetLarPesistenceImpl extends
 		BaseDataHandlerImpl<LayoutSet>
 	implements LayoutSetLarPesistence {
 
+
 	@Override
-	protected void doImport(LarDigestItem item) throws Exception{
+	public LayoutSet getEntity(String classPK) {
+		// TODO implement getEntity
+		return null;
+	}
+
+	@Override
+	public void doDigest(LayoutSet object) throws Exception {
+		// TODO implement doDigest
+	}
+
+	@Override
+	protected void doImport(LarDigestItem item) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
 		Map parameterMap = context.getParameters();
@@ -53,7 +61,6 @@ public class LayoutSetLarPesistenceImpl extends
 			parameterMap, PortletDataHandlerKeys.LAYOUT_SET_SETTINGS);
 		boolean importThemeSettings = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.THEME_REFERENCE);
-
 
 		LayoutSet layoutSet = null;
 
@@ -157,6 +164,7 @@ public class LayoutSetLarPesistenceImpl extends
 			colorSchemeId, css, wapTheme); */
 	}
 
-	private static Log _log =
-		LogFactoryUtil.getLog(LayoutSetLarPesistenceImpl.class);
+	private static Log _log = LogFactoryUtil.getLog(
+		LayoutSetLarPesistenceImpl.class);
+
 }

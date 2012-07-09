@@ -14,8 +14,6 @@
 
 package com.liferay.portal.kernel.lar;
 
-import com.liferay.portal.lar.digest.LarDigest;
-
 import javax.portlet.PortletPreferences;
 
 /**

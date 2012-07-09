@@ -14,14 +14,17 @@
 
 package com.liferay.portal.service.persistence.lar;
 
-import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
+import com.liferay.portal.service.persistence.BaseDataHandler;
+import com.liferay.portlet.asset.model.AssetVocabulary;
 
 /**
  * @author Mate Thurzo
  */
-public class PermissionsDataHandlerImpl
-	extends BaseDataHandlerImpl
-	implements PermissionsDataHandler {
+public interface AssetVocabularyDataHandler
+	extends BaseDataHandler<AssetVocabulary> {
 
+	public void doDigest(AssetVocabulary assetVocabulary) throws Exception;
+
+	public AssetVocabulary getEntity(String classPK);
 
 }

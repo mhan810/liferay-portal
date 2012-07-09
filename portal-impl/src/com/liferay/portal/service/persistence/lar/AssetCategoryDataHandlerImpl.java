@@ -15,83 +15,96 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.DataHandlerContext;
+import com.liferay.portal.kernel.lar.DataHandlerContextThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
-import com.liferay.portal.util.PortletKeys;
-import com.liferay.portlet.bookmarks.model.BookmarksFolder;
-import com.liferay.portlet.bookmarks.service.BookmarksFolderLocalServiceUtil;
+import com.liferay.portlet.asset.model.AssetCategory;
+import com.liferay.portlet.asset.model.AssetCategoryConstants;
+import com.liferay.portlet.asset.model.AssetVocabulary;
+import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
+import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
 
 import java.util.Map;
 
 /**
  * @author Mate Thurzo
  */
-public class BookmarksFolderDataHandlerImpl
-	extends BaseDataHandlerImpl<BookmarksFolder>
-	implements BookmarksFolderDataHandler {
-
-
-	public void deserialize(Document document) {
-	}
+public class AssetCategoryDataHandlerImpl
+	extends BaseDataHandlerImpl<AssetCategory>
+	implements AssetCategoryDataHandler {
 
 	@Override
-	public void doDigest(BookmarksFolder folder) throws Exception {
-		DataHandlerContext context = getDataHandlerContext();
+	public void doDigest(AssetCategory category) throws Exception {
+		DataHandlerContext context =
+			DataHandlerContextThreadLocal.getDataHandlerContext();
 
 		boolean exportPermissions = MapUtil.getBoolean(
 			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
 
-		LarDigest digest = context.getLarDigest();
+		AssetVocabulary vocabulary =
+			AssetVocabularyLocalServiceUtil.getAssetVocabulary(
+				category.getVocabularyId());
 
-		String path = getEntityPath(folder);
+		assetVocabularyDataHandler.digest(vocabulary);
+
+		if (category.getParentCategoryId() !=
+				AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) {
+
+			AssetCategory parentCategory =
+				AssetCategoryLocalServiceUtil.getCategory(
+					category.getParentCategoryId());
+
+			digest(parentCategory);
+		}
+
+		String path = getEntityPath(category);
 
 		if (context.isPathProcessed(path)) {
 			return;
 		}
 
+		LarDigest digest = context.getLarDigest();
+
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
 		if (exportPermissions) {
 			Map permissionsMap = digestEntityPermissions(
-				BookmarksFolder.class.getName(), context.getScopeGroupId());
+				AssetCategory.class.getName(), category.getCategoryId());
 
 			digestItem.setPermissions(permissionsMap);
 		}
 
 		digestItem.setAction(LarDigesterConstants.ACTION_ADD);
 		digestItem.setPath(path);
-		digestItem.setType(BookmarksFolder.class.getName());
-		digestItem.setClassPK(StringUtil.valueOf(folder.getFolderId()));
+		digestItem.setType(AssetCategory.class.getName());
+		digestItem.setClassPK(String.valueOf(category.getCategoryId()));
 
 		digest.write(digestItem);
 	}
 
-	public BookmarksFolder getEntity(String classPK) {
-		if (Validator.isNotNull(classPK)) {
-			try {
-				long folderId = Long.valueOf(classPK);
-
-				BookmarksFolder bookmarksFolder =
-					BookmarksFolderLocalServiceUtil.getBookmarksFolder(
-						folderId);
-
-				return bookmarksFolder;
-			}
-			catch (Exception e) {
-				return null;
-			}
+	@Override
+	public AssetCategory getEntity(String classPK) {
+		if (Validator.isNull(classPK)) {
+			return null;
 		}
 
-		return null;
+		try {
+			long categoryId = Long.valueOf(classPK);
+
+			AssetCategory category =
+				AssetCategoryLocalServiceUtil.getCategory(categoryId);
+
+			return category;
+		}
+		catch (Exception e) {
+			return null;
+		}
 	}
 
 }

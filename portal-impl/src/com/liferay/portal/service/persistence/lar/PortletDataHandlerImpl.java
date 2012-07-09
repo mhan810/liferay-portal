@@ -76,7 +76,7 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 	}
 
 	@Override
-	protected void doDigest(Portlet portlet) throws Exception {
+	public void doDigest(Portlet portlet) throws Exception {
 		return;
 	}
 
@@ -313,6 +313,11 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 
 	public boolean isPublishToLiveByDefault() {
 		return _PUBLISH_TO_LIVE_BY_DEFAULT;
+	}
+
+	@Override
+	public Portlet getEntity(String classPK) {
+		return null;
 	}
 
 	private static final Log _log =

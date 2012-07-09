@@ -27,9 +27,6 @@ import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
-import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
 import com.liferay.portal.lar.digest.LarDigest;
@@ -37,8 +34,9 @@ import com.liferay.portal.lar.digest.LarDigestImpl;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.*;
 import com.liferay.portal.service.*;
-import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
+import com.liferay.portal.service.persistence.lar.AssetCategoryDataHandler;
+import com.liferay.portal.service.persistence.lar.AssetVocabularyDataHandler;
 import com.liferay.portal.service.persistence.lar.LayoutDataHandler;
 import com.liferay.portal.service.persistence.lar.PortletDataHandler;
 import com.liferay.portal.theme.ThemeLoader;
@@ -115,8 +113,7 @@ public class LARExporter {
 		}
 	}
 
-	protected void doCreateDigest(
-			long[] layoutIds, DataHandlerContext context)
+	protected void doCreateDigest(long[] layoutIds, DataHandlerContext context)
 		throws Exception, PortalException {
 
 		long lastPublishDate = System.currentTimeMillis();
@@ -173,11 +170,8 @@ public class LARExporter {
 		metadata.put("export-date", Time.getRFC822());
 
 		if (context.hasDateRange()) {
-			metadata.put(
-				"start-date",
-				String.valueOf(context.getStartDate()));
-			metadata.put(
-				"end-date", String.valueOf(context.getEndDate()));
+			metadata.put("start-date", String.valueOf(context.getStartDate()));
+			metadata.put("end-date", String.valueOf(context.getEndDate()));
 		}
 
 		metadata.put("group-id", String.valueOf(group.getGroupId()));
@@ -251,12 +245,12 @@ public class LARExporter {
 
 		// Layouts
 
-		LayoutDataHandler layoutLarPersistence =
-			(LayoutDataHandler) DataHandlerLocatorUtil.locate(
-					Layout.class.getName());
+		LayoutDataHandler layoutDataHandler =
+			(LayoutDataHandler)DataHandlerLocatorUtil.locate(
+				Layout.class.getName());
 
 		for (Layout layout : layouts) {
-			layoutLarPersistence.digest(layout);
+			layoutDataHandler.digest(layout);
 		}
 
 		if (_log.isInfoEnabled()) {
@@ -283,8 +277,7 @@ public class LARExporter {
 			String type = item.getType();
 			String classPK = item.getClassPK();
 
-			BaseDataHandler dataHandler =
-				DataHandlerLocatorUtil.locate(type);
+			BaseDataHandler dataHandler = DataHandlerLocatorUtil.locate(type);
 
 			if (dataHandler != null) {
 				dataHandler.serialize(classPK);
@@ -292,41 +285,33 @@ public class LARExporter {
 		}
 	}
 
-	protected void exportAssetCategories(PortletDataContext portletDataContext)
+	protected void digestAssetCategories(DataHandlerContext context)
 			throws Exception {
-
-		Document document = SAXReaderUtil.createDocument();
-
-		Element rootElement = document.addElement("categories-hierarchy");
-
-		Element assetVocabulariesElement = rootElement.addElement(
-			"vocabularies");
 
 		List<AssetVocabulary> assetVocabularies =
 			AssetVocabularyLocalServiceUtil.getGroupVocabularies(
-				portletDataContext.getGroupId());
+				context.getGroupId());
+
+		AssetVocabularyDataHandler vocabularyDataHandler =
+			(AssetVocabularyDataHandler)DataHandlerLocatorUtil.locate(
+				AssetVocabulary.class.getName());
 
 		for (AssetVocabulary assetVocabulary : assetVocabularies) {
-			_portletExporter.exportAssetVocabulary(
-				portletDataContext, assetVocabulariesElement, assetVocabulary);
+			vocabularyDataHandler.digest(assetVocabulary);
 		}
-
-		Element categoriesElement = rootElement.addElement("categories");
 
 		List<AssetCategory> assetCategories = AssetCategoryUtil.findByGroupId(
-				portletDataContext.getGroupId());
+			context.getGroupId());
+
+		AssetCategoryDataHandler categoryDataHandler =
+			(AssetCategoryDataHandler)DataHandlerLocatorUtil.locate(
+				AssetCategory.class.getName());
 
 		for (AssetCategory assetCategory : assetCategories) {
-			_portletExporter.exportAssetCategory(
-				portletDataContext, assetVocabulariesElement, categoriesElement,
-				assetCategory);
+			categoryDataHandler.digest(assetCategory);
 		}
 
-		_portletExporter.exportAssetCategories(portletDataContext, rootElement);
-
-		portletDataContext.addZipEntry(
-			portletDataContext.getRootPath() + "/categories-hierarchy.xml",
-			document.formattedString());
+		//_portletExporter.exportAssetCategories(portletDataContext, rootElement);
 	}
 
 	protected void exportTheme(LayoutSet layoutSet, ZipWriter zipWriter)
@@ -457,6 +442,7 @@ public class LARExporter {
 
 				continue;
 			}
+
 			if (dataHandler != null) {
 				PortletDataHandler portletDataHandler =
 					(PortletDataHandler)dataHandler;

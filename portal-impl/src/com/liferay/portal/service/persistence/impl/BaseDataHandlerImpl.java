@@ -24,7 +24,7 @@ import com.liferay.portal.kernel.lar.PortletDataContextListener;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.KeyValuePair;
+import com.liferay.portal.kernel.staging.DataHandlerLocatorUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
@@ -43,6 +44,7 @@ import com.liferay.portal.model.AuditedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.ResourcedModel;
 import com.liferay.portal.model.Role;
@@ -50,6 +52,7 @@ import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.Team;
 import com.liferay.portal.security.permission.ResourceActionsUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.LockLocalServiceUtil;
 import com.liferay.portal.service.ResourceBlockLocalServiceUtil;
 import com.liferay.portal.service.ResourceBlockPermissionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
@@ -57,6 +60,9 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.TeamLocalServiceUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
+import com.liferay.portal.service.persistence.lar.AssetCategoryDataHandler;
+import com.liferay.portal.service.persistence.lar.AssetLinkDataHandler;
+import com.liferay.portal.service.persistence.lar.AssetVocabularyDataHandler;
 import com.liferay.portal.service.persistence.lar.BookmarksEntryDataHandler;
 import com.liferay.portal.service.persistence.lar.BookmarksFolderDataHandler;
 import com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandler;
@@ -64,9 +70,23 @@ import com.liferay.portal.service.persistence.lar.ImageDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalArticleDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalStructureDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalTemplateDataHandler;
-import com.liferay.portal.service.persistence.lar.PortletDataHandler;
+import com.liferay.portal.service.persistence.lar.LockDataHandler;
 import com.liferay.portal.service.persistence.lar.PortletPreferencesDataHandler;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.asset.model.AssetCategory;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.model.AssetLink;
+import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
+import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.portlet.asset.service.AssetLinkLocalServiceUtil;
+import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.expando.model.ExpandoBridge;
+import com.liferay.portlet.messageboards.model.MBDiscussion;
+import com.liferay.portlet.messageboards.model.MBMessage;
+import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
+import com.liferay.portlet.messageboards.service.persistence.MBDiscussionUtil;
+import com.liferay.portlet.ratings.model.RatingsEntry;
+import com.liferay.portlet.ratings.service.RatingsEntryLocalServiceUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,7 +94,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -82,7 +101,7 @@ import java.util.Set;
 /**
  * @author Mate Thurzo
  */
-public class BaseDataHandlerImpl<T extends BaseModel<T>>
+public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	implements BaseDataHandler<T> {
 
 	public void addZipEntry(String path, T object) throws SystemException {
@@ -186,6 +205,41 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 	public void digest(T object) throws Exception {
 		doDigest(object);
+
+		if (isResourceMain(object)) {
+			digestAssetLinks(object);
+			digestLocks(object);
+
+			DataHandlerContext context =
+				DataHandlerContextThreadLocal.getDataHandlerContext();
+
+			boolean portletMetadataAll = context.getBooleanParameter(
+				getNamespace(), PortletDataHandlerKeys.PORTLET_METADATA_ALL);
+
+			if (portletMetadataAll ||
+					context.getBooleanParameter(getNamespace(), "categories")) {
+
+				digestAssetCategories(object);
+			}
+
+			if (portletMetadataAll ||
+					context.getBooleanParameter(getNamespace(), "comments")) {
+
+				digestComments(object);
+			}
+
+			if (portletMetadataAll ||
+					context.getBooleanParameter(getNamespace(), "ratings")) {
+
+				digestRatingsEntries(object);
+			}
+
+			if (portletMetadataAll ||
+					context.getBooleanParameter(getNamespace(), "tags")) {
+
+				digestAssetTags(object);
+			}
+		}
 
 		String path = getEntityPath(object);
 
@@ -408,9 +462,8 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 	}
 
-	protected T getEntity(String classPK) {
-		return null;
-	}
+	// TODO re-think this method
+	public abstract T getEntity(String classPK);
 
 	public String toXML(Object object) {
 		return getXStreamWrapper().toXML(object);
@@ -452,6 +505,126 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 
 		return null;
+	}
+
+	protected void digestAssetCategories(T object) throws Exception {
+		long classPK = getClassPK(object);
+
+		List<AssetCategory> assetCategories =
+			AssetCategoryLocalServiceUtil.getCategories(
+				object.getClass().getName(), classPK);
+
+		for (AssetCategory assetCategory : assetCategories) {
+			assetCategoryDataHandler.digest(assetCategory);
+		}
+	}
+
+	protected void digestAssetLinks(T object)
+		throws Exception {
+
+		if (!isResourceMain(object)) {
+			return;
+		}
+
+		AssetEntry assetEntry = null;
+
+		try {
+			long classPK = getClassPK(object);
+
+			assetEntry = AssetEntryLocalServiceUtil.getEntry(
+				object.getClass().getName(), classPK);
+		}
+		catch (Exception e) {
+			return;
+		}
+
+		List<AssetLink> directAssetLinks =
+			AssetLinkLocalServiceUtil.getDirectLinks(assetEntry.getEntryId());
+
+		if (directAssetLinks.isEmpty()) {
+			return;
+		}
+
+		Map<Integer, List<AssetLink>> assetLinksMap =
+			new HashMap<Integer, List<AssetLink>>();
+
+		for (AssetLink assetLink : directAssetLinks) {
+			List<AssetLink> assetLinks = assetLinksMap.get(assetLink.getType());
+
+			if (assetLinks == null) {
+				assetLinks = new ArrayList<AssetLink>();
+
+				assetLinksMap.put(assetLink.getType(), assetLinks);
+			}
+
+			assetLinks.add(assetLink);
+		}
+
+		for (Map.Entry<Integer, List<AssetLink>> entry :
+				assetLinksMap.entrySet()) {
+
+			int assetLinkType = entry.getKey();
+			List<AssetLink> assetLinks = entry.getValue();
+
+			List<String> assetLinkUuids = new ArrayList<String>(
+				directAssetLinks.size());
+
+			for (AssetLink assetLink : assetLinks) {
+				assetLinkDataHandler.digest(assetLink);
+			}
+		}
+	}
+
+	protected void digestAssetTags(T object) throws Exception {
+		long classPK = getClassPK(object);
+
+		String[] tagNames = AssetTagLocalServiceUtil.getTagNames(
+			object.getClass().getName(), classPK);
+
+		for (String tagName : tagNames) {
+			// TODO create AssetTagDataHandler
+		}
+	}
+
+	protected void digestComments(T object) throws Exception {
+		long classNameId = PortalUtil.getClassNameId(
+			object.getClass().getName());
+
+		long classPK = getClassPK(object);
+
+		MBDiscussion discussion = MBDiscussionUtil.fetchByC_C(
+			classNameId, classPK);
+
+		if (discussion == null) {
+			return;
+		}
+
+		List<MBMessage> messages = MBMessageLocalServiceUtil.getThreadMessages(
+			discussion.getThreadId(), WorkflowConstants.STATUS_APPROVED);
+
+		if (messages.size() == 0) {
+			return;
+		}
+
+		for (MBMessage message : messages) {
+			// TODO create MBMessageDataHandler
+		}
+	}
+
+	protected void digestLocks(T object) throws Exception {
+		String key = String.valueOf(object.getPrimaryKeyObj());
+
+		if (LockLocalServiceUtil.isLocked(object.getClass().getName(), key)) {
+
+			Lock lock = LockLocalServiceUtil.getLock(
+				object.getClass().getName(), key);
+
+			LockDataHandler lockDataHandler =
+				(LockDataHandler)DataHandlerLocatorUtil.locate(
+					Lock.class.getName());
+
+			lockDataHandler.digest(lock);
+		}
 	}
 
 	protected Map<String, List<String>> digestPermissions(
@@ -508,6 +681,22 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 
 		return roleMap;
+	}
+
+	protected void digestRatingsEntries(T object) throws Exception {
+		long classPK = getClassPK(object);
+
+		List<RatingsEntry> ratingsEntries =
+			RatingsEntryLocalServiceUtil.getEntries(
+				object.getClass().getName(), classPK);
+
+		if (ratingsEntries.size() == 0) {
+			return;
+		}
+
+		for (RatingsEntry entry : ratingsEntries) {
+			// TODO create RatingsEntryDataHandler
+		}
 	}
 
 	protected Map<String, List<String>> digestEntityPermissions(
@@ -594,9 +783,7 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 			getPrimaryKeyString(resourceName, resourcePK), permissions);*/
 	}
 
-	protected void doDigest(T object) throws Exception {
-		return;
-	}
+	public abstract void doDigest(T object) throws Exception;
 
 	protected void doImport(LarDigestItem item) throws Exception{
 		return;
@@ -624,6 +811,10 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 					companyId, className, ResourceConstants.SCOPE_INDIVIDUAL,
 					String.valueOf(primKey), roleIds, actionIds);
 		}
+	}
+
+	protected String getNamespace() {
+		return StringPool.BLANK;
 	}
 
 	protected String getExpandoPath(String path) {
@@ -712,5 +903,11 @@ public class BaseDataHandlerImpl<T extends BaseModel<T>>
 	protected BookmarksPortletDataHandler bookmarksPortletDataHandler;
 	@BeanReference(type = PortletPreferencesDataHandler.class)
 	protected PortletPreferencesDataHandler portletPreferencesDataHandler;
+	@BeanReference(type = AssetVocabularyDataHandler.class)
+	protected AssetVocabularyDataHandler assetVocabularyDataHandler;
+	@BeanReference(type = AssetCategoryDataHandler.class)
+	protected AssetCategoryDataHandler assetCategoryDataHandler;
+	@BeanReference(type = AssetLinkDataHandler.class)
+	protected AssetLinkDataHandler assetLinkDataHandler;
 
 }

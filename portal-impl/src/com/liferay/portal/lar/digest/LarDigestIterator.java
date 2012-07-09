@@ -16,7 +16,6 @@ package com.liferay.portal.lar.digest;
 
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.xml.StAXReaderUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +65,7 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 		catch (Exception e) {
 			return false;
 		}
-	}  */
+	} */
 
 	public boolean hasNext() {
 		try {
@@ -92,7 +91,7 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 	}
 
 	public LarDigestItem next() {
-		if(!hasNext()) {
+		if (!hasNext()) {
 			return null;
 		}
 
@@ -144,7 +143,7 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 							permissions.put(roleName, actionNames);
 						}
 
-						while(_xmlStreamReader.hasNext()) {
+						while (_xmlStreamReader.hasNext()) {
 							elementName = _xmlStreamReader.getLocalName();
 
 							if (_xmlStreamReader.isEndElement() &&

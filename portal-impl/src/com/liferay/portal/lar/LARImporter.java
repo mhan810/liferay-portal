@@ -22,7 +22,6 @@ import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.NoSuchLayoutPrototypeException;
 import com.liferay.portal.NoSuchLayoutSetPrototypeException;
 import com.liferay.portal.kernel.lar.*;
-import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
@@ -43,7 +42,6 @@ import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutPrototype;
-import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionCacheUtil;
@@ -56,11 +54,9 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.LayoutUtil;
-import com.liferay.portal.service.persistence.lar.PortletDataHandlerImpl;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
-import org.apache.commons.lang.time.StopWatch;
 
 import java.io.File;
 
@@ -69,6 +65,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.commons.lang.time.StopWatch;
 
 /**
  * @author Daniel Kocsis
@@ -287,8 +285,7 @@ public class LARImporter {
 				metaData.get("type-uuid"));
 		}
 
-		context.setAttribute(
-			"layoutSetPrototypeUuid", layoutSetPrototypeUuid);
+		context.setAttribute("layoutSetPrototypeUuid", layoutSetPrototypeUuid);
 
 		context.setAttribute(
 			"layoutSetPrototypeLinkEnabled", layoutSetPrototypeLinkEnabled);
@@ -309,7 +306,7 @@ public class LARImporter {
 		_portletImporter.readComments(portletDataContext);
 		_portletImporter.readExpandoTables(portletDataContext);
 		_portletImporter.readLocks(portletDataContext);
-		_portletImporter.readRatingsEntries(portletDataContext);  */
+		_portletImporter.readRatingsEntries(portletDataContext); */
 
 		// Layouts
 
@@ -362,8 +359,8 @@ public class LARImporter {
 		context.setAttribute("previousLayouts", previousLayouts);
 
 		for (LarDigestItem item : larDigest) {
-			BaseDataHandler larPesistence =
-				DataHandlerLocatorUtil.locate(item.getType());
+			BaseDataHandler larPesistence = DataHandlerLocatorUtil.locate(
+				item.getType());
 
 			larPesistence.importData(item);
 		}
@@ -500,8 +497,7 @@ public class LARImporter {
 			long groupId, Map<String, String[]> parameters)
 		throws Exception {
 
-		DataHandlerContext context =
-			new DataHandlerContextImpl();
+		DataHandlerContext context = new DataHandlerContextImpl();
 
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 
@@ -511,12 +507,10 @@ public class LARImporter {
 
 		context.setParameters(parameters);
 
-		DataHandlerContextThreadLocal.setDataHandlerContext(
-				context);
+		DataHandlerContextThreadLocal.setDataHandlerContext(context);
 
 		return context;
 	}
-
 
 	private static Log _log = LogFactoryUtil.getLog(LARImporter.class);
 

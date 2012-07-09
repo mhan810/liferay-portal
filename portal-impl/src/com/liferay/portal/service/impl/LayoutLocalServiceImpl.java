@@ -710,8 +710,8 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			LARExporter larExporter = new LARExporter();
 
 			larExporter.digest(
-				groupId, privateLayout, layoutIds, parameterMap,
-				startDate, endDate);
+				groupId, privateLayout, layoutIds, parameterMap, startDate,
+				endDate);
 
 			return larExporter.export(
 				groupId, privateLayout, null, parameterMap, startDate, endDate);
