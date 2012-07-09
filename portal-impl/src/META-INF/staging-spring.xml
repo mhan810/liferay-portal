@@ -53,6 +53,7 @@
 				<entry key="com.liferay.portlet.bookmarks.model.BookmarksEntry" value="com.liferay.portal.service.persistence.lar.BookmarksEntryDataHandler" />
 				<entry key="com.liferay.portlet.bookmarks.model.BookmarksFolder" value="com.liferay.portal.service.persistence.lar.BookmarksFolderDataHandler" />
 				<entry key="com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandlerImpl" value="com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandler" />
+				<entry key="com.liferay.portal.model.LayoutSet" value="com.liferay.portal.service.persistence.lar.LayoutSetDataHandler" />
 				<entry key="com.liferay.portal.model.PortletPreferences" value="com.liferay.portal.service.persistence.lar.PortletPreferencesDataHandler" />
 				<entry key="com.liferay.portlet.asset.model.AssetVocabulary" value="com.liferay.portal.service.persistence.lar.AssetVocabuaryDataHandler" />
 				<entry key="com.liferay.portlet.asset.model.AssetCategory" value="com.liferay.portal.service.persistence.lar.AssetCategoryDataHandler" />

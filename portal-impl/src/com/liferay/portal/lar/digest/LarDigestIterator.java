@@ -14,7 +14,6 @@
 
 package com.liferay.portal.lar.digest;
 
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
@@ -23,11 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.events.EndElement;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
 
 import static com.liferay.portal.lar.digest.LarDigesterConstants.*;
 
@@ -36,36 +31,9 @@ import static com.liferay.portal.lar.digest.LarDigesterConstants.*;
  */
 public class LarDigestIterator implements Iterator<LarDigestItem> {
 
-	public LarDigestIterator(XMLEventReader digestXMLEventReader) {
-		_xmlEventReader = digestXMLEventReader;
-	}
-
 	public LarDigestIterator(XMLStreamReader digestXMLStreamReader) {
 		_xmlStreamReader = digestXMLStreamReader;
 	}
-
-	/*public boolean hasNext() {
-		try {
-			while (_xmlEventReader.hasNext()) {
-				XMLEvent nextEvent = _xmlEventReader.peek();
-
-				String nextStartElementName = _getElementName(nextEvent);
-
-				if (nextEvent.isStartElement()) {
-					if (nextStartElementName.equals(NODE_DIGEST_ITEM_LABEL)) {
-						return true;
-					}
-				}
-
-				nextEvent = _xmlEventReader.nextEvent();
-			}
-
-			return false;
-		}
-		catch (Exception e) {
-			return false;
-		}
-	} */
 
 	public boolean hasNext() {
 		try {
@@ -91,7 +59,7 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 	}
 
 	public LarDigestItem next() {
-		if (!hasNext()) {
+		if(!hasNext()) {
 			return null;
 		}
 
@@ -143,7 +111,7 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 							permissions.put(roleName, actionNames);
 						}
 
-						while (_xmlStreamReader.hasNext()) {
+						while(_xmlStreamReader.hasNext()) {
 							elementName = _xmlStreamReader.getLocalName();
 
 							if (_xmlStreamReader.isEndElement() &&
@@ -185,22 +153,6 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 		throw new UnsupportedOperationException();
 	}
 
-	private String _getElementName(XMLEvent event) {
-		if (event.isStartElement()) {
-			StartElement startElement = event.asStartElement();
-
-			return startElement.getName().getLocalPart();
-		}
-		else if (event.isEndElement()) {
-			EndElement endElement = event.asEndElement();
-
-			return endElement.getName().getLocalPart();
-		}
-
-		return StringPool.BLANK;
-	}
-
-	private XMLEventReader _xmlEventReader;
 	private XMLStreamReader _xmlStreamReader;
 
 }
