@@ -30,6 +30,7 @@ import com.liferay.portlet.bookmarks.model.BookmarksFolderConstants;
 import com.liferay.portlet.bookmarks.service.persistence.BookmarksEntryUtil;
 import com.liferay.portlet.bookmarks.service.persistence.BookmarksFolderUtil;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,24 +43,28 @@ public class BookmarksPortletDataHandlerImpl
 
 	@Override
 	public void doDigest(Portlet portlet) throws Exception {
-		DataHandlerContext context =
-			getDataHandlerContext();
+		DataHandlerContext context = getDataHandlerContext();
 
-		/*portletDataContext.addPermissions(
-			"com.liferay.portlet.bookmarks",
-			portletDataContext.getScopeGroupId());*/
+		boolean exportPermissions = MapUtil.getBoolean(
+			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
 
 		LarDigest digest = context.getLarDigest();
 
 		LarDigestItem item = new LarDigestItemImpl();
 
+		if (context.getPlid() > 0) {
+			//portlet is on a layout, add plid to metadata
+			Map metadataMap = new HashMap<String, String>();
+
+			metadataMap.put("layoutPlid", context.getPlid());
+
+			item.setMetadata(metadataMap);
+		}
+
 		item.setAction(LarDigesterConstants.ACTION_ADD);
 		item.setType("com.liferay.portlet.bookmarks");
 		item.setClassPK(portlet.getPortletId());
 		item.setPath(getPortletPath(portlet.getPortletId()));
-
-		boolean exportPermissions = MapUtil.getBoolean(
-			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
 
 		if (exportPermissions) {
 			Map permissionsMap = digestEntityPermissions(
@@ -124,6 +129,10 @@ public class BookmarksPortletDataHandlerImpl
 	@Override
 	public boolean isPublishToLiveByDefault() {
 		return _PUBLISH_TO_LIVE_BY_DEFAULT;
+	}
+
+	protected String getNamespace() {
+		return _NAMESPACE;
 	}
 
 	private void exportEntry(

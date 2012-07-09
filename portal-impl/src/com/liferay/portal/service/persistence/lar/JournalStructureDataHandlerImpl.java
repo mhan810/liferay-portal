@@ -31,7 +31,7 @@ public class JournalStructureDataHandlerImpl
 	implements JournalStructureDataHandler {
 
 	@Override
-	protected void doDigest(JournalStructure structure) throws Exception {
+	public void doDigest(JournalStructure structure) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
 		String path = getEntityPath(structure);
@@ -57,4 +57,24 @@ public class JournalStructureDataHandlerImpl
 		/*portletDataContext.addClassedModel(
 			path, structure, JournalPortletDataHandler._NAMESPACE);*/
 	}
+
+	@Override
+	public JournalStructure getEntity(String classPK) {
+		if (Validator.isNull(classPK)) {
+			return null;
+		}
+
+		try {
+			long structureId = Long.valueOf(classPK);
+
+			JournalStructure structure =
+				JournalStructureLocalServiceUtil.getStructure(structureId);
+
+			return structure;
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
+
 }

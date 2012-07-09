@@ -325,7 +325,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 			addPermissions(clazz, classPK);
 
 			boolean portletMetadataAll = getBooleanParameter(
-					namespace, PortletDataHandlerKeys.PORTLET_METADATA_ALL);
+				namespace, PortletDataHandlerKeys.PORTLET_METADATA_ALL);
 
 			if (portletMetadataAll ||
 					getBooleanParameter(namespace, "categories")) {

@@ -573,7 +573,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				layout.getGroupId(), layout.isPrivateLayout(), parentLayoutId);
 
 			if (parentLayout != null) {
-				//TODO digest parent layout
+				digest(parentLayout);
 			}
 		}
 

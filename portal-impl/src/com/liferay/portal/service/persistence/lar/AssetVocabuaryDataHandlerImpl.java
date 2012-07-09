@@ -17,38 +17,36 @@ package com.liferay.portal.service.persistence.lar;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
-import com.liferay.portal.util.PortletKeys;
-import com.liferay.portlet.bookmarks.model.BookmarksEntry;
-import com.liferay.portlet.bookmarks.service.BookmarksEntryLocalServiceUtil;
+import com.liferay.portlet.asset.model.AssetVocabulary;
+import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
 
 import java.util.Map;
 
 /**
  * @author Mate Thurzo
  */
-public class BookmarksEntryDataHandlerImpl
-	extends BaseDataHandlerImpl<BookmarksEntry>
-	implements BookmarksEntryDataHandler {
+public class AssetVocabuaryDataHandlerImpl
+	extends BaseDataHandlerImpl<AssetVocabulary>
+	implements AssetVocabularyDataHandler {
 
-	public void deserialize(Document document) {
-	}
 
 	@Override
-	public void doDigest(BookmarksEntry entry) throws Exception {
+	public void doDigest(AssetVocabulary vocabulary) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
+
+		boolean exportPermissions = MapUtil.getBoolean(
+			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
 
 		LarDigest digest = context.getLarDigest();
 
-		String path = getEntityPath(entry);
+		String path = getEntityPath(vocabulary);
 
 		if (context.isPathProcessed(path)) {
 			return;
@@ -56,40 +54,38 @@ public class BookmarksEntryDataHandlerImpl
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
-		boolean exportPermissions = MapUtil.getBoolean(
-			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
-
 		if (exportPermissions) {
 			Map permissionsMap = digestEntityPermissions(
-				BookmarksEntry.class.getName(), entry.getEntryId());
+				AssetVocabulary.class.getName(), vocabulary.getVocabularyId());
 
 			digestItem.setPermissions(permissionsMap);
 		}
 
 		digestItem.setAction(LarDigesterConstants.ACTION_ADD);
 		digestItem.setPath(path);
-		digestItem.setType(BookmarksEntry.class.getName());
-		digestItem.setClassPK(StringUtil.valueOf(entry.getEntryId()));
+		digestItem.setType(AssetVocabulary.class.getName());
+		digestItem.setClassPK(StringUtil.valueOf(vocabulary.getVocabularyId()));
 
 		digest.write(digestItem);
 	}
 
-	public BookmarksEntry getEntity(String classPK) {
-		if (Validator.isNotNull(classPK)) {
-			try {
-				long entryId = Long.valueOf(classPK);
-
-				BookmarksEntry bookmarksEntry =
-					BookmarksEntryLocalServiceUtil.getBookmarksEntry(entryId);
-
-				return bookmarksEntry;
-			}
-			catch (Exception e) {
-				return null;
-			}
+	@Override
+	public AssetVocabulary getEntity(String classPK) {
+		if (Validator.isNull(classPK)) {
+			return null;
 		}
 
-		return null;
-	}
+		try {
+			long vocabularyId = Long.valueOf(classPK);
 
+			AssetVocabulary assetVocabulary =
+				AssetVocabularyLocalServiceUtil.getAssetVocabulary(
+					vocabularyId);
+
+			return assetVocabulary;
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
 }

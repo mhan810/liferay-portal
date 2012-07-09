@@ -15,25 +15,26 @@
 package com.liferay.portal.lar.digest;
 
 import com.liferay.portal.kernel.util.FileUtil;
-import com.liferay.portal.model.Layout;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.ExecutionTestListeners;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 
 import java.io.File;
+
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.portlet.Portlet;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.powermock.api.mockito.PowerMockito;
-
-import javax.portlet.Portlet;
 
 /**
  * @author Daniel Kocsis
