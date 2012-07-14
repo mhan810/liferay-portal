@@ -457,6 +457,30 @@ public class ArrayUtil_IW {
 		return ArrayUtil.toStringArray(array);
 	}
 
+	public byte[] unique(byte[] array) {
+		return ArrayUtil.unique(array);
+	}
+
+	public double[] unique(double[] array) {
+		return ArrayUtil.unique(array);
+	}
+
+	public float[] unique(float[] array) {
+		return ArrayUtil.unique(array);
+	}
+
+	public int[] unique(int[] array) {
+		return ArrayUtil.unique(array);
+	}
+
+	public long[] unique(long[] array) {
+		return ArrayUtil.unique(array);
+	}
+
+	public short[] unique(short[] array) {
+		return ArrayUtil.unique(array);
+	}
+
 	private ArrayUtil_IW() {
 	}
 

@@ -168,9 +168,9 @@ public class ExportUsersAction extends PortletAction {
 			params.put("usersOrgs", new Long(organizationId));
 		}
 		else if (!exportAllUsers) {
-			User currentUser = themeDisplay.getUser();
+			User user = themeDisplay.getUser();
 
-			long[] organizationIds = currentUser.getOrganizationIds(true);
+			long[] organizationIds = user.getOrganizationIds(true);
 
 			if (organizationIds.length > 0) {
 				params.put("usersOrgs", organizationIds);

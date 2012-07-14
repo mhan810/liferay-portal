@@ -204,6 +204,8 @@ public class AssetVocabularyLocalServiceImpl
 
 		List<AssetVocabulary> vocabularies = new ArrayList<AssetVocabulary>();
 
+		groupIds = ArrayUtil.unique(groupIds);
+
 		for (long groupId : groupIds) {
 			List<AssetVocabulary> groupVocabularies = getGroupVocabularies(
 				groupId);
