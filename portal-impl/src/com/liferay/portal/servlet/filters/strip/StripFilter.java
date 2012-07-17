@@ -381,6 +381,10 @@ public class StripFilter extends BasePortalFilter {
 			CharBuffer charBuffer, Writer writer, char[] openTag)
 		throws Exception {
 
+		if (!PropsValues.STRIP_JAVASCRIPT_ENABLED) {
+			return;
+		}
+
 		int endPos = openTag.length + 1;
 
 		char c = charBuffer.charAt(openTag.length);

@@ -2083,6 +2083,8 @@ public interface PropsKeys {
 
 	public static final String STRIP_IGNORE_PATHS = "strip.ignore.paths";
 
+	public static final String STRIP_JAVASCRIPT_ENABLED = "strip.javascript.enabled";
+
 	public static final String STRUTS_PORTLET_REQUEST_PROCESSOR = "struts.portlet.request.processor";
 
 	public static final String SYSTEM_GROUPS = "system.groups";
