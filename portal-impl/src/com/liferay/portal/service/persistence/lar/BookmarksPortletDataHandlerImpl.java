@@ -60,7 +60,7 @@ public class BookmarksPortletDataHandlerImpl
 			//portlet is on a layout, add plid to metadata
 			Map metadataMap = new HashMap<String, String>();
 
-			metadataMap.put("layoutPlid", context.getPlid());
+			metadataMap.put("layoutPlid", String.valueOf(context.getPlid()));
 
 			item.setMetadata(metadataMap);
 		}
