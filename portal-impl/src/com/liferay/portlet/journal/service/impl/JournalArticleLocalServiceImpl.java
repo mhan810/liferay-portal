@@ -3425,9 +3425,14 @@ public class JournalArticleLocalServiceImpl
 			Date displayDate = dateInterval[0];
 			Date expirationDate = dateInterval[1];
 
-			assetEntryLocalService.updateEntry(
+			AssetEntry assetEntry = assetEntryLocalService.updateEntry(
 				JournalArticle.class.getName(), article.getResourcePrimKey(),
 				displayDate, expirationDate, true);
+
+			assetEntry.setModifiedDate(
+				previousApprovedArticle.getModifiedDate());
+
+			assetEntryPersistence.update(assetEntry, false);
 
 			if (article.isIndexable()) {
 				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(

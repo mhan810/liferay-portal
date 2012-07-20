@@ -84,7 +84,7 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 
 		updateLayoutTemplateId(_layoutSetPrototypeLayout, "1_column");
 
-		_layoutSetPrototypeJournalArticle = addArticle(
+		_layoutSetPrototypeJournalArticle = addJournalArticle(
 			_layoutSetPrototypeGroup.getGroupId(), 0, "Test Article",
 			"Test Content");
 
@@ -199,7 +199,7 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 
 	}
 
-	protected JournalArticle addArticle(
+	protected JournalArticle addJournalArticle(
 			long groupId, long folderId, String name, String content)
 		throws Exception {
 

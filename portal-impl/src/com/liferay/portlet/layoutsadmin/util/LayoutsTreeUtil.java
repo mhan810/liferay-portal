@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.layoutsadmin.util;
 
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -51,16 +52,16 @@ public class LayoutsTreeUtil {
 
 	public static String getLayoutsJSON(
 			HttpServletRequest request, long groupId, boolean privateLayout,
-			long parentLayoutId)
+			long parentLayoutId, boolean incomplete)
 		throws Exception {
 
 		return getLayoutsJSON(
-			request, groupId, privateLayout, parentLayoutId, null);
+			request, groupId, privateLayout, parentLayoutId, null, incomplete);
 	}
 
 	public static String getLayoutsJSON(
 			HttpServletRequest request, long groupId, boolean privateLayout,
-			long parentLayoutId, long[] expandedLayoutIds)
+			long parentLayoutId, long[] expandedLayoutIds, boolean incomplete)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
@@ -71,7 +72,8 @@ public class LayoutsTreeUtil {
 		List<Layout> layoutAncestors = null;
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			groupId, privateLayout, parentLayoutId);
+			groupId, privateLayout, parentLayoutId, incomplete,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
 		long selPlid = ParamUtil.getLong(request, "selPlid");
 
@@ -118,13 +120,14 @@ public class LayoutsTreeUtil {
 					childrenJSON = getLayoutsJSON(
 						request, virtualLayout.getSourceGroupId(),
 						virtualLayout.getPrivateLayout(),
-						virtualLayout.getLayoutId(), expandedLayoutIds);
+						virtualLayout.getLayoutId(), expandedLayoutIds,
+						incomplete);
 
 				}
 				else {
 					childrenJSON = getLayoutsJSON(
 						request, groupId, layout.getPrivateLayout(),
-						layout.getLayoutId(), expandedLayoutIds);
+						layout.getLayoutId(), expandedLayoutIds, incomplete);
 				}
 
 				jsonObject.put(
