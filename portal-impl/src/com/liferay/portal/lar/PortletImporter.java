@@ -194,7 +194,7 @@ public class PortletImporter {
 		}
 
 		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
+			portlet.getLegacyPortletDataHandlerInstance();
 
 		if (portletDataHandler == null) {
 			if (_log.isDebugEnabled()) {
@@ -335,8 +335,8 @@ public class PortletImporter {
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
 			portletDataContext.getCompanyId(), portletId);
 
-		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
+		PortletDataHandler portletDataHandler = null;
+			//portlet.getPortletDataHandlerInstance();
 
 		if (portletDataHandler.isDataLocalized()) {
 			Element sourceAvailableLocalesElement = rootElement.element(
@@ -1024,7 +1024,7 @@ public class PortletImporter {
 		}
 
 		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
+			portlet.getLegacyPortletDataHandlerInstance();
 
 		if (portletDataHandler == null) {
 			if (_log.isDebugEnabled()) {
@@ -1885,8 +1885,9 @@ public class PortletImporter {
 			Portlet portlet = PortletLocalServiceUtil.getPortletById(
 				portletDataContext.getCompanyId(), portletId);
 
-			PortletDataHandler portletDataHandler =
-				portlet.getPortletDataHandlerInstance();
+			PortletDataHandler portletDataHandler = null;
+			/*PortletDataHandler portletDataHandler =
+				portlet.getPortletDataHandlerInstance();*/
 
 			// Portlet preferences to be updated only when importing data
 

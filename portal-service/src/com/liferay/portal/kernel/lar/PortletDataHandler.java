@@ -26,6 +26,7 @@ import javax.portlet.PortletPreferences;
  * @author Raymond Augé
  * @author Joel Kozikowski
  * @author Bruno Farache
+ * @author Mate Thurzo
  */
 public interface PortletDataHandler {
 
@@ -42,6 +43,7 @@ public interface PortletDataHandler {
 	 *         this data handler.
 	 * @throws PortletDataException if a portlet data exception occurred
 	 */
+	@Deprecated
 	public PortletPreferences deleteData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
@@ -60,6 +62,7 @@ public interface PortletDataHandler {
 	 *         data is to be written out.
 	 * @throws PortletDataException if a portlet data exception occurred
 	 */
+	@Deprecated
 	public String exportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
@@ -134,6 +137,7 @@ public interface PortletDataHandler {
 	 *         this data handler.
 	 * @throws PortletDataException if a portlet data exception occurred
 	 */
+	@Deprecated
 	public PortletPreferences importData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences, String data)
