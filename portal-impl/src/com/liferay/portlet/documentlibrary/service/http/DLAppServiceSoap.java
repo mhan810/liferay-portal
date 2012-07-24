@@ -2205,7 +2205,8 @@ public class DLAppServiceSoap {
 	}
 
 	/**
-	* @deprecated Use {@link #checkInFileEntry(long, boolean, String, ServiceContext)}.
+	* @deprecated Use {@link #checkInFileEntry(long, boolean, String,
+	ServiceContext)}.
 	*/
 	public static void unlockFileEntry(long fileEntryId)
 		throws RemoteException {
