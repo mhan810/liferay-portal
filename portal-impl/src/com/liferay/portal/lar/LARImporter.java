@@ -228,7 +228,10 @@ public class LARImporter {
 
 		// Layout prototypes validation
 
-		//validateLayoutPrototypes(companyId, layoutsElement, layoutElements);
+		List<LarDigestItem> layoutItems = larDigest.findDigestItems(
+			0, null, Layout.class.getName(),null);
+
+		validateLayoutPrototypes(companyId, metaData, layoutItems);
 
 		// Group id
 
@@ -434,15 +437,14 @@ public class LARImporter {
 		zipReader.close();
 	}
 
-	// toDo: review this method!
 	protected void validateLayoutPrototypes(
-			long companyId, Element layoutsElement,
-			List<Element> layoutElements)
+			long companyId, Map<String, String> metadata,
+			List<LarDigestItem> layoutItems)
 		throws Exception {
 
 		List<Tuple> missingLayoutPrototypes = new ArrayList<Tuple>();
 
-		String layoutSetPrototypeUuid = layoutsElement.attributeValue(
+		String layoutSetPrototypeUuid = metadata.get(
 			"layout-set-prototype-uuid");
 
 		if (Validator.isNotNull(layoutSetPrototypeUuid)) {
@@ -452,7 +454,7 @@ public class LARImporter {
 						layoutSetPrototypeUuid, companyId);
 			}
 			catch (NoSuchLayoutSetPrototypeException nlspe) {
-				String layoutSetPrototypeName = layoutsElement.attributeValue(
+				String layoutSetPrototypeName = metadata.get(
 					"layout-set-prototype-name");
 
 				missingLayoutPrototypes.add(
@@ -462,9 +464,11 @@ public class LARImporter {
 			}
 		}
 
-		for (Element layoutElement : layoutElements) {
-			String layoutPrototypeUuid = GetterUtil.getString(
-				layoutElement.attributeValue("layout-prototype-uuid"));
+		for (LarDigestItem layoutItem : layoutItems) {
+			Map<String, String> layoutMetadata = layoutItem.getMetadata();
+
+			String layoutPrototypeUuid = layoutMetadata.get(
+				"layout-prototype-uuid");
 
 			if (Validator.isNotNull(layoutPrototypeUuid)) {
 				try {
@@ -473,8 +477,8 @@ public class LARImporter {
 							layoutPrototypeUuid, companyId);
 				}
 				catch (NoSuchLayoutPrototypeException nslpe) {
-					String layoutPrototypeName = GetterUtil.getString(
-						layoutElement.attributeValue("layout-prototype-name"));
+					String layoutPrototypeName = layoutMetadata.get(
+						"layout-prototype-name");
 
 					missingLayoutPrototypes.add(
 						new Tuple(

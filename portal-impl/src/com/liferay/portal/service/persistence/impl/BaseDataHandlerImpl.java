@@ -15,6 +15,7 @@
 package com.liferay.portal.service.persistence.impl;
 
 import com.liferay.portal.NoSuchRoleException;
+import com.liferay.portal.NoSuchTeamException;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -29,7 +30,10 @@ import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.portlet.ProtectedActionRequest;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -106,6 +110,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -863,6 +868,10 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return StringPool.BLANK;
 	}
 
+	protected DataHandlerContext getDataHandlerContext() {
+		return DataHandlerContextThreadLocal.getDataHandlerContext();
+	}
+
 	protected String getExpandoPath(String path) {
 		if (!isValidPath(path)) {
 			throw new IllegalArgumentException(
@@ -878,10 +887,10 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 		return path.substring(0, pos).concat("-expando").concat(
 			path.substring(pos));
-}
+	}
 
-	protected DataHandlerContext getDataHandlerContext() {
-		return DataHandlerContextThreadLocal.getDataHandlerContext();
+	protected String getLayoutPath(long layoutId) {
+		return getRootPath() + ROOT_PATH_LAYOUTS + layoutId;
 	}
 
 	protected String getPortletPath(String portletId) {
@@ -940,17 +949,160 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return 0;
 	}
 
-	// toDo: develop importEntityPermissions
 	protected void importEntityPermissions(
-			Map<String, List<String>> permissionsMap)
-		throws Exception {
+			String resourceName, long resourcePK, long newResourcePK)
+		throws PortalException, SystemException {
 
+		DataHandlerContext context = getDataHandlerContext();
+
+		if (!MapUtil.getBoolean(
+			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS)) {
+
+			return;
+		}
+
+		List<KeyValuePair> permissions = null; /*_permissionsMap.get(
+			getPrimaryKeyString(resourceName, resourcePK));*/
+
+		if (permissions == null) {
+			return;
+		}
+
+		Map<Long, String[]> roleIdsToActionIds = new HashMap<Long, String[]>();
+
+		for (KeyValuePair permission : permissions) {
+			String roleName = permission.getKey();
+
+			Role role = null;
+
+			Team team = null;
+
+			if (roleName.startsWith(PermissionExporter.ROLE_TEAM_PREFIX)) {
+				roleName = roleName.substring(
+						PermissionExporter.ROLE_TEAM_PREFIX.length());
+
+				try {
+					team = TeamLocalServiceUtil.getTeam(
+						context.getGroupId(), roleName);
+				}
+				catch (NoSuchTeamException nste) {
+					if (_log.isWarnEnabled()) {
+						_log.warn("Team " + roleName + " does not exist");
+					}
+
+					continue;
+				}
+			}
+
+			try {
+				if (team != null) {
+					role = RoleLocalServiceUtil.getTeamRole(
+						context.getCompanyId(), team.getTeamId());
+				}
+				else {
+					role = RoleLocalServiceUtil.getRole(
+						context.getCompanyId(), roleName);
+				}
+			}
+			catch (NoSuchRoleException nsre) {
+				if (_log.isWarnEnabled()) {
+					_log.warn("Role " + roleName + " does not exist");
+				}
+
+				continue;
+			}
+
+			String[] actionIds = StringUtil.split(permission.getValue());
+
+			roleIdsToActionIds.put(role.getRoleId(), actionIds);
+		}
+
+		if (roleIdsToActionIds.isEmpty()) {
+			return;
+		}
+
+		if (ResourceBlockLocalServiceUtil.isSupported(resourceName)) {
+			ResourceBlockLocalServiceUtil.setIndividualScopePermissions(
+				context.getCompanyId(), context.getGroupId(), resourceName,
+				newResourcePK, roleIdsToActionIds);
+		}
+		else {
+			ResourcePermissionLocalServiceUtil.setResourcePermissions(
+				context.getCompanyId(), resourceName,
+				ResourceConstants.SCOPE_INDIVIDUAL,
+				String.valueOf(newResourcePK), roleIdsToActionIds);
+		}
 	}
 
-	// toDo: develop importPermissions
-	protected void importPermissions(Map<String, List<String>> permissionsMap)
+	protected void importPermissions(
+			LayoutCache layoutCache, long companyId, long groupId, long userId,
+			String resourceName, String resourcePrimKey,
+			Map<String, List<String>> permissions, boolean portletActions)
 		throws Exception {
 
+		Map<Long, String[]> roleIdsToActionIds = new HashMap<Long, String[]>();
+
+		/*List<Element> roleElements = permissionsElement.elements("role");
+
+		for (String role : permissions) {
+			String name = roleElement.attributeValue("name");
+			int type = GetterUtil.getInteger(
+					roleElement.attributeValue("type"));
+
+			Role role = null;
+
+			if (name.startsWith(PermissionExporter.ROLE_TEAM_PREFIX)) {
+				name = name.substring(
+					PermissionExporter.ROLE_TEAM_PREFIX.length());
+
+				String description = roleElement.attributeValue("description");
+
+				Team team = null;
+
+				try {
+					team = TeamLocalServiceUtil.getTeam(groupId, name);
+				}
+				catch (NoSuchTeamException nste) {
+					team = TeamLocalServiceUtil.addTeam(
+							userId, groupId, name, description);
+				}
+
+				role = RoleLocalServiceUtil.getTeamRole(
+					companyId, team.getTeamId());
+			}
+			else {
+				role = layoutCache.getRole(companyId, name);
+			}
+
+			if (role == null) {
+				String title = roleElement.attributeValue("title");
+
+				Map<Locale, String> titleMap =
+					LocalizationUtil.getLocalizationMap(title);
+
+				String description = roleElement.attributeValue("description");
+
+				Map<Locale, String> descriptionMap =
+					LocalizationUtil.getLocalizationMap(description);
+
+				role = RoleLocalServiceUtil.addRole(
+					userId, companyId, name, titleMap, descriptionMap, type);
+			}
+
+			List<String> actions = permissions.get(roleElement);
+
+			roleIdsToActionIds.put(
+				role.getRoleId(), actions.toArray(new String[actions.size()]));
+		}
+
+		if (roleIdsToActionIds.isEmpty()) {
+			return;
+		}
+
+		ResourcePermissionLocalServiceUtil.setResourcePermissions(
+			companyId, resourceName, ResourceConstants.SCOPE_INDIVIDUAL,
+			resourcePrimKey, roleIdsToActionIds);
+		*/
 	}
 
 	protected boolean isResourceMain(ClassedModel classedModel) {
