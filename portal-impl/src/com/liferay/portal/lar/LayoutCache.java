@@ -118,6 +118,24 @@ public class LayoutCache {
 		return entityGroupId;
 	}
 
+	public Role getRole(long companyId, String roleName)
+		throws PortalException, SystemException {
+
+		Role role = rolesMap.get(roleName);
+
+		if (role == null) {
+			try {
+				role = RoleLocalServiceUtil.getRole(companyId, roleName);
+
+				rolesMap.put(roleName, role);
+			}
+			catch (NoSuchRoleException nsre) {
+			}
+		}
+
+		return role;
+	}
+
 	protected Map<String, Long> getEntityMap(long companyId, String entityName)
 		throws PortalException, SystemException {
 
@@ -186,24 +204,6 @@ public class LayoutCache {
 		}
 
 		return users;
-	}
-
-	protected Role getRole(long companyId, String roleName)
-		throws PortalException, SystemException {
-
-		Role role = rolesMap.get(roleName);
-
-		if (role == null) {
-			try {
-				role = RoleLocalServiceUtil.getRole(companyId, roleName);
-
-				rolesMap.put(roleName, role);
-			}
-			catch (NoSuchRoleException nsre) {
-			}
-		}
-
-		return role;
 	}
 
 	protected List<Role> getUserRoles(long userId) throws SystemException {

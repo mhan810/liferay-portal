@@ -24,9 +24,11 @@ import com.liferay.portal.kernel.staging.LayoutStagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PrimitiveLongList;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -57,6 +59,7 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.security.permission.ResourceActionsUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ImageLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
@@ -80,6 +83,7 @@ import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.sites.util.SitesUtil;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -97,9 +101,6 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 	@Override
 	public void doImport(LarDigestItem item) throws Exception {
-
-		// toDo: move methods from PortletDataContext to DataHandlerContext
-		//PortletDataContext portletDataContext = null;
 
 		DataHandlerContext context = getDataHandlerContext();
 
@@ -441,6 +442,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		importedLayout.setLayoutPrototypeLinkEnabled(
 				layout.isLayoutPrototypeLinkEnabled());
 
+		// toDo: review StagingUtil.updateLastImportSettings
 		/*StagingUtil.updateLastImportSettings(
 			layoutElement, importedLayout, portletDataContext);*/
 
@@ -449,7 +451,9 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		importedLayout.setIconImage(false);
 
 		if (layout.isIconImage()) {
-			String iconImagePath = null; //layoutElement.elementText("icon-image-path");
+			Map<String, String> metadata = item.getMetadata();
+
+			String iconImagePath = metadata.get("icon-image-path");
 
 			byte[] iconBytes = getZipEntryAsByteArray(iconImagePath);
 
@@ -470,14 +474,11 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			ImageLocalServiceUtil.deleteImage(importedLayout.getIconImageId());
 		}
 
-		// toDo: we need an expando path here!
-	/*	String expandoPath = null;
+		// toDo: review expando export-import
+		/*ServiceContext serviceContext = createServiceContext(
+			getExpandoPath(path), importedLayout, null);
 
-		ServiceContext serviceContext = createServiceContext(
-			expandoPath, importedLayout, null);
-
-		importedLayout.setExpandoBridgeAttributes(serviceContext);
-		*/
+		importedLayout.setExpandoBridgeAttributes(serviceContext);  */
 
 		LayoutUtil.update(importedLayout, false);
 
@@ -494,14 +495,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 		newLayouts.add(importedLayout);
 
-		// Layout permissions
-		LayoutCache layoutCache = (LayoutCache)context.getAttribute(
-			"layoutCache");
-
 		if (importPermissions) {
-			/*_permissionImporter.importLayoutPermissions(
-				layoutCache, portletDataContext.getCompanyId(), groupId,
-				user.getUserId(), importedLayout, null, null); */
+			importLayoutPermissions(context, importedLayout, item);
 		}
 
 		if (importPublicLayoutPermissions) {
@@ -516,11 +511,6 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey,
 				guestRole.getRoleId(), new String[]{ActionKeys.VIEW});
 		}
-
-		/*_portletImporter.importPortletData(
-			portletDataContext, PortletKeys.LAYOUT_CONFIGURATION, null,
-			null);
-		*/
 
 		context.setAttribute("newLayoutsMap", newLayoutsMap);
 	}
@@ -567,19 +557,32 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 			layoutStagingHandler.setLayoutRevision(layoutRevision);
 		}
+		Map metadata = new HashMap<String, String>();
 
 		if (layoutRevision != null) {
-			//TODO create layoutrevision digest
+			metadata.put(
+				"layout-revision-id",
+				String.valueOf(layoutRevision.getLayoutRevisionId()));
+			metadata.put(
+				"layout-branch-id",
+				String.valueOf(layoutRevision.getLayoutBranchId()));
+			metadata.put(
+				"layout-branch-name",
+				String.valueOf(layoutRevision.getLayoutBranch().getName()));
 		}
+
+		metadata.put("layout-uuid", layout.getUuid());
+		metadata.put("layout-id", String.valueOf(layout.getLayoutId()));
 
 		long parentLayoutId = layout.getParentLayoutId();
 
 		if (parentLayoutId != LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
 			Layout parentLayout = LayoutLocalServiceUtil.getLayout(
-				layout.getGroupId(), layout.isPrivateLayout(), parentLayoutId);
+					layout.getGroupId(), layout.isPrivateLayout(), parentLayoutId);
 
 			if (parentLayout != null) {
 				digest(parentLayout);
+				metadata.put("parent-layout-uuid", parentLayout.getUuid());
 			}
 		}
 
@@ -591,7 +594,10 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 					getLayoutPrototypeByUuidAndCompanyId(
 						layoutPrototypeUuid, context.getCompanyId());
 
-			//TODO digest layout prototype
+			metadata.put("layout-prototype-uuid", layoutPrototypeUuid);
+			metadata.put(
+				"layout-prototype-name",
+				layoutPrototype.getName(LocaleUtil.getDefault()));
 		}
 
 		boolean deleteLayout = MapUtil.getBoolean(
@@ -610,11 +616,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			String resourceName = Layout.class.getName();
 			String resourcePrimKey = String.valueOf(layout.getPlid());
 
-			/*exportPermissions(
-				layoutCache, companyId, groupId, resourceName, resourcePrimKey,
-				permissionsElement, false);*/
-
-			LayoutCache layoutCache = new LayoutCache();
+			LayoutCache layoutCache = (LayoutCache)context.getAttribute(
+				"layoutCache");
 
 			Map permissionMap = digestPermissions(
 				layoutCache, context.getCompanyId(), context.getScopeGroupId(),
@@ -638,9 +641,14 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 			if (image != null) {
 				imageDataHandler.digest(image);
+
+				String iconPath = getLayoutIconPath(layout, image);
+
+				metadata.put("icon-image-path", iconPath);
 			}
 		}
 
+		digestItem.setMetadata(metadata);
 		digestItem.setAction(LarDigesterConstants.ACTION_ADD);
 		digestItem.setPath(path);
 		digestItem.setType(Layout.class.getName());
@@ -787,6 +795,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		}
 
 		journalArticleDataHandler.digest(article);
+
+		// toDo: link the article to the layout
 	}
 
 	private void fixTypeSettings(Layout layout) throws Exception {
@@ -836,6 +846,20 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			url.substring(0, x) + SAME_GROUP_FRIENDLY_URL + url.substring(y));
 	}
 
+	private String getLayoutIconPath(Layout layout, Image image) {
+
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(getLayoutPath(layout.getLayoutId()));
+		sb.append("/icons/");
+		sb.append(image.getImageId());
+		sb.append(StringPool.PERIOD);
+		sb.append(image.getType());
+
+		return sb.toString();
+	}
+
+
 	private String[] appendPortletIds(
 		String[] portletIds, String[] newPortletIds, String portletsMergeMode) {
 
@@ -858,53 +882,33 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		return portletIds;
 	}
 
+	// toDo: importJournalArticle needs to be developed
 	private void importJournalArticle(
 			PortletDataContext portletDataContext, Layout layout)
 		throws Exception {
+	}
 
-		UnicodeProperties typeSettingsProperties =
-			layout.getTypeSettingsProperties();
+	private void importLayoutPermissions(
+			DataHandlerContext context, Layout layout, LarDigestItem item)
+		throws Exception {
 
-		String articleId = typeSettingsProperties.getProperty(
-			"article-id", StringPool.BLANK);
+		Map permissions = item.getPermissions();
 
-		if (Validator.isNull(articleId)) {
-			return;
+		if (permissions != null) {
+			String resourceName = Layout.class.getName();
+			String resourcePrimKey = String.valueOf(layout.getPlid());
+
+			LayoutCache layoutCache = (LayoutCache)context.getAttribute(
+				"layoutCache");
+
+			User user = context.getUser();
+			long userId = user.getUserId();
+
+			// toDo: refactor permission export-import
+			/*importPermissions(
+				layoutCache, context.getCompanyId(), context.getGroupId(),
+				userId, resourceName, resourcePrimKey, permissions, false); */
 		}
-
-		// toDo: we need to find a way to get the JournalArticle from the digest item or layoutObject
-		/*journalArticleDataHandler.importReferencedData(
-			portletDataContext, layoutElement);
-
-		Element structureElement = layout.element("structure");
-
-		if (structureElement != null) {
-			journalStructureDataHandler.importData(null);
-		}
-
-		Element templateElement = layoutElement.element("template");
-
-		if (templateElement != null) {
-			journalTemplateDataHandler.importData(null);
-		}
-
-		Element articleElement = layoutElement.element("article");
-
-		if (articleElement != null) {
-			journalArticleDataHandler.importData(null);
-		}
-
-		Map<String, String> articleIds =
-			(Map<String, String>)portletDataContext.getNewPrimaryKeysMap(
-				JournalArticle.class + ".articleId");
-
-		articleId = MapUtil.getString(articleIds, articleId, articleId);
-
-		typeSettingsProperties.setProperty("article-id", articleId);
-
-		JournalContentSearchLocalServiceUtil.updateContentSearch(
-			portletDataContext.getScopeGroupId(), layout.isPrivateLayout(),
-			layout.getLayoutId(), StringPool.BLANK, articleId, true);  */
 	}
 
 	private void mergePortlets(
