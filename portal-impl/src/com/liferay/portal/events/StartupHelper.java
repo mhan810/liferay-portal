@@ -40,7 +40,6 @@ import java.sql.Connection;
  */
 public class StartupHelper {
 
-
 	public static void updateIndexes(
 		DB db, Connection con, boolean dropIndexes) {
 

@@ -48,6 +48,7 @@ public class JournalPortletDataHandlerImpl extends PortletDataHandlerImpl
 	@Override
 	public LarDigestItem doDigest(Portlet portlet) throws Exception {
 		return null;
+		return null;
 	}
 
 	private static final boolean _ALWAYS_EXPORTABLE = true;

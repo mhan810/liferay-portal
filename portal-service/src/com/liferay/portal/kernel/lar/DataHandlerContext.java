@@ -95,6 +95,8 @@ public interface DataHandlerContext {
 
 	public long getOldPlid();
 
+	public PermissionDigester getPermissionDigester();
+
 	public Map<String, String[]> getParameters();
 
 	public long getPlid();
@@ -145,6 +147,7 @@ public interface DataHandlerContext {
 
 	public void setOldPlid(long oldPlid);
 
+
 	public void setParameters(Map<String, String[]> parameters);
 
 	public void setPlid(long plid);
@@ -159,7 +162,7 @@ public interface DataHandlerContext {
 
 	public void setUser(User user);
 
-	public void setUserIdStrategy(UserIdStrategy strategy);
+	public void setUserIdStrategy(User user, String userIdStrategy);
 
 	public void setZipReader(ZipReader zipReader);
 

@@ -16,6 +16,7 @@ package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
+import com.liferay.portal.kernel.lar.PermissionDigester;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
@@ -37,6 +38,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.lar.DataHandlersUtil;
+import com.liferay.portal.lar.LARExporter;
 import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
@@ -72,6 +74,7 @@ import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
+import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.LayoutRevisionUtil;
 import com.liferay.portal.service.persistence.LayoutUtil;
@@ -440,7 +443,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		importedLayout.setPriority(layout.getPriority());
 		importedLayout.setLayoutPrototypeUuid(layout.getLayoutPrototypeUuid());
 		importedLayout.setLayoutPrototypeLinkEnabled(
-				layout.isLayoutPrototypeLinkEnabled());
+			layout.isLayoutPrototypeLinkEnabled());
 
 		// toDo: review StagingUtil.updateLastImportSettings
 		/*StagingUtil.updateLastImportSettings(
@@ -496,7 +499,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		newLayouts.add(importedLayout);
 
 		if (importPermissions) {
-			importLayoutPermissions(context, importedLayout, item);
+			importLayoutPermissions(importedLayout, item);
 		}
 
 		if (importPublicLayoutPermissions) {
@@ -517,8 +520,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 	@Override
 	public LarDigestItem doDigest(Layout layout) throws Exception {
-		DataHandlerContext context =
-			getDataHandlerContext();
+		DataHandlerContext context = getDataHandlerContext();
 
 		context.setPlid(layout.getPlid());
 
@@ -536,7 +538,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		boolean exportLAR = ParamUtil.getBoolean(serviceContext, "exportLAR");
 
 		if (!exportLAR && LayoutStagingUtil.isBranchingLayout(layout) &&
-				!layout.isTypeURL()) {
+			!layout.isTypeURL()) {
 
 			long layoutSetBranchId = ParamUtil.getLong(
 				serviceContext, "layoutSetBranchId");
@@ -578,7 +580,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 		if (parentLayoutId != LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
 			Layout parentLayout = LayoutLocalServiceUtil.getLayout(
-					layout.getGroupId(), layout.isPrivateLayout(), parentLayoutId);
+				layout.getGroupId(), layout.isPrivateLayout(), parentLayoutId);
 
 			if (parentLayout != null) {
 				digest(parentLayout);
@@ -674,6 +676,32 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			}
 		}
 		else if (layout.isTypePortlet()) {
+			for (Portlet portlet : LARExporter.getAlwaysExportablePortlets(
+					context.getCompanyId())) {
+
+				if (portlet.isScopeable() && layout.hasScopeGroup()) {
+					String key = PortletPermissionUtil.getPrimaryKey(
+						layout.getPlid(), portlet.getPortletId());
+
+
+					context.setPlid(layout.getPlid());
+					context.setOldPlid(layout.getPlid());
+					context.setScopeGroupId(
+						layout.getScopeGroup().getGroupId());
+					context.setAttribute("scopeType", StringPool.BLANK);
+					context.setAttribute("scopeLayoutUuid", layout.getUuid());
+					context.setAttribute("layout", layout);
+
+					BaseDataHandler portletDataHandler =
+						DataHandlerLocatorUtil.locate(
+							portlet.getPortletDataHandlerClass());
+
+					if (portletDataHandler != null) {
+						portletDataHandler.digest(portlet);
+					}
+				}
+			}
+
 			LayoutTypePortlet layoutTypePortlet =
 				(LayoutTypePortlet)layout.getLayoutType();
 
@@ -704,7 +732,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 						scopeLayout = LayoutLocalServiceUtil.
 							fetchLayoutByUuidAndGroupId(
-								scopeLayoutUuid, context.getGroupId());
+									scopeLayoutUuid,
+									context.getGroupId());
 
 						if (scopeLayout == null) {
 							continue;
@@ -725,6 +754,14 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				PortletDataHandler portletDataHandler =
 					(PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(
 						portlet.getPortletId());
+
+				context.setPlid(layout.getPlid());
+				context.setOldPlid(layout.getPlid());
+				context.setScopeGroupId(scopeGroupId);
+				context.setAttribute("scopeType", scopeType);
+				context.setAttribute("scopeLayoutUuid", scopeLayoutUuid);
+				context.setAttribute("layout", layout);
+
 
 				if (portletDataHandler != null) {
 					portletDataHandler.digest(portlet);
@@ -888,26 +925,17 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		throws Exception {
 	}
 
-	private void importLayoutPermissions(
-			DataHandlerContext context, Layout layout, LarDigestItem item)
+	private void importLayoutPermissions(Layout layout, LarDigestItem item)
 		throws Exception {
 
-		Map permissions = item.getPermissions();
+		Map<String, List<String>> permissions = item.getPermissions();
 
 		if (permissions != null) {
 			String resourceName = Layout.class.getName();
 			String resourcePrimKey = String.valueOf(layout.getPlid());
 
-			LayoutCache layoutCache = (LayoutCache)context.getAttribute(
-				"layoutCache");
-
-			User user = context.getUser();
-			long userId = user.getUserId();
-
-			// toDo: refactor permission export-import
-			/*importPermissions(
-				layoutCache, context.getCompanyId(), context.getGroupId(),
-				userId, resourceName, resourcePrimKey, permissions, false); */
+			importPermissions(
+				resourceName, resourcePrimKey, permissions);
 		}
 	}
 
