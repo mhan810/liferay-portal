@@ -16,6 +16,7 @@ package com.liferay.portal.lar;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.DataHandlerContextThreadLocal;
 import com.liferay.portal.kernel.lar.ImportExportThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
@@ -137,12 +138,12 @@ public class LARExporter {
 			MessageBusUtil.sendMessage(
 				DestinationNames.LAR_EXPORT_IMPORT, message);
 
-			DataHandlerContext context = _initDataHandlerContext(
-				groupId, privateLayout, parameterMap, startDate, endDate);
+			_initDataHandlerContext(groupId, privateLayout, parameterMap,
+				startDate, endDate);
 
-			doCreateDigest(layoutIds, context);
+			doCreateDigest(layoutIds, _context);
 
-			return context.getLarDigest().getDigestFile();
+			return _context.getLarDigest().getDigestFile();
 		}
 		catch (Exception e) {
 			_log.error(e);
@@ -245,6 +246,8 @@ public class LARExporter {
 
 		Group group = GroupLocalServiceUtil.getGroup(context.getGroupId());
 
+		context.setAttribute("layoutCache", new LayoutCache());
+
 		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
 			group.getGroupId(), privateLayout);
 
@@ -284,6 +287,8 @@ public class LARExporter {
 		// Assembly metadata for LAR
 		HashMap<String, String> metadata = new HashMap<String, String>();
 
+		metadata.put("available-locales",
+			StringUtil.merge(LanguageUtil.getAvailableLocales()));
 		metadata.put(
 			"build-number", String.valueOf(ReleaseInfo.getBuildNumber()));
 		metadata.put("export-date", Time.getRFC822());
@@ -346,12 +351,51 @@ public class LARExporter {
 		List<Portlet> portlets = getAlwaysExportablePortlets(
 			group.getCompanyId());
 
+		long plid = LayoutConstants.DEFAULT_PLID;
+
+		if (!layouts.isEmpty()) {
+			Layout firstLayout = layouts.get(0);
+
+			plid = firstLayout.getPlid();
+		}
+
+		if (group.isStagingGroup()) {
+			group = group.getLiveGroup();
+		}
+
 		for (Portlet portlet : portlets) {
 			if (!group.isStagedPortlet(portlet.getPortletId())) {
 				continue;
 			}
 
-			PortletDataHandler portletDataHandler =
+			Layout layout = LayoutLocalServiceUtil.fetchLayout(plid);
+
+			if (layout == null) {
+				if (!group.isCompany() &&
+						(plid <= LayoutConstants.DEFAULT_PLID)) {
+
+					continue;
+				}
+
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Assuming global scope because no layout was found");
+				}
+
+				layout = new LayoutImpl();
+
+				layout.setGroupId(group.getGroupId());
+				layout.setCompanyId(context.getCompanyId());
+			}
+
+			context.setPlid(plid);
+			context.setOldPlid(plid);
+			context.setScopeGroupId(group.getGroupId());
+			context.setAttribute("scopeType", StringPool.BLANK);
+			context.setAttribute("scopeLayoutUuid", StringPool.BLANK);
+			context.setAttribute("layout", layout);
+
+PortletDataHandler portletDataHandler =
 				(PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(
 					portlet.getPortletId());
 
@@ -521,41 +565,35 @@ public class LARExporter {
 			settingsProperties.toString());
 	}
 
-	private DataHandlerContext _initDataHandlerContext(
+	private void _initDataHandlerContext(
 			long groupId, boolean privateLayout,
 			Map<String, String[]> parameters, Date startDate, Date endDate)
 		throws Exception {
 
-		DataHandlerContext context = new DataHandlerContextImpl();
+		_context = new DataHandlerContextImpl();
 
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 
-		context.setCompanyId(group.getCompanyId());
-		context.setEndDate(endDate);
-		context.setGroupId(groupId);
-		context.setPrivateLayout(privateLayout);
-		context.setScopeGroupId(groupId);
-		context.setStartDate(startDate);
+		_context.setCompanyId(group.getCompanyId());
+		_context.setEndDate(endDate);
+		_context.setGroupId(groupId);
+		_context.setPrivateLayout(privateLayout);
+		_context.setScopeGroupId(groupId);
+		_context.setStartDate(startDate);
 
-		context.setParameters(parameters);
+		_context.setParameters(parameters);
 
 		LarDigest larDigest = new LarDigestImpl();
 		ZipWriter zipWriter = ZipWriterFactoryUtil.getZipWriter();
 
-		context.setLarDigest(larDigest);
-		context.setZipWriter(zipWriter);
+		_context.setLarDigest(larDigest);
+		_context.setZipWriter(zipWriter);
 
-		DataHandlerContextThreadLocal.setDataHandlerContext(context);
-
-		return context;
+		DataHandlerContextThreadLocal.setDataHandlerContext(_context);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(LARExporter.class);
 
-	private LarDigest _larDigest;
-	private File _larDigestFile;
-	private LayoutExporter _layoutExporter = new LayoutExporter();
-	private PermissionExporter _permissionExporter = new PermissionExporter();
-	private PortletExporter _portletExporter = new PortletExporter();
+	private DataHandlerContext _context;
 
 }

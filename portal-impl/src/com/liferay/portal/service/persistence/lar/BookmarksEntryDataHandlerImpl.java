@@ -15,6 +15,7 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.DataHandlerContext;
+import com.liferay.portal.kernel.lar.PermissionDigester;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -62,8 +63,12 @@ public class BookmarksEntryDataHandlerImpl
 			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
 
 		if (exportPermissions) {
-			Map permissionsMap = digestEntityPermissions(
-				BookmarksEntry.class.getName(), entry.getEntryId());
+			PermissionDigester permissionDigester =
+				context.getPermissionDigester();
+
+			Map permissionsMap = permissionDigester.digestEntityPermissions(
+				BookmarksEntry.class.getName(), entry.getEntryId(),
+				context);
 
 			digestItem.setPermissions(permissionsMap);
 		}
@@ -73,6 +78,7 @@ public class BookmarksEntryDataHandlerImpl
 		digestItem.setType(BookmarksEntry.class.getName());
 		digestItem.setClassPK(StringUtil.valueOf(entry.getEntryId()));
 
+		return digestItem;
 		return digestItem;
 	}
 

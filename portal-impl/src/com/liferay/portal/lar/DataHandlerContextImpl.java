@@ -15,6 +15,7 @@
 package com.liferay.portal.lar;
 
 import com.liferay.portal.kernel.lar.*;
+import com.liferay.portal.kernel.lar.PermissionDigester;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -97,6 +98,11 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 
 	public long getOldPlid() {
 		return GetterUtil.getLong(getAttribute(ATTRIBUTE_NAME_OLD_PLID));
+	}
+
+	public PermissionDigester getPermissionDigester() {
+		return (PermissionDigester)getAttribute(
+			ATTRIBUTE_NAME_PERMISSION_DIGESTER);
 	}
 
 	public Map<String, String[]> getParameters() {
@@ -228,7 +234,11 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 
 	public void setOldPlid(long oldPlid) {
 		setAttribute(ATTRIBUTE_NAME_OLD_PLID, oldPlid);
-	};
+	}
+
+	public void setPermissionDigester(PermissionDigester permissionDigester) {
+		setAttribute(ATTRIBUTE_NAME_PERMISSION_DIGESTER, permissionDigester);
+	}
 
 	public void setParameters(Map<String, String[]> parameters) {
 		_paramaters = parameters;
@@ -236,7 +246,7 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 
 	public void setPlid(long plid) {
 		setAttribute(ATTRIBUTE_NAME_PLID, plid);
-	};
+	}
 
 	public void setPrivateLayout(boolean privateLayout) {
 		setAttribute(ATTRIBUTE_NAME_PRIVATE_LAYOUT, privateLayout);
@@ -258,7 +268,16 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		setAttribute(ATTRIBUTE_NAME_USER, user);
 	}
 
-	public void setUserIdStrategy(UserIdStrategy strategy) {
+	public void setUserIdStrategy(User user, String userIdStrategy) {
+		UserIdStrategy strategy = null;
+
+		if (UserIdStrategy.ALWAYS_CURRENT_USER_ID.equals(userIdStrategy)) {
+			strategy = new AlwaysCurrentUserIdStrategy(user);
+		}
+		else {
+			strategy = new CurrentUserIdStrategy(user);
+		}
+
 		setAttribute(ATTRIBUTE_NAME_USER_ID_STRATEGY, strategy);
 	}
 

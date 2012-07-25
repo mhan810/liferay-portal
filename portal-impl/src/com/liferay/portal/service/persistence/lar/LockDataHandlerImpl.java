@@ -52,6 +52,7 @@ public class LockDataHandlerImpl
 		digestItem.setClassPK(StringUtil.valueOf(lock.getLockId()));
 
 		return digestItem;
+		return digestItem;
 	}
 
 	@Override
