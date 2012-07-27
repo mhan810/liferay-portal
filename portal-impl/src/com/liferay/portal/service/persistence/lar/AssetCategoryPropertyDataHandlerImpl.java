@@ -52,8 +52,6 @@ public class AssetCategoryPropertyDataHandlerImpl
 				StringUtil.valueOf(categoryProperty.getCategoryPropertyId()));
 
 			return digestItem;
-
-			return digestItem;
 		}
 
 		return null;

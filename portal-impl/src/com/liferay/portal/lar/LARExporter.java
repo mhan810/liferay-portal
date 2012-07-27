@@ -42,11 +42,13 @@ import com.liferay.portal.lar.digest.LarDigestImpl;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.Theme;
+import com.liferay.portal.model.impl.LayoutImpl;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
@@ -249,7 +251,7 @@ public class LARExporter {
 		context.setAttribute("layoutCache", new LayoutCache());
 
 		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-			group.getGroupId(), privateLayout);
+				group.getGroupId(), privateLayout);
 
 		UnicodeProperties typeSettings = layoutSet.getSettingsProperties();
 
@@ -396,7 +398,7 @@ public class LARExporter {
 			context.setAttribute("scopeLayoutUuid", StringPool.BLANK);
 			context.setAttribute("layout", layout);
 
-PortletDataHandler portletDataHandler =
+			PortletDataHandler portletDataHandler =
 				(PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(
 					portlet.getPortletId());
 

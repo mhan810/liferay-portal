@@ -75,7 +75,6 @@ public class BookmarksEntryDataHandlerImpl
 		digestItem.setClassPK(StringUtil.valueOf(entry.getEntryId()));
 
 		return digestItem;
-		return digestItem;
 	}
 
 	@Override

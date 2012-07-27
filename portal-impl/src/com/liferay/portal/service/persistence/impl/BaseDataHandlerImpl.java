@@ -931,8 +931,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return -1;
 	}
 
-	}
-
 	protected DataHandlerContext getDataHandlerContext() {
 		return DataHandlerContextThreadLocal.getDataHandlerContext();
 	}

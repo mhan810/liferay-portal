@@ -87,7 +87,6 @@ public class AssetCategoryDataHandlerImpl
 		digestItem.setClassPK(String.valueOf(category.getCategoryId()));
 
 		return digestItem;
-		return digestItem;
 	}
 
 	@Override
