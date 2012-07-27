@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.impl;
 
+import com.liferay.portal.NoSuchRoleException;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -24,7 +25,10 @@ import com.liferay.portal.kernel.lar.PortletDataContextListener;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.staging.DataHandlerLocatorUtil;
+import com.liferay.portal.kernel.messaging.DestinationNames;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.portlet.ProtectedActionRequest;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
@@ -36,10 +40,13 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
+import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.PermissionExporter;
 import com.liferay.portal.lar.XStreamWrapper;
+import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.AuditedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
@@ -96,6 +103,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +111,7 @@ import java.util.Set;
 
 /**
  * @author Mate Thurzo
+ * @author Daniel Kocsis
  */
 public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	implements BaseDataHandler<T> {
@@ -179,21 +188,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 	}
 
-	public void addExpando(T object) throws SystemException {
-		if (!(object instanceof ClassedModel)) {
-			return;
-		}
-
-		ClassedModel classedModel = (ClassedModel)object;
-
-		String expandoPath = getEntityPath(object);
-		expandoPath = StringUtil.replace(expandoPath, ".xml", "-expando.xml");
-
-		ExpandoBridge expandoBridge = classedModel.getExpandoBridge();
-
-		addZipEntry(expandoPath, expandoBridge.getAttributes());
-	}
-
 	public ServiceContext createServiceContext(
 		Element element, ClassedModel classedModel, String namespace) {
 
@@ -207,14 +201,19 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	}
 
 	public void digest(T object) throws Exception {
-		doDigest(object);
+		sendUpdateMessage(MESSAGE_COMMAND_DIGEST, object);
+
+		DataHandlerContext context = getDataHandlerContext();
+
+		LarDigestItem item = doDigest(object);
+
+		if (item != null) {
+			context.getLarDigest().write(item);
+		}
 
 		if (isResourceMain(object)) {
 			digestAssetLinks(object);
 			digestLocks(object);
-
-			DataHandlerContext context =
-				DataHandlerContextThreadLocal.getDataHandlerContext();
 
 			boolean portletMetadataAll = context.getBooleanParameter(
 				getNamespace(), PortletDataHandlerKeys.PORTLET_METADATA_ALL);
@@ -249,6 +248,10 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		getDataHandlerContext().addProcessedPath(path);
 	}
 
+	public abstract LarDigestItem doDigest(T object) throws Exception;
+
+	public abstract void doImport(LarDigestItem item)throws Exception;
+
 	public Object fromXML(byte[] bytes) {
 		if ((bytes == null) || (bytes.length == 0)) {
 			return null;
@@ -264,6 +267,9 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 		return getXstreamWrapper().fromXML(xml);
 	}
+
+	// TODO re-think this method
+	public abstract T getEntity(String classPK);
 
 	public String getEntityPath(T object) {
 		if (object instanceof Portlet) {
@@ -293,6 +299,18 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 
 		return StringPool.BLANK;
+	}
+
+	public XStreamWrapper getXstreamWrapper() {
+		if (_xStreamWrapper == null) {
+			Object o = PortalBeanLocatorUtil.locate("xStreamWrapper");
+
+			if (o != null) {
+				_xStreamWrapper = ((XStreamWrapper)o);
+			}
+		}
+
+		return _xStreamWrapper;
 	}
 
 	public List<String> getZipEntries() {
@@ -343,17 +361,42 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return getZipReader().getFolderEntries(path);
 	}
 
+	public ZipReader getZipReader() {
+		DataHandlerContext context =
+			DataHandlerContextThreadLocal.getDataHandlerContext();
+
+		if (context != null) {
+			return context.getZipReader();
+		}
+
+		return null;
+	}
+
+	public ZipWriter getZipWriter() {
+		DataHandlerContext context =
+			DataHandlerContextThreadLocal.getDataHandlerContext();
+
+		if (context != null) {
+			return context.getZipWriter();
+		}
+
+		return null;
+	}
+
 	public void importData(LarDigestItem item) {
 		try {
+			sendUpdateMessage(MESSAGE_COMMAND_IMPORT, item);
+
 			doImport(item);
 		}
 		catch (Exception e) {
 		}
 	}
 
-	public void serialize(String classPK) {
+	public void serialize(LarDigestItem item, DataHandlerContext context) {
+		T object = getEntity(item.getClassPK());
 
-		T object = getEntity(classPK);
+		sendUpdateMessage(MESSAGE_COMMAND_SERIALIZE, object);
 
 		if (object == null) {
 			return;
@@ -364,11 +407,50 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		try {
 			doSerialize(object);
 
+			addPermissions(item.getPermissions(), context);
 			addExpando(object);
 		}
 		catch (Exception e) {
 		}
 
+	}
+
+	public void setXstreamWrapper(XStreamWrapper xStreamWrapper) {
+		_xStreamWrapper = xStreamWrapper;
+	}
+
+	public String toXML(Object object) {
+		return getXstreamWrapper().toXML(object);
+	}
+
+	protected void addExpando(T object) throws SystemException {
+		if (!(object instanceof ClassedModel)) {
+			return;
+		}
+
+		ClassedModel classedModel = (ClassedModel)object;
+
+		String expandoPath = getEntityPath(object);
+		expandoPath = StringUtil.replace(expandoPath, ".xml", "-expando.xml");
+
+		ExpandoBridge expandoBridge = classedModel.getExpandoBridge();
+
+		addZipEntry(expandoPath, expandoBridge.getAttributes());
+	}
+
+	protected void addPermissions(
+			Map<String, List<String>> permissions, DataHandlerContext context)
+		throws Exception {
+
+		for (String roleName : permissions.keySet()) {
+			Role role = RoleLocalServiceUtil.getRole(
+				context.getCompanyId(), roleName);
+
+
+			String path = getRolePath(role);
+
+			addZipEntry(path, role);
+		}
 	}
 
 	protected ServiceContext createServiceContext(
@@ -469,51 +551,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		else {
 			return (Long)classedModel.getPrimaryKeyObj();
 		}
-	}
-
-	// TODO re-think this method
-	public abstract T getEntity(String classPK);
-
-	public String toXML(Object object) {
-		return getXstreamWrapper().toXML(object);
-	}
-
-	public void setXstreamWrapper(XStreamWrapper xStreamWrapper) {
-		_xStreamWrapper = xStreamWrapper;
-	}
-
-	public XStreamWrapper getXstreamWrapper() {
-		if (_xStreamWrapper == null) {
-			Object o = PortalBeanLocatorUtil.locate("xStreamWrapper");
-
-			if (o != null) {
-				_xStreamWrapper = ((XStreamWrapper)o);
-			}
-		}
-
-		return _xStreamWrapper;
-	}
-
-	public ZipReader getZipReader() {
-		DataHandlerContext context =
-			DataHandlerContextThreadLocal.getDataHandlerContext();
-
-		if (context != null) {
-			return context.getZipReader();
-		}
-
-		return null;
-	}
-
-	public ZipWriter getZipWriter() {
-		DataHandlerContext context =
-			DataHandlerContextThreadLocal.getDataHandlerContext();
-
-		if (context != null) {
-			return context.getZipWriter();
-		}
-
-		return null;
 	}
 
 	protected void digestAssetCategories(T object) throws Exception {
@@ -629,7 +666,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 				object.getClass().getName(), key);
 
 			LockDataHandler lockDataHandler =
-				(LockDataHandler)DataHandlerLocatorUtil.locate(
+				(LockDataHandler)DataHandlersUtil.getDataHandlerInstance(
 					Lock.class.getName());
 
 			lockDataHandler.digest(lock);
@@ -712,18 +749,10 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 			String resourceName, long resourcePK)
 		throws Exception {
 
-		/*if (!MapUtil.getBoolean(
-				_parameterMap, PortletDataHandlerKeys.PERMISSIONS)) {
-
-			return;
-		}*/
-
 		DataHandlerContext context = getDataHandlerContext();
 
 		HashMap<String, List<String>> permissions =
 			new HashMap<String, List<String>>();
-
-		//List<KeyValuePair> permissions = new ArrayList<KeyValuePair>();
 
 		Group group = GroupLocalServiceUtil.getGroup(context.getGroupId());
 
@@ -777,9 +806,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 				continue;
 			}
 
-			/*KeyValuePair permission = new KeyValuePair(
-				name, StringUtil.merge(availableActionIds));*/
-
 			List<String> actionIdsList = ListUtil.fromCollection(
 				availableActionIds);
 
@@ -787,14 +813,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 
 		return permissions;
-
-		/*_permissionsMap.put(
-			getPrimaryKeyString(resourceName, resourcePK), permissions);*/
 	}
-
-	public abstract void doDigest(T object) throws Exception;
-
-	public abstract void doImport(LarDigestItem item)throws Exception;
 
 	protected void doSerialize(T object) throws Exception {
 		String path = getEntityPath(object);
@@ -818,6 +837,26 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 					companyId, className, ResourceConstants.SCOPE_INDIVIDUAL,
 					String.valueOf(primKey), roleIds, actionIds);
 		}
+	}
+
+	protected int getDigestAction(T object) {
+		DataHandlerContext context = getDataHandlerContext();
+
+		if (object instanceof BaseModel) {
+			BaseModel modelObj = (BaseModel)object;
+
+			Map<String, Object> modelAttributes = modelObj.getModelAttributes();
+
+			Date modifiedDate = (Date)modelAttributes.get("modifiedDate");
+
+			if (context.getLastPublishDate().before(modifiedDate)) {
+				return LarDigesterConstants.ACTION_UPDATE;
+			}
+
+			return LarDigesterConstants.ACTION_ADD;
+		}
+
+		return -1;
 	}
 
 	protected String getNamespace() {
@@ -857,6 +896,17 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return sb.toString();
 	}
 
+	protected String getRolePath(Role role) {
+		StringBundler sb = new StringBundler();
+
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append("roles");
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(role.getName() + ".xml");
+
+		return sb.toString();
+	}
+
 	protected String getRootPath() {
 		return ROOT_PATH_GROUPS + getScopeGroupId();
 	}
@@ -869,10 +919,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 
 		return 0;
-	}
-
-	protected String getSourceLayoutPath(long layoutId) {
-		return getSourceRootPath() + ROOT_PATH_LAYOUTS + layoutId;
 	}
 
 	protected String getSourcePortletPath(String portletId) {
@@ -898,11 +944,13 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	protected void importEntityPermissions(
 			Map<String, List<String>> permissionsMap)
 		throws Exception {
+
 	}
 
 	// toDo: develop importPermissions
 	protected void importPermissions(Map<String, List<String>> permissionsMap)
 		throws Exception {
+
 	}
 
 	protected boolean isResourceMain(ClassedModel classedModel) {
@@ -921,6 +969,15 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 
 		return true;
+	}
+
+	protected void sendUpdateMessage(String messageCommand, Object payload) {
+		Message message = new Message();
+
+		message.put("command", messageCommand);
+		message.put("payload", payload);
+
+		MessageBusUtil.sendMessage(DestinationNames.LAR_EXPORT_IMPORT, message);
 	}
 
 	private Log _log = LogFactoryUtil.getLog(BaseDataHandlerImpl.class);

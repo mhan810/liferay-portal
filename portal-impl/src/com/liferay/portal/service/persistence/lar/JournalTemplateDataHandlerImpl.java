@@ -29,56 +29,15 @@ public class JournalTemplateDataHandlerImpl
 	implements JournalTemplateDataHandler {
 
 	@Override
-	public void digest(JournalTemplate template) throws Exception {
-		return;
-		/*DataHandlerContext larPersistenceContext =
-			DataHandlerContextThreadLocal.getDataHandlerContext();
-
-		String path = getTemplatePath(template);
-
-		if (isPathProcessed(path)) {
-			return;
-		}
-
-		// Clone this template to make sure changes to its content are never
-		// persisted
-
-		template = (JournalTemplate)template.clone();
-
-		if (template.isSmallImage()) {
-			String smallImagePath = getTemplateSmallImagePath(template);
-
-			Image smallImage = ImageUtil.fetchByPrimaryKey(
-				template.getSmallImageId());
-
-			template.setSmallImageType(smallImage.getType());
-		}
-
-		if (larPersistenceContext.getBooleanParameter(
-				JournalPortletDataHandler._NAMESPACE, "embedded-assets")) {
-
-			String content =
-				journalArticleLarPersistence.exportReferencedContent(
-					portletDataContext, template.getXsl(),
-					JournalTemplate.class);
-
-			template.setXsl(content);
-		}*/
-
-	/*	portletDataContext.addClassedModel(
-			templateElement, path, template,
-			JournalPortletDataHandler._NAMESPACE);*/
-	}
-
-	@Override
 	public JournalTemplate getEntity(String classPK) {
 		// TODO implement getEntity
 		return null;
 	}
 
 	@Override
-	public void doDigest(JournalTemplate object) throws Exception {
+	public LarDigestItem doDigest(JournalTemplate object) throws Exception {
 		// TODO implement doDigest
+		return null;
 	}
 
 	@Override

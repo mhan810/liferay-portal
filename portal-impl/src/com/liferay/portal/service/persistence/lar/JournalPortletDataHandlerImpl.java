@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFeed;
@@ -44,64 +45,9 @@ import java.util.List;
 public class JournalPortletDataHandlerImpl extends PortletDataHandlerImpl
 	implements JournalPortletDataHandler {
 
-
 	@Override
-	public void doDigest(Portlet portlet) throws Exception {
-		DataHandlerContext context = getDataHandlerContext();
-
-		List<JournalStructure> structures = JournalStructureUtil.findByGroupId(
-			context.getScopeGroupId(), QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, new StructurePKComparator(true));
-
-		for (JournalStructure structure : structures) {
-			if (context.isWithinDateRange(structure.getModifiedDate())) {
-
-				journalStructureDataHandler.digest(structure);
-			}
-		}
-
-		List<JournalTemplate> templates = JournalTemplateUtil.findByGroupId(
-			context.getScopeGroupId());
-
-		for (JournalTemplate template : templates) {
-			if (context.isWithinDateRange(template.getModifiedDate())) {
-
-				journalTemplateDataHandler.digest(template);
-			}
-		}
-
-		List<JournalFeed> feeds = JournalFeedUtil.findByGroupId(
-			context.getScopeGroupId());
-
-		for (JournalFeed feed : feeds) {
-			if (context.isWithinDateRange(feed.getModifiedDate())) {
-				//exportFeed(portletDataContext, feed);
-			}
-		}
-
-		if (context.getBooleanParameter(_NAMESPACE, "web-content")) {
-			List<JournalFolder> folders = JournalFolderUtil.findByGroupId(
-				context.getScopeGroupId());
-
-			for (JournalFolder folder : folders) {
-				/*exportFolder(
-					portletDataContext, foldersElement, articlesElement,
-					structuresElement, templatesElement,
-					dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
-					dlFileRanksElement, dlRepositoriesElement,
-					dlRepositoryEntriesElement, folder, true);   */
-			}
-
-			List<JournalArticle> articles = JournalArticleUtil.findByG_F(
-				context.getScopeGroupId(),
-				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-				QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-				new ArticleIDComparator(true));
-
-			for (JournalArticle article : articles) {
-				journalArticleDataHandler.digest(article);
-			}
-		}
+	public LarDigestItem doDigest(Portlet portlet) throws Exception {
+		return null;
 	}
 
 	private static final boolean _ALWAYS_EXPORTABLE = true;
@@ -121,6 +67,5 @@ public class JournalPortletDataHandlerImpl extends PortletDataHandlerImpl
 	private static PortletDataHandlerBoolean
 		_structuresTemplatesAndFeeds = new PortletDataHandlerBoolean(
 			_NAMESPACE, "structures-templates-and-feeds", true, true);
-
 
 }

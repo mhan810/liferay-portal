@@ -46,7 +46,7 @@ public class BookmarksPortletDataHandlerImpl
 	implements BookmarksPortletDataHandler {
 
 	@Override
-	public void doDigest(Portlet portlet) throws Exception {
+	public LarDigestItem doDigest(Portlet portlet) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
 		boolean exportPermissions = MapUtil.getBoolean(
@@ -56,17 +56,18 @@ public class BookmarksPortletDataHandlerImpl
 
 		LarDigestItem item = new LarDigestItemImpl();
 
+		Map metadataMap = new HashMap<String, String>();
+
 		if (context.getPlid() > 0) {
 			//portlet is on a layout, add plid to metadata
-			Map metadataMap = new HashMap<String, String>();
 
-			metadataMap.put("layoutPlid", context.getPlid());
+			metadataMap.put("layoutPlid", String.valueOf(context.getPlid()));
 
 			item.setMetadata(metadataMap);
 		}
 
 		item.setAction(LarDigesterConstants.ACTION_ADD);
-		item.setType(portlet.getPortletDataHandlerClass());
+		item.setType(portlet.getPortletId());
 		item.setClassPK(portlet.getPortletId());
 		item.setPath(getEntityPath(portlet));
 
@@ -76,8 +77,6 @@ public class BookmarksPortletDataHandlerImpl
 
 			item.setPermissions(permissionsMap);
 		}
-
-		digest.write(item);
 
 		List<BookmarksFolder> folders = BookmarksFolderUtil.findByGroupId(
 			context.getScopeGroupId());
@@ -93,6 +92,8 @@ public class BookmarksPortletDataHandlerImpl
 		for (BookmarksEntry entry : entries) {
 			exportEntry(entry, context);
 		}
+
+		return item;
 	}
 
 	@Override

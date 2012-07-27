@@ -114,6 +114,7 @@ public class LayoutExporter {
 	public static final String SAME_GROUP_FRIENDLY_URL =
 		"/[$SAME_GROUP_FRIENDLY_URL$]";
 
+	@Deprecated
 	public static List<Portlet> getAlwaysExportablePortlets(long companyId)
 		throws Exception {
 
@@ -130,8 +131,8 @@ public class LayoutExporter {
 				continue;
 			}
 
-			PortletDataHandler portletDataHandler =
-				portlet.getLegacyPortletDataHandlerInstance();
+			PortletDataHandler portletDataHandler = null;
+				//portlet.getLegacyPortletDataHandlerInstance();
 
 			if ((portletDataHandler == null) ||
 				!portletDataHandler.isAlwaysExportable()) {
@@ -1081,8 +1082,8 @@ public class LayoutExporter {
 				companyId, portletId);
 
 			if (portlet != null) {
-				String portletDataHandlerClass =
-					portlet.getPortletDataHandlerClass();
+				String portletDataHandlerClass = StringPool.BLANK;
+					//portlet.getPortletDataHandlerClass();
 
 				// Checking if the portlet has a data handler, if it doesn't,
 				// the default values are the ones set in PORTLET_DATA and

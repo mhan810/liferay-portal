@@ -26,8 +26,8 @@ public class AssetLinkDataHandlerImpl
 	implements AssetLinkDataHandler {
 
 	@Override
-	public void doDigest(AssetLink assetLink) throws Exception {
-		return;
+	public LarDigestItem doDigest(AssetLink assetLink) throws Exception {
+		return null;
 	}
 
 	@Override

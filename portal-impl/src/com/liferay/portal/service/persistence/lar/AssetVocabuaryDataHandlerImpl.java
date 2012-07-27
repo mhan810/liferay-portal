@@ -38,7 +38,7 @@ public class AssetVocabuaryDataHandlerImpl
 
 
 	@Override
-	public void doDigest(AssetVocabulary vocabulary) throws Exception {
+	public LarDigestItem doDigest(AssetVocabulary vocabulary) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
 		boolean exportPermissions = MapUtil.getBoolean(
@@ -49,7 +49,7 @@ public class AssetVocabuaryDataHandlerImpl
 		String path = getEntityPath(vocabulary);
 
 		if (context.isPathProcessed(path)) {
-			return;
+			return null;
 		}
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
@@ -66,7 +66,7 @@ public class AssetVocabuaryDataHandlerImpl
 		digestItem.setType(AssetVocabulary.class.getName());
 		digestItem.setClassPK(StringUtil.valueOf(vocabulary.getVocabularyId()));
 
-		digest.write(digestItem);
+		return digestItem;
 	}
 
 	@Override

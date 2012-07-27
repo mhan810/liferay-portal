@@ -24,6 +24,7 @@ import java.util.Map;
 
 /**
  * @author Mate Thurzo
+ * @author Daniel Kocsis
  */
 public interface DataHandlerContext {
 
@@ -37,11 +38,14 @@ public interface DataHandlerContext {
 
 	public static final String ATTRIBUTE_NAME_LAR_DIGEST = "LAR_DIGEST";
 
-	public static final String ATTRIBUTE_NAME_PRIVATE_LAYOUT = "PRIVATE_LAYOUT";
+	public static final String ATTRIBUTE_NAME_LAST_PUBLISH_DATE =
+		"LAST_PUBLISH_DATE";
+
+	public static final String ATTRIBUTE_NAME_OLD_PLID = "OLD_PLID";
 
 	public static final String ATTRIBUTE_NAME_PLID = "PLID";
 
-	public static final String ATTRIBUTE_NAME_OLD_PLID = "OLD_PLID";
+	public static final String ATTRIBUTE_NAME_PRIVATE_LAYOUT = "PRIVATE_LAYOUT";
 
 	public static final String ATTRIBUTE_NAME_SCOPE_GROUP_ID = "SCOPE_GROUP_ID";
 
@@ -75,11 +79,15 @@ public interface DataHandlerContext {
 
 	public long getCompanyId();
 
+	public String getDataStrategy();
+
 	public Date getEndDate();
 
 	public long getGroupId();
 
 	public LarDigest getLarDigest();
+
+	public Date getLastPublishDate();
 
 	public Map<?, ?> getNewPrimaryKeysMap(Class<?> clazz);
 
@@ -87,17 +95,15 @@ public interface DataHandlerContext {
 
 	public long getOldPlid();
 
-	public long getPlid();
-
 	public Map<String, String[]> getParameters();
+
+	public long getPlid();
 
 	public long getScopeGroupId();
 
 	public long getSourceGroupId();
 
 	public Date getStartDate();
-
-	public String getDataStrategy();
 
 	public User getUser();
 
@@ -127,17 +133,21 @@ public interface DataHandlerContext {
 
 	public void setCompanyId(long companyId);
 
+	public void setDataStrategy(String dataStrategy);
+
 	public void setEndDate(Date endDate);
 
 	public void setGroupId(long groupId);
 
 	public void setLarDigest(LarDigest digest);
 
+	public void setLastPublishDate(Date lastPublishDate);
+
 	public void setOldPlid(long oldPlid);
 
-	public void setPlid(long plid);
-
 	public void setParameters(Map<String, String[]> parameters);
+
+	public void setPlid(long plid);
 
 	public void setPrivateLayout(boolean privateLayout);
 
@@ -146,8 +156,6 @@ public interface DataHandlerContext {
 	public void setSourceGroupId(long sourceGroupId);
 
 	public void setStartDate(Date startDate);
-
-	public void setDataStrategy(String dataStrategy);
 
 	public void setUser(User user);
 

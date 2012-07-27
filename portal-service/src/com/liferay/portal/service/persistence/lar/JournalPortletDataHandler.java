@@ -14,10 +14,15 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.model.Portlet;
+
 /**
  * @author Daniel Kocsis
  */
 public interface JournalPortletDataHandler extends PortletDataHandler {
 
 	public static final String _NAMESPACE = "journal";
+
+	public LarDigestItem doDigest(Portlet portlet) throws Exception;
 }

@@ -15,7 +15,6 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.DataHandlerContext;
-import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -44,12 +43,8 @@ public class BookmarksFolderDataHandlerImpl
 	extends BaseDataHandlerImpl<BookmarksFolder>
 	implements BookmarksFolderDataHandler {
 
-
-	public void deserialize(Document document) {
-	}
-
 	@Override
-	public void doDigest(BookmarksFolder folder) throws Exception {
+	public LarDigestItem doDigest(BookmarksFolder folder) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
 		boolean exportPermissions = MapUtil.getBoolean(
@@ -60,7 +55,7 @@ public class BookmarksFolderDataHandlerImpl
 		String path = getEntityPath(folder);
 
 		if (context.isPathProcessed(path)) {
-			return;
+			return null;
 		}
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
@@ -77,7 +72,7 @@ public class BookmarksFolderDataHandlerImpl
 		digestItem.setType(BookmarksFolder.class.getName());
 		digestItem.setClassPK(StringUtil.valueOf(folder.getFolderId()));
 
-		digest.write(digestItem);
+		return digestItem;
 	}
 
 	@Override

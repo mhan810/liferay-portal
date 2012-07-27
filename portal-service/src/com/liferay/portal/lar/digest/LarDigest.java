@@ -14,8 +14,6 @@
 
 package com.liferay.portal.lar.digest;
 
-import com.liferay.portal.kernel.xml.Document;
-
 import java.io.File;
 
 import java.util.List;

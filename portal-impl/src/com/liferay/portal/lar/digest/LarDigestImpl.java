@@ -280,6 +280,31 @@ public class LarDigestImpl implements LarDigest {
 		return getMetaData(root);
 	}
 
+	public Map<String, String> getMetaData(Element element) {
+		Element metadataSetElement = element.element(
+			LarDigesterConstants.NODE_METADATA_SET_LABEL);
+
+		if (metadataSetElement == null) {
+			return null;
+		}
+
+		Map metadata = new HashMap<String, String>();
+
+		List<Element> metadataElements = metadataSetElement.elements(
+			LarDigesterConstants.NODE_METADATA_LABEL);
+
+		if ((metadataElements == null) || metadataElements.isEmpty()) {
+			return null;
+		}
+
+		for (Element metadataEl : metadataElements) {
+			Attribute metadataAt = metadataEl.attribute(0);
+			metadata.put(metadataAt.getName(), metadataAt.getValue());
+		}
+
+		return metadata;
+	}
+
 	public Iterator<LarDigestItem> iterator() {
 		XMLInputFactory xmlInputFactory = StAXReaderUtil.getXMLInputFactory();
 
@@ -365,31 +390,6 @@ public class LarDigestImpl implements LarDigest {
 		digestItem.setMetadata(getMetaData(root));
 
 		return digestItem;
-	}
-
-	public Map<String, String> getMetaData(Element element) {
-		Element metadataSetElement = element.element(
-			LarDigesterConstants.NODE_METADATA_SET_LABEL);
-
-		if (metadataSetElement == null) {
-			return null;
-		}
-
-		Map metadata = new HashMap<String, String>();
-
-		List<Element> metadataElements = metadataSetElement.elements(
-			LarDigesterConstants.NODE_METADATA_LABEL);
-
-		if (metadataElements == null || metadataElements.isEmpty()) {
-			return null;
-		}
-
-		for (Element metadataEl : metadataElements) {
-			Attribute metadataAt = metadataEl.attribute(0);
-			metadata.put(metadataAt.getName(), metadataAt.getValue());
-		}
-
-		return metadata;
 	}
 
 	protected Map getPermissions(Element element) {

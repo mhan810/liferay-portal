@@ -59,6 +59,10 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		return GetterUtil.getLong(getAttribute(ATTRIBUTE_NAME_COMPANY_ID));
 	}
 
+	public String getDataStrategy() {
+		return GetterUtil.getString(getAttribute(ATTRIBUTE_NAME_DATA_STRATEGY));
+	}
+
 	public Date getEndDate() {
 		return (Date)getAttribute(ATTRIBUTE_NAME_END_DATE);
 	}
@@ -69,6 +73,10 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 
 	public LarDigest getLarDigest() {
 		return (LarDigest)getAttribute(ATTRIBUTE_NAME_LAR_DIGEST);
+	}
+
+	public Date getLastPublishDate() {
+		return (Date)getAttribute(ATTRIBUTE_NAME_LAST_PUBLISH_DATE);
 	}
 
 	public Map<?, ?> getNewPrimaryKeysMap(Class<?> clazz) {
@@ -111,10 +119,6 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		return (Date)getAttribute(ATTRIBUTE_NAME_START_DATE);
 	}
 
-	public String getDataStrategy() {
-		return GetterUtil.getString(getAttribute(ATTRIBUTE_NAME_DATA_STRATEGY));
-	}
-
 	public User getUser() {
 		return (User)getAttribute(ATTRIBUTE_NAME_USER);
 	}
@@ -133,18 +137,6 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 
 	public ZipWriter getZipWriter() {
 		return (ZipWriter)getAttribute(ATTRIBUTE_NAME_ZIP_WRITER);
-	}
-
-	public boolean isPathProcessed(String path) {
-		if (_storedPaths.contains(path)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	public boolean isPrivateLayout() {
-		return (Boolean)getAttribute(ATTRIBUTE_NAME_PRIVATE_LAYOUT);
 	}
 
 	public boolean hasDateRange() {
@@ -169,12 +161,23 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 
 	public boolean isDataStrategyMirrorWithOverwriting() {
 		if (getDataStrategy().equals(DATA_STRATEGY_MIRROR_OVERWRITE)) {
-
 			return true;
 		}
 		else {
 			return false;
 		}
+	}
+
+	public boolean isPathProcessed(String path) {
+		if (_storedPaths.contains(path)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean isPrivateLayout() {
+		return (Boolean)getAttribute(ATTRIBUTE_NAME_PRIVATE_LAYOUT);
 	}
 
 	public boolean isWithinDateRange(Date modifiedDate) {
@@ -203,6 +206,10 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		setAttribute(ATTRIBUTE_NAME_COMPANY_ID, companyId);
 	}
 
+	public void setDataStrategy(String dataStrategy) {
+		setAttribute(ATTRIBUTE_NAME_DATA_STRATEGY, dataStrategy);
+	}
+
 	public void setEndDate(Date endDate) {
 		setAttribute(ATTRIBUTE_NAME_END_DATE, endDate);
 	}
@@ -213,6 +220,10 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 
 	public void setLarDigest(LarDigest digest) {
 		setAttribute(ATTRIBUTE_NAME_LAR_DIGEST, digest);
+	}
+
+	public void setLastPublishDate(Date lastPublishDate) {
+		setAttribute(ATTRIBUTE_NAME_LAST_PUBLISH_DATE, lastPublishDate);
 	}
 
 	public void setOldPlid(long oldPlid) {
@@ -243,10 +254,6 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		setAttribute(ATTRIBUTE_NAME_START_DATE, startDate);
 	}
 
-	public void setDataStrategy(String dataStrategy) {
-		setAttribute(ATTRIBUTE_NAME_DATA_STRATEGY, dataStrategy);
-	}
-
 	public void setUser(User user) {
 		setAttribute(ATTRIBUTE_NAME_USER, user);
 	}
@@ -264,9 +271,9 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 	}
 
 	private Map<String, Object> _attributes = new HashMap<String, Object>();
-	private Map<String, String[]> _paramaters;
-	private Set<String> _storedPaths = new HashSet<String>();
 	private Map<String, Map<?, ?>> _newPrimaryKeysMaps =
 		new HashMap<String, Map<?, ?>>();
+	private Map<String, String[]> _paramaters;
+	private Set<String> _storedPaths = new HashSet<String>();
 
 }

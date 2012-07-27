@@ -40,7 +40,7 @@ public class AssetCategoryDataHandlerImpl
 	implements AssetCategoryDataHandler {
 
 	@Override
-	public void doDigest(AssetCategory category) throws Exception {
+	public LarDigestItem doDigest(AssetCategory category) throws Exception {
 		DataHandlerContext context =
 			DataHandlerContextThreadLocal.getDataHandlerContext();
 
@@ -66,7 +66,7 @@ public class AssetCategoryDataHandlerImpl
 		String path = getEntityPath(category);
 
 		if (context.isPathProcessed(path)) {
-			return;
+			return null;
 		}
 
 		LarDigest digest = context.getLarDigest();
@@ -85,7 +85,7 @@ public class AssetCategoryDataHandlerImpl
 		digestItem.setType(AssetCategory.class.getName());
 		digestItem.setClassPK(String.valueOf(category.getCategoryId()));
 
-		digest.write(digestItem);
+		return digestItem;
 	}
 
 	@Override

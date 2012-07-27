@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portlet.journal.model.JournalStructure;
 
@@ -23,7 +24,8 @@ import com.liferay.portlet.journal.model.JournalStructure;
 public interface JournalStructureDataHandler
 	extends BaseDataHandler<JournalStructure> {
 
-	public void doDigest(JournalStructure journalStructure) throws Exception;
+	public LarDigestItem doDigest(JournalStructure journalStructure)
+		throws Exception;
 
 	public JournalStructure getEntity(String classPK);
 

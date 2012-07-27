@@ -22,12 +22,10 @@ import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.NoSuchLayoutPrototypeException;
 import com.liferay.portal.NoSuchLayoutSetPrototypeException;
 import com.liferay.portal.kernel.lar.*;
-import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.staging.DataHandlerLocatorUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ReleaseInfo;
@@ -43,7 +41,6 @@ import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutPrototype;
-import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionCacheUtil;
@@ -57,20 +54,19 @@ import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.LayoutUtil;
-import com.liferay.portal.service.persistence.lar.PortletDataHandlerImpl;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
-import org.apache.commons.lang.time.StopWatch;
 
 import java.io.File;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.commons.lang.time.StopWatch;
 
 /**
  * @author Daniel Kocsis
@@ -97,6 +93,35 @@ public class LARImporter {
 			JournalContentUtil.clearCache();
 			PermissionCacheUtil.clearCache();
 		}
+	}
+
+	protected void deleteMissingLayouts(
+			long groupId, boolean privateLayout, Set<Long> newLayoutIds,
+			List<Layout> previousLayouts, ServiceContext serviceContext)
+		throws Exception {
+
+		// Layouts
+
+		if (_log.isDebugEnabled()) {
+			if (newLayoutIds.size() > 0) {
+				_log.debug("Delete missing layouts");
+			}
+		}
+
+		for (Layout layout : previousLayouts) {
+			if (!newLayoutIds.contains(layout.getLayoutId())) {
+				try {
+					LayoutLocalServiceUtil.deleteLayout(
+						layout, false, serviceContext);
+				}
+				catch (NoSuchLayoutException nsle) {
+				}
+			}
+		}
+
+		// Layout set
+
+		LayoutSetLocalServiceUtil.updatePageCount(groupId, privateLayout);
 	}
 
 	protected void doImport(DataHandlerContext context, File file)
@@ -283,8 +308,7 @@ public class LARImporter {
 				metaData.get("type-uuid"));
 		}
 
-		context.setAttribute(
-			"layoutSetPrototypeUuid", layoutSetPrototypeUuid);
+		context.setAttribute("layoutSetPrototypeUuid", layoutSetPrototypeUuid);
 
 		context.setAttribute(
 			"layoutSetPrototypeLinkEnabled", layoutSetPrototypeLinkEnabled);
@@ -361,7 +385,7 @@ public class LARImporter {
 
 		for (LarDigestItem item : larDigest) {
 			BaseDataHandler larPesistence =
-				DataHandlerLocatorUtil.locate(item.getType());
+				DataHandlersUtil.getDataHandlerInstance(item.getType());
 
 			larPesistence.importData(item);
 		}
@@ -408,35 +432,6 @@ public class LARImporter {
 		}
 
 		zipReader.close();
-	}
-
-	protected void deleteMissingLayouts(
-			long groupId, boolean privateLayout, Set<Long> newLayoutIds,
-			List<Layout> previousLayouts, ServiceContext serviceContext)
-		throws Exception {
-
-		// Layouts
-
-		if (_log.isDebugEnabled()) {
-			if (newLayoutIds.size() > 0) {
-				_log.debug("Delete missing layouts");
-			}
-		}
-
-		for (Layout layout : previousLayouts) {
-			if (!newLayoutIds.contains(layout.getLayoutId())) {
-				try {
-					LayoutLocalServiceUtil.deleteLayout(
-						layout, false, serviceContext);
-				}
-				catch (NoSuchLayoutException nsle) {
-				}
-			}
-		}
-
-		// Layout set
-
-		LayoutSetLocalServiceUtil.updatePageCount(groupId, privateLayout);
 	}
 
 	// toDo: review this method!
@@ -499,8 +494,7 @@ public class LARImporter {
 			Map<String, String[]> parameters)
 		throws Exception {
 
-		DataHandlerContext context =
-			new DataHandlerContextImpl();
+		DataHandlerContext context = new DataHandlerContextImpl();
 
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 		User user = UserLocalServiceUtil.getUser(userId);
@@ -512,12 +506,10 @@ public class LARImporter {
 		context.setScopeGroupId(groupId);
 		context.setUser(user);
 
-		DataHandlerContextThreadLocal.setDataHandlerContext(
-			context);
+		DataHandlerContextThreadLocal.setDataHandlerContext(context);
 
 		return context;
 	}
-
 
 	private static Log _log = LogFactoryUtil.getLog(LARImporter.class);
 

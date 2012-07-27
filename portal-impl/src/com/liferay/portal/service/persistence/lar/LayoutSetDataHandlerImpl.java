@@ -41,8 +41,9 @@ public class LayoutSetDataHandlerImpl extends BaseDataHandlerImpl<LayoutSet>
 	}
 
 	@Override
-	public void doDigest(LayoutSet object) throws Exception {
+	public LarDigestItem doDigest(LayoutSet object) throws Exception {
 		// TODO implement doDigest
+		return null;
 	}
 
 	@Override
