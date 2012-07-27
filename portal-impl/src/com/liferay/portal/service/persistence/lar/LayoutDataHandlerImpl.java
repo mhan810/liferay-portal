@@ -16,7 +16,6 @@ package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
-import com.liferay.portal.kernel.lar.PermissionDigester;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
@@ -25,11 +24,9 @@ import com.liferay.portal.kernel.staging.LayoutStagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PrimitiveLongList;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -61,7 +58,6 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
-import com.liferay.portal.security.permission.ResourceActionsUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ImageLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
@@ -615,17 +611,9 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
 
 		if (exportPermissions) {
-			String resourceName = Layout.class.getName();
-			String resourcePrimKey = String.valueOf(layout.getPlid());
+			Map permissionsMap = digestLayoutPermissions(context, layout);
 
-			LayoutCache layoutCache = (LayoutCache)context.getAttribute(
-				"layoutCache");
-
-			Map permissionMap = digestPermissions(
-				layoutCache, context.getCompanyId(), context.getScopeGroupId(),
-				resourceName, resourcePrimKey, false);
-
-			digestItem.setPermissions(permissionMap);
+			digestItem.setPermissions(permissionsMap);
 		}
 
 		if (deleteLayout) {
@@ -711,7 +699,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 				javax.portlet.PortletPreferences jxPreferences =
 					PortletPreferencesFactoryUtil.getLayoutPortletSetup(
-						layout, portlet.getPortletId());
+						layout, portletId);
 
 				String scopeType = GetterUtil.getString(
 					jxPreferences.getValue("lfrScopeType", null));
@@ -762,6 +750,19 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				context.setAttribute("scopeLayoutUuid", scopeLayoutUuid);
 				context.setAttribute("layout", layout);
 
+				Portlet portlet = PortletLocalServiceUtil.getPortletById(
+					context.getCompanyId(), portletId);
+
+				if (portlet == null) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(
+							"Do not export portlet " + portletId +
+								" because the portlet does not exist");
+					}
+
+					continue;
+				}
+
 
 				if (portletDataHandler != null) {
 					portletDataHandler.digest(portlet);
@@ -802,6 +803,24 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		}
 
 		return null;
+	}
+
+	private Map<String, List<String>> digestLayoutPermissions(
+			DataHandlerContext context, Layout layout)
+		throws Exception {
+
+		long companyId = context.getCompanyId();
+		long groupId = context.getGroupId();
+
+		String resourceName = Layout.class.getName();
+		String resourcePrimKey = String.valueOf(layout.getPlid());
+
+		LayoutCache layoutCache = (LayoutCache)context.getAttribute(
+			"layoutCache");
+
+		return digestPermissions(
+			layoutCache, companyId, groupId, resourceName, resourcePrimKey,
+			false);
 	}
 
 	private void exportJournalArticle(Layout layout) throws Exception {

@@ -15,7 +15,6 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.DataHandlerContext;
-import com.liferay.portal.kernel.lar.PermissionDigester;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -56,10 +55,7 @@ public class AssetVocabuaryDataHandlerImpl
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
 		if (exportPermissions) {
-			PermissionDigester permissionDigester =
-				context.getPermissionDigester();
-
-			Map permissionsMap = permissionDigester.digestEntityPermissions(
+			Map permissionsMap = digestEntityPermissions(
 				AssetVocabulary.class.getName(), vocabulary.getVocabularyId(),
 				context);
 

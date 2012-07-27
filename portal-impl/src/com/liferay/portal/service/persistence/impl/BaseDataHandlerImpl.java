@@ -24,17 +24,15 @@ import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.DataHandlerContextThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataContextListener;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
-import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
-import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.KeyValuePair;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.PrimitiveLongList;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -44,8 +42,6 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.DataHandlersUtil;
-import com.liferay.portal.lar.AlwaysCurrentUserIdStrategy;
-import com.liferay.portal.lar.CurrentUserIdStrategy;
 import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.PermissionExporter;
 import com.liferay.portal.lar.XStreamWrapper;
@@ -55,22 +51,24 @@ import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.AuditedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
-import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.Portlet;
-import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.ResourcedModel;
 import com.liferay.portal.model.Role;
+import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.Team;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.permission.ResourceActionsUtil;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LockLocalServiceUtil;
 import com.liferay.portal.service.ResourceBlockLocalServiceUtil;
+import com.liferay.portal.service.ResourceBlockPermissionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.TeamLocalServiceUtil;
-import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.lar.AssetCategoryDataHandler;
 import com.liferay.portal.service.persistence.lar.AssetLinkDataHandler;
@@ -112,6 +110,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Mate Thurzo
@@ -391,7 +390,9 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		try {
 			sendUpdateMessage(MESSAGE_COMMAND_IMPORT, item);
 
+		if (!getDataHandlerContext().isPathProcessed(item.getPath())) {
 			doImport(item);
+		}
 		}
 		catch (Exception e) {
 		}
@@ -661,6 +662,73 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 	}
 
+	public Map<String, List<String>> digestEntityPermissions(
+			String resourceName, long resourcePK, DataHandlerContext context)
+			throws Exception {
+
+		HashMap<String, List<String>> permissions =
+			new HashMap<String, List<String>>();
+
+		Group group = GroupLocalServiceUtil.getGroup(context.getGroupId());
+
+		List<Role> roles = RoleLocalServiceUtil.getRoles(
+			context.getCompanyId());
+
+		PrimitiveLongList roleIds = new PrimitiveLongList(roles.size());
+		Map<Long, String> roleIdsToNames = new HashMap<Long, String>();
+
+		for (Role role : roles) {
+			int type = role.getType();
+
+			if ((type == RoleConstants.TYPE_REGULAR) ||
+					((type == RoleConstants.TYPE_ORGANIZATION) &&
+						group.isOrganization()) ||
+					((type == RoleConstants.TYPE_SITE) &&
+						(group.isLayoutSetPrototype() || group.isSite()))) {
+
+				String name = role.getName();
+
+				roleIds.add(role.getRoleId());
+				roleIdsToNames.put(role.getRoleId(), name);
+			}
+			else if ((type == RoleConstants.TYPE_PROVIDER) && role.isTeam()) {
+				Team team = TeamLocalServiceUtil.getTeam(role.getClassPK());
+
+				if (team.getGroupId() == context.getGroupId()) {
+					String name = ROLE_TEAM_PREFIX + team.getName();
+
+					roleIds.add(role.getRoleId());
+					roleIdsToNames.put(role.getRoleId(), name);
+				}
+			}
+		}
+
+		List<String> actionIds = ResourceActionsUtil.getModelResourceActions(
+				resourceName);
+
+		Map<Long, Set<String>> roleIdsToActionIds = getActionIds(
+				context.getCompanyId(), roleIds.getArray(), resourceName,
+				resourcePK, actionIds);
+
+		for (Map.Entry<Long, String> entry : roleIdsToNames.entrySet()) {
+			long roleId = entry.getKey();
+			String name = entry.getValue();
+
+			Set<String> availableActionIds = roleIdsToActionIds.get(roleId);
+
+			if ((availableActionIds == null) || availableActionIds.isEmpty()) {
+				continue;
+			}
+
+			List<String> actionIdsList = ListUtil.fromCollection(
+				availableActionIds);
+
+			permissions.put(name, actionIdsList);
+		}
+
+		return permissions;
+	}
+
 	protected void digestLocks(T object) throws Exception {
 		String key = String.valueOf(object.getPrimaryKeyObj());
 
@@ -863,8 +931,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return -1;
 	}
 
-	protected String getNamespace() {
-		return StringPool.BLANK;
 	}
 
 	protected DataHandlerContext getDataHandlerContext() {
@@ -890,6 +956,10 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 	protected String getLayoutPath(long layoutId) {
 		return getRootPath() + ROOT_PATH_LAYOUTS + layoutId;
+	}
+
+	protected String getNamespace() {
+		return StringPool.BLANK;
 	}
 
 	protected String getPortletPath(String portletId) {

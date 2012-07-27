@@ -48,6 +48,8 @@ public interface BaseDataHandler<T extends BaseModel<T>> {
 
 	public static final String ROOT_PATH_PORTLETS = "/portlets/";
 
+	public static final String ROLE_TEAM_PREFIX = "ROLE_TEAM_,*";
+
 	public void addZipEntry(String path, T object) throws SystemException;
 
 	public void addZipEntry(String path, byte[] bytes) throws SystemException;

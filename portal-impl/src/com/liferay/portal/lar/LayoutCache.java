@@ -43,7 +43,7 @@ import java.util.Map;
 public class LayoutCache {
 
 	public List<Role> getGroupRoles_5(long groupId, String resourceName)
-			throws PortalException, SystemException {
+		throws PortalException, SystemException {
 
 		List<Role> roles = groupRolesMap.get(groupId);
 
@@ -70,6 +70,24 @@ public class LayoutCache {
 		}
 
 		return roles;
+	}
+
+	public Role getRole(long companyId, String roleName)
+		throws PortalException, SystemException {
+
+		Role role = rolesMap.get(roleName);
+
+		if (role == null) {
+			try {
+				role = RoleLocalServiceUtil.getRole(companyId, roleName);
+
+				rolesMap.put(roleName, role);
+			}
+			catch (NoSuchRoleException nsre) {
+			}
+		}
+
+		return role;
 	}
 
 	protected long getEntityGroupId(
@@ -116,24 +134,6 @@ public class LayoutCache {
 		}
 
 		return entityGroupId;
-	}
-
-	public Role getRole(long companyId, String roleName)
-		throws PortalException, SystemException {
-
-		Role role = rolesMap.get(roleName);
-
-		if (role == null) {
-			try {
-				role = RoleLocalServiceUtil.getRole(companyId, roleName);
-
-				rolesMap.put(roleName, role);
-			}
-			catch (NoSuchRoleException nsre) {
-			}
-		}
-
-		return role;
 	}
 
 	protected Map<String, Long> getEntityMap(long companyId, String entityName)

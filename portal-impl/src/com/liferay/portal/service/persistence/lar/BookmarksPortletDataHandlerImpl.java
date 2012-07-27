@@ -15,7 +15,6 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.DataHandlerContext;
-import com.liferay.portal.kernel.lar.PermissionDigester;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;

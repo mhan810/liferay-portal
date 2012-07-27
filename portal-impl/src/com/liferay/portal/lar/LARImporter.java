@@ -102,6 +102,35 @@ public class LARImporter {
 		}
 	}
 
+	protected void deleteMissingLayouts(
+			long groupId, boolean privateLayout, Set<Long> newLayoutIds,
+			List<Layout> previousLayouts, ServiceContext serviceContext)
+		throws Exception {
+
+		// Layouts
+
+		if (_log.isDebugEnabled()) {
+			if (newLayoutIds.size() > 0) {
+				_log.debug("Delete missing layouts");
+			}
+		}
+
+		for (Layout layout : previousLayouts) {
+			if (!newLayoutIds.contains(layout.getLayoutId())) {
+				try {
+					LayoutLocalServiceUtil.deleteLayout(
+						layout, false, serviceContext);
+				}
+				catch (NoSuchLayoutException nsle) {
+				}
+			}
+		}
+
+		// Layout set
+
+		LayoutSetLocalServiceUtil.updatePageCount(groupId, privateLayout);
+	}
+
 	protected void doImport(DataHandlerContext context, File file)
 		throws Exception {
 
@@ -261,7 +290,7 @@ public class LARImporter {
 				layoutPrototype.setUuid(layoutPrototypeUuid);
 
 				LayoutPrototypeLocalServiceUtil.updateLayoutPrototype(
-						layoutPrototype);
+					layoutPrototype);
 			}
 		}
 		else if (group.isLayoutSetPrototype() &&
@@ -310,10 +339,6 @@ public class LARImporter {
 
 		// toDo: asset, comment, expando, lock, rating import needs to be moved here!
 		/*
-		if (importPermissions) {
-			_permissionImporter.readPortletDataPermissions(portletDataContext);
-		}
-
 		if (importCategories || group.isCompany()) {
 			_portletImporter.readAssetCategories(portletDataContext);
 		}
@@ -386,7 +411,7 @@ public class LARImporter {
 		if (importPermissions) {
 			if (userId > 0) {
 				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-						User.class);
+					User.class);
 
 				indexer.reindex(userId);
 			}
@@ -439,35 +464,6 @@ public class LARImporter {
 		}
 
 		zipReader.close();
-	}
-
-	protected void deleteMissingLayouts(
-			long groupId, boolean privateLayout, Set<Long> newLayoutIds,
-			List<Layout> previousLayouts, ServiceContext serviceContext)
-		throws Exception {
-
-		// Layouts
-
-		if (_log.isDebugEnabled()) {
-			if (newLayoutIds.size() > 0) {
-				_log.debug("Delete missing layouts");
-			}
-		}
-
-		for (Layout layout : previousLayouts) {
-			if (!newLayoutIds.contains(layout.getLayoutId())) {
-				try {
-					LayoutLocalServiceUtil.deleteLayout(
-						layout, false, serviceContext);
-				}
-				catch (NoSuchLayoutException nsle) {
-				}
-			}
-		}
-
-		// Layout set
-
-		LayoutSetLocalServiceUtil.updatePageCount(groupId, privateLayout);
 	}
 
 	protected void validateLayoutPrototypes(
@@ -549,4 +545,5 @@ public class LARImporter {
 	private static Log _log = LogFactoryUtil.getLog(LARImporter.class);
 
 	private DataHandlerContext _context;
+
 }

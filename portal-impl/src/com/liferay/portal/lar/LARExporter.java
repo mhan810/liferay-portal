@@ -138,8 +138,8 @@ public class LARExporter {
 			MessageBusUtil.sendMessage(
 				DestinationNames.LAR_EXPORT_IMPORT, message);
 
-			_initDataHandlerContext(groupId, privateLayout, parameterMap,
-				startDate, endDate);
+			_initDataHandlerContext(
+				groupId, privateLayout, parameterMap, startDate, endDate);
 
 			doCreateDigest(layoutIds, _context);
 
@@ -287,7 +287,8 @@ public class LARExporter {
 		// Assembly metadata for LAR
 		HashMap<String, String> metadata = new HashMap<String, String>();
 
-		metadata.put("available-locales",
+		metadata.put(
+			"available-locales",
 			StringUtil.merge(LanguageUtil.getAvailableLocales()));
 		metadata.put(
 			"build-number", String.valueOf(ReleaseInfo.getBuildNumber()));
