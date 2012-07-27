@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.staging.DataHandlerLocatorUtil;
 import com.liferay.portal.kernel.staging.LayoutStagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
@@ -35,6 +34,7 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
@@ -526,7 +526,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 	}
 
 	@Override
-	public void doDigest(Layout layout) throws Exception {
+	public LarDigestItem doDigest(Layout layout) throws Exception {
 		DataHandlerContext context =
 			getDataHandlerContext();
 
@@ -535,7 +535,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		String path = getEntityPath(layout);
 
 		if (context.isPathProcessed(path)) {
-			return;
+			return null;
 		}
 
 		LayoutRevision layoutRevision = null;
@@ -552,14 +552,14 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				serviceContext, "layoutSetBranchId");
 
 			if (layoutSetBranchId <= 0) {
-				return;
+				return null;
 			}
 
 			layoutRevision = LayoutRevisionUtil.fetchByL_H_P(
 				layoutSetBranchId, true, layout.getPlid());
 
 			if (layoutRevision == null) {
-				return;
+				return null;
 			}
 
 			LayoutStagingHandler layoutStagingHandler =
@@ -629,9 +629,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			digestItem.setType(Layout.class.getName());
 			digestItem.setClassPK(StringUtil.valueOf(layout.getLayoutId()));
 
-			digest.write(digestItem);
-
-			return;
+			return digestItem;
 		}
 
 		if (layout.isIconImage()) {
@@ -647,8 +645,6 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		digestItem.setPath(path);
 		digestItem.setType(Layout.class.getName());
 		digestItem.setClassPK(String.valueOf(layout.getPlid()));
-
-		digest.write(digestItem);
 
 		if (layout.isTypeArticle()) {
 			exportJournalArticle(layout);
@@ -718,9 +714,9 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 					}
 				}
 
-				BaseDataHandler portletDataHandler =
-					DataHandlerLocatorUtil.locate(
-						portlet.getPortletDataHandlerClass());
+				PortletDataHandler portletDataHandler =
+					(PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(
+						portlet.getPortletId());
 
 				if (portletDataHandler != null) {
 					portletDataHandler.digest(portlet);
@@ -729,6 +725,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		}
 
 		context.resetAttribute(DataHandlerContext.ATTRIBUTE_NAME_PLID);
+
+		return digestItem;
 	}
 
 	@Override

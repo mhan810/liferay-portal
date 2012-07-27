@@ -49,7 +49,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.lar.LARExporter;
 import com.liferay.portal.lar.LARImporter;
-import com.liferay.portal.lar.LayoutImporter;
 import com.liferay.portal.lar.PortletExporter;
 import com.liferay.portal.lar.PortletImporter;
 import com.liferay.portal.model.Group;
@@ -714,7 +713,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 				groupId, privateLayout, layoutIds, parameterMap, startDate,
 				endDate);
 
-			return larExporter.export(
+			return larExporter.serialize(
 				groupId, privateLayout, null, parameterMap, startDate, endDate);
 		}
 		catch (Exception e) {

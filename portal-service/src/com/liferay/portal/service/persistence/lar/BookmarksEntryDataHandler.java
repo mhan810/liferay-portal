@@ -15,6 +15,7 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 
@@ -26,7 +27,7 @@ public interface BookmarksEntryDataHandler
 
 	public void deserialize(Document document);
 
-	public void doDigest(BookmarksEntry entry) throws Exception;
+	public LarDigestItem doDigest(BookmarksEntry entry) throws Exception;
 
 	public BookmarksEntry getEntity(String classPK);
 

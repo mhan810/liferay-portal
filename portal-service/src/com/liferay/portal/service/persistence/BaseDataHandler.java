@@ -15,6 +15,7 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
@@ -35,13 +36,17 @@ import java.util.List;
  */
 public interface BaseDataHandler<T extends BaseModel<T>> {
 
+	public static final String MESSAGE_COMMAND_DIGEST = "digest";
+
+	public static final String MESSAGE_COMMAND_SERIALIZE = "serialize";
+
+	public static final String MESSAGE_COMMAND_IMPORT = "import";
+
 	public static final String ROOT_PATH_GROUPS = "/groups/";
 
 	public static final String ROOT_PATH_LAYOUTS = "/layouts/";
 
 	public static final String ROOT_PATH_PORTLETS = "/portlets/";
-
-	public void addExpando(T object) throws SystemException;
 
 	public void addZipEntry(String path, T object) throws SystemException;
 
@@ -86,7 +91,7 @@ public interface BaseDataHandler<T extends BaseModel<T>> {
 
 	public ZipWriter getZipWriter();
 
-	public void serialize(String classPK);
+	public void serialize(LarDigestItem item, DataHandlerContext context);
 
 	public void setXstreamWrapper(XStreamWrapper xStreamWrapper);
 

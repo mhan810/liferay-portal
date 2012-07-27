@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portlet.asset.model.AssetCategory;
 
@@ -23,7 +24,7 @@ import com.liferay.portlet.asset.model.AssetCategory;
 public interface AssetCategoryDataHandler
 	extends BaseDataHandler<AssetCategory> {
 
-	public void doDigest(AssetCategory assetCategory) throws Exception;
+	public LarDigestItem doDigest(AssetCategory assetCategory) throws Exception;
 
 	public AssetCategory getEntity(String classPK);
 

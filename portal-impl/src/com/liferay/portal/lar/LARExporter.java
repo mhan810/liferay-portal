@@ -15,25 +15,44 @@
 package com.liferay.portal.lar;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.lar.*;
+import com.liferay.portal.kernel.lar.DataHandlerContext;
+import com.liferay.portal.kernel.lar.DataHandlerContextThreadLocal;
+import com.liferay.portal.kernel.lar.ImportExportThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.messaging.DestinationNames;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
-import com.liferay.portal.kernel.staging.DataHandlerLocatorUtil;
+import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestImpl;
 import com.liferay.portal.lar.digest.LarDigestItem;
-import com.liferay.portal.model.*;
-import com.liferay.portal.service.*;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutPrototype;
+import com.liferay.portal.model.LayoutSet;
+import com.liferay.portal.model.LayoutSetPrototype;
+import com.liferay.portal.model.Portlet;
+import com.liferay.portal.model.Theme;
+import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
+import com.liferay.portal.service.LayoutSetLocalServiceUtil;
+import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
+import com.liferay.portal.service.PortletLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.lar.AssetCategoryDataHandler;
 import com.liferay.portal.service.persistence.lar.AssetVocabularyDataHandler;
@@ -67,12 +86,56 @@ import org.apache.commons.lang.time.StopWatch;
  */
 public class LARExporter {
 
+	public static List<Portlet> getAlwaysExportablePortlets(long companyId)
+		throws Exception {
+
+		List<Portlet> portlets = PortletLocalServiceUtil.getPortlets(companyId);
+
+		Iterator<Portlet> itr = portlets.iterator();
+
+		PortletDataHandler portletDataHandler = null;
+
+		while (itr.hasNext()) {
+			Portlet portlet = itr.next();
+
+			portletDataHandler =
+				(PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(
+					portlet.getPortletId());
+
+			if (!portlet.isActive()) {
+				itr.remove();
+
+				continue;
+			}
+
+			if (portletDataHandler == null) {
+				itr.remove();
+
+				continue;
+			}
+
+			if (!portletDataHandler.isAlwaysExportable()) {
+				itr.remove();
+			}
+		}
+
+		return portlets;
+	}
+
 	public File digest(
 		long groupId, boolean privateLayout, long[] layoutIds,
 		Map<String, String[]> parameterMap, Date startDate, Date endDate) {
 
 		try {
 			ImportExportThreadLocal.setLayoutExportInProcess(true);
+
+			//Broadcasting message about starting of process
+
+			Message message = new Message();
+			message.put("command", "larExporterDigest");
+
+			MessageBusUtil.sendMessage(
+				DestinationNames.LAR_EXPORT_IMPORT, message);
 
 			DataHandlerContext context = _initDataHandlerContext(
 				groupId, privateLayout, parameterMap, startDate, endDate);
@@ -88,15 +151,25 @@ public class LARExporter {
 		}
 	}
 
-	public File export(
+	public File serialize(
 		long groupId, boolean privateLayout, long[] layoutIds,
 		Map<String, String[]> parameterMap, Date startDate, Date endDate) {
 
 		try {
+			//Broadcasting message about starting of process
+
+			Message message = new Message();
+			message.put("command", "larExporterSerialize");
+
+			MessageBusUtil.sendMessage(
+				DestinationNames.LAR_EXPORT_IMPORT, message);
+
+			// Serializing
+
 			DataHandlerContext context =
 				DataHandlerContextThreadLocal.getDataHandlerContext();
 
-			doExport(context);
+			doSerialize(context);
 
 			context.getZipWriter().addEntry(
 				"/digest.xml", context.getLarDigest().getDigestString());
@@ -113,10 +186,39 @@ public class LARExporter {
 		}
 	}
 
+	protected void digestAssetCategories(DataHandlerContext context)
+			throws Exception {
+
+		List<AssetVocabulary> assetVocabularies =
+			AssetVocabularyLocalServiceUtil.getGroupVocabularies(
+				context.getGroupId());
+
+		AssetVocabularyDataHandler vocabularyDataHandler =
+			(AssetVocabularyDataHandler)DataHandlersUtil.getDataHandlerInstance(
+				AssetVocabulary.class.getName());
+
+		for (AssetVocabulary assetVocabulary : assetVocabularies) {
+			vocabularyDataHandler.digest(assetVocabulary);
+		}
+
+		List<AssetCategory> assetCategories = AssetCategoryUtil.findByGroupId(
+			context.getGroupId());
+
+		AssetCategoryDataHandler categoryDataHandler =
+			(AssetCategoryDataHandler)DataHandlersUtil.getDataHandlerInstance(
+				AssetCategory.class.getName());
+
+		for (AssetCategory assetCategory : assetCategories) {
+			categoryDataHandler.digest(assetCategory);
+		}
+	}
+
 	protected void doCreateDigest(long[] layoutIds, DataHandlerContext context)
 		throws Exception, PortalException {
 
 		long lastPublishDate = System.currentTimeMillis();
+
+		// Parameters
 
 		Map parameterMap = context.getParameters();
 
@@ -143,6 +245,22 @@ public class LARExporter {
 
 		Group group = GroupLocalServiceUtil.getGroup(context.getGroupId());
 
+		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
+			group.getGroupId(), privateLayout);
+
+		UnicodeProperties typeSettings = layoutSet.getSettingsProperties();
+
+		if (typeSettings.containsKey("last-publish-date")) {
+			Date date = DateUtil.parseDate(
+				typeSettings.get("last-publish-date"),
+				LocaleThreadLocal.getDefaultLocale());
+
+			context.setLastPublishDate(date);
+		}
+		else {
+			context.setLastPublishDate(new Date(lastPublishDate));
+		}
+
 		long defaultUserId = UserLocalServiceUtil.getDefaultUserId(
 			group.getCompanyId());
 
@@ -163,6 +281,7 @@ public class LARExporter {
 			stopWatch.start();
 		}
 
+		// Assembly metadata for LAR
 		HashMap<String, String> metadata = new HashMap<String, String>();
 
 		metadata.put(
@@ -232,21 +351,19 @@ public class LARExporter {
 				continue;
 			}
 
-			BaseDataHandler portletDataHandler = DataHandlerLocatorUtil.locate(
-				portlet.getPortletDataHandlerClass());
+			PortletDataHandler portletDataHandler =
+				(PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(
+					portlet.getPortletId());
 
 			if (portletDataHandler != null) {
 				portletDataHandler.digest(portlet);
 			}
 		}
 
-		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-			group.getGroupId(), privateLayout);
-
 		// Layouts
 
 		LayoutDataHandler layoutDataHandler =
-			(LayoutDataHandler)DataHandlerLocatorUtil.locate(
+			(LayoutDataHandler)DataHandlersUtil.getDataHandlerInstance(
 				Layout.class.getName());
 
 		for (Layout layout : layouts) {
@@ -264,54 +381,23 @@ public class LARExporter {
 		}
 
 		if (updateLastPublishDate) {
-			LayoutExporter.updateLastPublishDate(layoutSet, lastPublishDate);
+			updateLastPublishDate(layoutSet, lastPublishDate);
 		}
 
 		context.getLarDigest().close();
 	}
 
-	protected void doExport(DataHandlerContext context)
+	protected void doSerialize(DataHandlerContext context)
 		throws Exception, PortalException {
 
 		for (LarDigestItem item : context.getLarDigest()) {
-			String type = item.getType();
-			String classPK = item.getClassPK();
-
-			BaseDataHandler dataHandler = DataHandlerLocatorUtil.locate(type);
+			BaseDataHandler dataHandler =
+				DataHandlersUtil.getDataHandlerInstance(item.getType());
 
 			if (dataHandler != null) {
-				dataHandler.serialize(classPK);
+				dataHandler.serialize(item, context);
 			}
 		}
-	}
-
-	protected void digestAssetCategories(DataHandlerContext context)
-			throws Exception {
-
-		List<AssetVocabulary> assetVocabularies =
-			AssetVocabularyLocalServiceUtil.getGroupVocabularies(
-				context.getGroupId());
-
-		AssetVocabularyDataHandler vocabularyDataHandler =
-			(AssetVocabularyDataHandler)DataHandlerLocatorUtil.locate(
-				AssetVocabulary.class.getName());
-
-		for (AssetVocabulary assetVocabulary : assetVocabularies) {
-			vocabularyDataHandler.digest(assetVocabulary);
-		}
-
-		List<AssetCategory> assetCategories = AssetCategoryUtil.findByGroupId(
-			context.getGroupId());
-
-		AssetCategoryDataHandler categoryDataHandler =
-			(AssetCategoryDataHandler)DataHandlerLocatorUtil.locate(
-				AssetCategory.class.getName());
-
-		for (AssetCategory assetCategory : assetCategories) {
-			categoryDataHandler.digest(assetCategory);
-		}
-
-		//_portletExporter.exportAssetCategories(portletDataContext, rootElement);
 	}
 
 	protected void exportTheme(LayoutSet layoutSet, ZipWriter zipWriter)
@@ -415,45 +501,24 @@ public class LARExporter {
 		}
 	}
 
-	public static List<Portlet> getAlwaysExportablePortlets(long companyId)
-			throws Exception {
+	protected void updateLastPublishDate(
+			LayoutSet layoutSet, long lastPublishDate)
+		throws Exception {
 
-		List<Portlet> portlets = PortletLocalServiceUtil.getPortlets(companyId);
+		UnicodeProperties settingsProperties =
+			layoutSet.getSettingsProperties();
 
-		Iterator<Portlet> itr = portlets.iterator();
-
-		com.liferay.portal.kernel.lar.PortletDataHandler legacyDataHandler =
-			null;
-
-		while (itr.hasNext()) {
-			Portlet portlet = itr.next();
-
-			if (!portlet.isActive()) {
-				itr.remove();
-
-				continue;
-			}
-
-			BaseDataHandler dataHandler = DataHandlerLocatorUtil.locate(
-				portlet.getPortletDataHandlerClass());
-
-			if (dataHandler == null) {
-				itr.remove();
-
-				continue;
-			}
-
-			if (dataHandler != null) {
-				PortletDataHandler portletDataHandler =
-					(PortletDataHandler)dataHandler;
-
-				if (!portletDataHandler.isAlwaysExportable()) {
-					itr.remove();
-				}
-			}
+		if (lastPublishDate <= 0) {
+			settingsProperties.remove("last-publish-date");
+		}
+		else {
+			settingsProperties.setProperty(
+				"last-publish-date", String.valueOf(lastPublishDate));
 		}
 
-		return portlets;
+		LayoutSetLocalServiceUtil.updateSettings(
+			layoutSet.getGroupId(), layoutSet.isPrivateLayout(),
+			settingsProperties.toString());
 	}
 
 	private DataHandlerContext _initDataHandlerContext(

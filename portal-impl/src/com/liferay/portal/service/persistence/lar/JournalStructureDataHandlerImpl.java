@@ -15,11 +15,9 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.DataHandlerContext;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.journal.NoSuchStructureException;
 import com.liferay.portlet.journal.model.JournalStructure;
 import com.liferay.portlet.journal.service.JournalStructureLocalServiceUtil;
@@ -32,31 +30,8 @@ public class JournalStructureDataHandlerImpl
 	implements JournalStructureDataHandler {
 
 	@Override
-	public void doDigest(JournalStructure structure) throws Exception {
-		DataHandlerContext context = getDataHandlerContext();
-
-		String path = getEntityPath(structure);
-
-		if (context.isPathProcessed(path)) {
-			return;
-		}
-
-		String parentStructureId = structure.getParentStructureId();
-
-		if (Validator.isNotNull(parentStructureId)) {
-			try {
-				JournalStructure parentStructure =
-					JournalStructureLocalServiceUtil.getStructure(
-						structure.getGroupId(), parentStructureId, true);
-
-				doDigest(parentStructure);
-			}
-			catch (NoSuchStructureException nsse) {
-			}
-		}
-
-		/*portletDataContext.addClassedModel(
-			path, structure, JournalPortletDataHandler._NAMESPACE);*/
+	public LarDigestItem doDigest(JournalStructure structure) throws Exception {
+		return null;
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class AssetCategoryPropertyDataHandlerImpl
 	implements AssetCategoryPropertyDataHandler{
 
 	@Override
-	public void doDigest(AssetCategoryProperty categoryProperty)
+	public LarDigestItem doDigest(AssetCategoryProperty categoryProperty)
 		throws Exception {
 
 		DataHandlerContext context = getDataHandlerContext();
@@ -51,8 +51,10 @@ public class AssetCategoryPropertyDataHandlerImpl
 			digestItem.setClassPK(
 				StringUtil.valueOf(categoryProperty.getCategoryPropertyId()));
 
-			digest.write(digestItem);
+			return digestItem;
 		}
+
+		return null;
 	}
 
 	@Override

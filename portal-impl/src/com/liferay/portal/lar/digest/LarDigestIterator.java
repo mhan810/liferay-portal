@@ -28,6 +28,7 @@ import static com.liferay.portal.lar.digest.LarDigesterConstants.*;
 
 /**
  * @author Mate Thurzo
+ * @author Daniel Kocsis
  */
 public class LarDigestIterator implements Iterator<LarDigestItem> {
 
@@ -59,7 +60,7 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 	}
 
 	public LarDigestItem next() {
-		if(!hasNext()) {
+		if (!hasNext()) {
 			return null;
 		}
 
@@ -93,7 +94,8 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 						item.setClassPK(elementText);
 					}
 					else if (elementName.equals(NODE_METADATA_LABEL)) {
-						metadata.put(_xmlStreamReader.getAttributeName(0),
+						metadata.put(
+							_xmlStreamReader.getAttributeName(0),
 							_xmlStreamReader.getAttributeValue(0));
 					}
 					else if (elementName.equals(NODE_PERMISSION_LABEL)) {
@@ -111,7 +113,7 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 							permissions.put(roleName, actionNames);
 						}
 
-						while(_xmlStreamReader.hasNext()) {
+						while (_xmlStreamReader.hasNext()) {
 							elementName = _xmlStreamReader.getLocalName();
 
 							if (_xmlStreamReader.isEndElement() &&

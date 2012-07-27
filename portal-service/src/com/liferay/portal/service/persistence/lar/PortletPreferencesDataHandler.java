@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 
@@ -23,7 +24,7 @@ import com.liferay.portal.service.persistence.BaseDataHandler;
 public interface PortletPreferencesDataHandler
 	extends BaseDataHandler<PortletPreferences> {
 
-	public void doDigest(PortletPreferences preferences) throws Exception;
+	public LarDigestItem doDigest(PortletPreferences preferences) throws Exception;
 
 	public PortletPreferences getEntity(String classPK);
 

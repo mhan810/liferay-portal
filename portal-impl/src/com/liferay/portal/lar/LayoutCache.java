@@ -42,6 +42,36 @@ import java.util.Map;
  */
 public class LayoutCache {
 
+	public List<Role> getGroupRoles_5(long groupId, String resourceName)
+			throws PortalException, SystemException {
+
+		List<Role> roles = groupRolesMap.get(groupId);
+
+		if (roles == null) {
+			Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+			roles = ResourceActionsUtil.getRoles(
+				group.getCompanyId(), group, resourceName, null);
+
+			List<Team> teams = TeamLocalServiceUtil.getGroupTeams(groupId);
+
+			for (Team team : teams) {
+				Role teamRole = RoleLocalServiceUtil.getTeamRole(
+					group.getCompanyId(), team.getTeamId());
+
+				teamRole.setName(
+					PermissionExporter.ROLE_TEAM_PREFIX + team.getName());
+				teamRole.setDescription(team.getDescription());
+
+				roles.add(teamRole);
+			}
+
+			groupRolesMap.put(groupId, roles);
+		}
+
+		return roles;
+	}
+
 	protected long getEntityGroupId(
 			long companyId, String entityName, String name)
 		throws PortalException, SystemException {
@@ -139,36 +169,6 @@ public class LayoutCache {
 
 		if (roles == null) {
 			roles = RoleLocalServiceUtil.getGroupRoles(groupId);
-
-			groupRolesMap.put(groupId, roles);
-		}
-
-		return roles;
-	}
-
-	public List<Role> getGroupRoles_5(long groupId, String resourceName)
-		throws PortalException, SystemException {
-
-		List<Role> roles = groupRolesMap.get(groupId);
-
-		if (roles == null) {
-			Group group = GroupLocalServiceUtil.getGroup(groupId);
-
-			roles = ResourceActionsUtil.getRoles(
-				group.getCompanyId(), group, resourceName, null);
-
-			List<Team> teams = TeamLocalServiceUtil.getGroupTeams(groupId);
-
-			for (Team team : teams) {
-				Role teamRole = RoleLocalServiceUtil.getTeamRole(
-					group.getCompanyId(), team.getTeamId());
-
-				teamRole.setName(
-					PermissionExporter.ROLE_TEAM_PREFIX + team.getName());
-				teamRole.setDescription(team.getDescription());
-
-				roles.add(teamRole);
-			}
 
 			groupRolesMap.put(groupId, roles);
 		}

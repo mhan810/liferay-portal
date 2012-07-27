@@ -72,9 +72,9 @@ public class LarDigestItemImpl implements LarDigestItem {
 
 	private int _action;
 	private String _classPK;
-	private String _path;
-	private String _type;
 	private Map _metadata;
+	private String _path;
 	private Map _permissions;
+	private String _type;
 
 }

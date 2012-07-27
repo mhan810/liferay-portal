@@ -17,20 +17,26 @@ package com.liferay.portal.service.persistence.lar;
 import com.liferay.portal.NoSuchPortletPreferencesException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
+import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutTypePortlet;
@@ -49,6 +55,7 @@ import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,25 +72,99 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 	public void digest(Portlet portlet) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
-		doDigest(portlet);
+		boolean exportPortletData = false;
 
-		digestPortletPreferences(
-			PortletKeys.PREFS_OWNER_ID_DEFAULT,
-			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, false,
-			portlet.getPortletId());
+		if (context.getParameters().containsKey(
+				PortletDataHandlerKeys.PORTLET_DATA + "_" +
+				PortletConstants.getRootPortletId(portlet.getPortletId()))) {
 
-		digestPortletPreferences(
-			context.getScopeGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
-			false, portlet.getPortletId());
+			exportPortletData = MapUtil.getBoolean(
+				context.getParameters(),
+				PortletDataHandlerKeys.PORTLET_DATA + "_" +
+					PortletConstants.getRootPortletId(portlet.getPortletId()));
+		}
+		else {
+			exportPortletData = MapUtil.getBoolean(
+				context.getParameters(), PortletDataHandlerKeys.PORTLET_DATA);
+		}
 
-		digestPortletPreferences(
-			context.getCompanyId(), PortletKeys.PREFS_OWNER_TYPE_COMPANY,
-			false, portlet.getPortletId());
+		boolean exportPortletDataAll = MapUtil.getBoolean(
+			context.getParameters(), PortletDataHandlerKeys.PORTLET_DATA_ALL);
+		boolean exportPortletSetup = MapUtil.getBoolean(
+			context.getParameters(), PortletDataHandlerKeys.PORTLET_SETUP);
+		boolean exportPortletUserPreferences = MapUtil.getBoolean(
+			context.getParameters(),
+			PortletDataHandlerKeys.PORTLET_USER_PREFERENCES);
+
+		if (exportPortletDataAll) {
+			exportPortletData = true;
+		}
+
+		LarDigestItem item = doDigest(portlet);
+
+		Map<String, String> metaDataMap = new HashMap<String, String>();
+
+		if (exportPortletSetup) {
+			digestPortletPreferences(
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, false,
+				portlet.getPortletId(), metaDataMap);
+
+			digestPortletPreferences(
+				context.getScopeGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
+				false, portlet.getPortletId(), metaDataMap);
+
+			digestPortletPreferences(
+				context.getCompanyId(), PortletKeys.PREFS_OWNER_TYPE_COMPANY,
+				false, portlet.getPortletId(), metaDataMap);
+		}
+
+		if (exportPortletUserPreferences) {
+			List<PortletPreferences> portletPreferencesList =
+				PortletPreferencesLocalServiceUtil.getPortletPreferences(
+					PortletKeys.PREFS_OWNER_TYPE_USER, context.getPlid(),
+					portlet.getPortletId());
+
+			for (PortletPreferences portletPreferences :
+					portletPreferencesList) {
+
+				boolean defaultUser = false;
+
+				if (portletPreferences.getOwnerId() ==
+						PortletKeys.PREFS_OWNER_ID_DEFAULT) {
+
+					defaultUser = true;
+				}
+
+				digestPortletPreferences(
+						portletPreferences.getOwnerId(),
+						PortletKeys.PREFS_OWNER_TYPE_USER, defaultUser,
+						portlet.getPortletId(), metaDataMap);
+			}
+
+			try {
+				PortletPreferences groupPortletPreferences =
+					PortletPreferencesLocalServiceUtil.getPortletPreferences(
+						context.getScopeGroupId(),
+						PortletKeys.PREFS_OWNER_TYPE_GROUP,
+						PortletKeys.PREFS_PLID_SHARED, portlet.getPortletId());
+
+				digestPortletPreference(
+					groupPortletPreferences, portlet.getPortletId(),
+					context.getScopeGroupId(),
+					PortletKeys.PREFS_OWNER_TYPE_GROUP, false,
+					PortletKeys.PREFS_PLID_SHARED, metaDataMap);
+			}
+			catch (NoSuchPortletPreferencesException nsppe) {
+			}
+		}
+
+		context.getLarDigest().write(item);
 	}
 
 	@Override
-	public void doDigest(Portlet portlet) throws Exception {
-		return;
+	public LarDigestItem doDigest(Portlet portlet) throws Exception {
+		return new LarDigestItemImpl();
 	}
 
 	@Override
@@ -281,8 +362,68 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 		return null;
 	}
 
+	protected void digestPortletPreference(
+			PortletPreferences portletPreferences, String portletId,
+			long ownerId, int ownerType, boolean defaultUser, long plid,
+			Map<String, String> metadataMap)
+		throws Exception {
+
+		String preferencesXML = portletPreferences.getPreferences();
+
+		if (Validator.isNull(preferencesXML)) {
+			preferencesXML = PortletConstants.DEFAULT_PREFERENCES;
+		}
+
+		String rootPotletId = PortletConstants.getRootPortletId(portletId);
+
+		if (rootPotletId.equals(PortletKeys.ASSET_PUBLISHER)) {
+			/*preferencesXML = updateAssetPublisherPortletPreferences(
+				preferencesXML, plid);*/
+		}
+
+		Document document = SAXReaderUtil.read(preferencesXML);
+
+		metadataMap.put("owner-id", String.valueOf(ownerId));
+		metadataMap.put("owner-type", String.valueOf(ownerType));
+		metadataMap.put("default-user", String.valueOf(defaultUser));
+		metadataMap.put("plid", String.valueOf(plid));
+		metadataMap.put("portlet-id", portletId);
+
+		if (ownerType == PortletKeys.PREFS_OWNER_TYPE_ARCHIVED) {
+			PortletItem portletItem =
+				PortletItemLocalServiceUtil.getPortletItem(ownerId);
+
+			metadataMap.put(
+				"archive-user-uuid", portletItem.getUserUuid());
+			metadataMap.put("archive-name", portletItem.getName());
+		}
+		else if (ownerType == PortletKeys.PREFS_OWNER_TYPE_USER) {
+			User user = UserLocalServiceUtil.fetchUserById(ownerId);
+
+			if (user == null) {
+				return;
+			}
+
+			metadataMap.put("user-uuid", user.getUserUuid());
+		}
+
+		List<Node> nodes = document.selectNodes(
+			"/portlet-preferences/preference[name/text() = " +
+				"'last-publish-date']");
+
+		for (Node node : nodes) {
+			document.remove(node);
+		}
+
+		String path = getPortletPreferencesPath(
+			portletId, ownerId, ownerType, plid);
+
+		metadataMap.put("path", path);
+	}
+
 	protected void digestPortletPreferences(
-			long ownerId, int ownerType, boolean defaultUser, String portletId)
+			long ownerId, int ownerType, boolean defaultUser, String portletId,
+			Map<String, String> metadataMap)
 		throws Exception {
 
 		DataHandlerContext context = getDataHandlerContext();
@@ -328,8 +469,45 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 		if ((layoutTypePortlet == null) ||
 			layoutTypePortlet.hasPortletId(portletId)) {
 
-			portletPreferencesDataHandler.digest(portletPreferences);
+			digestPortletPreference(
+				portletPreferences, portletId, ownerId,
+				ownerType, defaultUser, plid, metadataMap);
 		}
+
+		return;
+	}
+
+	protected String getPortletPreferencesPath(
+		String portletId, long ownerId, int ownerType, long plid) {
+
+		StringBundler sb = new StringBundler(8);
+
+		sb.append(getPortletPath(portletId));
+		sb.append("/preferences/");
+
+		if (ownerType == PortletKeys.PREFS_OWNER_TYPE_COMPANY) {
+			sb.append("company/");
+		}
+		else if (ownerType == PortletKeys.PREFS_OWNER_TYPE_GROUP) {
+			sb.append("group/");
+		}
+		else if (ownerType == PortletKeys.PREFS_OWNER_TYPE_LAYOUT) {
+			sb.append("layout/");
+		}
+		else if (ownerType == PortletKeys.PREFS_OWNER_TYPE_USER) {
+			sb.append("user/");
+		}
+		else if (ownerType == PortletKeys.PREFS_OWNER_TYPE_ARCHIVED) {
+			sb.append("archived/");
+		}
+
+		sb.append(ownerId);
+		sb.append(CharPool.FORWARD_SLASH);
+		sb.append(plid);
+		sb.append(CharPool.FORWARD_SLASH);
+		sb.append("portlet-preferences.xml");
+
+		return sb.toString();
 	}
 
 	// toDo: review importPortletPreferences
