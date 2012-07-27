@@ -71,9 +71,6 @@ public interface PortletBag extends Cloneable {
 
 	public MessageListener getPopMessageListenerInstance();
 
-	public com.liferay.portal.kernel.lar.PortletDataHandler
-		getLegacyPortletDataHandlerInstance();
-
 	public PortletDisplayTemplateHandler
 		getPortletDisplayTemplateHandlerInstance();
 

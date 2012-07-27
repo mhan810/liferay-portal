@@ -212,7 +212,7 @@ if (!portletId.equals(PortletKeys.PORTLET_CONFIGURATION)) {
 
 		showConfigurationIcon = true;
 
-		boolean supportsLAR = Validator.isNotNull(portlet.getPortletDataHandlerClass());
+		boolean supportsLAR = Validator.isNotNull(DataHandlersUtil.getDataHandlerClass(portlet.getPortletId()));
 		boolean supportsSetup = Validator.isNotNull(portlet.getConfigurationActionClass());
 
 		if (supportsLAR || (supportsSetup && !group.isControlPanel())) {

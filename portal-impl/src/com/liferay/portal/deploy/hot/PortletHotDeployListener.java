@@ -51,6 +51,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.webdav.WebDAVUtil;
 import com.liferay.portal.kernel.workflow.WorkflowHandler;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
+import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletApp;
 import com.liferay.portal.model.PortletCategory;
@@ -652,6 +653,12 @@ public class PortletHotDeployListener extends BaseHotDeployListener {
 					resourceBundle);
 			}
 		}
+
+		// Data Handlers
+
+		DataHandlersUtil.read(classLoader, "datahandlers.xml");
+
+		// Resource Actions
 
 		String[] resourceActionConfigs = StringUtil.split(
 			portletProperties.getProperty(PropsKeys.RESOURCE_ACTIONS_CONFIGS));
