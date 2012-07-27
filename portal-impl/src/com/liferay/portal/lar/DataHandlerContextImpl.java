@@ -15,7 +15,6 @@
 package com.liferay.portal.lar;
 
 import com.liferay.portal.kernel.lar.*;
-import com.liferay.portal.kernel.lar.PermissionDigester;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -100,11 +99,6 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		return GetterUtil.getLong(getAttribute(ATTRIBUTE_NAME_OLD_PLID));
 	}
 
-	public PermissionDigester getPermissionDigester() {
-		return (PermissionDigester)getAttribute(
-			ATTRIBUTE_NAME_PERMISSION_DIGESTER);
-	}
-
 	public Map<String, String[]> getParameters() {
 		return _paramaters;
 	}
@@ -156,7 +150,7 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 
 	public boolean isDataStrategyMirror() {
 		if (getDataStrategy().equals(DATA_STRATEGY_MIRROR) ||
-			getDataStrategy().equals(DATA_STRATEGY_MIRROR_OVERWRITE)) {
+				getDataStrategy().equals(DATA_STRATEGY_MIRROR_OVERWRITE)) {
 
 			return true;
 		}
@@ -234,10 +228,6 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 
 	public void setOldPlid(long oldPlid) {
 		setAttribute(ATTRIBUTE_NAME_OLD_PLID, oldPlid);
-	}
-
-	public void setPermissionDigester(PermissionDigester permissionDigester) {
-		setAttribute(ATTRIBUTE_NAME_PERMISSION_DIGESTER, permissionDigester);
 	}
 
 	public void setParameters(Map<String, String[]> parameters) {

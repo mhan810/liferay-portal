@@ -40,7 +40,6 @@ public interface DataHandlerContext {
 
 	public static final String ATTRIBUTE_NAME_LAST_PUBLISH_DATE =
 		"LAST_PUBLISH_DATE";
-
 	public static final String ATTRIBUTE_NAME_OLD_PLID = "OLD_PLID";
 
 	public static final String ATTRIBUTE_NAME_PLID = "PLID";
@@ -94,8 +93,6 @@ public interface DataHandlerContext {
 	public Map<?, ?> getNewPrimaryKeysMap(String className);
 
 	public long getOldPlid();
-
-	public PermissionDigester getPermissionDigester();
 
 	public Map<String, String[]> getParameters();
 

@@ -55,22 +55,10 @@ public class LarDigestTest extends PowerMockito {
 	}
 
 	@Test
-	public void testPortletNodeDigest() throws Exception {
-		LarDigest larDigest = new LarDigestImpl();
-
-		larDigest.write(getDigestItem());
-		larDigest.close();
-
-		String result = larDigest.getDigestString();
-
-		Assert.assertEquals(getTestFileContent("portletNode.xml"), result);
-	}
-
-	@Test
 	public void testFindDigestItems() throws Exception {
 		File testFile = getTestFile("digest.xml");
 
-		LarDigest digest = new LarDigestImpl(testFile);
+		LarDigest digest = null; //new LarDigestImpl(testFile);
 
 		LarDigestItem expectedItem = getDigestItem();
 
@@ -92,6 +80,18 @@ public class LarDigestTest extends PowerMockito {
 			expectedItem.getMetadata(), resultItem.getMetadata());
 
 		digest.close();
+	}
+
+	@Test
+	public void testPortletNodeDigest() throws Exception {
+		LarDigest larDigest = new LarDigestImpl();
+
+		larDigest.write(getDigestItem());
+		larDigest.close();
+
+		String result = larDigest.getDigestString();
+
+		Assert.assertEquals(getTestFileContent("portletNode.xml"), result);
 	}
 
 	private LarDigestItem getDigestItem() {
