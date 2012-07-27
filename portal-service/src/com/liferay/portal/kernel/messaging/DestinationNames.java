@@ -77,6 +77,8 @@ public interface DestinationNames {
 	 */
 	public static final String JOURNAL = "liferay/journal";
 
+	public static final String LAR_EXPORT_IMPORT = "liferay/lar_export_import";
+
 	public static final String LAYOUTS_LOCAL_PUBLISHER =
 		"liferay/layouts_local_publisher";
 

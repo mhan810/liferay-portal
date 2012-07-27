@@ -60,7 +60,7 @@ for (Layout curLayout : LayoutLocalServiceUtil.getLayouts(liveGroupId, privateLa
 				continue;
 			}
 
-			PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+			PortletDataHandler portletDataHandler = (PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(portlet.getPortletId());
 
 			if ((portletDataHandler != null) && !portletIdsSet.contains(portlet.getRootPortletId())) {
 				portletIdsSet.add(portlet.getRootPortletId());
@@ -71,7 +71,7 @@ for (Layout curLayout : LayoutLocalServiceUtil.getLayouts(liveGroupId, privateLa
 	}
 }
 
-List<Portlet> alwaysExportablePortlets = LayoutExporter.getAlwaysExportablePortlets(company.getCompanyId());
+List<Portlet> alwaysExportablePortlets = LARExporter.getAlwaysExportablePortlets(company.getCompanyId());
 
 for (Portlet alwaysExportablePortlet : alwaysExportablePortlets) {
 	if (!portletIdsSet.contains(alwaysExportablePortlet.getRootPortletId())) {

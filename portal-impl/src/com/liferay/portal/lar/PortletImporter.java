@@ -193,8 +193,8 @@ public class PortletImporter {
 			return null;
 		}
 
-		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
+		PortletDataHandler portletDataHandler = null;
+			//portlet.getLegacyPortletDataHandlerInstance();
 
 		if (portletDataHandler == null) {
 			if (_log.isDebugEnabled()) {
@@ -335,8 +335,8 @@ public class PortletImporter {
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
 			portletDataContext.getCompanyId(), portletId);
 
-		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
+		PortletDataHandler portletDataHandler = null;
+			//portlet.getPortletDataHandlerInstance();
 
 		if ((portletDataHandler != null) &&
 			portletDataHandler.isDataLocalized()) {
@@ -1025,8 +1025,8 @@ public class PortletImporter {
 			return null;
 		}
 
-		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
+		PortletDataHandler portletDataHandler = null;
+			//portlet.getLegacyPortletDataHandlerInstance();
 
 		if (portletDataHandler == null) {
 			if (_log.isDebugEnabled()) {
@@ -1897,8 +1897,8 @@ public class PortletImporter {
 				return;
 			}
 
-			PortletDataHandler portletDataHandler =
-				portlet.getPortletDataHandlerInstance();
+			PortletDataHandler portletDataHandler = null;
+				//portlet.getPortletDataHandlerInstance();
 
 			if (portletDataHandler == null) {
 				PortletPreferencesLocalServiceUtil.updatePreferences(

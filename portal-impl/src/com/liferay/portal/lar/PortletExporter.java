@@ -963,8 +963,8 @@ public class PortletExporter {
 			return;
 		}
 
-		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
+		PortletDataHandler portletDataHandler = null;
+			/*portlet.getPortletDataHandlerInstance();*/
 
 		if (portletDataHandler == null) {
 			return;
@@ -1182,8 +1182,7 @@ public class PortletExporter {
 		}
 	}
 
-	protected void exportRatingsEntries(
-			PortletDataContext portletDataContext, Element parentElement)
+	protected void exportRatingsEntries(PortletDataContext portletDataContext)
 		throws Exception {
 
 		Document document = SAXReaderUtil.createDocument();
@@ -1224,6 +1223,14 @@ public class PortletExporter {
 		portletDataContext.addZipEntry(
 			portletDataContext.getRootPath() + "/ratings.xml",
 			document.formattedString());
+	}
+
+	@Deprecated
+	protected void exportRatingsEntries(
+			PortletDataContext portletDataContext, Element parentElement)
+		throws Exception {
+
+		exportRatingsEntries(portletDataContext);
 	}
 
 	protected String getAssetCategoryPath(

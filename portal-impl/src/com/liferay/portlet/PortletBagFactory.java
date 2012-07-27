@@ -17,7 +17,6 @@ package com.liferay.portlet;
 import com.liferay.portal.dao.shard.ShardPollerProcessorWrapper;
 import com.liferay.portal.kernel.atom.AtomCollectionAdapter;
 import com.liferay.portal.kernel.atom.AtomCollectionAdapterRegistryUtil;
-import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.poller.PollerProcessor;
@@ -145,9 +144,6 @@ public class PortletBagFactory {
 			portlet);
 
 		URLEncoder urlEncoderInstance = newURLEncoder(portlet);
-
-		PortletDataHandler portletDataHandlerInstance = newPortletDataHandler(
-			portlet);
 
 		PortletDisplayTemplateHandler portletDisplayTemplateHandlerInstance =
 			newPortletDisplayTemplateHandler(portlet);
@@ -317,7 +313,7 @@ public class PortletBagFactory {
 			portlet.getPortletId(), _servletContext, portletInstance,
 			configurationActionInstance, indexerInstances, openSearchInstance,
 			friendlyURLMapperInstance, urlEncoderInstance,
-			portletDataHandlerInstance, portletDisplayTemplateHandlerInstance,
+			portletDisplayTemplateHandlerInstance,
 			portletLayoutListenerInstance, pollerProcessorInstance,
 			popMessageListenerInstance, socialActivityInterpreterInstance,
 			socialRequestInterpreterInstance, webDAVStorageInstance,
@@ -557,7 +553,7 @@ public class PortletBagFactory {
 			portlet.getPortletId(), socialActivityInterpreterInstance);
 
 		SocialActivityInterpreterLocalServiceUtil.addActivityInterpreter(
-			socialActivityInterpreterInstance);
+				socialActivityInterpreterInstance);
 
 		return socialActivityInterpreterInstance;
 	}
@@ -799,8 +795,8 @@ public class PortletBagFactory {
 			PollerProcessor.class, portlet.getPollerProcessorClass());
 
 		PollerProcessorUtil.addPollerProcessor(
-			portlet.getPortletId(),
-			new ShardPollerProcessorWrapper(pollerProcessorInstance));
+				portlet.getPortletId(),
+				new ShardPollerProcessorWrapper(pollerProcessorInstance));
 
 		return pollerProcessorInstance;
 	}
@@ -819,17 +815,6 @@ public class PortletBagFactory {
 		POPServerUtil.addListener(popMessageListenerInstance);
 
 		return popMessageListenerInstance;
-	}
-
-	protected PortletDataHandler newPortletDataHandler(Portlet portlet)
-		throws Exception {
-
-		if (Validator.isNull(portlet.getPortletDataHandlerClass())) {
-			return null;
-		}
-
-		return (PortletDataHandler)newInstance(
-			PortletDataHandler.class, portlet.getPortletDataHandlerClass());
 	}
 
 	protected PortletDisplayTemplateHandler newPortletDisplayTemplateHandler(

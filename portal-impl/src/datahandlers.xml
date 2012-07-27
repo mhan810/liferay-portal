@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE data-handler-mapping PUBLIC "-//Liferay//DTD Data Handler Mapping 6.2.0//EN" "http://www.liferay.com/dtd/liferay-data-handler-mapping_6_2_0.dtd">
+
+<data-handler-mapping>
+	<data-handler-entry>
+		<data-handler-name>28</data-handler-name>
+		<data-handler-class>com.liferay.portal.service.persistence.lar.BookmarksPortletDataHandler</data-handler-class>
+	</data-handler-entry>
+	<data-handler-entry>
+		<data-handler-name>com.liferay.portlet.bookmarks.model.BookmarksFolder</data-handler-name>
+		<data-handler-class>com.liferay.portal.service.persistence.lar.BookmarksFolderDataHandler</data-handler-class>
+	</data-handler-entry>
+	<data-handler-entry>
+		<data-handler-name>com.liferay.portlet.bookmarks.model.BookmarksEntry</data-handler-name>
+		<data-handler-class>com.liferay.portal.service.persistence.lar.BookmarksEntryDataHandler</data-handler-class>
+	</data-handler-entry>
+	<data-handler-entry>
+		<data-handler-name>com.liferay.portal.model.Layout</data-handler-name>
+		<data-handler-class>com.liferay.portal.service.persistence.lar.LayoutDataHandler</data-handler-class>
+	</data-handler-entry>
+	<data-handler-entry>
+		<data-handler-name>com.liferay.portal.model.LayoutSet</data-handler-name>
+		<data-handler-class>com.liferay.portal.service.persistence.lar.LayoutSetDataHandler</data-handler-class>
+	</data-handler-entry>
+</data-handler-mapping>

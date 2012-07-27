@@ -1,0 +1,25 @@
+<!--
+<!DOCTYPE data-handler-mapping PUBLIC
+	"-//Liferay//DTD Data Handler Mapping 6.2.0//EN"
+	"http://www.liferay.com/dtd/liferay-data-handler-mapping_6_2_0.dtd">
+-->
+
+<!--
+banana
+-->
+<!ELEMENT data-handler-mapping (data-handler-entry*) >
+
+<!--
+banana
+-->
+<!ELEMENT data-handler-entry (data-handler-name?, data-handler-class?) >
+
+<!--
+banana
+-->
+<!ELEMENT data-handler-name (#PCDATA) >
+
+<!--
+banana
+-->
+<!ELEMENT data-handler-class (#PCDATA) >

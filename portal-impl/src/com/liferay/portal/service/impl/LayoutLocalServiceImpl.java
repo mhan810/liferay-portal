@@ -47,8 +47,8 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.lar.LayoutExporter;
-import com.liferay.portal.lar.LayoutImporter;
+import com.liferay.portal.lar.LARExporter;
+import com.liferay.portal.lar.LARImporter;
 import com.liferay.portal.lar.PortletExporter;
 import com.liferay.portal.lar.PortletImporter;
 import com.liferay.portal.model.Group;
@@ -707,17 +707,14 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		try {
-			LayoutExporter layoutExporter = new LayoutExporter();
+			LARExporter larExporter = new LARExporter();
 
-			return layoutExporter.exportLayoutsAsFile(
+			larExporter.digest(
 				groupId, privateLayout, layoutIds, parameterMap, startDate,
 				endDate);
-		}
-		catch (PortalException pe) {
-			throw pe;
-		}
-		catch (SystemException se) {
-			throw se;
+
+			return larExporter.serialize(
+				groupId, privateLayout, null, parameterMap, startDate, endDate);
 		}
 		catch (Exception e) {
 			throw new SystemException(e);
@@ -1357,9 +1354,9 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		try {
-			LayoutImporter layoutImporter = new LayoutImporter();
+			LARImporter larImporter = new LARImporter();
 
-			layoutImporter.importLayouts(
+			larImporter.importLar(
 				userId, groupId, privateLayout, parameterMap, file);
 		}
 		catch (PortalException pe) {

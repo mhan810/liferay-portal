@@ -176,6 +176,7 @@
 	<xmlcatalog id="dtd.catalog">
 		<dtd publicId="datatypes" location="datatypes.dtd" />
 		<dtd publicId="-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN" location="${definitions.dir}/facelet-taglib_1_0.dtd" />
+		<dtd publicid="-//Liferay//DTD Data Handler Mapping 6.2.0//EN" location="{definitions.dir/liferay-data-handler-mapping_6_2_0.dtd}" />
 		<dtd publicId="-//Liferay//DTD DISPLAY 2.0.0//EN" location="${definitions.dir}/liferay-display_2_0_0.dtd" />
 		<dtd publicId="-//Liferay//DTD Display 3.5.0//EN" location="${definitions.dir}/liferay-display_3_5_0.dtd" />
 		<dtd publicId="-//Liferay//DTD Display 4.0.0//EN" location="${definitions.dir}/liferay-display_4_0_0.dtd" />

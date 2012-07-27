@@ -120,7 +120,7 @@ public class ZipReaderImpl implements ZipReader {
 		return bytes;
 	}
 
-	public InputStream getEntryAsInputStream(String name) {
+	public File getEntryAsFile(String name) {
 		if (Validator.isNull(name)) {
 			return null;
 		}
@@ -132,16 +132,24 @@ public class ZipReaderImpl implements ZipReader {
 		File file = new File(_zipFile, name, DefaultArchiveDetector.NULL);
 
 		if (file.exists() && !file.isDirectory()) {
-			try {
-				if (_log.isDebugEnabled()) {
-					_log.debug("Extracting " + name);
-				}
+			return file;
+		}
 
-				return new FileInputStream(file);
+		return null;
+	}
+
+	public InputStream getEntryAsInputStream(String name) {
+		File file = getEntryAsFile(name);
+
+		try {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Extracting " + name);
 			}
-			catch (IOException ioe) {
-				_log.error(ioe, ioe);
-			}
+
+			return new FileInputStream(file);
+		}
+		catch (IOException ioe) {
+			_log.error(ioe, ioe);
 		}
 
 		return null;
