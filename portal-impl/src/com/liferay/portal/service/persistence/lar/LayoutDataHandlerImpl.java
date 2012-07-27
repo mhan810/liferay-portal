@@ -681,8 +681,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 					context.setAttribute("layout", layout);
 
 					BaseDataHandler portletDataHandler =
-						DataHandlerLocatorUtil.locate(
-							portlet.getPortletDataHandlerClass());
+						DataHandlersUtil.getDataHandlerInstance(
+							portlet.getPortletId());
 
 					if (portletDataHandler != null) {
 						portletDataHandler.digest(portlet);
@@ -749,9 +749,6 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				context.setAttribute("scopeType", scopeType);
 				context.setAttribute("scopeLayoutUuid", scopeLayoutUuid);
 				context.setAttribute("layout", layout);
-
-				Portlet portlet = PortletLocalServiceUtil.getPortletById(
-					context.getCompanyId(), portletId);
 
 				if (portlet == null) {
 					if (_log.isDebugEnabled()) {

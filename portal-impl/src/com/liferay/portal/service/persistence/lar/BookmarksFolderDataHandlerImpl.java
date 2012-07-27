@@ -67,7 +67,7 @@ public class BookmarksFolderDataHandlerImpl
 			digestItem.setPermissions(permissionsMap);
 		}
 
-		digestItem.setAction(LarDigesterConstants.ACTION_ADD);
+		digestItem.setAction(getDigestAction(folder));
 		digestItem.setPath(path);
 		digestItem.setType(BookmarksFolder.class.getName());
 		digestItem.setClassPK(StringUtil.valueOf(folder.getFolderId()));

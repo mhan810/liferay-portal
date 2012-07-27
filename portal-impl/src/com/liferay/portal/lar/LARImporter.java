@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.staging.DataHandlerLocatorUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -402,10 +401,10 @@ public class LARImporter {
 		context.setAttribute("previousLayouts", previousLayouts);
 
 		for (LarDigestItem item : larDigest) {
-			BaseDataHandler larPesistence = DataHandlerLocatorUtil.locate(
-				item.getType());
+			BaseDataHandler dataHandler =
+				DataHandlersUtil.getDataHandlerInstance(item.getType());
 
-			larPesistence.importData(item);
+			dataHandler.importData(item);
 		}
 
 		if (importPermissions) {

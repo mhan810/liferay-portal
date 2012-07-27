@@ -68,7 +68,6 @@ public class AssetVocabuaryDataHandlerImpl
 		digestItem.setClassPK(StringUtil.valueOf(vocabulary.getVocabularyId()));
 
 		return digestItem;
-		return digestItem;
 	}
 
 	@Override
