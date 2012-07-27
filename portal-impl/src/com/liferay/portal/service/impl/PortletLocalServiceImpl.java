@@ -1267,10 +1267,6 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 			GetterUtil.getString(
 				portletElement.elementText("url-encoder-class"),
 				portletModel.getURLEncoderClass()));
-		portletModel.setPortletDataHandlerClass(
-			GetterUtil.getString(
-				portletElement.elementText("portlet-data-handler-class"),
-				portletModel.getPortletDataHandlerClass()));
 		portletModel.setPortletDisplayTemplateHandlerClass(
 			GetterUtil.getString(
 				portletElement.elementText("portlet-display-template-handler"),

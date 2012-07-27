@@ -12,28 +12,25 @@
  * details.
  */
 
-package com.liferay.portal.kernel.staging;
+package com.liferay.portal.lar;
 
 import com.liferay.portal.service.persistence.BaseDataHandler;
-import com.liferay.portal.staging.DataHandlerLocator;
+
+import java.util.Map;
 
 /**
  * @author Mate Thurzo
  */
-public class DataHandlerLocatorUtil {
+public interface DataHandlers {
 
-	public static DataHandlerLocator getLocator() {
-		return _locator;
-	}
+	public void addDataHandlerMapping(String key, String dataHandlerClass);
 
-	public static BaseDataHandler locate(String key) {
-		return getLocator().locate(key);
-	}
+	public String getDataHandlerClass(String key);
 
-	public void setLocator(DataHandlerLocator locator) {
-		_locator = locator;
-	}
+	public BaseDataHandler getDataHandlerInstance(String key);
 
-	private static DataHandlerLocator _locator;
+	public Map<String, String> getDataHandlerMapping();
+
+	public void read(ClassLoader classLoader, String source) throws Exception;
 
 }

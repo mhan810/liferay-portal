@@ -130,6 +130,11 @@ public class EntityResolver implements org.xml.sax.EntityResolver {
 		),
 
 		new KeyValuePair(
+			"-//Liferay//DTD Data Handler Mapping 6.2.0//EN",
+			"liferay-data-handler-mapping_6_2_0.dtd"
+		),
+
+		new KeyValuePair(
 			"-//Liferay//DTD Display 2.0.0//EN", "liferay-display_2_0_0.dtd"
 		),
 

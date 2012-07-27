@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
@@ -394,7 +395,7 @@ public class GroupImpl extends GroupBaseImpl {
 			Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
 
 			String portletDataHandlerClass =
-				portlet.getPortletDataHandlerClass();
+				DataHandlersUtil.getDataHandlerClass(portlet.getPortletId());
 
 			if (Validator.isNull(portletDataHandlerClass)) {
 				return true;
@@ -418,8 +419,12 @@ public class GroupImpl extends GroupBaseImpl {
 				Portlet stagedPortlet = PortletLocalServiceUtil.getPortletById(
 					stagedPortletId);
 
+				String stagedPortletDataHandlerClass =
+					DataHandlersUtil.getDataHandlerClass(
+						stagedPortlet.getPortletId());
+
 				if (portletDataHandlerClass.equals(
-						stagedPortlet.getPortletDataHandlerClass())) {
+						stagedPortletDataHandlerClass)) {
 
 					return GetterUtil.getBoolean(entry.getValue());
 				}

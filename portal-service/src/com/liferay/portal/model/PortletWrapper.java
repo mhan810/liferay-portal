@@ -949,28 +949,6 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	}
 
 	/**
-	* Returns the name of the portlet data handler class of the portlet.
-	*
-	* @return the name of the portlet data handler class of the portlet
-	*/
-	public java.lang.String getPortletDataHandlerClass() {
-		return _portlet.getPortletDataHandlerClass();
-	}
-
-	public com.liferay.portal.service.persistence.lar.PortletDataHandler getPortletDataHandlerInstance() {
-		return _portlet.getPortletDataHandlerInstance();
-	}
-
-	/**
-	* Returns the portlet data handler instance of the portlet.
-	*
-	* @return the portlet data handler instance of the portlet
-	*/
-	public com.liferay.portal.kernel.lar.PortletDataHandler getLegacyPortletDataHandlerInstance() {
-		return _portlet.getLegacyPortletDataHandlerInstance();
-	}
-
-	/**
 	* Returns the name of the portlet display style class of the portlet.
 	*
 	* @return the name of the portlet display style class of the portlet
@@ -2428,17 +2406,6 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	public void setPortletClass(java.lang.String portletClass) {
 		_portlet.setPortletClass(portletClass);
-	}
-
-	/**
-	* Sets the name of the portlet data handler class of the portlet.
-	*
-	* @param portletDataHandlerClass the name of portlet data handler class of
-	the portlet
-	*/
-	public void setPortletDataHandlerClass(
-		java.lang.String portletDataHandlerClass) {
-		_portlet.setPortletDataHandlerClass(portletDataHandlerClass);
 	}
 
 	/**

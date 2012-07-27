@@ -45,7 +45,7 @@
 			<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>" type="hidden" value="<%= false %>" />
 
 			<%
-			PortletDataHandler portletDataHandler = selPortlet.getLegacyPortletDataHandlerInstance();
+			PortletDataHandler portletDataHandler = (PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(selPortlet.getPortletId());
 			%>
 
 			<c:choose>
@@ -130,7 +130,7 @@
 				<%
 					}
 				}
-				catch (PortletDataException pde) {
+				catch (Exception e) {
 				%>
 
 					<li class="tree-item">

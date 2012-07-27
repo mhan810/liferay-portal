@@ -145,16 +145,6 @@ public class PortletBagFactory {
 
 		URLEncoder urlEncoderInstance = newURLEncoder(portlet);
 
-		com.liferay.portal.kernel.lar.PortletDataHandler legacyDataHandler =
-			null;
-
-		try {
-			legacyDataHandler = newLegacyPortletDataHandler(portlet);
-		}
-		catch (ClassCastException cce) {
-			_log.warn("Cannot create legacy data handler: " + cce.getMessage());
-		}
-
 		PortletDisplayTemplateHandler portletDisplayTemplateHandlerInstance =
 			newPortletDisplayTemplateHandler(portlet);
 
@@ -322,7 +312,7 @@ public class PortletBagFactory {
 		PortletBag portletBag = new PortletBagImpl(
 			portlet.getPortletId(), _servletContext, portletInstance,
 			configurationActionInstance, indexerInstances, openSearchInstance,
-			friendlyURLMapperInstance, urlEncoderInstance, legacyDataHandler,
+			friendlyURLMapperInstance, urlEncoderInstance,
 			portletDisplayTemplateHandlerInstance,
 			portletLayoutListenerInstance, pollerProcessorInstance,
 			popMessageListenerInstance, socialActivityInterpreterInstance,
@@ -825,18 +815,6 @@ public class PortletBagFactory {
 		POPServerUtil.addListener(popMessageListenerInstance);
 
 		return popMessageListenerInstance;
-	}
-
-	protected com.liferay.portal.kernel.lar.PortletDataHandler
-			newLegacyPortletDataHandler(Portlet portlet) throws Exception {
-
-		if (Validator.isNull(portlet.getPortletDataHandlerClass())) {
-			return null;
-		}
-
-		return (com.liferay.portal.kernel.lar.PortletDataHandler)newInstance(
-			com.liferay.portal.kernel.lar.PortletDataHandler.class,
-			portlet.getPortletDataHandlerClass());
 	}
 
 	protected PortletDisplayTemplateHandler newPortletDisplayTemplateHandler(
