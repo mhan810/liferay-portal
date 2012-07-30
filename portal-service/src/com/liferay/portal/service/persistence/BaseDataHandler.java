@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author Mate Thurzo
  */
-public interface BaseDataHandler<T extends BaseModel<T>> {
+public abstract interface BaseDataHandler<T extends BaseModel<T>> {
 
 	public static final String MESSAGE_COMMAND_DIGEST = "digest";
 
@@ -69,7 +69,11 @@ public interface BaseDataHandler<T extends BaseModel<T>> {
 
 	public Object fromXML(String xml);
 
+	public abstract T getEntity(String classPK);
+
 	public String getEntityPath(T object);
+
+	public String getNamespace();
 
 	public List<String> getZipEntries();
 

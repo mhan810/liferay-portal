@@ -214,38 +214,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 			context.getLarDigest().write(item);
 		}
 
-		if (isResourceMain(object)) {
-			digestAssetLinks(object);
-			digestLocks(object);
-
-			boolean portletMetadataAll = context.getBooleanParameter(
-				getNamespace(), PortletDataHandlerKeys.PORTLET_METADATA_ALL);
-
-			if (portletMetadataAll ||
-					context.getBooleanParameter(getNamespace(), "categories")) {
-
-				digestAssetCategories(object);
-			}
-
-			if (portletMetadataAll ||
-					context.getBooleanParameter(getNamespace(), "comments")) {
-
-				digestComments(object);
-			}
-
-			if (portletMetadataAll ||
-					context.getBooleanParameter(getNamespace(), "ratings")) {
-
-				digestRatingsEntries(object);
-			}
-
-			if (portletMetadataAll ||
-					context.getBooleanParameter(getNamespace(), "tags")) {
-
-				digestAssetTags(object);
-			}
-		}
-
 		String path = getEntityPath(object);
 
 		getDataHandlerContext().addProcessedPath(path);
@@ -271,7 +239,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return getXstreamWrapper().fromXML(xml);
 	}
 
-	// TODO re-think this method
 	public abstract T getEntity(String classPK);
 
 	public String getEntityPath(T object) {
@@ -301,6 +268,10 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 			return sb.toString();
 		}
 
+		return StringPool.BLANK;
+	}
+
+	public String getNamespace() {
 		return StringPool.BLANK;
 	}
 
@@ -493,31 +464,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 			serviceContext.setAddGuestPermissions(true);
 		}
 
-		// Asset
-
-		boolean portletMetadataAll = context.getBooleanParameter(
-			namespace, PortletDataHandlerKeys.PORTLET_METADATA_ALL);
-
-		if (isResourceMain(classedModel)) {
-			if (portletMetadataAll ||
-				context.getBooleanParameter(namespace, "categories")) {
-
-				// toDo: add getAssetCategoryIds to context
-				//long[] assetCategoryIds = getAssetCategoryIds(clazz, classPK);
-
-				//serviceContext.setAssetCategoryIds(assetCategoryIds);
-			}
-
-			if (portletMetadataAll ||
-				context.getBooleanParameter(namespace, "tags")) {
-
-				// toDo: add getAssetTagNames to context
-				//String[] assetTagNames = getAssetTagNames(clazz, classPK);
-
-				//serviceContext.setAssetTagNames(assetTagNames);
-			}
-		}
-
 		// Expando
 
 		String expandoPath = null;
@@ -555,110 +501,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 		else {
 			return (Long)classedModel.getPrimaryKeyObj();
-		}
-	}
-
-	protected void digestAssetCategories(T object) throws Exception {
-		long classPK = getClassPK(object);
-
-		List<AssetCategory> assetCategories =
-			AssetCategoryLocalServiceUtil.getCategories(
-				object.getClass().getName(), classPK);
-
-		for (AssetCategory assetCategory : assetCategories) {
-			assetCategoryDataHandler.digest(assetCategory);
-		}
-	}
-
-	protected void digestAssetLinks(T object)
-		throws Exception {
-
-		if (!isResourceMain(object)) {
-			return;
-		}
-
-		AssetEntry assetEntry = null;
-
-		try {
-			long classPK = getClassPK(object);
-
-			assetEntry = AssetEntryLocalServiceUtil.getEntry(
-				object.getClass().getName(), classPK);
-		}
-		catch (Exception e) {
-			return;
-		}
-
-		List<AssetLink> directAssetLinks =
-			AssetLinkLocalServiceUtil.getDirectLinks(assetEntry.getEntryId());
-
-		if (directAssetLinks.isEmpty()) {
-			return;
-		}
-
-		Map<Integer, List<AssetLink>> assetLinksMap =
-			new HashMap<Integer, List<AssetLink>>();
-
-		for (AssetLink assetLink : directAssetLinks) {
-			List<AssetLink> assetLinks = assetLinksMap.get(assetLink.getType());
-
-			if (assetLinks == null) {
-				assetLinks = new ArrayList<AssetLink>();
-
-				assetLinksMap.put(assetLink.getType(), assetLinks);
-			}
-
-			assetLinks.add(assetLink);
-		}
-
-		for (Map.Entry<Integer, List<AssetLink>> entry :
-				assetLinksMap.entrySet()) {
-
-			int assetLinkType = entry.getKey();
-			List<AssetLink> assetLinks = entry.getValue();
-
-			List<String> assetLinkUuids = new ArrayList<String>(
-				directAssetLinks.size());
-
-			for (AssetLink assetLink : assetLinks) {
-				assetLinkDataHandler.digest(assetLink);
-			}
-		}
-	}
-
-	protected void digestAssetTags(T object) throws Exception {
-		long classPK = getClassPK(object);
-
-		String[] tagNames = AssetTagLocalServiceUtil.getTagNames(
-				object.getClass().getName(), classPK);
-
-		for (String tagName : tagNames) {
-			// TODO create AssetTagDataHandler
-		}
-	}
-
-	protected void digestComments(T object) throws Exception {
-		long classNameId = PortalUtil.getClassNameId(
-				object.getClass().getName());
-
-		long classPK = getClassPK(object);
-
-		MBDiscussion discussion = MBDiscussionUtil.fetchByC_C(
-			classNameId, classPK);
-
-		if (discussion == null) {
-			return;
-		}
-
-		List<MBMessage> messages = MBMessageLocalServiceUtil.getThreadMessages(
-			discussion.getThreadId(), WorkflowConstants.STATUS_APPROVED);
-
-		if (messages.size() == 0) {
-			return;
-		}
-
-		for (MBMessage message : messages) {
-			// TODO create MBMessageDataHandler
 		}
 	}
 
@@ -729,22 +571,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return permissions;
 	}
 
-	protected void digestLocks(T object) throws Exception {
-		String key = String.valueOf(object.getPrimaryKeyObj());
-
-		if (LockLocalServiceUtil.isLocked(object.getClass().getName(), key)) {
-
-			Lock lock = LockLocalServiceUtil.getLock(
-				object.getClass().getName(), key);
-
-			LockDataHandler lockDataHandler =
-				(LockDataHandler)DataHandlersUtil.getDataHandlerInstance(
-					Lock.class.getName());
-
-			lockDataHandler.digest(lock);
-		}
-	}
-
 	protected Map<String, List<String>> digestPermissions(
 			LayoutCache layoutCache, long companyId, long groupId,
 			String resourceName, String resourcePrimKey, boolean portletActions)
@@ -799,22 +625,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 
 		return roleMap;
-	}
-
-	protected void digestRatingsEntries(T object) throws Exception {
-		long classPK = getClassPK(object);
-
-		List<RatingsEntry> ratingsEntries =
-			RatingsEntryLocalServiceUtil.getEntries(
-					object.getClass().getName(), classPK);
-
-		if (ratingsEntries.size() == 0) {
-			return;
-		}
-
-		for (RatingsEntry entry : ratingsEntries) {
-			// TODO create RatingsEntryDataHandler
-		}
 	}
 
 	protected Map<String, List<String>> digestEntityPermissions(
@@ -954,10 +764,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 	protected String getLayoutPath(long layoutId) {
 		return getRootPath() + ROOT_PATH_LAYOUTS + layoutId;
-	}
-
-	protected String getNamespace() {
-		return StringPool.BLANK;
 	}
 
 	protected String getPortletPath(String portletId) {
@@ -1176,6 +982,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 	}
 
+	@Deprecated
 	protected boolean isResourceMain(ClassedModel classedModel) {
 		if (classedModel instanceof ResourcedModel) {
 			ResourcedModel resourcedModel = (ResourcedModel)classedModel;

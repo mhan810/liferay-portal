@@ -336,7 +336,9 @@ public class LARImporter {
 		// ratings entries to make them available to the data handlers through
 		// the context
 
-		// toDo: asset, comment, expando, lock, rating import needs to be moved here!
+		// toDo: asset, comment, expando, lock, rating
+		// import needs to be moved here!
+
 		/*
 		if (importCategories || group.isCompany()) {
 			_portletImporter.readAssetCategories(portletDataContext);

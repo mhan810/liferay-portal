@@ -144,7 +144,6 @@ public interface DataHandlerContext {
 
 	public void setOldPlid(long oldPlid);
 
-
 	public void setParameters(Map<String, String[]> parameters);
 
 	public void setPlid(long plid);

@@ -31,6 +31,11 @@
 		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestErrorRegistryAdvice" pointcut="bean(com.liferay.portal.service.persistence.lar*)" />
 	</aop:config>
 
+	<bean id="com.liferay.portal.service.persistence.lar.DigestAssetAdvice" class="com.liferay.portal.service.persistence.lar.DigestAssetAdvice" />
+	<aop:config proxy-target-class="false">
+		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestAssetAdvice" pointcut="execution(void com.liferay.portal.service.persistence.lar.*DataHandler.digest(..))" />
+	</aop:config>
+
 	<bean id="com.liferay.portal.kernel.staging.LayoutStagingUtil" class="com.liferay.portal.kernel.staging.LayoutStagingUtil">
 		<property name="layoutStaging">
 			<bean class="com.liferay.portal.staging.LayoutStagingImpl" />
