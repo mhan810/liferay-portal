@@ -58,17 +58,6 @@ public class BookmarksEntryDataHandlerImpl
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
-		boolean exportPermissions = MapUtil.getBoolean(
-			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
-
-		if (exportPermissions) {
-			Map permissionsMap = digestEntityPermissions(
-				BookmarksEntry.class.getName(), entry.getEntryId(),
-				context);
-
-			digestItem.setPermissions(permissionsMap);
-		}
-
 		digestItem.setAction(getDigestAction(entry));
 		digestItem.setPath(path);
 		digestItem.setType(BookmarksEntry.class.getName());

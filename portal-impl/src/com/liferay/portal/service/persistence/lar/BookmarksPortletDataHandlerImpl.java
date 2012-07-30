@@ -50,9 +50,6 @@ public class BookmarksPortletDataHandlerImpl
 	public LarDigestItem doDigest(Portlet portlet) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
-		boolean exportPermissions = MapUtil.getBoolean(
-			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
-
 		LarDigest digest = context.getLarDigest();
 
 		LarDigestItem item = new LarDigestItemImpl();
@@ -71,13 +68,6 @@ public class BookmarksPortletDataHandlerImpl
 		item.setType(portlet.getPortletId());
 		item.setClassPK(portlet.getPortletId());
 		item.setPath(getEntityPath(portlet));
-
-		if (exportPermissions) {
-			Map permissionsMap = digestEntityPermissions(
-				"com.liferay.portlet.bookmarks", context.getScopeGroupId());
-
-			item.setPermissions(permissionsMap);
-		}
 
 		List<BookmarksFolder> folders = BookmarksFolderUtil.findByGroupId(
 			context.getScopeGroupId());
@@ -137,8 +127,12 @@ public class BookmarksPortletDataHandlerImpl
 		return _PUBLISH_TO_LIVE_BY_DEFAULT;
 	}
 
-	protected String getNamespace() {
+	public String getNamespace() {
 		return _NAMESPACE;
+	}
+
+	public String getPermissionResourceName() {
+		return "com.liferay.portlet.bookmarks";
 	}
 
 	private void exportEntry(

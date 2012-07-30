@@ -132,8 +132,6 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 				context.getParameters(), PortletDataHandlerKeys.PORTLET_DATA);
 		}
 
-		boolean exportPermissions = MapUtil.getBoolean(
-			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
 		boolean exportPortletDataAll = MapUtil.getBoolean(
 			context.getParameters(), PortletDataHandlerKeys.PORTLET_DATA_ALL);
 		boolean exportPortletSetup = MapUtil.getBoolean(
@@ -171,13 +169,6 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 
 		metaDataMap.put("portlet-id", portletId);
 		metaDataMap.put("layout-id", String.valueOf(layoutId));
-
-		if (exportPermissions) {
-			Map permissionsMap = digestPortletPermissions(
-					context, portletId, layout);
-
-			item.setPermissions(permissionsMap);
-		}
 
 	/*	if (exportPortletSetup) {
 			digestPortletPreferences(
@@ -355,6 +346,15 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 			importPortletUserPreferences, false, importPortletData);
 	}
 
+	public String[] getDataPortletPreferences() {
+		return new String[0];
+	}
+
+	@Override
+	public Portlet getEntity(String classPK) {
+		return null;
+	}
+
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[0];
 	}
@@ -371,10 +371,6 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 		return new PortletDataHandlerControl[0];
 	}
 
-	public String[] getDataPortletPreferences() {
-		return new String[0];
-	}
-
 	public boolean isAlwaysExportable() {
 		return _ALWAYS_EXPORTABLE;
 	}
@@ -389,11 +385,6 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 
 	public boolean isPublishToLiveByDefault() {
 		return _PUBLISH_TO_LIVE_BY_DEFAULT;
-	}
-
-	@Override
-	public Portlet getEntity(String classPK) {
-		return null;
 	}
 
 	protected void deletePortletData(
@@ -462,24 +453,6 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 		}
 
 		return PortletPreferencesFactoryUtil.toXML(portletPreferencesImpl);
-	}
-
-	protected Map<String, List<String>> digestPortletPermissions(
-			DataHandlerContext context, String portletId, Layout layout)
-		throws Exception {
-
-		long companyId = context.getCompanyId();
-		long groupId = context.getGroupId();
-
-		String resourceName = PortletConstants.getRootPortletId(portletId);
-		String resourcePrimKey = PortletPermissionUtil.getPrimaryKey(
-			layout.getPlid(), portletId);
-		LayoutCache layoutCache = (LayoutCache)context.getAttribute(
-			"layoutCache");
-
-		return digestPermissions(
-			layoutCache, companyId, groupId, resourceName, resourcePrimKey,
-			true);
 	}
 
 	protected javax.portlet.PortletPreferences doDeleteData(

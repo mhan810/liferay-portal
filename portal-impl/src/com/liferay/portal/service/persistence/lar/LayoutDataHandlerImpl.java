@@ -606,16 +606,6 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
-		// Layout permissions
-		boolean exportPermissions = MapUtil.getBoolean(
-			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
-
-		if (exportPermissions) {
-			Map permissionsMap = digestLayoutPermissions(context, layout);
-
-			digestItem.setPermissions(permissionsMap);
-		}
-
 		if (deleteLayout) {
 			digestItem.setAction(LarDigesterConstants.ACTION_DELETE);
 			digestItem.setPath(path);
@@ -800,24 +790,6 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		}
 
 		return null;
-	}
-
-	private Map<String, List<String>> digestLayoutPermissions(
-			DataHandlerContext context, Layout layout)
-		throws Exception {
-
-		long companyId = context.getCompanyId();
-		long groupId = context.getGroupId();
-
-		String resourceName = Layout.class.getName();
-		String resourcePrimKey = String.valueOf(layout.getPlid());
-
-		LayoutCache layoutCache = (LayoutCache)context.getAttribute(
-			"layoutCache");
-
-		return digestPermissions(
-			layoutCache, companyId, groupId, resourceName, resourcePrimKey,
-			false);
 	}
 
 	private void exportJournalArticle(Layout layout) throws Exception {

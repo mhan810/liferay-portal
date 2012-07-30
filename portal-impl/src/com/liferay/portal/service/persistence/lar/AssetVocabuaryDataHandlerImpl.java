@@ -41,9 +41,6 @@ public class AssetVocabuaryDataHandlerImpl
 	public LarDigestItem doDigest(AssetVocabulary vocabulary) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
-		boolean exportPermissions = MapUtil.getBoolean(
-			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
-
 		LarDigest digest = context.getLarDigest();
 
 		String path = getEntityPath(vocabulary);
@@ -53,14 +50,6 @@ public class AssetVocabuaryDataHandlerImpl
 		}
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
-
-		if (exportPermissions) {
-			Map permissionsMap = digestEntityPermissions(
-				AssetVocabulary.class.getName(), vocabulary.getVocabularyId(),
-				context);
-
-			digestItem.setPermissions(permissionsMap);
-		}
 
 		digestItem.setAction(LarDigesterConstants.ACTION_ADD);
 		digestItem.setPath(path);

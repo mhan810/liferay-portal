@@ -75,6 +75,8 @@ public abstract interface BaseDataHandler<T extends BaseModel<T>> {
 
 	public String getNamespace();
 
+	public String getPermissionResourceName();
+
 	public List<String> getZipEntries();
 
 	public byte[] getZipEntryAsByteArray(String path);
@@ -92,6 +94,8 @@ public abstract interface BaseDataHandler<T extends BaseModel<T>> {
 	public List<String> getZipFolderEntries(String path);
 
 	public void importData(LarDigestItem item) throws Exception;
+
+	public boolean isResourceMain(ClassedModel classedModel);
 
 	public XStreamWrapper getXstreamWrapper();
 

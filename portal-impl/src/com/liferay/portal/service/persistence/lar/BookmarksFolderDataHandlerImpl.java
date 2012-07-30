@@ -47,9 +47,6 @@ public class BookmarksFolderDataHandlerImpl
 	public LarDigestItem doDigest(BookmarksFolder folder) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
-		boolean exportPermissions = MapUtil.getBoolean(
-			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
-
 		LarDigest digest = context.getLarDigest();
 
 		String path = getEntityPath(folder);
@@ -59,13 +56,6 @@ public class BookmarksFolderDataHandlerImpl
 		}
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
-
-		if (exportPermissions) {
-			Map permissionsMap = digestEntityPermissions(
-				BookmarksFolder.class.getName(), context.getScopeGroupId());
-
-			digestItem.setPermissions(permissionsMap);
-		}
 
 		digestItem.setAction(getDigestAction(folder));
 		digestItem.setPath(path);

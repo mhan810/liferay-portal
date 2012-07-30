@@ -44,9 +44,6 @@ public class AssetCategoryDataHandlerImpl
 		DataHandlerContext context =
 			DataHandlerContextThreadLocal.getDataHandlerContext();
 
-		boolean exportPermissions = MapUtil.getBoolean(
-			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
-
 		AssetVocabulary vocabulary =
 			AssetVocabularyLocalServiceUtil.getAssetVocabulary(
 				category.getVocabularyId());
@@ -72,14 +69,6 @@ public class AssetCategoryDataHandlerImpl
 		LarDigest digest = context.getLarDigest();
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
-
-		if (exportPermissions) {
-			Map permissionsMap = digestEntityPermissions(
-				AssetCategory.class.getName(), category.getCategoryId(),
-				context);
-
-			digestItem.setPermissions(permissionsMap);
-		}
 
 		digestItem.setAction(LarDigesterConstants.ACTION_ADD);
 		digestItem.setPath(path);

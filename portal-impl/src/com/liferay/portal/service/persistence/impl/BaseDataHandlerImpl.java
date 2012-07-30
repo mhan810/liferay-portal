@@ -104,6 +104,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -275,6 +276,13 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return StringPool.BLANK;
 	}
 
+	public String getPermissionResourceName() {
+		ParameterizedType type =
+			(ParameterizedType)getClass().getGenericSuperclass();
+
+		return type.getClass().getName();
+	}
+
 	public XStreamWrapper getXstreamWrapper() {
 		if (_xStreamWrapper == null) {
 			Object o = PortalBeanLocatorUtil.locate("xStreamWrapper");
@@ -367,6 +375,16 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 		catch (Exception e) {
 		}
+	}
+
+	public boolean isResourceMain(ClassedModel classedModel) {
+		if (classedModel instanceof ResourcedModel) {
+			ResourcedModel resourcedModel = (ResourcedModel)classedModel;
+
+			return resourcedModel.isResourceMain();
+		}
+
+		return true;
 	}
 
 	public void serialize(LarDigestItem item, DataHandlerContext context) {
@@ -504,221 +522,10 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 	}
 
-	public Map<String, List<String>> digestEntityPermissions(
-			String resourceName, long resourcePK, DataHandlerContext context)
-			throws Exception {
-
-		HashMap<String, List<String>> permissions =
-			new HashMap<String, List<String>>();
-
-		Group group = GroupLocalServiceUtil.getGroup(context.getGroupId());
-
-		List<Role> roles = RoleLocalServiceUtil.getRoles(
-			context.getCompanyId());
-
-		PrimitiveLongList roleIds = new PrimitiveLongList(roles.size());
-		Map<Long, String> roleIdsToNames = new HashMap<Long, String>();
-
-		for (Role role : roles) {
-			int type = role.getType();
-
-			if ((type == RoleConstants.TYPE_REGULAR) ||
-					((type == RoleConstants.TYPE_ORGANIZATION) &&
-						group.isOrganization()) ||
-					((type == RoleConstants.TYPE_SITE) &&
-						(group.isLayoutSetPrototype() || group.isSite()))) {
-
-				String name = role.getName();
-
-				roleIds.add(role.getRoleId());
-				roleIdsToNames.put(role.getRoleId(), name);
-			}
-			else if ((type == RoleConstants.TYPE_PROVIDER) && role.isTeam()) {
-				Team team = TeamLocalServiceUtil.getTeam(role.getClassPK());
-
-				if (team.getGroupId() == context.getGroupId()) {
-					String name = ROLE_TEAM_PREFIX + team.getName();
-
-					roleIds.add(role.getRoleId());
-					roleIdsToNames.put(role.getRoleId(), name);
-				}
-			}
-		}
-
-		List<String> actionIds = ResourceActionsUtil.getModelResourceActions(
-				resourceName);
-
-		Map<Long, Set<String>> roleIdsToActionIds = getActionIds(
-				context.getCompanyId(), roleIds.getArray(), resourceName,
-				resourcePK, actionIds);
-
-		for (Map.Entry<Long, String> entry : roleIdsToNames.entrySet()) {
-			long roleId = entry.getKey();
-			String name = entry.getValue();
-
-			Set<String> availableActionIds = roleIdsToActionIds.get(roleId);
-
-			if ((availableActionIds == null) || availableActionIds.isEmpty()) {
-				continue;
-			}
-
-			List<String> actionIdsList = ListUtil.fromCollection(
-				availableActionIds);
-
-			permissions.put(name, actionIdsList);
-		}
-
-		return permissions;
-	}
-
-	protected Map<String, List<String>> digestPermissions(
-			LayoutCache layoutCache, long companyId, long groupId,
-			String resourceName, String resourcePrimKey, boolean portletActions)
-		throws Exception {
-
-		List<Role> roles = layoutCache.getGroupRoles_5(groupId, resourceName);
-
-		List<String> actionIds = null;
-
-		if (portletActions) {
-			actionIds = ResourceActionsUtil.getPortletResourceActions(
-				resourceName);
-		}
-		else {
-			actionIds = ResourceActionsUtil.getModelResourceActions(
-				resourceName);
-		}
-
-		if (actionIds.isEmpty()) {
-			return null;
-		}
-
-		PrimitiveLongList roleIds = new PrimitiveLongList(roles.size());
-		Map<Long, Role> roleIdsToRoles = new HashMap<Long, Role>();
-
-		for (Role role : roles) {
-			String name = role.getName();
-
-			if (name.equals(RoleConstants.ADMINISTRATOR)) {
-				continue;
-			}
-
-			roleIds.add(role.getRoleId());
-			roleIdsToRoles.put(role.getRoleId(), role);
-		}
-
-		Map<Long, Set<String>> roleIdsToActionIds =
-			ResourcePermissionLocalServiceUtil.
-				getAvailableResourcePermissionActionIds(
-					companyId, resourceName, ResourceConstants.SCOPE_INDIVIDUAL,
-					resourcePrimKey, roleIds.getArray(), actionIds);
-
-		HashMap<String, List<String>> roleMap =
-			new HashMap<String, List<String>>();
-
-		for (Map.Entry<Long, Set<String>> entry :
-				roleIdsToActionIds.entrySet()) {
-
-			List<String> values = ListUtil.fromCollection(entry.getValue());
-
-			roleMap.put(String.valueOf(entry.getKey()), values);
-		}
-
-		return roleMap;
-	}
-
-	protected Map<String, List<String>> digestEntityPermissions(
-			String resourceName, long resourcePK)
-		throws Exception {
-
-		DataHandlerContext context = getDataHandlerContext();
-
-		HashMap<String, List<String>> permissions =
-			new HashMap<String, List<String>>();
-
-		Group group = GroupLocalServiceUtil.getGroup(context.getGroupId());
-
-		List<Role> roles = RoleLocalServiceUtil.getRoles(
-			context.getCompanyId());
-
-		PrimitiveLongList roleIds = new PrimitiveLongList(roles.size());
-		Map<Long, String> roleIdsToNames = new HashMap<Long, String>();
-
-		for (Role role : roles) {
-			int type = role.getType();
-
-			if ((type == RoleConstants.TYPE_REGULAR) ||
-				((type == RoleConstants.TYPE_ORGANIZATION) &&
-					group.isOrganization()) ||
-				((type == RoleConstants.TYPE_SITE) &&
-					(group.isLayoutSetPrototype() || group.isSite()))) {
-
-				String name = role.getName();
-
-				roleIds.add(role.getRoleId());
-				roleIdsToNames.put(role.getRoleId(), name);
-			}
-			else if ((type == RoleConstants.TYPE_PROVIDER) && role.isTeam()) {
-				Team team = TeamLocalServiceUtil.getTeam(role.getClassPK());
-
-				if (team.getGroupId() == context.getGroupId()) {
-					String name =
-						PermissionExporter.ROLE_TEAM_PREFIX + team.getName();
-
-					roleIds.add(role.getRoleId());
-					roleIdsToNames.put(role.getRoleId(), name);
-				}
-			}
-		}
-
-		List<String> actionIds = ResourceActionsUtil.getModelResourceActions(
-			resourceName);
-
-		Map<Long, Set<String>> roleIdsToActionIds = getActionIds(
-			context.getCompanyId(), roleIds.getArray(), resourceName,
-			resourcePK, actionIds);
-
-		for (Map.Entry<Long, String> entry : roleIdsToNames.entrySet()) {
-			long roleId = entry.getKey();
-			String name = entry.getValue();
-
-			Set<String> availableActionIds = roleIdsToActionIds.get(roleId);
-
-			if ((availableActionIds == null) || availableActionIds.isEmpty()) {
-				continue;
-			}
-
-			List<String> actionIdsList = ListUtil.fromCollection(
-				availableActionIds);
-
-			permissions.put(name, actionIdsList);
-		}
-
-		return permissions;
-	}
-
 	protected void doSerialize(T object) throws Exception {
 		String path = getEntityPath(object);
 
 		addZipEntry(path, object);
-	}
-
-	protected Map<Long, Set<String>> getActionIds(
-			long companyId, long[] roleIds, String className, long primKey,
-			List<String> actionIds)
-		throws PortalException, SystemException {
-
-		if (ResourceBlockLocalServiceUtil.isSupported(className)) {
-			return ResourceBlockPermissionLocalServiceUtil.
-				getAvailableResourceBlockPermissionActionIds(
-					roleIds, className, primKey, actionIds);
-		}
-		else {
-			return ResourcePermissionLocalServiceUtil.
-				getAvailableResourcePermissionActionIds(
-					companyId, className, ResourceConstants.SCOPE_INDIVIDUAL,
-					String.valueOf(primKey), roleIds, actionIds);
-		}
 	}
 
 	protected int getDigestAction(T object) {
@@ -980,17 +787,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 				companyId, resourceName, ResourceConstants.SCOPE_INDIVIDUAL,
 				String.valueOf(newResourcePK), roleIdsToActionIds);
 		}
-	}
-
-	@Deprecated
-	protected boolean isResourceMain(ClassedModel classedModel) {
-		if (classedModel instanceof ResourcedModel) {
-			ResourcedModel resourcedModel = (ResourcedModel)classedModel;
-
-			return resourcedModel.isResourceMain();
-		}
-
-		return true;
 	}
 
 	protected boolean isValidPath(String path) {
