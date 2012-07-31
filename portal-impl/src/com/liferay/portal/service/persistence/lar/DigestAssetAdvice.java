@@ -50,15 +50,11 @@ import java.util.Map;
 /**
  * @author Mate Thurzo
  */
-public class DigestAssetAdvice implements AfterReturningAdvice {
+public class DigestAssetAdvice {
 
-
-	public void afterReturning(
-			Object returnValue, Method method, Object[] args, Object target)
-		throws Throwable {
-
+	public Object invoke(Object returnValue) throws Throwable {
 		if (returnValue == null) {
-			return;
+			return null;
 		}
 
 		DataHandlerContext context =
@@ -85,7 +81,7 @@ public class DigestAssetAdvice implements AfterReturningAdvice {
 			dataHandler.getNamespace(), "tags");
 
 		if (!isResourceMain(entity)) {
-			return;
+			return returnValue;
 		}
 
 		digestAssetLinks(item, entity);
@@ -108,6 +104,7 @@ public class DigestAssetAdvice implements AfterReturningAdvice {
 			digestAssetTags(item, entity);
 		}
 
+		return returnValue;
 	}
 
 	private void digestComments(LarDigestItem item, Object entity)

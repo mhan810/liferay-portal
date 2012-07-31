@@ -32,13 +32,18 @@
 	</aop:config>
 
 	<bean id="com.liferay.portal.service.persistence.lar.DigestAssetAdvice" class="com.liferay.portal.service.persistence.lar.DigestAssetAdvice" />
-	<aop:config proxy-target-class="false">
-		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestAssetAdvice" pointcut="execution(void com.liferay.portal.service.persistence.lar.*DataHandler.digest(..))" />
-	</aop:config>
-
 	<bean id="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" class="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" />
+
 	<aop:config proxy-target-class="false">
-		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" pointcut="execution(void com.liferay.portal.service.persistence.lar.*DataHandler.digest(..))" />
+		<aop:pointcut id="digestPointcut" expression="execution(* com.liferay.portal.service.persistence.BaseDataHandler.doDigest(..) throws Exception)" />
+
+		<aop:aspect ref="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" order="1">
+			<aop:after-returning method="invoke" pointcut-ref="digestPointcut" returning="returnValue" />
+		</aop:aspect>
+
+		<aop:aspect ref="com.liferay.portal.service.persistence.lar.DigestAssetAdvice" order="2">
+			<aop:after-returning method="invoke" pointcut-ref="digestPointcut" returning="returnValue" />
+		</aop:aspect>
 	</aop:config>
 
 	<bean id="com.liferay.portal.kernel.staging.LayoutStagingUtil" class="com.liferay.portal.kernel.staging.LayoutStagingUtil">

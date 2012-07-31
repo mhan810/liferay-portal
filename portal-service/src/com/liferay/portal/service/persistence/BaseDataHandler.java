@@ -65,6 +65,8 @@ public abstract interface BaseDataHandler<T extends BaseModel<T>> {
 
 	public void digest(T object) throws Exception;
 
+	public abstract LarDigestItem doDigest(T object) throws Exception;
+
 	public Object fromXML(byte[] bytes);
 
 	public Object fromXML(String xml);

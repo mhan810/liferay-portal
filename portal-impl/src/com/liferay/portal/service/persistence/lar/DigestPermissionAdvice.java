@@ -44,6 +44,7 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.TeamLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.aop.AfterReturningAdvice;
 
 import java.lang.reflect.Method;
@@ -55,14 +56,12 @@ import java.util.Set;
 /**
  * @author Mate Thurzo
  */
-public class DigestPermissionAdvice implements AfterReturningAdvice {
+public class DigestPermissionAdvice {
 
-	public void afterReturning(
-			Object returnValue, Method method, Object[] args, Object target)
-		throws Throwable {
+	public Object invoke(Object returnValue) throws Throwable {
 
 		if ((returnValue == null) || !(returnValue instanceof LarDigestItem)) {
-			return;
+			return null;
 		}
 
 		LarDigestItem item = (LarDigestItem)returnValue;
@@ -95,7 +94,7 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 				Layout layout = LayoutLocalServiceUtil.getLayout(plid);
 
 				permissionsMap = digestPortletPermissions(
-					context, portletId, layout);
+						context, portletId, layout);
 			}
 			else {
 				permissionsMap = digestEntityPermissions(
@@ -107,6 +106,8 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 				item.setPermissions(permissionsMap);
 			}
 		}
+
+		return item;
 	}
 
 	private Map<String, List<String>> digestEntityPermissions(
