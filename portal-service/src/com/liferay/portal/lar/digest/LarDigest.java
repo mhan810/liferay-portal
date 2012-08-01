@@ -24,6 +24,8 @@ import java.util.Map;
  */
 public interface LarDigest extends Iterable<LarDigestItem> {
 
+	public void addItem(LarDigestItem item);
+
 	public void addMetaData(Map<String, String> metadata) throws Exception;
 
 	public void addPermissions(Map<String, List<String>> permissions)
@@ -39,6 +41,8 @@ public interface LarDigest extends Iterable<LarDigestItem> {
 	public String getDigestString();
 
 	public Map<String, String> getMetaData();
+
+	public void write() throws Exception;
 
 	public void write(LarDigestItem digestItem) throws Exception;
 

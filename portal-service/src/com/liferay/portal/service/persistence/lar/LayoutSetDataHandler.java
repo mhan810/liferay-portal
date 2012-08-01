@@ -14,11 +14,20 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 
 /**
  * @author Daniel Kocsis
+ * @author Mate Thurzo
  */
 public interface LayoutSetDataHandler extends BaseDataHandler<LayoutSet> {
+
+	public LarDigestItem doDigest(LayoutSet layoutSet) throws Exception;
+
+	public void doImport(LarDigestItem item) throws Exception;
+
+	public LayoutSet getEntity(String classPK);
+
 }

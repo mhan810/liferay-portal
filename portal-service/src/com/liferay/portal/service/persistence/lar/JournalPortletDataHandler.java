@@ -19,10 +19,22 @@ import com.liferay.portal.model.Portlet;
 
 /**
  * @author Daniel Kocsis
+ * @author Mate Thurzo
  */
 public interface JournalPortletDataHandler extends PortletDataHandler {
 
-	public static final String _NAMESPACE = "journal";
+	public static final boolean ALWAYS_EXPORTABLE = true;
+
+	public static final boolean ALWAYS_STAGED = false;
+
+	public static final boolean DATA_LOCALIZED = true;
+
+	public static final String NAMESPACE = "journal";
+
+	public static final boolean PUBLISH_TO_LIVE_BY_DEFAULT = false;
 
 	public LarDigestItem doDigest(Portlet portlet) throws Exception;
+
+	public void doImport(LarDigestItem item) throws Exception;
+
 }

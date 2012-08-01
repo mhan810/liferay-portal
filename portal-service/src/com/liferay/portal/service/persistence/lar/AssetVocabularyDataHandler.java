@@ -24,7 +24,10 @@ import com.liferay.portlet.asset.model.AssetVocabulary;
 public interface AssetVocabularyDataHandler
 	extends BaseDataHandler<AssetVocabulary> {
 
-	public LarDigestItem doDigest(AssetVocabulary assetVocabulary) throws Exception;
+	public LarDigestItem doDigest(AssetVocabulary assetVocabulary)
+		throws Exception;
+
+	public void doImport(LarDigestItem item) throws Exception;
 
 	public AssetVocabulary getEntity(String classPK);
 

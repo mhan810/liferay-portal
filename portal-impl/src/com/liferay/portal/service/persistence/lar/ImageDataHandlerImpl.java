@@ -33,9 +33,10 @@ public class ImageDataHandlerImpl extends BaseDataHandlerImpl<Image>
 
 	@Override
 	public void doImport(LarDigestItem item) throws Exception {
-		// toDo: implement
+		return;
 	}
 
+	@Override
 	public Image getEntity(String classPK) {
 		if (Validator.isNotNull(classPK)) {
 			try {

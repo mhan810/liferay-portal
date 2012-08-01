@@ -53,7 +53,7 @@ import java.util.Map;
 public class DigestAssetAdvice {
 
 	public Object invoke(Object returnValue) throws Throwable {
-		if (returnValue == null) {
+		if ((returnValue == null) || !(returnValue instanceof LarDigestItem)) {
 			return null;
 		}
 
@@ -66,6 +66,10 @@ public class DigestAssetAdvice {
 			item.getType());
 
 		Object entity = dataHandler.getEntity(item.getClassPK());
+
+		if (entity == null) {
+			return null;
+		}
 
 		boolean portletMetadataAll = context.getBooleanParameter(
 			dataHandler.getNamespace(),

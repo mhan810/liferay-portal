@@ -27,6 +27,8 @@ public interface BookmarksFolderDataHandler
 
 	public LarDigestItem doDigest(BookmarksFolder folder) throws Exception;
 
+	public void doImport(LarDigestItem item) throws Exception;
+
 	public BookmarksFolder getEntity(String classPK);
 
 }

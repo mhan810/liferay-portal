@@ -81,7 +81,6 @@ import com.liferay.portal.service.persistence.lar.JournalArticleDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalStructureDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalTemplateDataHandler;
 import com.liferay.portal.service.persistence.lar.LockDataHandler;
-import com.liferay.portal.service.persistence.lar.PortletPreferencesDataHandler;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetEntry;
@@ -124,38 +123,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		addZipEntry(path, toXML(object));
 	}
 
-	public void addZipEntry(String path, byte[] bytes) throws SystemException {
-		if (_portletDataContextListener != null) {
-			_portletDataContextListener.onAddZipEntry(path);
-		}
-
-		try {
-			ZipWriter zipWriter = getZipWriter();
-
-			zipWriter.addEntry(path, bytes);
-		}
-		catch (IOException ioe) {
-			throw new SystemException(ioe);
-		}
-	}
-
-	public void addZipEntry(String path, InputStream is)
-		throws SystemException {
-
-		if (_portletDataContextListener != null) {
-			_portletDataContextListener.onAddZipEntry(path);
-		}
-
-		try {
-			ZipWriter zipWriter = getZipWriter();
-
-			zipWriter.addEntry(path, is);
-		}
-		catch (IOException ioe) {
-			throw new SystemException(ioe);
-		}
-	}
-
 	public void addZipEntry(String path, Object object) throws SystemException {
 		addZipEntry(path, toXML(object));
 	}
@@ -175,70 +142,29 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 	}
 
-	public void addZipEntry(String path, StringBuilder sb)
-			throws SystemException {
-
-		if (_portletDataContextListener != null) {
-			_portletDataContextListener.onAddZipEntry(path);
-		}
-
-		try {
-			ZipWriter zipWriter = getZipWriter();
-
-			zipWriter.addEntry(path, sb);
-		}
-		catch (IOException ioe) {
-			throw new SystemException(ioe);
-		}
-	}
-
-	public ServiceContext createServiceContext(
-		Element element, ClassedModel classedModel, String namespace) {
-
-		return createServiceContext(element, null, classedModel, namespace);
-	}
-
 	public ServiceContext createServiceContext(
 		String path, ClassedModel classedModel, String namespace) {
 
 		return createServiceContext(null, path, classedModel, namespace);
 	}
 
-	public void digest(T object) throws Exception {
-		sendUpdateMessage(MESSAGE_COMMAND_DIGEST, object);
-
+	public LarDigestItem digest(T object) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
 		LarDigestItem item = doDigest(object);
 
-		if (item != null) {
-			context.getLarDigest().write(item);
-		}
+		context.getLarDigest().addItem(item);
 
 		String path = getEntityPath(object);
 
 		getDataHandlerContext().addProcessedPath(path);
+
+		return item;
 	}
 
 	public abstract LarDigestItem doDigest(T object) throws Exception;
 
 	public abstract void doImport(LarDigestItem item)throws Exception;
-
-	public Object fromXML(byte[] bytes) {
-		if ((bytes == null) || (bytes.length == 0)) {
-			return null;
-		}
-
-		return getXstreamWrapper().fromXML(new String(bytes));
-	}
-
-	public Object fromXML(String xml) {
-		if (Validator.isNull(xml)) {
-			return null;
-		}
-
-		return getXstreamWrapper().fromXML(xml);
-	}
 
 	public abstract T getEntity(String classPK);
 
@@ -295,32 +221,12 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return _xStreamWrapper;
 	}
 
-	public List<String> getZipEntries() {
-		return getZipReader().getEntries();
-	}
-
 	public byte[] getZipEntryAsByteArray(String path) {
 		if (_portletDataContextListener != null) {
 			_portletDataContextListener.onGetZipEntry(path);
 		}
 
 		return getZipReader().getEntryAsByteArray(path);
-	}
-
-	public File getZipEntryAsFile(String path) {
-		if (_portletDataContextListener != null) {
-			_portletDataContextListener.onGetZipEntry(path);
-		}
-
-		return getZipReader().getEntryAsFile(path);
-	}
-
-	public InputStream getZipEntryAsInputStream(String path) {
-		if (_portletDataContextListener != null) {
-			_portletDataContextListener.onGetZipEntry(path);
-		}
-
-		return getZipReader().getEntryAsInputStream(path);
 	}
 
 	public Object getZipEntryAsObject(String path) {
@@ -335,62 +241,18 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return getZipReader().getEntryAsString(path);
 	}
 
-	public List<String> getZipFolderEntries() {
-		return getZipFolderEntries(StringPool.SLASH);
-	}
-
-	public List<String> getZipFolderEntries(String path) {
-		return getZipReader().getFolderEntries(path);
-	}
-
-	public ZipReader getZipReader() {
-		DataHandlerContext context =
-			DataHandlerContextThreadLocal.getDataHandlerContext();
-
-		if (context != null) {
-			return context.getZipReader();
-		}
-
-		return null;
-	}
-
-	public ZipWriter getZipWriter() {
-		DataHandlerContext context =
-			DataHandlerContextThreadLocal.getDataHandlerContext();
-
-		if (context != null) {
-			return context.getZipWriter();
-		}
-
-		return null;
-	}
-
 	public void importData(LarDigestItem item) {
 		try {
-			sendUpdateMessage(MESSAGE_COMMAND_IMPORT, item);
-
-		if (!getDataHandlerContext().isPathProcessed(item.getPath())) {
-			doImport(item);
-		}
+			if (!getDataHandlerContext().isPathProcessed(item.getPath())) {
+				doImport(item);
+			}
 		}
 		catch (Exception e) {
 		}
 	}
 
-	public boolean isResourceMain(ClassedModel classedModel) {
-		if (classedModel instanceof ResourcedModel) {
-			ResourcedModel resourcedModel = (ResourcedModel)classedModel;
-
-			return resourcedModel.isResourceMain();
-		}
-
-		return true;
-	}
-
 	public void serialize(LarDigestItem item, DataHandlerContext context) {
 		T object = getEntity(item.getClassPK());
-
-		sendUpdateMessage(MESSAGE_COMMAND_SERIALIZE, object);
 
 		if (object == null) {
 			return;
@@ -411,10 +273,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 	public void setXstreamWrapper(XStreamWrapper xStreamWrapper) {
 		_xStreamWrapper = xStreamWrapper;
-	}
-
-	public String toXML(Object object) {
-		return getXstreamWrapper().toXML(object);
 	}
 
 	protected void addExpando(T object) throws SystemException {
@@ -439,7 +297,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		for (String roleName : permissions.keySet()) {
 			Role role = RoleLocalServiceUtil.getRole(
 				context.getCompanyId(), roleName);
-
 
 			String path = getRolePath(role);
 
@@ -511,6 +368,20 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return serviceContext;
 	}
 
+	protected void doSerialize(T object) throws Exception {
+		String path = getEntityPath(object);
+
+		addZipEntry(path, object);
+	}
+
+	protected Object fromXML(String xml) {
+		if (Validator.isNull(xml)) {
+			return null;
+		}
+
+		return getXstreamWrapper().fromXML(xml);
+	}
+
 	protected long getClassPK(ClassedModel classedModel) {
 		if (classedModel instanceof ResourcedModel) {
 			ResourcedModel resourcedModel = (ResourcedModel)classedModel;
@@ -520,12 +391,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		else {
 			return (Long)classedModel.getPrimaryKeyObj();
 		}
-	}
-
-	protected void doSerialize(T object) throws Exception {
-		String path = getEntityPath(object);
-
-		addZipEntry(path, object);
 	}
 
 	protected int getDigestAction(T object) {
@@ -567,10 +432,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 		return path.substring(0, pos).concat("-expando").concat(
 			path.substring(pos));
-	}
-
-	protected String getLayoutPath(long layoutId) {
-		return getRootPath() + ROOT_PATH_LAYOUTS + layoutId;
 	}
 
 	protected String getPortletPath(String portletId) {
@@ -629,6 +490,28 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return 0;
 	}
 
+	protected ZipReader getZipReader() {
+		DataHandlerContext context =
+			DataHandlerContextThreadLocal.getDataHandlerContext();
+
+		if (context != null) {
+			return context.getZipReader();
+		}
+
+		return null;
+	}
+
+	protected ZipWriter getZipWriter() {
+		DataHandlerContext context =
+			DataHandlerContextThreadLocal.getDataHandlerContext();
+
+		if (context != null) {
+			return context.getZipWriter();
+		}
+
+		return null;
+	}
+
 	protected void importPermissions(
 			String resourceName, String resourcePrimKey,
 			Map<String, List<String>> permissions)
@@ -655,7 +538,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 				roleName = roleName.substring(
 					PermissionExporter.ROLE_TEAM_PREFIX.length());
 
-				String description = "";
+				String description = StringPool.BLANK;
 				//roleElement.attributeValue("description");
 
 				Team team = null;
@@ -676,12 +559,14 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 			}
 
 			if (role == null) {
-				String title = ""; //roleElement.attributeValue("title");
+				String title = StringPool.BLANK;
+				//roleElement.attributeValue("title");
 
 				Map<Locale, String> titleMap =
 					LocalizationUtil.getLocalizationMap(title);
 
-				String description = ""; //roleElement.attributeValue("description");
+				String description = StringPool.BLANK;
+				//roleElement.attributeValue("description");
 
 				Map<Locale, String> descriptionMap =
 					LocalizationUtil.getLocalizationMap(description);
@@ -797,13 +682,8 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return true;
 	}
 
-	protected void sendUpdateMessage(String messageCommand, Object payload) {
-		Message message = new Message();
-
-		message.put("command", messageCommand);
-		message.put("payload", payload);
-
-		MessageBusUtil.sendMessage(DestinationNames.LAR_EXPORT_IMPORT, message);
+	protected String toXML(Object object) {
+		return getXstreamWrapper().toXML(object);
 	}
 
 	private Log _log = LogFactoryUtil.getLog(BaseDataHandlerImpl.class);
@@ -824,8 +704,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	protected BookmarksFolderDataHandler bookmarksFolderDataHandler;
 	@BeanReference(type = BookmarksPortletDataHandler.class)
 	protected BookmarksPortletDataHandler bookmarksPortletDataHandler;
-	@BeanReference(type = PortletPreferencesDataHandler.class)
-	protected PortletPreferencesDataHandler portletPreferencesDataHandler;
 	@BeanReference(type = AssetVocabularyDataHandler.class)
 	protected AssetVocabularyDataHandler assetVocabularyDataHandler;
 	@BeanReference(type = AssetCategoryDataHandler.class)

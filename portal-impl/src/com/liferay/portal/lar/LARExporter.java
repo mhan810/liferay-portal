@@ -431,6 +431,7 @@ public class LARExporter {
 			updateLastPublishDate(layoutSet, lastPublishDate);
 		}
 
+		context.getLarDigest().write();
 		context.getLarDigest().close();
 	}
 

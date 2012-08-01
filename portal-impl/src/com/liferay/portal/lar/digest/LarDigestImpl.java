@@ -69,6 +69,8 @@ public class LarDigestImpl implements LarDigest {
 		_xmlStreamWriter.writeStartDocument();
 
 		_xmlStreamWriter.writeStartElement("root");
+
+		_itemList = new ArrayList<LarDigestItem>();
 	}
 
 	public LarDigestImpl(ZipReader zipReader) throws Exception {
@@ -77,6 +79,14 @@ public class LarDigestImpl implements LarDigest {
 		_digestFile = getDigestFile();
 
 		FileUtil.write(_digestFile, xml);
+	}
+
+	public void addItem(LarDigestItem item) {
+		if (item == null) {
+			return;
+		}
+
+		_itemList.add(item);
 	}
 
 	public void addMetaData(Map<String, String> metadata) throws Exception {
@@ -325,6 +335,12 @@ public class LarDigestImpl implements LarDigest {
 		}
 	}
 
+	public void write() throws Exception {
+		for (LarDigestItem item : _itemList) {
+			write(item);
+		}
+	}
+
 	public void write(LarDigestItem digestItem) throws Exception {
 		_xmlStreamWriter.writeStartElement(
 			LarDigesterConstants.NODE_DIGEST_ITEM_LABEL);
@@ -428,6 +444,8 @@ public class LarDigestImpl implements LarDigest {
 
 	private File _digestFile;
 	private Document _document;
+
+	private List<LarDigestItem> _itemList;
 
 	private XMLStreamReader _xmlStreamReader;
 	private XMLStreamWriter _xmlStreamWriter;

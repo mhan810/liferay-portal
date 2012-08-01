@@ -45,7 +45,7 @@ public class AssetCategoryPropertyDataHandlerImpl
 		if (!context.isPathProcessed(path)) {
 			LarDigestItem digestItem = new LarDigestItemImpl();
 
-			digestItem.setAction(LarDigesterConstants.ACTION_ADD);
+			digestItem.setAction(getDigestAction(categoryProperty));
 			digestItem.setPath(path);
 			digestItem.setType(AssetCategoryProperty.class.getName());
 			digestItem.setClassPK(
@@ -59,7 +59,7 @@ public class AssetCategoryPropertyDataHandlerImpl
 
 	@Override
 	public void doImport(LarDigestItem item) throws Exception {
-		// toDo: implement
+		return;
 	}
 
 	@Override

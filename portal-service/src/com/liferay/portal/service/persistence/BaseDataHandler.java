@@ -36,40 +36,18 @@ import java.util.List;
  */
 public abstract interface BaseDataHandler<T extends BaseModel<T>> {
 
-	public static final String MESSAGE_COMMAND_DIGEST = "digest";
-
-	public static final String MESSAGE_COMMAND_SERIALIZE = "serialize";
-
-	public static final String MESSAGE_COMMAND_IMPORT = "import";
-
 	public static final String ROOT_PATH_GROUPS = "/groups/";
-
-	public static final String ROOT_PATH_LAYOUTS = "/layouts/";
 
 	public static final String ROOT_PATH_PORTLETS = "/portlets/";
 
-	public static final String ROLE_TEAM_PREFIX = "ROLE_TEAM_,*";
-
 	public void addZipEntry(String path, T object) throws SystemException;
-
-	public void addZipEntry(String path, byte[] bytes) throws SystemException;
-
-	public void addZipEntry(String path, InputStream is)
-		throws SystemException;
-
-	public ServiceContext createServiceContext(
-		Element element, ClassedModel classedModel, String namespace);
 
 	public ServiceContext createServiceContext(
 		String path, ClassedModel classedModel, String namespace);
 
-	public void digest(T object) throws Exception;
+	public LarDigestItem digest(T object) throws Exception;
 
 	public abstract LarDigestItem doDigest(T object) throws Exception;
-
-	public Object fromXML(byte[] bytes);
-
-	public Object fromXML(String xml);
 
 	public abstract T getEntity(String classPK);
 
@@ -79,34 +57,18 @@ public abstract interface BaseDataHandler<T extends BaseModel<T>> {
 
 	public String getPermissionResourceName();
 
-	public List<String> getZipEntries();
-
 	public byte[] getZipEntryAsByteArray(String path);
-
-	public File getZipEntryAsFile(String path);
-
-	public InputStream getZipEntryAsInputStream(String path);
 
 	public Object getZipEntryAsObject(String path);
 
 	public String getZipEntryAsString(String path);
 
-	public List<String> getZipFolderEntries();
-
-	public List<String> getZipFolderEntries(String path);
-
 	public void importData(LarDigestItem item) throws Exception;
 
-	public boolean isResourceMain(ClassedModel classedModel);
-
 	public XStreamWrapper getXstreamWrapper();
-
-	public ZipWriter getZipWriter();
 
 	public void serialize(LarDigestItem item, DataHandlerContext context);
 
 	public void setXstreamWrapper(XStreamWrapper xStreamWrapper);
-
-	public String toXML(Object object);
 
 }

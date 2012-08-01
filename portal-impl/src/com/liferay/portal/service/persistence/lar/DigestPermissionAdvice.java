@@ -59,7 +59,6 @@ import java.util.Set;
 public class DigestPermissionAdvice {
 
 	public Object invoke(Object returnValue) throws Throwable {
-
 		if ((returnValue == null) || !(returnValue instanceof LarDigestItem)) {
 			return null;
 		}

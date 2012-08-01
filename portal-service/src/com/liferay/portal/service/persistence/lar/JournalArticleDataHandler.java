@@ -16,6 +16,7 @@ package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portlet.journal.model.JournalArticle;
 
@@ -25,21 +26,10 @@ import com.liferay.portlet.journal.model.JournalArticle;
 public interface JournalArticleDataHandler
 	extends BaseDataHandler<JournalArticle> {
 
-	public String exportReferencedContent(
-			PortletDataContext portletDataContext, String content, Object clazz)
-		throws Exception;
+	public LarDigestItem doDigest(JournalArticle article) throws Exception;
 
-	public String getArticlePath(
-			PortletDataContext portletDataContext, JournalArticle article)
-		throws Exception;
+	public void doImport(LarDigestItem item) throws Exception;
 
-	public String importReferencedContent(
-			PortletDataContext portletDataContext, Element parentElement,
-			String content)
-		throws Exception;
-
-	public void importReferencedData(
-			PortletDataContext portletDataContext, Element entityElement)
-		throws Exception;
+	public JournalArticle getEntity(String classPK);
 
 }

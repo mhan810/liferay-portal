@@ -100,7 +100,7 @@ public class BookmarksFolderDataHandlerImpl
 		}
 
 		ServiceContext serviceContext = createServiceContext(
-			item.getPath(), folder, _NAMESPACE);
+			item.getPath(), folder, BookmarksPortletDataHandler._NAMESPACE);
 
 		BookmarksFolder importedFolder = null;
 
@@ -163,7 +163,5 @@ public class BookmarksFolderDataHandlerImpl
 
 		return sb.toString();
 	}
-
-	private static final String _NAMESPACE = "bookmarks";
 
 }

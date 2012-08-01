@@ -30,19 +30,13 @@ import java.util.Map;
 
 /**
  * @author Daniel Kocsis
+ * @author Mate Thurzo
  */
 public class LayoutSetDataHandlerImpl extends BaseDataHandlerImpl<LayoutSet>
 	implements LayoutSetDataHandler {
 
-@Override
-	public LayoutSet getEntity(String classPK) {
-		// TODO implement getEntity
-		return null;
-	}
-
 	@Override
 	public LarDigestItem doDigest(LayoutSet object) throws Exception {
-		// TODO implement doDigest
 		return null;
 	}
 
@@ -162,6 +156,11 @@ public class LayoutSetDataHandlerImpl extends BaseDataHandlerImpl<LayoutSet>
 		LayoutSetLocalServiceUtil.updateLookAndFeel(
 			context.getGroupId(), context.isPrivateLayout(), themeId,
 			colorSchemeId, css, wapTheme); */
+	}
+
+	@Override
+	public LayoutSet getEntity(String classPK) {
+		return null;
 	}
 
 	private static Log _log =

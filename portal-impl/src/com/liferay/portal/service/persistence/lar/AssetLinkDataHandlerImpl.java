@@ -32,7 +32,7 @@ public class AssetLinkDataHandlerImpl
 
 	@Override
 	public void doImport(LarDigestItem item) throws Exception {
-		// toDo: implement
+		return;
 	}
 
 	@Override

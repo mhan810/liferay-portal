@@ -26,6 +26,8 @@ public interface ImageDataHandler extends BaseDataHandler<Image> {
 
 	public LarDigestItem doDigest(Image image) throws Exception;
 
+	public void doImport(LarDigestItem item) throws Exception;
+
 	public Image getEntity(String classPK);
 
 }

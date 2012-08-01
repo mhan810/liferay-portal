@@ -41,9 +41,6 @@ public class BookmarksEntryDataHandlerImpl
 	extends BaseDataHandlerImpl<BookmarksEntry>
 	implements BookmarksEntryDataHandler {
 
-	public void deserialize(Document document) {
-	}
-
 	@Override
 	public LarDigestItem doDigest(BookmarksEntry entry) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
@@ -99,7 +96,7 @@ public class BookmarksEntryDataHandlerImpl
 		}
 
 		ServiceContext serviceContext = createServiceContext(
-			item.getPath(), entry, _NAMESPACE);
+			item.getPath(), entry, BookmarksPortletDataHandler._NAMESPACE);
 
 		BookmarksEntry importedEntry = null;
 
@@ -151,7 +148,5 @@ public class BookmarksEntryDataHandlerImpl
 
 		return null;
 	}
-
-	private static final String _NAMESPACE = "bookmarks";
 
 }

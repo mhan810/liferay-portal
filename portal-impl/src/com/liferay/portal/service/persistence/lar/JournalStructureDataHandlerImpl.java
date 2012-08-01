@@ -36,7 +36,7 @@ public class JournalStructureDataHandlerImpl
 
 	@Override
 	public void doImport(LarDigestItem item) throws Exception {
-		// toDo: implement method
+		return;
 	}
 
 	@Override

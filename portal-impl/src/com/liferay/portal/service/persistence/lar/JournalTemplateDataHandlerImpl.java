@@ -29,46 +29,18 @@ public class JournalTemplateDataHandlerImpl
 	implements JournalTemplateDataHandler {
 
 	@Override
-	public JournalTemplate getEntity(String classPK) {
-		// TODO implement getEntity
-		return null;
-	}
-
-	@Override
 	public LarDigestItem doDigest(JournalTemplate object) throws Exception {
-		// TODO implement doDigest
 		return null;
 	}
 
 	@Override
 	public void doImport(LarDigestItem item) throws Exception {
-		// toDo: implement method
+		return;
 	}
 
-	private String getTemplatePath(JournalTemplate template) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(getPortletPath(PortletKeys.JOURNAL));
-		sb.append("/templates/");
-		sb.append(template.getUuid());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	private String getTemplateSmallImagePath(JournalTemplate template)
-		throws Exception {
-
-		StringBundler sb = new StringBundler(5);
-
-		sb.append(getPortletPath(PortletKeys.JOURNAL));
-		sb.append("/templates/thumbnail-");
-		sb.append(template.getUuid());
-		sb.append(StringPool.PERIOD);
-		sb.append(template.getSmallImageType());
-
-		return sb.toString();
+	@Override
+	public JournalTemplate getEntity(String classPK) {
+		return null;
 	}
 
 }

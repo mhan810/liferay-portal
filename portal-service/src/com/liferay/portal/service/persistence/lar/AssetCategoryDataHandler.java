@@ -26,6 +26,8 @@ public interface AssetCategoryDataHandler
 
 	public LarDigestItem doDigest(AssetCategory assetCategory) throws Exception;
 
+	public void doImport(LarDigestItem item) throws Exception;
+
 	public AssetCategory getEntity(String classPK);
 
 }

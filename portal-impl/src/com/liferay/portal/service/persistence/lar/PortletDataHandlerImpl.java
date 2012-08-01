@@ -77,14 +77,11 @@ import java.util.Map;
 /**
  * @author Mate Thurzo
  */
-public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
+public abstract class PortletDataHandlerImpl
+	extends BaseDataHandlerImpl<Portlet>
 	implements PortletDataHandler {
 
-	public void deserialize(Document document) {
-		return;
-	}
-
-	public void digest(Portlet portlet) throws Exception {
+	public LarDigestItem digest(Portlet portlet) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
 		long plid = PortletKeys.PREFS_OWNER_ID_DEFAULT;
@@ -106,14 +103,14 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 						" because the portlet does not exist");
 			}
 
-			return;
+			return null;
 		}
 
 		if (!portlet.isInstanceable() &&
 			!portlet.isPreferencesUniquePerLayout()) { //&&
 			//context.hasNotUniquePerLayout(portletId)) {
 
-			return;
+			return null;
 		}
 
 		boolean exportPortletData = false;
@@ -149,7 +146,7 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 		String path = item.getPath();
 
 		if (context.isPathProcessed(path)) {
-			return;
+			return null;
 		}
 
 		Map<String, String> metaDataMap = item.getMetadata();
@@ -170,70 +167,13 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 		metaDataMap.put("portlet-id", portletId);
 		metaDataMap.put("layout-id", String.valueOf(layoutId));
 
-	/*	if (exportPortletSetup) {
-			digestPortletPreferences(
-				PortletKeys.PREFS_OWNER_ID_DEFAULT,
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, false,
-				portlet.getPortletId(), metaDataMap);
+		context.getLarDigest().addItem(item);
 
-			digestPortletPreferences(
-				context.getScopeGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
-				false, portlet.getPortletId(), metaDataMap);
-
-			digestPortletPreferences(
-				context.getCompanyId(), PortletKeys.PREFS_OWNER_TYPE_COMPANY,
-				false, portlet.getPortletId(), metaDataMap);
-		}
-
-		if (exportPortletUserPreferences) {
-			List<PortletPreferences> portletPreferencesList =
-				PortletPreferencesLocalServiceUtil.getPortletPreferences(
-					PortletKeys.PREFS_OWNER_TYPE_USER, context.getPlid(),
-					portlet.getPortletId());
-
-			for (PortletPreferences portletPreferences :
-					portletPreferencesList) {
-
-				boolean defaultUser = false;
-
-				if (portletPreferences.getOwnerId() ==
-						PortletKeys.PREFS_OWNER_ID_DEFAULT) {
-
-					defaultUser = true;
-				}
-
-				digestPortletPreferences(
-					portletPreferences.getOwnerId(),
-					PortletKeys.PREFS_OWNER_TYPE_USER, defaultUser,
-					portlet.getPortletId(), metaDataMap);
-			}
-
-			try {
-				PortletPreferences groupPortletPreferences =
-					PortletPreferencesLocalServiceUtil.getPortletPreferences(
-						context.getScopeGroupId(),
-						PortletKeys.PREFS_OWNER_TYPE_GROUP,
-						PortletKeys.PREFS_PLID_SHARED, portlet.getPortletId());
-
-				digestPortletPreference(
-					groupPortletPreferences, portlet.getPortletId(),
-					context.getScopeGroupId(),
-					PortletKeys.PREFS_OWNER_TYPE_GROUP, false,
-					PortletKeys.PREFS_PLID_SHARED, metaDataMap);
-			}
-			catch (NoSuchPortletPreferencesException nsppe) {
-			}
-		} */
-
-		//context.addPrimaryKey(String.class, path);
-
-		context.getLarDigest().write(item);
+		return item;
 	}
 
 	@Override
-	public LarDigestItem doDigest(Portlet portlet) throws Exception {
-		return new LarDigestItemImpl();
-	}
+	public abstract LarDigestItem doDigest(Portlet portlet) throws Exception;
 
 	@Override
 	public void doImport(LarDigestItem item) throws Exception {
@@ -346,46 +286,27 @@ public class PortletDataHandlerImpl extends BaseDataHandlerImpl<Portlet>
 			importPortletUserPreferences, false, importPortletData);
 	}
 
-	public String[] getDataPortletPreferences() {
-		return new String[0];
-	}
+	public abstract String[] getDataPortletPreferences();
 
-	@Override
 	public Portlet getEntity(String classPK) {
 		return null;
 	}
 
-	public PortletDataHandlerControl[] getExportControls() {
-		return new PortletDataHandlerControl[0];
-	}
+	public abstract PortletDataHandlerControl[] getExportControls();
 
-	public PortletDataHandlerControl[] getExportMetadataControls() {
-		return new PortletDataHandlerControl[0];
-	}
+	public abstract PortletDataHandlerControl[] getExportMetadataControls();
 
-	public PortletDataHandlerControl[] getImportControls() {
-		return new PortletDataHandlerControl[0];
-	}
+	public abstract PortletDataHandlerControl[] getImportControls();
 
-	public PortletDataHandlerControl[] getImportMetadataControls() {
-		return new PortletDataHandlerControl[0];
-	}
+	public abstract PortletDataHandlerControl[] getImportMetadataControls();
 
-	public boolean isAlwaysExportable() {
-		return _ALWAYS_EXPORTABLE;
-	}
+	public abstract boolean isAlwaysExportable();
 
-	public boolean isAlwaysStaged() {
-		return _ALWAYS_STAGED;
-	}
+	public abstract boolean isAlwaysStaged();
 
-	public boolean isDataLocalized() {
-		return _DATA_LOCALIZED;
-	}
+	public abstract boolean isDataLocalized();
 
-	public boolean isPublishToLiveByDefault() {
-		return _PUBLISH_TO_LIVE_BY_DEFAULT;
-	}
+	public abstract boolean isPublishToLiveByDefault();
 
 	protected void deletePortletData(
 			DataHandlerContext context, String portletId, long plid)

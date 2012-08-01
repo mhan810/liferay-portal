@@ -70,7 +70,7 @@ public class AssetCategoryDataHandlerImpl
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
-		digestItem.setAction(LarDigesterConstants.ACTION_ADD);
+		digestItem.setAction(getDigestAction(category));
 		digestItem.setPath(path);
 		digestItem.setType(AssetCategory.class.getName());
 		digestItem.setClassPK(String.valueOf(category.getCategoryId()));

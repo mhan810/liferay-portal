@@ -88,6 +88,11 @@ public class BookmarksPortletDataHandlerImpl
 	}
 
 	@Override
+	public String[] getDataPortletPreferences() {
+		return new String[0];
+	}
+
+	@Override
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[] {
 			_foldersAndEntries
@@ -120,6 +125,15 @@ public class BookmarksPortletDataHandlerImpl
 	@Override
 	public boolean isAlwaysExportable() {
 		return _ALWAYS_EXPORTABLE;
+	}
+
+	@Override
+	public boolean isAlwaysStaged() {
+		return _ALWAYS_STAGED;
+	}
+
+	public boolean isDataLocalized() {
+		return _DATA_LOCALIZED;
 	}
 
 	@Override
@@ -184,12 +198,6 @@ public class BookmarksPortletDataHandlerImpl
 
 		bookmarksFolderDataHandler.digest(folder);
 	}
-
-	private static final boolean _ALWAYS_EXPORTABLE = true;
-
-	private static final String _NAMESPACE = "bookmarks";
-
-	private static final boolean _PUBLISH_TO_LIVE_BY_DEFAULT = true;
 
 	private static PortletDataHandlerBoolean _foldersAndEntries =
 		new PortletDataHandlerBoolean(

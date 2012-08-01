@@ -41,6 +41,7 @@ import java.util.List;
 
 /**
  * @author Daniel Kocsis
+ * @author Mate Thurzo
  */
 public class JournalPortletDataHandlerImpl extends PortletDataHandlerImpl
 	implements JournalPortletDataHandler {
@@ -50,22 +51,70 @@ public class JournalPortletDataHandlerImpl extends PortletDataHandlerImpl
 		return null;
 	}
 
-	private static final boolean _ALWAYS_EXPORTABLE = true;
+	@Override
+	public void doImport(LarDigestItem item) throws Exception {
+		return;
+	}
+
+	@Override
+	public String[] getDataPortletPreferences() {
+		return new String[0];
+	}
+
+	@Override
+	public PortletDataHandlerControl[] getExportControls() {
+		return new PortletDataHandlerControl[0];
+	}
+
+	@Override
+	public PortletDataHandlerControl[] getExportMetadataControls() {
+		return new PortletDataHandlerControl[0];
+	}
+
+	@Override
+	public PortletDataHandlerControl[] getImportControls() {
+		return new PortletDataHandlerControl[0];
+	}
+
+	@Override
+	public PortletDataHandlerControl[] getImportMetadataControls() {
+		return new PortletDataHandlerControl[0];
+	}
+
+	@Override
+	public boolean isAlwaysExportable() {
+		return ALWAYS_EXPORTABLE;
+	}
+
+	@Override
+	public boolean isAlwaysStaged() {
+		return ALWAYS_STAGED;
+	}
+
+	@Override
+	public boolean isDataLocalized() {
+		return DATA_LOCALIZED;
+	}
+
+	@Override
+	public boolean isPublishToLiveByDefault() {
+		return PUBLISH_TO_LIVE_BY_DEFAULT;
+	}
 
 	private static Log _log = LogFactoryUtil.getLog(
 		JournalPortletDataHandlerImpl.class);
 
 	private static PortletDataHandlerControl[] _metadataControls =
 		new PortletDataHandlerControl[] {
-			new PortletDataHandlerBoolean(_NAMESPACE, "images"),
-			new PortletDataHandlerBoolean(_NAMESPACE, "categories"),
-			new PortletDataHandlerBoolean(_NAMESPACE, "comments"),
-			new PortletDataHandlerBoolean(_NAMESPACE, "ratings"),
-			new PortletDataHandlerBoolean(_NAMESPACE, "tags")
+			new PortletDataHandlerBoolean(NAMESPACE, "images"),
+			new PortletDataHandlerBoolean(NAMESPACE, "categories"),
+			new PortletDataHandlerBoolean(NAMESPACE, "comments"),
+			new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
+			new PortletDataHandlerBoolean(NAMESPACE, "tags")
 		};
 
 	private static PortletDataHandlerBoolean
 		_structuresTemplatesAndFeeds = new PortletDataHandlerBoolean(
-			_NAMESPACE, "structures-templates-and-feeds", true, true);
+			NAMESPACE, "structures-templates-and-feeds", true, true);
 
 }
