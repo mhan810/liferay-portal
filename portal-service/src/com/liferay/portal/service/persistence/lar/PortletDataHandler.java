@@ -27,8 +27,6 @@ public abstract interface PortletDataHandler extends BaseDataHandler<Portlet> {
 
 	public LarDigestItem digest(Portlet portlet) throws Exception;
 
-	public abstract LarDigestItem doDigest(Portlet portlet) throws Exception;
-
 	public Portlet getEntity(String classPK);
 
 	public abstract PortletDataHandlerControl[] getExportControls();

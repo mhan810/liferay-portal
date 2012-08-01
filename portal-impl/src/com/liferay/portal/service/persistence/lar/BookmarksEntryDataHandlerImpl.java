@@ -64,7 +64,7 @@ public class BookmarksEntryDataHandlerImpl
 	}
 
 	@Override
-	public void doImport(LarDigestItem item) throws Exception {
+	public void doImportData(LarDigestItem item) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
 		BookmarksEntry entry = (BookmarksEntry)getZipEntryAsObject(

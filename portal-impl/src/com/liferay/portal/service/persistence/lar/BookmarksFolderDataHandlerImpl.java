@@ -15,16 +15,13 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.DataHandlerContext;
-import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
-import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
@@ -47,8 +44,6 @@ public class BookmarksFolderDataHandlerImpl
 	public LarDigestItem doDigest(BookmarksFolder folder) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
-		LarDigest digest = context.getLarDigest();
-
 		String path = getEntityPath(folder);
 
 		if (context.isPathProcessed(path)) {
@@ -66,7 +61,7 @@ public class BookmarksFolderDataHandlerImpl
 	}
 
 	@Override
-	public void doImport(LarDigestItem item) throws Exception {
+	public void doImportData(LarDigestItem item) throws Exception {
 		DataHandlerContext context = getDataHandlerContext();
 
 		BookmarksFolder folder = (BookmarksFolder)getZipEntryAsObject(
@@ -92,7 +87,7 @@ public class BookmarksFolderDataHandlerImpl
 			List<LarDigestItem> parentFolderItem = digest.findDigestItems(
 				0, path, BookmarksFolder.class.getName(), null);
 
-			doImport(parentFolderItem.get(0));
+			doImportData(parentFolderItem.get(0));
 
 			parentFolderId = MapUtil.getLong(
 				folderIds, folder.getParentFolderId(),

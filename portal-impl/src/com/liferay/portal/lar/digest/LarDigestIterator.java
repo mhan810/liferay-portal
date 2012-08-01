@@ -67,7 +67,7 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 		try {
 			LarDigestItem item = new LarDigestItemImpl();
 
-			Map metadata = new HashMap<String, String>();
+			Map<String, String> metadata = new HashMap<String, String>();
 			Map<String, List<String>> permissions =
 				new HashMap<String, List<String>>();
 
@@ -95,7 +95,7 @@ public class LarDigestIterator implements Iterator<LarDigestItem> {
 					}
 					else if (elementName.equals(NODE_METADATA_LABEL)) {
 						metadata.put(
-							_xmlStreamReader.getAttributeName(0),
+							_xmlStreamReader.getAttributeName(0).getLocalPart(),
 							_xmlStreamReader.getAttributeValue(0));
 					}
 					else if (elementName.equals(NODE_PERMISSION_LABEL)) {

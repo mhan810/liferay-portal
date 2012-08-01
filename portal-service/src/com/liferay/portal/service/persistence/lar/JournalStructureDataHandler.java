@@ -27,7 +27,7 @@ public interface JournalStructureDataHandler
 	public LarDigestItem doDigest(JournalStructure journalStructure)
 		throws Exception;
 
-	public void doImport(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item) throws Exception;
 
 	public JournalStructure getEntity(String classPK);
 

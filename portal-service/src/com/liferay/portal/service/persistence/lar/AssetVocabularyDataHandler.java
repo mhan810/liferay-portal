@@ -27,7 +27,7 @@ public interface AssetVocabularyDataHandler
 	public LarDigestItem doDigest(AssetVocabulary assetVocabulary)
 		throws Exception;
 
-	public void doImport(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item) throws Exception;
 
 	public AssetVocabulary getEntity(String classPK);
 

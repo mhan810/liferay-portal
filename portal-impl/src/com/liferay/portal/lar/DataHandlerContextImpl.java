@@ -14,10 +14,12 @@
 
 package com.liferay.portal.lar;
 
-import com.liferay.portal.kernel.lar.*;
+import com.liferay.portal.kernel.lar.DataHandlerContext;
+import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.digest.LarDigest;
@@ -33,6 +35,49 @@ import java.util.Set;
  * @author Mate Thurzo
  */
 public class DataHandlerContextImpl implements DataHandlerContext {
+
+	public DataHandlerContextImpl(
+			long companyId, long groupId, Map<String, String[]> parameterMap,
+			Date startDate, Date endDate, ZipWriter zipWriter)
+		throws PortletDataException {
+
+		validateDateRange(startDate, endDate);
+
+		setCompanyId(companyId);
+		setGroupId(groupId);
+		setScopeGroupId(groupId);
+		setParameters(parameterMap);
+		_primaryKeys = new HashSet<String>();
+		setStartDate(startDate);
+		setEndDate(endDate);
+		setZipReader(null);
+		setZipWriter(zipWriter);
+	}
+
+	public DataHandlerContextImpl(
+		long companyId, long groupId, Map<String, String[]> parameterMap) {
+
+		setCompanyId(companyId);
+		setGroupId(groupId);
+		setScopeGroupId(groupId);
+		setParameters(parameterMap);
+		_primaryKeys = new HashSet<String>();
+		setDataStrategy(
+			MapUtil.getString(
+				parameterMap, PortletDataHandlerKeys.DATA_STRATEGY,
+				PortletDataHandlerKeys.DATA_STRATEGY_MIRROR));
+		setZipWriter(null);
+	}
+
+	public boolean addPrimaryKey(Class<?> clazz, String primaryKey) {
+		boolean value = hasPrimaryKey(clazz, primaryKey);
+
+		if (!value) {
+			_primaryKeys.add(getPrimaryKeyString(clazz, primaryKey));
+		}
+
+		return value;
+	}
 
 	public void addProcessedPath(String path) {
 		if (!_storedPaths.contains(path)) {
@@ -111,6 +156,15 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		return GetterUtil.getLong(getAttribute(ATTRIBUTE_NAME_SCOPE_GROUP_ID));
 	}
 
+	public String getScopeLayoutUuid() {
+		return GetterUtil.getString(
+			getAttribute(ATTRIBUTE_NAME_SCOPE_LAYOUT_UUID));
+	}
+
+	public String getScopeType() {
+		return GetterUtil.getString(getAttribute(ATTRIBUTE_NAME_SCOPE_TYPE));
+	}
+
 	public long getSourceGroupId() {
 		return GetterUtil.getLong(getAttribute(ATTRIBUTE_NAME_SOURCE_GROUP_ID));
 	}
@@ -148,9 +202,17 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		}
 	}
 
+	public boolean hasNotUniquePerLayout(String dataKey) {
+		return _notUniquePerLayout.contains(dataKey);
+	}
+
+	public boolean hasPrimaryKey(Class<?> clazz, String primaryKey) {
+		return _primaryKeys.contains(getPrimaryKeyString(clazz, primaryKey));
+	}
+
 	public boolean isDataStrategyMirror() {
 		if (getDataStrategy().equals(DATA_STRATEGY_MIRROR) ||
-				getDataStrategy().equals(DATA_STRATEGY_MIRROR_OVERWRITE)) {
+			getDataStrategy().equals(DATA_STRATEGY_MIRROR_OVERWRITE)) {
 
 			return true;
 		}
@@ -192,6 +254,10 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		else {
 			return false;
 		}
+	}
+
+	public void putNotUniquePerLayout(String dataKey) {
+		_notUniquePerLayout.add(dataKey);
 	}
 
 	public void resetAttribute(String key) {
@@ -246,6 +312,14 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		setAttribute(ATTRIBUTE_NAME_SCOPE_GROUP_ID, scopeGroupId);
 	}
 
+	public void setScopeLayoutUuid(String scopeLayoutUuid) {
+		setAttribute(ATTRIBUTE_NAME_SCOPE_LAYOUT_UUID, scopeLayoutUuid);
+	}
+
+	public void setScopeType(String scopeType) {
+		setAttribute(ATTRIBUTE_NAME_SCOPE_TYPE, scopeType);
+	}
+
 	public void setSourceGroupId(long sourceGroupId) {
 		setAttribute(ATTRIBUTE_NAME_SOURCE_GROUP_ID, sourceGroupId);
 	}
@@ -279,10 +353,60 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		setAttribute(ATTRIBUTE_NAME_ZIP_WRITER, zipWriter);
 	}
 
+	protected String getPrimaryKeyString(Class<?> clazz, long classPK) {
+		return getPrimaryKeyString(clazz.getName(), String.valueOf(classPK));
+	}
+
+	protected String getPrimaryKeyString(Class<?> clazz, String primaryKey) {
+		return getPrimaryKeyString(clazz.getName(), primaryKey);
+	}
+
+	protected String getPrimaryKeyString(String className, long classPK) {
+		return getPrimaryKeyString(className, String.valueOf(classPK));
+	}
+
+	protected String getPrimaryKeyString(String className, String primaryKey) {
+		return className.concat(StringPool.POUND).concat(primaryKey);
+	}
+
+	protected void validateDateRange(Date startDate, Date endDate)
+		throws PortletDataException {
+
+		if ((startDate == null) && (endDate != null)) {
+			throw new PortletDataException(
+				PortletDataException.END_DATE_IS_MISSING_START_DATE);
+		}
+		else if ((startDate != null) && (endDate == null)) {
+			throw new PortletDataException(
+				PortletDataException.START_DATE_IS_MISSING_END_DATE);
+		}
+
+		if (startDate != null) {
+			if (startDate.after(endDate) || startDate.equals(endDate)) {
+				throw new PortletDataException(
+					PortletDataException.START_DATE_AFTER_END_DATE);
+			}
+
+			Date now = new Date();
+
+			if (startDate.after(now)) {
+				throw new PortletDataException(
+					PortletDataException.FUTURE_START_DATE);
+			}
+
+			if (endDate.after(now)) {
+				throw new PortletDataException(
+					PortletDataException.FUTURE_END_DATE);
+			}
+		}
+	}
+
 	private Map<String, Object> _attributes = new HashMap<String, Object>();
 	private Map<String, Map<?, ?>> _newPrimaryKeysMaps =
 		new HashMap<String, Map<?, ?>>();
+	private Set<String> _notUniquePerLayout = new HashSet<String>();
 	private Map<String, String[]> _paramaters;
+	private Set<String> _primaryKeys;
 	private Set<String> _storedPaths = new HashSet<String>();
 
 }

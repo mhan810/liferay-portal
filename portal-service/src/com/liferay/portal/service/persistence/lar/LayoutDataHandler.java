@@ -26,7 +26,7 @@ public interface LayoutDataHandler extends BaseDataHandler<Layout> {
 
 	public LarDigestItem doDigest(Layout layout) throws Exception;
 
-	public void doImport(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item) throws Exception;
 
 	public void doSerialize(Layout layout) throws Exception;
 

@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
@@ -45,47 +46,6 @@ import java.util.Map;
 public class BookmarksPortletDataHandlerImpl
 	extends PortletDataHandlerImpl
 	implements BookmarksPortletDataHandler {
-
-	@Override
-	public LarDigestItem doDigest(Portlet portlet) throws Exception {
-		DataHandlerContext context = getDataHandlerContext();
-
-		LarDigest digest = context.getLarDigest();
-
-		LarDigestItem item = new LarDigestItemImpl();
-
-		Map metadataMap = new HashMap<String, String>();
-
-		if (context.getPlid() > 0) {
-			//portlet is on a layout, add plid to metadata
-
-			metadataMap.put("layoutPlid", String.valueOf(context.getPlid()));
-
-			item.setMetadata(metadataMap);
-		}
-
-		item.setAction(LarDigesterConstants.ACTION_ADD);
-		item.setType(portlet.getPortletId());
-		item.setClassPK(portlet.getPortletId());
-		item.setPath(getEntityPath(portlet));
-
-		List<BookmarksFolder> folders = BookmarksFolderUtil.findByGroupId(
-			context.getScopeGroupId());
-
-		for (BookmarksFolder folder : folders) {
-			exportFolder(folder, context);
-		}
-
-		List<BookmarksEntry> entries = BookmarksEntryUtil.findByG_F(
-			context.getScopeGroupId(),
-			BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-
-		for (BookmarksEntry entry : entries) {
-			exportEntry(entry, context);
-		}
-
-		return item;
-	}
 
 	@Override
 	public String[] getDataPortletPreferences() {
@@ -149,7 +109,30 @@ public class BookmarksPortletDataHandlerImpl
 		return "com.liferay.portlet.bookmarks";
 	}
 
-	private void exportEntry(
+	@Override
+	protected LarDigestItem doDigestPortlet(Portlet portlet, LarDigestItem item)
+			throws Exception {
+		DataHandlerContext context = getDataHandlerContext();
+
+		List<BookmarksFolder> folders = BookmarksFolderUtil.findByGroupId(
+			context.getScopeGroupId());
+
+		for (BookmarksFolder folder : folders) {
+			exportFolder(folder, context);
+		}
+
+		List<BookmarksEntry> entries = BookmarksEntryUtil.findByG_F(
+			context.getScopeGroupId(),
+			BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+
+		for (BookmarksEntry entry : entries) {
+			exportEntry(entry, context);
+		}
+
+		return item;
+	}
+
+	protected void exportEntry(
 			BookmarksEntry entry, DataHandlerContext context)
 		throws Exception {
 
@@ -166,7 +149,7 @@ public class BookmarksPortletDataHandlerImpl
 		bookmarksEntryDataHandler.digest(entry);
 	}
 
-	private void exportFolder(
+	protected void exportFolder(
 			BookmarksFolder folder, DataHandlerContext context)
 		throws Exception{
 
@@ -185,7 +168,7 @@ public class BookmarksPortletDataHandlerImpl
 		}
 	}
 
-	private void exportParentFolder(LarDigest larDigest, long folderId)
+	protected void exportParentFolder(LarDigest larDigest, long folderId)
 		throws Exception {
 
 		if (folderId == BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) {

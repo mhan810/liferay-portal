@@ -26,7 +26,7 @@ public interface JournalTemplateDataHandler
 
 	public LarDigestItem doDigest(JournalTemplate template) throws Exception;
 
-	public void doImport(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item) throws Exception;
 
 	public JournalTemplate getEntity(String classPK);
 

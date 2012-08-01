@@ -346,7 +346,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		"/[$SAME_GROUP_FRIENDLY_URL$]";
 
 	@Override
-	public void doImport(LarDigestItem item) throws Exception {
+	public void doImportData(LarDigestItem item) throws Exception {
 
 		DataHandlerContext context = getDataHandlerContext();
 

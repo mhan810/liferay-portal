@@ -528,14 +528,12 @@ public class LARImporter {
 			Map<String, String[]> parameters)
 		throws Exception {
 
-		_context = new DataHandlerContextImpl();
-
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 		User user = UserLocalServiceUtil.getUser(userId);
 
-		_context.setCompanyId(group.getCompanyId());
-		_context.setGroupId(groupId);
-		_context.setParameters(parameters);
+		_context = new DataHandlerContextImpl(
+			group.getCompanyId(), groupId, parameters);
+
 		_context.setPrivateLayout(privateLayout);
 		_context.setScopeGroupId(groupId);
 		_context.setUser(user);

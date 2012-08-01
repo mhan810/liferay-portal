@@ -23,7 +23,6 @@ import com.liferay.portal.model.Portlet;
  * @author Daniel Kocsis
  */
 public interface BookmarksPortletDataHandler extends PortletDataHandler {
-
 	public static final boolean _ALWAYS_EXPORTABLE = true;
 
 	public static final boolean _ALWAYS_STAGED = false;
@@ -34,9 +33,7 @@ public interface BookmarksPortletDataHandler extends PortletDataHandler {
 
 	public static final boolean _PUBLISH_TO_LIVE_BY_DEFAULT = true;
 
-	public LarDigestItem doDigest(Portlet portlet) throws Exception;
-
-	public void doImport(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item) throws Exception;
 
 	public abstract PortletDataHandlerControl[] getExportControls();
 
@@ -53,5 +50,4 @@ public interface BookmarksPortletDataHandler extends PortletDataHandler {
 	public abstract boolean isDataLocalized();
 
 	public abstract boolean isPublishToLiveByDefault();
-
 }

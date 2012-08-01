@@ -29,42 +29,30 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.PrimitiveLongList;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
-import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.PermissionExporter;
 import com.liferay.portal.lar.XStreamWrapper;
-import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.AuditedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.ResourcedModel;
 import com.liferay.portal.model.Role;
-import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.Team;
 import com.liferay.portal.model.User;
-import com.liferay.portal.security.permission.ResourceActionsUtil;
-import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.service.LockLocalServiceUtil;
 import com.liferay.portal.service.ResourceBlockLocalServiceUtil;
-import com.liferay.portal.service.ResourceBlockPermissionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -80,22 +68,7 @@ import com.liferay.portal.service.persistence.lar.ImageDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalArticleDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalStructureDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalTemplateDataHandler;
-import com.liferay.portal.service.persistence.lar.LockDataHandler;
-import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.asset.model.AssetCategory;
-import com.liferay.portlet.asset.model.AssetEntry;
-import com.liferay.portlet.asset.model.AssetLink;
-import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
-import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
-import com.liferay.portlet.asset.service.AssetLinkLocalServiceUtil;
-import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.expando.model.ExpandoBridge;
-import com.liferay.portlet.messageboards.model.MBDiscussion;
-import com.liferay.portlet.messageboards.model.MBMessage;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
-import com.liferay.portlet.messageboards.service.persistence.MBDiscussionUtil;
-import com.liferay.portlet.ratings.model.RatingsEntry;
-import com.liferay.portlet.ratings.service.RatingsEntryLocalServiceUtil;
 import com.liferay.portal.service.persistence.lar.LayoutSetDataHandler;
 
 
@@ -104,13 +77,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Mate Thurzo
@@ -164,7 +135,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 	public abstract LarDigestItem doDigest(T object) throws Exception;
 
-	public abstract void doImport(LarDigestItem item)throws Exception;
+	public abstract void doImportData(LarDigestItem item)throws Exception;
 
 	public abstract T getEntity(String classPK);
 
@@ -244,7 +215,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	public void importData(LarDigestItem item) {
 		try {
 			if (!getDataHandlerContext().isPathProcessed(item.getPath())) {
-				doImport(item);
+				doImportData(item);
 			}
 		}
 		catch (Exception e) {
@@ -447,12 +418,16 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	}
 
 	protected String getRolePath(Role role) {
+		return getRolePath(role.getName());
+	}
+
+	protected String getRolePath(String roleName) {
 		StringBundler sb = new StringBundler();
 
 		sb.append(StringPool.FORWARD_SLASH);
 		sb.append("roles");
 		sb.append(StringPool.FORWARD_SLASH);
-		sb.append(role.getName() + ".xml");
+		sb.append(roleName + ".xml");
 
 		return sb.toString();
 	}
@@ -529,8 +504,10 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		Map<Long, String[]> roleIdsToActionIds = new HashMap<Long, String[]>();
 
 		for (String roleName : permissions.keySet()) {
-			int type = 0;
-			//GetterUtil.getInteger(roleElement.attributeValue("type"));
+			Role importedRole = (Role)getZipEntryAsObject(
+				getRolePath(roleName));
+
+			int type = importedRole.getType();
 
 			Role role = null;
 
@@ -538,8 +515,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 				roleName = roleName.substring(
 					PermissionExporter.ROLE_TEAM_PREFIX.length());
 
-				String description = StringPool.BLANK;
-				//roleElement.attributeValue("description");
+				String description = importedRole.getDescription();
 
 				Team team = null;
 
@@ -559,14 +535,12 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 			}
 
 			if (role == null) {
-				String title = StringPool.BLANK;
-				//roleElement.attributeValue("title");
+				String title = importedRole.getTitle();
 
 				Map<Locale, String> titleMap =
 					LocalizationUtil.getLocalizationMap(title);
 
-				String description = StringPool.BLANK;
-				//roleElement.attributeValue("description");
+				String description = importedRole.getDescription();
 
 				Map<Locale, String> descriptionMap =
 					LocalizationUtil.getLocalizationMap(description);

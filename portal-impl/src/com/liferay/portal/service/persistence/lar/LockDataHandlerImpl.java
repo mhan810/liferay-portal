@@ -55,7 +55,7 @@ public class LockDataHandlerImpl
 	}
 
 	@Override
-	public void doImport(LarDigestItem item) throws Exception {
+	public void doImportData(LarDigestItem item) throws Exception {
 		// toDo: implement
 	}
 

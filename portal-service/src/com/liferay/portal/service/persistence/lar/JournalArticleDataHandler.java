@@ -28,7 +28,7 @@ public interface JournalArticleDataHandler
 
 	public LarDigestItem doDigest(JournalArticle article) throws Exception;
 
-	public void doImport(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item) throws Exception;
 
 	public JournalArticle getEntity(String classPK);
 

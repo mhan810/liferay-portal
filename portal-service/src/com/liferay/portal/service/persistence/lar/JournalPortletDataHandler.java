@@ -35,6 +35,6 @@ public interface JournalPortletDataHandler extends PortletDataHandler {
 
 	public LarDigestItem doDigest(Portlet portlet) throws Exception;
 
-	public void doImport(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item) throws Exception;
 
 }

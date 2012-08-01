@@ -27,7 +27,7 @@ public interface AssetCategoryPropertyDataHandler
 	public LarDigestItem doDigest(AssetCategoryProperty categoryProperty)
 		throws Exception;
 
-	public void doImport(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item) throws Exception;
 
 	public AssetCategoryProperty getEntity(String classPK);
 

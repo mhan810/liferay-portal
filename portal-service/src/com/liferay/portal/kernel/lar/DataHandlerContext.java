@@ -48,6 +48,11 @@ public interface DataHandlerContext {
 
 	public static final String ATTRIBUTE_NAME_SCOPE_GROUP_ID = "SCOPE_GROUP_ID";
 
+	public static final String ATTRIBUTE_NAME_SCOPE_LAYOUT_UUID =
+		"SCOPE_LAYOUT_UUID";
+
+	public static final String ATTRIBUTE_NAME_SCOPE_TYPE = "SCOPE_TYPE";
+
 	public static final String ATTRIBUTE_NAME_SOURCE_GROUP_ID =
 		"SOURCE_GROUP_ID";
 
@@ -69,6 +74,8 @@ public interface DataHandlerContext {
 
 	public static final String DATA_STRATEGY_MIRROR_OVERWRITE =
 		"DATA_STRATEGY_MIRROR_OVERWRITE";
+
+	public boolean addPrimaryKey(Class<?> clazz, String primaryKey);
 
 	public void addProcessedPath(String path);
 
@@ -100,6 +107,10 @@ public interface DataHandlerContext {
 
 	public long getScopeGroupId();
 
+	public String getScopeLayoutUuid();
+
+	public String getScopeType();
+
 	public long getSourceGroupId();
 
 	public Date getStartDate();
@@ -116,6 +127,10 @@ public interface DataHandlerContext {
 
 	public boolean hasDateRange();
 
+	public boolean hasNotUniquePerLayout(String dataKey);
+
+	public boolean hasPrimaryKey(Class<?> clazz, String primaryKey);
+
 	public boolean isDataStrategyMirror();
 
 	public boolean isDataStrategyMirrorWithOverwriting();
@@ -125,6 +140,8 @@ public interface DataHandlerContext {
 	public boolean isPrivateLayout();
 
 	public boolean isWithinDateRange(Date modifiedDate);
+
+	public void putNotUniquePerLayout(String dataKey);
 
 	public void resetAttribute(String key);
 
@@ -151,6 +168,10 @@ public interface DataHandlerContext {
 	public void setPrivateLayout(boolean privateLayout);
 
 	public void setScopeGroupId(long scopeGroupId);
+
+	public void setScopeLayoutUuid(String scopeLayoutUuid);
+
+	public void setScopeType(String scopeType);
 
 	public void setSourceGroupId(long sourceGroupId);
 

@@ -375,7 +375,7 @@ public class LARExporter {
 
 			if (layout == null) {
 				if (!group.isCompany() &&
-						(plid <= LayoutConstants.DEFAULT_PLID)) {
+					(plid <= LayoutConstants.DEFAULT_PLID)) {
 
 					continue;
 				}
@@ -574,24 +574,20 @@ public class LARExporter {
 			Map<String, String[]> parameters, Date startDate, Date endDate)
 		throws Exception {
 
-		_context = new DataHandlerContextImpl();
-
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 
-		_context.setCompanyId(group.getCompanyId());
-		_context.setEndDate(endDate);
-		_context.setGroupId(groupId);
-		_context.setPrivateLayout(privateLayout);
-		_context.setScopeGroupId(groupId);
-		_context.setStartDate(startDate);
-
-		_context.setParameters(parameters);
-
-		LarDigest larDigest = new LarDigestImpl();
 		ZipWriter zipWriter = ZipWriterFactoryUtil.getZipWriter();
 
+		_context = new DataHandlerContextImpl(
+			group.getCompanyId(), groupId, parameters, startDate, endDate,
+			zipWriter);
+
+		_context.setPrivateLayout(privateLayout);
+		_context.setScopeGroupId(groupId);
+
+		LarDigest larDigest = new LarDigestImpl();
+
 		_context.setLarDigest(larDigest);
-		_context.setZipWriter(zipWriter);
 
 		DataHandlerContextThreadLocal.setDataHandlerContext(_context);
 	}

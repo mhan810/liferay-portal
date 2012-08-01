@@ -25,7 +25,7 @@ public interface AssetLinkDataHandler extends BaseDataHandler<AssetLink> {
 
 	public LarDigestItem doDigest(AssetLink assetLink) throws Exception;
 
-	public void doImport(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item) throws Exception;
 
 	public AssetLink getEntity(String classPK);
 
