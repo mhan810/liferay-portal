@@ -15,6 +15,7 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -62,13 +63,18 @@ public class JournalArticleDataHandlerImpl
 	implements JournalArticleDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(JournalArticle article) throws Exception {
+	public LarDigestItem doDigest(
+			JournalArticle article, DataHandlerContext context)
+		throws Exception {
+
 		return null;
 	}
 
 	@Override
-	public void doImportData(LarDigestItem item) throws Exception {
-		// toDo: implement method
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception {
+
+		return;
 	}
 
 	@Override

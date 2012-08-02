@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portlet.asset.model.AssetVocabulary;
@@ -24,10 +25,12 @@ import com.liferay.portlet.asset.model.AssetVocabulary;
 public interface AssetVocabularyDataHandler
 	extends BaseDataHandler<AssetVocabulary> {
 
-	public LarDigestItem doDigest(AssetVocabulary assetVocabulary)
+	public LarDigestItem doDigest(
+			AssetVocabulary assetVocabulary, DataHandlerContext context)
 		throws Exception;
 
-	public void doImportData(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception;
 
 	public AssetVocabulary getEntity(String classPK);
 

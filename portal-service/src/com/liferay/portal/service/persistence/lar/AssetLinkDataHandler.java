@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portlet.asset.model.AssetLink;
@@ -23,9 +24,12 @@ import com.liferay.portlet.asset.model.AssetLink;
  */
 public interface AssetLinkDataHandler extends BaseDataHandler<AssetLink> {
 
-	public LarDigestItem doDigest(AssetLink assetLink) throws Exception;
+	public LarDigestItem doDigest(
+			AssetLink assetLink, DataHandlerContext context)
+		throws Exception;
 
-	public void doImportData(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception;
 
 	public AssetLink getEntity(String classPK);
 

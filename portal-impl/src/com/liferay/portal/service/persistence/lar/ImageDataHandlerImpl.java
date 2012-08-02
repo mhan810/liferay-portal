@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.Image;
@@ -27,12 +28,17 @@ public class ImageDataHandlerImpl extends BaseDataHandlerImpl<Image>
 	implements ImageDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(Image object) throws Exception {
+	public LarDigestItem doDigest(
+			Image object, DataHandlerContext context)
+		throws Exception {
+
 		return null;
 	}
 
 	@Override
-	public void doImportData(LarDigestItem item) throws Exception {
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception {
+
 		return;
 	}
 

@@ -48,14 +48,16 @@ public class JournalPortletDataHandlerImpl extends PortletDataHandlerImpl
 
 	@Override
 	public LarDigestItem doDigestPortlet(
-			Portlet portlet, LarDigestItem item)
+			Portlet portlet, LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
 		return null;
 	}
 
 	@Override
-	public void doImportData(LarDigestItem item) throws Exception {
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception {
+
 		return;
 	}
 

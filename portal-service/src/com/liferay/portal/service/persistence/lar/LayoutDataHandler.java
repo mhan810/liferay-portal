@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.Layout;
@@ -24,11 +25,15 @@ import com.liferay.portal.service.persistence.BaseDataHandler;
  */
 public interface LayoutDataHandler extends BaseDataHandler<Layout> {
 
-	public LarDigestItem doDigest(Layout layout) throws Exception;
+	public LarDigestItem doDigest(
+			Layout layout, DataHandlerContext context)
+		throws Exception;
 
-	public void doImportData(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception;
 
-	public void doSerialize(Layout layout) throws Exception;
+	public void doSerialize(Layout layout, DataHandlerContext context)
+		throws Exception;
 
 	public Layout getEntity(String classPK);
 

@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.service.persistence.BaseDataHandler;
@@ -25,9 +26,12 @@ import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 public interface BookmarksFolderDataHandler
 	extends BaseDataHandler<BookmarksFolder> {
 
-	public LarDigestItem doDigest(BookmarksFolder folder) throws Exception;
+	public LarDigestItem doDigest(
+			BookmarksFolder folder, DataHandlerContext context)
+		throws Exception;
 
-	public void doImportData(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception;
 
 	public BookmarksFolder getEntity(String classPK);
 

@@ -41,8 +41,9 @@ public class BookmarksFolderDataHandlerImpl
 	implements BookmarksFolderDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(BookmarksFolder folder) throws Exception {
-		DataHandlerContext context = getDataHandlerContext();
+	public LarDigestItem doDigest(
+			BookmarksFolder folder, DataHandlerContext context)
+		throws Exception {
 
 		String path = getEntityPath(folder);
 
@@ -52,7 +53,7 @@ public class BookmarksFolderDataHandlerImpl
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
-		digestItem.setAction(getDigestAction(folder));
+		digestItem.setAction(getDigestAction(folder, context));
 		digestItem.setPath(path);
 		digestItem.setType(BookmarksFolder.class.getName());
 		digestItem.setClassPK(StringUtil.valueOf(folder.getFolderId()));
@@ -61,11 +62,11 @@ public class BookmarksFolderDataHandlerImpl
 	}
 
 	@Override
-	public void doImportData(LarDigestItem item) throws Exception {
-		DataHandlerContext context = getDataHandlerContext();
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception {
 
 		BookmarksFolder folder = (BookmarksFolder)getZipEntryAsObject(
-			item.getPath());
+			context.getZipReader(), item.getPath());
 
 		long userId = context.getUserId(folder.getUserUuid());
 
@@ -87,7 +88,7 @@ public class BookmarksFolderDataHandlerImpl
 			List<LarDigestItem> parentFolderItem = digest.findDigestItems(
 				0, path, BookmarksFolder.class.getName(), null);
 
-			doImportData(parentFolderItem.get(0));
+			doImportData(parentFolderItem.get(0), context);
 
 			parentFolderId = MapUtil.getLong(
 				folderIds, folder.getParentFolderId(),
@@ -95,7 +96,8 @@ public class BookmarksFolderDataHandlerImpl
 		}
 
 		ServiceContext serviceContext = createServiceContext(
-			item.getPath(), folder, BookmarksPortletDataHandler._NAMESPACE);
+			item.getPath(), folder, BookmarksPortletDataHandler._NAMESPACE,
+			context);
 
 		BookmarksFolder importedFolder = null;
 
@@ -122,9 +124,6 @@ public class BookmarksFolderDataHandlerImpl
 				userId, parentFolderId, folder.getName(),
 				folder.getDescription(), serviceContext);
 		}
-
-		// toDo: put the classedModel methods to somewhere from PortletDataContext
-		//context.importClassedModel(folder, importedFolder, _NAMESPACE);
 	}
 
 	public BookmarksFolder getEntity(String classPK) {
@@ -151,7 +150,9 @@ public class BookmarksFolderDataHandlerImpl
 
 		StringBundler sb = new StringBundler(4);
 
-		sb.append(getSourcePortletPath(PortletKeys.BOOKMARKS));
+		sb.append(
+			getSourcePortletPath(
+				context.getScopeGroupId(), PortletKeys.BOOKMARKS));
 		sb.append("/folders/");
 		sb.append(folderId);
 		sb.append(".xml");

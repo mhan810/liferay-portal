@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.Portlet;
@@ -33,7 +34,8 @@ public interface BookmarksPortletDataHandler extends PortletDataHandler {
 
 	public static final boolean _PUBLISH_TO_LIVE_BY_DEFAULT = true;
 
-	public void doImportData(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception;
 
 	public abstract PortletDataHandlerControl[] getExportControls();
 

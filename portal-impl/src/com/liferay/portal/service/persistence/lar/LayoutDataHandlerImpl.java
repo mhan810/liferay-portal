@@ -96,8 +96,9 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 	implements LayoutDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(Layout layout) throws Exception {
-		DataHandlerContext context = getDataHandlerContext();
+	public LarDigestItem doDigest(
+			Layout layout, DataHandlerContext context)
+		throws Exception {
 
 		context.setPlid(layout.getPlid());
 
@@ -161,7 +162,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				layout.getGroupId(), layout.isPrivateLayout(), parentLayoutId);
 
 			if (parentLayout != null) {
-				digest(parentLayout);
+				digest(parentLayout, context);
 				metadata.put("parent-layout-uuid", parentLayout.getUuid());
 			}
 		}
@@ -202,7 +203,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				layout.getIconImageId());
 
 			if (image != null) {
-				LarDigestItem item = imageDataHandler.digest(image);
+				LarDigestItem item = imageDataHandler.digest(image, context);
 
 				metadata.put("icon-image-path", item.getPath());
 			}
@@ -215,7 +216,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		digestItem.setClassPK(String.valueOf(layout.getPlid()));
 
 		if (layout.isTypeArticle()) {
-			exportJournalArticle(layout);
+			exportJournalArticle(layout, context);
 		}
 		else if (layout.isTypeLinkToLayout()) {
 			UnicodeProperties typeSettingsProperties =
@@ -230,7 +231,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 					context.getScopeGroupId(), layout.isPrivateLayout(),
 					linkToLayoutId);
 
-				digest(linkedToLayout);
+				digest(linkedToLayout, context);
 			}
 		}
 		else if (layout.isTypePortlet()) {
@@ -255,7 +256,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 							portlet.getPortletId());
 
 					if (portletDataHandler != null) {
-						portletDataHandler.digest(portlet);
+						portletDataHandler.digest(portlet, context);
 					}
 				}
 			}
@@ -332,7 +333,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 
 				if (portletDataHandler != null) {
-					portletDataHandler.digest(portlet);
+					portletDataHandler.digest(portlet, context);
 				}
 			}
 		}
@@ -346,9 +347,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		"/[$SAME_GROUP_FRIENDLY_URL$]";
 
 	@Override
-	public void doImportData(LarDigestItem item) throws Exception {
-
-		DataHandlerContext context = getDataHandlerContext();
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception {
 
 		Map parameterMap = context.getParameters();
 
@@ -373,7 +373,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		Map<Long, Layout> newLayoutsMap =
 			(Map<Long, Layout>)context.getNewPrimaryKeysMap(Layout.class);
 
-		Layout layout = (Layout)getZipEntryAsObject(item.getPath());
+		Layout layout = (Layout)getZipEntryAsObject(
+			context.getZipReader(), item.getPath());
 
 		String layoutUuid = layout.getUuid();
 
@@ -577,7 +578,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		if ((parentLayoutId != LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) &&
 			(parentLayoutItem != null)) {
 
-			importData(parentLayoutItem);
+			importData(parentLayoutItem, context);
 
 			Layout parentLayout = newLayoutsMap.get(parentLayoutId);
 
@@ -635,7 +636,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				LarDigestItem linekdLayoutItem = resultItems.get(0);
 
 				if (linekdLayoutItem != null) {
-					importData(linekdLayoutItem);
+					importData(linekdLayoutItem, context);
 
 					Layout linkedLayout = newLayoutsMap.get(linkToLayoutId);
 
@@ -701,7 +702,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 			String iconImagePath = metadata.get("icon-image-path");
 
-			byte[] iconBytes = getZipEntryAsByteArray(iconImagePath);
+			byte[] iconBytes = getZipEntryAsByteArray(
+				context.getZipReader(), iconImagePath);
 
 			if ((iconBytes != null) && (iconBytes.length > 0)) {
 				importedLayout.setIconImage(true);
@@ -742,7 +744,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		newLayouts.add(importedLayout);
 
 		if (importPermissions) {
-			importLayoutPermissions(importedLayout, item);
+			importLayoutPermissions(importedLayout, item, context);
 		}
 
 		if (importPublicLayoutPermissions) {
@@ -762,12 +764,14 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 	}
 
 	@Override
-	public void doSerialize(Layout layout) throws Exception {
+	public void doSerialize(Layout layout, DataHandlerContext context)
+		throws Exception {
+
 		String path = getEntityPath(layout);
 
 		fixTypeSettings(layout);
 
-		addZipEntry(path, layout);
+		addZipEntry(context.getZipWriter(), path, layout);
 	}
 
 	public Layout getEntity(String classPK) {
@@ -809,7 +813,10 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		return portletIds;
 	}
 
-	private void exportJournalArticle(Layout layout) throws Exception {
+	private void exportJournalArticle(
+			Layout layout, DataHandlerContext context)
+		throws Exception {
+
 		UnicodeProperties typeSettingsProperties =
 			layout.getTypeSettingsProperties();
 
@@ -835,7 +842,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			return;
 		}
 
-		journalArticleDataHandler.digest(article);
+		journalArticleDataHandler.digest(article, context);
 
 		// toDo: link the article to the layout
 	}
@@ -894,7 +901,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		return;
 	}
 
-	private void importLayoutPermissions(Layout layout, LarDigestItem item)
+	private void importLayoutPermissions(
+			Layout layout, LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
 		Map<String, List<String>> permissions = item.getPermissions();
@@ -904,7 +912,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			String resourcePrimKey = String.valueOf(layout.getPlid());
 
 			importPermissions(
-				resourceName, resourcePrimKey, permissions);
+				resourceName, resourcePrimKey, permissions, context);
 		}
 	}
 

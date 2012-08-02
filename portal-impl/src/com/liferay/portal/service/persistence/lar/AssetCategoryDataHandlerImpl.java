@@ -15,22 +15,16 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.DataHandlerContext;
-import com.liferay.portal.kernel.lar.DataHandlerContextThreadLocal;
-import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
-import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
-import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
-
-import java.util.Map;
 
 /**
  * @author Mate Thurzo
@@ -40,15 +34,15 @@ public class AssetCategoryDataHandlerImpl
 	implements AssetCategoryDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(AssetCategory category) throws Exception {
-		DataHandlerContext context =
-			DataHandlerContextThreadLocal.getDataHandlerContext();
+	public LarDigestItem doDigest(
+			AssetCategory category, DataHandlerContext context)
+		throws Exception {
 
 		AssetVocabulary vocabulary =
 			AssetVocabularyLocalServiceUtil.getAssetVocabulary(
 				category.getVocabularyId());
 
-		assetVocabularyDataHandler.digest(vocabulary);
+		assetVocabularyDataHandler.digest(vocabulary, context);
 
 		if (category.getParentCategoryId() !=
 				AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) {
@@ -57,7 +51,7 @@ public class AssetCategoryDataHandlerImpl
 				AssetCategoryLocalServiceUtil.getCategory(
 					category.getParentCategoryId());
 
-			digest(parentCategory);
+			digest(parentCategory, context);
 		}
 
 		String path = getEntityPath(category);
@@ -70,7 +64,7 @@ public class AssetCategoryDataHandlerImpl
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
-		digestItem.setAction(getDigestAction(category));
+		digestItem.setAction(getDigestAction(category, context));
 		digestItem.setPath(path);
 		digestItem.setType(AssetCategory.class.getName());
 		digestItem.setClassPK(String.valueOf(category.getCategoryId()));
@@ -79,7 +73,9 @@ public class AssetCategoryDataHandlerImpl
 	}
 
 	@Override
-	public void doImportData(LarDigestItem item) throws Exception {
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception {
+
 		return;
 	}
 

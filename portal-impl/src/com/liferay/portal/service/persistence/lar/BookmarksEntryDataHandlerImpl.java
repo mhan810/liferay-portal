@@ -42,8 +42,9 @@ public class BookmarksEntryDataHandlerImpl
 	implements BookmarksEntryDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(BookmarksEntry entry) throws Exception {
-		DataHandlerContext context = getDataHandlerContext();
+	public LarDigestItem doDigest(
+			BookmarksEntry entry, DataHandlerContext context)
+		throws Exception {
 
 		LarDigest digest = context.getLarDigest();
 
@@ -55,7 +56,7 @@ public class BookmarksEntryDataHandlerImpl
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
-		digestItem.setAction(getDigestAction(entry));
+		digestItem.setAction(getDigestAction(entry, context));
 		digestItem.setPath(path);
 		digestItem.setType(BookmarksEntry.class.getName());
 		digestItem.setClassPK(StringUtil.valueOf(entry.getEntryId()));
@@ -64,11 +65,11 @@ public class BookmarksEntryDataHandlerImpl
 	}
 
 	@Override
-	public void doImportData(LarDigestItem item) throws Exception {
-		DataHandlerContext context = getDataHandlerContext();
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception {
 
 		BookmarksEntry entry = (BookmarksEntry)getZipEntryAsObject(
-			item.getPath());
+			context.getZipReader(), item.getPath());
 
 		long userId = context.getUserId(entry.getUserUuid());
 
@@ -89,14 +90,16 @@ public class BookmarksEntryDataHandlerImpl
 				0, null, BookmarksFolder.class.getName(),
 				StringUtil.valueOf(folderId));
 
-			bookmarksFolderDataHandler.importData(parentFolderItem.get(0));
+			bookmarksFolderDataHandler.importData(
+				parentFolderItem.get(0), context);
 
 			folderId = MapUtil.getLong(
 				folderIds, entry.getFolderId(), entry.getFolderId());
 		}
 
 		ServiceContext serviceContext = createServiceContext(
-			item.getPath(), entry, BookmarksPortletDataHandler._NAMESPACE);
+			item.getPath(), entry, BookmarksPortletDataHandler._NAMESPACE,
+			context);
 
 		BookmarksEntry importedEntry = null;
 

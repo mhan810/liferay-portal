@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.lar.digest.LarDigestItem;
@@ -23,26 +24,28 @@ import com.liferay.portal.service.persistence.BaseDataHandler;
 /**
  * @author Mate Thurzo
  */
-public abstract interface PortletDataHandler extends BaseDataHandler<Portlet> {
+public interface PortletDataHandler extends BaseDataHandler<Portlet> {
 
-	public LarDigestItem digest(Portlet portlet) throws Exception;
+	public LarDigestItem digest(
+			Portlet portlet, DataHandlerContext context)
+		throws Exception;
 
 	public Portlet getEntity(String classPK);
 
-	public abstract PortletDataHandlerControl[] getExportControls();
+	public PortletDataHandlerControl[] getExportControls();
 
-	public abstract PortletDataHandlerControl[] getExportMetadataControls();
+	public PortletDataHandlerControl[] getExportMetadataControls();
 
-	public abstract PortletDataHandlerControl[] getImportControls();
+	public PortletDataHandlerControl[] getImportControls();
 
-	public abstract PortletDataHandlerControl[] getImportMetadataControls();
+	public PortletDataHandlerControl[] getImportMetadataControls();
 
-	public abstract boolean isAlwaysExportable();
+	public boolean isAlwaysExportable();
 
-	public abstract boolean isAlwaysStaged();
+	public boolean isAlwaysStaged();
 
-	public abstract boolean isDataLocalized();
+	public boolean isDataLocalized();
 
-	public abstract boolean isPublishToLiveByDefault();
+	public boolean isPublishToLiveByDefault();
 
 }

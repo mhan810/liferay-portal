@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.lar.digest.LarDigest;
@@ -40,14 +41,20 @@ public abstract interface BaseDataHandler<T extends BaseModel<T>> {
 
 	public static final String ROOT_PATH_PORTLETS = "/portlets/";
 
-	public void addZipEntry(String path, T object) throws SystemException;
+	public void addZipEntry(ZipWriter writer, String path, T object)
+		throws SystemException;
 
 	public ServiceContext createServiceContext(
-		String path, ClassedModel classedModel, String namespace);
+		String path, ClassedModel classedModel, String namespace,
+		DataHandlerContext context);
 
-	public LarDigestItem digest(T object) throws Exception;
+	public LarDigestItem digest(
+			T object, DataHandlerContext context)
+		throws Exception;
 
-	public abstract LarDigestItem doDigest(T object) throws Exception;
+	public abstract LarDigestItem doDigest(
+			T object, DataHandlerContext context)
+		throws Exception;
 
 	public abstract T getEntity(String classPK);
 
@@ -57,13 +64,14 @@ public abstract interface BaseDataHandler<T extends BaseModel<T>> {
 
 	public String getPermissionResourceName();
 
-	public byte[] getZipEntryAsByteArray(String path);
+	public byte[] getZipEntryAsByteArray(ZipReader reader, String path);
 
-	public Object getZipEntryAsObject(String path);
+	public Object getZipEntryAsObject(ZipReader reader, String path);
 
-	public String getZipEntryAsString(String path);
+	public String getZipEntryAsString(ZipReader reader, String path);
 
-	public void importData(LarDigestItem item) throws Exception;
+	public void importData(LarDigestItem item, DataHandlerContext context)
+		throws Exception;
 
 	public XStreamWrapper getXstreamWrapper();
 

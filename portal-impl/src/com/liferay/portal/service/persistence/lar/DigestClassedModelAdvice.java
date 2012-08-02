@@ -15,7 +15,6 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.DataHandlerContext;
-import com.liferay.portal.kernel.lar.DataHandlerContextThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.lar.DataHandlersUtil;
@@ -50,15 +49,17 @@ import java.util.Map;
 /**
  * @author Mate Thurzo
  */
-public class DigestAssetAdvice {
+public class DigestClassedModelAdvice implements AfterReturningAdvice {
 
-	public Object invoke(Object returnValue) throws Throwable {
+	public void afterReturning(
+			Object returnValue, Method method, Object[] args, Object target)
+		throws Throwable {
+
 		if ((returnValue == null) || !(returnValue instanceof LarDigestItem)) {
-			return null;
+			return;
 		}
 
-		DataHandlerContext context =
-			DataHandlerContextThreadLocal.getDataHandlerContext();
+		DataHandlerContext context = (DataHandlerContext)args[1];
 
 		LarDigestItem item = (LarDigestItem)returnValue;
 
@@ -68,7 +69,7 @@ public class DigestAssetAdvice {
 		Object entity = dataHandler.getEntity(item.getClassPK());
 
 		if (entity == null) {
-			return null;
+			return;
 		}
 
 		boolean portletMetadataAll = context.getBooleanParameter(
@@ -76,24 +77,24 @@ public class DigestAssetAdvice {
 			PortletDataHandlerKeys.PORTLET_METADATA_ALL);
 
 		boolean categoriesParam = context.getBooleanParameter(
-			dataHandler.getNamespace(), "categories");
+				dataHandler.getNamespace(), "categories");
 		boolean commentsParam = context.getBooleanParameter(
-			dataHandler.getNamespace(), "comments");
+				dataHandler.getNamespace(), "comments");
 		boolean ratingsParam = context.getBooleanParameter(
-			dataHandler.getNamespace(), "ratings");
+				dataHandler.getNamespace(), "ratings");
 		boolean tagsParam = context.getBooleanParameter(
-			dataHandler.getNamespace(), "tags");
+				dataHandler.getNamespace(), "tags");
 
 		if (!isResourceMain(entity)) {
-			return returnValue;
+			return;
 		}
 
-		digestAssetLinks(item, entity);
+		digestAssetLinks(item, entity, context);
 
-		digestLocks(item, (ClassedModel)entity);
+		digestLocks(item, (ClassedModel)entity, context);
 
 		if (portletMetadataAll || categoriesParam) {
-			digestAssetCategories(item, entity);
+			digestAssetCategories(item, entity, context);
 		}
 
 		if (portletMetadataAll || commentsParam) {
@@ -101,14 +102,12 @@ public class DigestAssetAdvice {
 		}
 
 		if (portletMetadataAll || ratingsParam) {
-			digestRatingsEntries(item, entity);
+			digestRatingsEntries(item, entity, context);
 		}
 
 		if (portletMetadataAll || tagsParam) {
-			digestAssetTags(item, entity);
+			digestAssetTags(item, entity, context);
 		}
-
-		return returnValue;
 	}
 
 	private void digestComments(LarDigestItem item, Object entity)
@@ -138,7 +137,8 @@ public class DigestAssetAdvice {
 		}
 	}
 
-	private void digestAssetCategories(LarDigestItem item, Object entity)
+	private void digestAssetCategories(
+			LarDigestItem item, Object entity, DataHandlerContext context)
 		throws Exception {
 
 		long classPK = getClassPK(item);
@@ -152,11 +152,12 @@ public class DigestAssetAdvice {
 				AssetCategory.class.getName());
 
 		for (AssetCategory assetCategory : assetCategories) {
-			categoryDataHandler.digest(assetCategory);
+			categoryDataHandler.digest(assetCategory, context);
 		}
 	}
 
-	private void digestAssetLinks(LarDigestItem item, Object entity)
+	private void digestAssetLinks(
+			LarDigestItem item, Object entity, DataHandlerContext context)
 		throws Exception {
 
 		AssetEntry assetEntry = null;
@@ -207,12 +208,13 @@ public class DigestAssetAdvice {
 					AssetLink.class.getName());
 
 			for (AssetLink assetLink : assetLinks) {
-				linkDataHandler.digest(assetLink);
+				linkDataHandler.digest(assetLink, context);
 			}
 		}
 	}
 
-	private void digestAssetTags(LarDigestItem item, Object entity)
+	private void digestAssetTags(
+			LarDigestItem item, Object entity, DataHandlerContext context)
 		throws Exception {
 
 		long classPK = getClassPK(item);
@@ -225,7 +227,8 @@ public class DigestAssetAdvice {
 		}
 	}
 
-	private void digestLocks(LarDigestItem item, ClassedModel object)
+	private void digestLocks(
+			LarDigestItem item, ClassedModel object, DataHandlerContext context)
 		throws Exception {
 
 		String key = String.valueOf(object.getPrimaryKeyObj());
@@ -239,11 +242,12 @@ public class DigestAssetAdvice {
 				(LockDataHandler)DataHandlersUtil.getDataHandlerInstance(
 					Lock.class.getName());
 
-			lockDataHandler.digest(lock);
+			lockDataHandler.digest(lock, context);
 		}
 	}
 
-	private void digestRatingsEntries(LarDigestItem item, Object entity)
+	private void digestRatingsEntries(
+			LarDigestItem item, Object entity, DataHandlerContext context)
 		throws Exception {
 
 		long classPK = getClassPK(item);

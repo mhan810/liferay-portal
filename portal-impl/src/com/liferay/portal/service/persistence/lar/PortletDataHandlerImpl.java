@@ -81,12 +81,13 @@ import java.util.Map;
 /**
  * @author Mate Thurzo
  */
-public abstract class PortletDataHandlerImpl
+public class PortletDataHandlerImpl
 	extends BaseDataHandlerImpl<Portlet>
 	implements PortletDataHandler {
 
-	public LarDigestItem digest(Portlet portlet) throws Exception {
-		DataHandlerContext context = getDataHandlerContext();
+	public LarDigestItem digest(
+			Portlet portlet, DataHandlerContext context)
+		throws Exception {
 
 		long plid = PortletKeys.PREFS_OWNER_ID_DEFAULT;
 		long layoutId = LayoutConstants.DEFAULT_PARENT_LAYOUT_ID;
@@ -202,15 +203,15 @@ public abstract class PortletDataHandlerImpl
 			digestPortletPreferences(
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, false,
-				portlet.getPortletId(), metadataMap);
+				portlet.getPortletId(), metadataMap, context);
 
 			digestPortletPreferences(
 				context.getScopeGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
-				false, portlet.getPortletId(), metadataMap);
+				false, portlet.getPortletId(), metadataMap, context);
 
 			digestPortletPreferences(
 				context.getCompanyId(), PortletKeys.PREFS_OWNER_TYPE_COMPANY,
-				false, portlet.getPortletId(), metadataMap);
+				false, portlet.getPortletId(), metadataMap, context);
 		}
 
 		// Portlet preferences
@@ -235,7 +236,7 @@ public abstract class PortletDataHandlerImpl
 				digestPortletPreferences(
 					portletPreferences.getOwnerId(),
 					PortletKeys.PREFS_OWNER_TYPE_USER, defaultUser,
-					portlet.getPortletId(), metadataMap);
+					portlet.getPortletId(), metadataMap, context);
 			}
 
 			try {
@@ -262,7 +263,7 @@ public abstract class PortletDataHandlerImpl
 				digestPortletPreferences(
 					portletItem.getPortletItemId(),
 					PortletKeys.PREFS_OWNER_TYPE_ARCHIVED, false,
-					portletItem.getPortletId(), metadataMap);
+					portletItem.getPortletId(), metadataMap, context);
 			}
 		}
 
@@ -278,17 +279,23 @@ public abstract class PortletDataHandlerImpl
 	}
 
 	@Override
-	public LarDigestItem doDigest(Portlet object) throws Exception {
+	public LarDigestItem doDigest(
+			Portlet object, DataHandlerContext context)
+		throws Exception {
+
 		return null;
 	}
 
-	protected abstract LarDigestItem doDigestPortlet(
-			Portlet portlet, LarDigestItem item)
-		throws Exception;
+	protected LarDigestItem doDigestPortlet(
+			Portlet portlet, LarDigestItem item, DataHandlerContext context)
+		throws Exception {
+
+		return null;
+	}
 
 	@Override
-	public void doImportData(LarDigestItem item) throws Exception{
-		DataHandlerContext context = getDataHandlerContext();
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception{
 
 		Map<String, String> metadata = item.getMetadata();
 
@@ -386,7 +393,7 @@ public abstract class PortletDataHandlerImpl
 		// Portlet permissions
 
 		if (importPermissions) {
-			importPortletPermissions(layout, portletId, item);
+			importPortletPermissions(layout, portletId, item, context);
 		}
 
 		// Archived setups
@@ -397,27 +404,45 @@ public abstract class PortletDataHandlerImpl
 			importPortletUserPreferences, false, importPortletData);
 	}
 
-	public abstract String[] getDataPortletPreferences();
+	public String[] getDataPortletPreferences() {
+		return new String[0];
+	}
 
 	public Portlet getEntity(String classPK) {
 		return null;
 	}
 
-	public abstract PortletDataHandlerControl[] getExportControls();
+	public PortletDataHandlerControl[] getExportControls() {
+		return new PortletDataHandlerControl[0];
+	}
 
-	public abstract PortletDataHandlerControl[] getExportMetadataControls();
+	public PortletDataHandlerControl[] getExportMetadataControls() {
+		return new PortletDataHandlerControl[0];
+	}
 
-	public abstract PortletDataHandlerControl[] getImportControls();
+	public PortletDataHandlerControl[] getImportControls() {
+		return new PortletDataHandlerControl[0];
+	}
 
-	public abstract PortletDataHandlerControl[] getImportMetadataControls();
+	public PortletDataHandlerControl[] getImportMetadataControls() {
+		return new PortletDataHandlerControl[0];
+	}
 
-	public abstract boolean isAlwaysExportable();
+	public boolean isAlwaysExportable() {
+		return _ALWAYS_EXPORTABLE;
+	}
 
-	public abstract boolean isAlwaysStaged();
+	public boolean isAlwaysStaged() {
+		return _ALWAYS_STAGED;
+	}
 
-	public abstract boolean isDataLocalized();
+	public boolean isDataLocalized() {
+		return _DATA_LOCALIZED;
+	}
 
-	public abstract boolean isPublishToLiveByDefault();
+	public boolean isPublishToLiveByDefault() {
+		return _PUBLISH_TO_LIVE_BY_DEFAULT;
+	}
 
 	protected void deletePortletData(
 			DataHandlerContext context, String portletId, long plid)
@@ -504,7 +529,9 @@ public abstract class PortletDataHandlerImpl
 	}
 
 	@Override
-	protected void doSerialize(Portlet portlet) throws Exception {
+	protected void doSerialize(Portlet portlet, DataHandlerContext context)
+		throws Exception {
+
 		String path = getEntityPath(portlet);
 
 		PortletPreferences portletPreferences = getPortletPreferences(
@@ -527,7 +554,8 @@ public abstract class PortletDataHandlerImpl
 		}
 
 		addZipEntry(
-			path, document.formattedString(StringPool.TAB, false, false));
+			context.getZipWriter(), path,
+			document.formattedString(StringPool.TAB, false, false));
 	}
 
 	protected void exportPortletData(
@@ -602,7 +630,7 @@ public abstract class PortletDataHandlerImpl
 		context.setGroupId(context.getScopeGroupId());
 
 		try {
-			portletItem = doDigestPortlet(portlet, portletItem);
+			portletItem = doDigestPortlet(portlet, portletItem, context);
 		}
 		catch (Exception e) {
 			throw new SystemException(e);
@@ -766,10 +794,8 @@ public abstract class PortletDataHandlerImpl
 
 	protected void digestPortletPreferences(
 			long ownerId, int ownerType, boolean defaultUser, String portletId,
-			Map<String, String> metadataMap)
+			Map<String, String> metadataMap, DataHandlerContext context)
 		throws Exception {
-
-		DataHandlerContext context = getDataHandlerContext();
 
 		long plid = PortletKeys.PREFS_OWNER_ID_DEFAULT;
 		Layout layout = null;
@@ -945,7 +971,7 @@ public abstract class PortletDataHandlerImpl
 	}
 
 	protected void importPortletPreferences(
-			DataHandlerContext portletDataContext, long companyId, long groupId,
+			DataHandlerContext context, long companyId, long groupId,
 			Layout layout, String portletId, LarDigestItem item,
 			boolean importPortletSetup, boolean importPortletArchivedSetups,
 			boolean importPortletUserPreferences, boolean preserveScopeLayoutId,
@@ -985,13 +1011,13 @@ public abstract class PortletDataHandlerImpl
 		for (Element portletPreferencesElement : portletPreferencesElements) {
 			String path = portletPreferencesElement.attributeValue("path");
 
-			if (!portletDataContext.isPathProcessed(path)) {
+			if (!context.isPathProcessed(path)) {
 				String xml = null;
 
 				Element element = null;
 
 				try {
-					xml = getZipEntryAsString(path);
+					xml = getZipEntryAsString(context.getZipReader(), path);
 
 					Document preferencesDocument = SAXReaderUtil.read(xml);
 
@@ -1032,7 +1058,7 @@ public abstract class PortletDataHandlerImpl
 
 				if (ownerType == PortletKeys.PREFS_OWNER_TYPE_GROUP) {
 					plid = PortletKeys.PREFS_PLID_SHARED;
-					ownerId = portletDataContext.getScopeGroupId();
+					ownerId = context.getScopeGroupId();
 				}
 
 				boolean defaultUser = GetterUtil.getBoolean(
@@ -1049,7 +1075,7 @@ public abstract class PortletDataHandlerImpl
 						"archive-user-uuid");
 					String name = element.attributeValue("archive-name");
 
-					long userId = portletDataContext.getUserId(userUuid);
+					long userId = context.getUserId(userUuid);
 
 					PortletItem portletItem =
 						PortletItemLocalServiceUtil.updatePortletItem(
@@ -1062,7 +1088,7 @@ public abstract class PortletDataHandlerImpl
 				else if (ownerType == PortletKeys.PREFS_OWNER_TYPE_USER) {
 					String userUuid = element.attributeValue("user-uuid");
 
-					ownerId = portletDataContext.getUserId(userUuid);
+					ownerId = context.getUserId(userUuid);
 				}
 
 				if (defaultUser) {
@@ -1082,7 +1108,7 @@ public abstract class PortletDataHandlerImpl
 				}*/
 
 				updatePortletPreferences(
-					portletDataContext, ownerId, ownerType, plid, portletId,
+					context, ownerId, ownerType, plid, portletId,
 					xml, importPortletData);
 			}
 		}
@@ -1106,7 +1132,8 @@ public abstract class PortletDataHandlerImpl
 	}
 
 	protected void importPortletPermissions(
-			Layout layout, String portletId, LarDigestItem item)
+			Layout layout, String portletId, LarDigestItem item,
+			DataHandlerContext context)
 		throws Exception {
 
 		Map<String, List<String>> permissions = item.getPermissions();
@@ -1118,14 +1145,16 @@ public abstract class PortletDataHandlerImpl
 					layout.getPlid(), portletId);
 
 			importPermissions(
-				resourceName, resourcePrimKey, permissions);
+				resourceName, resourcePrimKey, permissions, context);
 		}
 	}
 
 	protected void readAssetLinks(DataHandlerContext context)
 			throws Exception {
 
-		String xml = getZipEntryAsString(getSourceRootPath() + "/links.xml");
+		String xml = getZipEntryAsString(
+			context.getZipReader(),
+			getSourceRootPath(context.getScopeGroupId()) + "/links.xml");
 
 		if (xml == null) {
 			return;

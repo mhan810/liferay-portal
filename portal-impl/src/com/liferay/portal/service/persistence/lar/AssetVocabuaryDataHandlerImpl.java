@@ -37,8 +37,9 @@ public class AssetVocabuaryDataHandlerImpl
 	implements AssetVocabularyDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(AssetVocabulary vocabulary) throws Exception {
-		DataHandlerContext context = getDataHandlerContext();
+	public LarDigestItem doDigest(
+			AssetVocabulary vocabulary, DataHandlerContext context)
+		throws Exception {
 
 		LarDigest digest = context.getLarDigest();
 
@@ -50,7 +51,7 @@ public class AssetVocabuaryDataHandlerImpl
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
-		digestItem.setAction(getDigestAction(vocabulary));
+		digestItem.setAction(getDigestAction(vocabulary, context));
 		digestItem.setPath(path);
 		digestItem.setType(AssetVocabulary.class.getName());
 		digestItem.setClassPK(StringUtil.valueOf(vocabulary.getVocabularyId()));
@@ -59,7 +60,9 @@ public class AssetVocabuaryDataHandlerImpl
 	}
 
 	@Override
-	public void doImportData(LarDigestItem item) throws Exception {
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception {
+
 		return;
 	}
 

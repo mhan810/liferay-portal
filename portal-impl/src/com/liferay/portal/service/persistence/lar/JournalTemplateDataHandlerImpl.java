@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.lar.digest.LarDigestItem;
@@ -29,12 +30,17 @@ public class JournalTemplateDataHandlerImpl
 	implements JournalTemplateDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(JournalTemplate object) throws Exception {
+	public LarDigestItem doDigest(
+			JournalTemplate object, DataHandlerContext context)
+		throws Exception {
+
 		return null;
 	}
 
 	@Override
-	public void doImportData(LarDigestItem item) throws Exception {
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception {
+
 		return;
 	}
 

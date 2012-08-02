@@ -33,8 +33,8 @@ public class LockDataHandlerImpl
 	implements LockDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(Lock lock) throws Exception {
-		DataHandlerContext context = getDataHandlerContext();
+	public LarDigestItem doDigest(Lock lock, DataHandlerContext context)
+		throws Exception {
 
 		String path = getEntityPath(lock);
 
@@ -46,7 +46,7 @@ public class LockDataHandlerImpl
 
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
-		digestItem.setAction(LarDigesterConstants.ACTION_ADD);
+		digestItem.setAction(getDigestAction(lock, context));
 		digestItem.setPath(path);
 		digestItem.setType(Lock.class.getName());
 		digestItem.setClassPK(StringUtil.valueOf(lock.getLockId()));
@@ -55,8 +55,10 @@ public class LockDataHandlerImpl
 	}
 
 	@Override
-	public void doImportData(LarDigestItem item) throws Exception {
-		// toDo: implement
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception {
+
+		return;
 	}
 
 	@Override

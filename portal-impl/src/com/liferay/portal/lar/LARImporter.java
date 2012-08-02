@@ -406,7 +406,7 @@ public class LARImporter {
 			BaseDataHandler dataHandler =
 				DataHandlersUtil.getDataHandlerInstance(item.getType());
 
-			dataHandler.importData(item);
+			dataHandler.importData(item, context);
 		}
 
 		if (importPermissions) {
@@ -537,8 +537,6 @@ public class LARImporter {
 		_context.setPrivateLayout(privateLayout);
 		_context.setScopeGroupId(groupId);
 		_context.setUser(user);
-
-		DataHandlerContextThreadLocal.setDataHandlerContext(_context);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(LARImporter.class);

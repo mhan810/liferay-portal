@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portlet.journal.model.JournalTemplate;
@@ -24,9 +25,12 @@ import com.liferay.portlet.journal.model.JournalTemplate;
 public interface JournalTemplateDataHandler
 	extends BaseDataHandler<JournalTemplate> {
 
-	public LarDigestItem doDigest(JournalTemplate template) throws Exception;
+	public LarDigestItem doDigest(
+			JournalTemplate template, DataHandlerContext context)
+		throws Exception;
 
-	public void doImportData(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception;
 
 	public JournalTemplate getEntity(String classPK);
 

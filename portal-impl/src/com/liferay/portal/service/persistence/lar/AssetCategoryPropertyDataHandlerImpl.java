@@ -33,10 +33,9 @@ public class AssetCategoryPropertyDataHandlerImpl
 	implements AssetCategoryPropertyDataHandler{
 
 	@Override
-	public LarDigestItem doDigest(AssetCategoryProperty categoryProperty)
+	public LarDigestItem doDigest(
+			AssetCategoryProperty categoryProperty, DataHandlerContext context)
 		throws Exception {
-
-		DataHandlerContext context = getDataHandlerContext();
 
 		LarDigest digest = context.getLarDigest();
 
@@ -45,7 +44,7 @@ public class AssetCategoryPropertyDataHandlerImpl
 		if (!context.isPathProcessed(path)) {
 			LarDigestItem digestItem = new LarDigestItemImpl();
 
-			digestItem.setAction(getDigestAction(categoryProperty));
+			digestItem.setAction(getDigestAction(categoryProperty, context));
 			digestItem.setPath(path);
 			digestItem.setType(AssetCategoryProperty.class.getName());
 			digestItem.setClassPK(
@@ -58,7 +57,9 @@ public class AssetCategoryPropertyDataHandlerImpl
 	}
 
 	@Override
-	public void doImportData(LarDigestItem item) throws Exception {
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception {
+
 		return;
 	}
 

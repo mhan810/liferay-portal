@@ -31,20 +31,15 @@
 		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestErrorRegistryAdvice" pointcut="bean(*DataHandler)" />
 	</aop:config>
 
-	<bean id="com.liferay.portal.service.persistence.lar.DigestAssetAdvice" class="com.liferay.portal.service.persistence.lar.DigestAssetAdvice" />
+	<bean id="com.liferay.portal.service.persistence.lar.DigestClassedModelAdvice" class="com.liferay.portal.service.persistence.lar.DigestClassedModelAdvice" />
 	<bean id="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" class="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" />
 
 	<aop:config proxy-target-class="false">
 		<aop:pointcut id="digestPointcut" expression="execution(* com.liferay.portal.service.persistence.BaseDataHandler.digest(..) throws Exception)" />
 		<aop:pointcut id="serializePointcut" expression="execution(* com.liferay.portal.service.persistence.BaseDataHandler.serialize(..))" />
 
-		<aop:aspect ref="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" order="1">
-			<aop:after-returning method="invoke" pointcut-ref="digestPointcut" returning="returnValue" />
-		</aop:aspect>
-
-		<aop:aspect ref="com.liferay.portal.service.persistence.lar.DigestAssetAdvice" order="2">
-			<aop:after-returning method="invoke" pointcut-ref="digestPointcut" returning="returnValue" />
-		</aop:aspect>
+		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestClassedModelAdvice" pointcut-ref="digestPointcut" order="2" />
+		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" pointcut-ref="digestPointcut" order="1" />
 	</aop:config>
 
 	<bean id="com.liferay.portal.service.persistence.lar.ExportImportMessageAdvice" class="com.liferay.portal.service.persistence.lar.ExportImportMessageAdvice" />

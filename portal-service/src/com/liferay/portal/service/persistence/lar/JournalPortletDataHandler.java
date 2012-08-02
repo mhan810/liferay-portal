@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.Portlet;
 
@@ -33,8 +34,11 @@ public interface JournalPortletDataHandler extends PortletDataHandler {
 
 	public static final boolean PUBLISH_TO_LIVE_BY_DEFAULT = false;
 
-	public LarDigestItem doDigest(Portlet portlet) throws Exception;
+	public LarDigestItem doDigest(
+			Portlet portlet, DataHandlerContext context)
+		throws Exception;
 
-	public void doImportData(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception;
 
 }

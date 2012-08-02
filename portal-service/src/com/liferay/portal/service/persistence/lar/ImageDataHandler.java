@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.model.Image;
@@ -24,9 +25,12 @@ import com.liferay.portal.service.persistence.BaseDataHandler;
  */
 public interface ImageDataHandler extends BaseDataHandler<Image> {
 
-	public LarDigestItem doDigest(Image image) throws Exception;
+	public LarDigestItem doDigest(
+			Image image, DataHandlerContext context)
+		throws Exception;
 
-	public void doImportData(LarDigestItem item) throws Exception;
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception;
 
 	public Image getEntity(String classPK);
 

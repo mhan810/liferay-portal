@@ -110,9 +110,9 @@ public class BookmarksPortletDataHandlerImpl
 	}
 
 	@Override
-	protected LarDigestItem doDigestPortlet(Portlet portlet, LarDigestItem item)
-			throws Exception {
-		DataHandlerContext context = getDataHandlerContext();
+	protected LarDigestItem doDigestPortlet(
+			Portlet portlet, LarDigestItem item, DataHandlerContext context)
+		throws Exception {
 
 		List<BookmarksFolder> folders = BookmarksFolderUtil.findByGroupId(
 			context.getScopeGroupId());
@@ -143,10 +143,10 @@ public class BookmarksPortletDataHandlerImpl
 		long parentForlderId = entry.getFolderId();
 
 		if (parentForlderId > 0) {
-			exportParentFolder(context.getLarDigest(), parentForlderId);
+			exportParentFolder(parentForlderId, context);
 		}
 
-		bookmarksEntryDataHandler.digest(entry);
+		bookmarksEntryDataHandler.digest(entry, context);
 	}
 
 	protected void exportFolder(
@@ -154,21 +154,20 @@ public class BookmarksPortletDataHandlerImpl
 		throws Exception{
 
 		if (context.isWithinDateRange(folder.getModifiedDate())) {
-			exportParentFolder(
-				context.getLarDigest(), folder.getParentFolderId());
+			exportParentFolder(folder.getParentFolderId(), context);
 
-			bookmarksFolderDataHandler.digest(folder);
+			bookmarksFolderDataHandler.digest(folder, context);
 		}
 
 		List<BookmarksEntry> entries = BookmarksEntryUtil.findByG_F(
 			folder.getGroupId(), folder.getFolderId());
 
 		for (BookmarksEntry entry : entries) {
-			bookmarksEntryDataHandler.digest(entry);
+			bookmarksEntryDataHandler.digest(entry, context);
 		}
 	}
 
-	protected void exportParentFolder(LarDigest larDigest, long folderId)
+	protected void exportParentFolder(long folderId, DataHandlerContext context)
 		throws Exception {
 
 		if (folderId == BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
@@ -177,9 +176,9 @@ public class BookmarksPortletDataHandlerImpl
 
 		BookmarksFolder folder = BookmarksFolderUtil.findByPrimaryKey(folderId);
 
-		exportParentFolder(larDigest, folder.getParentFolderId());
+		exportParentFolder(folder.getParentFolderId(), context);
 
-		bookmarksFolderDataHandler.digest(folder);
+		bookmarksFolderDataHandler.digest(folder, context);
 	}
 
 	private static PortletDataHandlerBoolean _foldersAndEntries =

@@ -30,12 +30,17 @@ public class JournalStructureDataHandlerImpl
 	implements JournalStructureDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(JournalStructure structure) throws Exception {
+	public LarDigestItem doDigest(
+			JournalStructure structure, DataHandlerContext context)
+		throws Exception {
+
 		return null;
 	}
 
 	@Override
-	public void doImportData(LarDigestItem item) throws Exception {
+	public void doImportData(LarDigestItem item, DataHandlerContext context)
+		throws Exception {
+
 		return;
 	}
 

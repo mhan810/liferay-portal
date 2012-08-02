@@ -17,9 +17,7 @@ package com.liferay.portal.service.persistence.lar;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
-import com.liferay.portal.kernel.lar.DataHandlerContextThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
@@ -44,7 +42,6 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.TeamLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.aop.AfterReturningAdvice;
 
 import java.lang.reflect.Method;
@@ -56,17 +53,19 @@ import java.util.Set;
 /**
  * @author Mate Thurzo
  */
-public class DigestPermissionAdvice {
+public class DigestPermissionAdvice implements AfterReturningAdvice {
 
-	public Object invoke(Object returnValue) throws Throwable {
+	public void afterReturning(
+			Object returnValue, Method method, Object[] args, Object target)
+		throws Throwable {
+
 		if ((returnValue == null) || !(returnValue instanceof LarDigestItem)) {
-			return null;
+			return;
 		}
 
-		LarDigestItem item = (LarDigestItem)returnValue;
+		DataHandlerContext context = (DataHandlerContext)args[1];
 
-		DataHandlerContext context =
-			DataHandlerContextThreadLocal.getDataHandlerContext();
+		LarDigestItem item = (LarDigestItem)returnValue;
 
 		BaseDataHandler dataHandler = DataHandlersUtil.getDataHandlerInstance(
 			item.getType());
@@ -93,7 +92,7 @@ public class DigestPermissionAdvice {
 				Layout layout = LayoutLocalServiceUtil.getLayout(plid);
 
 				permissionsMap = digestPortletPermissions(
-						context, portletId, layout);
+					context, portletId, layout);
 			}
 			else {
 				permissionsMap = digestEntityPermissions(
@@ -106,7 +105,7 @@ public class DigestPermissionAdvice {
 			}
 		}
 
-		return item;
+		returnValue = item;
 	}
 
 	private Map<String, List<String>> digestEntityPermissions(

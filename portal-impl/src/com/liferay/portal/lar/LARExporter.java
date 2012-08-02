@@ -17,7 +17,6 @@ package com.liferay.portal.lar;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
-import com.liferay.portal.kernel.lar.DataHandlerContextThreadLocal;
 import com.liferay.portal.kernel.lar.ImportExportThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
@@ -169,15 +168,12 @@ public class LARExporter {
 
 			// Serializing
 
-			DataHandlerContext context =
-				DataHandlerContextThreadLocal.getDataHandlerContext();
+			doSerialize(_context);
 
-			doSerialize(context);
+			_context.getZipWriter().addEntry(
+				"/digest.xml", _context.getLarDigest().getDigestString());
 
-			context.getZipWriter().addEntry(
-				"/digest.xml", context.getLarDigest().getDigestString());
-
-			return context.getZipWriter().getFile();
+			return _context.getZipWriter().getFile();
 		}
 		catch (Exception e) {
 			_log.error(e);
@@ -201,7 +197,7 @@ public class LARExporter {
 				AssetVocabulary.class.getName());
 
 		for (AssetVocabulary assetVocabulary : assetVocabularies) {
-			vocabularyDataHandler.digest(assetVocabulary);
+			vocabularyDataHandler.digest(assetVocabulary, _context);
 		}
 
 		List<AssetCategory> assetCategories = AssetCategoryUtil.findByGroupId(
@@ -212,7 +208,7 @@ public class LARExporter {
 				AssetCategory.class.getName());
 
 		for (AssetCategory assetCategory : assetCategories) {
-			categoryDataHandler.digest(assetCategory);
+			categoryDataHandler.digest(assetCategory, _context);
 		}
 	}
 
@@ -403,7 +399,7 @@ public class LARExporter {
 					portlet.getPortletId());
 
 			if (portletDataHandler != null) {
-				portletDataHandler.digest(portlet);
+				portletDataHandler.digest(portlet, context);
 			}
 		}
 
@@ -414,7 +410,7 @@ public class LARExporter {
 				Layout.class.getName());
 
 		for (Layout layout : layouts) {
-			layoutDataHandler.digest(layout);
+			layoutDataHandler.digest(layout, _context);
 		}
 
 		if (_log.isInfoEnabled()) {
@@ -588,8 +584,6 @@ public class LARExporter {
 		LarDigest larDigest = new LarDigestImpl();
 
 		_context.setLarDigest(larDigest);
-
-		DataHandlerContextThreadLocal.setDataHandlerContext(_context);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(LARExporter.class);
