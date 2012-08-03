@@ -47,5 +47,4 @@ public interface PortletDataHandler extends BaseDataHandler<Portlet> {
 	public boolean isDataLocalized();
 
 	public boolean isPublishToLiveByDefault();
-
 }

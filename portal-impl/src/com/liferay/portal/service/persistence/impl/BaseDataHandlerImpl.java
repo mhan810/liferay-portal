@@ -38,6 +38,7 @@ import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.PermissionExporter;
 import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigestPermission;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.AuditedModel;
 import com.liferay.portal.model.BaseModel;
@@ -271,12 +272,12 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	}
 
 	protected void addPermissions(
-			Map<String, List<String>> permissions, DataHandlerContext context)
+			List<LarDigestPermission> permissions, DataHandlerContext context)
 		throws Exception {
 
-		for (String roleName : permissions.keySet()) {
+		for (LarDigestPermission permission : permissions) {
 			Role role = RoleLocalServiceUtil.getRole(
-				context.getCompanyId(), roleName);
+				context.getCompanyId(), permission.getRoleName());
 
 			String path = getRolePath(role);
 
@@ -448,7 +449,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 	protected void importPermissions(
 			String resourceName, String resourcePrimKey,
-			Map<String, List<String>> permissions, DataHandlerContext context)
+			List<LarDigestPermission> permissions, DataHandlerContext context)
 		throws Exception {
 
 		LayoutCache layoutCache = (LayoutCache)context.getAttribute(
@@ -460,7 +461,9 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 		Map<Long, String[]> roleIdsToActionIds = new HashMap<Long, String[]>();
 
-		for (String roleName : permissions.keySet()) {
+		for (LarDigestPermission permission : permissions) {
+			String roleName = permission.getRoleName();
+
 			Role importedRole = (Role)getZipEntryAsObject(
 				context.getZipReader(), getRolePath(roleName));
 
@@ -507,7 +510,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 					type);
 			}
 
-			List<String> actions = permissions.get(roleName);
+			List<String> actions = permission.getActionIds();
 
 			roleIdsToActionIds.put(
 				role.getRoleId(), actions.toArray(new String[actions.size()]));

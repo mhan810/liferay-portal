@@ -22,15 +22,29 @@ import java.util.Map;
  */
 public interface LarDigestItem {
 
+	public void addDependency(LarDigestDependency dependency);
+
+	public void addMetadata(LarDigestMetadata metadata);
+
+	public void addPermission(LarDigestPermission permission);
+
 	public int getAction();
+
+	public List<LarDigestDependency> getDependencies();
+
+	public List<LarDigestMetadata> getMetadata();
+
+	public List<LarDigestPermission> getPermissions();
 
 	public String getClassPK();
 
-	public Map<String, String> getMetadata();
+	public List<LarDigestDependency> getDependencies(String className);
+
+	public List<LarDigestMetadata> getMetadata(String name);
+
+	public String getMetadataValue(String name);
 
 	public String getPath();
-
-	public Map<String, List<String>> getPermissions();
 
 	public String getType();
 
@@ -38,11 +52,9 @@ public interface LarDigestItem {
 
 	public void setClassPK(String classPK);
 
-	public void setMetadata(Map<String, String> metadata);
-
 	public void setPath(String path);
 
-	public void setPermissions(Map<String, List<String>> permissions);
+	public void setPermissions(List<LarDigestPermission> permissions);
 
 	public void setType(String type);
 

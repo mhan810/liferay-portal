@@ -24,6 +24,7 @@ import com.liferay.portal.NoSuchLayoutPrototypeException;
 import com.liferay.portal.NoSuchLayoutSetPrototypeException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.*;
+import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -43,6 +44,7 @@ import com.liferay.portal.kernel.zip.ZipReaderFactoryUtil;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestImpl;
 import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigestMetadata;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutPrototype;
@@ -72,7 +74,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import com.liferay.portlet.layoutsadmin.util.LayoutsTreeUtil;
 import org.apache.commons.lang.time.StopWatch;
+
+import javax.portlet.Portlet;
 
 /**
  * @author Daniel Kocsis
@@ -186,7 +191,9 @@ public class LARImporter {
 		LarDigest larDigest = null;
 
 		try {
-			larDigest = new LarDigestImpl(zipReader);
+			String xml = zipReader.getEntryAsString("/digest.xml");
+
+			larDigest = new LarDigestImpl(xml);
 
 			context.setLarDigest(larDigest);
 		}
@@ -196,12 +203,12 @@ public class LARImporter {
 
 		// Build compatibility
 
-		Map<String, String> metaData = larDigest.getMetaData();
+		List<LarDigestMetadata> metaDataList = larDigest.getMetaData();
 
 		int buildNumber = ReleaseInfo.getBuildNumber();
 
 		int importBuildNumber = GetterUtil.getInteger(
-			metaData.get("build-number"));
+			larDigest.getMetadataValue("build-number"));
 
 		if (buildNumber != importBuildNumber) {
 			throw new LayoutImportException(
@@ -211,7 +218,7 @@ public class LARImporter {
 
 		// Type compatibility
 
-		String larType = metaData.get("type");
+		String larType = larDigest.getMetadataValue("type");
 
 		if (!larType.equals("layout-prototype") &&
 			!larType.equals("layout-set") &&
@@ -225,7 +232,7 @@ public class LARImporter {
 		// Available locales
 
 		Locale[] sourceAvailableLocales = LocaleUtil.fromLanguageIds(
-			StringUtil.split(metaData.get("available-locales")));
+			StringUtil.split(larDigest.getMetadataValue("available-locales")));
 
 		Locale[] targetAvailableLocales = LanguageUtil.getAvailableLocales();
 
@@ -247,7 +254,7 @@ public class LARImporter {
 		List<LarDigestItem> layoutItems = larDigest.findDigestItems(
 			0, null, Layout.class.getName(), null);
 
-		validateLayoutPrototypes(companyId, metaData, layoutItems);
+		validateLayoutPrototypes(companyId, layoutItems, larDigest);
 
 		// Group id
 
@@ -255,13 +262,14 @@ public class LARImporter {
 
 		context.setAttribute("layoutCache", layoutCache);
 
-		long sourceGroupId = GetterUtil.getLong(metaData.get("group-id"));
+		long sourceGroupId = GetterUtil.getLong(
+			larDigest.getMetadataValue("group-id"));
 
 		context.setSourceGroupId(sourceGroupId);
 
 		// Layout and layout set prototype
 
-		String layoutSetPrototypeUuid = metaData.get(
+		String layoutSetPrototypeUuid = larDigest.getMetadataValue(
 			"layout-set-prototype-uuid");
 
 		if (group.isLayoutPrototype() && larType.equals("layout-prototype")) {
@@ -270,7 +278,7 @@ public class LARImporter {
 					group.getClassPK());
 
 			String layoutPrototypeUuid = GetterUtil.getString(
-				metaData.get("type-uuid"));
+				larDigest.getMetadataValue("type-uuid"));
 
 			LayoutPrototype existingLayoutPrototype = null;
 
@@ -300,7 +308,7 @@ public class LARImporter {
 					group.getClassPK());
 
 			String importedLayoutSetPrototypeUuid = GetterUtil.getString(
-				metaData.get("type-uuid"));
+				larDigest.getMetadataValue("type-uuid"));
 
 			LayoutSetPrototype existingLayoutSetPrototype = null;
 
@@ -324,7 +332,7 @@ public class LARImporter {
 		}
 		else if (larType.equals("layout-set-prototype")) {
 			layoutSetPrototypeUuid = GetterUtil.getString(
-				metaData.get("type-uuid"));
+				larDigest.getMetadataValue("type-uuid"));
 		}
 
 		context.setAttribute("layoutSetPrototypeUuid", layoutSetPrototypeUuid);
@@ -402,12 +410,49 @@ public class LARImporter {
 		context.setAttribute("newLayoutsMap", newLayoutsMap);
 		context.setAttribute("previousLayouts", previousLayouts);
 
-		for (LarDigestItem item : larDigest) {
+
+		for (LarDigestItem item : larDigest.getAllItems()) {
 			BaseDataHandler dataHandler =
 				DataHandlersUtil.getDataHandlerInstance(item.getType());
 
 			dataHandler.importData(item, context);
 		}
+		// Import layouts
+
+		/*if (_log.isDebugEnabled()) {
+			if (layoutItems.size() > 0) {
+				_log.debug("Importing layouts");
+			}
+		}
+
+		for (LarDigestItem layoutItem : layoutItems) {
+			BaseDataHandler dataHandler =
+				DataHandlersUtil.getDataHandlerInstance(Layout.class.getName());
+
+			dataHandler.importData(layoutItem);
+		}
+		*/
+
+		// Import portlets
+
+		/*List<LarDigestItem> portletItems = larDigest.findDigestItems(
+			0, null, Portlet.class.getName(), null);
+
+		if (_log.isDebugEnabled()) {
+			if (portletItems.size() > 0) {
+				_log.debug("Importing portlets");
+			}
+		}
+
+		for (LarDigestItem portletItem : portletItems) {
+			BaseDataHandler dataHandler =
+				DataHandlersUtil.getDataHandlerInstance(
+					portletItem.getClassPK());
+
+			dataHandler.importData(portletItem);
+		}        */
+
+		// Re-index user
 
 		if (importPermissions) {
 			if (userId > 0) {
@@ -468,13 +513,12 @@ public class LARImporter {
 	}
 
 	protected void validateLayoutPrototypes(
-			long companyId, Map<String, String> metadata,
-			List<LarDigestItem> layoutItems)
+			long companyId, List<LarDigestItem> layoutItems, LarDigest digest)
 		throws Exception {
 
 		List<Tuple> missingLayoutPrototypes = new ArrayList<Tuple>();
 
-		String layoutSetPrototypeUuid = metadata.get(
+		String layoutSetPrototypeUuid = digest.getMetadataValue(
 			"layout-set-prototype-uuid");
 
 		if (Validator.isNotNull(layoutSetPrototypeUuid)) {
@@ -484,7 +528,7 @@ public class LARImporter {
 						layoutSetPrototypeUuid, companyId);
 			}
 			catch (NoSuchLayoutSetPrototypeException nlspe) {
-				String layoutSetPrototypeName = metadata.get(
+				String layoutSetPrototypeName = digest.getMetadataValue(
 					"layout-set-prototype-name");
 
 				missingLayoutPrototypes.add(
@@ -495,10 +539,8 @@ public class LARImporter {
 		}
 
 		for (LarDigestItem layoutItem : layoutItems) {
-			Map<String, String> layoutMetadata = layoutItem.getMetadata();
-
-			String layoutPrototypeUuid = layoutMetadata.get(
-				"layout-prototype-uuid");
+			String layoutPrototypeUuid = layoutItem.getMetadataValue(
+					"layout-prototype-uuid");
 
 			if (Validator.isNotNull(layoutPrototypeUuid)) {
 				try {
@@ -507,8 +549,8 @@ public class LARImporter {
 							layoutPrototypeUuid, companyId);
 				}
 				catch (NoSuchLayoutPrototypeException nslpe) {
-					String layoutPrototypeName = layoutMetadata.get(
-						"layout-prototype-name");
+					String layoutPrototypeName = layoutItem.getMetadataValue(
+							"layout-prototype-name");
 
 					missingLayoutPrototypes.add(
 						new Tuple(

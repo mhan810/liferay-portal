@@ -14,6 +14,9 @@
 
 package com.liferay.portal.lar.digest;
 
+import org.mockito.internal.util.ListUtil;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,24 +25,78 @@ import java.util.Map;
  */
 public class LarDigestItemImpl implements LarDigestItem {
 
+	public void addDependency(LarDigestDependency dependency) {
+		_dependencies.add(dependency);
+	}
+
+	public void addMetadata(LarDigestMetadata metadata) {
+		_metadata.add(metadata);
+	}
+
+	public void addPermission(LarDigestPermission permission) {
+		_permissions.add(permission);
+	}
+
 	public int getAction() {
 		return _action;
+	}
+
+	public List<LarDigestDependency> getDependencies() {
+		return _dependencies;
+	}
+
+	public List<LarDigestMetadata> getMetadata() {
+		return _metadata;
+	}
+
+	public List<LarDigestPermission> getPermissions() {
+		return _permissions;
 	}
 
 	public String getClassPK() {
 		return _classPK;
 	}
 
-	public Map<String, String> getMetadata() {
-		return _metadata;
+	public List<LarDigestDependency> getDependencies(String className) {
+		List<LarDigestDependency> result = new ArrayList<LarDigestDependency>();
+
+		for (LarDigestDependency dependency : _dependencies) {
+			String itemClassName = dependency.getClassName();
+
+			if(itemClassName.equals(className)) {
+				result.add(dependency);
+			}
+		}
+
+		return result;
+	}
+
+	public List<LarDigestMetadata> getMetadata(String name) {
+		List<LarDigestMetadata> result = new ArrayList<LarDigestMetadata>();
+
+		for (LarDigestMetadata metadata : _metadata) {
+			String metadataName = metadata.getName();
+
+			if(metadataName.equals(name)) {
+				result.add(metadata);
+			}
+		}
+
+		return result;
+	}
+
+	public String getMetadataValue(String name) {
+		List<LarDigestMetadata> result = getMetadata(name);
+
+		if (result.isEmpty()) {
+			return null;
+		}
+
+		return result.get(0).getValue();
 	}
 
 	public String getPath() {
 		return _path;
-	}
-
-	public Map<String, List<String>> getPermissions() {
-		return _permissions;
 	}
 
 	public String getType() {
@@ -54,15 +111,11 @@ public class LarDigestItemImpl implements LarDigestItem {
 		_classPK = classPK;
 	}
 
-	public void setMetadata(Map<String, String> metadata) {
-		_metadata = metadata;
-	}
-
 	public void setPath(String path) {
 		_path = path;
 	}
 
-	public void setPermissions(Map<String, List<String>> permissions) {
+	public void setPermissions(List<LarDigestPermission> permissions) {
 		_permissions = permissions;
 	}
 
@@ -72,9 +125,13 @@ public class LarDigestItemImpl implements LarDigestItem {
 
 	private int _action;
 	private String _classPK;
-	private Map _metadata;
+	private List<LarDigestDependency> _dependencies =
+		new ArrayList<LarDigestDependency>();
+	private List<LarDigestMetadata> _metadata =
+		new ArrayList<LarDigestMetadata>();
 	private String _path;
-	private Map _permissions;
+	private List<LarDigestPermission> _permissions =
+		new ArrayList<LarDigestPermission>();
 	private String _type;
 
 }

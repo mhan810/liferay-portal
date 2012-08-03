@@ -22,25 +22,29 @@ import java.util.Map;
 /**
  * @author Daniel Kocsis
  */
-public interface LarDigest extends Iterable<LarDigestItem> {
+public interface LarDigest {
 
 	public void addItem(LarDigestItem item);
 
-	public void addMetaData(Map<String, String> metadata) throws Exception;
-
-	public void addPermissions(Map<String, List<String>> permissions)
-		throws Exception;
+	public void addMetadata(LarDigestMetadata metadata);
 
 	public void close() throws Exception;
 
+	public LarDigestItem findDigestItem(
+		int action, String path, String type, String classPK);
+
 	public List<LarDigestItem> findDigestItems(
 		int action, String path, String type, String classPK);
+
+	public List<LarDigestItem> getAllItems();
 
 	public File getDigestFile();
 
 	public String getDigestString();
 
-	public Map<String, String> getMetaData();
+	public List<LarDigestMetadata> getMetaData();
+
+	public String getMetadataValue(String name);
 
 	public void write() throws Exception;
 

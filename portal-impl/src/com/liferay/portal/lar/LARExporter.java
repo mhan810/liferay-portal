@@ -39,6 +39,8 @@ import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestImpl;
 import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigestMetadata;
+import com.liferay.portal.lar.digest.LarDigestMetadataImpl;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
@@ -71,6 +73,7 @@ import com.liferay.util.ContentUtil;
 
 import java.io.File;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -247,7 +250,7 @@ public class LARExporter {
 		context.setAttribute("layoutCache", new LayoutCache());
 
 		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				group.getGroupId(), privateLayout);
+			group.getGroupId(), privateLayout);
 
 		UnicodeProperties typeSettings = layoutSet.getSettingsProperties();
 
@@ -282,23 +285,28 @@ public class LARExporter {
 			stopWatch.start();
 		}
 
-		// Assembly metadata for LAR
-		HashMap<String, String> metadata = new HashMap<String, String>();
+		LarDigest digest = context.getLarDigest();
 
-		metadata.put(
+		// Assembly metadata for LAR
+		digest.addMetadata(new LarDigestMetadataImpl(
 			"available-locales",
-			StringUtil.merge(LanguageUtil.getAvailableLocales()));
-		metadata.put(
-			"build-number", String.valueOf(ReleaseInfo.getBuildNumber()));
-		metadata.put("export-date", Time.getRFC822());
+			StringUtil.merge(LanguageUtil.getAvailableLocales())));
+		digest.addMetadata(new LarDigestMetadataImpl(
+			"build-number", String.valueOf(ReleaseInfo.getBuildNumber())));
+		digest.addMetadata(new LarDigestMetadataImpl(
+			"export-date", Time.getRFC822()));
 
 		if (context.hasDateRange()) {
-			metadata.put("start-date", String.valueOf(context.getStartDate()));
-			metadata.put("end-date", String.valueOf(context.getEndDate()));
+			digest.addMetadata(new LarDigestMetadataImpl(
+				"start-date", String.valueOf(context.getStartDate())));
+			digest.addMetadata(new LarDigestMetadataImpl(
+				"end-date", String.valueOf(context.getEndDate())));
 		}
 
-		metadata.put("group-id", String.valueOf(group.getGroupId()));
-		metadata.put("private-layout", String.valueOf(privateLayout));
+		digest.addMetadata(new LarDigestMetadataImpl(
+			"group-id", String.valueOf(group.getGroupId())));
+		digest.addMetadata(new LarDigestMetadataImpl(
+			"private-layout", String.valueOf(privateLayout)));
 
 		String type = "layout-set";
 
@@ -309,7 +317,8 @@ public class LARExporter {
 				LayoutPrototypeLocalServiceUtil.getLayoutPrototype(
 					group.getClassPK());
 
-			metadata.put("type-uuid", layoutPrototype.getUuid());
+			digest.addMetadata(new LarDigestMetadataImpl(
+				"type-uuid", layoutPrototype.getUuid()));
 		}
 		else if (group.isLayoutSetPrototype()) {
 			type ="layout-set-prototype";
@@ -318,14 +327,11 @@ public class LARExporter {
 				LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(
 					group.getClassPK());
 
-			metadata.put("type-uuid", layoutSetPrototype.getUuid());
+			digest.addMetadata(new LarDigestMetadataImpl(
+				"type-uuid", layoutSetPrototype.getUuid()));
 		}
 
-		metadata.put("type", type);
-
-		LarDigest digest = context.getLarDigest();
-
-		digest.addMetaData(metadata);
+		digest.addMetadata(new LarDigestMetadataImpl("type", type));
 
 		Portlet layoutConfigurationPortlet =
 			PortletLocalServiceUtil.getPortletById(
@@ -434,7 +440,7 @@ public class LARExporter {
 	protected void doSerialize(DataHandlerContext context)
 		throws Exception, PortalException {
 
-		for (LarDigestItem item : context.getLarDigest()) {
+		for (LarDigestItem item : context.getLarDigest().getAllItems()) {
 			BaseDataHandler dataHandler =
 				DataHandlersUtil.getDataHandlerInstance(item.getType());
 

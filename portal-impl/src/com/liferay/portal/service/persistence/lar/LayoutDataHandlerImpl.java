@@ -40,6 +40,9 @@ import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
+import com.liferay.portal.lar.digest.LarDigestMetadata;
+import com.liferay.portal.lar.digest.LarDigestMetadataImpl;
+import com.liferay.portal.lar.digest.LarDigestPermission;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Image;
@@ -92,7 +95,7 @@ import java.util.Set;
  * @author Mate Thurzo
  * @author Daniel Kocsis
  */
-public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
+public class    LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 	implements LayoutDataHandler {
 
 	@Override
@@ -138,22 +141,27 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			layoutStagingHandler.setLayoutRevision(layoutRevision);
 		}
 
-		Map metadata = new HashMap<String, String>();
+		LarDigest digest = context.getLarDigest();
+
+		LarDigestItem digestItem = new LarDigestItemImpl();
 
 		if (layoutRevision != null) {
-			metadata.put(
-				"layout-revision-id",
-				String.valueOf(layoutRevision.getLayoutRevisionId()));
-			metadata.put(
-				"layout-branch-id",
-				String.valueOf(layoutRevision.getLayoutBranchId()));
-			metadata.put(
-				"layout-branch-name",
-				String.valueOf(layoutRevision.getLayoutBranch().getName()));
+			digestItem.addMetadata(new LarDigestMetadataImpl(
+					"layout-revision-id",
+					String.valueOf(layoutRevision.getLayoutRevisionId())));
+			digestItem.addMetadata(new LarDigestMetadataImpl(
+					"layout-branch-id",
+					String.valueOf(layoutRevision.getLayoutBranchId())));
+			digestItem.addMetadata(new LarDigestMetadataImpl(
+					"layout-branch-name",
+					String.valueOf(layoutRevision.getLayoutBranch().getName())));
 		}
 
-		metadata.put("layout-uuid", layout.getUuid());
-		metadata.put("layout-id", String.valueOf(layout.getLayoutId()));
+		digestItem.addMetadata(
+				new LarDigestMetadataImpl("layout-uuid", layout.getUuid()));
+		digestItem.addMetadata(
+				new LarDigestMetadataImpl(
+						"layout-id", String.valueOf(layout.getLayoutId())));
 
 		long parentLayoutId = layout.getParentLayoutId();
 
@@ -163,7 +171,9 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 			if (parentLayout != null) {
 				digest(parentLayout, context);
-				metadata.put("parent-layout-uuid", parentLayout.getUuid());
+				digestItem.addMetadata(
+						new LarDigestMetadataImpl(
+								"parent-layout-uuid", parentLayout.getUuid()));
 			}
 		}
 
@@ -175,19 +185,18 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 					getLayoutPrototypeByUuidAndCompanyId(
 						layoutPrototypeUuid, context.getCompanyId());
 
-			metadata.put("layout-prototype-uuid", layoutPrototypeUuid);
-			metadata.put(
-				"layout-prototype-name",
-				layoutPrototype.getName(LocaleUtil.getDefault()));
+			digestItem.addMetadata(
+					new LarDigestMetadataImpl(
+							"layout-prototype-uuid", layoutPrototypeUuid));
+			digestItem.addMetadata(
+					new LarDigestMetadataImpl(
+							"layout-prototype-name",
+							layoutPrototype.getName(LocaleUtil.getDefault())));
 		}
 
 		boolean deleteLayout = MapUtil.getBoolean(
 			context.getParameters(),
 			"delete_" + layout.getPlid());
-
-		LarDigest digest = context.getLarDigest();
-
-		LarDigestItem digestItem = new LarDigestItemImpl();
 
 		if (deleteLayout) {
 			digestItem.setAction(LarDigesterConstants.ACTION_DELETE);
@@ -205,11 +214,12 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			if (image != null) {
 				LarDigestItem item = imageDataHandler.digest(image, context);
 
-				metadata.put("icon-image-path", item.getPath());
+				digestItem.addMetadata(
+						new LarDigestMetadataImpl(
+								"icon-image-path", item.getPath()));
 			}
 		}
 
-		digestItem.setMetadata(metadata);
 		digestItem.setAction(LarDigesterConstants.ACTION_ADD);
 		digestItem.setPath(path);
 		digestItem.setType(Layout.class.getName());
@@ -571,8 +581,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		if (resultItems != null && !resultItems.isEmpty()) {
 			parentLayoutItem = resultItems.get(0);
 
-			Map<String, String> metadata = parentLayoutItem.getMetadata();
-			parentLayoutUuid = metadata.get("parent-layout-uuid");
+			parentLayoutUuid =
+				parentLayoutItem.getMetadataValue("parent-layout-uuid");
 		}
 
 		if ((parentLayoutId != LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) &&
@@ -698,9 +708,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		importedLayout.setIconImage(false);
 
 		if (layout.isIconImage()) {
-			Map<String, String> metadata = item.getMetadata();
-
-			String iconImagePath = metadata.get("icon-image-path");
+			String iconImagePath = item.getMetadataValue("icon-image-path");
 
 			byte[] iconBytes = getZipEntryAsByteArray(
 				context.getZipReader(), iconImagePath);
@@ -905,9 +913,9 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			Layout layout, LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
-		Map<String, List<String>> permissions = item.getPermissions();
+		List<LarDigestPermission> permissions = item.getPermissions();
 
-		if (permissions != null) {
+		if (!permissions.isEmpty()) {
 			String resourceName = Layout.class.getName();
 			String resourcePrimKey = String.valueOf(layout.getPlid());
 

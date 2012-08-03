@@ -25,6 +25,8 @@ import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.PermissionExporter;
 import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigestPermission;
+import com.liferay.portal.lar.digest.LarDigestPermissionImpl;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.PortletConstants;
@@ -45,6 +47,7 @@ import com.liferay.portal.service.persistence.BaseDataHandler;
 import org.springframework.aop.AfterReturningAdvice;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,46 +77,41 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
 
 		if (exportPermissions) {
-			Map permissionsMap = null;
+			List<LarDigestPermission> permissionsList = null;
 
 			if (Layout.class.getName().equals(item.getType())) {
 				long plid = Long.valueOf(item.getClassPK());
 
 				Layout layout = LayoutLocalServiceUtil.getLayout(plid);
 
-				permissionsMap = digestLayoutPermissions(context, layout);
+				permissionsList = digestLayoutPermissions(context, layout);
 			}
 			else if (dataHandler instanceof PortletDataHandler) {
-				Map<String, String> metadataMap = item.getMetadata();
-
-				long plid = Long.valueOf(metadataMap.get("old-plid"));
-				String portletId = metadataMap.get("portlet-id");
+				long plid = Long.valueOf(item.getMetadataValue("old-plid"));
+				String portletId = item.getMetadataValue("portlet-id");
 
 				Layout layout = LayoutLocalServiceUtil.getLayout(plid);
 
-				permissionsMap = digestPortletPermissions(
+				permissionsList = digestPortletPermissions(
 					context, portletId, layout);
 			}
 			else {
-				permissionsMap = digestEntityPermissions(
+				permissionsList = digestEntityPermissions(
 					dataHandler.getPermissionResourceName(),
 					context.getScopeGroupId(), context);
 			}
 
-			if (permissionsMap != null) {
-				item.setPermissions(permissionsMap);
+			if (permissionsList != null) {
+				item.setPermissions(permissionsList);
 			}
 		}
 
 		returnValue = item;
 	}
 
-	private Map<String, List<String>> digestEntityPermissions(
+	private List<LarDigestPermission> digestEntityPermissions(
 			String resourceName, long resourcePK, DataHandlerContext context)
 		throws Exception {
-
-		HashMap<String, List<String>> permissions =
-			new HashMap<String, List<String>>();
 
 		Group group = GroupLocalServiceUtil.getGroup(context.getGroupId());
 
@@ -157,6 +155,9 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 			context.getCompanyId(), roleIds.getArray(), resourceName,
 			resourcePK, actionIds);
 
+		List<LarDigestPermission> permissions =
+			new ArrayList<LarDigestPermission>();
+
 		for (Map.Entry<Long, String> entry : roleIdsToNames.entrySet()) {
 			long roleId = entry.getKey();
 			String name = entry.getValue();
@@ -170,13 +171,18 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 			List<String> actionIdsList = ListUtil.fromCollection(
 				availableActionIds);
 
-			permissions.put(name, actionIdsList);
+			LarDigestPermission permission = new LarDigestPermissionImpl();
+
+			permission.setRoleName(name);
+			permission.setActionIds(actionIdsList);
+
+			permissions.add(permission);
 		}
 
 		return permissions;
 	}
 
-	private Map<String, List<String>> digestLayoutPermissions(
+	private List<LarDigestPermission> digestLayoutPermissions(
 			DataHandlerContext context, Layout layout)
 		throws Exception {
 
@@ -194,7 +200,7 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 			false);
 	}
 
-	protected Map<String, List<String>> digestPermissions(
+	protected List<LarDigestPermission> digestPermissions(
 			LayoutCache layoutCache, long companyId, long groupId,
 			String resourceName, String resourcePrimKey, boolean portletActions)
 		throws Exception {
@@ -236,21 +242,26 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 					companyId, resourceName, ResourceConstants.SCOPE_INDIVIDUAL,
 					resourcePrimKey, roleIds.getArray(), actionIds);
 
-		HashMap<String, List<String>> roleMap =
-				new HashMap<String, List<String>>();
+		List<LarDigestPermission> permissions =
+			new ArrayList<LarDigestPermission>();
 
 		for (Map.Entry<Long, Set<String>> entry :
 				roleIdsToActionIds.entrySet()) {
 
 			List<String> values = ListUtil.fromCollection(entry.getValue());
 
-			roleMap.put(String.valueOf(entry.getKey()), values);
+			LarDigestPermission permission = new LarDigestPermissionImpl();
+
+			permission.setRoleName(String.valueOf(entry.getKey()));
+			permission.setActionIds(values);
+
+			permissions.add(permission);
 		}
 
-		return roleMap;
+		return permissions;
 	}
 
-	private Map<String, List<String>> digestPortletPermissions(
+	private List<LarDigestPermission> digestPortletPermissions(
 			DataHandlerContext context, String portletId, Layout layout)
 		throws Exception {
 
