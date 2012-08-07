@@ -35,11 +35,17 @@ public class LarDigesterConstants {
 
 	public static final String NODE_CLASS_PK_LABEL = "classPK";
 
-	public static final String NODE_DIGEST_ITEM_LABEL = "item";
+	public static final String NODE_DEPENDENCY_LABEL = "item-dependency";
+
+	public static final String NODE_DEPENDENCIES_LABEL = "item-dependencies";
+
+	public static final String NODE_ITEM_LABEL = "item";
 
 	public static final String NODE_METADATA_LABEL = "metadata";
 
-	public static final String NODE_METADATA_SET_LABEL = "metadataSet";
+	public static final String NODE_METADATA_SET_LABEL = "metadata-set";
+
+	public static final String NODE_MODULE_LABEL = "portal-module";
 
 	public static final String NODE_PATH_LABEL = "path";
 
@@ -47,6 +53,14 @@ public class LarDigesterConstants {
 
 	public static final String NODE_PERMISSIONS_LABEL = "permissions";
 
+	public static final String NODE_PORTLET_PREFERENCES_LABEL =
+		"portlet-preferences";
+
+	public static final String NODE_PORTLET_PREFERENCE_LABEL =
+		"portlet-preference";
+
 	public static final String NODE_TYPE_LABEL = "type";
+
+	public static final String NODE_UUID_LABEL = "uuid";
 
 }

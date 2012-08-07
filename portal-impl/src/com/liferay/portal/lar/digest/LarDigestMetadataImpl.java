@@ -14,10 +14,22 @@
 
 package com.liferay.portal.lar.digest;
 
+import com.liferay.portal.kernel.xml.Attribute;
+import com.liferay.portal.kernel.xml.Element;
+
+import javax.xml.stream.XMLStreamWriter;
+
 /**
  * @author Daniel Kocsis
  */
 public class LarDigestMetadataImpl implements LarDigestMetadata {
+
+	public LarDigestMetadataImpl(Element root){
+		Attribute metadataAt = root.attribute(0);
+
+		_name = metadataAt.getName();
+		_value = metadataAt.getValue();
+	}
 
 	public LarDigestMetadataImpl(String name, String value){
 		_name = name;
@@ -31,6 +43,12 @@ public class LarDigestMetadataImpl implements LarDigestMetadata {
 
 	public String getValue() {
 		return _value;
+	}
+
+	public void serialize(XMLStreamWriter writer) throws Exception {
+		writer.writeStartElement(LarDigesterConstants.NODE_METADATA_LABEL);
+		writer.writeAttribute(_name, _value);
+		writer.writeEndElement();
 	}
 
 	public void setName(String name) {

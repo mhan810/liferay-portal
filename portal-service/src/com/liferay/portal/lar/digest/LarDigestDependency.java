@@ -17,14 +17,18 @@ package com.liferay.portal.lar.digest;
 /**
  * @author Daniel Kocsis
  */
-public interface LarDigestDependency {
+public interface LarDigestDependency extends LarDigestElement {
 
-	public String getClassName();
+	public String getClassPK();
 
 	public String getUuid();
 
-	public void setClassName(String className);
+	public String getType();
+
+	public void setClassPK(String classPK);
 
 	public void setUuid(String uuid);
+
+	public void setType(String Type);
 
 }

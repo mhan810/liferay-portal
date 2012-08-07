@@ -14,16 +14,14 @@
 
 package com.liferay.portal.lar.digest;
 
+import com.liferay.portal.kernel.xml.Element;
+
+import javax.xml.stream.XMLStreamWriter;
+
 /**
  * @author Daniel Kocsis
  */
-public interface LarDigestMetadata extends LarDigestElement{
+public interface LarDigestElement<T> {
 
-	public String getName();
-
-	public String getValue();
-
-	public void setName(String name);
-
-	public void setValue(String value);
+	public void serialize(XMLStreamWriter writer) throws Exception;
 }

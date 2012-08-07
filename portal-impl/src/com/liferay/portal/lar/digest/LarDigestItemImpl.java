@@ -14,16 +14,66 @@
 
 package com.liferay.portal.lar.digest;
 
-import org.mockito.internal.util.ListUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.xml.Element;
 
+import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Mate Thurzo
  */
 public class LarDigestItemImpl implements LarDigestItem {
+
+	public LarDigestItemImpl() {
+	}
+
+	public LarDigestItemImpl(Element root) {
+		Element metadataRootEl =
+			root.element(LarDigesterConstants.NODE_METADATA_SET_LABEL);
+
+		List<Element> metadatasEl =
+			metadataRootEl.elements(LarDigesterConstants.NODE_METADATA_LABEL);
+
+		for (Element metadataEl : metadatasEl) {
+			addMetadata(new LarDigestMetadataImpl(metadataEl));
+		}
+
+		Element permissionsRootEl =
+			root.element(LarDigesterConstants.NODE_PERMISSIONS_LABEL);
+
+		List<Element> permissionsEl = permissionsRootEl.elements(
+			LarDigesterConstants.NODE_PERMISSION_LABEL);
+
+		for (Element permissionEl : permissionsEl) {
+			addPermission(new LarDigestPermissionImpl(permissionEl));
+		}
+
+		Element element = root.element(LarDigesterConstants.NODE_ACTION_LABEL);
+		_action = (GetterUtil.getInteger(element.getText()));
+
+		element = root.element(LarDigesterConstants.NODE_CLASS_PK_LABEL);
+		_classPK = element.getText();
+
+		element = root.element(LarDigesterConstants.NODE_PATH_LABEL);
+		_path = element.getText();
+
+		element = root.element(LarDigesterConstants.NODE_TYPE_LABEL);
+		_type = element.getText();
+
+		Element dependenciesRootEl =
+			root.element(LarDigesterConstants.NODE_DEPENDENCIES_LABEL);
+
+		List<Element> dependenciesEl = dependenciesRootEl.elements(
+			LarDigesterConstants.NODE_DEPENDENCY_LABEL);
+
+		for (Element dependencyEl : dependenciesEl) {
+			addDependency(new LarDigestDependencyImpl(dependencyEl));
+		}
+	}
 
 	public void addDependency(LarDigestDependency dependency) {
 		_dependencies.add(dependency);
@@ -61,7 +111,7 @@ public class LarDigestItemImpl implements LarDigestItem {
 		List<LarDigestDependency> result = new ArrayList<LarDigestDependency>();
 
 		for (LarDigestDependency dependency : _dependencies) {
-			String itemClassName = dependency.getClassName();
+			String itemClassName = dependency.getClassPK();
 
 			if(itemClassName.equals(className)) {
 				result.add(dependency);
@@ -103,6 +153,81 @@ public class LarDigestItemImpl implements LarDigestItem {
 		return _type;
 	}
 
+	public String getUuid() {
+		return _uuid;
+	}
+
+	public void serialize(XMLStreamWriter writer) throws Exception{
+		writer.writeStartElement(
+			LarDigesterConstants.NODE_ITEM_LABEL);
+
+		// metadata
+		writer.writeStartElement(
+			LarDigesterConstants.NODE_METADATA_SET_LABEL);
+
+		for(LarDigestMetadata metadata : _metadata) {
+			metadata.serialize(writer);
+		}
+
+		writer.writeEndElement();
+
+		// dependencies
+
+		writer.writeStartElement(
+			LarDigesterConstants.NODE_DEPENDENCIES_LABEL);
+
+		for(LarDigestDependency dependency : _dependencies) {
+			dependency.serialize(writer);
+		}
+
+		writer.writeEndElement();
+
+		// item fields
+
+		writer.writeStartElement(LarDigesterConstants.NODE_PATH_LABEL);
+		if(Validator.isNotNull(_path)) {
+			writer.writeCharacters(_path);
+		}
+		writer.writeEndElement();
+
+		writer.writeStartElement(LarDigesterConstants.NODE_ACTION_LABEL);
+		if(_action > 0) {
+			writer.writeCharacters(StringUtil.valueOf(_action));
+		}
+		writer.writeEndElement();
+
+		writer.writeStartElement(LarDigesterConstants.NODE_TYPE_LABEL);
+		if(Validator.isNotNull(_type)) {
+			writer.writeCharacters(_type);
+		}
+		writer.writeEndElement();
+
+		writer.writeStartElement(LarDigesterConstants.NODE_CLASS_PK_LABEL);
+		if(Validator.isNotNull(_classPK)) {
+			writer.writeCharacters(_classPK);
+		}
+		writer.writeEndElement();
+
+		writer.writeStartElement(LarDigesterConstants.NODE_UUID_LABEL);
+		if(Validator.isNotNull(_uuid)) {
+			writer.writeCharacters(_uuid);
+		}
+		writer.writeEndElement();
+
+		// permissions
+
+		writer.writeStartElement(
+			LarDigesterConstants.NODE_PERMISSIONS_LABEL);
+
+		for(LarDigestPermission permission : _permissions) {
+			permission.serialize(writer);
+		}
+
+		writer.writeEndElement();
+
+		writer.writeEndElement();
+	}
+
 	public void setAction(int action) {
 		_action = action;
 	}
@@ -123,6 +248,10 @@ public class LarDigestItemImpl implements LarDigestItem {
 		_type = type;
 	}
 
+	public void setUuid(String uuid) {
+		_uuid = uuid;
+	}
+
 	private int _action;
 	private String _classPK;
 	private List<LarDigestDependency> _dependencies =
@@ -133,5 +262,6 @@ public class LarDigestItemImpl implements LarDigestItem {
 	private List<LarDigestPermission> _permissions =
 		new ArrayList<LarDigestPermission>();
 	private String _type;
+	private String _uuid;
 
 }

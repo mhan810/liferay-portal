@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * @author Mate Thurzo
  */
-public interface LarDigestItem {
+public interface LarDigestItem extends LarDigestElement {
 
 	public void addDependency(LarDigestDependency dependency);
 
@@ -48,6 +48,8 @@ public interface LarDigestItem {
 
 	public String getType();
 
+	public String getUuid();
+
 	public void setAction(int action);
 
 	public void setClassPK(String classPK);
@@ -57,5 +59,7 @@ public interface LarDigestItem {
 	public void setPermissions(List<LarDigestPermission> permissions);
 
 	public void setType(String type);
+
+	public void setUuid(String uuid);
 
 }

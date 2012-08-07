@@ -14,34 +14,72 @@
 
 package com.liferay.portal.lar.digest;
 
+import com.liferay.portal.kernel.xml.Element;
+
+import javax.xml.stream.XMLStreamWriter;
+
 /**
  * @author Daniel Kocsis
  */
 public class LarDigestDependencyImpl implements LarDigestDependency {
 
+	public LarDigestDependencyImpl(Element root) {
+		Element classPkEl = root.element("className");
+		Element uuidEl = root.element("uuid");
+
+		_classPK = classPkEl.getText();
+		_uuid = uuidEl.getText();
+	}
+
 	public LarDigestDependencyImpl(String className, String uuid) {
-		_className = className;
+		_classPK = className;
 		_uuid = uuid;
 	}
 
-	public String getClassName() {
-		return _className;
+	public String getClassPK() {
+		return _classPK;
 	}
 
 	public String getUuid() {
 		return _uuid;
 	}
 
-	public void setClassName(String className) {
-		_className = _className;
+	public String getType() {
+		return _type;
+	}
+
+	public void serialize(XMLStreamWriter writer) throws Exception {
+		writer.writeStartElement(LarDigesterConstants.NODE_DEPENDENCY_LABEL);
+
+		writer.writeStartElement("classPK");
+		writer.writeCharacters(_classPK);
+		writer.writeEndElement();
+
+		writer.writeStartElement("uuid");
+		writer.writeCharacters(_uuid);
+		writer.writeEndElement();
+
+		writer.writeStartElement("type");
+		writer.writeCharacters(_type);
+		writer.writeEndElement();
+
+		writer.writeEndElement();
+	}
+
+	public void setClassPK(String classPK) {
+		_classPK = classPK;
 	}
 
 	public void setUuid(String uuid) {
-		_uuid = _uuid;
+		_uuid = uuid;
 	}
 
-	private String _className;
+	public void setType(String type) {
+		_type = type;
+	}
 
+	private String _classPK;
 	private String _uuid;
+	private String _type;
 
 }

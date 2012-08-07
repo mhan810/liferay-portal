@@ -411,7 +411,7 @@ public class LARImporter {
 		context.setAttribute("previousLayouts", previousLayouts);
 
 
-		for (LarDigestItem item : larDigest.getAllItems()) {
+		/*for (LarDigestItem item : larDigest.getAllItems()) {
 			BaseDataHandler dataHandler =
 				DataHandlersUtil.getDataHandlerInstance(item.getType());
 
@@ -419,7 +419,7 @@ public class LARImporter {
 		}
 		// Import layouts
 
-		/*if (_log.isDebugEnabled()) {
+		if (_log.isDebugEnabled()) {
 			if (layoutItems.size() > 0) {
 				_log.debug("Importing layouts");
 			}
@@ -431,11 +431,11 @@ public class LARImporter {
 
 			dataHandler.importData(layoutItem);
 		}
-		*/
+
 
 		// Import portlets
 
-		/*List<LarDigestItem> portletItems = larDigest.findDigestItems(
+		List<LarDigestItem> portletItems = larDigest.findDigestItems(
 			0, null, Portlet.class.getName(), null);
 
 		if (_log.isDebugEnabled()) {
@@ -450,7 +450,8 @@ public class LARImporter {
 					portletItem.getClassPK());
 
 			dataHandler.importData(portletItem);
-		}        */
+		}
+		*/
 
 		// Re-index user
 

@@ -14,16 +14,26 @@
 
 package com.liferay.portal.lar.digest;
 
+import java.util.List;
+
 /**
  * @author Daniel Kocsis
  */
-public interface LarDigestMetadata extends LarDigestElement{
+public interface LarDigestModule extends LarDigestElement {
+
+	public void addItem(LarDigestItem item);
+
+	public void addPortletPreference(String path);
+
+	public List<LarDigestItem> getItems();
 
 	public String getName();
 
-	public String getValue();
+	public List<String> getPortletPreferences();
+
+	public void setItems(List<LarDigestItem> items);
 
 	public void setName(String name);
 
-	public void setValue(String value);
+	public void setPortletPreferences(List<String> portletPreferences);
 }

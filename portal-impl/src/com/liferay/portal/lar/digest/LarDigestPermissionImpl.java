@@ -14,6 +14,11 @@
 
 package com.liferay.portal.lar.digest;
 
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.xml.Attribute;
+import com.liferay.portal.kernel.xml.Element;
+
+import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +26,23 @@ import java.util.List;
  * @author Daniel Kocsis
  */
 public class LarDigestPermissionImpl implements LarDigestPermission {
+
+	public LarDigestPermissionImpl() {
+	}
+
+	public LarDigestPermissionImpl (Element root) {
+		Attribute role = root.attribute(
+				LarDigesterConstants.ATTRIBUTE_NAME_ROLE);
+
+		_roleName = role.getText();
+
+		List<Element> actionNameElements = root.elements(
+			LarDigesterConstants.NODE_ACTION_KEY_LABEL);
+
+		for (Element actionId : actionNameElements) {
+			addActionId(actionId.getText());
+		}
+	}
 
 	public void addActionId(String actionId) {
 		_actionIds.add(actionId);
@@ -34,6 +56,26 @@ public class LarDigestPermissionImpl implements LarDigestPermission {
 		return _roleName;
 	}
 
+	public void serialize(XMLStreamWriter writer) throws Exception {
+		writer.writeStartElement(
+			LarDigesterConstants.NODE_PERMISSION_LABEL);
+		writer.writeAttribute(
+			LarDigesterConstants.ATTRIBUTE_NAME_ROLE, _roleName);
+
+		for (String action : _actionIds) {
+			if (Validator.isNull(action)) {
+				continue;
+			}
+
+			writer.writeStartElement(
+				LarDigesterConstants.NODE_ACTION_KEY_LABEL);
+			writer.writeCharacters(action);
+			writer.writeEndElement();
+		}
+
+		writer.writeEndElement();
+	}
+
 	public void setRoleName(String roleName) {
 		_roleName = roleName;
 	}
@@ -42,8 +84,7 @@ public class LarDigestPermissionImpl implements LarDigestPermission {
 		_actionIds = actionIds;
 	}
 
-	private String _roleName;
-
 	private List<String> _actionIds = new ArrayList<String>();
+	private String _roleName;
 
 }

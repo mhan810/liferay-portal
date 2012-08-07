@@ -84,7 +84,6 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.time.StopWatch;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 /**
  * @author Mate Thurzo

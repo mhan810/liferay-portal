@@ -272,7 +272,7 @@ public class PortletDataHandlerImpl
 
 		LarDigest digest = context.getLarDigest();
 
-		digest.addItem(item);
+		//digest.addItem(item);
 
 		context.addProcessedPath(path);
 
@@ -533,7 +533,7 @@ public class PortletDataHandlerImpl
 					javax.portlet.Portlet.class.getName());
 
 			LarDigestItem dependentItem = digest.findDigestItem(
-				0,null, dependency.getClassName(), dependency.getUuid());
+				0,null, dependency.getType(), dependency.getClassPK());
 
 			dataHandler.importData(dependentItem, context);
 		}

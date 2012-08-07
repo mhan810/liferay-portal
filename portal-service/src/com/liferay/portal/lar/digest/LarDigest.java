@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public interface LarDigest {
 
-	public void addItem(LarDigestItem item);
+	public void addModule(LarDigestModule module);
 
 	public void addMetadata(LarDigestMetadata metadata);
 
@@ -36,7 +36,7 @@ public interface LarDigest {
 	public List<LarDigestItem> findDigestItems(
 		int action, String path, String type, String classPK);
 
-	public List<LarDigestItem> getAllItems();
+	public List<LarDigestModule> getAllModules();
 
 	public File getDigestFile();
 
@@ -47,7 +47,5 @@ public interface LarDigest {
 	public String getMetadataValue(String name);
 
 	public void write() throws Exception;
-
-	public void write(LarDigestItem digestItem) throws Exception;
 
 }

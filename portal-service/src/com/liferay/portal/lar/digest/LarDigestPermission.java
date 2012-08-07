@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author Daniel Kocsis
  */
-public interface LarDigestPermission {
+public interface LarDigestPermission extends LarDigestElement {
 
 	public void addActionId(String actionId);
 

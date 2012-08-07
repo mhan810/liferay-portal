@@ -15,6 +15,7 @@
 package com.liferay.portal.lar.digest;
 
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.ExecutionTestListeners;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
@@ -23,10 +24,7 @@ import java.io.File;
 
 import java.net.URL;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.portlet.Portlet;
 
@@ -56,69 +54,115 @@ public class LarDigestTest extends PowerMockito {
 
 	@Test
 	public void testFindDigestItems() throws Exception {
-		File testFile = getTestFile("digest.xml");
+		String xml = getTestFileContent("digest.xml");
 
-		LarDigest digest = null; //new LarDigestImpl(testFile);
-
-		LarDigestItem expectedItem = getDigestItem();
+		LarDigest digest = new LarDigestImpl(xml);
 
 		List<LarDigestItem> result = digest.findDigestItems(
-			expectedItem.getAction(), expectedItem.getPath(),
-			expectedItem.getType(), expectedItem.getClassPK());
+			0, StringPool.BLANK, Portlet.class.getName(), "12345");
 
 		Assert.assertEquals(1, result.size());
 
 		LarDigestItem resultItem = result.get(0);
 
-		Assert.assertEquals(expectedItem.getAction(), resultItem.getAction());
-		Assert.assertEquals(expectedItem.getClassPK(), resultItem.getClassPK());
-		Assert.assertEquals(expectedItem.getPath(), resultItem.getPath());
-		Assert.assertEquals(expectedItem.getType(), resultItem.getType());
 		Assert.assertEquals(
-			expectedItem.getPermissions(), resultItem.getPermissions());
-		Assert.assertEquals(
-			expectedItem.getMetadata(), resultItem.getMetadata());
+			LarDigesterConstants.ACTION_ADD, resultItem.getAction());
+		Assert.assertEquals("12345", resultItem.getClassPK());
+		Assert.assertEquals("here/i/am.xml", resultItem.getPath());
+		Assert.assertEquals(Portlet.class.getName(), resultItem.getType());
+		Assert.assertEquals(2, resultItem.getPermissions().size());
+
+		LarDigestMetadata metadata = resultItem.getMetadata().get(0);
+		Assert.assertEquals("test1", metadata.getValue());
 
 		digest.close();
 	}
 
 	@Test
-	public void testPortletNodeDigest() throws Exception {
+	public void testCreateDigest() throws Exception {
 		LarDigest larDigest = new LarDigestImpl();
 
-		larDigest.write(getDigestItem());
+		larDigest.addMetadata(new LarDigestMetadataImpl("test", "test"));
+
+		larDigest.addModule(getPortletModule());
+
+		larDigest.addModule(new LarDigestModuleImpl());
+
+		larDigest.write();
+
 		larDigest.close();
 
 		String result = larDigest.getDigestString();
 
-		Assert.assertEquals(getTestFileContent("portletNode.xml"), result);
+		Assert.assertEquals(getTestFileContent("digest.xml"), result);
 	}
 
-	private LarDigestItem getDigestItem() {
+	@Test
+	public void testParseDigest() throws Exception {
+		String xml = getTestFileContent("digest.xml");
+
+		LarDigest digest = new LarDigestImpl(xml);
+
+		Assert.assertEquals(1, digest.getMetaData().size());
+
+		List<LarDigestModule> modules = digest.getAllModules();
+
+		Assert.assertEquals(2, modules.size());
+
+		LarDigestModule module = modules.get(0);
+
+		List<LarDigestItem> items = module.getItems();
+
+		Assert.assertEquals(2, items.size());
+
+		List<String> portletPreferences = module.getPortletPreferences();
+
+		Assert.assertEquals(2, portletPreferences.size());
+
+		LarDigestItem item = items.get(0);
+
+		Assert.assertEquals(1, item.getMetadata().size());
+
+		Assert.assertEquals(2, item.getPermissions().size());
+	}
+
+	private LarDigestModule getPortletModule() {
+		LarDigestModule module = new LarDigestModuleImpl();
+
+		module.setName("test.module");
+
+		module.addPortletPreference("test/module/preference/path1");
+
+		module.addPortletPreference("test/module/preference/path2");
+
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
 		digestItem.setAction(LarDigesterConstants.ACTION_ADD);
 		digestItem.setPath("here/i/am.xml");
 		digestItem.setClassPK("12345");
 		digestItem.setType(Portlet.class.getName());
+		digestItem.setUuid("123-123-123");
 
-		Map metadata = new HashMap<String, String>();
+		digestItem.addMetadata(new LarDigestMetadataImpl("test1", "test1"));
 
-		metadata.put("test-metadata", "test-value");
+		LarDigestPermission permission = new LarDigestPermissionImpl();
+		permission.addActionId("001");
+		permission.setRoleName("TestRole1");
 
-		digestItem.setMetadata(metadata);
+		digestItem.addPermission(permission);
 
-		Map permissions = new HashMap<String, List<String>>();
+		permission = new LarDigestPermissionImpl();
+		permission.addActionId("001");
+		permission.addActionId("002");
+		permission.setRoleName("TestRole2");
 
-		List actionKeys = new ArrayList<String>();
+		digestItem.addPermission(permission);
 
-		actionKeys.add("test-action");
+		module.addItem(digestItem);
 
-		permissions.put("test-role", actionKeys);
+		module.addItem(new LarDigestItemImpl());
 
-		digestItem.setPermissions(permissions);
-
-		return digestItem;
+		return module;
 	}
 
 	private File getTestFile(String filename) throws Exception {

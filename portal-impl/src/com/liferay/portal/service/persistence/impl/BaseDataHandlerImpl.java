@@ -126,7 +126,7 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 		LarDigestItem item = doDigest(object, context);
 
-		context.getLarDigest().addItem(item);
+		//context.getLarDigest().addItem(item);
 
 		String path = getEntityPath(object);
 

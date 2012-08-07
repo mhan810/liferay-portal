@@ -18,33 +18,22 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.*;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
-import com.liferay.portal.kernel.xml.Attribute;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
-import com.liferay.portal.kernel.zip.ZipReader;
-import com.liferay.portal.xml.StAXReaderUtil;
 import com.liferay.portal.xml.StAXWriterUtil;
 
 import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
@@ -77,12 +66,12 @@ public class LarDigestImpl implements LarDigest {
 		FileUtil.write(_digestFile, xmlContent);
 	}
 
-	public void addItem(LarDigestItem item) {
-		if (item == null) {
+	public void addModule(LarDigestModule module) {
+		if (module == null) {
 			return;
 		}
 
-		_itemList.add(item);
+		_moduleList.add(module);
 	}
 
 	public void addMetadata(LarDigestMetadata metadata) {
@@ -123,7 +112,7 @@ public class LarDigestImpl implements LarDigest {
 		try {
 			Element rootElement = getDocument().getRootElement();
 
-			StringBundler sb = new StringBundler("./item");
+			StringBundler sb = new StringBundler("//item");
 
 			if (action > 0) {
 				sb = sb.append(StringPool.OPEN_BRACKET);
@@ -160,7 +149,7 @@ public class LarDigestImpl implements LarDigest {
 			for (Node node : rootElement.selectNodes(sb.toString())) {
 				Element digestElement = (Element)node;
 
-				LarDigestItem digestItem = fetchDigestItem(digestElement);
+				LarDigestItem digestItem = new LarDigestItemImpl(digestElement);
 
 				result.add(digestItem);
 			}
@@ -175,18 +164,18 @@ public class LarDigestImpl implements LarDigest {
 		return result;
 	}
 
-	public List<LarDigestItem> getAllItems() {
-		if(_itemList.isEmpty()) {
+	public List<LarDigestModule> getAllModules() {
+		if(_moduleList.isEmpty()) {
 			Element root = getDocument().getRootElement();
 
-			for(Element itemEl : root.elements(
-					LarDigesterConstants.NODE_DIGEST_ITEM_LABEL)) {
+			for(Element moduleEl : root.elements(
+					LarDigesterConstants.NODE_MODULE_LABEL)) {
 
-				_itemList.add(fetchDigestItem(itemEl));
+				_moduleList.add(new LarDigestModuleImpl(moduleEl));
 			}
 		}
 
-		return _itemList;
+		return _moduleList;
 	}
 
 	public File getDigestFile() {
@@ -239,7 +228,19 @@ public class LarDigestImpl implements LarDigest {
 	public List<LarDigestMetadata> getMetaData() {
 		Element root = getDocument().getRootElement();
 
-		return getMetaData(root);
+		Element metadataRootEl =
+			root.element(LarDigesterConstants.NODE_METADATA_SET_LABEL);
+
+		List<Element> metadatasEl =
+			metadataRootEl.elements(LarDigesterConstants.NODE_METADATA_LABEL);
+
+		List<LarDigestMetadata> result = new ArrayList<LarDigestMetadata>();
+
+		for (Element metadataEl : metadatasEl) {
+			result.add(new LarDigestMetadataImpl(metadataEl));
+		}
+
+		return result;
 	}
 
 	public String getMetadataValue(String name) {
@@ -255,223 +256,18 @@ public class LarDigestImpl implements LarDigest {
 	}
 
 	public void write() throws Exception {
-		addMetaData(_metadata);
-
-		for (LarDigestItem item : _itemList) {
-			write(item);
-		}
-	}
-
-	public void write(LarDigestItem digestItem) throws Exception {
-		_xmlStreamWriter.writeStartElement(
-			LarDigesterConstants.NODE_DIGEST_ITEM_LABEL);
-
-		try {
-			addMetaData(digestItem.getMetadata());
-
-			addDependencies(digestItem.getDependencies());
-
-			addXmlNode(
-				LarDigesterConstants.NODE_PATH_LABEL, digestItem.getPath());
-
-			addXmlNode(
-				LarDigesterConstants.NODE_ACTION_LABEL,
-				StringUtil.valueOf(digestItem.getAction()));
-
-			addXmlNode(
-				LarDigesterConstants.NODE_TYPE_LABEL, digestItem.getType());
-
-			addXmlNode(
-				LarDigesterConstants.NODE_CLASS_PK_LABEL,
-				digestItem.getClassPK());
-
-			addPermissions(digestItem.getPermissions());
-		}
-		finally {
-			try {
-				_xmlStreamWriter.writeEndElement();
-				_xmlStreamWriter.flush();
-			}
-			catch (Exception e) {
-				if (_log.isDebugEnabled()) {
-					_log.debug("Cannot add new item into the digest: " +
-						e.getMessage());
-				}
-			}
-		}
-	}
-
-	protected void addDependencies(List<LarDigestDependency> dependencies)
-		throws Exception{
-
-		_xmlStreamWriter.writeStartElement("dependencies");
-
-		for (LarDigestDependency dependency : dependencies) {
-			_xmlStreamWriter.writeStartElement("dependency");
-			_xmlStreamWriter.writeStartElement("className");
-			_xmlStreamWriter.writeCharacters(dependency.getClassName());
-			_xmlStreamWriter.writeEndElement();
-			_xmlStreamWriter.writeStartElement("uuid");
-			_xmlStreamWriter.writeCharacters(dependency.getUuid());
-			_xmlStreamWriter.writeEndElement();
-			_xmlStreamWriter.writeEndElement();
-		}
-
-		_xmlStreamWriter.writeEndElement();
-	}
-
-	protected void addMetaData(List<LarDigestMetadata> metadata)
-		throws Exception {
-
 		_xmlStreamWriter.writeStartElement(
 			LarDigesterConstants.NODE_METADATA_SET_LABEL);
 
-		for (LarDigestMetadata metadataItem : metadata) {
-			_xmlStreamWriter.writeStartElement(
-				LarDigesterConstants.NODE_METADATA_LABEL);
-			_xmlStreamWriter.writeAttribute(
-				metadataItem.getName(), metadataItem.getValue());
-			_xmlStreamWriter.writeEndElement();
+		for (LarDigestMetadata metadataItem : _metadata) {
+			metadataItem.serialize(_xmlStreamWriter);
 		}
 
 		_xmlStreamWriter.writeEndElement();
-	}
 
-	protected void addPermissions(List<LarDigestPermission> permissions)
-		throws Exception {
-
-		_xmlStreamWriter.writeStartElement(
-			LarDigesterConstants.NODE_PERMISSIONS_LABEL);
-
-		for (LarDigestPermission permission : permissions) {
-			_xmlStreamWriter.writeStartElement(
-				LarDigesterConstants.NODE_PERMISSION_LABEL);
-			_xmlStreamWriter.writeAttribute(
-				LarDigesterConstants.ATTRIBUTE_NAME_ROLE,
-				permission.getRoleName());
-
-			for (String action : permission.getActionIds()) {
-				if (Validator.isNull(action)) {
-					continue;
-				}
-
-				_xmlStreamWriter.writeStartElement(
-					LarDigesterConstants.NODE_ACTION_KEY_LABEL);
-				_xmlStreamWriter.writeCharacters(action);
-				_xmlStreamWriter.writeEndElement();
-			}
-
-			_xmlStreamWriter.writeEndElement();
+		for (LarDigestModule module : _moduleList) {
+			module.serialize(_xmlStreamWriter);
 		}
-
-		_xmlStreamWriter.writeEndElement();
-	}
-
-	protected void addXmlNode(String name, String value)
-		throws XMLStreamException {
-
-		_xmlStreamWriter.writeStartElement(name);
-		_xmlStreamWriter.writeCharacters(value);
-		_xmlStreamWriter.writeEndElement();
-	}
-
-	protected LarDigestItem fetchDigestItem(Element root) {
-		LarDigestItem digestItem = new LarDigestItemImpl();
-
-		for(LarDigestMetadata metadata : getMetaData(root)) {
-			digestItem.addMetadata(metadata);
-		}
-
-		for(LarDigestDependency dependency : getDependencies(root)) {
-			digestItem.addDependency(dependency);
-		}
-
-		Element element = root.element(LarDigesterConstants.NODE_ACTION_LABEL);
-		digestItem.setAction(GetterUtil.getInteger(element.getText()));
-
-		element = root.element(LarDigesterConstants.NODE_CLASS_PK_LABEL);
-		digestItem.setClassPK(element.getText());
-
-		element = root.element(LarDigesterConstants.NODE_PATH_LABEL);
-		digestItem.setPath(element.getText());
-
-		element = root.element(LarDigesterConstants.NODE_TYPE_LABEL);
-		digestItem.setType(element.getText());
-
-		for(LarDigestDependency dependency : getDependencies(root)) {
-			digestItem.addDependency(dependency);
-		}
-
-		return digestItem;
-	}
-
-	protected List<LarDigestDependency> getDependencies(Element root) {
-		List<LarDigestDependency> result = new ArrayList<LarDigestDependency>();
-
-		Element dependencyElement = root.element("dependencies");
-
-		List<Element> dependencyElements =
-			dependencyElement.elements("dependency");
-
-		for (Element dependencyEl : dependencyElements) {
-			Element classNameEl= dependencyEl.element("className");
-			Element uuidEl= dependencyEl.element("uuid");
-
-			result.add(new LarDigestDependencyImpl(
-				classNameEl.getText(), uuidEl.getText()));
-		}
-
-		return result;
-	}
-
-	public List<LarDigestMetadata> getMetaData(Element root) {
-		Element metadataSetElement = root.element(
-			LarDigesterConstants.NODE_METADATA_SET_LABEL);
-
-		List<LarDigestMetadata> result = new ArrayList<LarDigestMetadata>();
-
-		List<Element> metadataElements = metadataSetElement.elements(
-			LarDigesterConstants.NODE_METADATA_LABEL);
-
-		for (Element metadataEl : metadataElements) {
-			Attribute metadataAt = metadataEl.attribute(0);
-
-			result.add(new LarDigestMetadataImpl(
-				metadataAt.getName(), metadataAt.getValue()));
-		}
-
-		return result;
-	}
-
-
-	protected List<LarDigestPermission> getPermissions(Element root) {
-		Element permissionsElement = root.element(
-			LarDigesterConstants.NODE_PERMISSIONS_LABEL);
-
-		List<LarDigestPermission> result = new ArrayList<LarDigestPermission>();
-
-		List<Element> permissionElements = permissionsElement.elements(
-			LarDigesterConstants.NODE_PERMISSION_LABEL);
-
-		for (Element permissionEl : permissionElements) {
-			LarDigestPermission permission = new LarDigestPermissionImpl();
-
-			Attribute role = permissionEl.attribute(
-				LarDigesterConstants.ATTRIBUTE_NAME_ROLE);
-
-			permission.setRoleName(role.getText());
-
-			List<Element> actionNameElements = permissionEl.elements(
-				LarDigesterConstants.NODE_ACTION_KEY_LABEL);
-
-			for (Element actionId : actionNameElements) {
-				permission.addActionId(actionId.getText());
-			}
-
-			result.add(permission);
-		}
-
-		return result;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(LarDigest.class);
@@ -479,7 +275,8 @@ public class LarDigestImpl implements LarDigest {
 	private File _digestFile;
 	private Document _document;
 
-	private List<LarDigestItem> _itemList = new ArrayList<LarDigestItem>();
+	private List<LarDigestModule> _moduleList =
+		new ArrayList<LarDigestModule>();
 	private List<LarDigestMetadata> _metadata =
 		new ArrayList<LarDigestMetadata>();
 
