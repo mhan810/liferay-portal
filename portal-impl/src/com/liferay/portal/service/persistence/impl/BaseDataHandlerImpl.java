@@ -241,8 +241,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 			return;
 		}
 
-		String path = getEntityPath(object);
-
 		try {
 			doSerialize(object, context);
 

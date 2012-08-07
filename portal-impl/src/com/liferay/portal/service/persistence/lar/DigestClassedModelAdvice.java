@@ -59,14 +59,13 @@ public class DigestClassedModelAdvice implements AfterReturningAdvice {
 			return;
 		}
 
+		Object entity = args[0];
 		DataHandlerContext context = (DataHandlerContext)args[1];
 
 		LarDigestItem item = (LarDigestItem)returnValue;
 
 		BaseDataHandler dataHandler = DataHandlersUtil.getDataHandlerInstance(
 			item.getType());
-
-		Object entity = dataHandler.getEntity(item.getClassPK());
 
 		if (entity == null) {
 			return;
@@ -77,13 +76,13 @@ public class DigestClassedModelAdvice implements AfterReturningAdvice {
 			PortletDataHandlerKeys.PORTLET_METADATA_ALL);
 
 		boolean categoriesParam = context.getBooleanParameter(
-				dataHandler.getNamespace(), "categories");
+			dataHandler.getNamespace(), "categories");
 		boolean commentsParam = context.getBooleanParameter(
-				dataHandler.getNamespace(), "comments");
+			dataHandler.getNamespace(), "comments");
 		boolean ratingsParam = context.getBooleanParameter(
-				dataHandler.getNamespace(), "ratings");
+			dataHandler.getNamespace(), "ratings");
 		boolean tagsParam = context.getBooleanParameter(
-				dataHandler.getNamespace(), "tags");
+			dataHandler.getNamespace(), "tags");
 
 		if (!isResourceMain(entity)) {
 			return;

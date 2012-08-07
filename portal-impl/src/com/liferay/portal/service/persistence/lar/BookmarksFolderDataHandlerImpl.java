@@ -126,6 +126,15 @@ public class BookmarksFolderDataHandlerImpl
 		}
 	}
 
+	public void export(
+			BookmarksFolder folder, DataHandlerContext context)
+		throws Exception {
+
+		LarDigestItem item = doDigest(folder, context);
+
+		serialize(item, context);
+	}
+
 	public BookmarksFolder getEntity(String classPK) {
 		if (Validator.isNotNull(classPK)) {
 			try {

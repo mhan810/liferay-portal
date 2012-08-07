@@ -84,6 +84,7 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.time.StopWatch;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 /**
  * @author Mate Thurzo
@@ -127,54 +128,18 @@ public class LARExporter {
 		return portlets;
 	}
 
-	public File digest(
-		long groupId, boolean privateLayout, long[] layoutIds,
-		Map<String, String[]> parameterMap, Date startDate, Date endDate) {
+	public File export(
+			long groupId, boolean privateLayout, long[] layoutIds,
+			Map<String, String[]> parameterMap, Date startDate, Date endDate)
+		throws Exception {
 
 		try {
 			ImportExportThreadLocal.setLayoutExportInProcess(true);
 
-			//Broadcasting message about starting of process
-
-			Message message = new Message();
-			message.put("command", "larExporterDigest");
-
-			MessageBusUtil.sendMessage(
-				DestinationNames.LAR_EXPORT_IMPORT, message);
-
 			_initDataHandlerContext(
 				groupId, privateLayout, parameterMap, startDate, endDate);
 
-			doCreateDigest(layoutIds, _context);
-
-			return _context.getLarDigest().getDigestFile();
-		}
-		catch (Exception e) {
-			_log.error(e);
-
-			return null;
-		}
-	}
-
-	public File serialize(
-		long groupId, boolean privateLayout, long[] layoutIds,
-		Map<String, String[]> parameterMap, Date startDate, Date endDate) {
-
-		try {
-			//Broadcasting message about starting of process
-
-			Message message = new Message();
-			message.put("command", "larExporterSerialize");
-
-			MessageBusUtil.sendMessage(
-				DestinationNames.LAR_EXPORT_IMPORT, message);
-
-			// Serializing
-
-			doSerialize(_context);
-
-			_context.getZipWriter().addEntry(
-				"/digest.xml", _context.getLarDigest().getDigestString());
+			doExport(layoutIds, _context);
 
 			return _context.getZipWriter().getFile();
 		}
@@ -188,35 +153,8 @@ public class LARExporter {
 		}
 	}
 
-	protected void digestAssetCategories(DataHandlerContext context)
-			throws Exception {
-
-		List<AssetVocabulary> assetVocabularies =
-			AssetVocabularyLocalServiceUtil.getGroupVocabularies(
-				context.getGroupId());
-
-		AssetVocabularyDataHandler vocabularyDataHandler =
-			(AssetVocabularyDataHandler)DataHandlersUtil.getDataHandlerInstance(
-				AssetVocabulary.class.getName());
-
-		for (AssetVocabulary assetVocabulary : assetVocabularies) {
-			vocabularyDataHandler.digest(assetVocabulary, _context);
-		}
-
-		List<AssetCategory> assetCategories = AssetCategoryUtil.findByGroupId(
-			context.getGroupId());
-
-		AssetCategoryDataHandler categoryDataHandler =
-			(AssetCategoryDataHandler)DataHandlersUtil.getDataHandlerInstance(
-				AssetCategory.class.getName());
-
-		for (AssetCategory assetCategory : assetCategories) {
-			categoryDataHandler.digest(assetCategory, _context);
-		}
-	}
-
-	protected void doCreateDigest(long[] layoutIds, DataHandlerContext context)
-		throws Exception, PortalException {
+	protected void doExport(long[] layoutIds, DataHandlerContext context)
+		throws Exception {
 
 		long lastPublishDate = System.currentTimeMillis();
 
@@ -405,7 +343,7 @@ public class LARExporter {
 					portlet.getPortletId());
 
 			if (portletDataHandler != null) {
-				portletDataHandler.digest(portlet, context);
+				portletDataHandler.export(portlet, context);
 			}
 		}
 
@@ -416,7 +354,7 @@ public class LARExporter {
 				Layout.class.getName());
 
 		for (Layout layout : layouts) {
-			layoutDataHandler.digest(layout, _context);
+			layoutDataHandler.export(layout, context);
 		}
 
 		if (_log.isInfoEnabled()) {
@@ -435,23 +373,13 @@ public class LARExporter {
 
 		context.getLarDigest().write();
 		context.getLarDigest().close();
-	}
 
-	protected void doSerialize(DataHandlerContext context)
-		throws Exception, PortalException {
-
-		for (LarDigestItem item : context.getLarDigest().getAllItems()) {
-			BaseDataHandler dataHandler =
-				DataHandlersUtil.getDataHandlerInstance(item.getType());
-
-			if (dataHandler != null) {
-				dataHandler.serialize(item, context);
-			}
-		}
+		_context.getZipWriter().addEntry(
+			"/digest.xml", _context.getLarDigest().getDigestString());
 	}
 
 	protected void exportTheme(LayoutSet layoutSet, ZipWriter zipWriter)
-			throws Exception {
+		throws Exception {
 
 		Theme theme = layoutSet.getTheme();
 
@@ -530,7 +458,7 @@ public class LARExporter {
 	}
 
 	protected void exportThemeFiles(String path, File dir, ZipWriter zipWriter)
-			throws Exception {
+		throws Exception {
 
 		if ((dir == null) || !dir.exists()) {
 			return;

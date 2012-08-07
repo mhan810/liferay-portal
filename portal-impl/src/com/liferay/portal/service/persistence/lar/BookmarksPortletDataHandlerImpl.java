@@ -135,6 +135,20 @@ public class BookmarksPortletDataHandlerImpl
 	public void export(Portlet portlet, DataHandlerContext context)
 		throws Exception {
 
+		List<BookmarksFolder> folders = BookmarksFolderUtil.findByGroupId(
+			context.getScopeGroupId());
+
+		for (BookmarksFolder folder : folders) {
+			exportFolder(folder, context);
+		}
+
+		List<BookmarksEntry> entries = BookmarksEntryUtil.findByG_F(
+			context.getScopeGroupId(),
+			BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+
+		for (BookmarksEntry entry : entries) {
+			exportEntry(entry, context);
+		}
 	}
 
 	protected void exportEntry(
