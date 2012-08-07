@@ -145,6 +145,10 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 	public abstract T getEntity(String classPK);
 
+	public void export(T object, DataHandlerContext context) throws Exception {
+		return;
+	}
+
 	public String getEntityPath(T object) {
 		if (object instanceof Portlet) {
 			Portlet portlet = (Portlet)object;

@@ -132,6 +132,11 @@ public class BookmarksPortletDataHandlerImpl
 		return item;
 	}
 
+	public void export(Portlet portlet, DataHandlerContext context)
+		throws Exception {
+
+	}
+
 	protected void exportEntry(
 			BookmarksEntry entry, DataHandlerContext context)
 		throws Exception {

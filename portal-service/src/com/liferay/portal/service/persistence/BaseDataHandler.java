@@ -56,6 +56,8 @@ public abstract interface BaseDataHandler<T extends BaseModel<T>> {
 			T object, DataHandlerContext context)
 		throws Exception;
 
+	public void export(T object, DataHandlerContext context) throws Exception;
+
 	public abstract T getEntity(String classPK);
 
 	public String getEntityPath(T object);
