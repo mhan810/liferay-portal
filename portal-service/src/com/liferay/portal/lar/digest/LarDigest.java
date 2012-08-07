@@ -17,24 +17,23 @@ package com.liferay.portal.lar.digest;
 import java.io.File;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Daniel Kocsis
  */
 public interface LarDigest {
 
-	public void addModule(LarDigestModule module);
-
 	public void addMetadata(LarDigestMetadata metadata);
+
+	public void addModule(LarDigestModule module);
 
 	public void close() throws Exception;
 
 	public LarDigestItem findDigestItem(
-		int action, String path, String type, String classPK);
+		int action, String path, String type, String classPK, String uuid);
 
 	public List<LarDigestItem> findDigestItems(
-		int action, String path, String type, String classPK);
+		int action, String path, String type, String classPK, String uuid);
 
 	public List<LarDigestModule> getAllModules();
 

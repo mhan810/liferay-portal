@@ -66,16 +66,16 @@ public class LarDigestImpl implements LarDigest {
 		FileUtil.write(_digestFile, xmlContent);
 	}
 
+	public void addMetadata(LarDigestMetadata metadata) {
+		_metadata.add(metadata);
+	}
+
 	public void addModule(LarDigestModule module) {
 		if (module == null) {
 			return;
 		}
 
 		_moduleList.add(module);
-	}
-
-	public void addMetadata(LarDigestMetadata metadata) {
-		_metadata.add(metadata);
 	}
 
 	public void close() throws Exception {
@@ -92,10 +92,10 @@ public class LarDigestImpl implements LarDigest {
 	}
 
 	public LarDigestItem findDigestItem(
-		int action, String path, String type, String classPK) {
+		int action, String path, String type, String classPK, String uuid) {
 
-		List<LarDigestItem> result =
-			findDigestItems(action, path, type, classPK);
+		List<LarDigestItem> result = findDigestItems(
+			action, path, type, classPK, uuid);
 
 		if (result.isEmpty()) {
 			return null;
@@ -105,7 +105,7 @@ public class LarDigestImpl implements LarDigest {
 	}
 
 	public List<LarDigestItem> findDigestItems(
-		int action, String path, String type, String classPK) {
+		int action, String path, String type, String classPK, String uuid) {
 
 		List result = new ArrayList<LarDigestItem>();
 
@@ -146,6 +146,14 @@ public class LarDigestImpl implements LarDigest {
 				sb = sb.append(StringPool.CLOSE_BRACKET);
 			}
 
+			if (Validator.isNotNull(uuid)) {
+				sb = sb.append(StringPool.OPEN_BRACKET);
+				sb = sb.append(LarDigesterConstants.NODE_UUID_LABEL);
+				sb = sb.append(StringPool.EQUAL);
+				sb = sb.append("'" + uuid + "'");
+				sb = sb.append(StringPool.CLOSE_BRACKET);
+			}
+
 			for (Node node : rootElement.selectNodes(sb.toString())) {
 				Element digestElement = (Element)node;
 
@@ -165,10 +173,10 @@ public class LarDigestImpl implements LarDigest {
 	}
 
 	public List<LarDigestModule> getAllModules() {
-		if(_moduleList.isEmpty()) {
+		if (_moduleList.isEmpty()) {
 			Element root = getDocument().getRootElement();
 
-			for(Element moduleEl : root.elements(
+			for (Element moduleEl : root.elements(
 					LarDigesterConstants.NODE_MODULE_LABEL)) {
 
 				_moduleList.add(new LarDigestModuleImpl(moduleEl));
@@ -228,11 +236,11 @@ public class LarDigestImpl implements LarDigest {
 	public List<LarDigestMetadata> getMetaData() {
 		Element root = getDocument().getRootElement();
 
-		Element metadataRootEl =
-			root.element(LarDigesterConstants.NODE_METADATA_SET_LABEL);
+		Element metadataRootEl = root.element(
+			LarDigesterConstants.NODE_METADATA_SET_LABEL);
 
-		List<Element> metadatasEl =
-			metadataRootEl.elements(LarDigesterConstants.NODE_METADATA_LABEL);
+		List<Element> metadatasEl = metadataRootEl.elements(
+			LarDigesterConstants.NODE_METADATA_LABEL);
 
 		List<LarDigestMetadata> result = new ArrayList<LarDigestMetadata>();
 
@@ -247,7 +255,7 @@ public class LarDigestImpl implements LarDigest {
 		for (LarDigestMetadata metadata : getMetaData()) {
 			String metadataName = metadata.getName();
 
-			if(metadataName.equals(name)) {
+			if (metadataName.equals(name)) {
 				return metadata.getValue();
 			}
 		}
@@ -275,10 +283,10 @@ public class LarDigestImpl implements LarDigest {
 	private File _digestFile;
 	private Document _document;
 
-	private List<LarDigestModule> _moduleList =
-		new ArrayList<LarDigestModule>();
 	private List<LarDigestMetadata> _metadata =
 		new ArrayList<LarDigestMetadata>();
+	private List<LarDigestModule> _moduleList =
+		new ArrayList<LarDigestModule>();
 
 	private XMLStreamWriter _xmlStreamWriter;
 

@@ -17,7 +17,7 @@ package com.liferay.portal.lar.digest;
 /**
  * @author Daniel Kocsis
  */
-public interface LarDigestMetadata extends LarDigestElement{
+public interface LarDigestMetadata extends LarDigestElement {
 
 	public String getName();
 
@@ -26,4 +26,5 @@ public interface LarDigestMetadata extends LarDigestElement{
 	public void setName(String name);
 
 	public void setValue(String value);
+
 }

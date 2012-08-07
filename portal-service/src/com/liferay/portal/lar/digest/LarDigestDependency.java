@@ -21,14 +21,14 @@ public interface LarDigestDependency extends LarDigestElement {
 
 	public String getClassPK();
 
-	public String getUuid();
-
 	public String getType();
+
+	public String getUuid();
 
 	public void setClassPK(String classPK);
 
-	public void setUuid(String uuid);
-
 	public void setType(String Type);
+
+	public void setUuid(String uuid);
 
 }

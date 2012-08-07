@@ -18,9 +18,10 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Attribute;
 import com.liferay.portal.kernel.xml.Element;
 
-import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.stream.XMLStreamWriter;
 
 /**
  * @author Daniel Kocsis
@@ -32,7 +33,7 @@ public class LarDigestModuleImpl implements LarDigestModule {
 		_portletPreferences = new ArrayList<String>();
 	}
 
-	public LarDigestModuleImpl(Element root){
+	public LarDigestModuleImpl(Element root) {
 		this();
 
 		Attribute nameAttr = root.attribute("name");
@@ -47,7 +48,7 @@ public class LarDigestModuleImpl implements LarDigestModule {
 		List<Element> portletPreferenceEls = portletPreferencesEl.elements(
 			LarDigesterConstants.NODE_PORTLET_PREFERENCE_LABEL);
 
-		for(Element portletPreferenceEl : portletPreferenceEls) {
+		for (Element portletPreferenceEl : portletPreferenceEls) {
 			_portletPreferences.add(portletPreferenceEl.getText());
 		}
 
@@ -82,7 +83,7 @@ public class LarDigestModuleImpl implements LarDigestModule {
 	public void serialize(XMLStreamWriter writer) throws Exception {
 		writer.writeStartElement(LarDigesterConstants.NODE_MODULE_LABEL);
 
-		if(Validator.isNotNull(_name)) {
+		if (Validator.isNotNull(_name)) {
 			writer.writeAttribute("name", _name);
 		}
 
@@ -120,4 +121,5 @@ public class LarDigestModuleImpl implements LarDigestModule {
 	private List<LarDigestItem> _items;
 	private String _name;
 	private List<String> _portletPreferences;
+
 }

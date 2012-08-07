@@ -19,9 +19,10 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
 
-import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.stream.XMLStreamWriter;
 
 /**
  * @author Mate Thurzo
@@ -32,18 +33,18 @@ public class LarDigestItemImpl implements LarDigestItem {
 	}
 
 	public LarDigestItemImpl(Element root) {
-		Element metadataRootEl =
-			root.element(LarDigesterConstants.NODE_METADATA_SET_LABEL);
+		Element metadataRootEl = root.element(
+			LarDigesterConstants.NODE_METADATA_SET_LABEL);
 
-		List<Element> metadatasEl =
-			metadataRootEl.elements(LarDigesterConstants.NODE_METADATA_LABEL);
+		List<Element> metadatasEl = metadataRootEl.elements(
+			LarDigesterConstants.NODE_METADATA_LABEL);
 
 		for (Element metadataEl : metadatasEl) {
 			addMetadata(new LarDigestMetadataImpl(metadataEl));
 		}
 
-		Element permissionsRootEl =
-			root.element(LarDigesterConstants.NODE_PERMISSIONS_LABEL);
+		Element permissionsRootEl = root.element(
+			LarDigesterConstants.NODE_PERMISSIONS_LABEL);
 
 		List<Element> permissionsEl = permissionsRootEl.elements(
 			LarDigesterConstants.NODE_PERMISSION_LABEL);
@@ -64,8 +65,8 @@ public class LarDigestItemImpl implements LarDigestItem {
 		element = root.element(LarDigesterConstants.NODE_TYPE_LABEL);
 		_type = element.getText();
 
-		Element dependenciesRootEl =
-			root.element(LarDigesterConstants.NODE_DEPENDENCIES_LABEL);
+		Element dependenciesRootEl = root.element(
+			LarDigesterConstants.NODE_DEPENDENCIES_LABEL);
 
 		List<Element> dependenciesEl = dependenciesRootEl.elements(
 			LarDigesterConstants.NODE_DEPENDENCY_LABEL);
@@ -91,20 +92,12 @@ public class LarDigestItemImpl implements LarDigestItem {
 		return _action;
 	}
 
-	public List<LarDigestDependency> getDependencies() {
-		return _dependencies;
-	}
-
-	public List<LarDigestMetadata> getMetadata() {
-		return _metadata;
-	}
-
-	public List<LarDigestPermission> getPermissions() {
-		return _permissions;
-	}
-
 	public String getClassPK() {
 		return _classPK;
+	}
+
+	public List<LarDigestDependency> getDependencies() {
+		return _dependencies;
 	}
 
 	public List<LarDigestDependency> getDependencies(String className) {
@@ -113,12 +106,16 @@ public class LarDigestItemImpl implements LarDigestItem {
 		for (LarDigestDependency dependency : _dependencies) {
 			String itemClassName = dependency.getClassPK();
 
-			if(itemClassName.equals(className)) {
+			if (itemClassName.equals(className)) {
 				result.add(dependency);
 			}
 		}
 
 		return result;
+	}
+
+	public List<LarDigestMetadata> getMetadata() {
+		return _metadata;
 	}
 
 	public List<LarDigestMetadata> getMetadata(String name) {
@@ -127,7 +124,7 @@ public class LarDigestItemImpl implements LarDigestItem {
 		for (LarDigestMetadata metadata : _metadata) {
 			String metadataName = metadata.getName();
 
-			if(metadataName.equals(name)) {
+			if (metadataName.equals(name)) {
 				result.add(metadata);
 			}
 		}
@@ -149,6 +146,10 @@ public class LarDigestItemImpl implements LarDigestItem {
 		return _path;
 	}
 
+	public List<LarDigestPermission> getPermissions() {
+		return _permissions;
+	}
+
 	public String getType() {
 		return _type;
 	}
@@ -157,15 +158,13 @@ public class LarDigestItemImpl implements LarDigestItem {
 		return _uuid;
 	}
 
-	public void serialize(XMLStreamWriter writer) throws Exception{
-		writer.writeStartElement(
-			LarDigesterConstants.NODE_ITEM_LABEL);
+	public void serialize(XMLStreamWriter writer) throws Exception {
+		writer.writeStartElement(LarDigesterConstants.NODE_ITEM_LABEL);
 
 		// metadata
-		writer.writeStartElement(
-			LarDigesterConstants.NODE_METADATA_SET_LABEL);
+		writer.writeStartElement(LarDigesterConstants.NODE_METADATA_SET_LABEL);
 
-		for(LarDigestMetadata metadata : _metadata) {
+		for (LarDigestMetadata metadata : _metadata) {
 			metadata.serialize(writer);
 		}
 
@@ -173,10 +172,9 @@ public class LarDigestItemImpl implements LarDigestItem {
 
 		// dependencies
 
-		writer.writeStartElement(
-			LarDigesterConstants.NODE_DEPENDENCIES_LABEL);
+		writer.writeStartElement(LarDigesterConstants.NODE_DEPENDENCIES_LABEL);
 
-		for(LarDigestDependency dependency : _dependencies) {
+		for (LarDigestDependency dependency : _dependencies) {
 			dependency.serialize(writer);
 		}
 
@@ -185,41 +183,45 @@ public class LarDigestItemImpl implements LarDigestItem {
 		// item fields
 
 		writer.writeStartElement(LarDigesterConstants.NODE_PATH_LABEL);
-		if(Validator.isNotNull(_path)) {
+		if (Validator.isNotNull(_path)) {
 			writer.writeCharacters(_path);
 		}
+
 		writer.writeEndElement();
 
 		writer.writeStartElement(LarDigesterConstants.NODE_ACTION_LABEL);
-		if(_action > 0) {
+		if (_action > 0) {
 			writer.writeCharacters(StringUtil.valueOf(_action));
 		}
+
 		writer.writeEndElement();
 
 		writer.writeStartElement(LarDigesterConstants.NODE_TYPE_LABEL);
-		if(Validator.isNotNull(_type)) {
+		if (Validator.isNotNull(_type)) {
 			writer.writeCharacters(_type);
 		}
+
 		writer.writeEndElement();
 
 		writer.writeStartElement(LarDigesterConstants.NODE_CLASS_PK_LABEL);
-		if(Validator.isNotNull(_classPK)) {
+		if (Validator.isNotNull(_classPK)) {
 			writer.writeCharacters(_classPK);
 		}
+
 		writer.writeEndElement();
 
 		writer.writeStartElement(LarDigesterConstants.NODE_UUID_LABEL);
-		if(Validator.isNotNull(_uuid)) {
+		if (Validator.isNotNull(_uuid)) {
 			writer.writeCharacters(_uuid);
 		}
+
 		writer.writeEndElement();
 
 		// permissions
 
-		writer.writeStartElement(
-			LarDigesterConstants.NODE_PERMISSIONS_LABEL);
+		writer.writeStartElement(LarDigesterConstants.NODE_PERMISSIONS_LABEL);
 
-		for(LarDigestPermission permission : _permissions) {
+		for (LarDigestPermission permission : _permissions) {
 			permission.serialize(writer);
 		}
 

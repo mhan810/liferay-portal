@@ -40,12 +40,12 @@ public class LarDigestDependencyImpl implements LarDigestDependency {
 		return _classPK;
 	}
 
-	public String getUuid() {
-		return _uuid;
-	}
-
 	public String getType() {
 		return _type;
+	}
+
+	public String getUuid() {
+		return _uuid;
 	}
 
 	public void serialize(XMLStreamWriter writer) throws Exception {
@@ -70,16 +70,16 @@ public class LarDigestDependencyImpl implements LarDigestDependency {
 		_classPK = classPK;
 	}
 
-	public void setUuid(String uuid) {
-		_uuid = uuid;
-	}
-
 	public void setType(String type) {
 		_type = type;
 	}
 
+	public void setUuid(String uuid) {
+		_uuid = uuid;
+	}
+
 	private String _classPK;
-	private String _uuid;
 	private String _type;
+	private String _uuid;
 
 }

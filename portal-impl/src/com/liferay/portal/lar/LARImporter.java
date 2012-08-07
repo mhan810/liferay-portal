@@ -24,7 +24,6 @@ import com.liferay.portal.NoSuchLayoutPrototypeException;
 import com.liferay.portal.NoSuchLayoutSetPrototypeException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.*;
-import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -59,7 +58,6 @@ import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -74,10 +72,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import com.liferay.portlet.layoutsadmin.util.LayoutsTreeUtil;
 import org.apache.commons.lang.time.StopWatch;
-
-import javax.portlet.Portlet;
 
 /**
  * @author Daniel Kocsis
@@ -410,7 +405,6 @@ public class LARImporter {
 		context.setAttribute("newLayoutsMap", newLayoutsMap);
 		context.setAttribute("previousLayouts", previousLayouts);
 
-
 		/*for (LarDigestItem item : larDigest.getAllItems()) {
 			BaseDataHandler dataHandler =
 				DataHandlersUtil.getDataHandlerInstance(item.getType());
@@ -432,7 +426,6 @@ public class LARImporter {
 			dataHandler.importData(layoutItem);
 		}
 
-
 		// Import portlets
 
 		List<LarDigestItem> portletItems = larDigest.findDigestItems(
@@ -451,6 +444,7 @@ public class LARImporter {
 
 			dataHandler.importData(portletItem);
 		}
+
 		*/
 
 		// Re-index user

@@ -14,8 +14,6 @@
 
 package com.liferay.portal.lar.digest;
 
-import com.liferay.portal.kernel.xml.Element;
-
 import javax.xml.stream.XMLStreamWriter;
 
 /**
@@ -24,4 +22,5 @@ import javax.xml.stream.XMLStreamWriter;
 public interface LarDigestElement<T> {
 
 	public void serialize(XMLStreamWriter writer) throws Exception;
+
 }

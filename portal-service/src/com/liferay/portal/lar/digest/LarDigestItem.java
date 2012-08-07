@@ -15,7 +15,6 @@
 package com.liferay.portal.lar.digest;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Mate Thurzo
@@ -30,21 +29,21 @@ public interface LarDigestItem extends LarDigestElement {
 
 	public int getAction();
 
-	public List<LarDigestDependency> getDependencies();
-
-	public List<LarDigestMetadata> getMetadata();
-
-	public List<LarDigestPermission> getPermissions();
-
 	public String getClassPK();
 
+	public List<LarDigestDependency> getDependencies();
+
 	public List<LarDigestDependency> getDependencies(String className);
+
+	public List<LarDigestMetadata> getMetadata();
 
 	public List<LarDigestMetadata> getMetadata(String name);
 
 	public String getMetadataValue(String name);
 
 	public String getPath();
+
+	public List<LarDigestPermission> getPermissions();
 
 	public String getType();
 

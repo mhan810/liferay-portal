@@ -326,7 +326,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 		List<LarDigestItem> resultItems = digest.findDigestItems(
 			0, null, Layout.class.getName(),
-			StringUtil.valueOf(parentLayoutId));
+			StringUtil.valueOf(parentLayoutId), StringPool.BLANK);
 
 		LarDigestItem parentLayoutItem = null;
 		String parentLayoutUuid = null;
@@ -394,7 +394,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			if (linkToLayoutId > 0) {
 				resultItems = digest.findDigestItems(
 					0, null, Layout.class.getName(),
-					StringUtil.valueOf(linkToLayoutId));
+					StringUtil.valueOf(linkToLayoutId), StringPool.BLANK);
 
 				LarDigestItem linekdLayoutItem = resultItems.get(0);
 
@@ -644,7 +644,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 		if (layout.isIconImage()) {
 			Image image = ImageLocalServiceUtil.getImage(
-					layout.getIconImageId());
+				layout.getIconImageId());
 
 			if (image != null) {
 				LarDigestItem item = imageDataHandler.digest(image, context);

@@ -18,9 +18,10 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Attribute;
 import com.liferay.portal.kernel.xml.Element;
 
-import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.stream.XMLStreamWriter;
 
 /**
  * @author Daniel Kocsis
@@ -30,7 +31,7 @@ public class LarDigestPermissionImpl implements LarDigestPermission {
 	public LarDigestPermissionImpl() {
 	}
 
-	public LarDigestPermissionImpl (Element root) {
+	public LarDigestPermissionImpl(Element root) {
 		Attribute role = root.attribute(
 				LarDigesterConstants.ATTRIBUTE_NAME_ROLE);
 
@@ -57,8 +58,7 @@ public class LarDigestPermissionImpl implements LarDigestPermission {
 	}
 
 	public void serialize(XMLStreamWriter writer) throws Exception {
-		writer.writeStartElement(
-			LarDigesterConstants.NODE_PERMISSION_LABEL);
+		writer.writeStartElement(LarDigesterConstants.NODE_PERMISSION_LABEL);
 		writer.writeAttribute(
 			LarDigesterConstants.ATTRIBUTE_NAME_ROLE, _roleName);
 
@@ -76,12 +76,12 @@ public class LarDigestPermissionImpl implements LarDigestPermission {
 		writer.writeEndElement();
 	}
 
-	public void setRoleName(String roleName) {
-		_roleName = roleName;
-	}
-
 	public void setActionIds(List<String> actionIds) {
 		_actionIds = actionIds;
+	}
+
+	public void setRoleName(String roleName) {
+		_roleName = roleName;
 	}
 
 	private List<String> _actionIds = new ArrayList<String>();

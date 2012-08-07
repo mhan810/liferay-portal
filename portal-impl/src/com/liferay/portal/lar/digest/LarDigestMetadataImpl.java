@@ -24,14 +24,14 @@ import javax.xml.stream.XMLStreamWriter;
  */
 public class LarDigestMetadataImpl implements LarDigestMetadata {
 
-	public LarDigestMetadataImpl(Element root){
+	public LarDigestMetadataImpl(Element root) {
 		Attribute metadataAt = root.attribute(0);
 
 		_name = metadataAt.getName();
 		_value = metadataAt.getValue();
 	}
 
-	public LarDigestMetadataImpl(String name, String value){
+	public LarDigestMetadataImpl(String name, String value) {
 		_name = name;
 
 		_value = value;

@@ -27,7 +27,8 @@ public interface LarDigestPermission extends LarDigestElement {
 
 	public String getRoleName();
 
+	public void setActionIds(List<String> actionIds);
+
 	public void setRoleName(String roleName);
 
-	public void setActionIds(List<String> actionIds);
 }

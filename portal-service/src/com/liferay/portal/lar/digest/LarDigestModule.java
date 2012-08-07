@@ -36,4 +36,5 @@ public interface LarDigestModule extends LarDigestElement {
 	public void setName(String name);
 
 	public void setPortletPreferences(List<String> portletPreferences);
+
 }

@@ -43,42 +43,6 @@ import org.powermock.api.mockito.PowerMockito;
 public class LarDigestTest extends PowerMockito {
 
 	@Test
-	public void testEmptyDigest() throws Exception {
-		LarDigest larDigest = new LarDigestImpl();
-		larDigest.close();
-
-		String result = larDigest.getDigestString();
-
-		Assert.assertEquals(getTestFileContent("emptyLar.xml"), result);
-	}
-
-	@Test
-	public void testFindDigestItems() throws Exception {
-		String xml = getTestFileContent("digest.xml");
-
-		LarDigest digest = new LarDigestImpl(xml);
-
-		List<LarDigestItem> result = digest.findDigestItems(
-			0, StringPool.BLANK, Portlet.class.getName(), "12345");
-
-		Assert.assertEquals(1, result.size());
-
-		LarDigestItem resultItem = result.get(0);
-
-		Assert.assertEquals(
-			LarDigesterConstants.ACTION_ADD, resultItem.getAction());
-		Assert.assertEquals("12345", resultItem.getClassPK());
-		Assert.assertEquals("here/i/am.xml", resultItem.getPath());
-		Assert.assertEquals(Portlet.class.getName(), resultItem.getType());
-		Assert.assertEquals(2, resultItem.getPermissions().size());
-
-		LarDigestMetadata metadata = resultItem.getMetadata().get(0);
-		Assert.assertEquals("test1", metadata.getValue());
-
-		digest.close();
-	}
-
-	@Test
 	public void testCreateDigest() throws Exception {
 		LarDigest larDigest = new LarDigestImpl();
 
@@ -95,6 +59,43 @@ public class LarDigestTest extends PowerMockito {
 		String result = larDigest.getDigestString();
 
 		Assert.assertEquals(getTestFileContent("digest.xml"), result);
+	}
+
+	@Test
+	public void testEmptyDigest() throws Exception {
+		LarDigest larDigest = new LarDigestImpl();
+		larDigest.close();
+
+		String result = larDigest.getDigestString();
+
+		Assert.assertEquals(getTestFileContent("emptyLar.xml"), result);
+	}
+
+	@Test
+	public void testFindDigestItems() throws Exception {
+		String xml = getTestFileContent("digest.xml");
+
+		LarDigest digest = new LarDigestImpl(xml);
+
+		List<LarDigestItem> result = digest.findDigestItems(
+			0, StringPool.BLANK, Portlet.class.getName(), "12345",
+			StringPool.BLANK);
+
+		Assert.assertEquals(1, result.size());
+
+		LarDigestItem resultItem = result.get(0);
+
+		Assert.assertEquals(
+			LarDigesterConstants.ACTION_ADD, resultItem.getAction());
+		Assert.assertEquals("12345", resultItem.getClassPK());
+		Assert.assertEquals("here/i/am.xml", resultItem.getPath());
+		Assert.assertEquals(Portlet.class.getName(), resultItem.getType());
+		Assert.assertEquals(2, resultItem.getPermissions().size());
+
+		LarDigestMetadata metadata = resultItem.getMetadata().get(0);
+		Assert.assertEquals("test1", metadata.getValue());
+
+		digest.close();
 	}
 
 	@Test

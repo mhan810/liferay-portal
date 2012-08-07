@@ -35,9 +35,9 @@ public class LarDigesterConstants {
 
 	public static final String NODE_CLASS_PK_LABEL = "classPK";
 
-	public static final String NODE_DEPENDENCY_LABEL = "item-dependency";
-
 	public static final String NODE_DEPENDENCIES_LABEL = "item-dependencies";
+
+	public static final String NODE_DEPENDENCY_LABEL = "item-dependency";
 
 	public static final String NODE_ITEM_LABEL = "item";
 
@@ -53,11 +53,11 @@ public class LarDigesterConstants {
 
 	public static final String NODE_PERMISSIONS_LABEL = "permissions";
 
-	public static final String NODE_PORTLET_PREFERENCES_LABEL =
-		"portlet-preferences";
-
 	public static final String NODE_PORTLET_PREFERENCE_LABEL =
 		"portlet-preference";
+
+	public static final String NODE_PORTLET_PREFERENCES_LABEL =
+		"portlet-preferences";
 
 	public static final String NODE_TYPE_LABEL = "type";
 
