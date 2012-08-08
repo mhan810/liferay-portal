@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<root>
+  <metadata-set>
+    <metadata test="test" />
+  </metadata-set>
+  <portal-module name="test.module">
+    <portlet-preferences>
+      <portlet-preference>test/module/preference/path1</portlet-preference>
+      <portlet-preference>test/module/preference/path2</portlet-preference>
+    </portlet-preferences>
+    <item>
+      <metadata-set>
+        <metadata test1="test1" />
+      </metadata-set>
+      <item-dependencies />
+      <path>here/i/am.xml</path>
+      <action>1</action>
+      <type>javax.portlet.Portlet</type>
+      <classPK>12345</classPK>
+      <uuid>123-123-123</uuid>
+      <permissions>
+        <permission role-name="TestRole1">
+          <actionKey>001</actionKey>
+        </permission>
+        <permission role-name="TestRole2">
+          <actionKey>001</actionKey>
+          <actionKey>002</actionKey>
+        </permission>
+      </permissions>
+    </item>
+    <item>
+      <metadata-set />
+      <item-dependencies />
+      <path />
+      <action />
+      <type />
+      <classPK />
+      <uuid />
+      <permissions />
+    </item>
+  </portal-module>
+  <portal-module>
+    <portlet-preferences />
+  </portal-module>
+</root>
