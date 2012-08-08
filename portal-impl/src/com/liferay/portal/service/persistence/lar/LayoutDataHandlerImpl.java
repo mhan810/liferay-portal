@@ -777,7 +777,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				}
 
 				if (portletDataHandler != null) {
-					portletDataHandler.export(portlet, context);
+					portletDataHandler.export(portlet, context, null);
 				}
 			}
 		}

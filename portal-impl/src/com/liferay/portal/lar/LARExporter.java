@@ -327,7 +327,7 @@ public class LARExporter {
 					portlet.getPortletId());
 
 			if (portletDataHandler != null) {
-				portletDataHandler.export(portlet, context);
+				portletDataHandler.export(portlet, context, null);
 			}
 		}
 
@@ -338,7 +338,7 @@ public class LARExporter {
 				Layout.class.getName());
 
 		for (Layout layout : layouts) {
-			layoutDataHandler.export(layout, context);
+			layoutDataHandler.export(layout, context, null);
 		}
 
 		if (_log.isInfoEnabled()) {

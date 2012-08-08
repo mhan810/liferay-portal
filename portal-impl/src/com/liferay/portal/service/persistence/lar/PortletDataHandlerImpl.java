@@ -44,6 +44,8 @@ import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.lar.digest.LarDigestMetadata;
 import com.liferay.portal.lar.digest.LarDigestMetadataImpl;
+import com.liferay.portal.lar.digest.LarDigestModule;
+import com.liferay.portal.lar.digest.LarDigestModuleImpl;
 import com.liferay.portal.lar.digest.LarDigestPermission;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.Group;
@@ -93,190 +95,8 @@ public class PortletDataHandlerImpl
 			Portlet portlet, DataHandlerContext context)
 		throws Exception {
 
-		long plid = PortletKeys.PREFS_OWNER_ID_DEFAULT;
-		long layoutId = LayoutConstants.DEFAULT_PARENT_LAYOUT_ID;
 
-		Layout layout = (Layout)context.getAttribute("layout");
-
-		if (layout != null) {
-			plid = layout.getPlid();
-			layoutId = layout.getLayoutId();
-		}
-
-		String portletId = portlet.getPortletId();
-
-		if (portlet == null) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					"Do not export portlet " + portletId +
-						" because the portlet does not exist");
-			}
-
-			return null;
-		}
-
-		if (!portlet.isInstanceable() &&
-			!portlet.isPreferencesUniquePerLayout() &&
-			context.hasNotUniquePerLayout(portletId)) {
-
-			return null;
-		}
-
-		boolean exportPortletArchivedSetups = MapUtil.getBoolean(
-			context.getParameters(),
-			PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS);
-		boolean exportPortletUserPreferences = MapUtil.getBoolean(
-			context.getParameters(),
-			PortletDataHandlerKeys.PORTLET_USER_PREFERENCES);
-
-		boolean[] exportPortletControls = getExportPortletControls(
-			context.getCompanyId(), portletId, context);
-
-		String path = getEntityPath(portlet);
-
-		if (context.isPathProcessed(path)) {
-			return null;
-		}
-
-		LarDigestItem item = new LarDigestItemImpl();
-
-		if (context.getPlid() > 0) {
-			//portlet is on a layout, add plid to metadata
-
-			item.addMetadata(new LarDigestMetadataImpl(
-				"layoutPlid", String.valueOf(context.getPlid())));
-		}
-
-		item.setAction(LarDigesterConstants.ACTION_ADD);
-		item.setType(portlet.getPortletId());
-		item.setClassPK(portlet.getPortletId());
-		item.setPath(path);
-
-		item.addMetadata(new LarDigestMetadataImpl("portlet-id", portletId));
-		item.addMetadata(new LarDigestMetadataImpl("root-portlet-id",
-			PortletConstants.getRootPortletId(portletId)));
-		item.addMetadata(new LarDigestMetadataImpl(
-			"old-plid", String.valueOf(plid)));
-		item.addMetadata(new LarDigestMetadataImpl("scope-layout-type",
-			StringUtil.valueOf(context.getAttribute("scopeType"))));
-		item.addMetadata(new LarDigestMetadataImpl("scope-layout-uuid",
-			StringUtil.valueOf(context.getAttribute("scopeLayoutUuid"))));
-		item.addMetadata(new LarDigestMetadataImpl(
-			"layout-id", String.valueOf(layoutId)));
-
-		boolean exportPortletData = exportPortletControls[0];
-		boolean exportPortletSetup = exportPortletControls[1];
-
-		// Data
-
-		if (exportPortletData) {
-			javax.portlet.PortletPreferences jxPreferences =
-				PortletPreferencesFactoryUtil.getPortletSetup(
-					layout, portletId, StringPool.BLANK);
-
-			if (!portlet.isPreferencesUniquePerLayout()) {
-				StringBundler sb = new StringBundler(5);
-
-				sb.append(portletId);
-				sb.append(StringPool.AT);
-				sb.append(context.getScopeType());
-				sb.append(StringPool.AT);
-				sb.append(context.getScopeLayoutUuid());
-
-				String dataKey = sb.toString();
-
-				if (!context.hasNotUniquePerLayout(dataKey)) {
-					context.putNotUniquePerLayout(dataKey);
-
-					exportPortletData(
-						context, portlet, layout, jxPreferences, item);
-				}
-			}
-			else {
-				exportPortletData(
-					context, portlet, layout, jxPreferences, item);
-			}
-		}
-
-		// Portlet preferences
-
-		if (exportPortletSetup) {
-			digestPortletPreferences(
-				PortletKeys.PREFS_OWNER_ID_DEFAULT,
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, false,
-				portlet.getPortletId(), item, context);
-
-			digestPortletPreferences(
-				context.getScopeGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
-				false, portlet.getPortletId(), item, context);
-
-			digestPortletPreferences(
-				context.getCompanyId(), PortletKeys.PREFS_OWNER_TYPE_COMPANY,
-				false, portlet.getPortletId(), item, context);
-		}
-
-		// Portlet preferences
-
-		if (exportPortletUserPreferences) {
-			List<PortletPreferences> portletPreferencesList =
-				PortletPreferencesLocalServiceUtil.getPortletPreferences(
-					PortletKeys.PREFS_OWNER_TYPE_USER, context.getPlid(),
-					portlet.getPortletId());
-
-			for (PortletPreferences portletPreferences :
-					portletPreferencesList) {
-
-				boolean defaultUser = false;
-
-				if (portletPreferences.getOwnerId() ==
-						PortletKeys.PREFS_OWNER_ID_DEFAULT) {
-
-					defaultUser = true;
-				}
-
-				digestPortletPreferences(
-					portletPreferences.getOwnerId(),
-					PortletKeys.PREFS_OWNER_TYPE_USER, defaultUser,
-					portlet.getPortletId(), item, context);
-			}
-
-			try {
-				digestPortletPreference(
-					portlet.getPortletId(), context.getScopeGroupId(),
-					PortletKeys.PREFS_OWNER_TYPE_GROUP, false,
-					PortletKeys.PREFS_PLID_SHARED, item);
-			}
-			catch (NoSuchPortletPreferencesException nsppe) {
-			}
-		}
-
-		// Archived setups
-
-		if (exportPortletArchivedSetups) {
-			String rootPortletId = PortletConstants.getRootPortletId(portletId);
-
-			List<PortletItem> portletItems =
-				PortletItemLocalServiceUtil.getPortletItems(
-					context.getGroupId(), rootPortletId,
-					PortletPreferences.class.getName());
-
-			for (PortletItem portletItem : portletItems) {
-				digestPortletPreferences(
-					portletItem.getPortletItemId(),
-					PortletKeys.PREFS_OWNER_TYPE_ARCHIVED, false,
-					portletItem.getPortletId(), item, context);
-			}
-		}
-
-		context.addPrimaryKey(String.class, path);
-
-		LarDigest digest = context.getLarDigest();
-
-		//digest.addItem(item);
-
-		context.addProcessedPath(path);
-
-		return item;
+		return null;
 	}
 
 	@Override
@@ -287,11 +107,12 @@ public class PortletDataHandlerImpl
 		return null;
 	}
 
-	protected LarDigestItem doDigestPortlet(
-			Portlet portlet, LarDigestItem item, DataHandlerContext context)
+	public void doExport(
+			Portlet portlet, DataHandlerContext context,
+			LarDigestModule digestModule)
 		throws Exception {
 
-		return null;
+		return;
 	}
 
 	@Override
@@ -402,6 +223,195 @@ public class PortletDataHandlerImpl
 			context, layout.getCompanyId(), groupId, null,
 			null, item, importPortletSetup, importPortletArchivedSetups,
 			importPortletUserPreferences, false, importPortletData);
+	}
+
+	public void export(
+			Portlet portlet, DataHandlerContext context,
+			LarDigestModule digestModule)
+		throws Exception {
+
+		LarDigestModule portletModule = new LarDigestModuleImpl();
+
+		long plid = PortletKeys.PREFS_OWNER_ID_DEFAULT;
+		long layoutId = LayoutConstants.DEFAULT_PARENT_LAYOUT_ID;
+
+		Layout layout = (Layout)context.getAttribute("layout");
+
+		if (layout != null) {
+			plid = layout.getPlid();
+			layoutId = layout.getLayoutId();
+		}
+
+		String portletId = portlet.getPortletId();
+
+		if (portlet == null) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Do not export portlet " + portletId +
+						" because the portlet does not exist");
+			}
+
+			return;
+		}
+
+		if (!portlet.isInstanceable() &&
+			!portlet.isPreferencesUniquePerLayout() &&
+			context.hasNotUniquePerLayout(portletId)) {
+
+			return;
+		}
+
+		boolean exportPortletArchivedSetups = MapUtil.getBoolean(
+			context.getParameters(),
+			PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS);
+		boolean exportPortletUserPreferences = MapUtil.getBoolean(
+			context.getParameters(),
+			PortletDataHandlerKeys.PORTLET_USER_PREFERENCES);
+
+		boolean[] exportPortletControls = getExportPortletControls(
+				context.getCompanyId(), portletId, context);
+
+		String path = getEntityPath(portlet);
+
+		if (context.isPathProcessed(path)) {
+			return;
+		}
+
+		LarDigestItem item = new LarDigestItemImpl();
+
+		if (context.getPlid() > 0) {
+			//portlet is on a layout, add plid to metadata
+
+			item.addMetadata(new LarDigestMetadataImpl(
+				"layoutPlid", String.valueOf(context.getPlid())));
+		}
+
+		item.setAction(LarDigesterConstants.ACTION_ADD);
+		item.setType(portlet.getPortletId());
+		item.setClassPK(portlet.getPortletId());
+		item.setPath(path);
+
+		item.addMetadata(new LarDigestMetadataImpl("portlet-id", portletId));
+		item.addMetadata(new LarDigestMetadataImpl("root-portlet-id",
+			PortletConstants.getRootPortletId(portletId)));
+		item.addMetadata(new LarDigestMetadataImpl(
+			"old-plid", String.valueOf(plid)));
+		item.addMetadata(new LarDigestMetadataImpl("scope-layout-type",
+			StringUtil.valueOf(context.getAttribute("scopeType"))));
+		item.addMetadata(new LarDigestMetadataImpl("scope-layout-uuid",
+			StringUtil.valueOf(context.getAttribute("scopeLayoutUuid"))));
+		item.addMetadata(new LarDigestMetadataImpl(
+			"layout-id", String.valueOf(layoutId)));
+
+		boolean exportPortletData = exportPortletControls[0];
+		boolean exportPortletSetup = exportPortletControls[1];
+
+		// Data
+
+		if (exportPortletData) {
+			javax.portlet.PortletPreferences jxPreferences =
+				PortletPreferencesFactoryUtil.getPortletSetup(
+					layout, portletId, StringPool.BLANK);
+
+			if (!portlet.isPreferencesUniquePerLayout()) {
+				StringBundler sb = new StringBundler(5);
+
+				sb.append(portletId);
+				sb.append(StringPool.AT);
+				sb.append(context.getScopeType());
+				sb.append(StringPool.AT);
+				sb.append(context.getScopeLayoutUuid());
+
+				String dataKey = sb.toString();
+
+				if (!context.hasNotUniquePerLayout(dataKey)) {
+					context.putNotUniquePerLayout(dataKey);
+
+					exportPortletData(
+						portlet, context, layout, jxPreferences, portletModule);
+				}
+			}
+			else {
+				exportPortletData(
+					portlet, context, layout, jxPreferences, portletModule);
+			}
+		}
+
+		// Portlet preferences
+
+		if (exportPortletSetup) {
+			digestPortletPreferences(
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, false,
+				portlet.getPortletId(), item, context);
+
+			digestPortletPreferences(
+				context.getScopeGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
+				false, portlet.getPortletId(), item, context);
+
+			digestPortletPreferences(
+				context.getCompanyId(), PortletKeys.PREFS_OWNER_TYPE_COMPANY,
+				false, portlet.getPortletId(), item, context);
+		}
+
+		// Portlet preferences
+
+		if (exportPortletUserPreferences) {
+			List<PortletPreferences> portletPreferencesList =
+				PortletPreferencesLocalServiceUtil.getPortletPreferences(
+					PortletKeys.PREFS_OWNER_TYPE_USER, context.getPlid(),
+					portlet.getPortletId());
+
+			for (PortletPreferences portletPreferences :
+					portletPreferencesList) {
+
+				boolean defaultUser = false;
+
+				if (portletPreferences.getOwnerId() ==
+						PortletKeys.PREFS_OWNER_ID_DEFAULT) {
+
+					defaultUser = true;
+				}
+
+				digestPortletPreferences(
+					portletPreferences.getOwnerId(),
+					PortletKeys.PREFS_OWNER_TYPE_USER, defaultUser,
+					portlet.getPortletId(), item, context);
+			}
+
+			try {
+				digestPortletPreference(
+					portlet.getPortletId(), context.getScopeGroupId(),
+					PortletKeys.PREFS_OWNER_TYPE_GROUP, false,
+					PortletKeys.PREFS_PLID_SHARED, item);
+			}
+			catch (NoSuchPortletPreferencesException nsppe) {
+			}
+		}
+
+		// Archived setups
+
+		if (exportPortletArchivedSetups) {
+			String rootPortletId = PortletConstants.getRootPortletId(portletId);
+
+			List<PortletItem> portletItems =
+				PortletItemLocalServiceUtil.getPortletItems(
+					context.getGroupId(), rootPortletId,
+					PortletPreferences.class.getName());
+
+			for (PortletItem portletItem : portletItems) {
+				digestPortletPreferences(
+					portletItem.getPortletItemId(),
+					PortletKeys.PREFS_OWNER_TYPE_ARCHIVED, false,
+					portletItem.getPortletId(), item, context);
+			}
+		}
+
+		context.addPrimaryKey(String.class, path);
+
+		context.addProcessedPath(path);
+
+		context.getLarDigest().addModule(portletModule);
 	}
 
 	public String[] getDataPortletPreferences() {
@@ -520,6 +530,13 @@ public class PortletDataHandlerImpl
 		return null;
 	}
 
+	protected LarDigestItem doDigestPortlet(
+			Portlet portlet, LarDigestItem item, DataHandlerContext context)
+		throws Exception {
+
+		return null;
+	}
+
 	protected javax.portlet.PortletPreferences doImportData(
 			DataHandlerContext context, LarDigestItem item,
 			javax.portlet.PortletPreferences portletPreferences)
@@ -533,7 +550,8 @@ public class PortletDataHandlerImpl
 					javax.portlet.Portlet.class.getName());
 
 			LarDigestItem dependentItem = digest.findDigestItem(
-				0,null, dependency.getType(), dependency.getClassPK());
+				0,null, dependency.getType(), dependency.getClassPK(),
+				StringPool.BLANK);
 
 			dataHandler.importData(dependentItem, context);
 		}
@@ -572,9 +590,9 @@ public class PortletDataHandlerImpl
 	}
 
 	protected void exportPortletData(
-			DataHandlerContext context, Portlet portlet,
+			Portlet portlet, DataHandlerContext context,
 			Layout layout, javax.portlet.PortletPreferences jxPreferences,
-			LarDigestItem portletItem)
+			LarDigestModule digestModule)
 		throws Exception {
 
 		if (portlet == null) {
@@ -641,7 +659,7 @@ public class PortletDataHandlerImpl
 		context.setGroupId(context.getScopeGroupId());
 
 		try {
-			portletItem = doDigestPortlet(portlet, portletItem, context);
+			doExport(portlet, context, digestModule);
 		}
 		catch (Exception e) {
 			throw new SystemException(e);

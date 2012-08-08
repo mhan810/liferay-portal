@@ -35,11 +35,10 @@
 	<bean id="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" class="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" />
 
 	<aop:config proxy-target-class="false">
-		<aop:pointcut id="digestPointcut" expression="execution(* com.liferay.portal.service.persistence.BaseDataHandler.digest(..) throws Exception)" />
-		<aop:pointcut id="serializePointcut" expression="execution(* com.liferay.portal.service.persistence.BaseDataHandler.serialize(..))" />
+		<aop:pointcut id="exportPointcut" expression="execution(* com.liferay.portal.service.persistence.BaseDataHandler.export(..) throws Exception)" />
 
-		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestClassedModelAdvice" pointcut-ref="digestPointcut" order="2" />
-		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" pointcut-ref="digestPointcut" order="1" />
+		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestClassedModelAdvice" pointcut-ref="exportPointcut" order="2" />
+		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" pointcut-ref="exportPointcut" order="1" />
 	</aop:config>
 
 	<bean id="com.liferay.portal.service.persistence.lar.ExportImportMessageAdvice" class="com.liferay.portal.service.persistence.lar.ExportImportMessageAdvice" />

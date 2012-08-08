@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -107,69 +108,19 @@ public class LarDigestImpl implements LarDigest {
 	public List<LarDigestItem> findDigestItems(
 		int action, String path, String type, String classPK, String uuid) {
 
-		List result = new ArrayList<LarDigestItem>();
-
-		try {
-			Element rootElement = getDocument().getRootElement();
-
-			StringBundler sb = new StringBundler("//item");
-
-			if (action > 0) {
-				sb = sb.append(StringPool.OPEN_BRACKET);
-				sb = sb.append(LarDigesterConstants.NODE_ACTION_LABEL);
-				sb = sb.append(StringPool.EQUAL);
-				sb = sb.append("'" + action + "'");
-				sb = sb.append(StringPool.CLOSE_BRACKET);
-			}
-
-			if (Validator.isNotNull(path)) {
-				sb = sb.append(StringPool.OPEN_BRACKET);
-				sb = sb.append(LarDigesterConstants.NODE_PATH_LABEL);
-				sb = sb.append(StringPool.EQUAL);
-				sb = sb.append("'" + path + "'");
-				sb = sb.append(StringPool.CLOSE_BRACKET);
-			}
-
-			if (Validator.isNotNull(type)) {
-				sb = sb.append(StringPool.OPEN_BRACKET);
-				sb = sb.append(LarDigesterConstants.NODE_TYPE_LABEL);
-				sb = sb.append(StringPool.EQUAL);
-				sb = sb.append("'" + type + "'");
-				sb = sb.append(StringPool.CLOSE_BRACKET);
-			}
-
-			if (Validator.isNotNull(classPK)) {
-				sb = sb.append(StringPool.OPEN_BRACKET);
-				sb = sb.append(LarDigesterConstants.NODE_CLASS_PK_LABEL);
-				sb = sb.append(StringPool.EQUAL);
-				sb = sb.append("'" + classPK + "'");
-				sb = sb.append(StringPool.CLOSE_BRACKET);
-			}
-
-			if (Validator.isNotNull(uuid)) {
-				sb = sb.append(StringPool.OPEN_BRACKET);
-				sb = sb.append(LarDigesterConstants.NODE_UUID_LABEL);
-				sb = sb.append(StringPool.EQUAL);
-				sb = sb.append("'" + uuid + "'");
-				sb = sb.append(StringPool.CLOSE_BRACKET);
-			}
-
-			for (Node node : rootElement.selectNodes(sb.toString())) {
-				Element digestElement = (Element)node;
-
-				LarDigestItem digestItem = new LarDigestItemImpl(digestElement);
-
-				result.add(digestItem);
-			}
-		}
-		catch (Exception e) {
-			if (_log.isDebugEnabled()) {
-				_log.debug("Cannot find item in the digest: " +
-					e.getMessage());
-			}
+		if (getDigestString() == null) {
+			return doFindDigestItemsInObject(action, path, type, classPK, uuid);
 		}
 
-		return result;
+		return doFindDigestItemsInXml(action, path, type, classPK, uuid);
+	}
+
+	public LarDigestModule findDigestModule(String moduleName) {
+		if (getDigestString() == null) {
+			return doFindDigestModuleInObject(moduleName);
+		}
+
+		return doFindDigestModuleInXml(moduleName);
 	}
 
 	public List<LarDigestModule> getAllModules() {
@@ -276,6 +227,113 @@ public class LarDigestImpl implements LarDigest {
 		for (LarDigestModule module : _moduleList) {
 			module.serialize(_xmlStreamWriter);
 		}
+	}
+
+	protected List<LarDigestItem> doFindDigestItemsInObject(
+		int action, String path, String type, String classPK, String uuid) {
+
+		return Collections.emptyList();
+	}
+
+	protected List<LarDigestItem> doFindDigestItemsInXml(
+		int action, String path, String type, String classPK, String uuid) {
+
+		List result = new ArrayList<LarDigestItem>();
+
+		try {
+			Element rootElement = getDocument().getRootElement();
+
+			StringBundler sb = new StringBundler("//item");
+
+			if (action > 0) {
+				sb = sb.append(StringPool.OPEN_BRACKET);
+				sb = sb.append(LarDigesterConstants.NODE_ACTION_LABEL);
+				sb = sb.append(StringPool.EQUAL);
+				sb = sb.append("'" + action + "'");
+				sb = sb.append(StringPool.CLOSE_BRACKET);
+			}
+
+			if (Validator.isNotNull(path)) {
+				sb = sb.append(StringPool.OPEN_BRACKET);
+				sb = sb.append(LarDigesterConstants.NODE_PATH_LABEL);
+				sb = sb.append(StringPool.EQUAL);
+				sb = sb.append("'" + path + "'");
+				sb = sb.append(StringPool.CLOSE_BRACKET);
+			}
+
+			if (Validator.isNotNull(type)) {
+				sb = sb.append(StringPool.OPEN_BRACKET);
+				sb = sb.append(LarDigesterConstants.NODE_TYPE_LABEL);
+				sb = sb.append(StringPool.EQUAL);
+				sb = sb.append("'" + type + "'");
+				sb = sb.append(StringPool.CLOSE_BRACKET);
+			}
+
+			if (Validator.isNotNull(classPK)) {
+				sb = sb.append(StringPool.OPEN_BRACKET);
+				sb = sb.append(LarDigesterConstants.NODE_CLASS_PK_LABEL);
+				sb = sb.append(StringPool.EQUAL);
+				sb = sb.append("'" + classPK + "'");
+				sb = sb.append(StringPool.CLOSE_BRACKET);
+			}
+
+			if (Validator.isNotNull(uuid)) {
+				sb = sb.append(StringPool.OPEN_BRACKET);
+				sb = sb.append(LarDigesterConstants.NODE_UUID_LABEL);
+				sb = sb.append(StringPool.EQUAL);
+				sb = sb.append("'" + uuid + "'");
+				sb = sb.append(StringPool.CLOSE_BRACKET);
+			}
+
+			for (Node node : rootElement.selectNodes(sb.toString())) {
+				Element digestElement = (Element)node;
+
+				LarDigestItem digestItem = new LarDigestItemImpl(digestElement);
+
+				result.add(digestItem);
+			}
+		}
+		catch (Exception e) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Cannot find item in the digest: " +
+					e.getMessage());
+			}
+		}
+
+		return result;
+	}
+
+	protected LarDigestModule doFindDigestModuleInObject(String moduleName) {
+
+		if (Validator.isNull(moduleName)) {
+			return null;
+		}
+
+		for (LarDigestModule module : _moduleList) {
+			if (module.getName().equals(moduleName)) {
+				return module;
+			}
+		}
+
+		return null;
+	}
+
+	protected LarDigestModule doFindDigestModuleInXml(String moduleName) {
+
+		List<LarDigestModule> result = new ArrayList<LarDigestModule>();
+
+		Element rootElement = getDocument().getRootElement();
+
+		String xPath = "//" + LarDigesterConstants.NODE_MODULE_LABEL +
+			"[@name=" + moduleName + "]";
+
+		Element digestModuleEl = (Element)rootElement.selectSingleNode(xPath);
+
+		if (digestModuleEl == null) {
+			return null;
+		}
+
+		return new LarDigestModuleImpl(digestModuleEl);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(LarDigest.class);

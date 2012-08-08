@@ -21,14 +21,18 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.PermissionExporter;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestPermission;
 import com.liferay.portal.lar.digest.LarDigestPermissionImpl;
+import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.Role;
@@ -66,6 +70,7 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 			return;
 		}
 
+		Object entity = args[0];
 		DataHandlerContext context = (DataHandlerContext)args[1];
 
 		LarDigestItem item = (LarDigestItem)returnValue;
@@ -79,14 +84,12 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 		if (exportPermissions) {
 			List<LarDigestPermission> permissionsList = null;
 
-			if (Layout.class.getName().equals(item.getType())) {
-				long plid = Long.valueOf(item.getClassPK());
-
-				Layout layout = LayoutLocalServiceUtil.getLayout(plid);
+			if (entity instanceof Layout) {
+				Layout layout = (Layout)entity;
 
 				permissionsList = digestLayoutPermissions(context, layout);
 			}
-			else if (dataHandler instanceof PortletDataHandler) {
+			else if (entity instanceof Portlet) {
 				long plid = Long.valueOf(item.getMetadataValue("old-plid"));
 				String portletId = item.getMetadataValue("portlet-id");
 
@@ -287,7 +290,7 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 		if (ResourceBlockLocalServiceUtil.isSupported(className)) {
 			return ResourceBlockPermissionLocalServiceUtil.
 				getAvailableResourceBlockPermissionActionIds(
-						roleIds, className, primKey, actionIds);
+					roleIds, className, primKey, actionIds);
 		}
 		else {
 			return ResourcePermissionLocalServiceUtil.
@@ -295,6 +298,30 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 					companyId, className, ResourceConstants.SCOPE_INDIVIDUAL,
 					String.valueOf(primKey), roleIds, actionIds);
 		}
+	}
+
+	private String getPermissionPath(Object entity) {
+		if (entity instanceof BaseModel) {
+			BaseModel baseModel = (BaseModel)entity;
+
+			Map<String, Object> modelAttributes =
+				baseModel.getModelAttributes();
+
+			StringBundler sb = new StringBundler();
+
+			sb.append(StringPool.FORWARD_SLASH);
+			sb.append("group");
+			sb.append(StringPool.FORWARD_SLASH);
+			sb.append(modelAttributes.get("groupId"));
+			sb.append(StringPool.FORWARD_SLASH);
+			sb.append(baseModel.getModelClassName());
+			sb.append(StringPool.FORWARD_SLASH);
+			sb.append(baseModel.getPrimaryKeyObj() + "-permissions.xml");
+
+			return sb.toString();
+		}
+
+		return StringPool.BLANK;
 	}
 
 }

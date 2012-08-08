@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFeed;
@@ -52,6 +53,15 @@ public class JournalPortletDataHandlerImpl extends PortletDataHandlerImpl
 		throws Exception {
 
 		return null;
+	}
+
+	@Override
+	public void doExport(
+			Portlet portlet, DataHandlerContext context,
+			LarDigestModule digestModule)
+		throws Exception {
+
+		return;
 	}
 
 	@Override

@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ReleaseInfo;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -247,7 +248,7 @@ public class LARImporter {
 		// Layout prototypes validation
 
 		List<LarDigestItem> layoutItems = larDigest.findDigestItems(
-			0, null, Layout.class.getName(), null);
+			0, null, Layout.class.getName(), null, StringPool.BLANK);
 
 		validateLayoutPrototypes(companyId, layoutItems, larDigest);
 

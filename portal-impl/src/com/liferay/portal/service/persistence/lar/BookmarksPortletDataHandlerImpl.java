@@ -26,6 +26,8 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
+import com.liferay.portal.lar.digest.LarDigestModule;
+import com.liferay.portal.lar.digest.LarDigestModuleImpl;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Portlet;
@@ -43,8 +45,7 @@ import java.util.Map;
 /**
  * @author Mate Thurzo
  */
-public class BookmarksPortletDataHandlerImpl
-	extends PortletDataHandlerImpl
+public class BookmarksPortletDataHandlerImpl extends PortletDataHandlerImpl
 	implements BookmarksPortletDataHandler {
 
 	@Override
@@ -114,11 +115,21 @@ public class BookmarksPortletDataHandlerImpl
 			Portlet portlet, LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
+		return null;
+	}
+
+	public void doExport(
+			Portlet portlet, DataHandlerContext context,
+			LarDigestModule digestModule)
+		throws Exception {
+
+		digestModule.setName("com.liferay.portlet.bookmarks");
+
 		List<BookmarksFolder> folders = BookmarksFolderUtil.findByGroupId(
 			context.getScopeGroupId());
 
 		for (BookmarksFolder folder : folders) {
-			exportFolder(folder, context);
+			bookmarksFolderDataHandler.export(folder, context, digestModule);
 		}
 
 		List<BookmarksEntry> entries = BookmarksEntryUtil.findByG_F(
@@ -126,78 +137,8 @@ public class BookmarksPortletDataHandlerImpl
 			BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 
 		for (BookmarksEntry entry : entries) {
-			exportEntry(entry, context);
+			bookmarksEntryDataHandler.export(entry, context, digestModule);
 		}
-
-		return item;
-	}
-
-	public void export(Portlet portlet, DataHandlerContext context)
-		throws Exception {
-
-		List<BookmarksFolder> folders = BookmarksFolderUtil.findByGroupId(
-			context.getScopeGroupId());
-
-		for (BookmarksFolder folder : folders) {
-			exportFolder(folder, context);
-		}
-
-		List<BookmarksEntry> entries = BookmarksEntryUtil.findByG_F(
-			context.getScopeGroupId(),
-			BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-
-		for (BookmarksEntry entry : entries) {
-			exportEntry(entry, context);
-		}
-	}
-
-	protected void exportEntry(
-			BookmarksEntry entry, DataHandlerContext context)
-		throws Exception {
-
-		if (!context.isWithinDateRange(entry.getModifiedDate())) {
-			return;
-		}
-
-		long parentForlderId = entry.getFolderId();
-
-		if (parentForlderId > 0) {
-			exportParentFolder(parentForlderId, context);
-		}
-
-		bookmarksEntryDataHandler.digest(entry, context);
-	}
-
-	protected void exportFolder(
-			BookmarksFolder folder, DataHandlerContext context)
-		throws Exception{
-
-		if (context.isWithinDateRange(folder.getModifiedDate())) {
-			exportParentFolder(folder.getParentFolderId(), context);
-
-			bookmarksFolderDataHandler.digest(folder, context);
-		}
-
-		List<BookmarksEntry> entries = BookmarksEntryUtil.findByG_F(
-			folder.getGroupId(), folder.getFolderId());
-
-		for (BookmarksEntry entry : entries) {
-			bookmarksEntryDataHandler.digest(entry, context);
-		}
-	}
-
-	protected void exportParentFolder(long folderId, DataHandlerContext context)
-		throws Exception {
-
-		if (folderId == BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-			return;
-		}
-
-		BookmarksFolder folder = BookmarksFolderUtil.findByPrimaryKey(folderId);
-
-		exportParentFolder(folder.getParentFolderId(), context);
-
-		bookmarksFolderDataHandler.digest(folder, context);
 	}
 
 	private static PortletDataHandlerBoolean _foldersAndEntries =

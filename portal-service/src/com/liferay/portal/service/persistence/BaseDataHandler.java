@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.service.ServiceContext;
@@ -56,7 +57,9 @@ public abstract interface BaseDataHandler<T extends BaseModel<T>> {
 			T object, DataHandlerContext context)
 		throws Exception;
 
-	public void export(T object, DataHandlerContext context) throws Exception;
+	public void export(
+			T object, DataHandlerContext context, LarDigestModule digestModule)
+		throws Exception;
 
 	public abstract T getEntity(String classPK);
 

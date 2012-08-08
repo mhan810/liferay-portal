@@ -17,17 +17,23 @@ package com.liferay.portal.service.persistence.lar;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.lar.digest.LarDigest;
+import com.liferay.portal.lar.digest.LarDigestDependency;
+import com.liferay.portal.lar.digest.LarDigestDependencyImpl;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
+import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.model.BookmarksFolderConstants;
 import com.liferay.portlet.bookmarks.service.BookmarksFolderLocalServiceUtil;
+import com.liferay.portlet.bookmarks.service.persistence.BookmarksEntryUtil;
 import com.liferay.portlet.bookmarks.service.persistence.BookmarksFolderUtil;
 
 import java.util.List;
@@ -86,7 +92,8 @@ public class BookmarksFolderDataHandlerImpl
 			LarDigest digest = context.getLarDigest();
 
 			List<LarDigestItem> parentFolderItem = digest.findDigestItems(
-				0, path, BookmarksFolder.class.getName(), null);
+				0, path, BookmarksFolder.class.getName(), null,
+				StringPool.BLANK);
 
 			doImportData(parentFolderItem.get(0), context);
 
@@ -127,12 +134,58 @@ public class BookmarksFolderDataHandlerImpl
 	}
 
 	public void export(
-			BookmarksFolder folder, DataHandlerContext context)
+			BookmarksFolder folder, DataHandlerContext context,
+			LarDigestModule digestModule)
 		throws Exception {
 
-		LarDigestItem item = doDigest(folder, context);
+		String path = getEntityPath(folder);
 
-		serialize(item, context);
+		if (context.isPathProcessed(path) ||
+			!context.isWithinDateRange(folder.getModifiedDate())) {
+
+			return;
+		}
+
+		LarDigestItem digestItem = new LarDigestItemImpl();
+
+		digestItem.setAction(getDigestAction(folder, context));
+		digestItem.setPath(path);
+		digestItem.setType(BookmarksFolder.class.getName());
+		digestItem.setClassPK(StringUtil.valueOf(folder.getFolderId()));
+		digestItem.setUuid(folder.getUuid());
+
+		List<BookmarksFolder> children = BookmarksFolderUtil.findByG_P(
+			folder.getGroupId(), folder.getFolderId());
+
+		LarDigestDependency dependency = null;
+
+		if (children != null) {
+			for (BookmarksFolder childFolder : children) {
+				dependency = new LarDigestDependencyImpl(
+					BookmarksFolder.class.getName(), childFolder.getUuid());
+
+				digestItem.addDependency(dependency);
+
+				export(childFolder, context, digestModule);
+			}
+		}
+
+		List<BookmarksEntry> childEntries = BookmarksEntryUtil.findByG_F(
+			folder.getGroupId(), folder.getFolderId());
+
+		if (childEntries != null) {
+			for (BookmarksEntry childEntry : childEntries) {
+				dependency = new LarDigestDependencyImpl(
+					BookmarksEntry.class.getName(), childEntry.getUuid());
+
+				digestItem.addDependency(dependency);
+
+				bookmarksEntryDataHandler.export(
+					childEntry, context, digestModule);
+			}
+		}
+
+		digestModule.addItem(digestItem);
 	}
 
 	public BookmarksFolder getEntity(String classPK) {

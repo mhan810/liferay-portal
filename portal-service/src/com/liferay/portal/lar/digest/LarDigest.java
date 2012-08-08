@@ -35,6 +35,8 @@ public interface LarDigest {
 	public List<LarDigestItem> findDigestItems(
 		int action, String path, String type, String classPK, String uuid);
 
+	public LarDigestModule findDigestModule(String moduleName);
+
 	public List<LarDigestModule> getAllModules();
 
 	public File getDigestFile();

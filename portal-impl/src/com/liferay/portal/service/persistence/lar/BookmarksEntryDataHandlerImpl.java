@@ -17,12 +17,14 @@ package com.liferay.portal.service.persistence.lar;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
+import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
@@ -46,22 +48,7 @@ public class BookmarksEntryDataHandlerImpl
 			BookmarksEntry entry, DataHandlerContext context)
 		throws Exception {
 
-		LarDigest digest = context.getLarDigest();
-
-		String path = getEntityPath(entry);
-
-		if (context.isPathProcessed(path)) {
-			return null;
-		}
-
-		LarDigestItem digestItem = new LarDigestItemImpl();
-
-		digestItem.setAction(getDigestAction(entry, context));
-		digestItem.setPath(path);
-		digestItem.setType(BookmarksEntry.class.getName());
-		digestItem.setClassPK(StringUtil.valueOf(entry.getEntryId()));
-
-		return digestItem;
+		return null;
 	}
 
 	@Override
@@ -88,7 +75,7 @@ public class BookmarksEntryDataHandlerImpl
 
 			List<LarDigestItem> parentFolderItem = digest.findDigestItems(
 				0, null, BookmarksFolder.class.getName(),
-				StringUtil.valueOf(folderId));
+				StringUtil.valueOf(folderId), StringPool.BLANK);
 
 			bookmarksFolderDataHandler.importData(
 				parentFolderItem.get(0), context);
@@ -132,6 +119,31 @@ public class BookmarksEntryDataHandlerImpl
 
 		// toDo: getClassedModel again...
 		//context.importClassedModel(entry, importedEntry, _NAMESPACE);
+	}
+
+	@Override
+	public void export(
+			BookmarksEntry entry, DataHandlerContext context,
+			LarDigestModule digestModule)
+		throws Exception {
+
+		String path = getEntityPath(entry);
+
+		if (context.isPathProcessed(path) ||
+			!context.isWithinDateRange(entry.getModifiedDate())) {
+
+			return;
+		}
+
+		LarDigestItem digestItem = new LarDigestItemImpl();
+
+		digestItem.setAction(getDigestAction(entry, context));
+		digestItem.setPath(path);
+		digestItem.setType(BookmarksEntry.class.getName());
+		digestItem.setClassPK(StringUtil.valueOf(entry.getEntryId()));
+		digestItem.setUuid(entry.getUuid());
+
+		digestModule.addItem(digestItem);
 	}
 
 	public BookmarksEntry getEntity(String classPK) {

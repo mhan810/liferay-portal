@@ -38,6 +38,7 @@ import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.PermissionExporter;
 import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.lar.digest.LarDigestPermission;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.AuditedModel;
@@ -145,7 +146,10 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 	public abstract T getEntity(String classPK);
 
-	public void export(T object, DataHandlerContext context) throws Exception {
+	public void export(
+			T object, DataHandlerContext context, LarDigestModule digestModule)
+		throws Exception {
+
 		return;
 	}
 
