@@ -34,9 +34,12 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
+import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.PermissionExporter;
 import com.liferay.portal.lar.XStreamWrapper;
+import com.liferay.portal.lar.digest.LarDigest;
+import com.liferay.portal.lar.digest.LarDigestDependency;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.lar.digest.LarDigestPermission;
@@ -122,10 +125,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 			null, path, classedModel, namespace, context);
 	}
 
-	public abstract void doImportData(
-			LarDigestItem item, DataHandlerContext context)
-		throws Exception;
-
 	public void export(
 			T object, DataHandlerContext context, LarDigestModule digestModule)
 		throws Exception {
@@ -206,16 +205,10 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return reader.getEntryAsString(path);
 	}
 
-	public void importData(LarDigestItem item, DataHandlerContext context) {
-		try {
-			if (!context.isPathProcessed(item.getPath())) {
-				doImportData(item, context);
-			}
+	public void importData(LarDigestItem item, DataHandlerContext context)
+		throws Exception{
 
-			context.addProcessedPath(item.getPath());
-		}
-		catch (Exception e) {
-		}
+		return;
 	}
 
 	public void serialize(T object, DataHandlerContext context) {
@@ -432,6 +425,41 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return ROOT_PATH_GROUPS + groupId;
 	}
 
+	public void importClassedModel(
+			ClassedModel classedModel, ClassedModel newClassedModel,
+			String namespace, DataHandlerContext context)
+		throws PortalException, SystemException {
+
+		if (!isResourceMain(classedModel)) {
+			return;
+		}
+
+		Class<?> clazz = classedModel.getModelClass();
+		long classPK = getClassPK(classedModel);
+
+		long newClassPK = getClassPK(newClassedModel);
+
+		Map<Long, Long> newPrimaryKeysMap =
+			(Map<Long, Long>)context.getNewPrimaryKeysMap(clazz);
+
+		newPrimaryKeysMap.put(classPK, newClassPK);
+
+		/*importLocks(clazz, String.valueOf(classPK), String.valueOf(newClassPK));
+		importPermissions(clazz, classPK, newClassPK);
+
+		boolean portletMetadataAll = getBooleanParameter(
+				namespace, PortletDataHandlerKeys.PORTLET_METADATA_ALL);
+
+		if (portletMetadataAll || getBooleanParameter(namespace, "comments")) {
+			importComments(clazz, classPK, newClassPK, getScopeGroupId());
+		}
+
+		if (portletMetadataAll || getBooleanParameter(namespace, "ratings")) {
+			importRatingsEntries(clazz, classPK, newClassPK);
+		}*/
+	}
+
+
 	protected void importPermissions(
 			String resourceName, String resourcePrimKey,
 			List<LarDigestPermission> permissions, DataHandlerContext context)
@@ -508,6 +536,25 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		ResourcePermissionLocalServiceUtil.setResourcePermissions(
 			companyId, resourceName, ResourceConstants.SCOPE_INDIVIDUAL,
 			resourcePrimKey, roleIdsToActionIds);
+	}
+
+	protected void importDependencies(
+			LarDigestItem item, DataHandlerContext context)
+		throws  Exception{
+
+		LarDigest digest = context.getLarDigest();
+
+		for(LarDigestDependency dependency : item.getDependencies()) {
+
+			LarDigestItem dependentItem =  digest.findDigestItem(
+				0, null, dependency.getType(), dependency.getClassPK(),
+				dependency.getUuid());
+
+			BaseDataHandler dataHandler =
+				DataHandlersUtil.getDataHandlerInstance(item.getType());
+
+			dataHandler.importData(dependentItem, context);
+		}
 	}
 
 	protected void importEntityPermission(
@@ -589,6 +636,16 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 				companyId, resourceName, ResourceConstants.SCOPE_INDIVIDUAL,
 				String.valueOf(newResourcePK), roleIdsToActionIds);
 		}
+	}
+
+	protected boolean isResourceMain(ClassedModel classedModel) {
+		if (classedModel instanceof ResourcedModel) {
+			ResourcedModel resourcedModel = (ResourcedModel)classedModel;
+
+			return resourcedModel.isResourceMain();
+		}
+
+		return true;
 	}
 
 	protected boolean isValidPath(String path) {

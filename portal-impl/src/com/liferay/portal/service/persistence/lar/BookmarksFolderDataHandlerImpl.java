@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestDependency;
 import com.liferay.portal.lar.digest.LarDigestDependencyImpl;
@@ -27,6 +28,7 @@ import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
@@ -47,11 +49,17 @@ public class BookmarksFolderDataHandlerImpl
 	implements BookmarksFolderDataHandler {
 
 	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
+	public void importData(LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
 		BookmarksFolder folder = (BookmarksFolder)getZipEntryAsObject(
 			context.getZipReader(), item.getPath());
+
+		String path = getEntityPath(folder);
+
+		if (context.isPathProcessed(path)) {
+			return;
+		}
 
 		long userId = context.getUserId(folder.getUserUuid());
 
@@ -62,24 +70,6 @@ public class BookmarksFolderDataHandlerImpl
 		long parentFolderId = MapUtil.getLong(
 			folderIds, folder.getParentFolderId(), folder.getParentFolderId());
 
-		if ((parentFolderId !=
-				BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) &&
-			(parentFolderId == folder.getParentFolderId())) {
-
-			String path = getImportFolderPath(context, parentFolderId);
-
-			LarDigest digest = context.getLarDigest();
-
-			List<LarDigestItem> parentFolderItem = digest.findDigestItems(
-				0, path, BookmarksFolder.class.getName(), null,
-				StringPool.BLANK);
-
-			doImportData(parentFolderItem.get(0), context);
-
-			parentFolderId = MapUtil.getLong(
-				folderIds, folder.getParentFolderId(),
-				folder.getParentFolderId());
-		}
 
 		ServiceContext serviceContext = createServiceContext(
 			item.getPath(), folder, BookmarksPortletDataHandler._NAMESPACE,
@@ -110,6 +100,10 @@ public class BookmarksFolderDataHandlerImpl
 				userId, parentFolderId, folder.getName(),
 				folder.getDescription(), serviceContext);
 		}
+
+		importClassedModel(folder, importedFolder, getNamespace(), context);
+
+		importDependencies(item, context);
 	}
 
 	public void export(

@@ -25,9 +25,6 @@ import com.liferay.portal.service.persistence.BaseDataHandler;
  */
 public interface LayoutDataHandler extends BaseDataHandler<Layout> {
 
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception;
-
 	public Layout getEntity(String classPK);
 
 }

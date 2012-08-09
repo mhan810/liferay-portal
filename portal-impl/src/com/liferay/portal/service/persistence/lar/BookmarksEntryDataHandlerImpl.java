@@ -44,11 +44,17 @@ public class BookmarksEntryDataHandlerImpl
 	implements BookmarksEntryDataHandler {
 
 	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
+	public void importData(LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
 		BookmarksEntry entry = (BookmarksEntry)getZipEntryAsObject(
 			context.getZipReader(), item.getPath());
+
+		String path = getEntityPath(entry);
+
+		if (context.isPathProcessed(path)) {
+			return;
+		}
 
 		long userId = context.getUserId(entry.getUserUuid());
 
@@ -58,23 +64,6 @@ public class BookmarksEntryDataHandlerImpl
 
 		long folderId = MapUtil.getLong(
 			folderIds, entry.getFolderId(), entry.getFolderId());
-
-		if ((folderId != BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) &&
-			(folderId == entry.getFolderId())) {
-
-
-			LarDigest digest = context.getLarDigest();
-
-			List<LarDigestItem> parentFolderItem = digest.findDigestItems(
-				0, null, BookmarksFolder.class.getName(),
-				StringUtil.valueOf(folderId), StringPool.BLANK);
-
-			bookmarksFolderDataHandler.importData(
-				parentFolderItem.get(0), context);
-
-			folderId = MapUtil.getLong(
-				folderIds, entry.getFolderId(), entry.getFolderId());
-		}
 
 		ServiceContext serviceContext = createServiceContext(
 			item.getPath(), entry, BookmarksPortletDataHandler._NAMESPACE,
@@ -109,8 +98,7 @@ public class BookmarksEntryDataHandlerImpl
 				serviceContext);
 		}
 
-		// toDo: getClassedModel again...
-		//context.importClassedModel(entry, importedEntry, _NAMESPACE);
+		importClassedModel(entry, importedEntry, getNamespace(), context);
 	}
 
 	@Override

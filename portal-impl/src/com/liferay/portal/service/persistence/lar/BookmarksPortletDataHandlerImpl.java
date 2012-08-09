@@ -38,6 +38,7 @@ import com.liferay.portlet.bookmarks.model.BookmarksFolderConstants;
 import com.liferay.portlet.bookmarks.service.persistence.BookmarksEntryUtil;
 import com.liferay.portlet.bookmarks.service.persistence.BookmarksFolderUtil;
 
+import javax.portlet.PortletPreferences;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,14 +111,6 @@ public class BookmarksPortletDataHandlerImpl extends PortletDataHandlerImpl
 		return "com.liferay.portlet.bookmarks";
 	}
 
-	@Override
-	protected LarDigestItem doDigestPortlet(
-			Portlet portlet, LarDigestItem item, DataHandlerContext context)
-		throws Exception {
-
-		return null;
-	}
-
 	public void doExport(
 			Portlet portlet, DataHandlerContext context,
 			LarDigestModule digestModule)
@@ -137,6 +130,16 @@ public class BookmarksPortletDataHandlerImpl extends PortletDataHandlerImpl
 		for (BookmarksEntry entry : entries) {
 			bookmarksEntryDataHandler.export(entry, context, digestModule);
 		}
+	}
+
+	protected PortletPreferences doImportData(
+			DataHandlerContext context, LarDigestModule portletModule,
+			PortletPreferences portletPreferences)
+		throws Exception {
+
+		System.out.println(getClass().getName() + "doImportData");
+
+		return null;
 	}
 
 	private static PortletDataHandlerBoolean _foldersAndEntries =

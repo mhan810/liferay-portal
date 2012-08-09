@@ -33,7 +33,7 @@ public class LarDigestPermissionImpl implements LarDigestPermission {
 
 	public LarDigestPermissionImpl(Element root) {
 		Attribute role = root.attribute(
-				LarDigesterConstants.ATTRIBUTE_NAME_ROLE);
+			LarDigesterConstants.ATTRIBUTE_NAME_ROLE);
 
 		_roleName = role.getText();
 

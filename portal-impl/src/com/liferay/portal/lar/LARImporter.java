@@ -23,7 +23,10 @@ import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.NoSuchLayoutPrototypeException;
 import com.liferay.portal.NoSuchLayoutSetPrototypeException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.lar.*;
+
+import com.liferay.portal.service.persistence.lar.PortletDataHandler;
+import com.liferay.portal.kernel.lar.DataHandlerContext;
+import com.liferay.portal.kernel.lar.ImportExportThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -44,7 +47,7 @@ import com.liferay.portal.kernel.zip.ZipReaderFactoryUtil;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestImpl;
 import com.liferay.portal.lar.digest.LarDigestItem;
-import com.liferay.portal.lar.digest.LarDigestMetadata;
+import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutPrototype;
@@ -59,6 +62,7 @@ import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -74,6 +78,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.time.StopWatch;
+
+import javax.portlet.Portlet;
 
 /**
  * @author Daniel Kocsis
@@ -190,16 +196,14 @@ public class LARImporter {
 			String xml = zipReader.getEntryAsString("/digest.xml");
 
 			larDigest = new LarDigestImpl(xml);
-
-			context.setLarDigest(larDigest);
 		}
 		catch (Exception e) {
 			throw new LARFileException(e);
 		}
 
-		// Build compatibility
+		context.setLarDigest(larDigest);
 
-		List<LarDigestMetadata> metaDataList = larDigest.getMetaData();
+		// Build compatibility
 
 		int buildNumber = ReleaseInfo.getBuildNumber();
 
@@ -336,25 +340,6 @@ public class LARImporter {
 		context.setAttribute(
 			"layoutSetPrototypeLinkEnabled", layoutSetPrototypeLinkEnabled);
 
-		// Read asset categories, asset tags, comments, locks, permissions, and
-		// ratings entries to make them available to the data handlers through
-		// the context
-
-		// toDo: asset, comment, expando, lock, rating
-		// import needs to be moved here!
-
-		/*
-		if (importCategories || group.isCompany()) {
-			_portletImporter.readAssetCategories(portletDataContext);
-		}
-
-		readAssetTags(portletDataContext);
-		readComments(portletDataContext);
-		readExpandoTables(portletDataContext);
-		readLocks(portletDataContext);
-		readRatingsEntries(portletDataContext);
-		*/
-
 		// Layouts
 
 		List<Layout> previousLayouts = LayoutUtil.findByG_P(
@@ -406,12 +391,6 @@ public class LARImporter {
 		context.setAttribute("newLayoutsMap", newLayoutsMap);
 		context.setAttribute("previousLayouts", previousLayouts);
 
-		/*for (LarDigestItem item : larDigest.getAllItems()) {
-			BaseDataHandler dataHandler =
-				DataHandlersUtil.getDataHandlerInstance(item.getType());
-
-			dataHandler.importData(item, context);
-		}
 		// Import layouts
 
 		if (_log.isDebugEnabled()) {
@@ -424,29 +403,22 @@ public class LARImporter {
 			BaseDataHandler dataHandler =
 				DataHandlersUtil.getDataHandlerInstance(Layout.class.getName());
 
-			dataHandler.importData(layoutItem);
+			dataHandler.importData(layoutItem, context);
 		}
 
 		// Import portlets
 
-		List<LarDigestItem> portletItems = larDigest.findDigestItems(
-			0, null, Portlet.class.getName(), null);
-
 		if (_log.isDebugEnabled()) {
-			if (portletItems.size() > 0) {
-				_log.debug("Importing portlets");
-			}
+			_log.debug("Importing portlets");
 		}
 
-		for (LarDigestItem portletItem : portletItems) {
-			BaseDataHandler dataHandler =
-				DataHandlersUtil.getDataHandlerInstance(
-					portletItem.getClassPK());
+		for (LarDigestModule portletModule : larDigest.getAllPortletModules()) {
+			PortletDataHandler dataHandler =
+				(PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(
+					portletModule.getName());
 
-			dataHandler.importData(portletItem);
+			dataHandler.importData(portletModule, context);
 		}
-
-		*/
 
 		// Re-index user
 

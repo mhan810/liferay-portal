@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 
@@ -33,6 +34,10 @@ public interface PortletDataHandler extends BaseDataHandler<Portlet> {
 	public PortletDataHandlerControl[] getImportControls();
 
 	public PortletDataHandlerControl[] getImportMetadataControls();
+
+	public void importData(
+			LarDigestModule portletModule, DataHandlerContext context)
+		throws Exception;
 
 	public boolean isAlwaysExportable();
 

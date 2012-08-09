@@ -39,6 +39,8 @@ public interface LarDigest {
 
 	public List<LarDigestModule> getAllModules();
 
+	public List<LarDigestModule> getAllPortletModules();
+
 	public File getDigestFile();
 
 	public String getDigestString();

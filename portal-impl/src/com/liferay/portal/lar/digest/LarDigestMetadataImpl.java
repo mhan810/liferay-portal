@@ -14,6 +14,7 @@
 
 package com.liferay.portal.lar.digest;
 
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Attribute;
 import com.liferay.portal.kernel.xml.Element;
 
@@ -46,6 +47,10 @@ public class LarDigestMetadataImpl implements LarDigestMetadata {
 	}
 
 	public void serialize(XMLStreamWriter writer) throws Exception {
+		if (Validator.isNull(_name)) {
+			return;
+		}
+
 		writer.writeStartElement(LarDigesterConstants.NODE_METADATA_LABEL);
 		writer.writeAttribute(_name, _value);
 		writer.writeEndElement();

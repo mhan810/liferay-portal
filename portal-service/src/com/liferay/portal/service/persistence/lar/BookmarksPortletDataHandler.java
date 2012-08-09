@@ -34,9 +34,6 @@ public interface BookmarksPortletDataHandler extends PortletDataHandler {
 
 	public static final boolean _PUBLISH_TO_LIVE_BY_DEFAULT = true;
 
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception;
-
 	public abstract PortletDataHandlerControl[] getExportControls();
 
 	public abstract PortletDataHandlerControl[] getExportMetadataControls();

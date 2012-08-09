@@ -26,7 +26,5 @@ import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 public interface BookmarksEntryDataHandler
 	extends BaseDataHandler<BookmarksEntry> {
 
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception;
 
 }

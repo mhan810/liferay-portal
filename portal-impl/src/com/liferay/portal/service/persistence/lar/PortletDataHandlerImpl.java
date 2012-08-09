@@ -38,8 +38,6 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.lar.DataHandlersUtil;
-import com.liferay.portal.lar.digest.LarDigest;
-import com.liferay.portal.lar.digest.LarDigestDependency;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.lar.digest.LarDigestMetadataImpl;
@@ -97,9 +95,10 @@ public class PortletDataHandlerImpl
 		return;
 	}
 
-	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception{
+	public void importData(
+			LarDigestModule portletModule, DataHandlerContext context)
+		throws Exception {
+
 
 		Map parameterMap = context.getParameters();
 
@@ -119,10 +118,10 @@ public class PortletDataHandlerImpl
 		long groupId = context.getGroupId();
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 
-		long layoutId = 0;//GetterUtil.getLong(item.getMetadataValue("layout-id"));
-		long oldPlid = 0;//GetterUtil.getLong(item.getMetadataValue("old-plid"));
+		long layoutId = 0; //GetterUtil.getLong(item.getMetadataValue("layout-id"));
+		long oldPlid = 0; //GetterUtil.getLong(item.getMetadataValue("old-plid"));
 
-		String portletId = "";//item.getMetadataValue("portlet-id");
+		String portletId = ""; //item.getMetadataValue("portlet-id");
 
 		Map<Long, Layout> newLayoutsMap =
 			(Map<Long, Layout>)context.getAttribute("newLayoutsMap");
@@ -132,7 +131,7 @@ public class PortletDataHandlerImpl
 
 			context.setPlid(plid);
 
-			//deletePortletData(context, portletId, plid);
+			deletePortletData(context, portletId, plid);
 		}
 
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
@@ -164,7 +163,7 @@ public class PortletDataHandlerImpl
 		// the portlet permissions. The import of the portlet data
 		// assumes that portlet preferences already exist.
 
-		setPortletScope(context, item);
+		setPortletScope(context, portletModule);
 
 		long portletPreferencesGroupId = groupId;
 
@@ -177,7 +176,7 @@ public class PortletDataHandlerImpl
 
 			importPortletPreferences(
 				context, layout.getCompanyId(),
-				portletPreferencesGroupId, layout, null, item,
+				portletPreferencesGroupId, layout, null, portletModule,
 				importPortletSetup, importPortletArchivedSetups,
 				importPortletUserPreferences, false, importPortletData);
 
@@ -186,7 +185,7 @@ public class PortletDataHandlerImpl
 					_log.debug("Importing portlet data");
 				}
 
-				importPortletData(context, item, plid);
+				importPortletData(context, portletModule, plid);
 			}
 		}
 		finally {
@@ -196,14 +195,14 @@ public class PortletDataHandlerImpl
 		// Portlet permissions
 
 		if (importPermissions) {
-			importPortletPermissions(layout, portletId, item, context);
+			// importPortletPermissions(layout, portletId, item, context);
 		}
 
 		// Archived setups
 
 		importPortletPreferences(
-			context, layout.getCompanyId(), groupId, null,
-			null, item, importPortletSetup, importPortletArchivedSetups,
+			context, layout.getCompanyId(), groupId, null, null, portletModule,
+			importPortletSetup, importPortletArchivedSetups,
 			importPortletUserPreferences, false, importPortletData);
 	}
 
@@ -507,31 +506,10 @@ public class PortletDataHandlerImpl
 		return null;
 	}
 
-	protected LarDigestItem doDigestPortlet(
-			Portlet portlet, LarDigestItem item, DataHandlerContext context)
-		throws Exception {
-
-		return null;
-	}
-
 	protected javax.portlet.PortletPreferences doImportData(
-			DataHandlerContext context, LarDigestItem item,
+			DataHandlerContext context, LarDigestModule portletModule,
 			javax.portlet.PortletPreferences portletPreferences)
 		throws Exception {
-
-		LarDigest digest = context.getLarDigest();
-
-		for (LarDigestDependency dependency : item.getDependencies()) {
-			BaseDataHandler dataHandler =
-				DataHandlersUtil.getDataHandlerInstance(
-					javax.portlet.Portlet.class.getName());
-
-			LarDigestItem dependentItem = digest.findDigestItem(
-				0,null, dependency.getType(), dependency.getClassPK(),
-				StringPool.BLANK);
-
-			dataHandler.importData(dependentItem, context);
-		}
 
 		return null;
 	}
@@ -752,7 +730,7 @@ public class PortletDataHandlerImpl
 				preferencesXML, plid);*/
 		}
 
-		/*item.addMetadata(new LarDigestMetadataImpl(
+		item.addMetadata(new LarDigestMetadataImpl(
 			"owner-id", String.valueOf(ownerId)));
 		item.addMetadata(new LarDigestMetadataImpl(
 			"owner-type", String.valueOf(ownerType)));
@@ -760,16 +738,16 @@ public class PortletDataHandlerImpl
 			"default-user", String.valueOf(defaultUser)));
 		item.addMetadata(new LarDigestMetadataImpl(
 			"plid", String.valueOf(plid)));
-		item.addMetadata(new LarDigestMetadataImpl("portlet-id", portletId));*/
+		item.addMetadata(new LarDigestMetadataImpl("portlet-id", portletId));
 
 		if (ownerType == PortletKeys.PREFS_OWNER_TYPE_ARCHIVED) {
 			PortletItem portletItem =
 				PortletItemLocalServiceUtil.getPortletItem(ownerId);
 
-			/*item.addMetadata(new LarDigestMetadataImpl(
+			item.addMetadata(new LarDigestMetadataImpl(
 				"archive-user-uuid", portletItem.getUserUuid()));
 			item.addMetadata(new LarDigestMetadataImpl(
-				"archive-name", portletItem.getName()));*/
+				"archive-name", portletItem.getName()));
 		}
 		else if (ownerType == PortletKeys.PREFS_OWNER_TYPE_USER) {
 			User user = UserLocalServiceUtil.fetchUserById(ownerId);
@@ -778,8 +756,8 @@ public class PortletDataHandlerImpl
 				return;
 			}
 
-			/*item.addMetadata(new LarDigestMetadataImpl(
-				"user-uuid", user.getUserUuid()));*/
+			item.addMetadata(new LarDigestMetadataImpl(
+				"user-uuid", user.getUserUuid()));
 		}
 
 		String path = getPortletPreferencesPath(
@@ -931,13 +909,14 @@ public class PortletDataHandlerImpl
 	}
 
 	protected void importPortletData(
-			DataHandlerContext context, LarDigestItem item, long plid)
+			DataHandlerContext context, LarDigestModule portletModule,
+			long plid)
 		throws Exception {
 
 		long ownerId = PortletKeys.PREFS_OWNER_ID_DEFAULT;
 		int ownerType = PortletKeys.PREFS_OWNER_TYPE_LAYOUT;
 
-		String portletId = "";//item.getMetadataValue("portlet-id");
+		String portletId = ""; //portletModule.getMetadataValue("portlet-id");
 
 		PortletPreferences portletPreferences =
 			PortletPreferencesUtil.fetchByO_O_P_P(
@@ -955,9 +934,16 @@ public class PortletDataHandlerImpl
 			portletPreferencesImpl = new PortletPreferencesImpl();
 		}
 
+		for (LarDigestItem item : portletModule.getItems()) {
+			BaseDataHandler dataHandler =
+				DataHandlersUtil.getDataHandlerInstance(item.getType());
+
+			dataHandler.importData(item, context);
+		}
+
 		portletPreferencesImpl =
 			(PortletPreferencesImpl)doImportData(
-				context, item, portletPreferencesImpl);
+				context, portletModule, portletPreferencesImpl);
 
 		if (portletPreferencesImpl != null) {
 			String xml = PortletPreferencesFactoryUtil.toXML(
@@ -970,7 +956,7 @@ public class PortletDataHandlerImpl
 
 	protected void importPortletPreferences(
 			DataHandlerContext context, long companyId, long groupId,
-			Layout layout, String portletId, LarDigestItem item,
+			Layout layout, String portletId, LarDigestModule module,
 			boolean importPortletSetup, boolean importPortletArchivedSetups,
 			boolean importPortletUserPreferences, boolean preserveScopeLayoutId,
 			boolean importPortletData)
@@ -999,14 +985,7 @@ public class PortletDataHandlerImpl
 			}
 		}
 
-		List<Element> portletPreferencesElements = null;
-
-		// toDo: read digested portletpreferences
-		//parentElement.elements("portlet-preferences");
-
-		for (Element portletPreferencesElement : portletPreferencesElements) {
-			String path = portletPreferencesElement.attributeValue("path");
-
+		for (String path  : module.getPortletPreferences()) {
 			if (!context.isPathProcessed(path)) {
 				String xml = null;
 
@@ -1128,11 +1107,11 @@ public class PortletDataHandlerImpl
 	}
 
 	protected void importPortletPermissions(
-			Layout layout, String portletId, LarDigestItem item,
+			Layout layout, String portletId, LarDigestModule module,
 			DataHandlerContext context)
 		throws Exception {
 
-		List<LarDigestPermission> permissions = item.getPermissions();
+		List<LarDigestPermission> permissions = null; //item.getPermissions();
 
 		if (permissions != null) {
 			String resourceName = PortletConstants.getRootPortletId(portletId);
@@ -1214,12 +1193,12 @@ public class PortletDataHandlerImpl
 	}
 
 	protected void setPortletScope(
-		DataHandlerContext context, LarDigestItem item) {
+		DataHandlerContext context, LarDigestModule module) {
 
 		// Portlet data scope
 
-		String scopeLayoutUuid = "";//item.getMetadataValue("scope-layout-uuid");
-		String scopeLayoutType = "";//item.getMetadataValue("scope-layout-type");
+		String scopeLayoutUuid = ""; //module.getMetadataValue("scope-layout-uuid");
+		String scopeLayoutType = ""; //module.getMetadataValue("scope-layout-type");
 
 		context.setScopeLayoutUuid(scopeLayoutUuid);
 		context.setScopeType(scopeLayoutType);

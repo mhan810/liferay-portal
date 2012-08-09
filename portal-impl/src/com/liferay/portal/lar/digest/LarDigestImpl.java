@@ -137,6 +137,21 @@ public class LarDigestImpl implements LarDigest {
 		return _moduleList;
 	}
 
+	public List<LarDigestModule> getAllPortletModules() {
+		List<LarDigestModule> result = new ArrayList<LarDigestModule>();
+
+		for (LarDigestModule module : getAllModules()) {
+
+			String modulName = module.getName();
+
+			if(modulName.startsWith("com.liferay.portlet")) {
+				result.add(module);
+			}
+		}
+
+		return result;
+	}
+
 	public File getDigestFile() {
 		if (_digestFile == null) {
 			String path =

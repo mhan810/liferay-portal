@@ -14,6 +14,8 @@
 
 package com.liferay.portal.lar.digest;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
 
 import javax.xml.stream.XMLStreamWriter;
@@ -49,18 +51,28 @@ public class LarDigestDependencyImpl implements LarDigestDependency {
 	}
 
 	public void serialize(XMLStreamWriter writer) throws Exception {
+		if(!isValidObject()) {
+			return;
+		}
+
 		writer.writeStartElement(LarDigesterConstants.NODE_DEPENDENCY_LABEL);
 
 		writer.writeStartElement("classPK");
-		writer.writeCharacters(_classPK);
+		if (Validator.isNotNull(_classPK)) {
+			writer.writeCharacters(_classPK);
+		}
 		writer.writeEndElement();
 
 		writer.writeStartElement("uuid");
-		writer.writeCharacters(_uuid);
+		if (Validator.isNotNull(_uuid)) {
+			writer.writeCharacters(_uuid);
+		}
 		writer.writeEndElement();
 
 		writer.writeStartElement("type");
-		writer.writeCharacters(_type);
+		if (Validator.isNotNull(_type)) {
+			writer.writeCharacters(_type);
+		}
 		writer.writeEndElement();
 
 		writer.writeEndElement();
@@ -76,6 +88,16 @@ public class LarDigestDependencyImpl implements LarDigestDependency {
 
 	public void setUuid(String uuid) {
 		_uuid = uuid;
+	}
+
+	protected boolean isValidObject() throws Exception {
+		if (Validator.isNull(_classPK) && Validator.isNull(_uuid) &&
+			Validator.isNull(_type)) {
+
+			return false;
+		}
+
+		return true;
 	}
 
 	private String _classPK;

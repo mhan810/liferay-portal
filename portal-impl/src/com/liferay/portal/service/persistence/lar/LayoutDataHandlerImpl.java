@@ -105,7 +105,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		"/[$SAME_GROUP_FRIENDLY_URL$]";
 
 	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
+	public void importData(LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
 		Map parameterMap = context.getParameters();
