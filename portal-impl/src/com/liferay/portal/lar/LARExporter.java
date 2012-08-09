@@ -499,9 +499,9 @@ public class LARExporter {
 		_context.setPrivateLayout(privateLayout);
 		_context.setScopeGroupId(groupId);
 
-		LarDigest larDigest = new LarDigestImpl();
+		DigestStore store = DigestStoreUtil.createDigestStore();
 
-		_context.setLarDigest(larDigest);
+		_context.setLarDigest(store.getDigest());
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(LARExporter.class);

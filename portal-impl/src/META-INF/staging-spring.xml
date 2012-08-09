@@ -63,8 +63,8 @@
 	</bean>
 
 	<bean id="com.liferay.portal.lar.DigestStoreUtil" class="com.liferay.portal.lar.DigestStoreUtil">
-		<property name="digestStoreImpl">
-			<bean class="com.liferay.portal.lar.ThreadLocalDigestStore" />
+		<property name="digestStoreFactory">
+			<bean class="com.liferay.portal.lar.ThreadLocalDigestStoreFactory" />
 		</property>
 	</bean>
 </beans>
