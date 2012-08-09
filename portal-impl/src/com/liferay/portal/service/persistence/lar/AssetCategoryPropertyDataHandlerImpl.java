@@ -32,12 +32,11 @@ public class AssetCategoryPropertyDataHandlerImpl
 	extends BaseDataHandlerImpl<AssetCategoryProperty>
 	implements AssetCategoryPropertyDataHandler{
 
-	@Override
 	public LarDigestItem doDigest(
 			AssetCategoryProperty categoryProperty, DataHandlerContext context)
 		throws Exception {
 
-		LarDigest digest = context.getLarDigest();
+		/*LarDigest digest = context.getLarDigest();
 
 		String path = getEntityPath(categoryProperty);
 
@@ -51,7 +50,7 @@ public class AssetCategoryPropertyDataHandlerImpl
 				StringUtil.valueOf(categoryProperty.getCategoryPropertyId()));
 
 			return digestItem;
-		}
+		}*/
 
 		return null;
 	}
@@ -61,26 +60,6 @@ public class AssetCategoryPropertyDataHandlerImpl
 		throws Exception {
 
 		return;
-	}
-
-	@Override
-	public AssetCategoryProperty getEntity(String classPK) {
-		if (Validator.isNull(classPK)) {
-			return null;
-		}
-
-		try {
-			long categoryPropertyId = Long.valueOf(classPK);
-
-			AssetCategoryProperty categoryProperty =
-				AssetCategoryPropertyLocalServiceUtil.getCategoryProperty(
-					categoryPropertyId);
-
-			return categoryProperty;
-		}
-		catch(Exception e) {
-			return null;
-		}
 	}
 
 }

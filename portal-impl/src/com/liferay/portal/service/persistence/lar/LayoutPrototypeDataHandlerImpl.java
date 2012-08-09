@@ -16,15 +16,31 @@ package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.lar.digest.LarDigestItem;
-import com.liferay.portal.service.persistence.BaseDataHandler;
-import com.liferay.portlet.asset.model.AssetLink;
+import com.liferay.portal.lar.digest.LarDigestModule;
+import com.liferay.portal.model.LayoutPrototype;
+import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 
 /**
  * @author Mate Thurzo
  */
-public interface AssetLinkDataHandler extends BaseDataHandler<AssetLink> {
+public class LayoutPrototypeDataHandlerImpl
+	extends BaseDataHandlerImpl<LayoutPrototype>
+	implements LayoutPrototypeDataHandler {
 
+	@Override
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception;
+		throws Exception {
+
+		return;
+	}
+
+	@Override
+	public void export(
+			LayoutPrototype object, DataHandlerContext context,
+			LarDigestModule digestModule)
+		throws Exception {
+
+		return;
+	}
 
 }

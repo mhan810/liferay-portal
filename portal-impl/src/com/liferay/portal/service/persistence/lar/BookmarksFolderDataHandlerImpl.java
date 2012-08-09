@@ -47,27 +47,6 @@ public class BookmarksFolderDataHandlerImpl
 	implements BookmarksFolderDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(
-			BookmarksFolder folder, DataHandlerContext context)
-		throws Exception {
-
-		String path = getEntityPath(folder);
-
-		if (context.isPathProcessed(path)) {
-			return null;
-		}
-
-		LarDigestItem digestItem = new LarDigestItemImpl();
-
-		digestItem.setAction(getDigestAction(folder, context));
-		digestItem.setPath(path);
-		digestItem.setType(BookmarksFolder.class.getName());
-		digestItem.setClassPK(StringUtil.valueOf(folder.getFolderId()));
-
-		return digestItem;
-	}
-
-	@Override
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
@@ -186,25 +165,6 @@ public class BookmarksFolderDataHandlerImpl
 		}
 
 		digestModule.addItem(digestItem);
-	}
-
-	public BookmarksFolder getEntity(String classPK) {
-		if (Validator.isNotNull(classPK)) {
-			try {
-				long folderId = Long.valueOf(classPK);
-
-				BookmarksFolder bookmarksFolder =
-					BookmarksFolderLocalServiceUtil.getBookmarksFolder(
-						folderId);
-
-				return bookmarksFolder;
-			}
-			catch (Exception e) {
-				return null;
-			}
-		}
-
-		return null;
 	}
 
 	protected String getImportFolderPath(

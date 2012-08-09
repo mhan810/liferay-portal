@@ -30,37 +30,10 @@ public class JournalStructureDataHandlerImpl
 	implements JournalStructureDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(
-			JournalStructure structure, DataHandlerContext context)
-		throws Exception {
-
-		return null;
-	}
-
-	@Override
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
 		return;
-	}
-
-	@Override
-	public JournalStructure getEntity(String classPK) {
-		if (Validator.isNull(classPK)) {
-			return null;
-		}
-
-		try {
-			long structureId = Long.valueOf(classPK);
-
-			JournalStructure structure =
-				JournalStructureLocalServiceUtil.getStructure(structureId);
-
-			return structure;
-		}
-		catch (Exception e) {
-			return null;
-		}
 	}
 
 }

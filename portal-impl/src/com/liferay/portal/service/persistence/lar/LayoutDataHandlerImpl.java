@@ -38,10 +38,13 @@ import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.lar.LARExporter;
 import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.digest.LarDigest;
+import com.liferay.portal.lar.digest.LarDigestDependency;
+import com.liferay.portal.lar.digest.LarDigestDependencyImpl;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.lar.digest.LarDigestMetadata;
 import com.liferay.portal.lar.digest.LarDigestMetadataImpl;
+import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.lar.digest.LarDigestPermission;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
 import com.liferay.portal.model.Group;
@@ -100,14 +103,6 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 	public static final String SAME_GROUP_FRIENDLY_URL =
 		"/[$SAME_GROUP_FRIENDLY_URL$]";
-
-	@Override
-	public LarDigestItem doDigest(
-			Layout layout, DataHandlerContext context)
-		throws Exception {
-
-		return null;
-	}
 
 	@Override
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
@@ -334,8 +329,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		if (resultItems != null && !resultItems.isEmpty()) {
 			parentLayoutItem = resultItems.get(0);
 
-			parentLayoutUuid =
-				parentLayoutItem.getMetadataValue("parent-layout-uuid");
+			parentLayoutUuid = "";
+				//parentLayoutItem.getMetadataValue("parent-layout-uuid");
 		}
 
 		if ((parentLayoutId != LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) &&
@@ -461,7 +456,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		importedLayout.setIconImage(false);
 
 		if (layout.isIconImage()) {
-			String iconImagePath = item.getMetadataValue("icon-image-path");
+			String iconImagePath = "";//item.getMetadataValue("icon-image-path");
 
 			byte[] iconBytes = getZipEntryAsByteArray(
 				context.getZipReader(), iconImagePath);
@@ -524,18 +519,9 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		context.setAttribute("newLayoutsMap", newLayoutsMap);
 	}
 
-	@Override
-	public void doSerialize(Layout layout, DataHandlerContext context)
-		throws Exception {
-
-		String path = getEntityPath(layout);
-
-		fixTypeSettings(layout);
-
-		addZipEntry(context.getZipWriter(), path, layout);
-	}
-
-	public void export(Layout layout, DataHandlerContext context)
+	public void export(
+			Layout layout, DataHandlerContext context,
+			LarDigestModule digestModule)
 		throws Exception {
 
 		context.setPlid(layout.getPlid());
@@ -581,36 +567,26 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
 		if (layoutRevision != null) {
-			digestItem.addMetadata(new LarDigestMetadataImpl(
-				"layout-revision-id",
-				String.valueOf(layoutRevision.getLayoutRevisionId())));
-			digestItem.addMetadata(new LarDigestMetadataImpl(
-				"layout-branch-id",
-				String.valueOf(layoutRevision.getLayoutBranchId())));
-			digestItem.addMetadata(new LarDigestMetadataImpl(
-				"layout-branch-name",
-				String.valueOf(layoutRevision.getLayoutBranch().getName())));
+			// layoutRevisionDataHandler.export();
 		}
 
-		digestItem.addMetadata(
-			new LarDigestMetadataImpl("layout-uuid", layout.getUuid()));
-		digestItem.addMetadata(
-			new LarDigestMetadataImpl(
-				"layout-id", String.valueOf(layout.getLayoutId())));
+		// Children Layouts
 
-		long parentLayoutId = layout.getParentLayoutId();
+		List<Layout> childrenLayouts = LayoutUtil.findByG_P_P(
+			layout.getGroupId(), layout.isPrivateLayout(),
+			layout.getLayoutId());
 
-		if (parentLayoutId != LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
-			Layout parentLayout = LayoutLocalServiceUtil.getLayout(
-				layout.getGroupId(), layout.isPrivateLayout(), parentLayoutId);
+		for (Layout childLayout : childrenLayouts) {
+			LarDigestDependency childrenDependency =
+				new LarDigestDependencyImpl(
+					Layout.class.getName(), childLayout.getUuid());
 
-			if (parentLayout != null) {
-				digest(parentLayout, context);
-				digestItem.addMetadata(
-					new LarDigestMetadataImpl(
-						"parent-layout-uuid", parentLayout.getUuid()));
-			}
+			digestItem.addDependency(childrenDependency);
+
+			export(childLayout, context, digestModule);
 		}
+
+		// Layout prototype
 
 		String layoutPrototypeUuid = layout.getLayoutPrototypeUuid();
 
@@ -620,13 +596,14 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 					getLayoutPrototypeByUuidAndCompanyId(
 						layoutPrototypeUuid, context.getCompanyId());
 
-			digestItem.addMetadata(
-				new LarDigestMetadataImpl(
-					"layout-prototype-uuid", layoutPrototypeUuid));
-			digestItem.addMetadata(
-				new LarDigestMetadataImpl(
-					"layout-prototype-name",
-					layoutPrototype.getName(LocaleUtil.getDefault())));
+			LarDigestDependency prototypeDependecy =
+				new LarDigestDependencyImpl(
+					LayoutPrototype.class.getName(), layoutPrototypeUuid);
+
+			digestItem.addDependency(prototypeDependecy);
+
+			layoutPrototypeDataHandler.export(
+				layoutPrototype, context, digestModule);
 		}
 
 		boolean deleteLayout = MapUtil.getBoolean(
@@ -638,6 +615,9 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			digestItem.setPath(path);
 			digestItem.setType(Layout.class.getName());
 			digestItem.setClassPK(StringUtil.valueOf(layout.getLayoutId()));
+			digestItem.setUuid(layout.getUuid());
+
+			digestModule.addItem(digestItem);
 
 			return;
 		}
@@ -647,11 +627,12 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				layout.getIconImageId());
 
 			if (image != null) {
-				LarDigestItem item = imageDataHandler.digest(image, context);
+				imageDataHandler.export(image, context, digestModule);
 
-				digestItem.addMetadata(
-					new LarDigestMetadataImpl(
-						"icon-image-path", item.getPath()));
+				LarDigestDependency dependency = new LarDigestDependencyImpl(
+					Image.class.getName(), String.valueOf(image.getImageId()));
+
+				digestItem.addDependency(dependency);
 			}
 		}
 
@@ -659,9 +640,12 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		digestItem.setPath(path);
 		digestItem.setType(Layout.class.getName());
 		digestItem.setClassPK(String.valueOf(layout.getPlid()));
+		digestItem.setUuid(layout.getUuid());
+
+		digestModule.addItem(digestItem);
 
 		if (layout.isTypeArticle()) {
-			exportJournalArticle(layout, context);
+			exportJournalArticle(layout, context, digestModule);
 		}
 		else if (layout.isTypeLinkToLayout()) {
 			UnicodeProperties typeSettingsProperties =
@@ -676,7 +660,12 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 					context.getScopeGroupId(), layout.isPrivateLayout(),
 					linkToLayoutId);
 
-				digest(linkedToLayout, context);
+				LarDigestDependency dependency = new LarDigestDependencyImpl(
+					Layout.class.getName(), linkedToLayout.getUuid());
+
+				digestItem.addDependency(dependency);
+
+				export(linkedToLayout, context, digestModule);
 			}
 		}
 		else if (layout.isTypePortlet()) {
@@ -701,7 +690,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 							portlet.getPortletId());
 
 					if (portletDataHandler != null) {
-						portletDataHandler.digest(portlet, context);
+						portletDataHandler.export(portlet, context, null);
 					}
 				}
 			}
@@ -783,6 +772,12 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		}
 
 		context.resetAttribute(DataHandlerContext.ATTRIBUTE_NAME_PLID);
+
+		// Serializing
+
+		fixTypeSettings(layout);
+
+		addZipEntry(context.getZipWriter(), path, layout);
 	}
 
 	public Layout getEntity(String classPK) {
@@ -825,7 +820,8 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 	}
 
 	private void exportJournalArticle(
-			Layout layout, DataHandlerContext context)
+			Layout layout, DataHandlerContext context,
+			LarDigestModule digestModule)
 		throws Exception {
 
 		UnicodeProperties typeSettingsProperties =
@@ -853,7 +849,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			return;
 		}
 
-		journalArticleDataHandler.digest(article, context);
+		journalArticleDataHandler.export(article, context, digestModule);
 
 		// toDo: link the article to the layout
 	}

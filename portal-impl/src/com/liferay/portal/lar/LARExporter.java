@@ -35,6 +35,8 @@ import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestImpl;
 import com.liferay.portal.lar.digest.LarDigestMetadataImpl;
+import com.liferay.portal.lar.digest.LarDigestModule;
+import com.liferay.portal.lar.digest.LarDigestModuleImpl;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
@@ -255,6 +257,14 @@ public class LARExporter {
 
 		digest.addMetadata(new LarDigestMetadataImpl("type", type));
 
+		// Portal portlet module in digest
+
+		LarDigestModule portalModule = new LarDigestModuleImpl();
+
+		portalModule.setName("com.liferay.portal");
+
+		digest.addModule(portalModule);
+
 		Portlet layoutConfigurationPortlet =
 			PortletLocalServiceUtil.getPortletById(
 				group.getCompanyId(), PortletKeys.LAYOUT_CONFIGURATION);
@@ -338,7 +348,7 @@ public class LARExporter {
 				Layout.class.getName());
 
 		for (Layout layout : layouts) {
-			layoutDataHandler.export(layout, context, null);
+			layoutDataHandler.export(layout, context, portalModule);
 		}
 
 		if (_log.isInfoEnabled()) {

@@ -23,9 +23,17 @@ public interface LarDigestModule extends LarDigestElement {
 
 	public void addItem(LarDigestItem item);
 
+	public void addMetadata(LarDigestMetadata metadata);
+
 	public void addPortletPreference(String path);
 
 	public List<LarDigestItem> getItems();
+
+	public List<LarDigestMetadata> getMetadata();
+
+	public List<LarDigestMetadata> getMetadata(String name);
+
+	public String getMetadataValue(String name);
 
 	public String getName();
 

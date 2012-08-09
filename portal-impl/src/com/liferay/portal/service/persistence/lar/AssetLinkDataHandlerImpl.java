@@ -27,23 +27,10 @@ public class AssetLinkDataHandlerImpl
 	implements AssetLinkDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(
-			AssetLink assetLink, DataHandlerContext context)
-		throws Exception {
-
-		return null;
-	}
-
-	@Override
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
 		return;
-	}
-
-	@Override
-	public AssetLink getEntity(String classPK) {
-		return null;
 	}
 
 }

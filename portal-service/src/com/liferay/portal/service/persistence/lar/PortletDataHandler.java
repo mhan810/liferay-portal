@@ -26,12 +26,6 @@ import com.liferay.portal.service.persistence.BaseDataHandler;
  */
 public interface PortletDataHandler extends BaseDataHandler<Portlet> {
 
-	public LarDigestItem digest(
-			Portlet portlet, DataHandlerContext context)
-		throws Exception;
-
-	public Portlet getEntity(String classPK);
-
 	public PortletDataHandlerControl[] getExportControls();
 
 	public PortletDataHandlerControl[] getExportMetadataControls();

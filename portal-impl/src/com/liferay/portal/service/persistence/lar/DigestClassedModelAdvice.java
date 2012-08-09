@@ -151,7 +151,7 @@ public class DigestClassedModelAdvice implements AfterReturningAdvice {
 				AssetCategory.class.getName());
 
 		for (AssetCategory assetCategory : assetCategories) {
-			categoryDataHandler.digest(assetCategory, context);
+			categoryDataHandler.export(assetCategory, context, null);
 		}
 	}
 
@@ -207,7 +207,7 @@ public class DigestClassedModelAdvice implements AfterReturningAdvice {
 					AssetLink.class.getName());
 
 			for (AssetLink assetLink : assetLinks) {
-				linkDataHandler.digest(assetLink, context);
+				linkDataHandler.export(assetLink, context, null);
 			}
 		}
 	}
@@ -241,7 +241,7 @@ public class DigestClassedModelAdvice implements AfterReturningAdvice {
 				(LockDataHandler)DataHandlersUtil.getDataHandlerInstance(
 					Lock.class.getName());
 
-			lockDataHandler.digest(lock, context);
+			lockDataHandler.export(lock, context, null);
 		}
 	}
 

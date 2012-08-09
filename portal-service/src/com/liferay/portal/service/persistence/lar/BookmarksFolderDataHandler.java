@@ -26,13 +26,7 @@ import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 public interface BookmarksFolderDataHandler
 	extends BaseDataHandler<BookmarksFolder> {
 
-	public LarDigestItem doDigest(
-			BookmarksFolder folder, DataHandlerContext context)
-		throws Exception;
-
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception;
-
-	public BookmarksFolder getEntity(String classPK);
 
 }

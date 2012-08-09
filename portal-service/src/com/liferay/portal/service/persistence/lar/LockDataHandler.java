@@ -24,9 +24,4 @@ import com.liferay.portal.service.persistence.BaseDataHandler;
  */
 public interface LockDataHandler extends BaseDataHandler<Lock> {
 
-	public LarDigestItem doDigest(Lock lock, DataHandlerContext context)
-		throws Exception;
-
-	public Lock getEntity(String classPK);
-
 }

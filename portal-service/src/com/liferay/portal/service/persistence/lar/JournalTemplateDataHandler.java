@@ -25,13 +25,7 @@ import com.liferay.portlet.journal.model.JournalTemplate;
 public interface JournalTemplateDataHandler
 	extends BaseDataHandler<JournalTemplate> {
 
-	public LarDigestItem doDigest(
-			JournalTemplate template, DataHandlerContext context)
-		throws Exception;
-
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception;
-
-	public JournalTemplate getEntity(String classPK);
 
 }

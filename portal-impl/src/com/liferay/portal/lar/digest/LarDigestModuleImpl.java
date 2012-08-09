@@ -42,6 +42,16 @@ public class LarDigestModuleImpl implements LarDigestModule {
 			_name = nameAttr.getText();
 		}
 
+		Element metadataRootEl = root.element(
+			LarDigesterConstants.NODE_METADATA_SET_LABEL);
+
+		List<Element> metadatasEl = metadataRootEl.elements(
+			LarDigesterConstants.NODE_METADATA_LABEL);
+
+		for (Element metadataEl : metadatasEl) {
+			addMetadata(new LarDigestMetadataImpl(metadataEl));
+		}
+
 		Element portletPreferencesEl = root.element(
 			LarDigesterConstants.NODE_PORTLET_PREFERENCES_LABEL);
 
@@ -62,6 +72,10 @@ public class LarDigestModuleImpl implements LarDigestModule {
 
 	public void addItem(LarDigestItem item) {
 		_items.add(item);
+	}
+
+	public void addMetadata(LarDigestMetadata metadata) {
+		_metadata.add(metadata);
 	}
 
 	public void addPortletPreference(String path) {
@@ -87,6 +101,18 @@ public class LarDigestModuleImpl implements LarDigestModule {
 			writer.writeAttribute("name", _name);
 		}
 
+		// Metadata
+
+		writer.writeStartElement(LarDigesterConstants.NODE_METADATA_SET_LABEL);
+
+		for (LarDigestMetadata metadata : _metadata) {
+			metadata.serialize(writer);
+		}
+
+		writer.writeEndElement();
+
+		// Preferences
+
 		writer.writeStartElement(
 			LarDigesterConstants.NODE_PORTLET_PREFERENCES_LABEL);
 
@@ -99,6 +125,8 @@ public class LarDigestModuleImpl implements LarDigestModule {
 
 		writer.writeEndElement();
 
+		// Module Items
+
 		for (LarDigestItem item : _items) {
 			item.serialize(writer);
 		}
@@ -110,6 +138,34 @@ public class LarDigestModuleImpl implements LarDigestModule {
 		_items = items;
 	}
 
+	public List<LarDigestMetadata> getMetadata() {
+		return _metadata;
+	}
+
+	public List<LarDigestMetadata> getMetadata(String name) {
+		List<LarDigestMetadata> result = new ArrayList<LarDigestMetadata>();
+
+		for (LarDigestMetadata metadata : _metadata) {
+			String metadataName = metadata.getName();
+
+			if (metadataName.equals(name)) {
+				result.add(metadata);
+			}
+		}
+
+		return result;
+	}
+
+	public String getMetadataValue(String name) {
+		List<LarDigestMetadata> result = getMetadata(name);
+
+		if (result.isEmpty()) {
+			return null;
+		}
+
+		return result.get(0).getValue();
+	}
+
 	public void setName(String name) {
 		_name = name;
 	}
@@ -119,6 +175,8 @@ public class LarDigestModuleImpl implements LarDigestModule {
 	}
 
 	private List<LarDigestItem> _items;
+	private List<LarDigestMetadata> _metadata =
+		new ArrayList<LarDigestMetadata>();
 	private String _name;
 	private List<String> _portletPreferences;
 

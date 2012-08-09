@@ -30,23 +30,10 @@ public class JournalTemplateDataHandlerImpl
 	implements JournalTemplateDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(
-			JournalTemplate object, DataHandlerContext context)
-		throws Exception {
-
-		return null;
-	}
-
-	@Override
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
 		return;
-	}
-
-	@Override
-	public JournalTemplate getEntity(String classPK) {
-		return null;
 	}
 
 }

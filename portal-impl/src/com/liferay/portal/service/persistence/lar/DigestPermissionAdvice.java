@@ -90,8 +90,10 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 				permissionsList = digestLayoutPermissions(context, layout);
 			}
 			else if (entity instanceof Portlet) {
-				long plid = Long.valueOf(item.getMetadataValue("old-plid"));
-				String portletId = item.getMetadataValue("portlet-id");
+				Portlet portlet = (Portlet)entity;
+
+				long plid = Long.valueOf("0"/*item.getMetadataValue("old-plid")*/);
+				String portletId = portlet.getPortletId();
 
 				Layout layout = LayoutLocalServiceUtil.getLayout(plid);
 

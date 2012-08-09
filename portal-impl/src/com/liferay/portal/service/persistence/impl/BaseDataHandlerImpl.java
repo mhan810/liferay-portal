@@ -66,6 +66,7 @@ import com.liferay.portal.service.persistence.lar.ImageDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalArticleDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalStructureDataHandler;
 import com.liferay.portal.service.persistence.lar.JournalTemplateDataHandler;
+import com.liferay.portal.service.persistence.lar.LayoutPrototypeDataHandler;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portal.service.persistence.lar.LayoutSetDataHandler;
 
@@ -121,30 +122,9 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 			null, path, classedModel, namespace, context);
 	}
 
-	public LarDigestItem digest(
-			T object, DataHandlerContext context)
-		throws Exception {
-
-		LarDigestItem item = doDigest(object, context);
-
-		//context.getLarDigest().addItem(item);
-
-		String path = getEntityPath(object);
-
-		context.addProcessedPath(path);
-
-		return item;
-	}
-
-	public abstract LarDigestItem doDigest(
-			T object, DataHandlerContext context)
-		throws Exception;
-
 	public abstract void doImportData(
 			LarDigestItem item, DataHandlerContext context)
 		throws Exception;
-
-	public abstract T getEntity(String classPK);
 
 	public void export(
 			T object, DataHandlerContext context, LarDigestModule digestModule)
@@ -238,17 +218,16 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 	}
 
-	public void serialize(LarDigestItem item, DataHandlerContext context) {
-		T object = getEntity(item.getClassPK());
-
+	public void serialize(T object, DataHandlerContext context) {
 		if (object == null) {
 			return;
 		}
 
 		try {
-			doSerialize(object, context);
+			String path = getEntityPath(object);
 
-			addPermissions(item.getPermissions(), context);
+			addZipEntry(context.getZipWriter(), path, object);
+
 			addExpando(object, context);
 		}
 		catch (Exception e) {
@@ -648,6 +627,8 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	protected AssetCategoryDataHandler assetCategoryDataHandler;
 	@BeanReference(type = AssetLinkDataHandler.class)
 	protected AssetLinkDataHandler assetLinkDataHandler;
+	@BeanReference(type = LayoutPrototypeDataHandler.class)
+	protected LayoutPrototypeDataHandler layoutPrototypeDataHandler;
 	@BeanReference(type = LayoutSetDataHandler.class)
 	protected LayoutSetDataHandler layoutSetDataHandler;
 

@@ -33,12 +33,11 @@ public class AssetCategoryDataHandlerImpl
 	extends BaseDataHandlerImpl<AssetCategory>
 	implements AssetCategoryDataHandler {
 
-	@Override
 	public LarDigestItem doDigest(
 			AssetCategory category, DataHandlerContext context)
 		throws Exception {
 
-		AssetVocabulary vocabulary =
+		/*AssetVocabulary vocabulary =
 			AssetVocabularyLocalServiceUtil.getAssetVocabulary(
 				category.getVocabularyId());
 
@@ -69,7 +68,8 @@ public class AssetCategoryDataHandlerImpl
 		digestItem.setType(AssetCategory.class.getName());
 		digestItem.setClassPK(String.valueOf(category.getCategoryId()));
 
-		return digestItem;
+		return digestItem;*/
+		return null;
 	}
 
 	@Override
@@ -77,25 +77,6 @@ public class AssetCategoryDataHandlerImpl
 		throws Exception {
 
 		return;
-	}
-
-	@Override
-	public AssetCategory getEntity(String classPK) {
-		if (Validator.isNull(classPK)) {
-			return null;
-		}
-
-		try {
-			long categoryId = Long.valueOf(classPK);
-
-			AssetCategory category =
-				AssetCategoryLocalServiceUtil.getCategory(categoryId);
-
-			return category;
-		}
-		catch (Exception e) {
-			return null;
-		}
 	}
 
 }

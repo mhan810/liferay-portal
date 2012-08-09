@@ -34,10 +34,6 @@ public interface JournalPortletDataHandler extends PortletDataHandler {
 
 	public static final boolean PUBLISH_TO_LIVE_BY_DEFAULT = false;
 
-	public LarDigestItem doDigest(
-			Portlet portlet, DataHandlerContext context)
-		throws Exception;
-
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception;
 

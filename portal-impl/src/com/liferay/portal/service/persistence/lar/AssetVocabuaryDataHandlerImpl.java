@@ -36,7 +36,6 @@ public class AssetVocabuaryDataHandlerImpl
 	extends BaseDataHandlerImpl<AssetVocabulary>
 	implements AssetVocabularyDataHandler {
 
-	@Override
 	public LarDigestItem doDigest(
 			AssetVocabulary vocabulary, DataHandlerContext context)
 		throws Exception {
@@ -64,26 +63,6 @@ public class AssetVocabuaryDataHandlerImpl
 		throws Exception {
 
 		return;
-	}
-
-	@Override
-	public AssetVocabulary getEntity(String classPK) {
-		if (Validator.isNull(classPK)) {
-			return null;
-		}
-
-		try {
-			long vocabularyId = Long.valueOf(classPK);
-
-			AssetVocabulary assetVocabulary =
-				AssetVocabularyLocalServiceUtil.getAssetVocabulary(
-					vocabularyId);
-
-			return assetVocabulary;
-		}
-		catch (Exception e) {
-			return null;
-		}
 	}
 
 }

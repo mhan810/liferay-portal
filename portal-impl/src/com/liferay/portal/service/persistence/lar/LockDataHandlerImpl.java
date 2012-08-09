@@ -28,55 +28,14 @@ import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 /**
  * @author Mate Thurzo
  */
-public class LockDataHandlerImpl
-	extends BaseDataHandlerImpl<Lock>
+public class LockDataHandlerImpl extends BaseDataHandlerImpl<Lock>
 	implements LockDataHandler {
-
-	@Override
-	public LarDigestItem doDigest(Lock lock, DataHandlerContext context)
-		throws Exception {
-
-		String path = getEntityPath(lock);
-
-		if (context.isPathProcessed(path)) {
-			return null;
-		}
-
-		LarDigest digest = context.getLarDigest();
-
-		LarDigestItem digestItem = new LarDigestItemImpl();
-
-		digestItem.setAction(getDigestAction(lock, context));
-		digestItem.setPath(path);
-		digestItem.setType(Lock.class.getName());
-		digestItem.setClassPK(StringUtil.valueOf(lock.getLockId()));
-
-		return digestItem;
-	}
 
 	@Override
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
 		return;
-	}
-
-	@Override
-	public Lock getEntity(String classPK) {
-		if (Validator.isNull(classPK)) {
-			return null;
-		}
-
-		try {
-			long lockId = Long.valueOf(classPK);
-
-			Lock lock = LockLocalServiceUtil.getLock(lockId);
-
-			return lock;
-		}
-		catch (Exception e) {
-			return null;
-		}
 	}
 
 }

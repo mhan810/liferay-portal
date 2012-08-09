@@ -25,13 +25,7 @@ import com.liferay.portlet.asset.model.AssetCategory;
 public interface AssetCategoryDataHandler
 	extends BaseDataHandler<AssetCategory> {
 
-	public LarDigestItem doDigest(
-			AssetCategory assetCategory, DataHandlerContext context)
-		throws Exception;
-
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception;
-
-	public AssetCategory getEntity(String classPK);
 
 }

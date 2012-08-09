@@ -123,8 +123,6 @@ public class BookmarksPortletDataHandlerImpl extends PortletDataHandlerImpl
 			LarDigestModule digestModule)
 		throws Exception {
 
-		digestModule.setName("com.liferay.portlet.bookmarks");
-
 		List<BookmarksFolder> folders = BookmarksFolderUtil.findByGroupId(
 			context.getScopeGroupId());
 

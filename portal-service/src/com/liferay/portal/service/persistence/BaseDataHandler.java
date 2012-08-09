@@ -49,19 +49,9 @@ public abstract interface BaseDataHandler<T extends BaseModel<T>> {
 		String path, ClassedModel classedModel, String namespace,
 		DataHandlerContext context);
 
-	public LarDigestItem digest(
-			T object, DataHandlerContext context)
-		throws Exception;
-
-	public abstract LarDigestItem doDigest(
-			T object, DataHandlerContext context)
-		throws Exception;
-
 	public void export(
 			T object, DataHandlerContext context, LarDigestModule digestModule)
 		throws Exception;
-
-	public abstract T getEntity(String classPK);
 
 	public String getEntityPath(T object);
 
@@ -79,8 +69,6 @@ public abstract interface BaseDataHandler<T extends BaseModel<T>> {
 		throws Exception;
 
 	public XStreamWrapper getXstreamWrapper();
-
-	public void serialize(LarDigestItem item, DataHandlerContext context);
 
 	public void setXstreamWrapper(XStreamWrapper xStreamWrapper);
 

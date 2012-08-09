@@ -17,6 +17,7 @@ package com.liferay.portal.service.persistence.lar;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.lar.digest.LarDigestItem;
+import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.service.ImageLocalServiceUtil;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
@@ -28,14 +29,6 @@ public class ImageDataHandlerImpl extends BaseDataHandlerImpl<Image>
 	implements ImageDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(
-			Image object, DataHandlerContext context)
-		throws Exception {
-
-		return null;
-	}
-
-	@Override
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
@@ -43,21 +36,12 @@ public class ImageDataHandlerImpl extends BaseDataHandlerImpl<Image>
 	}
 
 	@Override
-	public Image getEntity(String classPK) {
-		if (Validator.isNotNull(classPK)) {
-			try {
-				long imageId = Long.valueOf(classPK);
+	public void export(
+			Image object, DataHandlerContext context,
+			LarDigestModule digestModule)
+		throws Exception {
 
-				Image image = ImageLocalServiceUtil.getImage(imageId);
-
-				return image;
-			}
-			catch (Exception e) {
-				return null;
-			}
-		}
-
-		return null;
+		return;
 	}
 
 }

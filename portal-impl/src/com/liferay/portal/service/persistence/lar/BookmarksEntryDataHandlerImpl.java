@@ -44,14 +44,6 @@ public class BookmarksEntryDataHandlerImpl
 	implements BookmarksEntryDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(
-			BookmarksEntry entry, DataHandlerContext context)
-		throws Exception {
-
-		return null;
-	}
-
-	@Override
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
@@ -144,24 +136,10 @@ public class BookmarksEntryDataHandlerImpl
 		digestItem.setUuid(entry.getUuid());
 
 		digestModule.addItem(digestItem);
-	}
 
-	public BookmarksEntry getEntity(String classPK) {
-		if (Validator.isNotNull(classPK)) {
-			try {
-				long entryId = Long.valueOf(classPK);
+		// Serializing
 
-				BookmarksEntry bookmarksEntry =
-					BookmarksEntryLocalServiceUtil.getBookmarksEntry(entryId);
-
-				return bookmarksEntry;
-			}
-			catch (Exception e) {
-				return null;
-			}
-		}
-
-		return null;
+		serialize(entry, context);
 	}
 
 }

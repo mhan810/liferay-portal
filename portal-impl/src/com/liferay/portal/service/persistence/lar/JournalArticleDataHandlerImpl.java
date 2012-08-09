@@ -63,23 +63,10 @@ public class JournalArticleDataHandlerImpl
 	implements JournalArticleDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(
-			JournalArticle article, DataHandlerContext context)
-		throws Exception {
-
-		return null;
-	}
-
-	@Override
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
 		return;
-	}
-
-	@Override
-	public JournalArticle getEntity(String classPK) {
-		return null;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

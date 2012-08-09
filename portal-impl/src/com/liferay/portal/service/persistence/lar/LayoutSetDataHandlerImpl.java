@@ -36,14 +36,6 @@ public class LayoutSetDataHandlerImpl extends BaseDataHandlerImpl<LayoutSet>
 	implements LayoutSetDataHandler {
 
 	@Override
-	public LarDigestItem doDigest(
-			LayoutSet layoutSet, DataHandlerContext context)
-		throws Exception {
-
-		return null;
-	}
-
-	@Override
 	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception{
 
@@ -159,11 +151,6 @@ public class LayoutSetDataHandlerImpl extends BaseDataHandlerImpl<LayoutSet>
 		LayoutSetLocalServiceUtil.updateLookAndFeel(
 			context.getGroupId(), context.isPrivateLayout(), themeId,
 			colorSchemeId, css, wapTheme); */
-	}
-
-	@Override
-	public LayoutSet getEntity(String classPK) {
-		return null;
 	}
 
 	private static Log _log =

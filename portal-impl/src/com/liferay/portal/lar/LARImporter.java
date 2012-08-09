@@ -535,8 +535,8 @@ public class LARImporter {
 		}
 
 		for (LarDigestItem layoutItem : layoutItems) {
-			String layoutPrototypeUuid = layoutItem.getMetadataValue(
-					"layout-prototype-uuid");
+			String layoutPrototypeUuid = "";/*layoutItem.getMetadataValue(
+				"layout-prototype-uuid");*/
 
 			if (Validator.isNotNull(layoutPrototypeUuid)) {
 				try {
@@ -545,8 +545,8 @@ public class LARImporter {
 							layoutPrototypeUuid, companyId);
 				}
 				catch (NoSuchLayoutPrototypeException nslpe) {
-					String layoutPrototypeName = layoutItem.getMetadataValue(
-							"layout-prototype-name");
+					String layoutPrototypeName = "";/*layoutItem.getMetadataValue(
+						"layout-prototype-name");*/
 
 					missingLayoutPrototypes.add(
 						new Tuple(
