@@ -48,24 +48,9 @@ public class JournalPortletDataHandlerImpl extends PortletDataHandlerImpl
 	implements JournalPortletDataHandler {
 
 	@Override
-	public LarDigestItem doDigestPortlet(
-			Portlet portlet, LarDigestItem item, DataHandlerContext context)
-		throws Exception {
-
-		return null;
-	}
-
-	@Override
 	public void doExport(
 			Portlet portlet, DataHandlerContext context,
 			LarDigestModule digestModule)
-		throws Exception {
-
-		return;
-	}
-
-	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
 		throws Exception {
 
 		return;

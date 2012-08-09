@@ -26,11 +26,4 @@ public class AssetLinkDataHandlerImpl
 	extends BaseDataHandlerImpl<AssetLink>
 	implements AssetLinkDataHandler {
 
-	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception {
-
-		return;
-	}
-
 }

@@ -36,7 +36,7 @@ public class LayoutSetDataHandlerImpl extends BaseDataHandlerImpl<LayoutSet>
 	implements LayoutSetDataHandler {
 
 	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
+	public void importData(LarDigestItem item, DataHandlerContext context)
 		throws Exception{
 
 		Map parameterMap = context.getParameters();

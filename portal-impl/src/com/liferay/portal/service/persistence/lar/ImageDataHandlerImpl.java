@@ -29,13 +29,6 @@ public class ImageDataHandlerImpl extends BaseDataHandlerImpl<Image>
 	implements ImageDataHandler {
 
 	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception {
-
-		return;
-	}
-
-	@Override
 	public void export(
 			Image object, DataHandlerContext context,
 			LarDigestModule digestModule)

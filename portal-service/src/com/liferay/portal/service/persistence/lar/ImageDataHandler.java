@@ -25,7 +25,4 @@ import com.liferay.portal.service.persistence.BaseDataHandler;
  */
 public interface ImageDataHandler extends BaseDataHandler<Image> {
 
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception;
-
 }

@@ -29,11 +29,4 @@ public class JournalStructureDataHandlerImpl
 	extends BaseDataHandlerImpl<JournalStructure>
 	implements JournalStructureDataHandler {
 
-	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception {
-
-		return;
-	}
-
 }

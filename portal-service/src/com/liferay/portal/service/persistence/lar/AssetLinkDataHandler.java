@@ -24,7 +24,4 @@ import com.liferay.portlet.asset.model.AssetLink;
  */
 public interface AssetLinkDataHandler extends BaseDataHandler<AssetLink> {
 
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception;
-
 }

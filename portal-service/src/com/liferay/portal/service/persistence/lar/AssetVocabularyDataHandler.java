@@ -25,7 +25,4 @@ import com.liferay.portlet.asset.model.AssetVocabulary;
 public interface AssetVocabularyDataHandler
 	extends BaseDataHandler<AssetVocabulary> {
 
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception;
-
 }

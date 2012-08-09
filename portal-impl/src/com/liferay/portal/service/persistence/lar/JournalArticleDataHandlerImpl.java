@@ -62,13 +62,6 @@ public class JournalArticleDataHandlerImpl
 	extends BaseDataHandlerImpl<JournalArticle>
 	implements JournalArticleDataHandler {
 
-	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception {
-
-		return;
-	}
-
 	private static Log _log = LogFactoryUtil.getLog(
 		JournalArticleDataHandlerImpl.class);
 

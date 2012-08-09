@@ -58,11 +58,4 @@ public class AssetVocabuaryDataHandlerImpl
 		return digestItem;
 	}
 
-	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception {
-
-		return;
-	}
-
 }

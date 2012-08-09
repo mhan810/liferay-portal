@@ -30,7 +30,7 @@ import com.liferay.portlet.asset.service.AssetCategoryPropertyLocalServiceUtil;
  */
 public class AssetCategoryPropertyDataHandlerImpl
 	extends BaseDataHandlerImpl<AssetCategoryProperty>
-	implements AssetCategoryPropertyDataHandler{
+	implements AssetCategoryPropertyDataHandler {
 
 	public LarDigestItem doDigest(
 			AssetCategoryProperty categoryProperty, DataHandlerContext context)
@@ -53,13 +53,6 @@ public class AssetCategoryPropertyDataHandlerImpl
 		}*/
 
 		return null;
-	}
-
-	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception {
-
-		return;
 	}
 
 }

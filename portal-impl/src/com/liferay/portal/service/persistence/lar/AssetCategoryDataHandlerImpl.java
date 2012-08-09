@@ -72,11 +72,4 @@ public class AssetCategoryDataHandlerImpl
 		return null;
 	}
 
-	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception {
-
-		return;
-	}
-
 }

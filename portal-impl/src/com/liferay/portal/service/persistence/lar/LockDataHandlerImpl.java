@@ -31,11 +31,4 @@ import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 public class LockDataHandlerImpl extends BaseDataHandlerImpl<Lock>
 	implements LockDataHandler {
 
-	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception {
-
-		return;
-	}
-
 }

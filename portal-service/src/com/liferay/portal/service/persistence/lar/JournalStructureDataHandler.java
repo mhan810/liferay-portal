@@ -25,7 +25,4 @@ import com.liferay.portlet.journal.model.JournalStructure;
 public interface JournalStructureDataHandler
 	extends BaseDataHandler<JournalStructure> {
 
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception;
-
 }

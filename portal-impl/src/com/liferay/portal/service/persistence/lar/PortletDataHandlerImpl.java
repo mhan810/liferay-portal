@@ -730,23 +730,23 @@ public class PortletDataHandlerImpl
 				preferencesXML, plid);*/
 		}
 
-		item.addMetadata(new LarDigestMetadataImpl(
+		portletModule.addMetadata(new LarDigestMetadataImpl(
 			"owner-id", String.valueOf(ownerId)));
-		item.addMetadata(new LarDigestMetadataImpl(
+		portletModule.addMetadata(new LarDigestMetadataImpl(
 			"owner-type", String.valueOf(ownerType)));
-		item.addMetadata(new LarDigestMetadataImpl(
+		portletModule.addMetadata(new LarDigestMetadataImpl(
 			"default-user", String.valueOf(defaultUser)));
-		item.addMetadata(new LarDigestMetadataImpl(
+		portletModule.addMetadata(new LarDigestMetadataImpl(
 			"plid", String.valueOf(plid)));
-		item.addMetadata(new LarDigestMetadataImpl("portlet-id", portletId));
+		portletModule.addMetadata(new LarDigestMetadataImpl("portlet-id", portletId));
 
 		if (ownerType == PortletKeys.PREFS_OWNER_TYPE_ARCHIVED) {
 			PortletItem portletItem =
 				PortletItemLocalServiceUtil.getPortletItem(ownerId);
 
-			item.addMetadata(new LarDigestMetadataImpl(
+			portletModule.addMetadata(new LarDigestMetadataImpl(
 				"archive-user-uuid", portletItem.getUserUuid()));
-			item.addMetadata(new LarDigestMetadataImpl(
+			portletModule.addMetadata(new LarDigestMetadataImpl(
 				"archive-name", portletItem.getName()));
 		}
 		else if (ownerType == PortletKeys.PREFS_OWNER_TYPE_USER) {
@@ -756,7 +756,7 @@ public class PortletDataHandlerImpl
 				return;
 			}
 
-			item.addMetadata(new LarDigestMetadataImpl(
+			portletModule.addMetadata(new LarDigestMetadataImpl(
 				"user-uuid", user.getUserUuid()));
 		}
 

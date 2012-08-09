@@ -27,7 +27,4 @@ import com.liferay.portlet.journal.model.JournalArticle;
 public interface JournalArticleDataHandler
 	extends BaseDataHandler<JournalArticle> {
 
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception;
-
 }

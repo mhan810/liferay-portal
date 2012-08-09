@@ -28,13 +28,6 @@ public class LayoutPrototypeDataHandlerImpl
 	implements LayoutPrototypeDataHandler {
 
 	@Override
-	public void doImportData(LarDigestItem item, DataHandlerContext context)
-		throws Exception {
-
-		return;
-	}
-
-	@Override
 	public void export(
 			LayoutPrototype object, DataHandlerContext context,
 			LarDigestModule digestModule)
