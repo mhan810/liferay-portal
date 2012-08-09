@@ -141,12 +141,14 @@ public class LarDigestImpl implements LarDigest {
 		List<LarDigestModule> result = new ArrayList<LarDigestModule>();
 
 		for (LarDigestModule module : getAllModules()) {
-
-			String modulName = module.getName();
-
-			if (modulName.startsWith("com.liferay.portlet")) {
-				result.add(module);
+			try {
+				Integer.valueOf(module.getName());
 			}
+			catch (NumberFormatException nfe) {
+				continue;
+			}
+
+			result.add(module);
 		}
 
 		return result;
@@ -339,8 +341,15 @@ public class LarDigestImpl implements LarDigest {
 
 		Element rootElement = getDocument().getRootElement();
 
-		String xPath = "//" + LarDigesterConstants.NODE_MODULE_LABEL +
-			"[@name=" + moduleName + "]";
+		StringBundler sb = new StringBundler(5);
+
+		sb = sb.append("//");
+		sb = sb.append(LarDigesterConstants.NODE_MODULE_LABEL);
+		sb = sb.append("[@name=");
+		sb = sb.append(moduleName);
+		sb = sb.append("]");
+
+		String xPath = sb.toString();
 
 		Element digestModuleEl = (Element)rootElement.selectSingleNode(xPath);
 

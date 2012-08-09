@@ -118,10 +118,12 @@ public class PortletDataHandlerImpl
 		long groupId = context.getGroupId();
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 
-		long layoutId = 0; //GetterUtil.getLong(item.getMetadataValue("layout-id"));
-		long oldPlid = 0; //GetterUtil.getLong(item.getMetadataValue("old-plid"));
+		long layoutId = GetterUtil.getLong(
+			portletModule.getMetadataValue("layout-id"));
+		long oldPlid = GetterUtil.getLong(
+			portletModule.getMetadataValue("old-plid"));
 
-		String portletId = ""; //item.getMetadataValue("portlet-id");
+		String portletId = portletModule.getMetadataValue("portlet-id");
 
 		Map<Long, Layout> newLayoutsMap =
 			(Map<Long, Layout>)context.getAttribute("newLayoutsMap");
@@ -267,7 +269,8 @@ public class PortletDataHandlerImpl
 				"layoutPlid", String.valueOf(context.getPlid())));
 		}
 
-		portletModule.addMetadata(new LarDigestMetadataImpl("portlet-id", portletId));
+		portletModule.addMetadata(
+			new LarDigestMetadataImpl("portlet-id", portletId));
 		portletModule.addMetadata(new LarDigestMetadataImpl("root-portlet-id",
 			PortletConstants.getRootPortletId(portletId)));
 		portletModule.addMetadata(new LarDigestMetadataImpl(
@@ -646,38 +649,33 @@ public class PortletDataHandlerImpl
 				companyId, portletId);
 
 			if (portlet != null) {
-				String portletDataHandlerClass = StringPool.BLANK;
-				//portlet.getPortletDataHandlerClass();
-
 				// Checking if the portlet has a data handler, if it doesn't,
 				// the default values are the ones set in PORTLET_DATA and
 				// PORTLET_SETUP. If it has a data handler, iterate over each
 				// portlet export control.
 
-				if (portletDataHandlerClass != null) {
-					String rootPortletId = PortletConstants.getRootPortletId(
-						portletId);
+				String rootPortletId = PortletConstants.getRootPortletId(
+					portletId);
 
-					// PORTLET_DATA and the PORTLET_DATA for this specific
-					// data handler must be true
+				// PORTLET_DATA and the PORTLET_DATA for this specific
+				// data handler must be true
 
-					exportCurPortletData =
-						exportPortletData &&
-							MapUtil.getBoolean(
-								parameterMap,
-								PortletDataHandlerKeys.PORTLET_DATA +
-									StringPool.UNDERLINE + rootPortletId);
+				exportCurPortletData =
+					exportPortletData &&
+						MapUtil.getBoolean(
+							parameterMap,
+							PortletDataHandlerKeys.PORTLET_DATA +
+								StringPool.UNDERLINE + rootPortletId);
 
-					// PORTLET_SETUP and the PORTLET_SETUP for this specific
-					// data handler must be true
+				// PORTLET_SETUP and the PORTLET_SETUP for this specific
+				// data handler must be true
 
-					exportCurPortletSetup =
-						exportPortletSetup &&
-							MapUtil.getBoolean(
-								parameterMap,
-								PortletDataHandlerKeys.PORTLET_SETUP +
-									StringPool.UNDERLINE + rootPortletId);
-				}
+				exportCurPortletSetup =
+					exportPortletSetup &&
+						MapUtil.getBoolean(
+							parameterMap,
+							PortletDataHandlerKeys.PORTLET_SETUP +
+								StringPool.UNDERLINE + rootPortletId);
 			}
 		}
 
@@ -790,9 +788,8 @@ public class PortletDataHandlerImpl
 		}
 
 		try {
-			PortletPreferences portletPreferences =
-				PortletPreferencesLocalServiceUtil.getPortletPreferences(
-					ownerId, ownerType, plid, portletId);
+			PortletPreferencesLocalServiceUtil.getPortletPreferences(
+				ownerId, ownerType, plid, portletId);
 		}
 		catch (NoSuchPortletPreferencesException nsppe) {
 			return;
@@ -810,8 +807,6 @@ public class PortletDataHandlerImpl
 			exportPortletPreference(portletId, ownerId, ownerType, defaultUser,
 				plid, portletModule, context);
 		}
-
-		return;
 	}
 
 	protected String getPortletPreferencesPath(
@@ -912,7 +907,7 @@ public class PortletDataHandlerImpl
 		long ownerId = PortletKeys.PREFS_OWNER_ID_DEFAULT;
 		int ownerType = PortletKeys.PREFS_OWNER_TYPE_LAYOUT;
 
-		String portletId = ""; //portletModule.getMetadataValue("portlet-id");
+		String portletId = portletModule.getMetadataValue("portlet-id");
 
 		PortletPreferences portletPreferences =
 			PortletPreferencesUtil.fetchByO_O_P_P(
@@ -1184,8 +1179,8 @@ public class PortletDataHandlerImpl
 		DataHandlerContext context, long groupId) {
 
 		context.setScopeGroupId(groupId);
-		//context.setScopeLayoutUuid(StringPool.BLANK);
-		//context.setScopeType(StringPool.BLANK);
+		context.setScopeLayoutUuid(StringPool.BLANK);
+		context.setScopeType(StringPool.BLANK);
 	}
 
 	protected void setPortletScope(
@@ -1193,8 +1188,8 @@ public class PortletDataHandlerImpl
 
 		// Portlet data scope
 
-		String scopeLayoutUuid = ""; //module.getMetadataValue("scope-layout-uuid");
-		String scopeLayoutType = ""; //module.getMetadataValue("scope-layout-type");
+		String scopeLayoutUuid = module.getMetadataValue("scope-layout-uuid");
+		String scopeLayoutType = module.getMetadataValue("scope-layout-type");
 
 		context.setScopeLayoutUuid(scopeLayoutUuid);
 		context.setScopeType(scopeLayoutType);
@@ -1281,15 +1276,12 @@ public class PortletDataHandlerImpl
 				return;
 			}
 
-			PortletDataHandler portletDataHandler = null;
-			//portlet.getPortletDataHandlerInstance();
-
-			if (portletDataHandler == null) {
+			//if (portletDataHandler == null) {
 				PortletPreferencesLocalServiceUtil.updatePreferences(
-						ownerId, ownerType, plid, portletId, xml);
+					ownerId, ownerType, plid, portletId, xml);
 
-				return;
-			}
+			//	return;
+			//}
 
 			// Portlet preferences to be updated only when importing data
 

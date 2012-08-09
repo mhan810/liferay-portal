@@ -526,7 +526,8 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 				dependency.getUuid());
 
 			BaseDataHandler dataHandler =
-				DataHandlersUtil.getDataHandlerInstance(item.getType());
+				DataHandlersUtil.getDataHandlerInstance(
+					dependentItem.getType());
 
 			dataHandler.importData(dependentItem, context);
 		}

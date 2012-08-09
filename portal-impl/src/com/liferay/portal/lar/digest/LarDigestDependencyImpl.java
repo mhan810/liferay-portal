@@ -26,10 +26,20 @@ public class LarDigestDependencyImpl implements LarDigestDependency {
 
 	public LarDigestDependencyImpl(Element root) {
 		Element classPkEl = root.element("className");
+		Element typeEl = root.element("type");
 		Element uuidEl = root.element("uuid");
 
-		_classPK = classPkEl.getText();
-		_uuid = uuidEl.getText();
+		if (classPkEl != null) {
+			_classPK = classPkEl.getText();
+		}
+
+		if (typeEl != null) {
+			_type = typeEl.getText();
+		}
+
+		if (uuidEl != null) {
+			_uuid = uuidEl.getText();
+		}
 	}
 
 	public LarDigestDependencyImpl(String className, String uuid) {

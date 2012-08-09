@@ -504,8 +504,8 @@ public class LARImporter {
 		}
 
 		for (LarDigestItem layoutItem : layoutItems) {
-			String layoutPrototypeUuid = "";/*layoutItem.getMetadataValue(
-				"layout-prototype-uuid");*/
+			String layoutPrototypeUuid = layoutItem.getMetadataValue(
+				"layout-prototype-uuid");
 
 			if (Validator.isNotNull(layoutPrototypeUuid)) {
 				try {
