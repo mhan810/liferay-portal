@@ -144,7 +144,7 @@ public class LarDigestImpl implements LarDigest {
 
 			String modulName = module.getName();
 
-			if(modulName.startsWith("com.liferay.portlet")) {
+			if (modulName.startsWith("com.liferay.portlet")) {
 				result.add(module);
 			}
 		}

@@ -211,23 +211,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		return;
 	}
 
-	public void serialize(T object, DataHandlerContext context) {
-		if (object == null) {
-			return;
-		}
-
-		try {
-			String path = getEntityPath(object);
-
-			addZipEntry(context.getZipWriter(), path, object);
-
-			addExpando(object, context);
-		}
-		catch (Exception e) {
-		}
-
-	}
-
 	public void setXstreamWrapper(XStreamWrapper xStreamWrapper) {
 		_xStreamWrapper = xStreamWrapper;
 	}
@@ -323,14 +306,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 
 		return serviceContext;
-	}
-
-	protected void doSerialize(T object, DataHandlerContext context)
-		throws Exception {
-
-		String path = getEntityPath(object);
-
-		addZipEntry(context.getZipWriter(), path, object);
 	}
 
 	protected Object fromXML(String xml) {
@@ -654,6 +629,22 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 		}
 
 		return true;
+	}
+
+	protected void serialize(T object, DataHandlerContext context) {
+		if (object == null) {
+			return;
+		}
+
+		try {
+			String path = getEntityPath(object);
+
+			addZipEntry(context.getZipWriter(), path, object);
+
+			addExpando(object, context);
+		}
+		catch (Exception e) {
+		}
 	}
 
 	protected String toXML(Object object) {

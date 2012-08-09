@@ -22,14 +22,6 @@ import com.liferay.portal.lar.digest.LarDigest;
  */
 public class DigestStoreUtil {
 
-	public static DigestStore createDigestStore(
-		DigestStoreFactory factory, DataHandlerContext context) {
-
-		_digestStoreImpl = factory.createDigestStore();
-
-		return _digestStoreImpl;
-	}
-
 	public static DigestStore createDigestStore() {
 		if (_digestStoreFactory != null) {
 			_digestStoreImpl = _digestStoreFactory.createDigestStore();
@@ -40,6 +32,14 @@ public class DigestStoreUtil {
 		return null;
 	}
 
+	public static DigestStore createDigestStore(
+		DigestStoreFactory factory, DataHandlerContext context) {
+
+		_digestStoreImpl = factory.createDigestStore();
+
+		return _digestStoreImpl;
+	}
+
 	public static LarDigest getLarDigest() {
 		return _digestStoreImpl.getDigest();
 	}
@@ -48,7 +48,7 @@ public class DigestStoreUtil {
 		_digestStoreFactory = factory;
 	}
 
-	private static DigestStore _digestStoreImpl;
 	private static DigestStoreFactory _digestStoreFactory;
+	private static DigestStore _digestStoreImpl;
 
 }

@@ -23,8 +23,6 @@ import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.NoSuchLayoutPrototypeException;
 import com.liferay.portal.NoSuchLayoutSetPrototypeException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-
-import com.liferay.portal.service.persistence.lar.PortletDataHandler;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.ImportExportThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
@@ -64,6 +62,7 @@ import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.LayoutUtil;
+import com.liferay.portal.service.persistence.lar.PortletDataHandler;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
@@ -78,8 +77,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.time.StopWatch;
-
-import javax.portlet.Portlet;
 
 /**
  * @author Daniel Kocsis
@@ -517,8 +514,8 @@ public class LARImporter {
 							layoutPrototypeUuid, companyId);
 				}
 				catch (NoSuchLayoutPrototypeException nslpe) {
-					String layoutPrototypeName = "";/*layoutItem.getMetadataValue(
-						"layout-prototype-name");*/
+					String layoutPrototypeName = layoutItem.getMetadataValue(
+						"layout-prototype-name");
 
 					missingLayoutPrototypes.add(
 						new Tuple(

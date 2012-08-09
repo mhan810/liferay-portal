@@ -14,7 +14,6 @@
 
 package com.liferay.portal.lar.digest;
 
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
 
@@ -51,7 +50,7 @@ public class LarDigestDependencyImpl implements LarDigestDependency {
 	}
 
 	public void serialize(XMLStreamWriter writer) throws Exception {
-		if(!isValidObject()) {
+		if (!isValidObject()) {
 			return;
 		}
 
@@ -61,18 +60,21 @@ public class LarDigestDependencyImpl implements LarDigestDependency {
 		if (Validator.isNotNull(_classPK)) {
 			writer.writeCharacters(_classPK);
 		}
+
 		writer.writeEndElement();
 
 		writer.writeStartElement("uuid");
 		if (Validator.isNotNull(_uuid)) {
 			writer.writeCharacters(_uuid);
 		}
+
 		writer.writeEndElement();
 
 		writer.writeStartElement("type");
 		if (Validator.isNotNull(_type)) {
 			writer.writeCharacters(_type);
 		}
+
 		writer.writeEndElement();
 
 		writer.writeEndElement();

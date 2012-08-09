@@ -25,6 +25,4 @@ import com.liferay.portal.service.persistence.BaseDataHandler;
  */
 public interface LayoutDataHandler extends BaseDataHandler<Layout> {
 
-	public Layout getEntity(String classPK);
-
 }

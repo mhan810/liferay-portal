@@ -86,6 +86,34 @@ public class LarDigestModuleImpl implements LarDigestModule {
 		return _items;
 	}
 
+	public List<LarDigestMetadata> getMetadata() {
+		return _metadata;
+	}
+
+	public List<LarDigestMetadata> getMetadata(String name) {
+		List<LarDigestMetadata> result = new ArrayList<LarDigestMetadata>();
+
+		for (LarDigestMetadata metadata : _metadata) {
+			String metadataName = metadata.getName();
+
+			if (metadataName.equals(name)) {
+				result.add(metadata);
+			}
+		}
+
+		return result;
+	}
+
+	public String getMetadataValue(String name) {
+		List<LarDigestMetadata> result = getMetadata(name);
+
+		if (result.isEmpty()) {
+			return null;
+		}
+
+		return result.get(0).getValue();
+	}
+
 	public String getName() {
 		return _name;
 	}
@@ -136,34 +164,6 @@ public class LarDigestModuleImpl implements LarDigestModule {
 
 	public void setItems(List<LarDigestItem> items) {
 		_items = items;
-	}
-
-	public List<LarDigestMetadata> getMetadata() {
-		return _metadata;
-	}
-
-	public List<LarDigestMetadata> getMetadata(String name) {
-		List<LarDigestMetadata> result = new ArrayList<LarDigestMetadata>();
-
-		for (LarDigestMetadata metadata : _metadata) {
-			String metadataName = metadata.getName();
-
-			if (metadataName.equals(name)) {
-				result.add(metadata);
-			}
-		}
-
-		return result;
-	}
-
-	public String getMetadataValue(String name) {
-		List<LarDigestMetadata> result = getMetadata(name);
-
-		if (result.isEmpty()) {
-			return null;
-		}
-
-		return result.get(0).getValue();
 	}
 
 	public void setName(String name) {

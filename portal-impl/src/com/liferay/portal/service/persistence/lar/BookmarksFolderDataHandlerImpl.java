@@ -119,6 +119,8 @@ public class BookmarksFolderDataHandlerImpl
 			return;
 		}
 
+		// Digesting
+
 		LarDigestItem digestItem = new LarDigestItemImpl();
 
 		digestItem.setAction(getDigestAction(folder, context));
@@ -159,6 +161,10 @@ public class BookmarksFolderDataHandlerImpl
 		}
 
 		digestModule.addItem(digestItem);
+
+		// Serialization
+
+		serialize(folder, context);
 	}
 
 	protected String getImportFolderPath(

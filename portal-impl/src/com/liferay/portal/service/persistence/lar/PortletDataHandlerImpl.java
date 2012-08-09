@@ -113,7 +113,7 @@ public class PortletDataHandlerImpl
 		boolean importPortletSetup = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.PORTLET_SETUP);
 		boolean importPortletUserPreferences = MapUtil.getBoolean(
-			parameterMap, PortletDataHandlerKeys.PORTLET_USER_PREFERENCES);
+				parameterMap, PortletDataHandlerKeys.PORTLET_USER_PREFERENCES);
 
 		long groupId = context.getGroupId();
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
@@ -201,9 +201,9 @@ public class PortletDataHandlerImpl
 		// Archived setups
 
 		importPortletPreferences(
-			context, layout.getCompanyId(), groupId, null, null, portletModule,
-			importPortletSetup, importPortletArchivedSetups,
-			importPortletUserPreferences, false, importPortletData);
+				context, layout.getCompanyId(), groupId, null, null, portletModule,
+				importPortletSetup, importPortletArchivedSetups,
+				importPortletUserPreferences, false, importPortletData);
 	}
 
 	public void export(
@@ -252,7 +252,7 @@ public class PortletDataHandlerImpl
 			PortletDataHandlerKeys.PORTLET_USER_PREFERENCES);
 
 		boolean[] exportPortletControls = getExportPortletControls(
-				context.getCompanyId(), portletId, context);
+			context.getCompanyId(), portletId, context);
 
 		String path = getEntityPath(portlet);
 
@@ -359,7 +359,7 @@ public class PortletDataHandlerImpl
 				exportPortletPreference(
 					portlet.getPortletId(), context.getScopeGroupId(),
 					PortletKeys.PREFS_OWNER_TYPE_GROUP, false,
-					PortletKeys.PREFS_PLID_SHARED, portletModule);
+					PortletKeys.PREFS_PLID_SHARED, portletModule, context);
 			}
 			catch (NoSuchPortletPreferencesException nsppe) {
 			}
@@ -512,36 +512,6 @@ public class PortletDataHandlerImpl
 		throws Exception {
 
 		return null;
-	}
-
-	@Override
-	protected void doSerialize(Portlet portlet, DataHandlerContext context)
-		throws Exception {
-
-		String path = getEntityPath(portlet);
-
-		PortletPreferences portletPreferences = getPortletPreferences(
-			path, portlet.getPortletId());
-
-		String preferencesXML = portletPreferences.getPreferences();
-
-		if (Validator.isNull(preferencesXML)) {
-			preferencesXML = PortletConstants.DEFAULT_PREFERENCES;
-		}
-
-		Document document = SAXReaderUtil.read(preferencesXML);
-
-		List<Node> nodes = document.selectNodes(
-			"/portlet-preferences/preference[name/text() = " +
-				"'last-publish-date']");
-
-		for (Node node : nodes) {
-			document.remove(node);
-		}
-
-		addZipEntry(
-			context.getZipWriter(), path,
-			document.formattedString(StringPool.TAB, false, false));
 	}
 
 	protected void exportPortletData(
@@ -720,7 +690,8 @@ public class PortletDataHandlerImpl
 
 	protected void exportPortletPreference(
 			String portletId, long ownerId, int ownerType, boolean defaultUser,
-			long plid, LarDigestModule portletModule)
+			long plid, LarDigestModule portletModule,
+			DataHandlerContext context)
 		throws Exception {
 
 		String rootPotletId = PortletConstants.getRootPortletId(portletId);
@@ -764,6 +735,32 @@ public class PortletDataHandlerImpl
 			portletId, ownerId, ownerType, plid);
 
 		portletModule.addPortletPreference(path);
+
+		// Serialize Preferences
+
+		PortletPreferences portletPreferences =
+			PortletPreferencesLocalServiceUtil.getPortletPreferences(
+				ownerId, ownerType, plid, portletId);
+
+		String preferencesXML = portletPreferences.getPreferences();
+
+		if (Validator.isNull(preferencesXML)) {
+			preferencesXML = PortletConstants.DEFAULT_PREFERENCES;
+		}
+
+		Document document = SAXReaderUtil.read(preferencesXML);
+
+		List<Node> nodes = document.selectNodes(
+			"/portlet-preferences/preference[name/text() = " +
+				"'last-publish-date']");
+
+		for (Node node : nodes) {
+			document.remove(node);
+		}
+
+		addZipEntry(
+			context.getZipWriter(), path,
+			document.formattedString(StringPool.TAB, false, false));
 	}
 
 	protected void exportPortletPreferences(
@@ -811,7 +808,7 @@ public class PortletDataHandlerImpl
 			layoutTypePortlet.hasPortletId(portletId)) {
 
 			exportPortletPreference(portletId, ownerId, ownerType, defaultUser,
-				plid, portletModule);
+				plid, portletModule, context);
 		}
 
 		return;
@@ -822,7 +819,6 @@ public class PortletDataHandlerImpl
 
 		StringBundler sb = new StringBundler(8);
 
-		sb.append(getPortletPath(portletId));
 		sb.append("/preferences/");
 
 		if (ownerType == PortletKeys.PREFS_OWNER_TYPE_COMPANY) {
@@ -1325,8 +1321,6 @@ public class PortletDataHandlerImpl
 					portletPreferences.setValue(name, value);
 				}
 			}
-
-
 
 			PortletPreferencesLocalServiceUtil.updatePreferences(
 				ownerId, ownerType, plid, portletId, portletPreferences);
