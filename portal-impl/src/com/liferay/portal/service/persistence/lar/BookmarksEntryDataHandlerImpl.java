@@ -15,13 +15,8 @@
 package com.liferay.portal.service.persistence.lar;
 
 import com.liferay.portal.kernel.lar.DataHandlerContext;
-import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.lar.digest.LarDigestModule;
@@ -29,11 +24,9 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
-import com.liferay.portlet.bookmarks.model.BookmarksFolderConstants;
 import com.liferay.portlet.bookmarks.service.BookmarksEntryLocalServiceUtil;
 import com.liferay.portlet.bookmarks.service.persistence.BookmarksEntryUtil;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -104,7 +97,7 @@ public class BookmarksEntryDataHandlerImpl
 	@Override
 	public void export(
 			BookmarksEntry entry, DataHandlerContext context,
-			LarDigestModule digestModule)
+			LarDigestModule parentPortletModule)
 		throws Exception {
 
 		String path = getEntityPath(entry);
@@ -123,7 +116,7 @@ public class BookmarksEntryDataHandlerImpl
 		digestItem.setClassPK(StringUtil.valueOf(entry.getEntryId()));
 		digestItem.setUuid(entry.getUuid());
 
-		digestModule.addItem(digestItem);
+		parentPortletModule.addItem(digestItem);
 
 		// Serializing
 

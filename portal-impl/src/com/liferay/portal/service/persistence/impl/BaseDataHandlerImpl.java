@@ -40,6 +40,7 @@ import com.liferay.portal.lar.PermissionExporter;
 import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestDependency;
+import com.liferay.portal.lar.digest.LarDigestElement;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.lar.digest.LarDigestPermission;
@@ -126,7 +127,8 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	}
 
 	public void export(
-			T object, DataHandlerContext context, LarDigestModule digestModule)
+			T object, DataHandlerContext context,
+			LarDigestModule parentPortletModule)
 		throws Exception {
 
 		return;
@@ -229,7 +231,8 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 
 		ExpandoBridge expandoBridge = classedModel.getExpandoBridge();
 
-		addZipEntry(context.getZipWriter(), expandoPath, expandoBridge.getAttributes());
+		addZipEntry(
+			context.getZipWriter(), expandoPath, expandoBridge.getAttributes());
 	}
 
 	protected void addPermissions(
@@ -418,20 +421,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 			(Map<Long, Long>)context.getNewPrimaryKeysMap(clazz);
 
 		newPrimaryKeysMap.put(classPK, newClassPK);
-
-		/*importLocks(clazz, String.valueOf(classPK), String.valueOf(newClassPK));
-		importPermissions(clazz, classPK, newClassPK);
-
-		boolean portletMetadataAll = getBooleanParameter(
-				namespace, PortletDataHandlerKeys.PORTLET_METADATA_ALL);
-
-		if (portletMetadataAll || getBooleanParameter(namespace, "comments")) {
-			importComments(clazz, classPK, newClassPK, getScopeGroupId());
-		}
-
-		if (portletMetadataAll || getBooleanParameter(namespace, "ratings")) {
-			importRatingsEntries(clazz, classPK, newClassPK);
-		}*/
 	}
 
 

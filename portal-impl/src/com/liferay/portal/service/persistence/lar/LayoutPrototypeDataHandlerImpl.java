@@ -30,7 +30,7 @@ public class LayoutPrototypeDataHandlerImpl
 	@Override
 	public void export(
 			LayoutPrototype object, DataHandlerContext context,
-			LarDigestModule digestModule)
+			LarDigestModule parentPortletModule)
 		throws Exception {
 
 		return;

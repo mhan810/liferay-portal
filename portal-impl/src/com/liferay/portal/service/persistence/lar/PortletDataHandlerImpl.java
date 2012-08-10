@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.lar.DataHandlersUtil;
+import com.liferay.portal.lar.digest.LarDigestElement;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.lar.digest.LarDigestMetadataImpl;
@@ -98,7 +99,6 @@ public class PortletDataHandlerImpl
 	public void importData(
 			LarDigestModule portletModule, DataHandlerContext context)
 		throws Exception {
-
 
 		Map parameterMap = context.getParameters();
 
@@ -210,7 +210,7 @@ public class PortletDataHandlerImpl
 
 	public void export(
 			Portlet portlet, DataHandlerContext context,
-			LarDigestModule digestModule)
+			LarDigestModule parentPortletModule)
 		throws Exception {
 
 		LarDigestModule portletModule = new LarDigestModuleImpl();
@@ -359,6 +359,12 @@ public class PortletDataHandlerImpl
 			}
 
 			try {
+				PortletPreferences groupPortletPreferences =
+					PortletPreferencesLocalServiceUtil.getPortletPreferences(
+						context.getScopeGroupId(),
+						PortletKeys.PREFS_OWNER_TYPE_GROUP,
+						PortletKeys.PREFS_PLID_SHARED, portletId);
+
 				exportPortletPreference(
 					portlet.getPortletId(), context.getScopeGroupId(),
 					PortletKeys.PREFS_OWNER_TYPE_GROUP, false,
@@ -577,7 +583,7 @@ public class PortletDataHandlerImpl
 		Date startDate = context.getStartDate();
 
 		if ((lastPublishDate > 0) && (startDate != null) &&
-				(lastPublishDate < startDate.getTime())) {
+			(lastPublishDate < startDate.getTime())) {
 
 			context.setStartDate(new Date(lastPublishDate));
 		}
@@ -1173,7 +1179,6 @@ public class PortletDataHandlerImpl
 			}
 		}
 	}
-
 
 	protected void resetPortletScope(
 		DataHandlerContext context, long groupId) {

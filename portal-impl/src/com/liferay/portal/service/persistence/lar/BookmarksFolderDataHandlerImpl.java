@@ -17,23 +17,17 @@ package com.liferay.portal.service.persistence.lar;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.lar.DataHandlersUtil;
-import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestDependency;
 import com.liferay.portal.lar.digest.LarDigestDependencyImpl;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
 import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.persistence.BaseDataHandler;
 import com.liferay.portal.service.persistence.impl.BaseDataHandlerImpl;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
-import com.liferay.portlet.bookmarks.model.BookmarksFolderConstants;
 import com.liferay.portlet.bookmarks.service.BookmarksFolderLocalServiceUtil;
 import com.liferay.portlet.bookmarks.service.persistence.BookmarksEntryUtil;
 import com.liferay.portlet.bookmarks.service.persistence.BookmarksFolderUtil;
@@ -108,7 +102,7 @@ public class BookmarksFolderDataHandlerImpl
 
 	public void export(
 			BookmarksFolder folder, DataHandlerContext context,
-			LarDigestModule digestModule)
+			LarDigestModule parentPortletModule)
 		throws Exception {
 
 		String path = getEntityPath(folder);
@@ -141,7 +135,7 @@ public class BookmarksFolderDataHandlerImpl
 
 				digestItem.addDependency(dependency);
 
-				export(childFolder, context, digestModule);
+				export(childFolder, context, parentPortletModule);
 			}
 		}
 
@@ -156,11 +150,11 @@ public class BookmarksFolderDataHandlerImpl
 				digestItem.addDependency(dependency);
 
 				bookmarksEntryDataHandler.export(
-					childEntry, context, digestModule);
+					childEntry, context, parentPortletModule);
 			}
 		}
 
-		digestModule.addItem(digestItem);
+		parentPortletModule.addItem(digestItem);
 
 		// Serialization
 

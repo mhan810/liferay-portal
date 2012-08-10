@@ -31,14 +31,14 @@
 		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestErrorRegistryAdvice" pointcut="bean(*DataHandler)" />
 	</aop:config>
 
-	<bean id="com.liferay.portal.service.persistence.lar.DigestClassedModelAdvice" class="com.liferay.portal.service.persistence.lar.DigestClassedModelAdvice" />
-	<bean id="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" class="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" />
+	<bean id="com.liferay.portal.service.persistence.lar.ExportClassedModelAdvice" class="com.liferay.portal.service.persistence.lar.ExportClassedModelAdvice" />
+	<bean id="com.liferay.portal.service.persistence.lar.ExportPermissionsAdvice" class="com.liferay.portal.service.persistence.lar.ExportPermissionsAdvice" />
 
 	<aop:config proxy-target-class="false">
 		<aop:pointcut id="exportPointcut" expression="execution(* com.liferay.portal.service.persistence.BaseDataHandler.export(..) throws Exception)" />
 
-		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestClassedModelAdvice" pointcut-ref="exportPointcut" order="2" />
-		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestPermissionAdvice" pointcut-ref="exportPointcut" order="1" />
+		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.ExportClassedModelAdvice" pointcut-ref="exportPointcut" order="2" />
+		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.ExportPermissionsAdvice" pointcut-ref="exportPointcut" order="1" />
 	</aop:config>
 
 	<bean id="com.liferay.portal.service.persistence.lar.ExportImportMessageAdvice" class="com.liferay.portal.service.persistence.lar.ExportImportMessageAdvice" />

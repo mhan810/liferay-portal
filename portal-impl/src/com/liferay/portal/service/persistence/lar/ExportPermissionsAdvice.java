@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.lar;
 
+import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.DataHandlerContext;
@@ -23,9 +24,12 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.PermissionExporter;
+import com.liferay.portal.lar.XStreamWrapper;
+import com.liferay.portal.lar.digest.LarDigestElement;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestPermission;
 import com.liferay.portal.lar.digest.LarDigestPermissionImpl;
@@ -60,23 +64,20 @@ import java.util.Set;
 /**
  * @author Mate Thurzo
  */
-public class DigestPermissionAdvice implements AfterReturningAdvice {
+public class ExportPermissionsAdvice extends ExportImportAdvice
+	implements AfterReturningAdvice {
 
 	public void afterReturning(
 			Object returnValue, Method method, Object[] args, Object target)
 		throws Throwable {
 
-		if ((returnValue == null) || !(returnValue instanceof LarDigestItem)) {
-			return;
-		}
-
 		Object entity = args[0];
 		DataHandlerContext context = (DataHandlerContext)args[1];
 
-		LarDigestItem item = (LarDigestItem)returnValue;
+		String entityType = getEntityObjectInterfaceName(entity);
 
 		BaseDataHandler dataHandler = DataHandlersUtil.getDataHandlerInstance(
-			item.getType());
+			entityType);
 
 		boolean exportPermissions = MapUtil.getBoolean(
 			context.getParameters(), PortletDataHandlerKeys.PERMISSIONS);
@@ -92,7 +93,7 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 			else if (entity instanceof Portlet) {
 				Portlet portlet = (Portlet)entity;
 
-				long plid = Long.valueOf("0"/*item.getMetadataValue("old-plid")*/);
+				long plid = context.getPlid();
 				String portletId = portlet.getPortletId();
 
 				Layout layout = LayoutLocalServiceUtil.getLayout(plid);
@@ -107,11 +108,16 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 			}
 
 			if (permissionsList != null) {
-				item.setPermissions(permissionsList);
+				ZipWriter zipWriter = context.getZipWriter();
+
+				XStreamWrapper xStream =
+					(XStreamWrapper)PortalBeanLocatorUtil.locate(
+						"xStreamWrapper");
+
+				zipWriter.addEntry(
+					getPermissionPath(entity), xStream.toXML(permissionsList));
 			}
 		}
-
-		returnValue = item;
 	}
 
 	private List<LarDigestPermission> digestEntityPermissions(
@@ -300,30 +306,6 @@ public class DigestPermissionAdvice implements AfterReturningAdvice {
 					companyId, className, ResourceConstants.SCOPE_INDIVIDUAL,
 					String.valueOf(primKey), roleIds, actionIds);
 		}
-	}
-
-	private String getPermissionPath(Object entity) {
-		if (entity instanceof BaseModel) {
-			BaseModel baseModel = (BaseModel)entity;
-
-			Map<String, Object> modelAttributes =
-				baseModel.getModelAttributes();
-
-			StringBundler sb = new StringBundler();
-
-			sb.append(StringPool.FORWARD_SLASH);
-			sb.append("group");
-			sb.append(StringPool.FORWARD_SLASH);
-			sb.append(modelAttributes.get("groupId"));
-			sb.append(StringPool.FORWARD_SLASH);
-			sb.append(baseModel.getModelClassName());
-			sb.append(StringPool.FORWARD_SLASH);
-			sb.append(baseModel.getPrimaryKeyObj() + "-permissions.xml");
-
-			return sb.toString();
-		}
-
-		return StringPool.BLANK;
 	}
 
 }

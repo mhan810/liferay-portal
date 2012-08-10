@@ -31,7 +31,7 @@ public class ImageDataHandlerImpl extends BaseDataHandlerImpl<Image>
 	@Override
 	public void export(
 			Image object, DataHandlerContext context,
-			LarDigestModule digestModule)
+			LarDigestModule parentPortletModule)
 		throws Exception {
 
 		return;

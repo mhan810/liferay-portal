@@ -49,7 +49,8 @@ import java.util.Map;
 /**
  * @author Mate Thurzo
  */
-public class DigestClassedModelAdvice implements AfterReturningAdvice {
+public class ExportClassedModelAdvice extends ExportImportAdvice
+	implements AfterReturningAdvice {
 
 	public void afterReturning(
 			Object returnValue, Method method, Object[] args, Object target)
@@ -262,20 +263,6 @@ public class DigestClassedModelAdvice implements AfterReturningAdvice {
 		for (RatingsEntry entry : ratingsEntries) {
 			// TODO create RatingsEntryDataHandler
 		}
-	}
-
-	private long getClassPK(LarDigestItem item) {
-		return Long.valueOf(item.getClassPK());
-	}
-
-	private boolean isResourceMain(Object object) {
-		if (object instanceof ResourcedModel) {
-			ResourcedModel resourcedModel = (ResourcedModel)object;
-
-			return resourcedModel.isResourceMain();
-		}
-
-		return true;
 	}
 
 }

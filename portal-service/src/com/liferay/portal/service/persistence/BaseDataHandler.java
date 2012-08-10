@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.lar.digest.LarDigest;
+import com.liferay.portal.lar.digest.LarDigestElement;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.model.BaseModel;
@@ -50,7 +51,8 @@ public abstract interface BaseDataHandler<T extends BaseModel<T>> {
 		DataHandlerContext context);
 
 	public void export(
-			T object, DataHandlerContext context, LarDigestModule digestModule)
+			T object, DataHandlerContext context,
+			LarDigestModule parentPortletModule)
 		throws Exception;
 
 	public String getEntityPath(T object);

@@ -19,7 +19,7 @@ import javax.xml.stream.XMLStreamWriter;
 /**
  * @author Daniel Kocsis
  */
-public interface LarDigestElement<T> {
+public interface LarDigestElement {
 
 	public void serialize(XMLStreamWriter writer) throws Exception;
 

@@ -33,17 +33,13 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.lar.LARExporter;
-import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.digest.LarDigest;
 import com.liferay.portal.lar.digest.LarDigestDependency;
 import com.liferay.portal.lar.digest.LarDigestDependencyImpl;
 import com.liferay.portal.lar.digest.LarDigestItem;
 import com.liferay.portal.lar.digest.LarDigestItemImpl;
-import com.liferay.portal.lar.digest.LarDigestMetadata;
-import com.liferay.portal.lar.digest.LarDigestMetadataImpl;
 import com.liferay.portal.lar.digest.LarDigestModule;
 import com.liferay.portal.lar.digest.LarDigestPermission;
 import com.liferay.portal.lar.digest.LarDigesterConstants;
@@ -88,7 +84,6 @@ import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.sites.util.SitesUtil;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -521,7 +516,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 	public void export(
 			Layout layout, DataHandlerContext context,
-			LarDigestModule digestModule)
+			LarDigestModule parentPortletModule)
 		throws Exception {
 
 		context.setPlid(layout.getPlid());
@@ -583,7 +578,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 			digestItem.addDependency(childrenDependency);
 
-			export(childLayout, context, digestModule);
+			export(childLayout, context, parentPortletModule);
 		}
 
 		// Layout prototype
@@ -603,7 +598,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			digestItem.addDependency(prototypeDependecy);
 
 			layoutPrototypeDataHandler.export(
-				layoutPrototype, context, digestModule);
+				layoutPrototype, context, parentPortletModule);
 		}
 
 		boolean deleteLayout = MapUtil.getBoolean(
@@ -617,7 +612,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			digestItem.setClassPK(StringUtil.valueOf(layout.getLayoutId()));
 			digestItem.setUuid(layout.getUuid());
 
-			digestModule.addItem(digestItem);
+			parentPortletModule.addItem(digestItem);
 
 			return;
 		}
@@ -627,7 +622,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 				layout.getIconImageId());
 
 			if (image != null) {
-				imageDataHandler.export(image, context, digestModule);
+				imageDataHandler.export(image, context, parentPortletModule);
 
 				LarDigestDependency dependency = new LarDigestDependencyImpl(
 					Image.class.getName(), String.valueOf(image.getImageId()));
@@ -642,10 +637,10 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 		digestItem.setClassPK(String.valueOf(layout.getPlid()));
 		digestItem.setUuid(layout.getUuid());
 
-		digestModule.addItem(digestItem);
+		parentPortletModule.addItem(digestItem);
 
 		if (layout.isTypeArticle()) {
-			exportJournalArticle(layout, context, digestModule);
+			exportJournalArticle(layout, context, parentPortletModule);
 		}
 		else if (layout.isTypeLinkToLayout()) {
 			UnicodeProperties typeSettingsProperties =
@@ -665,7 +660,7 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 
 				digestItem.addDependency(dependency);
 
-				export(linkedToLayout, context, digestModule);
+				export(linkedToLayout, context, parentPortletModule);
 			}
 		}
 		else if (layout.isTypePortlet()) {
