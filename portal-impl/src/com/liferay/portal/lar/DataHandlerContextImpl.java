@@ -16,6 +16,8 @@ package com.liferay.portal.lar;
 
 import com.liferay.portal.kernel.lar.DataHandlerContext;
 import com.liferay.portal.kernel.lar.PortletDataException;
+import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
+import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -36,22 +38,23 @@ import java.util.Set;
  */
 public class DataHandlerContextImpl implements DataHandlerContext {
 
+	public DataHandlerContextImpl(long companyId) {
+		setCompanyId(companyId);
+
+		_primaryKeys = new HashSet<String>();
+	}
+
 	public DataHandlerContextImpl(
 			long companyId, long groupId, Map<String, String[]> parameterMap,
-			Date startDate, Date endDate, ZipWriter zipWriter)
+			Date startDate, Date endDate)
 		throws PortletDataException {
-
-		validateDateRange(startDate, endDate);
 
 		setCompanyId(companyId);
 		setGroupId(groupId);
 		setScopeGroupId(groupId);
 		setParameters(parameterMap);
-		_primaryKeys = new HashSet<String>();
 		setStartDate(startDate);
 		setEndDate(endDate);
-		setZipReader(null);
-		setZipWriter(zipWriter);
 	}
 
 	public DataHandlerContextImpl(
@@ -66,7 +69,6 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 			MapUtil.getString(
 				parameterMap, PortletDataHandlerKeys.DATA_STRATEGY,
 				PortletDataHandlerKeys.DATA_STRATEGY_MIRROR));
-		setZipWriter(null);
 	}
 
 	public boolean addPrimaryKey(Class<?> clazz, String primaryKey) {
@@ -332,17 +334,8 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 		setAttribute(ATTRIBUTE_NAME_USER, user);
 	}
 
-	public void setUserIdStrategy(User user, String userIdStrategy) {
-		UserIdStrategy strategy = null;
-
-		if (UserIdStrategy.ALWAYS_CURRENT_USER_ID.equals(userIdStrategy)) {
-			strategy = new AlwaysCurrentUserIdStrategy(user);
-		}
-		else {
-			strategy = new CurrentUserIdStrategy(user);
-		}
-
-		setAttribute(ATTRIBUTE_NAME_USER_ID_STRATEGY, strategy);
+	public void setUserIdStrategy(UserIdStrategy userIdStrategy) {
+		setAttribute(ATTRIBUTE_NAME_USER_ID_STRATEGY, userIdStrategy);
 	}
 
 	public void setZipReader(ZipReader zipReader) {
@@ -367,38 +360,6 @@ public class DataHandlerContextImpl implements DataHandlerContext {
 
 	protected String getPrimaryKeyString(String className, String primaryKey) {
 		return className.concat(StringPool.POUND).concat(primaryKey);
-	}
-
-	protected void validateDateRange(Date startDate, Date endDate)
-		throws PortletDataException {
-
-		if ((startDate == null) && (endDate != null)) {
-			throw new PortletDataException(
-				PortletDataException.END_DATE_IS_MISSING_START_DATE);
-		}
-		else if ((startDate != null) && (endDate == null)) {
-			throw new PortletDataException(
-				PortletDataException.START_DATE_IS_MISSING_END_DATE);
-		}
-
-		if (startDate != null) {
-			if (startDate.after(endDate) || startDate.equals(endDate)) {
-				throw new PortletDataException(
-					PortletDataException.START_DATE_AFTER_END_DATE);
-			}
-
-			Date now = new Date();
-
-			if (startDate.after(now)) {
-				throw new PortletDataException(
-					PortletDataException.FUTURE_START_DATE);
-			}
-
-			if (endDate.after(now)) {
-				throw new PortletDataException(
-					PortletDataException.FUTURE_END_DATE);
-			}
-		}
 	}
 
 	private Map<String, Object> _attributes = new HashMap<String, Object>();

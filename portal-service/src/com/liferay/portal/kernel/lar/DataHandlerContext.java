@@ -179,7 +179,7 @@ public interface DataHandlerContext {
 
 	public void setUser(User user);
 
-	public void setUserIdStrategy(User user, String userIdStrategy);
+	public void setUserIdStrategy(UserIdStrategy userIdStrategy);
 
 	public void setZipReader(ZipReader zipReader);
 

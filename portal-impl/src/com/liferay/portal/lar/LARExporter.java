@@ -499,14 +499,14 @@ public class LARExporter {
 
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 
-		ZipWriter zipWriter = ZipWriterFactoryUtil.getZipWriter();
+		DataHandlerContextBuilder contextBuilder =
+			new DataHandlerContextBuilder(group.getCompanyId(), true);
 
-		_context = new DataHandlerContextImpl(
-			group.getCompanyId(), groupId, parameters, startDate, endDate,
-			zipWriter);
+		contextBuilder = contextBuilder.setEndDate(endDate).setGroupId(
+			groupId).setParameters(parameters).setPrivateLayout(
+				privateLayout).setStartDate(startDate);
 
-		_context.setPrivateLayout(privateLayout);
-		_context.setScopeGroupId(groupId);
+		_context = contextBuilder.build();
 
 		DigestStore store = DigestStoreUtil.createDigestStore();
 

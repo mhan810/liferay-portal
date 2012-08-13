@@ -92,7 +92,7 @@ public class LARImporter {
 			ImportExportThreadLocal.setLayoutImportInProcess(true);
 
 			_initLarPersistenceContext(
-				userId, groupId, privateLayout, parameterMap);
+				userId, groupId, privateLayout, parameterMap, file);
 
 			doImport(_context, file);
 		}
@@ -155,9 +155,6 @@ public class LARImporter {
 			layoutSetPrototypeLinkEnabled = false;
 		}
 
-		String userIdStrategy = MapUtil.getString(
-			parameterMap, PortletDataHandlerKeys.USER_ID_STRATEGY);
-
 		StopWatch stopWatch = null;
 
 		if (_log.isInfoEnabled()) {
@@ -173,17 +170,7 @@ public class LARImporter {
 		User user = context.getUser();
 		long userId = user.getUserId();
 
-		context.setUserIdStrategy(user, userIdStrategy);
-
-		ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(file);
-
-		context.setZipReader(zipReader);
-
-		String dataStrategy = MapUtil.getString(
-			parameterMap, PortletDataHandlerKeys.DATA_STRATEGY,
-			PortletDataHandlerKeys.DATA_STRATEGY_MIRROR);
-
-		context.setDataStrategy(dataStrategy);
+		ZipReader zipReader = context.getZipReader();
 
 		// Digest
 
@@ -532,18 +519,20 @@ public class LARImporter {
 
 	private void _initLarPersistenceContext(
 			long userId, long groupId, boolean privateLayout,
-			Map<String, String[]> parameters)
+			Map<String, String[]> parameters, File larFile)
 		throws Exception {
 
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 		User user = UserLocalServiceUtil.getUser(userId);
 
-		_context = new DataHandlerContextImpl(
-			group.getCompanyId(), groupId, parameters);
+		DataHandlerContextBuilder contextBuilder =
+			new DataHandlerContextBuilder(group.getCompanyId(), false);
 
-		_context.setPrivateLayout(privateLayout);
-		_context.setScopeGroupId(groupId);
-		_context.setUser(user);
+		contextBuilder = contextBuilder.setGroupId(groupId).setParameters(
+			parameters).setPrivateLayout(privateLayout).setUser(
+				user).setZipFile(larFile);
+
+		_context = contextBuilder.build();
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(LARImporter.class);
