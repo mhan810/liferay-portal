@@ -81,6 +81,10 @@ public class LarDigestItemImpl implements LarDigestItem {
 	}
 
 	public void addMetadata(LarDigestMetadata metadata) {
+		if (_metadata.contains(metadata)) {
+			return;
+		}
+
 		_metadata.add(metadata);
 	}
 

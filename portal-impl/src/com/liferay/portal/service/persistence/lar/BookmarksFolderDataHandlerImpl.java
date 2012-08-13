@@ -159,6 +159,8 @@ public class BookmarksFolderDataHandlerImpl
 		// Serialization
 
 		serialize(folder, context);
+
+		context.addProcessedPath(path);
 	}
 
 	protected String getImportFolderPath(

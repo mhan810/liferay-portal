@@ -64,6 +64,38 @@ public class LarDigestMetadataImpl implements LarDigestMetadata {
 		_value = value;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+
+		LarDigestMetadata metadata = null;
+
+		try {
+			metadata = (LarDigestMetadata)obj;
+		}
+		catch (ClassCastException cce) {
+			return false;
+		}
+
+		String name = metadata.getName();
+
+		String value = metadata.getValue();
+
+		if ((_name == null) && (name == null) &&
+			(_value == null) && (value != null)) {
+
+			return true;
+		}
+
+		if (_name.equals(name) && _value.equals(value)) {
+			return true;
+		}
+
+		return false;
+	}
+
 	private String _name;
 
 	private String _value;

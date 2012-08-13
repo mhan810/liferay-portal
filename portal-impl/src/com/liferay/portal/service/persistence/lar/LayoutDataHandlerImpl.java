@@ -664,32 +664,6 @@ public class LayoutDataHandlerImpl extends BaseDataHandlerImpl<Layout>
 			}
 		}
 		else if (layout.isTypePortlet()) {
-			for (Portlet portlet : LARExporter.getAlwaysExportablePortlets(
-					context.getCompanyId())) {
-
-				if (portlet.isScopeable() && layout.hasScopeGroup()) {
-					String key = PortletPermissionUtil.getPrimaryKey(
-						layout.getPlid(), portlet.getPortletId());
-
-
-					context.setPlid(layout.getPlid());
-					context.setOldPlid(layout.getPlid());
-					context.setScopeGroupId(
-						layout.getScopeGroup().getGroupId());
-					context.setAttribute("scopeType", StringPool.BLANK);
-					context.setAttribute("scopeLayoutUuid", layout.getUuid());
-					context.setAttribute("layout", layout);
-
-					BaseDataHandler portletDataHandler =
-						DataHandlersUtil.getDataHandlerInstance(
-							portlet.getPortletId());
-
-					if (portletDataHandler != null) {
-						portletDataHandler.export(portlet, context, null);
-					}
-				}
-			}
-
 			LayoutTypePortlet layoutTypePortlet =
 				(LayoutTypePortlet)layout.getLayoutType();
 

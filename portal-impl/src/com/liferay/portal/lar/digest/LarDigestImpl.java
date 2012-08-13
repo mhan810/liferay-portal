@@ -68,11 +68,15 @@ public class LarDigestImpl implements LarDigest {
 	}
 
 	public void addMetadata(LarDigestMetadata metadata) {
+		if (_metadata.contains(metadata)) {
+			return;
+		}
+
 		_metadata.add(metadata);
 	}
 
 	public void addModule(LarDigestModule module) {
-		if (module == null) {
+		if (module == null || _moduleList.contains(module)) {
 			return;
 		}
 
@@ -108,7 +112,7 @@ public class LarDigestImpl implements LarDigest {
 	public List<LarDigestItem> findDigestItems(
 		int action, String path, String type, String classPK, String uuid) {
 
-		if (getDigestString() == null) {
+		if (Validator.isNull(getDigestString())) {
 			return doFindDigestItemsInObject(action, path, type, classPK, uuid);
 		}
 
@@ -116,7 +120,7 @@ public class LarDigestImpl implements LarDigest {
 	}
 
 	public LarDigestModule findDigestModule(String moduleName) {
-		if (getDigestString() == null) {
+		if (Validator.isNull(getDigestString())) {
 			return doFindDigestModuleInObject(moduleName);
 		}
 

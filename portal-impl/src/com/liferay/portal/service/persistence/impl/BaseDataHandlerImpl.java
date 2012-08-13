@@ -135,12 +135,6 @@ public abstract class BaseDataHandlerImpl<T extends BaseModel<T>>
 	}
 
 	public String getEntityPath(T object) {
-		if (object instanceof Portlet) {
-			Portlet portlet = (Portlet)object;
-
-			return getPortletPath(portlet.getPortletId());
-		}
-
 		if (object instanceof BaseModel) {
 			BaseModel<T> baseModel = (BaseModel<T>)object;
 

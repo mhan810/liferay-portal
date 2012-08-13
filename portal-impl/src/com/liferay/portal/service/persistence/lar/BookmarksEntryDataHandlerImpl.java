@@ -121,6 +121,8 @@ public class BookmarksEntryDataHandlerImpl
 		// Serializing
 
 		serialize(entry, context);
+
+		context.addProcessedPath(path);
 	}
 
 }
