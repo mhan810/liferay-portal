@@ -15,21 +15,18 @@
 package com.liferay.portal.lar;
 
 /**
- * @author     Raymond Augé
- * @deprecated Moved to {@link
- *             com.liferay.portal.kernel.lar.PortletDataHandlerControl}
+ * @author Mate Thurzo
  */
-public class PortletDataHandlerControl
-	extends com.liferay.portal.kernel.lar.PortletDataHandlerControl {
+public interface XStreamWrapper {
 
-	public PortletDataHandlerControl(String namespace, String controlName) {
-		super(namespace, controlName);
-	}
+	public void alias(String name, Class type);
 
-	public PortletDataHandlerControl(
-		String namespace, String controlName, boolean disabled) {
+	public Object fromXML(String xml);
 
-		super(namespace, controlName, disabled);
-	}
+	public ClassLoader getClassLoader();
+
+	public void setClassLoader(ClassLoader classLoader);
+
+	public String toXML(Object obj);
 
 }

@@ -197,7 +197,7 @@
 											Set<String> portletDataHandlerClasses = new HashSet<String>();
 
 											for (Portlet portlet : portletsList) {
-												String portletDataHandlerClass = portlet.getPortletDataHandlerClass();
+												String portletDataHandlerClass = DataHandlersUtil.getDataHandlerClass(portlet.getPortletId());
 
 												if (!portletDataHandlerClasses.contains(portletDataHandlerClass)) {
 													portletDataHandlerClasses.add(portletDataHandlerClass);
@@ -206,7 +206,7 @@
 													continue;
 												}
 
-												PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+												PortletDataHandler portletDataHandler = (PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(portlet.getPortletId());
 
 												try {
 													PortletDataHandlerControl[] controls = null;
@@ -254,7 +254,7 @@
 											<%
 													}
 												}
-												catch (PortletDataException pde) {
+												catch (Exception pde) {
 												%>
 
 													<li class="tree-item">
@@ -285,7 +285,11 @@
 											Set<String> portletDataHandlerClasses = new HashSet<String>();
 
 											for (Portlet portlet : portletsList) {
-												String portletDataHandlerClass = portlet.getPortletDataHandlerClass();
+												String portletDataHandlerClass = DataHandlersUtil.getDataHandlerClass(portlet.getPortletId());
+
+												if (Validator.isNull(portletDataHandlerClass)) {
+													continue;
+												}
 
 												if (!portletDataHandlerClasses.contains(portletDataHandlerClass)) {
 													portletDataHandlerClasses.add(portletDataHandlerClass);
@@ -294,7 +298,7 @@
 													continue;
 												}
 
-												PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+												PortletDataHandler portletDataHandler = (PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(portlet.getPortletId());
 
 												try {
 													PortletDataHandlerControl[] metadataControls = null;
@@ -338,7 +342,7 @@
 														}
 													}
 												}
-												catch (PortletDataException pde) {
+												catch (Exception pde) {
 												%>
 
 													<li class="tree-item">

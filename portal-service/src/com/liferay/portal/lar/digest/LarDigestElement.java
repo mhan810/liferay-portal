@@ -12,12 +12,15 @@
  * details.
  */
 
-package com.liferay.portal.lar;
+package com.liferay.portal.lar.digest;
+
+import javax.xml.stream.XMLStreamWriter;
 
 /**
- * @author     Raymond Augé
- * @deprecated Moved to {@link com.liferay.portal.kernel.lar.PortletDataHandler}
+ * @author Daniel Kocsis
  */
-public interface PortletDataHandler
-	extends com.liferay.portal.kernel.lar.PortletDataHandler {
+public interface LarDigestElement {
+
+	public void serialize(XMLStreamWriter writer) throws Exception;
+
 }

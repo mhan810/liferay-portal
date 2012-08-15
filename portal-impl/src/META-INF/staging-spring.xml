@@ -16,4 +16,55 @@
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.LayoutSetLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.LayoutSetLocalService)" />
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.PortletPreferencesLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.PortletPreferencesLocalService)" />
 	</aop:config>
+
+	<bean id="com.liferay.portal.lar.DataHandlers" class="com.liferay.portal.lar.DataHandlersImpl" />
+	<bean id="com.liferay.portal.lar.DataHandlersUtil" class="com.liferay.portal.lar.DataHandlersUtil">
+		<property name="dataHandlers" ref="com.liferay.portal.lar.DataHandlers" />
+	</bean>
+	<bean id="baseDataHandler" abstract="true">
+		<property name="xstreamWrapper" ref="xStreamWrapper" />
+	</bean>
+	<bean id="xStreamWrapper" class="com.liferay.portal.lar.XStreamWrapperImpl" init-method="initWrapper" />
+
+	<bean id="com.liferay.portal.service.persistence.lar.DigestErrorRegistryAdvice" class="com.liferay.portal.service.persistence.lar.DigestErrorRegistryAdvice" />
+	<aop:config proxy-target-class="false">
+		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.DigestErrorRegistryAdvice" pointcut="bean(*DataHandler)" />
+	</aop:config>
+
+	<bean id="com.liferay.portal.service.persistence.lar.ExportClassedModelAdvice" class="com.liferay.portal.service.persistence.lar.ExportClassedModelAdvice" />
+	<bean id="com.liferay.portal.service.persistence.lar.ExportPermissionsAdvice" class="com.liferay.portal.service.persistence.lar.ExportPermissionsAdvice" />
+
+	<aop:config proxy-target-class="false">
+		<aop:pointcut id="exportPointcut" expression="execution(* com.liferay.portal.service.persistence.BaseDataHandler.export(..) throws Exception)" />
+
+		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.ExportClassedModelAdvice" pointcut-ref="exportPointcut" order="2" />
+		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.ExportPermissionsAdvice" pointcut-ref="exportPointcut" order="1" />
+	</aop:config>
+
+	<bean id="com.liferay.portal.service.persistence.lar.ExportImportMessageAdvice" class="com.liferay.portal.service.persistence.lar.ExportImportMessageAdvice" />
+	<aop:config proxy-target-class="false">
+		<aop:advisor advice-ref="com.liferay.portal.service.persistence.lar.ExportImportMessageAdvice" pointcut="bean(*DataHandler)" />
+	</aop:config>
+
+	<bean id="com.liferay.portal.kernel.staging.LayoutStagingUtil" class="com.liferay.portal.kernel.staging.LayoutStagingUtil">
+		<property name="layoutStaging">
+			<bean class="com.liferay.portal.staging.LayoutStagingImpl" />
+		</property>
+	</bean>
+	<bean id="com.liferay.portal.kernel.staging.StagingUtil" class="com.liferay.portal.kernel.staging.StagingUtil">
+		<property name="staging">
+			<bean class="com.liferay.portal.staging.StagingImpl" />
+		</property>
+	</bean>
+	<bean id="com.liferay.portal.kernel.staging.permission.StagingPermissionUtil" class="com.liferay.portal.kernel.staging.permission.StagingPermissionUtil">
+		<property name="stagingPermission">
+			<bean class="com.liferay.portal.staging.permission.StagingPermissionImpl" />
+		</property>
+	</bean>
+
+	<bean id="com.liferay.portal.lar.DigestStoreUtil" class="com.liferay.portal.lar.DigestStoreUtil">
+		<property name="digestStoreFactory">
+			<bean class="com.liferay.portal.lar.ThreadLocalDigestStoreFactory" />
+		</property>
+	</bean>
 </beans>

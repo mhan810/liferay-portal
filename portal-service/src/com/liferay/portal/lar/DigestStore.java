@@ -14,10 +14,17 @@
 
 package com.liferay.portal.lar;
 
+import com.liferay.portal.lar.digest.LarDigest;
+
 /**
- * @author     Bruno Farache
- * @deprecated Moved to {@link com.liferay.portal.kernel.lar.UserIdStrategy}
+ * @author Mate Thurzo
  */
-public interface UserIdStrategy
-	extends com.liferay.portal.kernel.lar.UserIdStrategy {
+public interface DigestStore {
+
+	public LarDigest getDigest();
+
+	public void setDigest(LarDigest digest);
+
+	public void storeDigest();
+
 }

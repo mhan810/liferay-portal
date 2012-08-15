@@ -41,7 +41,7 @@ for (Layout curLayout : exportLayouts) {
 				continue;
 			}
 
-			PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+			PortletDataHandler portletDataHandler = (PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(portlet.getPortletId());
 
 			if ((portletDataHandler != null) && !portletIdsSet.contains(portlet.getRootPortletId())) {
 				portletIdsSet.add(portlet.getRootPortletId());
@@ -52,7 +52,7 @@ for (Layout curLayout : exportLayouts) {
 	}
 }
 
-List<Portlet> alwaysExportablePortlets = LayoutExporter.getAlwaysExportablePortlets(company.getCompanyId());
+List<Portlet> alwaysExportablePortlets = LARExporter.getAlwaysExportablePortlets(company.getCompanyId());
 
 for (Portlet alwaysExportablePortlet : alwaysExportablePortlets) {
 	if (!portletIdsSet.contains(alwaysExportablePortlet.getRootPortletId())) {
@@ -179,7 +179,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 						Set<String> portletDataHandlerClasses = new HashSet<String>();
 
 						for (Portlet portlet : portletsList) {
-							String portletDataHandlerClass = portlet.getPortletDataHandlerClass();
+							String portletDataHandlerClass = DataHandlersUtil.getDataHandlerClass(portlet.getPortletId());
 
 							if (!portletDataHandlerClasses.contains(portletDataHandlerClass)) {
 								portletDataHandlerClasses.add(portletDataHandlerClass);
@@ -188,7 +188,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 								continue;
 							}
 
-							PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+							PortletDataHandler portletDataHandler = (PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(portlet.getPortletId());
 
 							try {
 								PortletDataHandlerControl[] controls = portletDataHandler.getExportControls();
@@ -229,7 +229,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 						<%
 								}
 							}
-							catch (PortletDataException pde) {
+							catch (Exception e) {
 							%>
 
 								<li class="tree-item">
@@ -259,7 +259,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 							Set<String> portletDataHandlerClasses = new HashSet<String>();
 
 							for (Portlet portlet : portletsList) {
-								String portletDataHandlerClass = portlet.getPortletDataHandlerClass();
+								String portletDataHandlerClass = DataHandlersUtil.getDataHandlerClass(portlet.getPortletId());
 
 								if (!portletDataHandlerClasses.contains(portletDataHandlerClass)) {
 									portletDataHandlerClasses.add(portletDataHandlerClass);
@@ -268,7 +268,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 									continue;
 								}
 
-								PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+								PortletDataHandler portletDataHandler = (PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(portlet.getPortletId());
 
 								try {
 									PortletDataHandlerControl[] metadataControls = portletDataHandler.getExportMetadataControls();
@@ -305,7 +305,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 										}
 									}
 								}
-								catch (PortletDataException pde) {
+								catch (Exception e) {
 							%>
 
 									<li class="tree-item">

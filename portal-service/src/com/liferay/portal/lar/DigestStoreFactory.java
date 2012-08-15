@@ -15,27 +15,10 @@
 package com.liferay.portal.lar;
 
 /**
- * @author     Raymond Augé
- * @deprecated Moved to {@link
- *             com.liferay.portal.kernel.lar.PortletDataException}
+ * @author Mate Thurzo
  */
-public class PortletDataException
-	extends com.liferay.portal.kernel.lar.PortletDataException {
+public interface DigestStoreFactory {
 
-	public PortletDataException() {
-		super();
-	}
-
-	public PortletDataException(String msg) {
-		super(msg);
-	}
-
-	public PortletDataException(Throwable cause) {
-		super(cause);
-	}
-
-	public PortletDataException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
+	public DigestStore createDigestStore();
 
 }

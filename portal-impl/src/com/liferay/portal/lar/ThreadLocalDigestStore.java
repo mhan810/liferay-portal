@@ -14,11 +14,28 @@
 
 package com.liferay.portal.lar;
 
+import com.liferay.portal.kernel.util.AutoResetThreadLocal;
+import com.liferay.portal.lar.digest.LarDigest;
+
 /**
- * @author     Raymond Augé
- * @deprecated Moved to {@link
- *             com.liferay.portal.kernel.lar.PortletDataHandlerKeys}
+ * @author Mate Thurzo
  */
-public class PortletDataHandlerKeys
-	extends com.liferay.portal.kernel.lar.PortletDataHandlerKeys {
+public class ThreadLocalDigestStore implements DigestStore {
+
+	public LarDigest getDigest() {
+		return _digest.get();
+	}
+
+	public void setDigest(LarDigest digest) {
+		_digest.set(digest);
+	}
+
+	public void storeDigest() {
+		return;
+	}
+
+	private static ThreadLocal<LarDigest> _digest =
+		new AutoResetThreadLocal<LarDigest>(
+			ThreadLocalDigestStore.class.getName(), null);
+
 }

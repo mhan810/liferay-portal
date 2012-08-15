@@ -15,7 +15,6 @@
 package com.liferay.portal.kernel.portlet;
 
 import com.liferay.portal.kernel.atom.AtomCollectionAdapter;
-import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.poller.PollerProcessor;
 import com.liferay.portal.kernel.pop.MessageListener;
 import com.liferay.portal.kernel.search.Indexer;
@@ -71,8 +70,6 @@ public interface PortletBag extends Cloneable {
 	public PollerProcessor getPollerProcessorInstance();
 
 	public MessageListener getPopMessageListenerInstance();
-
-	public PortletDataHandler getPortletDataHandlerInstance();
 
 	public PortletDisplayTemplateHandler
 		getPortletDisplayTemplateHandlerInstance();

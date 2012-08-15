@@ -15,7 +15,6 @@
 package com.liferay.portal.model.impl;
 
 import com.liferay.portal.kernel.atom.AtomCollectionAdapter;
-import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.plugin.PluginPackage;
@@ -145,7 +144,6 @@ public class PortletImpl extends PortletBaseImpl {
 		List<SchedulerEntry> schedulerEntries, String portletURLClass,
 		String friendlyURLMapperClass, String friendlyURLMapping,
 		String friendlyURLRoutes, String urlEncoderClass,
-		String portletDataHandlerClass,
 		String portletDisplayTemplateHandlerClass,
 		String portletLayoutListenerClass, String pollerProcessorClass,
 		String popMessageListenerClass, String socialActivityInterpreterClass,
@@ -206,7 +204,6 @@ public class PortletImpl extends PortletBaseImpl {
 		_friendlyURLMapping = friendlyURLMapping;
 		_friendlyURLRoutes = friendlyURLRoutes;
 		_urlEncoderClass = urlEncoderClass;
-		_portletDataHandlerClass = portletDataHandlerClass;
 		_portletDisplayTemplateHandlerClass =
 			portletDisplayTemplateHandlerClass;
 		_portletLayoutListenerClass = portletLayoutListenerClass;
@@ -349,7 +346,6 @@ public class PortletImpl extends PortletBaseImpl {
 			getOpenSearchClass(), getSchedulerEntries(), getPortletURLClass(),
 			getFriendlyURLMapperClass(), getFriendlyURLMapping(),
 			getFriendlyURLRoutes(), getURLEncoderClass(),
-			getPortletDataHandlerClass(),
 			getPortletDisplayTemplateHandlerClass(),
 			getPortletLayoutListenerClass(), getPollerProcessorClass(),
 			getPopMessageListenerClass(), getSocialActivityInterpreterClass(),
@@ -1152,30 +1148,6 @@ public class PortletImpl extends PortletBaseImpl {
 	 */
 	public String getPortletClass() {
 		return _portletClass;
-	}
-
-	/**
-	 * Returns the name of the portlet data handler class of the portlet.
-	 *
-	 * @return the name of the portlet data handler class of the portlet
-	 */
-	public String getPortletDataHandlerClass() {
-		return _portletDataHandlerClass;
-	}
-
-	/**
-	 * Returns the portlet data handler instance of the portlet.
-	 *
-	 * @return the portlet data handler instance of the portlet
-	 */
-	public PortletDataHandler getPortletDataHandlerInstance() {
-		if (Validator.isNull(getPortletDataHandlerClass())) {
-			return null;
-		}
-
-		PortletBag portletBag = PortletBagPool.get(getRootPortletId());
-
-		return portletBag.getPortletDataHandlerInstance();
 	}
 
 	/**
@@ -2804,16 +2776,6 @@ public class PortletImpl extends PortletBaseImpl {
 	}
 
 	/**
-	 * Sets the name of the portlet data handler class of the portlet.
-	 *
-	 * @param portletDataHandlerClass the name of portlet data handler class of
-	 *        the portlet
-	 */
-	public void setPortletDataHandlerClass(String portletDataHandlerClass) {
-		_portletDataHandlerClass = portletDataHandlerClass;
-	}
-
-	/**
 	 * Sets the name of the portlet display template handler class of the
 	 * portlet.
 	 *
@@ -3603,11 +3565,6 @@ public class PortletImpl extends PortletBaseImpl {
 	 * The name of the portlet class of the portlet.
 	 */
 	private String _portletClass;
-
-	/**
-	 * The name of the portlet data handler class of the portlet.
-	 */
-	private String _portletDataHandlerClass;
 
 	/**
 	 * The name of the display style handler class of the portlet.

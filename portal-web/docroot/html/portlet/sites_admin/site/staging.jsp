@@ -1,3 +1,5 @@
+<%@ page import="com.liferay.portal.lar.DataHandlersUtil" %>
+
 <%--
 /**
  * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
@@ -171,7 +173,7 @@ LayoutSet publicLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroup.get
 						continue;
 					}
 
-					String portletDataHandlerClass = curPortlet.getPortletDataHandlerClass();
+					String portletDataHandlerClass = DataHandlersUtil.getDataHandlerClass(curPortlet.getPortletId());
 
 					if (!portletDataHandlerClasses.contains(portletDataHandlerClass)) {
 						portletDataHandlerClasses.add(portletDataHandlerClass);
@@ -180,7 +182,7 @@ LayoutSet publicLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroup.get
 						continue;
 					}
 
-					PortletDataHandler portletDataHandler = curPortlet.getPortletDataHandlerInstance();
+					PortletDataHandler portletDataHandler = (PortletDataHandler)DataHandlersUtil.getDataHandlerInstance(curPortlet.getPortletId());
 
 					if (portletDataHandler == null) {
 						continue;
