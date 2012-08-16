@@ -16,4 +16,10 @@
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.LayoutSetLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.LayoutSetLocalService)" />
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.PortletPreferencesLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.PortletPreferencesLocalService)" />
 	</aop:config>
+
+	<bean id="com.liferay.portal.lar.DigestStoreUtil" class="com.liferay.portal.lar.DigestStoreUtil">
+		<property name="digestStoreFactory">
+			<bean class="com.liferay.portal.lar.ThreadLocalDigestStoreFactory" />
+		</property>
+	</bean>
 </beans>
