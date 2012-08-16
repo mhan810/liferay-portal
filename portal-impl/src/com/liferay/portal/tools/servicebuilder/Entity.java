@@ -663,6 +663,14 @@ public class Entity {
 		}
 	}
 
+	public boolean isStagedModel() {
+		if (hasUuid() && hasColumn("createDate") && hasColumn("modifiedDate")) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public boolean isWorkflowEnabled() {
 		if (hasColumn("status") && hasColumn("statusByUserId") &&
 			hasColumn("statusByUserName") && hasColumn("statusDate")) {
