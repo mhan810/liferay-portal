@@ -17,6 +17,8 @@
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.PortletPreferencesLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.PortletPreferencesLocalService)" />
 	</aop:config>
 
+	<bean id="xStreamWrapper" class="com.liferay.portal.lar.XStreamWrapperImpl" init-method="initWrapper" />
+
 	<bean id="com.liferay.portal.lar.DataHandlers" class="com.liferay.portal.lar.DataHandlersImpl" />
 	<bean id="com.liferay.portal.lar.DataHandlersUtil" class="com.liferay.portal.lar.DataHandlersUtil">
 		<property name="dataHandlers" ref="com.liferay.portal.lar.DataHandlers" />
