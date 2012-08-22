@@ -45,6 +45,7 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.QName;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.model.EventDefinition;
 import com.liferay.portal.model.Portlet;
@@ -1213,10 +1214,44 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 			indexerClasses.add(indexerClassElement.getText());
 		}
 
+		// Data Handlers
+
+		Element portletDataHandlerElement = portletElement.element(
+			"portlet-data-handler");
+
+		if (portletDataHandlerElement != null) {
+			String className = GetterUtil.getString(
+				portletDataHandlerElement.elementText("class"));
+
+			if (Validator.isNotNull(className)) {
+				DataHandlersUtil.addDataHandlerMapping(portletId, className);
+			}
+		}
+
+		for (Element dataHandlerElement :
+				portletElement.elements("model-data-handler")) {
+
+			String modelName = GetterUtil.getString(
+				dataHandlerElement.elementText("model-name"));
+			String dataHandlerClass = GetterUtil.getString(
+				dataHandlerElement.elementText("class"));
+
+			if (Validator.isNotNull(modelName) &&
+				Validator.isNotNull(dataHandlerClass)) {
+
+				DataHandlersUtil.addDataHandlerMapping(
+					modelName, dataHandlerClass);
+			}
+		}
+
+		// Open Search
+
 		portletModel.setOpenSearchClass(
 			GetterUtil.getString(
 				portletElement.elementText("open-search-class"),
 				portletModel.getOpenSearchClass()));
+
+		// Scheduler Entry
 
 		for (Element schedulerEntryElement :
 				portletElement.elements("scheduler-entry")) {
@@ -1312,10 +1347,6 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 			GetterUtil.getString(
 				portletElement.elementText("url-encoder-class"),
 				portletModel.getURLEncoderClass()));
-		portletModel.setPortletDataHandlerClass(
-			GetterUtil.getString(
-				portletElement.elementText("portlet-data-handler-class"),
-				portletModel.getPortletDataHandlerClass()));
 		portletModel.setPortletDisplayTemplateHandlerClass(
 			GetterUtil.getString(
 				portletElement.elementText("portlet-display-template-handler"),
