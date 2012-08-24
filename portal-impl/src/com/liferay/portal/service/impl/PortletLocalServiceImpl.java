@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.plugin.PluginPackage;
 import com.liferay.portal.kernel.portlet.FriendlyURLMapper;
 import com.liferay.portal.kernel.portlet.LiferayPortletConfig;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
+import com.liferay.portal.kernel.portlet.PortletLayoutListener;
 import com.liferay.portal.kernel.scheduler.SchedulerEntry;
 import com.liferay.portal.kernel.scheduler.SchedulerEntryImpl;
 import com.liferay.portal.kernel.scheduler.TimeUnit;
@@ -44,6 +45,7 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.QName;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.model.EventDefinition;
 import com.liferay.portal.model.Portlet;
@@ -52,6 +54,7 @@ import com.liferay.portal.model.PortletCategory;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.PortletFilter;
 import com.liferay.portal.model.PortletInfo;
+import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.model.PortletURLListener;
 import com.liferay.portal.model.PublicRenderParameter;
 import com.liferay.portal.model.ResourceConstants;
@@ -65,6 +68,7 @@ import com.liferay.portal.model.impl.PublicRenderParameterImpl;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.ResourceActionsUtil;
 import com.liferay.portal.service.base.PortletLocalServiceBaseImpl;
+import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
@@ -215,6 +219,48 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 		Portlet portlet = getPortletById(portletId);
 
 		return (Portlet)portlet.clone();
+	}
+
+	public void deletePortlet(long companyId, String portletId, long plid)
+		throws PortalException, SystemException {
+
+		String rootPortletId = PortletConstants.getRootPortletId(portletId);
+
+		resourceLocalService.deleteResource(
+			companyId, rootPortletId, ResourceConstants.SCOPE_INDIVIDUAL,
+			PortletPermissionUtil.getPrimaryKey(plid, portletId));
+
+		List<PortletPreferences> portletPreferencesList =
+			portletPreferencesLocalService.getPortletPreferences(
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, plid, portletId);
+
+		Portlet portlet = getPortletById(companyId, portletId);
+
+		PortletLayoutListener portletLayoutListener = null;
+
+		if (portlet != null) {
+			portletLayoutListener = portlet.getPortletLayoutListenerInstance();
+
+			PortletInstanceFactoryUtil.delete(portlet);
+		}
+
+		for (PortletPreferences portletPreferences : portletPreferencesList) {
+			if (portletLayoutListener != null) {
+				portletLayoutListener.onRemoveFromLayout(
+					portletPreferences.getPortletId(), plid);
+			}
+
+			portletPreferencesLocalService.deletePortletPreferences(
+				portletPreferences.getPortletPreferencesId());
+		}
+	}
+
+	public void deletePortlets(long companyId, String[] portletIds, long plid)
+		throws PortalException, SystemException {
+
+		for (String portletId : portletIds) {
+			deletePortlet(companyId, portletId, plid);
+		}
 	}
 
 	public Portlet deployRemotePortlet(Portlet portlet, String categoryName)
@@ -1168,10 +1214,52 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 			indexerClasses.add(indexerClassElement.getText());
 		}
 
+		// Data Handlers
+
+		Element dataHandlerConfigurationElement = portletElement.element(
+			"portlet-data-handler-configuration");
+
+		if (dataHandlerConfigurationElement != null) {
+
+			Element portletDataHandlerElement =
+				dataHandlerConfigurationElement.element("portlet-data-handler");
+
+			if (portletDataHandlerElement != null) {
+				String className = GetterUtil.getString(
+					portletDataHandlerElement.elementText("class"));
+
+				if (Validator.isNotNull(className)) {
+					DataHandlersUtil.addDataHandlerMapping(
+						portletId, className);
+				}
+			}
+
+			for (Element dataHandlerElement :
+					dataHandlerConfigurationElement.elements(
+						"model-data-handler")) {
+
+				String modelName = GetterUtil.getString(
+					dataHandlerElement.elementText("model-name"));
+				String dataHandlerClass = GetterUtil.getString(
+					dataHandlerElement.elementText("class"));
+
+				if (Validator.isNotNull(modelName) &&
+					Validator.isNotNull(dataHandlerClass)) {
+
+					DataHandlersUtil.addDataHandlerMapping(
+						modelName, dataHandlerClass);
+				}
+			}
+		}
+
+		// Open Search
+
 		portletModel.setOpenSearchClass(
 			GetterUtil.getString(
 				portletElement.elementText("open-search-class"),
 				portletModel.getOpenSearchClass()));
+
+		// Scheduler Entry
 
 		for (Element schedulerEntryElement :
 				portletElement.elements("scheduler-entry")) {
@@ -1267,10 +1355,6 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 			GetterUtil.getString(
 				portletElement.elementText("url-encoder-class"),
 				portletModel.getURLEncoderClass()));
-		portletModel.setPortletDataHandlerClass(
-			GetterUtil.getString(
-				portletElement.elementText("portlet-data-handler-class"),
-				portletModel.getPortletDataHandlerClass()));
 		portletModel.setPortletDisplayTemplateHandlerClass(
 			GetterUtil.getString(
 				portletElement.elementText("portlet-display-template-handler"),

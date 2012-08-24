@@ -31,7 +31,7 @@ portletURL.setParameter("redirect", redirect);
 portletURL.setParameter("returnToFullPageURL", returnToFullPageURL);
 portletURL.setParameter("portletResource", portletResource);
 
-boolean supportsLAR = Validator.isNotNull(selPortlet.getPortletDataHandlerClass());
+boolean supportsLAR = Validator.isNotNull(DataHandlersUtil.getDataHandlerClass(selPortlet.getPortletId()));
 
 boolean supportsSetup = Validator.isNotNull(selPortlet.getConfigurationActionClass());
 

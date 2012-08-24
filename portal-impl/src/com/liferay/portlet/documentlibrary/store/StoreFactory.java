@@ -14,17 +14,29 @@
 
 package com.liferay.portlet.documentlibrary.store;
 
+import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
+import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.InstanceFactory;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.pacl.PACLClassLoaderUtil;
+import com.liferay.portal.spring.aop.MethodInterceptorInvocationHandler;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.aopalliance.intercept.MethodInterceptor;
+
 /**
  * @author Brian Wing Shun Chan
+ * @author Shuyang Zhou
  */
 public class StoreFactory {
 
@@ -79,20 +91,18 @@ public class StoreFactory {
 				_log.debug("Instantiate " + PropsValues.DL_STORE_IMPL);
 			}
 
-			ClassLoader classLoader =
-				PACLClassLoaderUtil.getPortalClassLoader();
-
 			try {
-				_store = (Store)classLoader.loadClass(
-					PropsValues.DL_STORE_IMPL).newInstance();
+				_store = _getInstance();
 			}
 			catch (Exception e) {
 				_log.error(e, e);
 			}
 		}
 
-		if (_log.isDebugEnabled()) {
-			_log.debug("Return " + _store.getClass().getName());
+		if ((_store != null) && _log.isDebugEnabled()) {
+			Class<?> clazz = _store.getClass();
+
+			_log.debug("Return " + clazz.getName());
 		}
 
 		return _store;
@@ -104,6 +114,40 @@ public class StoreFactory {
 		}
 
 		_store = store;
+	}
+
+	private static Store _getInstance() throws Exception {
+		ClassLoader classLoader = PACLClassLoaderUtil.getPortalClassLoader();
+
+		Store store = (Store)InstanceFactory.newInstance(
+			classLoader, PropsValues.DL_STORE_IMPL);
+
+		if (store instanceof DBStore) {
+			DB db = DBFactoryUtil.getDB();
+
+			String dbType = db.getType();
+
+			if (dbType.equals(DB.TYPE_POSTGRESQL)) {
+				MethodInterceptor transactionAdviceMethodInterceptor =
+					(MethodInterceptor)PortalBeanLocatorUtil.locate(
+						"transactionAdvice");
+
+				MethodInterceptor tempFileMethodInterceptor =
+					new TempFileMethodInterceptor();
+
+				List<MethodInterceptor> methodInterceptors =
+					Arrays.asList(
+						transactionAdviceMethodInterceptor,
+						tempFileMethodInterceptor);
+
+				store = (Store)ProxyUtil.newProxyInstance(
+					classLoader, new Class<?>[] {Store.class},
+					new MethodInterceptorInvocationHandler(
+						store, methodInterceptors));
+			}
+		}
+
+		return store;
 	}
 
 	private static final String[][] _DL_HOOK_STORES = new String[][] {

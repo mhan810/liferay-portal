@@ -32,18 +32,15 @@ public class LiferaySeleniumHelper {
 		}
 
 		try {
-			String[] commands = {
-				RuntimeVariables.replace(
-					_SELENIUM_EXECUTABLE_DIR +
-						TestPropsValues.SELENIUM_DOWNLOAD_FILE),
-				TestPropsValues.OUTPUT_DIR + value
-			};
+			Thread.sleep(5000);
 
 			Runtime runtime = Runtime.getRuntime();
 
-			Thread.sleep(5000);
+			String command = RuntimeVariables.replace(
+				TestPropsValues.SELENIUM_BROWSER_COMMANDS_DIR +
+					TestPropsValues.SELENIUM_DOWNLOAD_FILE);
 
-			runtime.exec(commands);
+			runtime.exec(command);
 
 			Thread.sleep(30000);
 		}
@@ -60,13 +57,16 @@ public class LiferaySeleniumHelper {
 		}
 
 		try {
-			String command = RuntimeVariables.replace(
-				_SELENIUM_EXECUTABLE_DIR +
-					TestPropsValues.SELENIUM_SET_BROWSER_OPTION);
-
 			Runtime runtime = Runtime.getRuntime();
 
-			runtime.exec(command);
+			String[] commands = {
+				RuntimeVariables.replace(
+					TestPropsValues.SELENIUM_BROWSER_COMMANDS_DIR +
+						TestPropsValues.SELENIUM_SET_BROWSER_OPTION),
+					TestPropsValues.OUTPUT_DIR
+			};
+
+			runtime.exec(commands);
 
 			Thread.sleep(10000);
 		}
@@ -76,8 +76,5 @@ public class LiferaySeleniumHelper {
 	}
 
 	private static final String _BROWSER_TYPE = TestPropsValues.BROWSER_TYPE;
-
-	private static final String _SELENIUM_EXECUTABLE_DIR =
-		TestPropsValues.SELENIUM_EXECUTABLE_DIR;
 
 }

@@ -68,6 +68,7 @@ import javax.xml.stream.events.XMLEvent;
  * @author Brian Wing Shun Chan
  * @author Alexander Chow
  * @author Minhchau Dang
+ * @author Raymond Augé
  */
 public class PortletPreferencesFactoryImpl
 	implements PortletPreferencesFactory {
@@ -127,6 +128,11 @@ public class PortletPreferencesFactoryImpl
 
 		long ownerId = PortletKeys.PREFS_OWNER_ID_DEFAULT;
 		int ownerType = PortletKeys.PREFS_OWNER_TYPE_LAYOUT;
+
+		if (PortletConstants.hasUserId(portletId)) {
+			ownerId = PortletConstants.getUserId(portletId);
+			ownerType = PortletKeys.PREFS_OWNER_TYPE_USER;
+		}
 
 		return PortletPreferencesLocalServiceUtil.getPreferences(
 			layout.getCompanyId(), ownerId, ownerType, layout.getPlid(),
@@ -262,29 +268,10 @@ public class PortletPreferencesFactoryImpl
 			boolean modeEditGuest)
 		throws PortalException, SystemException {
 
-		// Below is a list of  the possible combinations, where we specify the
-		// the owner id, the layout id, portlet id, and the function.
-
-		// liferay.com.1, SHARED, PORTAL, preference is scoped per user across
-		// the entire portal
-
-		// COMPANY.liferay.com, SHARED, 56_INSTANCE_abcd, preference is scoped
-		// per portlet and company and is shared across all layouts
-
-		// GROUP.10, SHARED, 56_INSTANCE_abcd, preference is scoped per portlet
-		// and group and is shared across all layouts
-
-		// USER.liferay.com.1, SHARED, 56_INSTANCE_abcd, preference is scoped
-		// per portlet and user and is shared across all layouts
-
-		// PUB.10, 3, 56_INSTANCE_abcd, preference is scoped per portlet, group,
-		// and layout
-
-		// PUB.10.USER.liferay.com.1, 3, 56_INSTANCE_abcd, preference is scoped
-		// per portlet, user, and layout
-
 		PermissionChecker permissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
+
+		String originalPortletId = portletId;
 
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
 			layout.getCompanyId(), portletId);
@@ -308,7 +295,14 @@ public class PortletPreferencesFactoryImpl
 			}
 		}
 
-		if (portlet.isPreferencesCompanyWide()) {
+		if (PortletConstants.hasUserId(originalPortletId) &&
+			(PortletConstants.getUserId(originalPortletId) == userId)) {
+
+			ownerId = userId;
+			ownerType = PortletKeys.PREFS_OWNER_TYPE_USER;
+			plid = layout.getPlid();
+		}
+		else if (portlet.isPreferencesCompanyWide()) {
 			ownerId = layout.getCompanyId();
 			ownerType = PortletKeys.PREFS_OWNER_TYPE_COMPANY;
 			plid = PortletKeys.PREFS_PLID_SHARED;
@@ -393,6 +387,8 @@ public class PortletPreferencesFactoryImpl
 			String defaultPreferences)
 		throws SystemException {
 
+		String originalPortletId = portletId;
+
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
 			layout.getCompanyId(), portletId);
 
@@ -422,17 +418,17 @@ public class PortletPreferencesFactoryImpl
 		int ownerType = PortletKeys.PREFS_OWNER_TYPE_LAYOUT;
 		long plid = layout.getPlid();
 
-		try {
-			Group group = GroupLocalServiceUtil.getGroup(scopeGroupId);
+		Group group = GroupLocalServiceUtil.fetchGroup(scopeGroupId);
 
-			if (group.isLayout()) {
-				plid = group.getClassPK();
-			}
-		}
-		catch (PortalException pe) {
+		if ((group != null) && group.isLayout()) {
+			plid = group.getClassPK();
 		}
 
-		if (!uniquePerLayout) {
+		if (PortletConstants.hasUserId(originalPortletId)) {
+			ownerId = PortletConstants.getUserId(originalPortletId);
+			ownerType = PortletKeys.PREFS_OWNER_TYPE_USER;
+		}
+		else if (!uniquePerLayout) {
 			plid = PortletKeys.PREFS_PLID_SHARED;
 
 			if (uniquePerGroup) {
@@ -531,6 +527,11 @@ public class PortletPreferencesFactoryImpl
 
 		long ownerId = PortletKeys.PREFS_OWNER_ID_DEFAULT;
 		int ownerType = PortletKeys.PREFS_OWNER_TYPE_LAYOUT;
+
+		if (PortletConstants.hasUserId(portletId)) {
+			ownerId = PortletConstants.getUserId(portletId);
+			ownerType = PortletKeys.PREFS_OWNER_TYPE_USER;
+		}
 
 		return PortletPreferencesLocalServiceUtil.getStrictPreferences(
 			layout.getCompanyId(), ownerId, ownerType, layout.getPlid(),

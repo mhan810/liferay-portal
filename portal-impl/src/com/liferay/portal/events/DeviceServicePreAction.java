@@ -22,7 +22,7 @@ import com.liferay.portal.kernel.mobile.device.DeviceDetectionUtil;
 import com.liferay.portal.kernel.mobile.device.UnknownDevice;
 import com.liferay.portal.kernel.mobile.device.rulegroup.ActionHandlerManagerUtil;
 import com.liferay.portal.kernel.mobile.device.rulegroup.RuleGroupProcessorUtil;
-import com.liferay.portal.kernel.servlet.NonSerializableObjectHandler;
+import com.liferay.portal.kernel.util.TransientValue;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
@@ -51,9 +51,12 @@ public class DeviceServicePreAction extends Action {
 		Device device = null;
 
 		if (PropsValues.MOBILE_DEVICE_SESSION_CACHE_ENABLED) {
-			Object value = session.getAttribute(WebKeys.DEVICE);
+			TransientValue<Device> transientValue =
+				(TransientValue<Device>)session.getAttribute(WebKeys.DEVICE);
 
-			device = (Device)NonSerializableObjectHandler.getValue(value);
+			if (transientValue != null) {
+				device = transientValue.getValue();
+			}
 		}
 
 		if (device == null) {
@@ -61,7 +64,7 @@ public class DeviceServicePreAction extends Action {
 
 			if (PropsValues.MOBILE_DEVICE_SESSION_CACHE_ENABLED) {
 				session.setAttribute(
-					WebKeys.DEVICE, new NonSerializableObjectHandler(device));
+					WebKeys.DEVICE, new TransientValue<Device>(device));
 			}
 		}
 

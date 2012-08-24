@@ -57,7 +57,18 @@ PortletPreferencesIds portletPreferencesIds = PortletPreferencesFactoryUtil.getP
 
 PortletPreferences portletPreferences = null;
 
-Group group = layout.getGroup();
+Group group = null;
+
+if (layout instanceof VirtualLayout) {
+	VirtualLayout virtualLayout = (VirtualLayout)layout;
+
+	Layout sourceLayout = virtualLayout.getSourceLayout();
+
+	group = sourceLayout.getGroup();
+}
+else {
+	group = layout.getGroup();
+}
 
 if (allowAddPortletDefaultResource) {
 	portletPreferences = PortletPreferencesLocalServiceUtil.getPreferences(portletPreferencesIds);
@@ -212,7 +223,7 @@ if (!portletId.equals(PortletKeys.PORTLET_CONFIGURATION)) {
 
 		showConfigurationIcon = true;
 
-		boolean supportsLAR = Validator.isNotNull(portlet.getPortletDataHandlerClass());
+		boolean supportsLAR = Validator.isNotNull(DataHandlersUtil.getDataHandlerClass(portlet.getPortletId()));
 		boolean supportsSetup = Validator.isNotNull(portlet.getConfigurationActionClass());
 
 		if (supportsLAR || (supportsSetup && !group.isControlPanel())) {

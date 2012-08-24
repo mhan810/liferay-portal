@@ -478,15 +478,14 @@ public class ProcessExecutorTest extends BaseTestCase {
 	}
 
 	public void testCreateProcessContext() throws Exception {
-
-		// Useless test to satisfy Cobertura
-
 		Constructor<ProcessContext> constructor =
 			ProcessContext.class.getDeclaredConstructor();
 
 		constructor.setAccessible(true);
 
 		constructor.newInstance();
+
+		assertNotNull(ProcessContext.getAttributes());
 	}
 
 	public void testDestroy() throws Exception {

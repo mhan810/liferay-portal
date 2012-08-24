@@ -14,7 +14,7 @@
 
 package com.liferay.portalweb.portal;
 
-import com.liferay.portalweb.portal.controlpanel.pagetemplates.PageTemplatesTests;
+import com.liferay.portalweb.portal.controlpanel.pagetemplates.PageTemplatesTestPlan;
 import com.liferay.portalweb.portal.login.LoginTests;
 
 import junit.framework.Test;
@@ -29,7 +29,7 @@ public class ControlPanelPageTemplatesTestSuite extends BaseTestSuite {
 		TestSuite testSuite = new TestSuite();
 
 		testSuite.addTest(LoginTests.suite());
-		testSuite.addTest(PageTemplatesTests.suite());
+		testSuite.addTest(PageTemplatesTestPlan.suite());
 
 		testSuite.addTestSuite(StopSeleniumTest.class);
 

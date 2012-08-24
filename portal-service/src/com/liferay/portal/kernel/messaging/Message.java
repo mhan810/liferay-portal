@@ -16,6 +16,7 @@ package com.liferay.portal.kernel.messaging;
 
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.TransientValue;
 
 import java.io.Serializable;
 
@@ -58,9 +59,17 @@ public class Message implements Cloneable, Serializable {
 		if (_values == null) {
 			return null;
 		}
-		else {
-			return _values.get(key);
+
+		Object value = _values.get(key);
+
+		if (value instanceof TransientValue) {
+			TransientValue<Object> transientValue =
+				(TransientValue<Object>)value;
+
+			value = transientValue.getValue();
 		}
+
+		return value;
 	}
 
 	public boolean getBoolean(String key) {
@@ -154,6 +163,10 @@ public class Message implements Cloneable, Serializable {
 	public void put(String key, Object value) {
 		if (_values == null) {
 			_values = new HashMap<String, Object>();
+		}
+
+		if (!(value instanceof Serializable)) {
+			value = new TransientValue<Object>(value);
 		}
 
 		_values.put(key, value);

@@ -17,15 +17,16 @@ The portlet element contains the declarative data of a portlet.
 parent-struts-path?, configuration-path?, configuration-action-class?,
 indexer-class*, open-search-class?, scheduler-entry*, portlet-url-class?,
 friendly-url-mapper-class?, friendly-url-mapping?, friendly-url-routes?,
-url-encoder-class?, portlet-data-handler-class?,
-portlet-display-template-handler?, portlet-layout-listener-class?,
-poller-processor-class?, pop-message-listener-class?,
-social-activity-interpreter-class?, social-request-interpreter-class?,
-webdav-storage-token?, webdav-storage-class?, xml-rpc-method-class?,
-control-panel-entry-category?, control-panel-entry-weight?,
-control-panel-entry-class?, asset-renderer-factory*, atom-collection-adapter*,
-custom-attributes-display*, permission-propagator?, trash-handler*,
-workflow-handler*, preferences-company-wide?, preferences-unique-per-layout?,
+url-encoder-class?, portlet-data-handler-configuration?,
+portlet-data-handler-class?, portlet-display-template-handler?,
+portlet-layout-listener-class?, poller-processor-class?,
+pop-message-listener-class?, social-activity-interpreter-class?,
+social-request-interpreter-class?, webdav-storage-token?, webdav-storage-class?,
+xml-rpc-method-class?, control-panel-entry-category?,
+control-panel-entry-weight?, control-panel-entry-class?,
+asset-renderer-factory*, atom-collection-adapter*, custom-attributes-display*,
+permission-propagator?, trash-handler*, workflow-handler*,
+preferences-company-wide?, preferences-unique-per-layout?,
 preferences-owned-by-group?, use-default-template?, show-portlet-access-denied?,
 show-portlet-inactive?, action-url-redirect?, restore-current-view?,
 maximize-edit?, maximize-help?, pop-up-print?, layout-cacheable?, instanceable?,
@@ -230,6 +231,89 @@ URLEncoder that is used by the RenderResponse class to implement the encodeURL
 method. This is useful if you need to add custom logic to rewrite URLs.
 -->
 <!ELEMENT url-encoder-class (#PCDATA)>
+
+<!--
+banana
+
+See:
+
+banana
+-->
+<!ELEMENT portlet-data-handler-configuration (portlet-data-handler*,
+model-data-handler*)>
+
+<!--
+banana
+
+See:
+
+banana
+-->
+<!ELEMENT portlet-data-handler (class, always-exportable?, always-staged?,
+data-localized?, publish-to-live-by-default?)>
+
+<!--
+banana
+
+See:
+
+banana
+-->
+<!ELEMENT class (#PCDATA)>
+
+<!--
+banana
+
+See:
+
+banana
+-->
+<!ELEMENT always-exportable (#PCDATA)>
+
+<!--
+banana
+
+See:
+
+banana
+-->
+<!ELEMENT always-staged (#PCDATA)>
+
+<!--
+banana
+
+See:
+
+banana
+-->
+<!ELEMENT data-localized (#PCDATA)>
+
+<!--
+banana
+
+See:
+
+banana
+-->
+<!ELEMENT publish-to-live-by-default (#PCDATA)>
+
+<!--
+banana
+
+See:
+
+banana
+-->
+<!ELEMENT model-data-handler (model-name?, class?)>
+
+<!--
+banana
+
+See:
+
+banana
+-->
+<!ELEMENT model-name (#PCDATA)>
 
 <!--
 The portlet-data-handler-class value must be a class that implements

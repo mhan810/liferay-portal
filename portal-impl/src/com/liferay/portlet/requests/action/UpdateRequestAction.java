@@ -29,7 +29,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.social.NoSuchRequestException;
-import com.liferay.portlet.social.service.SocialRequestLocalServiceUtil;
+import com.liferay.portlet.social.service.SocialRequestServiceUtil;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -99,8 +99,7 @@ public class UpdateRequestAction extends PortletAction {
 		long requestId = ParamUtil.getLong(actionRequest, "requestId");
 		int status = ParamUtil.getInteger(actionRequest, "status");
 
-		SocialRequestLocalServiceUtil.updateRequest(
-			requestId, status, themeDisplay);
+		SocialRequestServiceUtil.updateRequest(requestId, status, themeDisplay);
 	}
 
 }

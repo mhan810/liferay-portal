@@ -138,14 +138,14 @@ public abstract class BaseWebDriverImpl
 				"dependencies\\" + value);
 	}
 
-	public void uploadTempFile(String location, String value) {
-		uploadFile(location, TestPropsValues.OUTPUT_DIR + value);
-	}
-
-	protected void uploadFile(String location, String value) {
+	public void uploadFile(String location, String value) {
 		WebElement webElement = getWebElement(location);
 
 		webElement.sendKeys(value);
+	}
+
+	public void uploadTempFile(String location, String value) {
+		uploadFile(location, TestPropsValues.OUTPUT_DIR + value);
 	}
 
 	private String _projectDir;

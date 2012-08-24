@@ -115,16 +115,12 @@ if (!categories.isEmpty() || !portlets.isEmpty()) {
 				boolean portletUsed = layoutTypePortlet.hasPortletId(portlet.getPortletId());
 
 				for (String runtimePortletId : runtimePortletIds) {
-					String portletId = portlet.getPortletId();
-
-					if (runtimePortletId.equals(portletId) ||
-						runtimePortletId.startsWith(portletId.concat(PortletConstants.INSTANCE_SEPARATOR))) {
-
+					if (PortletConstants.hasIdenticalRootPortletId(runtimePortletId, portlet.getPortletId())) {
 						portletUsed = true;
 					}
 				}
 
-				boolean portletLocked = (!portletInstanceable && portletUsed);
+				boolean portletLocked = !portletInstanceable && portletUsed;
 
 				if (portletInstanceable && layout.isTypePanel()) {
 					continue;

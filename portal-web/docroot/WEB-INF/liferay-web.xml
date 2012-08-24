@@ -136,6 +136,10 @@
 	<filter>
 		<filter-name>GZip Filter</filter-name>
 		<filter-class>com.liferay.portal.servlet.filters.gzip.GZipFilter</filter-class>
+		<init-param>
+			<param-name>url-regex-ignore-pattern</param-name>
+			<param-value>^(/c/document_library/get_file|/c/message_boards/get_message_attachment|/c/wiki/get_page_attachment)(\?.*)?$</param-value>
+		</init-param>
 	</filter>
 	<filter>
 		<filter-name>GZip Filter - Theme PNG</filter-name>
@@ -632,6 +636,12 @@
 	<filter-mapping>
 		<filter-name>Header Filter - No Cache</filter-name>
 		<url-pattern>/c/portal/logout</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>ETag Filter</filter-name>
+		<url-pattern>^(/c/document_library/get_file|/c/message_boards/get_message_attachment|/c/wiki/get_page_attachment)(\?.*)?$</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>ETag Filter</filter-name>
