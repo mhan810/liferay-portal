@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.digest.LarDigest;
@@ -32,6 +33,9 @@ import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.lar.AssetAction;
 import com.liferay.portal.lar.DataHandlersUtil;
+import com.liferay.portal.lar.ImageDataHandler;
+import com.liferay.portal.lar.LayoutPrototypeDataHandler;
+import com.liferay.portal.lar.LayoutSetDataHandler;
 import com.liferay.portal.lar.XStreamWrapper;
 import com.liferay.portal.model.AuditedModel;
 import com.liferay.portal.model.BaseModel;
@@ -39,7 +43,16 @@ import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.ResourcedModel;
 import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portlet.asset.lar.AssetCategoryDataHandler;
+import com.liferay.portlet.asset.lar.AssetLinkDataHandler;
+import com.liferay.portlet.asset.lar.AssetVocabularyDataHandler;
+import com.liferay.portlet.bookmarks.lar.BookmarksEntryDataHandler;
+import com.liferay.portlet.bookmarks.lar.BookmarksFolderDataHandler;
+import com.liferay.portlet.bookmarks.lar.BookmarksPortletDataHandler;
 import com.liferay.portlet.expando.model.ExpandoBridge;
+import com.liferay.portlet.journal.lar.JournalArticleDataHandler;
+import com.liferay.portlet.journal.lar.JournalStructureDataHandler;
+import com.liferay.portlet.journal.lar.JournalTemplateDataHandler;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -378,5 +391,30 @@ public abstract class StagedDataHandlerImpl<T extends BaseModel<T>>
 	private Log _log = LogFactoryUtil.getLog(StagedDataHandlerImpl.class);
 	private PortletDataContextListener _portletDataContextListener;
 	private XStreamWrapper _xStreamWrapper;
+
+	@BeanReference(type = AssetCategoryDataHandler.class)
+	protected AssetCategoryDataHandler assetCategoryDataHandler;
+	@BeanReference(type = AssetLinkDataHandler.class)
+	protected AssetLinkDataHandler assetLinkDataHandler;
+	@BeanReference(type = AssetVocabularyDataHandler.class)
+	protected AssetVocabularyDataHandler assetVocabularyDataHandler;
+	@BeanReference(type = BookmarksEntryDataHandler.class)
+	protected BookmarksEntryDataHandler bookmarksEntryDataHandler;
+	@BeanReference(type = BookmarksFolderDataHandler.class)
+	protected BookmarksFolderDataHandler bookmarksFolderDataHandler;
+	@BeanReference(type = BookmarksPortletDataHandler.class)
+	protected BookmarksPortletDataHandler bookmarksPortletDataHandler;
+	@BeanReference(type = ImageDataHandler.class)
+	protected ImageDataHandler imageDataHandler;
+	@BeanReference(type = JournalArticleDataHandler.class)
+	protected JournalArticleDataHandler journalArticleDataHandler;
+	@BeanReference(type = JournalStructureDataHandler.class)
+	protected JournalStructureDataHandler journalStructureDataHandler;
+	@BeanReference(type = JournalTemplateDataHandler.class)
+	protected JournalTemplateDataHandler journalTemplateDataHandler;
+	@BeanReference(type = LayoutPrototypeDataHandler.class)
+	protected LayoutPrototypeDataHandler layoutPrototypeDataHandler;
+	@BeanReference(type = LayoutSetDataHandler.class)
+	protected LayoutSetDataHandler layoutSetDataHandler;
 
 }

@@ -452,4 +452,21 @@
 	<bean id="com.liferay.portlet.wiki.service.persistence.WikiPageFinder" class="com.liferay.portlet.wiki.service.persistence.WikiPageFinderImpl" parent="basePersistence" />
 	<bean id="com.liferay.portlet.wiki.service.WikiPageResourceLocalService" class="com.liferay.portlet.wiki.service.impl.WikiPageResourceLocalServiceImpl" />
 	<bean id="com.liferay.portlet.wiki.service.persistence.WikiPageResourcePersistence" class="com.liferay.portlet.wiki.service.persistence.WikiPageResourcePersistenceImpl" parent="basePersistence" />
+
+	<bean id="com.liferay.portlet.journal.lar.JournalArticleDataHandler" class="com.liferay.portlet.journal.lar.JournalArticleDataHandlerImpl" parent="stagedDataHandler" />
+	<bean id="com.liferay.portlet.journal.lar.JournalPortletDataHandler" class="com.liferay.portlet.journal.lar.JournalPortletDataHandlerImpl" parent="com.liferay.portal.kernel.lar.StagedPortletDataHandler" />
+	<bean id="com.liferay.portlet.journal.lar.JournalStructureDataHandler" class="com.liferay.portlet.journal.lar.JournalStructureDataHandlerImpl" parent="stagedDataHandler" />
+	<bean id="com.liferay.portlet.journal.lar.JournalTemplateDataHandler" class="com.liferay.portlet.journal.lar.JournalTemplateDataHandlerImpl" parent="stagedDataHandler" />
+	<bean id="com.liferay.portal.lar.LayoutDataHandler" class="com.liferay.portal.lar.LayoutDataHandlerImpl" parent="stagedDataHandler" />
+	<bean id="com.liferay.portlet.bookmarks.lar.BookmarksEntryDataHandler" class="com.liferay.portlet.bookmarks.lar.BookmarksEntryDataHandlerImpl" parent="stagedDataHandler" />
+	<bean id="com.liferay.portlet.bookmarks.lar.BookmarksFolderDataHandler" class="com.liferay.portlet.bookmarks.lar.BookmarksFolderDataHandlerImpl" parent="stagedDataHandler" />
+	<bean id="com.liferay.portal.kernel.lar.StagedPortletDataHandler" class="com.liferay.portal.kernel.lar.StagedPortletDataHandlerImpl" parent="stagedDataHandler" />
+	<bean id="com.liferay.portlet.bookmarks.lar.BookmarksPortletDataHandler" class="com.liferay.portlet.bookmarks.lar.BookmarksPortletDataHandlerImpl" parent="com.liferay.portal.kernel.lar.StagedPortletDataHandler" />
+	<bean id="com.liferay.portal.lar.ImageDataHandler" class="com.liferay.portal.lar.ImageDataHandlerImpl" parent="stagedDataHandler" />
+	<bean id="com.liferay.portlet.asset.lar.AssetVocabularyDataHandler" class="com.liferay.portlet.asset.lar.AssetVocabularyDataHandlerImpl" parent="stagedDataHandler" />
+	<bean id="com.liferay.portlet.asset.lar.AssetCategoryDataHandler" class="com.liferay.portlet.asset.lar.AssetCategoryDataHandlerImpl" parent="stagedDataHandler" />
+	<bean id="com.liferay.portlet.asset.lar.AssetCategoryPropertyDataHandler" class="com.liferay.portlet.asset.lar.AssetCategoryPropertyDataHandlerImpl" parent="stagedDataHandler" />
+	<bean id="com.liferay.portlet.asset.lar.AssetLinkDataHandler" class="com.liferay.portlet.asset.lar.AssetLinkDataHandlerImpl" parent="stagedDataHandler" />
+	<bean id="com.liferay.portal.lar.LayoutSetDataHandler" class="com.liferay.portal.lar.LayoutSetDataHandlerImpl" parent="stagedDataHandler" />
+	<bean id="com.liferay.portal.lar.LayoutPrototypeDataHandler" class="com.liferay.portal.lar.LayoutPrototypeDataHandlerImpl" parent="stagedDataHandler" />
 </beans>

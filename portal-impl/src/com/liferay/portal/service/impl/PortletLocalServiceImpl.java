@@ -1216,31 +1216,39 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 
 		// Data Handlers
 
-		Element portletDataHandlerElement = portletElement.element(
-			"portlet-data-handler");
+		Element dataHandlerConfigurationElement = portletElement.element(
+			"portlet-data-handler-configuration");
 
-		if (portletDataHandlerElement != null) {
-			String className = GetterUtil.getString(
-				portletDataHandlerElement.elementText("class"));
+		if (dataHandlerConfigurationElement != null) {
 
-			if (Validator.isNotNull(className)) {
-				DataHandlersUtil.addDataHandlerMapping(portletId, className);
+			Element portletDataHandlerElement =
+				dataHandlerConfigurationElement.element("portlet-data-handler");
+
+			if (portletDataHandlerElement != null) {
+				String className = GetterUtil.getString(
+					portletDataHandlerElement.elementText("class"));
+
+				if (Validator.isNotNull(className)) {
+					DataHandlersUtil.addDataHandlerMapping(
+						portletId, className);
+				}
 			}
-		}
 
-		for (Element dataHandlerElement :
-				portletElement.elements("model-data-handler")) {
+			for (Element dataHandlerElement :
+					dataHandlerConfigurationElement.elements(
+						"model-data-handler")) {
 
-			String modelName = GetterUtil.getString(
-				dataHandlerElement.elementText("model-name"));
-			String dataHandlerClass = GetterUtil.getString(
-				dataHandlerElement.elementText("class"));
+				String modelName = GetterUtil.getString(
+					dataHandlerElement.elementText("model-name"));
+				String dataHandlerClass = GetterUtil.getString(
+					dataHandlerElement.elementText("class"));
 
-			if (Validator.isNotNull(modelName) &&
-				Validator.isNotNull(dataHandlerClass)) {
+				if (Validator.isNotNull(modelName) &&
+					Validator.isNotNull(dataHandlerClass)) {
 
-				DataHandlersUtil.addDataHandlerMapping(
-					modelName, dataHandlerClass);
+					DataHandlersUtil.addDataHandlerMapping(
+						modelName, dataHandlerClass);
+				}
 			}
 		}
 

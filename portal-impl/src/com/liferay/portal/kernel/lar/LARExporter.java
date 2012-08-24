@@ -1,0 +1,518 @@
+/**
+ * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
+package com.liferay.portal.kernel.lar;
+
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.lar.digest.LarDigest;
+import com.liferay.portal.kernel.lar.digest.LarDigestMetadataImpl;
+import com.liferay.portal.kernel.lar.digest.LarDigestModule;
+import com.liferay.portal.kernel.lar.digest.LarDigestModuleImpl;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.servlet.ServletContextPool;
+import com.liferay.portal.kernel.util.DateUtil;
+import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
+import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.ReleaseInfo;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Time;
+import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.kernel.zip.ZipWriter;
+import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
+import com.liferay.portal.lar.DataHandlersUtil;
+import com.liferay.portal.lar.DigestStore;
+import com.liferay.portal.lar.DigestStoreUtil;
+import com.liferay.portal.lar.LayoutDataHandler;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutConstants;
+import com.liferay.portal.model.LayoutPrototype;
+import com.liferay.portal.model.LayoutSet;
+import com.liferay.portal.model.LayoutSetPrototype;
+import com.liferay.portal.model.Portlet;
+import com.liferay.portal.model.Theme;
+import com.liferay.portal.model.impl.LayoutImpl;
+import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
+import com.liferay.portal.service.LayoutSetLocalServiceUtil;
+import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
+import com.liferay.portal.service.PortletLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.theme.ThemeLoader;
+import com.liferay.portal.theme.ThemeLoaderFactory;
+import com.liferay.portal.util.PortletKeys;
+import com.liferay.util.ContentUtil;
+
+import java.io.File;
+
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+
+import org.apache.commons.lang.time.StopWatch;
+
+/**
+ * @author Mate Thurzo
+ * @author Daniel Kocsis
+ */
+public class LARExporter {
+
+	public static List<Portlet> getAlwaysExportablePortlets(long companyId)
+		throws Exception {
+
+		List<Portlet> portlets = PortletLocalServiceUtil.getPortlets(companyId);
+
+		Iterator<Portlet> itr = portlets.iterator();
+
+		StagedPortletDataHandler portletDataHandler = null;
+
+		while (itr.hasNext()) {
+			Portlet portlet = itr.next();
+
+			portletDataHandler =
+				(StagedPortletDataHandler)DataHandlersUtil.
+					getDataHandlerInstance(portlet.getPortletId());
+
+			if (!portlet.isActive()) {
+				itr.remove();
+
+				continue;
+			}
+
+			if (portletDataHandler == null) {
+				itr.remove();
+
+				continue;
+			}
+
+			if (!portletDataHandler.isAlwaysExportable()) {
+				itr.remove();
+			}
+		}
+
+		return portlets;
+	}
+
+	public File export(
+			long groupId, boolean privateLayout, long[] layoutIds,
+			Map<String, String[]> parameterMap, Date startDate, Date endDate)
+		throws Exception {
+
+		try {
+			ImportExportThreadLocal.setLayoutExportInProcess(true);
+
+			_initDataHandlerContext(
+				groupId, privateLayout, parameterMap, startDate, endDate);
+
+			doExport(layoutIds, _context);
+
+			return _context.getZipWriter().getFile();
+		}
+		catch (Exception e) {
+			_log.error(e);
+
+			return null;
+		}
+		finally {
+			ImportExportThreadLocal.setLayoutExportInProcess(false);
+		}
+	}
+
+	protected void doExport(long[] layoutIds, DataHandlerContext context)
+		throws Exception {
+
+		long lastPublishDate = System.currentTimeMillis();
+
+		// Parameters
+
+		Map parameterMap = context.getParameters();
+
+		boolean exportCategories = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.CATEGORIES);
+		boolean exportIgnoreLastPublishDate = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.IGNORE_LAST_PUBLISH_DATE);
+		boolean exportPortletArchivedSetups = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS);
+		boolean exportPortletUserPreferences = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.PORTLET_USER_PREFERENCES);
+		boolean exportTheme = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.THEME);
+		boolean exportThemeSettings = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.THEME_REFERENCE);
+		boolean exportLogo = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.LOGO);
+		boolean exportLayoutSetSettings = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.LAYOUT_SET_SETTINGS);
+		boolean updateLastPublishDate = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.UPDATE_LAST_PUBLISH_DATE);
+
+		boolean privateLayout = context.isPrivateLayout();
+
+		Group group = GroupLocalServiceUtil.getGroup(context.getGroupId());
+
+		context.setAttribute("layoutCache", new LayoutCache());
+
+		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
+			group.getGroupId(), privateLayout);
+
+		UnicodeProperties typeSettings = layoutSet.getSettingsProperties();
+
+		if (typeSettings.containsKey("last-publish-date")) {
+			Date date = DateUtil.parseDate(
+				typeSettings.get("last-publish-date"),
+				LocaleThreadLocal.getDefaultLocale());
+
+			context.setLastPublishDate(date);
+		}
+		else {
+			context.setLastPublishDate(new Date(lastPublishDate));
+		}
+
+		long defaultUserId = UserLocalServiceUtil.getDefaultUserId(
+			group.getCompanyId());
+
+		if (context.getEndDate() != null) {
+			lastPublishDate = context.getEndDate().getTime();
+		}
+
+		if (exportIgnoreLastPublishDate) {
+			context.setEndDate(null);
+			context.setStartDate(null);
+		}
+
+		StopWatch stopWatch = null;
+
+		if (_log.isInfoEnabled()) {
+			stopWatch = new StopWatch();
+
+			stopWatch.start();
+		}
+
+		LarDigest digest = context.getLarDigest();
+
+		// Assembly metadata for LAR
+		digest.addMetadata(new LarDigestMetadataImpl(
+			"available-locales",
+			StringUtil.merge(LanguageUtil.getAvailableLocales())));
+		digest.addMetadata(new LarDigestMetadataImpl(
+			"build-number", String.valueOf(ReleaseInfo.getBuildNumber())));
+		digest.addMetadata(new LarDigestMetadataImpl(
+			"export-date", Time.getRFC822()));
+
+		if (context.hasDateRange()) {
+			digest.addMetadata(new LarDigestMetadataImpl(
+				"start-date", String.valueOf(context.getStartDate())));
+			digest.addMetadata(new LarDigestMetadataImpl(
+				"end-date", String.valueOf(context.getEndDate())));
+		}
+
+		digest.addMetadata(new LarDigestMetadataImpl(
+			"group-id", String.valueOf(group.getGroupId())));
+		digest.addMetadata(new LarDigestMetadataImpl(
+			"private-layout", String.valueOf(privateLayout)));
+
+		String type = "layout-set";
+
+		if (group.isLayoutPrototype()) {
+			type = "layout-prototype";
+
+			LayoutPrototype layoutPrototype =
+				LayoutPrototypeLocalServiceUtil.getLayoutPrototype(
+					group.getClassPK());
+
+			digest.addMetadata(new LarDigestMetadataImpl(
+				"type-uuid", layoutPrototype.getUuid()));
+		}
+		else if (group.isLayoutSetPrototype()) {
+			type ="layout-set-prototype";
+
+			LayoutSetPrototype layoutSetPrototype =
+				LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(
+					group.getClassPK());
+
+			digest.addMetadata(new LarDigestMetadataImpl(
+				"type-uuid", layoutSetPrototype.getUuid()));
+		}
+
+		digest.addMetadata(new LarDigestMetadataImpl("type", type));
+
+		// Portal portlet module in digest
+
+		LarDigestModule portalModule = new LarDigestModuleImpl(
+			"com.liferay.portal");
+
+		digest.addModule(portalModule);
+
+		Portlet layoutConfigurationPortlet =
+			PortletLocalServiceUtil.getPortletById(
+				group.getCompanyId(), PortletKeys.LAYOUT_CONFIGURATION);
+
+		Map<String, Object[]> portletIds =
+			new LinkedHashMap<String, Object[]>();
+
+		List<Layout> layouts = null;
+
+		if ((layoutIds == null) || (layoutIds.length == 0)) {
+			layouts = LayoutLocalServiceUtil.getLayouts(
+				group.getGroupId(), privateLayout);
+		}
+		else {
+			layouts = LayoutLocalServiceUtil.getLayouts(
+				group.getGroupId(), privateLayout, layoutIds);
+		}
+
+		// Always exportable portlets
+
+		List<Portlet> portlets = getAlwaysExportablePortlets(
+			group.getCompanyId());
+
+		long plid = LayoutConstants.DEFAULT_PLID;
+
+		if (!layouts.isEmpty()) {
+			Layout firstLayout = layouts.get(0);
+
+			plid = firstLayout.getPlid();
+		}
+
+		if (group.isStagingGroup()) {
+			group = group.getLiveGroup();
+		}
+
+		for (Portlet portlet : portlets) {
+			if (!group.isStagedPortlet(portlet.getPortletId())) {
+				continue;
+			}
+
+			Layout layout = LayoutLocalServiceUtil.fetchLayout(plid);
+
+			if (layout == null) {
+				if (!group.isCompany() &&
+					(plid <= LayoutConstants.DEFAULT_PLID)) {
+
+					continue;
+				}
+
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Assuming global scope because no layout was found");
+				}
+
+				layout = new LayoutImpl();
+
+				layout.setGroupId(group.getGroupId());
+				layout.setCompanyId(context.getCompanyId());
+			}
+
+			context.setPlid(plid);
+			context.setOldPlid(plid);
+			context.setScopeGroupId(group.getGroupId());
+			context.setAttribute("scopeType", StringPool.BLANK);
+			context.setAttribute("scopeLayoutUuid", StringPool.BLANK);
+			context.setAttribute("layout", layout);
+
+			StagedPortletDataHandler portletDataHandler =
+				(StagedPortletDataHandler)DataHandlersUtil.
+					getDataHandlerInstance(portlet.getPortletId());
+
+			if (portletDataHandler != null) {
+				portletDataHandler.export(portlet, context, null);
+			}
+		}
+
+		// Layouts
+
+		LayoutDataHandler layoutDataHandler =
+			(LayoutDataHandler)DataHandlersUtil.getDataHandlerInstance(
+				Layout.class.getName());
+
+		for (Layout layout : layouts) {
+			layoutDataHandler.export(layout, context, portalModule);
+		}
+
+		if (_log.isInfoEnabled()) {
+			if (stopWatch != null) {
+				_log.info(
+					"Exporting layouts takes " + stopWatch.getTime() + " ms");
+			}
+			else {
+				_log.info("Exporting layouts is finished");
+			}
+		}
+
+		if (updateLastPublishDate) {
+			updateLastPublishDate(layoutSet, lastPublishDate);
+		}
+
+		context.getLarDigest().write();
+		context.getLarDigest().close();
+
+		_context.getZipWriter().addEntry(
+			"/digest.xml", _context.getLarDigest().getDigestString());
+	}
+
+	protected void exportTheme(LayoutSet layoutSet, ZipWriter zipWriter)
+		throws Exception {
+
+		Theme theme = layoutSet.getTheme();
+
+		String lookAndFeelXML = ContentUtil.get(
+			"com/liferay/portal/dependencies/liferay-look-and-feel.xml.tmpl");
+
+		lookAndFeelXML = StringUtil.replace(
+			lookAndFeelXML,
+			new String[] {
+				"[$TEMPLATE_EXTENSION$]", "[$VIRTUAL_PATH$]"
+			},
+			new String[] {
+				theme.getTemplateExtension(), theme.getVirtualPath()
+			}
+		);
+
+		String servletContextName = theme.getServletContextName();
+
+		ServletContext servletContext = ServletContextPool.get(
+			servletContextName);
+
+		if (servletContext == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Servlet context not found for theme " +
+						theme.getThemeId());
+			}
+
+			return;
+		}
+
+		File themeZip = new File(zipWriter.getPath() + "/theme.zip");
+
+		ZipWriter themeZipWriter = ZipWriterFactoryUtil.getZipWriter(themeZip);
+
+		themeZipWriter.addEntry("liferay-look-and-feel.xml", lookAndFeelXML);
+
+		File cssPath = null;
+		File imagesPath = null;
+		File javaScriptPath = null;
+		File templatesPath = null;
+
+		if (!theme.isLoadFromServletContext()) {
+			ThemeLoader themeLoader = ThemeLoaderFactory.getThemeLoader(
+				servletContextName);
+
+			if (themeLoader == null) {
+				_log.error(
+					servletContextName + " does not map to a theme loader");
+			}
+			else {
+				String realPath =
+					themeLoader.getFileStorage().getPath() + StringPool.SLASH +
+						theme.getName();
+
+				cssPath = new File(realPath + "/css");
+				imagesPath = new File(realPath + "/images");
+				javaScriptPath = new File(realPath + "/javascript");
+				templatesPath = new File(realPath + "/templates");
+			}
+		}
+		else {
+			cssPath = new File(servletContext.getRealPath(theme.getCssPath()));
+			imagesPath = new File(
+				servletContext.getRealPath(theme.getImagesPath()));
+			javaScriptPath = new File(
+				servletContext.getRealPath(theme.getJavaScriptPath()));
+			templatesPath = new File(
+				servletContext.getRealPath(theme.getTemplatesPath()));
+		}
+
+		exportThemeFiles("css", cssPath, themeZipWriter);
+		exportThemeFiles("images", imagesPath, themeZipWriter);
+		exportThemeFiles("javascript", javaScriptPath, themeZipWriter);
+		exportThemeFiles("templates", templatesPath, themeZipWriter);
+	}
+
+	protected void exportThemeFiles(String path, File dir, ZipWriter zipWriter)
+		throws Exception {
+
+		if ((dir == null) || !dir.exists()) {
+			return;
+		}
+
+		File[] files = dir.listFiles();
+
+		for (File file : files) {
+			if (file.isDirectory()) {
+				exportThemeFiles(
+					path + StringPool.SLASH + file.getName(), file, zipWriter);
+			}
+			else {
+				zipWriter.addEntry(
+					path + StringPool.SLASH + file.getName(),
+					FileUtil.getBytes(file));
+			}
+		}
+	}
+
+	protected void updateLastPublishDate(
+			LayoutSet layoutSet, long lastPublishDate)
+		throws Exception {
+
+		UnicodeProperties settingsProperties =
+			layoutSet.getSettingsProperties();
+
+		if (lastPublishDate <= 0) {
+			settingsProperties.remove("last-publish-date");
+		}
+		else {
+			settingsProperties.setProperty(
+				"last-publish-date", String.valueOf(lastPublishDate));
+		}
+
+		LayoutSetLocalServiceUtil.updateSettings(
+			layoutSet.getGroupId(), layoutSet.isPrivateLayout(),
+			settingsProperties.toString());
+	}
+
+	private void _initDataHandlerContext(
+			long groupId, boolean privateLayout,
+			Map<String, String[]> parameters, Date startDate, Date endDate)
+		throws Exception {
+
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+		DataHandlerContextBuilder contextBuilder =
+			new DataHandlerContextBuilder(group.getCompanyId(), true);
+
+		contextBuilder = contextBuilder.setEndDate(endDate).setGroupId(
+			groupId).setParameters(parameters).setPrivateLayout(
+				privateLayout).setStartDate(startDate);
+
+		_context = contextBuilder.build();
+
+		DigestStore store = DigestStoreUtil.createDigestStore();
+
+		_context.setLarDigest(store.getDigest());
+	}
+
+	private static Log _log = LogFactoryUtil.getLog(LARExporter.class);
+
+	private DataHandlerContext _context;
+
+}

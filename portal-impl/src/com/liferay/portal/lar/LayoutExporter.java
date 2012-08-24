@@ -17,8 +17,8 @@ package com.liferay.portal.lar;
 import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.ImportExportThreadLocal;
+import com.liferay.portal.kernel.lar.LayoutCache;
 import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -79,7 +79,7 @@ import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.portlet.asset.service.persistence.AssetCategoryUtil;
 import com.liferay.portlet.journal.NoSuchArticleException;
-import com.liferay.portlet.journal.lar.JournalPortletDataHandlerImpl;
+import com.liferay.portlet.journal.lar.old.JournalPortletDataHandlerImpl;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.util.ContentUtil;
@@ -114,6 +114,7 @@ public class LayoutExporter {
 	public static final String SAME_GROUP_FRIENDLY_URL =
 		"/[$SAME_GROUP_FRIENDLY_URL$]";
 
+	@Deprecated
 	public static List<Portlet> getAlwaysExportablePortlets(long companyId)
 		throws Exception {
 
@@ -130,8 +131,8 @@ public class LayoutExporter {
 				continue;
 			}
 
-			PortletDataHandler portletDataHandler =
-				portlet.getPortletDataHandlerInstance();
+			PortletDataHandler portletDataHandler = null;
+				//portlet.getLegacyPortletDataHandlerInstance();
 
 			if ((portletDataHandler == null) ||
 				!portletDataHandler.isAlwaysExportable()) {
@@ -1081,8 +1082,8 @@ public class LayoutExporter {
 				companyId, portletId);
 
 			if (portlet != null) {
-				String portletDataHandlerClass =
-					portlet.getPortletDataHandlerClass();
+				String portletDataHandlerClass = StringPool.BLANK;
+					//portlet.getPortletDataHandlerClass();
 
 				// Checking if the portlet has a data handler, if it doesn't,
 				// the default values are the ones set in PORTLET_DATA and

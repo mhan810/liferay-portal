@@ -20,8 +20,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.ImportExportThreadLocal;
+import com.liferay.portal.kernel.lar.LayoutCache;
 import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -134,7 +134,7 @@ public class PortletExporter {
 			ImportExportThreadLocal.setPortletExportInProcess(true);
 
 			return doExportPortletInfoAsFile(
-				plid, groupId, portletId, parameterMap, startDate, endDate);
+					plid, groupId, portletId, parameterMap, startDate, endDate);
 		}
 		finally {
 			ImportExportThreadLocal.setPortletExportInProcess(false);
@@ -405,14 +405,14 @@ public class PortletExporter {
 		}
 
 		String path = getAssetCategoryPath(
-			portletDataContext, assetCategory.getCategoryId());
+				portletDataContext, assetCategory.getCategoryId());
 
 		if (!portletDataContext.isPathNotProcessed(path)) {
 			return;
 		}
 
 		Element assetCategoryElement = assetCategoriesElement.addElement(
-			"category");
+				"category");
 
 		Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
 			assetCategory.getCompanyId());
@@ -516,7 +516,7 @@ public class PortletExporter {
 
 		List<AssetTagProperty> assetTagProperties =
 			AssetTagPropertyLocalServiceUtil.getTagProperties(
-				assetTag.getTagId());
+					assetTag.getTagId());
 
 		for (AssetTagProperty assetTagProperty : assetTagProperties) {
 			Element propertyElement = assetTagElement.addElement("property");
@@ -558,15 +558,15 @@ public class PortletExporter {
 		}
 
 		List<AssetTag> assetTags = AssetTagLocalServiceUtil.getGroupTags(
-			portletDataContext.getScopeGroupId());
+				portletDataContext.getScopeGroupId());
 
 		for (AssetTag assetTag : assetTags) {
 			exportAssetTag(portletDataContext, assetTag, rootElement);
 		}
 
 		portletDataContext.addZipEntry(
-			portletDataContext.getRootPath() + "/tags.xml",
-			document.formattedString());
+				portletDataContext.getRootPath() + "/tags.xml",
+				document.formattedString());
 	}
 
 	protected void exportAssetVocabulary(
@@ -575,14 +575,14 @@ public class PortletExporter {
 		throws Exception {
 
 		String path = getAssetVocabulariesPath(
-			portletDataContext, assetVocabulary.getVocabularyId());
+				portletDataContext, assetVocabulary.getVocabularyId());
 
 		if (!portletDataContext.isPathNotProcessed(path)) {
 			return;
 		}
 
 		Element assetVocabularyElement = assetVocabulariesElement.addElement(
-			"vocabulary");
+				"vocabulary");
 
 		Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
 			assetVocabulary.getCompanyId());
@@ -598,7 +598,7 @@ public class PortletExporter {
 		portletDataContext.addZipEntry(path, assetVocabulary);
 
 		portletDataContext.addPermissions(
-			AssetVocabulary.class, assetVocabulary.getVocabularyId());
+				AssetVocabulary.class, assetVocabulary.getVocabularyId());
 	}
 
 	protected void exportAssetVocabulary(
@@ -607,10 +607,10 @@ public class PortletExporter {
 		throws Exception {
 
 		AssetVocabulary assetVocabulary = AssetVocabularyUtil.findByPrimaryKey(
-			assetVocabularyId);
+				assetVocabularyId);
 
 		exportAssetVocabulary(
-			portletDataContext, assetVocabulariesElement, assetVocabulary);
+				portletDataContext, assetVocabulariesElement, assetVocabulary);
 	}
 
 	protected void exportComments(PortletDataContext portletDataContext)
@@ -654,8 +654,8 @@ public class PortletExporter {
 		}
 
 		portletDataContext.addZipEntry(
-			portletDataContext.getRootPath() + "/comments.xml",
-			document.formattedString());
+				portletDataContext.getRootPath() + "/comments.xml",
+				document.formattedString());
 	}
 
 	protected void exportExpandoTables(PortletDataContext portletDataContext)
@@ -682,7 +682,7 @@ public class PortletExporter {
 
 			for (ExpandoColumn expandoColumn : expandoColumns) {
 				Element expandoColumnElement = expandoTableElement.addElement(
-					"expando-column");
+						"expando-column");
 
 				expandoColumnElement.addAttribute(
 					"column-id", String.valueOf(expandoColumn.getColumnId()));
@@ -963,8 +963,8 @@ public class PortletExporter {
 			return;
 		}
 
-		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
+		PortletDataHandler portletDataHandler = null;
+			/*portlet.getPortletDataHandlerInstance();*/
 
 		if (portletDataHandler == null) {
 			return;
@@ -1182,8 +1182,7 @@ public class PortletExporter {
 		}
 	}
 
-	protected void exportRatingsEntries(
-			PortletDataContext portletDataContext, Element parentElement)
+	protected void exportRatingsEntries(PortletDataContext portletDataContext)
 		throws Exception {
 
 		Document document = SAXReaderUtil.createDocument();
@@ -1224,6 +1223,14 @@ public class PortletExporter {
 		portletDataContext.addZipEntry(
 			portletDataContext.getRootPath() + "/ratings.xml",
 			document.formattedString());
+	}
+
+	@Deprecated
+	protected void exportRatingsEntries(
+			PortletDataContext portletDataContext, Element parentElement)
+		throws Exception {
+
+		exportRatingsEntries(portletDataContext);
 	}
 
 	protected String getAssetCategoryPath(

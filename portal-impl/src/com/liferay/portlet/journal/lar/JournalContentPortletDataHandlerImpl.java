@@ -45,6 +45,8 @@ import java.util.Map;
 
 import javax.portlet.PortletPreferences;
 
+import javax.swing.*;
+
 /**
  * <p>
  * Provides the Journal Content portlet export and import functionality, which
@@ -91,7 +93,8 @@ public class JournalContentPortletDataHandlerImpl
 		return new PortletDataHandlerControl[] {
 			new PortletDataHandlerBoolean(
 				_NAMESPACE, "web-content", true,
-				JournalPortletDataHandlerImpl.getMetadataControls()),
+					com.liferay.portlet.journal.lar.old.
+						JournalPortletDataHandlerImpl.getMetadataControls()),
 			new PortletDataHandlerBoolean(
 				_NAMESPACE, "folders-and-documents", true,
 				DLPortletDataHandlerImpl.getMetadataControls()
@@ -111,7 +114,8 @@ public class JournalContentPortletDataHandlerImpl
 		return new PortletDataHandlerControl[] {
 			new PortletDataHandlerBoolean(
 				_NAMESPACE, "web-content", true,
-				JournalPortletDataHandlerImpl.getMetadataControls()),
+					com.liferay.portlet.journal.lar.old.
+						JournalPortletDataHandlerImpl.getMetadataControls()),
 			new PortletDataHandlerBoolean(
 				_NAMESPACE, "folders-and-documents", true,
 				DLPortletDataHandlerImpl.getMetadataControls()
@@ -220,8 +224,9 @@ public class JournalContentPortletDataHandlerImpl
 			return document.formattedString();
 		}
 
-		String path = JournalPortletDataHandlerImpl.getArticlePath(
-			portletDataContext, article);
+		String path =
+			com.liferay.portlet.journal.lar.old.JournalPortletDataHandlerImpl.
+				getArticlePath(portletDataContext, article);
 
 		Element articleElement = rootElement.addElement("article");
 
@@ -237,11 +242,11 @@ public class JournalContentPortletDataHandlerImpl
 		Element dlRepositoryEntriesElement = rootElement.addElement(
 			"dl-repository-entries");
 
-		JournalPortletDataHandlerImpl.exportArticle(
-			portletDataContext, rootElement, rootElement, rootElement,
-			dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
-			dlFileRanksElement, dlRepositoriesElement,
-			dlRepositoryEntriesElement, article, false);
+		com.liferay.portlet.journal.lar.old.JournalPortletDataHandlerImpl.
+			exportArticle(portletDataContext, rootElement, rootElement,
+				rootElement, dlFileEntryTypesElement, dlFoldersElement,
+				dlFilesElement, dlFileRanksElement, dlRepositoriesElement,
+				dlRepositoryEntriesElement, article, false);
 
 		String defaultTemplateId = article.getTemplateId();
 		String preferenceTemplateId = portletPreferences.getValue(
@@ -255,10 +260,11 @@ public class JournalContentPortletDataHandlerImpl
 				JournalTemplateLocalServiceUtil.getTemplate(
 					article.getGroupId(), preferenceTemplateId, true);
 
-			JournalPortletDataHandlerImpl.exportTemplate(
-				portletDataContext, rootElement, dlFileEntryTypesElement,
-				dlFoldersElement, dlFilesElement, dlFileRanksElement,
-				dlRepositoriesElement, dlRepositoryEntriesElement, template);
+			com.liferay.portlet.journal.lar.old.JournalPortletDataHandlerImpl.
+				exportTemplate(portletDataContext, rootElement,
+					dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
+					dlFileRanksElement, dlRepositoriesElement,
+					dlRepositoryEntriesElement, template);
 		}
 
 		portletDataContext.setScopeGroupId(previousScopeGroupId);
@@ -294,30 +300,31 @@ public class JournalContentPortletDataHandlerImpl
 
 		Element rootElement = document.getRootElement();
 
-		JournalPortletDataHandlerImpl.importReferencedData(
-			portletDataContext, rootElement);
+		com.liferay.portlet.journal.lar.old.JournalPortletDataHandlerImpl.
+			importReferencedData(portletDataContext, rootElement);
 
 		Element structureElement = rootElement.element("structure");
 
 		if (structureElement != null) {
-			JournalPortletDataHandlerImpl.importStructure(
-				portletDataContext, structureElement);
+			com.liferay.portlet.journal.lar.old.JournalPortletDataHandlerImpl.
+				importStructure(portletDataContext, structureElement);
 		}
 
 		List<Element> templateElements = rootElement.elements("template");
 
 		if (templateElements != null) {
 			for (Element templateElement : templateElements) {
-				JournalPortletDataHandlerImpl.importTemplate(
-					portletDataContext, templateElement);
+				com.liferay.portlet.journal.lar.old.
+					JournalPortletDataHandlerImpl.importTemplate(
+						portletDataContext, templateElement);
 			}
 		}
 
 		Element articleElement = rootElement.element("article");
 
 		if (articleElement != null) {
-			JournalPortletDataHandlerImpl.importArticle(
-				portletDataContext, articleElement);
+			com.liferay.portlet.journal.lar.old.JournalPortletDataHandlerImpl.
+				importArticle(portletDataContext, articleElement);
 		}
 
 		String articleId = portletPreferences.getValue("articleId", null);

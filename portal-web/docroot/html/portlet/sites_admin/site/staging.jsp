@@ -171,7 +171,7 @@ LayoutSet publicLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroup.get
 						continue;
 					}
 
-					String portletDataHandlerClass = curPortlet.getPortletDataHandlerClass();
+					String portletDataHandlerClass = DataHandlersUtil.getDataHandlerClass(curPortlet.getPortletId());
 
 					if (!portletDataHandlerClasses.contains(portletDataHandlerClass)) {
 						portletDataHandlerClasses.add(portletDataHandlerClass);
@@ -180,7 +180,7 @@ LayoutSet publicLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroup.get
 						continue;
 					}
 
-					PortletDataHandler portletDataHandler = curPortlet.getPortletDataHandlerInstance();
+					StagedPortletDataHandler portletDataHandler = (StagedPortletDataHandler)DataHandlersUtil.getDataHandlerInstance(curPortlet.getPortletId());
 
 					if (portletDataHandler == null) {
 						continue;

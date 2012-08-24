@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.lar;
+package com.liferay.portal.kernel.lar;
 
 import com.liferay.portal.NoSuchRoleException;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -42,8 +42,7 @@ import java.util.Map;
  */
 public class LayoutCache {
 
-	protected long getEntityGroupId(
-			long companyId, String entityName, String name)
+	public long getEntityGroupId(long companyId, String entityName, String name)
 		throws PortalException, SystemException {
 
 		long entityGroupId = 0;
@@ -88,7 +87,7 @@ public class LayoutCache {
 		return entityGroupId;
 	}
 
-	protected Map<String, Long> getEntityMap(long companyId, String entityName)
+	public Map<String, Long> getEntityMap(long companyId, String entityName)
 		throws PortalException, SystemException {
 
 		Map<String, Long> entityMap = entityMapMap.get(entityName);
@@ -132,9 +131,7 @@ public class LayoutCache {
 		return entityMap;
 	}
 
-	protected List<Role> getGroupRoles_1to4(long groupId)
-		throws SystemException {
-
+	public List<Role> getGroupRoles_1to4(long groupId) throws SystemException {
 		List<Role> roles = groupRolesMap.get(groupId);
 
 		if (roles == null) {
@@ -146,7 +143,7 @@ public class LayoutCache {
 		return roles;
 	}
 
-	protected List<Role> getGroupRoles_5(long groupId, String resourceName)
+	public List<Role> getGroupRoles_5(long groupId, String resourceName)
 		throws PortalException, SystemException {
 
 		List<Role> roles = groupRolesMap.get(groupId);
@@ -163,8 +160,7 @@ public class LayoutCache {
 				Role teamRole = RoleLocalServiceUtil.getTeamRole(
 					group.getCompanyId(), team.getTeamId());
 
-				teamRole.setName(
-					PermissionExporter.ROLE_TEAM_PREFIX + team.getName());
+				teamRole.setName(ROLE_TEAM_PREFIX + team.getName());
 				teamRole.setDescription(team.getDescription());
 
 				roles.add(teamRole);
@@ -176,7 +172,7 @@ public class LayoutCache {
 		return roles;
 	}
 
-	protected List<User> getGroupUsers(long groupId) throws SystemException {
+	public List<User> getGroupUsers(long groupId) throws SystemException {
 		List<User> users = groupUsersMap.get(groupId);
 
 		if (users == null) {
@@ -188,7 +184,7 @@ public class LayoutCache {
 		return users;
 	}
 
-	protected Role getRole(long companyId, String roleName)
+	public Role getRole(long companyId, String roleName)
 		throws PortalException, SystemException {
 
 		Role role = rolesMap.get(roleName);
@@ -206,7 +202,7 @@ public class LayoutCache {
 		return role;
 	}
 
-	protected List<Role> getUserRoles(long userId) throws SystemException {
+	public List<Role> getUserRoles(long userId) throws SystemException {
 		List<Role> userRoles = userRolesMap.get(userId);
 
 		if (userRoles == null) {
@@ -228,5 +224,7 @@ public class LayoutCache {
 	protected Map<String, Role> rolesMap = new HashMap<String, Role>();
 	protected Map<Long, List<Role>> userRolesMap =
 		new HashMap<Long, List<Role>>();
+
+	private static final String ROLE_TEAM_PREFIX = "ROLE_TEAM_,*";
 
 }
