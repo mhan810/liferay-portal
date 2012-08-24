@@ -45,6 +45,7 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.QName;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.lar.DataHandlersUtil;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.model.EventDefinition;
 import com.liferay.portal.model.Portlet;
@@ -1212,6 +1213,61 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 
 			indexerClasses.add(indexerClassElement.getText());
 		}
+
+		// Data Handlers
+
+		Element dataHandlerConfigurationElement = portletElement.element(
+			"portlet-data-handler-configuration");
+
+		if (dataHandlerConfigurationElement != null) {
+			Element portletDataHandlerElement = portletElement.element(
+				"portlet-data-handler");
+
+			if (portletDataHandlerElement != null) {
+				String className = GetterUtil.getString(
+					portletDataHandlerElement.elementText("class"));
+
+				if (Validator.isNotNull(className)) {
+					DataHandlersUtil.addDataHandlerMapping(
+						portletId, className);
+				}
+
+				portletModel.setAlwaysExportable(
+					GetterUtil.getBoolean(
+						portletDataHandlerElement.elementText(
+							"always-exportable")));
+				portletModel.setAlwaysStaged(
+					GetterUtil.getBoolean(
+						portletDataHandlerElement.elementText(
+							"always-staged")));
+				portletModel.setDataLocalized(
+					GetterUtil.getBoolean(
+						portletDataHandlerElement.elementText(
+							"data-localized")));
+				portletModel.setPublishToLiveByDefault(
+					GetterUtil.getBoolean(
+						portletDataHandlerElement.elementText(
+							"publish-to-live-by-default")));
+			}
+
+			for (Element dataHandlerElement :
+					portletElement.elements("model-data-handler")) {
+
+				String modelName = GetterUtil.getString(
+					dataHandlerElement.elementText("model-name"));
+				String dataHandlerClass = GetterUtil.getString(
+					dataHandlerElement.elementText("class"));
+
+				if (Validator.isNotNull(modelName) &&
+					Validator.isNotNull(dataHandlerClass)) {
+
+					DataHandlersUtil.addDataHandlerMapping(
+						modelName, dataHandlerClass);
+				}
+			}
+		}
+
+		// Open Search
 
 		portletModel.setOpenSearchClass(
 			GetterUtil.getString(
