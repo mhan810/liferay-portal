@@ -43,13 +43,13 @@ portletURL.setParameter("organizationId", String.valueOf(organization.getOrganiz
 
 <portlet:actionURL var="editAssignmentsURL">
 	<portlet:param name="struts_action" value="/users_admin/edit_organization_assignments" />
-	<portlet:param name="redirect" value="<%= redirect %>" />
 </portlet:actionURL>
 
 <aui:form action="<%= editAssignmentsURL %>" method="post" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="tabs1" type="hidden" value="<%= tabs1 %>" />
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
+	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="assignmentsRedirect" type="hidden" />
 	<aui:input name="organizationId" type="hidden" value="<%= organization.getOrganizationId() %>" />
 

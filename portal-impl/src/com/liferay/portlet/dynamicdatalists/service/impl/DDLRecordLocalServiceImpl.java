@@ -148,6 +148,8 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 
 		// Record
 
+		String dirName = DDMUtil.getFileUploadPath(record);
+
 		ddlRecordPersistence.remove(record);
 
 		// Record Versions
@@ -180,8 +182,7 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 
 		try {
 			DLStoreUtil.deleteDirectory(
-				record.getCompanyId(), CompanyConstants.SYSTEM,
-				DDMUtil.getFileUploadPath(record));
+				record.getCompanyId(), CompanyConstants.SYSTEM, dirName);
 		}
 		catch (NoSuchDirectoryException nsde) {
 			if (_log.isDebugEnabled()) {

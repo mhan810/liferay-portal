@@ -65,6 +65,7 @@ portletURL.setParameter("tabs3", tabs3);
 	<aui:input name="tabs1" type="hidden" value="<%=tabs1 %>" />
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 	<aui:input name="tabs3" type="hidden" value="<%= tabs3 %>" />
+	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="assignmentsRedirect" type="hidden" />
 	<aui:input name="passwordPolicyId" type="hidden" value="<%= String.valueOf(passwordPolicy.getPasswordPolicyId()) %>" />
 

@@ -1010,6 +1010,10 @@ public class PortalUtil {
 		return getPortal().getPortletTitle(portlet, user);
 	}
 
+	public static String getPortletTitle(RenderRequest renderRequest) {
+		return getPortal().getPortletTitle(renderRequest);
+	}
+
 	public static String getPortletTitle(RenderResponse renderResponse) {
 		return getPortal().getPortletTitle(renderResponse);
 	}
@@ -1390,13 +1394,13 @@ public class PortalUtil {
 	}
 
 	public static boolean isGroupAdmin(User user, long groupId)
-			throws Exception {
+		throws Exception {
 
 		return getPortal().isGroupAdmin(user, groupId);
 	}
 
 	public static boolean isGroupOwner(User user, long groupId)
-			throws Exception {
+		throws Exception {
 
 		return getPortal().isGroupOwner(user, groupId);
 	}

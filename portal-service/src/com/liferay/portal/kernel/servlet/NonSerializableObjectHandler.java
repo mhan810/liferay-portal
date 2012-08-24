@@ -18,6 +18,7 @@ import java.io.Serializable;
 
 /**
  * @author Igor Spasic
+ * @see    com.liferay.portal.kernel.util.TransientValue
  */
 public final class NonSerializableObjectHandler implements Serializable {
 

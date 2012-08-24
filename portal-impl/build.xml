@@ -523,7 +523,7 @@ public class Creole10Parser]]></replacevalue>
 			/>
 		</delete>
 
-		<copy file="${project.dir}/tools/selenium/user-extensions.js" todir="${tstamp.value}/core/scripts" overwrite="true" />
+		<copy file="${project.dir}/tools/selenium/extensions/server.js" tofile="${tstamp.value}/core/scripts/user-extensions.js" overwrite="true" />
 
 		<zip basedir="${tstamp.value}" destfile="${project.dir}/lib/development/selenium-server.jar.new" />
 

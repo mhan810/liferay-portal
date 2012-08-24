@@ -17,6 +17,7 @@ package com.liferay.portalweb.portlet.webcontentdisplay;
 import com.liferay.portalweb.portal.BaseTestSuite;
 import com.liferay.portalweb.portlet.webcontentdisplay.comment.CommentTestPlan;
 import com.liferay.portalweb.portlet.webcontentdisplay.portlet.PortletTestPlan;
+import com.liferay.portalweb.portlet.webcontentdisplay.wcstructure.WCStructureTestPlan;
 import com.liferay.portalweb.portlet.webcontentdisplay.wcwebcontent.WCWebContentTestPlan;
 import com.liferay.portalweb.portlet.webcontentdisplay.webcontent.WebContentTestPlan;
 
@@ -33,6 +34,7 @@ public class WebContentDisplayTestPlan extends BaseTestSuite {
 
 		testSuite.addTest(CommentTestPlan.suite());
 		testSuite.addTest(PortletTestPlan.suite());
+		testSuite.addTest(WCStructureTestPlan.suite());
 		testSuite.addTest(WCWebContentTestPlan.suite());
 		testSuite.addTest(WebContentTestPlan.suite());
 

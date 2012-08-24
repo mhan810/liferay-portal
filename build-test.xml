@@ -283,7 +283,7 @@
 	</target>
 
 	<target name="build-test-ant-scripts">
-		<property name="build-test-ant-scripts.version" value="1" />
+		<property name="build-test-ant-scripts.version" value="4" />
 
 		<if>
 			<available file="portal-web/test-ant-scripts/version" />
@@ -665,6 +665,20 @@
 		</antcall>
 
 		<antcall target="build-test-ant-script-db-upgrade">
+			<param name="test.ant.script.command" value="db-upgrade-phone" />
+			<param name="test.ant.script.suite" value="Phone" />
+			<param name="test.ant.script.template" value="ant-script-db-upgrade.xml" />
+			<param name="test.ant.script.versions" value="5.2.3,5.2.5,5.2.7,5.2.8,5.2.9,6.0.6,6.0.10,6.0.11,6.0.12,6.1.1,6.1.10,6.1.20" />
+		</antcall>
+
+		<antcall target="build-test-ant-script-db-upgrade">
+			<param name="test.ant.script.command" value="db-upgrade-polls" />
+			<param name="test.ant.script.suite" value="Polls" />
+			<param name="test.ant.script.template" value="ant-script-db-upgrade.xml" />
+			<param name="test.ant.script.versions" value="5.2.3,5.2.5,5.2.7,5.2.8,5.2.9,6.0.6,6.0.10,6.0.11,6.0.12,6.1.1,6.1.10,6.1.20" />
+		</antcall>
+
+		<antcall target="build-test-ant-script-db-upgrade">
 			<param name="test.ant.script.command" value="db-upgrade-portlet-permissions" />
 			<param name="test.ant.script.suite" value="PortletPermissions" />
 			<param name="test.ant.script.template" value="ant-script-db-upgrade.xml" />
@@ -912,11 +926,6 @@
 		</antcall>
 
 		<antcall target="build-test-ant-script">
-			<param name="test.ant.script.command" value="permissions-organizations" />
-			<param name="test.ant.script.suite" value="PermissionsOrganizationsTestSuite" />
-		</antcall>
-
-		<antcall target="build-test-ant-script">
 			<param name="test.ant.script.command" value="permissions-document-library" />
 			<param name="test.ant.script.suite" value="PermissionsDocumentLibraryTestSuite" />
 		</antcall>
@@ -927,8 +936,18 @@
 		</antcall>
 
 		<antcall target="build-test-ant-script">
+			<param name="test.ant.script.command" value="permissions-media-gallery" />
+			<param name="test.ant.script.suite" value="PermissionsMediaGalleryTestSuite" />
+		</antcall>
+
+		<antcall target="build-test-ant-script">
 			<param name="test.ant.script.command" value="permissions-message-boards" />
 			<param name="test.ant.script.suite" value="PermissionsMessageBoardsTestSuite" />
+		</antcall>
+
+		<antcall target="build-test-ant-script">
+			<param name="test.ant.script.command" value="permissions-organizations" />
+			<param name="test.ant.script.suite" value="PermissionsOrganizationsTestSuite" />
 		</antcall>
 
 		<antcall target="build-test-ant-script">
@@ -2954,53 +2973,58 @@ executable ZIP file.
 		</if>
 
 		<if>
-			<or>
-				<equals arg1="${test.browser}" arg2="chrome" />
-				<equals arg1="${test.browser}" arg2="firefox" />
-			</or>
+			<equals arg1="${test.selenium.implementation}" arg2="selenium" />
 			<then>
-				<replace
-					file="portal-web/test/test-portal-web.properties"
-					token="#selenium.executable.dir="
-					value="selenium.executable.dir=${basedir.unix}/tools/selenium/"
-				/>
-				<replace
-					file="portal-web/test/test-portal-web.properties"
-					token="#selenium.download.file.executable="
-					value="selenium.download.file.executable=selenium_download_file_ff.exe"
-				/>
-				<replace
-					file="portal-web/test/test-portal-web.properties"
-					token="#selenium.set.browser.option.executable="
-					value="selenium.set.browser.option.executable=selenium_set_browser_option_ff.exe"
-				/>
+				<if>
+					<or>
+						<equals arg1="${test.browser}" arg2="chrome" />
+						<equals arg1="${test.browser}" arg2="firefox" />
+					</or>
+					<then>
+						<replace
+							file="portal-web/test/test-portal-web.properties"
+							token="#selenium.browser.commands.dir="
+							value="selenium.browser.commands.dir=${basedir.unix}/tools/selenium/browser-commands/selenium/firefox/3.6/"
+						/>
+						<replace
+							file="portal-web/test/test-portal-web.properties"
+							token="#selenium.executable.dir="
+							value="selenium.executable.dir=${basedir.unix}/tools/selenium/"
+						/>
+					</then>
+				</if>
 			</then>
 			<elseif>
-				<equals arg1="${test.browser}" arg2="googlechrome" />
+				<equals arg1="${test.selenium.implementation}" arg2="web-driver" />
 				<then>
-					<replace
-						file="portal-web/test/test-portal-web.properties"
-						token="#selenium.executable.dir="
-						value="selenium.executable.dir=${basedir.unix}/tools/selenium/"
-					/>
-				</then>
-			</elseif>
-			<elseif>
-				<or>
-					<equals arg1="${test.browser}" arg2="iehta" />
-					<equals arg1="${test.browser}" arg2="iexplorer" />
-				</or>
-				<then>
-					<replace
-						file="portal-web/test/test-portal-web.properties"
-						token="#selenium.executable.dir="
-						value="selenium.executable.dir=${basedir.unix}/tools/selenium/"
-					/>
-					<replace
-						file="portal-web/test/test-portal-web.properties"
-						token="#selenium.download.file.executable="
-						value="selenium.download.file.executable=selenium_download_file_ie.exe"
-					/>
+					<if>
+						<or>
+							<equals arg1="${test.browser}" arg2="chrome" />
+							<equals arg1="${test.browser}" arg2="firefox" />
+						</or>
+						<then>
+							<replace
+								file="portal-web/test/test-portal-web.properties"
+								token="#selenium.executable.dir="
+								value="selenium.browser.commands.dir=${basedir.unix}/tools/selenium/browser-commands/webdriver/firefox/3.6/"
+							/>
+							<replace
+								file="portal-web/test/test-portal-web.properties"
+								token="#selenium.executable.dir="
+								value="selenium.executable.dir=${basedir.unix}/tools/selenium/"
+							/>
+						</then>
+						<elseif>
+							<equals arg1="${test.browser}" arg2="googlechrome" />
+							<then>
+								<replace
+									file="portal-web/test/test-portal-web.properties"
+									token="#selenium.executable.dir="
+									value="selenium.executable.dir=${basedir.unix}/tools/selenium/"
+								/>
+							</then>
+						</elseif>
+					</if>
 				</then>
 			</elseif>
 		</if>

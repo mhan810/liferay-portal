@@ -80,16 +80,13 @@ import com.liferay.portlet.journal.model.impl.JournalArticleImpl;
 import com.liferay.portlet.journal.model.impl.JournalFeedImpl;
 import com.liferay.portlet.journal.model.impl.JournalStructureImpl;
 import com.liferay.portlet.journal.model.impl.JournalTemplateImpl;
-import com.liferay.portlet.messageboards.NoSuchDiscussionException;
 import com.liferay.portlet.messageboards.model.MBDiscussion;
 import com.liferay.portlet.messageboards.model.MBMessage;
-import com.liferay.portlet.messageboards.model.MBMessageConstants;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.model.impl.MBBanImpl;
 import com.liferay.portlet.messageboards.model.impl.MBCategoryImpl;
 import com.liferay.portlet.messageboards.model.impl.MBMessageImpl;
 import com.liferay.portlet.messageboards.model.impl.MBThreadFlagImpl;
-import com.liferay.portlet.messageboards.service.MBDiscussionLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBThreadLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.persistence.MBDiscussionUtil;
@@ -345,7 +342,13 @@ public class PortletDataContextImpl implements PortletDataContext {
 		List<MBMessage> messages = MBMessageLocalServiceUtil.getThreadMessages(
 			discussion.getThreadId(), WorkflowConstants.STATUS_APPROVED);
 
-		if (messages.size() == 0) {
+		if (messages.isEmpty()) {
+			return;
+		}
+
+		MBMessage firstMessage = messages.get(0);
+
+		if ((messages.size() == 1) && firstMessage.isRoot()) {
 			return;
 		}
 
@@ -935,14 +938,16 @@ public class PortletDataContextImpl implements PortletDataContext {
 			return;
 		}
 
-		MBDiscussion discussion = null;
+		MBMessage firstMessage = messages.get(0);
 
-		try {
-			discussion = MBDiscussionLocalServiceUtil.getDiscussion(
-				clazz.getName(), newClassPK);
+		if ((messages.size() == 1) && firstMessage.isRoot()) {
+			return;
 		}
-		catch (NoSuchDiscussionException nsde) {
-		}
+
+		long classNameId = PortalUtil.getClassNameId(clazz);
+
+		MBDiscussion discussion = MBDiscussionUtil.fetchByC_C(
+			classNameId, newClassPK);
 
 		for (MBMessage message : messages) {
 			long userId = getUserId(message.getUserUuid());
@@ -952,10 +957,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 			long threadId = MapUtil.getLong(
 				threadPKs, message.getThreadId(), message.getThreadId());
 
-			if ((message.getParentMessageId() ==
-					MBMessageConstants.DEFAULT_PARENT_MESSAGE_ID) &&
-				(discussion != null)) {
-
+			if (message.isRoot() && (discussion != null)) {
 				MBThread thread = MBThreadLocalServiceUtil.getThread(
 					discussion.getThreadId());
 

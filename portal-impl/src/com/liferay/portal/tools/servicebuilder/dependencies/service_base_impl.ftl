@@ -472,6 +472,12 @@ import javax.sql.DataSource;
 	</#list>
 
 	public void afterPropertiesSet() {
+		<#if pluginName != "">
+			Class<?> clazz = getClass();
+
+			_classLoader = clazz.getClassLoader();
+		</#if>
+
 		<#if (sessionTypeName == "Local") && entity.hasColumns()>
 			<#if pluginName != "">
 				PersistedModelLocalServiceRegistryUtil.register("${packagePath}.model.${entity.name}", ${entity.varName}LocalService);
@@ -514,7 +520,22 @@ import javax.sql.DataSource;
 				String name, String[] parameterTypes, Object[] arguments)
 			throws Throwable {
 
-			return _clpInvoker.invokeMethod(name, parameterTypes, arguments);
+			Thread currentThread = Thread.currentThread();
+
+			ClassLoader contextClassLoader = currentThread.getContextClassLoader();
+
+			if (contextClassLoader != _classLoader) {
+				currentThread.setContextClassLoader(_classLoader);
+			}
+
+			try {
+				return _clpInvoker.invokeMethod(name, parameterTypes, arguments);
+			}
+			finally {
+				if (contextClassLoader != _classLoader) {
+					currentThread.setContextClassLoader(contextClassLoader);
+				}
+			}
 		}
 	</#if>
 
@@ -582,6 +603,7 @@ import javax.sql.DataSource;
 	private String _beanIdentifier;
 
 	<#if pluginName != "">
+		private ClassLoader _classLoader;
 		private ${entity.name}${sessionTypeName}ServiceClpInvoker _clpInvoker = new ${entity.name}${sessionTypeName}ServiceClpInvoker();
 	</#if>
 

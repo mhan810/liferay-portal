@@ -18,6 +18,7 @@ import java.io.Serializable;
 
 /**
  * @author Brian Wing Shun Chan
+ * @see    com.liferay.portal.kernel.servlet.NonSerializableObjectHandler
  */
 public class TransientValue<V> implements Serializable {
 
