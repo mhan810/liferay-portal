@@ -3801,6 +3801,8 @@
 			<transient name="actionURLRedirect" />
 			<transient name="addDefaultResource" />
 			<transient name="ajaxable" />
+			<transient name="alwaysExportable" />
+			<transient name="alwaysStaged" />
 			<transient name="assetRendererFactoryClasses" />
 			<transient name="atomCollectionAdapterClasses" />
 			<transient name="autopropagatedParameters" />
@@ -3810,6 +3812,7 @@
 			<transient name="controlPanelEntryWeight" />
 			<transient name="cssClassWrapper" />
 			<transient name="customAttributesDisplayClasses" />
+			<transient name="dataLocalized" />
 			<transient name="defaultPluginSetting" />
 			<transient name="defaultPreferences" />
 			<transient name="displayName" />
@@ -3859,6 +3862,7 @@
 			<transient name="privateSessionAttributes" />
 			<transient name="processingEvents" />
 			<transient name="publicRenderParameters" />
+			<transient name="publishToLiveByDefault" />
 			<transient name="publishingEvents" />
 			<transient name="ready" />
 			<transient name="remoteable" />

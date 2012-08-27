@@ -168,8 +168,9 @@ public class PortletImpl extends PortletBaseImpl {
 		boolean privateRequestAttributes, boolean privateSessionAttributes,
 		Set<String> autopropagatedParameters, int actionTimeout,
 		int renderTimeout, int renderWeight, boolean ajaxable,
-		List<String> headerPortalCss, List<String> headerPortletCss,
-		List<String> headerPortalJavaScript,
+		boolean alwaysExportable, boolean alwaysStaged, boolean dataLocalized,
+		boolean publishToLiveByDefault, List<String> headerPortalCss,
+		List<String> headerPortletCss, List<String> headerPortalJavaScript,
 		List<String> headerPortletJavaScript, List<String> footerPortalCss,
 		List<String> footerPortletCss, List<String> footerPortalJavaScript,
 		List<String> footerPortletJavaScript, String cssClassWrapper,
@@ -252,6 +253,10 @@ public class PortletImpl extends PortletBaseImpl {
 		_renderTimeout = renderTimeout;
 		_renderWeight = renderWeight;
 		_ajaxable = ajaxable;
+		_alwaysExportable = alwaysExportable;
+		_alwaysStaged = alwaysStaged;
+		_dataLocalized = dataLocalized;
+		_publishToLiveByDefault = publishToLiveByDefault;
 		_headerPortalCss = headerPortalCss;
 		_headerPortletCss = headerPortletCss;
 		_headerPortalJavaScript = headerPortalJavaScript;
@@ -371,14 +376,15 @@ public class PortletImpl extends PortletBaseImpl {
 			getUserPrincipalStrategy(), isPrivateRequestAttributes(),
 			isPrivateSessionAttributes(), getAutopropagatedParameters(),
 			getActionTimeout(), getRenderTimeout(), getRenderWeight(),
-			isAjaxable(), getHeaderPortalCss(), getHeaderPortletCss(),
-			getHeaderPortalJavaScript(), getHeaderPortletJavaScript(),
-			getFooterPortalCss(), getFooterPortletCss(),
-			getFooterPortalJavaScript(), getFooterPortletJavaScript(),
-			getCssClassWrapper(), getFacebookIntegration(),
-			isAddDefaultResource(), getRoles(), getUnlinkedRoles(),
-			getRoleMappers(), isSystem(), isActive(), isInclude(),
-			getInitParams(), getExpCache(), getPortletModes(),
+			isAjaxable(), isAlwaysExportable(), isAlwaysStaged(),
+			isDataLocalized(), isPublishToLiveByDefault(), getHeaderPortalCss(),
+			getHeaderPortletCss(), getHeaderPortalJavaScript(),
+			getHeaderPortletJavaScript(), getFooterPortalCss(),
+			getFooterPortletCss(), getFooterPortalJavaScript(),
+			getFooterPortletJavaScript(), getCssClassWrapper(),
+			getFacebookIntegration(), isAddDefaultResource(), getRoles(),
+			getUnlinkedRoles(), getRoleMappers(), isSystem(), isActive(),
+			isInclude(), getInitParams(), getExpCache(), getPortletModes(),
 			getWindowStates(), getSupportedLocales(), getResourceBundle(),
 			getPortletInfo(), getPortletFilters(), getProcessingEvents(),
 			getPublishingEvents(), getPublicRenderParameters(),
@@ -2046,6 +2052,33 @@ public class PortletImpl extends PortletBaseImpl {
 	}
 
 	/**
+	 * Returns <code>true</code> if the portlet is always exportable.
+	 *
+	 * @return <code>true</code> if the protlet is always exportable
+	 */
+	public boolean isAlwaysExportable() {
+		return _alwaysExportable;
+	}
+
+	/**
+	 * Returns <code>true</code> if the portlet is always staged.
+	 *
+	 * @return <code>true</code> if the portlet is always staged
+	 */
+	public boolean isAlwaysStaged() {
+		return _alwaysStaged;
+	}
+
+	/**
+	 * Returns <code>true</code> if the portlet data is localized.
+	 *
+	 * @return <code>true</code> if the portlet data is localized
+	 */
+	public boolean isDataLocalized() {
+		return _dataLocalized;
+	}
+
+	/**
 	 * Returns <code>true</code> to include the portlet and make it available to
 	 * be made active.
 	 *
@@ -2163,6 +2196,17 @@ public class PortletImpl extends PortletBaseImpl {
 	 */
 	public boolean isPrivateSessionAttributes() {
 		return _privateSessionAttributes;
+	}
+
+	/**
+	 * Returns <code>true</code> if the portlet is to be published to live by
+	 * default.
+	 *
+	 * @return <code>true</code> if the portlet is to be published to live by
+	 *         default
+	 */
+	public boolean isPublishToLiveByDefault() {
+		return _publishToLiveByDefault;
 	}
 
 	/**
@@ -2371,6 +2415,26 @@ public class PortletImpl extends PortletBaseImpl {
 	}
 
 	/**
+	 * Set to <code>true</code> if the portlet is always exportable.
+	 *
+	 * @param alwaysExportable boolean value for whether the portlet is always
+	 *        exportable
+	 */
+	public void setAlwaysExportable(boolean alwaysExportable) {
+		_alwaysExportable = alwaysExportable;
+	}
+
+	/**
+	 * Set to <code>true</code> if the portlet is always staged.
+	 *
+	 * @param alwaysStaged boolean value for whether the portlet is always
+	 *        staged
+	 */
+	public void setAlwaysStaged(boolean alwaysStaged) {
+		_alwaysStaged = alwaysStaged;
+	}
+
+	/**
 	 * Sets the name of the classes that represent asset types associated with
 	 * the portlet.
 	 *
@@ -2475,6 +2539,15 @@ public class PortletImpl extends PortletBaseImpl {
 		List<String> customAttributesDisplayClasses) {
 
 		_customAttributesDisplayClasses = customAttributesDisplayClasses;
+	}
+
+	/**
+	 * Set to <code>true</code> if the portlet data is localized.
+	 *
+	 * @param dataLocalized boolean value whether the portlet data is localized
+	 */
+	public void setDataLocalized(boolean dataLocalized) {
+		_dataLocalized = dataLocalized;
 	}
 
 	/**
@@ -3018,6 +3091,17 @@ public class PortletImpl extends PortletBaseImpl {
 	}
 
 	/**
+	 * Set to <code>true</code> if the portlet is to be published to live by
+	 * default.
+	 *
+	 * @param publishToLiveByDefault boolean value whether the portlet is to be
+	 *        published to live by default
+	 */
+	public void setPublishToLiveByDefault(boolean publishToLiveByDefault) {
+		_publishToLiveByDefault = publishToLiveByDefault;
+	}
+
+	/**
 	 * Set to <code>true</code> if the portlet is ready to be used.
 	 *
 	 * @param ready whether the portlet is ready to be used
@@ -3389,6 +3473,16 @@ public class PortletImpl extends PortletBaseImpl {
 	private boolean _ajaxable = true;
 
 	/**
+	 * <code>True</code> if the portlet is always exportable.
+	 */
+	private boolean _alwaysExportable = false;
+
+	/**
+	 * <code>True</code> if the portlet is always staged.
+	 */
+	private boolean _alwaysStaged = false;
+
+	/**
 	 * The names of the classes that represents asset types associated with the
 	 * portlet.
 	 */
@@ -3440,6 +3534,11 @@ public class PortletImpl extends PortletBaseImpl {
 	 * associated with the portlet.
 	 */
 	private List<String> _customAttributesDisplayClasses;
+
+	/**
+	 * <code>True</code> if the portlet is handling data localized.
+	 */
+	private boolean _dataLocalized = false;
 
 	/**
 	 * Plugin settings associated with the portlet.
@@ -3732,6 +3831,11 @@ public class PortletImpl extends PortletBaseImpl {
 	 * The supported publishing events of the portlet.
 	 */
 	private Set<QName> _publishingEvents = new HashSet<QName>();
+
+	/**
+	 * <code>True</code> if the portlet is to be published to live by default.
+	 */
+	private boolean _publishToLiveByDefault = false;
 
 	/**
 	 * <code>True</code> if the portlet supports remoting.
