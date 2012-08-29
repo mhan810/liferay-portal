@@ -1690,6 +1690,33 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	}
 
 	/**
+	* Returns <code>true</code> if the portlet is always exportable.
+	*
+	* @return <code>true</code> if the protlet is always exportable
+	*/
+	public boolean isAlwaysExportable() {
+		return _portlet.isAlwaysExportable();
+	}
+
+	/**
+	* Returns <code>true</code> if the portlet is always staged.
+	*
+	* @return <code>true</code> if the portlet is always staged
+	*/
+	public boolean isAlwaysStaged() {
+		return _portlet.isAlwaysStaged();
+	}
+
+	/**
+	* Returns <code>true</code> if the portlet data is localized.
+	*
+	* @return <code>true</code> if the portlet data is localized
+	*/
+	public boolean isDataLocalized() {
+		return _portlet.isDataLocalized();
+	}
+
+	/**
 	* Returns <code>true</code> to include the portlet and make it available to
 	* be made active.
 	*
@@ -1807,6 +1834,17 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	public boolean isPrivateSessionAttributes() {
 		return _portlet.isPrivateSessionAttributes();
+	}
+
+	/**
+	* Returns <code>true</code> if the portlet is to be published to live by
+	* default.
+	*
+	* @return <code>true</code> if the portlet is to be published to live by
+	default
+	*/
+	public boolean isPublishToLiveByDefault() {
+		return _portlet.isPublishToLiveByDefault();
 	}
 
 	/**
@@ -1981,6 +2019,26 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	}
 
 	/**
+	* Set to <code>true</code> if the portlet is always exportable.
+	*
+	* @param alwaysExportable boolean value for whether the portlet is always
+	exportable
+	*/
+	public void setAlwaysExportable(boolean alwaysExportable) {
+		_portlet.setAlwaysExportable(alwaysExportable);
+	}
+
+	/**
+	* Set to <code>true</code> if the portlet is always staged.
+	*
+	* @param alwaysStaged boolean value for whether the portlet is always
+	staged
+	*/
+	public void setAlwaysStaged(boolean alwaysStaged) {
+		_portlet.setAlwaysStaged(alwaysStaged);
+	}
+
+	/**
 	* Sets the name of the classes that represent asset types associated with
 	* the portlet.
 	*
@@ -2084,6 +2142,15 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	public void setCustomAttributesDisplayClasses(
 		java.util.List<java.lang.String> customAttributesDisplayClasses) {
 		_portlet.setCustomAttributesDisplayClasses(customAttributesDisplayClasses);
+	}
+
+	/**
+	* Set to <code>true</code> if the portlet data is localized.
+	*
+	* @param dataLocalized boolean value whether the portlet data is localized
+	*/
+	public void setDataLocalized(boolean dataLocalized) {
+		_portlet.setDataLocalized(dataLocalized);
 	}
 
 	/**
@@ -2614,6 +2681,17 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	public void setPublishingEvents(
 		java.util.Set<com.liferay.portal.kernel.xml.QName> publishingEvents) {
 		_portlet.setPublishingEvents(publishingEvents);
+	}
+
+	/**
+	* Set to <code>true</code> if the portlet is to be published to live by
+	* default.
+	*
+	* @param publishToLiveByDefault boolean value whether the portlet is to be
+	published to live by default
+	*/
+	public void setPublishToLiveByDefault(boolean publishToLiveByDefault) {
+		_portlet.setPublishToLiveByDefault(publishToLiveByDefault);
 	}
 
 	/**

@@ -17,6 +17,7 @@ package com.liferay.portal.kernel.scheduler;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Time;
 
 /**
@@ -162,14 +163,14 @@ public class SchedulerEntryImpl implements SchedulerEntry {
 		return sb.toString();
 	}
 
-	private String _contextPath;
-	private String _description;
+	private String _contextPath = StringPool.BLANK;
+	private String _description = StringPool.BLANK;
 	private transient MessageListener _eventListener;
-	private String _eventListenerClass;
-	private String _propertyKey;
+	private String _eventListenerClass = StringPool.BLANK;
+	private String _propertyKey = StringPool.BLANK;
 	private TimeUnit _timeUnit;
 	private Trigger _trigger;
 	private TriggerType _triggerType;
-	private String _triggerValue;
+	private String _triggerValue = StringPool.BLANK;
 
 }

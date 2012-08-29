@@ -16,4 +16,20 @@
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.LayoutSetLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.LayoutSetLocalService)" />
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.PortletPreferencesLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.PortletPreferencesLocalService)" />
 	</aop:config>
+
+	<bean id="stagedDataHandler" abstract="true">
+		<property name="xstreamWrapper" ref="xStreamWrapper" />
+	</bean>
+	<bean id="xStreamWrapper" class="com.liferay.portal.lar.XStreamWrapperImpl" init-method="initWrapper" />
+
+	<bean id="com.liferay.portal.lar.DataHandlers" class="com.liferay.portal.lar.DataHandlersImpl" />
+	<bean id="com.liferay.portal.lar.DataHandlersUtil" class="com.liferay.portal.lar.DataHandlersUtil">
+		<property name="dataHandlers" ref="com.liferay.portal.lar.DataHandlers" />
+	</bean>
+
+	<bean id="com.liferay.portal.lar.DigestStoreUtil" class="com.liferay.portal.lar.DigestStoreUtil">
+		<property name="digestStoreFactory">
+			<bean class="com.liferay.portal.lar.ThreadLocalDigestStoreFactory" />
+		</property>
+	</bean>
 </beans>

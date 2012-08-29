@@ -1184,6 +1184,27 @@ public interface Portlet extends PortletModel, PersistedModel {
 	public boolean isAjaxable();
 
 	/**
+	* Returns <code>true</code> if the portlet is always exportable.
+	*
+	* @return <code>true</code> if the protlet is always exportable
+	*/
+	public boolean isAlwaysExportable();
+
+	/**
+	* Returns <code>true</code> if the portlet is always staged.
+	*
+	* @return <code>true</code> if the portlet is always staged
+	*/
+	public boolean isAlwaysStaged();
+
+	/**
+	* Returns <code>true</code> if the portlet data is localized.
+	*
+	* @return <code>true</code> if the portlet data is localized
+	*/
+	public boolean isDataLocalized();
+
+	/**
 	* Returns <code>true</code> to include the portlet and make it available to
 	* be made active.
 	*
@@ -1280,6 +1301,15 @@ public interface Portlet extends PortletModel, PersistedModel {
 	attributes with the portal
 	*/
 	public boolean isPrivateSessionAttributes();
+
+	/**
+	* Returns <code>true</code> if the portlet is to be published to live by
+	* default.
+	*
+	* @return <code>true</code> if the portlet is to be published to live by
+	default
+	*/
+	public boolean isPublishToLiveByDefault();
 
 	/**
 	* Returns <code>true</code> if the portlet is ready to be used.
@@ -1419,6 +1449,22 @@ public interface Portlet extends PortletModel, PersistedModel {
 	public void setAjaxable(boolean ajaxable);
 
 	/**
+	* Set to <code>true</code> if the portlet is always exportable.
+	*
+	* @param alwaysExportable boolean value for whether the portlet is always
+	exportable
+	*/
+	public void setAlwaysExportable(boolean alwaysExportable);
+
+	/**
+	* Set to <code>true</code> if the portlet is always staged.
+	*
+	* @param alwaysStaged boolean value for whether the portlet is always
+	staged
+	*/
+	public void setAlwaysStaged(boolean alwaysStaged);
+
+	/**
 	* Sets the name of the classes that represent asset types associated with
 	* the portlet.
 	*
@@ -1505,6 +1551,13 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*/
 	public void setCustomAttributesDisplayClasses(
 		java.util.List<java.lang.String> customAttributesDisplayClasses);
+
+	/**
+	* Set to <code>true</code> if the portlet data is localized.
+	*
+	* @param dataLocalized boolean value whether the portlet data is localized
+	*/
+	public void setDataLocalized(boolean dataLocalized);
 
 	/**
 	* Sets the default plugin settings of the portlet.
@@ -1935,6 +1988,15 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*/
 	public void setPublishingEvents(
 		java.util.Set<com.liferay.portal.kernel.xml.QName> publishingEvents);
+
+	/**
+	* Set to <code>true</code> if the portlet is to be published to live by
+	* default.
+	*
+	* @param publishToLiveByDefault boolean value whether the portlet is to be
+	published to live by default
+	*/
+	public void setPublishToLiveByDefault(boolean publishToLiveByDefault);
 
 	/**
 	* Set to <code>true</code> if the portlet is ready to be used.
