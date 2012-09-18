@@ -53,6 +53,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.ImageUtil;
 import com.liferay.portal.service.persistence.LayoutUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.lar.DLPortletDataHandlerImpl;
@@ -330,6 +331,13 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 			(JournalArticle)portletDataContext.getZipEntryAsObject(path);
 
 		prepareLanguagesForImport(article);
+
+		long classNameId = 0;
+
+		if (article.getClassNameId() > 0) {
+			classNameId = PortalUtil.getClassNameId(
+				JournalStructure.class.getName());
+		}
 
 		long userId = portletDataContext.getUserId(article.getUserUuid());
 
@@ -720,8 +728,8 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 			if (existingArticle == null) {
 				importedArticle = JournalArticleLocalServiceUtil.addArticle(
 					userId, portletDataContext.getScopeGroupId(), folderId,
-					article.getClassNameId(), structurePrimaryKey, articleId,
-					autoArticleId, article.getVersion(), article.getTitleMap(),
+					classNameId, structurePrimaryKey, articleId, autoArticleId,
+					article.getVersion(), article.getTitleMap(),
 					article.getDescriptionMap(), article.getContent(),
 					article.getType(), parentStructureId, parentTemplateId,
 					article.getLayoutUuid(), displayDateMonth, displayDateDay,
@@ -754,8 +762,8 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 		else {
 			importedArticle = JournalArticleLocalServiceUtil.addArticle(
 				userId, portletDataContext.getScopeGroupId(), folderId,
-				article.getClassNameId(), structurePrimaryKey, articleId,
-				autoArticleId, article.getVersion(), article.getTitleMap(),
+				classNameId, structurePrimaryKey, articleId, autoArticleId,
+				article.getVersion(), article.getTitleMap(),
 				article.getDescriptionMap(), article.getContent(),
 				article.getType(), parentStructureId, parentTemplateId,
 				article.getLayoutUuid(), displayDateMonth, displayDateDay,
