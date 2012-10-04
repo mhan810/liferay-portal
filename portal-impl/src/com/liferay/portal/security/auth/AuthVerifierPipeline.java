@@ -129,7 +129,10 @@ public class AuthVerifierPipeline {
 
 				Properties properties = PropsUtil.getProperties(
 					PropsKeys.AUTH_VERIFIER +
-						authVerififerClass.getSimpleName() + StringPool.PERIOD,
+						authVerifierClassName.substring(
+							authVerifierClassName
+							.lastIndexOf(StringPool.PERIOD)+1) +
+								StringPool.PERIOD,
 					true);
 
 				authVerifierConfiguration.setProperties(properties);

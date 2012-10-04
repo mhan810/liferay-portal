@@ -1032,7 +1032,9 @@ public class HookHotDeployListener
 
 			Properties properties = PropertiesUtil.getProperties(
 				portalProperties,
-				AUTH_VERIFIER + authVerifierClass.getSimpleName() +
+				AUTH_VERIFIER + authVerifierClassName.substring(
+					authVerifierClassName
+					.lastIndexOf(StringPool.PERIOD)+1) +
 					StringPool.PERIOD,
 				true);
 
