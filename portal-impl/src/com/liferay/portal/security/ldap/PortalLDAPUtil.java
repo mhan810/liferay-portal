@@ -279,6 +279,50 @@ public class PortalLDAPUtil {
 			long companyId, String screenName, String emailAddress)
 		throws Exception {
 
+		if (PropsValues.LDAP_USER_PREFERRED_SERVER_ENABLED) {
+
+			// getLdapServerId() method is called from
+			// PortalLDAPImporterImpl.importLDAPUserByScreenName(), which is
+			// called from NtlmAutoLogin.login() after successful auth
+
+			Long preferredLdapServerId =
+					LDAPSettingsUtil.getPreferredLdapServerId(companyId,
+																screenName);
+
+			if (null != preferredLdapServerId) {
+
+				if (_log.isDebugEnabled()) {
+					_log.debug(String.format("Found preferred LDAP " +
+											"ldapServerId=%s for user '%s'",
+											preferredLdapServerId,
+											_getFirstNotBlank(emailAddress,
+																screenName)));
+				}
+
+				if (hasUser(preferredLdapServerId, companyId, screenName,
+								emailAddress)) {
+
+					if (_log.isDebugEnabled()) {
+						_log.debug(String.format("User '%s' found in " +
+												"preferred ldapServerId=%s ",
+												_getFirstNotBlank(emailAddress,
+																	screenName),
+												preferredLdapServerId));
+					}
+
+					return preferredLdapServerId;
+				}
+			}
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(String.format("Preferred LDAP for user '%s' not " +
+										"found or is missing the user, " +
+										"going to iterate over all LDAPs",
+										_getFirstNotBlank(emailAddress,
+												screenName)));
+			}
+		}
+
 		long[] ldapServerIds = StringUtil.split(
 			PrefsPropsUtil.getString(companyId, "ldap.server.ids"), 0L);
 
@@ -890,6 +934,21 @@ public class PortalLDAPUtil {
 		sb.append(end);
 
 		return sb.toString();
+	}
+
+	/**
+	 * Returns first not empty value (emailAddress or screenName).
+	 *
+	 * @param emailAddress
+	 * @param screenName
+	 * @return
+	 */
+	private static String _getFirstNotBlank(String emailAddress,
+	String screenName) {
+
+		return Validator.isNotNull(emailAddress)
+				? emailAddress
+				: screenName;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(PortalLDAPUtil.class);

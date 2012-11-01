@@ -52,6 +52,7 @@ import javax.naming.ldap.LdapContext;
 /**
  * @author Brian Wing Shun Chan
  * @author Scott Lee
+ * @author Josef Sustacek
  */
 public class LDAPAuth implements Authenticator {
 
@@ -358,6 +359,24 @@ public class LDAPAuth implements Authenticator {
 			_log.debug("Authenticator is enabled");
 		}
 
+		int preferredLdapResult = DNE;
+
+		if (PropsValues.LDAP_USER_PREFERRED_SERVER_ENABLED) {
+
+			preferredLdapResult = authenticateAgainstPreferredLdapServer(
+					companyId, emailAddress, screenName, userId, password);
+
+			if (preferredLdapResult == SUCCESS) {
+
+				if (_log.isDebugEnabled()) {
+					_log.debug("Successfully authenticated against " +
+								"preferred LDAP");
+				}
+
+				return preferredLdapResult;
+			}
+		}
+
 		long[] ldapServerIds = StringUtil.split(
 			PrefsPropsUtil.getString(companyId, "ldap.server.ids"), 0L);
 
@@ -458,6 +477,144 @@ public class LDAPAuth implements Authenticator {
 		else {
 			return SUCCESS;
 		}
+	}
+
+	/**
+	 * Uses preferred LDAP server to authenticate the user. Preferred LDAP
+	 * server index is read from user's expando attribute. If user does not
+	 * exist, or if user has no such attribute, or it's invalid (<0),
+	 * returns LDAPAuth.DNE. Otherwise the result of LDAP auth.
+	 *
+	 * @param companyId current company
+	 * @param emailAddress email address used for auth, may be blank
+	 * @param screenName screenanme used for auth, may be blank
+	 * @param userId userId used for auth, may be 0
+	 * @param password password used for auth
+	 * @return LDAPAuth.SUCCESS in case of (found user && found preferred LDAP
+	 * && LDAP auth success) against this server
+	 * @throws Exception
+	 */
+	protected int authenticateAgainstPreferredLdapServer(long companyId,
+															String emailAddress,
+		String screenName, long userId, String password)
+				throws Exception {
+
+		int result = DNE;
+
+		User user = null;
+
+		try {
+
+			if (Validator.isNotNull(emailAddress)) {
+				user = UserLocalServiceUtil.getUserByEmailAddress(companyId,
+																emailAddress);
+			}
+			else if (Validator.isNotNull(screenName)) {
+				user = UserLocalServiceUtil.getUserByScreenName(companyId,
+																screenName);
+			}
+			else if (userId > 0) {
+				user = UserLocalServiceUtil.getUserById(companyId, userId);
+			} else {
+
+				if (_log.isDebugEnabled()) {
+					_log.debug(String.format("No user credentials found, " +
+							"cannot fetch preferred LDAP server"));
+				}
+
+				return result;
+			}
+
+		} catch (NoSuchUserException e) {
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(String.format("User not found, cannot fetch " +
+										"preferred LDAP server"),
+							e);
+			}
+
+			return result;
+		}
+
+		Long preferredLdapServerId = LDAPSettingsUtil.getPreferredLdapServerId(
+							user);
+
+		if (null != preferredLdapServerId) {
+
+			String postfix = LDAPSettingsUtil.getPropertyPostfix(
+													preferredLdapServerId);
+
+			String providerUrl = PrefsPropsUtil.getString(
+									user.getCompanyId(),
+									PropsKeys.LDAP_BASE_PROVIDER_URL + postfix);
+
+			if (Validator.isNotNull(providerUrl)) {
+
+				if (_log.isDebugEnabled()) {
+					_log.debug(String.format("Trying preferred LDAP " +
+											"ldapServerId=%s for user '%s'...",
+											preferredLdapServerId,
+											_getFirstNotBlank(emailAddress,
+																screenName,
+																userId)));
+				}
+
+				result = authenticate(
+						companyId, preferredLdapServerId, emailAddress,
+						screenName, userId, password);
+
+				if (_log.isDebugEnabled()) {
+					_log.debug(String.format("Preferred LDAP ldapServerId=%s " +
+											"for user '%s' returned %s",
+											preferredLdapServerId,
+											_getFirstNotBlank(emailAddress,
+																screenName,
+																userId),
+											result));
+				}
+
+			} else {
+
+				if (_log.isDebugEnabled()) {
+					_log.debug(String.format("User '%s' has invalid " +
+							"preferred ldapServerId: '%s'. LDAP with given " +
+							"id does not exist in portal.",
+							_getFirstNotBlank(emailAddress, screenName, userId),
+							preferredLdapServerId));
+				}
+			}
+
+		} else {
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(String.format("Preferred LDAP ldapServerId is not " +
+										"valid for user '%s'",
+										_getFirstNotBlank(emailAddress,
+															screenName,
+															userId)));
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Returns first not empty value (emailAddress or screenName), userId
+	 * otherwise.
+	 *
+	 * @param emailAddress
+	 * @param screenName
+	 * @param userId
+	 * @return
+	 */
+	private String _getFirstNotBlank(String emailAddress, String screenName,
+	long userId) {
+
+		return Validator.isNotNull(emailAddress)
+				? emailAddress
+				: Validator.isNotNull(screenName)
+					? screenName
+					: String.valueOf(userId);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(LDAPAuth.class);
