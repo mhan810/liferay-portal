@@ -1303,6 +1303,8 @@ public interface PropsKeys {
 
 	public static final String LDAP_USER_MAPPINGS = "ldap.user.mappings";
 
+	public static final String LDAP_USER_PREFERRED_SERVER_ENABLED = "ldap.user.preferred.server.enabled";
+
 	public static final String LDAP_USERS_DN = "ldap.users.dn";
 
 	public static final String LIBRARY_DOWNLOAD_URL = "library.download.url.";

@@ -919,6 +919,8 @@ public class PropsValues {
 
 	public static final String LDAP_USER_IMPL = PropsUtil.get(PropsKeys.LDAP_USER_IMPL);
 
+	public static final boolean LDAP_USER_PREFERRED_SERVER_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.LDAP_USER_PREFERRED_SERVER_ENABLED));
+
 	public static final String LIFERAY_HOME = PropsUtil.get(PropsKeys.LIFERAY_HOME);
 
 	public static final String LIFERAY_LIB_GLOBAL_DIR = PropsUtil.get(PropsKeys.LIFERAY_LIB_GLOBAL_DIR);
