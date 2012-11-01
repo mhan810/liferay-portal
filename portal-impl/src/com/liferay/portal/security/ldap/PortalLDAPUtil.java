@@ -279,18 +279,19 @@ public class PortalLDAPUtil {
 			long companyId, String screenName, String emailAddress)
 		throws Exception {
 
-		if(PropsValues.LDAP_USER_PREFERRED_SERVER_ENABLED) {
+		if (PropsValues.LDAP_USER_PREFERRED_SERVER_ENABLED) {
 
 			// getLdapServerId() method is called from
 			// PortalLDAPImporterImpl.importLDAPUserByScreenName(), which is
 			// called from NtlmAutoLogin.login() after successful auth
+
 			Long preferredLdapServerId =
 					LDAPSettingsUtil.getPreferredLdapServerId(companyId,
 																screenName);
 
-			if(null != preferredLdapServerId) {
+			if (null != preferredLdapServerId) {
 
-				if(_log.isDebugEnabled()) {
+				if (_log.isDebugEnabled()) {
 					_log.debug(String.format("Found preferred LDAP " +
 											"ldapServerId=%s for user '%s'",
 											preferredLdapServerId,
@@ -301,7 +302,7 @@ public class PortalLDAPUtil {
 				if (hasUser(preferredLdapServerId, companyId, screenName,
 								emailAddress)) {
 
-					if(_log.isDebugEnabled()) {
+					if (_log.isDebugEnabled()) {
 						_log.debug(String.format("User '%s' found in " +
 												"preferred ldapServerId=%s ",
 												_getFirstNotBlank(emailAddress,
@@ -313,7 +314,7 @@ public class PortalLDAPUtil {
 				}
 			}
 
-			if(_log.isDebugEnabled()) {
+			if (_log.isDebugEnabled()) {
 				_log.debug(String.format("Preferred LDAP for user '%s' not " +
 										"found or is missing the user, " +
 										"going to iterate over all LDAPs",
@@ -943,7 +944,7 @@ public class PortalLDAPUtil {
 	 * @return
 	 */
 	private static String _getFirstNotBlank(String emailAddress,
-	                                        String screenName) {
+	String screenName) {
 
 		return Validator.isNotNull(emailAddress)
 				? emailAddress

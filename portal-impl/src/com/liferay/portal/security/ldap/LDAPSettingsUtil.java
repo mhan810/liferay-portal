@@ -35,6 +35,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
 
 import java.io.Serializable;
+
 import java.util.Properties;
 
 /**
@@ -239,7 +240,7 @@ public class LDAPSettingsUtil {
 	 * @throws SystemException
 	 */
 	public static Long getPreferredLdapServerId(long companyId,
-	                                            String screenName)
+	String screenName)
 				throws PortalException, SystemException {
 
 		Long preferredLdapServerId = null;
@@ -253,7 +254,7 @@ public class LDAPSettingsUtil {
 
 		} catch (NoSuchUserException e) {
 
-			if(_log.isDebugEnabled()) {
+			if (_log.isDebugEnabled()) {
 				_log.debug(String.format("Cannot fetch preferred LDAP server " +
 										"for companyId %s and screenName '%s'",
 										companyId, screenName),
@@ -282,19 +283,18 @@ public class LDAPSettingsUtil {
 	 */
 	public static Long getPreferredLdapServerId(User user) {
 
-		if(Validator.isNull(user)) {
+		if (Validator.isNull(user)) {
 			throw new IllegalArgumentException("User cannot be null.");
 		}
-
 
 		Long DEFAULT_RESULT = null;
 
 		ExpandoBridge userExpandoBridge = user.getExpandoBridge();
 
-		if(!userExpandoBridge.hasAttribute(
+		if (!userExpandoBridge.hasAttribute(
 				USER_PREFERRED_LDAP_SERVER_ID_EXPANDO_KEY)) {
 
-			if(_log.isDebugEnabled()) {
+			if (_log.isDebugEnabled()) {
 				_log.debug(String.format("User entity (via user %s) has no " +
 						"preferred ldapServerId attribute defined in Expando",
 						user.getScreenName()));
@@ -306,9 +306,9 @@ public class LDAPSettingsUtil {
 		int attributeType = userExpandoBridge.getAttributeType(
 				USER_PREFERRED_LDAP_SERVER_ID_EXPANDO_KEY);
 
-		if(attributeType != USER_PREFERRED_LDAP_SERVER_ID_EXPANDO_VALUE_TYPE) {
+		if (attributeType != USER_PREFERRED_LDAP_SERVER_ID_EXPANDO_VALUE_TYPE) {
 
-			if(_log.isDebugEnabled()) {
+			if (_log.isDebugEnabled()) {
 				_log.debug(String.format("User entity (via user %s) has bad " +
 						"type of attribute %s (type= %s) defined in Expando, " +
 						"has to be %s = ExpandoColumnConstants.LONG",
@@ -326,12 +326,12 @@ public class LDAPSettingsUtil {
 						USER_PREFERRED_LDAP_SERVER_ID_EXPANDO_KEY, false),
 				-1L);
 
-		if(preferredLdapServerId < 0) {
+		if (preferredLdapServerId < 0) {
 
-			if(_log.isDebugEnabled()) {
+			if (_log.isDebugEnabled()) {
 				_log.debug(String.format("User %s has negative preferred " +
-						"ldapServerId: '%s'",
-						user.getScreenName(), preferredLdapServerId));
+						"ldapServerId: '%s'", user.getScreenName(),
+						preferredLdapServerId));
 			}
 
 			return DEFAULT_RESULT;
@@ -351,8 +351,7 @@ public class LDAPSettingsUtil {
 	 * @throws SystemException
 	 */
 	public static void storePreferredLdapServerId(long companyId,
-	                                              String screenName,
-	                                              long ldapServerId)
+	String screenName, long ldapServerId)
 			throws PortalException, SystemException {
 
 		User user = UserLocalServiceUtil.getUserByScreenName(companyId,
@@ -371,21 +370,19 @@ public class LDAPSettingsUtil {
 	public static void storePreferredLdapServerId(User user, long ldapServerId)
 			throws PortalException {
 
-		if(Validator.isNull(user)) {
+		if (Validator.isNull(user)) {
 			throw new IllegalArgumentException("User cannot be null.");
 		}
 
-
 		ExpandoBridge userExpandoBridge = user.getExpandoBridge();
 
-		if(!userExpandoBridge.hasAttribute(
+		if (!userExpandoBridge.hasAttribute(
 				USER_PREFERRED_LDAP_SERVER_ID_EXPANDO_KEY)) {
 
 			userExpandoBridge.addAttribute(
 					USER_PREFERRED_LDAP_SERVER_ID_EXPANDO_KEY,
 					USER_PREFERRED_LDAP_SERVER_ID_EXPANDO_VALUE_TYPE,
-					USER_PREFERRED_LDAP_SERVER_ID_EXPANDO_VALUE_DEFAULT,
-					false);
+					USER_PREFERRED_LDAP_SERVER_ID_EXPANDO_VALUE_DEFAULT, false);
 
 		}
 

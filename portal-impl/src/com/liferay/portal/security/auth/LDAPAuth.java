@@ -34,8 +34,6 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.admin.util.OmniadminUtil;
-import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.util.ReflectionUtils;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -363,12 +361,12 @@ public class LDAPAuth implements Authenticator {
 
 		int preferredLdapResult = DNE;
 
-		if(PropsValues.LDAP_USER_PREFERRED_SERVER_ENABLED) {
+		if (PropsValues.LDAP_USER_PREFERRED_SERVER_ENABLED) {
 
 			preferredLdapResult = authenticateAgainstPreferredLdapServer(
 					companyId, emailAddress, screenName, userId, password);
 
-			if(preferredLdapResult == SUCCESS) {
+			if (preferredLdapResult == SUCCESS) {
 
 				if (_log.isDebugEnabled()) {
 					_log.debug("Successfully authenticated against " +
@@ -498,9 +496,7 @@ public class LDAPAuth implements Authenticator {
 	 */
 	protected int authenticateAgainstPreferredLdapServer(long companyId,
 															String emailAddress,
-		                                                    String screenName,
-		                                                    long userId,
-		                                                    String password)
+		String screenName, long userId, String password)
 				throws Exception {
 
 		int result = DNE;
@@ -521,7 +517,7 @@ public class LDAPAuth implements Authenticator {
 				user = UserLocalServiceUtil.getUserById(companyId, userId);
 			} else {
 
-				if(_log.isDebugEnabled()) {
+				if (_log.isDebugEnabled()) {
 					_log.debug(String.format("No user credentials found, " +
 							"cannot fetch preferred LDAP server"));
 				}
@@ -531,7 +527,7 @@ public class LDAPAuth implements Authenticator {
 
 		} catch (NoSuchUserException e) {
 
-			if(_log.isDebugEnabled()) {
+			if (_log.isDebugEnabled()) {
 				_log.debug(String.format("User not found, cannot fetch " +
 										"preferred LDAP server"),
 							e);
@@ -540,10 +536,10 @@ public class LDAPAuth implements Authenticator {
 			return result;
 		}
 
-		Long preferredLdapServerId =
-							LDAPSettingsUtil.getPreferredLdapServerId(user);
+		Long preferredLdapServerId = LDAPSettingsUtil.getPreferredLdapServerId(
+							user);
 
-		if(null != preferredLdapServerId) {
+		if (null != preferredLdapServerId) {
 
 			String postfix = LDAPSettingsUtil.getPropertyPostfix(
 													preferredLdapServerId);
@@ -554,7 +550,7 @@ public class LDAPAuth implements Authenticator {
 
 			if (Validator.isNotNull(providerUrl)) {
 
-				if(_log.isDebugEnabled()) {
+				if (_log.isDebugEnabled()) {
 					_log.debug(String.format("Trying preferred LDAP " +
 											"ldapServerId=%s for user '%s'...",
 											preferredLdapServerId,
@@ -567,7 +563,7 @@ public class LDAPAuth implements Authenticator {
 						companyId, preferredLdapServerId, emailAddress,
 						screenName, userId, password);
 
-				if(_log.isDebugEnabled()) {
+				if (_log.isDebugEnabled()) {
 					_log.debug(String.format("Preferred LDAP ldapServerId=%s " +
 											"for user '%s' returned %s",
 											preferredLdapServerId,
@@ -579,7 +575,7 @@ public class LDAPAuth implements Authenticator {
 
 			} else {
 
-				if(_log.isDebugEnabled()) {
+				if (_log.isDebugEnabled()) {
 					_log.debug(String.format("User '%s' has invalid " +
 							"preferred ldapServerId: '%s'. LDAP with given " +
 							"id does not exist in portal.",
@@ -590,7 +586,7 @@ public class LDAPAuth implements Authenticator {
 
 		} else {
 
-			if(_log.isDebugEnabled()) {
+			if (_log.isDebugEnabled()) {
 				_log.debug(String.format("Preferred LDAP ldapServerId is not " +
 										"valid for user '%s'",
 										_getFirstNotBlank(emailAddress,
@@ -612,7 +608,7 @@ public class LDAPAuth implements Authenticator {
 	 * @return
 	 */
 	private String _getFirstNotBlank(String emailAddress, String screenName,
-	                                 long userId) {
+	long userId) {
 
 		return Validator.isNotNull(emailAddress)
 				? emailAddress

@@ -231,12 +231,11 @@ public class PortalLDAPImporterImpl implements PortalLDAPImporter {
 			companyId, attributes, userMappings, userExpandoMappings,
 			contactMappings, contactExpandoMappings, password);
 
-		if(PropsValues.LDAP_USER_PREFERRED_SERVER_ENABLED) {
-			if(_log.isDebugEnabled()) {
+		if (PropsValues.LDAP_USER_PREFERRED_SERVER_ENABLED) {
+			if (_log.isDebugEnabled()) {
 				_log.debug(String.format("Importing user '%s' from LDAP with " +
 						"ldapServerId=%s, storing this LDAP as his preferred " +
-						"as well",
-						user.getScreenName(), ldapServerId));
+						"as well", user.getScreenName(), ldapServerId));
 			}
 
 			LDAPSettingsUtil.storePreferredLdapServerId(user, ldapServerId);
