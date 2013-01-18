@@ -641,7 +641,15 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 									showNonApprovedDocuments = true;
 								}
 
-								SearchContainer searchContainer = new SearchContainer();
+								PortletURL viewFileEntryURL = renderResponse.createRenderURL();
+
+								viewFileEntryURL.setParameter("struts_action", "/document_library/view_file_entry");
+								viewFileEntryURL.setParameter("redirect", currentURL);
+								viewFileEntryURL.setParameter("fileEntryId", String.valueOf(fileEntry.getFileEntryId()));
+								viewFileEntryURL.setParameter("fileVersionId", String.valueOf(fileVersionId));
+
+								SearchContainer versionsSearchContainer = new SearchContainer(
+										renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, viewFileEntryURL, null, null);
 
 								List<String> headerNames = new ArrayList<String>();
 
@@ -655,22 +663,14 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 
 								headerNames.add(StringPool.BLANK);
 
-								searchContainer.setHeaderNames(headerNames);
-
-								PortletURL viewFileEntryURL = renderResponse.createRenderURL();
-
-								viewFileEntryURL.setParameter("struts_action", "/document_library/view_file_entry");
-								viewFileEntryURL.setParameter("redirect", currentURL);
-								viewFileEntryURL.setParameter("fileEntryId", String.valueOf(fileEntry.getFileEntryId()));
-
-								searchContainer.setIteratorURL(viewFileEntryURL);
+								versionsSearchContainer.setHeaderNames(headerNames);
 
 								if (comparableFileEntry) {
 									RowChecker rowChecker = new RowChecker(renderResponse);
 
 									rowChecker.setAllRowIds(null);
 
-									searchContainer.setRowChecker(rowChecker);
+									versionsSearchContainer.setRowChecker(rowChecker);
 								}
 
 								int status = WorkflowConstants.STATUS_APPROVED;
@@ -679,8 +679,13 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 									status = WorkflowConstants.STATUS_ANY;
 								}
 
-								List results = fileEntry.getFileVersions(status);
-								List resultRows = searchContainer.getResultRows();
+								List allResults = fileEntry.getFileVersions(status);
+								List results = ListUtil.subList(allResults, versionsSearchContainer.getStart(), versionsSearchContainer.getEnd());
+
+								versionsSearchContainer.setResults(results);
+								versionsSearchContainer.setTotal(allResults.size());
+
+								List resultRows = versionsSearchContainer.getResultRows();
 
 								for (int i = 0; i < results.size(); i++) {
 									FileVersion curFileVersion = (FileVersion)results.get(i);
@@ -731,7 +736,10 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 								}
 								%>
 
-								<liferay-ui:search-iterator paginate="<%= false %>" searchContainer="<%= searchContainer %>" />
+								<liferay-ui:search-iterator paginate="<%= false %>" searchContainer="<%= versionsSearchContainer %>" />
+
+								<liferay-ui:search-paginator searchContainer="<%= versionsSearchContainer %>" type="more" />
+
 							</liferay-ui:panel>
 						</c:if>
 					</liferay-ui:panel-container>
