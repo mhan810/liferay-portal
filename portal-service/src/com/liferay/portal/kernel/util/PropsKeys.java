@@ -375,7 +375,15 @@ public interface PropsKeys {
 
 	public static final String CAS_AUTH_ENABLED = "cas.auth.enabled";
 
+	public static final String CAS_AUTH_STRICT = "cas.auth.strict";
+
+	public static final String CAS_AUTO_REDIRECT = "cas.auto.redirect";
+
+	public static final String CAS_AUTO_REDIRECT_SERVER_ID = "cas.auto.redirect.server.id";
+
 	public static final String CAS_IMPORT_FROM_LDAP = "cas.import.from.ldap";
+
+	public static final String CAS_LAST_UPDATE = "cas.last.update";
 
 	public static final String CAS_LOGIN_URL = "cas.login.url";
 
@@ -385,7 +393,7 @@ public interface PropsKeys {
 
 	public static final String CAS_NO_SUCH_USER_REDIRECT_URL = "cas.no.such.user.redirect.url";
 
-	public static final String CAS_SERVER_NAME = "cas.server.name";
+	public static final String CAS_SERVER_IDS = "cas.server.ids";
 
 	public static final String CAS_SERVER_URL = "cas.server.url";
 

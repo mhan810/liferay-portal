@@ -290,6 +290,12 @@ public class PropsValues {
 
 	public static final boolean CAS_AUTH_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.CAS_AUTH_ENABLED));
 
+	public static final boolean CAS_AUTH_STRICT = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.CAS_AUTH_STRICT));
+
+	public static final boolean CAS_AUTO_REDIRECT = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.CAS_AUTO_REDIRECT));
+
+	public static final String CAS_AUTO_REDIRECT_SERVER_ID = PropsUtil.get(PropsKeys.CAS_AUTO_REDIRECT_SERVER_ID);
+
 	public static final boolean CAS_IMPORT_FROM_LDAP = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.CAS_IMPORT_FROM_LDAP));
 
 	public static final String CAS_LOGIN_URL = PropsUtil.get(PropsKeys.CAS_LOGIN_URL);
@@ -300,7 +306,7 @@ public class PropsValues {
 
 	public static final String CAS_NO_SUCH_USER_REDIRECT_URL = PropsUtil.get(PropsKeys.CAS_NO_SUCH_USER_REDIRECT_URL);
 
-	public static final String CAS_SERVER_NAME = PropsUtil.get(PropsKeys.CAS_SERVER_NAME);
+	public static final String[] CAS_SERVER_IDS = PropsUtil.getArray(PropsKeys.CAS_SERVER_IDS);
 
 	public static final String CAS_SERVER_URL = PropsUtil.get(PropsKeys.CAS_SERVER_URL);
 

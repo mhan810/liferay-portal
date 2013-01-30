@@ -1156,6 +1156,10 @@
 
 	<definition name="portlet.portal_settings" extends="portlet" />
 
+	<definition name="portlet.portal_settings.edit_cas_server" extends="portlet.portal_settings">
+		<put name="portlet_content" value="/portlet/portal_settings/edit_cas_server.jsp" />
+	</definition>
+
 	<definition name="portlet.portal_settings.edit_company" extends="portlet.portal_settings">
 		<put name="portlet_content" value="/portlet/portal_settings/edit_company.jsp" />
 	</definition>

@@ -17,50 +17,113 @@
 <%@ include file="/html/portlet/portal_settings/init.jsp" %>
 
 <%
+String authenticationURL = currentURL + "#_LFR_FN_authentication";
+
 boolean casAuthEnabled = PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.CAS_AUTH_ENABLED, PropsValues.CAS_AUTH_ENABLED);
+boolean casAuthStrict = PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.CAS_AUTH_STRICT, PropsValues.CAS_AUTH_STRICT);
+boolean casAutoRedirect = PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.CAS_AUTO_REDIRECT, PropsValues.CAS_AUTO_REDIRECT);
+String casAutoRedirectServerId = PrefsPropsUtil.getString(company.getCompanyId(), PropsKeys.CAS_AUTO_REDIRECT_SERVER_ID, PropsValues.CAS_AUTO_REDIRECT_SERVER_ID);
 boolean casImportFromLdap = PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.CAS_IMPORT_FROM_LDAP, PropsValues.CAS_IMPORT_FROM_LDAP);
-String casLoginURL = PrefsPropsUtil.getString(company.getCompanyId(), PropsKeys.CAS_LOGIN_URL, PropsValues.CAS_LOGIN_URL);
-String casLogoutURL = PrefsPropsUtil.getString(company.getCompanyId(), PropsKeys.CAS_LOGOUT_URL, PropsValues.CAS_LOGOUT_URL);
-String casServerName = PrefsPropsUtil.getString(company.getCompanyId(), PropsKeys.CAS_SERVER_NAME, PropsValues.CAS_SERVER_NAME);
-String casServerURL = PrefsPropsUtil.getString(company.getCompanyId(), PropsKeys.CAS_SERVER_URL, PropsValues.CAS_SERVER_URL);
-String casServiceURL = PrefsPropsUtil.getString(company.getCompanyId(), PropsKeys.CAS_SERVICE_URL, PropsValues.CAS_SERVICE_URL);
 String casNoSuchUserRedirectURL = PrefsPropsUtil.getString(company.getCompanyId(), PropsKeys.CAS_NO_SUCH_USER_REDIRECT_URL, PropsValues.CAS_NO_SUCH_USER_REDIRECT_URL);
+String[] casServerIds = CASManagerUtil.getCASServerIds(company.getCompanyId());
 %>
 
 <aui:fieldset>
-	<liferay-ui:error key="casServerNameInvalid" message="the-cas-server-name-is-invalid" />
-	<liferay-ui:error key="casServerURLInvalid" message="the-cas-server-url-is-invalid" />
-	<liferay-ui:error key="casServiceURLInvalid" message="the-cas-service-url-is-invalid" />
-	<liferay-ui:error key="casLoginURLInvalid" message="the-cas-login-url-is-invalid" />
-	<liferay-ui:error key="casLogoutURLInvalid" message="the-cas-logout-url-is-invalid" />
 	<liferay-ui:error key="casNoSuchUserURLInvalid" message="the-cas-no-such-user-url-is-invalid" />
-	<liferay-ui:error key="casServerURLAndServiceURLConflict" message="the-cas-server-url-and-cas-service-url-cannot-both-be-set" />
-	<liferay-ui:error key="casServerURLAndServiceURLNotSet" message="either-the-cas-server-url-or-the-cas-service-url-must-be-set" />
 
 	<aui:input label="enabled" name='<%= "settings--" + PropsKeys.CAS_AUTH_ENABLED + "--" %>' type="checkbox" value="<%= casAuthEnabled %>" />
 
 	<aui:input helpMessage="import-cas-users-from-ldap-help" label="import-cas-users-from-ldap" name='<%= "settings--" + PropsKeys.CAS_IMPORT_FROM_LDAP + "--" %>' type="checkbox" value="<%= casImportFromLdap %>" />
 
-	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-login-url-help" label="login-url" name='<%= "settings--" + PropsKeys.CAS_LOGIN_URL + "--" %>' type="text" value="<%= casLoginURL %>" />
+	<aui:input helpMessage="cas-auth-strict-help" label="cas-auth-strict" name='<%= "settings--" + PropsKeys.CAS_AUTH_STRICT + "--" %>' type="checkbox" value="<%= casAuthStrict %>" />
 
-	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-logout-url-help" label="logout-url" name='<%= "settings--" + PropsKeys.CAS_LOGOUT_URL + "--" %>' type="text" value="<%= casLogoutURL %>" />
+	<aui:input helpMessage="cas-auto-redirect-help" label="cas-auto-redirect" name='<%= "settings--" + PropsKeys.CAS_AUTO_REDIRECT + "--" %>' type="checkbox" value="<%= casAutoRedirect %>" />
 
-	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-server-name-help" label="server-name" name='<%= "settings--" + PropsKeys.CAS_SERVER_NAME + "--" %>' type="text" value="<%= casServerName %>" />
-
-	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-server-url-help" label="server-url" name='<%= "settings--" + PropsKeys.CAS_SERVER_URL + "--" %>' type="text" value="<%= casServerURL %>" />
-
-	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-service-url-help" label="service-url" name='<%= "settings--" + PropsKeys.CAS_SERVICE_URL + "--" %>' type="text" value="<%= casServiceURL %>" />
+	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-auto-redirect-server-id-help" label="cas-auto-redirect-server-id" name='<%= "settings--" + PropsKeys.CAS_AUTO_REDIRECT_SERVER_ID + "--" %>' type="text" value="<%= casAutoRedirectServerId %>" />
 
 	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-no-such-user-redirect-url-help" label="no-such-user-redirect-url" name='<%= "settings--" + PropsKeys.CAS_NO_SUCH_USER_REDIRECT_URL + "--" %>' type="text" value="<%= casNoSuchUserRedirectURL %>" />
 
 	<aui:button-row>
 
 		<%
-		String taglibOnClick = renderResponse.getNamespace() + "testCasSettings();";
+		PortletURL addServerURL = renderResponse.createRenderURL();
+
+		addServerURL.setParameter("struts_action", "portal_settings/edit_cas_server");
+		addServerURL.setParameter("redirect", authenticationURL);
 		%>
 
-		<aui:button onClick="<%= taglibOnClick %>" value="test-cas-configuration" />
+		<aui:button href="<%= addServerURL.toString() %>" name="addButton" value="add" />
 	</aui:button-row>
+
+	<aui:input name="settings--cas.server.ids--" type="hidden" value="<%= StringUtil.merge(casServerIds) %>" />
+
+	<c:if test="<%= casServerIds.length > 0 %>">
+		<br /><br />
+
+		<div class="results-grid cas-servers">
+			<table class="taglib-search-iterator">
+				<tr class="results-header">
+					<th>
+						<liferay-ui:message key="cas-server-id" />
+					</th>
+					<th>
+						<liferay-ui:message key="cas-server-url" />
+					</th>
+					<th></th>
+				</tr>
+
+				<%
+				for (int i = 0; i < casServerIds.length; i++) {
+					String casServerId = casServerIds[i];
+
+					CASServer casServer = CASManagerUtil.getCASServer(company.getCompanyId(), casServerId);
+
+					String className = "portlet-section-body results-row";
+
+					if (MathUtil.isEven(i)) {
+						className = "portlet-section-alternate results-row alt";
+					}
+				%>
+
+					<tr class="<%= className %>">
+						<td>
+							<%= casServerId %>
+						</td>
+						<td>
+							<%= casServer.getServerUrl() %>
+						</td>
+						<td align="right">
+							<div class="control">
+								<portlet:renderURL var="editURL">
+									<portlet:param name="struts_action" value="/portal_settings/edit_cas_server" />
+									<portlet:param name="redirect" value="<%= authenticationURL %>" />
+									<portlet:param name="casServerId" value="<%= String.valueOf(casServerId) %>" />
+								</portlet:renderURL>
+
+								<liferay-ui:icon
+									image="edit"
+									url="<%= editURL %>"
+								/>
+
+								<portlet:actionURL var="deleteURL">
+									<portlet:param name="struts_action" value="/portal_settings/edit_cas_server" />
+									<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
+									<portlet:param name="redirect" value="<%= authenticationURL %>" />
+									<portlet:param name="casServerId" value="<%= String.valueOf(casServerId) %>" />
+								</portlet:actionURL>
+
+								<liferay-ui:icon-delete url="<%= deleteURL %>" />
+							</div>
+						</td>
+					</tr>
+
+				<%
+				}
+				%>
+
+			</table>
+		</div>
+	</c:if>
 </aui:fieldset>
 
 <aui:script>

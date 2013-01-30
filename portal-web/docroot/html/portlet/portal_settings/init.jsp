@@ -20,6 +20,8 @@
 page import="com.liferay.portal.CompanyMxException" %><%@
 page import="com.liferay.portal.CompanyVirtualHostException" %><%@
 page import="com.liferay.portal.LocaleException" %><%@
+page import="com.liferay.portal.kernel.cas.CASManagerUtil" %><%@
+page import="com.liferay.portal.kernel.cas.CASServer" %><%@
 page import="com.liferay.portal.kernel.facebook.FacebookConnectUtil" %><%@
 page import="com.liferay.portal.kernel.ldap.DuplicateLDAPServerNameException" %><%@
 page import="com.liferay.portal.kernel.ldap.LDAPFilterException" %><%@

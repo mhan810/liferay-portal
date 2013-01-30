@@ -211,56 +211,9 @@ public class EditCompanyAction extends PortletAction {
 			return;
 		}
 
-		String casLoginURL = ParamUtil.getString(
-			actionRequest, "settings--" + PropsKeys.CAS_LOGIN_URL + "--");
-		String casLogoutURL = ParamUtil.getString(
-			actionRequest, "settings--" + PropsKeys.CAS_LOGOUT_URL + "--");
-		String casServerName = ParamUtil.getString(
-			actionRequest, "settings--" + PropsKeys.CAS_SERVER_NAME + "--");
-		String casServerURL = ParamUtil.getString(
-			actionRequest, "settings--" + PropsKeys.CAS_SERVER_URL + "--");
-		String casServiceURL = ParamUtil.getString(
-			actionRequest, "settings--" + PropsKeys.CAS_SERVICE_URL + "--");
 		String casNoSuchUserRedirectURL = ParamUtil.getString(
 			actionRequest, "settings--" +
 			PropsKeys.CAS_NO_SUCH_USER_REDIRECT_URL + "--");
-
-		if (!Validator.isUrl(casLoginURL)) {
-			SessionErrors.add(actionRequest, "casLoginURLInvalid");
-		}
-
-		if (!Validator.isUrl(casLogoutURL)) {
-			SessionErrors.add(actionRequest, "casLogoutURLInvalid");
-		}
-
-		if (Validator.isNull(casServerName)) {
-			SessionErrors.add(actionRequest, "casServerNameInvalid");
-		}
-
-		if (Validator.isNotNull(casServerURL) &&
-			Validator.isNotNull(casServiceURL)) {
-
-			SessionErrors.add(
-				actionRequest, "casServerURLAndServiceURLConflict");
-		}
-		else if (Validator.isNull(casServerURL) &&
-				 Validator.isNull(casServiceURL)) {
-
-			SessionErrors.add(actionRequest, "casServerURLAndServiceURLNotSet");
-		}
-		else {
-			if (Validator.isNotNull(casServerURL) &&
-				!Validator.isUrl(casServerURL)) {
-
-				SessionErrors.add(actionRequest, "casServerURLInvalid");
-			}
-
-			if (Validator.isNotNull(casServiceURL) &&
-				!Validator.isUrl(casServiceURL)) {
-
-				SessionErrors.add(actionRequest, "casServiceURLInvalid");
-			}
-		}
 
 		if (Validator.isNotNull(casNoSuchUserRedirectURL) &&
 			!Validator.isUrl(casNoSuchUserRedirectURL)) {

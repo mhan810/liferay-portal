@@ -14,21 +14,25 @@
 
 package com.liferay.portal.servlet.filters.sso.cas;
 
+import com.liferay.portal.kernel.cas.CASManagerUtil;
+import com.liferay.portal.kernel.cas.CASServer;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.cas.CASServerImpl;
 import com.liferay.portal.servlet.filters.BasePortalFilter;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 
-import java.util.HashMap;
+import java.io.IOException;
+
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -36,9 +40,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.jasig.cas.client.authentication.AttributePrincipal;
-import org.jasig.cas.client.util.CommonUtils;
 import org.jasig.cas.client.validation.Assertion;
-import org.jasig.cas.client.validation.Cas20ProxyTicketValidator;
+import org.jasig.cas.client.validation.TicketValidationException;
 import org.jasig.cas.client.validation.TicketValidator;
 
 /**
@@ -47,12 +50,9 @@ import org.jasig.cas.client.validation.TicketValidator;
  * @author Raymond Augé
  * @author Tina Tian
  * @author Zsolt Balogh
+ * @author Edward Han
  */
 public class CASFilter extends BasePortalFilter {
-
-	public static void reload(long companyId) {
-		_ticketValidators.remove(companyId);
-	}
 
 	@Override
 	public boolean isFilterEnabled(
@@ -80,37 +80,26 @@ public class CASFilter extends BasePortalFilter {
 		return _log;
 	}
 
-	protected TicketValidator getTicketValidator(long companyId)
-		throws Exception {
+	protected boolean isLogout(HttpServletRequest request) throws IOException {
+		boolean logout = false;
 
-		TicketValidator ticketValidator = _ticketValidators.get(companyId);
+		HttpSession session = request.getSession();
 
-		if (ticketValidator != null) {
-			return ticketValidator;
+		Object forceLogout = session.getAttribute(WebKeys.CAS_FORCE_LOGOUT);
+
+		if (forceLogout != null) {
+			session.removeAttribute(WebKeys.CAS_FORCE_LOGOUT);
+
+			logout = true;
 		}
 
-		String serverName = PrefsPropsUtil.getString(
-			companyId, PropsKeys.CAS_SERVER_NAME, PropsValues.CAS_SERVER_NAME);
-		String serverUrl = PrefsPropsUtil.getString(
-			companyId, PropsKeys.CAS_SERVER_URL, PropsValues.CAS_SERVER_URL);
-		String loginUrl = PrefsPropsUtil.getString(
-			companyId, PropsKeys.CAS_LOGIN_URL, PropsValues.CAS_LOGIN_URL);
+		String pathInfo = request.getPathInfo();
 
-		Cas20ProxyTicketValidator cas20ProxyTicketValidator =
-			new Cas20ProxyTicketValidator(serverUrl);
+		if ((pathInfo != null) && pathInfo.contains("/portal/logout")) {
+			logout = true;
+		}
 
-		Map<String, String> parameters = new HashMap<String, String>();
-
-		parameters.put("serverName", serverName);
-		parameters.put("casServerUrlPrefix", serverUrl);
-		parameters.put("casServerLoginUrl", loginUrl);
-		parameters.put("redirectAfterValidation", "false");
-
-		cas20ProxyTicketValidator.setCustomParameters(parameters);
-
-		_ticketValidators.put(companyId, cas20ProxyTicketValidator);
-
-		return cas20ProxyTicketValidator;
+		return logout;
 	}
 
 	@Override
@@ -123,72 +112,226 @@ public class CASFilter extends BasePortalFilter {
 
 		long companyId = PortalUtil.getCompanyId(request);
 
-		String pathInfo = request.getPathInfo();
+		boolean casAutoRedirect = PrefsPropsUtil.getBoolean(
+			companyId, PropsKeys.CAS_AUTO_REDIRECT);
 
-		Object forceLogout = session.getAttribute(WebKeys.CAS_FORCE_LOGOUT);
-
-		if (forceLogout != null) {
-			session.removeAttribute(WebKeys.CAS_FORCE_LOGOUT);
-
-			String logoutUrl = PrefsPropsUtil.getString(
-				companyId, PropsKeys.CAS_LOGOUT_URL,
-				PropsValues.CAS_LOGOUT_URL);
-
-			response.sendRedirect(logoutUrl);
+		if (processLogout(request, response)) {
+			if (!response.isCommitted()) {
+				processFilter(CASFilter.class, request, response, filterChain);
+			}
 
 			return;
 		}
 
-		if (pathInfo.contains("/portal/logout")) {
-			session.invalidate();
+		String login = (String)session.getAttribute(WebKeys.CAS_LOGIN);
 
-			String logoutUrl = PrefsPropsUtil.getString(
-				companyId, PropsKeys.CAS_LOGOUT_URL,
-				PropsValues.CAS_LOGOUT_URL);
-
-			response.sendRedirect(logoutUrl);
+		if (Validator.isNotNull(login)) {
+			processFilter(CASFilter.class, request, response, filterChain);
 
 			return;
+		}
+
+		String ticket = ParamUtil.getString(request, "ticket");
+
+		if (Validator.isNotNull(ticket)) {
+			processLogin(request, response, ticket, companyId);
+		}
+		else if (casAutoRedirect) {
+			if (processRedirect(request, response, companyId)) {
+				return;
+			}
+		}
+
+		processFilter(CASFilter.class, request, response, filterChain);
+	}
+
+	protected void processLogin(
+			HttpServletRequest request, HttpServletResponse response,
+			String ticket, long companyId)
+		throws Exception {
+
+		String casServerId = ParamUtil.getString(request, "casServerId");
+
+		boolean strictLogin = PrefsPropsUtil.getBoolean(
+			companyId, PropsKeys.CAS_AUTH_STRICT);
+
+		boolean isDefaultConfig =
+			request.getParameterMap().containsKey("casServerId") &&
+				Validator.isNull(casServerId);
+
+		CASServer casServer;
+
+		if (isDefaultConfig) {
+			casServer = CASManagerUtil.getDefaultCASServer(companyId);
 		}
 		else {
-			String login = (String)session.getAttribute(WebKeys.CAS_LOGIN);
+			casServer = CASManagerUtil.getCASServer(companyId, casServerId);
+		}
 
-			if (Validator.isNotNull(login)) {
-				processFilter(CASFilter.class, request, response, filterChain);
+		boolean valid = validateTicket(
+			request, response, companyId, casServer, ticket);
 
-				return;
+		if (!strictLogin && !valid) {
+			Map<String, CASServer> casServers = CASManagerUtil.getCASServers(
+				companyId);
+
+			for (CASServer otherCASServer : casServers.values()) {
+				if (!otherCASServer.getServerId().equals(casServerId)) {
+					valid = validateTicket(
+						request, response, companyId, otherCASServer, ticket);
+
+					if (valid) {
+						break;
+					}
+				}
 			}
 
-			String serverName = PrefsPropsUtil.getString(
-				companyId, PropsKeys.CAS_SERVER_NAME,
-				PropsValues.CAS_SERVER_NAME);
+			if (!valid && !isDefaultConfig) {
+				casServer = CASManagerUtil.getDefaultCASServer(companyId);
 
-			String serviceUrl = PrefsPropsUtil.getString(
-				companyId, PropsKeys.CAS_SERVICE_URL,
-				PropsValues.CAS_SERVICE_URL);
+				valid = validateTicket(
+					request, response, companyId, casServer, ticket);
+			}
+		}
 
-			if (Validator.isNull(serviceUrl)) {
-				serviceUrl = CommonUtils.constructServiceUrl(
-					request, response, serviceUrl, serverName, "ticket", false);
+		if (!valid && _log.isInfoEnabled()) {
+			_log.info(
+				"Failed to authenticate ticket [" + ticket +
+					"] for companyId " + companyId);
+		}
+	}
+
+	protected boolean processLogout(
+			HttpServletRequest request, HttpServletResponse response)
+		throws IOException, SystemException {
+
+		if (!isLogout(request)) {
+			return false;
+		}
+
+		HttpSession session = request.getSession();
+
+		try {
+			long companyId = PortalUtil.getCompanyId(request);
+
+			Object casServerId = session.getAttribute(WebKeys.CAS_SERVER_ID);
+
+			if (casServerId != null) {
+				CASServer casServer;
+
+				if (!casServerId.equals(StringPool.BLANK)) {
+					casServer = CASManagerUtil.getCASServer(
+						companyId, (String)casServerId);
+				}
+				else {
+					casServer = CASManagerUtil.getDefaultCASServer(companyId);
+				}
+
+				if (casServer != null) {
+					String logoutUrl = casServer.getLogoutUrl();
+
+					response.sendRedirect(logoutUrl);
+
+					return true;
+				}
+				else {
+					throw new SystemException(
+						"Unable to locate cas server with serverId: " +
+							casServerId);
+				}
+			}
+			else {
+				if (_log.isDebugEnabled()) {
+					_log.debug("User did not sign in using CAS");
+				}
+			}
+		}
+		finally {
+			session.invalidate();
+		}
+
+		return true;
+	}
+
+	protected boolean processRedirect(
+			HttpServletRequest request, HttpServletResponse response,
+			long companyId)
+		throws IOException, SystemException {
+
+		String pathInfo = request.getPathInfo();
+
+		if (Validator.isNotNull(pathInfo) && pathInfo.equals("/portal/login")) {
+			String redirectServerId = PrefsPropsUtil.getString(
+				companyId, PropsKeys.CAS_AUTO_REDIRECT_SERVER_ID);
+
+			CASServer casServer;
+
+			if (Validator.isNull(redirectServerId)) {
+				casServer = CASManagerUtil.getDefaultCASServer(companyId);
+			}
+			else {
+				casServer = CASManagerUtil.getCASServer(
+					companyId, redirectServerId);
 			}
 
-			String ticket = ParamUtil.getString(request, "ticket");
+			if (casServer != null) {
+				String loginURL = CASManagerUtil.getLoginUrl(
+					request, response, casServer);
 
-			if (Validator.isNull(ticket)) {
-				String loginUrl = PrefsPropsUtil.getString(
-					companyId, PropsKeys.CAS_LOGIN_URL,
-					PropsValues.CAS_LOGIN_URL);
+				response.sendRedirect(loginURL);
 
-				loginUrl = HttpUtil.addParameter(
-					loginUrl, "service", serviceUrl);
-
-				response.sendRedirect(loginUrl);
-
-				return;
+				return true;
 			}
+			else {
+				if (_log.isErrorEnabled()) {
+					_log.error(
+						"CAS auto redirect is enabled but no suitable " +
+							"CAS server to redirect to found");
+				}
+			}
+		}
 
-			TicketValidator ticketValidator = getTicketValidator(companyId);
+		return false;
+	}
 
+	protected boolean validateTicket(
+			HttpServletRequest request, HttpServletResponse response,
+			long companyId, CASServer casServer, String ticket)
+		throws Exception {
+
+		if (casServer == null) {
+			return false;
+		}
+
+		String serviceUrl = CASManagerUtil.getServiceUrl(
+			request, response, casServer);
+
+		String login = validateTicket(companyId, casServer, serviceUrl, ticket);
+
+		if (Validator.isNotNull(login)) {
+			HttpSession session = request.getSession();
+
+			session.setAttribute(WebKeys.CAS_LOGIN, login);
+			session.setAttribute(
+				WebKeys.CAS_SERVER_ID, casServer.getServerId());
+
+			return true;
+		}
+
+		return false;
+	}
+
+	protected String validateTicket(
+			long companyId, CASServer casServer, String serviceUrl,
+			String ticket)
+		throws Exception {
+
+		String login = null;
+
+		TicketValidator ticketValidator =
+			((CASServerImpl)casServer).getTicketValidator();
+
+		try {
 			Assertion assertion = ticketValidator.validate(ticket, serviceUrl);
 
 			if (assertion != null) {
@@ -196,17 +339,26 @@ public class CASFilter extends BasePortalFilter {
 					assertion.getPrincipal();
 
 				login = attributePrincipal.getName();
-
-				session.setAttribute(WebKeys.CAS_LOGIN, login);
+			}
+		}
+		catch (TicketValidationException tve) {
+			if (_log.isInfoEnabled()) {
+				_log.info(
+					"Ticket " + ticket + " failed auth against " +
+						casServer.getServerId() + " for companyId " +
+						companyId);
 			}
 		}
 
-		processFilter(CASFilter.class, request, response, filterChain);
+		if (_log.isInfoEnabled()) {
+			_log.info(
+				"Ticket " + ticket + " successfully authenticated against " +
+					casServer.getServerId() + " for companyId " + companyId);
+		}
+
+		return login;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(CASFilter.class);
-
-	private static Map<Long, TicketValidator> _ticketValidators =
-		new ConcurrentHashMap<Long, TicketValidator>();
 
 }

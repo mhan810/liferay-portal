@@ -501,13 +501,7 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>SSO CAS Filter</filter-name>
-		<url-pattern>/c/portal/login</url-pattern>
-		<dispatcher>FORWARD</dispatcher>
-		<dispatcher>REQUEST</dispatcher>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>SSO CAS Filter</filter-name>
-		<url-pattern>/c/portal/logout</url-pattern>
+		<url-pattern>/*</url-pattern>
 		<dispatcher>FORWARD</dispatcher>
 		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
