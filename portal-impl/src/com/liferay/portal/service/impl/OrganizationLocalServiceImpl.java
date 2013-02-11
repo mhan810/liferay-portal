@@ -672,6 +672,23 @@ public class OrganizationLocalServiceImpl
 	}
 
 	/**
+	 * Returns the sub-organizations of the organization.
+	 *
+	 * @param  organization the organization from which to get
+	 *         sub-organizations
+	 * @return the sub-organizations of the organization
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Organization> getSuborganizations(
+		Organization organization)
+		throws SystemException {
+
+		return organizationPersistence.findByC_P(
+			organization.getCompanyId(),
+			organization.getOrganizationId());
+	}
+
+	/**
 	 * Returns the sub-organizations of the organizations.
 	 *
 	 * @param  organizations the organizations from which to get
@@ -680,7 +697,7 @@ public class OrganizationLocalServiceImpl
 	 * @throws SystemException if a system exception occurred
 	 */
 	public List<Organization> getSuborganizations(
-			List<Organization> organizations)
+		List<Organization> organizations)
 		throws SystemException {
 
 		List<Organization> allSuborganizations = new ArrayList<Organization>();
@@ -697,6 +714,23 @@ public class OrganizationLocalServiceImpl
 		}
 
 		return allSuborganizations;
+	}
+
+	/**
+	 * Returns the count of sub-organizations of the organization.
+	 *
+	 * @param  organization the organization from which to get
+	 *         the count of sub-organizations
+	 * @return the count of sub-organizations of the organization
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int getSuborganizationsCount(
+		Organization organization)
+		throws SystemException {
+
+		return organizationPersistence.countByC_P(
+			organization.getCompanyId(),
+			organization.getOrganizationId());
 	}
 
 	/**

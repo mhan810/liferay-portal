@@ -518,6 +518,20 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 	}
 
 	/**
+	* Returns the sub-organizations of the organization.
+	*
+	* @param organization the organization from which to get
+	sub-organizations
+	* @return the sub-organizations of the organization
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portal.model.Organization> getSuborganizations(
+		com.liferay.portal.model.Organization organization)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _organizationLocalService.getSuborganizations(organization);
+	}
+
+	/**
 	* Returns the sub-organizations of the organizations.
 	*
 	* @param organizations the organizations from which to get
@@ -529,6 +543,20 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 		java.util.List<com.liferay.portal.model.Organization> organizations)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _organizationLocalService.getSuborganizations(organizations);
+	}
+
+	/**
+	* Returns the count of sub-organizations of the organization.
+	*
+	* @param organization the organization from which to get
+	the count of sub-organizations
+	* @return the count of sub-organizations of the organization
+	* @throws SystemException if a system exception occurred
+	*/
+	public int getSuborganizationsCount(
+		com.liferay.portal.model.Organization organization)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _organizationLocalService.getSuborganizationsCount(organization);
 	}
 
 	/**

@@ -283,15 +283,11 @@ public class OrganizationImpl extends OrganizationBaseImpl {
 	}
 
 	public List<Organization> getSuborganizations() throws SystemException {
-		return OrganizationLocalServiceUtil.search(
-			getCompanyId(), getOrganizationId(), null, null, null, null, null,
-			0, getSuborganizationsSize());
+		return OrganizationLocalServiceUtil.getSuborganizations(this);
 	}
 
 	public int getSuborganizationsSize() throws SystemException {
-		return OrganizationLocalServiceUtil.searchCount(
-			getCompanyId(), getOrganizationId(), null, null, null, null, null,
-			null, null, null, true);
+		return OrganizationLocalServiceUtil.getSuborganizationsCount(this);
 	}
 
 	public int getTypeOrder() {
