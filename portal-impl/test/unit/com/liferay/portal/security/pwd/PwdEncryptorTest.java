@@ -1,0 +1,212 @@
+/**
+ * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
+package com.liferay.portal.security.pwd;
+
+import com.liferay.portal.kernel.util.DigesterUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.util.DigesterImpl;
+import com.liferay.portal.util.PropsUtil;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+/**
+ * @author Tomas Polesovsky
+ */
+@PowerMockIgnore({"javax.crypto.*" })
+@PrepareForTest(PropsUtil.class)
+@RunWith(PowerMockRunner.class)
+public class PwdEncryptorTest extends PowerMockito {
+
+	@Before
+	public void setUp() {
+		new DigesterUtil().setDigester(new DigesterImpl());
+	}
+
+	@Test
+	public void testEdgeCases() throws Exception {
+		testFail(
+			"Some nonexistent algorithm", StringPool.BLANK, StringPool.BLANK);
+	}
+
+	@Test
+	public void testEncryptBCrypt() throws Exception {
+		String algorithm = PwdEncryptor.TYPE_BCRYPT;
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password",
+			"$2a$10$/ST7LsB.7AAHsn/tlK6hr.nudQaBbJhPX9KfRSSzsn.1ij45lVzaK");
+	}
+
+	@Test
+	public void testEncryptCRYPT() throws Exception {
+		String algorithm = PwdEncryptor.TYPE_CRYPT;
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password", "SNbUMVY9kKQpY");
+	}
+
+	@Test
+	public void testEncryptMD2() throws Exception {
+		String algorithm = PwdEncryptor.TYPE_MD2;
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password", "8DiBqIxuORNfDsxg79YJuQ==");
+	}
+
+	@Test
+	public void testEncryptMD5() throws Exception {
+		String algorithm = PwdEncryptor.TYPE_MD5;
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password", "X03MO1qnZdYdgyfeuILPmQ==");
+	}
+
+	@Test
+	public void testEncryptNONE() throws Exception {
+		String algorithm = PwdEncryptor.TYPE_NONE;
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password", "password");
+	}
+
+	@Test
+	public void testEncryptSHA() throws Exception {
+		String algorithm = PwdEncryptor.TYPE_SHA;
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=");
+	}
+
+	@Test
+	public void testEncryptSHA1() throws Exception {
+		String algorithm = "SHA-1";
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=");
+	}
+
+	@Test
+	public void testEncryptSHA256() throws Exception {
+		String algorithm = PwdEncryptor.TYPE_SHA_256;
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password",
+			"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=");
+	}
+
+	@Test
+	public void testEncryptSHA384() throws Exception {
+		String algorithm = PwdEncryptor.TYPE_SHA_384;
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password",
+			"qLZLq9CsqRpZvbt3YbQh1PK7OCgNOnW6DyHyvrxFWD1EbFmGYMl" +
+				"M5oDEfRnDB4On");
+	}
+
+	@Test
+	public void testEncryptSSHA() throws Exception {
+		String algorithm = PwdEncryptor.TYPE_SSHA;
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password",
+			"2EWEKeVpSdd79PkTX5vaGXH5uQ028Smy/H1NmA==");
+	}
+
+	@Test
+	public void testEncryptUFCCRYPT() throws Exception {
+		String algorithm = PwdEncryptor.TYPE_UFC_CRYPT;
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password", "2lrTlR/pWPUOQ");
+	}
+
+	protected void testAlgorithm(String algorithm) throws Exception {
+		String password = "password";
+		String encrypted = PwdEncryptor.encrypt(algorithm, password, null);
+
+		testAlgorithm(algorithm, password, encrypted);
+	}
+
+	protected String testAlgorithm(
+			String algorithm, String password, String encrypted)
+		throws Exception {
+
+		long time = System.currentTimeMillis();
+
+		String actual = PwdEncryptor.encrypt(algorithm, password, encrypted);
+
+		System.out.println(
+			"Hash [algorithm, time, result]: [" + algorithm +
+				", " + (System.currentTimeMillis() - time) + ", " + actual +
+				"]");
+
+		Assert.assertEquals(encrypted, actual);
+
+		return actual;
+	}
+
+	protected void testFail(String password) {
+		try {
+			PwdEncryptor.encrypt(password);
+
+			Assert.fail();
+		} catch (Exception e){}
+	}
+
+	protected void testFail(String password, String encryptedPassword) {
+		try {
+			PwdEncryptor.encrypt(password, encryptedPassword);
+
+			Assert.fail();
+		} catch (Exception e){}
+	}
+
+	protected void testFail(
+		String algorithm, String password, String encryptedPassword) {
+
+		try {
+			PwdEncryptor.encrypt(algorithm, password, encryptedPassword);
+
+			Assert.fail();
+		} catch (Exception e){}
+	}
+
+	protected void testUpgradeAlgorithm(String algorithm, String encrypted)
+		throws Exception {
+
+		String password = "password";
+
+		spy(PropsUtil.class);
+
+		when(
+			PropsUtil.get(PropsKeys.PASSWORDS_ENCRYPTION_ALGORITHM)
+		).thenReturn(algorithm);
+
+		String actual = PwdEncryptor.encrypt(password, encrypted);
+
+		Assert.assertEquals(encrypted, actual);
+	}
+
+}
