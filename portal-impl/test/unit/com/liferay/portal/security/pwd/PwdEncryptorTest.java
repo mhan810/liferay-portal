@@ -59,6 +59,24 @@ public class PwdEncryptorTest extends PowerMockito {
 	}
 
 	@Test
+	public void testEncryptBCryptWith10Rounds() throws Exception {
+		String algorithm = PwdEncryptor.TYPE_BCRYPT + "/10";
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password",
+			"$2a$10$/ST7LsB.7AAHsn/tlK6hr.nudQaBbJhPX9KfRSSzsn.1ij45lVzaK");
+	}
+
+	@Test
+	public void testEncryptBCryptWith12Rounds() throws Exception {
+		String algorithm = PwdEncryptor.TYPE_BCRYPT + "/12";
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password",
+			"$2a$12$2dD/NrqCEBlVgFEkkFCbzOll2a9vrdl8tTTqGosm26wJK1eCtsjnO");
+	}
+
+	@Test
 	public void testEncryptCRYPT() throws Exception {
 		String algorithm = PwdEncryptor.TYPE_CRYPT;
 		testAlgorithm(algorithm);
@@ -88,6 +106,33 @@ public class PwdEncryptorTest extends PowerMockito {
 		testAlgorithm(algorithm);
 		testAlgorithm(
 			algorithm, "password", "password");
+	}
+
+	@Test
+	public void testEncryptPBKDF2() throws Exception {
+		String algorithm = "PBKDF2WithHmacSHA1";
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password",
+			"AAAAoAAB9ADJZ16OuMAPPHe2CUbP0HPyXvagoKHumh7iHU3c");
+	}
+
+	@Test
+	public void testEncryptPBKDF2With50000Rounds() throws Exception {
+		String algorithm = "PBKDF2WithHmacSHA1/50000";
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password",
+			"AAAAoAAAw1B+jxO3UiVsWdBk4B9xGd/Ko3GKHW2afYhuit49");
+	}
+
+	@Test
+	public void testEncryptPBKDF2With50000RoundsAnd128Key() throws Exception {
+		String algorithm = "PBKDF2WithHmacSHA1/128/50000";
+		testAlgorithm(algorithm);
+		testAlgorithm(
+			algorithm, "password",
+			"AAAAoAAAw1AbW1e1Str9wSLWIX5X9swLn+j5/5+m6auSPdva");
 	}
 
 	@Test
