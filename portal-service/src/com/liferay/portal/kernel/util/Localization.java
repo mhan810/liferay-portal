@@ -22,6 +22,8 @@ import java.util.Map;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Stores and retrieves localized strings from XML, and provides utility methods
  * for updating localizations from JSON, portlet requests, and maps. Used for
@@ -112,6 +114,19 @@ public interface Localization {
 
 	/**
 	 * Returns a map of locales and localized strings for the parameter in the
+	 * request.
+	 *
+	 * @param  request the request
+	 * @param  parameter the prefix of the parameters containing the localized
+	 *         strings. Each localization will be loaded from a parameter with
+	 *         this prefix, followed by an underscore, and the language ID.
+	 * @return the locales and localized strings
+	 */
+	public Map<Locale, String> getLocalizationMap(
+		HttpServletRequest request, String parameter);
+
+	/**
+	 * Returns a map of locales and localized strings for the parameter in the
 	 * preferences container.
 	 *
 	 * @param  preferences the preferences container
@@ -177,7 +192,8 @@ public interface Localization {
 		String parameter);
 
 	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #getLocalizationMap(PortletRequest, String)}
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 *             #getLocalizationMap(PortletRequest, String)}
 	 */
 	public Map<Locale, String> getLocalizedParameter(
 		PortletRequest portletRequest, String parameter);

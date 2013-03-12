@@ -969,6 +969,17 @@ public class DDMStructureLocalServiceImpl
 		return ddmStructurePersistence.findByGroupId(groupIds);
 	}
 
+	/**
+	 * Returns all the structures matching the class name ID and belonging to
+	 * the groups.
+	 *
+	 * @param  groupIds the primary keys of the groups
+	 * @param  classNameId the primary key of the class name for the structure's
+	 *         related model
+	 * @return the structures matching the class name ID and belonging to the
+	 *         groups
+	 * @throws SystemException if a system exception occurred
+	 */
 	public List<DDMStructure> getStructures(long[] groupIds, long classNameId)
 		throws SystemException {
 
@@ -1538,7 +1549,12 @@ public class DDMStructureLocalServiceImpl
 			groupId, classNameId, structureKey);
 
 		if (structure != null) {
-			throw new StructureDuplicateStructureKeyException();
+			StructureDuplicateStructureKeyException sdske =
+				new StructureDuplicateStructureKeyException();
+
+			sdske.setStructureKey(structure.getStructureKey());
+
+			throw sdske;
 		}
 
 		validate(nameMap, xsd);

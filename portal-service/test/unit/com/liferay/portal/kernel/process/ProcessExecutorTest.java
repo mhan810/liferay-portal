@@ -1053,6 +1053,13 @@ public class ProcessExecutorTest {
 	private static List<String> _createArguments(String jpdaOptions) {
 		List<String> arguments = new ArrayList<String>();
 
+		boolean coberturaParentDynamicallyInstrumented = Boolean.getBoolean(
+			"cobertura.parent.dynamically.instrumented");
+
+		if (coberturaParentDynamicallyInstrumented) {
+			arguments.add("-Dcobertura.parent.dynamically.instrumented=true");
+		}
+
 		String agentLine = System.getProperty("junit.cobertura.agent");
 
 		if (!Validator.isNull(agentLine)) {

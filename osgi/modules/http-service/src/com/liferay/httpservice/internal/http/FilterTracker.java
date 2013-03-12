@@ -14,30 +14,52 @@
 
 package com.liferay.httpservice.internal.http;
 
+import com.liferay.httpservice.internal.servlet.BundleServletContext;
+import com.liferay.portal.kernel.util.GetterUtil;
+
+import java.util.Map;
+
 import javax.servlet.Filter;
 
 import org.osgi.framework.ServiceReference;
-import org.osgi.util.tracker.ServiceTrackerCustomizer;
+import org.osgi.service.http.HttpContext;
 
 /**
  * @author Raymond Augé
  * @author Miguel Pastor
  */
-public class FilterTracker implements ServiceTrackerCustomizer<Filter, Filter> {
+public class FilterTracker extends
+	BaseServiceTrackerCustomizer<Filter, Filter> {
 
 	public FilterTracker(HttpSupport httpSupport) {
+		super(httpSupport);
 	}
 
-	public Filter addingService(ServiceReference<Filter> serviceReference) {
-		return null;
+	@Override
+	protected void registerService(
+			BundleServletContext bundleServletContext,
+			ServiceReference<Filter> serviceReference, Filter filter,
+			Map<String, String> initParameters, HttpContext httpContext)
+		throws Exception {
+
+		String filterName = GetterUtil.getString(
+			serviceReference.getProperty("filterName"));
+		String urlPattern = GetterUtil.getString(
+			serviceReference.getProperty("urlPattern"));
+
+		bundleServletContext.registerFilter(
+			filterName, urlPattern, filter, initParameters, httpContext);
 	}
 
-	public void modifiedService(
-		ServiceReference<Filter> serviceReference, Filter filter) {
-	}
+	@Override
+	protected void unregisterService(
+		BundleServletContext bundleServletContext,
+		ServiceReference<Filter> serviceReference) {
 
-	public void removedService(
-		ServiceReference<Filter> serviceReference, Filter filter) {
+		String filterName = GetterUtil.getString(
+			serviceReference.getProperty("filterName"));
+
+		bundleServletContext.unregisterFilter(filterName);
 	}
 
 }

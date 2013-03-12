@@ -1321,14 +1321,12 @@ public class UserWrapper implements User, ModelWrapper<User> {
 	}
 
 	public long[] getGroupIds()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.SystemException {
 		return _user.getGroupIds();
 	}
 
 	public java.util.List<com.liferay.portal.model.Group> getGroups()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.SystemException {
 		return _user.getGroups();
 	}
 
@@ -1558,7 +1556,7 @@ public class UserWrapper implements User, ModelWrapper<User> {
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #getWrappedModel}
+	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedModel}
 	 */
 	public User getWrappedUser() {
 		return _user;

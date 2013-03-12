@@ -125,6 +125,9 @@ public class WikiPageServiceUtil {
 		getService().deletePage(nodeId, title);
 	}
 
+	/**
+	* @deprecated As of 6.2.0
+	*/
 	public static void deletePage(long nodeId, java.lang.String title,
 		double version)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -403,7 +406,7 @@ public class WikiPageServiceUtil {
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated As of 6.2.0
 	 */
 	public void setService(WikiPageService service) {
 	}

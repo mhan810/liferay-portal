@@ -806,8 +806,7 @@ public class LayoutLocalServiceWrapper implements LayoutLocalService,
 	* @param groupId the primary key of the group
 	* @param privateLayout whether the layout is private to the group
 	* @param layoutIds the primary keys of the layouts
-	* @return the matching layouts, or <code>null</code> if no matches were
-	found
+	* @return the matching layouts, or an empty list if no matches were found
 	* @throws PortalException if a group or layout with the primary key could
 	not be found
 	* @throws SystemException if a system exception occurred
@@ -1488,14 +1487,14 @@ public class LayoutLocalServiceWrapper implements LayoutLocalService,
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #getWrappedService}
+	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
 	public LayoutLocalService getWrappedLayoutLocalService() {
 		return _layoutLocalService;
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #setWrappedService}
+	 * @deprecated As of 6.1.0, replaced by {@link #setWrappedService}
 	 */
 	public void setWrappedLayoutLocalService(
 		LayoutLocalService layoutLocalService) {

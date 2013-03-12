@@ -210,10 +210,18 @@ import com.liferay.portal.service.persistence.WebsitePersistence;
 import com.liferay.portal.service.persistence.WorkflowDefinitionLinkPersistence;
 import com.liferay.portal.service.persistence.WorkflowInstanceLinkPersistence;
 
+import com.liferay.portlet.asset.service.AssetCategoryLocalService;
+import com.liferay.portlet.asset.service.AssetCategoryService;
 import com.liferay.portlet.asset.service.AssetEntryLocalService;
 import com.liferay.portlet.asset.service.AssetEntryService;
+import com.liferay.portlet.asset.service.AssetTagLocalService;
+import com.liferay.portlet.asset.service.AssetTagService;
+import com.liferay.portlet.asset.service.persistence.AssetCategoryFinder;
+import com.liferay.portlet.asset.service.persistence.AssetCategoryPersistence;
 import com.liferay.portlet.asset.service.persistence.AssetEntryFinder;
 import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
+import com.liferay.portlet.asset.service.persistence.AssetTagFinder;
+import com.liferay.portlet.asset.service.persistence.AssetTagPersistence;
 import com.liferay.portlet.expando.service.ExpandoValueLocalService;
 import com.liferay.portlet.expando.service.ExpandoValueService;
 import com.liferay.portlet.expando.service.persistence.ExpandoValuePersistence;
@@ -432,6 +440,264 @@ public abstract class OrganizationLocalServiceBaseImpl
 	public Organization updateOrganization(Organization organization)
 		throws SystemException {
 		return organizationPersistence.update(organization);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void addGroupOrganization(long groupId, long organizationId)
+		throws SystemException {
+		groupPersistence.addOrganization(groupId, organizationId);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void addGroupOrganization(long groupId, Organization organization)
+		throws SystemException {
+		groupPersistence.addOrganization(groupId, organization);
+	}
+
+	/**
+	 * @throws PortalException
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void addGroupOrganizations(long groupId, long[] organizationIds)
+		throws PortalException, SystemException {
+		groupPersistence.addOrganizations(groupId, organizationIds);
+	}
+
+	/**
+	 * @throws PortalException
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void addGroupOrganizations(long groupId,
+		List<Organization> Organizations)
+		throws PortalException, SystemException {
+		groupPersistence.addOrganizations(groupId, Organizations);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void clearGroupOrganizations(long groupId) throws SystemException {
+		groupPersistence.clearOrganizations(groupId);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void deleteGroupOrganization(long groupId, long organizationId)
+		throws SystemException {
+		groupPersistence.removeOrganization(groupId, organizationId);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void deleteGroupOrganization(long groupId, Organization organization)
+		throws SystemException {
+		groupPersistence.removeOrganization(groupId, organization);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void deleteGroupOrganizations(long groupId, long[] organizationIds)
+		throws SystemException {
+		groupPersistence.removeOrganizations(groupId, organizationIds);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void deleteGroupOrganizations(long groupId,
+		List<Organization> Organizations) throws SystemException {
+		groupPersistence.removeOrganizations(groupId, Organizations);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Organization> getGroupOrganizations(long groupId)
+		throws SystemException {
+		return groupPersistence.getOrganizations(groupId);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Organization> getGroupOrganizations(long groupId, int start,
+		int end) throws SystemException {
+		return groupPersistence.getOrganizations(groupId, start, end);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Organization> getGroupOrganizations(long groupId, int start,
+		int end, OrderByComparator orderByComparator) throws SystemException {
+		return groupPersistence.getOrganizations(groupId, start, end,
+			orderByComparator);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int getGroupOrganizationsCount(long groupId)
+		throws SystemException {
+		return groupPersistence.getOrganizationsSize(groupId);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public boolean hasGroupOrganization(long groupId, long organizationId)
+		throws SystemException {
+		return groupPersistence.containsOrganization(groupId, organizationId);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public boolean hasGroupOrganizations(long groupId)
+		throws SystemException {
+		return groupPersistence.containsOrganizations(groupId);
+	}
+
+	/**
+	 * @throws PortalException
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void setGroupOrganizations(long groupId, long[] organizationIds)
+		throws PortalException, SystemException {
+		groupPersistence.setOrganizations(groupId, organizationIds);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void addUserOrganization(long userId, long organizationId)
+		throws SystemException {
+		userPersistence.addOrganization(userId, organizationId);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void addUserOrganization(long userId, Organization organization)
+		throws SystemException {
+		userPersistence.addOrganization(userId, organization);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void addUserOrganizations(long userId, long[] organizationIds)
+		throws SystemException {
+		userPersistence.addOrganizations(userId, organizationIds);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void addUserOrganizations(long userId,
+		List<Organization> Organizations) throws SystemException {
+		userPersistence.addOrganizations(userId, Organizations);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void clearUserOrganizations(long userId) throws SystemException {
+		userPersistence.clearOrganizations(userId);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void deleteUserOrganization(long userId, long organizationId)
+		throws SystemException {
+		userPersistence.removeOrganization(userId, organizationId);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void deleteUserOrganization(long userId, Organization organization)
+		throws SystemException {
+		userPersistence.removeOrganization(userId, organization);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void deleteUserOrganizations(long userId, long[] organizationIds)
+		throws SystemException {
+		userPersistence.removeOrganizations(userId, organizationIds);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void deleteUserOrganizations(long userId,
+		List<Organization> Organizations) throws SystemException {
+		userPersistence.removeOrganizations(userId, Organizations);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Organization> getUserOrganizations(long userId)
+		throws SystemException {
+		return userPersistence.getOrganizations(userId);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Organization> getUserOrganizations(long userId, int start,
+		int end) throws SystemException {
+		return userPersistence.getOrganizations(userId, start, end);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Organization> getUserOrganizations(long userId, int start,
+		int end, OrderByComparator orderByComparator) throws SystemException {
+		return userPersistence.getOrganizations(userId, start, end,
+			orderByComparator);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int getUserOrganizationsCount(long userId) throws SystemException {
+		return userPersistence.getOrganizationsSize(userId);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public boolean hasUserOrganization(long userId, long organizationId)
+		throws SystemException {
+		return userPersistence.containsOrganization(userId, organizationId);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public boolean hasUserOrganizations(long userId) throws SystemException {
+		return userPersistence.containsOrganizations(userId);
+	}
+
+	/**
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void setUserOrganizations(long userId, long[] organizationIds)
+		throws SystemException {
+		userPersistence.setOrganizations(userId, organizationIds);
 	}
 
 	/**
@@ -3757,6 +4023,81 @@ public abstract class OrganizationLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the asset category local service.
+	 *
+	 * @return the asset category local service
+	 */
+	public AssetCategoryLocalService getAssetCategoryLocalService() {
+		return assetCategoryLocalService;
+	}
+
+	/**
+	 * Sets the asset category local service.
+	 *
+	 * @param assetCategoryLocalService the asset category local service
+	 */
+	public void setAssetCategoryLocalService(
+		AssetCategoryLocalService assetCategoryLocalService) {
+		this.assetCategoryLocalService = assetCategoryLocalService;
+	}
+
+	/**
+	 * Returns the asset category remote service.
+	 *
+	 * @return the asset category remote service
+	 */
+	public AssetCategoryService getAssetCategoryService() {
+		return assetCategoryService;
+	}
+
+	/**
+	 * Sets the asset category remote service.
+	 *
+	 * @param assetCategoryService the asset category remote service
+	 */
+	public void setAssetCategoryService(
+		AssetCategoryService assetCategoryService) {
+		this.assetCategoryService = assetCategoryService;
+	}
+
+	/**
+	 * Returns the asset category persistence.
+	 *
+	 * @return the asset category persistence
+	 */
+	public AssetCategoryPersistence getAssetCategoryPersistence() {
+		return assetCategoryPersistence;
+	}
+
+	/**
+	 * Sets the asset category persistence.
+	 *
+	 * @param assetCategoryPersistence the asset category persistence
+	 */
+	public void setAssetCategoryPersistence(
+		AssetCategoryPersistence assetCategoryPersistence) {
+		this.assetCategoryPersistence = assetCategoryPersistence;
+	}
+
+	/**
+	 * Returns the asset category finder.
+	 *
+	 * @return the asset category finder
+	 */
+	public AssetCategoryFinder getAssetCategoryFinder() {
+		return assetCategoryFinder;
+	}
+
+	/**
+	 * Sets the asset category finder.
+	 *
+	 * @param assetCategoryFinder the asset category finder
+	 */
+	public void setAssetCategoryFinder(AssetCategoryFinder assetCategoryFinder) {
+		this.assetCategoryFinder = assetCategoryFinder;
+	}
+
+	/**
 	 * Returns the asset entry local service.
 	 *
 	 * @return the asset entry local service
@@ -3828,6 +4169,79 @@ public abstract class OrganizationLocalServiceBaseImpl
 	 */
 	public void setAssetEntryFinder(AssetEntryFinder assetEntryFinder) {
 		this.assetEntryFinder = assetEntryFinder;
+	}
+
+	/**
+	 * Returns the asset tag local service.
+	 *
+	 * @return the asset tag local service
+	 */
+	public AssetTagLocalService getAssetTagLocalService() {
+		return assetTagLocalService;
+	}
+
+	/**
+	 * Sets the asset tag local service.
+	 *
+	 * @param assetTagLocalService the asset tag local service
+	 */
+	public void setAssetTagLocalService(
+		AssetTagLocalService assetTagLocalService) {
+		this.assetTagLocalService = assetTagLocalService;
+	}
+
+	/**
+	 * Returns the asset tag remote service.
+	 *
+	 * @return the asset tag remote service
+	 */
+	public AssetTagService getAssetTagService() {
+		return assetTagService;
+	}
+
+	/**
+	 * Sets the asset tag remote service.
+	 *
+	 * @param assetTagService the asset tag remote service
+	 */
+	public void setAssetTagService(AssetTagService assetTagService) {
+		this.assetTagService = assetTagService;
+	}
+
+	/**
+	 * Returns the asset tag persistence.
+	 *
+	 * @return the asset tag persistence
+	 */
+	public AssetTagPersistence getAssetTagPersistence() {
+		return assetTagPersistence;
+	}
+
+	/**
+	 * Sets the asset tag persistence.
+	 *
+	 * @param assetTagPersistence the asset tag persistence
+	 */
+	public void setAssetTagPersistence(AssetTagPersistence assetTagPersistence) {
+		this.assetTagPersistence = assetTagPersistence;
+	}
+
+	/**
+	 * Returns the asset tag finder.
+	 *
+	 * @return the asset tag finder
+	 */
+	public AssetTagFinder getAssetTagFinder() {
+		return assetTagFinder;
+	}
+
+	/**
+	 * Sets the asset tag finder.
+	 *
+	 * @param assetTagFinder the asset tag finder
+	 */
+	public void setAssetTagFinder(AssetTagFinder assetTagFinder) {
+		this.assetTagFinder = assetTagFinder;
 	}
 
 	/**
@@ -4299,6 +4713,14 @@ public abstract class OrganizationLocalServiceBaseImpl
 	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	@BeanReference(type = CounterLocalService.class)
 	protected CounterLocalService counterLocalService;
+	@BeanReference(type = AssetCategoryLocalService.class)
+	protected AssetCategoryLocalService assetCategoryLocalService;
+	@BeanReference(type = AssetCategoryService.class)
+	protected AssetCategoryService assetCategoryService;
+	@BeanReference(type = AssetCategoryPersistence.class)
+	protected AssetCategoryPersistence assetCategoryPersistence;
+	@BeanReference(type = AssetCategoryFinder.class)
+	protected AssetCategoryFinder assetCategoryFinder;
 	@BeanReference(type = AssetEntryLocalService.class)
 	protected AssetEntryLocalService assetEntryLocalService;
 	@BeanReference(type = AssetEntryService.class)
@@ -4307,6 +4729,14 @@ public abstract class OrganizationLocalServiceBaseImpl
 	protected AssetEntryPersistence assetEntryPersistence;
 	@BeanReference(type = AssetEntryFinder.class)
 	protected AssetEntryFinder assetEntryFinder;
+	@BeanReference(type = AssetTagLocalService.class)
+	protected AssetTagLocalService assetTagLocalService;
+	@BeanReference(type = AssetTagService.class)
+	protected AssetTagService assetTagService;
+	@BeanReference(type = AssetTagPersistence.class)
+	protected AssetTagPersistence assetTagPersistence;
+	@BeanReference(type = AssetTagFinder.class)
+	protected AssetTagFinder assetTagFinder;
 	@BeanReference(type = ExpandoValueLocalService.class)
 	protected ExpandoValueLocalService expandoValueLocalService;
 	@BeanReference(type = ExpandoValueService.class)

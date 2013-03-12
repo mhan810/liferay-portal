@@ -17,6 +17,7 @@ package com.liferay.httpservice.internal.http;
 import com.liferay.httpservice.internal.servlet.BundleServletContext;
 
 import java.util.Dictionary;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -40,8 +41,8 @@ public class NonWABHttpServiceWrapper
 	}
 
 	public void registerFilter(
-		String urlPattern, Filter filter, Map<String, String> initParameters,
-		HttpContext httpContext) {
+		String filterName, List<String> urlPatterns, Filter filter,
+		Map<String, String> initParameters, HttpContext httpContext) {
 	}
 
 	public void registerListener(
@@ -54,18 +55,32 @@ public class NonWABHttpServiceWrapper
 	}
 
 	public void registerServlet(
-		String alias, Servlet servlet,
+		String servletName, List<String> urlPatterns, Servlet servlet,
+		Map<String, String> initParameters, HttpContext httpContext) {
+	}
+
+	/**
+	 * @deprecated As of 6.2.0
+	 */
+	public void registerServlet(
+		String urlPattern, Servlet servlet,
 		@SuppressWarnings("rawtypes") Dictionary initParameters,
 		HttpContext httpContext) {
+
+		throw new UnsupportedOperationException();
 	}
 
-	public void unregister(String alias) {
+	public void unregister(String servletName) {
+		unregisterServlet(servletName);
 	}
 
-	public void unregisterFilter(String name) {
+	public void unregisterFilter(String filterName) {
 	}
 
 	public void unregisterListener(Object listener) {
+	}
+
+	public void unregisterServlet(String servletName) {
 	}
 
 }

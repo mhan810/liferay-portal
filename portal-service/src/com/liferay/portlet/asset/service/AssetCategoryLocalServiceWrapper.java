@@ -248,6 +248,154 @@ public class AssetCategoryLocalServiceWrapper
 	}
 
 	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void addAssetEntryAssetCategory(long entryId, long categoryId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_assetCategoryLocalService.addAssetEntryAssetCategory(entryId,
+			categoryId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void addAssetEntryAssetCategory(long entryId,
+		com.liferay.portlet.asset.model.AssetCategory assetCategory)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_assetCategoryLocalService.addAssetEntryAssetCategory(entryId,
+			assetCategory);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void addAssetEntryAssetCategories(long entryId, long[] categoryIds)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_assetCategoryLocalService.addAssetEntryAssetCategories(entryId,
+			categoryIds);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void addAssetEntryAssetCategories(long entryId,
+		java.util.List<com.liferay.portlet.asset.model.AssetCategory> AssetCategories)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_assetCategoryLocalService.addAssetEntryAssetCategories(entryId,
+			AssetCategories);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void clearAssetEntryAssetCategories(long entryId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_assetCategoryLocalService.clearAssetEntryAssetCategories(entryId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void deleteAssetEntryAssetCategory(long entryId, long categoryId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_assetCategoryLocalService.deleteAssetEntryAssetCategory(entryId,
+			categoryId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void deleteAssetEntryAssetCategory(long entryId,
+		com.liferay.portlet.asset.model.AssetCategory assetCategory)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_assetCategoryLocalService.deleteAssetEntryAssetCategory(entryId,
+			assetCategory);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void deleteAssetEntryAssetCategories(long entryId, long[] categoryIds)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_assetCategoryLocalService.deleteAssetEntryAssetCategories(entryId,
+			categoryIds);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void deleteAssetEntryAssetCategories(long entryId,
+		java.util.List<com.liferay.portlet.asset.model.AssetCategory> AssetCategories)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_assetCategoryLocalService.deleteAssetEntryAssetCategories(entryId,
+			AssetCategories);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portlet.asset.model.AssetCategory> getAssetEntryAssetCategories(
+		long entryId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryLocalService.getAssetEntryAssetCategories(entryId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portlet.asset.model.AssetCategory> getAssetEntryAssetCategories(
+		long entryId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryLocalService.getAssetEntryAssetCategories(entryId,
+			start, end);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portlet.asset.model.AssetCategory> getAssetEntryAssetCategories(
+		long entryId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryLocalService.getAssetEntryAssetCategories(entryId,
+			start, end, orderByComparator);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public int getAssetEntryAssetCategoriesCount(long entryId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryLocalService.getAssetEntryAssetCategoriesCount(entryId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public boolean hasAssetEntryAssetCategory(long entryId, long categoryId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryLocalService.hasAssetEntryAssetCategory(entryId,
+			categoryId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public boolean hasAssetEntryAssetCategories(long entryId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryLocalService.hasAssetEntryAssetCategories(entryId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void setAssetEntryAssetCategories(long entryId, long[] categoryIds)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_assetCategoryLocalService.setAssetEntryAssetCategories(entryId,
+			categoryIds);
+	}
+
+	/**
 	* Returns the Spring bean ID for this bean.
 	*
 	* @return the Spring bean ID for this bean
@@ -442,6 +590,11 @@ public class AssetCategoryLocalServiceWrapper
 			start, end, obc);
 	}
 
+	public int getVocabularyRootCategoriesCount(long vocabularyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryLocalService.getVocabularyRootCategoriesCount(vocabularyId);
+	}
+
 	public void mergeCategories(long fromCategoryId, long toCategoryId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
@@ -484,14 +637,14 @@ public class AssetCategoryLocalServiceWrapper
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #getWrappedService}
+	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
 	public AssetCategoryLocalService getWrappedAssetCategoryLocalService() {
 		return _assetCategoryLocalService;
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #setWrappedService}
+	 * @deprecated As of 6.1.0, replaced by {@link #setWrappedService}
 	 */
 	public void setWrappedAssetCategoryLocalService(
 		AssetCategoryLocalService assetCategoryLocalService) {

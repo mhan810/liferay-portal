@@ -53,6 +53,7 @@
 	</path>
 
 	<path id="test.classpath">
+		<pathelement path="test-classes/${test.type}" />
 		<pathelement path="${classpath}" />
 		<fileset dir="${project.dir}/lib/development" includes="*.jar" excludes="jetty*.jar,tomcat*.jar" />
 		<fileset dir="${project.dir}/lib/global" includes="*.jar" />
@@ -75,6 +76,14 @@
 
 	<taskdef classname="com.tonicsystems.jarjar.JarJarTask" classpath="${project.dir}/lib/development/jarjar.jar" name="jarjar" />
 	<taskdef classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpath="${project.dir}/lib/development/xmltask.jar" name="xmltask" />
+
+	<property location="${project.dir}" name="project.location.absolute" />
+
+	<propertycopy
+		from="project.location.absolute"
+		name="project.dir"
+		override="true"
+	/>
 
 	<property name="doc.dir" value="${project.dir}/api" />
 
@@ -397,6 +406,8 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		</then>
 	</if>
 
+	<property name="junit.cobertura.agent" value="-javaagent:${project.dir}/${junit.cobertura.agent.jar}=${junit.cobertura.includes};${junit.cobertura.excludes}" />
+
 	<if>
 		<not>
 			<equals arg1="${junit.debug}" arg2="true" />
@@ -464,7 +475,7 @@ Please set the environment variable ANT_OPTS to the recommended value of
 				<mkdir dir="test-results/${test.type}" />
 
 				<copy todir="test-classes/${test.type}">
-					<fileset dir="test" includes="*.properties,META-INF/*.xml" />
+					<fileset dir="test" includes="*.properties,META-INF/*.dtd,META-INF/*.xml" />
 					<fileset dir="test/${test.type}" includes="**/*.properties,**/dependencies/**,META-INF/*.xml" />
 				</copy>
 
@@ -719,18 +730,33 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		</if>
 
 		<if>
-			<equals arg1="${test.functional.count}" arg2="1" />
+			<and>
+				<isset property="test.functional.count"/>
+				<not>
+					<equals arg1="${test.functional.count}" arg2="0" />
+				</not>
+			</and>
 			<then>
 				<var name="test.type" value="functional" />
 			</then>
 			<elseif>
-				<equals arg1="${test.integration.count}" arg2="1" />
+				<and>
+					<isset property="test.integration.count"/>
+					<not>
+						<equals arg1="${test.integration.count}" arg2="0" />
+					</not>
+				</and>
 				<then>
 					<var name="test.type" value="integration" />
 				</then>
 			</elseif>
 			<elseif>
-				<equals arg1="${test.unit.count}" arg2="1" />
+				<and>
+					<isset property="test.unit.count"/>
+					<not>
+						<equals arg1="${test.unit.count}" arg2="0" />
+					</not>
+				</and>
 				<then>
 					<var name="test.type" value="unit" />
 				</then>
@@ -751,7 +777,7 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		<if>
 			<available file="test/${test.type}" type="dir" />
 			<then>
-				<junit dir="${project.dir}" fork="on" forkmode="perTest" haltonfailure="${junit.halt.on.failure}" outputtoformatters="false" printsummary="on" showoutput="true">
+				<junit dir="${project.dir}" fork="on" forkmode="once" haltonfailure="${junit.halt.on.failure}" outputtoformatters="false" printsummary="on" showoutput="true">
 					<sysproperty key="junit.aspectj.dump" file="woven-classes" />
 					<sysproperty key="junit.cobertura.agent" value="${junit.cobertura.agent}" />
 					<sysproperty key="junit.code.coverage" value="${junit.code.coverage}" />

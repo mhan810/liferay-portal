@@ -14,9 +14,10 @@
 
 package com.liferay.httpservice.servlet;
 
-import java.util.Dictionary;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -31,7 +32,7 @@ public class BundleServletConfig implements ServletConfig {
 
 	public BundleServletConfig(
 		ServletContext servletContext, String servletName,
-		Dictionary<String, String> initParameters, HttpContext httpContext) {
+		Map<String, String> initParameters, HttpContext httpContext) {
 
 		_servletContext = servletContext;
 		_servletName = servletName;
@@ -52,12 +53,11 @@ public class BundleServletConfig implements ServletConfig {
 		return _initParameters.get(name);
 	}
 
-	@SuppressWarnings("rawtypes")
-	public Enumeration getInitParameterNames() {
-		return _initParameters.keys();
+	public Enumeration<String> getInitParameterNames() {
+		return Collections.enumeration(_initParameters.keySet());
 	}
 
-	public Dictionary<String, String> getInitParameters() {
+	public Map<String, String> getInitParameters() {
 		return _initParameters;
 	}
 
@@ -74,7 +74,7 @@ public class BundleServletConfig implements ServletConfig {
 	}
 
 	private HttpContext _httpContext;
-	private Dictionary<String, String> _initParameters;
+	private Map<String, String> _initParameters;
 	private ServletContext _servletContext;
 	private String _servletName;
 

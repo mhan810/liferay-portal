@@ -232,6 +232,163 @@ public class SCFrameworkVersionLocalServiceWrapper
 	}
 
 	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void addSCProductVersionSCFrameworkVersion(long productVersionId,
+		long frameworkVersionId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_scFrameworkVersionLocalService.addSCProductVersionSCFrameworkVersion(productVersionId,
+			frameworkVersionId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void addSCProductVersionSCFrameworkVersion(long productVersionId,
+		com.liferay.portlet.softwarecatalog.model.SCFrameworkVersion scFrameworkVersion)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_scFrameworkVersionLocalService.addSCProductVersionSCFrameworkVersion(productVersionId,
+			scFrameworkVersion);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void addSCProductVersionSCFrameworkVersions(long productVersionId,
+		long[] frameworkVersionIds)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_scFrameworkVersionLocalService.addSCProductVersionSCFrameworkVersions(productVersionId,
+			frameworkVersionIds);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void addSCProductVersionSCFrameworkVersions(long productVersionId,
+		java.util.List<com.liferay.portlet.softwarecatalog.model.SCFrameworkVersion> SCFrameworkVersions)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_scFrameworkVersionLocalService.addSCProductVersionSCFrameworkVersions(productVersionId,
+			SCFrameworkVersions);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void clearSCProductVersionSCFrameworkVersions(long productVersionId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_scFrameworkVersionLocalService.clearSCProductVersionSCFrameworkVersions(productVersionId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void deleteSCProductVersionSCFrameworkVersion(
+		long productVersionId, long frameworkVersionId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_scFrameworkVersionLocalService.deleteSCProductVersionSCFrameworkVersion(productVersionId,
+			frameworkVersionId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void deleteSCProductVersionSCFrameworkVersion(
+		long productVersionId,
+		com.liferay.portlet.softwarecatalog.model.SCFrameworkVersion scFrameworkVersion)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_scFrameworkVersionLocalService.deleteSCProductVersionSCFrameworkVersion(productVersionId,
+			scFrameworkVersion);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void deleteSCProductVersionSCFrameworkVersions(
+		long productVersionId, long[] frameworkVersionIds)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_scFrameworkVersionLocalService.deleteSCProductVersionSCFrameworkVersions(productVersionId,
+			frameworkVersionIds);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void deleteSCProductVersionSCFrameworkVersions(
+		long productVersionId,
+		java.util.List<com.liferay.portlet.softwarecatalog.model.SCFrameworkVersion> SCFrameworkVersions)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_scFrameworkVersionLocalService.deleteSCProductVersionSCFrameworkVersions(productVersionId,
+			SCFrameworkVersions);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portlet.softwarecatalog.model.SCFrameworkVersion> getSCProductVersionSCFrameworkVersions(
+		long productVersionId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _scFrameworkVersionLocalService.getSCProductVersionSCFrameworkVersions(productVersionId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portlet.softwarecatalog.model.SCFrameworkVersion> getSCProductVersionSCFrameworkVersions(
+		long productVersionId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _scFrameworkVersionLocalService.getSCProductVersionSCFrameworkVersions(productVersionId,
+			start, end);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portlet.softwarecatalog.model.SCFrameworkVersion> getSCProductVersionSCFrameworkVersions(
+		long productVersionId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _scFrameworkVersionLocalService.getSCProductVersionSCFrameworkVersions(productVersionId,
+			start, end, orderByComparator);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public int getSCProductVersionSCFrameworkVersionsCount(
+		long productVersionId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _scFrameworkVersionLocalService.getSCProductVersionSCFrameworkVersionsCount(productVersionId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public boolean hasSCProductVersionSCFrameworkVersion(
+		long productVersionId, long frameworkVersionId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _scFrameworkVersionLocalService.hasSCProductVersionSCFrameworkVersion(productVersionId,
+			frameworkVersionId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public boolean hasSCProductVersionSCFrameworkVersions(long productVersionId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _scFrameworkVersionLocalService.hasSCProductVersionSCFrameworkVersions(productVersionId);
+	}
+
+	/**
+	* @throws SystemException if a system exception occurred
+	*/
+	public void setSCProductVersionSCFrameworkVersions(long productVersionId,
+		long[] frameworkVersionIds)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_scFrameworkVersionLocalService.setSCProductVersionSCFrameworkVersions(productVersionId,
+			frameworkVersionIds);
+	}
+
+	/**
 	* Returns the Spring bean ID for this bean.
 	*
 	* @return the Spring bean ID for this bean
@@ -365,14 +522,14 @@ public class SCFrameworkVersionLocalServiceWrapper
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #getWrappedService}
+	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
 	public SCFrameworkVersionLocalService getWrappedSCFrameworkVersionLocalService() {
 		return _scFrameworkVersionLocalService;
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #setWrappedService}
+	 * @deprecated As of 6.1.0, replaced by {@link #setWrappedService}
 	 */
 	public void setWrappedSCFrameworkVersionLocalService(
 		SCFrameworkVersionLocalService scFrameworkVersionLocalService) {

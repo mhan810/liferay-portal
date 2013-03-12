@@ -211,6 +211,11 @@ public class AssetCategoryServiceWrapper implements AssetCategoryService,
 			name, vocabularyId, start, end, obc);
 	}
 
+	/**
+	* @deprecated As of 6.2.0, replaced by {@link #
+	getVocabularyRootCategories(long, long, int, int,
+	OrderByComparator)}
+	*/
 	public java.util.List<com.liferay.portlet.asset.model.AssetCategory> getVocabularyRootCategories(
 		long vocabularyId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator obc)
@@ -218,6 +223,20 @@ public class AssetCategoryServiceWrapper implements AssetCategoryService,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _assetCategoryService.getVocabularyRootCategories(vocabularyId,
 			start, end, obc);
+	}
+
+	public java.util.List<com.liferay.portlet.asset.model.AssetCategory> getVocabularyRootCategories(
+		long groupId, long vocabularyId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator obc)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryService.getVocabularyRootCategories(groupId,
+			vocabularyId, start, end, obc);
+	}
+
+	public int getVocabularyRootCategoriesCount(long groupId, long vocabularyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryService.getVocabularyRootCategoriesCount(groupId,
+			vocabularyId);
 	}
 
 	public com.liferay.portlet.asset.model.AssetCategory moveCategory(
@@ -268,14 +287,14 @@ public class AssetCategoryServiceWrapper implements AssetCategoryService,
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #getWrappedService}
+	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
 	public AssetCategoryService getWrappedAssetCategoryService() {
 		return _assetCategoryService;
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #setWrappedService}
+	 * @deprecated As of 6.1.0, replaced by {@link #setWrappedService}
 	 */
 	public void setWrappedAssetCategoryService(
 		AssetCategoryService assetCategoryService) {

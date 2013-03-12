@@ -250,23 +250,41 @@ public class SocialActivitySetLocalServiceWrapper
 	}
 
 	public com.liferay.portlet.social.model.SocialActivitySet addActivitySet(
-		long userId, long activityId, java.lang.String className, long classPK,
-		int type)
+		long activityId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return _socialActivitySetLocalService.addActivitySet(userId,
-			activityId, className, classPK, type);
+		return _socialActivitySetLocalService.addActivitySet(activityId);
+	}
+
+	public void decrementActivityCount(long activitySetId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_socialActivitySetLocalService.decrementActivityCount(activitySetId);
+	}
+
+	public void decrementActivityCount(long classNameId, long classPK)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_socialActivitySetLocalService.decrementActivityCount(classNameId,
+			classPK);
+	}
+
+	public void incrementActivityCount(long activitySetId, long activityId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_socialActivitySetLocalService.incrementActivityCount(activitySetId,
+			activityId);
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #getWrappedService}
+	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
 	public SocialActivitySetLocalService getWrappedSocialActivitySetLocalService() {
 		return _socialActivitySetLocalService;
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #setWrappedService}
+	 * @deprecated As of 6.1.0, replaced by {@link #setWrappedService}
 	 */
 	public void setWrappedSocialActivitySetLocalService(
 		SocialActivitySetLocalService socialActivitySetLocalService) {

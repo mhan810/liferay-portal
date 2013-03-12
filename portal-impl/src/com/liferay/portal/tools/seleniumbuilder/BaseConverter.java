@@ -14,8 +14,47 @@
 
 package com.liferay.portal.tools.seleniumbuilder;
 
+import com.liferay.portal.freemarker.FreeMarkerUtil;
+import com.liferay.portal.kernel.util.StringUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Michael Hashimoto
  */
 public class BaseConverter {
+
+	public BaseConverter(SeleniumBuilderContext seleniumBuilderContext) {
+		this.seleniumBuilderContext = seleniumBuilderContext;
+
+		this.seleniumBuilderFileUtil = new SeleniumBuilderFileUtil(
+			seleniumBuilderContext.getBaseDir());
+	}
+
+	protected Map<String, Object> getContext() {
+		Map<String, Object> context = new HashMap<String, Object>();
+
+		context.put("seleniumBuilderContext", seleniumBuilderContext);
+
+		return context;
+	}
+
+	protected String processTemplate(String name) throws Exception {
+		return processTemplate(name, getContext());
+	}
+
+	protected String processTemplate(String name, Map<String, Object> context)
+		throws Exception {
+
+		return StringUtil.strip(
+			FreeMarkerUtil.process(_TPL_ROOT + name, context), '\r');
+	}
+
+	protected SeleniumBuilderContext seleniumBuilderContext;
+	protected SeleniumBuilderFileUtil seleniumBuilderFileUtil;
+
+	private static final String _TPL_ROOT =
+		"com/liferay/portal/tools/seleniumbuilder/dependencies/";
+
 }

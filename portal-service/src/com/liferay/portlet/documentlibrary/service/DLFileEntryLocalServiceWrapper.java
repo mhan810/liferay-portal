@@ -410,11 +410,12 @@ public class DLFileEntryLocalServiceWrapper implements DLFileEntryLocalService,
 		return _dlFileEntryLocalService.deleteFileEntry(userId, fileEntryId);
 	}
 
-	public void deleteFileVersion(long userId, long fileEntryId,
-		java.lang.String version)
+	public com.liferay.portlet.documentlibrary.model.DLFileEntry deleteFileVersion(
+		long userId, long fileEntryId, java.lang.String version)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		_dlFileEntryLocalService.deleteFileVersion(userId, fileEntryId, version);
+		return _dlFileEntryLocalService.deleteFileVersion(userId, fileEntryId,
+			version);
 	}
 
 	public com.liferay.portlet.documentlibrary.model.DLFileEntry fetchFileEntry(
@@ -719,14 +720,14 @@ public class DLFileEntryLocalServiceWrapper implements DLFileEntryLocalService,
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #getWrappedService}
+	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
 	public DLFileEntryLocalService getWrappedDLFileEntryLocalService() {
 		return _dlFileEntryLocalService;
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #setWrappedService}
+	 * @deprecated As of 6.1.0, replaced by {@link #setWrappedService}
 	 */
 	public void setWrappedDLFileEntryLocalService(
 		DLFileEntryLocalService dlFileEntryLocalService) {

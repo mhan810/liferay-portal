@@ -14,8 +14,17 @@
 
 package com.liferay.portalweb2.util.block.function;
 
+import com.liferay.portalweb.portal.util.liferayselenium.LiferaySelenium;
+
 /**
  * @author Michael Hashimoto
  */
 public class BaseFunction {
+
+	public BaseFunction(LiferaySelenium liferaySelenium) {
+		this.liferaySelenium = liferaySelenium;
+	}
+
+	protected LiferaySelenium liferaySelenium;
+
 }

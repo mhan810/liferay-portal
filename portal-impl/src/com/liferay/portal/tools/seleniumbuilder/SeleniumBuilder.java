@@ -14,10 +14,13 @@
 
 package com.liferay.portal.tools.seleniumbuilder;
 
+import com.liferay.portal.kernel.util.SetUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.tools.ArgumentsUtil;
 import com.liferay.portal.util.InitUtil;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Michael Hashimoto
@@ -34,14 +37,81 @@ public class SeleniumBuilder {
 		Map<String, String> arguments = ArgumentsUtil.parseArguments(args);
 
 		String baseDir = arguments.get("selenium.base.dir");
-		String types = arguments.get("selenium.types");
-
-		System.out.println(types);
 
 		SeleniumBuilderContext seleniumBuilderContext =
 			new SeleniumBuilderContext(baseDir);
 
-		System.out.println(seleniumBuilderContext);
+		Set<String> types = SetUtil.fromArray(
+			StringUtil.split(arguments.get("selenium.types")));
+
+		if (types.contains("action")) {
+			ActionConverter actionConverter = new ActionConverter(
+				seleniumBuilderContext);
+
+			Set<String> actionNames = seleniumBuilderContext.getActionNames();
+
+			for (String actionName : actionNames) {
+				actionConverter.convert(actionName);
+			}
+		}
+
+		if (types.contains("function")) {
+			FunctionConverter functionConverter = new FunctionConverter(
+				seleniumBuilderContext);
+
+			Set<String> functionNames =
+				seleniumBuilderContext.getFunctionNames();
+
+			for (String functionName : functionNames) {
+				functionConverter.convert(functionName);
+			}
+		}
+
+		if (types.contains("macro")) {
+			MacroConverter macroConverter = new MacroConverter(
+				seleniumBuilderContext);
+
+			Set<String> macroNames = seleniumBuilderContext.getMacroNames();
+
+			for (String macroName : macroNames) {
+				macroConverter.convert(macroName);
+			}
+		}
+
+		if (types.contains("path")) {
+			PathConverter pathConverter = new PathConverter(
+				seleniumBuilderContext);
+
+			Set<String> pathNames = seleniumBuilderContext.getPathNames();
+
+			for (String pathName : pathNames) {
+				pathConverter.convert(pathName);
+			}
+		}
+
+		if (types.contains("testcase")) {
+			TestCaseConverter testCaseConverter = new TestCaseConverter(
+				seleniumBuilderContext);
+
+			Set<String> testCaseNames =
+				seleniumBuilderContext.getTestCaseNames();
+
+			for (String testCaseName : testCaseNames) {
+				testCaseConverter.convert(testCaseName);
+			}
+		}
+
+		if (types.contains("testsuite")) {
+			TestSuiteConverter testSuiteConverter = new TestSuiteConverter(
+				seleniumBuilderContext);
+
+			Set<String> testSuiteNames =
+				seleniumBuilderContext.getTestSuiteNames();
+
+			for (String testSuiteName : testSuiteNames) {
+				testSuiteConverter.convert(testSuiteName);
+			}
+		}
 	}
 
 }

@@ -75,6 +75,16 @@ public class SocialActivityInterpreterLocalServiceUtil {
 		getService().deleteActivityInterpreter(activityInterpreter);
 	}
 
+	public static java.util.Map<java.lang.String, java.util.List<com.liferay.portlet.social.model.SocialActivityInterpreter>> getActivityInterpreters() {
+		return getService().getActivityInterpreters();
+	}
+
+	public static long getActivitySetId(long activityId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().getActivitySetId(activityId);
+	}
+
 	/**
 	* Creates a human readable activity feed entry for the activity using an
 	* available compatible activity interpreter.
@@ -116,7 +126,7 @@ public class SocialActivityInterpreterLocalServiceUtil {
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated As of 6.2.0
 	 */
 	public void setService(SocialActivityInterpreterLocalService service) {
 	}

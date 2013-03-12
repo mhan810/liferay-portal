@@ -15,6 +15,7 @@
 package com.liferay.portlet.messageboards.service.persistence;
 
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
@@ -22,7 +23,9 @@ import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
+import com.liferay.portal.kernel.util.IntegerWrapper;
 import com.liferay.portal.kernel.util.Time;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.persistence.BasePersistence;
 import com.liferay.portal.service.persistence.PersistenceExecutionTestListener;
@@ -110,9 +113,19 @@ public class MBThreadPersistenceTest {
 
 		MBThread newMBThread = _persistence.create(pk);
 
+		newMBThread.setUuid(ServiceTestUtil.randomString());
+
 		newMBThread.setGroupId(ServiceTestUtil.nextLong());
 
 		newMBThread.setCompanyId(ServiceTestUtil.nextLong());
+
+		newMBThread.setUserId(ServiceTestUtil.nextLong());
+
+		newMBThread.setUserName(ServiceTestUtil.randomString());
+
+		newMBThread.setCreateDate(ServiceTestUtil.nextDate());
+
+		newMBThread.setModifiedDate(ServiceTestUtil.nextDate());
 
 		newMBThread.setCategoryId(ServiceTestUtil.nextLong());
 
@@ -144,12 +157,23 @@ public class MBThreadPersistenceTest {
 
 		MBThread existingMBThread = _persistence.findByPrimaryKey(newMBThread.getPrimaryKey());
 
+		Assert.assertEquals(existingMBThread.getUuid(), newMBThread.getUuid());
 		Assert.assertEquals(existingMBThread.getThreadId(),
 			newMBThread.getThreadId());
 		Assert.assertEquals(existingMBThread.getGroupId(),
 			newMBThread.getGroupId());
 		Assert.assertEquals(existingMBThread.getCompanyId(),
 			newMBThread.getCompanyId());
+		Assert.assertEquals(existingMBThread.getUserId(),
+			newMBThread.getUserId());
+		Assert.assertEquals(existingMBThread.getUserName(),
+			newMBThread.getUserName());
+		Assert.assertEquals(Time.getShortTimestamp(
+				existingMBThread.getCreateDate()),
+			Time.getShortTimestamp(newMBThread.getCreateDate()));
+		Assert.assertEquals(Time.getShortTimestamp(
+				existingMBThread.getModifiedDate()),
+			Time.getShortTimestamp(newMBThread.getModifiedDate()));
 		Assert.assertEquals(existingMBThread.getCategoryId(),
 			newMBThread.getCategoryId());
 		Assert.assertEquals(existingMBThread.getRootMessageId(),
@@ -218,6 +242,26 @@ public class MBThreadPersistenceTest {
 		MBThread missingMBThread = _persistence.fetchByPrimaryKey(pk);
 
 		Assert.assertNull(missingMBThread);
+	}
+
+	@Test
+	public void testActionableDynamicQuery() throws Exception {
+		final IntegerWrapper count = new IntegerWrapper();
+
+		ActionableDynamicQuery actionableDynamicQuery = new MBThreadActionableDynamicQuery() {
+				@Override
+				protected void performAction(Object object) {
+					MBThread mbThread = (MBThread)object;
+
+					Assert.assertNotNull(mbThread);
+
+					count.increment();
+				}
+			};
+
+		actionableDynamicQuery.performActions();
+
+		Assert.assertEquals(count.getValue(), _persistence.countAll());
 	}
 
 	@Test
@@ -304,6 +348,12 @@ public class MBThreadPersistenceTest {
 
 		MBThreadModelImpl existingMBThreadModelImpl = (MBThreadModelImpl)_persistence.findByPrimaryKey(newMBThread.getPrimaryKey());
 
+		Assert.assertTrue(Validator.equals(
+				existingMBThreadModelImpl.getUuid(),
+				existingMBThreadModelImpl.getOriginalUuid()));
+		Assert.assertEquals(existingMBThreadModelImpl.getGroupId(),
+			existingMBThreadModelImpl.getOriginalGroupId());
+
 		Assert.assertEquals(existingMBThreadModelImpl.getRootMessageId(),
 			existingMBThreadModelImpl.getOriginalRootMessageId());
 	}
@@ -313,9 +363,19 @@ public class MBThreadPersistenceTest {
 
 		MBThread mbThread = _persistence.create(pk);
 
+		mbThread.setUuid(ServiceTestUtil.randomString());
+
 		mbThread.setGroupId(ServiceTestUtil.nextLong());
 
 		mbThread.setCompanyId(ServiceTestUtil.nextLong());
+
+		mbThread.setUserId(ServiceTestUtil.nextLong());
+
+		mbThread.setUserName(ServiceTestUtil.randomString());
+
+		mbThread.setCreateDate(ServiceTestUtil.nextDate());
+
+		mbThread.setModifiedDate(ServiceTestUtil.nextDate());
 
 		mbThread.setCategoryId(ServiceTestUtil.nextLong());
 

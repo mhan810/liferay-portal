@@ -14,8 +14,27 @@
 
 package com.liferay.portal.tools.seleniumbuilder;
 
+import java.util.Map;
+
 /**
  * @author Michael Hashimoto
  */
 public class ActionConverter extends BaseConverter {
+
+	public ActionConverter(SeleniumBuilderContext seleniumBuilderContext) {
+		super(seleniumBuilderContext);
+	}
+
+	public void convert(String actionName) throws Exception {
+		Map<String, Object> context = getContext();
+
+		context.put("actionName", actionName);
+
+		String content = processTemplate("action.ftl", context);
+
+		seleniumBuilderFileUtil.writeFile(
+			seleniumBuilderContext.getActionJavaFileName(actionName), content,
+			true);
+	}
+
 }

@@ -594,9 +594,9 @@ create table DLFileEntryType (
 );
 
 create table DLFileEntryTypes_DDMStructures (
-	fileEntryTypeId LONG not null,
 	structureId LONG not null,
-	primary key (fileEntryTypeId, structureId)
+	fileEntryTypeId LONG not null,
+	primary key (structureId, fileEntryTypeId)
 );
 
 create table DLFileEntryTypes_DLFolders (
@@ -1217,9 +1217,14 @@ create table MBStatsUser (
 );
 
 create table MBThread (
+	uuid_ VARCHAR(75) null,
 	threadId LONG not null primary key,
 	groupId LONG,
 	companyId LONG,
+	userId LONG,
+	userName VARCHAR(75) null,
+	createDate DATE null,
+	modifiedDate DATE null,
 	categoryId LONG,
 	rootMessageId LONG,
 	rootMessageUserId LONG,
@@ -1461,7 +1466,9 @@ create table PollsQuestion (
 );
 
 create table PollsVote (
+	uuid_ VARCHAR(75) null,
 	voteId LONG not null primary key,
+	groupId LONG,
 	companyId LONG,
 	userId LONG,
 	userName VARCHAR(75) null,
