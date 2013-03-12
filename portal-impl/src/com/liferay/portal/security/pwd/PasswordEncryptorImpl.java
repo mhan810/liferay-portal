@@ -16,10 +16,7 @@ package com.liferay.portal.security.pwd;
 
 import com.liferay.portal.PwdEncryptorException;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-
-import java.io.UnsupportedEncodingException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,52 +51,29 @@ public class PasswordEncryptorImpl implements PasswordEncryptor {
 			String currentEncryptedPassword)
 		throws PwdEncryptorException {
 
-		byte[] saltBytes = _getSaltFromBCrypt(
-			algorithm, currentEncryptedPassword);
+		String salt;
 
-		String salt = new String(saltBytes);
+		if (Validator.isNull(currentEncryptedPassword)) {
+			int rounds = _DEFAULT_BCRYPT_ROUNDS;
+
+			Matcher algorithmRoundsMatcher = _BCRYPT_PATTERN.matcher(algorithm);
+
+			if (algorithmRoundsMatcher.matches()) {
+				rounds = GetterUtil.getInteger(
+					algorithmRoundsMatcher.group(1), rounds);
+			}
+
+			salt = BCrypt.gensalt(rounds);
+		}
+		else {
+			salt = currentEncryptedPassword.substring(0, 29);
+		}
 
 		return BCrypt.hashpw(clearTextPassword, salt);
 	}
 
-	private byte[] _getSaltFromBCrypt(String algorithm, String bcryptString)
-		throws PwdEncryptorException {
-
-		byte[] saltBytes = null;
-
-		try {
-			if (Validator.isNull(bcryptString)) {
-				int rounds = _DEFAULT_BCRYPT_ROUNDS;
-
-				Matcher algorithmRoundsMatcher = _algorithmRounds.matcher(
-					algorithm);
-
-				if (algorithmRoundsMatcher.matches()) {
-					rounds = GetterUtil.getInteger(
-						algorithmRoundsMatcher.group(1), rounds);
-				}
-
-				String salt = BCrypt.gensalt(rounds);
-
-				saltBytes = salt.getBytes(StringPool.UTF8);
-			}
-			else {
-				String salt = bcryptString.substring(0, 29);
-
-				saltBytes = salt.getBytes(StringPool.UTF8);
-			}
-		}
-		catch (UnsupportedEncodingException uee) {
-			throw new PwdEncryptorException(
-				"Unable to extract salt from encrypted password: " +
-					uee.getMessage());
-		}
-
-		return saltBytes;
-	}
-
-	private static final Pattern _algorithmRounds = Pattern.compile(
-		"^.*/([0-9]+)$");
+	private static final Pattern _BCRYPT_PATTERN = Pattern.compile(
+			"^BCrypt/([0-9]+)$", Pattern.CASE_INSENSITIVE);
 
 	private static final int _DEFAULT_BCRYPT_ROUNDS = 10;
 
