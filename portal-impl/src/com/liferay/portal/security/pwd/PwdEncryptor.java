@@ -49,6 +49,8 @@ public class PwdEncryptor {
 
 	public static final String TYPE_NONE = "NONE";
 
+	public static final String TYPE_PBKDF2 = "PBKDF2";
+
 	public static final String TYPE_SHA = "SHA";
 
 	public static final String TYPE_SHA_256 = "SHA-256";
