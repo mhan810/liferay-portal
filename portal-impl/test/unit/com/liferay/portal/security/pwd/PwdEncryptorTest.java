@@ -15,13 +15,12 @@
 package com.liferay.portal.security.pwd;
 
 import com.liferay.portal.kernel.util.DigesterUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.util.DigesterImpl;
 import com.liferay.portal.util.PropsUtil;
 
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,13 +32,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 /**
  * @author Tomas Polesovsky
  */
-@PowerMockIgnore({"javax.crypto.*" })
-@PrepareForTest(PropsUtil.class)
+@PowerMockIgnore({"javax.crypto.*", "javax.xml.*" })
+@PrepareForTest({PropsUtil.class})
 @RunWith(PowerMockRunner.class)
 public class PwdEncryptorTest extends PowerMockito {
 
-	@Before
-	public void setUp() {
+	@BeforeClass
+	public static void init() {
 		new DigesterUtil().setDigester(new DigesterImpl());
 	}
 
@@ -54,6 +53,9 @@ public class PwdEncryptorTest extends PowerMockito {
 		String algorithm = PwdEncryptor.TYPE_BCRYPT;
 		testAlgorithm(algorithm);
 		testAlgorithm(
+			algorithm, "password",
+			"$2a$10$/ST7LsB.7AAHsn/tlK6hr.nudQaBbJhPX9KfRSSzsn.1ij45lVzaK");
+		testUpgradeAlgorithm(
 			algorithm, "password",
 			"$2a$10$/ST7LsB.7AAHsn/tlK6hr.nudQaBbJhPX9KfRSSzsn.1ij45lVzaK");
 	}
@@ -80,32 +82,32 @@ public class PwdEncryptorTest extends PowerMockito {
 	public void testEncryptCRYPT() throws Exception {
 		String algorithm = PwdEncryptor.TYPE_CRYPT;
 		testAlgorithm(algorithm);
-		testAlgorithm(
-			algorithm, "password", "SNbUMVY9kKQpY");
+		testAlgorithm(algorithm, "password", "SNbUMVY9kKQpY");
+		testUpgradeAlgorithm(algorithm, "password", "SNbUMVY9kKQpY");
 	}
 
 	@Test
 	public void testEncryptMD2() throws Exception {
 		String algorithm = PwdEncryptor.TYPE_MD2;
 		testAlgorithm(algorithm);
-		testAlgorithm(
-			algorithm, "password", "8DiBqIxuORNfDsxg79YJuQ==");
+		testAlgorithm(algorithm, "password", "8DiBqIxuORNfDsxg79YJuQ==");
+		testUpgradeAlgorithm(algorithm, "password", "8DiBqIxuORNfDsxg79YJuQ==");
 	}
 
 	@Test
 	public void testEncryptMD5() throws Exception {
 		String algorithm = PwdEncryptor.TYPE_MD5;
 		testAlgorithm(algorithm);
-		testAlgorithm(
-			algorithm, "password", "X03MO1qnZdYdgyfeuILPmQ==");
+		testAlgorithm(algorithm, "password", "X03MO1qnZdYdgyfeuILPmQ==");
+		testUpgradeAlgorithm(algorithm, "password", "X03MO1qnZdYdgyfeuILPmQ==");
 	}
 
 	@Test
 	public void testEncryptNONE() throws Exception {
 		String algorithm = PwdEncryptor.TYPE_NONE;
 		testAlgorithm(algorithm);
-		testAlgorithm(
-			algorithm, "password", "password");
+		testAlgorithm(algorithm, "password", "password");
+		testUpgradeAlgorithm(algorithm, "password", "password");
 	}
 
 	@Test
@@ -139,7 +141,8 @@ public class PwdEncryptorTest extends PowerMockito {
 	public void testEncryptSHA() throws Exception {
 		String algorithm = PwdEncryptor.TYPE_SHA;
 		testAlgorithm(algorithm);
-		testAlgorithm(
+		testAlgorithm(algorithm, "password", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=");
+		testUpgradeAlgorithm(
 			algorithm, "password", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=");
 	}
 
@@ -147,7 +150,8 @@ public class PwdEncryptorTest extends PowerMockito {
 	public void testEncryptSHA1() throws Exception {
 		String algorithm = "SHA-1";
 		testAlgorithm(algorithm);
-		testAlgorithm(
+		testAlgorithm(algorithm, "password", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=");
+		testUpgradeAlgorithm(
 			algorithm, "password", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=");
 	}
 
@@ -156,6 +160,9 @@ public class PwdEncryptorTest extends PowerMockito {
 		String algorithm = PwdEncryptor.TYPE_SHA_256;
 		testAlgorithm(algorithm);
 		testAlgorithm(
+			algorithm, "password",
+			"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=");
+		testUpgradeAlgorithm(
 			algorithm, "password",
 			"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=");
 	}
@@ -168,6 +175,10 @@ public class PwdEncryptorTest extends PowerMockito {
 			algorithm, "password",
 			"qLZLq9CsqRpZvbt3YbQh1PK7OCgNOnW6DyHyvrxFWD1EbFmGYMl" +
 				"M5oDEfRnDB4On");
+		testUpgradeAlgorithm(
+			algorithm, "password",
+			"qLZLq9CsqRpZvbt3YbQh1PK7OCgNOnW6DyHyvrxFWD1EbFmGYMl" +
+				"M5oDEfRnDB4On");
 	}
 
 	@Test
@@ -175,21 +186,52 @@ public class PwdEncryptorTest extends PowerMockito {
 		String algorithm = PwdEncryptor.TYPE_SSHA;
 		testAlgorithm(algorithm);
 		testAlgorithm(
-			algorithm, "password",
-			"2EWEKeVpSdd79PkTX5vaGXH5uQ028Smy/H1NmA==");
+			algorithm, "password", "2EWEKeVpSdd79PkTX5vaGXH5uQ028Smy/H1NmA==");
+		testUpgradeAlgorithm(
+			algorithm, "password", "2EWEKeVpSdd79PkTX5vaGXH5uQ028Smy/H1NmA==");
 	}
 
 	@Test
 	public void testEncryptUFCCRYPT() throws Exception {
 		String algorithm = PwdEncryptor.TYPE_UFC_CRYPT;
 		testAlgorithm(algorithm);
-		testAlgorithm(
-			algorithm, "password", "2lrTlR/pWPUOQ");
+		testAlgorithm(algorithm, "password", "2lrTlR/pWPUOQ");
+		testUpgradeAlgorithm(algorithm, "password", "2lrTlR/pWPUOQ");
+	}
+
+	@Test
+	public void testUpgradeCustomAlgorithm() throws Exception {
+		PwdEncryptor.PASSWORDS_ENCRYPTION_ALGORITHM = PwdEncryptor.TYPE_SHA_256;
+
+		String sha256Encrypted =
+			PwdEncryptor.encrypt(
+				"password", "XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=");
+
+		Assert.assertEquals(
+			"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=", sha256Encrypted);
+
+		String newPassword = PwdEncryptor.encrypt("password");
+
+		Assert.assertTrue(newPassword.startsWith("{PBKDF2WITHHMACSHA1}"));
+	}
+
+	@Test
+	public void testUpgradeStandardAlgorithm() throws Exception {
+		PwdEncryptor.PASSWORDS_ENCRYPTION_ALGORITHM = null;
+
+		String shaEncrypted = PwdEncryptor.encrypt(
+			"password", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=");
+
+		Assert.assertEquals("W6ph5Mm5Pz8GgiULbPgzG37mj9g=", shaEncrypted);
 	}
 
 	protected void testAlgorithm(String algorithm) throws Exception {
 		String password = "password";
 		String encrypted = PwdEncryptor.encrypt(algorithm, password, null);
+
+		Assert.assertTrue(
+			encrypted.startsWith(
+				"{" + PwdEncryptor.getAlgorithmName(algorithm) + "}"));
 
 		testAlgorithm(algorithm, password, encrypted);
 	}
@@ -212,22 +254,6 @@ public class PwdEncryptorTest extends PowerMockito {
 		return actual;
 	}
 
-	protected void testFail(String password) {
-		try {
-			PwdEncryptor.encrypt(password);
-
-			Assert.fail();
-		} catch (Exception e){}
-	}
-
-	protected void testFail(String password, String encryptedPassword) {
-		try {
-			PwdEncryptor.encrypt(password, encryptedPassword);
-
-			Assert.fail();
-		} catch (Exception e){}
-	}
-
 	protected void testFail(
 		String algorithm, String password, String encryptedPassword) {
 
@@ -238,16 +264,11 @@ public class PwdEncryptorTest extends PowerMockito {
 		} catch (Exception e){}
 	}
 
-	protected void testUpgradeAlgorithm(String algorithm, String encrypted)
+	protected void testUpgradeAlgorithm(
+			String algorithm, String password, String encrypted)
 		throws Exception {
 
-		String password = "password";
-
-		spy(PropsUtil.class);
-
-		when(
-			PropsUtil.get(PropsKeys.PASSWORDS_ENCRYPTION_ALGORITHM)
-		).thenReturn(algorithm);
+		PwdEncryptor.PASSWORDS_ENCRYPTION_ALGORITHM = algorithm;
 
 		String actual = PwdEncryptor.encrypt(password, encrypted);
 
