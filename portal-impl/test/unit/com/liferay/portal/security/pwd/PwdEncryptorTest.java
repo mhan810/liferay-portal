@@ -14,6 +14,7 @@
 
 package com.liferay.portal.security.pwd;
 
+import com.liferay.portal.PwdEncryptorException;
 import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.util.DigesterImpl;
@@ -46,6 +47,15 @@ public class PwdEncryptorTest extends PowerMockito {
 	public void testEdgeCases() throws Exception {
 		testFail(
 			"Some nonexistent algorithm", StringPool.BLANK, StringPool.BLANK);
+
+		testFail(null, null, null);
+		testFail(null, null, StringPool.BLANK);
+		testFail(null, StringPool.BLANK, null);
+		testFail(StringPool.BLANK, null, null);
+		testFail(StringPool.BLANK, null, StringPool.BLANK);
+		testFail(StringPool.BLANK, StringPool.BLANK, null);
+		testFail(null, StringPool.BLANK, StringPool.BLANK);
+		testFail(StringPool.BLANK, StringPool.BLANK, StringPool.BLANK);
 	}
 
 	@Test
@@ -261,7 +271,7 @@ public class PwdEncryptorTest extends PowerMockito {
 			PwdEncryptor.encrypt(algorithm, password, encryptedPassword);
 
 			Assert.fail();
-		} catch (Exception e){}
+		} catch (PwdEncryptorException e){}
 	}
 
 	protected void testUpgradeAlgorithm(
