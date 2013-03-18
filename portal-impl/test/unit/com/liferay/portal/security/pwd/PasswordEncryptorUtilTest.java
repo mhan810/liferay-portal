@@ -16,7 +16,6 @@ package com.liferay.portal.security.pwd;
 
 import com.liferay.portal.PwdEncryptorException;
 import com.liferay.portal.kernel.util.DigesterUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.util.DigesterImpl;
 import com.liferay.portal.util.PropsUtil;
@@ -70,7 +69,13 @@ public class PasswordEncryptorUtilTest extends PowerMockito {
 
 		compositePasswordEncryptor.setPasswordEncryptors(passwordEncryptors);
 
-		passwordEncryptorUtil.setPasswordEncryptor(compositePasswordEncryptor);
+		PrefixingPasswordEncryptor prefixingPasswordEncryptor =
+			new PrefixingPasswordEncryptor();
+
+		prefixingPasswordEncryptor.setParentPasswordEncryptor(
+			compositePasswordEncryptor);
+
+		passwordEncryptorUtil.setPasswordEncryptor(prefixingPasswordEncryptor);
 	}
 
 	@Test
