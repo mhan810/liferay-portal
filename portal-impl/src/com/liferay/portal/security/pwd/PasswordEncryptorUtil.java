@@ -64,16 +64,14 @@ public class PasswordEncryptorUtil {
 	public static String encrypt(String clearTextPassword)
 		throws PwdEncryptorException {
 
-		return encrypt(PASSWORDS_ENCRYPTION_ALGORITHM, clearTextPassword, null);
+		return encrypt(null, clearTextPassword, null);
 	}
 
 	public static String encrypt(
 			String clearTextPassword, String currentEncryptedPassword)
 		throws PwdEncryptorException {
 
-		return encrypt(
-			PASSWORDS_ENCRYPTION_ALGORITHM, clearTextPassword,
-			currentEncryptedPassword);
+		return encrypt(null, clearTextPassword, currentEncryptedPassword);
 	}
 
 	public static String encrypt(
@@ -83,6 +81,10 @@ public class PasswordEncryptorUtil {
 
 		return _passwordEncryptor.encrypt(
 			algorithm, clearTextPassword, currentEncryptedPassword);
+	}
+
+	public PasswordEncryptor getPasswordEncryptor() {
+		return _passwordEncryptor;
 	}
 
 	public void setPasswordEncryptor(PasswordEncryptor passwordEncryptor) {

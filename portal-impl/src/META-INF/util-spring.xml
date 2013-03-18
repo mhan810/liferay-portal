@@ -676,7 +676,10 @@
 			<bean class="com.liferay.portal.service.permission.PasswordPolicyPermissionImpl" />
 		</property>
 	</bean>
-	<bean id="com.liferay.portal.security.pwd.PasswordEncryptor" class="com.liferay.portal.security.pwd.PrefixingPasswordEncryptor">
+	<bean id="com.liferay.portal.security.pwd.PasswordEncryptor" class="com.liferay.portal.security.pwd.UpgradePasswordEncryptor">
+		<property name="parentPasswordEncryptor" ref="com.liferay.portal.security.pwd.PrefixingPasswordEncryptor" />
+	</bean>
+	<bean id="com.liferay.portal.security.pwd.PrefixingPasswordEncryptor" class="com.liferay.portal.security.pwd.PrefixingPasswordEncryptor">
 		<property name="parentPasswordEncryptor" ref="com.liferay.portal.security.pwd.CompositePasswordEncryptor" />
 	</bean>
 	<bean id="com.liferay.portal.security.pwd.CompositePasswordEncryptor" class="com.liferay.portal.security.pwd.CompositePasswordEncryptor">
