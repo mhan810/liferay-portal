@@ -1797,7 +1797,15 @@ public interface PropsKeys {
 
 	public static final String PASSWORDS_DIGEST_ENCODING = "passwords.digest.encoding";
 
+	/**
+	 * @deprecated As of 6.2.0. Please use
+	 *             {@link #PASSWORDS_ENCRYPTION_ALGORITHM_LIFERAY}
+	 */
 	public static final String PASSWORDS_ENCRYPTION_ALGORITHM = "passwords.encryption.algorithm";
+
+	public static final String PASSWORDS_ENCRYPTION_ALGORITHM_LIFERAY = "passwords.encryption.algorithm.liferay";
+
+	public static final String PASSWORDS_ENCRYPTOR = "passwords.encryptor";
 
 	public static final String PASSWORDS_PASSWORDPOLICYTOOLKIT_CHARSET_LOWERCASE = "passwords.passwordpolicytoolkit.charset.lowercase";
 
