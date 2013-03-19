@@ -208,6 +208,7 @@ public class CalEventLocalServiceImpl extends CalEventLocalServiceBaseImpl {
 		event.setRemindBy(remindBy);
 		event.setFirstReminder(firstReminder);
 		event.setSecondReminder(secondReminder);
+		event.setImported(false);
 		event.setExpandoBridgeAttributes(serviceContext);
 
 		calEventPersistence.update(event);
@@ -605,6 +606,10 @@ public class CalEventLocalServiceImpl extends CalEventLocalServiceBaseImpl {
 
 	public List<CalEvent> getNoAssetEvents() throws SystemException {
 		return calEventFinder.findByNoAssets();
+	}
+
+	public List<CalEvent> getNotImportedEvents() throws SystemException {
+		return calEventPersistence.findByImported(false);
 	}
 
 	public List<CalEvent> getRepeatingEvents(long groupId)
