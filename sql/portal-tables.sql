@@ -314,7 +314,8 @@ create table CalEvent (
 	recurrence TEXT null,
 	remindBy INTEGER,
 	firstReminder INTEGER,
-	secondReminder INTEGER
+	secondReminder INTEGER,
+	imported BOOLEAN
 );
 
 create table ClassName_ (

@@ -427,6 +427,27 @@ public interface CalEventModel extends BaseModel<CalEvent>, GroupedModel,
 	 */
 	public void setSecondReminder(int secondReminder);
 
+	/**
+	 * Returns the imported of this cal event.
+	 *
+	 * @return the imported of this cal event
+	 */
+	public boolean getImported();
+
+	/**
+	 * Returns <code>true</code> if this cal event is imported.
+	 *
+	 * @return <code>true</code> if this cal event is imported; <code>false</code> otherwise
+	 */
+	public boolean isImported();
+
+	/**
+	 * Sets whether this cal event is imported.
+	 *
+	 * @param imported the imported of this cal event
+	 */
+	public void setImported(boolean imported);
+
 	public boolean isNew();
 
 	public void setNew(boolean n);

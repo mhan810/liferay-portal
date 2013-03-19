@@ -1391,6 +1391,7 @@
 		<property name="remindBy" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		<property name="firstReminder" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		<property name="secondReminder" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="imported" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
 	<class name="com.liferay.portlet.documentlibrary.model.impl.DLContentImpl" table="DLContent">
 		<cache usage="read-write" />

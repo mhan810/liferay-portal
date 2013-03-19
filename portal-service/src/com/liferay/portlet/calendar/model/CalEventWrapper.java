@@ -68,6 +68,7 @@ public class CalEventWrapper implements CalEvent, ModelWrapper<CalEvent> {
 		attributes.put("remindBy", getRemindBy());
 		attributes.put("firstReminder", getFirstReminder());
 		attributes.put("secondReminder", getSecondReminder());
+		attributes.put("imported", getImported());
 
 		return attributes;
 	}
@@ -209,6 +210,12 @@ public class CalEventWrapper implements CalEvent, ModelWrapper<CalEvent> {
 
 		if (secondReminder != null) {
 			setSecondReminder(secondReminder);
+		}
+
+		Boolean imported = (Boolean)attributes.get("imported");
+
+		if (imported != null) {
+			setImported(imported);
 		}
 	}
 
@@ -689,6 +696,33 @@ public class CalEventWrapper implements CalEvent, ModelWrapper<CalEvent> {
 	*/
 	public void setSecondReminder(int secondReminder) {
 		_calEvent.setSecondReminder(secondReminder);
+	}
+
+	/**
+	* Returns the imported of this cal event.
+	*
+	* @return the imported of this cal event
+	*/
+	public boolean getImported() {
+		return _calEvent.getImported();
+	}
+
+	/**
+	* Returns <code>true</code> if this cal event is imported.
+	*
+	* @return <code>true</code> if this cal event is imported; <code>false</code> otherwise
+	*/
+	public boolean isImported() {
+		return _calEvent.isImported();
+	}
+
+	/**
+	* Sets whether this cal event is imported.
+	*
+	* @param imported the imported of this cal event
+	*/
+	public void setImported(boolean imported) {
+		_calEvent.setImported(imported);
 	}
 
 	public boolean isNew() {

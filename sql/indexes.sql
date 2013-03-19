@@ -133,6 +133,7 @@ create index IX_12EE4898 on CalEvent (groupId);
 create index IX_4FDDD2BF on CalEvent (groupId, repeating);
 create index IX_FCD7C63D on CalEvent (groupId, type_);
 create index IX_FD93CBFA on CalEvent (groupId, type_, repeating);
+create index IX_7E5C3ECA on CalEvent (imported);
 create index IX_F6006202 on CalEvent (remindBy);
 create index IX_C1AD2122 on CalEvent (uuid_);
 create index IX_299639C6 on CalEvent (uuid_, companyId);
