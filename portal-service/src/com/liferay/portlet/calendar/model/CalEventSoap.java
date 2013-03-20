@@ -54,6 +54,7 @@ public class CalEventSoap implements Serializable {
 		soapModel.setRemindBy(model.getRemindBy());
 		soapModel.setFirstReminder(model.getFirstReminder());
 		soapModel.setSecondReminder(model.getSecondReminder());
+		soapModel.setImported(model.getImported());
 
 		return soapModel;
 	}
@@ -302,6 +303,18 @@ public class CalEventSoap implements Serializable {
 		_secondReminder = secondReminder;
 	}
 
+	public boolean getImported() {
+		return _imported;
+	}
+
+	public boolean isImported() {
+		return _imported;
+	}
+
+	public void setImported(boolean imported) {
+		_imported = imported;
+	}
+
 	private String _uuid;
 	private long _eventId;
 	private long _groupId;
@@ -325,4 +338,5 @@ public class CalEventSoap implements Serializable {
 	private int _remindBy;
 	private int _firstReminder;
 	private int _secondReminder;
+	private boolean _imported;
 }

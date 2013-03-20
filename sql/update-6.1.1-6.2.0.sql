@@ -24,6 +24,8 @@ update BookmarksFolder set statusByUserId = userId;
 update BookmarksFolder set statusByUserName = userName;
 update BookmarksFolder set statusDate = modifiedDate;
 
+update CalEvent set imported = false;
+
 alter table Contact_ add classNameId LONG;
 alter table Contact_ add classPK LONG;
 alter table Contact_ add emailAddress VARCHAR(75) null;

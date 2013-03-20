@@ -1824,6 +1824,7 @@
 			<basic name="remindBy" />
 			<basic name="firstReminder" />
 			<basic name="secondReminder" />
+			<basic name="imported" />
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />

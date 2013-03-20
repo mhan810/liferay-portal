@@ -448,6 +448,11 @@ public class CalEventLocalServiceWrapper implements CalEventLocalService,
 		return _calEventLocalService.getNoAssetEvents();
 	}
 
+	public java.util.List<com.liferay.portlet.calendar.model.CalEvent> getNotImportedEvents()
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _calEventLocalService.getNotImportedEvents();
+	}
+
 	public java.util.List<com.liferay.portlet.calendar.model.CalEvent> getRepeatingEvents(
 		long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException {

@@ -88,9 +88,10 @@ public class CalEventModelImpl extends BaseModelImpl<CalEvent>
 			{ "recurrence", Types.CLOB },
 			{ "remindBy", Types.INTEGER },
 			{ "firstReminder", Types.INTEGER },
-			{ "secondReminder", Types.INTEGER }
+			{ "secondReminder", Types.INTEGER },
+			{ "imported", Types.BOOLEAN }
 		};
-	public static final String TABLE_SQL_CREATE = "create table CalEvent (uuid_ VARCHAR(75) null,eventId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,title VARCHAR(75) null,description STRING null,location STRING null,startDate DATE null,endDate DATE null,durationHour INTEGER,durationMinute INTEGER,allDay BOOLEAN,timeZoneSensitive BOOLEAN,type_ VARCHAR(75) null,repeating BOOLEAN,recurrence TEXT null,remindBy INTEGER,firstReminder INTEGER,secondReminder INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table CalEvent (uuid_ VARCHAR(75) null,eventId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,title VARCHAR(75) null,description STRING null,location STRING null,startDate DATE null,endDate DATE null,durationHour INTEGER,durationMinute INTEGER,allDay BOOLEAN,timeZoneSensitive BOOLEAN,type_ VARCHAR(75) null,repeating BOOLEAN,recurrence TEXT null,remindBy INTEGER,firstReminder INTEGER,secondReminder INTEGER,imported BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table CalEvent";
 	public static final String ORDER_BY_JPQL = " ORDER BY calEvent.startDate ASC, calEvent.title ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY CalEvent.startDate ASC, CalEvent.title ASC";
@@ -108,12 +109,13 @@ public class CalEventModelImpl extends BaseModelImpl<CalEvent>
 			true);
 	public static long COMPANYID_COLUMN_BITMASK = 1L;
 	public static long GROUPID_COLUMN_BITMASK = 2L;
-	public static long REMINDBY_COLUMN_BITMASK = 4L;
-	public static long REPEATING_COLUMN_BITMASK = 8L;
-	public static long TYPE_COLUMN_BITMASK = 16L;
-	public static long UUID_COLUMN_BITMASK = 32L;
-	public static long STARTDATE_COLUMN_BITMASK = 64L;
-	public static long TITLE_COLUMN_BITMASK = 128L;
+	public static long IMPORTED_COLUMN_BITMASK = 4L;
+	public static long REMINDBY_COLUMN_BITMASK = 8L;
+	public static long REPEATING_COLUMN_BITMASK = 16L;
+	public static long TYPE_COLUMN_BITMASK = 32L;
+	public static long UUID_COLUMN_BITMASK = 64L;
+	public static long STARTDATE_COLUMN_BITMASK = 128L;
+	public static long TITLE_COLUMN_BITMASK = 256L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -151,6 +153,7 @@ public class CalEventModelImpl extends BaseModelImpl<CalEvent>
 		model.setRemindBy(soapModel.getRemindBy());
 		model.setFirstReminder(soapModel.getFirstReminder());
 		model.setSecondReminder(soapModel.getSecondReminder());
+		model.setImported(soapModel.getImported());
 
 		return model;
 	}
@@ -232,6 +235,7 @@ public class CalEventModelImpl extends BaseModelImpl<CalEvent>
 		attributes.put("remindBy", getRemindBy());
 		attributes.put("firstReminder", getFirstReminder());
 		attributes.put("secondReminder", getSecondReminder());
+		attributes.put("imported", getImported());
 
 		return attributes;
 	}
@@ -374,6 +378,12 @@ public class CalEventModelImpl extends BaseModelImpl<CalEvent>
 
 		if (secondReminder != null) {
 			setSecondReminder(secondReminder);
+		}
+
+		Boolean imported = (Boolean)attributes.get("imported");
+
+		if (imported != null) {
+			setImported(imported);
 		}
 	}
 
@@ -709,6 +719,31 @@ public class CalEventModelImpl extends BaseModelImpl<CalEvent>
 		_secondReminder = secondReminder;
 	}
 
+	@JSON
+	public boolean getImported() {
+		return _imported;
+	}
+
+	public boolean isImported() {
+		return _imported;
+	}
+
+	public void setImported(boolean imported) {
+		_columnBitmask |= IMPORTED_COLUMN_BITMASK;
+
+		if (!_setOriginalImported) {
+			_setOriginalImported = true;
+
+			_originalImported = _imported;
+		}
+
+		_imported = imported;
+	}
+
+	public boolean getOriginalImported() {
+		return _originalImported;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -763,6 +798,7 @@ public class CalEventModelImpl extends BaseModelImpl<CalEvent>
 		calEventImpl.setRemindBy(getRemindBy());
 		calEventImpl.setFirstReminder(getFirstReminder());
 		calEventImpl.setSecondReminder(getSecondReminder());
+		calEventImpl.setImported(getImported());
 
 		calEventImpl.resetOriginalValues();
 
@@ -840,6 +876,10 @@ public class CalEventModelImpl extends BaseModelImpl<CalEvent>
 		calEventModelImpl._originalRemindBy = calEventModelImpl._remindBy;
 
 		calEventModelImpl._setOriginalRemindBy = false;
+
+		calEventModelImpl._originalImported = calEventModelImpl._imported;
+
+		calEventModelImpl._setOriginalImported = false;
 
 		calEventModelImpl._columnBitmask = 0;
 	}
@@ -964,12 +1004,14 @@ public class CalEventModelImpl extends BaseModelImpl<CalEvent>
 
 		calEventCacheModel.secondReminder = getSecondReminder();
 
+		calEventCacheModel.imported = getImported();
+
 		return calEventCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(47);
+		StringBundler sb = new StringBundler(49);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -1017,13 +1059,15 @@ public class CalEventModelImpl extends BaseModelImpl<CalEvent>
 		sb.append(getFirstReminder());
 		sb.append(", secondReminder=");
 		sb.append(getSecondReminder());
+		sb.append(", imported=");
+		sb.append(getImported());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(73);
+		StringBundler sb = new StringBundler(76);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.portlet.calendar.model.CalEvent");
@@ -1121,6 +1165,10 @@ public class CalEventModelImpl extends BaseModelImpl<CalEvent>
 			"<column><column-name>secondReminder</column-name><column-value><![CDATA[");
 		sb.append(getSecondReminder());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>imported</column-name><column-value><![CDATA[");
+		sb.append(getImported());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -1165,6 +1213,9 @@ public class CalEventModelImpl extends BaseModelImpl<CalEvent>
 	private boolean _setOriginalRemindBy;
 	private int _firstReminder;
 	private int _secondReminder;
+	private boolean _imported;
+	private boolean _originalImported;
+	private boolean _setOriginalImported;
 	private long _columnBitmask;
 	private CalEvent _escapedModel;
 }

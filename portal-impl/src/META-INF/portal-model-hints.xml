@@ -1312,6 +1312,7 @@
 		<field name="remindBy" type="int" />
 		<field name="firstReminder" type="int" />
 		<field name="secondReminder" type="int" />
+		<field name="imported" type="boolean" />
 	</model>
 	<model name="com.liferay.portlet.documentlibrary.model.DLContent">
 		<field name="contentId" type="long" />

@@ -156,6 +156,8 @@ public class CalEventPersistenceTest {
 
 		newCalEvent.setSecondReminder(ServiceTestUtil.nextInt());
 
+		newCalEvent.setImported(ServiceTestUtil.randomBoolean());
+
 		_persistence.update(newCalEvent);
 
 		CalEvent existingCalEvent = _persistence.findByPrimaryKey(newCalEvent.getPrimaryKey());
@@ -207,6 +209,8 @@ public class CalEventPersistenceTest {
 			newCalEvent.getFirstReminder());
 		Assert.assertEquals(existingCalEvent.getSecondReminder(),
 			newCalEvent.getSecondReminder());
+		Assert.assertEquals(existingCalEvent.getImported(),
+			newCalEvent.getImported());
 	}
 
 	@Test
@@ -408,6 +412,8 @@ public class CalEventPersistenceTest {
 		calEvent.setFirstReminder(ServiceTestUtil.nextInt());
 
 		calEvent.setSecondReminder(ServiceTestUtil.nextInt());
+
+		calEvent.setImported(ServiceTestUtil.randomBoolean());
 
 		_persistence.update(calEvent);
 

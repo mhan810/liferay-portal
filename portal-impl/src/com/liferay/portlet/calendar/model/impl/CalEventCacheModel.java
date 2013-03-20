@@ -37,7 +37,7 @@ import java.util.Date;
 public class CalEventCacheModel implements CacheModel<CalEvent>, Externalizable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(47);
+		StringBundler sb = new StringBundler(49);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -85,6 +85,8 @@ public class CalEventCacheModel implements CacheModel<CalEvent>, Externalizable 
 		sb.append(firstReminder);
 		sb.append(", secondReminder=");
 		sb.append(secondReminder);
+		sb.append(", imported=");
+		sb.append(imported);
 		sb.append("}");
 
 		return sb.toString();
@@ -185,6 +187,7 @@ public class CalEventCacheModel implements CacheModel<CalEvent>, Externalizable 
 		calEventImpl.setRemindBy(remindBy);
 		calEventImpl.setFirstReminder(firstReminder);
 		calEventImpl.setSecondReminder(secondReminder);
+		calEventImpl.setImported(imported);
 
 		calEventImpl.resetOriginalValues();
 
@@ -215,6 +218,7 @@ public class CalEventCacheModel implements CacheModel<CalEvent>, Externalizable 
 		remindBy = objectInput.readInt();
 		firstReminder = objectInput.readInt();
 		secondReminder = objectInput.readInt();
+		imported = objectInput.readBoolean();
 	}
 
 	public void writeExternal(ObjectOutput objectOutput)
@@ -288,6 +292,7 @@ public class CalEventCacheModel implements CacheModel<CalEvent>, Externalizable 
 		objectOutput.writeInt(remindBy);
 		objectOutput.writeInt(firstReminder);
 		objectOutput.writeInt(secondReminder);
+		objectOutput.writeBoolean(imported);
 	}
 
 	public String uuid;
@@ -313,4 +318,5 @@ public class CalEventCacheModel implements CacheModel<CalEvent>, Externalizable 
 	public int remindBy;
 	public int firstReminder;
 	public int secondReminder;
+	public boolean imported;
 }

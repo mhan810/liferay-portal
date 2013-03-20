@@ -38,6 +38,7 @@
 		<column name="remindBy" type="int" />
 		<column name="firstReminder" type="int" />
 		<column name="secondReminder" type="int" />
+		<column name="imported" type="boolean" />
 
 		<!-- Order -->
 
@@ -53,6 +54,9 @@
 		</finder>
 		<finder name="GroupId" return-type="Collection">
 			<finder-column name="groupId" />
+		</finder>
+		<finder name="Imported" return-type="Collection">
+			<finder-column name="imported" />
 		</finder>
 		<finder name="NotRemindBy" return-type="Collection">
 			<finder-column name="remindBy" comparator="!=" />

@@ -457,6 +457,11 @@ public class CalEventLocalServiceUtil {
 		return getService().getNoAssetEvents();
 	}
 
+	public static java.util.List<com.liferay.portlet.calendar.model.CalEvent> getNotImportedEvents()
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getNotImportedEvents();
+	}
+
 	public static java.util.List<com.liferay.portlet.calendar.model.CalEvent> getRepeatingEvents(
 		long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException {
