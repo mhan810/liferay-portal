@@ -169,8 +169,8 @@ boolean showIconsActions = themeDisplay.isSignedIn() && (hasConfigurationPermiss
 
 				<liferay-ui:icon
 					cssClass="icon-action icon-action-add"
-					label="<%= true %>"
 					image="add_article"
+					label="<%= true %>"
 					message="add-question"
 					url="<%= addQuestionURL %>"
 				/>

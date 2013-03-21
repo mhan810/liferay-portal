@@ -976,7 +976,7 @@ public class SourceFormatter {
 
 			String content = _fileUtil.read(file);
 
-			String newContent = _trimContent(content);
+			String newContent = _trimContent(content, true);
 
 			newContent = _fixAntXMLProjectName(basedir, fileName, newContent);
 
@@ -1038,7 +1038,7 @@ public class SourceFormatter {
 
 			String content = _fileUtil.read(file);
 
-			String newContent = _trimContent(content);
+			String newContent = _trimContent(content, false);
 
 			newContent = _formatDDLStructuresXML(content);
 
@@ -1112,7 +1112,7 @@ public class SourceFormatter {
 				continue;
 			}
 
-			String newContent = _trimContent(content);
+			String newContent = _trimContent(content, false);
 
 			newContent = _formatFriendlyURLRoutesXML(content);
 
@@ -1274,7 +1274,7 @@ public class SourceFormatter {
 
 			String content = _fileUtil.read(file);
 
-			String newContent = _trimContent(content);
+			String newContent = _trimContent(content, false);
 
 			if ((newContent != null) && !content.equals(newContent)) {
 				_fileUtil.write(file, newContent);
@@ -1588,7 +1588,7 @@ public class SourceFormatter {
 		while ((line = unsyncBufferedReader.readLine()) != null) {
 			lineCount++;
 
-			line = _trimLine(line);
+			line = _trimLine(line, false);
 
 			if (line.startsWith("package ")) {
 				packageName = line.substring(8, line.length() - 1);
@@ -1937,16 +1937,16 @@ public class SourceFormatter {
 				else if (fileName.endsWith("Table.java") &&
 						 line.contains(" index IX_")) {
 				}
+				else if (lineLength > 80) {
+					_processErrorMessage(
+						fileName, "> 80: " + fileName + " " + lineCount);
+				}
 				else {
-					if (lineLength > 80) {
-						_processErrorMessage(
-							fileName, "> 80: " + fileName + " " + lineCount);
-					}
-					else if (!trimmedLine.startsWith("//")) {
-						int lineLeadingTabCount = _getLeadingTabCount(line);
-						int previousLineLeadingTabCount = _getLeadingTabCount(
-							previousLine);
+					int lineLeadingTabCount = _getLeadingTabCount(line);
+					int previousLineLeadingTabCount = _getLeadingTabCount(
+						previousLine);
 
+					if (!trimmedLine.startsWith("//")) {
 						if (previousLine.endsWith(StringPool.COMMA) &&
 							previousLine.contains(
 								StringPool.OPEN_PARENTHESIS) &&
@@ -2026,11 +2026,11 @@ public class SourceFormatter {
 								fileName,
 								"new line: " + fileName + " " + lineCount);
 						}
-
-						combinedLines = _getCombinedLines(
-							trimmedLine, previousLine, lineLeadingTabCount,
-							previousLineLeadingTabCount);
 					}
+
+					combinedLines = _getCombinedLines(
+						trimmedLine, previousLine, lineLeadingTabCount,
+						previousLineLeadingTabCount);
 				}
 			}
 
@@ -2182,7 +2182,7 @@ public class SourceFormatter {
 
 			String content = _fileUtil.read(file);
 
-			String newContent = _trimContent(content);
+			String newContent = _trimContent(content, false);
 
 			newContent = StringUtil.replace(
 				newContent,
@@ -2408,7 +2408,7 @@ public class SourceFormatter {
 			if (!fileName.contains("jsonw") ||
 				!fileName.endsWith("action.jsp")) {
 
-				line = _trimLine(line);
+				line = _trimLine(line, false);
 			}
 
 			if (line.contains("<aui:button ") &&
@@ -2773,7 +2773,7 @@ public class SourceFormatter {
 
 				String content = _fileUtil.read(file);
 
-				String newContent = _trimContent(content);
+				String newContent = _trimContent(content, false);
 
 				newContent = _formatPortletXML(content);
 
@@ -2831,7 +2831,7 @@ public class SourceFormatter {
 
 			String content = _fileUtil.read(file);
 
-			String newContent = _trimContent(content);
+			String newContent = _trimContent(content, false);
 
 			_formatServiceXML(fileName, content);
 
@@ -2986,7 +2986,7 @@ public class SourceFormatter {
 		String previousLineSqlCommand = StringPool.BLANK;
 
 		while ((line = unsyncBufferedReader.readLine()) != null) {
-			line = _trimLine(line);
+			line = _trimLine(line, false);
 
 			if (Validator.isNotNull(line) && !line.startsWith(StringPool.TAB)) {
 				String sqlCommand = StringUtil.split(line, CharPool.SPACE)[0];
@@ -3033,7 +3033,7 @@ public class SourceFormatter {
 
 		String content = _fileUtil.read(file);
 
-		String newContent = _trimContent(content);
+		String newContent = _trimContent(content, false);
 
 		Document document = _saxReaderUtil.read(newContent);
 
@@ -3143,7 +3143,7 @@ public class SourceFormatter {
 
 		String content = _fileUtil.read(file);
 
-		String newContent = _trimContent(content);
+		String newContent = _trimContent(content, false);
 
 		Document document = _saxReaderUtil.read(newContent);
 
@@ -3200,7 +3200,7 @@ public class SourceFormatter {
 
 			String content = _fileUtil.read(file);
 
-			String newContent = _trimContent(content);
+			String newContent = _trimContent(content, false);
 
 			if ((newContent != null) && !content.equals(newContent)) {
 				_fileUtil.write(file, newContent);
@@ -3252,7 +3252,7 @@ public class SourceFormatter {
 
 			String content = _fileUtil.read(file);
 
-			String newContent = _trimContent(content);
+			String newContent = _trimContent(content, false);
 
 			int x = newContent.indexOf("<servlet-mapping>");
 
@@ -3357,7 +3357,33 @@ public class SourceFormatter {
 
 		String trimmedPreviousLine = StringUtil.trimLeading(previousLine);
 
+		int previousLineLength = _getLineLength(previousLine);
+
 		if (line.startsWith("// ") || trimmedPreviousLine.startsWith("// ")) {
+			String linePart = line.substring(3);
+
+			if (!linePart.startsWith("PLACEHOLDER") &&
+				!linePart.startsWith(StringPool.OPEN_BRACKET)) {
+
+				int pos = linePart.indexOf(StringPool.SPACE);
+
+				if (pos == -1) {
+					pos = linePart.length();
+				}
+
+				if (previousLineLength + pos < 80) {
+					if (linePart.contains(StringPool.SPACE)) {
+						return new Tuple(
+							previousLine + StringPool.SPACE,
+							linePart.substring(0, pos + 1), true);
+					}
+					else {
+						return new Tuple(
+							previousLine + StringPool.SPACE + linePart);
+					}
+				}
+			}
+
 			return null;
 		}
 
@@ -3374,8 +3400,6 @@ public class SourceFormatter {
 
 			return new Tuple(previousLine + StringPool.SPACE, linePart, true);
 		}
-
-		int previousLineLength = _getLineLength(previousLine);
 
 		if ((line.length() + previousLineLength) < 80) {
 			if (trimmedPreviousLine.startsWith("for ") &&
@@ -4823,7 +4847,10 @@ public class SourceFormatter {
 		return newProperties;
 	}
 
-	private static String _trimContent(String content) throws IOException {
+	private static String _trimContent(
+			String content, boolean allowLeadingSpaces)
+		throws IOException {
+
 		StringBundler sb = new StringBundler();
 
 		UnsyncBufferedReader unsyncBufferedReader = new UnsyncBufferedReader(
@@ -4832,7 +4859,7 @@ public class SourceFormatter {
 		String line = null;
 
 		while ((line = unsyncBufferedReader.readLine()) != null) {
-			sb.append(_trimLine(line));
+			sb.append(_trimLine(line, allowLeadingSpaces));
 			sb.append("\n");
 		}
 
@@ -4847,14 +4874,16 @@ public class SourceFormatter {
 		return content;
 	}
 
-	private static String _trimLine(String line) {
+	private static String _trimLine(String line, boolean allowLeadingSpaces) {
 		if (line.trim().length() == 0) {
 			return StringPool.BLANK;
 		}
 
 		line = StringUtil.trimTrailing(line);
 
-		if (!line.startsWith(StringPool.SPACE) || line.startsWith(" *")) {
+		if (allowLeadingSpaces || !line.startsWith(StringPool.SPACE) ||
+			line.startsWith(" *")) {
+
 			return line;
 		}
 

@@ -45,6 +45,7 @@ import com.liferay.portal.kernel.servlet.BrowserSnifferUtil;
 import com.liferay.portal.kernel.servlet.DynamicServletRequest;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.HttpMethods;
+import com.liferay.portal.kernel.servlet.NonSerializableObjectRequestWrapper;
 import com.liferay.portal.kernel.servlet.PersistentHttpServletRequestWrapper;
 import com.liferay.portal.kernel.servlet.PortalSessionThreadLocal;
 import com.liferay.portal.kernel.servlet.ServletContextUtil;
@@ -74,6 +75,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
+import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringComparator;
@@ -119,6 +121,7 @@ import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.security.auth.FullNameGenerator;
 import com.liferay.portal.security.auth.FullNameGeneratorFactory;
 import com.liferay.portal.security.auth.PrincipalException;
+import com.liferay.portal.security.lang.DoPrivilegedUtil;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
@@ -2783,7 +2786,7 @@ public class PortalImpl implements Portal {
 		PortletRequestImpl portletRequestImpl =
 			PortletRequestImpl.getPortletRequestImpl(portletRequest);
 
-		return portletRequestImpl;
+		return DoPrivilegedUtil.wrap(portletRequestImpl, true);
 	}
 
 	public LiferayPortletResponse getLiferayPortletResponse(
@@ -2792,7 +2795,7 @@ public class PortalImpl implements Portal {
 		PortletResponseImpl portletResponseImpl =
 			PortletResponseImpl.getPortletResponseImpl(portletResponse);
 
-		return portletResponseImpl;
+		return DoPrivilegedUtil.wrap(portletResponseImpl, true);
 	}
 
 	public Locale getLocale(HttpServletRequest request) {
@@ -4269,6 +4272,19 @@ public class PortalImpl implements Portal {
 					// This block should never be reached unless this method is
 					// called from a hot deployable portlet. See LayoutAction.
 
+					if (ServerDetector.isWebLogic()) {
+						if (requestWrapper instanceof
+								NonSerializableObjectRequestWrapper) {
+
+							parentRequest = requestWrapper;
+						}
+						else {
+							parentRequest =
+								new NonSerializableObjectRequestWrapper(
+									parentRequest);
+						}
+					}
+
 					uploadServletRequest = new UploadServletRequestImpl(
 						parentRequest);
 
@@ -4354,9 +4370,9 @@ public class PortalImpl implements Portal {
 		if (userId <= 0) {
 
 			// Portlet WARs may have the correct remote user and not have the
-			// correct user id because the user id is saved in the session
-			// and may not be accessible by the portlet WAR's session. This
-			// behavior is inconsistent across different application servers.
+			// correct user id because the user id is saved in the session and
+			// may not be accessible by the portlet WAR's session. This behavior
+			// is inconsistent across different application servers.
 
 			String remoteUser = request.getRemoteUser();
 
