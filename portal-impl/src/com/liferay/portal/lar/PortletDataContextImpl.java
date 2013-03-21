@@ -658,8 +658,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 		StagedModel stagedModel, String namespace) {
 
 		return createServiceContext(
-			StagedModelPathUtil.getPath(stagedModel), (ClassedModel)stagedModel,
-			namespace);
+			StagedModelPathUtil.getPath(stagedModel), stagedModel, namespace);
 	}
 
 	public ServiceContext createServiceContext(
