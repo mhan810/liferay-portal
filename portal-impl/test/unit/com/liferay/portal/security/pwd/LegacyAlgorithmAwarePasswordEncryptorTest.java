@@ -93,7 +93,7 @@ public class LegacyAlgorithmAwarePasswordEncryptorTest {
 	}
 
 	@Test
-	public void testLegacyEncryptionBCryptWith10secRounds() throws Exception {
+	public void testLegacyEncryptionBCryptWith10Rounds() throws Exception {
 		String expectedHash =
 			"$2a$10$AHEC063zO5wHcovp1JteTukrB5jSWa2OTBkoUx79ItxqKzSBp/Sem";
 

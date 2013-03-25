@@ -695,7 +695,7 @@
 			</util:list>
 		</property>
 	</bean>
-	<bean id="com.liferay.portal.security.pwd.PasswordEncryptor" class="com.liferay.portal.security.pwd.LegacyAlgorithmAwarePasswordEncryptorTest">
+	<bean id="com.liferay.portal.security.pwd.PasswordEncryptor" class="com.liferay.portal.security.pwd.LegacyAlgorithmAwarePasswordEncryptor">
 		<property name="parentPasswordEncryptor" ref="com.liferay.portal.security.pwd.CompositePasswordEncryptor" />
 	</bean>
 	<bean id="com.liferay.portal.security.pwd.PasswordEncryptorUtil" class="com.liferay.portal.security.pwd.PasswordEncryptorUtil">
