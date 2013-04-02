@@ -602,6 +602,8 @@ create index IX_418E4522 on Organization_ (companyId, parentOrganizationId);
 
 create index IX_2C1142E on PasswordPolicy (companyId, defaultPolicy);
 create unique index IX_3FBFA9F4 on PasswordPolicy (companyId, name);
+create index IX_51437A01 on PasswordPolicy (uuid_);
+create index IX_E4D7EF87 on PasswordPolicy (uuid_, companyId);
 
 create unique index IX_C3A17327 on PasswordPolicyRel (classNameId, classPK);
 create index IX_CD25266E on PasswordPolicyRel (passwordPolicyId);

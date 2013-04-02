@@ -18,6 +18,7 @@
 
 <%
 String p_u_i_d = ParamUtil.getString(request, "p_u_i_d");
+long groupId = ParamUtil.getLong(request, "groupId");
 boolean includeCompany = ParamUtil.getBoolean(request, "includeCompany");
 boolean includeUserPersonalSite = ParamUtil.getBoolean(request, "includeUserPersonalSite");
 String callback = ParamUtil.getString(request, "callback", "selectGroup");
@@ -28,14 +29,15 @@ User selUser = PortalUtil.getSelectedUser(request);
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("struts_action", "/sites_admin/select_site");
-portletURL.setParameter("includeCompany", String.valueOf(includeCompany));
-portletURL.setParameter("includeUserPersonalSite", String.valueOf(includeUserPersonalSite));
-portletURL.setParameter("callback", callback);
-portletURL.setParameter("target", target);
 
 if (selUser != null) {
 	portletURL.setParameter("p_u_i_d", String.valueOf(selUser.getUserId()));
 }
+
+portletURL.setParameter("includeCompany", String.valueOf(includeCompany));
+portletURL.setParameter("includeUserPersonalSite", String.valueOf(includeUserPersonalSite));
+portletURL.setParameter("callback", callback);
+portletURL.setParameter("target", target);
 %>
 
 <aui:form action="<%= portletURL.toString() %>" method="post" name="fm">
@@ -61,6 +63,20 @@ if (selUser != null) {
 			<%
 			results.clear();
 
+			if (groupId > 0) {
+				List<Long> excludedGroupIds = new ArrayList<Long>();
+
+				excludedGroupIds.add(groupId);
+
+				groupParams.put("excludedGroupIds", excludedGroupIds);
+			}
+
+			groupParams.put("site", Boolean.TRUE);
+
+			if (filterManageableGroups) {
+				groupParams.put("usersGroups", user.getUserId());
+			}
+
 			int additionalSites = 0;
 
 			if (includeCompany) {
@@ -80,12 +96,6 @@ if (selUser != null) {
 
 				additionalSites++;
 			}
-
-			if (filterManageableGroups) {
-				groupParams.put("usersGroups", user.getUserId());
-			}
-
-			groupParams.put("site", Boolean.TRUE);
 
 			int start = searchContainer.getStart();
 

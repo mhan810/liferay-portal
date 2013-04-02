@@ -201,7 +201,7 @@
 			<hint-collection name="TEXTAREA" />
 		</field>
 		<field name="friendlyURL" type="String">
-			<hint name="max-length">255</hint>
+			<hint name="max-length">100</hint>
 		</field>
 		<field name="site" type="boolean" />
 		<field name="active" type="boolean" />
@@ -504,6 +504,7 @@
 		<field name="satClose" type="int" />
 	</model>
 	<model name="com.liferay.portal.model.PasswordPolicy">
+		<field name="uuid" type="String" />
 		<field name="passwordPolicyId" type="long" />
 		<field name="companyId" type="long" />
 		<field name="userId" type="long" />

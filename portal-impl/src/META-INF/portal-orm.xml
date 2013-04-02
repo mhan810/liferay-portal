@@ -642,6 +642,9 @@
 	<mapped-superclass class="com.liferay.portal.model.impl.PasswordPolicyModelImpl">
 		<attributes>
 			<id name="passwordPolicyId" />
+			<basic name="uuid">
+				<column name="UUID_" />
+			</basic>
 			<basic name="companyId" />
 			<basic name="userId" />
 			<basic name="userName" />
