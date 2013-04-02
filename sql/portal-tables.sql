@@ -768,7 +768,7 @@ create table Group_ (
 	description STRING null,
 	type_ INTEGER,
 	typeSettings STRING null,
-	friendlyURL VARCHAR(255) null,
+	friendlyURL VARCHAR(100) null,
 	site BOOLEAN,
 	active_ BOOLEAN
 );
@@ -1376,6 +1376,7 @@ create table OrgLabor (
 );
 
 create table PasswordPolicy (
+	uuid_ VARCHAR(75) null,
 	passwordPolicyId LONG not null primary key,
 	companyId LONG,
 	userId LONG,
