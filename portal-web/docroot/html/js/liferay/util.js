@@ -722,32 +722,49 @@
 
 		_defaultSubmitFormFn: function(event) {
 			var form = event.form;
-			var action = event.action;
-			var singleSubmit = event.singleSubmit;
 
-			var inputs = form.all('input[type=button], input[type=reset], input[type=submit]');
+			var hasErrors = false;
 
-			Util.disableFormButtons(inputs, form);
+			var liferayForm = Liferay.Form.get(form.attr('id'));
 
-			if (singleSubmit === false) {
-				Util._submitLocked = A.later(
-					1000,
-					Util,
-					Util.enableFormButtons,
-					[inputs, form]
-				);
-			}
-			else {
-				Util._submitLocked = true;
+			if (liferayForm) {
+				var validator = liferayForm.formValidator;
+
+				if (A.instanceOf(validator, A.FormValidator)) {
+					validator.validate();
+
+					hasErrors = validator.hasErrors();
+				}
 			}
 
-			if (action !== null) {
-				form.attr('action', action);
+			if (!hasErrors) {
+				var action = event.action;
+				var singleSubmit = event.singleSubmit;
+
+				var inputs = form.all('input[type=button], input[type=reset], input[type=submit]');
+
+				Util.disableFormButtons(inputs, form);
+
+				if (singleSubmit === false) {
+					Util._submitLocked = A.later(
+						1000,
+						Util,
+						Util.enableFormButtons,
+						[inputs, form]
+					);
+				}
+				else {
+					Util._submitLocked = true;
+				}
+
+				if (action !== null) {
+					form.attr('action', action);
+				}
+
+				form.submit();
+
+				form.attr('target', '');
 			}
-
-			form.submit();
-
-			form.attr('target', '');
 		},
 
 		_escapeHTML: function(preventDoubleEscape, entities, entitiesValues, match) {
@@ -1942,7 +1959,7 @@
 				);
 			}
 		},
-		['aui-base']
+		['aui-base', 'aui-form-validator', 'liferay-form']
 	);
 
 	Liferay.publish(

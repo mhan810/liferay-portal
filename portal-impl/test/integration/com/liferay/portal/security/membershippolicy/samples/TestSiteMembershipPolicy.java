@@ -16,6 +16,7 @@ package com.liferay.portal.security.membershippolicy.samples;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.UserGroupRole;
@@ -68,6 +69,7 @@ public class TestSiteMembershipPolicy extends BaseSiteMembershipPolicy {
 		}
 	}
 
+	@Override
 	public void checkRoles(
 			List<UserGroupRole> addUserGroupRoles,
 			List<UserGroupRole> removeUserGroupRoles)
@@ -123,6 +125,7 @@ public class TestSiteMembershipPolicy extends BaseSiteMembershipPolicy {
 		BaseSiteMembershipPolicyTestCase.setPropagateMembership(true);
 	}
 
+	@Override
 	public void propagateRoles(
 		List<UserGroupRole> addUserGroupRoles,
 		List<UserGroupRole> removeUserGroupRoles) {
@@ -144,12 +147,12 @@ public class TestSiteMembershipPolicy extends BaseSiteMembershipPolicy {
 		Group group, Group oldGroup, List<AssetCategory> oldAssetCategories,
 		List<AssetTag> oldAssetTags,
 		Map<String, Serializable> oldExpandoAttributes,
-		String oldTypeSettings) {
+		UnicodeProperties oldTypeSettingsProperties) {
 
 		Assert.assertNotNull(group);
 		Assert.assertNotNull(oldGroup);
 
-		if (oldTypeSettings == null) {
+		if (oldTypeSettingsProperties == null) {
 			Assert.assertNotNull(oldAssetCategories);
 			Assert.assertNotNull(oldAssetTags);
 			Assert.assertNotNull(oldExpandoAttributes);
@@ -163,10 +166,12 @@ public class TestSiteMembershipPolicy extends BaseSiteMembershipPolicy {
 		verifyPolicy(group);
 	}
 
+	@Override
 	public void verifyPolicy(Role role) {
 		verifyPolicy();
 	}
 
+	@Override
 	public void verifyPolicy(
 		Role role, Role oldRole,
 		Map<String, Serializable> oldExpandoAttributes) {

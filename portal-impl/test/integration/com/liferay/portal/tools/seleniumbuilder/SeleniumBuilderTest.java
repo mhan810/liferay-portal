@@ -38,6 +38,86 @@ public class SeleniumBuilderTest {
 	}
 
 	@Test
+	public void testActionCaseElement1001() throws Exception {
+		test(
+			"ActionCaseElement1001.action",
+			"Error 1001: Missing (execute) child element in " + _DIR_NAME +
+				"/ActionCaseElement1001.action:3");
+	}
+
+	@Test
+	public void testActionCaseElement1002() throws Exception {
+		test(
+			"ActionCaseElement1002.action",
+			"Error 1002: Invalid var element in " + _DIR_NAME +
+				"/ActionCaseElement1002.action:4");
+	}
+
+	@Test
+	public void testActionCaseElement1004_1() throws Exception {
+		test(
+			"ActionCaseElement1004_1.action",
+			"Error 1004: Missing (locator1|locator-key1) attribute in " +
+				_DIR_NAME + "/ActionCaseElement1004_1.action:3");
+	}
+
+	@Test
+	public void testActionCaseElement1004_2() throws Exception {
+		test(
+			"ActionCaseElement1004_2.action",
+			"Error 1004: Missing (locator1|locator-key1) attribute in " +
+				_DIR_NAME + "/ActionCaseElement1004_2.action:3");
+	}
+
+	@Test
+	public void testActionCaseElement1005() throws Exception {
+		test(
+			"ActionCaseElement1005.action",
+			"Error 1005: Invalid fail attribute in " + _DIR_NAME +
+				"/ActionCaseElement1005.action:3");
+	}
+
+	@Test
+	public void testActionCaseElement1006_1() throws Exception {
+		test(
+			"ActionCaseElement1006_1.action",
+			"Error 1006: Invalid locator1 attribute value in " + _DIR_NAME +
+				"/ActionCaseElement1006_1.action:3");
+	}
+
+	@Test
+	public void testActionCaseElement1006_2() throws Exception {
+		test(
+			"ActionCaseElement1006_2.action",
+			"Error 1006: Invalid locator-key1 attribute value in " + _DIR_NAME +
+				"/ActionCaseElement1006_2.action:3");
+	}
+
+	@Test
+	public void testActionCaseElement1006_3() throws Exception {
+		test(
+			"ActionCaseElement1006_3.action",
+			"Error 1006: Invalid comparator attribute value in " + _DIR_NAME +
+				"/ActionCaseElement1006_3.action:3");
+	}
+
+	@Test
+	public void testActionCaseElement1006_4() throws Exception {
+		test(
+			"ActionCaseElement1006_4.action",
+			"Error 1006: Invalid comparator attribute value in " + _DIR_NAME +
+				"/ActionCaseElement1006_4.action:3");
+	}
+
+	@Test
+	public void testActionCaseElement2000() throws Exception {
+		test(
+			"ActionCaseElement2000.action",
+			"Error 2000: Too many child elements in the case element in " +
+				_DIR_NAME + "/ActionCaseElement2000.action:5");
+	}
+
+	@Test
 	public void testActionCommandElement1001() throws Exception {
 		test(
 			"ActionCommandElement1001.action",
@@ -78,6 +158,38 @@ public class SeleniumBuilderTest {
 	}
 
 	@Test
+	public void testActionDefaultElement1001() throws Exception {
+		test(
+			"ActionDefaultElement1001.action",
+			"Error 1001: Missing (execute) child element in " + _DIR_NAME +
+				"/ActionDefaultElement1001.action:3");
+	}
+
+	@Test
+	public void testActionDefaultElement1002() throws Exception {
+		test(
+			"ActionDefaultElement1002.action",
+			"Error 1002: Invalid fail element in " + _DIR_NAME +
+				"/ActionDefaultElement1002.action:4");
+	}
+
+	@Test
+	public void testActionDefaultElement1005() throws Exception {
+		test(
+			"ActionDefaultElement1005.action",
+			"Error 1005: Invalid locator1 attribute in " + _DIR_NAME +
+				"/ActionDefaultElement1005.action:3");
+	}
+
+	@Test
+	public void testActionDefaultElement2000() throws Exception {
+		test(
+			"ActionDefaultElement2000.action",
+			"Error 2000: Too many child elements in the default element in " +
+				_DIR_NAME + "/ActionDefaultElement2000.action:5");
+	}
+
+	@Test
 	public void testActionDefinitionElement1000() throws Exception {
 		test(
 			"ActionDefinitionElement1000.action",
@@ -99,6 +211,70 @@ public class SeleniumBuilderTest {
 			"ActionDefinitionElement1002.action",
 			"Error 1002: Invalid command-fail element in " + _DIR_NAME +
 				"/ActionDefinitionElement1002.action:2");
+	}
+
+	@Test
+	public void testActionExecuteElement1002() throws Exception {
+		test(
+			"ActionExecuteElement1002.action",
+			"Error 1002: Invalid var element in " + _DIR_NAME +
+				"/ActionExecuteElement1002.action:5");
+	}
+
+	@Test
+	public void testActionExecuteElement1004_1() throws Exception {
+		test(
+			"ActionExecuteElement1004_1.action",
+			"Error 1004: Missing (function) attribute in " + _DIR_NAME +
+				"/ActionExecuteElement1004_1.action:4");
+	}
+
+	@Test
+	public void testActionExecuteElement1004_2() throws Exception {
+		test(
+			"ActionExecuteElement1004_2.action",
+			"Error 1004: Missing (function) attribute in " + _DIR_NAME +
+				"/ActionExecuteElement1004_2.action:4");
+	}
+
+	@Test
+	public void testActionExecuteElement1004_3() throws Exception {
+		test(
+			"ActionExecuteElement1004_3.action",
+			"Error 1004: Missing (function) attribute in " + _DIR_NAME +
+				"/ActionExecuteElement1004_3.action:4");
+	}
+
+	@Test
+	public void testActionExecuteElement1005_1() throws Exception {
+		test(
+			"ActionExecuteElement1005_1.action",
+			"Error 1005: Invalid fail attribute in " + _DIR_NAME +
+				"/ActionExecuteElement1005_1.action:4");
+	}
+
+	@Test
+	public void testActionExecuteElement1005_2() throws Exception {
+		test(
+			"ActionExecuteElement1005_2.action",
+			"Error 1005: Invalid locator attribute in " + _DIR_NAME +
+				"/ActionExecuteElement1005_2.action:4");
+	}
+
+	@Test
+	public void testActionExecuteElement1005_3() throws Exception {
+		test(
+			"ActionExecuteElement1005_3.action",
+			"Error 1005: Invalid value attribute in " + _DIR_NAME +
+				"/ActionExecuteElement1005_3.action:4");
+	}
+
+	@Test
+	public void testActionExecuteElement1006() throws Exception {
+		test(
+			"ActionExecuteElement1006.action",
+			"Error 1006: Invalid function attribute value in " + _DIR_NAME +
+				"/ActionExecuteElement1006.action:4");
 	}
 
 	@Test
@@ -435,15 +611,31 @@ public class SeleniumBuilderTest {
 	}
 
 	protected void test(String fileName) throws Exception {
-		test(fileName, null);
+		test(fileName, null, false);
 	}
 
-	protected void test(String fileName, String errorMessage) throws Exception {
+	protected void test(String fileName, String expectedErrorMessage)
+		throws Exception {
+
+		test(fileName, expectedErrorMessage, true);
+	}
+
+	protected void test(
+		String fileName, String expectedErrorMessage, boolean expectException)
+			throws Exception {
+
+		String actualErrorMessage = null;
+
 		try {
 			_seleniumBuilderFileUtil.getRootElement(_DIR_NAME + "/" + fileName);
 		}
 		catch (IllegalArgumentException e) {
-			Assert.assertEquals(errorMessage, e.getMessage());
+			actualErrorMessage = e.getMessage();
+		}
+		finally {
+			if (expectException) {
+				Assert.assertEquals(expectedErrorMessage, actualErrorMessage);
+			}
 		}
 	}
 

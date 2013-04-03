@@ -44,6 +44,17 @@ public class ETagFilter extends BasePortalFilter {
 		}
 	}
 
+	protected boolean isEligibleForEtag(int status) {
+		if ((status >= HttpServletResponse.SC_OK) &&
+			(status < HttpServletResponse.SC_MULTIPLE_CHOICES)) {
+
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 	@Override
 	protected void processFilter(
 			HttpServletRequest request, HttpServletResponse response,
@@ -58,9 +69,14 @@ public class ETagFilter extends BasePortalFilter {
 
 		ByteBuffer byteBuffer = bufferCacheServletResponse.getByteBuffer();
 
-		if (!ETagUtil.processETag(request, response, byteBuffer)) {
+		if (isEligibleForEtag(bufferCacheServletResponse.getStatus())) {
+			if (!ETagUtil.processETag(request, response, byteBuffer)) {
+				bufferCacheServletResponse.finishResponse();
+				bufferCacheServletResponse.outputBuffer();
+			}
+		}
+		else {
 			bufferCacheServletResponse.finishResponse();
-			bufferCacheServletResponse.outputBuffer();
 		}
 	}
 

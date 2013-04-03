@@ -699,6 +699,13 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 		_organizationLocalService.deleteLogo(organizationId);
 	}
 
+	public com.liferay.portal.model.Organization fetchOrganizationByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _organizationLocalService.fetchOrganizationByUuidAndCompanyId(uuid,
+			companyId);
+	}
+
 	/**
 	* Returns the organization with the name.
 	*

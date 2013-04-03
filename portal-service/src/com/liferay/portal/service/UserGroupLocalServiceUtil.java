@@ -772,6 +772,12 @@ public class UserGroupLocalServiceUtil {
 		getService().copyUserGroupLayouts(userGroupIds, userId);
 	}
 
+	public static com.liferay.portal.model.UserGroup fetchUserGroupByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().fetchUserGroupByUuidAndCompanyId(uuid, companyId);
+	}
+
 	/**
 	* Returns the user group with the name.
 	*

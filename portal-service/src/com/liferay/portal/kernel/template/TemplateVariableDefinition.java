@@ -15,6 +15,7 @@
 package com.liferay.portal.kernel.template;
 
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 
 /**
  * @author Jorge Ferrer
@@ -48,6 +49,26 @@ public class TemplateVariableDefinition {
 		this(label, clazz, variableName);
 
 		_itemTemplateVariableDefinition = itemTemplateVariableDefinition;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof TemplateVariableDefinition)) {
+			return false;
+		}
+
+		TemplateVariableDefinition templateVariableDefinition =
+			(TemplateVariableDefinition)obj;
+
+		if (Validator.equals(_name, templateVariableDefinition._name)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public Class<?> getClazz() {

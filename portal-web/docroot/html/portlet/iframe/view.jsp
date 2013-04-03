@@ -184,10 +184,10 @@ if (windowState.equals(WindowState.MAXIMIZED)) {
 				var height = A.Plugin.ResizeIframe.getContentHeight(iframe);
 
 				if (height == null) {
-					height = <%= heightNormal %>;
+					height = '<%= heightNormal %>';
 
 					if (themeDisplay.isStateMaximized()) {
-						height = <%= heightMaximized %>;
+						height = '<%= heightMaximized %>';
 					}
 
 					iframe.setStyle('height', height);

@@ -705,6 +705,12 @@ public class OrganizationLocalServiceUtil {
 		getService().deleteLogo(organizationId);
 	}
 
+	public static com.liferay.portal.model.Organization fetchOrganizationByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().fetchOrganizationByUuidAndCompanyId(uuid, companyId);
+	}
+
 	/**
 	* Returns the organization with the name.
 	*

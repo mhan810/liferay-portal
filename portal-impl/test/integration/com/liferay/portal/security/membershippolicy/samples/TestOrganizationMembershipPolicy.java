@@ -77,6 +77,7 @@ public class TestOrganizationMembershipPolicy
 		}
 	}
 
+	@Override
 	public void checkRoles(
 			List<UserGroupRole> addUserGroupRoles,
 			List<UserGroupRole> removeUserGroupRoles)
@@ -134,9 +135,10 @@ public class TestOrganizationMembershipPolicy
 		BaseOrganizationMembershipPolicyTestCase.setPropagateMembership(true);
 	}
 
+	@Override
 	public void propagateRoles(
-			List<UserGroupRole> adduserGroupRoles,
-			List<UserGroupRole> removeUserGroupRoles) {
+		List<UserGroupRole> adduserGroupRoles,
+		List<UserGroupRole> removeUserGroupRoles) {
 
 		BaseOrganizationMembershipPolicyTestCase.setPropagateRoles(true);
 	}
@@ -165,13 +167,15 @@ public class TestOrganizationMembershipPolicy
 			verifyPolicy(organization);
 	}
 
+	@Override
 	public void verifyPolicy(Role role) {
 		verifyPolicy();
 	}
 
+	@Override
 	public void verifyPolicy(
-			Role role, Role oldRole,
-			Map<String, Serializable> oldExpandoAttributes) {
+		Role role, Role oldRole,
+		Map<String, Serializable> oldExpandoAttributes) {
 
 		Assert.assertNotNull(role);
 		Assert.assertNotNull(oldRole);
