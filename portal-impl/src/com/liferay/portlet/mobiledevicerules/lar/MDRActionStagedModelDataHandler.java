@@ -97,6 +97,8 @@ public class MDRActionStagedModelDataHandler
 			PortletDataContext portletDataContext, MDRAction action)
 		throws Exception {
 
+		long groupId = portletDataContext.getImportGroupId(action);
+
 		String ruleGroupInstancePath = StagedModelPathUtil.getPath(
 			portletDataContext, MDRRuleGroupInstance.class.getName(),
 			action.getRuleGroupInstanceId());
@@ -131,7 +133,7 @@ public class MDRActionStagedModelDataHandler
 
 		if (portletDataContext.isDataStrategyMirror()) {
 			MDRAction existingAction = MDRActionUtil.fetchByUUID_G(
-				action.getUuid(), portletDataContext.getScopeGroupId());
+				action.getUuid(), groupId);
 
 			if (existingAction == null) {
 				serviceContext.setUuid(action.getUuid());

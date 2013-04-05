@@ -88,6 +88,7 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 
 		long userId = portletDataContext.getUserId(
 			ruleGroupInstance.getUserUuid());
+		long groupId = portletDataContext.getImportGroupId(ruleGroupInstance);
 
 		String ruleGroupPath = StagedModelPathUtil.getPath(
 			portletDataContext, MDRRuleGroup.class.getName(),
@@ -120,15 +121,14 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 			if (Validator.isNotNull(layoutUuid)) {
 				Layout layout =
 					LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-						layoutUuid, portletDataContext.getScopeGroupId(),
+						layoutUuid, groupId,
 						portletDataContext.isPrivateLayout());
 
 				classPK = layout.getPrimaryKey();
 			}
 			else {
 				LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-					portletDataContext.getScopeGroupId(),
-					portletDataContext.isPrivateLayout());
+					groupId, portletDataContext.isPrivateLayout());
 
 				classPK = layoutSet.getLayoutSetId();
 			}
@@ -159,17 +159,16 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 		if (portletDataContext.isDataStrategyMirror()) {
 			MDRRuleGroupInstance existingMDRRuleGroupInstance =
 				MDRRuleGroupInstanceUtil.fetchByUUID_G(
-					ruleGroupInstance.getUuid(),
-					portletDataContext.getScopeGroupId());
+					ruleGroupInstance.getUuid(), groupId);
 
 			if (existingMDRRuleGroupInstance == null) {
 				serviceContext.setUuid(ruleGroupInstance.getUuid());
 
 				importedRuleGroupInstance =
 					MDRRuleGroupInstanceLocalServiceUtil.addRuleGroupInstance(
-						portletDataContext.getScopeGroupId(),
-						ruleGroupInstance.getClassName(), classPK, ruleGroupId,
-						ruleGroupInstance.getPriority(), serviceContext);
+						groupId, ruleGroupInstance.getClassName(), classPK,
+						ruleGroupId, ruleGroupInstance.getPriority(),
+						serviceContext);
 			}
 			else {
 				importedRuleGroupInstance =
@@ -183,9 +182,9 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 		else {
 			importedRuleGroupInstance =
 				MDRRuleGroupInstanceLocalServiceUtil.addRuleGroupInstance(
-					portletDataContext.getScopeGroupId(),
-					ruleGroupInstance.getClassName(), classPK, ruleGroupId,
-					ruleGroupInstance.getPriority(), serviceContext);
+					groupId, ruleGroupInstance.getClassName(), classPK,
+					ruleGroupId, ruleGroupInstance.getPriority(),
+					serviceContext);
 		}
 
 		portletDataContext.importClassedModel(

@@ -57,6 +57,7 @@ public class PollsQuestionStagedModelDataHandler
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(question.getUserUuid());
+		long groupId = portletDataContext.getImportGroupId(question);
 
 		int expirationMonth = 0;
 		int expirationDay = 0;
@@ -91,7 +92,7 @@ public class PollsQuestionStagedModelDataHandler
 
 		if (portletDataContext.isDataStrategyMirror()) {
 			PollsQuestion existingQuestion = PollsQuestionUtil.fetchByUUID_G(
-				question.getUuid(), portletDataContext.getScopeGroupId());
+				question.getUuid(), groupId);
 
 			if (existingQuestion == null) {
 				serviceContext.setUuid(question.getUuid());
