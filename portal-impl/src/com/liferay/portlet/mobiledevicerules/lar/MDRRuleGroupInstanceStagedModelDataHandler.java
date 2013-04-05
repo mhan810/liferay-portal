@@ -90,8 +90,7 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 			ruleGroupInstance.getUserUuid());
 
 		String ruleGroupPath = StagedModelPathUtil.getPath(
-			portletDataContext, MDRRuleGroup.class.getName(),
-			ruleGroupInstance.getRuleGroupId());
+			MDRRuleGroup.class.getName(), ruleGroupInstance.getRuleGroupId());
 
 		MDRRuleGroup ruleGroup =
 			(MDRRuleGroup)portletDataContext.getZipEntryAsObject(ruleGroupPath);

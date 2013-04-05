@@ -97,7 +97,7 @@ public class MBThreadFlagStagedModelDataHandler
 				element.attributeValue("root-message-id"));
 
 			String rootMessagePath = StagedModelPathUtil.getPath(
-				portletDataContext, MBMessage.class.getName(), rootMessageId);
+				MBMessage.class.getName(), rootMessageId);
 
 			MBMessage rootMessage = (MBMessage)portletDataContext.
 				getZipEntryAsObject(rootMessagePath);

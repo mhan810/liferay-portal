@@ -67,8 +67,7 @@ public class PollsChoiceStagedModelDataHandler
 		long userId = portletDataContext.getUserId(choice.getUserUuid());
 
 		String questionPath = StagedModelPathUtil.getPath(
-			portletDataContext, PollsQuestion.class.getName(),
-			choice.getQuestionId());
+			PollsQuestion.class.getName(), choice.getQuestionId());
 
 		PollsQuestion question =
 			(PollsQuestion)portletDataContext.getZipEntryAsObject(questionPath);

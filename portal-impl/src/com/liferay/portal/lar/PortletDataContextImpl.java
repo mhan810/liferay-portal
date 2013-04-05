@@ -898,8 +898,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 			long classPK = GetterUtil.getLong(
 				referenceElement.attributeValue("class-pk"));
 
-			String path = StagedModelPathUtil.getPath(
-				this, clazz.getName(), classPK);
+			String path = StagedModelPathUtil.getPath(clazz.getName(), classPK);
 
 			Element referencedElement = getImportDataStagedModelElement(
 				clazz.getSimpleName(), "path", path);

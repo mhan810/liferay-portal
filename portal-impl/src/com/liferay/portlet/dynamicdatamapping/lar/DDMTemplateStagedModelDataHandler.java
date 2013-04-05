@@ -188,8 +188,7 @@ public class DDMTemplateStagedModelDataHandler
 				DDMStructure.class);
 
 		String structurePath = StagedModelPathUtil.getPath(
-			portletDataContext, DDMStructure.class.getName(),
-			template.getClassPK());
+			DDMStructure.class.getName(), template.getClassPK());
 
 		DDMStructure structure =
 			(DDMStructure)portletDataContext.getZipEntryAsObject(structurePath);

@@ -79,7 +79,7 @@ public class BookmarksEntryStagedModelDataHandler
 			(folderId == entry.getFolderId())) {
 
 			String parentFolderPath = StagedModelPathUtil.getPath(
-				portletDataContext, BookmarksFolder.class.getName(), folderId);
+				BookmarksFolder.class.getName(), folderId);
 
 			BookmarksFolder parentFolder =
 				(BookmarksFolder)portletDataContext.getZipEntryAsObject(

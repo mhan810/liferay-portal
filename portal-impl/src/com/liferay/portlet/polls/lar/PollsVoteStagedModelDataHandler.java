@@ -64,8 +64,7 @@ public class PollsVoteStagedModelDataHandler
 		throws Exception {
 
 		String choicePath = StagedModelPathUtil.getPath(
-			portletDataContext, PollsChoice.class.getName(),
-			vote.getChoiceId());
+			PollsChoice.class.getName(), vote.getChoiceId());
 
 		PollsChoice choice =
 			(PollsChoice)portletDataContext.getZipEntryAsObject(choicePath);
