@@ -98,7 +98,7 @@ public class MDRActionStagedModelDataHandler
 		throws Exception {
 
 		String ruleGroupInstancePath = StagedModelPathUtil.getPath(
-			portletDataContext, MDRRuleGroupInstance.class.getName(),
+			MDRRuleGroupInstance.class.getName(),
 			action.getRuleGroupInstanceId());
 
 		MDRRuleGroupInstance ruleGroupInstance =

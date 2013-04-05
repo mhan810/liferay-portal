@@ -106,7 +106,7 @@ public class MBCategoryStagedModelDataHandler
 			(parentCategoryId == category.getParentCategoryId())) {
 
 			String parentCategoryPath = StagedModelPathUtil.getPath(
-				portletDataContext, getClassName(), parentCategoryId);
+				getClassName(), parentCategoryId);
 
 			MBCategory parentCategory =
 				(MBCategory)portletDataContext.getZipEntryAsObject(

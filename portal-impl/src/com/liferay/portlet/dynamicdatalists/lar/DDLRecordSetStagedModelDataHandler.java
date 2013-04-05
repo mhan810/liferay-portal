@@ -81,8 +81,7 @@ public class DDLRecordSetStagedModelDataHandler
 				DDMStructure.class);
 
 		String structurePath = StagedModelPathUtil.getPath(
-			portletDataContext, DDMStructure.class.getName(),
-			recordSet.getDDMStructureId());
+			DDMStructure.class.getName(), recordSet.getDDMStructureId());
 
 		DDMStructure ddmStructure =
 			(DDMStructure)portletDataContext.getZipEntryAsObject(structurePath);
