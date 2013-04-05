@@ -26,21 +26,6 @@ import java.io.Serializable;
  */
 public class StagedModelPathUtil {
 
-	public static String getPath(
-		PortletDataContext portletDataContext, String className, long classPK) {
-
-		return getPath(portletDataContext, className, classPK, null);
-	}
-
-	public static String getPath(
-		PortletDataContext portletDataContext, String className, long classPK,
-		String dependentFileName) {
-
-		return getPath(
-			portletDataContext.getSourceGroupId(), className, classPK,
-			dependentFileName);
-	}
-
 	public static String getPath(StagedModel stagedModel) {
 		return getPath(stagedModel, null);
 	}
@@ -49,18 +34,27 @@ public class StagedModelPathUtil {
 		StagedModel stagedModel, String dependentFileName) {
 
 		return getPath(
-			stagedModel.getGroupId(), stagedModel.getModelClassName(),
-			stagedModel.getPrimaryKeyObj(), dependentFileName);
+			stagedModel.getModelClassName(), stagedModel.getPrimaryKeyObj(),
+			dependentFileName);
+	}
+
+	public static String getPath(String className, long classPK) {
+
+		return getPath(className, classPK, null);
+	}
+
+	public static String getPath(
+		String className, long classPK, String dependentFileName) {
+
+		return getPath(className, (Serializable)classPK, dependentFileName);
 	}
 
 	protected static String getPath(
-		long groupId, String className, Serializable primaryKeyObj,
+		String className, Serializable primaryKeyObj,
 		String dependentFileName) {
 
 		StringBundler sb = new StringBundler(7);
 
-		sb.append("/groups/");
-		sb.append(groupId);
 		sb.append(StringPool.FORWARD_SLASH);
 		sb.append(className);
 		sb.append(StringPool.FORWARD_SLASH);
