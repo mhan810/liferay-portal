@@ -71,6 +71,7 @@ public class MBCategoryStagedModelDataHandler
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(category.getUserUuid());
+		long groupId = portletDataContext.getImportGroupId(category);
 
 		Map<Long, Long> categoryIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
@@ -127,7 +128,7 @@ public class MBCategoryStagedModelDataHandler
 
 		if (portletDataContext.isDataStrategyMirror()) {
 			MBCategory existingCategory = MBCategoryUtil.fetchByUUID_G(
-				category.getUuid(), portletDataContext.getScopeGroupId());
+				category.getUuid(), groupId);
 
 			if (existingCategory == null) {
 				serviceContext.setUuid(category.getUuid());

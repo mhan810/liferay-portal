@@ -64,6 +64,7 @@ public class BookmarksFolderStagedModelDataHandler
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(folder.getUserUuid());
+		long groupId = portletDataContext.getImportGroupId(folder);
 
 		Map<Long, Long> folderIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
@@ -98,7 +99,7 @@ public class BookmarksFolderStagedModelDataHandler
 
 		if (portletDataContext.isDataStrategyMirror()) {
 			BookmarksFolder existingFolder = BookmarksFolderUtil.fetchByUUID_G(
-				folder.getUuid(), portletDataContext.getScopeGroupId());
+				folder.getUuid(), groupId);
 
 			if (existingFolder == null) {
 				serviceContext.setUuid(folder.getUuid());

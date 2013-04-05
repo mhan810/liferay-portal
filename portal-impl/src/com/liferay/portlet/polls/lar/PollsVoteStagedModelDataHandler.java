@@ -63,6 +63,8 @@ public class PollsVoteStagedModelDataHandler
 			PortletDataContext portletDataContext, PollsVote vote)
 		throws Exception {
 
+		long groupId = portletDataContext.getImportGroupId(vote);
+
 		String choicePath = StagedModelPathUtil.getPath(
 			portletDataContext, PollsChoice.class.getName(),
 			vote.getChoiceId());
@@ -94,7 +96,7 @@ public class PollsVoteStagedModelDataHandler
 
 		if (portletDataContext.isDataStrategyMirror()) {
 			PollsVote existingVote = PollsVoteUtil.fetchByUUID_G(
-				vote.getUuid(), portletDataContext.getScopeGroupId());
+				vote.getUuid(), groupId);
 
 			if (existingVote == null) {
 				serviceContext.setUuid(vote.getUuid());

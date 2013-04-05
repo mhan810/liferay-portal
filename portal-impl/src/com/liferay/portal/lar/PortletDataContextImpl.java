@@ -52,6 +52,7 @@ import com.liferay.portal.model.AttachedModel;
 import com.liferay.portal.model.AuditedModel;
 import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.GroupedModel;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.ResourceConstants;
@@ -834,6 +835,22 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return (Element)xPath.selectSingleNode(groupElement);
 	}
 
+	public long getImportGroupId(GroupedModel groupedModel) {
+		if (groupedModel.getGroupId() == getSourceGroupId()) {
+			return getScopeGroupId();
+		}
+
+		try {
+			Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+				getCompanyId());
+
+			return companyGroup.getGroupId();
+		}
+		catch (Exception e) {
+			return getScopeGroupId();
+		}
+	}
+
 	public String getLayoutPath(long layoutId) {
 		return getRootPath() + ROOT_PATH_LAYOUTS + layoutId;
 	}
@@ -1465,7 +1482,14 @@ public class PortletDataContextImpl implements PortletDataContext {
 		// Theme display
 
 		serviceContext.setCompanyId(getCompanyId());
-		serviceContext.setScopeGroupId(getScopeGroupId());
+
+		if (classedModel instanceof GroupedModel) {
+			serviceContext.setScopeGroupId(
+				getImportGroupId((GroupedModel)classedModel));
+		}
+		else {
+			serviceContext.setScopeGroupId(getScopeGroupId());
+		}
 
 		// Dates
 

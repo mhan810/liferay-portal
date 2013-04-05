@@ -75,6 +75,7 @@ public class DDLRecordSetStagedModelDataHandler
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(recordSet.getUserUuid());
+		long groupId = portletDataContext.getImportGroupId(recordSet);
 
 		Map<Long, Long> ddmStructureIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
@@ -110,15 +111,15 @@ public class DDLRecordSetStagedModelDataHandler
 
 		if (portletDataContext.isDataStrategyMirror()) {
 			DDLRecordSet existingRecordSet = DDLRecordSetUtil.fetchByUUID_G(
-				recordSet.getUuid(), portletDataContext.getScopeGroupId());
+				recordSet.getUuid(), groupId);
 
 			if (existingRecordSet == null) {
 				serviceContext.setUuid(recordSet.getUuid());
 
 				importedRecordSet = DDLRecordSetLocalServiceUtil.addRecordSet(
-					userId, portletDataContext.getScopeGroupId(),
-					ddmStructureId, recordSet.getRecordSetKey(),
-					recordSet.getNameMap(), recordSet.getDescriptionMap(),
+					userId, groupId, ddmStructureId,
+					recordSet.getRecordSetKey(), recordSet.getNameMap(),
+					recordSet.getDescriptionMap(),
 					recordSet.getMinDisplayRows(), recordSet.getScope(),
 					serviceContext);
 			}
@@ -132,10 +133,10 @@ public class DDLRecordSetStagedModelDataHandler
 		}
 		else {
 			importedRecordSet = DDLRecordSetLocalServiceUtil.addRecordSet(
-				userId, portletDataContext.getScopeGroupId(), ddmStructureId,
-				recordSet.getRecordSetKey(), recordSet.getNameMap(),
-				recordSet.getDescriptionMap(), recordSet.getMinDisplayRows(),
-				recordSet.getScope(), serviceContext);
+				userId, groupId, ddmStructureId, recordSet.getRecordSetKey(),
+				recordSet.getNameMap(), recordSet.getDescriptionMap(),
+				recordSet.getMinDisplayRows(), recordSet.getScope(),
+				serviceContext);
 		}
 
 		portletDataContext.importClassedModel(

@@ -182,6 +182,7 @@ public class DDMTemplateStagedModelDataHandler
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(template.getUserUuid());
+		long groupId = portletDataContext.getImportGroupId(template);
 
 		Map<Long, Long> structureIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
@@ -236,14 +237,14 @@ public class DDMTemplateStagedModelDataHandler
 
 		if (portletDataContext.isDataStrategyMirror()) {
 			DDMTemplate existingTemplate = DDMTemplateUtil.fetchByUUID_G(
-				template.getUuid(), portletDataContext.getScopeGroupId());
+				template.getUuid(), groupId);
 
 			if (existingTemplate == null) {
 				serviceContext.setUuid(template.getUuid());
 
 				importedTemplate = addTemplate(
-					userId, portletDataContext.getScopeGroupId(), template,
-					classPK, smallFile, serviceContext);
+					userId, groupId, template, classPK, smallFile,
+					serviceContext);
 			}
 			else {
 				importedTemplate = DDMTemplateLocalServiceUtil.updateTemplate(
@@ -257,8 +258,7 @@ public class DDMTemplateStagedModelDataHandler
 		}
 		else {
 			importedTemplate = addTemplate(
-				userId, portletDataContext.getScopeGroupId(), template, classPK,
-				smallFile, serviceContext);
+				userId, groupId, template, classPK, smallFile, serviceContext);
 		}
 
 		portletDataContext.importClassedModel(

@@ -53,6 +53,7 @@ public class MDRRuleGroupStagedModelDataHandler
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(ruleGroup.getUserUuid());
+		long groupId = portletDataContext.getImportGroupId(ruleGroup);
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			ruleGroup, MDRPortletDataHandler.NAMESPACE);
@@ -63,15 +64,14 @@ public class MDRRuleGroupStagedModelDataHandler
 
 		if (portletDataContext.isDataStrategyMirror()) {
 			MDRRuleGroup existingRuleGroup = MDRRuleGroupUtil.fetchByUUID_G(
-				ruleGroup.getUuid(), portletDataContext.getScopeGroupId());
+				ruleGroup.getUuid(), groupId);
 
 			if (existingRuleGroup == null) {
 				serviceContext.setUuid(ruleGroup.getUuid());
 
 				importedRuleGroup = MDRRuleGroupLocalServiceUtil.addRuleGroup(
-					portletDataContext.getScopeGroupId(),
-					ruleGroup.getNameMap(), ruleGroup.getDescriptionMap(),
-					serviceContext);
+					groupId, ruleGroup.getNameMap(),
+					ruleGroup.getDescriptionMap(), serviceContext);
 			}
 			else {
 				importedRuleGroup =
@@ -83,8 +83,8 @@ public class MDRRuleGroupStagedModelDataHandler
 		}
 		else {
 			importedRuleGroup = MDRRuleGroupLocalServiceUtil.addRuleGroup(
-				portletDataContext.getScopeGroupId(), ruleGroup.getNameMap(),
-				ruleGroup.getDescriptionMap(), serviceContext);
+				groupId, ruleGroup.getNameMap(), ruleGroup.getDescriptionMap(),
+				serviceContext);
 		}
 
 		portletDataContext.importClassedModel(

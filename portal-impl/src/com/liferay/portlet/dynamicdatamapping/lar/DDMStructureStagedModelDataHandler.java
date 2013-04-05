@@ -70,6 +70,7 @@ public class DDMStructureStagedModelDataHandler
 		prepareLanguagesForImport(structure);
 
 		long userId = portletDataContext.getUserId(structure.getUserUuid());
+		long groupId = portletDataContext.getImportGroupId(structure);
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			structure, DDMPortletDataHandler.NAMESPACE);
@@ -87,20 +88,19 @@ public class DDMStructureStagedModelDataHandler
 
 			if (!preloaded) {
 				existingStructure = DDMStructureUtil.fetchByUUID_G(
-					structure.getUuid(), portletDataContext.getScopeGroupId());
+					structure.getUuid(), groupId);
 			}
 			else {
 				existingStructure = DDMStructureUtil.fetchByG_C_S(
-					portletDataContext.getScopeGroupId(),
-					structure.getClassNameId(), structure.getStructureKey());
+					groupId, structure.getClassNameId(),
+					structure.getStructureKey());
 			}
 
 			if (existingStructure == null) {
 				serviceContext.setUuid(structure.getUuid());
 
 				importedStructure = DDMStructureLocalServiceUtil.addStructure(
-					userId, portletDataContext.getScopeGroupId(),
-					structure.getParentStructureId(),
+					userId, groupId, structure.getParentStructureId(),
 					structure.getClassNameId(), structure.getStructureKey(),
 					structure.getNameMap(), structure.getDescriptionMap(),
 					structure.getXsd(), structure.getStorageType(),
@@ -117,12 +117,11 @@ public class DDMStructureStagedModelDataHandler
 		}
 		else {
 			importedStructure = DDMStructureLocalServiceUtil.addStructure(
-				userId, portletDataContext.getScopeGroupId(),
-				structure.getParentStructureId(), structure.getClassNameId(),
-				structure.getStructureKey(), structure.getNameMap(),
-				structure.getDescriptionMap(), structure.getXsd(),
-				structure.getStorageType(), structure.getType(),
-				serviceContext);
+				userId, groupId, structure.getParentStructureId(),
+				structure.getClassNameId(), structure.getStructureKey(),
+				structure.getNameMap(), structure.getDescriptionMap(),
+				structure.getXsd(), structure.getStorageType(),
+				structure.getType(), serviceContext);
 		}
 
 		portletDataContext.importClassedModel(

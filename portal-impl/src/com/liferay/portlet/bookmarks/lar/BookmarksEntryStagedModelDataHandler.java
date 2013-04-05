@@ -67,6 +67,7 @@ public class BookmarksEntryStagedModelDataHandler
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(entry.getUserUuid());
+		long groupId = portletDataContext.getImportGroupId(entry);
 
 		Map<Long, Long> folderIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
@@ -99,29 +100,26 @@ public class BookmarksEntryStagedModelDataHandler
 
 		if (portletDataContext.isDataStrategyMirror()) {
 			BookmarksEntry existingEntry = BookmarksEntryUtil.fetchByUUID_G(
-				entry.getUuid(), portletDataContext.getScopeGroupId());
+				entry.getUuid(), groupId);
 
 			if (existingEntry == null) {
 				serviceContext.setUuid(entry.getUuid());
 
 				importedEntry = BookmarksEntryLocalServiceUtil.addEntry(
-					userId, portletDataContext.getScopeGroupId(), folderId,
-					entry.getName(), entry.getUrl(), entry.getDescription(),
-					serviceContext);
+					userId, groupId, folderId, entry.getName(), entry.getUrl(),
+					entry.getDescription(), serviceContext);
 			}
 			else {
 				importedEntry = BookmarksEntryLocalServiceUtil.updateEntry(
-					userId, existingEntry.getEntryId(),
-					portletDataContext.getScopeGroupId(), folderId,
+					userId, existingEntry.getEntryId(), groupId, folderId,
 					entry.getName(), entry.getUrl(), entry.getDescription(),
 					serviceContext);
 			}
 		}
 		else {
 			importedEntry = BookmarksEntryLocalServiceUtil.addEntry(
-				userId, portletDataContext.getScopeGroupId(), folderId,
-				entry.getName(), entry.getUrl(), entry.getDescription(),
-				serviceContext);
+				userId, groupId, folderId, entry.getName(), entry.getUrl(),
+				entry.getDescription(), serviceContext);
 		}
 
 		portletDataContext.importClassedModel(

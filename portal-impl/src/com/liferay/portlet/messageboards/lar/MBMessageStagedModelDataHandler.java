@@ -118,6 +118,7 @@ public class MBMessageStagedModelDataHandler
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(message.getUserUuid());
+		long groupId = portletDataContext.getImportGroupId(message);
 
 		String userName = message.getUserName();
 
@@ -184,16 +185,15 @@ public class MBMessageStagedModelDataHandler
 
 			if (portletDataContext.isDataStrategyMirror()) {
 				MBMessage existingMessage = MBMessageUtil.fetchByUUID_G(
-					message.getUuid(), portletDataContext.getScopeGroupId());
+					message.getUuid(), groupId);
 
 				if (existingMessage == null) {
 					serviceContext.setUuid(message.getUuid());
 
 					importedMessage = MBMessageLocalServiceUtil.addMessage(
-						userId, userName, portletDataContext.getScopeGroupId(),
-						parentCategoryId, threadId, parentMessageId,
-						message.getSubject(), message.getBody(),
-						message.getFormat(), inputStreamOVPs,
+						userId, userName, groupId, parentCategoryId, threadId,
+						parentMessageId, message.getSubject(),
+						message.getBody(), message.getFormat(), inputStreamOVPs,
 						message.getAnonymous(), message.getPriority(),
 						message.getAllowPingbacks(), serviceContext);
 				}
@@ -208,9 +208,8 @@ public class MBMessageStagedModelDataHandler
 			}
 			else {
 				importedMessage = MBMessageLocalServiceUtil.addMessage(
-					userId, userName, portletDataContext.getScopeGroupId(),
-					parentCategoryId, threadId, parentMessageId,
-					message.getSubject(), message.getBody(),
+					userId, userName, groupId, parentCategoryId, threadId,
+					parentMessageId, message.getSubject(), message.getBody(),
 					message.getFormat(), inputStreamOVPs,
 					message.getAnonymous(), message.getPriority(),
 					message.getAllowPingbacks(), serviceContext);

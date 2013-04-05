@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.model.ClassedModel;
+import com.liferay.portal.model.GroupedModel;
 import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.service.ServiceContext;
@@ -179,6 +180,8 @@ public interface PortletDataContext extends Serializable {
 
 	public Element getImportDataStagedModelElement(
 		String name, String attribute, String value);
+
+	public long getImportGroupId(GroupedModel stagedModel);
 
 	public String getLayoutPath(long layoutId);
 
