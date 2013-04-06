@@ -591,6 +591,14 @@
 				<column name="UUID_" />
 			</basic>
 			<basic name="companyId" />
+			<basic name="userId" />
+			<basic name="userName" />
+			<basic name="createDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="modifiedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
 			<basic name="parentOrganizationId" />
 			<basic name="treePath" />
 			<basic name="name" />
@@ -605,6 +613,7 @@
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
 		</attributes>
 	</mapped-superclass>
 	<mapped-superclass class="com.liferay.portal.model.impl.OrgGroupRoleModelImpl">
@@ -987,6 +996,14 @@
 				<column name="UUID_" />
 			</basic>
 			<basic name="companyId" />
+			<basic name="userId" />
+			<basic name="userName" />
+			<basic name="createDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="modifiedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
 			<basic name="classNameId" />
 			<basic name="classPK" />
 			<basic name="name" />
@@ -1004,6 +1021,7 @@
 			<transient name="primaryKeyObj" />
 			<transient name="titleCurrentLanguageId" />
 			<transient name="titleMap" />
+			<transient name="userUuid" />
 		</attributes>
 	</mapped-superclass>
 	<mapped-superclass class="com.liferay.portal.model.impl.ServiceComponentModelImpl">
@@ -1173,6 +1191,14 @@
 				<column name="UUID_" />
 			</basic>
 			<basic name="companyId" />
+			<basic name="userId" />
+			<basic name="userName" />
+			<basic name="createDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="modifiedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
 			<basic name="parentUserGroupId" />
 			<basic name="name" />
 			<basic name="description" />
@@ -1180,6 +1206,7 @@
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
 		</attributes>
 	</mapped-superclass>
 	<mapped-superclass class="com.liferay.portal.model.impl.UserGroupGroupRoleModelImpl">
