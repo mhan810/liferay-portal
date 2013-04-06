@@ -61,6 +61,7 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1694,6 +1695,9 @@ public class OrganizationLocalServiceImpl
 
 		organization.setTreePath(treePath);
 
+		Date now = new Date();
+
+		organization.setModifiedDate(now);
 		organization.setName(name);
 		organization.setType(type);
 		organization.setRecursable(true);

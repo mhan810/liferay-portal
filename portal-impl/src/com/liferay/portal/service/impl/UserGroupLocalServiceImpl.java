@@ -49,6 +49,7 @@ import java.io.File;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -117,8 +118,7 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 			long userId, long companyId, String name, String description)
 		throws PortalException, SystemException {
 
-		return addUserGroup(
-			userId, companyId, name, description, new ServiceContext());
+		return addUserGroup(userId, companyId, name, description, null);
 	}
 
 	/**
@@ -151,15 +151,31 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 
 		validate(0, companyId, name);
 
+		User user = userPersistence.findByPrimaryKey(userId);
+
 		long userGroupId = counterLocalService.increment();
 
 		UserGroup userGroup = userGroupPersistence.create(userGroupId);
+
+		Date now = new Date();
+
+		if (serviceContext != null) {
+			userGroup.setUuid(serviceContext.getUuid());
+			userGroup.setCreateDate(serviceContext.getCreateDate(now));
+			userGroup.setModifiedDate(serviceContext.getModifiedDate(now));
+		}
+		else {
+			userGroup.setCreateDate(now);
+			userGroup.setModifiedDate(now);
+		}
 
 		if (serviceContext != null) {
 			userGroup.setUuid(serviceContext.getUuid());
 		}
 
 		userGroup.setCompanyId(companyId);
+		userGroup.setUserId(user.getUserId());
+		userGroup.setUserName(user.getFullName());
 		userGroup.setParentUserGroupId(
 			UserGroupConstants.DEFAULT_PARENT_USER_GROUP_ID);
 		userGroup.setName(name);
@@ -746,6 +762,9 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 		UserGroup userGroup = userGroupPersistence.findByPrimaryKey(
 			userGroupId);
 
+		Date now = new Date();
+
+		userGroup.setModifiedDate(now);
 		userGroup.setName(name);
 		userGroup.setDescription(description);
 		userGroup.setExpandoBridgeAttributes(serviceContext);
