@@ -91,6 +91,58 @@ public class LayoutPrototypeLocalServiceImpl
 		return layoutPrototype;
 	}
 
+	public LayoutPrototype addLayoutPrototype(
+		long userId, long companyId, Map<Locale, String> nameMap,
+		String description, boolean active, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		// Layout prototype
+
+		long layoutPrototypeId = counterLocalService.increment();
+
+		LayoutPrototype layoutPrototype = layoutPrototypePersistence.create(
+			layoutPrototypeId);
+
+		if (serviceContext != null) {
+			layoutPrototype.setUuid(serviceContext.getUuid());
+		}
+		layoutPrototype.setCompanyId(companyId);
+		layoutPrototype.setNameMap(nameMap);
+		layoutPrototype.setDescription(description);
+		layoutPrototype.setActive(active);
+
+		layoutPrototypePersistence.update(layoutPrototype);
+
+		// Resources
+
+		if (userId > 0) {
+			resourceLocalService.addResources(
+				companyId, 0, userId, LayoutPrototype.class.getName(),
+				layoutPrototype.getLayoutPrototypeId(), false, false, false);
+		}
+
+		// Group
+
+		String friendlyURL =
+			"/template-" + layoutPrototype.getLayoutPrototypeId();
+
+		Group group = groupLocalService.addGroup(
+			userId, GroupConstants.DEFAULT_PARENT_GROUP_ID,
+			LayoutPrototype.class.getName(),
+			layoutPrototype.getLayoutPrototypeId(),
+			GroupConstants.DEFAULT_LIVE_GROUP_ID,
+			layoutPrototype.getName(LocaleUtil.getDefault()), null, 0,
+			friendlyURL, false, true, null);
+
+		layoutLocalService.addLayout(
+			userId, group.getGroupId(), true,
+			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
+			layoutPrototype.getName(LocaleUtil.getDefault()), null, null,
+			LayoutConstants.TYPE_PORTLET, false, "/layout", serviceContext);
+
+		return layoutPrototype;
+	}
+
 	@Override
 	public LayoutPrototype deleteLayoutPrototype(
 			LayoutPrototype layoutPrototype)
@@ -191,6 +243,34 @@ public class LayoutPrototypeLocalServiceImpl
 	public LayoutPrototype updateLayoutPrototype(
 			long layoutPrototypeId, Map<Locale, String> nameMap,
 			String description, boolean active)
+		throws PortalException, SystemException {
+
+		// Layout prototype
+
+		LayoutPrototype layoutPrototype =
+			layoutPrototypePersistence.findByPrimaryKey(layoutPrototypeId);
+
+		layoutPrototype.setNameMap(nameMap);
+		layoutPrototype.setDescription(description);
+		layoutPrototype.setActive(active);
+
+		layoutPrototypePersistence.update(layoutPrototype);
+
+		// Group
+
+		Group group = groupLocalService.getLayoutPrototypeGroup(
+			layoutPrototype.getCompanyId(), layoutPrototypeId);
+
+		group.setName(layoutPrototype.getName(LocaleUtil.getDefault()));
+
+		groupPersistence.update(group);
+
+		return layoutPrototype;
+	}
+
+	public LayoutPrototype updateLayoutPrototype(
+		long layoutPrototypeId, Map<Locale, String> nameMap,
+		String description, boolean active, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		// Layout prototype
