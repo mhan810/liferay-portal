@@ -51,6 +51,7 @@ public class LayoutSetPrototypeLocalServiceImpl
 		// Layout set prototype
 
 		User user = userPersistence.findByPrimaryKey(userId);
+
 		Date now = new Date();
 
 		long layoutSetPrototypeId = counterLocalService.increment();
