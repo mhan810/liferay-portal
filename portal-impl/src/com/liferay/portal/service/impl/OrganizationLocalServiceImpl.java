@@ -61,6 +61,7 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -129,7 +130,7 @@ public class OrganizationLocalServiceImpl
 			userId, parentOrganizationId, name,
 			OrganizationConstants.TYPE_REGULAR_ORGANIZATION, 0, 0,
 			ListTypeConstants.ORGANIZATION_STATUS_DEFAULT, StringPool.BLANK,
-			site, new ServiceContext());
+			site, null);
 	}
 
 	/**
@@ -230,7 +231,10 @@ public class OrganizationLocalServiceImpl
 		Organization organization = organizationPersistence.create(
 			organizationId);
 
-		organization.setUuid(serviceContext.getUuid());
+		if (serviceContext != null) {
+			organization.setUuid(serviceContext.getUuid());
+		}
+
 		organization.setCompanyId(user.getCompanyId());
 		organization.setParentOrganizationId(parentOrganizationId);
 
@@ -1691,6 +1695,9 @@ public class OrganizationLocalServiceImpl
 
 		organization.setTreePath(treePath);
 
+		Date now = new Date();
+
+		organization.setModifiedDate(now);
 		organization.setName(name);
 		organization.setType(type);
 		organization.setRecursable(true);

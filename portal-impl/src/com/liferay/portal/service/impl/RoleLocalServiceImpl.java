@@ -62,6 +62,7 @@ import com.liferay.portlet.usersadmin.util.UsersAdminUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -137,7 +138,7 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 
 		return addRole(
 			userId, className, classPK, name, titleMap, descriptionMap, type,
-			null, new ServiceContext());
+			null, null);
 	}
 
 	/**
@@ -186,10 +187,23 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 
 		validate(0, user.getCompanyId(), classNameId, name);
 
+		Date now = new Date();
+
 		Role role = rolePersistence.create(roleId);
 
-		role.setUuid(serviceContext.getUuid());
+		if (serviceContext != null) {
+			role.setUuid(serviceContext.getUuid());
+			role.setCreateDate(serviceContext.getCreateDate(now));
+			role.setModifiedDate(serviceContext.getModifiedDate(now));
+		}
+		else {
+			role.setCreateDate(now);
+			role.setModifiedDate(now);
+		}
+
 		role.setCompanyId(user.getCompanyId());
+		role.setUserId(user.getUserId());
+		role.setUserName(user.getFullName());
 		role.setClassNameId(classNameId);
 		role.setClassPK(classPK);
 		role.setName(name);
@@ -1264,6 +1278,9 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 			subtype = null;
 		}
 
+		Date now = new Date();
+
+		role.setModifiedDate(now);
 		role.setName(name);
 		role.setTitleMap(titleMap);
 		role.setDescriptionMap(descriptionMap);
@@ -1302,7 +1319,7 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 
 			role = roleLocalService.addRole(
 				user.getUserId(), null, 0, name, null, descriptionMap, type,
-				null, new ServiceContext());
+				null, null);
 
 			if (name.equals(RoleConstants.USER)) {
 				initPersonalControlPanelPortletsPermissions(role);

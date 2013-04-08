@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.IntegerWrapper;
+import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.impl.OrganizationModelImpl;
@@ -114,6 +115,14 @@ public class OrganizationPersistenceTest {
 
 		newOrganization.setCompanyId(ServiceTestUtil.nextLong());
 
+		newOrganization.setUserId(ServiceTestUtil.nextLong());
+
+		newOrganization.setUserName(ServiceTestUtil.randomString());
+
+		newOrganization.setCreateDate(ServiceTestUtil.nextDate());
+
+		newOrganization.setModifiedDate(ServiceTestUtil.nextDate());
+
 		newOrganization.setParentOrganizationId(ServiceTestUtil.nextLong());
 
 		newOrganization.setTreePath(ServiceTestUtil.randomString());
@@ -142,6 +151,16 @@ public class OrganizationPersistenceTest {
 			newOrganization.getOrganizationId());
 		Assert.assertEquals(existingOrganization.getCompanyId(),
 			newOrganization.getCompanyId());
+		Assert.assertEquals(existingOrganization.getUserId(),
+			newOrganization.getUserId());
+		Assert.assertEquals(existingOrganization.getUserName(),
+			newOrganization.getUserName());
+		Assert.assertEquals(Time.getShortTimestamp(
+				existingOrganization.getCreateDate()),
+			Time.getShortTimestamp(newOrganization.getCreateDate()));
+		Assert.assertEquals(Time.getShortTimestamp(
+				existingOrganization.getModifiedDate()),
+			Time.getShortTimestamp(newOrganization.getModifiedDate()));
 		Assert.assertEquals(existingOrganization.getParentOrganizationId(),
 			newOrganization.getParentOrganizationId());
 		Assert.assertEquals(existingOrganization.getTreePath(),
@@ -324,6 +343,14 @@ public class OrganizationPersistenceTest {
 		organization.setUuid(ServiceTestUtil.randomString());
 
 		organization.setCompanyId(ServiceTestUtil.nextLong());
+
+		organization.setUserId(ServiceTestUtil.nextLong());
+
+		organization.setUserName(ServiceTestUtil.randomString());
+
+		organization.setCreateDate(ServiceTestUtil.nextDate());
+
+		organization.setModifiedDate(ServiceTestUtil.nextDate());
 
 		organization.setParentOrganizationId(ServiceTestUtil.nextLong());
 
