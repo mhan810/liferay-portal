@@ -133,6 +133,12 @@ public class VerifyAuditedModel extends VerifyProcess {
 
 	private static final String[][] _MODELS = new String[][] {
 		new String[] {
+			"LayoutPrototype", "layoutPrototypeId"
+		},
+		new String[] {
+			"LayoutSetPrototype", "layoutSetPrototypeId"
+		},
+		new String[] {
 			"Organization_", "organizationId"
 		},
 		new String[] {
