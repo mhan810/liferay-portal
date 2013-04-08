@@ -76,6 +76,7 @@ public class LayoutPrototypeLocalServiceImpl
 			layoutPrototype.setCreateDate(now);
 			layoutPrototype.setModifiedDate(now);
 		}
+
 		layoutPrototype.setCompanyId(companyId);
 		layoutPrototype.setUserId(userId);
 		layoutPrototype.setUserName(user.getFullName());
@@ -160,6 +161,12 @@ public class LayoutPrototypeLocalServiceImpl
 		return deleteLayoutPrototype(layoutPrototype);
 	}
 
+	public LayoutPrototype fetchLayoutPrototype(long companyId, String name)
+		throws SystemException {
+
+		return layoutPrototypePersistence.fetchByC_N(companyId, name);
+	}
+
 	public LayoutPrototype fetchLayoutPrototypeByUuidAndCompanyId(
 			String uuid, long companyId)
 		throws SystemException {
@@ -224,8 +231,8 @@ public class LayoutPrototypeLocalServiceImpl
 	}
 
 	public LayoutPrototype updateLayoutPrototype(
-		long layoutPrototypeId, Map<Locale, String> nameMap,
-		String description, boolean active, ServiceContext serviceContext)
+			long layoutPrototypeId, Map<Locale, String> nameMap,
+			String description, boolean active, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		// Layout prototype
