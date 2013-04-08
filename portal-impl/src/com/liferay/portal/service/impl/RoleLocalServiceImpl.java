@@ -449,6 +449,26 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 	}
 
 	/**
+	 * Deletes the role with the primary key and its associated permissions.
+	 *
+	 * @param  companyId the primary key of the company
+	 * @return the deleted role
+	 * @throws PortalException if a role with the primary key could not be
+	 *         found, if the role is a default system role, or if the role's
+	 *         resource could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void deleteRoles(long companyId)
+		throws PortalException, SystemException {
+
+		List<Role> roles = rolePersistence.findByCompanyId(companyId);
+
+		for (Role role: roles) {
+			deleteRole(role);
+		}
+	}
+
+	/**
 	 * Returns the role with the name in the company.
 	 *
 	 * <p>
