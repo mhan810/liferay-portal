@@ -99,8 +99,9 @@ public class LayoutSetPrototypeModelImpl extends BaseModelImpl<LayoutSetPrototyp
 			true);
 	public static long ACTIVE_COLUMN_BITMASK = 1L;
 	public static long COMPANYID_COLUMN_BITMASK = 2L;
-	public static long UUID_COLUMN_BITMASK = 4L;
-	public static long LAYOUTSETPROTOTYPEID_COLUMN_BITMASK = 8L;
+	public static long NAME_COLUMN_BITMASK = 4L;
+	public static long UUID_COLUMN_BITMASK = 8L;
+	public static long LAYOUTSETPROTOTYPEID_COLUMN_BITMASK = 16L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -417,6 +418,12 @@ public class LayoutSetPrototypeModelImpl extends BaseModelImpl<LayoutSetPrototyp
 	}
 
 	public void setName(String name) {
+		_columnBitmask |= NAME_COLUMN_BITMASK;
+
+		if (_originalName == null) {
+			_originalName = _name;
+		}
+
 		_name = name;
 	}
 
@@ -453,6 +460,10 @@ public class LayoutSetPrototypeModelImpl extends BaseModelImpl<LayoutSetPrototyp
 
 		setName(LocalizationUtil.updateLocalization(nameMap, getName(), "Name",
 				LocaleUtil.toLanguageId(defaultLocale)));
+	}
+
+	public String getOriginalName() {
+		return GetterUtil.getString(_originalName);
 	}
 
 	@JSON
@@ -616,6 +627,8 @@ public class LayoutSetPrototypeModelImpl extends BaseModelImpl<LayoutSetPrototyp
 		layoutSetPrototypeModelImpl._originalCompanyId = layoutSetPrototypeModelImpl._companyId;
 
 		layoutSetPrototypeModelImpl._setOriginalCompanyId = false;
+
+		layoutSetPrototypeModelImpl._originalName = layoutSetPrototypeModelImpl._name;
 
 		layoutSetPrototypeModelImpl._originalActive = layoutSetPrototypeModelImpl._active;
 
@@ -802,6 +815,7 @@ public class LayoutSetPrototypeModelImpl extends BaseModelImpl<LayoutSetPrototyp
 	private Date _modifiedDate;
 	private String _name;
 	private String _nameCurrentLanguageId;
+	private String _originalName;
 	private String _description;
 	private String _settings;
 	private boolean _active;
