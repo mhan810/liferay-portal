@@ -662,6 +662,22 @@ public class RoleLocalServiceUtil {
 	}
 
 	/**
+	* Deletes the role with the primary key and its associated permissions.
+	*
+	* @param companyId the primary key of the company
+	* @return the deleted role
+	* @throws PortalException if a role with the primary key could not be
+	found, if the role is a default system role, or if the role's
+	resource could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void deleteRoles(long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().deleteRoles(companyId);
+	}
+
+	/**
 	* Returns the role with the name in the company.
 	*
 	* <p>
