@@ -910,6 +910,69 @@ public interface LayoutSetPrototypePersistence extends BasePersistence<LayoutSet
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns the layout set prototype where companyId = &#63; and name = &#63; or throws a {@link com.liferay.portal.NoSuchLayoutSetPrototypeException} if it could not be found.
+	*
+	* @param companyId the company ID
+	* @param name the name
+	* @return the matching layout set prototype
+	* @throws com.liferay.portal.NoSuchLayoutSetPrototypeException if a matching layout set prototype could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portal.model.LayoutSetPrototype findByC_N(
+		long companyId, java.lang.String name)
+		throws com.liferay.portal.NoSuchLayoutSetPrototypeException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the layout set prototype where companyId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param companyId the company ID
+	* @param name the name
+	* @return the matching layout set prototype, or <code>null</code> if a matching layout set prototype could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portal.model.LayoutSetPrototype fetchByC_N(
+		long companyId, java.lang.String name)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the layout set prototype where companyId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param companyId the company ID
+	* @param name the name
+	* @param retrieveFromCache whether to use the finder cache
+	* @return the matching layout set prototype, or <code>null</code> if a matching layout set prototype could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portal.model.LayoutSetPrototype fetchByC_N(
+		long companyId, java.lang.String name, boolean retrieveFromCache)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Removes the layout set prototype where companyId = &#63; and name = &#63; from the database.
+	*
+	* @param companyId the company ID
+	* @param name the name
+	* @return the layout set prototype that was removed
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portal.model.LayoutSetPrototype removeByC_N(
+		long companyId, java.lang.String name)
+		throws com.liferay.portal.NoSuchLayoutSetPrototypeException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the number of layout set prototypes where companyId = &#63; and name = &#63;.
+	*
+	* @param companyId the company ID
+	* @param name the name
+	* @return the number of matching layout set prototypes
+	* @throws SystemException if a system exception occurred
+	*/
+	public int countByC_N(long companyId, java.lang.String name)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Caches the layout set prototype in the entity cache if it is enabled.
 	*
 	* @param layoutSetPrototype the layout set prototype
