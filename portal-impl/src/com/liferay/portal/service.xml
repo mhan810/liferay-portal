@@ -658,6 +658,10 @@
 			<finder-column name="companyId" />
 			<finder-column name="active" />
 		</finder>
+		<finder name="C_N" return-type="LayoutPrototype" unique="true">
+			<finder-column name="companyId" />
+			<finder-column name="name" />
+		</finder>
 	</entity>
 	<entity name="LayoutRevision" local-service="true" remote-service="true">
 
@@ -888,6 +892,10 @@
 		<finder name="C_A" return-type="Collection">
 			<finder-column name="companyId" />
 			<finder-column name="active" />
+		</finder>
+		<finder name="C_N" return-type="LayoutSetPrototype" unique="true">
+			<finder-column name="companyId" />
+			<finder-column name="name" />
 		</finder>
 	</entity>
 	<entity name="LayoutTemplate" local-service="true" remote-service="false" tx-manager="none" />
