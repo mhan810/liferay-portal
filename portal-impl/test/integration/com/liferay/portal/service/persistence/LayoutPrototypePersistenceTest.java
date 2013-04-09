@@ -29,12 +29,15 @@ import com.liferay.portal.kernel.util.IntegerWrapper;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
 import com.liferay.portal.kernel.util.Time;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.LayoutPrototype;
+import com.liferay.portal.model.impl.LayoutPrototypeModelImpl;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.persistence.BasePersistence;
 import com.liferay.portal.service.persistence.PersistenceExecutionTestListener;
 import com.liferay.portal.test.LiferayPersistenceIntegrationJUnitTestRunner;
 import com.liferay.portal.test.persistence.TransactionalPersistenceAdvice;
+import com.liferay.portal.util.PropsValues;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -146,10 +149,10 @@ public class LayoutPrototypePersistenceTest {
 		Assert.assertEquals(existingLayoutPrototype.getUserName(),
 			newLayoutPrototype.getUserName());
 		Assert.assertEquals(Time.getShortTimestamp(
-			existingLayoutPrototype.getCreateDate()),
+				existingLayoutPrototype.getCreateDate()),
 			Time.getShortTimestamp(newLayoutPrototype.getCreateDate()));
 		Assert.assertEquals(Time.getShortTimestamp(
-			existingLayoutPrototype.getModifiedDate()),
+				existingLayoutPrototype.getModifiedDate()),
 			Time.getShortTimestamp(newLayoutPrototype.getModifiedDate()));
 		Assert.assertEquals(existingLayoutPrototype.getName(),
 			newLayoutPrototype.getName());
@@ -197,8 +200,9 @@ public class LayoutPrototypePersistenceTest {
 
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("LayoutPrototype", "uuid",
-			true, "layoutPrototypeId", true, "companyId", true, "name", true,
-			"description", true, "settings", true, "active", true);
+			true, "layoutPrototypeId", true, "companyId", true, "userId", true,
+			"userName", true, "createDate", true, "modifiedDate", true, "name",
+			true, "description", true, "settings", true, "active", true);
 	}
 
 	@Test
@@ -311,6 +315,25 @@ public class LayoutPrototypePersistenceTest {
 		List<Object> result = _persistence.findWithDynamicQuery(dynamicQuery);
 
 		Assert.assertEquals(0, result.size());
+	}
+
+	@Test
+	public void testResetOriginalValues() throws Exception {
+		if (!PropsValues.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE) {
+			return;
+		}
+
+		LayoutPrototype newLayoutPrototype = addLayoutPrototype();
+
+		_persistence.clearCache();
+
+		LayoutPrototypeModelImpl existingLayoutPrototypeModelImpl = (LayoutPrototypeModelImpl)_persistence.findByPrimaryKey(newLayoutPrototype.getPrimaryKey());
+
+		Assert.assertEquals(existingLayoutPrototypeModelImpl.getCompanyId(),
+			existingLayoutPrototypeModelImpl.getOriginalCompanyId());
+		Assert.assertTrue(Validator.equals(
+				existingLayoutPrototypeModelImpl.getName(),
+				existingLayoutPrototypeModelImpl.getOriginalName()));
 	}
 
 	protected LayoutPrototype addLayoutPrototype() throws Exception {

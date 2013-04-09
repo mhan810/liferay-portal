@@ -1142,6 +1142,79 @@ public class LayoutPrototypeUtil {
 	}
 
 	/**
+	* Returns the layout prototype where companyId = &#63; and name = &#63; or throws a {@link com.liferay.portal.NoSuchLayoutPrototypeException} if it could not be found.
+	*
+	* @param companyId the company ID
+	* @param name the name
+	* @return the matching layout prototype
+	* @throws com.liferay.portal.NoSuchLayoutPrototypeException if a matching layout prototype could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.model.LayoutPrototype findByC_N(
+		long companyId, java.lang.String name)
+		throws com.liferay.portal.NoSuchLayoutPrototypeException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByC_N(companyId, name);
+	}
+
+	/**
+	* Returns the layout prototype where companyId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param companyId the company ID
+	* @param name the name
+	* @return the matching layout prototype, or <code>null</code> if a matching layout prototype could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.model.LayoutPrototype fetchByC_N(
+		long companyId, java.lang.String name)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().fetchByC_N(companyId, name);
+	}
+
+	/**
+	* Returns the layout prototype where companyId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param companyId the company ID
+	* @param name the name
+	* @param retrieveFromCache whether to use the finder cache
+	* @return the matching layout prototype, or <code>null</code> if a matching layout prototype could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.model.LayoutPrototype fetchByC_N(
+		long companyId, java.lang.String name, boolean retrieveFromCache)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().fetchByC_N(companyId, name, retrieveFromCache);
+	}
+
+	/**
+	* Removes the layout prototype where companyId = &#63; and name = &#63; from the database.
+	*
+	* @param companyId the company ID
+	* @param name the name
+	* @return the layout prototype that was removed
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.model.LayoutPrototype removeByC_N(
+		long companyId, java.lang.String name)
+		throws com.liferay.portal.NoSuchLayoutPrototypeException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().removeByC_N(companyId, name);
+	}
+
+	/**
+	* Returns the number of layout prototypes where companyId = &#63; and name = &#63;.
+	*
+	* @param companyId the company ID
+	* @param name the name
+	* @return the number of matching layout prototypes
+	* @throws SystemException if a system exception occurred
+	*/
+	public static int countByC_N(long companyId, java.lang.String name)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().countByC_N(companyId, name);
+	}
+
+	/**
 	* Caches the layout prototype in the entity cache if it is enabled.
 	*
 	* @param layoutPrototype the layout prototype

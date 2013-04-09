@@ -270,6 +270,12 @@ public class LayoutPrototypeLocalServiceWrapper
 			companyId, nameMap, description, active, serviceContext);
 	}
 
+	public com.liferay.portal.model.LayoutPrototype fetchLayoutPrototype(
+		long companyId, java.lang.String name)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _layoutPrototypeLocalService.fetchLayoutPrototype(companyId, name);
+	}
+
 	public com.liferay.portal.model.LayoutPrototype fetchLayoutPrototypeByUuidAndCompanyId(
 		java.lang.String uuid, long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException {

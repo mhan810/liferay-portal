@@ -29,12 +29,15 @@ import com.liferay.portal.kernel.util.IntegerWrapper;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
 import com.liferay.portal.kernel.util.Time;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.LayoutSetPrototype;
+import com.liferay.portal.model.impl.LayoutSetPrototypeModelImpl;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.persistence.BasePersistence;
 import com.liferay.portal.service.persistence.PersistenceExecutionTestListener;
 import com.liferay.portal.test.LiferayPersistenceIntegrationJUnitTestRunner;
 import com.liferay.portal.test.persistence.TransactionalPersistenceAdvice;
+import com.liferay.portal.util.PropsValues;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -198,8 +201,9 @@ public class LayoutSetPrototypePersistenceTest {
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("LayoutSetPrototype",
 			"uuid", true, "layoutSetPrototypeId", true, "companyId", true,
-			"createDate", true, "modifiedDate", true, "name", true,
-			"description", true, "settings", true, "active", true);
+			"userId", true, "userName", true, "createDate", true,
+			"modifiedDate", true, "name", true, "description", true,
+			"settings", true, "active", true);
 	}
 
 	@Test
@@ -313,6 +317,25 @@ public class LayoutSetPrototypePersistenceTest {
 		List<Object> result = _persistence.findWithDynamicQuery(dynamicQuery);
 
 		Assert.assertEquals(0, result.size());
+	}
+
+	@Test
+	public void testResetOriginalValues() throws Exception {
+		if (!PropsValues.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE) {
+			return;
+		}
+
+		LayoutSetPrototype newLayoutSetPrototype = addLayoutSetPrototype();
+
+		_persistence.clearCache();
+
+		LayoutSetPrototypeModelImpl existingLayoutSetPrototypeModelImpl = (LayoutSetPrototypeModelImpl)_persistence.findByPrimaryKey(newLayoutSetPrototype.getPrimaryKey());
+
+		Assert.assertEquals(existingLayoutSetPrototypeModelImpl.getCompanyId(),
+			existingLayoutSetPrototypeModelImpl.getOriginalCompanyId());
+		Assert.assertTrue(Validator.equals(
+				existingLayoutSetPrototypeModelImpl.getName(),
+				existingLayoutSetPrototypeModelImpl.getOriginalName()));
 	}
 
 	protected LayoutSetPrototype addLayoutSetPrototype()

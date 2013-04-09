@@ -277,6 +277,12 @@ public class LayoutPrototypeLocalServiceUtil {
 			active, serviceContext);
 	}
 
+	public static com.liferay.portal.model.LayoutPrototype fetchLayoutPrototype(
+		long companyId, java.lang.String name)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().fetchLayoutPrototype(companyId, name);
+	}
+
 	public static com.liferay.portal.model.LayoutPrototype fetchLayoutPrototypeByUuidAndCompanyId(
 		java.lang.String uuid, long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException {
