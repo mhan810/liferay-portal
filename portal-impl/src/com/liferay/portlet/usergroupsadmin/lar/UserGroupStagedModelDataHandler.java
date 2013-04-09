@@ -58,6 +58,7 @@ public class UserGroupStagedModelDataHandler
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			userGroup, UserGroupsAdminPortletDataHandler.NAMESPACE);
+		serviceContext.setUserId(userId);
 
 		UserGroup existingUserGroup =
 			UserGroupLocalServiceUtil.fetchUserGroupByUuidAndCompanyId(
