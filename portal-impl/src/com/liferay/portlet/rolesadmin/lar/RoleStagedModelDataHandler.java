@@ -56,14 +56,14 @@ public class RoleStagedModelDataHandler
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			role, RoleAdminPortletDataHandler.NAMESPACE);
+		serviceContext.setUserId(userId);
 
-		Role existingRole =
-			RoleLocalServiceUtil.fetchRoleByUuidAndCompanyId(
-				role.getUuid(), companyId);
+		Role existingRole = RoleLocalServiceUtil.fetchRoleByUuidAndCompanyId(
+			role.getUuid(), companyId);
 
 		if (existingRole == null) {
-			existingRole =
-				RoleLocalServiceUtil.fetchRole(companyId, role.getName());
+			existingRole = RoleLocalServiceUtil.fetchRole(
+				companyId, role.getName());
 		}
 
 		Role importedRole = null;
@@ -78,9 +78,8 @@ public class RoleStagedModelDataHandler
 		}
 		else {
 			importedRole = RoleLocalServiceUtil.updateRole(
-				existingRole.getRoleId(), role.getName(),
-				role.getTitleMap(), role.getDescriptionMap(),
-				role.getSubtype(), serviceContext);
+				existingRole.getRoleId(), role.getName(), role.getTitleMap(),
+				role.getDescriptionMap(), role.getSubtype(), serviceContext);
 		}
 
 		portletDataContext.importClassedModel(
