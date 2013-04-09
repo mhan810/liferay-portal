@@ -158,6 +158,12 @@ public class LayoutPrototypeLocalServiceImpl
 		return deleteLayoutPrototype(layoutPrototype);
 	}
 
+	public LayoutPrototype fetchLayoutPrototype(long companyId, String name)
+		throws SystemException {
+
+		return layoutPrototypePersistence.fetchByC_N(companyId, name);
+	}
+
 	public LayoutPrototype fetchLayoutPrototypeByUuidAndCompanyId(
 			String uuid, long companyId)
 		throws SystemException {

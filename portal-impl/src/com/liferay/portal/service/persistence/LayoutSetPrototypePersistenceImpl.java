@@ -3738,6 +3738,265 @@ public class LayoutSetPrototypePersistenceImpl extends BasePersistenceImpl<Layou
 	private static final String _FINDER_COLUMN_C_A_COMPANYID_2 = "layoutSetPrototype.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_A_ACTIVE_2 = "layoutSetPrototype.active = ?";
 	private static final String _FINDER_COLUMN_C_A_ACTIVE_2_SQL = "layoutSetPrototype.active_ = ?";
+	public static final FinderPath FINDER_PATH_FETCH_BY_C_N = new FinderPath(LayoutSetPrototypeModelImpl.ENTITY_CACHE_ENABLED,
+			LayoutSetPrototypeModelImpl.FINDER_CACHE_ENABLED,
+			LayoutSetPrototypeImpl.class, FINDER_CLASS_NAME_ENTITY,
+			"fetchByC_N",
+			new String[] { Long.class.getName(), String.class.getName() },
+			LayoutSetPrototypeModelImpl.COMPANYID_COLUMN_BITMASK |
+			LayoutSetPrototypeModelImpl.NAME_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_C_N = new FinderPath(LayoutSetPrototypeModelImpl.ENTITY_CACHE_ENABLED,
+			LayoutSetPrototypeModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByC_N",
+			new String[] { Long.class.getName(), String.class.getName() });
+
+	/**
+	 * Returns the layout set prototype where companyId = &#63; and name = &#63; or throws a {@link com.liferay.portal.NoSuchLayoutSetPrototypeException} if it could not be found.
+	 *
+	 * @param companyId the company ID
+	 * @param name the name
+	 * @return the matching layout set prototype
+	 * @throws com.liferay.portal.NoSuchLayoutSetPrototypeException if a matching layout set prototype could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public LayoutSetPrototype findByC_N(long companyId, String name)
+		throws NoSuchLayoutSetPrototypeException, SystemException {
+		LayoutSetPrototype layoutSetPrototype = fetchByC_N(companyId, name);
+
+		if (layoutSetPrototype == null) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("companyId=");
+			msg.append(companyId);
+
+			msg.append(", name=");
+			msg.append(name);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(msg.toString());
+			}
+
+			throw new NoSuchLayoutSetPrototypeException(msg.toString());
+		}
+
+		return layoutSetPrototype;
+	}
+
+	/**
+	 * Returns the layout set prototype where companyId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param companyId the company ID
+	 * @param name the name
+	 * @return the matching layout set prototype, or <code>null</code> if a matching layout set prototype could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public LayoutSetPrototype fetchByC_N(long companyId, String name)
+		throws SystemException {
+		return fetchByC_N(companyId, name, true);
+	}
+
+	/**
+	 * Returns the layout set prototype where companyId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param companyId the company ID
+	 * @param name the name
+	 * @param retrieveFromCache whether to use the finder cache
+	 * @return the matching layout set prototype, or <code>null</code> if a matching layout set prototype could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public LayoutSetPrototype fetchByC_N(long companyId, String name,
+		boolean retrieveFromCache) throws SystemException {
+		Object[] finderArgs = new Object[] { companyId, name };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_C_N,
+					finderArgs, this);
+		}
+
+		if (result instanceof LayoutSetPrototype) {
+			LayoutSetPrototype layoutSetPrototype = (LayoutSetPrototype)result;
+
+			if ((companyId != layoutSetPrototype.getCompanyId()) ||
+					!Validator.equals(name, layoutSetPrototype.getName())) {
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(4);
+
+			query.append(_SQL_SELECT_LAYOUTSETPROTOTYPE_WHERE);
+
+			query.append(_FINDER_COLUMN_C_N_COMPANYID_2);
+
+			boolean bindName = false;
+
+			if (name == null) {
+				query.append(_FINDER_COLUMN_C_N_NAME_1);
+			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_N_NAME_3);
+			}
+			else {
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_N_NAME_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(companyId);
+
+				if (bindName) {
+					qPos.add(name);
+				}
+
+				List<LayoutSetPrototype> list = q.list();
+
+				if (list.isEmpty()) {
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_N,
+						finderArgs, list);
+				}
+				else {
+					LayoutSetPrototype layoutSetPrototype = list.get(0);
+
+					result = layoutSetPrototype;
+
+					cacheResult(layoutSetPrototype);
+
+					if ((layoutSetPrototype.getCompanyId() != companyId) ||
+							(layoutSetPrototype.getName() == null) ||
+							!layoutSetPrototype.getName().equals(name)) {
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_N,
+							finderArgs, layoutSetPrototype);
+					}
+				}
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_N,
+					finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		if (result instanceof List<?>) {
+			return null;
+		}
+		else {
+			return (LayoutSetPrototype)result;
+		}
+	}
+
+	/**
+	 * Removes the layout set prototype where companyId = &#63; and name = &#63; from the database.
+	 *
+	 * @param companyId the company ID
+	 * @param name the name
+	 * @return the layout set prototype that was removed
+	 * @throws SystemException if a system exception occurred
+	 */
+	public LayoutSetPrototype removeByC_N(long companyId, String name)
+		throws NoSuchLayoutSetPrototypeException, SystemException {
+		LayoutSetPrototype layoutSetPrototype = findByC_N(companyId, name);
+
+		return remove(layoutSetPrototype);
+	}
+
+	/**
+	 * Returns the number of layout set prototypes where companyId = &#63; and name = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param name the name
+	 * @return the number of matching layout set prototypes
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByC_N(long companyId, String name)
+		throws SystemException {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N;
+
+		Object[] finderArgs = new Object[] { companyId, name };
+
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_LAYOUTSETPROTOTYPE_WHERE);
+
+			query.append(_FINDER_COLUMN_C_N_COMPANYID_2);
+
+			boolean bindName = false;
+
+			if (name == null) {
+				query.append(_FINDER_COLUMN_C_N_NAME_1);
+			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_N_NAME_3);
+			}
+			else {
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_N_NAME_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(companyId);
+
+				if (bindName) {
+					qPos.add(name);
+				}
+
+				count = (Long)q.uniqueResult();
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_C_N_COMPANYID_2 = "layoutSetPrototype.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_N_NAME_1 = "layoutSetPrototype.name IS NULL";
+	private static final String _FINDER_COLUMN_C_N_NAME_2 = "layoutSetPrototype.name = ?";
+	private static final String _FINDER_COLUMN_C_N_NAME_3 = "(layoutSetPrototype.name IS NULL OR layoutSetPrototype.name = '')";
 
 	/**
 	 * Caches the layout set prototype in the entity cache if it is enabled.
@@ -3748,6 +4007,11 @@ public class LayoutSetPrototypePersistenceImpl extends BasePersistenceImpl<Layou
 		EntityCacheUtil.putResult(LayoutSetPrototypeModelImpl.ENTITY_CACHE_ENABLED,
 			LayoutSetPrototypeImpl.class, layoutSetPrototype.getPrimaryKey(),
 			layoutSetPrototype);
+
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_N,
+			new Object[] {
+				layoutSetPrototype.getCompanyId(), layoutSetPrototype.getName()
+			}, layoutSetPrototype);
 
 		layoutSetPrototype.resetOriginalValues();
 	}
@@ -3805,6 +4069,8 @@ public class LayoutSetPrototypePersistenceImpl extends BasePersistenceImpl<Layou
 
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		clearUniqueFindersCache(layoutSetPrototype);
 	}
 
 	@Override
@@ -3815,6 +4081,62 @@ public class LayoutSetPrototypePersistenceImpl extends BasePersistenceImpl<Layou
 		for (LayoutSetPrototype layoutSetPrototype : layoutSetPrototypes) {
 			EntityCacheUtil.removeResult(LayoutSetPrototypeModelImpl.ENTITY_CACHE_ENABLED,
 				LayoutSetPrototypeImpl.class, layoutSetPrototype.getPrimaryKey());
+
+			clearUniqueFindersCache(layoutSetPrototype);
+		}
+	}
+
+	protected void cacheUniqueFindersCache(
+		LayoutSetPrototype layoutSetPrototype) {
+		if (layoutSetPrototype.isNew()) {
+			Object[] args = new Object[] {
+					layoutSetPrototype.getCompanyId(),
+					layoutSetPrototype.getName()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_N, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_N, args,
+				layoutSetPrototype);
+		}
+		else {
+			LayoutSetPrototypeModelImpl layoutSetPrototypeModelImpl = (LayoutSetPrototypeModelImpl)layoutSetPrototype;
+
+			if ((layoutSetPrototypeModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_N.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						layoutSetPrototype.getCompanyId(),
+						layoutSetPrototype.getName()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_N, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_N, args,
+					layoutSetPrototype);
+			}
+		}
+	}
+
+	protected void clearUniqueFindersCache(
+		LayoutSetPrototype layoutSetPrototype) {
+		LayoutSetPrototypeModelImpl layoutSetPrototypeModelImpl = (LayoutSetPrototypeModelImpl)layoutSetPrototype;
+
+		Object[] args = new Object[] {
+				layoutSetPrototype.getCompanyId(), layoutSetPrototype.getName()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_N, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_N, args);
+
+		if ((layoutSetPrototypeModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_N.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					layoutSetPrototypeModelImpl.getOriginalCompanyId(),
+					layoutSetPrototypeModelImpl.getOriginalName()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_N, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_N, args);
 		}
 	}
 
@@ -4050,6 +4372,9 @@ public class LayoutSetPrototypePersistenceImpl extends BasePersistenceImpl<Layou
 		EntityCacheUtil.putResult(LayoutSetPrototypeModelImpl.ENTITY_CACHE_ENABLED,
 			LayoutSetPrototypeImpl.class, layoutSetPrototype.getPrimaryKey(),
 			layoutSetPrototype);
+
+		clearUniqueFindersCache(layoutSetPrototype);
+		cacheUniqueFindersCache(layoutSetPrototype);
 
 		return layoutSetPrototype;
 	}

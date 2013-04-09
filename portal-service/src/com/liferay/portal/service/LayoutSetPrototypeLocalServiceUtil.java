@@ -267,6 +267,12 @@ public class LayoutSetPrototypeLocalServiceUtil {
 			description, active, layoutsUpdateable, serviceContext);
 	}
 
+	public static com.liferay.portal.model.LayoutSetPrototype fetchLayoutSetPrototype(
+		long companyId, java.lang.String name)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().fetchLayoutSetPrototype(companyId, name);
+	}
+
 	public static com.liferay.portal.model.LayoutSetPrototype fetchLayoutSetPrototypeByUuidAndCompanyId(
 		java.lang.String uuid, long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException {
