@@ -53,11 +53,12 @@ public class OrganizationStagedModelDataHandler
 
 			Element organizationElement =
 				portletDataContext.getExportDataStagedModelElement(
-					organization);
+					exportingOrganization);
 
 			portletDataContext.addClassedModel(
-				organizationElement, StagedModelPathUtil.getPath(organization),
-				organization, UsersAdminPortletDataHandler.NAMESPACE);
+				organizationElement,
+				StagedModelPathUtil.getPath(exportingOrganization),
+				exportingOrganization, UsersAdminPortletDataHandler.NAMESPACE);
 
 			organizationQueue.addAll(
 				exportingOrganization.getSuborganizations());
@@ -83,7 +84,7 @@ public class OrganizationStagedModelDataHandler
 			organization.getParentOrganizationId());
 
 		if ((parentOrganizationId !=
-			OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID) &&
+				OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID) &&
 			(parentOrganizationId == organization.getParentOrganizationId())) {
 
 			String parentOrganizationPath = StagedModelPathUtil.getPath(
@@ -104,6 +105,7 @@ public class OrganizationStagedModelDataHandler
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			organization, UsersAdminPortletDataHandler.NAMESPACE);
+		serviceContext.setUserId(userId);
 
 		Organization existingOrganization = OrganizationLocalServiceUtil
 			.fetchOrganizationByUuidAndCompanyId(

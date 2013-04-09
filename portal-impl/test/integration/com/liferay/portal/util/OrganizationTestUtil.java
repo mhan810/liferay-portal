@@ -22,6 +22,7 @@ import com.liferay.portal.service.ServiceTestUtil;
 
 /**
  * @author Alberto Chaparro
+ * @author David Mendez Gonzalez
  */
 public class OrganizationTestUtil {
 
@@ -46,6 +47,12 @@ public class OrganizationTestUtil {
 
 		return OrganizationLocalServiceUtil.addOrganization(
 			user.getUserId(), parentOrganizationId, name, site);
+	}
+
+	public static Organization updateOrganization(Organization organization)
+		throws Exception {
+
+		return OrganizationLocalServiceUtil.updateOrganization(organization);
 	}
 
 }
