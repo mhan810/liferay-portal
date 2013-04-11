@@ -28,8 +28,6 @@ import com.liferay.portal.service.ServiceContext;
 public class RoleStagedModelDataHandler
 	extends BaseStagedModelDataHandler<Role> {
 
-	public static final String NAMESPACE = "role";
-
 	@Override
 	public String getClassName() {
 		return Role.class.getName();
@@ -43,7 +41,8 @@ public class RoleStagedModelDataHandler
 			portletDataContext.getExportDataStagedModelElement(role);
 
 		portletDataContext.addClassedModel(
-			roleElement, StagedModelPathUtil.getPath(role), role, NAMESPACE);
+			roleElement, StagedModelPathUtil.getPath(role), role,
+			RolesAdminPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -56,38 +55,36 @@ public class RoleStagedModelDataHandler
 		long companyId = portletDataContext.getCompanyId();
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			role, NAMESPACE);
+			role, RolesAdminPortletDataHandler.NAMESPACE);
+
+		Role existingRole =
+			RoleLocalServiceUtil.fetchRoleByUuidAndCompanyId(
+				role.getUuid(), companyId);
+
+		if (existingRole == null) {
+			existingRole = RoleLocalServiceUtil.fetchRole(
+				companyId, role.getName());
+		}
 
 		Role importedRole = null;
 
-		if (portletDataContext.isDataStrategyMirror()) {
-			Role existingRole =
-				RoleLocalServiceUtil.fetchRoleByUuidAndCompanyId(
-					role.getUuid(), companyId);
+		if (existingRole == null) {
+			serviceContext.setUuid(role.getUuid());
 
-			if (existingRole == null) {
-				serviceContext.setUuid(role.getUuid());
-
-				importedRole = RoleLocalServiceUtil.addRole(
-					userId, null, 0, role.getName(), role.getTitleMap(),
-					role.getDescriptionMap(), role.getType(), role.getSubtype(),
-					serviceContext);
-			}
-			else {
-				importedRole = RoleLocalServiceUtil.updateRole(
-					existingRole.getRoleId(), role.getName(),
-					role.getTitleMap(), role.getDescriptionMap(),
-					role.getSubtype(), serviceContext);
-			}
-		}
-		else {
 			importedRole = RoleLocalServiceUtil.addRole(
 				userId, null, 0, role.getName(), role.getTitleMap(),
 				role.getDescriptionMap(), role.getType(), role.getSubtype(),
 				serviceContext);
 		}
+		else {
+			importedRole = RoleLocalServiceUtil.updateRole(
+				existingRole.getRoleId(), role.getName(), role.getTitleMap(),
+				role.getDescriptionMap(), role.getSubtype(), serviceContext);
+		}
 
-		portletDataContext.importClassedModel(role, importedRole, NAMESPACE);
+		portletDataContext.importClassedModel(
+			role, importedRole, RolesAdminPortletDataHandler.NAMESPACE);
+
 	}
 
 }

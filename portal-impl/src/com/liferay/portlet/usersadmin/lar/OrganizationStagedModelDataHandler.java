@@ -35,8 +35,6 @@ import java.util.Queue;
 public class OrganizationStagedModelDataHandler
 	extends BaseStagedModelDataHandler<Organization> {
 
-	public static final String NAMESPACE = "organization";
-
 	@Override
 	public String getClassName() {
 		return Organization.class.getName();
@@ -55,11 +53,12 @@ public class OrganizationStagedModelDataHandler
 
 			Element organizationElement =
 				portletDataContext.getExportDataStagedModelElement(
-					organization);
+					exportingOrganization);
 
 			portletDataContext.addClassedModel(
-				organizationElement, StagedModelPathUtil.getPath(organization),
-				organization, NAMESPACE);
+				organizationElement,
+				StagedModelPathUtil.getPath(exportingOrganization),
+				exportingOrganization, UsersAdminPortletDataHandler.NAMESPACE);
 
 			organizationQueue.addAll(
 				exportingOrganization.getSuborganizations());
@@ -85,7 +84,7 @@ public class OrganizationStagedModelDataHandler
 			organization.getParentOrganizationId());
 
 		if ((parentOrganizationId !=
-			OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID) &&
+				OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID) &&
 			(parentOrganizationId == organization.getParentOrganizationId())) {
 
 			String parentOrganizationPath = StagedModelPathUtil.getPath(
@@ -105,36 +104,23 @@ public class OrganizationStagedModelDataHandler
 		}
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			organization, NAMESPACE);
+			organization, UsersAdminPortletDataHandler.NAMESPACE);
+
+		Organization existingOrganization = OrganizationLocalServiceUtil
+			.fetchOrganizationByUuidAndCompanyId(
+				organization.getUuid(), companyId);
+
+		if (existingOrganization == null) {
+			existingOrganization =
+				OrganizationLocalServiceUtil.fetchOrganization(
+					companyId, organization.getName());
+		}
 
 		Organization importedOrganization = null;
 
-		if (portletDataContext.isDataStrategyMirror()) {
-			Organization existingOrganization = OrganizationLocalServiceUtil
-				.fetchOrganizationByUuidAndCompanyId(
-					organization.getUuid(), companyId);
+		if (existingOrganization == null) {
+			serviceContext.setUuid(organization.getUuid());
 
-			if (existingOrganization == null) {
-				serviceContext.setUuid(organization.getUuid());
-
-				importedOrganization =
-					OrganizationLocalServiceUtil.addOrganization(
-						userId, parentOrganizationId, organization.getName(),
-						organization.getType(), organization.getRegionId(),
-						organization.getCountryId(), organization.getStatusId(),
-						organization.getComments(), false, serviceContext);
-			}
-			else {
-				importedOrganization =
-					OrganizationLocalServiceUtil.updateOrganization(
-						companyId, existingOrganization.getOrganizationId(),
-						parentOrganizationId, organization.getName(),
-						organization.getType(), organization.getRegionId(),
-						organization.getCountryId(), organization.getStatusId(),
-						organization.getComments(), false, serviceContext);
-			}
-		}
-		else {
 			importedOrganization =
 				OrganizationLocalServiceUtil.addOrganization(
 					userId, parentOrganizationId, organization.getName(),
@@ -142,9 +128,19 @@ public class OrganizationStagedModelDataHandler
 					organization.getCountryId(), organization.getStatusId(),
 					organization.getComments(), false, serviceContext);
 		}
+		else {
+			importedOrganization =
+				OrganizationLocalServiceUtil.updateOrganization(
+					companyId, existingOrganization.getOrganizationId(),
+					parentOrganizationId, organization.getName(),
+					organization.getType(), organization.getRegionId(),
+					organization.getCountryId(), organization.getStatusId(),
+					organization.getComments(), false, serviceContext);
+		}
 
 		portletDataContext.importClassedModel(
-			organization, importedOrganization, NAMESPACE);
+			organization, importedOrganization,
+			UsersAdminPortletDataHandler.NAMESPACE);
 	}
 
 }

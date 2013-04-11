@@ -44,7 +44,7 @@ public class UserGroupStagedModelDataHandler
 
 		portletDataContext.addClassedModel(
 			userGroupElement, StagedModelPathUtil.getPath(userGroup), userGroup,
-			NAMESPACE);
+			UserGroupsAdminPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -57,37 +57,36 @@ public class UserGroupStagedModelDataHandler
 		long companyId = portletDataContext.getCompanyId();
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			userGroup, NAMESPACE);
+			userGroup, UserGroupsAdminPortletDataHandler.NAMESPACE);
+
+		UserGroup existingUserGroup =
+			UserGroupLocalServiceUtil.fetchUserGroupByUuidAndCompanyId(
+				userGroup.getUuid(), companyId);
+
+		if (existingUserGroup == null) {
+			existingUserGroup = UserGroupLocalServiceUtil.fetchUserGroup(
+				companyId, userGroup.getName());
+		}
 
 		UserGroup importedUserGroup = null;
 
-		if (portletDataContext.isDataStrategyMirror()) {
-			UserGroup existingUserGroup =
-				UserGroupLocalServiceUtil.fetchUserGroupByUuidAndCompanyId(
-					userGroup.getUuid(), companyId);
+		if (existingUserGroup == null) {
+			serviceContext.setUuid(userGroup.getUuid());
 
-			if (existingUserGroup == null) {
-				serviceContext.setUuid(userGroup.getUuid());
-
-				importedUserGroup = UserGroupLocalServiceUtil.addUserGroup(
-					userId, companyId, userGroup.getName(),
-					userGroup.getDescription(), serviceContext);
-			}
-			else {
-				importedUserGroup = UserGroupLocalServiceUtil.updateUserGroup(
-					companyId, existingUserGroup.getUserGroupId(),
-					userGroup.getName(), userGroup.getDescription(),
-					serviceContext);
-			}
-		}
-		else {
 			importedUserGroup = UserGroupLocalServiceUtil.addUserGroup(
 				userId, companyId, userGroup.getName(),
 				userGroup.getDescription(), serviceContext);
 		}
+		else {
+			importedUserGroup = UserGroupLocalServiceUtil.updateUserGroup(
+				companyId, existingUserGroup.getUserGroupId(),
+				userGroup.getName(), userGroup.getDescription(),
+				serviceContext);
+		}
 
 		portletDataContext.importClassedModel(
-			userGroup, importedUserGroup, NAMESPACE);
+			userGroup, importedUserGroup,
+			UserGroupsAdminPortletDataHandler.NAMESPACE);
 	}
 
 }
