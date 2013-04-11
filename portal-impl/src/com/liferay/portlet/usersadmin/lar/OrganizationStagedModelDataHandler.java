@@ -106,6 +106,8 @@ public class OrganizationStagedModelDataHandler
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			organization, UsersAdminPortletDataHandler.NAMESPACE);
 
+		serviceContext.setUserId(userId);
+
 		Organization existingOrganization = OrganizationLocalServiceUtil
 			.fetchOrganizationByUuidAndCompanyId(
 				organization.getUuid(), companyId);
