@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.nio.intraband.welder;
 
-import com.liferay.portal.kernel.nio.intraband.IntraBand;
+import com.liferay.portal.kernel.nio.intraband.Intraband;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public interface Welder extends Serializable {
 
 	public void destroy() throws IOException;
 
-	public RegistrationReference weld(IntraBand intraBand)
+	public RegistrationReference weld(Intraband intraBand)
 		throws IOException;
 
 }

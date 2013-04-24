@@ -15,7 +15,7 @@
 package com.liferay.portal.kernel.nio.intraband.mailbox;
 
 import com.liferay.portal.kernel.nio.intraband.Datagram;
-import com.liferay.portal.kernel.nio.intraband.IntraBand;
+import com.liferay.portal.kernel.nio.intraband.Intraband;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.SystemDataType;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -53,7 +53,7 @@ public class MailboxUtil {
 			RegistrationReference registrationReference, ByteBuffer byteBuffer)
 		throws MailboxException {
 
-		IntraBand intraBand = registrationReference.getIntraBand();
+		Intraband intraBand = registrationReference.getIntraband();
 
 		try {
 			SystemDataType systemDataType = SystemDataType.MAILBOX;

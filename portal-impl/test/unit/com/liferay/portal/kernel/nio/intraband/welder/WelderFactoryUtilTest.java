@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.nio.intraband.welder;
 
-import com.liferay.portal.kernel.nio.intraband.IntraBand;
+import com.liferay.portal.kernel.nio.intraband.Intraband;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.welder.fifo.FIFOWelder;
 import com.liferay.portal.kernel.nio.intraband.welder.socket.SocketWelder;
@@ -167,7 +167,7 @@ public class WelderFactoryUtilTest {
 		public void destroy() {
 		}
 
-		public RegistrationReference weld(IntraBand intraBand) {
+		public RegistrationReference weld(Intraband intraBand) {
 			return null;
 		}
 
@@ -178,7 +178,7 @@ public class WelderFactoryUtilTest {
 		public void destroy() {
 		}
 
-		public RegistrationReference weld(IntraBand intraBand) {
+		public RegistrationReference weld(Intraband intraBand) {
 			return null;
 		}
 

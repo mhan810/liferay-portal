@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.nio.intraband.welder.fifo;
 
-import com.liferay.portal.kernel.nio.intraband.IntraBand;
+import com.liferay.portal.kernel.nio.intraband.Intraband;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.welder.BaseWelder;
 
@@ -57,7 +57,7 @@ public class FIFOWelder extends BaseWelder {
 	}
 
 	@Override
-	protected RegistrationReference weldClient(IntraBand intraBand)
+	protected RegistrationReference weldClient(Intraband intraBand)
 		throws IOException {
 
 		// Write, then read
@@ -75,7 +75,7 @@ public class FIFOWelder extends BaseWelder {
 	}
 
 	@Override
-	protected RegistrationReference weldServer(IntraBand intraBand)
+	protected RegistrationReference weldServer(Intraband intraBand)
 		throws IOException {
 
 		// Read, then write

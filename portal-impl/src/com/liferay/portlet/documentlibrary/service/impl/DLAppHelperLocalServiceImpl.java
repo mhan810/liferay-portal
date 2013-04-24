@@ -279,7 +279,7 @@ public class DLAppHelperLocalServiceImpl
 
 			// Sync
 
-			if (!isStagingGroup(fileEntry.getGroupId())) {
+			if (isUpdateSync(fileEntry)) {
 				dlSyncLocalService.updateSync(
 					fileEntry.getFileEntryId(), fileEntry.getFolderId(),
 					fileEntry.getTitle(), fileEntry.getDescription(),
@@ -420,7 +420,7 @@ public class DLAppHelperLocalServiceImpl
 	public void moveFileEntry(FileEntry fileEntry)
 		throws PortalException, SystemException {
 
-		if (!isStagingGroup(fileEntry.getGroupId())) {
+		if (isUpdateSync(fileEntry)) {
 			dlSyncLocalService.updateSync(
 				fileEntry.getFileEntryId(), fileEntry.getFolderId(),
 				fileEntry.getTitle(), fileEntry.getDescription(),
@@ -1462,6 +1462,22 @@ public class DLAppHelperLocalServiceImpl
 		catch (Exception e) {
 			return false;
 		}
+	}
+
+	protected boolean isUpdateSync(FileEntry fileEntry)
+		throws PortalException, SystemException {
+
+		if (isStagingGroup(fileEntry.getGroupId())) {
+			return false;
+		}
+
+		FileVersion fileVersion = fileEntry.getFileVersion();
+
+		if (!fileVersion.isApproved()) {
+			return false;
+		}
+
+		return true;
 	}
 
 	protected void notifySubscribers(

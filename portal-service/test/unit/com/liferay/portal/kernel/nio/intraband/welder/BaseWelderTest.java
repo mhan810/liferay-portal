@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.nio.intraband.welder;
 
-import com.liferay.portal.kernel.nio.intraband.IntraBand;
+import com.liferay.portal.kernel.nio.intraband.Intraband;
 import com.liferay.portal.kernel.nio.intraband.MockRegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
@@ -138,7 +138,7 @@ public class BaseWelderTest {
 		}
 
 		@Override
-		protected RegistrationReference weldClient(IntraBand intraBand) {
+		protected RegistrationReference weldClient(Intraband intraBand) {
 			_clientRegistrationReference = new MockRegistrationReference(
 				intraBand);
 
@@ -146,7 +146,7 @@ public class BaseWelderTest {
 		}
 
 		@Override
-		protected RegistrationReference weldServer(IntraBand intraBand) {
+		protected RegistrationReference weldServer(Intraband intraBand) {
 			_serverRegistrationReference = new MockRegistrationReference(
 				intraBand);
 

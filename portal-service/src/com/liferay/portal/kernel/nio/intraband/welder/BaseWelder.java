@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.nio.intraband.welder;
 
-import com.liferay.portal.kernel.nio.intraband.IntraBand;
+import com.liferay.portal.kernel.nio.intraband.Intraband;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public abstract class BaseWelder implements Welder {
 		state = State.DESTROYED;
 	}
 
-	public synchronized RegistrationReference weld(IntraBand intraBand)
+	public synchronized RegistrationReference weld(Intraband intraBand)
 		throws IOException {
 
 		if (state != State.CREATED) {
@@ -71,10 +71,10 @@ public abstract class BaseWelder implements Welder {
 
 	protected abstract void doDestroy() throws IOException;
 
-	protected abstract RegistrationReference weldClient(IntraBand intraBand)
+	protected abstract RegistrationReference weldClient(Intraband intraBand)
 		throws IOException;
 
-	protected abstract RegistrationReference weldServer(IntraBand intraBand)
+	protected abstract RegistrationReference weldServer(Intraband intraBand)
 		throws IOException;
 
 	protected transient RegistrationReference registrationReference;

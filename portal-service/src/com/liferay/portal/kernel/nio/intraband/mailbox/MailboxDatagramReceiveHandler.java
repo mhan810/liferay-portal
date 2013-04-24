@@ -17,7 +17,7 @@ package com.liferay.portal.kernel.nio.intraband.mailbox;
 import com.liferay.portal.kernel.io.BigEndianCodec;
 import com.liferay.portal.kernel.nio.intraband.BaseAsyncDatagramReceiveHandler;
 import com.liferay.portal.kernel.nio.intraband.Datagram;
-import com.liferay.portal.kernel.nio.intraband.IntraBand;
+import com.liferay.portal.kernel.nio.intraband.Intraband;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 
 import java.nio.ByteBuffer;
@@ -38,7 +38,7 @@ public class MailboxDatagramReceiveHandler
 
 		BigEndianCodec.putLong(data, 0, receipt);
 
-		IntraBand intraBand = registrationReference.getIntraBand();
+		Intraband intraBand = registrationReference.getIntraband();
 
 		intraBand.sendDatagram(
 			registrationReference,

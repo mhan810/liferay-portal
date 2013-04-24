@@ -21,7 +21,7 @@ public interface RegistrationReference {
 
 	public void cancelRegistration();
 
-	public IntraBand getIntraBand();
+	public Intraband getIntraband();
 
 	public boolean isValid();
 

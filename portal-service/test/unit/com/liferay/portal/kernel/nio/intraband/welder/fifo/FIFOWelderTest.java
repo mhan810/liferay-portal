@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.nio.intraband.welder.fifo;
 
-import com.liferay.portal.kernel.nio.intraband.MockIntraBand;
+import com.liferay.portal.kernel.nio.intraband.MockIntraband;
 import com.liferay.portal.kernel.nio.intraband.MockRegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.welder.WelderTestUtil;
 import com.liferay.portal.kernel.nio.intraband.welder.fifo.FIFOWelder.AutoRemoveFileInputStream;
@@ -183,7 +183,7 @@ public class FIFOWelderTest {
 
 					public MockRegistrationReference call() throws Exception {
 						return (MockRegistrationReference)serverFifoWelder.weld(
-							new MockIntraBand());
+							new MockIntraband());
 					}
 				});
 
@@ -197,7 +197,7 @@ public class FIFOWelderTest {
 
 					public MockRegistrationReference call() throws Exception {
 						return (MockRegistrationReference)clientFIFOWelder.weld(
-							new MockIntraBand());
+							new MockIntraband());
 					}
 				});
 
@@ -222,7 +222,7 @@ public class FIFOWelderTest {
 		clientFIFOWelder.destroy();
 
 		try {
-			serverFifoWelder.weld(new MockIntraBand());
+			serverFifoWelder.weld(new MockIntraband());
 
 			Assert.fail();
 		}
@@ -237,7 +237,7 @@ public class FIFOWelderTest {
 		}
 
 		try {
-			clientFIFOWelder.weld(new MockIntraBand());
+			clientFIFOWelder.weld(new MockIntraband());
 
 			Assert.fail();
 		}

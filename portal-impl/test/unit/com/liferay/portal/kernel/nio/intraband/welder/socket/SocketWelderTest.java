@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.nio.intraband.welder.socket;
 
-import com.liferay.portal.kernel.nio.intraband.MockIntraBand;
+import com.liferay.portal.kernel.nio.intraband.MockIntraband;
 import com.liferay.portal.kernel.nio.intraband.MockRegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.welder.WelderTestUtil;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
@@ -128,7 +128,7 @@ public class SocketWelderTest {
 
 					public MockRegistrationReference call() throws Exception {
 						return (MockRegistrationReference)
-							serverSocketWelder.weld(new MockIntraBand());
+							serverSocketWelder.weld(new MockIntraband());
 					}
 				});
 
@@ -142,7 +142,7 @@ public class SocketWelderTest {
 
 					public MockRegistrationReference call() throws Exception {
 						return (MockRegistrationReference)
-							clientSocketWelder.weld(new MockIntraBand());
+							clientSocketWelder.weld(new MockIntraband());
 					}
 				});
 
@@ -167,7 +167,7 @@ public class SocketWelderTest {
 		clientSocketWelder.destroy();
 
 		try {
-			serverSocketWelder.weld(new MockIntraBand());
+			serverSocketWelder.weld(new MockIntraband());
 
 			Assert.fail();
 		}
@@ -178,7 +178,7 @@ public class SocketWelderTest {
 		}
 
 		try {
-			clientSocketWelder.weld(new MockIntraBand());
+			clientSocketWelder.weld(new MockIntraband());
 
 			Assert.fail();
 		}

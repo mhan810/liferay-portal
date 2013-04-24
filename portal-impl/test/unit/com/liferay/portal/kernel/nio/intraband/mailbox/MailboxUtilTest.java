@@ -18,7 +18,7 @@ import com.liferay.portal.kernel.io.BigEndianCodec;
 import com.liferay.portal.kernel.nio.intraband.CompletionHandler;
 import com.liferay.portal.kernel.nio.intraband.Datagram;
 import com.liferay.portal.kernel.nio.intraband.DatagramHelper;
-import com.liferay.portal.kernel.nio.intraband.MockIntraBand;
+import com.liferay.portal.kernel.nio.intraband.MockIntraband;
 import com.liferay.portal.kernel.nio.intraband.MockRegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
@@ -188,7 +188,7 @@ public class MailboxUtilTest {
 	@AdviseWith(adviceClasses = {PropsUtilAdvice.class})
 	@Test
 	public void testSendMailFail() {
-		MockIntraBand mockIntraBand = new MockIntraBand() {
+		MockIntraband mockIntraband = new MockIntraband() {
 
 			@Override
 			protected void doSendDatagram(
@@ -202,7 +202,7 @@ public class MailboxUtilTest {
 
 		try {
 			MailboxUtil.sendMail(
-				new MockRegistrationReference(mockIntraBand),
+				new MockRegistrationReference(mockIntraband),
 				ByteBuffer.allocate(0));
 
 			Assert.fail();
@@ -219,7 +219,7 @@ public class MailboxUtilTest {
 	public void testSendMailSuccess() throws MailboxException {
 		final long receipt = 100;
 
-		MockIntraBand mockIntraBand = new MockIntraBand() {
+		MockIntraband mockIntraband = new MockIntraband() {
 
 			@Override
 			protected void doSendDatagram(
@@ -244,7 +244,7 @@ public class MailboxUtilTest {
 		Assert.assertEquals(
 			receipt,
 			MailboxUtil.sendMail(
-				new MockRegistrationReference(mockIntraBand),
+				new MockRegistrationReference(mockIntraband),
 				ByteBuffer.allocate(0)));
 	}
 

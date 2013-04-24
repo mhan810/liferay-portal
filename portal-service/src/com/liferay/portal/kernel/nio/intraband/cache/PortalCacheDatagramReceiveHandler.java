@@ -21,7 +21,7 @@ import com.liferay.portal.kernel.io.Deserializer;
 import com.liferay.portal.kernel.io.Serializer;
 import com.liferay.portal.kernel.nio.intraband.BaseAsyncDatagramReceiveHandler;
 import com.liferay.portal.kernel.nio.intraband.Datagram;
-import com.liferay.portal.kernel.nio.intraband.IntraBand;
+import com.liferay.portal.kernel.nio.intraband.Intraband;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 
 import java.io.Serializable;
@@ -48,7 +48,7 @@ public class PortalCacheDatagramReceiveHandler
 			PortalCacheActionType.values()[deserializer.readInt()];
 
 		PortalCacheManager<Serializable, Serializable> portalCacheManager =
-			IntraBandPortalCacheManager.getPortalCacheManager();
+			IntrabandPortalCacheManager.getPortalCacheManager();
 
 		if (portalCacheActionType == PortalCacheActionType.RECONFIGURE) {
 			portalCacheManager.reconfigureCaches(
@@ -136,7 +136,7 @@ public class PortalCacheDatagramReceiveHandler
 
 		serializer.writeObject(result);
 
-		IntraBand intraBand = registrationReference.getIntraBand();
+		Intraband intraBand = registrationReference.getIntraband();
 
 		intraBand.sendDatagram(
 			registrationReference,

@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.nio.intraband.welder.socket;
 
-import com.liferay.portal.kernel.nio.intraband.IntraBand;
+import com.liferay.portal.kernel.nio.intraband.Intraband;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.welder.BaseWelder;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -70,7 +70,7 @@ public class SocketWelder extends BaseWelder {
 	}
 
 	@Override
-	protected RegistrationReference weldClient(IntraBand intraBand)
+	protected RegistrationReference weldClient(Intraband intraBand)
 		throws IOException {
 
 		socketChannel = SocketChannel.open();
@@ -85,7 +85,7 @@ public class SocketWelder extends BaseWelder {
 	}
 
 	@Override
-	protected RegistrationReference weldServer(IntraBand intraBand)
+	protected RegistrationReference weldServer(Intraband intraBand)
 		throws IOException {
 
 		socketChannel = serverSocketChannel.accept();

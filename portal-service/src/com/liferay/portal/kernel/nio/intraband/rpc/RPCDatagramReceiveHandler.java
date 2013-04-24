@@ -18,7 +18,7 @@ import com.liferay.portal.kernel.io.Deserializer;
 import com.liferay.portal.kernel.io.Serializer;
 import com.liferay.portal.kernel.nio.intraband.BaseAsyncDatagramReceiveHandler;
 import com.liferay.portal.kernel.nio.intraband.Datagram;
-import com.liferay.portal.kernel.nio.intraband.IntraBand;
+import com.liferay.portal.kernel.nio.intraband.Intraband;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 import com.liferay.portal.kernel.process.ProcessCallable;
 
@@ -46,7 +46,7 @@ public class RPCDatagramReceiveHandler extends BaseAsyncDatagramReceiveHandler {
 
 		serializer.writeObject(result);
 
-		IntraBand intraBand = registrationReference.getIntraBand();
+		Intraband intraBand = registrationReference.getIntraband();
 
 		intraBand.sendDatagram(
 			registrationReference,

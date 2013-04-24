@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.nio.intraband.nonblocking;
 
-import com.liferay.portal.kernel.nio.intraband.IntraBand;
+import com.liferay.portal.kernel.nio.intraband.Intraband;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 
 import java.nio.channels.SelectionKey;
@@ -29,7 +29,7 @@ class SelectionKeyRegistrationReference implements RegistrationReference {
 		writeSelectionKey.cancel();
 	}
 
-	public IntraBand getIntraBand() {
+	public Intraband getIntraband() {
 		return intraBand;
 	}
 
@@ -38,7 +38,7 @@ class SelectionKeyRegistrationReference implements RegistrationReference {
 	}
 
 	protected SelectionKeyRegistrationReference(
-		IntraBand intraBand, SelectionKey readSelectionKey,
+		Intraband intraBand, SelectionKey readSelectionKey,
 		SelectionKey writeSelectionKey) {
 
 		this.intraBand = intraBand;
@@ -46,7 +46,7 @@ class SelectionKeyRegistrationReference implements RegistrationReference {
 		this.writeSelectionKey = writeSelectionKey;
 	}
 
-	protected final IntraBand intraBand;
+	protected final Intraband intraBand;
 	protected final SelectionKey readSelectionKey;
 	protected final SelectionKey writeSelectionKey;
 

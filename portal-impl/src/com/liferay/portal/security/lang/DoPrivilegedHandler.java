@@ -70,6 +70,19 @@ public class DoPrivilegedHandler
 
 			return getActualBean();
 		}
+		else if (methodDeclaringClass.equals(Object.class) &&
+				 methodName.equals("equals")) {
+
+			Object object = arguments[0];
+
+			if (object instanceof DoPrivilegedBean) {
+				DoPrivilegedBean doPrivilegedBean = (DoPrivilegedBean)object;
+
+				object = doPrivilegedBean.getActualBean();
+			}
+
+			return getActualBean().equals(object);
+		}
 		else if (!PACLPolicyManager.isActive() || _isNotPrivileged(method)) {
 			return method.invoke(_bean, arguments);
 		}

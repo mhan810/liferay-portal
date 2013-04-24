@@ -15,7 +15,7 @@
 package com.liferay.portal.kernel.nio.intraband.blocking;
 
 import com.liferay.portal.kernel.nio.intraband.ChannelContext;
-import com.liferay.portal.kernel.nio.intraband.IntraBand;
+import com.liferay.portal.kernel.nio.intraband.Intraband;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 
 import java.util.concurrent.Future;
@@ -30,7 +30,7 @@ class FutureRegistrationReference implements RegistrationReference {
 		writeFuture.cancel(true);
 	}
 
-	public IntraBand getIntraBand() {
+	public Intraband getIntraband() {
 		return intraBand;
 	}
 
@@ -43,7 +43,7 @@ class FutureRegistrationReference implements RegistrationReference {
 	}
 
 	protected FutureRegistrationReference(
-		IntraBand intraBand, ChannelContext channelContext,
+		Intraband intraBand, ChannelContext channelContext,
 		Future<Void> readFuture, Future<Void> writeFuture) {
 
 		this.intraBand = intraBand;
@@ -53,7 +53,7 @@ class FutureRegistrationReference implements RegistrationReference {
 	}
 
 	protected final ChannelContext channelContext;
-	protected final IntraBand intraBand;
+	protected final Intraband intraBand;
 	protected final Future<Void> readFuture;
 	protected final Future<Void> writeFuture;
 
