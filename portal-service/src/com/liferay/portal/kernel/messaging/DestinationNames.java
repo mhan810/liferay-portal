@@ -51,6 +51,8 @@ public interface DestinationNames {
 	public static final String DOCUMENT_LIBRARY_VIDEO_PROCESSOR =
 		"liferay/document_library_video_processor";
 
+	public static final String EXPORT = "liferay/export";
+
 	public static final String FLAGS = "liferay/flags";
 
 	/**
@@ -60,6 +62,8 @@ public interface DestinationNames {
 	public static final String GLOBAL = "liferay/global";
 
 	public static final String HOT_DEPLOY = "liferay/hot_deploy";
+
+	public static final String IMPORT = "liferay/import";
 
 	public static final String IP_GEOCODER = "liferay/ip_geocoder";
 
