@@ -214,6 +214,11 @@
 			<bean class="com.liferay.portal.lar.messaging.ExportImportMessageFactoryImpl" />
 		</property>
 	</bean>
+	<bean id="com.liferay.portal.kernel.lar.messaging.ExportImportMessageHandlerUtil" class="com.liferay.portal.kernel.lar.messaging.ExportImportMessageHandlerUtil">
+		<property name="exportImportMessageHandler">
+			<bean class="com.liferay.portal.lar.messaging.ExportImportMessageHandlerImpl" />
+		</property>
+	</bean>
 	<bean id="com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistry" class="com.liferay.portal.lar.StagedModelDataHandlerRegistryImpl" />
 	<bean id="com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil" class="com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil">
 		<property name="stagedModelDataHandlerRegistry" ref="com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistry" />
