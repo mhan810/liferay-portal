@@ -209,6 +209,7 @@
 			<bean class="com.liferay.portal.language.UnicodeLanguageImpl" />
 		</property>
 	</bean>
+	<bean id="com.liferay.portal.kernel.lar.StagedModelDataHandlerProxy" class="com.liferay.portal.lar.StagedModelDataHandlerProxyImpl" />
 	<bean id="com.liferay.portal.kernel.lar.messaging.ExportImportMessageFactoryUtil" class="com.liferay.portal.kernel.lar.messaging.ExportImportMessageFactoryUtil">
 		<property name="exportImportMessageFactory">
 			<bean class="com.liferay.portal.lar.messaging.ExportImportMessageFactoryImpl" />
