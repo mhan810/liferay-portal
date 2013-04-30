@@ -266,6 +266,13 @@ public class AssetVocabularyLocalServiceWrapper
 		_assetVocabularyLocalService.setBeanIdentifier(beanIdentifier);
 	}
 
+	public com.liferay.portlet.asset.model.AssetVocabulary addDefaultVocabulary(
+		long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _assetVocabularyLocalService.addDefaultVocabulary(groupId);
+	}
+
 	/**
 	* @deprecated As of 6.1.0
 	*/
@@ -368,11 +375,11 @@ public class AssetVocabularyLocalServiceWrapper
 	}
 
 	public java.util.List<com.liferay.portlet.asset.model.AssetVocabulary> getGroupVocabularies(
-		long groupId, boolean createDefaultVocabulary)
+		long groupId, boolean addDefaultVocabulary)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _assetVocabularyLocalService.getGroupVocabularies(groupId,
-			createDefaultVocabulary);
+			addDefaultVocabulary);
 	}
 
 	public java.util.List<com.liferay.portlet.asset.model.AssetVocabulary> getGroupVocabularies(

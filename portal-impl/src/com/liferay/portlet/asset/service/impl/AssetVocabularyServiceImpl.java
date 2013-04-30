@@ -201,7 +201,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 	public AssetVocabularyDisplay getGroupVocabulariesDisplay(
 			long groupId, String name, int start, int end,
 			OrderByComparator obc)
-		throws SystemException {
+		throws PortalException, SystemException {
 
 		List<AssetVocabulary> vocabularies;
 		int total = 0;
@@ -215,6 +215,15 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 		else {
 			vocabularies = getGroupVocabularies(groupId, start, end, obc);
 			total = getGroupVocabulariesCount(groupId);
+		}
+
+		if (total == 0) {
+			vocabularies = new ArrayList<AssetVocabulary>();
+
+			vocabularies.add(
+				assetVocabularyLocalService.addDefaultVocabulary(groupId));
+
+			total = 1;
 		}
 
 		return new AssetVocabularyDisplay(vocabularies, total, start, end);

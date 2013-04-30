@@ -20,6 +20,7 @@ import com.liferay.portalweb.socialofficehome.microblogs.mbentry.addmicroblogsco
 import com.liferay.portalweb.socialofficehome.microblogs.mbentry.addmicroblogscontentmentions.AddMicroblogsContentMentionsTests;
 import com.liferay.portalweb.socialofficehome.microblogs.mbentry.addmicroblogscontentmultipletag.AddMicroblogsContentMultipleTagTests;
 import com.liferay.portalweb.socialofficehome.microblogs.mbentry.addmicroblogscontentmultipletagmultiple.AddMicroblogsContentMultipleTagMultipleTests;
+import com.liferay.portalweb.socialofficehome.microblogs.mbentry.addmicroblogscontentspecialcharacters.AddMicroblogsContentSpecialCharactersTests;
 import com.liferay.portalweb.socialofficehome.microblogs.mbentry.addmicroblogscontenttagviewablebyeveryone.AddMicroblogsContentTagViewableByEveryoneTests;
 import com.liferay.portalweb.socialofficehome.microblogs.mbentry.addmicroblogscontentviewablebyconnections.AddMicroblogsContentViewableByConnectionsTests;
 import com.liferay.portalweb.socialofficehome.microblogs.mbentry.addmicroblogscontentviewablebyeveryone.AddMicroblogsContentViewableByEveryoneTests;
@@ -57,6 +58,7 @@ public class MBEntryTestPlan extends BaseTestSuite {
 		testSuite.addTest(AddMicroblogsContentMentionsTests.suite());
 		testSuite.addTest(AddMicroblogsContentMultipleTagTests.suite());
 		testSuite.addTest(AddMicroblogsContentMultipleTagMultipleTests.suite());
+		testSuite.addTest(AddMicroblogsContentSpecialCharactersTests.suite());
 		testSuite.addTest(
 			AddMicroblogsContentTagViewableByEveryoneTests.suite());
 		testSuite.addTest(
