@@ -16,6 +16,7 @@ package com.liferay.portalweb.socialofficehome.activities.dashboardactivity;
 
 import com.liferay.portalweb.portal.BaseTestSuite;
 import com.liferay.portalweb.socialofficehome.activities.dashboardactivity.viewdashboardactivityactivities.ViewDashboardActivityActivitiesTests;
+import com.liferay.portalweb.socialofficehome.activities.dashboardactivity.viewdmfolderdocumentactivities.ViewDMFolderDocumentActivitiesTests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -29,6 +30,7 @@ public class DashboardActivityTestPlan extends BaseTestSuite {
 		TestSuite testSuite = new TestSuite();
 
 		testSuite.addTest(ViewDashboardActivityActivitiesTests.suite());
+		testSuite.addTest(ViewDMFolderDocumentActivitiesTests.suite());
 
 		return testSuite;
 	}

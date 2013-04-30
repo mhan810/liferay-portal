@@ -21,6 +21,7 @@ import com.liferay.portalweb.socialofficesite.wiki.wikipage.addwikifrontpagechil
 import com.liferay.portalweb.socialofficesite.wiki.wikipage.addwikifrontpagecommentsite.AddWikiFrontPageCommentSiteTests;
 import com.liferay.portalweb.socialofficesite.wiki.wikipage.addwikifrontpagesite.AddWikiFrontPageSiteTests;
 import com.liferay.portalweb.socialofficesite.wiki.wikipage.editpermissionsfrontpagechildpageguestnoview.EditPermissionsFrontPageChildPageGuestNoViewTests;
+import com.liferay.portalweb.socialofficesite.wiki.wikipage.editwikifrontpagesite.EditWikiFrontPageSiteTests;
 import com.liferay.portalweb.socialofficesite.wiki.wikipage.ratewikifrontpagesite.RateWikiFrontPageSiteTests;
 import com.liferay.portalweb.socialofficesite.wiki.wikipage.saveasdraftwikifrontpagesite.SaveAsDraftWikiFrontPageSiteTests;
 
@@ -42,6 +43,7 @@ public class WikiPageTestPlan extends BaseTestSuite {
 		testSuite.addTest(AddWikiFrontPageSiteTests.suite());
 		testSuite.addTest(
 			EditPermissionsFrontPageChildPageGuestNoViewTests.suite());
+		testSuite.addTest(EditWikiFrontPageSiteTests.suite());
 		testSuite.addTest(RateWikiFrontPageSiteTests.suite());
 		testSuite.addTest(SaveAsDraftWikiFrontPageSiteTests.suite());
 
