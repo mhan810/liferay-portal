@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.ResourcePermission;
 import com.liferay.portal.model.impl.ResourcePermissionImpl;
 import com.liferay.portal.model.impl.ResourcePermissionModelImpl;
@@ -242,6 +243,38 @@ public class ResourcePermissionFinderImpl
 		}
 	}
 
+	public void resetResourcePermissions(
+			long roleId, long systemGroupId, long userGroupId)
+		throws SystemException {
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			String sql = RESET_RESOURCE_PERMISSIONS;
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(roleId);
+			qPos.add(ResourceConstants.SCOPE_COMPANY);
+			qPos.add(ResourceConstants.SCOPE_GROUP_TEMPLATE);
+			qPos.add(ResourceConstants.SCOPE_GROUP);
+			qPos.add(String.valueOf(systemGroupId));
+			qPos.add(String.valueOf(userGroupId));
+
+			q.executeUpdate();
+		}
+		catch (Exception e) {
+			throw new SystemException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
 	/**
 	 * @see PermissionFinderImpl#getScopes(int[])
 	 */
@@ -266,5 +299,9 @@ public class ResourcePermissionFinderImpl
 
 		return sb.toString();
 	}
+
+	private static final String RESET_RESOURCE_PERMISSIONS =
+		"UPDATE ResourcePermission SET actionIds=0 WHERE roleId=? AND (" +
+			"(scope=?) OR (scope=?) OR (scope=? AND (primKey=? OR primKey=?)))";
 
 }
