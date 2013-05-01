@@ -33,6 +33,13 @@ public class ResourceTypePermissionFinderUtil {
 		return getFinder().findByGroupScopeC_N_R(companyId, name, roleId);
 	}
 
+	public static void resetResourceTypePermissions(long roleId,
+		long systemGroupId, long userGroupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getFinder()
+			.resetResourceTypePermissions(roleId, systemGroupId, userGroupId);
+	}
+
 	public static ResourceTypePermissionFinder getFinder() {
 		if (_finder == null) {
 			_finder = (ResourceTypePermissionFinder)PortalBeanLocatorUtil.locate(ResourceTypePermissionFinder.class.getName());

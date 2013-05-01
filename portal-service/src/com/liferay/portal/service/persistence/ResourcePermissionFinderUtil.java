@@ -47,6 +47,12 @@ public class ResourcePermissionFinderUtil {
 		return getFinder().findByR_S(roleId, scopes, start, end);
 	}
 
+	public static void resetResourcePermissions(long roleId,
+		long systemGroupId, long userGroupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getFinder().resetResourcePermissions(roleId, systemGroupId, userGroupId);
+	}
+
 	public static ResourcePermissionFinder getFinder() {
 		if (_finder == null) {
 			_finder = (ResourcePermissionFinder)PortalBeanLocatorUtil.locate(ResourcePermissionFinder.class.getName());

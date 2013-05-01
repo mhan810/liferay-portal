@@ -25,4 +25,8 @@ public interface ResourceTypePermissionFinder {
 	public java.util.List<com.liferay.portal.model.ResourceTypePermission> findByGroupScopeC_N_R(
 		long companyId, java.lang.String name, long roleId)
 		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public void resetResourceTypePermissions(long roleId, long systemGroupId,
+		long userGroupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
 }
