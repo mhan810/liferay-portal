@@ -14,18 +14,32 @@
 
 package com.liferay.portlet.usersadmin.lar;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.model.Address;
+import com.liferay.portal.model.EmailAddress;
+import com.liferay.portal.model.OrgLabor;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.OrganizationConstants;
+import com.liferay.portal.model.Phone;
+import com.liferay.portal.model.Website;
+import com.liferay.portal.service.AddressLocalServiceUtil;
+import com.liferay.portal.service.EmailAddressLocalServiceUtil;
+import com.liferay.portal.service.OrgLaborLocalServiceUtil;
 import com.liferay.portal.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.service.PhoneLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.WebsiteLocalServiceUtil;
+import com.liferay.portlet.usersadmin.util.UsersAdminUtil;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
@@ -56,6 +70,12 @@ public class OrganizationStagedModelDataHandler
 
 			Element organizationElement =
 				portletDataContext.getExportDataElement(exportedOrganization);
+
+			exportAddresses(portletDataContext, exportedOrganization);
+			exportEmailAddresses(portletDataContext, exportedOrganization);
+			exportOrgLabors(portletDataContext, exportedOrganization);
+			exportPhones(portletDataContext, exportedOrganization);
+			exportWebsites(portletDataContext, exportedOrganization);
 
 			portletDataContext.addClassedModel(
 				organizationElement,
@@ -116,6 +136,16 @@ public class OrganizationStagedModelDataHandler
 					portletDataContext.getCompanyId(), organization.getName());
 		}
 
+		//	Supplemental data
+		List<Address> addresses = readAddresses(
+			portletDataContext, organization);
+		List<EmailAddress> emailAddresses = readEmailAddresses(
+			portletDataContext, organization);
+		List<OrgLabor> orgLabors = readOrgLabors(
+			portletDataContext, organization);
+		List<Phone> phones = readPhones(portletDataContext, organization);
+		List<Website> websites = readWebsites(portletDataContext, organization);
+
 		Organization importedOrganization = null;
 
 		if (existingOrganization == null) {
@@ -139,9 +169,187 @@ public class OrganizationStagedModelDataHandler
 					organization.getComments(), false, serviceContext);
 		}
 
+		long importedOrganizationId = importedOrganization.getOrganizationId();
+
+		UsersAdminUtil.updateAddresses(
+			Organization.class.getName(), importedOrganizationId, addresses);
+
+		UsersAdminUtil.updateEmailAddresses(
+			Organization.class.getName(), importedOrganizationId,
+			emailAddresses);
+
+		UsersAdminUtil.updateOrgLabors(importedOrganizationId, orgLabors);
+
+		UsersAdminUtil.updatePhones(
+			Organization.class.getName(), importedOrganizationId, phones);
+
+		UsersAdminUtil.updateWebsites(
+			Organization.class.getName(), importedOrganizationId, websites);
+
 		portletDataContext.importClassedModel(
 			organization, importedOrganization,
 			UsersAdminPortletDataHandler.NAMESPACE);
+	}
+
+	protected void exportAddresses(
+			PortletDataContext portletDataContext, Organization organization)
+		throws PortalException, SystemException {
+
+		List<Address> addresses = AddressLocalServiceUtil.getAddresses(
+			organization.getCompanyId(), organization.getModelClassName(),
+			organization.getOrganizationId());
+
+		String addressXML = portletDataContext.toXML(addresses);
+
+		String path = ExportImportPathUtil.getModelPath(
+			organization, Address.class.getSimpleName());
+
+		portletDataContext.addZipEntry(path, addressXML);
+	}
+
+	protected void exportEmailAddresses(
+			PortletDataContext portletDataContext, Organization organization)
+		throws PortalException, SystemException {
+
+		List<EmailAddress> emailAddresses =
+			EmailAddressLocalServiceUtil.getEmailAddresses(
+				organization.getCompanyId(), organization.getModelClassName(),
+				organization.getOrganizationId());
+
+		String emailAddressXML = portletDataContext.toXML(emailAddresses);
+
+		String path = ExportImportPathUtil.getModelPath(
+			organization, EmailAddress.class.getSimpleName());
+
+		portletDataContext.addZipEntry(path, emailAddressXML);
+	}
+
+	protected void exportOrgLabors(
+			PortletDataContext portletDataContext, Organization organization)
+		throws PortalException, SystemException {
+
+		List<OrgLabor> orgLabors = OrgLaborLocalServiceUtil.getOrgLabors(
+			organization.getOrganizationId());
+
+		String orgLaborsXML = portletDataContext.toXML(orgLabors);
+
+		String path = ExportImportPathUtil.getModelPath(
+			organization, OrgLabor.class.getSimpleName());
+
+		portletDataContext.addZipEntry(path, orgLaborsXML);
+	}
+
+	protected void exportPhones(
+			PortletDataContext portletDataContext, Organization organization)
+		throws PortalException, SystemException {
+
+		List<Phone> phones = PhoneLocalServiceUtil.getPhones(
+			organization.getCompanyId(), organization.getModelClassName(),
+			organization.getOrganizationId());
+
+		String phonesXML = portletDataContext.toXML(phones);
+
+		String path = ExportImportPathUtil.getModelPath(
+			organization, Phone.class.getSimpleName());
+
+		portletDataContext.addZipEntry(path, phonesXML);
+
+	}
+
+	protected void exportWebsites(
+			PortletDataContext portletDataContext, Organization organization)
+		throws PortalException, SystemException {
+
+		List<Website> websites = WebsiteLocalServiceUtil.getWebsites(
+			organization.getCompanyId(), organization.getModelClassName(),
+			organization.getOrganizationId());
+
+		String websitesXML = portletDataContext.toXML(websites);
+
+		String path = ExportImportPathUtil.getModelPath(
+			organization, Website.class.getSimpleName());
+
+		portletDataContext.addZipEntry(path, websitesXML);
+	}
+
+	protected List<Address> readAddresses(
+		PortletDataContext portletDataContext, Organization organization) {
+
+		String path = ExportImportPathUtil.getModelPath(
+			organization, Address.class.getSimpleName());
+
+		List<Address> rawEntries =
+			(List<Address>)portletDataContext.getZipEntryAsObject(path);
+
+		for (Address address : rawEntries) {
+			address.setAddressId(0);
+		}
+
+		return rawEntries;
+	}
+
+	protected List<EmailAddress> readEmailAddresses(
+		PortletDataContext portletDataContext, Organization organization) {
+
+		String path = ExportImportPathUtil.getModelPath(
+			organization, EmailAddress.class.getSimpleName());
+
+		List<EmailAddress> rawEntries =
+			(List<EmailAddress>)portletDataContext.getZipEntryAsObject(path);
+
+		for (EmailAddress emailAddress : rawEntries) {
+			emailAddress.setEmailAddressId(0);
+		}
+
+		return rawEntries;
+	}
+
+	protected List<OrgLabor> readOrgLabors(
+		PortletDataContext portletDataContext, Organization organization) {
+
+		String path = ExportImportPathUtil.getModelPath(
+			organization, OrgLabor.class.getSimpleName());
+
+		List<OrgLabor> rawEntries =
+			(List<OrgLabor>)portletDataContext.getZipEntryAsObject(path);
+
+		for (OrgLabor orgLabor : rawEntries) {
+			orgLabor.setOrgLaborId(0);
+		}
+
+		return rawEntries;
+	}
+
+	protected List<Phone> readPhones(
+		PortletDataContext portletDataContext, Organization organization) {
+
+		String path = ExportImportPathUtil.getModelPath(
+			organization, Phone.class.getSimpleName());
+
+		List<Phone> rawEntries =
+			(List<Phone>)portletDataContext.getZipEntryAsObject(path);
+
+		for (Phone phone : rawEntries) {
+			phone.setPhoneId(0);
+		}
+
+		return rawEntries;
+	}
+
+	protected List<Website> readWebsites(
+		PortletDataContext portletDataContext, Organization organization) {
+
+		String path = ExportImportPathUtil.getModelPath(
+			organization, Website.class.getSimpleName());
+
+		List<Website> rawEntries =
+			(List<Website>)portletDataContext.getZipEntryAsObject(path);
+
+		for (Website website : rawEntries) {
+			website.setWebsiteId(0);
+		}
+
+		return rawEntries;
 	}
 
 }

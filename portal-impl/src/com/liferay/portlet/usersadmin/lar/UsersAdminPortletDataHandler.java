@@ -22,6 +22,8 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Organization;
+import com.liferay.portal.model.OrganizationConstants;
+import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.service.persistence.OrganizationActionableDynamicQuery;
 
 import java.util.List;
@@ -42,8 +44,16 @@ public class UsersAdminPortletDataHandler extends BasePortletDataHandler {
 			PortletPreferences portletPreferences)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"Cannot delete portlet data for organizations");
+		List<Organization> organizations =
+			OrganizationLocalServiceUtil.getOrganizations(
+				portletDataContext.getCompanyId(),
+				OrganizationConstants.ANY_PARENT_ORGANIZATION_ID);
+
+		for (Organization organization : organizations) {
+			OrganizationLocalServiceUtil.deleteOrganization(organization);
+		}
+
+		return portletPreferences;
 	}
 
 	@Override
