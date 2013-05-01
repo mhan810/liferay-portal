@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Role;
+import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.persistence.RoleActionableDynamicQuery;
 
 import java.util.List;
@@ -42,8 +43,14 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 			PortletPreferences portletPreferences)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"Cannot delete portlet data for roles");
+		List<Role> roles = RoleLocalServiceUtil.getRoles(
+			portletDataContext.getCompanyId());
+
+		for (Role role : roles) {
+			RoleLocalServiceUtil.deleteRole(role);
+		}
+
+		return portletPreferences;
 	}
 
 	@Override
