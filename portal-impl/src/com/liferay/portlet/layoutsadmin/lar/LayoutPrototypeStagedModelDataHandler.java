@@ -116,6 +116,10 @@ public class LayoutPrototypeStagedModelDataHandler
 		portletDataContext.importClassedModel(
 			layoutPrototype, importedLayoutPrototype,
 			LayoutPrototypePortletDataHandler.NAMESPACE);
+
+		importLayoutLar(
+			userId, portletDataContext, layoutPrototype,
+			importedLayoutPrototype);
 	}
 
 	protected void exportLayoutLar(
@@ -155,6 +159,24 @@ public class LayoutPrototypeStagedModelDataHandler
 		sb.append("-layout.lar");
 
 		return sb.toString();
+	}
+
+	protected void importLayoutLar(
+			long userId, PortletDataContext portletDataContext,
+			LayoutPrototype layoutPrototype,
+			LayoutPrototype importedLayoutPrototype)
+		throws PortalException, SystemException {
+
+		String path = getLayoutLarPath(portletDataContext, layoutPrototype);
+
+		long groupId = importedLayoutPrototype.getGroup().getGroupId();
+
+		byte[] larBytes = portletDataContext.getZipEntryAsByteArray(path);
+
+		Map<String, String[]> parameters = getLayoutImportExportParameters();
+
+		LayoutLocalServiceUtil.importLayouts(
+			userId, groupId, true, parameters, larBytes);
 	}
 
 	private static final Map<String, String[]> LAR_PARAMETERS =
