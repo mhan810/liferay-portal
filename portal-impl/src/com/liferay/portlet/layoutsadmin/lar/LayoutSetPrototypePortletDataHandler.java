@@ -46,7 +46,7 @@ public class LayoutSetPrototypePortletDataHandler
 		throws Exception {
 
 		if (portletDataContext.addPrimaryKey(
-			LayoutSetPrototypePortletDataHandler.class, "deleteData")) {
+				LayoutSetPrototypePortletDataHandler.class, "deleteData")) {
 
 			return portletPreferences;
 		}

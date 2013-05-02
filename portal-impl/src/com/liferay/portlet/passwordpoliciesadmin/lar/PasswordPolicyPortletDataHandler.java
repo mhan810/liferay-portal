@@ -43,7 +43,7 @@ public class PasswordPolicyPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		if (portletDataContext.addPrimaryKey(
-			PasswordPolicyPortletDataHandler.class, "deleteData")) {
+				PasswordPolicyPortletDataHandler.class, "deleteData")) {
 
 			return portletPreferences;
 		}
@@ -114,8 +114,7 @@ public class PasswordPolicyPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getScopeGroupId());
 
 		Element passwordPoliciesElement =
-			portletDataContext.getImportDataGroupElement(
-				PasswordPolicy.class);
+			portletDataContext.getImportDataGroupElement(PasswordPolicy.class);
 
 		List<Element> passwordPolicyElements =
 			passwordPoliciesElement.elements();

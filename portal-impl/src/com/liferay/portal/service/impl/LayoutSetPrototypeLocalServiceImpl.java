@@ -157,7 +157,7 @@ public class LayoutSetPrototypeLocalServiceImpl
 	}
 
 	public void deleteLayoutSetPrototypes(long companyId)
-		throws  PortalException, SystemException {
+		throws PortalException, SystemException {
 
 		List<LayoutSetPrototype> layoutSetPrototypes =
 			layoutSetPrototypePersistence.findByCompanyId(companyId);

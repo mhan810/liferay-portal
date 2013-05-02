@@ -140,7 +140,7 @@ public class LayoutSetPrototypeStagedModelDataHandler
 
 		Map<String, String[]> parameters = getLayoutImportExportParameters();
 
-		byte[] layouts =  LayoutLocalServiceUtil.exportLayouts(
+		byte[] layouts = LayoutLocalServiceUtil.exportLayouts(
 			layoutSet.getGroupId(), layoutSet.isPrivateLayout(), parameters,
 			null, null);
 

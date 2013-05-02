@@ -45,7 +45,7 @@ public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		if (portletDataContext.addPrimaryKey(
-			LayoutPrototypePortletDataHandler.class, "deleteData")) {
+				LayoutPrototypePortletDataHandler.class, "deleteData")) {
 
 			return portletPreferences;
 		}
