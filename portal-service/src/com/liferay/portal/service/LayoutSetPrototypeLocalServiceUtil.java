@@ -267,6 +267,12 @@ public class LayoutSetPrototypeLocalServiceUtil {
 			description, active, layoutsUpdateable, serviceContext);
 	}
 
+	public static void deleteLayoutSetPrototypes(long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().deleteLayoutSetPrototypes(companyId);
+	}
+
 	public static com.liferay.portal.model.LayoutSetPrototype fetchLayoutSetPrototypeByUuidAndCompanyId(
 		java.lang.String uuid, long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException {
