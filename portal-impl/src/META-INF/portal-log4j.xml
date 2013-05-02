@@ -498,6 +498,10 @@
 		<priority value="ERROR" />
 	</category>
 
+	<category name="com.liferay.portal.security.pacl.GeneratingPACLPolicy">
+		<priority value="DEBUG" />
+	</category>
+
 	<category name="com.liferay.portal.security.pacl.PACLAdvice">
 		<priority value="ERROR" />
 	</category>

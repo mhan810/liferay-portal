@@ -14,8 +14,8 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.StagedModel;
 
 /**
@@ -60,14 +60,19 @@ public class StagedModelDataHandlerUtil {
 	private static <T extends StagedModel> StagedModelDataHandler<T>
 		_getStagedModelDataHandler(T stagedModel) {
 
-		ClassedModel classedModel = stagedModel;
+		StagedModelDataHandlerProxy stagedModelDataHandlerProxy =
+			(StagedModelDataHandlerProxy)PortalBeanLocatorUtil.locate(
+				StagedModelDataHandlerProxy.class.getName());
 
 		StagedModelDataHandler<T> stagedModelDataHandler =
 			(StagedModelDataHandler<T>)
 				StagedModelDataHandlerRegistryUtil.getStagedModelDataHandler(
-					classedModel.getModelClassName());
+					stagedModel.getModelClassName());
 
-		return stagedModelDataHandler;
+		stagedModelDataHandlerProxy.setStagedModelDataHandler(
+			stagedModelDataHandler);
+
+		return stagedModelDataHandlerProxy;
 	}
 
 }

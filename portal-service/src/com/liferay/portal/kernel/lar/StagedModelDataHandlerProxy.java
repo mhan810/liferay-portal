@@ -12,14 +12,14 @@
  * details.
  */
 
-package com.liferay.portlet.documentlibrary.model.impl;
+package com.liferay.portal.kernel.lar;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Mate Thurzo
  */
-public class DLSyncImpl extends DLSyncBaseImpl {
+public interface StagedModelDataHandlerProxy extends StagedModelDataHandler {
 
-	public DLSyncImpl() {
-	}
+	public void setStagedModelDataHandler(
+		StagedModelDataHandler stagedModelDataHandler);
 
 }

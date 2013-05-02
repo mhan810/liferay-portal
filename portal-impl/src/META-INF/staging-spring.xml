@@ -31,4 +31,12 @@
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.LayoutSetLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.LayoutSetLocalService)" />
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.PortletPreferencesLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.PortletPreferencesLocalService)" />
 	</aop:config>
+	<bean id="com.liferay.portal.lar.ExportImportErrorProcessorAdvice" class="com.liferay.portal.lar.ExportImportErrorProcessorAdvice" />
+	<bean id="com.liferay.portal.lar.ExportImportMessageAdvice" class="com.liferay.portal.lar.ExportImportMessageAdvice" />
+	<aop:config proxy-target-class="false">
+		<aop:pointcut id="stagedModelDataHandlerexportImportPointcut" expression="execution(* com.liferay.portal.kernel.lar.StagedModelDataHandlerProxy.exportStagedModel(..)) || execution(* com.liferay.portal.kernel.lar.StagedModelDataHandlerProxy.importStagedModel(..))" />
+
+		<aop:advisor advice-ref="com.liferay.portal.lar.ExportImportMessageAdvice" pointcut-ref="stagedModelDataHandlerexportImportPointcut" />
+		<aop:advisor advice-ref="com.liferay.portal.lar.ExportImportErrorProcessorAdvice" pointcut-ref="stagedModelDataHandlerexportImportPointcut" />
+	</aop:config>
 </beans>

@@ -12,13 +12,24 @@
  * details.
  */
 
-package com.liferay.portlet.documentlibrary.service.persistence;
+package com.liferay.portal.kernel.lar.messaging;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Mate Thurzo
  */
-public interface DLSyncFinder {
-	public java.util.List<com.liferay.portlet.documentlibrary.model.DLSync> filterFindByC_M_R(
-		long companyId, long modifiedDate, long repositoryId)
-		throws com.liferay.portal.kernel.exception.SystemException;
+public enum ExportImportMessageLevel {
+
+	// Means EXPORT or IMPORT, eg.: EXPORT is finished or IMPORT is started
+
+	PROCESS,
+
+	// Content group like Documents and Media or DDM. NOT portlets
+
+	CONTENT_GROUP,
+
+	// report information regarding the model level - BookmarksEntry has been
+	// exported
+
+	MODEL
+
 }
