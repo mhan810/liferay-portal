@@ -90,6 +90,10 @@
 		<priority value="INFO" />
 	</category>
 
+	<category name="com.liferay.portal.calendar.CalendarServicesProviderRegistryImpl">
+		<priority value="INFO" />
+	</category>
+
 	<category name="com.liferay.portal.captcha.CaptchaImpl">
 		<priority value="INFO" />
 	</category>

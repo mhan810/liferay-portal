@@ -91,6 +91,11 @@
 			<bean class="com.liferay.portal.cache.key.HashCodeCacheKeyGenerator" />
 		</property>
 	</bean>
+	<bean id="com.liferay.portal.kernel.calendar.CalendarServicesProviderRegistryUtil" class="com.liferay.portal.kernel.calendar.CalendarServicesProviderRegistryUtil">
+		<property name="calendarServicesProviderRegistry">
+			<bean class="com.liferay.portal.calendar.CalendarServicesProviderRegistryImpl" />
+		</property>
+	</bean>
 	<bean id="com.liferay.portal.kernel.captcha.CaptchaUtil" class="com.liferay.portal.kernel.captcha.CaptchaUtil">
 		<property name="captcha">
 			<bean class="com.liferay.portal.captcha.CaptchaImpl" />
