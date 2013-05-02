@@ -28,6 +28,10 @@ public class MessageStatus implements Serializable {
 		return _endTime - _startTime;
 	}
 
+	public long getEndTime() {
+		return _endTime;
+	}
+
 	public String getExceptionMessage() {
 		return _exceptionMessage;
 	}
@@ -40,6 +44,10 @@ public class MessageStatus implements Serializable {
 		return _payload;
 	}
 
+	public long getStartTime() {
+		return _startTime;
+	}
+
 	public boolean hasException() {
 		if (_exceptionStackTrace != null) {
 			return true;
@@ -49,13 +57,29 @@ public class MessageStatus implements Serializable {
 		}
 	}
 
+	public void setEndTime(long endTime) {
+		_endTime = endTime;
+	}
+
 	public void setException(Exception e) {
 		_exceptionMessage = e.getMessage();
 		_exceptionStackTrace = StackTraceUtil.getStackTrace(e);
 	}
 
+	public void setExceptionMessage(String exceptionMessage) {
+		_exceptionMessage = exceptionMessage;
+	}
+
+	public void setExceptionStackTrace(String exceptionStackTrace) {
+		_exceptionStackTrace = exceptionStackTrace;
+	}
+
 	public void setPayload(Object payload) {
 		_payload = payload;
+	}
+
+	public void setStartTime(long startTime) {
+		_startTime = startTime;
 	}
 
 	public void startTimer() {
