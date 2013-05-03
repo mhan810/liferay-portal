@@ -14,13 +14,24 @@
 
 package com.liferay.portlet.layoutsadmin.lar;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutPrototype;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.util.PortletKeys;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Daniela Zapata Riesco
@@ -49,6 +60,8 @@ public class LayoutPrototypeStagedModelDataHandler
 			layoutPrototypeElement,
 			ExportImportPathUtil.getModelPath(layoutPrototype), layoutPrototype,
 			LayoutPrototypePortletDataHandler.NAMESPACE);
+
+		exportLayoutLar(portletDataContext, layoutPrototype);
 	}
 
 	@Override
@@ -103,6 +116,87 @@ public class LayoutPrototypeStagedModelDataHandler
 		portletDataContext.importClassedModel(
 			layoutPrototype, importedLayoutPrototype,
 			LayoutPrototypePortletDataHandler.NAMESPACE);
+
+		importLayoutLar(
+			userId, portletDataContext, layoutPrototype,
+			importedLayoutPrototype);
+	}
+
+	protected void exportLayoutLar(
+			PortletDataContext portletDataContext,
+			LayoutPrototype layoutPrototype)
+		throws PortalException, SystemException {
+
+		Layout layout = layoutPrototype.getLayout();
+
+		String path = getLayoutLarPath(portletDataContext, layoutPrototype);
+
+		Map<String, String[]> parameters = getLayoutImportExportParameters();
+
+		byte[] layouts = LayoutLocalServiceUtil.exportLayouts(
+			layout.getGroupId(), layout.isPrivateLayout(), parameters, null,
+			null);
+
+		portletDataContext.addZipEntry(path, layouts);
+	}
+
+	protected Map<String, String[]> getLayoutImportExportParameters() {
+		return LAR_PARAMETERS;
+	}
+
+	protected String getLayoutLarPath(
+		PortletDataContext portletDataContext,
+		LayoutPrototype layoutPrototype) {
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append(ExportImportPathUtil.getPortletPath(
+			portletDataContext, PortletKeys.LAYOUT_SET_PROTOTYPE));
+		sb.append(StringPool.SLASH);
+		sb.append(LayoutPrototypePortletDataHandler.NAMESPACE);
+		sb.append(StringPool.SLASH);
+		sb.append(layoutPrototype.getLayoutPrototypeId());
+		sb.append("-layout.lar");
+
+		return sb.toString();
+	}
+
+	protected void importLayoutLar(
+			long userId, PortletDataContext portletDataContext,
+			LayoutPrototype layoutPrototype,
+			LayoutPrototype importedLayoutPrototype)
+		throws PortalException, SystemException {
+
+		String path = getLayoutLarPath(portletDataContext, layoutPrototype);
+
+		long groupId = importedLayoutPrototype.getGroup().getGroupId();
+
+		byte[] larBytes = portletDataContext.getZipEntryAsByteArray(path);
+
+		Map<String, String[]> parameters = getLayoutImportExportParameters();
+
+		LayoutLocalServiceUtil.importLayouts(
+			userId, groupId, true, parameters, larBytes);
+	}
+
+	private static final Map<String, String[]> LAR_PARAMETERS =
+		new HashMap<String, String[]>();
+
+	static {
+		LAR_PARAMETERS.put(
+			PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE,
+			new String[]{PortletDataHandlerKeys.
+				LAYOUTS_IMPORT_MODE_MERGE_BY_LAYOUT_UUID});
+
+		LAR_PARAMETERS.put(PortletDataHandlerKeys.PERMISSIONS,
+			new String[]{String.valueOf(true)});
+
+		LAR_PARAMETERS.put(PortletDataHandlerKeys.PORTLET_SETUP_ALL,
+			new String[]{String.valueOf(true)});
+
+		LAR_PARAMETERS.put(
+			PortletDataHandlerKeys.DELETE_MISSING_LAYOUTS,
+			new String[]{String.valueOf(true)});
 	}
 
 }

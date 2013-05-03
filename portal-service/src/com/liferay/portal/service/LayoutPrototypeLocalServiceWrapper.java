@@ -274,6 +274,12 @@ public class LayoutPrototypeLocalServiceWrapper
 			companyId, nameMap, description, active, serviceContext);
 	}
 
+	public void deleteLayoutPrototypes(long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_layoutPrototypeLocalService.deleteLayoutPrototypes(companyId);
+	}
+
 	public com.liferay.portal.model.LayoutPrototype fetchLayoutPrototypeByUuidAndCompanyId(
 		java.lang.String uuid, long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException {

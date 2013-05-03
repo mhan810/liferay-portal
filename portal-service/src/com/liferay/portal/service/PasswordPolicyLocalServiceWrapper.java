@@ -323,6 +323,13 @@ public class PasswordPolicyLocalServiceWrapper
 		return _passwordPolicyLocalService.getDefaultPasswordPolicy(companyId);
 	}
 
+	public java.util.List<com.liferay.portal.model.PasswordPolicy> getPasswordPolicies(
+		long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _passwordPolicyLocalService.getPasswordPolicies(companyId);
+	}
+
 	/**
 	* @deprecated As of 6.1.0
 	*/

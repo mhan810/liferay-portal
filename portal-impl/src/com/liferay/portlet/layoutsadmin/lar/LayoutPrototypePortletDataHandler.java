@@ -14,7 +14,22 @@
 
 package com.liferay.portlet.layoutsadmin.lar;
 
+import com.liferay.portal.events.AddDefaultLayoutPrototypesAction;
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.events.SimpleAction;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.model.LayoutPrototype;
+import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
+import com.liferay.portal.service.persistence.LayoutPrototypeActionableDynamicQuery;
+
+import java.util.List;
+
+import javax.portlet.PortletPreferences;
 
 /**
  * @author Daniela Zapata Riesco
@@ -22,5 +37,94 @@ import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 
 	public static final String NAMESPACE = "layout_prototypes";
+
+	@Override
+	protected PortletPreferences doDeleteData(
+			PortletDataContext portletDataContext, String portletId,
+			PortletPreferences portletPreferences)
+		throws Exception {
+
+		if (portletDataContext.addPrimaryKey(
+				LayoutPrototypePortletDataHandler.class, "deleteData")) {
+
+			return portletPreferences;
+		}
+
+		LayoutPrototypeLocalServiceUtil.deleteLayoutPrototypes(
+			portletDataContext.getCompanyId());
+
+		SimpleAction addDefaultLayoutPrototypesAction =
+			new AddDefaultLayoutPrototypesAction();
+
+		addDefaultLayoutPrototypesAction.run(
+			new String[]{String.valueOf(portletDataContext.getCompanyId())});
+
+		return portletPreferences;
+	}
+
+	@Override
+	protected String doExportData(
+			final PortletDataContext portletDataContext, String portletId,
+			PortletPreferences portletPreferences)
+		throws Exception {
+
+		portletDataContext.addPermissions(
+			"com.liferay.portlet.layoutsadmin",
+			portletDataContext.getScopeGroupId());
+
+		Element rootElement = addExportDataRootElement(portletDataContext);
+
+		rootElement.addAttribute(
+			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
+
+		ActionableDynamicQuery actionableDynamicQuery =
+			new LayoutPrototypeActionableDynamicQuery() {
+
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				portletDataContext.addDateRangeCriteria(
+					dynamicQuery, "modifiedDate");
+			}
+
+			@Override
+			protected void performAction(Object object) throws PortalException {
+				LayoutPrototype layoutPrototype = (LayoutPrototype)object;
+
+				StagedModelDataHandlerUtil.exportStagedModel(
+					portletDataContext, layoutPrototype);
+			}
+		};
+
+		actionableDynamicQuery.setGroupId(portletDataContext.getScopeGroupId());
+
+		actionableDynamicQuery.performActions();
+
+		return getExportDataRootElementString(rootElement);
+	}
+
+	@Override
+	protected PortletPreferences doImportData(
+			PortletDataContext portletDataContext, String portletId,
+			PortletPreferences portletPreferences, String data)
+		throws Exception {
+
+		portletDataContext.importPermissions(
+			"com.liferay.portlet.layoutsadmin",
+			portletDataContext.getSourceGroupId(),
+			portletDataContext.getScopeGroupId());
+
+		Element layoutPrototypesElement =
+			portletDataContext.getImportDataGroupElement(LayoutPrototype.class);
+
+		List<Element> layoutPrototypeElements =
+			layoutPrototypesElement.elements();
+
+		for (Element layoutPrototypeElement : layoutPrototypeElements) {
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, layoutPrototypeElement);
+		}
+
+		return null;
+	}
 
 }

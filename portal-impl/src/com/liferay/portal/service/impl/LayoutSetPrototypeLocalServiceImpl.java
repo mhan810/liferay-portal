@@ -156,6 +156,17 @@ public class LayoutSetPrototypeLocalServiceImpl
 		return deleteLayoutSetPrototype(layoutSetPrototype);
 	}
 
+	public void deleteLayoutSetPrototypes(long companyId)
+		throws PortalException, SystemException {
+
+		List<LayoutSetPrototype> layoutSetPrototypes =
+			layoutSetPrototypePersistence.findByCompanyId(companyId);
+
+		for (LayoutSetPrototype layoutSetPrototype : layoutSetPrototypes) {
+			deleteLayoutSetPrototype(layoutSetPrototype);
+		}
+	}
+
 	public LayoutSetPrototype fetchLayoutSetPrototypeByUuidAndCompanyId(
 			String uuid, long companyId)
 		throws SystemException {
