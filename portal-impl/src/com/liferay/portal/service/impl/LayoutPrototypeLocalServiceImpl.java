@@ -158,14 +158,18 @@ public class LayoutPrototypeLocalServiceImpl
 		return deleteLayoutPrototype(layoutPrototype);
 	}
 
-	public void deleteLayoutPrototypes(long companyId)
+	public void deleteNonDefaultLayoutPrototypes(long companyId)
 		throws PortalException, SystemException {
 
 		List<LayoutPrototype> layoutPrototypes =
 			layoutPrototypePersistence.findByCompanyId(companyId);
 
+		long defaultUserId = userLocalService.getDefaultUserId(companyId);
+
 		for (LayoutPrototype layoutPrototype : layoutPrototypes) {
-			deleteLayoutPrototype(layoutPrototype);
+			if (layoutPrototype.getUserId() != defaultUserId) {
+				deleteLayoutPrototype(layoutPrototype);
+			}
 		}
 	}
 
