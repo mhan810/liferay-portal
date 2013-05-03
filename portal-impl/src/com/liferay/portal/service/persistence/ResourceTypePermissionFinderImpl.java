@@ -131,4 +131,38 @@ public class ResourceTypePermissionFinderImpl
 		}
 	}
 
+	public void resetResourceTypePermissions(
+			long roleId, long systemGroupId, long userGroupId)
+		throws SystemException {
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			String sql = RESET_RESOURCE_TYPE_PERMISSION;
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(roleId);
+			qPos.add(0L);
+			qPos.add(systemGroupId);
+			qPos.add(userGroupId);
+
+			q.executeUpdate();
+		}
+		catch (Exception e) {
+			throw new SystemException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	private static final String RESET_RESOURCE_TYPE_PERMISSION =
+		"UPDATE ResourceTypePermission SET actionIds=0 WHERE roleId=? AND (" +
+			"groupId=? OR groupId=? OR groupId=?)";
+
 }
