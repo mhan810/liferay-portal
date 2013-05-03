@@ -12,12 +12,10 @@
  * details.
  */
 
-package com.liferay.portlet.layoutsadmin.lar;
+package com.liferay.portlet.layoutprototypes.lar;
 
-import com.liferay.portal.events.AddDefaultLayoutPrototypesAction;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.events.SimpleAction;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -45,19 +43,13 @@ public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		if (portletDataContext.addPrimaryKey(
-			LayoutPrototypePortletDataHandler.class, "deleteData")) {
+				LayoutPrototypePortletDataHandler.class, "deleteData")) {
 
 			return portletPreferences;
 		}
 
-		LayoutPrototypeLocalServiceUtil.deleteLayoutPrototypes(
+		LayoutPrototypeLocalServiceUtil.deleteNonDefaultLayoutPrototypes(
 			portletDataContext.getCompanyId());
-
-		SimpleAction addDefaultLayoutPrototypesAction =
-			new AddDefaultLayoutPrototypesAction();
-
-		addDefaultLayoutPrototypesAction.run(
-			new String[]{String.valueOf(portletDataContext.getCompanyId())});
 
 		return portletPreferences;
 	}
@@ -69,7 +61,7 @@ public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.addPermissions(
-			"com.liferay.portlet.layoutsadmin",
+			"com.liferay.portlet.layoutprototypes",
 			portletDataContext.getScopeGroupId());
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
@@ -109,7 +101,7 @@ public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.importPermissions(
-			"com.liferay.portlet.layoutsadmin",
+			"com.liferay.portlet.layoutprototypes",
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
