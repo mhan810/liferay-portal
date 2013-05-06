@@ -37,17 +37,25 @@ public class UserGroupsAdminPortletDataHandler extends BasePortletDataHandler {
 
 	public static final String NAMESPACE = "user_groups_admin";
 
+	public UserGroupsAdminPortletDataHandler() {
+		super();
+
+		setDataPortalLevel(true);
+	}
+
 	protected PortletPreferences doDeleteData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
 
-		List<UserGroup> userGroups = UserGroupLocalServiceUtil.getUserGroups(
-			portletDataContext.getCompanyId());
+		if (portletDataContext.addPrimaryKey(
+				UserGroupsAdminPortletDataHandler.class, "deleteData")) {
 
-		for (UserGroup userGroup : userGroups) {
-			UserGroupLocalServiceUtil.deleteUserGroup(userGroup);
+			return portletPreferences;
 		}
+
+		UserGroupLocalServiceUtil.deleteUserGroups(
+			portletDataContext.getCompanyId());
 
 		return portletPreferences;
 	}
@@ -58,8 +66,7 @@ public class UserGroupsAdminPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.addPermissions(
-			"com.liferay.portlet.usergroupsadmin",
-			portletDataContext.getScopeGroupId());
+			_RESOURCE_OBJECT_ID, portletDataContext.getScopeGroupId());
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
@@ -87,9 +94,6 @@ public class UserGroupsAdminPortletDataHandler extends BasePortletDataHandler {
 
 			};
 
-		userGroupActionableDynamicQuery.setGroupId(
-			portletDataContext.getScopeGroupId());
-
 		userGroupActionableDynamicQuery.performActions();
 
 		return getExportDataRootElementString(rootElement);
@@ -102,8 +106,7 @@ public class UserGroupsAdminPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.importPermissions(
-			"com.liferay.portlet.usergroupsadmin",
-			portletDataContext.getSourceGroupId(),
+			_RESOURCE_OBJECT_ID, portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
 		Element userGroupsElement =
@@ -118,5 +121,8 @@ public class UserGroupsAdminPortletDataHandler extends BasePortletDataHandler {
 
 		return null;
 	}
+
+	private static final String _RESOURCE_OBJECT_ID =
+		"com.liferay.portlet.usergroupsadmin";
 
 }
