@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.documentlibrary.lar;
 
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -48,6 +49,7 @@ import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryMetadataLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil;
@@ -505,6 +507,26 @@ public class FileEntryStagedModelDataHandler
 
 		fileEntryIds.put(
 			fileEntry.getFileEntryId(), importedFileEntry.getFileEntryId());
+	}
+
+	@Override
+	protected String doPrepareStagedModel(
+		PortletDataContext portletDataContext) {
+
+		DynamicQuery fileEntryDynamicQuery = createDynamicQuery(
+			portletDataContext, DLFileEntry.class);
+
+		long fileEntryCount = 0;
+
+		try {
+			fileEntryCount = DLFileEntryLocalServiceUtil.dynamicQueryCount(
+				fileEntryDynamicQuery);
+
+			return String.valueOf(fileEntryCount);
+		}
+		catch (Exception e) {
+			return "-1";
+		}
 	}
 
 	protected void exportMetaData(

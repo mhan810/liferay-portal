@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
@@ -65,8 +67,8 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		setDataLocalized(true);
 		setDataPortletPreferences("rootFolderId");
 		setExportControls(
-			new PortletDataHandlerBoolean(
-				NAMESPACE, "folders-and-documents", true, true),
+			new PortletDataHandlerBoolean(NAMESPACE, "folders", true, true),
+			new PortletDataHandlerBoolean(NAMESPACE, "documents", true, true),
 			new PortletDataHandlerBoolean(NAMESPACE, "shortcuts"),
 			new PortletDataHandlerBoolean(NAMESPACE, "previews-and-thumbnails"),
 			new PortletDataHandlerBoolean(NAMESPACE, "ranks"));
@@ -336,6 +338,38 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		return portletPreferences;
+	}
+
+	@Override
+	protected String doPrepareData(PortletDataContext portletDataContext) {
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		String prepareData = StagedModelDataHandlerUtil.prepareStagedModel(
+			portletDataContext, DLFileEntryType.class);
+
+		jsonObject.put(DLFileEntryType.class.getName(), prepareData);
+
+		prepareData = StagedModelDataHandlerUtil.prepareStagedModel(
+			portletDataContext, DLFileRank.class);
+
+		jsonObject.put(DLFileRank.class.getName(), prepareData);
+
+		prepareData = StagedModelDataHandlerUtil.prepareStagedModel(
+			portletDataContext, DLFileShortcut.class);
+
+		jsonObject.put(DLFileShortcut.class.getName(), prepareData);
+
+		prepareData = StagedModelDataHandlerUtil.prepareStagedModel(
+			portletDataContext, FileEntry.class);
+
+		jsonObject.put(FileEntry.class.getName(), prepareData);
+
+		prepareData = StagedModelDataHandlerUtil.prepareStagedModel(
+			portletDataContext, Folder.class);
+
+		jsonObject.put(Folder.class.getName(), prepareData);
+
+		return jsonObject.toString();
 	}
 
 }

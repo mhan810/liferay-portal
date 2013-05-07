@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.documentlibrary.lar;
 
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -27,6 +28,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.model.DLFileRank;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFileRankLocalServiceUtil;
 
 import java.util.Map;
 
@@ -102,6 +104,26 @@ public class DLFileRankStagedModelDataHandler
 			portletDataContext.getScopeGroupId(),
 			portletDataContext.getCompanyId(), userId, fileEntryId,
 			serviceContext);
+	}
+
+	@Override
+	protected String doPrepareStagedModel(
+		PortletDataContext portletDataContext) {
+
+		DynamicQuery fileRankDynamicQuery = createDynamicQuery(
+			portletDataContext, DLFileRank.class);
+
+		long fileRankCount = 0;
+
+		try {
+			fileRankCount = DLFileRankLocalServiceUtil.dynamicQueryCount(
+				fileRankDynamicQuery);
+
+			return String.valueOf(fileRankCount);
+		}
+		catch (Exception e) {
+			return "-1";
+		}
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
