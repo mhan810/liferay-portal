@@ -14,6 +14,11 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.StagedModel;
 
 /**
@@ -61,6 +66,39 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 		}
 	}
 
+	public String prepareStagedModel(PortletDataContext portletDataContext) {
+		try {
+			return doPrepareStagedModel(portletDataContext);
+		}
+		catch (Exception e) {
+			return StringPool.BLANK;
+		}
+	}
+
+	protected DynamicQuery createDynamicQuery(
+		PortletDataContext portletDataContext,
+		Class<? extends StagedModel> stagedModelClass) {
+
+		Property companyIdProperty = PropertyFactoryUtil.forName("companyId");
+		Property groupIdProperty = PropertyFactoryUtil.forName("groupId");
+		Property modifiedDateProperty = PropertyFactoryUtil.forName(
+			"modifiedDate");
+
+		DynamicQuery stagedModelDynamicQuery = DynamicQueryFactoryUtil.forClass(
+			stagedModelClass);
+
+		stagedModelDynamicQuery.add(
+			companyIdProperty.eq(portletDataContext.getCompanyId()));
+		stagedModelDynamicQuery.add(
+			groupIdProperty.eq(portletDataContext.getScopeGroupId()));
+		stagedModelDynamicQuery.add(
+			modifiedDateProperty.between(
+				portletDataContext.getStartDate(),
+				portletDataContext.getEndDate()));
+
+		return stagedModelDynamicQuery;
+	}
+
 	protected abstract void doExportStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)
 		throws Exception;
@@ -68,5 +106,11 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	protected abstract void doImportStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)
 		throws Exception;
+
+	protected String doPrepareStagedModel(
+		PortletDataContext portletDataContext) {
+
+		return StringPool.BLANK;
+	}
 
 }

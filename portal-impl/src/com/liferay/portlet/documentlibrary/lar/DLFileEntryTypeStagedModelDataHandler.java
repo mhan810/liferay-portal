@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.documentlibrary.lar;
 
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
@@ -197,6 +198,27 @@ public class DLFileEntryTypeStagedModelDataHandler
 				DDMStructureLocalServiceUtil.updateDDMStructure(
 					importedDDMStructure);
 			}
+		}
+	}
+
+	@Override
+	protected String doPrepareStagedModel(
+		PortletDataContext portletDataContext) {
+
+		DynamicQuery fileEntryTypeDynamicQuery = createDynamicQuery(
+			portletDataContext, DLFileEntryType.class);
+
+		long fileEntryTypeCount = 0;
+
+		try {
+			fileEntryTypeCount =
+				DLFileEntryTypeLocalServiceUtil.dynamicQueryCount(
+					fileEntryTypeDynamicQuery);
+
+			return String.valueOf(fileEntryTypeCount);
+		}
+		catch (Exception e) {
+			return "-1";
 		}
 	}
 

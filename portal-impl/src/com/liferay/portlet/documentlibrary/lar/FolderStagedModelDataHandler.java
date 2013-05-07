@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.documentlibrary.lar;
 
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -210,6 +211,26 @@ public class FolderStagedModelDataHandler
 			folder, importedFolder, DLPortletDataHandler.NAMESPACE);
 
 		folderIds.put(folder.getFolderId(), importedFolder.getFolderId());
+	}
+
+	@Override
+	protected String doPrepareStagedModel(
+		PortletDataContext portletDataContext) {
+
+		DynamicQuery folderDynamicQuery = createDynamicQuery(
+			portletDataContext, DLFolder.class);
+
+		long folderCount = 0;
+
+		try {
+			folderCount = DLFolderLocalServiceUtil.dynamicQueryCount(
+				folderDynamicQuery);
+
+			return String.valueOf(folderCount);
+		}
+		catch (Exception e) {
+			return "-1";
+		}
 	}
 
 	protected void exportFolderFileEntryTypes(

@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.documentlibrary.lar;
 
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -28,6 +29,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFileShortcutLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.persistence.DLFileShortcutUtil;
 
 import java.util.Map;
@@ -172,6 +174,27 @@ public class DLFileShortcutStagedModelDataHandler
 
 		portletDataContext.importClassedModel(
 			fileShortcut, importedFileShortcut, DLPortletDataHandler.NAMESPACE);
+	}
+
+	@Override
+	protected String doPrepareStagedModel(
+		PortletDataContext portletDataContext) {
+
+		DynamicQuery fileShortcutDynamicQuery = createDynamicQuery(
+			portletDataContext, DLFileShortcut.class);
+
+		long fileShortcutCount = 0;
+
+		try {
+			fileShortcutCount =
+				DLFileShortcutLocalServiceUtil.dynamicQueryCount(
+					fileShortcutDynamicQuery);
+
+			return String.valueOf(fileShortcutCount);
+		}
+		catch (Exception e) {
+			return "-1";
+		}
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

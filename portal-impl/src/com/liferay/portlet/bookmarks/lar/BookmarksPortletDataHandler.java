@@ -17,6 +17,8 @@ package com.liferay.portlet.bookmarks.lar;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
@@ -50,8 +52,8 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 	public BookmarksPortletDataHandler() {
 		setAlwaysExportable(true);
 		setExportControls(
-			new PortletDataHandlerBoolean(
-				NAMESPACE, "folders-and-entries", true, true));
+			new PortletDataHandlerBoolean(NAMESPACE, "folders", true, true),
+			new PortletDataHandlerBoolean(NAMESPACE, "entries", true, true));
 		setExportMetadataControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "bookmarks", true,
@@ -183,6 +185,23 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		return null;
+	}
+
+	@Override
+	protected String doPrepareData(PortletDataContext portletDataContext) {
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		String prepareData = StagedModelDataHandlerUtil.prepareStagedModel(
+			portletDataContext, BookmarksFolder.class);
+
+		jsonObject.put(BookmarksFolder.class.getName(), prepareData);
+
+		prepareData = StagedModelDataHandlerUtil.prepareStagedModel(
+			portletDataContext, BookmarksEntry.class);
+
+		jsonObject.put(BookmarksEntry.class.getName(), prepareData);
+
+		return jsonObject.toString();
 	}
 
 }

@@ -70,6 +70,7 @@ import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.TeamLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.NoSuchEntryException;
 import com.liferay.portlet.asset.model.AssetCategory;
@@ -141,6 +142,7 @@ import jodd.bean.BeanUtil;
  * @author Raymond Augé
  * @author Bruno Farache
  * @author Alexander Chow
+ * @author Mate Thurzo
  */
 public class PortletDataContextImpl implements PortletDataContext {
 
@@ -207,6 +209,26 @@ public class PortletDataContextImpl implements PortletDataContext {
 		_zipWriter = null;
 
 		initXStream();
+	}
+
+	public PortletDataContextImpl(
+			ThemeDisplay themeDisplay, Date startDate, Date endDate)
+		throws PortletDataException {
+
+		validateDateRange(startDate, endDate);
+
+		_companyId = themeDisplay.getCompanyId();
+		_groupId = themeDisplay.getScopeGroupId();
+		_scopeGroupId = themeDisplay.getScopeGroupId();
+		_startDate = startDate;
+		_endDate = endDate;
+
+		_parameterMap = null;
+		_primaryKeys = null;
+		_dataStrategy = null;
+		_userIdStrategy = null;
+		_zipReader = null;
+		_zipWriter = null;
 	}
 
 	public void addAssetCategories(Class<?> clazz, long classPK)

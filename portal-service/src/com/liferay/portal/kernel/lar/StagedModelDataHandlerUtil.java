@@ -20,6 +20,7 @@ import com.liferay.portal.model.StagedModel;
 
 /**
  * @author Brian Wing Shun Chan
+ * @author Mate Thurzo
  */
 public class StagedModelDataHandlerUtil {
 
@@ -57,17 +58,30 @@ public class StagedModelDataHandlerUtil {
 			portletDataContext, stagedModel);
 	}
 
+	public static <T extends StagedModel> String prepareStagedModel(
+		PortletDataContext portletDataContext,
+		Class<? extends StagedModel> stagedModelClass) {
+
+		StagedModelDataHandler<T> stagedModelDataHandler =
+			_getStagedModelDataHandler(stagedModelClass.getName());
+
+		return stagedModelDataHandler.prepareStagedModel(portletDataContext);
+	}
+
 	private static <T extends StagedModel> StagedModelDataHandler<T>
 		_getStagedModelDataHandler(T stagedModel) {
 
 		ClassedModel classedModel = stagedModel;
 
-		StagedModelDataHandler<T> stagedModelDataHandler =
-			(StagedModelDataHandler<T>)
-				StagedModelDataHandlerRegistryUtil.getStagedModelDataHandler(
-					classedModel.getModelClassName());
+		return _getStagedModelDataHandler(classedModel.getModelClassName());
+	}
 
-		return stagedModelDataHandler;
+	private static <T extends StagedModel> StagedModelDataHandler<T>
+		_getStagedModelDataHandler(String stagedModelClassName) {
+
+		return (StagedModelDataHandler<T>)
+			StagedModelDataHandlerRegistryUtil.getStagedModelDataHandler(
+				stagedModelClassName);
 	}
 
 }

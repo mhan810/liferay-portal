@@ -165,4 +165,6 @@ public interface PortletDataHandler {
 	 */
 	public boolean isPublishToLiveByDefault();
 
+	public String prepareData(PortletDataContext portletDataContext);
+
 }
