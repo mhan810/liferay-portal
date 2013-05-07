@@ -32,4 +32,6 @@ public interface StagedModelDataHandler<T extends StagedModel> {
 			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException;
 
+	public String prepareStagedModel(PortletDataContext portletDataContext);
+
 }
