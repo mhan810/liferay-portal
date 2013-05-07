@@ -268,6 +268,15 @@
 						PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
 					%>
 
+						<%
+							Date endDate = new Date();
+							Date startDate = new Date(endDate.getTime() - Time.YEAR);
+
+							PortletDataContext portletDataContext = new PortletDataContextImpl(themeDisplay, startDate, endDate);
+						%>
+
+						<%= portletDataHandler.prepareData(portletDataContext) %>
+
 						<li>
 							<aui:input checked="<%= portletDataHandler.isPublishToLiveByDefault() %>" label="<%= portletTitle %>" name="<%= PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE + portlet.getPortletId() %>" type="checkbox" />
 
