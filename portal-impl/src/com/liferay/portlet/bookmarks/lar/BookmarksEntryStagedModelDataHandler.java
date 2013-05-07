@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.bookmarks.lar;
 
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -127,6 +128,26 @@ public class BookmarksEntryStagedModelDataHandler
 
 		portletDataContext.importClassedModel(
 			entry, importedEntry, BookmarksPortletDataHandler.NAMESPACE);
+	}
+
+	@Override
+	protected String doPrepareStagedModel(
+		PortletDataContext portletDataContext) {
+
+		DynamicQuery entryDynamicQuery = createDynamicQuery(
+			portletDataContext, BookmarksEntry.class);
+
+		long entryCount = 0;
+
+		try {
+			entryCount = BookmarksEntryLocalServiceUtil.dynamicQueryCount(
+				entryDynamicQuery);
+
+			return String.valueOf(entryCount);
+		}
+		catch (Exception e) {
+			return "-1";
+		}
 	}
 
 }
