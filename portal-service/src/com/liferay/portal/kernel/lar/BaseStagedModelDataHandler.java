@@ -61,6 +61,15 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 		}
 	}
 
+	public String prepareStagedModel(PortletDataContext portletDataContext) {
+		try {
+			return doPrepareStagedModel(portletDataContext);
+		}
+		catch (Exception e) {
+			return StringPool.BLANK;
+		}
+	}
+
 	protected abstract void doExportStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)
 		throws Exception;
@@ -68,5 +77,11 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	protected abstract void doImportStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)
 		throws Exception;
+
+	protected String doPrepareStagedModel(
+		PortletDataContext portletDataContext) {
+
+		return StringPool.BLANK;
+	}
 
 }
