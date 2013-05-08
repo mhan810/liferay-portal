@@ -37,6 +37,12 @@ public class LayoutSetPrototypePortletDataHandler
 
 	public static final String NAMESPACE = "layout_set_prototypes";
 
+	public LayoutSetPrototypePortletDataHandler() {
+		super();
+
+		setDataPortalLevel(true);
+	}
+
 	@Override
 	protected PortletPreferences doDeleteData(
 			PortletDataContext portletDataContext, String portletId,
@@ -62,8 +68,7 @@ public class LayoutSetPrototypePortletDataHandler
 		throws Exception {
 
 		portletDataContext.addPermissions(
-			"com.liferay.portlet.layoutsetprototypes",
-			portletDataContext.getScopeGroupId());
+			_RESOURCE_NAME, portletDataContext.getScopeGroupId());
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
@@ -87,9 +92,8 @@ public class LayoutSetPrototypePortletDataHandler
 				StagedModelDataHandlerUtil.exportStagedModel(
 					portletDataContext, layoutSetPrototype);
 			}
-		};
 
-		actionableDynamicQuery.setGroupId(portletDataContext.getScopeGroupId());
+		};
 
 		actionableDynamicQuery.performActions();
 
@@ -103,8 +107,7 @@ public class LayoutSetPrototypePortletDataHandler
 		throws Exception {
 
 		portletDataContext.importPermissions(
-			"com.liferay.portlet.layoutsetprototypes",
-			portletDataContext.getSourceGroupId(),
+			_RESOURCE_NAME, portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
 		Element layoutSetPrototypesElement =
@@ -121,5 +124,8 @@ public class LayoutSetPrototypePortletDataHandler
 
 		return null;
 	}
+
+	private static final String _RESOURCE_NAME =
+		"com.liferay.portlet.layoutsetprototypes";
 
 }
