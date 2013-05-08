@@ -17,10 +17,12 @@ package com.liferay.portlet.bookmarks.lar;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.ManifestSummary;
+import com.liferay.portal.kernel.lar.ExportImportMessageSenderFactoryUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSender;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
@@ -74,8 +76,12 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			return portletPreferences;
 		}
 
+		_exportImportMessageSender.send();
+
 		BookmarksFolderLocalServiceUtil.deleteFolders(
 			portletDataContext.getScopeGroupId());
+
+		_exportImportMessageSender.send();
 
 		BookmarksEntryLocalServiceUtil.deleteEntries(
 			portletDataContext.getScopeGroupId(),
@@ -169,5 +175,9 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 
 	private static final String _RESOURCE_NAME =
 		"com.liferay.portlet.bookmarks";
+
+	private static final ExportImportMessageSender _exportImportMessageSender =
+		ExportImportMessageSenderFactoryUtil.getExportImportMessageSender();
+
 
 }

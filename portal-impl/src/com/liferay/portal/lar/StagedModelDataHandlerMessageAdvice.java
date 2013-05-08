@@ -14,7 +14,8 @@
 
 package com.liferay.portal.lar;
 
-import com.liferay.portal.kernel.lar.messaging.ExportImportMessageHandlerUtil;
+import com.liferay.portal.kernel.lar.ExportImportMessageSenderFactoryUtil;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSender;
 import com.liferay.portal.model.StagedModel;
 
 import org.aopalliance.intercept.MethodInterceptor;
@@ -26,7 +27,7 @@ import org.springframework.core.annotation.Order;
  * @author Mate Thurzo
  */
 @Order(2)
-public class ExportImportMessageAdvice implements MethodInterceptor {
+public class StagedModelDataHandlerMessageAdvice implements MethodInterceptor {
 
 	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 		Object[] arguments = methodInvocation.getArguments();
@@ -35,17 +36,19 @@ public class ExportImportMessageAdvice implements MethodInterceptor {
 			(com.liferay.portal.kernel.lar.PortletDataContext)arguments[0];
 		StagedModel stagedModel = (StagedModel)arguments[1];
 
-		ExportImportMessageHandlerUtil.started(portletDataContext, stagedModel);
+		_exportImportMessageSender.send();
 
 		try {
 			methodInvocation.proceed();
 		}
 		finally {
-			ExportImportMessageHandlerUtil.finished(
-				portletDataContext, stagedModel);
+			_exportImportMessageSender.send();
 		}
 
 		return null;
 	}
+
+	private static final ExportImportMessageSender _exportImportMessageSender =
+		ExportImportMessageSenderFactoryUtil.getExportImportMessageSender();
 
 }

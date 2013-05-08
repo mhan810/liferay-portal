@@ -48,6 +48,8 @@ public abstract class BaseActionableDynamicQuery
 		List<Object> objects = (List<Object>)executeDynamicQuery(
 			dynamicQuery, _dynamicQueryMethod);
 
+		beforePerformActions(objects);
+
 		for (Object object : objects) {
 			performAction(object);
 		}
@@ -165,6 +167,10 @@ public abstract class BaseActionableDynamicQuery
 
 			dynamicQuery.add(property.eq(_groupId));
 		}
+	}
+
+	protected void beforePerformActions(List<Object> results) {
+		return;
 	}
 
 	protected Object executeDynamicQuery(

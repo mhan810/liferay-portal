@@ -29,11 +29,18 @@ public class ${entity.name}ExportActionableDynamicQuery extends ${entity.name}Ac
 	}
 
 	@Override
+	protected void beforePerformActions(List<Object> results) {
+		_exportImportMessageSender.send();
+	}
+
+	@Override
 	protected void performAction(Object object) throws PortalException {
 		${entity.name} stagedModel = (${entity.name})object;
 
 		StagedModelDataHandlerUtil.exportStagedModel(_portletDataContext, stagedModel);
 	}
+
+	private static final ExportImportMessageSender _exportImportMessageSender = ExportImportMessageSenderFactoryUtil.getExportImportMessageSender();
 
 	private PortletDataContext _portletDataContext;
 

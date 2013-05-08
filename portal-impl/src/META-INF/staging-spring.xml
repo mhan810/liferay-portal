@@ -31,12 +31,18 @@
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.LayoutSetLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.LayoutSetLocalService)" />
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.PortletPreferencesLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.PortletPreferencesLocalService)" />
 	</aop:config>
+	<bean id="com.liferay.portal.kernel.lar.PortletDataHandlerProxy" class="com.liferay.portal.lar.PortletDataHandlerProxyImpl" scope="prototype" />
+	<bean id="com.liferay.portal.kernel.lar.StagedModelDataHandlerProxy" class="com.liferay.portal.lar.StagedModelDataHandlerProxyImpl" />
 	<bean id="com.liferay.portal.lar.ExportImportErrorProcessorAdvice" class="com.liferay.portal.lar.ExportImportErrorProcessorAdvice" />
-	<bean id="com.liferay.portal.lar.ExportImportMessageAdvice" class="com.liferay.portal.lar.ExportImportMessageAdvice" />
+	<bean id="com.liferay.portal.lar.StagedModelDataHandlerMessageAdvice" class="com.liferay.portal.lar.StagedModelDataHandlerMessageAdvice" />
+	<bean id="com.liferay.portal.lar.PortletDataHandlerMessageAdvice" class="com.liferay.portal.lar.PortletDataHandlerMessageAdvice" />
 	<aop:config proxy-target-class="false">
-		<aop:pointcut id="stagedModelDataHandlerexportImportPointcut" expression="execution(* com.liferay.portal.kernel.lar.StagedModelDataHandlerProxy.exportStagedModel(..)) || execution(* com.liferay.portal.kernel.lar.StagedModelDataHandlerProxy.importStagedModel(..))" />
+		<aop:pointcut id="portletDataHandlerExportImportPointcut" expression="execution(* com.liferay.portal.kernel.lar.PortletDataHandlerProxy.exportData(..)) || execution(* com.liferay.portal.kernel.lar.PortletDataHandlerProxy.importData(..)) || execution(* com.liferay.portal.kernel.lar.PortletDataHandlerProxy.deleteData(..))" />
+		<aop:pointcut id="stagedModelDataHandlerExportImportPointcut" expression="execution(* com.liferay.portal.kernel.lar.StagedModelDataHandlerProxy.exportStagedModel(..)) || execution(* com.liferay.portal.kernel.lar.StagedModelDataHandlerProxy.importStagedModel(..))" />
 
-		<aop:advisor advice-ref="com.liferay.portal.lar.ExportImportMessageAdvice" pointcut-ref="stagedModelDataHandlerexportImportPointcut" />
-		<aop:advisor advice-ref="com.liferay.portal.lar.ExportImportErrorProcessorAdvice" pointcut-ref="stagedModelDataHandlerexportImportPointcut" />
+		<aop:advisor advice-ref="com.liferay.portal.lar.PortletDataHandlerMessageAdvice" pointcut-ref="portletDataHandlerExportImportPointcut" />
+
+		<aop:advisor advice-ref="com.liferay.portal.lar.StagedModelDataHandlerMessageAdvice" pointcut-ref="stagedModelDataHandlerExportImportPointcut" />
+		<aop:advisor advice-ref="com.liferay.portal.lar.ExportImportErrorProcessorAdvice" pointcut-ref="stagedModelDataHandlerExportImportPointcut" />
 	</aop:config>
 </beans>

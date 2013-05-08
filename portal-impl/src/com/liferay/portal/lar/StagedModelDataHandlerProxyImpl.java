@@ -37,6 +37,10 @@ public class StagedModelDataHandlerProxyImpl
 		return _stagedModelDataHandler.getClassNames();
 	}
 
+	public StagedModelDataHandler getStagedModelDataHandler() {
+		return _stagedModelDataHandler;
+	}
+
 	public void importStagedModel(
 			com.liferay.portal.kernel.lar.PortletDataContext portletDataContext,
 			StagedModel stagedModel)

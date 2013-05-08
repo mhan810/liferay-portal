@@ -17,11 +17,10 @@ package com.liferay.portal.kernel.lar;
 /**
  * @author Mate Thurzo
  */
-public interface StagedModelDataHandlerProxy extends StagedModelDataHandler {
+public interface PortletDataHandlerProxy extends PortletDataHandler {
 
-	public StagedModelDataHandler getStagedModelDataHandler();
+	public PortletDataHandler getPortletDataHandler();
 
-	public void setStagedModelDataHandler(
-		StagedModelDataHandler stagedModelDataHandler);
+	public void setPortletDataHandler(PortletDataHandler portletDataHandler);
 
 }

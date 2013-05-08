@@ -14,14 +14,16 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSender;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSenderImpl;
+
 /**
  * @author Mate Thurzo
  */
-public interface StagedModelDataHandlerProxy extends StagedModelDataHandler {
+public class ExportImportMessageSenderFactoryUtil {
 
-	public StagedModelDataHandler getStagedModelDataHandler();
-
-	public void setStagedModelDataHandler(
-		StagedModelDataHandler stagedModelDataHandler);
+	public static ExportImportMessageSender getExportImportMessageSender() {
+		return new ExportImportMessageSenderImpl();
+	}
 
 }

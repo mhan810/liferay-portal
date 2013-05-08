@@ -12,16 +12,37 @@
  * details.
  */
 
-package com.liferay.portal.kernel.lar;
+package com.liferay.portal.kernel.lar.messaging;
+
+import com.liferay.portal.kernel.lar.PortletDataHandler;
 
 /**
  * @author Mate Thurzo
  */
-public interface StagedModelDataHandlerProxy extends StagedModelDataHandler {
+public class ExportImportMessageSenderImpl
+	implements ExportImportMessageSender {
 
-	public StagedModelDataHandler getStagedModelDataHandler();
+	public boolean isDebugEnabled() {
+		return false;
+	}
 
-	public void setStagedModelDataHandler(
-		StagedModelDataHandler stagedModelDataHandler);
+	public boolean isErrorEnabled() {
+		return false;
+	}
+
+	public boolean isInfoEnabled() {
+		return false;
+	}
+
+	public void send() {
+		return;
+	}
+
+	public void send(
+		String action, PortletDataHandler portletDataHandler, long timestamp) {
+
+		System.out.println(
+			action + " - " + portletDataHandler + " - " + timestamp);
+	}
 
 }

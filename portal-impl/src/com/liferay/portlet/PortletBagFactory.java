@@ -17,7 +17,9 @@ package com.liferay.portlet;
 import com.liferay.portal.dao.shard.ShardPollerProcessorWrapper;
 import com.liferay.portal.kernel.atom.AtomCollectionAdapter;
 import com.liferay.portal.kernel.atom.AtomCollectionAdapterRegistryUtil;
+import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
+import com.liferay.portal.kernel.lar.PortletDataHandlerProxy;
 import com.liferay.portal.kernel.lar.StagedModelDataHandler;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -827,8 +829,16 @@ public class PortletBagFactory {
 			return null;
 		}
 
-		return (PortletDataHandler)newInstance(
+		PortletDataHandler portletDataHandler = (PortletDataHandler)newInstance(
 			PortletDataHandler.class, portlet.getPortletDataHandlerClass());
+
+		PortletDataHandlerProxy portletDataHandlerProxy =
+			(PortletDataHandlerProxy)PortalBeanLocatorUtil.locate(
+				PortletDataHandlerProxy.class.getName());
+
+		portletDataHandlerProxy.setPortletDataHandler(portletDataHandler);
+
+		return portletDataHandlerProxy;
 	}
 
 	protected PortletLayoutListener newPortletLayoutListener(Portlet portlet)
