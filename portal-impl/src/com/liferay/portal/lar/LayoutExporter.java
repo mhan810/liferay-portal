@@ -731,8 +731,8 @@ public class LayoutExporter {
 					getLayoutPrototypeByUuidAndCompanyId(
 						layoutPrototypeUuid, portletDataContext.getCompanyId());
 
-			layoutElement.addAttribute(
-				"layout-prototype-uuid", layoutPrototypeUuid);
+//			layoutElement.addAttribute(
+//				"layout-prototype-uuid", layoutPrototypeUuid);
 			layoutElement.addAttribute(
 				"layout-prototype-name",
 				layoutPrototype.getName(LocaleUtil.getDefault()));
