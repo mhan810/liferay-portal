@@ -15,21 +15,22 @@
 package com.liferay.portlet.bookmarks.lar;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.ManifestSummary;
+import com.liferay.portal.kernel.lar.ExportImportMessageSenderFactoryUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSender;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.model.BookmarksFolderConstants;
 import com.liferay.portlet.bookmarks.service.BookmarksEntryLocalServiceUtil;
 import com.liferay.portlet.bookmarks.service.BookmarksFolderLocalServiceUtil;
-import com.liferay.portlet.bookmarks.service.persistence.BookmarksEntryActionableDynamicQuery;
-import com.liferay.portlet.bookmarks.service.persistence.BookmarksFolderActionableDynamicQuery;
+import com.liferay.portlet.bookmarks.service.persistence.BookmarksEntryExportActionableDynamicQuery;
+import com.liferay.portlet.bookmarks.service.persistence.BookmarksFolderExportActionableDynamicQuery;
 
 import java.util.List;
 
@@ -50,8 +51,8 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 	public BookmarksPortletDataHandler() {
 		setAlwaysExportable(true);
 		setExportControls(
-			new PortletDataHandlerBoolean(
-				NAMESPACE, "folders-and-entries", true, true));
+			new PortletDataHandlerBoolean(NAMESPACE, "folders", true, true),
+			new PortletDataHandlerBoolean(NAMESPACE, "entries", true, true));
 		setExportMetadataControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "bookmarks", true,
@@ -75,8 +76,12 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			return portletPreferences;
 		}
 
+		_exportImportMessageSender.send();
+
 		BookmarksFolderLocalServiceUtil.deleteFolders(
 			portletDataContext.getScopeGroupId());
+
+		_exportImportMessageSender.send();
 
 		BookmarksEntryLocalServiceUtil.deleteEntries(
 			portletDataContext.getScopeGroupId(),
@@ -92,61 +97,22 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.addPermissions(
-			"com.liferay.portlet.bookmarks",
-			portletDataContext.getScopeGroupId());
+			_RESOURCE_NAME, portletDataContext.getScopeGroupId());
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		ActionableDynamicQuery folderActionableDynamicQuery =
-			new BookmarksFolderActionableDynamicQuery() {
+		ActionableDynamicQuery folderExportActionableDynamicQuery =
+			new BookmarksFolderExportActionableDynamicQuery(portletDataContext);
 
-			@Override
-			protected void addCriteria(DynamicQuery dynamicQuery) {
-				portletDataContext.addDateRangeCriteria(
-					dynamicQuery, "modifiedDate");
-			}
+		folderExportActionableDynamicQuery.performActions();
 
-			@Override
-			protected void performAction(Object object) throws PortalException {
-				BookmarksFolder folder = (BookmarksFolder)object;
+		ActionableDynamicQuery entryExportActionableDynamicQuery =
+			new BookmarksEntryExportActionableDynamicQuery(portletDataContext);
 
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, folder);
-			}
-
-		};
-
-		folderActionableDynamicQuery.setGroupId(
-			portletDataContext.getScopeGroupId());
-
-		folderActionableDynamicQuery.performActions();
-
-		ActionableDynamicQuery entryActionableDynamicQuery =
-			new BookmarksEntryActionableDynamicQuery() {
-
-			@Override
-			protected void addCriteria(DynamicQuery dynamicQuery) {
-				portletDataContext.addDateRangeCriteria(
-					dynamicQuery, "modifiedDate");
-			}
-
-			@Override
-			protected void performAction(Object object) throws PortalException {
-				BookmarksEntry entry = (BookmarksEntry)object;
-
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, entry);
-			}
-
-		};
-
-		entryActionableDynamicQuery.setGroupId(
-			portletDataContext.getScopeGroupId());
-
-		entryActionableDynamicQuery.performActions();
+		entryExportActionableDynamicQuery.performActions();
 
 		return getExportDataRootElementString(rootElement);
 	}
@@ -158,8 +124,7 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.importPermissions(
-			"com.liferay.portlet.bookmarks",
-			portletDataContext.getSourceGroupId(),
+			_RESOURCE_NAME, portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
 		Element foldersElement = portletDataContext.getImportDataGroupElement(
@@ -184,5 +149,35 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 
 		return null;
 	}
+
+	@Override
+	protected void doPrepareManifestSummary(
+			PortletDataContext portletDataContext)
+		throws Exception {
+
+		ActionableDynamicQuery folderExportActionableDynamicQuery =
+			new BookmarksFolderExportActionableDynamicQuery(portletDataContext);
+
+		ManifestSummary manifestSummary =
+			portletDataContext.getManifestSummary();
+
+		manifestSummary.addModelCount(
+			BookmarksFolder.class,
+			folderExportActionableDynamicQuery.performCount());
+
+		ActionableDynamicQuery entryExportActionableDynamicQuery =
+			new BookmarksEntryExportActionableDynamicQuery(portletDataContext);
+
+		manifestSummary.addModelCount(
+			BookmarksEntry.class,
+			entryExportActionableDynamicQuery.performCount());
+	}
+
+	private static final String _RESOURCE_NAME =
+		"com.liferay.portlet.bookmarks";
+
+	private static final ExportImportMessageSender _exportImportMessageSender =
+		ExportImportMessageSenderFactoryUtil.getExportImportMessageSender();
+
 
 }
