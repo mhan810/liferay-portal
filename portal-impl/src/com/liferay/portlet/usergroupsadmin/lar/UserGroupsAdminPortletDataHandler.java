@@ -15,15 +15,13 @@
 package com.liferay.portlet.usergroupsadmin.lar;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.service.UserGroupLocalServiceUtil;
-import com.liferay.portal.service.persistence.UserGroupActionableDynamicQuery;
+import com.liferay.portal.service.persistence.UserGroupExportActionableDynamicQuery;
 
 import java.util.List;
 
@@ -76,23 +74,7 @@ public class UserGroupsAdminPortletDataHandler extends BasePortletDataHandler {
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
 		ActionableDynamicQuery userGroupActionableDynamicQuery =
-			new UserGroupActionableDynamicQuery() {
-
-			@Override
-			protected void addCriteria(DynamicQuery dynamicQuery) {
-				portletDataContext.addDateRangeCriteria(
-					dynamicQuery, "modifiedDate");
-			}
-
-			@Override
-			protected void performAction(Object object) throws PortalException {
-				UserGroup userGroup = (UserGroup)object;
-
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, userGroup);
-			}
-
-		};
+			new UserGroupExportActionableDynamicQuery(portletDataContext);
 
 		userGroupActionableDynamicQuery.performActions();
 
