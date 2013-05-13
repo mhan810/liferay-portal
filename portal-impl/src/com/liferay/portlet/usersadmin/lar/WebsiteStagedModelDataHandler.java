@@ -45,7 +45,7 @@ public class WebsiteStagedModelDataHandler
 
 		portletDataContext.addClassedModel(
 			websiteElement, ExportImportPathUtil.getModelPath(website), website,
-			NAMESPACE);
+			_NAMESPACE);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class WebsiteStagedModelDataHandler
 		long userId = portletDataContext.getUserId(website.getUserUuid());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			website, NAMESPACE);
+			website, _NAMESPACE);
 
 		Website existingWebsite =
 			WebsiteLocalServiceUtil.fetchWebsiteByUuidAndCompanyId(
@@ -79,9 +79,9 @@ public class WebsiteStagedModelDataHandler
 		}
 
 		portletDataContext.importClassedModel(
-			website, importedWebsite, NAMESPACE);
+			website, importedWebsite, _NAMESPACE);
 	}
 
-	private static final String NAMESPACE = "website";
+	private static final String _NAMESPACE = "website";
 
 }

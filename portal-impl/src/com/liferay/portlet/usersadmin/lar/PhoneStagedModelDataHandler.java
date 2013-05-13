@@ -44,7 +44,7 @@ public class PhoneStagedModelDataHandler
 
 		portletDataContext.addClassedModel(
 			phoneElement, ExportImportPathUtil.getModelPath(phone), phone,
-			NAMESPACE);
+			_NAMESPACE);
 
 	}
 
@@ -56,7 +56,7 @@ public class PhoneStagedModelDataHandler
 		long userId = portletDataContext.getUserId(phone.getUserUuid());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			phone, NAMESPACE);
+			phone, _NAMESPACE);
 
 		Phone existingPhone =
 			PhoneLocalServiceUtil.fetchPhoneByUuidAndCompanyId(
@@ -78,9 +78,9 @@ public class PhoneStagedModelDataHandler
 				phone.getExtension(), phone.getTypeId(), phone.isPrimary());
 		}
 
-		portletDataContext.importClassedModel(phone, importedPhone, NAMESPACE);
+		portletDataContext.importClassedModel(phone, importedPhone, _NAMESPACE);
 	}
 
-	private static final String NAMESPACE = "phone";
+	private static final String _NAMESPACE = "phone";
 
 }
