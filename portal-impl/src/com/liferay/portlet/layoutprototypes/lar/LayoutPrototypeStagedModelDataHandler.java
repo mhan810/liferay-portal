@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Element;
@@ -29,6 +31,11 @@ import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortletKeys;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +63,7 @@ public class LayoutPrototypeStagedModelDataHandler
 		Element layoutPrototypeElement =
 			portletDataContext.getExportDataElement(layoutPrototype);
 
-		exportLayoutLar(portletDataContext, layoutPrototype);
+		exportLayouts(portletDataContext, layoutPrototype);
 
 		portletDataContext.addClassedModel(
 			layoutPrototypeElement,
@@ -117,12 +124,12 @@ public class LayoutPrototypeStagedModelDataHandler
 			layoutPrototype, importedLayoutPrototype,
 			LayoutPrototypePortletDataHandler.NAMESPACE);
 
-		importLayoutLar(
+		importLayouts(
 			userId, portletDataContext, layoutPrototype,
 			importedLayoutPrototype);
 	}
 
-	protected void exportLayoutLar(
+	protected void exportLayouts(
 			PortletDataContext portletDataContext,
 			LayoutPrototype layoutPrototype)
 		throws PortalException, SystemException {
@@ -134,11 +141,28 @@ public class LayoutPrototypeStagedModelDataHandler
 
 		Map<String, String[]> parameters = getLayoutImportExportParameters();
 
-		byte[] layouts = LayoutLocalServiceUtil.exportLayouts(
-			layout.getGroupId(), layout.isPrivateLayout(), parameters, null,
-			null);
+		File layoutsFile = null;
 
-		portletDataContext.addZipEntry(path, layouts);
+		FileInputStream fis = null;
+
+		try {
+			layoutsFile = LayoutLocalServiceUtil.exportLayoutsAsFile(
+				layout.getGroupId(), layout.isPrivateLayout(), null, parameters,
+				null, null);
+
+			fis = new FileInputStream(layoutsFile);
+
+			portletDataContext.addZipEntry(path, fis);
+		}
+		catch (FileNotFoundException fnfe) {
+			throw new SystemException(
+				"Unable to find temporary layout file", fnfe);
+		}
+		finally {
+			StreamUtil.cleanUp(fis);
+
+			FileUtil.delete(layoutsFile);
+		}
 	}
 
 	protected String getLayoutExportLarPath(
@@ -198,7 +222,7 @@ public class LayoutPrototypeStagedModelDataHandler
 		return sb.toString();
 	}
 
-	protected void importLayoutLar(
+	protected void importLayouts(
 			long userId, PortletDataContext portletDataContext,
 			LayoutPrototype layoutPrototype,
 			LayoutPrototype importedLayoutPrototype)
@@ -209,12 +233,19 @@ public class LayoutPrototypeStagedModelDataHandler
 
 		long groupId = importedLayoutPrototype.getGroup().getGroupId();
 
-		byte[] larBytes = portletDataContext.getZipEntryAsByteArray(path);
-
 		Map<String, String[]> parameters = getLayoutImportExportParameters();
 
-		LayoutLocalServiceUtil.importLayouts(
-			userId, groupId, true, parameters, larBytes);
+		InputStream is = null;
+
+		try {
+			is = portletDataContext.getZipEntryAsInputStream(path);
+
+			LayoutLocalServiceUtil.importLayouts(
+				userId, groupId, true, parameters, is);
+		}
+		finally {
+			StreamUtil.cleanUp(is);
+		}
 	}
 
 }

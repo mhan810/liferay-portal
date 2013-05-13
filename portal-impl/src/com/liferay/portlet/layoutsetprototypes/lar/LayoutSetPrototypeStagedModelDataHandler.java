@@ -14,6 +14,10 @@
 
 package com.liferay.portlet.layoutsetprototypes.lar;
 
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
@@ -22,13 +26,14 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Layout;
-import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
@@ -37,6 +42,11 @@ import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortletKeys;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import java.util.HashMap;
 import java.util.List;
@@ -65,10 +75,10 @@ public class LayoutSetPrototypeStagedModelDataHandler
 		Element layoutSetPrototypeElement =
 			portletDataContext.getExportDataElement(layoutSetPrototype);
 
-		exportLayoutLar(portletDataContext, layoutSetPrototype);
-
 		exportLayoutPrototypes(
 			portletDataContext, layoutSetPrototype, layoutSetPrototypeElement);
+
+		exportLayouts(portletDataContext, layoutSetPrototype);
 
 		portletDataContext.addClassedModel(
 			layoutSetPrototypeElement,
@@ -136,7 +146,7 @@ public class LayoutSetPrototypeStagedModelDataHandler
 					serviceContext);
 		}
 
-		importLayoutLar(
+		importLayouts(
 			userId, portletDataContext, layoutSetPrototype,
 			importedLayoutSetPrototype);
 
@@ -145,7 +155,48 @@ public class LayoutSetPrototypeStagedModelDataHandler
 			LayoutSetPrototypePortletDataHandler.NAMESPACE);
 	}
 
-	protected void exportLayoutLar(
+	protected void exportLayoutPrototypes(
+			PortletDataContext portletDataContext,
+			LayoutSetPrototype layoutSetPrototype,
+			Element layoutSetPrototypeElement)
+		throws Exception {
+
+		Class<?> clazz = getClass();
+
+		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
+			Layout.class, clazz.getClassLoader());
+
+		Property groupIdProperty = PropertyFactoryUtil.forName("groupId");
+
+		dynamicQuery.add(
+			groupIdProperty.eq(layoutSetPrototype.getGroup().getGroupId()));
+
+		Property layoutPrototypeUuidProperty = PropertyFactoryUtil.forName(
+			"layoutPrototypeLinkEnabled");
+
+		dynamicQuery.add(layoutPrototypeUuidProperty.eq(true));
+
+		List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(
+			dynamicQuery);
+
+		for (Layout layout : layouts) {
+			String layoutPrototypeUuid = layout.getLayoutPrototypeUuid();
+
+			LayoutPrototype layoutPrototype =
+				LayoutPrototypeLocalServiceUtil.
+					getLayoutPrototypeByUuidAndCompanyId(
+						layoutPrototypeUuid, portletDataContext.getCompanyId());
+
+			portletDataContext.addReferenceElement(
+				layout, layoutSetPrototypeElement, layoutPrototype,
+				PortletDataContext.REFERENCE_TYPE_DEPENDENCY, false);
+
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, layoutPrototype);
+		}
+	}
+
+	protected void exportLayouts(
 			PortletDataContext portletDataContext,
 			LayoutSetPrototype layoutSetPrototype)
 		throws PortalException, SystemException {
@@ -157,41 +208,27 @@ public class LayoutSetPrototypeStagedModelDataHandler
 
 		Map<String, String[]> parameters = getLayoutImportExportParameters();
 
-		byte[] layouts = LayoutLocalServiceUtil.exportLayouts(
-			layoutSet.getGroupId(), layoutSet.isPrivateLayout(), parameters,
-			null, null);
+		File layoutsFile = null;
 
-		portletDataContext.addZipEntry(path, layouts);
-	}
+		FileInputStream fis = null;
 
-	protected void exportLayoutPrototypes(
-			PortletDataContext portletDataContext,
-			LayoutSetPrototype layoutSetPrototype,
-			Element layoutSetPrototypeElement)
-		throws Exception {
+		try {
+			layoutsFile = LayoutLocalServiceUtil.exportLayoutsAsFile(
+				layoutSet.getGroupId(), layoutSet.isPrivateLayout(), null,
+				parameters, null, null);
 
-		LayoutSet layoutSet = layoutSetPrototype.getLayoutSet();
+			fis = new FileInputStream(layoutsFile);
 
-		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			layoutSet.getGroupId(), true,
-			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+			portletDataContext.addZipEntry(path, fis);
+		}
+		catch (FileNotFoundException fnfe) {
+			throw new SystemException(
+				"Unable to find temporary layout file", fnfe);
+		}
+		finally {
+			StreamUtil.cleanUp(fis);
 
-		for (Layout layout : layouts) {
-			if (layout.isLayoutPrototypeLinkEnabled()) {
-				String layoutPrototypeUuid = layout.getLayoutPrototypeUuid();
-
-				LayoutPrototype layoutPrototype =
-					LayoutPrototypeLocalServiceUtil.
-						getLayoutPrototypeByUuidAndCompanyId(
-							layoutPrototypeUuid,
-							portletDataContext.getCompanyId());
-
-				portletDataContext.addReferenceElement(
-					layoutSetPrototypeElement, layoutPrototype);
-
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, layoutPrototype);
-			}
+			FileUtil.delete(layoutsFile);
 		}
 	}
 
@@ -255,30 +292,6 @@ public class LayoutSetPrototypeStagedModelDataHandler
 		return sb.toString();
 	}
 
-	protected void importLayoutLar(
-			long userId, PortletDataContext portletDataContext,
-			LayoutSetPrototype layoutSetPrototype,
-			LayoutSetPrototype importedLayoutSetPrototype)
-		throws PortalException, SystemException {
-
-		String path = getLayoutImportLarPath(
-			portletDataContext, layoutSetPrototype);
-
-		long groupId = importedLayoutSetPrototype.getGroup().getGroupId();
-
-		byte[] larBytes = portletDataContext.getZipEntryAsByteArray(path);
-
-		Map<String, String[]> parameters = getLayoutImportExportParameters();
-
-		LayoutLocalServiceUtil.importLayouts(
-			userId, groupId, true, parameters, larBytes);
-
-		LayoutSet layoutSet = importedLayoutSetPrototype.getLayoutSet();
-
-		layoutSet.setLayoutSetPrototypeUuid(StringPool.BLANK);
-		layoutSet.setLayoutSetPrototypeLinkEnabled(false);
-	}
-
 	protected void importLayoutPrototype(
 			PortletDataContext portletDataContext,
 			LayoutSetPrototype layoutSetPrototype)
@@ -292,6 +305,37 @@ public class LayoutSetPrototypeStagedModelDataHandler
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, layoutPrototypeElement);
 		}
+	}
+
+	protected void importLayouts(
+			long userId, PortletDataContext portletDataContext,
+			LayoutSetPrototype layoutSetPrototype,
+			LayoutSetPrototype importedLayoutSetPrototype)
+		throws PortalException, SystemException {
+
+		String path = getLayoutImportLarPath(
+			portletDataContext, layoutSetPrototype);
+
+		long groupId = importedLayoutSetPrototype.getGroup().getGroupId();
+
+		Map<String, String[]> parameters = getLayoutImportExportParameters();
+
+		InputStream is = null;
+
+		try {
+			is = portletDataContext.getZipEntryAsInputStream(path);
+
+			LayoutLocalServiceUtil.importLayouts(
+				userId, groupId, true, parameters, is);
+		}
+		finally {
+			StreamUtil.cleanUp(is);
+		}
+
+		LayoutSet layoutSet = importedLayoutSetPrototype.getLayoutSet();
+
+		layoutSet.setLayoutSetPrototypeUuid(StringPool.BLANK);
+		layoutSet.setLayoutSetPrototypeLinkEnabled(false);
 	}
 
 }
