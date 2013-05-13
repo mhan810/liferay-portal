@@ -15,15 +15,13 @@
 package com.liferay.portlet.layoutprototypes.lar;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
-import com.liferay.portal.service.persistence.LayoutPrototypeActionableDynamicQuery;
+import com.liferay.portal.service.persistence.LayoutPrototypeExportActionableDynamicQuery;
 
 import java.util.List;
 
@@ -75,23 +73,7 @@ public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
 		ActionableDynamicQuery actionableDynamicQuery =
-			new LayoutPrototypeActionableDynamicQuery() {
-
-			@Override
-			protected void addCriteria(DynamicQuery dynamicQuery) {
-				portletDataContext.addDateRangeCriteria(
-					dynamicQuery, "modifiedDate");
-			}
-
-			@Override
-			protected void performAction(Object object) throws PortalException {
-				LayoutPrototype layoutPrototype = (LayoutPrototype)object;
-
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, layoutPrototype);
-			}
-
-		};
+			new LayoutPrototypeExportActionableDynamicQuery(portletDataContext);
 
 		actionableDynamicQuery.performActions();
 
