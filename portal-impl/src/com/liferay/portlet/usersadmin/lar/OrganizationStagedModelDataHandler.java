@@ -78,9 +78,6 @@ public class OrganizationStagedModelDataHandler
 
 			exportOrgLabors(portletDataContext, exportedOrganization);
 
-			Element dependentModelsElement = organizationElement.addElement(
-				"dependent-models");
-
 			exportAddresses(
 				organizationElement, portletDataContext, exportedOrganization);
 			exportEmailAddresses(
@@ -149,9 +146,6 @@ public class OrganizationStagedModelDataHandler
 					portletDataContext.getCompanyId(), organization.getName());
 		}
 
-		List<OrgLabor> orgLabors = readOrgLabors(
-			portletDataContext, organization);
-
 		Organization importedOrganization = null;
 
 		if (existingOrganization == null) {
@@ -176,6 +170,9 @@ public class OrganizationStagedModelDataHandler
 		}
 
 		long importedOrganizationId = importedOrganization.getOrganizationId();
+
+		List<OrgLabor> orgLabors = importOrgLabors(
+			portletDataContext, organization);
 
 		UsersAdminUtil.updateOrgLabors(importedOrganizationId, orgLabors);
 
@@ -202,7 +199,8 @@ public class OrganizationStagedModelDataHandler
 		for (Address address : addresses) {
 
 			portletDataContext.addReferenceElement(
-				organization, element, address, false);
+				organization, element, address,
+				PortletDataContext.REFERENCE_TYPE_EMBEDDED, false);
 
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, address);
@@ -222,7 +220,8 @@ public class OrganizationStagedModelDataHandler
 		for (EmailAddress emailAddress : emailAddresses) {
 
 			portletDataContext.addReferenceElement(
-				organization, element, emailAddress, false);
+				organization, element, emailAddress,
+				PortletDataContext.REFERENCE_TYPE_EMBEDDED, false);
 
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, emailAddress);
@@ -245,7 +244,7 @@ public class OrganizationStagedModelDataHandler
 	}
 
 	protected void exportPhones(
-			Element element, PortletDataContext portletDataContext,
+			Element organizationElement, PortletDataContext portletDataContext,
 			Organization organization)
 		throws PortalException, SystemException {
 
@@ -256,7 +255,8 @@ public class OrganizationStagedModelDataHandler
 		for (Phone phone : phones) {
 
 			portletDataContext.addReferenceElement(
-				organization, element, phone, false);
+				organization, organizationElement, phone,
+				PortletDataContext.REFERENCE_TYPE_EMBEDDED, false);
 
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, phone);
@@ -264,7 +264,7 @@ public class OrganizationStagedModelDataHandler
 	}
 
 	protected void exportWebsites(
-			Element element, PortletDataContext portletDataContext,
+			Element organizationElement, PortletDataContext portletDataContext,
 			Organization organization)
 		throws PortalException, SystemException {
 
@@ -275,7 +275,8 @@ public class OrganizationStagedModelDataHandler
 		for (Website website : websites) {
 
 			portletDataContext.addReferenceElement(
-				organization, element, website, false);
+				organization, organizationElement, website,
+				PortletDataContext.REFERENCE_TYPE_EMBEDDED, false);
 
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, website);
@@ -332,6 +333,22 @@ public class OrganizationStagedModelDataHandler
 
 	}
 
+	protected List<OrgLabor> importOrgLabors(
+		PortletDataContext portletDataContext, Organization organization) {
+
+		String path = ExportImportPathUtil.getModelPath(
+			organization, OrgLabor.class.getSimpleName());
+
+		List<OrgLabor> orgLabors =
+			(List<OrgLabor>)portletDataContext.getZipEntryAsObject(path);
+
+		for (OrgLabor orgLabor : orgLabors) {
+			orgLabor.setOrgLaborId(0);
+		}
+
+		return orgLabors;
+	}
+
 	protected void importPhones(
 			PortletDataContext portletDataContext,
 			Organization importedOrganization, Organization organization)
@@ -379,20 +396,5 @@ public class OrganizationStagedModelDataHandler
 		}
 	}
 
-	protected List<OrgLabor> readOrgLabors(
-		PortletDataContext portletDataContext, Organization organization) {
-
-		String path = ExportImportPathUtil.getModelPath(
-			organization, OrgLabor.class.getSimpleName());
-
-		List<OrgLabor> rawEntries =
-			(List<OrgLabor>)portletDataContext.getZipEntryAsObject(path);
-
-		for (OrgLabor orgLabor : rawEntries) {
-			orgLabor.setOrgLaborId(0);
-		}
-
-		return rawEntries;
-	}
 
 }
