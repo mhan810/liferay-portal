@@ -45,7 +45,7 @@ public class AddressStagedModelDataHandler
 
 		portletDataContext.addClassedModel(
 			addressElement, ExportImportPathUtil.getModelPath(address), address,
-			NAMESPACE);
+			_NAMESPACE);
 
 	}
 
@@ -57,7 +57,7 @@ public class AddressStagedModelDataHandler
 		long userId = portletDataContext.getUserId(address.getUserUuid());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			address, NAMESPACE);
+			address, _NAMESPACE);
 
 		Address existingAddress =
 			AddressLocalServiceUtil.fetchAddressByUuidAndCompanyId(
@@ -84,9 +84,9 @@ public class AddressStagedModelDataHandler
 		}
 
 		portletDataContext.importClassedModel(
-			address, importedAddress, NAMESPACE);
+			address, importedAddress, _NAMESPACE);
 	}
 
-	private static final String NAMESPACE = "address";
+	private static final String _NAMESPACE = "address";
 
 }
