@@ -691,6 +691,12 @@ public class OrganizationLocalServiceUtil {
 			.addPasswordPolicyOrganizations(passwordPolicyId, organizationIds);
 	}
 
+	public static void clearOrganizationDependencies(
+		com.liferay.portal.model.Organization organization)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getService().clearOrganizationDependencies(organization);
+	}
+
 	/**
 	* Deletes the logo of the organization.
 	*
