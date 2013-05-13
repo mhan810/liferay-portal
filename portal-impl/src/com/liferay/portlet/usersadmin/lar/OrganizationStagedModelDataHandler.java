@@ -169,12 +169,10 @@ public class OrganizationStagedModelDataHandler
 					organization.getComments(), false, serviceContext);
 		}
 
-		long importedOrganizationId = importedOrganization.getOrganizationId();
+		OrganizationLocalServiceUtil.clearOrganizationDependencies(
+			importedOrganization);
 
-		List<OrgLabor> orgLabors = importOrgLabors(
-			portletDataContext, organization);
-
-		UsersAdminUtil.updateOrgLabors(importedOrganizationId, orgLabors);
+		importOrgLabors(portletDataContext, importedOrganization);
 
 		importAddresses(portletDataContext, importedOrganization, organization);
 		importEmailAddresses(
@@ -333,8 +331,9 @@ public class OrganizationStagedModelDataHandler
 
 	}
 
-	protected List<OrgLabor> importOrgLabors(
-		PortletDataContext portletDataContext, Organization organization) {
+	protected void importOrgLabors(
+			PortletDataContext portletDataContext, Organization organization)
+		throws PortalException, SystemException {
 
 		String path = ExportImportPathUtil.getModelPath(
 			organization, OrgLabor.class.getSimpleName());
@@ -346,7 +345,8 @@ public class OrganizationStagedModelDataHandler
 			orgLabor.setOrgLaborId(0);
 		}
 
-		return orgLabors;
+		UsersAdminUtil.updateOrgLabors(
+			organization.getOrganizationId(), orgLabors);
 	}
 
 	protected void importPhones(
@@ -395,6 +395,5 @@ public class OrganizationStagedModelDataHandler
 				portletDataContext, importedWebsite);
 		}
 	}
-
 
 }
