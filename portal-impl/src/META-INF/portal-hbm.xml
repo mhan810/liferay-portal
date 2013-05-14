@@ -2553,6 +2553,7 @@
 		<property name="classPK" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="type" type="com.liferay.portal.dao.orm.hibernate.IntegerType" column="type_" />
 		<property name="activityCount" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="extraData" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 	<class name="com.liferay.portlet.social.model.impl.SocialActivitySettingImpl" table="SocialActivitySetting">
 		<cache usage="read-write" />

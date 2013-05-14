@@ -3421,6 +3421,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 		socialActivitySetImpl.setClassPK(socialActivitySet.getClassPK());
 		socialActivitySetImpl.setType(socialActivitySet.getType());
 		socialActivitySetImpl.setActivityCount(socialActivitySet.getActivityCount());
+		socialActivitySetImpl.setExtraData(socialActivitySet.getExtraData());
 
 		return socialActivitySetImpl;
 	}

@@ -3614,6 +3614,7 @@
 				<column name="TYPE_" />
 			</basic>
 			<basic name="activityCount" />
+			<basic name="extraData" />
 			<transient name="className" />
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
@@ -4626,6 +4627,7 @@
 		<table name="SocialActivity" />
 		<attributes>
 			<transient name="assetEntry" />
+			<transient name="extraDataValue" />
 		</attributes>
 	</entity>
 	<entity class="com.liferay.portlet.social.model.impl.SocialActivityAchievementImpl" name="SocialActivityAchievement">
@@ -4644,7 +4646,9 @@
 	</entity>
 	<entity class="com.liferay.portlet.social.model.impl.SocialActivitySetImpl" name="SocialActivitySet">
 		<table name="SocialActivitySet" />
-		<attributes />
+		<attributes>
+			<transient name="extraDataValue" />
+		</attributes>
 	</entity>
 	<entity class="com.liferay.portlet.social.model.impl.SocialActivitySettingImpl" name="SocialActivitySetting">
 		<table name="SocialActivitySetting" />

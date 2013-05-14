@@ -273,10 +273,20 @@ public class SocialActivitySetLocalServiceWrapper
 	}
 
 	@Override
-	public void addAssetActivitySet(
+	public com.liferay.portlet.social.model.SocialActivitySet addAssetActivitySet(
 		com.liferay.portlet.social.model.SocialActivity activity)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _socialActivitySetLocalService.addAssetActivitySet(activity);
+	}
+
+	@Override
+	public com.liferay.portlet.social.model.SocialActivitySet createActivitySet(
+		com.liferay.portlet.social.model.SocialActivity activity,
+		boolean assetActivitySet)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		_socialActivitySetLocalService.addAssetActivitySet(activity);
+		return _socialActivitySetLocalService.createActivitySet(activity,
+			assetActivitySet);
 	}
 
 	@Override

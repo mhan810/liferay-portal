@@ -2539,6 +2539,7 @@
 		<field name="classPK" type="long" />
 		<field name="type" type="int" />
 		<field name="activityCount" type="int" />
+		<field name="extraData" type="String" />
 	</model>
 	<model name="com.liferay.portlet.social.model.SocialActivitySetting">
 		<field name="activitySettingId" type="long" />

@@ -15,6 +15,7 @@
 package com.liferay.portlet.social.model.impl;
 
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.CacheModel;
 
 import com.liferay.portlet.social.model.SocialActivitySet;
@@ -35,7 +36,7 @@ public class SocialActivitySetCacheModel implements CacheModel<SocialActivitySet
 	Externalizable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{activitySetId=");
 		sb.append(activitySetId);
@@ -57,6 +58,8 @@ public class SocialActivitySetCacheModel implements CacheModel<SocialActivitySet
 		sb.append(type);
 		sb.append(", activityCount=");
 		sb.append(activityCount);
+		sb.append(", extraData=");
+		sb.append(extraData);
 		sb.append("}");
 
 		return sb.toString();
@@ -77,6 +80,13 @@ public class SocialActivitySetCacheModel implements CacheModel<SocialActivitySet
 		socialActivitySetImpl.setType(type);
 		socialActivitySetImpl.setActivityCount(activityCount);
 
+		if (extraData == null) {
+			socialActivitySetImpl.setExtraData(StringPool.BLANK);
+		}
+		else {
+			socialActivitySetImpl.setExtraData(extraData);
+		}
+
 		socialActivitySetImpl.resetOriginalValues();
 
 		return socialActivitySetImpl;
@@ -94,6 +104,7 @@ public class SocialActivitySetCacheModel implements CacheModel<SocialActivitySet
 		classPK = objectInput.readLong();
 		type = objectInput.readInt();
 		activityCount = objectInput.readInt();
+		extraData = objectInput.readUTF();
 	}
 
 	@Override
@@ -109,6 +120,13 @@ public class SocialActivitySetCacheModel implements CacheModel<SocialActivitySet
 		objectOutput.writeLong(classPK);
 		objectOutput.writeInt(type);
 		objectOutput.writeInt(activityCount);
+
+		if (extraData == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(extraData);
+		}
 	}
 
 	public long activitySetId;
@@ -121,4 +139,5 @@ public class SocialActivitySetCacheModel implements CacheModel<SocialActivitySet
 	public long classPK;
 	public int type;
 	public int activityCount;
+	public String extraData;
 }

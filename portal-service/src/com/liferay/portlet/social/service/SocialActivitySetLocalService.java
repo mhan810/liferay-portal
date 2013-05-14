@@ -235,8 +235,14 @@ public interface SocialActivitySetLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
-	public void addAssetActivitySet(
+	public com.liferay.portlet.social.model.SocialActivitySet addAssetActivitySet(
 		com.liferay.portlet.social.model.SocialActivity activity)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public com.liferay.portlet.social.model.SocialActivitySet createActivitySet(
+		com.liferay.portlet.social.model.SocialActivity activity,
+		boolean assetActivitySet)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	public void decrementActivityCount(long activitySetId)

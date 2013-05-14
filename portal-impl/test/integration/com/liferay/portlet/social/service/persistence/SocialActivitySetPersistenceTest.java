@@ -129,6 +129,8 @@ public class SocialActivitySetPersistenceTest {
 
 		newSocialActivitySet.setActivityCount(ServiceTestUtil.nextInt());
 
+		newSocialActivitySet.setExtraData(ServiceTestUtil.randomString());
+
 		_persistence.update(newSocialActivitySet);
 
 		SocialActivitySet existingSocialActivitySet = _persistence.findByPrimaryKey(newSocialActivitySet.getPrimaryKey());
@@ -153,6 +155,8 @@ public class SocialActivitySetPersistenceTest {
 			newSocialActivitySet.getType());
 		Assert.assertEquals(existingSocialActivitySet.getActivityCount(),
 			newSocialActivitySet.getActivityCount());
+		Assert.assertEquals(existingSocialActivitySet.getExtraData(),
+			newSocialActivitySet.getExtraData());
 	}
 
 	@Test
@@ -205,7 +209,7 @@ public class SocialActivitySetPersistenceTest {
 			"activitySetId", true, "groupId", true, "companyId", true,
 			"userId", true, "createDate", true, "modifiedDate", true,
 			"classNameId", true, "classPK", true, "type", true,
-			"activityCount", true);
+			"activityCount", true, "extraData", true);
 	}
 
 	@Test
@@ -343,6 +347,8 @@ public class SocialActivitySetPersistenceTest {
 		socialActivitySet.setType(ServiceTestUtil.nextInt());
 
 		socialActivitySet.setActivityCount(ServiceTestUtil.nextInt());
+
+		socialActivitySet.setExtraData(ServiceTestUtil.randomString());
 
 		_persistence.update(socialActivitySet);
 

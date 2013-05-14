@@ -31,4 +31,13 @@ public interface SocialActivitySet extends SocialActivitySetModel, PersistedMode
 	 *
 	 * Never modify this interface directly. Add methods to {@link com.liferay.portlet.social.model.impl.SocialActivitySetImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	public java.lang.String getExtraDataValue(java.lang.String key)
+		throws com.liferay.portal.kernel.json.JSONException;
+
+	public java.lang.String getExtraDataValue(java.lang.String key,
+		java.util.Locale locale)
+		throws com.liferay.portal.kernel.json.JSONException;
+
+	public void setExtraDataValue(java.lang.String key, java.lang.String value)
+		throws com.liferay.portal.kernel.json.JSONException;
 }
