@@ -3211,10 +3211,15 @@ public class JournalArticleLocalServiceImpl
 		socialActivityCounterLocalService.disableActivityCounters(
 			JournalFolder.class.getName(), article.getFolderId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", article.getTitle());
+
 		socialActivityLocalService.addActivity(
 			userId, article.getGroupId(), JournalArticle.class.getName(),
 			article.getResourcePrimKey(),
-			SocialActivityConstants.TYPE_MOVE_TO_TRASH, StringPool.BLANK, 0);
+			SocialActivityConstants.TYPE_MOVE_TO_TRASH,
+			extraDataJSONObject.toString(), 0);
 
 		return article;
 	}
@@ -3372,11 +3377,15 @@ public class JournalArticleLocalServiceImpl
 		socialActivityCounterLocalService.enableActivityCounters(
 			JournalFolder.class.getName(), article.getFolderId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", article.getTitle());
+
 		socialActivityLocalService.addActivity(
 			userId, article.getGroupId(), JournalArticle.class.getName(),
 			article.getResourcePrimKey(),
-			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH, StringPool.BLANK,
-			0);
+			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
+			extraDataJSONObject.toString(), 0);
 	}
 
 	/**
@@ -5007,6 +5016,11 @@ public class JournalArticleLocalServiceImpl
 				}
 
 				// Social
+
+				JSONObject extraDataJSONObject =
+					JSONFactoryUtil.createJSONObject();
+
+				extraDataJSONObject.put("title", article.getTitle());
 
 				if (serviceContext.isCommandUpdate()) {
 					socialActivityLocalService.addActivity(
