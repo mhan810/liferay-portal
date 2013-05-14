@@ -14,15 +14,14 @@
 
 package com.liferay.portlet.blogs.social;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
-import com.liferay.portlet.blogs.service.permission.BlogsEntryPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
@@ -39,6 +38,15 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 	@Override
 	public String[] getClassNames() {
 		return _CLASS_NAMES;
+	}
+
+	@Override
+	protected Object doGetEntity(
+			SocialActivity activity, ServiceContext serviceContext)
+		throws SystemException {
+
+		return BlogsEntryLocalServiceUtil.fetchBlogsEntry(
+			activity.getClassPK());
 	}
 
 	@Override
@@ -59,12 +67,12 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 		String receiverUserName = getUserName(
 			activity.getReceiverUserId(), serviceContext);
 
-		BlogsEntry entry = BlogsEntryLocalServiceUtil.getEntry(
-			activity.getClassPK());
+		BlogsEntry entry = (BlogsEntry)getEntity();
 
 		String displayDate = StringPool.BLANK;
 
 		if ((activity.getType() == BlogsActivityKeys.ADD_ENTRY) &&
+			(entry != null) &&
 			(entry.getStatus() == WorkflowConstants.STATUS_SCHEDULED)) {
 
 			link = null;
@@ -77,7 +85,8 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 			displayDate = dateFormatDate.format(entry.getDisplayDate());
 		}
 
-		String displayTitle = wrapLink(link, entry.getTitle());
+		String displayTitle = wrapLink(
+			link, activity.getExtraDataValue("title"));
 
 		return new Object[] {
 			groupName, creatorUserName, receiverUserName, displayTitle,
@@ -102,10 +111,11 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 			}
 		}
 		else if (activityType == BlogsActivityKeys.ADD_ENTRY) {
-			BlogsEntry entry = BlogsEntryLocalServiceUtil.getEntry(
-				activity.getClassPK());
+			BlogsEntry entry = (BlogsEntry)getEntity();
 
-			if (entry.getStatus() == WorkflowConstants.STATUS_SCHEDULED) {
+			if ((entry != null) &&
+				(entry.getStatus() == WorkflowConstants.STATUS_SCHEDULED)) {
+
 				if (Validator.isNull(groupName)) {
 					return "activity-blogs-entry-schedule-entry";
 				}
@@ -146,6 +156,14 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 			}
 			else {
 				return "activity-blogs-entry-update-entry-in";
+			}
+		}
+		else if (activityType == SocialActivityConstants.TYPE_DELETE) {
+			if (Validator.isNull(groupName)) {
+				return "activity-blogs-entry-delete";
+			}
+			else {
+				return "activity-blogs-entry-delete-in";
 			}
 		}
 

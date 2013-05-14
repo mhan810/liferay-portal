@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.social;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.journal.model.JournalFolder;
@@ -21,7 +22,6 @@ import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
-import com.liferay.portlet.trash.util.TrashUtil;
 
 /**
  * @author Zsolt Berentey
@@ -35,18 +35,12 @@ public class JournalFolderActivityInterpreter
 	}
 
 	@Override
-	protected String getEntryTitle(
+	protected Object doGetEntity(
 			SocialActivity activity, ServiceContext serviceContext)
-		throws Exception {
+		throws SystemException {
 
-		JournalFolder folder = JournalFolderLocalServiceUtil.getFolder(
+		return JournalFolderLocalServiceUtil.fetchJournalFolder(
 			activity.getClassPK());
-
-		if (folder.isInTrash()) {
-			return TrashUtil.getOriginalTitle(folder.getName());
-		}
-
-		return folder.getName();
 	}
 
 	@Override

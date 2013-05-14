@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.bookmarks.social;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
@@ -34,14 +35,12 @@ public class BookmarksFolderActivityInterpreter
 	}
 
 	@Override
-	protected String getEntryTitle(
+	protected Object doGetEntity(
 			SocialActivity activity, ServiceContext serviceContext)
-		throws Exception {
+		throws SystemException {
 
-		BookmarksFolder folder = BookmarksFolderLocalServiceUtil.getFolder(
+		return BookmarksFolderLocalServiceUtil.fetchBookmarksFolder(
 			activity.getClassPK());
-
-		return folder.getName();
 	}
 
 	@Override
@@ -73,6 +72,14 @@ public class BookmarksFolderActivityInterpreter
 			}
 			else {
 				return "activity-bookmarks-folder-restore-from-trash-in";
+			}
+		}
+		else if (activityType == SocialActivityConstants.TYPE_DELETE) {
+			if (Validator.isNull(groupName)) {
+				return "activity-bookmarks-folder-delete";
+			}
+			else {
+				return "activity-bookmarks-folder-delete-in";
 			}
 		}
 

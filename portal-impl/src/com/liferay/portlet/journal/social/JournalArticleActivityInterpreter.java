@@ -14,7 +14,9 @@
 
 package com.liferay.portlet.journal.social;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -37,13 +39,20 @@ public class JournalArticleActivityInterpreter
 	}
 
 	@Override
+	protected Object doGetEntity(
+			SocialActivity activity, ServiceContext serviceContext)
+		throws SystemException {
+
+		return JournalArticleLocalServiceUtil.fetchLatestArticle(
+			activity.getClassPK(), WorkflowConstants.STATUS_ANY, true);
+	}
+
+	@Override
 	protected String getEntryTitle(
 			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
-		JournalArticle article =
-			JournalArticleLocalServiceUtil.getLatestArticle(
-				activity.getClassPK());
+		JournalArticle article = (JournalArticle)getEntity();
 
 		return article.getTitle(serviceContext.getLocale());
 	}
@@ -53,9 +62,7 @@ public class JournalArticleActivityInterpreter
 			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
-		JournalArticle article =
-			JournalArticleLocalServiceUtil.getLatestArticle(
-				activity.getClassPK());
+		JournalArticle article = (JournalArticle)getEntity();
 
 		if (Validator.isNotNull(article.getLayoutUuid())) {
 			String groupFriendlyURL = PortalUtil.getGroupFriendlyURL(

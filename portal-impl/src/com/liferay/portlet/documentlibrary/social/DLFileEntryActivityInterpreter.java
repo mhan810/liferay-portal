@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.documentlibrary.social;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -24,7 +26,6 @@ import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
-import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
@@ -45,14 +46,28 @@ public class DLFileEntryActivityInterpreter
 	}
 
 	@Override
+	protected Object doGetEntity(
+			SocialActivity activity, ServiceContext serviceContext)
+		throws SystemException {
+
+		try {
+			DLAppLocalServiceUtil.getFileEntry(activity.getClassPK());
+		}
+		catch (PortalException pe) {
+		}
+
+		return null;
+	}
+
+	@Override
 	protected String getBody(
 			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
-		FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
-			activity.getClassPK());
+		FileEntry fileEntry = (FileEntry)getEntity();
 
-		if (TrashUtil.isInTrash(
+		if ((fileEntry == null) ||
+			TrashUtil.isInTrash(
 				DLFileEntry.class.getName(), fileEntry.getFileEntryId())) {
 
 			return StringPool.BLANK;
@@ -79,27 +94,6 @@ public class DLFileEntryActivityInterpreter
 		sb.append(wrapLink(folderLink, "go-to-folder", serviceContext));
 
 		return sb.toString();
-	}
-
-	@Override
-	protected String getEntryTitle(
-			SocialActivity activity, ServiceContext serviceContext)
-		throws Exception {
-
-		FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
-			activity.getClassPK());
-
-		if (fileEntry.getModel() instanceof DLFileEntry) {
-			DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
-
-			DLFileVersion dlFileVersion = dlFileEntry.getFileVersion();
-
-			if (dlFileVersion.isInTrash()) {
-				return TrashUtil.getOriginalTitle(fileEntry.getTitle());
-			}
-		}
-
-		return fileEntry.getTitle();
 	}
 
 	protected String getFolderLink(
@@ -163,6 +157,14 @@ public class DLFileEntryActivityInterpreter
 			}
 			else {
 				return "activity-document-library-file-restore-from-trash-in";
+			}
+		}
+		else if (activityType == SocialActivityConstants.TYPE_DELETE) {
+			if (Validator.isNull(groupName)) {
+				return "activity-document-library-file-delete";
+			}
+			else {
+				return "activity-document-library-file-delete-in";
 			}
 		}
 
