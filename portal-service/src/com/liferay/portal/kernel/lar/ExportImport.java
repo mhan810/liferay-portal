@@ -20,6 +20,7 @@ import com.liferay.portal.model.StagedModel;
 
 import java.io.File;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +48,14 @@ public interface ExportImport {
 	public String exportLinksToLayouts(
 			PortletDataContext portletDataContext, String content)
 		throws Exception;
+
+	public String getExportLayoutsTaskData(
+		long groupId, boolean privateLayout, long[] layoutIds,
+		Map<String, String[]> parameterMap, Date startDate, Date endDate);
+
+	public String getExportPortletTaskData(
+		long plid, long groupId, String portletId,
+		Map<String, String[]> parameterMap, Date startDate, Date endDate);
 
 	public ManifestSummary getManifestSummary(
 			long userId, long groupId, Map<String, String[]> parameterMap,

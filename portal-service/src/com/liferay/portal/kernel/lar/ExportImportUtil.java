@@ -21,6 +21,7 @@ import com.liferay.portal.model.StagedModel;
 
 import java.io.File;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +70,23 @@ public class ExportImportUtil {
 		PortalRuntimePermission.checkGetBeanProperty(ExportImportUtil.class);
 
 		return _exportImport;
+	}
+
+	public static String getExportLayoutsTaskData(
+		long groupId, boolean privateLayout, long[] layoutIds,
+		Map<String, String[]> parameterMap, Date startDate, Date endDate) {
+
+		return getExportImport().getExportLayoutsTaskData(
+			groupId, privateLayout, layoutIds, parameterMap, startDate,
+			endDate);
+	}
+
+	public static String getExportPortletTaskData(
+		long plid, long groupId, String portletId,
+		Map<String, String[]> parameterMap, Date startDate, Date endDate) {
+
+		return getExportImport().getExportPortletTaskData(
+			plid, groupId, portletId, parameterMap, startDate, endDate);
 	}
 
 	public static ManifestSummary getManifestSummary(
