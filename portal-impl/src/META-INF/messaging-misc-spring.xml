@@ -38,6 +38,9 @@
 	<bean id="destination.hot_deploy" class="com.liferay.portal.kernel.messaging.SerialDestination">
 		<property name="name" value="liferay/hot_deploy" />
 	</bean>
+	<bean id="destination.export" class="com.liferay.portal.kernel.messaging.ParallelDestination">
+		<property name="name" value="liferay/export" />
+	</bean>
 	<bean id="destination.layouts_local_publisher" class="com.liferay.portal.kernel.messaging.ParallelDestination">
 		<property name="name" value="liferay/layouts_local_publisher" />
 	</bean>
@@ -68,6 +71,7 @@
 	<bean id="messageListener.document_library_video_processor" class="com.liferay.portlet.documentlibrary.messaging.VideoProcessorMessageListener" />
 	<bean id="messageListener.flags" class="com.liferay.portlet.flags.messaging.FlagsRequestMessageListener" />
 	<bean id="messageListener.hot_deploy" class="com.liferay.portal.deploy.hot.messaging.HotDeployMessageListener" />
+	<bean id="messageListener.export" class="com.liferay.portal.lar.messaging.ExportMessageListener" />
 	<bean id="messageListener.layouts_local_publisher" class="com.liferay.portal.kernel.scheduler.messaging.SchedulerEventMessageListenerWrapper">
 		<property name="groupName" value="com.liferay.portal.messaging.LayoutsLocalPublisherMessageListener" />
 		<property name="jobName" value="com.liferay.portal.messaging.LayoutsLocalPublisherMessageListener" />
@@ -117,6 +121,7 @@
 				<ref bean="destination.document_library_video_processor" />
 				<ref bean="destination.flags" />
 				<ref bean="destination.hot_deploy" />
+				<ref bean="destination.export" />
 				<ref bean="destination.layouts_local_publisher" />
 				<ref bean="destination.layouts_remote_publisher" />
 				<ref bean="destination.live_users" />
@@ -163,6 +168,11 @@
 				<entry key="liferay/document_library_video_processor">
 					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
 						<ref bean="messageListener.document_library_video_processor" />
+					</list>
+				</entry>
+				<entry key="liferay/export">
+					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
+						<ref bean="messageListener.export" />
 					</list>
 				</entry>
 				<entry key="liferay/flags">
