@@ -589,6 +589,10 @@ public interface OrganizationLocalService extends BaseLocalService,
 		long[] organizationIds)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	public void clearOrganizationDependencies(
+		com.liferay.portal.model.Organization organization)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	/**
 	* Deletes the logo of the organization.
 	*

@@ -42,6 +42,7 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.ListTypeConstants;
+import com.liferay.portal.model.OrgLabor;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.OrganizationConstants;
 import com.liferay.portal.model.ResourceConstants;
@@ -51,7 +52,12 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.model.impl.OrganizationImpl;
 import com.liferay.portal.security.permission.PermissionCacheUtil;
+import com.liferay.portal.service.AddressLocalServiceUtil;
+import com.liferay.portal.service.EmailAddressLocalServiceUtil;
+import com.liferay.portal.service.OrgLaborLocalServiceUtil;
+import com.liferay.portal.service.PhoneLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.WebsiteLocalServiceUtil;
 import com.liferay.portal.service.base.OrganizationLocalServiceBaseImpl;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
@@ -352,6 +358,29 @@ public class OrganizationLocalServiceImpl
 
 		passwordPolicyRelLocalService.addPasswordPolicyRels(
 			passwordPolicyId, Organization.class.getName(), organizationIds);
+	}
+
+	public void clearOrganizationDependencies(Organization organization)
+		throws SystemException {
+
+		long companyId = organization.getCompanyId();
+
+		String className = organization.getModelClassName();
+		long classPK = organization.getPrimaryKey();
+
+		List<OrgLabor> orgLabors = OrgLaborLocalServiceUtil.getOrgLabors(
+			organization.getOrganizationId());
+
+		for (OrgLabor orgLabor : orgLabors) {
+			OrgLaborLocalServiceUtil.deleteOrgLabor(orgLabor);
+		}
+
+		AddressLocalServiceUtil.deleteAddresses(companyId, className, classPK);
+		EmailAddressLocalServiceUtil.deleteEmailAddresses(
+			companyId, className, classPK);
+		PhoneLocalServiceUtil.deletePhones(companyId, className, classPK);
+		WebsiteLocalServiceUtil.deleteWebsites(companyId, className, classPK);
+
 	}
 
 	/**

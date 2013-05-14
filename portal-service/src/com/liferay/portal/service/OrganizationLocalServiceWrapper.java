@@ -682,6 +682,12 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 			organizationIds);
 	}
 
+	public void clearOrganizationDependencies(
+		com.liferay.portal.model.Organization organization)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_organizationLocalService.clearOrganizationDependencies(organization);
+	}
+
 	/**
 	* Deletes the logo of the organization.
 	*
