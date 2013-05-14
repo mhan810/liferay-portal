@@ -64,10 +64,15 @@ public abstract class BaseSocialActivityInterpreter
 		SocialActivity activity, ServiceContext serviceContext) {
 
 		try {
+			_entityThreadLocal.set(doGetEntity(activity, serviceContext));
+
 			return doInterpret(activity, serviceContext);
 		}
 		catch (Exception e) {
 			_log.error("Unable to interpret activity", e);
+		}
+		finally {
+			_entityThreadLocal.remove();
 		}
 
 		return null;
@@ -85,11 +90,16 @@ public abstract class BaseSocialActivityInterpreter
 			if (!activities.isEmpty()) {
 				SocialActivity activity = activities.get(0);
 
+				_entityThreadLocal.set(doGetEntity(activity, serviceContext));
+
 				return doInterpret(activity, serviceContext);
 			}
 		}
 		catch (Exception e) {
 			_log.error("Unable to interpret activity set", e);
+		}
+		finally {
+			_entityThreadLocal.remove();
 		}
 
 		return null;
@@ -134,6 +144,13 @@ public abstract class BaseSocialActivityInterpreter
 	 */
 	protected String cleanContent(String content) {
 		return StringUtil.shorten(HtmlUtil.extractText(content), 200);
+	}
+
+	protected Object doGetEntity(
+			SocialActivity activity, ServiceContext serviceContext)
+		throws SystemException {
+
+		return null;
 	}
 
 	protected SocialActivityFeedEntry doInterpret(
@@ -192,6 +209,10 @@ public abstract class BaseSocialActivityInterpreter
 		throws Exception {
 
 		return StringPool.BLANK;
+	}
+
+	protected Object getEntity() {
+		return _entityThreadLocal.get();
 	}
 
 	protected String getEntryTitle(
@@ -320,7 +341,7 @@ public abstract class BaseSocialActivityInterpreter
 
 		long classPK = activity.getClassPK();
 
-		if ((trashHandler != null) &&
+		if ((trashHandler != null) && (getEntity() != null) &&
 			(trashHandler.isInTrash(classPK) ||
 			 trashHandler.isInTrashContainer(classPK))) {
 
@@ -336,7 +357,7 @@ public abstract class BaseSocialActivityInterpreter
 
 		String path = getPath(activity, serviceContext);
 
-		if (Validator.isNull(path)) {
+		if (Validator.isNull(path) || (getEntity() == null)) {
 			return null;
 		}
 
@@ -523,5 +544,8 @@ public abstract class BaseSocialActivityInterpreter
 
 	private SocialActivityFeedEntry _deprecatedMarkerSocialActivityFeedEntry =
 		new SocialActivityFeedEntry(StringPool.BLANK, StringPool.BLANK);
+
+	private final ThreadLocal<Object> _entityThreadLocal =
+		new ThreadLocal<Object>();
 
 }
