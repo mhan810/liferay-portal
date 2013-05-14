@@ -175,6 +175,12 @@ public class DLFileEntryActivityInterpreter
 			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
+		if (super.hasPermissions(
+				permissionChecker, activity, actionId, serviceContext)) {
+
+			return true;
+		}
+
 		return DLFileEntryPermission.contains(
 			permissionChecker, activity.getClassPK(), actionId);
 	}

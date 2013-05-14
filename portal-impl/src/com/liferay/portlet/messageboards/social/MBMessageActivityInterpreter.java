@@ -17,11 +17,9 @@ package com.liferay.portlet.messageboards.social;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
-import com.liferay.portlet.messageboards.service.permission.MBMessagePermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 
@@ -137,19 +135,6 @@ public class MBMessageActivityInterpreter
 		}
 
 		return null;
-	}
-
-	@Override
-	protected boolean hasPermissions(
-			PermissionChecker permissionChecker, SocialActivity activity,
-			String actionId, ServiceContext serviceContext)
-		throws Exception {
-
-		MBMessage message = MBMessageLocalServiceUtil.getMessage(
-			activity.getClassPK());
-
-		return MBMessagePermission.contains(
-			permissionChecker, message.getMessageId(), actionId);
 	}
 
 	private static final String[] _CLASS_NAMES = {MBMessage.class.getName()};

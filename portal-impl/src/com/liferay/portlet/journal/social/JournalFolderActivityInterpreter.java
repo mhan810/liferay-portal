@@ -15,11 +15,9 @@
 package com.liferay.portlet.journal.social;
 
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
-import com.liferay.portlet.journal.service.permission.JournalFolderPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
@@ -84,17 +82,6 @@ public class JournalFolderActivityInterpreter
 		}
 
 		return null;
-	}
-
-	@Override
-	protected boolean hasPermissions(
-			PermissionChecker permissionChecker, SocialActivity activity,
-			String actionId, ServiceContext serviceContext)
-		throws Exception {
-
-		return JournalFolderPermission.contains(
-			permissionChecker, activity.getGroupId(), activity.getClassPK(),
-			actionId);
 	}
 
 	private static final String[] _CLASS_NAMES =

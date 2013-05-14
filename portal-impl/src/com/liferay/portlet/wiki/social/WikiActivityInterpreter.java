@@ -241,32 +241,33 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
-		if (!WikiPagePermission.contains(
-				permissionChecker, activity.getClassPK(), ActionKeys.VIEW)) {
+		if (!super.hasPermissions(
+				permissionChecker, activity, ActionKeys.VIEW, serviceContext)) {
 
 			return false;
 		}
 
-		int activityType = activity.getType();
+		if ((getEntity() == null) ||
+			(activity.getType() != WikiActivityKeys.UPDATE_PAGE)) {
 
-		if (activityType == WikiActivityKeys.UPDATE_PAGE) {
-			WikiPageResource pageResource =
-				WikiPageResourceLocalServiceUtil.getPageResource(
-					activity.getClassPK());
+			return true;
+		}
 
-			double version = GetterUtil.getDouble(
-				activity.getExtraDataValue("version"));
+		WikiPageResource pageResource =
+			WikiPageResourceLocalServiceUtil.getPageResource(
+				activity.getClassPK());
 
-			WikiPage page = WikiPageLocalServiceUtil.getPage(
-				pageResource.getNodeId(), pageResource.getTitle(), version);
+		double version = GetterUtil.getDouble(
+			activity.getExtraDataValue("version"));
 
-			if (!page.isApproved() &&
-				!WikiPagePermission.contains(
-					permissionChecker, activity.getClassPK(),
-					ActionKeys.UPDATE)) {
+		WikiPage page = WikiPageLocalServiceUtil.getPage(
+			pageResource.getNodeId(), pageResource.getTitle(), version);
 
-				return false;
-			}
+		if (!page.isApproved() &&
+			!WikiPagePermission.contains(
+				permissionChecker, activity.getClassPK(), ActionKeys.UPDATE)) {
+
+			return false;
 		}
 
 		return true;

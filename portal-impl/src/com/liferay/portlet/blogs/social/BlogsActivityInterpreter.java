@@ -152,16 +152,6 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 		return null;
 	}
 
-	@Override
-	protected boolean hasPermissions(
-			PermissionChecker permissionChecker, SocialActivity activity,
-			String actionId, ServiceContext serviceContext)
-		throws Exception {
-
-		return BlogsEntryPermission.contains(
-			permissionChecker, activity.getClassPK(), actionId);
-	}
-
 	private static final String[] _CLASS_NAMES = {BlogsEntry.class.getName()};
 
 }

@@ -116,6 +116,12 @@ public class DLFolderActivityInterpreter extends BaseSocialActivityInterpreter {
 			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
+		if (super.hasPermissions(
+				permissionChecker, activity, actionId, serviceContext)) {
+
+			return true;
+		}
+
 		return DLFolderPermission.contains(
 			permissionChecker, activity.getGroupId(), activity.getClassPK(),
 			actionId);

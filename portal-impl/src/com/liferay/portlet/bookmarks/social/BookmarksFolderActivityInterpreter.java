@@ -15,11 +15,9 @@
 package com.liferay.portlet.bookmarks.social;
 
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.service.BookmarksFolderLocalServiceUtil;
-import com.liferay.portlet.bookmarks.service.permission.BookmarksFolderPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
@@ -79,17 +77,6 @@ public class BookmarksFolderActivityInterpreter
 		}
 
 		return null;
-	}
-
-	@Override
-	protected boolean hasPermissions(
-			PermissionChecker permissionChecker, SocialActivity activity,
-			String actionId, ServiceContext serviceContext)
-		throws Exception {
-
-		return BookmarksFolderPermission.contains(
-			permissionChecker, activity.getGroupId(), activity.getClassPK(),
-			actionId);
 	}
 
 	private static final String[] _CLASS_NAMES =

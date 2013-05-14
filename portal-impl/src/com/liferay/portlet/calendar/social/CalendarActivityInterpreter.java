@@ -18,11 +18,9 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.calendar.model.CalEvent;
 import com.liferay.portlet.calendar.service.CalEventLocalServiceUtil;
-import com.liferay.portlet.calendar.service.permission.CalEventPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 
@@ -86,16 +84,6 @@ public class CalendarActivityInterpreter extends BaseSocialActivityInterpreter {
 		}
 
 		return StringPool.BLANK;
-	}
-
-	@Override
-	protected boolean hasPermissions(
-			PermissionChecker permissionChecker, SocialActivity activity,
-			String actionId, ServiceContext serviceContext)
-		throws Exception {
-
-		return CalEventPermission.contains(
-			permissionChecker, activity.getClassPK(), actionId);
 	}
 
 	private static final String[] _CLASS_NAMES = {CalEvent.class.getName()};
