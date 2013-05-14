@@ -437,6 +437,11 @@
 			<bean class="com.liferay.portal.util.DigesterImpl" />
 		</property>
 	</bean>
+		<bean id="com.liferay.portal.kernel.util.ExportImportTaskFactoryUtil" class="com.liferay.portal.kernel.util.ExportImportTaskFactoryUtil">
+		<property name="exportImportTaskFactory">
+			<bean class="com.liferay.portal.util.ExportImportTaskFactoryImpl" />
+		</property>
+	</bean>
 	<bean id="com.liferay.portal.kernel.util.FastDateFormatFactoryUtil" class="com.liferay.portal.kernel.util.FastDateFormatFactoryUtil">
 		<property name="fastDateFormatFactory">
 			<bean class="com.liferay.portal.util.FastDateFormatFactoryImpl" />
