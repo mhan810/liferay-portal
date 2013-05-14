@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSender;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSenderFactoryUtil;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -373,5 +375,9 @@ public class FolderStagedModelDataHandler
 				serviceContext);
 		}
 	}
+
+	private static final ExportImportMessageSender _exportImportMessageSender =
+		ExportImportMessageSenderFactoryUtil.getExportImportMessageSender(
+			FolderStagedModelDataHandler.class);
 
 }

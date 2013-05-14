@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSender;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSenderFactoryUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
@@ -53,6 +55,9 @@ public class BookmarksEntryStagedModelDataHandler
 			PortletDataContext portletDataContext, BookmarksEntry entry)
 		throws Exception {
 
+		_exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_EXPORT_STARTED, entry);
+
 		if (entry.getFolderId() !=
 				BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
@@ -65,6 +70,9 @@ public class BookmarksEntryStagedModelDataHandler
 		portletDataContext.addClassedModel(
 			entryElement, ExportImportPathUtil.getModelPath(entry), entry,
 			BookmarksPortletDataHandler.NAMESPACE);
+
+		_exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_EXPORT_STOPPED, entry);
 	}
 
 	@Override
@@ -133,5 +141,9 @@ public class BookmarksEntryStagedModelDataHandler
 		portletDataContext.importClassedModel(
 			entry, importedEntry, BookmarksPortletDataHandler.NAMESPACE);
 	}
+
+	private static final ExportImportMessageSender _exportImportMessageSender =
+		ExportImportMessageSenderFactoryUtil.getExportImportMessageSender(
+			BookmarksEntryStagedModelDataHandler.class);
 
 }

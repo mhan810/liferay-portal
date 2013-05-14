@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSender;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSenderFactoryUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
@@ -75,8 +77,16 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			return portletPreferences;
 		}
 
+		_exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_DELETE_STARTED,
+			BookmarksFolder.class);
+
 		BookmarksFolderLocalServiceUtil.deleteFolders(
 			portletDataContext.getScopeGroupId());
+
+		_exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_DELETE_STARTED,
+			BookmarksEntry.class);
 
 		BookmarksEntryLocalServiceUtil.deleteEntries(
 			portletDataContext.getScopeGroupId(),
@@ -90,6 +100,9 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			final PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
+
+		_exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_EXPORT_STARTED);
 
 		portletDataContext.addPermissions(
 			BookmarksPermission.RESOURCE_NAME,
@@ -110,6 +123,9 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 
 		entryActionableDynamicQuery.performActions();
 
+		_exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_EXPORT_STOPPED);
+
 		return getExportDataRootElementString(rootElement);
 	}
 
@@ -118,6 +134,9 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences, String data)
 		throws Exception {
+
+		_exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_IMPORT_STARTED);
 
 		portletDataContext.importPermissions(
 			BookmarksPermission.RESOURCE_NAME,
@@ -144,6 +163,9 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, entryElement);
 		}
 
+		_exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_IMPORT_STOPPED);
+
 		return null;
 	}
 
@@ -169,5 +191,9 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			BookmarksFolder.class,
 			folderExportActionableDynamicQuery.performCount());
 	}
+
+	private static final ExportImportMessageSender _exportImportMessageSender =
+		ExportImportMessageSenderFactoryUtil.getExportImportMessageSender(
+			BookmarksPortletDataHandler.class);
 
 }

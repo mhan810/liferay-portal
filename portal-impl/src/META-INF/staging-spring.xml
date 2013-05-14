@@ -36,4 +36,8 @@
 			<bean class="com.liferay.portal.lar.messaging.ExportImportMessageSenderFactoryImpl" />
 		</property>
 	</bean>
+	<bean id="destination.export_import" class="com.liferay.portal.kernel.messaging.ParallelDestination">
+		<property name="name" value="liferay/export_import" />
+	</bean>
+	<bean id="messageListener.export_import" class="com.liferay.portal.lar.messaging.ExportImportMessageListener" />
 </beans>
