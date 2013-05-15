@@ -14,15 +14,62 @@
 
 package com.liferay.portal.util;
 
+import com.liferay.portal.kernel.servlet.PluginContextListener;
+import com.liferay.portal.kernel.servlet.ServletContextPool;
+import com.liferay.portal.kernel.util.AggregateClassLoader;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 
+import javax.servlet.ServletContext;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Raymond Augé
  */
 public class ClassLoaderUtil {
+
+	public static ClassLoader getAggregatedClassLoader(
+		final String[] servletContextNames) {
+
+		return AccessController.doPrivileged(
+			new PrivilegedAction<ClassLoader> () {
+
+				public ClassLoader run() {
+					List<ClassLoader> classLoaders = new ArrayList<ClassLoader>(
+						servletContextNames.length + 2);
+
+					ClassLoader contextClassLoader = _getContextClassLoader();
+
+					classLoaders.add(contextClassLoader);
+
+					if (!contextClassLoader.equals(
+						PortalClassLoaderUtil.getClassLoader())) {
+						classLoaders.add(
+							PortalClassLoaderUtil.getClassLoader());
+					}
+
+					for (String servletContextName : servletContextNames) {
+						ServletContext servletContext = ServletContextPool.get(
+							servletContextName);
+
+						ClassLoader pluginClassLoader =
+							(ClassLoader)servletContext.getAttribute(
+								PluginContextListener.PLUGIN_CLASS_LOADER);
+
+						classLoaders.add(pluginClassLoader);
+					}
+
+					ClassLoader[] classloaders = classLoaders.toArray(
+						new ClassLoader[classLoaders.size()]);
+
+					return AggregateClassLoader.getAggregateClassLoader(
+						classloaders);
+				}
+			}
+		);
+	}
 
 	public static ClassLoader getClassLoader(final Class<?> clazz) {
 		return AccessController.doPrivileged(
@@ -41,9 +88,7 @@ public class ClassLoaderUtil {
 			new PrivilegedAction<ClassLoader>() {
 
 				public ClassLoader run() {
-					Thread thread = Thread.currentThread();
-
-					return thread.getContextClassLoader();
+					return _getContextClassLoader();
 				}
 
 			}
@@ -62,6 +107,25 @@ public class ClassLoaderUtil {
 		);
 	}
 
+	public static ClassLoader getPluginClassLoader(
+		final String servletContextName) {
+
+		return AccessController.doPrivileged(
+			new PrivilegedAction<ClassLoader> () {
+
+				public ClassLoader run() {
+					ServletContext servletContext = ServletContextPool.get(
+						servletContextName);
+
+					ClassLoader pluginClassLoader =
+						(ClassLoader)servletContext.getAttribute(
+							PluginContextListener.PLUGIN_CLASS_LOADER);
+
+					return pluginClassLoader;
+				}
+			}
+		);
+	}
 	public static void setContextClassLoader(final ClassLoader classLoader) {
 		AccessController.doPrivileged(
 			new PrivilegedAction<Void>() {
@@ -76,6 +140,12 @@ public class ClassLoaderUtil {
 
 			}
 		);
+	}
+
+	private static ClassLoader _getContextClassLoader() {
+		Thread currentThread = Thread.currentThread();
+
+		return currentThread.getContextClassLoader();
 	}
 
 }

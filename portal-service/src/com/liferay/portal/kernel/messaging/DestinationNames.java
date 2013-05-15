@@ -28,6 +28,8 @@ public interface DestinationNames {
 	 */
 	public static final String BLOGS = "liferay/blogs";
 
+	public static final String BACKGROUND_TASK_EXECUTOR = "liferay/background_task";
+
 	public static final String CONVERT_PROCESS = "liferay/convert_process";
 
 	public static final String DEVICE_RECOGNITION_PROVIDER =
