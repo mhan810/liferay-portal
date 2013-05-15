@@ -81,6 +81,35 @@
 			<transient name="userUuid" />
 		</attributes>
 	</mapped-superclass>
+	<mapped-superclass class="com.liferay.portal.model.impl.BackgroundTaskModelImpl">
+		<attributes>
+			<id name="backgroundTaskId" />
+			<basic name="groupId" />
+			<basic name="companyId" />
+			<basic name="userId" />
+			<basic name="userName" />
+			<basic name="createDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="modifiedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="className" />
+			<basic name="completedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="data">
+				<column name="DATA_" />
+			</basic>
+			<basic name="name" />
+			<basic name="servletContextName" />
+			<basic name="status" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
 	<mapped-superclass class="com.liferay.portal.model.impl.BrowserTrackerModelImpl">
 		<attributes>
 			<id name="browserTrackerId" />
@@ -3865,6 +3894,10 @@
 	</entity>
 	<entity class="com.liferay.portal.model.impl.AddressImpl" name="Address">
 		<table name="Address" />
+		<attributes />
+	</entity>
+	<entity class="com.liferay.portal.model.impl.BackgroundTaskImpl" name="BackgroundTask">
+		<table name="BackgroundTask" />
 		<attributes />
 	</entity>
 	<entity class="com.liferay.portal.model.impl.BrowserTrackerImpl" name="BrowserTracker">
