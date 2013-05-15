@@ -36,4 +36,13 @@
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.LayoutSetLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.LayoutSetLocalService)" />
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.PortletPreferencesLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.PortletPreferencesLocalService)" />
 	</aop:config>
+	<bean id="com.liferay.portal.kernel.lar.messaging.ExportImportMessageSenderFactoryUtil" class="com.liferay.portal.kernel.lar.messaging.ExportImportMessageSenderFactoryUtil">
+		<property name="exportImportMessageSenderFactory">
+			<bean class="com.liferay.portal.lar.messaging.ExportImportMessageSenderFactoryImpl" />
+		</property>
+	</bean>
+	<bean id="destination.export_import" class="com.liferay.portal.kernel.messaging.ParallelDestination">
+		<property name="name" value="liferay/export_import" />
+	</bean>
+	<bean id="messageListener.export_import" class="com.liferay.portal.lar.messaging.ExportImportMessageListener" />
 </beans>

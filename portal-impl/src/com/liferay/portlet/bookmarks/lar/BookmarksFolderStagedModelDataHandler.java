@@ -17,6 +17,8 @@ package com.liferay.portlet.bookmarks.lar;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSender;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSenderFactoryUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
@@ -52,6 +54,9 @@ public class BookmarksFolderStagedModelDataHandler
 			PortletDataContext portletDataContext, BookmarksFolder folder)
 		throws Exception {
 
+		_exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_EXPORT_STARTED, folder);
+
 		if (folder.getParentFolderId() !=
 				BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
@@ -63,12 +68,18 @@ public class BookmarksFolderStagedModelDataHandler
 		portletDataContext.addClassedModel(
 			folderElement, ExportImportPathUtil.getModelPath(folder), folder,
 			BookmarksPortletDataHandler.NAMESPACE);
+
+		_exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_EXPORT_STOPPED, folder);
 	}
 
 	@Override
 	protected void doImportStagedModel(
 			PortletDataContext portletDataContext, BookmarksFolder folder)
 		throws Exception {
+
+		_exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_IMPORT_STARTED, folder);
 
 		long userId = portletDataContext.getUserId(folder.getUserUuid());
 
@@ -129,6 +140,13 @@ public class BookmarksFolderStagedModelDataHandler
 
 		portletDataContext.importClassedModel(
 			folder, importedFolder, BookmarksPortletDataHandler.NAMESPACE);
+
+		_exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_IMPORT_STOPPED, folder);
 	}
+
+	private static final ExportImportMessageSender _exportImportMessageSender =
+		ExportImportMessageSenderFactoryUtil.getExportImportMessageSender(
+			BookmarksFolderStagedModelDataHandler.class);
 
 }
