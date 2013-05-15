@@ -26,6 +26,7 @@ import com.liferay.portal.service.AccountLocalService;
 import com.liferay.portal.service.AccountService;
 import com.liferay.portal.service.AddressLocalService;
 import com.liferay.portal.service.AddressService;
+import com.liferay.portal.service.BackgroundTaskLocalService;
 import com.liferay.portal.service.BaseServiceImpl;
 import com.liferay.portal.service.BrowserTrackerLocalService;
 import com.liferay.portal.service.CMISRepositoryLocalService;
@@ -128,6 +129,7 @@ import com.liferay.portal.service.WorkflowDefinitionLinkLocalService;
 import com.liferay.portal.service.WorkflowInstanceLinkLocalService;
 import com.liferay.portal.service.persistence.AccountPersistence;
 import com.liferay.portal.service.persistence.AddressPersistence;
+import com.liferay.portal.service.persistence.BackgroundTaskPersistence;
 import com.liferay.portal.service.persistence.BrowserTrackerPersistence;
 import com.liferay.portal.service.persistence.ClassNamePersistence;
 import com.liferay.portal.service.persistence.ClusterGroupPersistence;
@@ -332,6 +334,44 @@ public abstract class LayoutBranchServiceBaseImpl extends BaseServiceImpl
 	 */
 	public void setAddressPersistence(AddressPersistence addressPersistence) {
 		this.addressPersistence = addressPersistence;
+	}
+
+	/**
+	 * Returns the background task local service.
+	 *
+	 * @return the background task local service
+	 */
+	public BackgroundTaskLocalService getBackgroundTaskLocalService() {
+		return backgroundTaskLocalService;
+	}
+
+	/**
+	 * Sets the background task local service.
+	 *
+	 * @param backgroundTaskLocalService the background task local service
+	 */
+	public void setBackgroundTaskLocalService(
+		BackgroundTaskLocalService backgroundTaskLocalService) {
+		this.backgroundTaskLocalService = backgroundTaskLocalService;
+	}
+
+	/**
+	 * Returns the background task persistence.
+	 *
+	 * @return the background task persistence
+	 */
+	public BackgroundTaskPersistence getBackgroundTaskPersistence() {
+		return backgroundTaskPersistence;
+	}
+
+	/**
+	 * Sets the background task persistence.
+	 *
+	 * @param backgroundTaskPersistence the background task persistence
+	 */
+	public void setBackgroundTaskPersistence(
+		BackgroundTaskPersistence backgroundTaskPersistence) {
+		this.backgroundTaskPersistence = backgroundTaskPersistence;
 	}
 
 	/**
@@ -3649,6 +3689,10 @@ public abstract class LayoutBranchServiceBaseImpl extends BaseServiceImpl
 	protected AddressService addressService;
 	@BeanReference(type = AddressPersistence.class)
 	protected AddressPersistence addressPersistence;
+	@BeanReference(type = BackgroundTaskLocalService.class)
+	protected BackgroundTaskLocalService backgroundTaskLocalService;
+	@BeanReference(type = BackgroundTaskPersistence.class)
+	protected BackgroundTaskPersistence backgroundTaskPersistence;
 	@BeanReference(type = BrowserTrackerLocalService.class)
 	protected BrowserTrackerLocalService browserTrackerLocalService;
 	@BeanReference(type = BrowserTrackerPersistence.class)

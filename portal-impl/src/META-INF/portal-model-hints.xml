@@ -71,6 +71,22 @@
 		<field name="mailing" type="boolean" />
 		<field name="primary" type="boolean" />
 	</model>
+	<model name="com.liferay.portal.model.BackgroundTask">
+		<field name="backgroundTaskId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="type" type="String" />
+		<field name="status" type="int" />
+		<field name="name" type="String" />
+		<field name="completedDate" type="Date" />
+		<field name="data" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+	</model>
 	<model name="com.liferay.portal.model.BrowserTracker">
 		<field name="browserTrackerId" type="long" />
 		<field name="userId" type="long" />

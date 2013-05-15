@@ -16,6 +16,9 @@ package com.liferay.portal.lar;
 
 import com.liferay.portal.LARFileException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.lar.ExportImport;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.ExportImportUtil;
@@ -66,6 +69,7 @@ import java.io.File;
 import java.io.InputStream;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -353,6 +357,88 @@ public class ExportImportImpl implements ExportImport {
 			ArrayUtil.toStringArray(newLinksToLayout.toArray()));
 
 		return content;
+	}
+
+	public String getExportLayoutsTaskData(
+		long groupId, boolean privateLayout, long[] layoutIds,
+		Map<String, String[]> parameterMap, Date startDate, Date endDate) {
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put("groupId", groupId);
+		jsonObject.put("privateLayout", privateLayout);
+
+		Map<String, String[]> copiedParameterMap =
+			new HashMap<String, String[]>();
+
+		MapUtil.copy(parameterMap, copiedParameterMap);
+
+		try {
+			jsonObject.put("layoutIds", JSONFactoryUtil.createJSONArray(
+				JSONFactoryUtil.serialize(layoutIds)));
+
+			jsonObject.put("parameterMap", JSONFactoryUtil.createJSONObject(
+				JSONFactoryUtil.serialize(copiedParameterMap)));
+
+			if (startDate != null) {
+				jsonObject.put(
+					"startDate",
+					JSONFactoryUtil.createJSONObject(
+						JSONFactoryUtil.serialize(startDate)));
+			}
+
+			if (endDate != null) {
+				jsonObject.put(
+					"endDate",
+					JSONFactoryUtil.createJSONObject(
+						JSONFactoryUtil.serialize(endDate)));
+			}
+		}
+		catch (JSONException je) {
+			return StringPool.BLANK;
+		}
+
+		return jsonObject.toString();
+	}
+
+	public String getExportPortletTaskData(
+		long plid, long groupId, String portletId,
+		Map<String, String[]> parameterMap, Date startDate, Date endDate) {
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put("plid", plid);
+		jsonObject.put("groupId", groupId);
+		jsonObject.put("portletId", portletId);
+
+		Map<String, String[]> copiedParameterMap =
+			new HashMap<String, String[]>();
+
+		MapUtil.copy(parameterMap, copiedParameterMap);
+
+		try {
+			jsonObject.put("parameterMap", JSONFactoryUtil.createJSONObject(
+				JSONFactoryUtil.serialize(copiedParameterMap)));
+
+			if (startDate != null) {
+				jsonObject.put(
+					"startDate",
+					JSONFactoryUtil.createJSONObject(
+						JSONFactoryUtil.serialize(startDate)));
+			}
+
+			if (endDate != null) {
+				jsonObject.put(
+					"endDate",
+					JSONFactoryUtil.createJSONObject(
+						JSONFactoryUtil.serialize(endDate)));
+			}
+		}
+		catch (JSONException je) {
+			return StringPool.BLANK;
+		}
+
+		return jsonObject.toString();
 	}
 
 	public ManifestSummary getManifestSummary(
