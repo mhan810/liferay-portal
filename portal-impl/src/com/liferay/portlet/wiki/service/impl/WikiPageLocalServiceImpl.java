@@ -58,6 +58,7 @@ import com.liferay.portlet.asset.model.AssetLinkConstants;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
+import com.liferay.portlet.social.util.SocialActivityHierarchyEntryThreadLocal;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.DuplicatePageException;
@@ -464,6 +465,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	public void deletePage(WikiPage page)
 		throws PortalException, SystemException {
 
+		SocialActivityHierarchyEntryThreadLocal.push(
+			WikiPage.class, page.getResourcePrimKey());
+
 		// Children
 
 		List<WikiPage> childrenPages = wikiPagePersistence.findByN_P(
@@ -516,6 +520,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		subscriptionLocalService.deleteSubscriptions(
 			page.getCompanyId(), WikiPage.class.getName(),
 			page.getResourcePrimKey());
+
+		SocialActivityHierarchyEntryThreadLocal.pop();
 
 		// Asset
 

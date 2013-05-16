@@ -37,6 +37,7 @@ import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.model.BookmarksFolderConstants;
 import com.liferay.portlet.bookmarks.service.base.BookmarksFolderLocalServiceBaseImpl;
 import com.liferay.portlet.social.model.SocialActivityConstants;
+import com.liferay.portlet.social.util.SocialActivityHierarchyEntryThreadLocal;
 import com.liferay.portlet.trash.model.TrashEntry;
 
 import java.util.ArrayList;
@@ -111,6 +112,9 @@ public class BookmarksFolderLocalServiceImpl
 			BookmarksFolder folder, boolean includeTrashedEntries)
 		throws PortalException, SystemException {
 
+		SocialActivityHierarchyEntryThreadLocal.push(
+			BookmarksFolder.class, folder.getFolderId());
+
 		// Folders
 
 		List<BookmarksFolder> folders = bookmarksFolderPersistence.findByG_P_S(
@@ -136,6 +140,8 @@ public class BookmarksFolderLocalServiceImpl
 
 		bookmarksEntryLocalService.deleteEntries(
 			folder.getGroupId(), folder.getFolderId(), includeTrashedEntries);
+
+		SocialActivityHierarchyEntryThreadLocal.pop();
 
 		// Asset
 

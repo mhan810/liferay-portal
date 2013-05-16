@@ -41,6 +41,7 @@ import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.service.base.JournalFolderLocalServiceBaseImpl;
 import com.liferay.portlet.social.model.SocialActivityConstants;
+import com.liferay.portlet.social.util.SocialActivityHierarchyEntryThreadLocal;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.util.TrashUtil;
 
@@ -114,6 +115,9 @@ public class JournalFolderLocalServiceImpl
 			JournalFolder folder, boolean includeTrashedEntries)
 		throws PortalException, SystemException {
 
+		SocialActivityHierarchyEntryThreadLocal.push(
+			JournalFolder.class, folder.getFolderId());
+
 		// Folders
 
 		List<JournalFolder> folders = journalFolderPersistence.findByG_P(
@@ -138,6 +142,8 @@ public class JournalFolderLocalServiceImpl
 
 		journalArticleLocalService.deleteArticles(
 			folder.getGroupId(), folder.getFolderId(), includeTrashedEntries);
+
+		SocialActivityHierarchyEntryThreadLocal.pop();
 
 		// Asset
 

@@ -51,6 +51,7 @@ import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.model.impl.DLFolderImpl;
 import com.liferay.portlet.documentlibrary.service.base.DLFolderLocalServiceBaseImpl;
 import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
+import com.liferay.portlet.social.util.SocialActivityHierarchyEntryThreadLocal;
 
 import java.io.Serializable;
 
@@ -204,6 +205,9 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 			DLFolder dlFolder, boolean includeTrashedEntries)
 		throws PortalException, SystemException {
 
+		SocialActivityHierarchyEntryThreadLocal.push(
+			DLFolder.class, dlFolder.getFolderId());
+
 		// Folders
 
 		List<DLFolder> dlFolders = dlFolderPersistence.findByG_P(
@@ -243,6 +247,8 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 		dlFileShortcutLocalService.deleteFileShortcuts(
 			dlFolder.getGroupId(), dlFolder.getFolderId(),
 			includeTrashedEntries);
+
+		SocialActivityHierarchyEntryThreadLocal.pop();
 
 		// Expando
 
