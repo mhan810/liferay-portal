@@ -46,7 +46,7 @@ public class EmailAddressStagedModelDataHandler
 		portletDataContext.addClassedModel(
 			emailAddressElement,
 			ExportImportPathUtil.getModelPath(emailAddress), emailAddress,
-			NAMESPACE);
+			UsersAdminPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class EmailAddressStagedModelDataHandler
 		long userId = portletDataContext.getUserId(emailAddress.getUserUuid());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			emailAddress, NAMESPACE);
+			emailAddress, UsersAdminPortletDataHandler.NAMESPACE);
 
 		EmailAddress existingEmailAddress =
 			EmailAddressLocalServiceUtil.fetchEmailAddressByUuidAndCompanyId(
@@ -82,9 +82,8 @@ public class EmailAddressStagedModelDataHandler
 		}
 
 		portletDataContext.importClassedModel(
-			emailAddress, importedEmailAddress, NAMESPACE);
+			emailAddress, importedEmailAddress,
+			UsersAdminPortletDataHandler.NAMESPACE);
 	}
-
-	private static final String NAMESPACE = "email_address";
 
 }
