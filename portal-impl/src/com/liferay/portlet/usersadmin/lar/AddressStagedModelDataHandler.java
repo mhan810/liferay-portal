@@ -73,7 +73,8 @@ public class AddressStagedModelDataHandler
 				address.getStreet1(), address.getStreet2(),
 				address.getStreet3(), address.getCity(), address.getZip(),
 				address.getRegionId(), address.getCountryId(),
-				address.getTypeId(), address.getMailing(), address.isPrimary());
+				address.getTypeId(), address.getMailing(), address.isPrimary(),
+				serviceContext);
 		}
 		else {
 			importedAddress = AddressLocalServiceUtil.updateAddress(

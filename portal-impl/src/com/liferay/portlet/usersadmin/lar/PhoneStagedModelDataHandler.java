@@ -70,7 +70,7 @@ public class PhoneStagedModelDataHandler
 			importedPhone = PhoneLocalServiceUtil.addPhone(
 				userId, phone.getClassName(), phone.getClassPK(),
 				phone.getNumber(), phone.getExtension(), phone.getTypeId(),
-				phone.isPrimary());
+				phone.isPrimary(), serviceContext);
 		}
 		else {
 			importedPhone = PhoneLocalServiceUtil.updatePhone(

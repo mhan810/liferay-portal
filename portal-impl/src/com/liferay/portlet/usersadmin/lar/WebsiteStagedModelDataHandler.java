@@ -69,7 +69,8 @@ public class WebsiteStagedModelDataHandler
 
 			importedWebsite = WebsiteLocalServiceUtil.addWebsite(
 				userId, website.getClassName(), website.getClassPK(),
-				website.getUrl(), website.getTypeId(), website.isPrimary());
+				website.getUrl(), website.getTypeId(), website.isPrimary(),
+				serviceContext);
 		}
 		else {
 			importedWebsite = WebsiteLocalServiceUtil.updateWebsite(

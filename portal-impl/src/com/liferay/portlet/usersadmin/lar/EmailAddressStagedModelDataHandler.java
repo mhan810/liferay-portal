@@ -71,7 +71,7 @@ public class EmailAddressStagedModelDataHandler
 			importedEmailAddress = EmailAddressLocalServiceUtil.addEmailAddress(
 				userId, emailAddress.getClassName(), emailAddress.getClassPK(),
 				emailAddress.getAddress(), emailAddress.getTypeId(),
-				emailAddress.isPrimary());
+				emailAddress.isPrimary(), serviceContext);
 		}
 		else {
 			importedEmailAddress =
