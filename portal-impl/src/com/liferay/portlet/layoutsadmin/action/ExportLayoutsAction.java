@@ -19,32 +19,28 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.lar.ExportImportUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.ContentTypes;
-import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.lar.executor.LayoutExportBackgroundTaskExecutor;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
-import com.liferay.portal.struts.ActionConstants;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.backgroundtask.service.BackgroundTaskLocalServiceUtil;
 import com.liferay.portlet.sites.action.ActionUtil;
-
-import java.io.File;
-import java.io.FileInputStream;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,9 +52,6 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -75,8 +68,6 @@ public class ExportLayoutsAction extends PortletAction {
 			ActionMapping mapping, ActionForm form, PortletConfig portletConfig,
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
-
-		File file = null;
 
 		try {
 			ThemeDisplay themeDisplay =
@@ -163,20 +154,14 @@ public class ExportLayoutsAction extends PortletAction {
 				endDate = now;
 			}
 
-			file = LayoutServiceUtil.exportLayoutsAsFile(
+			String data = ExportImportUtil.getExportLayoutsTaskData(
 				groupId, privateLayout, layoutIds,
 				actionRequest.getParameterMap(), startDate, endDate);
 
-			HttpServletRequest request = PortalUtil.getHttpServletRequest(
-				actionRequest);
-			HttpServletResponse response = PortalUtil.getHttpServletResponse(
-				actionResponse);
-
-			ServletResponseUtil.sendFile(
-				request, response, fileName, new FileInputStream(file),
-				ContentTypes.APPLICATION_ZIP);
-
-			setForward(actionRequest, ActionConstants.COMMON_NULL);
+			BackgroundTaskLocalServiceUtil.addBackgroundTask(
+				themeDisplay.getUserId(), groupId,
+				LayoutExportBackgroundTaskExecutor.class, fileName, data,
+				new ServiceContext());
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -187,9 +172,6 @@ public class ExportLayoutsAction extends PortletAction {
 				actionRequest, "pagesRedirect");
 
 			sendRedirect(actionRequest, actionResponse, pagesRedirect);
-		}
-		finally {
-			FileUtil.delete(file);
 		}
 	}
 

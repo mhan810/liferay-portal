@@ -44,13 +44,16 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Tuple;
+import com.liferay.portal.lar.executor.LayoutImportBackgroundTaskExecutor;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ResourceActionsUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.backgroundtask.service.BackgroundTaskLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.DuplicateFileException;
 import com.liferay.portlet.documentlibrary.FileExtensionException;
 import com.liferay.portlet.documentlibrary.FileNameException;
@@ -504,9 +507,16 @@ public class ImportLayoutsAction extends EditFileEntryAction {
 				FileUtil.copyFile(file, newFile);
 			}
 
-			LayoutServiceUtil.importLayouts(
-				groupId, privateLayout, actionRequest.getParameterMap(),
-				newFile);
+			String data =
+				com.liferay.portal.kernel.lar.ExportImportUtil.
+					getImportLayoutsTaskData(
+						groupId, privateLayout, actionRequest.getParameterMap(),
+						newFile);
+
+			BackgroundTaskLocalServiceUtil.addBackgroundTask(
+				themeDisplay.getUserId(), groupId,
+				LayoutImportBackgroundTaskExecutor.class, file.getName(), data,
+				new ServiceContext());
 
 			deleteTempFileEntry(groupId);
 
