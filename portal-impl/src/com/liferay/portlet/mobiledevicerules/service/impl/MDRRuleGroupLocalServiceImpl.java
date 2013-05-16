@@ -17,6 +17,7 @@ package com.liferay.portlet.mobiledevicerules.service.impl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
@@ -137,6 +138,9 @@ public class MDRRuleGroupLocalServiceImpl
 	public void deleteRuleGroup(MDRRuleGroup ruleGroup)
 		throws PortalException, SystemException {
 
+		SystemEventHierarchyEntryThreadLocal.push(
+			MDRRuleGroup.class, ruleGroup.getRuleGroupId());
+
 		// Rule group
 
 		mdrRuleGroupPersistence.remove(ruleGroup);
@@ -156,6 +160,8 @@ public class MDRRuleGroupLocalServiceImpl
 			ruleGroup.getGroupId(), SystemEventConstants.TYPE_DELETE,
 			MDRRuleGroup.class.getName(), ruleGroup.getRuleGroupId(),
 			ruleGroup.getUuid());
+
+		SystemEventHierarchyEntryThreadLocal.pop();
 	}
 
 	@Override

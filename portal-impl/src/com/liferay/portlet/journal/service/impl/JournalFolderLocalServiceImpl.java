@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
@@ -113,6 +114,9 @@ public class JournalFolderLocalServiceImpl
 			JournalFolder folder, boolean includeTrashedEntries)
 		throws PortalException, SystemException {
 
+		SystemEventHierarchyEntryThreadLocal.push(
+			JournalFolder.class, folder.getFolderId());
+
 		// Folders
 
 		List<JournalFolder> folders = journalFolderPersistence.findByG_P(
@@ -152,6 +156,8 @@ public class JournalFolderLocalServiceImpl
 
 		trashEntryLocalService.deleteEntry(
 			JournalFolder.class.getName(), folder.getFolderId());
+
+		SystemEventHierarchyEntryThreadLocal.pop();
 
 		return folder;
 	}
