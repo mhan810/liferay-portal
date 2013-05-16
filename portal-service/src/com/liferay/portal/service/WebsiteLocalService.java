@@ -229,6 +229,13 @@ public interface WebsiteLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	public com.liferay.portal.model.Website addWebsite(long userId,
+		java.lang.String className, long classPK, java.lang.String url,
+		int typeId, boolean primary,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	public void deleteWebsites(long companyId, java.lang.String className,
 		long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException;

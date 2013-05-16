@@ -263,6 +263,17 @@ public class EmailAddressLocalServiceUtil {
 			typeId, primary);
 	}
 
+	public static com.liferay.portal.model.EmailAddress addEmailAddress(
+		long userId, java.lang.String className, long classPK,
+		java.lang.String address, int typeId, boolean primary,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .addEmailAddress(userId, className, classPK, address,
+			typeId, primary, serviceContext);
+	}
+
 	public static void deleteEmailAddresses(long companyId,
 		java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException {
