@@ -2733,11 +2733,17 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="backgroundTaskContext" type="String" />
-		<field name="taskExecutorClassName" type="String" />
+		<field name="backgroundTaskContext" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="taskExecutorClassName" type="String">
+			<hint name="max-length">200</hint>
+		</field>
 		<field name="completionDate" type="Date" />
 		<field name="name" type="String" />
-		<field name="servletContextName" type="String" />
+		<field name="servletContextName" type="String">
+			<hint name="max-length">255</hint>
+		</field>
 		<field name="status" type="int" />
 	</model>
 </model-hints>
