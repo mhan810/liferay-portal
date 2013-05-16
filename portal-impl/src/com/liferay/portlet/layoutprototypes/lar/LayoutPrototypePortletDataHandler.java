@@ -15,15 +15,13 @@
 package com.liferay.portlet.layoutprototypes.lar;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
-import com.liferay.portal.service.persistence.LayoutPrototypeActionableDynamicQuery;
+import com.liferay.portal.service.persistence.LayoutPrototypeExportActionableDynamicQuery;
 
 import java.util.List;
 
@@ -35,6 +33,12 @@ import javax.portlet.PortletPreferences;
 public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 
 	public static final String NAMESPACE = "layout_prototypes";
+
+	public LayoutPrototypePortletDataHandler() {
+		super();
+
+		setDataPortalLevel(true);
+	}
 
 	@Override
 	protected PortletPreferences doDeleteData(
@@ -61,8 +65,7 @@ public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.addPermissions(
-			"com.liferay.portlet.layoutprototypes",
-			portletDataContext.getScopeGroupId());
+			_RESOURCE_NAME, portletDataContext.getScopeGroupId());
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
@@ -70,24 +73,7 @@ public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
 		ActionableDynamicQuery actionableDynamicQuery =
-			new LayoutPrototypeActionableDynamicQuery() {
-
-			@Override
-			protected void addCriteria(DynamicQuery dynamicQuery) {
-				portletDataContext.addDateRangeCriteria(
-					dynamicQuery, "modifiedDate");
-			}
-
-			@Override
-			protected void performAction(Object object) throws PortalException {
-				LayoutPrototype layoutPrototype = (LayoutPrototype)object;
-
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, layoutPrototype);
-			}
-		};
-
-		actionableDynamicQuery.setGroupId(portletDataContext.getScopeGroupId());
+			new LayoutPrototypeExportActionableDynamicQuery(portletDataContext);
 
 		actionableDynamicQuery.performActions();
 
@@ -101,8 +87,7 @@ public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.importPermissions(
-			"com.liferay.portlet.layoutprototypes",
-			portletDataContext.getSourceGroupId(),
+			_RESOURCE_NAME, portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
 		Element layoutPrototypesElement =
@@ -118,5 +103,8 @@ public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 
 		return null;
 	}
+
+	private static final String _RESOURCE_NAME =
+		"com.liferay.portlet.layoutprototypes";
 
 }
