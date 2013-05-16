@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.increment.BufferedIncrement;
 import com.liferay.portal.kernel.increment.NumberIncrement;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -133,8 +134,8 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 	public void deleteThread(MBThread thread)
 		throws PortalException, SystemException {
 
-		MBMessage rootMessage = mbMessagePersistence.findByPrimaryKey(
-			thread.getRootMessageId());
+		SystemEventHierarchyEntryThreadLocal.push(
+			MBThread.class, thread.getThreadId());
 
 		// Indexer
 
@@ -206,6 +207,9 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 		// Category
 
+		MBMessage rootMessage = mbMessagePersistence.findByPrimaryKey(
+			thread.getRootMessageId());
+
 		if ((rootMessage.getCategoryId() !=
 				MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) &&
 			(rootMessage.getCategoryId() !=
@@ -238,6 +242,8 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 		// Thread
 
 		mbThreadPersistence.remove(thread);
+
+		SystemEventHierarchyEntryThreadLocal.pop();
 	}
 
 	@Override
