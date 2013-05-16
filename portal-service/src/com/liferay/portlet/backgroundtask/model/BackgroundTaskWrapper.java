@@ -469,7 +469,8 @@ public class BackgroundTaskWrapper implements BackgroundTask,
 		return new BackgroundTaskWrapper((BackgroundTask)_backgroundTask.clone());
 	}
 
-	public int compareTo(BackgroundTask backgroundTask) {
+	public int compareTo(
+		com.liferay.portlet.backgroundtask.model.BackgroundTask backgroundTask) {
 		return _backgroundTask.compareTo(backgroundTask);
 	}
 
@@ -478,15 +479,15 @@ public class BackgroundTaskWrapper implements BackgroundTask,
 		return _backgroundTask.hashCode();
 	}
 
-	public com.liferay.portal.model.CacheModel<BackgroundTask> toCacheModel() {
+	public com.liferay.portal.model.CacheModel<com.liferay.portlet.backgroundtask.model.BackgroundTask> toCacheModel() {
 		return _backgroundTask.toCacheModel();
 	}
 
-	public BackgroundTask toEscapedModel() {
+	public com.liferay.portlet.backgroundtask.model.BackgroundTask toEscapedModel() {
 		return new BackgroundTaskWrapper(_backgroundTask.toEscapedModel());
 	}
 
-	public BackgroundTask toUnescapedModel() {
+	public com.liferay.portlet.backgroundtask.model.BackgroundTask toUnescapedModel() {
 		return new BackgroundTaskWrapper(_backgroundTask.toUnescapedModel());
 	}
 

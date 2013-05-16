@@ -67,14 +67,14 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 			{ "userName", Types.VARCHAR },
 			{ "createDate", Types.TIMESTAMP },
 			{ "modifiedDate", Types.TIMESTAMP },
-			{ "backgroundTaskContext", Types.VARCHAR },
+			{ "backgroundTaskContext", Types.CLOB },
 			{ "taskExecutorClassName", Types.VARCHAR },
 			{ "completionDate", Types.TIMESTAMP },
 			{ "name", Types.VARCHAR },
 			{ "servletContextName", Types.VARCHAR },
 			{ "status", Types.INTEGER }
 		};
-	public static final String TABLE_SQL_CREATE = "create table BackgroundTask (backgroundTaskId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,backgroundTaskContext VARCHAR(75) null,taskExecutorClassName VARCHAR(75) null,completionDate DATE null,name VARCHAR(75) null,servletContextName VARCHAR(75) null,status INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table BackgroundTask (backgroundTaskId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,backgroundTaskContext TEXT null,taskExecutorClassName VARCHAR(200) null,completionDate DATE null,name VARCHAR(75) null,servletContextName VARCHAR(255) null,status INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table BackgroundTask";
 	public static final String ORDER_BY_JPQL = " ORDER BY backgroundTask.backgroundTaskId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY BackgroundTask.backgroundTaskId ASC";

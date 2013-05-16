@@ -214,11 +214,11 @@ create table BackgroundTask (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	backgroundTaskContext VARCHAR(75) null,
-	taskExecutorClassName VARCHAR(75) null,
+	backgroundTaskContext TEXT null,
+	taskExecutorClassName VARCHAR(200) null,
 	completionDate DATE null,
 	name VARCHAR(75) null,
-	servletContextName VARCHAR(75) null,
+	servletContextName VARCHAR(255) null,
 	status INTEGER
 );
 
