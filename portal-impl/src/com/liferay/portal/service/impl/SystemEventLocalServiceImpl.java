@@ -94,6 +94,10 @@ public class SystemEventLocalServiceImpl
 			groupId = 0;
 		}
 
+		if (referrerClassNameId == classNameId) {
+			referrerClassNameId = 0;
+		}
+
 		long systemEventId = 0;
 
 		if ((systemEventHierarchyEntry != null) &&
