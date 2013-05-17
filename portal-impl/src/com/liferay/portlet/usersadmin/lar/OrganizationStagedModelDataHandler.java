@@ -315,8 +315,8 @@ public class OrganizationStagedModelDataHandler
 
 			String path = addressElement.attributeValue("path");
 
-			Address address =
-				(Address)portletDataContext.getZipEntryAsObject(path);
+			Address address = (Address)portletDataContext.getZipEntryAsObject(
+				path);
 
 			address.setClassPK(importedOrganization.getOrganizationId());
 
