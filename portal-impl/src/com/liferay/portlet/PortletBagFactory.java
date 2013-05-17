@@ -51,6 +51,7 @@ import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ProxyFactory;
+import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -66,6 +67,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xmlrpc.Method;
 import com.liferay.portal.language.LanguageResources;
 import com.liferay.portal.language.LiferayResourceBundle;
+import com.liferay.portal.lar.PortletDataHandlerInvocationHandler;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletApp;
 import com.liferay.portal.poller.PollerProcessorUtil;
@@ -827,8 +829,15 @@ public class PortletBagFactory {
 			return null;
 		}
 
-		return (PortletDataHandler)newInstance(
+		PortletDataHandler portletDataHandler = (PortletDataHandler)newInstance(
 			PortletDataHandler.class, portlet.getPortletDataHandlerClass());
+
+		PortletDataHandler proxiedPortletDataHandler =
+			(PortletDataHandler)ProxyUtil.newProxyInstance(
+				_classLoader, new Class[] {PortletDataHandler.class},
+				new PortletDataHandlerInvocationHandler(portletDataHandler));
+
+		return proxiedPortletDataHandler;
 	}
 
 	protected PortletLayoutListener newPortletLayoutListener(Portlet portlet)
