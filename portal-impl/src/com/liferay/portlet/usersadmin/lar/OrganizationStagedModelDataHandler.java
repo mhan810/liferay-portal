@@ -175,8 +175,9 @@ public class OrganizationStagedModelDataHandler
 		importAddresses(portletDataContext, importedOrganization, organization);
 		importEmailAddresses(
 			portletDataContext, importedOrganization, organization);
-		importOrgLabors(portletDataContext, importedOrganization);
-		importPasswordPolicyRel(portletDataContext, importedOrganization);
+		importOrgLabors(portletDataContext, importedOrganization, organization);
+		importPasswordPolicyRel(
+			portletDataContext, importedOrganization, organization);
 		importPhones(portletDataContext, importedOrganization, organization);
 		importWebsites(portletDataContext, importedOrganization, organization);
 
@@ -240,7 +241,7 @@ public class OrganizationStagedModelDataHandler
 	}
 
 	protected void exportPasswordPolicyRel(
-			Element element, PortletDataContext portletDataContext,
+			Element organizationElement, PortletDataContext portletDataContext,
 			Organization organization)
 		throws PortalException, SystemException {
 
@@ -251,7 +252,7 @@ public class OrganizationStagedModelDataHandler
 		}
 
 		portletDataContext.addReferenceElement(
-			organization, element, passwordPolicy,
+			organization, organizationElement, passwordPolicy,
 			PortletDataContext.REFERENCE_TYPE_STRONG, false);
 
 		StagedModelDataHandlerUtil.exportStagedModel(
@@ -314,30 +315,28 @@ public class OrganizationStagedModelDataHandler
 
 			String path = addressElement.attributeValue("path");
 
-			Address importedAddress =
+			Address address =
 				(Address)portletDataContext.getZipEntryAsObject(path);
 
-			importedAddress.setClassPK(
-				importedOrganization.getOrganizationId());
+			address.setClassPK(importedOrganization.getOrganizationId());
 
 			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, importedAddress);
+				portletDataContext, address);
 
 			Map<Long, Long> newPrimaryKeysMap =
 				(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
 					Address.class);
 
-			long emailAddressId = newPrimaryKeysMap.get(
-				importedAddress.getPrimaryKey());
+			long addressId = newPrimaryKeysMap.get(address.getPrimaryKey());
 
-			importedAddress.setPrimaryKey(emailAddressId);
+			address.setPrimaryKey(addressId);
 
-			addresses.add(importedAddress);
+			addresses.add(address);
 		}
 
 		UsersAdminUtil.updateAddresses(
-			Organization.class.getName(), organization.getOrganizationId(),
-			addresses);
+			Organization.class.getName(),
+			importedOrganization.getOrganizationId(), addresses);
 	}
 
 	protected void importEmailAddresses(
@@ -356,34 +355,34 @@ public class OrganizationStagedModelDataHandler
 
 			String path = emailAddressElement.attributeValue("path");
 
-			EmailAddress importedEmailAddress =
+			EmailAddress emailAddress =
 				(EmailAddress)portletDataContext.getZipEntryAsObject(path);
 
-			importedEmailAddress.setClassPK(
-				importedOrganization.getOrganizationId());
+			emailAddress.setClassPK(importedOrganization.getOrganizationId());
 
 			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, importedEmailAddress);
+				portletDataContext, emailAddress);
 
 			Map<Long, Long> newPrimaryKeysMap =
 				(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
 					EmailAddress.class);
 
 			long emailAddressId = newPrimaryKeysMap.get(
-				importedEmailAddress.getPrimaryKey());
+				emailAddress.getPrimaryKey());
 
-			importedEmailAddress.setPrimaryKey(emailAddressId);
+			emailAddress.setPrimaryKey(emailAddressId);
 
-			emailAddresses.add(importedEmailAddress);
+			emailAddresses.add(emailAddress);
 		}
 
 		UsersAdminUtil.updateEmailAddresses(
-			Organization.class.getName(), organization.getOrganizationId(),
-			emailAddresses);
+			Organization.class.getName(),
+			importedOrganization.getOrganizationId(), emailAddresses);
 	}
 
 	protected void importOrgLabors(
-			PortletDataContext portletDataContext, Organization organization)
+			PortletDataContext portletDataContext,
+			Organization importedOrganization, Organization organization)
 		throws PortalException, SystemException {
 
 		String path = ExportImportPathUtil.getModelPath(
@@ -397,36 +396,41 @@ public class OrganizationStagedModelDataHandler
 		}
 
 		UsersAdminUtil.updateOrgLabors(
-			organization.getOrganizationId(), orgLabors);
+			importedOrganization.getOrganizationId(), orgLabors);
 	}
 
 	protected void importPasswordPolicyRel(
-			PortletDataContext portletDataContext, Organization organization)
+			PortletDataContext portletDataContext,
+			Organization importedOrganization, Organization organization)
 		throws PortalException, SystemException {
 
 		List<Element> passwordPolicyElements =
 			portletDataContext.getReferenceDataElements(
 				organization, PasswordPolicy.class);
 
-		Element passwordPolicyElement = passwordPolicyElements.get(0);
+		if (!passwordPolicyElements.isEmpty()) {
 
-		String path = passwordPolicyElement.attributeValue("path");
+			Element passwordPolicyElement = passwordPolicyElements.get(0);
 
-		PasswordPolicy importedPasswordPolicy =
-			(PasswordPolicy)portletDataContext.getZipEntryAsObject(path);
+			String path = passwordPolicyElement.attributeValue("path");
 
-		StagedModelDataHandlerUtil.importStagedModel(
-			portletDataContext, importedPasswordPolicy);
+			PasswordPolicy passwordPolicy =
+				(PasswordPolicy)portletDataContext.getZipEntryAsObject(path);
 
-		Map<Long, Long> newPrimaryKeysMap =
-			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
-				PasswordPolicy.class);
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, passwordPolicy);
 
-		long passwordPolicyId = newPrimaryKeysMap.get(
-			importedPasswordPolicy.getPrimaryKey());
+			Map<Long, Long> newPrimaryKeysMap =
+				(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
+					PasswordPolicy.class);
 
-		OrganizationLocalServiceUtil.addPasswordPolicyOrganizations(
-			passwordPolicyId, new long[] { organization.getOrganizationId() });
+			long passwordPolicyId = newPrimaryKeysMap.get(
+				passwordPolicy.getPrimaryKey());
+
+			OrganizationLocalServiceUtil.addPasswordPolicyOrganizations(
+				passwordPolicyId,
+				new long[] { importedOrganization.getOrganizationId() });
+		}
 	}
 
 	protected void importPhones(
@@ -444,28 +448,27 @@ public class OrganizationStagedModelDataHandler
 
 			String path = phoneElement.attributeValue("path");
 
-			Phone importedPhone = (Phone)portletDataContext.getZipEntryAsObject(
-				path);
+			Phone phone = (Phone)portletDataContext.getZipEntryAsObject(path);
 
-			importedPhone.setClassPK(importedOrganization.getOrganizationId());
+			phone.setClassPK(importedOrganization.getOrganizationId());
 
 			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, importedPhone);
+				portletDataContext, phone);
 
 			Map<Long, Long> newPrimaryKeysMap =
 				(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
 					Phone.class);
 
-			long phoneId = newPrimaryKeysMap.get(importedPhone.getPrimaryKey());
+			long phoneId = newPrimaryKeysMap.get(phone.getPrimaryKey());
 
-			importedPhone.setPrimaryKey(phoneId);
+			phone.setPrimaryKey(phoneId);
 
-			phones.add(importedPhone);
+			phones.add(phone);
 		}
 
 		UsersAdminUtil.updatePhones(
-			Organization.class.getName(), organization.getOrganizationId(),
-			phones);
+			Organization.class.getName(),
+			importedOrganization.getOrganizationId(), phones);
 	}
 
 	protected void importWebsites(
@@ -483,30 +486,28 @@ public class OrganizationStagedModelDataHandler
 
 			String path = websiteElement.attributeValue("path");
 
-			Website importedWebsite =
-				(Website)portletDataContext.getZipEntryAsObject(path);
+			Website website = (Website)portletDataContext.getZipEntryAsObject(
+				path);
 
-			importedWebsite.setClassPK(
-				importedOrganization.getOrganizationId());
+			website.setClassPK(importedOrganization.getOrganizationId());
 
 			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, importedWebsite);
+				portletDataContext, website);
 
 			Map<Long, Long> newPrimaryKeysMap =
 				(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
 					Website.class);
 
-			long websiteId = newPrimaryKeysMap.get(
-				importedWebsite.getPrimaryKey());
+			long websiteId = newPrimaryKeysMap.get(website.getPrimaryKey());
 
-			importedWebsite.setPrimaryKey(websiteId);
+			website.setPrimaryKey(websiteId);
 
-			websites.add(importedWebsite);
+			websites.add(website);
 		}
 
 		UsersAdminUtil.updateWebsites(
-			Organization.class.getName(), organization.getOrganizationId(),
-			websites);
+			Organization.class.getName(),
+			importedOrganization.getOrganizationId(), websites);
 	}
 
 }
