@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSender;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSenderFactoryUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
@@ -75,8 +77,20 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			return portletPreferences;
 		}
 
+		ExportImportMessageSender exportImportMessageSender =
+			ExportImportMessageSenderFactoryUtil.getExportImportMessageSender(
+				BookmarksPortletDataHandler.class);
+
+		exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_DELETE,
+			BookmarksFolder.class);
+
 		BookmarksFolderLocalServiceUtil.deleteFolders(
 			portletDataContext.getScopeGroupId());
+
+		exportImportMessageSender.send(
+			ExportImportMessageSender.MESSAGE_ACTION_DELETE,
+			BookmarksEntry.class);
 
 		BookmarksEntryLocalServiceUtil.deleteEntries(
 			portletDataContext.getScopeGroupId(),
