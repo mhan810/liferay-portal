@@ -22,34 +22,34 @@ import com.liferay.portal.LocaleException;
 import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.PortletIdException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.lar.ExportImportUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.upload.UploadException;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.Constants;
-import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.lar.executor.PortletExportBackgroundTaskExecutor;
+import com.liferay.portal.lar.executor.PortletImportBackgroundTaskExecutor;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.service.LayoutServiceUtil;
-import com.liferay.portal.struts.ActionConstants;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portlet.backgroundtask.service.BackgroundTaskLocalServiceUtil;
 import com.liferay.portlet.dynamicdatalists.RecordSetDuplicateRecordSetKeyException;
 import com.liferay.portlet.dynamicdatamapping.StructureDuplicateStructureKeyException;
 
 import java.io.File;
-import java.io.FileInputStream;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -61,9 +61,6 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -181,8 +178,6 @@ public class ExportImportAction extends EditConfigurationAction {
 			Portlet portlet)
 		throws Exception {
 
-		File file = null;
-
 		try {
 			ThemeDisplay themeDisplay =
 				(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
@@ -259,20 +254,14 @@ public class ExportImportAction extends EditConfigurationAction {
 				}
 			}
 
-			file = LayoutServiceUtil.exportPortletInfoAsFile(
+			String data = ExportImportUtil.getExportPortletTaskData(
 				plid, groupId, portlet.getPortletId(),
 				actionRequest.getParameterMap(), startDate, endDate);
 
-			HttpServletRequest request = PortalUtil.getHttpServletRequest(
-				actionRequest);
-			HttpServletResponse response = PortalUtil.getHttpServletResponse(
-				actionResponse);
-
-			ServletResponseUtil.sendFile(
-				request, response, fileName, new FileInputStream(file),
-				ContentTypes.APPLICATION_ZIP);
-
-			setForward(actionRequest, ActionConstants.COMMON_NULL);
+			BackgroundTaskLocalServiceUtil.addBackgroundTask(
+				themeDisplay.getUserId(), groupId,
+				PortletExportBackgroundTaskExecutor.class, fileName, data,
+				new ServiceContext());
 		}
 		catch (Exception e) {
 			if (_log.isDebugEnabled()) {
@@ -280,9 +269,6 @@ public class ExportImportAction extends EditConfigurationAction {
 			}
 
 			SessionErrors.add(actionRequest, e.getClass(), e);
-		}
-		finally {
-			FileUtil.delete(file);
 		}
 	}
 
@@ -303,9 +289,21 @@ public class ExportImportAction extends EditConfigurationAction {
 				throw new LARFileException("Import file does not exist");
 			}
 
-			LayoutServiceUtil.importPortletInfo(
+			File tempFile = FileUtil.createTempFile("lar");
+
+			FileUtil.copyFile(file, tempFile);
+
+			String data = ExportImportUtil.getImportPortletTaskData(
 				plid, groupId, portlet.getPortletId(),
-				actionRequest.getParameterMap(), file);
+				actionRequest.getParameterMap(), tempFile);
+
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+
+			BackgroundTaskLocalServiceUtil.addBackgroundTask(
+				themeDisplay.getUserId(), groupId,
+				PortletImportBackgroundTaskExecutor.class, file.getName(), data,
+				new ServiceContext());
 
 			addSuccessMessage(actionRequest, actionResponse);
 		}

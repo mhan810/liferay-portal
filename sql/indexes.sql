@@ -80,6 +80,9 @@ create index IX_55F58818 on AssetVocabulary (uuid_);
 create index IX_C4E6FD10 on AssetVocabulary (uuid_, companyId);
 create unique index IX_1B2B8792 on AssetVocabulary (uuid_, groupId);
 
+create index IX_2CAC44A2 on BackgroundTask (groupId, className);
+create index IX_49B4C188 on BackgroundTask (groupId, className, status);
+
 create index IX_72EF6041 on BlogsEntry (companyId);
 create index IX_430D791F on BlogsEntry (companyId, displayDate);
 create index IX_BB0C2905 on BlogsEntry (companyId, displayDate, status);

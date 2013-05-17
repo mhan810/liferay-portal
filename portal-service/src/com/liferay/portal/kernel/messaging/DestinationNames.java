@@ -23,6 +23,9 @@ public interface DestinationNames {
 
 	public static final String AUDIT = "liferay/audit";
 
+	public static final String BACKGROUND_TASK_EXECUTOR =
+		"liferay/background_task";
+
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #SUBSCRIPTION_SENDER}
 	 */

@@ -2125,6 +2125,12 @@
 		<header-portlet-css>/html/portlet/directory/css/main.css</header-portlet-css>
 		<css-class-wrapper>portlet-directory</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>189</portlet-name>
+		<icon>/html/icons/default.png</icon>
+		<private-request-attributes>false</private-request-attributes>
+		<private-session-attributes>false</private-session-attributes>
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
