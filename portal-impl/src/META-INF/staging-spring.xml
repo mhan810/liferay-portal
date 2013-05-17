@@ -41,4 +41,20 @@
 			<bean class="com.liferay.portal.lar.messaging.ExportImportMessageSenderFactoryImpl" />
 		</property>
 	</bean>
+	<bean id="com.liferay.portal.lar.PortletDataHandlerMessageAdvice" class="com.liferay.portal.lar.PortletDataHandlerMessageAdvice" />
+	<bean id="com.liferay.portal.lar.StagedModelDataHandlerMessageAdvice" class="com.liferay.portal.lar.StagedModelDataHandlerMessageAdvice" />
+	<bean id="com.liferay.portal.lar.PortletDataHandlerInvocationHandler" class="com.liferay.portal.lar.PortletDataHandlerInvocationHandler">
+		<property name="adviceNames">
+			<array>
+				<value>com.liferay.portal.lar.PortletDataHandlerMessageAdvice</value>
+			</array>
+		</property>
+	</bean>
+	<bean id="com.liferay.portal.lar.StagedModelDataHanderInvocationHandler" class="com.liferay.portal.lar.StagedModelDataHanderInvocationHandler">
+		<property name="adviceNames">
+			<array>
+				<value>com.liferay.portal.lar.StagedModelDataHandlerMessageAdvice</value>
+			</array>
+		</property>
+	</bean>
 </beans>
