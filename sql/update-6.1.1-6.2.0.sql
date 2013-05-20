@@ -302,6 +302,8 @@ insert into Country (countryId, name, a2, a3, number_, idd_, zipRequired, active
 
 alter table DDMStructure add parentStructureId LONG;
 
+drop index IX_490E7A1E on DDMStructure;
+
 alter table DDMTemplate add cacheable BOOLEAN;
 alter table DDMTemplate add smallImage BOOLEAN;
 alter table DDMTemplate add smallImageId LONG;
