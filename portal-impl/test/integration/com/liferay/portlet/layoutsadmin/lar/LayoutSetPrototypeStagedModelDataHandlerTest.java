@@ -17,8 +17,10 @@ package com.liferay.portlet.layoutsadmin.lar;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.lar.BaseStagedModelDataHandlerTestCase;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
@@ -30,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.runner.RunWith;
+import org.testng.Assert;
 
 /**
  * @author Daniela Zapata Riesco
@@ -48,6 +51,12 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 			Group group,
 			Map<String, List<StagedModel>> dependentStagedModelsMap)
 		throws Exception {
+
+		LayoutPrototype layoutPrototype = LayoutTestUtil.addLayoutPrototype(
+			ServiceTestUtil.randomString());
+
+		addDependentStagedModel(
+			dependentStagedModelsMap, LayoutPrototype.class, layoutPrototype);
 
 		return LayoutTestUtil.addLayoutSetPrototype(
 			ServiceTestUtil.randomString());
@@ -68,6 +77,26 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 	@Override
 	protected Class<? extends StagedModel> getStagedModelClass() {
 		return LayoutSetPrototype.class;
+	}
+
+	@Override
+	protected void validateImport(
+			Map<String, List<StagedModel>> dependentStagedModelsMap,
+			Group group)
+		throws Exception {
+
+		List<StagedModel> dependentLayoutPrototypeStagedModels =
+			dependentStagedModelsMap.get(LayoutPrototype.class.getSimpleName());
+
+		Assert.assertEquals(1, dependentLayoutPrototypeStagedModels.size());
+
+		LayoutPrototype layoutPrototype =
+			(LayoutPrototype)dependentLayoutPrototypeStagedModels.get(0);
+
+		Assert.assertNotNull(
+			LayoutPrototypeLocalServiceUtil.
+				fetchLayoutPrototypeByUuidAndCompanyId(
+					layoutPrototype.getUuid(), group.getCompanyId()));
 	}
 
 }
