@@ -258,6 +258,17 @@ public class WebsiteLocalServiceUtil {
 				   .addWebsite(userId, className, classPK, url, typeId, primary);
 	}
 
+	public static com.liferay.portal.model.Website addWebsite(long userId,
+		java.lang.String className, long classPK, java.lang.String url,
+		int typeId, boolean primary,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .addWebsite(userId, className, classPK, url, typeId,
+			primary, serviceContext);
+	}
+
 	public static void deleteWebsites(long companyId,
 		java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException {

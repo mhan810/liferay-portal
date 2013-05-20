@@ -246,6 +246,16 @@ public class PhoneLocalServiceWrapper implements PhoneLocalService,
 			extension, typeId, primary);
 	}
 
+	public com.liferay.portal.model.Phone addPhone(long userId,
+		java.lang.String className, long classPK, java.lang.String number,
+		java.lang.String extension, int typeId, boolean primary,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _phoneLocalService.addPhone(userId, className, classPK, number,
+			extension, typeId, primary, serviceContext);
+	}
+
 	public void deletePhones(long companyId, java.lang.String className,
 		long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException {

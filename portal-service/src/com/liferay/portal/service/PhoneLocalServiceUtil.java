@@ -259,6 +259,17 @@ public class PhoneLocalServiceUtil {
 			typeId, primary);
 	}
 
+	public static com.liferay.portal.model.Phone addPhone(long userId,
+		java.lang.String className, long classPK, java.lang.String number,
+		java.lang.String extension, int typeId, boolean primary,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .addPhone(userId, className, classPK, number, extension,
+			typeId, primary, serviceContext);
+	}
+
 	public static void deletePhones(long companyId, java.lang.String className,
 		long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException {
