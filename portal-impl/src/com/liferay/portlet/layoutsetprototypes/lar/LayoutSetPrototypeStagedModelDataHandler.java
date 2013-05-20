@@ -149,13 +149,18 @@ public class LayoutSetPrototypeStagedModelDataHandler
 		dynamicQuery.add(
 			groupIdProperty.eq(layoutSetPrototype.getGroup().getGroupId()));
 
-		Property layoutPrototypeUuidProperty = PropertyFactoryUtil.forName(
-			"layoutPrototypeLinkEnabled");
+		Property layoutPrototypeLinkEnabledProperty =
+			PropertyFactoryUtil.forName("layoutPrototypeLinkEnabled");
 
-		dynamicQuery.add(layoutPrototypeUuidProperty.eq(true));
+		dynamicQuery.add(layoutPrototypeLinkEnabledProperty.eq(true));
 
 		List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(
 			dynamicQuery);
+
+		boolean exportLayoutPrototypes = portletDataContext.getBooleanParameter(
+			LayoutSetPrototypePortletDataHandler.NAMESPACE,
+			LayoutSetPrototypePortletDataHandler.
+				LAYOUT_PROTOTYPE_EXPORT_CONTROL);
 
 		for (Layout layout : layouts) {
 			String layoutPrototypeUuid = layout.getLayoutPrototypeUuid();
@@ -167,10 +172,13 @@ public class LayoutSetPrototypeStagedModelDataHandler
 
 			portletDataContext.addReferenceElement(
 				layout, layoutSetPrototypeElement, layoutPrototype,
-				PortletDataContext.REFERENCE_TYPE_DEPENDENCY, false);
+				PortletDataContext.REFERENCE_TYPE_DEPENDENCY,
+				exportLayoutPrototypes);
 
-			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, layoutPrototype);
+			if (exportLayoutPrototypes) {
+				StagedModelDataHandlerUtil.exportStagedModel(
+					portletDataContext, layoutPrototype);
+			}
 		}
 	}
 

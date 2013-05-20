@@ -16,7 +16,9 @@ package com.liferay.portlet.layoutsetprototypes.lar;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.LayoutSetPrototype;
@@ -33,12 +35,18 @@ import javax.portlet.PortletPreferences;
 public class LayoutSetPrototypePortletDataHandler
 	extends BasePortletDataHandler {
 
+	public static final String LAYOUT_PROTOTYPE_EXPORT_CONTROL =
+		"layout-prototypes";
+
 	public static final String NAMESPACE = "layout_set_prototypes";
 
 	public LayoutSetPrototypePortletDataHandler() {
 		super();
 
 		setDataPortalLevel(true);
+		setExportControls(
+			new PortletDataHandlerBoolean(
+				NAMESPACE, LAYOUT_PROTOTYPE_EXPORT_CONTROL, true, false));
 	}
 
 	@Override
@@ -105,6 +113,23 @@ public class LayoutSetPrototypePortletDataHandler
 		}
 
 		return null;
+	}
+
+	@Override
+	protected void doPrepareManifestSummary(
+			PortletDataContext portletDataContext)
+		throws Exception {
+
+		ManifestSummary manifestSummary =
+			portletDataContext.getManifestSummary();
+
+		ActionableDynamicQuery layoutSetPrototypeExportActionableDynamicQuery =
+			new LayoutSetPrototypeExportActionableDynamicQuery(
+				portletDataContext);
+
+		manifestSummary.addModelCount(
+			LayoutSetPrototype.class,
+			layoutSetPrototypeExportActionableDynamicQuery.performCount());
 	}
 
 	private static final String _RESOURCE_NAME =
