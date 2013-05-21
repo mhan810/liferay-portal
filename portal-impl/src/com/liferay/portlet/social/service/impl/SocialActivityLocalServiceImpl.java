@@ -29,6 +29,7 @@ import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.social.model.SocialActivityDefinition;
+import com.liferay.portlet.social.model.SocialActivitySet;
 import com.liferay.portlet.social.service.base.SocialActivityLocalServiceBaseImpl;
 import com.liferay.portlet.social.util.SocialActivityHierarchyEntry;
 import com.liferay.portlet.social.util.SocialActivityHierarchyEntryThreadLocal;
@@ -190,8 +191,6 @@ public class SocialActivityLocalServiceImpl
 			mirrorActivity.setAssetEntry(assetEntry);
 		}
 
-		socialActivitySetLocalService.addAssetActivitySet(activity);
-
 		socialActivityLocalService.addActivity(activity, mirrorActivity);
 	}
 
@@ -277,6 +276,16 @@ public class SocialActivityLocalServiceImpl
 				mirrorActivity.setMirrorActivityId(activity.getPrimaryKey());
 
 				socialActivityPersistence.update(mirrorActivity);
+			}
+
+			SocialActivitySet assetActivitySet =
+				socialActivitySetLocalService.addAssetActivitySet(activity);
+
+			if (activity.getType() == SocialActivityConstants.TYPE_DELETE) {
+				assetActivitySet.setExtraDataValue(
+					"title", activity.getExtraDataValue("title"));
+
+				socialActivitySetPersistence.update(assetActivitySet);
 			}
 
 			if (PropsValues.SOCIAL_ACTIVITY_SETS_ENABLED) {

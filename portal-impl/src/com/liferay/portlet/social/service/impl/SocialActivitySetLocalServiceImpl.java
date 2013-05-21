@@ -16,6 +16,12 @@ package com.liferay.portlet.social.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.transaction.Propagation;
+import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.lock.LockProtectedAction;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivitySet;
 import com.liferay.portlet.social.service.base.SocialActivitySetLocalServiceBaseImpl;
@@ -25,6 +31,7 @@ import java.util.List;
 
 /**
  * @author Matthew Kong
+ * @author Zsolt Berentey
  */
 public class SocialActivitySetLocalServiceImpl
 	extends SocialActivitySetLocalServiceBaseImpl {
@@ -38,6 +45,63 @@ public class SocialActivitySetLocalServiceImpl
 		SocialActivity activity = socialActivityPersistence.findByPrimaryKey(
 			activityId);
 
+		SocialActivitySet activitySet = createActivitySet(activity, false);
+
+		// Activity
+
+		activity.setActivitySetId(activitySet.getActivitySetId());
+
+		socialActivityPersistence.update(activity);
+
+		return activitySet;
+	}
+
+	@Override
+	public SocialActivitySet addAssetActivitySet(final SocialActivity activity)
+		throws PortalException, SystemException {
+
+		String lockKey = StringUtil.merge(
+			new Object[] {activity.getClassName(), activity.getClassPK(), 0},
+			StringPool.POUND);
+
+		LockProtectedAction<SocialActivitySet> protectedAction =
+			new LockProtectedAction<SocialActivitySet>(
+				SocialActivitySet.class.getName(), lockKey,
+				PropsValues.SOCIAL_ACTIVITY_LOCK_TIMEOUT,
+				PropsValues.SOCIAL_ACTIVITY_LOCK_RETRY_DELAY) {
+
+			@Override
+			protected SocialActivitySet performProtectedAction()
+				throws SystemException {
+
+				SocialActivitySet activitySet =
+					socialActivitySetPersistence.fetchByC_C(
+						activity.getClassNameId(), activity.getClassPK(),
+						false);
+
+				if (activitySet == null) {
+					activitySet =
+						socialActivitySetLocalService.createActivitySet(
+							activity, true);
+
+					socialActivitySetPersistence.cacheResult(activitySet);
+				}
+
+				return activitySet;
+			}
+		};
+
+		protectedAction.performAction();
+
+		return protectedAction.getReturnValue();
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public SocialActivitySet createActivitySet(
+			SocialActivity activity, boolean assetActivitySet)
+		throws SystemException {
+
 		long activitySetId = counterLocalService.increment();
 
 		SocialActivitySet activitySet = socialActivitySetPersistence.create(
@@ -50,42 +114,16 @@ public class SocialActivitySetLocalServiceImpl
 		activitySet.setModifiedDate(activity.getCreateDate());
 		activitySet.setClassName(activity.getClassName());
 		activitySet.setClassPK(activity.getClassPK());
-		activitySet.setType(activity.getType());
+
+		if (!assetActivitySet) {
+			activitySet.setType(activity.getType());
+		}
+
 		activitySet.setActivityCount(1);
 
 		socialActivitySetPersistence.update(activitySet);
 
-		// Activity
-
-		activity.setActivitySetId(activitySetId);
-
-		socialActivityPersistence.update(activity);
-
 		return activitySet;
-	}
-
-	@Override
-	public void addAssetActivitySet(SocialActivity activity)
-		throws SystemException {
-
-		SocialActivitySet activitySet = fetchAssetActivitySet(
-			activity.getClassNameId(), activity.getClassPK());
-
-		if (activitySet == null) {
-			long activitySetId = counterLocalService.increment();
-
-			activitySet = createSocialActivitySet(activitySetId);
-
-			activitySet.setGroupId(activity.getGroupId());
-			activitySet.setCompanyId(activity.getCompanyId());
-			activitySet.setUserId(activity.getUserId());
-			activitySet.setCreateDate(activity.getCreateDate());
-			activitySet.setModifiedDate(activity.getCreateDate());
-			activitySet.setClassName(activity.getClassName());
-			activitySet.setClassPK(activity.getClassPK());
-
-			socialActivitySetPersistence.update(activitySet);
-		}
 	}
 
 	@Override

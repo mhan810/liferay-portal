@@ -218,7 +218,7 @@ public class SocialActivityCounterLocalServiceImpl
 			Date createDate = lock.getCreateDate();
 
 			if ((System.currentTimeMillis() - createDate.getTime()) >=
-					PropsValues.SOCIAL_ACTIVITY_COUNTER_LOCK_TIMEOUT) {
+					PropsValues.SOCIAL_ACTIVITY_LOCK_TIMEOUT) {
 
 				lockLocalService.unlock(
 					SocialActivityCounter.class.getName(), lockKey,
@@ -227,13 +227,13 @@ public class SocialActivityCounterLocalServiceImpl
 				if (_log.isWarnEnabled()) {
 					_log.warn(
 						"Forcibly removed lock " + lock + ". See " +
-							PropsKeys.SOCIAL_ACTIVITY_COUNTER_LOCK_TIMEOUT);
+							PropsKeys.SOCIAL_ACTIVITY_LOCK_TIMEOUT);
 				}
 			}
 			else {
 				try {
 					Thread.sleep(
-						PropsValues.SOCIAL_ACTIVITY_COUNTER_LOCK_RETRY_DELAY);
+						PropsValues.SOCIAL_ACTIVITY_LOCK_RETRY_DELAY);
 				}
 				catch (InterruptedException ie) {
 					if (_log.isWarnEnabled()) {
