@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.lar.messaging.ExportImportMessage;
 import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSender;
 import com.liferay.portal.kernel.lar.messaging.ExportImportStatus;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender;
+import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.StagedModel;
 
 /**
@@ -34,6 +35,19 @@ public class ExportImportMessageSenderImpl
 		ExportImportMessage message =
 			ExportImportMessage.createExportImportMessage(
 				exportImportAction, exportImportStatus, stagedModel);
+
+		_singleDestinationMessageSender.send(message);
+	}
+
+	public void sendMessage(
+		ExportImportAction exportImportAction,
+		ExportImportStatus exportImportStatus, StagedModel referrerStagedModel,
+		ClassedModel classedModel, String referenceType) {
+
+		ExportImportMessage message =
+			ExportImportMessage.createExportImportMessage(
+				exportImportAction, exportImportStatus, referrerStagedModel,
+				classedModel, referenceType);
 
 		_singleDestinationMessageSender.send(message);
 	}

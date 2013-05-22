@@ -14,14 +14,70 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.kernel.lar.messaging.ExportImportAction;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSenderUtil;
+import com.liferay.portal.kernel.lar.messaging.ExportImportStatus;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.StagedModel;
 
 /**
  * @author Brian Wing Shun Chan
+ * @author Mate Thurzo
  */
 public class StagedModelDataHandlerUtil {
+
+	public static <T extends StagedModel, U extends StagedModel> Element
+		exportReferencedStagedModel(
+			PortletDataContext portletDataContext, T referrerStagedModel,
+			Class<?> referrerStagedModelClass, U stagedModel,
+			Class<?> stagedModelClass, String referenceType)
+		throws PortletDataException {
+
+		Element referrerStagedModelElement =
+			portletDataContext.getExportDataElement(
+				referrerStagedModel, referrerStagedModelClass);
+
+		return exportReferencedStagedModel(
+			portletDataContext, referrerStagedModel, referrerStagedModelElement,
+			stagedModel, stagedModelClass, referenceType);
+	}
+
+	public static <T extends StagedModel, U extends StagedModel> Element
+		exportReferencedStagedModel(
+			PortletDataContext portletDataContext, T referrerStagedModel,
+			Element referrerStagedModelElement, U stagedModel,
+			Class<?> stagedModelClass, String referenceType)
+		throws PortletDataException {
+
+		ExportImportMessageSenderUtil.sendMessage(
+			ExportImportAction.EXPORT_REFERENCE, ExportImportStatus.START,
+			referrerStagedModel, stagedModel, referenceType);
+
+		exportStagedModel(portletDataContext, stagedModel);
+
+		Element referenceElement = portletDataContext.addReferenceElement(
+			referrerStagedModel, referrerStagedModelElement, stagedModel,
+			stagedModelClass, referenceType, false);
+
+		ExportImportMessageSenderUtil.sendMessage(
+			ExportImportAction.EXPORT_REFERENCE, ExportImportStatus.END,
+			referrerStagedModel, stagedModel, referenceType);
+
+		return referenceElement;
+	}
+
+	public static <T extends StagedModel, U extends StagedModel> Element
+		exportReferencedStagedModel(
+			PortletDataContext portletDataContext, T referrerStagedModel,
+			U stagedModel, String referenceType)
+		throws PortletDataException {
+
+		return exportReferencedStagedModel(
+			portletDataContext, referrerStagedModel,
+			referrerStagedModel.getModelClass(), stagedModel,
+			stagedModel.getModelClass(), referenceType);
+	}
 
 	public static <T extends StagedModel> void exportStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)

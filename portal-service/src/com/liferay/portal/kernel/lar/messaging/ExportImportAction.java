@@ -22,6 +22,6 @@ import java.io.Serializable;
  */
 public enum ExportImportAction implements Serializable {
 
-	DELETE, EXPORT, IMPORT
+	DELETE, EXPORT, EXPORT_REFERENCE, IMPORT, IMPORT_REFERENCE
 
 }

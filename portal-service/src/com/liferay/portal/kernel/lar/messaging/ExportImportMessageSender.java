@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.lar.messaging;
 
+import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.StagedModel;
 
 /**
@@ -25,6 +26,11 @@ public interface ExportImportMessageSender {
 	public void sendMessage(
 		ExportImportAction exportImportAction,
 		ExportImportStatus exportImportStatus, StagedModel stagedModel);
+
+	public void sendMessage(
+		ExportImportAction exportImportAction,
+		ExportImportStatus exportImportStatus, StagedModel referrerStagedModel,
+		ClassedModel classedModel, String referenceType);
 
 	public void sendMessage(
 		ExportImportAction exportImportAction,

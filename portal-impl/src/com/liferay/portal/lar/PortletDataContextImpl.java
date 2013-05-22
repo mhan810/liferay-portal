@@ -884,6 +884,13 @@ public class PortletDataContextImpl implements PortletDataContext {
 			if (element != null) {
 				return element;
 			}
+
+			element = getDataElement(
+				groupElement, "uuid", stagedModel.getUuid());
+
+			if (element != null) {
+				return element;
+			}
 		}
 
 		element = groupElement.addElement("staged-model");
