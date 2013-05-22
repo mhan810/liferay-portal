@@ -30,12 +30,6 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException {
 
-		String path = ExportImportPathUtil.getModelPath(stagedModel);
-
-		if (portletDataContext.isPathExportedInScope(path)) {
-			return;
-		}
-
 		try {
 			doExportStagedModel(portletDataContext, (T)stagedModel.clone());
 
@@ -73,12 +67,6 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	public void importStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException {
-
-		String path = ExportImportPathUtil.getModelPath(stagedModel);
-
-		if (portletDataContext.isPathProcessed(path)) {
-			return;
-		}
 
 		try {
 			doImportStagedModel(portletDataContext, stagedModel);
