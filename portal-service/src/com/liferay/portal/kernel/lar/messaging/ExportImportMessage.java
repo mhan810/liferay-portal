@@ -15,6 +15,7 @@
 package com.liferay.portal.kernel.lar.messaging;
 
 import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.StagedModel;
 
 import java.io.Serializable;
@@ -32,6 +33,12 @@ public class ExportImportMessage extends Message implements Serializable {
 		"exportImportStatus";
 	public static final String VALUE_KEY_MODEL_CLASS_NAME = "modelClassName";
 	public static final String VALUE_KEY_PORTLET_ID = "portletId";
+	public static final String VALUE_KEY_REFERENCE_CLASS_NAME =
+		"referenceClassName";
+	public static final String VALUE_KEY_REFERENCE_PRIMARY_KEY =
+		"referencePrimaryKey";
+	public static final String VALUE_KEY_REFERENCE_TYPE = "referenceType";
+	public static final String VALUE_KEY_REFERENCE_UUID = "referenceUuid";
 	public static final String VALUE_KEY_ROOT_CAUSE = "rootCause";
 	public static final String VALUE_KEY_TIMESTAMP = "timestamp";
 	public static final String VALUE_KEY_UUID = "uuid";
@@ -51,6 +58,29 @@ public class ExportImportMessage extends Message implements Serializable {
 		exportImportMessage.setUuid(stagedModel.getUuid());
 
 		exportImportMessage.setTimestamp(System.currentTimeMillis());
+
+		return exportImportMessage;
+	}
+
+	public static ExportImportMessage createExportImportMessage(
+		ExportImportAction exportImportAction,
+		ExportImportStatus exportImportStatus, StagedModel referrerStagedModel,
+		ClassedModel classedModel, String referenceType) {
+
+		ExportImportMessage exportImportMessage = createExportImportMessage(
+			exportImportAction, exportImportStatus, referrerStagedModel);
+
+		exportImportMessage.setReferenceClassName(
+			classedModel.getModelClassName());
+		exportImportMessage.setReferencePrimaryKey(
+			classedModel.getPrimaryKeyObj().toString());
+		exportImportMessage.setReferenceType(referenceType);
+
+		if (classedModel instanceof StagedModel) {
+			StagedModel stagedModel = (StagedModel)classedModel;
+
+			exportImportMessage.setReferenceUuid(stagedModel.getUuid());
+		}
 
 		return exportImportMessage;
 	}
@@ -124,6 +154,22 @@ public class ExportImportMessage extends Message implements Serializable {
 
 	public void setPortletId(String portletId) {
 		put(VALUE_KEY_PORTLET_ID, portletId);
+	}
+
+	public void setReferenceClassName(String referenceClassName) {
+		put(VALUE_KEY_REFERENCE_CLASS_NAME, referenceClassName);
+	}
+
+	public void setReferencePrimaryKey(String referencePrimaryKey) {
+		put(VALUE_KEY_REFERENCE_PRIMARY_KEY, referencePrimaryKey);
+	}
+
+	public void setReferenceType(String referenceType) {
+		put(VALUE_KEY_REFERENCE_TYPE, referenceType);
+	}
+
+	public void setReferenceUuid(String referenceUuid) {
+		put(VALUE_KEY_REFERENCE_UUID, referenceUuid);
 	}
 
 	public void setRootCause(Throwable rootCause) {

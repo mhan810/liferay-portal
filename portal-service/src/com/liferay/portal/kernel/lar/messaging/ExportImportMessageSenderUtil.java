@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.lar.messaging;
 
+import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.StagedModel;
 
 /**
@@ -32,6 +33,16 @@ public class ExportImportMessageSenderUtil {
 
 		getExportImportMessageSender().sendMessage(
 			exportImportAction, exportImportStatus, stagedModel);
+	}
+
+	public static void sendMessage(
+		ExportImportAction exportImportAction,
+		ExportImportStatus exportImportStatus, StagedModel referrerStagedModel,
+		ClassedModel classedModel, String referenceType) {
+
+		getExportImportMessageSender().sendMessage(
+			exportImportAction, exportImportStatus, referrerStagedModel,
+			classedModel, referenceType);
 	}
 
 	public static void sendMessage(
