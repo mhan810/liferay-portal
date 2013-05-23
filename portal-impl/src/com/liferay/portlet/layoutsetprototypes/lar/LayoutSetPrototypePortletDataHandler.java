@@ -36,6 +36,8 @@ import javax.portlet.PortletPreferences;
 public class LayoutSetPrototypePortletDataHandler
 	extends BasePortletDataHandler {
 
+	public static final String LAYOUT_EXPORT_CONTROL = "layouts";
+
 	public static final String LAYOUT_PROTOTYPE_EXPORT_CONTROL =
 		"layout-prototypes";
 
@@ -45,7 +47,10 @@ public class LayoutSetPrototypePortletDataHandler
 		super();
 
 		setDataPortalLevel(true);
+
 		setExportControls(
+			new PortletDataHandlerBoolean(
+				NAMESPACE, LAYOUT_EXPORT_CONTROL, true, false),
 			new PortletDataHandlerBoolean(
 				NAMESPACE, LAYOUT_PROTOTYPE_EXPORT_CONTROL, true, false));
 	}

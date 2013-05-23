@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.LayoutPrototype;
@@ -34,12 +35,18 @@ import javax.portlet.PortletPreferences;
  */
 public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 
+	public static final String LAYOUT_EXPORT_CONTROL = "layouts";
+
 	public static final String NAMESPACE = "layout_prototypes";
 
 	public LayoutPrototypePortletDataHandler() {
 		super();
 
 		setDataPortalLevel(true);
+
+		setExportControls(
+			new PortletDataHandlerBoolean(
+				NAMESPACE, LAYOUT_EXPORT_CONTROL, true, false));
 	}
 
 	@Override
