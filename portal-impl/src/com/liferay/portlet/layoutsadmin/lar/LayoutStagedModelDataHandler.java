@@ -122,29 +122,32 @@ public class LayoutStagedModelDataHandler
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
-		boolean exportLAR = ParamUtil.getBoolean(serviceContext, "exportLAR");
+		if (serviceContext != null) {
+			boolean exportLAR = ParamUtil.getBoolean(
+				serviceContext, "exportLAR");
 
-		if (!exportLAR && LayoutStagingUtil.isBranchingLayout(layout) &&
-			!layout.isTypeURL()) {
+			if (!exportLAR && LayoutStagingUtil.isBranchingLayout(layout) &&
+				!layout.isTypeURL()) {
 
-			long layoutSetBranchId = ParamUtil.getLong(
-				serviceContext, "layoutSetBranchId");
+				long layoutSetBranchId = ParamUtil.getLong(
+					serviceContext, "layoutSetBranchId");
 
-			if (layoutSetBranchId <= 0) {
-				return;
+				if (layoutSetBranchId <= 0) {
+					return;
+				}
+
+				layoutRevision = LayoutRevisionUtil.fetchByL_H_P(
+					layoutSetBranchId, true, layout.getPlid());
+
+				if (layoutRevision == null) {
+					return;
+				}
+
+				LayoutStagingHandler layoutStagingHandler =
+					LayoutStagingUtil.getLayoutStagingHandler(layout);
+
+				layoutStagingHandler.setLayoutRevision(layoutRevision);
 			}
-
-			layoutRevision = LayoutRevisionUtil.fetchByL_H_P(
-				layoutSetBranchId, true, layout.getPlid());
-
-			if (layoutRevision == null) {
-				return;
-			}
-
-			LayoutStagingHandler layoutStagingHandler =
-				LayoutStagingUtil.getLayoutStagingHandler(layout);
-
-			layoutStagingHandler.setLayoutRevision(layoutRevision);
 		}
 
 		Element layoutElement = portletDataContext.getExportDataElement(layout);
