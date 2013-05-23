@@ -120,6 +120,7 @@
 				<ref bean="destination.document_library_pdf_processor" />
 				<ref bean="destination.document_library_raw_metadata_processor" />
 				<ref bean="destination.document_library_video_processor" />
+				<ref bean="destination.export_import" />
 				<ref bean="destination.flags" />
 				<ref bean="destination.hot_deploy" />
 				<ref bean="destination.layouts_local_publisher" />
@@ -173,6 +174,11 @@
 				<entry key="liferay/document_library_video_processor">
 					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
 						<ref bean="messageListener.document_library_video_processor" />
+					</list>
+				</entry>
+				<entry key="liferay/export_import">
+					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
+						<ref bean="messageListener.export_import" />
 					</list>
 				</entry>
 				<entry key="liferay/flags">

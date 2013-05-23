@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.ProxyUtil;
+import com.liferay.portal.util.ClassLoaderUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +49,15 @@ public class StagedModelDataHandlerRegistryImpl
 	}
 
 	public void register(StagedModelDataHandler<?> stagedModelDataHandler) {
-		for (String className : stagedModelDataHandler.getClassNames()) {
+		StagedModelDataHandler<?> proxiedStagedModelDataHandler =
+			(StagedModelDataHandler)ProxyUtil.newProxyInstance(
+				ClassLoaderUtil.getClassLoader(
+					stagedModelDataHandler.getClass()),
+				new Class[] {StagedModelDataHandler.class},
+				new StagedModelDataHanderInvocationHandler(
+					stagedModelDataHandler));
+
+		for (String className : proxiedStagedModelDataHandler.getClassNames()) {
 			if (_stagedModelDataHandlers.containsKey(className)) {
 				if (_log.isWarnEnabled()) {
 					_log.warn("Duplicate class " + className);
@@ -56,7 +66,8 @@ public class StagedModelDataHandlerRegistryImpl
 				continue;
 			}
 
-			_stagedModelDataHandlers.put(className, stagedModelDataHandler);
+			_stagedModelDataHandlers.put(
+				className, proxiedStagedModelDataHandler);
 		}
 	}
 
