@@ -67,26 +67,6 @@ public class LayoutPrototypeStagedModelDataHandler
 			LayoutPrototypePortletDataHandler.NAMESPACE);
 	}
 
-	protected void exportLayouts(
-			PortletDataContext portletDataContext,
-			LayoutPrototype layoutPrototype,
-			Element layoutPrototypeElement)
-		throws Exception {
-
-		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			layoutPrototype.getGroupId(), true,
-			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
-
-		for (Layout layout : layouts) {
-			portletDataContext.addReferenceElement(
-				layoutPrototype, layoutPrototypeElement, layout,
-				PortletDataContext.REFERENCE_TYPE_DEPENDENCY, false);
-
-			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, layout);
-		}
-	}
-
 	@Override
 	protected void doImportStagedModel(
 			PortletDataContext portletDataContext,
@@ -141,6 +121,25 @@ public class LayoutPrototypeStagedModelDataHandler
 		portletDataContext.importClassedModel(
 			layoutPrototype, importedLayoutPrototype,
 			LayoutPrototypePortletDataHandler.NAMESPACE);
+	}
+
+	protected void exportLayouts(
+			PortletDataContext portletDataContext,
+			LayoutPrototype layoutPrototype, Element layoutPrototypeElement)
+		throws Exception {
+
+		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
+			layoutPrototype.getGroupId(), true,
+			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+
+		for (Layout layout : layouts) {
+			portletDataContext.addReferenceElement(
+				layoutPrototype, layoutPrototypeElement, layout,
+				PortletDataContext.REFERENCE_TYPE_DEPENDENCY, false);
+
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, layout);
+		}
 	}
 
 	protected void importLayouts(

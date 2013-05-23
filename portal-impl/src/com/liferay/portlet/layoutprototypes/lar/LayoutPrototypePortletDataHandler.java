@@ -16,6 +16,7 @@ package com.liferay.portlet.layoutprototypes.lar;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.DataLevel;
 import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
@@ -42,7 +43,7 @@ public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 	public LayoutPrototypePortletDataHandler() {
 		super();
 
-		setDataPortalLevel(true);
+		setDataLevel(DataLevel.PORTAL);
 
 		setExportControls(
 			new PortletDataHandlerBoolean(
@@ -74,7 +75,7 @@ public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.addPermissions(
-			_RESOURCE_NAME, portletDataContext.getScopeGroupId());
+			_RESOURCE_NAME, portletDataContext.getCompanyId());
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
@@ -96,8 +97,8 @@ public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.importPermissions(
-			_RESOURCE_NAME, portletDataContext.getSourceGroupId(),
-			portletDataContext.getScopeGroupId());
+			_RESOURCE_NAME, portletDataContext.getCompanyId(),
+			portletDataContext.getCompanyId());
 
 		Element layoutPrototypesElement =
 			portletDataContext.getImportDataGroupElement(LayoutPrototype.class);

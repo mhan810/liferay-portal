@@ -60,8 +60,7 @@ public class LayoutSetPrototypeStagedModelDataHandler
 
 		boolean exportLayouts = portletDataContext.getBooleanParameter(
 			LayoutSetPrototypePortletDataHandler.NAMESPACE,
-			LayoutSetPrototypePortletDataHandler.
-				LAYOUT_EXPORT_CONTROL);
+			LayoutSetPrototypePortletDataHandler.LAYOUT_EXPORT_CONTROL);
 
 		boolean exportLayoutPrototypes = portletDataContext.getBooleanParameter(
 			LayoutSetPrototypePortletDataHandler.NAMESPACE,
@@ -73,7 +72,8 @@ public class LayoutSetPrototypeStagedModelDataHandler
 
 		if (exportLayoutPrototypes) {
 			exportLayoutPrototypes(
-				portletDataContext, layoutSetPrototype, layoutSetPrototypeElement);
+				portletDataContext, layoutSetPrototype,
+				layoutSetPrototypeElement);
 		}
 
 		if (exportLayouts) {
