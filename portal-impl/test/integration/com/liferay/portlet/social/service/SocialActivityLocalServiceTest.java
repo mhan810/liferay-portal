@@ -137,6 +137,22 @@ public class SocialActivityLocalServiceTest extends BaseSocialActivityTestCase {
 				ResourceConstants.SCOPE_INDIVIDUAL,
 				String.valueOf(activitySet.getActivitySetId()),
 				role.getRoleId(), ActionKeys.VIEW));
+
+		SocialActivityTestUtil.addActivity(
+			_creatorUser, _group, _assetEntry,
+			SocialActivityConstants.TYPE_DELETE,
+			SocialActivityTestUtil.createExtraDataJSON("title", "title2"));
+
+		Assert.assertEquals(
+			2,
+			SocialActivityLocalServiceUtil.getGroupActivitiesCount(
+				_group.getGroupId()));
+
+		activitySet =
+			SocialActivitySetLocalServiceUtil.fetchAssetActivitySet(
+				_assetEntry.getClassNameId(), _assetEntry.getClassPK());
+
+		Assert.assertEquals("title2", activitySet.getExtraDataValue("title"));
 	}
 
 	@Test
