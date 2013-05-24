@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Group;
@@ -34,6 +35,11 @@ import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portlet.sites.util.SitesUtil;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import java.util.List;
 
@@ -67,6 +73,28 @@ public class LayoutSetPrototypeStagedModelDataHandler
 			layoutSetPrototypeElement,
 			ExportImportPathUtil.getModelPath(layoutSetPrototype),
 			layoutSetPrototype, LayoutSetPrototypePortletDataHandler.NAMESPACE);
+
+		File file = null;
+		InputStream in = null;
+
+		try {
+			file = SitesUtil.exportLayoutSetPrototype(
+				layoutSetPrototype, new ServiceContext());
+
+			String path = ExportImportPathUtil.getModelPath(
+				layoutSetPrototype, _LAR_FILE_NAME);
+
+			in = new FileInputStream(file);
+
+			portletDataContext.addZipEntry(path, in);
+		}
+		finally {
+			StreamUtil.cleanUp(in);
+
+			if (file != null) {
+				file.delete();
+			}
+		}
 	}
 
 	@Override
@@ -132,6 +160,21 @@ public class LayoutSetPrototypeStagedModelDataHandler
 		portletDataContext.importClassedModel(
 			layoutSetPrototype, importedLayoutSetPrototype,
 			LayoutSetPrototypePortletDataHandler.NAMESPACE);
+
+		InputStream in = null;
+
+		try {
+			String path = ExportImportPathUtil.getModelPath(
+				layoutSetPrototype, _LAR_FILE_NAME);
+
+			in = portletDataContext.getZipEntryAsInputStream(path);
+
+			SitesUtil.importLayoutSetPrototype(
+				importedLayoutSetPrototype, in, serviceContext);
+		}
+		finally {
+			StreamUtil.cleanUp(in);
+		}
 	}
 
 	protected void exportLayoutPrototypes(
@@ -164,6 +207,8 @@ public class LayoutSetPrototypeStagedModelDataHandler
 			LayoutSetPrototypePortletDataHandler.
 				LAYOUT_PROTOTYPE_EXPORT_CONTROL);
 
+		boolean missingReference = !exportLayoutPrototypes;
+
 		for (Layout layout : layouts) {
 			String layoutPrototypeUuid = layout.getLayoutPrototypeUuid();
 
@@ -175,7 +220,7 @@ public class LayoutSetPrototypeStagedModelDataHandler
 			portletDataContext.addReferenceElement(
 				layout, layoutSetPrototypeElement, layoutPrototype,
 				PortletDataContext.REFERENCE_TYPE_DEPENDENCY,
-				exportLayoutPrototypes);
+				missingReference);
 
 			if (exportLayoutPrototypes) {
 				StagedModelDataHandlerUtil.exportStagedModel(
@@ -198,5 +243,7 @@ public class LayoutSetPrototypeStagedModelDataHandler
 				portletDataContext, layoutPrototypeElement);
 		}
 	}
+
+	private static final String _LAR_FILE_NAME = "lar";
 
 }
