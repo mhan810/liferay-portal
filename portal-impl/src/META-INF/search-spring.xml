@@ -53,6 +53,9 @@
 			</bean>
 		</property>
 	</bean>
+	<bean id="com.liferay.portal.kernel.search.AnalyzerUtil" class="com.liferay.portal.kernel.search.AnalyzerUtil" >
+		<property name="analyzer"  ref="com.liferay.portal.search.lucene.PerFieldAnalyzer" />
+	</bean>
 	<bean id="com.liferay.portal.kernel.search.QueryTranslator" class="com.liferay.portal.search.lucene.QueryTranslatorImpl" />
 	<bean id="com.liferay.portal.kernel.search.QueryTranslatorUtil" class="com.liferay.portal.kernel.search.QueryTranslatorUtil">
 		<property name="queryTranslator" ref="com.liferay.portal.kernel.search.QueryTranslator" />
