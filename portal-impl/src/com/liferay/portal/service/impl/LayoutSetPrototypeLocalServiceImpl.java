@@ -49,6 +49,19 @@ public class LayoutSetPrototypeLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
+		return addLayoutSetPrototype(
+			userId, companyId, nameMap, description, active, layoutsUpdateable,
+			true, serviceContext);
+	}
+
+	@Override
+	public LayoutSetPrototype addLayoutSetPrototype(
+			long userId, long companyId, Map<Locale, String> nameMap,
+			String description, boolean active, boolean layoutsUpdateable,
+			boolean addDefaultLayout,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
 		// Layout set prototype
 
 		User user = userPersistence.findByPrimaryKey(userId);
@@ -101,10 +114,12 @@ public class LayoutSetPrototypeLocalServiceImpl
 			layoutSetPrototype.getName(LocaleUtil.getDefault()), null, 0,
 			friendlyURL, false, true, serviceContext);
 
-		layoutLocalService.addLayout(
-			userId, group.getGroupId(), true,
-			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, "home", null, null,
-			LayoutConstants.TYPE_PORTLET, false, "/home", serviceContext);
+		if (addDefaultLayout) {
+			layoutLocalService.addLayout(
+				userId, group.getGroupId(), true,
+				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, "home", null, null,
+				LayoutConstants.TYPE_PORTLET, false, "/home", serviceContext);
+		}
 
 		return layoutSetPrototype;
 	}
