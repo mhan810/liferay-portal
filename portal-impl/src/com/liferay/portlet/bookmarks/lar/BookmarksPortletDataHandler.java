@@ -58,6 +58,14 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 					new PortletDataHandlerBoolean(NAMESPACE, "categories"),
 					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
 					new PortletDataHandlerBoolean(NAMESPACE, "tags")
+				}),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "classNames", false, false, true,
+				new PortletDataHandlerControl[] {
+					new PortletDataHandlerControl(
+						NAMESPACE, "entries", BookmarksEntry.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "entries", BookmarksFolder.class.getName())
 				}));
 		setImportControls(getExportControls());
 		setPublishToLiveByDefault(true);

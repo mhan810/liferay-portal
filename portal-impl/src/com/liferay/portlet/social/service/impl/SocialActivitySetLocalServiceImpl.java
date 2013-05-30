@@ -75,9 +75,9 @@ public class SocialActivitySetLocalServiceImpl
 				throws SystemException {
 
 				SocialActivitySet activitySet =
-					socialActivitySetPersistence.fetchByC_C(
-						activity.getClassNameId(), activity.getClassPK(),
-						false);
+					socialActivitySetPersistence.fetchByC_C_T_First(
+						activity.getClassNameId(), activity.getClassPK(), 0,
+						null);
 
 				if (activitySet == null) {
 					activitySet =

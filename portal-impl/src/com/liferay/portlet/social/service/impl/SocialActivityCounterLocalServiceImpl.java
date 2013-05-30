@@ -1374,8 +1374,4 @@ public class SocialActivityCounterLocalServiceImpl
 		}
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(
-		SocialActivityCounterLocalServiceImpl.class);
-
-
 }

@@ -26,6 +26,7 @@ import com.liferay.portlet.messageboards.model.MBBan;
 import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBCategoryConstants;
 import com.liferay.portlet.messageboards.model.MBMessage;
+import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.model.MBThreadFlag;
 import com.liferay.portlet.messageboards.service.MBBanLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBCategoryLocalServiceUtil;
@@ -67,6 +68,21 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 				new PortletDataHandlerControl[] {
 					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
 					new PortletDataHandlerBoolean(NAMESPACE, "tags")
+				}),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "classNames", false, false, true,
+				new PortletDataHandlerControl[] {
+					new PortletDataHandlerControl(
+						NAMESPACE, "messages", MBCategory.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "messages", MBThread.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "messages", MBMessage.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "thread-flags",
+						MBThreadFlag.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "messages", MBBan.class.getName())
 				}));
 		setImportControls(getExportControls());
 		setPublishToLiveByDefault(

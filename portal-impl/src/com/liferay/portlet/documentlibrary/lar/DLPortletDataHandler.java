@@ -85,6 +85,18 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 					new PortletDataHandlerBoolean(NAMESPACE, "comments"),
 					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
 					new PortletDataHandlerBoolean(NAMESPACE, "tags")
+				}),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "classNames", false, false, true,
+				new PortletDataHandlerControl[] {
+					new PortletDataHandlerControl(
+						NAMESPACE, "documents", DLFileEntry.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "documents", DLFolder.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "ranks", DLFileRank.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "shortcuts", DLFileShortcut.class.getName())
 				}));
 		setPublishToLiveByDefault(PropsValues.DL_PUBLISH_TO_LIVE_BY_DEFAULT);
 	}
