@@ -38,9 +38,31 @@ public class PortletDataHandlerBoolean extends PortletDataHandlerControl {
 
 	public PortletDataHandlerBoolean(
 		String namespace, String controlName, boolean defaultState,
+		boolean disabled, boolean hidden,
+		PortletDataHandlerControl[] children) {
+
+		this(
+			namespace, controlName, defaultState, disabled, hidden, children,
+			null);
+	}
+
+	public PortletDataHandlerBoolean(
+		String namespace, String controlName, boolean defaultState,
+		boolean disabled, boolean hidden, PortletDataHandlerControl[] children,
+		String className) {
+
+		super(namespace, controlName, disabled, hidden, className, children);
+
+		_defaultState = defaultState;
+	}
+
+	public PortletDataHandlerBoolean(
+		String namespace, String controlName, boolean defaultState,
 		boolean disabled, PortletDataHandlerControl[] children) {
 
-		this(namespace, controlName, defaultState, disabled, children, null);
+		this(
+			namespace, controlName, defaultState, disabled, false, children,
+			null);
 	}
 
 	public PortletDataHandlerBoolean(
@@ -48,10 +70,9 @@ public class PortletDataHandlerBoolean extends PortletDataHandlerControl {
 		boolean disabled, PortletDataHandlerControl[] children,
 		String className) {
 
-		super(namespace, controlName, disabled, className);
-
-		_children = children;
-		_defaultState = defaultState;
+		this(
+			namespace, controlName, defaultState, disabled, false, children,
+			className);
 	}
 
 	public PortletDataHandlerBoolean(
@@ -61,15 +82,10 @@ public class PortletDataHandlerBoolean extends PortletDataHandlerControl {
 		this(namespace, controlName, defaultState, false, children);
 	}
 
-	public PortletDataHandlerControl[] getChildren() {
-		return _children;
-	}
-
 	public boolean getDefaultState() {
 		return _defaultState;
 	}
 
-	private PortletDataHandlerControl[] _children;
 	private boolean _defaultState;
 
 }
