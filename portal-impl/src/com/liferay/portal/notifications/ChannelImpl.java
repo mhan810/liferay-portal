@@ -525,8 +525,8 @@ public class ChannelImpl extends BaseChannelImpl {
 		}
 
 		List<UserNotificationEvent> userNotificationEvents =
-			UserNotificationEventLocalServiceUtil.getUserNotificationEvents(
-				getUserId(), false);
+			UserNotificationEventLocalServiceUtil.
+				getDeliveredUserNotificationEvents(getUserId(), false);
 
 		Map<String, NotificationEvent> unconfirmedNotificationEvents =
 			_getUnconfirmedNotificationEvents();

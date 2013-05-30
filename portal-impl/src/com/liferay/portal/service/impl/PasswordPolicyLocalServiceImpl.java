@@ -28,6 +28,7 @@ import com.liferay.portal.model.PasswordPolicy;
 import com.liferay.portal.model.PasswordPolicyRel;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.security.ldap.LDAPSettingsUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.base.PasswordPolicyLocalServiceBaseImpl;
@@ -216,7 +217,9 @@ public class PasswordPolicyLocalServiceImpl
 	public PasswordPolicy deletePasswordPolicy(PasswordPolicy passwordPolicy)
 		throws PortalException, SystemException {
 
-		if (passwordPolicy.isDefaultPolicy()) {
+		if (passwordPolicy.isDefaultPolicy() &&
+			!CompanyThreadLocal.isDeleteInProcess()) {
+
 			throw new RequiredPasswordPolicyException();
 		}
 

@@ -26,8 +26,11 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.social.model.SocialActivity;
+import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.social.model.SocialActivityDefinition;
 import com.liferay.portlet.social.service.base.SocialActivityLocalServiceBaseImpl;
+import com.liferay.portlet.social.util.SocialActivityHierarchy;
+import com.liferay.portlet.social.util.SocialActivityHierarchyThreadLocal;
 
 import java.util.Date;
 import java.util.List;
@@ -125,6 +128,15 @@ public class SocialActivityLocalServiceImpl
 		activity.setMirrorActivityId(0);
 		activity.setClassNameId(classNameId);
 		activity.setClassPK(classPK);
+
+		SocialActivityHierarchy activityHierarchy =
+			SocialActivityHierarchyThreadLocal.peek();
+
+		if (activityHierarchy != null) {
+			activity.setParentClassNameId(activityHierarchy.getClassNameId());
+			activity.setParentClassPK(activityHierarchy.getClassPK());
+		}
+
 		activity.setType(type);
 		activity.setExtraData(extraData);
 		activity.setReceiverUserId(receiverUserId);
@@ -145,6 +157,13 @@ public class SocialActivityLocalServiceImpl
 			mirrorActivity.setCreateDate(createDate.getTime());
 			mirrorActivity.setClassNameId(classNameId);
 			mirrorActivity.setClassPK(classPK);
+
+			if (activityHierarchy != null) {
+				mirrorActivity.setParentClassNameId(
+					activityHierarchy.getClassNameId());
+				mirrorActivity.setParentClassPK(activityHierarchy.getClassPK());
+			}
+
 			mirrorActivity.setType(type);
 			mirrorActivity.setExtraData(extraData);
 			mirrorActivity.setReceiverUserId(user.getUserId());
@@ -219,15 +238,7 @@ public class SocialActivityLocalServiceImpl
 				"Activity and mirror activity must not have primary keys set");
 		}
 
-		SocialActivityDefinition activityDefinition =
-			socialActivitySettingLocalService.getActivityDefinition(
-				activity.getGroupId(), activity.getClassName(),
-				activity.getType());
-
-		if (((activityDefinition == null) && (activity.getType() < 10000)) ||
-			((activityDefinition != null) &&
-			 activityDefinition.isLogActivity())) {
-
+		if (isLogActivity(activity)) {
 			long activityId = counterLocalService.increment(
 				SocialActivity.class.getName());
 
@@ -1138,6 +1149,33 @@ public class SocialActivityLocalServiceImpl
 		throws SystemException {
 
 		return socialActivityFinder.countByUserOrganizations(userId);
+	}
+
+	protected boolean isLogActivity(SocialActivity activity)
+		throws SystemException {
+
+		if (activity.getType() == SocialActivityConstants.TYPE_DELETE) {
+			if (activity.getParentClassPK() == 0) {
+				return true;
+			}
+
+			return false;
+		}
+
+		SocialActivityDefinition activityDefinition =
+			socialActivitySettingLocalService.getActivityDefinition(
+				activity.getGroupId(), activity.getClassName(),
+				activity.getType());
+
+		if (activityDefinition != null) {
+			return activityDefinition.isLogActivity();
+		}
+
+		if (activity.getType() < SocialActivityConstants.TYPE_VIEW) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

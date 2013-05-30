@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -831,10 +832,20 @@ public class AssetPublisherImpl implements AssetPublisher {
 				return false;
 			}
 
-			if (!SitesUtil.isContentSharingWithChildrenEnabled(siteGroup)) {
-				return GroupPermissionUtil.contains(
-					permissionChecker, groupId, ActionKeys.UPDATE);
+			if (SitesUtil.isContentSharingWithChildrenEnabled(siteGroup)) {
+				return true;
 			}
+
+			if (!PrefsPropsUtil.getBoolean(
+					layout.getCompanyId(),
+					PropsKeys.
+					SITES_CONTENT_SHARING_THROUGH_ADMINISTRATORS_ENABLED)) {
+
+				return false;
+			}
+
+			return GroupPermissionUtil.contains(
+				permissionChecker, groupId, ActionKeys.UPDATE);
 		}
 		else if (groupId != companyGroupId) {
 			return GroupPermissionUtil.contains(

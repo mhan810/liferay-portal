@@ -16,7 +16,7 @@ package com.liferay.portal.deploy;
 
 import com.liferay.portal.events.GlobalStartupAction;
 import com.liferay.portal.kernel.deploy.DeployManager;
-import com.liferay.portal.kernel.deploy.auto.AutoDeployListener;
+import com.liferay.portal.kernel.deploy.auto.AutoDeployDir;
 import com.liferay.portal.kernel.deploy.auto.context.AutoDeploymentContext;
 import com.liferay.portal.kernel.plugin.PluginPackage;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
@@ -40,12 +40,9 @@ public class DeployManagerImpl implements DeployManager {
 	public void deploy(AutoDeploymentContext autoDeploymentContext)
 		throws Exception {
 
-		List<AutoDeployListener> autoDeployListeners =
-			GlobalStartupAction.getAutoDeployListeners();
-
-		for (AutoDeployListener autoDeployListener : autoDeployListeners) {
-			autoDeployListener.deploy(autoDeploymentContext);
-		}
+		AutoDeployDir.deploy(
+			autoDeploymentContext,
+			GlobalStartupAction.getAutoDeployListeners());
 	}
 
 	@Override

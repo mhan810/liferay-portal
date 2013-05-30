@@ -15,9 +15,9 @@
 package com.liferay.portal.tools.deploy;
 
 import com.liferay.portal.deploy.DeployUtil;
-import com.liferay.portal.deploy.auto.AutoDeployer;
 import com.liferay.portal.kernel.deploy.Deployer;
 import com.liferay.portal.kernel.deploy.auto.AutoDeployException;
+import com.liferay.portal.kernel.deploy.auto.AutoDeployer;
 import com.liferay.portal.kernel.deploy.auto.context.AutoDeploymentContext;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;

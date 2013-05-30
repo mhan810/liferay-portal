@@ -98,15 +98,14 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 			boolean active, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		if (!GroupPermissionUtil.contains(
+		if (parentGroupId == GroupConstants.DEFAULT_PARENT_GROUP_ID) {
+			PortalPermissionUtil.contains(
+				getPermissionChecker(), ActionKeys.ADD_COMMUNITY);
+		}
+		else {
+			GroupPermissionUtil.check(
 				getPermissionChecker(), parentGroupId,
-				ActionKeys.MANAGE_SUBGROUPS) &&
-			!PortalPermissionUtil.contains(
-				getPermissionChecker(), ActionKeys.ADD_COMMUNITY)) {
-
-			throw new PrincipalException(
-				"User " + getUserId() + " does not have permissions to add " +
-					"a site with parent " + parentGroupId);
+				ActionKeys.ADD_COMMUNITY);
 		}
 
 		Group group = groupLocalService.addGroup(
@@ -283,6 +282,25 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 			getPermissionChecker(), group.getGroupId(), ActionKeys.VIEW);
 
 		return group;
+	}
+
+	/**
+	 * Returns all the groups that are direct children of the parent group.
+	 *
+	 * @param  companyId the primary key of the company
+	 * @param  parentGroupId the primary key of the parent group
+	 * @param  site whether the group is to be associated with a main site
+	 * @return the matching groups, or <code>null</code> if no matches were
+	 *         found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public List<Group> getGroups(
+			long companyId, long parentGroupId, boolean site)
+		throws PortalException, SystemException {
+
+		return filterGroups(
+			groupLocalService.getGroups(companyId, parentGroupId, site));
 	}
 
 	/**
@@ -885,17 +903,9 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 					getPermissionChecker(), ActionKeys.ADD_COMMUNITY);
 			}
 			else {
-				if (!GroupPermissionUtil.contains(
-						getPermissionChecker(), parentGroupId,
-						ActionKeys.MANAGE_SUBGROUPS) &&
-					!PortalPermissionUtil.contains(
-						getPermissionChecker(), ActionKeys.ADD_COMMUNITY)) {
-
-					throw new PrincipalException(
-						"User " + getUserId() + " does not have permissions " +
-							"to move site " + groupId + "to parent " +
-								parentGroupId);
-				}
+				GroupPermissionUtil.check(
+					getPermissionChecker(), parentGroupId,
+					ActionKeys.ADD_COMMUNITY);
 			}
 		}
 

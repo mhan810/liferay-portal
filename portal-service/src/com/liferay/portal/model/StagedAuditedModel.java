@@ -12,24 +12,11 @@
  * details.
  */
 
-package com.liferay.portal.deploy.auto;
-
-import com.liferay.portal.kernel.deploy.auto.AutoDeployException;
-import com.liferay.portal.kernel.deploy.auto.context.AutoDeploymentContext;
+package com.liferay.portal.model;
 
 /**
- * @author Ivica Cardic
- * @author Brian Wing Shun Chan
+ * @author Daniel Kocsis
  */
-public interface AutoDeployer {
-
-	public static final int CODE_DEFAULT = 1;
-
-	public static final int CODE_SKIP_NEWER_VERSION = 2;
-
-	public int autoDeploy(AutoDeploymentContext autoDeploymentContext)
-		throws AutoDeployException;
-
-	public AutoDeployer cloneAutoDeployer() throws AutoDeployException;
+public interface StagedAuditedModel extends AuditedModel, StagedModel {
 
 }

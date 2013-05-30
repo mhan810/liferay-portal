@@ -51,6 +51,7 @@ import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.Shard;
 import com.liferay.portal.model.Team;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionCacheUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -411,7 +412,9 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 	 */
 	@Override
 	public Role deleteRole(Role role) throws PortalException, SystemException {
-		if (PortalUtil.isSystemRole(role.getName())) {
+		if (PortalUtil.isSystemRole(role.getName()) &&
+			!CompanyThreadLocal.isDeleteInProcess()) {
+
 			throw new RequiredRoleException();
 		}
 

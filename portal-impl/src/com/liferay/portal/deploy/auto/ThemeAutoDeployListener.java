@@ -15,6 +15,7 @@
 package com.liferay.portal.deploy.auto;
 
 import com.liferay.portal.kernel.deploy.auto.AutoDeployException;
+import com.liferay.portal.kernel.deploy.auto.AutoDeployer;
 import com.liferay.portal.kernel.deploy.auto.BaseAutoDeployListener;
 import com.liferay.portal.kernel.deploy.auto.context.AutoDeploymentContext;
 import com.liferay.portal.kernel.log.Log;
@@ -33,7 +34,7 @@ public class ThemeAutoDeployListener extends BaseAutoDeployListener {
 	}
 
 	@Override
-	public void deploy(AutoDeploymentContext autoDeploymentContext)
+	public int deploy(AutoDeploymentContext autoDeploymentContext)
 		throws AutoDeployException {
 
 		File file = autoDeploymentContext.getFile();
@@ -43,7 +44,7 @@ public class ThemeAutoDeployListener extends BaseAutoDeployListener {
 		}
 
 		if (!isThemePlugin(file)) {
-			return;
+			return AutoDeployer.CODE_NOT_APPLICABLE;
 		}
 
 		if (_log.isInfoEnabled()) {
@@ -57,6 +58,8 @@ public class ThemeAutoDeployListener extends BaseAutoDeployListener {
 				"Themes for " + file.getPath() + " copied successfully. " +
 					"Deployment will start in a few seconds.");
 		}
+
+		return code;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
