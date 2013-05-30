@@ -78,6 +78,18 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		}
 
 		try {
+			for (PortletDataHandlerControl exportMetaDataControl :
+					_exportMetadataControls) {
+
+				String controlName = exportMetaDataControl.getControlName();
+
+				if (controlName.equals("classNames")) {
+					portletDataContext.addPortletClassNames(
+						exportMetaDataControl.getChildren());
+				}
+
+			}
+
 			return doExportData(
 				portletDataContext, portletId, portletPreferences);
 		}
