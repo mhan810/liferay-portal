@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.layoutsadmin.lar;
+package com.liferay.portlet.layoutprototypes.lar;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.lar.BaseStagedModelDataHandlerTestCase;

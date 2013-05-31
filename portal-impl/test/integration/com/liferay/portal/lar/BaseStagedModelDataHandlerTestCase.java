@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.TestPropsValues;
 
@@ -69,6 +70,8 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 	public void tearDown() throws Exception {
 		GroupLocalServiceUtil.deleteGroup(liveGroup);
 		GroupLocalServiceUtil.deleteGroup(stagingGroup);
+
+		ServiceContextThreadLocal.popServiceContext();
 	}
 
 	@Test
