@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.journal.lar;
 
-import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.lar.BasePortletDataHandlerTestCase;
@@ -22,6 +21,8 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
+import com.liferay.portal.test.Sync;
+import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.LayoutTestUtil;
 import com.liferay.portal.util.PortletKeys;
@@ -30,9 +31,13 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.util.DDMStructureTestUtil;
 import com.liferay.portlet.dynamicdatamapping.util.DDMTemplateTestUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.model.JournalFeed;
 import com.liferay.portlet.journal.model.JournalFolder;
+import com.liferay.portlet.journal.service.JournalFeedLocalServiceUtil;
+import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
 import com.liferay.portlet.journal.util.JournalTestUtil;
 
+import java.util.List;
 import java.util.Map;
 
 import org.junit.runner.RunWith;
@@ -43,9 +48,11 @@ import org.junit.runner.RunWith;
 @ExecutionTestListeners(
 	listeners = {
 		MainServletExecutionTestListener.class,
+		SynchronousDestinationExecutionTestListener.class,
 		TransactionalExecutionTestListener.class
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
+@Sync
 public class JournalPortletDataHandlerTest
 	extends BasePortletDataHandlerTestCase {
 
@@ -63,40 +70,44 @@ public class JournalPortletDataHandlerTest
 		Layout layout = LayoutTestUtil.addLayout(
 			stagingGroup.getGroupId(), ServiceTestUtil.randomString());
 
-		JournalFolder folder = JournalTestUtil.addFolder(
-			stagingGroup.getGroupId(), ServiceTestUtil.randomString());
-
-		JournalTestUtil.addArticle(
-			stagingGroup.getGroupId(), folder.getFolderId(),
-			ServiceTestUtil.randomString(), ServiceTestUtil.randomString());
-
 		DDMStructure ddmStructure = DDMStructureTestUtil.addStructure(
 			stagingGroup.getGroupId(), JournalArticle.class.getName());
-
-		portletDataContext.isPathProcessed(
-			ExportImportPathUtil.getModelPath(ddmStructure));
 
 		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addTemplate(
 			stagingGroup.getGroupId(), ddmStructure.getStructureId());
 
-		portletDataContext.isPathProcessed(
-			ExportImportPathUtil.getModelPath(ddmTemplate));
+		JournalFolder folder = JournalTestUtil.addFolder(
+			stagingGroup.getGroupId(), ServiceTestUtil.randomString());
 
-		DDMTemplate rendererDDMTemplate = DDMTemplateTestUtil.addTemplate(
-			stagingGroup.getGroupId(), ddmStructure.getStructureId());
-
-		portletDataContext.isPathProcessed(
-			ExportImportPathUtil.getModelPath(rendererDDMTemplate));
+		JournalTestUtil.addArticleWithXMLContent(
+			folder.getFolderId(), "<title>Article</title>",
+			ddmStructure.getStructureKey(), ddmTemplate.getTemplateKey(),
+			ServiceTestUtil.getServiceContext(stagingGroup.getGroupId()));
 
 		JournalTestUtil.addFeed(
 			stagingGroup.getGroupId(), layout.getPlid(),
 			ServiceTestUtil.randomString(), ddmStructure.getStructureKey(),
-			ddmTemplate.getTemplateKey(), rendererDDMTemplate.getTemplateKey());
+			ddmTemplate.getTemplateKey(), ddmTemplate.getTemplateKey());
 	}
 
 	@Override
 	protected PortletDataHandler createPortletDataHandler() {
 		return new JournalPortletDataHandler();
+	}
+
+	@Override
+	protected void deleteStagedModels() throws Exception {
+		List<JournalFeed> feeds = JournalFeedLocalServiceUtil.getFeeds(
+			stagingGroup.getGroupId());
+
+		for (JournalFeed feed : feeds) {
+			JournalFeedLocalServiceUtil.deleteFeed(feed);
+		}
+
+		portletDataHandler.deleteData(
+			portletDataContext, PortletKeys.JOURNAL, null);
+
+		JournalFolderLocalServiceUtil.deleteFolders(stagingGroup.getGroupId());
 	}
 
 	@Override
