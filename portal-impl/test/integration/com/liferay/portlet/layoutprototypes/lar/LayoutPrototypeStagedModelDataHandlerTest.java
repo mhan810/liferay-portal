@@ -12,13 +12,15 @@
  * details.
  */
 
-package com.liferay.portlet.layoutsadmin.lar;
+package com.liferay.portlet.layoutprototypes.lar;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.lar.BaseStagedModelDataHandlerTestCase;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
@@ -29,6 +31,7 @@ import com.liferay.portal.util.LayoutTestUtil;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 
 /**
@@ -49,8 +52,25 @@ public class LayoutPrototypeStagedModelDataHandlerTest
 			Map<String, List<StagedModel>> dependentStagedModelsMap)
 		throws Exception {
 
-		return LayoutTestUtil.addLayoutPrototype(
+		LayoutPrototype layoutPrototype = LayoutTestUtil.addLayoutPrototype(
 			ServiceTestUtil.randomString());
+
+		Layout layout = layoutPrototype.getLayout();
+
+		addDependentStagedModel(dependentStagedModelsMap, Layout.class, layout);
+
+		return layoutPrototype;
+	}
+
+	@Override
+	protected void deleteStagedModel(
+			StagedModel stagedModel,
+			Map<String, List<StagedModel>> dependentStagedModelsMap,
+			Group group)
+		throws Exception {
+
+		LayoutPrototypeLocalServiceUtil.deleteLayoutPrototype(
+			(LayoutPrototype)stagedModel);
 	}
 
 	@Override
@@ -68,6 +88,35 @@ public class LayoutPrototypeStagedModelDataHandlerTest
 	@Override
 	protected Class<? extends StagedModel> getStagedModelClass() {
 		return LayoutPrototype.class;
+	}
+
+	@Override
+	protected void validateImport(
+			StagedModel stagedModel,
+			Map<String, List<StagedModel>> dependentStagedModelsMap,
+			Group group)
+		throws Exception {
+
+		LayoutPrototype importedLayoutPrototype =
+			LayoutPrototypeLocalServiceUtil.
+				fetchLayoutPrototypeByUuidAndCompanyId(
+					stagedModel.getUuid(), group.getCompanyId());
+
+		Assert.assertNotNull(importedLayoutPrototype);
+
+		List<StagedModel> dependentLayoutPrototypeStagedModels =
+			dependentStagedModelsMap.get(Layout.class.getSimpleName());
+
+		Assert.assertEquals(1, dependentLayoutPrototypeStagedModels.size());
+
+		Layout layout = (Layout)dependentLayoutPrototypeStagedModels.get(0);
+
+		Layout importedLayout =
+			LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
+				layout.getUuid(), importedLayoutPrototype.getGroupId(),
+				layout.isPrivateLayout());
+
+		Assert.assertNotNull(importedLayout);
 	}
 
 }
