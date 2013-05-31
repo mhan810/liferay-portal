@@ -14,10 +14,11 @@
 
 package com.liferay.portlet.layoutprototypes.lar;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Layout;
@@ -67,8 +68,6 @@ public class LayoutPrototypeStagedModelDataHandler
 			LayoutPrototype layoutPrototype)
 		throws Exception {
 
-		importLayouts(portletDataContext, layoutPrototype);
-
 		long userId = portletDataContext.getUserId(
 			layoutPrototype.getUserUuid());
 
@@ -92,7 +91,7 @@ public class LayoutPrototypeStagedModelDataHandler
 						userId, portletDataContext.getCompanyId(),
 						layoutPrototype.getNameMap(),
 						layoutPrototype.getDescription(),
-						layoutPrototype.isActive(), serviceContext);
+						layoutPrototype.isActive(), false, serviceContext);
 			}
 			else {
 				importedLayoutPrototype =
@@ -109,8 +108,12 @@ public class LayoutPrototypeStagedModelDataHandler
 					userId, portletDataContext.getCompanyId(),
 					layoutPrototype.getNameMap(),
 					layoutPrototype.getDescription(),
-					layoutPrototype.isActive(), serviceContext);
+					layoutPrototype.isActive(), false, serviceContext);
 		}
+
+		importLayouts(
+			portletDataContext, layoutPrototype,
+			importedLayoutPrototype.getGroupId());
 
 		portletDataContext.importClassedModel(
 			layoutPrototype, importedLayoutPrototype,
@@ -138,8 +141,10 @@ public class LayoutPrototypeStagedModelDataHandler
 
 	protected void importLayouts(
 			PortletDataContext portletDataContext,
-			LayoutPrototype layoutPrototype)
-		throws PortletDataException {
+			LayoutPrototype layoutPrototype, long groupId)
+		throws PortalException, SystemException {
+
+		portletDataContext.setGroupId(groupId);
 
 		List<Element> layoutElements =
 			portletDataContext.getReferenceDataElements(

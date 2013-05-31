@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -25,6 +27,7 @@ import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StreamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Group;
@@ -66,35 +69,15 @@ public class LayoutSetPrototypeStagedModelDataHandler
 		Element layoutSetPrototypeElement =
 			portletDataContext.getExportDataElement(layoutSetPrototype);
 
-		exportLayoutPrototypes(
-			portletDataContext, layoutSetPrototype, layoutSetPrototypeElement);
-
 		portletDataContext.addClassedModel(
 			layoutSetPrototypeElement,
 			ExportImportPathUtil.getModelPath(layoutSetPrototype),
 			layoutSetPrototype, LayoutSetPrototypePortletDataHandler.NAMESPACE);
 
-		File file = null;
-		InputStream in = null;
+		exportLayouts(layoutSetPrototype, portletDataContext);
 
-		try {
-			file = SitesUtil.exportLayoutSetPrototype(
-				layoutSetPrototype, new ServiceContext());
-
-			String path = ExportImportPathUtil.getModelPath(
-				layoutSetPrototype, _LAR_FILE_NAME);
-
-			in = new FileInputStream(file);
-
-			portletDataContext.addZipEntry(path, in);
-		}
-		finally {
-			StreamUtil.cleanUp(in);
-
-			if (file != null) {
-				file.delete();
-			}
-		}
+		exportLayoutPrototypes(
+			portletDataContext, layoutSetPrototype, layoutSetPrototypeElement);
 	}
 
 	@Override
@@ -102,8 +85,6 @@ public class LayoutSetPrototypeStagedModelDataHandler
 			PortletDataContext portletDataContext,
 			LayoutSetPrototype layoutSetPrototype)
 		throws Exception {
-
-		importLayoutPrototypes(portletDataContext, layoutSetPrototype);
 
 		long userId = portletDataContext.getUserId(
 			layoutSetPrototype.getUserUuid());
@@ -134,7 +115,7 @@ public class LayoutSetPrototypeStagedModelDataHandler
 						userId, portletDataContext.getCompanyId(),
 						layoutSetPrototype.getNameMap(),
 						layoutSetPrototype.getDescription(),
-						layoutSetPrototype.isActive(), layoutsUpdateable,
+						layoutSetPrototype.isActive(), layoutsUpdateable, false,
 						serviceContext);
 			}
 			else {
@@ -153,7 +134,7 @@ public class LayoutSetPrototypeStagedModelDataHandler
 					userId, portletDataContext.getCompanyId(),
 					layoutSetPrototype.getNameMap(),
 					layoutSetPrototype.getDescription(),
-					layoutSetPrototype.isActive(), layoutsUpdateable,
+					layoutSetPrototype.isActive(), layoutsUpdateable, false,
 					serviceContext);
 		}
 
@@ -161,19 +142,57 @@ public class LayoutSetPrototypeStagedModelDataHandler
 			layoutSetPrototype, importedLayoutSetPrototype,
 			LayoutSetPrototypePortletDataHandler.NAMESPACE);
 
+		importLayoutPrototypes(portletDataContext, layoutSetPrototype);
+
+		importLayouts(portletDataContext, layoutSetPrototype,
+			importedLayoutSetPrototype, serviceContext);
+	}
+
+	protected void exportLayouts(
+			LayoutSetPrototype layoutSetPrototype,
+			PortletDataContext portletDataContext)
+		throws Exception {
+
+		File file = null;
 		InputStream in = null;
 
 		try {
+			file = SitesUtil.exportLayoutSetPrototype(
+				layoutSetPrototype, new ServiceContext());
+
+			in = new FileInputStream(file);
+
+			List<Layout> layoutSetPrototypeLayouts =
+				LayoutLocalServiceUtil.getLayouts(
+					layoutSetPrototype.getGroup().getGroupId(), true);
+
+			Element layoutSetPrototypeElement =
+				portletDataContext.getExportDataElement(
+					layoutSetPrototype);
+
+			for (Layout layoutSetPrototypeLayout : layoutSetPrototypeLayouts) {
+				portletDataContext.addReferenceElement(
+					layoutSetPrototype, layoutSetPrototypeElement,
+					layoutSetPrototypeLayout,
+					PortletDataContext.REFERENCE_TYPE_EMBEDDED,
+					false);
+			}
+
 			String path = ExportImportPathUtil.getModelPath(
 				layoutSetPrototype, _LAR_FILE_NAME);
 
-			in = portletDataContext.getZipEntryAsInputStream(path);
-
-			SitesUtil.importLayoutSetPrototype(
-				importedLayoutSetPrototype, in, serviceContext);
+			portletDataContext.addZipEntry(path, in);
+		}
+		catch (Exception fnfe) {
+			throw new SystemException(
+				"Unable to fiend temporary layouts file", fnfe);
 		}
 		finally {
 			StreamUtil.cleanUp(in);
+
+			if (file != null) {
+				file.delete();
+			}
 		}
 	}
 
@@ -192,12 +211,14 @@ public class LayoutSetPrototypeStagedModelDataHandler
 
 		Group layoutSetPrototypeGroup = layoutSetPrototype.getGroup();
 
-				dynamicQuery.add(
-					groupIdProperty.eq(layoutSetPrototypeGroup.getGroupId()));
-		Property layoutPrototypeLinkEnabledProperty =
-			PropertyFactoryUtil.forName("layoutPrototypeLinkEnabled");
+		dynamicQuery.add(
+			groupIdProperty.eq(layoutSetPrototypeGroup.getGroupId()));
 
-		dynamicQuery.add(layoutPrototypeLinkEnabledProperty.eq(true));
+		Property layoutPrototypeUuidProperty =
+			PropertyFactoryUtil.forName("layoutPrototypeUuid");
+
+		dynamicQuery.add(
+			layoutPrototypeUuidProperty.ne(StringPool.BLANK));
 
 		List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(
 			dynamicQuery);
@@ -229,21 +250,44 @@ public class LayoutSetPrototypeStagedModelDataHandler
 		}
 	}
 
+	protected void importLayouts(
+			PortletDataContext portletDataContext,
+			LayoutSetPrototype layoutSetPrototype,
+			LayoutSetPrototype importedLayoutSetPrototype,
+			ServiceContext serviceContext)
+		throws SystemException, PortalException {
+
+		InputStream in = null;
+
+		try {
+			String path = ExportImportPathUtil.getModelPath(
+				layoutSetPrototype, _LAR_FILE_NAME);
+
+			in = portletDataContext.getZipEntryAsInputStream(path);
+
+			SitesUtil.importLayoutSetPrototype(
+				importedLayoutSetPrototype, in, serviceContext);
+		}
+		finally {
+			StreamUtil.cleanUp(in);
+		}
+	}
+
 	protected void importLayoutPrototypes(
 			PortletDataContext portletDataContext,
 			LayoutSetPrototype layoutSetPrototype)
 		throws PortletDataException {
 
-		List<Element> layoutPrototypesElement =
+		List<Element> layoutPrototypeElements =
 			portletDataContext.getReferenceDataElements(
 				layoutSetPrototype, LayoutPrototype.class);
 
-		for (Element layoutPrototypeElement : layoutPrototypesElement) {
+		for (Element layoutPrototypeElement : layoutPrototypeElements) {
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, layoutPrototypeElement);
 		}
 	}
 
-	private static final String _LAR_FILE_NAME = "lar";
+	private static final String _LAR_FILE_NAME = "layout.lar";
 
 }
