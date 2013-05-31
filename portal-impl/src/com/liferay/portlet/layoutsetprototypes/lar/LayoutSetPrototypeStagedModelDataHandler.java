@@ -171,6 +171,25 @@ public class LayoutSetPrototypeStagedModelDataHandler
 
 		dynamicQuery.add(layoutPrototypeUuidProperty.ne(StringPool.BLANK));
 
+
+
+//		dynamicQuery.add(layoutPrototypeUuidProperty.isNotNull());
+//
+//		Conjunction and = RestrictionsFactoryUtil.conjunction();
+//
+//		Criterion criterion1 = layoutPrototypeUuidProperty.isNotNull();
+//
+//		Criterion notBlank = layoutPrototypeUuidProperty.ne(StringPool.BLANK);
+//		Criterion notNull = layoutPrototypeUuidProperty.isNotNull();
+//
+//		and.add(criterion1);
+//		dynamicQuery.add(notBlank).add(notNull);
+//
+//		CustomSQL
+//
+//		RestrictionsFactoryUtil.eq()
+//		and.add(Restriction)
+
 		List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(
 			dynamicQuery);
 

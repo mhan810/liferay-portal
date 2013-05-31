@@ -100,6 +100,26 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 	}
 
 	@Override
+	protected void deleteStagedModel(
+			StagedModel stagedModel,
+			Map<String, List<StagedModel>> dependentStagedModelsMap,
+			Group group)
+		throws Exception {
+
+		LayoutSetPrototypeLocalServiceUtil.deleteLayoutSetPrototype(
+			(LayoutSetPrototype)stagedModel);
+
+		List<StagedModel> dependentLayoutSetPrototypeStagedModels =
+			dependentStagedModelsMap.get(
+				LayoutPrototype.class.getSimpleName());
+
+		LayoutPrototype layoutPrototype =
+			(LayoutPrototype)dependentLayoutSetPrototypeStagedModels.get(0);
+
+		LayoutPrototypeLocalServiceUtil.deleteLayoutPrototype(layoutPrototype);
+	}
+
+	@Override
 	protected StagedModel getStagedModel(String uuid, Group group) {
 		try {
 			return LayoutSetPrototypeLocalServiceUtil.
@@ -368,6 +388,5 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 
 	private Map<String, List<Layout>> _dependentLayoutsMap =
 			new HashMap<String, List<Layout>>();
-
 
 }

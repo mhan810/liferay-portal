@@ -144,15 +144,28 @@ public class LayoutPrototypeStagedModelDataHandler
 			LayoutPrototype layoutPrototype, long groupId)
 		throws PortalException, SystemException {
 
-		portletDataContext.setGroupId(groupId);
+		long currentGroupId = portletDataContext.getGroupId();
 
-		List<Element> layoutElements =
-			portletDataContext.getReferenceDataElements(
-				layoutPrototype, Layout.class);
+		boolean isCurrentPrivateLayout = portletDataContext.isPrivateLayout();
 
-		for (Element layoutElement : layoutElements) {
-			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, layoutElement);
+		try {
+			portletDataContext.setGroupId(groupId);
+
+			portletDataContext.setPrivateLayout(true);
+
+			List<Element> layoutElements =
+				portletDataContext.getReferenceDataElements(
+					layoutPrototype, Layout.class);
+
+			for (Element layoutElement : layoutElements) {
+				StagedModelDataHandlerUtil.importStagedModel(
+					portletDataContext, layoutElement);
+			}
+		}
+		finally {
+			portletDataContext.setGroupId(currentGroupId);
+
+			portletDataContext.setPrivateLayout(isCurrentPrivateLayout);
 		}
 	}
 
