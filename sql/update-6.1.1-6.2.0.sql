@@ -524,7 +524,7 @@ create table SocialActivitySet (
 	classPK LONG,
 	type_ INTEGER,
 	activityCount INTEGER,
-	extraData VARCHAR(75) null
+	extraData STRING null
 );
 
 create table TrashEntry (

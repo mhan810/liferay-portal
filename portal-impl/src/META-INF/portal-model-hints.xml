@@ -2539,7 +2539,10 @@
 		<field name="classPK" type="long" />
 		<field name="type" type="int" />
 		<field name="activityCount" type="int" />
-		<field name="extraData" type="String" />
+		<field name="extraData" type="String">
+			<hint-collection name="TEXTAREA" />
+			<hint name="auto-escape">false</hint>
+		</field>
 	</model>
 	<model name="com.liferay.portlet.social.model.SocialActivitySetting">
 		<field name="activitySettingId" type="long" />
