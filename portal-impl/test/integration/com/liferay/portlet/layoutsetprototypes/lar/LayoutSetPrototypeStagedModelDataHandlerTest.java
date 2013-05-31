@@ -155,8 +155,7 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 
 			List<Element> elements = stagedModelGroupElement.elements();
 
-			Assert.assertEquals(
-				dependentStagedModels.size(), elements.size());
+			Assert.assertEquals(dependentStagedModels.size(), elements.size());
 
 			for (Element element : elements) {
 				String path = element.attributeValue("path");
@@ -206,8 +205,8 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 		Layout importedLayoutSetPrototypeLayout = _validateLayouts(
 			importedlayoutSetPrototype, importedLayoutPrototype);
 
-		// Check dependency between imported
-		// layoutSetPrototype and layoutPrototype
+		// Check dependency between imported layoutSetPrototype and
+		// layoutPrototype
 
 		Assert.assertEquals(
 			importedLayoutPrototype.getUuid(),
@@ -215,8 +214,8 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 	}
 
 	private void _addDependentLayout(Class<?> clazz, Layout layout) {
-		List<Layout> dependentLayouts =
-			_dependentLayoutsMap.get(clazz.getSimpleName());
+		List<Layout> dependentLayouts = _dependentLayoutsMap.get(
+			clazz.getSimpleName());
 
 		if (dependentLayouts == null) {
 			dependentLayouts = new ArrayList<Layout>();
@@ -235,8 +234,7 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 			ServiceTestUtil.randomString());
 
 		addDependentStagedModel(
-			dependentStagedModelsMap, LayoutPrototype.class,
-			layoutPrototype);
+			dependentStagedModelsMap, LayoutPrototype.class, layoutPrototype);
 
 		List<Layout> layoutPrototypeLayouts =
 			LayoutLocalServiceUtil.getLayouts(
@@ -259,8 +257,7 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 		return _dependentLayoutsMap.get(clazz.getSimpleName());
 	}
 
-	private void _populateLayoutSetPrototypeLayouts(
-		StagedModel stagedModel)
+	private void _populateLayoutSetPrototypeLayouts(StagedModel stagedModel)
 		throws DocumentException, IOException {
 
 		String path = ExportImportPathUtil.getModelPath(
@@ -278,8 +275,9 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 			manifestDocument.getRootElement().element("Layout").elements();
 
 		for (Element stagedModelDataElement : stagedModelDataElements) {
-			String layoutPrototypeUuid =
-				stagedModelDataElement.attributeValue("layout-prototype-uuid");
+			String layoutPrototypeUuid = stagedModelDataElement.attributeValue(
+				"layout-prototype-uuid");
+
 			if (Validator.isNotNull(layoutPrototypeUuid)) {
 				String layoutPath = stagedModelDataElement.attributeValue(
 					"path");
@@ -291,55 +289,6 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 				_dependentLayoutSetPrototypeLayouts.add(
 					layoutSetPrototypeLayout);
 			}
-		}
-	}
-
-	private Layout _validateLayouts(
-			LayoutSetPrototype importedLayoutSetPrototype,
-			LayoutPrototype importedLayoutPrototype)
-		throws SystemException, PortalException {
-
-		// Validate layouts
-
-		_validatePrototypeLayouts(
-			LayoutSetPrototype.class,
-			importedLayoutSetPrototype.getGroup().getGroupId());
-		_validatePrototypeLayouts(
-			LayoutPrototype.class, importedLayoutPrototype.getGroupId());
-
-		// Validate dependency between layoutSetPrototype and layoutPrototype
-
-		Assert.assertEquals(1, _dependentLayoutSetPrototypeLayouts.size());
-
-		Layout layoutSetPrototypeLayout =
-			_dependentLayoutSetPrototypeLayouts.get(0);
-
-		Assert.assertNotNull(
-			layoutSetPrototypeLayout.getLayoutPrototypeUuid());
-
-		Layout importedLayoutSetPrototypeLayout =
-			LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-				layoutSetPrototypeLayout.getUuid(),
-				importedLayoutSetPrototype.getGroup().getGroupId(), true);
-
-		Assert.assertNotNull(importedLayoutSetPrototypeLayout);
-
-		return importedLayoutSetPrototypeLayout;
-	}
-
-	private void _validatePrototypeLayouts(
-			Class<?> clazz, long groupId)
-		throws SystemException {
-
-		List<Layout> dependentLayouts = _getDependentLayouts(clazz);
-
-		for (Layout dependentLayout : dependentLayouts) {
-			Layout importedDependentLayout =
-				LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-					dependentLayout.getUuid(), groupId,
-					dependentLayout.getPrivateLayout());
-
-			Assert.assertNotNull(importedDependentLayout);
 		}
 	}
 
@@ -366,12 +315,59 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 		return importedLayoutPrototype;
 	}
 
-	private Map<String, List<Layout>> _dependentLayoutsMap =
-			new HashMap<String, List<Layout>>();
+	private Layout _validateLayouts(
+			LayoutSetPrototype importedLayoutSetPrototype,
+			LayoutPrototype importedLayoutPrototype)
+		throws PortalException, SystemException {
 
+		// Validate layouts
+
+		_validatePrototypeLayouts(
+			LayoutSetPrototype.class,
+			importedLayoutSetPrototype.getGroup().getGroupId());
+		_validatePrototypeLayouts(
+			LayoutPrototype.class, importedLayoutPrototype.getGroupId());
+
+		// Validate dependency between layoutSetPrototype and layoutPrototype
+
+		Assert.assertEquals(1, _dependentLayoutSetPrototypeLayouts.size());
+
+		Layout layoutSetPrototypeLayout =
+			_dependentLayoutSetPrototypeLayouts.get(0);
+
+		Assert.assertNotNull(layoutSetPrototypeLayout.getLayoutPrototypeUuid());
+
+		Layout importedLayoutSetPrototypeLayout =
+			LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
+				layoutSetPrototypeLayout.getUuid(),
+				importedLayoutSetPrototype.getGroup().getGroupId(), true);
+
+		Assert.assertNotNull(importedLayoutSetPrototypeLayout);
+
+		return importedLayoutSetPrototypeLayout;
+	}
+
+	private void _validatePrototypeLayouts(Class<?> clazz, long groupId)
+		throws SystemException {
+
+		List<Layout> dependentLayouts = _getDependentLayouts(clazz);
+
+		for (Layout dependentLayout : dependentLayouts) {
+			Layout importedDependentLayout =
+				LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
+					dependentLayout.getUuid(), groupId,
+					dependentLayout.getPrivateLayout());
+
+			Assert.assertNotNull(importedDependentLayout);
+		}
+	}
+
+	private static final String _LAR_FILE_NAME = "layout.lar";
 	private List<Layout> _dependentLayoutSetPrototypeLayouts =
 		new ArrayList<Layout>();
 
-	private static final String _LAR_FILE_NAME = "layout.lar";
+	private Map<String, List<Layout>> _dependentLayoutsMap =
+			new HashMap<String, List<Layout>>();
+
 
 }

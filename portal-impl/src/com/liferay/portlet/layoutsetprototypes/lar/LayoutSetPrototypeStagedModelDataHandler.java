@@ -148,54 +148,6 @@ public class LayoutSetPrototypeStagedModelDataHandler
 			importedLayoutSetPrototype, serviceContext);
 	}
 
-	protected void exportLayouts(
-			LayoutSetPrototype layoutSetPrototype,
-			PortletDataContext portletDataContext)
-		throws Exception {
-
-		File file = null;
-		InputStream in = null;
-
-		try {
-			file = SitesUtil.exportLayoutSetPrototype(
-				layoutSetPrototype, new ServiceContext());
-
-			in = new FileInputStream(file);
-
-			List<Layout> layoutSetPrototypeLayouts =
-				LayoutLocalServiceUtil.getLayouts(
-					layoutSetPrototype.getGroup().getGroupId(), true);
-
-			Element layoutSetPrototypeElement =
-				portletDataContext.getExportDataElement(
-					layoutSetPrototype);
-
-			for (Layout layoutSetPrototypeLayout : layoutSetPrototypeLayouts) {
-				portletDataContext.addReferenceElement(
-					layoutSetPrototype, layoutSetPrototypeElement,
-					layoutSetPrototypeLayout,
-					PortletDataContext.REFERENCE_TYPE_EMBEDDED,
-					false);
-			}
-
-			String path = ExportImportPathUtil.getModelPath(
-				layoutSetPrototype, _LAR_FILE_NAME);
-
-			portletDataContext.addZipEntry(path, in);
-		}
-		catch (Exception fnfe) {
-			throw new SystemException(
-				"Unable to fiend temporary layouts file", fnfe);
-		}
-		finally {
-			StreamUtil.cleanUp(in);
-
-			if (file != null) {
-				file.delete();
-			}
-		}
-	}
-
 	protected void exportLayoutPrototypes(
 			PortletDataContext portletDataContext,
 			LayoutSetPrototype layoutSetPrototype,
@@ -214,11 +166,10 @@ public class LayoutSetPrototypeStagedModelDataHandler
 		dynamicQuery.add(
 			groupIdProperty.eq(layoutSetPrototypeGroup.getGroupId()));
 
-		Property layoutPrototypeUuidProperty =
-			PropertyFactoryUtil.forName("layoutPrototypeUuid");
+		Property layoutPrototypeUuidProperty = PropertyFactoryUtil.forName(
+			"layoutPrototypeUuid");
 
-		dynamicQuery.add(
-			layoutPrototypeUuidProperty.ne(StringPool.BLANK));
+		dynamicQuery.add(layoutPrototypeUuidProperty.ne(StringPool.BLANK));
 
 		List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(
 			dynamicQuery);
@@ -240,8 +191,7 @@ public class LayoutSetPrototypeStagedModelDataHandler
 
 			portletDataContext.addReferenceElement(
 				layout, layoutSetPrototypeElement, layoutPrototype,
-				PortletDataContext.REFERENCE_TYPE_DEPENDENCY,
-				missingReference);
+				PortletDataContext.REFERENCE_TYPE_DEPENDENCY, missingReference);
 
 			if (exportLayoutPrototypes) {
 				StagedModelDataHandlerUtil.exportStagedModel(
@@ -250,26 +200,49 @@ public class LayoutSetPrototypeStagedModelDataHandler
 		}
 	}
 
-	protected void importLayouts(
-			PortletDataContext portletDataContext,
+	protected void exportLayouts(
 			LayoutSetPrototype layoutSetPrototype,
-			LayoutSetPrototype importedLayoutSetPrototype,
-			ServiceContext serviceContext)
-		throws SystemException, PortalException {
+			PortletDataContext portletDataContext)
+		throws Exception {
 
+		File file = null;
 		InputStream in = null;
 
 		try {
+			file = SitesUtil.exportLayoutSetPrototype(
+				layoutSetPrototype, new ServiceContext());
+
+			in = new FileInputStream(file);
+
+			List<Layout> layoutSetPrototypeLayouts =
+				LayoutLocalServiceUtil.getLayouts(
+					layoutSetPrototype.getGroup().getGroupId(), true);
+
+			Element layoutSetPrototypeElement =
+				portletDataContext.getExportDataElement(layoutSetPrototype);
+
+			for (Layout layoutSetPrototypeLayout : layoutSetPrototypeLayouts) {
+				portletDataContext.addReferenceElement(
+					layoutSetPrototype, layoutSetPrototypeElement,
+					layoutSetPrototypeLayout,
+					PortletDataContext.REFERENCE_TYPE_EMBEDDED, false);
+			}
+
 			String path = ExportImportPathUtil.getModelPath(
 				layoutSetPrototype, _LAR_FILE_NAME);
 
-			in = portletDataContext.getZipEntryAsInputStream(path);
-
-			SitesUtil.importLayoutSetPrototype(
-				importedLayoutSetPrototype, in, serviceContext);
+			portletDataContext.addZipEntry(path, in);
+		}
+		catch (Exception fnfe) {
+			throw new SystemException(
+				"Unable to fiend temporary layouts file", fnfe);
 		}
 		finally {
 			StreamUtil.cleanUp(in);
+
+			if (file != null) {
+				file.delete();
+			}
 		}
 	}
 
@@ -285,6 +258,29 @@ public class LayoutSetPrototypeStagedModelDataHandler
 		for (Element layoutPrototypeElement : layoutPrototypeElements) {
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, layoutPrototypeElement);
+		}
+	}
+
+	protected void importLayouts(
+			PortletDataContext portletDataContext,
+			LayoutSetPrototype layoutSetPrototype,
+			LayoutSetPrototype importedLayoutSetPrototype,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		InputStream in = null;
+
+		try {
+			String path = ExportImportPathUtil.getModelPath(
+				layoutSetPrototype, _LAR_FILE_NAME);
+
+			in = portletDataContext.getZipEntryAsInputStream(path);
+
+			SitesUtil.importLayoutSetPrototype(
+				importedLayoutSetPrototype, in, serviceContext);
+		}
+		finally {
+			StreamUtil.cleanUp(in);
 		}
 	}
 
