@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.layoutsetprototypes.lar;
 
+import com.liferay.portal.kernel.dao.orm.Conjunction;
 import com.liferay.portal.kernel.dao.orm.Disjunction;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
@@ -165,14 +166,14 @@ public class LayoutSetPrototypeStagedModelDataHandler
 		dynamicQuery.add(
 			groupIdProperty.eq(layoutSetPrototypeGroup.getGroupId()));
 
-		Disjunction disjunction = RestrictionsFactoryUtil.disjunction();
-		dynamicQuery.add(disjunction);
+		Conjunction conjunction = RestrictionsFactoryUtil.conjunction();
+		dynamicQuery.add(conjunction);
 
 		Property layoutPrototypeUuidProperty = PropertyFactoryUtil.forName(
 			"layoutPrototypeUuid");
 
-		disjunction.add(layoutPrototypeUuidProperty.isNotNull());
-		disjunction.add(layoutPrototypeUuidProperty.ne(StringPool.BLANK));
+		conjunction.add(layoutPrototypeUuidProperty.isNotNull());
+		conjunction.add(layoutPrototypeUuidProperty.ne(StringPool.BLANK));
 
 		List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(
 			dynamicQuery);
