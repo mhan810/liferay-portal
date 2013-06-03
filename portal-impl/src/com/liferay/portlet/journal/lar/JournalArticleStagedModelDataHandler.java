@@ -78,17 +78,7 @@ public class JournalArticleStagedModelDataHandler
 	public static final String[] CLASS_NAMES = {JournalArticle.class.getName()};
 
 	@Override
-	public String[] getClassNames() {
-		return CLASS_NAMES;
-	}
-
-	@Override
-	public String getDisplayName(JournalArticle article) {
-		return article.getTitleCurrentValue();
-	}
-
-	@Override
-	protected boolean countStagedModel(
+	public boolean countStagedModel(
 		PortletDataContext portletDataContext, JournalArticle article) {
 
 		if (portletDataContext.isPathProcessed(
@@ -101,6 +91,16 @@ public class JournalArticleStagedModelDataHandler
 		}
 
 		return true;
+	}
+
+	@Override
+	public String[] getClassNames() {
+		return CLASS_NAMES;
+	}
+
+	@Override
+	public String getDisplayName(JournalArticle article) {
+		return article.getTitleCurrentValue();
 	}
 
 	@Override

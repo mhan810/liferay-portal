@@ -15,6 +15,7 @@
 package com.liferay.portal.lar;
 
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
+import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.StagedModelDataHandler;
 import com.liferay.portal.kernel.lar.messaging.ExportImportAction;
 import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSenderUtil;
@@ -78,6 +79,16 @@ public class StagedModelDataHandlerInvocationHandler
 
 		try {
 			Object returnValue = method.invoke(_stagedModelDataHandler, args);
+
+			if (_stagedModelDataHandler.countStagedModel(
+					portletDataContext, stagedModel)) {
+
+				ManifestSummary manifestSummary =
+					portletDataContext.getManifestSummary();
+
+				manifestSummary.incrementModelAdditionCount(
+					_stagedModelDataHandler.getManifestSummaryKey(stagedModel));
+			}
 
 			ExportImportMessageSenderUtil.sendMessage(
 				exportImportAction, ExportImportStatus.END, stagedModel);
