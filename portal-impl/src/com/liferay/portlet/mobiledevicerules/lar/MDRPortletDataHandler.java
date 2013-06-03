@@ -16,7 +16,6 @@ package com.liferay.portlet.mobiledevicerules.lar;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
-import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
@@ -144,35 +143,26 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 			PortletDataContext portletDataContext)
 		throws Exception {
 
-		ManifestSummary manifestSummary =
-			portletDataContext.getManifestSummary();
-
 		ActionableDynamicQuery actionsActionableDynamicQuery =
 			new MDRActionExportActionableDynamicQuery(portletDataContext);
 
-		manifestSummary.addModelCount(
-			MDRAction.class, actionsActionableDynamicQuery.performCount());
+		actionsActionableDynamicQuery.performCount();
 
 		ActionableDynamicQuery rulesActionableDynamicQuery =
 			new MDRRuleExportActionableDynamicQuery(portletDataContext);
 
-		manifestSummary.addModelCount(
-			MDRRule.class, rulesActionableDynamicQuery.performCount());
+		rulesActionableDynamicQuery.performCount();
 
 		ActionableDynamicQuery ruleGroupsActionableDynamicQuery =
 			new MDRRuleGroupExportActionableDynamicQuery(portletDataContext);
 
-		manifestSummary.addModelCount(
-			MDRRuleGroup.class,
-			ruleGroupsActionableDynamicQuery.performCount());
+		ruleGroupsActionableDynamicQuery.performCount();
 
 		ActionableDynamicQuery ruleGroupInstancesActionableDynamicQuery =
 			new MDRRuleGroupInstanceExportActionableDynamicQuery(
 				portletDataContext);
 
-		manifestSummary.addModelCount(
-			MDRRuleGroupInstance.class,
-			ruleGroupInstancesActionableDynamicQuery.performCount());
+		ruleGroupInstancesActionableDynamicQuery.performCount();
 	}
 
 }
