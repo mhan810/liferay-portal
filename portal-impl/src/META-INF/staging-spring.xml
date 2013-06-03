@@ -13,6 +13,18 @@
 			<bean class="com.liferay.portal.lar.PortletDataContextFactoryImpl" />
 		</property>
 	</bean>
+	<bean id="com.liferay.portal.kernel.lar.messaging.ExportImportMessageSenderUtil" class="com.liferay.portal.kernel.lar.messaging.ExportImportMessageSenderUtil">
+		<property name="exportImportMessageSender">
+			<bean class="com.liferay.portal.lar.messaging.ExportImportMessageSenderImpl">
+				<property name="singleDestinationMessageSender">
+					<bean class="com.liferay.portal.kernel.messaging.sender.DefaultSingleDestinationMessageSender">
+						<property name="destinationName" value="liferay/export_import" />
+						<property name="messageSender" ref="com.liferay.portal.kernel.messaging.sender.MessageSender" />
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
 	<bean id="com.liferay.portal.kernel.staging.LayoutStagingUtil" class="com.liferay.portal.kernel.staging.LayoutStagingUtil">
 		<property name="layoutStaging">
 			<bean class="com.liferay.portal.staging.LayoutStagingImpl" />
@@ -36,4 +48,21 @@
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.LayoutSetLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.LayoutSetLocalService)" />
 		<aop:advisor advice-ref="com.liferay.portal.service.impl.PortletPreferencesLocalServiceStagingAdvice" pointcut="bean(com.liferay.portal.service.PortletPreferencesLocalService)" />
 	</aop:config>
+
+	<!-- Messaging -->
+
+	<bean id="destination.export_import" class="com.liferay.portal.kernel.messaging.SerialDestination">
+		<property name="name" value="liferay/export_import" />
+	</bean>
+	<bean id="messagingConfigurator.staging" class="com.liferay.portal.kernel.messaging.config.DefaultMessagingConfigurator">
+		<property name="destinations">
+			<list>
+				<ref bean="destination.export_import" />
+			</list>
+		</property>
+		<property name="messageBus">
+			<ref bean="com.liferay.portal.kernel.messaging.MessageBus" />
+		</property>
+	</bean>
+
 </beans>

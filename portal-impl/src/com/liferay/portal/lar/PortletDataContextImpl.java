@@ -30,6 +30,9 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
+import com.liferay.portal.kernel.lar.messaging.ExportImportAction;
+import com.liferay.portal.kernel.lar.messaging.ExportImportMessageSenderUtil;
+import com.liferay.portal.kernel.lar.messaging.ExportImportStatus;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
@@ -587,78 +590,92 @@ public class PortletDataContextImpl implements PortletDataContext {
 		ClassedModel classedModel, String className, String binPath,
 		String referenceType, boolean missing) {
 
-		if (missing) {
-			addReferenceElement(
-				referrerStagedModel, element, classedModel, className, binPath,
-				false);
-		}
+		ExportImportMessageSenderUtil.sendMessage(
+			ExportImportAction.EXPORT_REFERENCE, ExportImportStatus.START,
+			referrerStagedModel, classedModel, referenceType);
 
-		Element referenceElement = null;
-
-		if (missing) {
-			Element referencesElement = _missingReferencesElement;
-
-			referenceElement = referencesElement.addElement(
-				"missing-reference");
-		}
-		else {
-			Element referencesElement = element.element("references");
-
-			if (referencesElement == null) {
-				referencesElement = element.addElement("references");
+		try {
+			if (missing) {
+				addReferenceElement(
+					referrerStagedModel, element, classedModel, className,
+					binPath, false);
 			}
 
-			referenceElement = referencesElement.addElement("reference");
-		}
+			Element referenceElement = null;
 
-		referenceElement.addAttribute("class-name", className);
+			if (missing) {
+				Element referencesElement = _missingReferencesElement;
+
+				referenceElement = referencesElement.addElement(
+					"missing-reference");
+			}
+			else {
+				Element referencesElement = element.element("references");
+
+				if (referencesElement == null) {
+					referencesElement = element.addElement("references");
+				}
+
+				referenceElement = referencesElement.addElement("reference");
+			}
+
+			referenceElement.addAttribute("class-name", className);
 
 		referenceElement.addAttribute(
 			"class-pk", String.valueOf(classedModel.getPrimaryKeyObj()));
 
-		if (missing) {
-			if (classedModel instanceof StagedModel) {
+			if (missing) {
+				if (classedModel instanceof StagedModel) {
+					referenceElement.addAttribute(
+						"display-name",
+						StagedModelDataHandlerUtil.getDisplayName(
+							(StagedModel)classedModel));
+				}
+				else {
+					referenceElement.addAttribute(
+						"display-name",
+						String.valueOf(classedModel.getPrimaryKeyObj()));
+				}
+			}
+
+			if (classedModel instanceof StagedGroupedModel) {
+				StagedGroupedModel stagedGroupedModel =
+					(StagedGroupedModel)classedModel;
+
 				referenceElement.addAttribute(
-					"display-name",
+					"group-id",
+					String.valueOf(stagedGroupedModel.getGroupId()));
+			}
+
+			if (Validator.isNotNull(binPath)) {
+				referenceElement.addAttribute("path", binPath);
+			}
+
+			referenceElement.addAttribute("type", referenceType);
+
+			if (missing) {
+				referenceElement.addAttribute(
+					"referrer-class-name",
+					referrerStagedModel.getModelClassName());
+				referenceElement.addAttribute(
+					"referrer-display-name",
 					StagedModelDataHandlerUtil.getDisplayName(
-						(StagedModel)classedModel));
+						referrerStagedModel));
 			}
-			else {
-				referenceElement.addAttribute(
-					"display-name",
-					String.valueOf(classedModel.getPrimaryKeyObj()));
+
+			if (classedModel instanceof StagedModel) {
+				StagedModel stagedModel = (StagedModel)classedModel;
+
+				referenceElement.addAttribute("uuid", stagedModel.getUuid());
 			}
+
+			return referenceElement;
 		}
-
-		if (classedModel instanceof StagedGroupedModel) {
-			StagedGroupedModel stagedGroupedModel =
-				(StagedGroupedModel)classedModel;
-
-			referenceElement.addAttribute(
-				"group-id", String.valueOf(stagedGroupedModel.getGroupId()));
+		finally {
+			ExportImportMessageSenderUtil.sendMessage(
+				ExportImportAction.EXPORT_REFERENCE, ExportImportStatus.END,
+				referrerStagedModel, classedModel, referenceType);
 		}
-
-		if (Validator.isNotNull(binPath)) {
-			referenceElement.addAttribute("path", binPath);
-		}
-
-		referenceElement.addAttribute("type", referenceType);
-
-		if (missing) {
-			referenceElement.addAttribute(
-				"referrer-class-name", referrerStagedModel.getModelClassName());
-			referenceElement.addAttribute(
-				"referrer-display-name",
-				StagedModelDataHandlerUtil.getDisplayName(referrerStagedModel));
-		}
-
-		if (classedModel instanceof StagedModel) {
-			StagedModel stagedModel = (StagedModel)classedModel;
-
-			referenceElement.addAttribute("uuid", stagedModel.getUuid());
-		}
-
-		return referenceElement;
 	}
 
 	@Override
