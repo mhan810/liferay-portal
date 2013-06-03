@@ -14,12 +14,11 @@
 
 package com.liferay.portlet.bookmarks.social;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.service.BookmarksEntryLocalServiceUtil;
-import com.liferay.portlet.bookmarks.service.permission.BookmarksEntryPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
@@ -37,14 +36,12 @@ public class BookmarksEntryActivityInterpreter
 	}
 
 	@Override
-	protected String getEntryTitle(
+	protected Object doGetEntity(
 			SocialActivity activity, ServiceContext serviceContext)
-		throws Exception {
+		throws SystemException {
 
-		BookmarksEntry entry = BookmarksEntryLocalServiceUtil.getEntry(
+		return BookmarksEntryLocalServiceUtil.fetchBookmarksEntry(
 			activity.getClassPK());
-
-		return entry.getName();
 	}
 
 	@Override
@@ -78,34 +75,32 @@ public class BookmarksEntryActivityInterpreter
 		}
 		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
 			if (Validator.isNull(groupName)) {
-				return "activity-bookmarks-entry-entry-move-to-trash";
+				return "activity-bookmarks-entry-move-to-trash";
 			}
 			else {
-				return "activity-bookmarks-entry-entry-move-to-trash-in";
+				return "activity-bookmarks-entry-move-to-trash-in";
 			}
 		}
 		else if (activityType ==
 					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
 
 			if (Validator.isNull(groupName)) {
-				return "activity-bookmarks-entry-entry-restore-from-trash";
+				return "activity-bookmarks-entry-restore-from-trash";
 			}
 			else {
-				return "activity-bookmarks-entry-entry-restore-from-trash-in";
+				return "activity-bookmarks-entry-restore-from-trash-in";
+			}
+		}
+		else if (activityType == SocialActivityConstants.TYPE_DELETE) {
+			if (Validator.isNull(groupName)) {
+				return "activity-bookmarks-entry-delete";
+			}
+			else {
+				return "activity-bookmarks-entry-delete-in";
 			}
 		}
 
 		return null;
-	}
-
-	@Override
-	protected boolean hasPermissions(
-			PermissionChecker permissionChecker, SocialActivity activity,
-			String actionId, ServiceContext serviceContext)
-		throws Exception {
-
-		return BookmarksEntryPermission.contains(
-			permissionChecker, activity.getClassPK(), actionId);
 	}
 
 	private static final String[] _CLASS_NAMES =

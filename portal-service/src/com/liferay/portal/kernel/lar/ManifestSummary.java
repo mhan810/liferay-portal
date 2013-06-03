@@ -20,22 +20,54 @@ import com.liferay.portal.model.ClassedModel;
 
 import java.io.Serializable;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Mate Thurzo
+ * @author Zsolt Berentey
  */
 public class ManifestSummary implements Serializable {
 
-	public void addModelCount(
-		Class<? extends ClassedModel> clazz, long modelCount) {
+	public void addDeletionCount(
+		Class<? extends ClassedModel> clazz, long count) {
 
-		addModelCount(clazz.getName(), modelCount);
+		addDeletionCount(clazz.getName(), count);
 	}
 
-	public void addModelCount(String modelName, long modelCount) {
-		_modelCounters.put(modelName, modelCount);
+	public void addDeletionCount(String modelName, long count) {
+		_deletionCounters.put(modelName, count);
+
+		_modelNames.add(modelName);
+	}
+
+	public void addModelCount(Class<? extends ClassedModel> clazz, long count) {
+		addModelCount(clazz.getName(), count);
+	}
+
+	public void addModelCount(String modelName, long count) {
+		_modelCounters.put(modelName, count);
+
+		_modelNames.add(modelName);
+	}
+
+	public long getDeletionCount(Class<? extends ClassedModel> clazz) {
+		return getDeletionCount(clazz.getName());
+	}
+
+	public long getDeletionCount(String modelName) {
+		if (!_deletionCounters.containsKey(modelName)) {
+			return -1;
+		}
+
+		return _deletionCounters.get(modelName);
+	}
+
+	public Map<String, Long> getDeletionCounters() {
+		return _deletionCounters;
 	}
 
 	public long getModelCount(Class<? extends ClassedModel> clazz) {
@@ -54,6 +86,28 @@ public class ManifestSummary implements Serializable {
 		return _modelCounters;
 	}
 
+	public Collection<String> getModelNames() {
+		return _modelNames;
+	}
+
+	public void incrementDeletionCount(Class<? extends ClassedModel> clazz) {
+		incrementDeletionCount(clazz.getName());
+	}
+
+	public void incrementDeletionCount(String modelName) {
+		if (!_deletionCounters.containsKey(modelName)) {
+			_deletionCounters.put(modelName, 1L);
+
+			_modelNames.add(modelName);
+
+			return;
+		}
+
+		long deletionCounter = _deletionCounters.get(modelName);
+
+		_deletionCounters.put(modelName, deletionCounter + 1);
+	}
+
 	public void incrementModelCount(Class<? extends ClassedModel> clazz) {
 		incrementModelCount(clazz.getName());
 	}
@@ -61,6 +115,8 @@ public class ManifestSummary implements Serializable {
 	public void incrementModelCount(String modelName) {
 		if (!_modelCounters.containsKey(modelName)) {
 			_modelCounters.put(modelName, 1L);
+
+			_modelNames.add(modelName);
 
 			return;
 		}
@@ -74,13 +130,17 @@ public class ManifestSummary implements Serializable {
 	public String toString() {
 		StringBundler sb = new StringBundler(3);
 
-		sb.append("{_modelCounters=");
+		sb.append("{modelCounters=");
 		sb.append(MapUtil.toString(_modelCounters));
+		sb.append(",{deletionCounters=");
+		sb.append(MapUtil.toString(_deletionCounters));
 		sb.append("}");
 
 		return sb.toString();
 	}
 
+	private Map<String, Long> _deletionCounters = new HashMap<String, Long>();
 	private Map<String, Long> _modelCounters = new HashMap<String, Long>();
+	private Set<String> _modelNames = new HashSet<String>();
 
 }

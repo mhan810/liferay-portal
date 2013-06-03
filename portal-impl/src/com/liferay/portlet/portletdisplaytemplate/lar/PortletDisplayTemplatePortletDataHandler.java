@@ -17,6 +17,7 @@ package com.liferay.portlet.portletdisplaytemplate.lar;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
+import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
 import com.liferay.portal.kernel.xml.Element;
@@ -40,6 +41,14 @@ public class PortletDisplayTemplatePortletDataHandler
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "application-display-templates", true, false, null,
 				DDMTemplate.class.getName()));
+		setExportMetadataControls(
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "classNames", false, false, true,
+				new PortletDataHandlerControl[] {
+					new PortletDataHandlerControl(
+						NAMESPACE, "application-display-templates",
+						DDMTemplate.class.getName())
+				}));
 	}
 
 	@Override

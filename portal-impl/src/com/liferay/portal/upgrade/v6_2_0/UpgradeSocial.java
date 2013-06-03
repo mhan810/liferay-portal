@@ -86,10 +86,20 @@ public class UpgradeSocial extends UpgradeProcess {
 	protected void updateJournalActivities() throws Exception {
 		long classNameId = PortalUtil.getClassNameId(JournalArticle.class);
 
+		StringBundler sb = new StringBundler(5);
+
+		sb.append("update SocialActivity");
+		sb.append(" set extraData = (select '{\"title\":\"' || title");
+		sb.append(" || '\"}' from JournalArticle where id_ = ");
+		sb.append("SocialActivity.classPK) where classNameId = ");
+		sb.append(classNameId);
+
+		runSQL(sb.toString());
+
 		String[] tableNames = {"SocialActivity", "SocialActivityCounter"};
 
 		for (String tableName : tableNames) {
-			StringBundler sb = new StringBundler(7);
+			sb = new StringBundler(7);
 
 			sb.append("update ");
 			sb.append(tableName);
@@ -117,7 +127,7 @@ public class UpgradeSocial extends UpgradeProcess {
 
 			ps = con.prepareStatement(
 				"select groupId, companyId, userId, modifiedDate, " +
-					"resourcePrimKey, version from WikiPage");
+					"resourcePrimKey, title, version from WikiPage");
 
 			rs = ps.executeQuery();
 
@@ -127,6 +137,7 @@ public class UpgradeSocial extends UpgradeProcess {
 				long userId = rs.getLong("userId");
 				Timestamp modifiedDate = rs.getTimestamp("modifiedDate");
 				long resourcePrimKey = rs.getLong("resourcePrimKey");
+				String title = rs.getString("title");
 				double version = rs.getDouble("version");
 
 				int type = WikiActivityKeys.ADD_PAGE;
@@ -138,6 +149,7 @@ public class UpgradeSocial extends UpgradeProcess {
 				JSONObject extraDataJSONObject =
 					JSONFactoryUtil.createJSONObject();
 
+				extraDataJSONObject.put("title", title);
 				extraDataJSONObject.put("version", version);
 
 				addActivity(

@@ -16,6 +16,8 @@ package com.liferay.portlet.journal.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.CharPool;
@@ -28,6 +30,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
@@ -40,6 +43,7 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFeed;
 import com.liferay.portlet.journal.model.JournalFeedConstants;
 import com.liferay.portlet.journal.service.base.JournalFeedLocalServiceBaseImpl;
+import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.util.RSSUtil;
 
 import java.util.Date;
@@ -181,6 +185,10 @@ public class JournalFeedLocalServiceImpl
 	public void deleteFeed(JournalFeed feed)
 		throws PortalException, SystemException {
 
+		// Feed
+
+		journalFeedPersistence.remove(feed);
+
 		// Expando
 
 		expandoValueLocalService.deleteValues(
@@ -192,9 +200,17 @@ public class JournalFeedLocalServiceImpl
 			feed.getCompanyId(), JournalFeed.class.getName(),
 			ResourceConstants.SCOPE_INDIVIDUAL, feed.getId());
 
-		// Feed
+		// Social
 
-		journalFeedPersistence.remove(feed);
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("uuid", feed.getUuid());
+
+		socialActivityLocalService.addActivity(
+			PrincipalThreadLocal.getUserId(), feed.getGroupId(),
+			JournalFeed.class.getName(), feed.getId(),
+			SocialActivityConstants.TYPE_DELETE, extraDataJSONObject.toString(),
+			0);
 	}
 
 	@Override

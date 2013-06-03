@@ -14,16 +14,14 @@
 
 package com.liferay.portlet.journal.social;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.security.permission.ActionKeys;
-import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
-import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
-import com.liferay.portlet.journal.service.permission.JournalPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
@@ -41,13 +39,20 @@ public class JournalArticleActivityInterpreter
 	}
 
 	@Override
+	protected Object doGetEntity(
+			SocialActivity activity, ServiceContext serviceContext)
+		throws SystemException {
+
+		return JournalArticleLocalServiceUtil.fetchLatestArticle(
+			activity.getClassPK(), WorkflowConstants.STATUS_ANY, true);
+	}
+
+	@Override
 	protected String getEntryTitle(
 			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
-		JournalArticle article =
-			JournalArticleLocalServiceUtil.getLatestArticle(
-				activity.getClassPK());
+		JournalArticle article = (JournalArticle)getEntity();
 
 		return article.getTitle(serviceContext.getLocale());
 	}
@@ -57,9 +62,7 @@ public class JournalArticleActivityInterpreter
 			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
-		JournalArticle article =
-			JournalArticleLocalServiceUtil.getLatestArticle(
-				activity.getClassPK());
+		JournalArticle article = (JournalArticle)getEntity();
 
 		if (Validator.isNotNull(article.getLayoutUuid())) {
 			String groupFriendlyURL = PortalUtil.getGroupFriendlyURL(
@@ -116,32 +119,6 @@ public class JournalArticleActivityInterpreter
 		}
 
 		return null;
-	}
-
-	@Override
-	protected boolean hasPermissions(
-			PermissionChecker permissionChecker, SocialActivity activity,
-			String actionId, ServiceContext serviceContext)
-		throws Exception {
-
-		int activityType = activity.getType();
-
-		if ((activityType == JournalActivityKeys.ADD_ARTICLE) &&
-			!JournalPermission.contains(
-				permissionChecker, activity.getGroupId(),
-				ActionKeys.ADD_ARTICLE)) {
-
-			return false;
-		}
-		else if ((activityType == JournalActivityKeys.UPDATE_ARTICLE) &&
-				 !JournalArticlePermission.contains(
-				permissionChecker, activity.getClassPK(), ActionKeys.UPDATE)) {
-
-			return false;
-		}
-
-		return JournalArticlePermission.contains(
-			permissionChecker, activity.getClassPK(), actionId);
 	}
 
 	private static final String[] _CLASS_NAMES =

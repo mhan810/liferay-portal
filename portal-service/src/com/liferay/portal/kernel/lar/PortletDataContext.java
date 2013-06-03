@@ -127,6 +127,8 @@ public interface PortletDataContext extends Serializable {
 	public void addPermissions(
 		String resourceName, long resourcePK, List<KeyValuePair> permissions);
 
+	public void addPortletClassNames(PortletDataHandlerControl[] controls);
+
 	public boolean addPrimaryKey(Class<?> clazz, String primaryKey);
 
 	public void addRatingsEntries(Class<?> clazz, long classPK)
@@ -207,6 +209,8 @@ public interface PortletDataContext extends Serializable {
 	public long getCompanyId();
 
 	public String getDataStrategy();
+
+	public Set<Long> getEnabledClassNameIds();
 
 	public Date getEndDate();
 

@@ -2028,7 +2028,8 @@ create table SocialActivitySet (
 	classNameId LONG,
 	classPK LONG,
 	type_ INTEGER,
-	activityCount INTEGER
+	activityCount INTEGER,
+	extraData STRING null
 );
 
 create table SocialActivitySetting (

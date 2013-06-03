@@ -109,6 +109,22 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 					new PortletDataHandlerBoolean(NAMESPACE, "comments"),
 					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
 					new PortletDataHandlerBoolean(NAMESPACE, "tags")
+				}),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "classNames", false, false, true,
+				new PortletDataHandlerControl[] {
+					new PortletDataHandlerControl(
+						NAMESPACE, "web-content",
+						JournalFolder.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "web-content",
+						JournalArticle.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "structures", DDMStructure.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "structures", DDMTemplate.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "feeds", JournalFeed.class.getName()),
 				}));
 		setImportControls(getExportControls());
 		setPublishToLiveByDefault(
@@ -166,7 +182,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 
 			ActionableDynamicQuery ddmStructureActionableDynamicQuery =
 				getDDMStructureActionableDynamicQuery(
-					portletDataContext, ddmTemplates);
+					portletDataContext, ddmTemplates, true);
 
 			ddmStructureActionableDynamicQuery.performActions();
 
@@ -279,26 +295,41 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			PortletDataContext portletDataContext)
 		throws Exception {
 
+		List<DDMTemplate> templates = new ArrayList<DDMTemplate>();
+
+		ActionableDynamicQuery ddmStructureActionableDynamicQuery =
+			getDDMStructureActionableDynamicQuery(
+				portletDataContext, templates, false);
+
+		ddmStructureActionableDynamicQuery.performActions();
+
+		ddmStructureActionableDynamicQuery.performCount();
+
+		ActionableDynamicQuery ddmTemplateActionableDynamicQuery =
+			getDDMTemplateActionableDynamicQuery(portletDataContext);
+
+		long count = ddmTemplateActionableDynamicQuery.performCount();
+
 		ManifestSummary manifestSummary =
 			portletDataContext.getManifestSummary();
+
+		manifestSummary.addModelCount(
+			DDMTemplate.class, count + templates.size());
 
 		ActionableDynamicQuery articleActionableDynamicQuery =
 			getArticleActionableDynamicQuery(portletDataContext);
 
-		manifestSummary.addModelCount(
-			JournalArticle.class, articleActionableDynamicQuery.performCount());
+		articleActionableDynamicQuery.performCount();
 
 		ActionableDynamicQuery feedActionableDynamicQuery =
 			new JournalFeedExportActionableDynamicQuery(portletDataContext);
 
-		manifestSummary.addModelCount(
-			JournalFeed.class, feedActionableDynamicQuery.performCount());
+		feedActionableDynamicQuery.performCount();
 
 		ActionableDynamicQuery folderActionableDynamicQuery =
 			getFolderActionableDynamicQuery(portletDataContext);
 
-		manifestSummary.addModelCount(
-			JournalFolder.class, folderActionableDynamicQuery.performCount());
+		folderActionableDynamicQuery.performCount();
 	}
 
 	protected ActionableDynamicQuery getArticleActionableDynamicQuery(
@@ -351,7 +382,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 
 	protected ActionableDynamicQuery getDDMStructureActionableDynamicQuery(
 			final PortletDataContext portletDataContext,
-			final List<DDMTemplate> ddmTemplates)
+			final List<DDMTemplate> ddmTemplates, final boolean export)
 		throws SystemException {
 
 		return new DDMStructureExportActionableDynamicQuery(
@@ -374,8 +405,10 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			protected void performAction(Object object) throws PortalException {
 				DDMStructure ddmStructure = (DDMStructure)object;
 
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, ddmStructure);
+				if (export) {
+					StagedModelDataHandlerUtil.exportStagedModel(
+						portletDataContext, ddmStructure);
+				}
 
 				try {
 					ddmTemplates.addAll(ddmStructure.getTemplates());

@@ -15,6 +15,8 @@
 package com.liferay.portlet.wiki.social;
 
 import com.liferay.portal.NoSuchModelException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -29,7 +31,6 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
-import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.model.WikiPageResource;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
@@ -46,6 +47,31 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 	@Override
 	public String[] getClassNames() {
 		return _CLASS_NAMES;
+	}
+
+	@Override
+	protected Object doGetEntity(
+			SocialActivity activity, ServiceContext serviceContext)
+		throws SystemException {
+
+		WikiPageResource pageResource =
+			WikiPageResourceLocalServiceUtil.fetchWikiPageResource(
+				activity.getClassPK());
+
+		if (pageResource != null) {
+			try {
+				double version = GetterUtil.getDouble(
+					activity.getExtraDataValue("version"));
+
+				return WikiPageLocalServiceUtil.fetchPage(
+					pageResource.getNodeId(), pageResource.getTitle(), version);
+			}
+			catch (JSONException je) {
+				throw new SystemException(je);
+			}
+		}
+
+		return null;
 	}
 
 	protected String getAttachmentTitle(
@@ -81,7 +107,8 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 				fileVersion = fileEntry.getFileVersion();
 			}
 
-			String fileEntryTitle = activity.getExtraDataValue("title");
+			String fileEntryTitle = activity.getExtraDataValue(
+				"fileEntrytitle");
 
 			if ((fileVersion != null) && !fileVersion.isInTrash()) {
 				StringBundler sb = new StringBundler(9);
@@ -106,25 +133,6 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected String getEntryTitle(
-			SocialActivity activity, ServiceContext serviceContext)
-		throws Exception {
-
-		WikiPageResource pageResource =
-			WikiPageResourceLocalServiceUtil.getPageResource(
-				activity.getClassPK());
-
-		WikiPage page = WikiPageLocalServiceUtil.getPage(
-			pageResource.getNodeId(), pageResource.getTitle());
-
-		if (!page.isInTrash()) {
-			return TrashUtil.getOriginalTitle(page.getTitle());
-		}
-
-		return page.getTitle();
-	}
-
-	@Override
 	protected String getPath(
 		SocialActivity activity, ServiceContext serviceContext) {
 
@@ -138,8 +146,12 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 		throws Exception {
 
 		WikiPageResource pageResource =
-			WikiPageResourceLocalServiceUtil.getPageResource(
+			WikiPageResourceLocalServiceUtil.fetchWikiPageResource(
 				activity.getClassPK());
+
+		if (pageResource == null) {
+			return null;
+		}
 
 		String creatorUserName = getUserName(
 			activity.getUserId(), serviceContext);
@@ -231,6 +243,14 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 				return "activity-wiki-page-update-page-in";
 			}
 		}
+		else if (activityType == SocialActivityConstants.TYPE_DELETE) {
+			if (Validator.isNull(groupName)) {
+				return "activity-wiki-page-delete";
+			}
+			else {
+				return "activity-wiki-page-delete-in";
+			}
+		}
 
 		return null;
 	}
@@ -241,32 +261,33 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
-		if (!WikiPagePermission.contains(
-				permissionChecker, activity.getClassPK(), ActionKeys.VIEW)) {
+		if (!super.hasPermissions(
+				permissionChecker, activity, ActionKeys.VIEW, serviceContext)) {
 
 			return false;
 		}
 
-		int activityType = activity.getType();
+		if ((getEntity() == null) ||
+			(activity.getType() != WikiActivityKeys.UPDATE_PAGE)) {
 
-		if (activityType == WikiActivityKeys.UPDATE_PAGE) {
-			WikiPageResource pageResource =
-				WikiPageResourceLocalServiceUtil.getPageResource(
-					activity.getClassPK());
+			return true;
+		}
 
-			double version = GetterUtil.getDouble(
-				activity.getExtraDataValue("version"));
+		WikiPageResource pageResource =
+			WikiPageResourceLocalServiceUtil.getPageResource(
+				activity.getClassPK());
 
-			WikiPage page = WikiPageLocalServiceUtil.getPage(
-				pageResource.getNodeId(), pageResource.getTitle(), version);
+		double version = GetterUtil.getDouble(
+			activity.getExtraDataValue("version"));
 
-			if (!page.isApproved() &&
-				!WikiPagePermission.contains(
-					permissionChecker, activity.getClassPK(),
-					ActionKeys.UPDATE)) {
+		WikiPage page = WikiPageLocalServiceUtil.getPage(
+			pageResource.getNodeId(), pageResource.getTitle(), version);
 
-				return false;
-			}
+		if (!page.isApproved() &&
+			!WikiPagePermission.contains(
+				permissionChecker, activity.getClassPK(), ActionKeys.UPDATE)) {
+
+			return false;
 		}
 
 		return true;
