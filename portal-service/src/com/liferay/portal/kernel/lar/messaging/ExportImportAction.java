@@ -12,18 +12,16 @@
  * details.
  */
 
-package com.liferay.portlet.social.service.permission;
+package com.liferay.portal.kernel.lar.messaging;
 
-import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portlet.social.model.SocialActivitySet;
+import java.io.Serializable;
 
 /**
- * @author Zsolt Berentey
+ * @author Mate Thurzo
+ * @author Michael C. Han
  */
-public interface SocialActivitySetPermission {
+public enum ExportImportAction implements Serializable {
 
-	public boolean contains(
-		PermissionChecker permissionChecker, SocialActivitySet activitySet,
-		String actionId);
+	DELETE, EXPORT, EXPORT_REFERENCE, IMPORT, IMPORT_REFERENCE
 
 }

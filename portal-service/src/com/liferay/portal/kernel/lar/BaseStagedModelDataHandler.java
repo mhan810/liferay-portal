@@ -39,11 +39,6 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 
 		try {
 			doExportStagedModel(portletDataContext, (T)stagedModel.clone());
-
-			ManifestSummary manifestSummary =
-				portletDataContext.getManifestSummary();
-
-			manifestSummary.incrementModelCount(getClassName(stagedModel));
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);
@@ -76,11 +71,6 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 
 		try {
 			doImportStagedModel(portletDataContext, stagedModel);
-
-			ManifestSummary manifestSummary =
-				portletDataContext.getManifestSummary();
-
-			manifestSummary.incrementModelCount(getClassName(stagedModel));
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);
