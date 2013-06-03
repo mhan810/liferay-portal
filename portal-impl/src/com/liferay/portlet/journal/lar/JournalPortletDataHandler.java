@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
-import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
@@ -279,26 +278,20 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			PortletDataContext portletDataContext)
 		throws Exception {
 
-		ManifestSummary manifestSummary =
-			portletDataContext.getManifestSummary();
-
 		ActionableDynamicQuery articleActionableDynamicQuery =
 			getArticleActionableDynamicQuery(portletDataContext);
 
-		manifestSummary.addModelCount(
-			JournalArticle.class, articleActionableDynamicQuery.performCount());
+		articleActionableDynamicQuery.performCount();
 
 		ActionableDynamicQuery feedActionableDynamicQuery =
 			new JournalFeedExportActionableDynamicQuery(portletDataContext);
 
-		manifestSummary.addModelCount(
-			JournalFeed.class, feedActionableDynamicQuery.performCount());
+		feedActionableDynamicQuery.performCount();
 
 		ActionableDynamicQuery folderActionableDynamicQuery =
 			getFolderActionableDynamicQuery(portletDataContext);
 
-		manifestSummary.addModelCount(
-			JournalFolder.class, folderActionableDynamicQuery.performCount());
+		folderActionableDynamicQuery.performCount();
 	}
 
 	protected ActionableDynamicQuery getArticleActionableDynamicQuery(
