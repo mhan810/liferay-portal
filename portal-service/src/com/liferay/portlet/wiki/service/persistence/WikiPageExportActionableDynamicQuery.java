@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandler;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.util.DateRange;
 import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.portlet.social.model.SocialActivityConstants;
@@ -63,7 +64,8 @@ public class WikiPageExportActionableDynamicQuery
 
 	@Override
 	protected void addCriteria(DynamicQuery dynamicQuery) {
-		_portletDataContext.addDateRangeCriteria(dynamicQuery, "modifiedDate");
+		_portletDataContext.addDateRangeCriteria(PortletDataContext.DATE_RANGE_CONTENT,
+			dynamicQuery, "modifiedDate");
 	}
 
 	protected long getDeletionCount() throws PortalException, SystemException {
@@ -87,19 +89,27 @@ public class WikiPageExportActionableDynamicQuery
 					dynamicQuery.add(classNameIdProperty.eq(
 							PortalUtil.getClassNameId(WikiPage.class.getName())));
 
-					if (!_portletDataContext.hasDateRange()) {
+					DateRange dateRange = _portletDataContext.getDateRange(PortletDataContext.DATE_RANGE_DELETIONS);
+
+					if (dateRange == null) {
 						return;
 					}
 
 					Property modifiedDateProperty = PropertyFactoryUtil.forName(
 							"createDate");
 
-					Date startDate = _portletDataContext.getStartDate();
-					Date endDate = _portletDataContext.getEndDate();
+					Date startDate = dateRange.getStartDate();
+					Date endDate = dateRange.getEndDate();
 
-					dynamicQuery.add(modifiedDateProperty.ge(
-							startDate.getTime()));
-					dynamicQuery.add(modifiedDateProperty.lt(endDate.getTime()));
+					if (startDate != null) {
+						dynamicQuery.add(modifiedDateProperty.ge(
+								startDate.getTime()));
+					}
+
+					if (endDate != null) {
+						dynamicQuery.add(modifiedDateProperty.le(
+								endDate.getTime()));
+					}
 				}
 
 				@Override
