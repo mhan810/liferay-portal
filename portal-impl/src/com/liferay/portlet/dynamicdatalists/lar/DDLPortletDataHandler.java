@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
+import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecordSet;
@@ -41,7 +42,13 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 		setExportControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "record-sets", true, false, null,
-				DDLRecordSet.class.getName()));
+				DDLRecordSet.class.getName()),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "classNames", false, false, true,
+				new PortletDataHandlerControl[] {
+					new PortletDataHandlerControl(
+						NAMESPACE, "record-sets", DDLRecordSet.class.getName())
+				}));
 		setImportControls(getExportControls());
 	}
 

@@ -16,12 +16,17 @@ package com.liferay.portal.lar;
 
 import com.liferay.portal.LayoutImportException;
 import com.liferay.portal.NoSuchPortletPreferencesException;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.lar.ExportImportUtil;
+import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataContextFactoryUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
@@ -29,6 +34,7 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.DateRange;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -88,6 +94,9 @@ import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUt
 import com.liferay.portlet.expando.model.ExpandoColumn;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.ratings.model.RatingsEntry;
+import com.liferay.portlet.social.model.SocialActivity;
+import com.liferay.portlet.social.model.SocialActivityConstants;
+import com.liferay.portlet.social.service.persistence.SocialActivityActionableDynamicQuery;
 import com.liferay.util.xml.DocUtil;
 
 import java.io.File;
@@ -98,6 +107,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.time.StopWatch;
 
@@ -179,12 +189,15 @@ public class PortletExporter {
 		long lastPublishDate = GetterUtil.getLong(
 			jxPreferences.getValue("last-publish-date", StringPool.BLANK));
 
-		Date startDate = portletDataContext.getStartDate();
+		Date startDate = portletDataContext.getStartDate(
+			PortletDataContext.DATE_RANGE_CONTENT);
 
 		if ((lastPublishDate > 0) && (startDate != null) &&
 			(lastPublishDate < startDate.getTime())) {
 
-			portletDataContext.setStartDate(new Date(lastPublishDate));
+			portletDataContext.setStartDate(
+				PortletDataContext.DATE_RANGE_CONTENT,
+				new Date(lastPublishDate));
 		}
 
 		String data = null;
@@ -202,7 +215,8 @@ public class PortletExporter {
 		}
 		finally {
 			portletDataContext.setGroupId(groupId);
-			portletDataContext.setStartDate(startDate);
+			portletDataContext.setStartDate(
+				PortletDataContext.DATE_RANGE_CONTENT, startDate);
 		}
 
 		if (Validator.isNull(data)) {
@@ -221,7 +235,8 @@ public class PortletExporter {
 
 		portletDataContext.addZipEntry(path, data);
 
-		Date endDate = portletDataContext.getEndDate();
+		Date endDate = portletDataContext.getEndDate(
+			PortletDataContext.DATE_RANGE_CONTENT);
 
 		if (endDate != null) {
 			try {
@@ -410,12 +425,16 @@ public class PortletExporter {
 			"build-number", String.valueOf(ReleaseInfo.getBuildNumber()));
 		headerElement.addAttribute("export-date", Time.getRFC822());
 
-		if (portletDataContext.hasDateRange()) {
+		if (portletDataContext.hasDateRange(
+				PortletDataContext.DATE_RANGE_CONTENT)) {
+
+			DateRange dateRange = portletDataContext.getDateRange(
+				PortletDataContext.DATE_RANGE_CONTENT);
+
 			headerElement.addAttribute(
-				"start-date",
-				String.valueOf(portletDataContext.getStartDate()));
+				"start-date", String.valueOf(dateRange.getStartDate()));
 			headerElement.addAttribute(
-				"end-date", String.valueOf(portletDataContext.getEndDate()));
+				"end-date", String.valueOf(dateRange.getEndDate()));
 		}
 
 		headerElement.addAttribute("type", "portlet");
@@ -452,6 +471,7 @@ public class PortletExporter {
 		exportAssetLinks(portletDataContext);
 		exportAssetTags(portletDataContext);
 		exportComments(portletDataContext);
+		exportDeletions(portletDataContext);
 		exportExpandoTables(portletDataContext);
 		exportLocks(portletDataContext);
 
@@ -838,6 +858,116 @@ public class PortletExporter {
 		portletDataContext.addZipEntry(
 			ExportImportPathUtil.getRootPath(portletDataContext) +
 				"/comments.xml",
+			document.formattedString());
+	}
+
+	protected void exportDeletion(
+		PortletDataContext portletDataContext, SocialActivity deleteActivity,
+		Element deletionsElement) {
+
+		Element deletionElement = deletionsElement.addElement("deletion");
+
+		deletionElement.addAttribute(
+			"class-name",
+			PortalUtil.getClassName(deleteActivity.getClassNameId()));
+
+		deletionElement.addAttribute(
+			"group-id", String.valueOf(deleteActivity.getGroupId()));
+
+		try {
+			deletionElement.addAttribute(
+				"uuid", deleteActivity.getExtraDataValue("uuid"));
+		}
+		catch (JSONException je) {
+			deletionsElement.remove(deletionElement);
+
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to export deletion.", je);
+			}
+		}
+
+		ManifestSummary manifestSummary =
+			portletDataContext.getManifestSummary();
+
+		manifestSummary.incrementDeletionCount(
+			PortalUtil.getClassName(deleteActivity.getClassNameId()));
+	}
+
+	protected void exportDeletions(final PortletDataContext portletDataContext)
+		throws Exception {
+
+		Document document = SAXReaderUtil.createDocument();
+
+		final Element rootElement = document.addElement("deletions");
+
+		final Set<Long> enabledClassesNameIds =
+			portletDataContext.getEnabledClassNameIds();
+
+		SocialActivityActionableDynamicQuery actionableDynamicQuery =
+			new SocialActivityActionableDynamicQuery() {
+
+				@Override
+				protected void addCriteria(DynamicQuery dynamicQuery) {
+					if (enabledClassesNameIds.isEmpty()) {
+						return;
+					}
+
+					setGroupId(portletDataContext.getScopeGroupId());
+
+					Property typeProperty = PropertyFactoryUtil.forName("type");
+
+					dynamicQuery.add(
+						typeProperty.eq(SocialActivityConstants.TYPE_DELETE));
+
+					Property classNameIdProperty = PropertyFactoryUtil.forName(
+						"classNameId");
+
+					dynamicQuery.add(
+						classNameIdProperty.in(
+							enabledClassesNameIds.toArray()));
+
+					DateRange dateRange = portletDataContext.getDateRange(
+						PortletDataContext.DATE_RANGE_DELETIONS);
+
+					if (dateRange == null) {
+						return;
+					}
+
+					Property modifiedDateProperty = PropertyFactoryUtil.forName(
+						"createDate");
+
+					Date startDate = dateRange.getStartDate();
+					Date endDate = dateRange.getEndDate();
+
+					if (startDate != null) {
+						dynamicQuery.add(
+							modifiedDateProperty.ge(startDate.getTime()));
+					}
+
+					if (endDate != null) {
+						dynamicQuery.add(
+							modifiedDateProperty.le(endDate.getTime()));
+					}
+				}
+
+				@Override
+				protected void performAction(Object object)
+					throws PortalException, SystemException {
+
+					SocialActivity deleteActivity = (SocialActivity)object;
+
+					exportDeletion(
+						portletDataContext, deleteActivity, rootElement);
+				}
+			};
+
+		if (!enabledClassesNameIds.isEmpty()) {
+			actionableDynamicQuery.performActions();
+		}
+
+		portletDataContext.addZipEntry(
+			ExportImportPathUtil.getRootPath(portletDataContext) +
+				"/deletions.xml",
 			document.formattedString());
 	}
 

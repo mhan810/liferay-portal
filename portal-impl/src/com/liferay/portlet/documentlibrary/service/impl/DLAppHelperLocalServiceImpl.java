@@ -17,6 +17,8 @@ package com.liferay.portlet.documentlibrary.service.impl;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
@@ -672,11 +674,15 @@ public class DLAppHelperLocalServiceImpl
 		socialActivityCounterLocalService.enableActivityCounters(
 			DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", fileEntry.getTitle());
+
 		socialActivityLocalService.addActivity(
 			userId, fileEntry.getGroupId(), DLFileEntryConstants.getClassName(),
 			fileEntry.getFileEntryId(),
-			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH, StringPool.BLANK,
-			0);
+			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
+			extraDataJSONObject.toString(), 0);
 	}
 
 	@Override
@@ -734,11 +740,15 @@ public class DLAppHelperLocalServiceImpl
 		socialActivityCounterLocalService.enableActivityCounters(
 			DLFolderConstants.class.getName(), folder.getFolderId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", folder.getName());
+
 		socialActivityLocalService.addActivity(
 			userId, folder.getGroupId(), DLFolderConstants.getClassName(),
 			folder.getFolderId(),
-			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH, StringPool.BLANK,
-			0);
+			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
+			extraDataJSONObject.toString(), 0);
 	}
 
 	@Override
@@ -1232,12 +1242,17 @@ public class DLAppHelperLocalServiceImpl
 					activityType = DLActivityKeys.ADD_FILE_ENTRY;
 				}
 
+				JSONObject extraDataJSONObject =
+					JSONFactoryUtil.createJSONObject();
+
+				extraDataJSONObject.put("title", fileEntry.getTitle());
+
 				socialActivityLocalService.addUniqueActivity(
 					latestFileVersion.getStatusByUserId(),
 					fileEntry.getGroupId(), activityDate,
 					DLFileEntryConstants.getClassName(),
-					fileEntry.getFileEntryId(), activityType, StringPool.BLANK,
-					0);
+					fileEntry.getFileEntryId(), activityType,
+					extraDataJSONObject.toString(), 0);
 
 				// Subscriptions
 
@@ -1325,11 +1340,15 @@ public class DLAppHelperLocalServiceImpl
 				DLFileEntryConstants.getClassName(),
 				fileEntry.getFileEntryId());
 
+			JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+			extraDataJSONObject.put("title", fileEntry.getTitle());
+
 			socialActivityLocalService.addActivity(
 				userId, fileEntry.getGroupId(),
 				DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId(),
 				SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
-				StringPool.BLANK, 0);
+				extraDataJSONObject.toString(), 0);
 
 			return fileEntry;
 		}
@@ -1392,10 +1411,16 @@ public class DLAppHelperLocalServiceImpl
 		socialActivityCounterLocalService.disableActivityCounters(
 			DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put(
+			"title", TrashUtil.getOriginalTitle(fileEntry.getTitle()));
+
 		socialActivityLocalService.addActivity(
 			userId, fileEntry.getGroupId(), DLFileEntryConstants.getClassName(),
 			fileEntry.getFileEntryId(),
-			SocialActivityConstants.TYPE_MOVE_TO_TRASH, StringPool.BLANK, 0);
+			SocialActivityConstants.TYPE_MOVE_TO_TRASH,
+			extraDataJSONObject.toString(), 0);
 
 		// Workflow
 
@@ -1437,11 +1462,15 @@ public class DLAppHelperLocalServiceImpl
 			socialActivityCounterLocalService.enableActivityCounters(
 				DLFolderConstants.class.getName(), folder.getFolderId());
 
+			JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+			extraDataJSONObject.put("title", folder.getName());
+
 			socialActivityLocalService.addActivity(
 				userId, folder.getGroupId(), DLFolderConstants.class.getName(),
 				folder.getFolderId(),
 				SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
-				StringPool.BLANK, 0);
+				extraDataJSONObject.toString(), 0);
 		}
 
 		return dlAppService.moveFolder(
@@ -1475,10 +1504,14 @@ public class DLAppHelperLocalServiceImpl
 		socialActivityCounterLocalService.disableActivityCounters(
 			DLFolderConstants.class.getName(), folder.getFolderId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", folder.getName());
+
 		socialActivityLocalService.addActivity(
 			userId, folder.getGroupId(), DLFolderConstants.getClassName(),
 			folder.getFolderId(), SocialActivityConstants.TYPE_MOVE_TO_TRASH,
-			StringPool.BLANK, 0);
+			extraDataJSONObject.toString(), 0);
 
 		return new LiferayFolder(dlFolder);
 	}

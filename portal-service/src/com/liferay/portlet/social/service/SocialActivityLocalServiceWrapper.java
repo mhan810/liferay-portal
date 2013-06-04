@@ -291,7 +291,8 @@ public class SocialActivityLocalServiceWrapper
 	* activities.
 	* </p>
 	*
-	* @param userId the primary key of the acting user
+	* @param userId the primary key of the acting user (optionally
+	<code>0</code>)
 	* @param groupId the primary key of the group
 	* @param createDate the activity's date
 	* @param className the target asset's class name
@@ -316,7 +317,8 @@ public class SocialActivityLocalServiceWrapper
 	* Records an activity in the database, using a time based on the current
 	* time in an attempt to make the activity's time unique.
 	*
-	* @param userId the primary key of the acting user
+	* @param userId the primary key of the acting user (optionally
+	<code>0</code>)
 	* @param groupId the primary key of the group
 	* @param className the target asset's class name
 	* @param classPK the primary key of the target asset
@@ -354,7 +356,8 @@ public class SocialActivityLocalServiceWrapper
 	* String, long, int, String, long)}
 	* </p>
 	*
-	* @param userId the primary key of the acting user
+	* @param userId the primary key of the acting user (optionally
+	<code>0</code>)
 	* @param groupId the primary key of the group
 	* @param createDate the activity's date
 	* @param className the target asset's class name
@@ -384,7 +387,8 @@ public class SocialActivityLocalServiceWrapper
 	* String, long, int, String, long)}
 	* </p>
 	*
-	* @param userId the primary key of the acting user
+	* @param userId the primary key of the acting user (optionally
+	<code>0</code>)
 	* @param groupId the primary key of the group
 	* @param className the target asset's class name
 	* @param classPK the primary key of the target asset

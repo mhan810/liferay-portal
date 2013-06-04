@@ -859,6 +859,14 @@ public class JournalArticleLocalServiceWrapper
 		return _journalArticleLocalService.fetchArticle(uuid, groupId);
 	}
 
+	@Override
+	public com.liferay.portlet.journal.model.JournalArticle fetchLatestArticle(
+		long resourcePrimKey, int status, boolean preferApproved)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _journalArticleLocalService.fetchLatestArticle(resourcePrimKey,
+			status, preferApproved);
+	}
+
 	/**
 	* Returns the web content article with the ID.
 	*

@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
+import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portlet.polls.model.PollsChoice;
@@ -50,7 +51,17 @@ public class PollsPortletDataHandler extends BasePortletDataHandler {
 				PollsQuestion.class.getName()),
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "votes", true, false, null,
-				PollsVote.class.getName()));
+				PollsVote.class.getName()),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "classNames", false, false, true,
+				new PortletDataHandlerControl[] {
+					new PortletDataHandlerControl(
+						NAMESPACE, "questions", PollsQuestion.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "questions", PollsChoice.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "votes", PollsVote.class.getName())
+				}));
 		setImportControls(getExportControls());
 	}
 

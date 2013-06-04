@@ -14,19 +14,24 @@
 
 package com.liferay.portlet.messageboards.social;
 
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBThreadLocalServiceUtil;
-import com.liferay.portlet.messageboards.service.permission.MBMessagePermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
+import com.liferay.portlet.social.model.SocialActivitySet;
+import com.liferay.portlet.social.service.SocialActivitySetLocalServiceUtil;
+import com.liferay.portlet.social.service.permission.SocialActivitySetPermissionUtil;
 
 /**
  * @author Zsolt Berentey
@@ -39,13 +44,29 @@ public class MBThreadActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
+	protected Object doGetEntity(
+			SocialActivity activity, ServiceContext serviceContext)
+		throws SystemException {
+
+		MBThread thread = MBThreadLocalServiceUtil.fetchThread(
+			activity.getClassPK());
+
+		if (thread != null) {
+			return MBMessageLocalServiceUtil.fetchMBMessage(
+				thread.getRootMessageId());
+		}
+
+		return null;
+	}
+
+	@Override
 	protected String getBody(
 			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
-		MBMessage message = getMessage(activity);
+		MBMessage message = (MBMessage)getEntity();
 
-		if (message.getCategoryId() <= 0) {
+		if ((message == null) || (message.getCategoryId() <= 0)) {
 			return StringPool.BLANK;
 		}
 
@@ -62,32 +83,18 @@ public class MBThreadActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected String getEntryTitle(
-			SocialActivity activity, ServiceContext serviceContext)
-		throws Exception {
-
-		MBMessage message = getMessage(activity);
-
-		return message.getSubject();
-	}
-
-	protected MBMessage getMessage(SocialActivity activity) throws Exception {
-		MBThread thread = MBThreadLocalServiceUtil.getThread(
-			activity.getClassPK());
-
-		return MBMessageLocalServiceUtil.getMessage(thread.getRootMessageId());
-	}
-
-	@Override
 	protected String getPath(
 			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
-		MBThread thread = MBThreadLocalServiceUtil.getThread(
-			activity.getClassPK());
+		MBMessage message = (MBMessage)getEntity();
 
-		return "/message_boards/find_message?messageId=" +
-			thread.getRootMessageId();
+		if (message != null) {
+			return "/message_boards/find_message?messageId=" +
+				message.getMessageId();
+		}
+
+		return null;
 	}
 
 	@Override
@@ -116,20 +123,28 @@ public class MBThreadActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
 			if (Validator.isNull(groupName)) {
-				return "activity-message-boards-move-to-trash";
+				return "activity-message-boards-thread-move-to-trash";
 			}
 			else {
-				return "activity-message-boards-move-to-trash-in";
+				return "activity-message-boards-thread-move-to-trash-in";
 			}
 		}
 		else if (activityType ==
 					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
 
 			if (Validator.isNull(groupName)) {
-				return "activity-message-boards-restore-from-trash";
+				return "activity-message-boards-thread-restore-from-trash";
 			}
 			else {
-				return "activity-message-boards-restore-from-trash-in";
+				return "activity-message-boards-thread-restore-from-trash-in";
+			}
+		}
+		else if (activityType == SocialActivityConstants.TYPE_DELETE) {
+			if (Validator.isNull(groupName)) {
+				return "activity-message-boards-thread-delete";
+			}
+			else {
+				return "activity-message-boards-thread-delete-in";
 			}
 		}
 
@@ -142,10 +157,25 @@ public class MBThreadActivityInterpreter extends BaseSocialActivityInterpreter {
 			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
-		MBMessage message = getMessage(activity);
+		SocialActivitySet activitySet =
+			SocialActivitySetLocalServiceUtil.fetchAssetActivitySet(
+				PortalUtil.getClassNameId(MBMessage.class),
+				GetterUtil.getLong(
+					activity.getExtraDataValue("rootMessageId")));
 
-		return MBMessagePermission.contains(
-			permissionChecker, message.getMessageId(), actionId);
+		if (activitySet == null) {
+			activitySet =
+				SocialActivitySetLocalServiceUtil.fetchAssetActivitySet(
+					PortalUtil.getClassNameId(MBThread.class),
+					activity.getClassPK());
+
+			if (activitySet == null) {
+				return false;
+			}
+		}
+
+		return SocialActivitySetPermissionUtil.contains(
+			permissionChecker, activitySet, actionId);
 	}
 
 	private static final String[] _CLASS_NAMES = {MBThread.class.getName()};

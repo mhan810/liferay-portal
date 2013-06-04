@@ -69,9 +69,10 @@ public class SocialActivitySetModelImpl extends BaseModelImpl<SocialActivitySet>
 			{ "classNameId", Types.BIGINT },
 			{ "classPK", Types.BIGINT },
 			{ "type_", Types.INTEGER },
-			{ "activityCount", Types.INTEGER }
+			{ "activityCount", Types.INTEGER },
+			{ "extraData", Types.VARCHAR }
 		};
-	public static final String TABLE_SQL_CREATE = "create table SocialActivitySet (activitySetId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,createDate LONG,modifiedDate LONG,classNameId LONG,classPK LONG,type_ INTEGER,activityCount INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table SocialActivitySet (activitySetId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,createDate LONG,modifiedDate LONG,classNameId LONG,classPK LONG,type_ INTEGER,activityCount INTEGER,extraData STRING null)";
 	public static final String TABLE_SQL_DROP = "drop table SocialActivitySet";
 	public static final String ORDER_BY_JPQL = " ORDER BY socialActivitySet.modifiedDate DESC";
 	public static final String ORDER_BY_SQL = " ORDER BY SocialActivitySet.modifiedDate DESC";
@@ -143,6 +144,7 @@ public class SocialActivitySetModelImpl extends BaseModelImpl<SocialActivitySet>
 		attributes.put("classPK", getClassPK());
 		attributes.put("type", getType());
 		attributes.put("activityCount", getActivityCount());
+		attributes.put("extraData", getExtraData());
 
 		return attributes;
 	}
@@ -207,6 +209,12 @@ public class SocialActivitySetModelImpl extends BaseModelImpl<SocialActivitySet>
 
 		if (activityCount != null) {
 			setActivityCount(activityCount);
+		}
+
+		String extraData = (String)attributes.get("extraData");
+
+		if (extraData != null) {
+			setExtraData(extraData);
 		}
 	}
 
@@ -402,6 +410,21 @@ public class SocialActivitySetModelImpl extends BaseModelImpl<SocialActivitySet>
 		_activityCount = activityCount;
 	}
 
+	@Override
+	public String getExtraData() {
+		if (_extraData == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _extraData;
+		}
+	}
+
+	@Override
+	public void setExtraData(String extraData) {
+		_extraData = extraData;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -443,6 +466,7 @@ public class SocialActivitySetModelImpl extends BaseModelImpl<SocialActivitySet>
 		socialActivitySetImpl.setClassPK(getClassPK());
 		socialActivitySetImpl.setType(getType());
 		socialActivitySetImpl.setActivityCount(getActivityCount());
+		socialActivitySetImpl.setExtraData(getExtraData());
 
 		socialActivitySetImpl.resetOriginalValues();
 
@@ -550,12 +574,20 @@ public class SocialActivitySetModelImpl extends BaseModelImpl<SocialActivitySet>
 
 		socialActivitySetCacheModel.activityCount = getActivityCount();
 
+		socialActivitySetCacheModel.extraData = getExtraData();
+
+		String extraData = socialActivitySetCacheModel.extraData;
+
+		if ((extraData != null) && (extraData.length() == 0)) {
+			socialActivitySetCacheModel.extraData = null;
+		}
+
 		return socialActivitySetCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{activitySetId=");
 		sb.append(getActivitySetId());
@@ -577,6 +609,8 @@ public class SocialActivitySetModelImpl extends BaseModelImpl<SocialActivitySet>
 		sb.append(getType());
 		sb.append(", activityCount=");
 		sb.append(getActivityCount());
+		sb.append(", extraData=");
+		sb.append(getExtraData());
 		sb.append("}");
 
 		return sb.toString();
@@ -584,7 +618,7 @@ public class SocialActivitySetModelImpl extends BaseModelImpl<SocialActivitySet>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(34);
+		StringBundler sb = new StringBundler(37);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.portlet.social.model.SocialActivitySet");
@@ -630,6 +664,10 @@ public class SocialActivitySetModelImpl extends BaseModelImpl<SocialActivitySet>
 			"<column><column-name>activityCount</column-name><column-value><![CDATA[");
 		sb.append(getActivityCount());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>extraData</column-name><column-value><![CDATA[");
+		sb.append(getExtraData());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -661,6 +699,7 @@ public class SocialActivitySetModelImpl extends BaseModelImpl<SocialActivitySet>
 	private int _originalType;
 	private boolean _setOriginalType;
 	private int _activityCount;
+	private String _extraData;
 	private long _columnBitmask;
 	private SocialActivitySet _escapedModel;
 }

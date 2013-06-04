@@ -14,7 +14,10 @@
 
 package com.liferay.portlet.dynamicdatamapping.service.persistence;
 
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.ManifestSummary;
@@ -22,8 +25,14 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandler;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.util.DateRange;
+import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
+import com.liferay.portlet.social.model.SocialActivityConstants;
+import com.liferay.portlet.social.service.persistence.SocialActivityActionableDynamicQuery;
+
+import java.util.Date;
 
 /**
  * @author Brian Wing Shun Chan
@@ -46,12 +55,71 @@ public class DDMStructureExportActionableDynamicQuery
 
 		manifestSummary.addModelCount(getManifestSummaryKey(), count);
 
+		long deletionCount = getDeletionCount();
+
+		manifestSummary.addDeletionCount(getManifestSummaryKey(), deletionCount);
+
 		return count;
 	}
 
 	@Override
 	protected void addCriteria(DynamicQuery dynamicQuery) {
-		_portletDataContext.addDateRangeCriteria(dynamicQuery, "modifiedDate");
+		_portletDataContext.addDateRangeCriteria(PortletDataContext.DATE_RANGE_CONTENT,
+			dynamicQuery, "modifiedDate");
+	}
+
+	protected long getDeletionCount() throws PortalException, SystemException {
+		ActionableDynamicQuery actionableDynamicQuery = new SocialActivityActionableDynamicQuery() {
+				@Override
+				protected void addCriteria(DynamicQuery dynamicQuery) {
+					Property groupProperty = PropertyFactoryUtil.forName(
+							"groupId");
+
+					dynamicQuery.add(groupProperty.eq(
+							_portletDataContext.getScopeGroupId()));
+
+					Property typeProperty = PropertyFactoryUtil.forName("type");
+
+					dynamicQuery.add(typeProperty.eq(
+							SocialActivityConstants.TYPE_DELETE));
+
+					Property classNameIdProperty = PropertyFactoryUtil.forName(
+							"classNameId");
+
+					dynamicQuery.add(classNameIdProperty.eq(
+							PortalUtil.getClassNameId(
+								DDMStructure.class.getName())));
+
+					DateRange dateRange = _portletDataContext.getDateRange(PortletDataContext.DATE_RANGE_DELETIONS);
+
+					if (dateRange == null) {
+						return;
+					}
+
+					Property modifiedDateProperty = PropertyFactoryUtil.forName(
+							"createDate");
+
+					Date startDate = dateRange.getStartDate();
+					Date endDate = dateRange.getEndDate();
+
+					if (startDate != null) {
+						dynamicQuery.add(modifiedDateProperty.ge(
+								startDate.getTime()));
+					}
+
+					if (endDate != null) {
+						dynamicQuery.add(modifiedDateProperty.le(
+								endDate.getTime()));
+					}
+				}
+
+				@Override
+				protected void performAction(Object object)
+					throws PortalException, SystemException {
+				}
+			};
+
+		return actionableDynamicQuery.performCount();
 	}
 
 	protected String getManifestSummaryKey() {

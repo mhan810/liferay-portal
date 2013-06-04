@@ -109,6 +109,22 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 					new PortletDataHandlerBoolean(NAMESPACE, "comments"),
 					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
 					new PortletDataHandlerBoolean(NAMESPACE, "tags")
+				}),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "classNames", false, false, true,
+				new PortletDataHandlerControl[] {
+					new PortletDataHandlerControl(
+						NAMESPACE, "web-content",
+						JournalFolder.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "web-content",
+						JournalArticle.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "structures", DDMStructure.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "structures", DDMTemplate.class.getName()),
+					new PortletDataHandlerControl(
+						NAMESPACE, "feeds", JournalFeed.class.getName()),
 				}));
 		setImportControls(getExportControls());
 		setPublishToLiveByDefault(

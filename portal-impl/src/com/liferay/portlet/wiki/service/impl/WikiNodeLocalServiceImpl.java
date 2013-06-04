@@ -17,6 +17,8 @@ package com.liferay.portlet.wiki.service.impl;
 import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
@@ -36,6 +38,8 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
+import com.liferay.portlet.social.model.SocialActivityConstants;
+import com.liferay.portlet.social.util.SocialActivityHierarchyEntryThreadLocal;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.DuplicateNodeNameException;
@@ -196,9 +200,14 @@ public class WikiNodeLocalServiceImpl extends WikiNodeLocalServiceBaseImpl {
 	public void deleteNode(WikiNode node)
 		throws PortalException, SystemException {
 
+		SocialActivityHierarchyEntryThreadLocal.push(
+			WikiNode.class, node.getNodeId());
+
 		// Pages
 
 		wikiPageLocalService.deletePages(node.getNodeId());
+
+		SocialActivityHierarchyEntryThreadLocal.pop();
 
 		// Node
 
@@ -245,6 +254,17 @@ public class WikiNodeLocalServiceImpl extends WikiNodeLocalServiceBaseImpl {
 			WikiPage.class);
 
 		wikiPageIndexer.delete(node);
+
+		// Social
+
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("uuid", node.getUuid());
+
+		socialActivityLocalService.addUniqueActivity(
+			0, node.getGroupId(), WikiNode.class.getName(), node.getNodeId(),
+			SocialActivityConstants.TYPE_DELETE, extraDataJSONObject.toString(),
+			0);
 	}
 
 	@Override

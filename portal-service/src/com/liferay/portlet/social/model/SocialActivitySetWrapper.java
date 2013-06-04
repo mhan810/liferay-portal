@@ -58,6 +58,7 @@ public class SocialActivitySetWrapper implements SocialActivitySet,
 		attributes.put("classPK", getClassPK());
 		attributes.put("type", getType());
 		attributes.put("activityCount", getActivityCount());
+		attributes.put("extraData", getExtraData());
 
 		return attributes;
 	}
@@ -122,6 +123,12 @@ public class SocialActivitySetWrapper implements SocialActivitySet,
 
 		if (activityCount != null) {
 			setActivityCount(activityCount);
+		}
+
+		String extraData = (String)attributes.get("extraData");
+
+		if (extraData != null) {
+			setExtraData(extraData);
 		}
 	}
 
@@ -382,6 +389,26 @@ public class SocialActivitySetWrapper implements SocialActivitySet,
 		_socialActivitySet.setActivityCount(activityCount);
 	}
 
+	/**
+	* Returns the extra data of this social activity set.
+	*
+	* @return the extra data of this social activity set
+	*/
+	@Override
+	public java.lang.String getExtraData() {
+		return _socialActivitySet.getExtraData();
+	}
+
+	/**
+	* Sets the extra data of this social activity set.
+	*
+	* @param extraData the extra data of this social activity set
+	*/
+	@Override
+	public void setExtraData(java.lang.String extraData) {
+		_socialActivitySet.setExtraData(extraData);
+	}
+
 	@Override
 	public boolean isNew() {
 		return _socialActivitySet.isNew();
@@ -485,6 +512,25 @@ public class SocialActivitySetWrapper implements SocialActivitySet,
 	public void persist()
 		throws com.liferay.portal.kernel.exception.SystemException {
 		_socialActivitySet.persist();
+	}
+
+	@Override
+	public java.lang.String getExtraDataValue(java.lang.String key)
+		throws com.liferay.portal.kernel.json.JSONException {
+		return _socialActivitySet.getExtraDataValue(key);
+	}
+
+	@Override
+	public java.lang.String getExtraDataValue(java.lang.String key,
+		java.util.Locale locale)
+		throws com.liferay.portal.kernel.json.JSONException {
+		return _socialActivitySet.getExtraDataValue(key, locale);
+	}
+
+	@Override
+	public void setExtraDataValue(java.lang.String key, java.lang.String value)
+		throws com.liferay.portal.kernel.json.JSONException {
+		_socialActivitySet.setExtraDataValue(key, value);
 	}
 
 	/**

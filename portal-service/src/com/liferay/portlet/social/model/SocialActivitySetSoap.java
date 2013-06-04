@@ -39,6 +39,7 @@ public class SocialActivitySetSoap implements Serializable {
 		soapModel.setClassPK(model.getClassPK());
 		soapModel.setType(model.getType());
 		soapModel.setActivityCount(model.getActivityCount());
+		soapModel.setExtraData(model.getExtraData());
 
 		return soapModel;
 	}
@@ -174,6 +175,14 @@ public class SocialActivitySetSoap implements Serializable {
 		_activityCount = activityCount;
 	}
 
+	public String getExtraData() {
+		return _extraData;
+	}
+
+	public void setExtraData(String extraData) {
+		_extraData = extraData;
+	}
+
 	private long _activitySetId;
 	private long _groupId;
 	private long _companyId;
@@ -184,4 +193,5 @@ public class SocialActivitySetSoap implements Serializable {
 	private long _classPK;
 	private int _type;
 	private int _activityCount;
+	private String _extraData;
 }

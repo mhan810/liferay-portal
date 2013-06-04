@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.trash.TrashHandler;
@@ -38,6 +39,7 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 import com.liferay.portlet.social.service.SocialActivitySetLocalServiceUtil;
+import com.liferay.portlet.social.service.permission.SocialActivitySetPermissionUtil;
 import com.liferay.portlet.social.service.persistence.SocialActivityUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 
@@ -62,10 +64,15 @@ public abstract class BaseSocialActivityInterpreter
 		SocialActivity activity, ServiceContext serviceContext) {
 
 		try {
+			_entityThreadLocal.set(doGetEntity(activity, serviceContext));
+
 			return doInterpret(activity, serviceContext);
 		}
 		catch (Exception e) {
 			_log.error("Unable to interpret activity", e);
+		}
+		finally {
+			_entityThreadLocal.remove();
 		}
 
 		return null;
@@ -83,11 +90,16 @@ public abstract class BaseSocialActivityInterpreter
 			if (!activities.isEmpty()) {
 				SocialActivity activity = activities.get(0);
 
+				_entityThreadLocal.set(doGetEntity(activity, serviceContext));
+
 				return doInterpret(activity, serviceContext);
 			}
 		}
 		catch (Exception e) {
 			_log.error("Unable to interpret activity set", e);
+		}
+		finally {
+			_entityThreadLocal.remove();
 		}
 
 		return null;
@@ -132,6 +144,13 @@ public abstract class BaseSocialActivityInterpreter
 	 */
 	protected String cleanContent(String content) {
 		return StringUtil.shorten(HtmlUtil.extractText(content), 200);
+	}
+
+	protected Object doGetEntity(
+			SocialActivity activity, ServiceContext serviceContext)
+		throws SystemException {
+
+		return null;
 	}
 
 	protected SocialActivityFeedEntry doInterpret(
@@ -192,11 +211,31 @@ public abstract class BaseSocialActivityInterpreter
 		return StringPool.BLANK;
 	}
 
+	protected String getDeletedEntryTitle(
+			SocialActivity activity, ServiceContext serviceContext)
+		throws Exception {
+
+		SocialActivitySet activitySet =
+			SocialActivitySetLocalServiceUtil.fetchAssetActivitySet(
+				activity.getClassNameId(), activity.getClassPK());
+
+		if (activitySet == null) {
+			return StringPool.BLANK;
+		}
+
+		return activitySet.getExtraDataValue(
+			"title", serviceContext.getLocale());
+	}
+
+	protected Object getEntity() {
+		return _entityThreadLocal.get();
+	}
+
 	protected String getEntryTitle(
 			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
-		return StringPool.BLANK;
+		return activity.getExtraDataValue("title");
 	}
 
 	protected String getGroupName(long groupId, ServiceContext serviceContext) {
@@ -318,7 +357,7 @@ public abstract class BaseSocialActivityInterpreter
 
 		long classPK = activity.getClassPK();
 
-		if ((trashHandler != null) &&
+		if ((trashHandler != null) && (getEntity() != null) &&
 			(trashHandler.isInTrash(classPK) ||
 			 trashHandler.isInTrashContainer(classPK))) {
 
@@ -334,7 +373,7 @@ public abstract class BaseSocialActivityInterpreter
 
 		String path = getPath(activity, serviceContext);
 
-		if (Validator.isNull(path)) {
+		if (Validator.isNull(path) || (getEntity() == null)) {
 			return null;
 		}
 
@@ -371,7 +410,14 @@ public abstract class BaseSocialActivityInterpreter
 
 		String link = getLink(activity, serviceContext);
 
-		String entryTitle = getEntryTitle(activity, serviceContext);
+		String entryTitle;
+
+		if (getEntity() != null) {
+			entryTitle = getEntryTitle(activity, serviceContext);
+		}
+		else {
+			entryTitle = getDeletedEntryTitle(activity, serviceContext);
+		}
 
 		Object[] titleArguments = getTitleArguments(
 			groupName, activity, link, entryTitle, serviceContext);
@@ -397,8 +443,11 @@ public abstract class BaseSocialActivityInterpreter
 
 	protected String getUserName(long userId, ServiceContext serviceContext) {
 		try {
-			if (userId <= 0) {
+			if (userId < 0) {
 				return StringPool.BLANK;
+			}
+			else if (userId == 0) {
+				return LanguageUtil.get(serviceContext.getLocale(), "system");
 			}
 
 			User user = UserLocalServiceUtil.getUserById(userId);
@@ -479,7 +528,16 @@ public abstract class BaseSocialActivityInterpreter
 			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
-		return false;
+		SocialActivitySet activitySet =
+			SocialActivitySetLocalServiceUtil.fetchAssetActivitySet(
+				activity.getClassNameId(), activity.getClassPK());
+
+		if (activitySet == null) {
+			return false;
+		}
+
+		return SocialActivitySetPermissionUtil.contains(
+			permissionChecker, activitySet, actionId);
 	}
 
 	protected String wrapLink(String link, String title) {
@@ -509,5 +567,8 @@ public abstract class BaseSocialActivityInterpreter
 
 	private SocialActivityFeedEntry _deprecatedMarkerSocialActivityFeedEntry =
 		new SocialActivityFeedEntry(StringPool.BLANK, StringPool.BLANK);
+
+	private final ThreadLocal<Object> _entityThreadLocal =
+		new ThreadLocal<Object>();
 
 }

@@ -17,13 +17,14 @@ package com.liferay.portlet.journal.service.impl;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ResourceConstants;
@@ -40,6 +41,7 @@ import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.service.base.JournalFolderLocalServiceBaseImpl;
 import com.liferay.portlet.social.model.SocialActivityConstants;
+import com.liferay.portlet.social.util.SocialActivityHierarchyEntryThreadLocal;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.util.TrashUtil;
 
@@ -113,6 +115,9 @@ public class JournalFolderLocalServiceImpl
 			JournalFolder folder, boolean includeTrashedEntries)
 		throws PortalException, SystemException {
 
+		SocialActivityHierarchyEntryThreadLocal.push(
+			JournalFolder.class, folder.getFolderId());
+
 		// Folders
 
 		List<JournalFolder> folders = journalFolderPersistence.findByG_P(
@@ -137,6 +142,8 @@ public class JournalFolderLocalServiceImpl
 
 		journalArticleLocalService.deleteArticles(
 			folder.getGroupId(), folder.getFolderId(), includeTrashedEntries);
+
+		SocialActivityHierarchyEntryThreadLocal.pop();
 
 		// Asset
 
@@ -433,10 +440,14 @@ public class JournalFolderLocalServiceImpl
 		socialActivityCounterLocalService.disableActivityCounters(
 			JournalFolder.class.getName(), folder.getFolderId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", folder.getName());
+
 		socialActivityLocalService.addActivity(
 			userId, folder.getGroupId(), JournalFolder.class.getName(),
 			folder.getFolderId(), SocialActivityConstants.TYPE_MOVE_TO_TRASH,
-			StringPool.BLANK, 0);
+			extraDataJSONObject.toString(), 0);
 	}
 
 	@Override
@@ -460,11 +471,15 @@ public class JournalFolderLocalServiceImpl
 		socialActivityCounterLocalService.enableActivityCounters(
 			JournalFolder.class.getName(), folder.getFolderId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", folder.getName());
+
 		socialActivityLocalService.addActivity(
 			userId, folder.getGroupId(), JournalFolder.class.getName(),
 			folder.getFolderId(),
-			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH, StringPool.BLANK,
-			0);
+			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
+			extraDataJSONObject.toString(), 0);
 	}
 
 	@Override
