@@ -130,12 +130,13 @@ public class LayoutPrototypeStagedModelDataHandler
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 		for (Layout layout : layouts) {
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, layout);
+
 			portletDataContext.addReferenceElement(
 				layoutPrototype, layoutPrototypeElement, layout,
 				PortletDataContext.REFERENCE_TYPE_EMBEDDED, false);
 
-			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, layout);
 		}
 	}
 
@@ -146,8 +147,16 @@ public class LayoutPrototypeStagedModelDataHandler
 
 		long currentGroupId = portletDataContext.getGroupId();
 
+		long currentScopeGroupId = portletDataContext.getScopeGroupId();
+
+		boolean isCurrentPrivateLayout = portletDataContext.isPrivateLayout();
+
 		try {
 			portletDataContext.setGroupId(importedGroupId);
+
+			portletDataContext.setPrivateLayout(true);
+
+			portletDataContext.setScopeGroupId(importedGroupId);
 
 			List<Element> layoutElements =
 				portletDataContext.getReferenceDataElements(
@@ -160,6 +169,10 @@ public class LayoutPrototypeStagedModelDataHandler
 		}
 		finally {
 			portletDataContext.setGroupId(currentGroupId);
+
+			portletDataContext.setPrivateLayout(isCurrentPrivateLayout);
+
+			portletDataContext.setScopeGroupId(currentScopeGroupId);
 		}
 	}
 

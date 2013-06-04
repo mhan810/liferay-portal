@@ -149,8 +149,7 @@ public class LayoutPrototypeStagedModelDataHandlerTest
 		LayoutFriendlyURL importedLayoutFriendlyURL =
 			LayoutFriendlyURLLocalServiceUtil.
 				fetchLayoutFriendlyURLByUuidAndGroupId(
-					layoutFriendlyURL.getUuid(),
-					importedLayout.getGroupId());
+					layoutFriendlyURL.getUuid(), importedLayout.getGroupId());
 
 		Assert.assertNotNull(importedLayoutFriendlyURL);
 

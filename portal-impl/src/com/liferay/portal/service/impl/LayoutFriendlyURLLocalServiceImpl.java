@@ -145,8 +145,7 @@ public class LayoutFriendlyURLLocalServiceImpl
 			String uuid, long groupId)
 		throws SystemException {
 
-		return layoutFriendlyURLPersistence.fetchByUUID_G(
-			uuid, groupId, true);
+		return layoutFriendlyURLPersistence.fetchByUUID_G(uuid, groupId, true);
 	}
 
 	@Override

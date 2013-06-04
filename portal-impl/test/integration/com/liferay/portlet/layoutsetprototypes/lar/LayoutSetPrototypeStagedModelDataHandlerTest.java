@@ -165,28 +165,6 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 			layoutSetPrototypeLayoutFromLAR);
 	}
 
-	private void _addDependentLayoutFriendlyURLs(
-			Class<?> clazz, long plid)
-		throws SystemException {
-
-		List<LayoutFriendlyURL> dependentLayoutFriendlyURLs =
-			_dependentLayoutFriendlyURLsMap.get(clazz.getSimpleName());
-
-		if (dependentLayoutFriendlyURLs == null) {
-			dependentLayoutFriendlyURLs = new ArrayList<LayoutFriendlyURL>();
-
-			_dependentLayoutFriendlyURLsMap.put(
-				clazz.getSimpleName(), dependentLayoutFriendlyURLs);
-		}
-
-		List<LayoutFriendlyURL> layoutFriendlyURLs =
-			LayoutFriendlyURLLocalServiceUtil.getLayoutFriendlyURLs(plid);
-
-		Assert.assertEquals(1, layoutFriendlyURLs.size());
-
-		dependentLayoutFriendlyURLs.add(layoutFriendlyURLs.get(0));
-	}
-
 	private void _addDependentLayout(Class<?> clazz, Layout layout)
 		throws SystemException {
 
@@ -205,6 +183,27 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 		typeSettings.setProperty("layoutPrototypeExportTest", "true");
 
 		LayoutLocalServiceUtil.updateLayout(layout);
+	}
+
+	private void _addDependentLayoutFriendlyURLs(Class<?> clazz, long plid)
+		throws SystemException {
+
+		List<LayoutFriendlyURL> dependentLayoutFriendlyURLs =
+			_dependentLayoutFriendlyURLsMap.get(clazz.getSimpleName());
+
+		if (dependentLayoutFriendlyURLs == null) {
+			dependentLayoutFriendlyURLs = new ArrayList<LayoutFriendlyURL>();
+
+			_dependentLayoutFriendlyURLsMap.put(
+				clazz.getSimpleName(), dependentLayoutFriendlyURLs);
+		}
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs =
+			LayoutFriendlyURLLocalServiceUtil.getLayoutFriendlyURLs(plid);
+
+		Assert.assertEquals(1, layoutFriendlyURLs.size());
+
+		dependentLayoutFriendlyURLs.add(layoutFriendlyURLs.get(0));
 	}
 
 	private LayoutPrototype _addLayoutPrototype(
@@ -247,13 +246,13 @@ public class LayoutSetPrototypeStagedModelDataHandlerTest
 		return layoutPrototype;
 	}
 
-	private List<Layout> _getDependentLayouts(Class<?> clazz) {
-		return _dependentLayoutsMap.get(clazz.getSimpleName());
-	}
-
 	private List<LayoutFriendlyURL> _getDependentLayoutFriendlyURLs(
 		Class<?> clazz) {
 		return _dependentLayoutFriendlyURLsMap.get(clazz.getSimpleName());
+	}
+
+	private List<Layout> _getDependentLayouts(Class<?> clazz) {
+		return _dependentLayoutsMap.get(clazz.getSimpleName());
 	}
 
 	private LayoutPrototype _retrieveImportedLayoutPrototype(
