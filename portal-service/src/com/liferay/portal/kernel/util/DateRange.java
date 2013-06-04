@@ -34,6 +34,26 @@ public class DateRange {
 		return _startDate;
 	}
 
+	public boolean isSet() {
+		if ((_startDate == null) && (_endDate == null)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean isWithinRange(Date date) {
+		if ((_startDate != null) && _startDate.after(date)) {
+			return false;
+		}
+
+		if ((_endDate != null) && _endDate.before(date)) {
+			return true;
+		}
+
+		return true;
+	}
+
 	public void setEndDate(Date endDate) {
 		_endDate = endDate;
 	}

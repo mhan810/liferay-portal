@@ -17,6 +17,7 @@ package com.liferay.portal.kernel.lar;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.DateRange;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipReader;
@@ -49,6 +50,10 @@ import java.util.Set;
  * @author Raymond Augé
  */
 public interface PortletDataContext extends Serializable {
+
+	public static final String DATE_RANGE_CONTENT = "content";
+
+	public static final String DATE_RANGE_DELETIONS = "deletions";
 
 	public static final String REFERENCE_TYPE_CHILD = "child";
 
@@ -106,8 +111,15 @@ public interface PortletDataContext extends Serializable {
 	public void addComments(
 		String className, long classPK, List<MBMessage> messages);
 
+	/**
+	 * @deprecated As of 6.2.0, use {@link #addDateRangeCriteria(String,
+	 *             DynamicQuery, String)}
+	 */
 	public void addDateRangeCriteria(
 		DynamicQuery dynamicQuery, String modifiedDatePropertyName);
+
+	void addDateRangeCriteria(String operation, DynamicQuery dynamicQuery,
+	String modifiedDatePropertyName);
 
 	public void addExpando(
 			Element element, String path, ClassedModel classedModel)
@@ -210,9 +222,16 @@ public interface PortletDataContext extends Serializable {
 
 	public String getDataStrategy();
 
+	DateRange getDateRange(String operation);
+
 	public Set<Long> getEnabledClassNameIds();
 
+	/**
+	 * @deprecated As of 6.2.0, use {@link #getDateRange(String)}
+	 */
 	public Date getEndDate();
+
+	Date getEndDate(String operation);
 
 	public Map<String, List<ExpandoColumn>> getExpandoColumns();
 
@@ -343,7 +362,12 @@ public interface PortletDataContext extends Serializable {
 
 	public long getSourceUserPersonalSiteGroupId();
 
+	/**
+	 * @deprecated As of 6.2.0, use {@link #getDateRange(String)}
+	 */
 	public Date getStartDate();
+
+	public Date getStartDate(String operation);
 
 	public long getUserId(String userUuid) throws SystemException;
 
@@ -371,7 +395,12 @@ public interface PortletDataContext extends Serializable {
 
 	public ZipWriter getZipWriter();
 
+	/**
+	 * @deprecated As of 6.2.0, use {@link #hasDateRange(String)}
+	 */
 	public boolean hasDateRange();
+
+	public boolean hasDateRange(String operation);
 
 	public boolean hasNotUniquePerLayout(String dataKey);
 
@@ -418,6 +447,9 @@ public interface PortletDataContext extends Serializable {
 
 	public boolean isPrivateLayout();
 
+	/**
+	 * @deprecated As of 6.2.0, use {@link #getDateRange(String)}
+	 */
 	public boolean isWithinDateRange(Date modifiedDate);
 
 	public void putNotUniquePerLayout(String dataKey);
@@ -430,7 +462,14 @@ public interface PortletDataContext extends Serializable {
 
 	public void setDataStrategy(String dataStrategy);
 
+	void setDateRange(String operation, DateRange dateRange);
+
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #setEndDate(String, Date)}
+	 */
 	public void setEndDate(Date endDate);
+
+	void setEndDate(String operation, Date endDate);
 
 	public void setExportDataRootElement(Element exportDataRootElement);
 
@@ -468,7 +507,12 @@ public interface PortletDataContext extends Serializable {
 	public void setSourceUserPersonalSiteGroupId(
 		long sourceUserPersonalSiteGroupId);
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #setStartDate(String, Date)}
+	 */
 	public void setStartDate(Date startDate);
+
+	void setStartDate(String operation, Date startDate);
 
 	public void setUserIdStrategy(UserIdStrategy userIdStrategy);
 

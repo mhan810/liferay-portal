@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.DateRange;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -351,21 +352,38 @@ public class PortletDataContextImpl implements PortletDataContext {
 	}
 
 	/**
-	 * @see #isWithinDateRange(Date)
+	 * @deprecated As of 6.2.0, use {@link #addDateRangeCriteria(String,
+	 *             DynamicQuery, String)}
 	 */
 	@Override
 	public void addDateRangeCriteria(
 		DynamicQuery dynamicQuery, String modifiedDatePropertyName) {
 
-		if (!hasDateRange()) {
+		addDateRangeCriteria(
+			DATE_RANGE_CONTENT, dynamicQuery, modifiedDatePropertyName);
+	}
+
+	@Override
+	public void addDateRangeCriteria(
+		String operation, DynamicQuery dynamicQuery,
+		String modifiedDatePropertyName) {
+
+		DateRange dateRange = _dateRangeMap.get(operation);
+
+		if ((dateRange == null) || !dateRange.isSet()) {
 			return;
 		}
 
 		Property modifiedDateProperty = PropertyFactoryUtil.forName(
 			modifiedDatePropertyName);
 
-		dynamicQuery.add(modifiedDateProperty.ge(_startDate));
-		dynamicQuery.add(modifiedDateProperty.lt(_endDate));
+		if (dateRange.getStartDate() != null) {
+			dynamicQuery.add(modifiedDateProperty.ge(dateRange.getStartDate()));
+		}
+
+		if (dateRange.getEndDate() != null) {
+			dynamicQuery.add(modifiedDateProperty.le(dateRange.getEndDate()));
+		}
 	}
 
 	@Override
@@ -885,12 +903,32 @@ public class PortletDataContextImpl implements PortletDataContext {
 	}
 
 	@Override
+	public DateRange getDateRange(String operation) {
+		return _dateRangeMap.get(operation);
+	}
+
+	@Override
 	public Set<Long> getEnabledClassNameIds() {
 		return _enabledClassNameIds;
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, use {@link #getDateRange(String)}
+	 */
+	@Override
 	public Date getEndDate() {
-		return _endDate;
+		return getEndDate(DATE_RANGE_CONTENT);
+	}
+
+	@Override
+	public Date getEndDate(String operation) {
+		DateRange dateRange = _dateRangeMap.get(operation);
+
+		if (dateRange == null) {
+			return null;
+		}
+
+		return dateRange.getEndDate();
 	}
 
 	@Override
@@ -1218,9 +1256,23 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return _sourceUserPersonalSiteGroupId;
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, use {@link #getDateRange(String)}
+	 */
 	@Override
 	public Date getStartDate() {
-		return _startDate;
+		return getStartDate(DATE_RANGE_CONTENT);
+	}
+
+	@Override
+	public Date getStartDate(String operation) {
+		DateRange dateRange = _dateRangeMap.get(operation);
+
+		if (dateRange == null) {
+			return null;
+		}
+
+		return dateRange.getStartDate();
 	}
 
 	@Override
@@ -1325,14 +1377,23 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return _zipWriter;
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, use {@link #hasDateRange(String)}
+	 */
 	@Override
 	public boolean hasDateRange() {
-		if (_startDate != null) {
-			return true;
-		}
-		else {
+		return hasDateRange(DATE_RANGE_CONTENT);
+	}
+
+	@Override
+	public boolean hasDateRange(String operation) {
+		DateRange dateRange = _dateRangeMap.get(operation);
+
+		if (dateRange == null) {
 			return false;
 		}
+
+		return dateRange.isSet();
 	}
 
 	@Override
@@ -1702,21 +1763,17 @@ public class PortletDataContextImpl implements PortletDataContext {
 	}
 
 	/**
-	 * @see #addDateRangeCriteria(DynamicQuery, String)
+	 * @deprecated As of 6.2.0, use {@link #getDateRange(String)}
 	 */
 	@Override
 	public boolean isWithinDateRange(Date modifiedDate) {
-		if (!hasDateRange()) {
-			return true;
-		}
-		else if ((_startDate.compareTo(modifiedDate) <= 0) &&
-				 _endDate.after(modifiedDate)) {
+		DateRange dateRange = _dateRangeMap.get(DATE_RANGE_CONTENT);
 
+		if (dateRange == null) {
 			return true;
 		}
-		else {
-			return false;
-		}
+
+		return dateRange.isWithinRange(modifiedDate);
 	}
 
 	@Override
@@ -1745,8 +1802,30 @@ public class PortletDataContextImpl implements PortletDataContext {
 	}
 
 	@Override
+	public void setDateRange(String operation, DateRange dateRange) {
+		_dateRangeMap.put(operation, dateRange);
+	}
+
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #setEndDate(String, Date)}
+	 */
+	@Override
 	public void setEndDate(Date endDate) {
-		_endDate = endDate;
+		setEndDate(DATE_RANGE_CONTENT, endDate);
+	}
+
+	@Override
+	public void setEndDate(String operation, Date endDate) {
+		DateRange dateRange = _dateRangeMap.get(operation);
+
+		if (dateRange == null) {
+			dateRange = new DateRange(null, endDate);
+
+			_dateRangeMap.put(operation, dateRange);
+		}
+		else {
+			dateRange.setEndDate(endDate);
+		}
 	}
 
 	@Override
@@ -1838,9 +1917,26 @@ public class PortletDataContextImpl implements PortletDataContext {
 		_sourceUserPersonalSiteGroupId = sourceUserPersonalSiteGroupId;
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #setStartDate(String, Date)}
+	 */
 	@Override
 	public void setStartDate(Date startDate) {
-		_startDate = startDate;
+		setStartDate(DATE_RANGE_CONTENT, startDate);
+	}
+
+	@Override
+	public void setStartDate(String operation, Date startDate) {
+		DateRange dateRange = _dateRangeMap.get(operation);
+
+		if (dateRange == null) {
+			dateRange = new DateRange(startDate, null);
+
+			_dateRangeMap.put(operation, dateRange);
+		}
+		else {
+			dateRange.setStartDate(startDate);
+		}
 	}
 
 	@Override
@@ -2231,8 +2327,9 @@ public class PortletDataContextImpl implements PortletDataContext {
 	private long _companyGroupId;
 	private long _companyId;
 	private String _dataStrategy;
+	private Map<String, DateRange> _dateRangeMap =
+		new HashMap<String, DateRange>();
 	private Set<Long> _enabledClassNameIds = new HashSet<Long>();
-	private Date _endDate;
 	private Map<String, List<ExpandoColumn>> _expandoColumnsMap =
 		new HashMap<String, List<ExpandoColumn>>();
 	private Element _exportDataRootElement;
@@ -2263,7 +2360,6 @@ public class PortletDataContextImpl implements PortletDataContext {
 	private long _sourceCompanyId;
 	private long _sourceGroupId;
 	private long _sourceUserPersonalSiteGroupId;
-	private Date _startDate;
 	private UserIdStrategy _userIdStrategy;
 	private long _userPersonalSiteGroupId;
 	private XStream _xStream;

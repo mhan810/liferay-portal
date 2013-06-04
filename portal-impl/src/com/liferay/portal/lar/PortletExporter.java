@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.DateRange;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -188,12 +189,15 @@ public class PortletExporter {
 		long lastPublishDate = GetterUtil.getLong(
 			jxPreferences.getValue("last-publish-date", StringPool.BLANK));
 
-		Date startDate = portletDataContext.getStartDate();
+		Date startDate = portletDataContext.getStartDate(
+			PortletDataContext.DATE_RANGE_CONTENT);
 
 		if ((lastPublishDate > 0) && (startDate != null) &&
 			(lastPublishDate < startDate.getTime())) {
 
-			portletDataContext.setStartDate(new Date(lastPublishDate));
+			portletDataContext.setStartDate(
+				PortletDataContext.DATE_RANGE_CONTENT,
+				new Date(lastPublishDate));
 		}
 
 		String data = null;
@@ -211,7 +215,8 @@ public class PortletExporter {
 		}
 		finally {
 			portletDataContext.setGroupId(groupId);
-			portletDataContext.setStartDate(startDate);
+			portletDataContext.setStartDate(
+				PortletDataContext.DATE_RANGE_CONTENT, startDate);
 		}
 
 		if (Validator.isNull(data)) {
@@ -230,7 +235,8 @@ public class PortletExporter {
 
 		portletDataContext.addZipEntry(path, data);
 
-		Date endDate = portletDataContext.getEndDate();
+		Date endDate = portletDataContext.getEndDate(
+			PortletDataContext.DATE_RANGE_CONTENT);
 
 		if (endDate != null) {
 			try {
@@ -419,12 +425,16 @@ public class PortletExporter {
 			"build-number", String.valueOf(ReleaseInfo.getBuildNumber()));
 		headerElement.addAttribute("export-date", Time.getRFC822());
 
-		if (portletDataContext.hasDateRange()) {
+		if (portletDataContext.hasDateRange(
+				PortletDataContext.DATE_RANGE_CONTENT)) {
+
+			DateRange dateRange = portletDataContext.getDateRange(
+				PortletDataContext.DATE_RANGE_CONTENT);
+
 			headerElement.addAttribute(
-				"start-date",
-				String.valueOf(portletDataContext.getStartDate()));
+				"start-date", String.valueOf(dateRange.getStartDate()));
 			headerElement.addAttribute(
-				"end-date", String.valueOf(portletDataContext.getEndDate()));
+				"end-date", String.valueOf(dateRange.getEndDate()));
 		}
 
 		headerElement.addAttribute("type", "portlet");
@@ -916,20 +926,28 @@ public class PortletExporter {
 						classNameIdProperty.in(
 							enabledClassesNameIds.toArray()));
 
-					if (!portletDataContext.hasDateRange()) {
+					DateRange dateRange = portletDataContext.getDateRange(
+						PortletDataContext.DATE_RANGE_DELETIONS);
+
+					if (dateRange == null) {
 						return;
 					}
 
 					Property modifiedDateProperty = PropertyFactoryUtil.forName(
 						"createDate");
 
-					Date startDate = portletDataContext.getStartDate();
-					Date endDate = portletDataContext.getEndDate();
+					Date startDate = dateRange.getStartDate();
+					Date endDate = dateRange.getEndDate();
 
-					dynamicQuery.add(
-						modifiedDateProperty.ge(startDate.getTime()));
-					dynamicQuery.add(
-						modifiedDateProperty.lt(endDate.getTime()));
+					if (startDate != null) {
+						dynamicQuery.add(
+							modifiedDateProperty.ge(startDate.getTime()));
+					}
+
+					if (endDate != null) {
+						dynamicQuery.add(
+							modifiedDateProperty.le(endDate.getTime()));
+					}
 				}
 
 				@Override
