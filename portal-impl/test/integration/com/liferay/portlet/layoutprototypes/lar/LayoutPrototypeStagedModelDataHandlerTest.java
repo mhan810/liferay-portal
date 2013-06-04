@@ -19,8 +19,10 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.lar.BaseStagedModelDataHandlerTestCase;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutFriendlyURL;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.service.LayoutFriendlyURLLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ServiceTestUtil;
@@ -65,6 +67,16 @@ public class LayoutPrototypeStagedModelDataHandlerTest
 
 		addDependentStagedModel(dependentStagedModelsMap, Layout.class, layout);
 
+		List<LayoutFriendlyURL> layoutFriendlyURLs =
+			LayoutFriendlyURLLocalServiceUtil.getLayoutFriendlyURLs(
+				layout.getPlid());
+
+		Assert.assertEquals(1, layoutFriendlyURLs.size());
+
+		addDependentStagedModel(
+			dependentStagedModelsMap, LayoutFriendlyURL.class,
+			layoutFriendlyURLs.get(0));
+
 		return layoutPrototype;
 	}
 
@@ -104,9 +116,7 @@ public class LayoutPrototypeStagedModelDataHandlerTest
 		throws Exception {
 
 		LayoutPrototype importedLayoutPrototype =
-			LayoutPrototypeLocalServiceUtil.
-				fetchLayoutPrototypeByUuidAndCompanyId(
-					stagedModel.getUuid(), group.getCompanyId());
+			(LayoutPrototype)getStagedModel(stagedModel.getUuid(), group);
 
 		Assert.assertNotNull(importedLayoutPrototype);
 
@@ -125,8 +135,28 @@ public class LayoutPrototypeStagedModelDataHandlerTest
 		Assert.assertNotNull(importedLayout);
 
 		Assert.assertEquals(
-			layout.getTypeSettingsProperties(),
-			importedLayout.getTypeSettingsProperties());
+			layout.getTypeSettingsProperty("layoutPrototypeExportTest"),
+			importedLayout.getTypeSettingsProperty(
+				"layoutPrototypeExportTest"));
+
+		List<StagedModel> dependentLayoutFriendlyURLsStagedModels =
+			dependentStagedModelsMap.get(
+				LayoutFriendlyURL.class.getSimpleName());
+
+		LayoutFriendlyURL layoutFriendlyURL =
+			(LayoutFriendlyURL)dependentLayoutFriendlyURLsStagedModels.get(0);
+
+		LayoutFriendlyURL importedLayoutFriendlyURL =
+			LayoutFriendlyURLLocalServiceUtil.
+				fetchLayoutFriendlyURLByUuidAndGroupId(
+					layoutFriendlyURL.getUuid(),
+					importedLayout.getGroupId());
+
+		Assert.assertNotNull(importedLayoutFriendlyURL);
+
+		Assert.assertEquals(
+			layoutFriendlyURL.getFriendlyURL(),
+			importedLayoutFriendlyURL.getFriendlyURL());
 	}
 
 }
