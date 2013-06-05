@@ -171,6 +171,10 @@ if (endDateTime > 0) {
 
 			<%
 			List<Portlet> dataSiteLevelPortlets = LayoutExporter.getDataSiteLevelPortlets(company.getCompanyId());
+
+			PortletDataContext portletDataContext = PortletDataContextFactoryUtil.createPreparePortletDataContext(themeDisplay, startDate, endDate);
+
+			ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
 			%>
 
 			<c:if test="<%= !dataSiteLevelPortlets.isEmpty() %>">
@@ -304,8 +308,6 @@ if (endDateTime > 0) {
 								Set<String> displayedControls = new HashSet<String>();
 								Set<String> portletDataHandlerClasses = new HashSet<String>();
 
-								PortletDataContext portletDataContext = PortletDataContextFactoryUtil.createPreparePortletDataContext(themeDisplay, startDate, endDate);
-
 								dataSiteLevelPortlets = ListUtil.sort(dataSiteLevelPortlets, new PortletTitleComparator(application, locale));
 
 								for (Portlet portlet : dataSiteLevelPortlets) {
@@ -323,8 +325,6 @@ if (endDateTime > 0) {
 									PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
 
 									portletDataHandler.prepareManifestSummary(portletDataContext);
-
-									ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
 
 									long exportModelCount = portletDataHandler.getExportModelCount(manifestSummary);
 								%>
@@ -444,6 +444,24 @@ if (endDateTime > 0) {
 								</li>
 							</ul>
 						</li>
+
+						<%
+						long totalDeletionCount = 0;
+
+						Map<String, Long> deletionCounters = manifestSummary.getDeletionCounters();
+
+						for (Long deletionCount : deletionCounters.values()) {
+							totalDeletionCount = totalDeletionCount + deletionCount;
+						}
+
+						String deletionCheckboxLabel = LanguageUtil.format(pageContext, "export-deletions", totalDeletionCount);
+						%>
+
+						<c:if test="<%= totalDeletionCount != 0 %>">
+							<li class="tree-item">
+								<aui:input checked="<%= true %>" helpMessage="export-deletions-help" id="deletions" label="<%= deletionCheckboxLabel %>" name="<%= PortletDataHandlerKeys.EXPORT_DELETIONS %>" type="checkbox" value="<%= true %>" />
+							</li>
+						</c:if>
 					</ul>
 				</aui:fieldset>
 			</c:if>
