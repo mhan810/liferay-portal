@@ -53,7 +53,7 @@
 					<util:list>
 						<bean class="com.liferay.portal.kernel.search.CollatedSpellCheckHitsProcessor" />
 						<bean class="com.liferay.portal.kernel.search.QueryIndexingHitsProcessor">
-							<property name="documentPrototype">
+							<property name="document">
 								<bean class="com.liferay.portal.kernel.search.DocumentImpl" />
 							</property>
 						</bean>

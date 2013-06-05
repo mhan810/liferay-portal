@@ -15,14 +15,14 @@
 package com.liferay.portal.kernel.search;
 
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author David Mendez Gonzalez
  */
 public interface Tokenizer {
 
-	public List<String> tokenize(String fieldName, String input, Locale locale)
+	public List<String> tokenize(
+			String fieldName, String input, String languageId)
 		throws SearchException;
 
 }

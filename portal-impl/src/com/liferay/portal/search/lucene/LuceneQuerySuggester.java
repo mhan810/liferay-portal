@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -80,34 +79,35 @@ public class LuceneQuerySuggester implements QuerySuggester {
 	public String spellCheckKeywords(SearchContext searchContext)
 		throws SearchException {
 
-		Locale locale = searchContext.getLocale();
+		String languageId = searchContext.getLanguageId();
 
 		String localizedFieldName = DocumentImpl.getLocalizedName(
-			locale, Field.SPELL_CHECK_WORD);
+			languageId, Field.SPELL_CHECK_WORD);
 
 		List<String> keywords = TokenizerUtil.tokenize(
-			localizedFieldName, searchContext.getKeywords(), locale);
+			localizedFieldName, searchContext.getKeywords(), languageId);
 
-		Map<String, List<String>> spellCheckResults = doSpellCheckKeywords(
-			keywords, localizedFieldName, searchContext, locale, 1);
+		Map<String, List<String>> results = spellCheckKeywords(
+			keywords, localizedFieldName, searchContext, languageId, 1);
 
-		return CollatorUtil.collate(spellCheckResults, keywords);
+		return CollatorUtil.collate(results, keywords);
 	}
 
 	public Map<String, List<String>> spellCheckKeywords(
 			SearchContext searchContext, int maxResults)
 		throws SearchException {
 
-		Locale locale = searchContext.getLocale();
+		String languageId = searchContext.getLanguageId();
 
 		String localizedFieldName = DocumentImpl.getLocalizedName(
-			locale, Field.SPELL_CHECK_WORD);
+			languageId, Field.SPELL_CHECK_WORD);
 
 		List<String> keywords = TokenizerUtil.tokenize(
-			localizedFieldName, searchContext.getKeywords(), locale);
+			localizedFieldName, searchContext.getKeywords(), languageId);
 
-		return doSpellCheckKeywords(
-			keywords, localizedFieldName, searchContext, locale, maxResults);
+		return spellCheckKeywords(
+			keywords, localizedFieldName, searchContext, languageId,
+			maxResults);
 	}
 
 	public String[] suggestKeywordQueries(
@@ -127,23 +127,23 @@ public class LuceneQuerySuggester implements QuerySuggester {
 				BooleanClause.Occur.MUST);
 
 			String localizedKeywordFieldName = DocumentImpl.getLocalizedName(
-				searchContext.getLocale(), Field.KEYWORD_SEARCH);
+				searchContext.getLanguageId(), Field.KEYWORD_SEARCH);
 
-			QueryParser queryPaser = new QueryParser(
+			QueryParser queryParser = new QueryParser(
 				LuceneHelperUtil.getVersion(), localizedKeywordFieldName,
 				analyzer);
 
-			Query query = queryPaser.parse(keywords);
+			Query query = queryParser.parse(keywords);
 
 			BooleanClause keywordTermQuery = new BooleanClause(
 				query, BooleanClause.Occur.MUST);
 
 			suggestKeywordQuery.add(keywordTermQuery);
 
-			Locale locale = searchContext.getLocale();
+			String languageId = searchContext.getLanguageId();
 
 			addTermQuery(
-				suggestKeywordQuery, Field.LOCALE, locale.toString(), null,
+				suggestKeywordQuery, Field.LANGUAGE_ID, languageId, null,
 				BooleanClause.Occur.MUST);
 
 			addTermQuery(
@@ -153,7 +153,7 @@ public class LuceneQuerySuggester implements QuerySuggester {
 			IndexSearcher indexSearcher = LuceneHelperUtil.getSearcher(
 				searchContext.getCompanyId(), true);
 
-			return doPerformSearch(
+			return performSearch(
 				indexSearcher, suggestKeywordQuery, localizedKeywordFieldName,
 				_defaultRelevancyChecker, maxResults);
 		}
@@ -225,7 +225,7 @@ public class LuceneQuerySuggester implements QuerySuggester {
 		return booleanQuery;
 	}
 
-	protected BooleanQuery buildSpellCheckQuery(String word, Locale locale)
+	protected BooleanQuery buildSpellCheckQuery(String word, String languageId)
 		throws SearchException {
 
 		BooleanQuery suggestWordQuery = new BooleanQuery();
@@ -238,7 +238,7 @@ public class LuceneQuerySuggester implements QuerySuggester {
 		suggestWordQuery.add(booleanNGramQueryClause);
 
 		addTermQuery(
-			suggestWordQuery, Field.LOCALE, locale.toString(), null,
+			suggestWordQuery, Field.LANGUAGE_ID, languageId, null,
 			BooleanClause.Occur.MUST);
 
 		addTermQuery(
@@ -248,7 +248,7 @@ public class LuceneQuerySuggester implements QuerySuggester {
 		return suggestWordQuery;
 	}
 
-	protected String[] doPerformSearch(
+	protected String[] performSearch(
 			IndexSearcher indexSearcher, Query query, String fieldName,
 			RelevancyChecker relevancyChecker, int maxResults)
 		throws IOException {
@@ -289,9 +289,9 @@ public class LuceneQuerySuggester implements QuerySuggester {
 		return list;
 	}
 
-	protected Map<String, List<String>> doSpellCheckKeywords(
+	protected Map<String, List<String>> spellCheckKeywords(
 			List<String> keywords, String localizedFieldName,
-			SearchContext searchContext, Locale locale, int maxResults)
+			SearchContext searchContext, String languageId, int maxResults)
 		throws SearchException {
 
 		try {
@@ -319,7 +319,7 @@ public class LuceneQuerySuggester implements QuerySuggester {
 			for (String keyword : keywords) {
 				List<String> spellCheckSuggestions = Collections.emptyList();
 
-				if (!SpellCheckerUtil.validateWordExists(
+				if (!SpellCheckerUtil.isValidWord(
 						localizedFieldName, keyword, indexReaders)) {
 
 					int frequency = indexSearcher.docFreq(
@@ -332,13 +332,13 @@ public class LuceneQuerySuggester implements QuerySuggester {
 					}
 					else {
 						BooleanQuery suggestWordQuery = buildSpellCheckQuery(
-							keyword, locale);
+							keyword, languageId);
 
 						RelevancyChecker relevancyChecker =
 							new StringDistanceRelevancyChecker(
 								keyword, scoringThreshold, _stringDistance);
 
-						suggestionsArray = doPerformSearch(
+						suggestionsArray = performSearch(
 							indexSearcher, suggestWordQuery, localizedFieldName,
 							relevancyChecker, maxResults);
 					}
