@@ -36,6 +36,7 @@ import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
+import com.liferay.portlet.documentlibrary.model.DLFileRank;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
@@ -63,6 +64,9 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "document_library";
 
 	public DLPortletDataHandler() {
+		setDeletionEventClassNames(
+			DLFileEntry.class.getName(), DLFileRank.class.getName(),
+			DLFileShortcut.class.getName(), DLFolder.class.getName());
 		setDataLocalized(true);
 		setDataPortletPreferences("rootFolderId");
 		setExportControls(
