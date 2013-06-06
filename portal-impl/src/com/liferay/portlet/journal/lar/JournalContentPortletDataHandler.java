@@ -200,15 +200,9 @@ public class JournalContentPortletDataHandler
 				PortalUtil.getClassNameId(DDMStructure.class),
 				preferenceTemplateId, true);
 
-			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, ddmTemplate);
-
-			Element articleElement = portletDataContext.getExportDataElement(
-				article);
-
-			portletDataContext.addReferenceElement(
-				article, articleElement, ddmTemplate,
-				PortletDataContext.REFERENCE_TYPE_STRONG, false);
+			StagedModelDataHandlerUtil.exportReferencedStagedModel(
+				portletDataContext, article, ddmTemplate,
+				PortletDataContext.REFERENCE_TYPE_STRONG);
 		}
 
 		portletDataContext.setScopeGroupId(previousScopeGroupId);

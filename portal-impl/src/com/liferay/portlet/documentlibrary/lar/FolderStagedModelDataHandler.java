@@ -90,12 +90,9 @@ public class FolderStagedModelDataHandler
 			repository = RepositoryUtil.findByPrimaryKey(
 				folder.getRepositoryId());
 
-			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, repository);
-
-			portletDataContext.addReferenceElement(
-				folder, folderElement, repository,
-				PortletDataContext.REFERENCE_TYPE_STRONG, false);
+			StagedModelDataHandlerUtil.exportReferencedStagedModel(
+				portletDataContext, folder, Folder.class, repository,
+				Repository.class, PortletDataContext.REFERENCE_TYPE_STRONG);
 
 			portletDataContext.addClassedModel(
 				folderElement, folderPath, folder,
@@ -265,12 +262,10 @@ public class FolderStagedModelDataHandler
 			}
 
 			if (dlFileEntryType.isExportable()) {
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, dlFileEntryType);
-
-				portletDataContext.addReferenceElement(
-					folder, folderElement, dlFileEntryType,
-					PortletDataContext.REFERENCE_TYPE_STRONG, false);
+				StagedModelDataHandlerUtil.exportReferencedStagedModel(
+					portletDataContext, folder, Folder.class, dlFileEntryType,
+					DLFileEntryType.class,
+					PortletDataContext.REFERENCE_TYPE_STRONG);
 			}
 		}
 

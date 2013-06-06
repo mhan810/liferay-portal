@@ -68,12 +68,9 @@ public class WikiPageStagedModelDataHandler
 
 		if (page.isHead()) {
 			for (FileEntry fileEntry : page.getAttachmentsFileEntries()) {
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, fileEntry);
-
-				portletDataContext.addReferenceElement(
-					page, pageElement, fileEntry, FileEntry.class,
-					PortletDataContext.REFERENCE_TYPE_WEAK, false);
+				StagedModelDataHandlerUtil.exportReferencedStagedModel(
+					portletDataContext, page, WikiPage.class, fileEntry,
+					FileEntry.class, PortletDataContext.REFERENCE_TYPE_WEAK);
 			}
 
 			long folderId = page.getAttachmentsFolderId();
