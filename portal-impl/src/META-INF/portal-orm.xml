@@ -1127,6 +1127,27 @@
 			<transient name="userUuid" />
 		</attributes>
 	</mapped-superclass>
+	<mapped-superclass class="com.liferay.portal.model.impl.SystemEventEntryModelImpl">
+		<attributes>
+			<id name="systemEventId" />
+			<basic name="groupId" />
+			<basic name="companyId" />
+			<basic name="userId" />
+			<basic name="userName" />
+			<basic name="createDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="eventType" />
+			<basic name="classNameId" />
+			<basic name="classPK" />
+			<basic name="classUuid" />
+			<transient name="className" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
 	<mapped-superclass class="com.liferay.portal.model.impl.TeamModelImpl">
 		<attributes>
 			<id name="teamId" />
@@ -4218,6 +4239,10 @@
 	</entity>
 	<entity class="com.liferay.portal.model.impl.SubscriptionImpl" name="Subscription">
 		<table name="Subscription" />
+		<attributes />
+	</entity>
+	<entity class="com.liferay.portal.model.impl.SystemEventEntryImpl" name="SystemEventEntry">
+		<table name="SystemEventEntry" />
 		<attributes />
 	</entity>
 	<entity class="com.liferay.portal.model.impl.TeamImpl" name="Team">

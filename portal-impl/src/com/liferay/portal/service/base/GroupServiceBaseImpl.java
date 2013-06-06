@@ -103,6 +103,8 @@ import com.liferay.portal.service.RoleService;
 import com.liferay.portal.service.ServiceComponentLocalService;
 import com.liferay.portal.service.ShardLocalService;
 import com.liferay.portal.service.SubscriptionLocalService;
+import com.liferay.portal.service.SystemEventEntryLocalService;
+import com.liferay.portal.service.SystemEventEntryService;
 import com.liferay.portal.service.TeamLocalService;
 import com.liferay.portal.service.TeamService;
 import com.liferay.portal.service.ThemeLocalService;
@@ -183,6 +185,7 @@ import com.liferay.portal.service.persistence.RolePersistence;
 import com.liferay.portal.service.persistence.ServiceComponentPersistence;
 import com.liferay.portal.service.persistence.ShardPersistence;
 import com.liferay.portal.service.persistence.SubscriptionPersistence;
+import com.liferay.portal.service.persistence.SystemEventEntryPersistence;
 import com.liferay.portal.service.persistence.TeamFinder;
 import com.liferay.portal.service.persistence.TeamPersistence;
 import com.liferay.portal.service.persistence.TicketPersistence;
@@ -2860,6 +2863,63 @@ public abstract class GroupServiceBaseImpl extends BaseServiceImpl
 	public void setSubscriptionPersistence(
 		SubscriptionPersistence subscriptionPersistence) {
 		this.subscriptionPersistence = subscriptionPersistence;
+	}
+
+	/**
+	 * Returns the system event entry local service.
+	 *
+	 * @return the system event entry local service
+	 */
+	public SystemEventEntryLocalService getSystemEventEntryLocalService() {
+		return systemEventEntryLocalService;
+	}
+
+	/**
+	 * Sets the system event entry local service.
+	 *
+	 * @param systemEventEntryLocalService the system event entry local service
+	 */
+	public void setSystemEventEntryLocalService(
+		SystemEventEntryLocalService systemEventEntryLocalService) {
+		this.systemEventEntryLocalService = systemEventEntryLocalService;
+	}
+
+	/**
+	 * Returns the system event entry remote service.
+	 *
+	 * @return the system event entry remote service
+	 */
+	public SystemEventEntryService getSystemEventEntryService() {
+		return systemEventEntryService;
+	}
+
+	/**
+	 * Sets the system event entry remote service.
+	 *
+	 * @param systemEventEntryService the system event entry remote service
+	 */
+	public void setSystemEventEntryService(
+		SystemEventEntryService systemEventEntryService) {
+		this.systemEventEntryService = systemEventEntryService;
+	}
+
+	/**
+	 * Returns the system event entry persistence.
+	 *
+	 * @return the system event entry persistence
+	 */
+	public SystemEventEntryPersistence getSystemEventEntryPersistence() {
+		return systemEventEntryPersistence;
+	}
+
+	/**
+	 * Sets the system event entry persistence.
+	 *
+	 * @param systemEventEntryPersistence the system event entry persistence
+	 */
+	public void setSystemEventEntryPersistence(
+		SystemEventEntryPersistence systemEventEntryPersistence) {
+		this.systemEventEntryPersistence = systemEventEntryPersistence;
 	}
 
 	/**
@@ -5730,6 +5790,12 @@ public abstract class GroupServiceBaseImpl extends BaseServiceImpl
 	protected SubscriptionLocalService subscriptionLocalService;
 	@BeanReference(type = SubscriptionPersistence.class)
 	protected SubscriptionPersistence subscriptionPersistence;
+	@BeanReference(type = SystemEventEntryLocalService.class)
+	protected SystemEventEntryLocalService systemEventEntryLocalService;
+	@BeanReference(type = SystemEventEntryService.class)
+	protected SystemEventEntryService systemEventEntryService;
+	@BeanReference(type = SystemEventEntryPersistence.class)
+	protected SystemEventEntryPersistence systemEventEntryPersistence;
 	@BeanReference(type = TeamLocalService.class)
 	protected TeamLocalService teamLocalService;
 	@BeanReference(type = TeamService.class)
