@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -245,6 +246,12 @@ public class WikiNodeLocalServiceImpl extends WikiNodeLocalServiceBaseImpl {
 			WikiPage.class);
 
 		wikiPageIndexer.delete(node);
+
+		// System Event
+
+		systemEventEntryLocalService.addEvent(
+			node.getGroupId(), SystemEventConstants.TYPE_DELETE,
+			WikiNode.class.getName(), node.getNodeId(), node.getUuid());
 	}
 
 	@Override

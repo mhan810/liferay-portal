@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.service.ServiceContext;
@@ -413,6 +414,13 @@ public class DDMStructureLocalServiceImpl
 		resourceLocalService.deleteResource(
 			structure.getCompanyId(), DDMStructure.class.getName(),
 			ResourceConstants.SCOPE_INDIVIDUAL, structure.getStructureId());
+
+		// System Event
+
+		systemEventEntryLocalService.addEvent(
+			structure.getGroupId(), SystemEventConstants.TYPE_DELETE,
+			DDMStructure.class.getName(), structure.getStructureId(),
+			structure.getUuid());
 	}
 
 	/**

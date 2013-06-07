@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.messageboards.CategoryNameException;
@@ -280,6 +281,13 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 		// Category
 
 		mbCategoryPersistence.remove(category);
+
+		// System Event
+
+		systemEventEntryLocalService.addEvent(
+			category.getGroupId(), SystemEventConstants.TYPE_DELETE,
+			MBCategory.class.getName(), category.getCategoryId(),
+			category.getUuid());
 	}
 
 	@Override

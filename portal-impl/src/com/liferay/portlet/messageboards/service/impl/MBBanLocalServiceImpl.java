@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PropsValues;
@@ -28,6 +29,7 @@ import com.liferay.portlet.messageboards.NoSuchBanException;
 import com.liferay.portlet.messageboards.model.MBBan;
 import com.liferay.portlet.messageboards.service.base.MBBanLocalServiceBaseImpl;
 import com.liferay.portlet.messageboards.util.MBUtil;
+import com.liferay.portlet.polls.model.PollsQuestion;
 
 import java.util.Date;
 import java.util.List;
@@ -88,7 +90,7 @@ public class MBBanLocalServiceImpl extends MBBanLocalServiceBaseImpl {
 
 	@Override
 	public void deleteBan(long banUserId, ServiceContext serviceContext)
-		throws SystemException {
+		throws PortalException, SystemException {
 
 		long groupId = serviceContext.getScopeGroupId();
 
@@ -102,12 +104,20 @@ public class MBBanLocalServiceImpl extends MBBanLocalServiceBaseImpl {
 	}
 
 	@Override
-	public void deleteBan(MBBan ban) throws SystemException {
+	public void deleteBan(MBBan ban) throws PortalException, SystemException {
 		mbBanPersistence.remove(ban);
+
+		// System Event
+
+		systemEventEntryLocalService.addEvent(
+			ban.getGroupId(), SystemEventConstants.TYPE_DELETE,
+			PollsQuestion.class.getName(), ban.getBanId(), ban.getUuid());
 	}
 
 	@Override
-	public void deleteBansByBanUserId(long banUserId) throws SystemException {
+	public void deleteBansByBanUserId(long banUserId)
+		throws PortalException, SystemException {
+
 		List<MBBan> bans = mbBanPersistence.findByBanUserId(banUserId);
 
 		for (MBBan ban : bans) {
@@ -116,7 +126,9 @@ public class MBBanLocalServiceImpl extends MBBanLocalServiceBaseImpl {
 	}
 
 	@Override
-	public void deleteBansByGroupId(long groupId) throws SystemException {
+	public void deleteBansByGroupId(long groupId)
+		throws PortalException, SystemException {
+
 		List<MBBan> bans = mbBanPersistence.findByGroupId(groupId);
 
 		for (MBBan ban : bans) {
