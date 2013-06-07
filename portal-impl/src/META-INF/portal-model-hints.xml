@@ -823,6 +823,18 @@
 		<field name="classPK" type="long" />
 		<field name="frequency" type="String" />
 	</model>
+	<model name="com.liferay.portal.model.SystemEventEntry">
+		<field name="systemEventId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="eventType" type="int" />
+		<field name="classNameId" type="long" />
+		<field name="classPK" type="long" />
+		<field name="classUuid" type="String" />
+	</model>
 	<model name="com.liferay.portal.model.Team">
 		<field name="teamId" type="long" />
 		<field name="companyId" type="long" />

@@ -385,6 +385,18 @@
 		<property name="service" ref="com.liferay.portal.service.RoleService" />
 		<property name="serviceInterface" value="com.liferay.portal.service.RoleService" />
 	</bean>
+	<bean name="/com_liferay_portal_service_spring_SystemEventEntryService-burlap" class="org.springframework.remoting.caucho.BurlapServiceExporter">
+		<property name="service" ref="com.liferay.portal.service.SystemEventEntryService" />
+		<property name="serviceInterface" value="com.liferay.portal.service.SystemEventEntryService" />
+	</bean>
+	<bean name="/com_liferay_portal_service_spring_SystemEventEntryService-hessian" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="com.liferay.portal.service.SystemEventEntryService" />
+		<property name="serviceInterface" value="com.liferay.portal.service.SystemEventEntryService" />
+	</bean>
+	<bean name="/com_liferay_portal_service_spring_SystemEventEntryService-http" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+		<property name="service" ref="com.liferay.portal.service.SystemEventEntryService" />
+		<property name="serviceInterface" value="com.liferay.portal.service.SystemEventEntryService" />
+	</bean>
 	<bean name="/com_liferay_portal_service_spring_TeamService-burlap" class="org.springframework.remoting.caucho.BurlapServiceExporter">
 		<property name="service" ref="com.liferay.portal.service.TeamService" />
 		<property name="serviceInterface" value="com.liferay.portal.service.TeamService" />
