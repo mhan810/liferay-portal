@@ -1897,6 +1897,8 @@ public interface PropsKeys {
 
 	public static final String POP_SERVER_SUBDOMAIN = "pop.server.subdomain";
 
+	public static final String PORTAL_DATA_SERVLET_DATE_FORMAT = "portal.data.servlet.date.format";
+
 	public static final String PORTAL_IMPERSONATION_ENABLE = "portal.impersonation.enable";
 
 	public static final String PORTAL_INSTANCE_HTTP_PORT = "portal.instance.http.port";

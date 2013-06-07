@@ -27,11 +27,18 @@ import java.util.Calendar;
 import java.util.Map;
 
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Zsolt Berentey
  */
 public class ExportImportUtil {
+
+	public static Calendar getDate(
+		HttpServletRequest request, String paramPrefix) {
+
+		return getExportImport().getDate(request, paramPrefix);
+	}
 
 	public static Calendar getDate(
 		PortletRequest portletRequest, String paramPrefix,

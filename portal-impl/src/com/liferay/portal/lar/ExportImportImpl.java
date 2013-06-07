@@ -94,6 +94,7 @@ import java.util.regex.Pattern;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.xerces.parsers.SAXParser;
 
@@ -102,8 +103,39 @@ import org.xml.sax.InputSource;
 /**
  * @author Zsolt Berentey
  * @author Levente Hudák
+ * @author Edward C. Han
  */
 public class ExportImportImpl implements ExportImport {
+
+	@Override
+	public Calendar getDate(
+		HttpServletRequest request, String paramPrefix) {
+
+		int dateMonth = ParamUtil.getInteger(
+			request, paramPrefix + "Month");
+		int dateDay = ParamUtil.getInteger(request, paramPrefix + "Day");
+		int dateYear = ParamUtil.getInteger(
+			request, paramPrefix + "Year");
+		int dateHour = ParamUtil.getInteger(
+			request, paramPrefix + "Hour");
+		int dateMinute = ParamUtil.getInteger(
+			request, paramPrefix + "Minute");
+		int dateAmPm = ParamUtil.getInteger(
+			request, paramPrefix + "AmPm");
+
+		if (Validator.isNull(dateMonth) || Validator.isNull(dateYear)
+			|| Validator.isNull(dateDay)) {
+
+			return null;
+		}
+
+		Locale locale = LocaleUtil.getDefault();
+		TimeZone timeZone = TimeZoneUtil.getTimeZone(StringPool.UTC);
+
+		return getDate(
+			locale, timeZone, dateMonth, dateDay, dateYear, dateHour, dateMinute,
+			dateAmPm);
+	}
 
 	@Override
 	public Calendar getDate(
@@ -125,33 +157,9 @@ public class ExportImportImpl implements ExportImport {
 		int dateAmPm = ParamUtil.getInteger(
 			portletRequest, paramPrefix + "AmPm");
 
-		if (dateAmPm == Calendar.PM) {
-			dateHour += 12;
-		}
-
-		Locale locale = null;
-		TimeZone timeZone = null;
-
-		if (timeZoneSensitive) {
-			locale = themeDisplay.getLocale();
-			timeZone = themeDisplay.getTimeZone();
-		}
-		else {
-			locale = LocaleUtil.getDefault();
-			timeZone = TimeZoneUtil.getTimeZone(StringPool.UTC);
-		}
-
-		Calendar calendar = CalendarFactoryUtil.getCalendar(timeZone, locale);
-
-		calendar.set(Calendar.MONTH, dateMonth);
-		calendar.set(Calendar.DATE, dateDay);
-		calendar.set(Calendar.YEAR, dateYear);
-		calendar.set(Calendar.HOUR_OF_DAY, dateHour);
-		calendar.set(Calendar.MINUTE, dateMinute);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
-
-		return calendar;
+		return getDate(
+			timeZoneSensitive, themeDisplay, dateMonth, dateDay, dateYear,
+			dateHour, dateMinute, dateAmPm);
 	}
 
 	@Override
@@ -925,6 +933,48 @@ public class ExportImportImpl implements ExportImport {
 
 			element.addText(count);
 		}
+	}
+
+	protected Calendar getDate(
+		Locale locale, TimeZone timeZone, int dateMonth,
+		int dateDay, int dateYear, int dateHour, int dateMinute, int dateAmPm) {
+
+		if (dateAmPm == Calendar.PM) {
+			dateHour += 12;
+		}
+
+		Calendar calendar = CalendarFactoryUtil.getCalendar(timeZone, locale);
+
+		calendar.set(Calendar.MONTH, dateMonth);
+		calendar.set(Calendar.DATE, dateDay);
+		calendar.set(Calendar.YEAR, dateYear);
+		calendar.set(Calendar.HOUR_OF_DAY, dateHour);
+		calendar.set(Calendar.MINUTE, dateMinute);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+
+		return calendar;
+	}
+
+	protected Calendar getDate(
+		boolean timeZoneSensitive, ThemeDisplay themeDisplay, int dateMonth,
+		int dateDay, int dateYear, int dateHour, int dateMinute, int dateAmPm) {
+
+		Locale locale = null;
+		TimeZone timeZone = null;
+
+		if (timeZoneSensitive) {
+			locale = themeDisplay.getLocale();
+			timeZone = themeDisplay.getTimeZone();
+		}
+		else {
+			locale = LocaleUtil.getDefault();
+			timeZone = TimeZoneUtil.getTimeZone(StringPool.UTC);
+		}
+
+		return getDate(
+			locale, timeZone, dateMonth, dateDay, dateYear, dateHour,
+			dateMinute, dateAmPm);
 	}
 
 	protected Map<String, String[]> getDLReferenceParameters(
