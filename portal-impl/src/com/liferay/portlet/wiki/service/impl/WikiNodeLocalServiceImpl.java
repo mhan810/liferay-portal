@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.InstancePool;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
@@ -29,6 +30,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -196,6 +198,9 @@ public class WikiNodeLocalServiceImpl extends WikiNodeLocalServiceBaseImpl {
 	public void deleteNode(WikiNode node)
 		throws PortalException, SystemException {
 
+		SystemEventHierarchyEntryThreadLocal.push(
+			WikiNode.class, node.getNodeId());
+
 		// Pages
 
 		wikiPageLocalService.deletePages(node.getNodeId());
@@ -245,6 +250,14 @@ public class WikiNodeLocalServiceImpl extends WikiNodeLocalServiceBaseImpl {
 			WikiPage.class);
 
 		wikiPageIndexer.delete(node);
+
+		// System Event
+
+		systemEventEntryLocalService.addEvent(
+			node.getGroupId(), SystemEventConstants.TYPE_DELETE,
+			WikiNode.class.getName(), node.getNodeId(), node.getUuid());
+
+		SystemEventHierarchyEntryThreadLocal.pop();
 	}
 
 	@Override

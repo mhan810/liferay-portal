@@ -23,8 +23,11 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.service.BaseServiceImpl;
 import com.liferay.portal.service.ResourceLocalService;
+import com.liferay.portal.service.SystemEventEntryLocalService;
+import com.liferay.portal.service.SystemEventEntryService;
 import com.liferay.portal.service.UserLocalService;
 import com.liferay.portal.service.UserService;
+import com.liferay.portal.service.persistence.SystemEventEntryPersistence;
 import com.liferay.portal.service.persistence.UserFinder;
 import com.liferay.portal.service.persistence.UserPersistence;
 
@@ -344,6 +347,63 @@ public abstract class MDRActionServiceBaseImpl extends BaseServiceImpl
 	}
 
 	/**
+	 * Returns the system event entry local service.
+	 *
+	 * @return the system event entry local service
+	 */
+	public SystemEventEntryLocalService getSystemEventEntryLocalService() {
+		return systemEventEntryLocalService;
+	}
+
+	/**
+	 * Sets the system event entry local service.
+	 *
+	 * @param systemEventEntryLocalService the system event entry local service
+	 */
+	public void setSystemEventEntryLocalService(
+		SystemEventEntryLocalService systemEventEntryLocalService) {
+		this.systemEventEntryLocalService = systemEventEntryLocalService;
+	}
+
+	/**
+	 * Returns the system event entry remote service.
+	 *
+	 * @return the system event entry remote service
+	 */
+	public SystemEventEntryService getSystemEventEntryService() {
+		return systemEventEntryService;
+	}
+
+	/**
+	 * Sets the system event entry remote service.
+	 *
+	 * @param systemEventEntryService the system event entry remote service
+	 */
+	public void setSystemEventEntryService(
+		SystemEventEntryService systemEventEntryService) {
+		this.systemEventEntryService = systemEventEntryService;
+	}
+
+	/**
+	 * Returns the system event entry persistence.
+	 *
+	 * @return the system event entry persistence
+	 */
+	public SystemEventEntryPersistence getSystemEventEntryPersistence() {
+		return systemEventEntryPersistence;
+	}
+
+	/**
+	 * Sets the system event entry persistence.
+	 *
+	 * @param systemEventEntryPersistence the system event entry persistence
+	 */
+	public void setSystemEventEntryPersistence(
+		SystemEventEntryPersistence systemEventEntryPersistence) {
+		this.systemEventEntryPersistence = systemEventEntryPersistence;
+	}
+
+	/**
 	 * Returns the user local service.
 	 *
 	 * @return the user local service
@@ -498,6 +558,12 @@ public abstract class MDRActionServiceBaseImpl extends BaseServiceImpl
 	protected CounterLocalService counterLocalService;
 	@BeanReference(type = ResourceLocalService.class)
 	protected ResourceLocalService resourceLocalService;
+	@BeanReference(type = SystemEventEntryLocalService.class)
+	protected SystemEventEntryLocalService systemEventEntryLocalService;
+	@BeanReference(type = SystemEventEntryService.class)
+	protected SystemEventEntryService systemEventEntryService;
+	@BeanReference(type = SystemEventEntryPersistence.class)
+	protected SystemEventEntryPersistence systemEventEntryPersistence;
 	@BeanReference(type = UserLocalService.class)
 	protected UserLocalService userLocalService;
 	@BeanReference(type = UserService.class)

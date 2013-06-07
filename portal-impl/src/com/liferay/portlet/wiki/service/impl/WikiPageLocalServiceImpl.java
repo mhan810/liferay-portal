@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.sanitizer.SanitizerUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -460,6 +461,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	public void deletePage(WikiPage page)
 		throws PortalException, SystemException {
 
+		SystemEventHierarchyEntryThreadLocal.push(
+			WikiPage.class, page.getResourcePrimKey());
+
 		// Children
 
 		List<WikiPage> childrenPages = wikiPagePersistence.findByN_P(
@@ -569,6 +573,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 				curPage.getCompanyId(), curPage.getGroupId(),
 				WikiPage.class.getName(), curPage.getPageId());
 		}
+
+		SystemEventHierarchyEntryThreadLocal.pop();
 	}
 
 	@Override
