@@ -230,6 +230,51 @@ public interface SystemEventModel extends AttachedModel, BaseModel<SystemEvent> 
 	public void setType(int type);
 
 	/**
+	 * Returns the event set of this system event.
+	 *
+	 * @return the event set of this system event
+	 */
+	@AutoEscape
+	public String getEventSet();
+
+	/**
+	 * Sets the event set of this system event.
+	 *
+	 * @param eventSet the event set of this system event
+	 */
+	public void setEventSet(String eventSet);
+
+	/**
+	 * Returns the event ID of this system event.
+	 *
+	 * @return the event ID of this system event
+	 */
+	@AutoEscape
+	public String getEventId();
+
+	/**
+	 * Sets the event ID of this system event.
+	 *
+	 * @param eventId the event ID of this system event
+	 */
+	public void setEventId(String eventId);
+
+	/**
+	 * Returns the parent event ID of this system event.
+	 *
+	 * @return the parent event ID of this system event
+	 */
+	@AutoEscape
+	public String getParentEventId();
+
+	/**
+	 * Sets the parent event ID of this system event.
+	 *
+	 * @param parentEventId the parent event ID of this system event
+	 */
+	public void setParentEventId(String parentEventId);
+
+	/**
 	 * Returns the extra data of this system event.
 	 *
 	 * @return the extra data of this system event
