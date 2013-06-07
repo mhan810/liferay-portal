@@ -2000,6 +2000,9 @@
 		<column name="classNameId" type="long" />
 		<column name="classPK" type="long" />
 		<column name="classUuid" type="String" />
+		<column name="eventSet" type="String" />
+		<column name="eventId" type="String" />
+		<column name="parentEventId" type="String" />
 
 		<!-- Order -->
 

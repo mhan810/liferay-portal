@@ -16,7 +16,10 @@ package com.liferay.portal.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntry;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.SystemEventEntry;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
@@ -35,6 +38,17 @@ public class SystemEventEntryLocalServiceImpl
 			long groupId, int eventType, String className, long classPK,
 			String classUuid)
 		throws PortalException, SystemException {
+
+		SystemEventHierarchyEntry systemEventHierarchyEntry =
+			SystemEventHierarchyEntryThreadLocal.peek();
+
+		if ((systemEventHierarchyEntry != null) &&
+			(systemEventHierarchyEntry.getAction() ==
+				SystemEventConstants.ACTION_SKIP) &&
+			(!systemEventHierarchyEntry.isAsset(className, classPK))) {
+
+			return;
+		}
 
 		long companyId = 0;
 		String userName;
@@ -75,6 +89,35 @@ public class SystemEventEntryLocalServiceImpl
 		entry.setClassName(className);
 		entry.setClassPK(classPK);
 		entry.setClassUuid(classUuid);
+
+		if (systemEventHierarchyEntry != null) {
+			entry.setEventSet(systemEventHierarchyEntry.getEventSet());
+		}
+		else {
+			entry.setEventSet(String.valueOf(counterLocalService.increment()));
+		}
+
+		if (systemEventHierarchyEntry.isAsset(className, classPK)) {
+			entry.setEventId(systemEventHierarchyEntry.getEventId());
+		}
+		else {
+			entry.setEventId(
+				SystemEventHierarchyEntryThreadLocal.getNextEventId(
+					entry.getEventSet()));
+		}
+
+		if ((systemEventHierarchyEntry != null) &&
+			(systemEventHierarchyEntry.getAction() ==
+					SystemEventConstants.ACTION_STORE_HIERARCHY)) {
+
+			if (systemEventHierarchyEntry.isAsset(className, classPK)) {
+				entry.setParentEventId(
+					systemEventHierarchyEntry.getParentEventId());
+			}
+			else {
+				entry.setParentEventId(systemEventHierarchyEntry.getEventId());
+			}
+		}
 
 		systemEventEntryPersistence.update(entry);
 	}
