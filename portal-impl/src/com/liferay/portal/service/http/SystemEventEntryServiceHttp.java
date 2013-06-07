@@ -36,10 +36,10 @@ package com.liferay.portal.service.http;
  * The HTTP utility is only generated for remote services.
  * </p>
  *
- * @author    Brian Wing Shun Chan
- * @see       SystemEventEntryServiceSoap
- * @see       com.liferay.portal.security.auth.HttpPrincipal
- * @see       com.liferay.portal.service.SystemEventEntryServiceUtil
+ * @author Brian Wing Shun Chan
+ * @see SystemEventEntryServiceSoap
+ * @see com.liferay.portal.security.auth.HttpPrincipal
+ * @see com.liferay.portal.service.SystemEventEntryServiceUtil
  * @generated
  */
 public class SystemEventEntryServiceHttp {

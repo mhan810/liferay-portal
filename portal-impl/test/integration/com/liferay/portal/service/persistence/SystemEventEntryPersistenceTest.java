@@ -129,6 +129,12 @@ public class SystemEventEntryPersistenceTest {
 
 		newSystemEventEntry.setClassUuid(ServiceTestUtil.randomString());
 
+		newSystemEventEntry.setEventSet(ServiceTestUtil.randomString());
+
+		newSystemEventEntry.setEventId(ServiceTestUtil.randomString());
+
+		newSystemEventEntry.setParentEventId(ServiceTestUtil.randomString());
+
 		_persistence.update(newSystemEventEntry);
 
 		SystemEventEntry existingSystemEventEntry = _persistence.findByPrimaryKey(newSystemEventEntry.getPrimaryKey());
@@ -154,6 +160,12 @@ public class SystemEventEntryPersistenceTest {
 			newSystemEventEntry.getClassPK());
 		Assert.assertEquals(existingSystemEventEntry.getClassUuid(),
 			newSystemEventEntry.getClassUuid());
+		Assert.assertEquals(existingSystemEventEntry.getEventSet(),
+			newSystemEventEntry.getEventSet());
+		Assert.assertEquals(existingSystemEventEntry.getEventId(),
+			newSystemEventEntry.getEventId());
+		Assert.assertEquals(existingSystemEventEntry.getParentEventId(),
+			newSystemEventEntry.getParentEventId());
 	}
 
 	@Test
@@ -194,7 +206,8 @@ public class SystemEventEntryPersistenceTest {
 		return OrderByComparatorFactoryUtil.create("SystemEventEntry",
 			"systemEventId", true, "groupId", true, "companyId", true,
 			"userId", true, "userName", true, "createDate", true, "eventType",
-			true, "classNameId", true, "classPK", true, "classUuid", true);
+			true, "classNameId", true, "classPK", true, "classUuid", true,
+			"eventSet", true, "eventId", true, "parentEventId", true);
 	}
 
 	@Test
@@ -331,6 +344,12 @@ public class SystemEventEntryPersistenceTest {
 		systemEventEntry.setClassPK(ServiceTestUtil.nextLong());
 
 		systemEventEntry.setClassUuid(ServiceTestUtil.randomString());
+
+		systemEventEntry.setEventSet(ServiceTestUtil.randomString());
+
+		systemEventEntry.setEventId(ServiceTestUtil.randomString());
+
+		systemEventEntry.setParentEventId(ServiceTestUtil.randomString());
 
 		_persistence.update(systemEventEntry);
 

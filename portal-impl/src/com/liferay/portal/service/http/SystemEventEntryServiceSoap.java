@@ -48,10 +48,10 @@ package com.liferay.portal.service.http;
  * The SOAP utility is only generated for remote services.
  * </p>
  *
- * @author    Brian Wing Shun Chan
- * @see       SystemEventEntryServiceHttp
- * @see       com.liferay.portal.model.SystemEventEntrySoap
- * @see       com.liferay.portal.service.SystemEventEntryServiceUtil
+ * @author Brian Wing Shun Chan
+ * @see SystemEventEntryServiceHttp
+ * @see com.liferay.portal.model.SystemEventEntrySoap
+ * @see com.liferay.portal.service.SystemEventEntryServiceUtil
  * @generated
  */
 public class SystemEventEntryServiceSoap {

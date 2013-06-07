@@ -1141,6 +1141,9 @@
 			<basic name="classNameId" />
 			<basic name="classPK" />
 			<basic name="classUuid" />
+			<basic name="eventSet" />
+			<basic name="eventId" />
+			<basic name="parentEventId" />
 			<transient name="className" />
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />

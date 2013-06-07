@@ -834,6 +834,9 @@
 		<field name="classNameId" type="long" />
 		<field name="classPK" type="long" />
 		<field name="classUuid" type="String" />
+		<field name="eventSet" type="String" />
+		<field name="eventId" type="String" />
+		<field name="parentEventId" type="String" />
 	</model>
 	<model name="com.liferay.portal.model.Team">
 		<field name="teamId" type="long" />

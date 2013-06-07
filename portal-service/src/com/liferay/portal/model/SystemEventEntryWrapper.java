@@ -23,8 +23,8 @@ import java.util.Map;
  * This class is a wrapper for {@link SystemEventEntry}.
  * </p>
  *
- * @author    Brian Wing Shun Chan
- * @see       SystemEventEntry
+ * @author Brian Wing Shun Chan
+ * @see SystemEventEntry
  * @generated
  */
 public class SystemEventEntryWrapper implements SystemEventEntry,
@@ -57,6 +57,9 @@ public class SystemEventEntryWrapper implements SystemEventEntry,
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("classPK", getClassPK());
 		attributes.put("classUuid", getClassUuid());
+		attributes.put("eventSet", getEventSet());
+		attributes.put("eventId", getEventId());
+		attributes.put("parentEventId", getParentEventId());
 
 		return attributes;
 	}
@@ -121,6 +124,24 @@ public class SystemEventEntryWrapper implements SystemEventEntry,
 
 		if (classUuid != null) {
 			setClassUuid(classUuid);
+		}
+
+		String eventSet = (String)attributes.get("eventSet");
+
+		if (eventSet != null) {
+			setEventSet(eventSet);
+		}
+
+		String eventId = (String)attributes.get("eventId");
+
+		if (eventId != null) {
+			setEventId(eventId);
+		}
+
+		String parentEventId = (String)attributes.get("parentEventId");
+
+		if (parentEventId != null) {
+			setParentEventId(parentEventId);
 		}
 	}
 
@@ -379,6 +400,66 @@ public class SystemEventEntryWrapper implements SystemEventEntry,
 	@Override
 	public void setClassUuid(java.lang.String classUuid) {
 		_systemEventEntry.setClassUuid(classUuid);
+	}
+
+	/**
+	* Returns the event set of this system event entry.
+	*
+	* @return the event set of this system event entry
+	*/
+	@Override
+	public java.lang.String getEventSet() {
+		return _systemEventEntry.getEventSet();
+	}
+
+	/**
+	* Sets the event set of this system event entry.
+	*
+	* @param eventSet the event set of this system event entry
+	*/
+	@Override
+	public void setEventSet(java.lang.String eventSet) {
+		_systemEventEntry.setEventSet(eventSet);
+	}
+
+	/**
+	* Returns the event ID of this system event entry.
+	*
+	* @return the event ID of this system event entry
+	*/
+	@Override
+	public java.lang.String getEventId() {
+		return _systemEventEntry.getEventId();
+	}
+
+	/**
+	* Sets the event ID of this system event entry.
+	*
+	* @param eventId the event ID of this system event entry
+	*/
+	@Override
+	public void setEventId(java.lang.String eventId) {
+		_systemEventEntry.setEventId(eventId);
+	}
+
+	/**
+	* Returns the parent event ID of this system event entry.
+	*
+	* @return the parent event ID of this system event entry
+	*/
+	@Override
+	public java.lang.String getParentEventId() {
+		return _systemEventEntry.getParentEventId();
+	}
+
+	/**
+	* Sets the parent event ID of this system event entry.
+	*
+	* @param parentEventId the parent event ID of this system event entry
+	*/
+	@Override
+	public void setParentEventId(java.lang.String parentEventId) {
+		_systemEventEntry.setParentEventId(parentEventId);
 	}
 
 	@Override

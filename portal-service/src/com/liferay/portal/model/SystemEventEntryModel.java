@@ -230,6 +230,51 @@ public interface SystemEventEntryModel extends AttachedModel,
 	 */
 	public void setClassUuid(String classUuid);
 
+	/**
+	 * Returns the event set of this system event entry.
+	 *
+	 * @return the event set of this system event entry
+	 */
+	@AutoEscape
+	public String getEventSet();
+
+	/**
+	 * Sets the event set of this system event entry.
+	 *
+	 * @param eventSet the event set of this system event entry
+	 */
+	public void setEventSet(String eventSet);
+
+	/**
+	 * Returns the event ID of this system event entry.
+	 *
+	 * @return the event ID of this system event entry
+	 */
+	@AutoEscape
+	public String getEventId();
+
+	/**
+	 * Sets the event ID of this system event entry.
+	 *
+	 * @param eventId the event ID of this system event entry
+	 */
+	public void setEventId(String eventId);
+
+	/**
+	 * Returns the parent event ID of this system event entry.
+	 *
+	 * @return the parent event ID of this system event entry
+	 */
+	@AutoEscape
+	public String getParentEventId();
+
+	/**
+	 * Sets the parent event ID of this system event entry.
+	 *
+	 * @param parentEventId the parent event ID of this system event entry
+	 */
+	public void setParentEventId(String parentEventId);
+
 	@Override
 	public boolean isNew();
 

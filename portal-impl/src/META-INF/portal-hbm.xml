@@ -940,6 +940,9 @@
 		<property name="classNameId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="classPK" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="classUuid" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="eventSet" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="eventId" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="parentEventId" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 	<class name="com.liferay.portal.model.impl.TeamImpl" table="Team">
 		<cache usage="read-write" />

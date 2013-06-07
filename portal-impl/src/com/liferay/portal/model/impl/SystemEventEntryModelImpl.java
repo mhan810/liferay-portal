@@ -75,9 +75,12 @@ public class SystemEventEntryModelImpl extends BaseModelImpl<SystemEventEntry>
 			{ "eventType", Types.INTEGER },
 			{ "classNameId", Types.BIGINT },
 			{ "classPK", Types.BIGINT },
-			{ "classUuid", Types.VARCHAR }
+			{ "classUuid", Types.VARCHAR },
+			{ "eventSet", Types.VARCHAR },
+			{ "eventId", Types.VARCHAR },
+			{ "parentEventId", Types.VARCHAR }
 		};
-	public static final String TABLE_SQL_CREATE = "create table SystemEventEntry (systemEventId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,eventType INTEGER,classNameId LONG,classPK LONG,classUuid VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table SystemEventEntry (systemEventId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,eventType INTEGER,classNameId LONG,classPK LONG,classUuid VARCHAR(75) null,eventSet VARCHAR(75) null,eventId VARCHAR(75) null,parentEventId VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table SystemEventEntry";
 	public static final String ORDER_BY_JPQL = " ORDER BY systemEventEntry.createDate DESC";
 	public static final String ORDER_BY_SQL = " ORDER BY SystemEventEntry.createDate DESC";
@@ -122,6 +125,9 @@ public class SystemEventEntryModelImpl extends BaseModelImpl<SystemEventEntry>
 		model.setClassNameId(soapModel.getClassNameId());
 		model.setClassPK(soapModel.getClassPK());
 		model.setClassUuid(soapModel.getClassUuid());
+		model.setEventSet(soapModel.getEventSet());
+		model.setEventId(soapModel.getEventId());
+		model.setParentEventId(soapModel.getParentEventId());
 
 		return model;
 	}
@@ -197,6 +203,9 @@ public class SystemEventEntryModelImpl extends BaseModelImpl<SystemEventEntry>
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("classPK", getClassPK());
 		attributes.put("classUuid", getClassUuid());
+		attributes.put("eventSet", getEventSet());
+		attributes.put("eventId", getEventId());
+		attributes.put("parentEventId", getParentEventId());
 
 		return attributes;
 	}
@@ -261,6 +270,24 @@ public class SystemEventEntryModelImpl extends BaseModelImpl<SystemEventEntry>
 
 		if (classUuid != null) {
 			setClassUuid(classUuid);
+		}
+
+		String eventSet = (String)attributes.get("eventSet");
+
+		if (eventSet != null) {
+			setEventSet(eventSet);
+		}
+
+		String eventId = (String)attributes.get("eventId");
+
+		if (eventId != null) {
+			setEventId(eventId);
+		}
+
+		String parentEventId = (String)attributes.get("parentEventId");
+
+		if (parentEventId != null) {
+			setParentEventId(parentEventId);
 		}
 	}
 
@@ -464,6 +491,54 @@ public class SystemEventEntryModelImpl extends BaseModelImpl<SystemEventEntry>
 		_classUuid = classUuid;
 	}
 
+	@Override
+	@JSON
+	public String getEventSet() {
+		if (_eventSet == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _eventSet;
+		}
+	}
+
+	@Override
+	public void setEventSet(String eventSet) {
+		_eventSet = eventSet;
+	}
+
+	@Override
+	@JSON
+	public String getEventId() {
+		if (_eventId == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _eventId;
+		}
+	}
+
+	@Override
+	public void setEventId(String eventId) {
+		_eventId = eventId;
+	}
+
+	@Override
+	@JSON
+	public String getParentEventId() {
+		if (_parentEventId == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _parentEventId;
+		}
+	}
+
+	@Override
+	public void setParentEventId(String parentEventId) {
+		_parentEventId = parentEventId;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -505,6 +580,9 @@ public class SystemEventEntryModelImpl extends BaseModelImpl<SystemEventEntry>
 		systemEventEntryImpl.setClassNameId(getClassNameId());
 		systemEventEntryImpl.setClassPK(getClassPK());
 		systemEventEntryImpl.setClassUuid(getClassUuid());
+		systemEventEntryImpl.setEventSet(getEventSet());
+		systemEventEntryImpl.setEventId(getEventId());
+		systemEventEntryImpl.setParentEventId(getParentEventId());
 
 		systemEventEntryImpl.resetOriginalValues();
 
@@ -620,12 +698,36 @@ public class SystemEventEntryModelImpl extends BaseModelImpl<SystemEventEntry>
 			systemEventEntryCacheModel.classUuid = null;
 		}
 
+		systemEventEntryCacheModel.eventSet = getEventSet();
+
+		String eventSet = systemEventEntryCacheModel.eventSet;
+
+		if ((eventSet != null) && (eventSet.length() == 0)) {
+			systemEventEntryCacheModel.eventSet = null;
+		}
+
+		systemEventEntryCacheModel.eventId = getEventId();
+
+		String eventId = systemEventEntryCacheModel.eventId;
+
+		if ((eventId != null) && (eventId.length() == 0)) {
+			systemEventEntryCacheModel.eventId = null;
+		}
+
+		systemEventEntryCacheModel.parentEventId = getParentEventId();
+
+		String parentEventId = systemEventEntryCacheModel.parentEventId;
+
+		if ((parentEventId != null) && (parentEventId.length() == 0)) {
+			systemEventEntryCacheModel.parentEventId = null;
+		}
+
 		return systemEventEntryCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{systemEventId=");
 		sb.append(getSystemEventId());
@@ -647,6 +749,12 @@ public class SystemEventEntryModelImpl extends BaseModelImpl<SystemEventEntry>
 		sb.append(getClassPK());
 		sb.append(", classUuid=");
 		sb.append(getClassUuid());
+		sb.append(", eventSet=");
+		sb.append(getEventSet());
+		sb.append(", eventId=");
+		sb.append(getEventId());
+		sb.append(", parentEventId=");
+		sb.append(getParentEventId());
 		sb.append("}");
 
 		return sb.toString();
@@ -654,7 +762,7 @@ public class SystemEventEntryModelImpl extends BaseModelImpl<SystemEventEntry>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(34);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.portal.model.SystemEventEntry");
@@ -700,6 +808,18 @@ public class SystemEventEntryModelImpl extends BaseModelImpl<SystemEventEntry>
 			"<column><column-name>classUuid</column-name><column-value><![CDATA[");
 		sb.append(getClassUuid());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>eventSet</column-name><column-value><![CDATA[");
+		sb.append(getEventSet());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>eventId</column-name><column-value><![CDATA[");
+		sb.append(getEventId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>parentEventId</column-name><column-value><![CDATA[");
+		sb.append(getParentEventId());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -729,6 +849,9 @@ public class SystemEventEntryModelImpl extends BaseModelImpl<SystemEventEntry>
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
 	private String _classUuid;
+	private String _eventSet;
+	private String _eventId;
+	private String _parentEventId;
 	private long _columnBitmask;
 	private SystemEventEntry _escapedModel;
 }

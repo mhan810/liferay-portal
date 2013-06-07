@@ -23,8 +23,8 @@ import java.util.List;
 /**
  * This class is used by SOAP remote services, specifically {@link com.liferay.portal.service.http.SystemEventEntryServiceSoap}.
  *
- * @author    Brian Wing Shun Chan
- * @see       com.liferay.portal.service.http.SystemEventEntryServiceSoap
+ * @author Brian Wing Shun Chan
+ * @see com.liferay.portal.service.http.SystemEventEntryServiceSoap
  * @generated
  */
 public class SystemEventEntrySoap implements Serializable {
@@ -41,6 +41,9 @@ public class SystemEventEntrySoap implements Serializable {
 		soapModel.setClassNameId(model.getClassNameId());
 		soapModel.setClassPK(model.getClassPK());
 		soapModel.setClassUuid(model.getClassUuid());
+		soapModel.setEventSet(model.getEventSet());
+		soapModel.setEventId(model.getEventId());
+		soapModel.setParentEventId(model.getParentEventId());
 
 		return soapModel;
 	}
@@ -175,6 +178,30 @@ public class SystemEventEntrySoap implements Serializable {
 		_classUuid = classUuid;
 	}
 
+	public String getEventSet() {
+		return _eventSet;
+	}
+
+	public void setEventSet(String eventSet) {
+		_eventSet = eventSet;
+	}
+
+	public String getEventId() {
+		return _eventId;
+	}
+
+	public void setEventId(String eventId) {
+		_eventId = eventId;
+	}
+
+	public String getParentEventId() {
+		return _parentEventId;
+	}
+
+	public void setParentEventId(String parentEventId) {
+		_parentEventId = parentEventId;
+	}
+
 	private long _systemEventId;
 	private long _groupId;
 	private long _companyId;
@@ -185,4 +212,7 @@ public class SystemEventEntrySoap implements Serializable {
 	private long _classNameId;
 	private long _classPK;
 	private String _classUuid;
+	private String _eventSet;
+	private String _eventId;
+	private String _parentEventId;
 }
