@@ -20,9 +20,11 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.messageboards.CategoryNameException;
@@ -222,6 +224,9 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 			MBCategory category, boolean includeTrashedEntries)
 		throws PortalException, SystemException {
 
+		SystemEventHierarchyEntryThreadLocal.push(
+			MBCategory.class, category.getCategoryId());
+
 		// Categories
 
 		List<MBCategory> categories = mbCategoryPersistence.findByG_P(
@@ -280,6 +285,15 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 		// Category
 
 		mbCategoryPersistence.remove(category);
+
+		// System Event
+
+		systemEventEntryLocalService.addEvent(
+			category.getGroupId(), SystemEventConstants.TYPE_DELETE,
+			MBCategory.class.getName(), category.getCategoryId(),
+			category.getUuid());
+
+		SystemEventHierarchyEntryThreadLocal.pop();
 	}
 
 	@Override

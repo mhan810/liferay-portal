@@ -16,12 +16,16 @@ package com.liferay.portal.lar;
 
 import com.liferay.portal.LayoutImportException;
 import com.liferay.portal.NoSuchPortletPreferencesException;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.lar.ExportImportUtil;
+import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataContextFactoryUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
@@ -54,6 +58,8 @@ import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.PortletItem;
 import com.liferay.portal.model.PortletPreferences;
+import com.liferay.portal.model.SystemEventConstants;
+import com.liferay.portal.model.SystemEventEntry;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
@@ -61,6 +67,7 @@ import com.liferay.portal.service.PortletItemLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.service.persistence.SystemEventEntryActionableDynamicQuery;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
@@ -447,6 +454,7 @@ public class PortletExporter {
 		exportAssetLinks(portletDataContext);
 		exportAssetTags(portletDataContext);
 		exportComments(portletDataContext);
+		exportDeletions(portletDataContext);
 		exportExpandoTables(portletDataContext);
 		exportLocks(portletDataContext);
 
@@ -836,15 +844,92 @@ public class PortletExporter {
 			document.formattedString());
 	}
 
-	protected void exportDeletions(PortletDataContext portletDataContext)
+	protected void exportDeletion(
+		PortletDataContext portletDataContext,
+		SystemEventEntry systemEventEntry, Element deletionsElement) {
+
+		Element deletionElement = deletionsElement.addElement("deletion");
+
+		deletionElement.addAttribute(
+			"class-name",
+			PortalUtil.getClassName(systemEventEntry.getClassNameId()));
+
+		deletionElement.addAttribute(
+			"group-id", String.valueOf(systemEventEntry.getGroupId()));
+
+		deletionElement.addAttribute("uuid", systemEventEntry.getClassUuid());
+
+		ManifestSummary manifestSummary =
+			portletDataContext.getManifestSummary();
+
+		manifestSummary.incrementDeletionCount(
+			PortalUtil.getClassName(systemEventEntry.getClassNameId()));
+	}
+
+	protected void exportDeletions(final PortletDataContext portletDataContext)
 		throws Exception {
 
 		Document document = SAXReaderUtil.createDocument();
 
-		Element rootElement = document.addElement("deletions");
+		final Element rootElement = document.addElement("deletions");
 
-		Set<Long> deletionEventClassNameIds =
+		final Set<Long> deletionEventClassNameIds =
 			portletDataContext.getDeletionEventClassNameIds();
+
+		SystemEventEntryActionableDynamicQuery actionableDynamicQuery =
+			new SystemEventEntryActionableDynamicQuery() {
+
+				@Override
+				protected void addCriteria(DynamicQuery dynamicQuery) {
+					if (deletionEventClassNameIds.isEmpty()) {
+						return;
+					}
+
+					setGroupId(portletDataContext.getScopeGroupId());
+
+					Property typeProperty = PropertyFactoryUtil.forName("type");
+
+					dynamicQuery.add(
+						typeProperty.eq(SystemEventConstants.TYPE_DELETE));
+
+					Property classNameIdProperty = PropertyFactoryUtil.forName(
+						"classNameId");
+
+					dynamicQuery.add(
+						classNameIdProperty.in(
+							deletionEventClassNameIds.toArray()));
+
+					if (!portletDataContext.hasDateRange()) {
+						return;
+					}
+
+					Property modifiedDateProperty = PropertyFactoryUtil.forName(
+						"createDate");
+
+					Date startDate = portletDataContext.getStartDate();
+					Date endDate = portletDataContext.getEndDate();
+
+					dynamicQuery.add(
+						modifiedDateProperty.ge(startDate.getTime()));
+					dynamicQuery.add(
+						modifiedDateProperty.le(endDate.getTime()));
+				}
+
+				@Override
+				protected void performAction(Object object)
+					throws PortalException, SystemException {
+
+					SystemEventEntry systemEventEntry =
+						(SystemEventEntry)object;
+
+					exportDeletion(
+						portletDataContext, systemEventEntry, rootElement);
+				}
+			};
+
+		if (!deletionEventClassNameIds.isEmpty()) {
+			actionableDynamicQuery.performActions();
+		}
 
 		portletDataContext.addZipEntry(
 			ExportImportPathUtil.getRootPath(portletDataContext) +

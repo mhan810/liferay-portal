@@ -138,6 +138,9 @@
 	<bean id="com.liferay.portal.service.persistence.ShardPersistence" class="com.liferay.portal.service.persistence.ShardPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.SubscriptionLocalService" class="com.liferay.portal.service.impl.SubscriptionLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.SubscriptionPersistence" class="com.liferay.portal.service.persistence.SubscriptionPersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.portal.service.SystemEventEntryLocalService" class="com.liferay.portal.service.impl.SystemEventEntryLocalServiceImpl" />
+	<bean id="com.liferay.portal.service.SystemEventEntryService" class="com.liferay.portal.service.impl.SystemEventEntryServiceImpl" />
+	<bean id="com.liferay.portal.service.persistence.SystemEventEntryPersistence" class="com.liferay.portal.service.persistence.SystemEventEntryPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.TeamLocalService" class="com.liferay.portal.service.impl.TeamLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.TeamService" class="com.liferay.portal.service.impl.TeamServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.TeamPersistence" class="com.liferay.portal.service.persistence.TeamPersistenceImpl" parent="basePersistence" />
