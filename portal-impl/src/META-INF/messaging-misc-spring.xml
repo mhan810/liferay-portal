@@ -17,6 +17,9 @@
 	<bean id="destination.background_task" class="com.liferay.portal.kernel.messaging.ParallelDestination">
 		<property name="name" value="liferay/background_task" />
 	</bean>
+	<bean id="destination.background_task.status" class="com.liferay.portal.kernel.messaging.ParallelDestination">
+		<property name="name" value="liferay/background_task/status" />
+	</bean>
 	<bean id="destination.convert_process" class="com.liferay.portal.kernel.messaging.SerialDestination">
 		<property name="name" value="liferay/convert_process" />
 	</bean>
@@ -114,6 +117,7 @@
 			<list>
 				<ref bean="destination.async_service" />
 				<ref bean="destination.background_task" />
+				<ref bean="destination.background_task.status" />
 				<ref bean="destination.convert_process" />
 				<ref bean="destination.document_library_audio_processor" />
 				<ref bean="destination.document_library_image_processor" />
