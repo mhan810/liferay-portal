@@ -107,6 +107,34 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 	}
 
 	@Override
+	public long getDeletionCount(ManifestSummary manifestSummary) {
+		String[] classNames = getDeletionEventClassNames();
+
+		if (classNames.length == 0) {
+			return 0;
+		}
+
+		long totalDeletionCount = -1;
+
+		for (String className : classNames) {
+			long deletionCount = manifestSummary.getDeletionCount(className);
+
+			if (deletionCount == -1) {
+				continue;
+			}
+
+			if (totalDeletionCount == -1) {
+				totalDeletionCount = deletionCount;
+			}
+			else {
+				totalDeletionCount += deletionCount;
+			}
+		}
+
+		return totalDeletionCount;
+	}
+
+	@Override
 	public String[] getDeletionEventClassNames() {
 		return _deletionEventClassNames;
 	}

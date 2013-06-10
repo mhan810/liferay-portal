@@ -16,9 +16,11 @@ package com.liferay.portlet.polls.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
@@ -179,6 +181,9 @@ public class PollsQuestionLocalServiceImpl
 	public void deleteQuestion(PollsQuestion question)
 		throws PortalException, SystemException {
 
+		SystemEventHierarchyEntryThreadLocal.push(
+			PollsQuestion.class, question.getQuestionId());
+
 		// Question
 
 		pollsQuestionPersistence.remove(question);
@@ -196,6 +201,15 @@ public class PollsQuestionLocalServiceImpl
 		// Votes
 
 		pollsVotePersistence.removeByQuestionId(question.getQuestionId());
+
+		// System Event
+
+		systemEventLocalService.addSystemEvent(
+			question.getGroupId(), PollsQuestion.class.getName(),
+			question.getQuestionId(), question.getUuid(),
+			SystemEventConstants.TYPE_DELETE);
+
+		SystemEventHierarchyEntryThreadLocal.pop();
 	}
 
 	@Override

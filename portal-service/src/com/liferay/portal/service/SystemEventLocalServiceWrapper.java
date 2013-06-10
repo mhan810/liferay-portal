@@ -260,6 +260,64 @@ public class SystemEventLocalServiceWrapper implements SystemEventLocalService,
 		_systemEventLocalService.setBeanIdentifier(beanIdentifier);
 	}
 
+	@Override
+	public void addSystemEvent(long groupId, java.lang.String className,
+		long classPK, java.lang.String classUuid, int type)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_systemEventLocalService.addSystemEvent(groupId, className, classPK,
+			classUuid, type);
+	}
+
+	@Override
+	public void addSystemEvent(long userId, long groupId, long classNameId,
+		long classPK, java.lang.String classUuid, int type)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_systemEventLocalService.addSystemEvent(userId, groupId, classNameId,
+			classPK, classUuid, type);
+	}
+
+	@Override
+	public void addSystemEvent(long userId, long groupId, long classNameId,
+		long classPK, java.lang.String classUuid, int type,
+		java.lang.String extraData)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_systemEventLocalService.addSystemEvent(userId, groupId, classNameId,
+			classPK, classUuid, type, extraData);
+	}
+
+	@Override
+	public void deleteSystemEvents(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_systemEventLocalService.deleteSystemEvents(groupId);
+	}
+
+	@Override
+	public com.liferay.portal.model.SystemEvent fetchSystemEvent(long groupId,
+		long classNameId, long classPK, int type)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _systemEventLocalService.fetchSystemEvent(groupId, classNameId,
+			classPK, type);
+	}
+
+	@Override
+	public java.util.List<com.liferay.portal.model.SystemEvent> getSystemEvents(
+		long groupId, long classNameId, long classPK)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _systemEventLocalService.getSystemEvents(groupId, classNameId,
+			classPK);
+	}
+
+	@Override
+	public java.util.List<com.liferay.portal.model.SystemEvent> getSystemEvents(
+		long groupId, long classNameId, long classPK, int type)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _systemEventLocalService.getSystemEvents(groupId, classNameId,
+			classPK, type);
+	}
+
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */

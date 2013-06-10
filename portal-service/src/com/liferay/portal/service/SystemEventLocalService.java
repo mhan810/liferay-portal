@@ -227,4 +227,38 @@ public interface SystemEventLocalService extends BaseLocalService,
 	* @param beanIdentifier the Spring bean ID for this bean
 	*/
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
+
+	public void addSystemEvent(long groupId, java.lang.String className,
+		long classPK, java.lang.String classUuid, int type)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void addSystemEvent(long userId, long groupId, long classNameId,
+		long classPK, java.lang.String classUuid, int type)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void addSystemEvent(long userId, long groupId, long classNameId,
+		long classPK, java.lang.String classUuid, int type,
+		java.lang.String extraData)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void deleteSystemEvents(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portal.model.SystemEvent fetchSystemEvent(long groupId,
+		long classNameId, long classPK, int type)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portal.model.SystemEvent> getSystemEvents(
+		long groupId, long classNameId, long classPK)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portal.model.SystemEvent> getSystemEvents(
+		long groupId, long classNameId, long classPK, int type)
+		throws com.liferay.portal.kernel.exception.SystemException;
 }

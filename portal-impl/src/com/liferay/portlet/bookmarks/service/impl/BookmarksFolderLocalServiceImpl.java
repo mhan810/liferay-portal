@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -110,6 +111,9 @@ public class BookmarksFolderLocalServiceImpl
 			BookmarksFolder folder, boolean includeTrashedEntries)
 		throws PortalException, SystemException {
 
+		SystemEventHierarchyEntryThreadLocal.push(
+			BookmarksFolder.class, folder.getFolderId());
+
 		// Folders
 
 		List<BookmarksFolder> folders = bookmarksFolderPersistence.findByG_P_S(
@@ -156,6 +160,8 @@ public class BookmarksFolderLocalServiceImpl
 
 		trashEntryLocalService.deleteEntry(
 			BookmarksFolder.class.getName(), folder.getFolderId());
+
+		SystemEventHierarchyEntryThreadLocal.pop();
 
 		return folder;
 	}

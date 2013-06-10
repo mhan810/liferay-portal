@@ -57,6 +57,10 @@ public class SystemEventWrapper implements SystemEvent,
 		attributes.put("classPK", getClassPK());
 		attributes.put("classUuid", getClassUuid());
 		attributes.put("type", getType());
+		attributes.put("eventSet", getEventSet());
+		attributes.put("eventId", getEventId());
+		attributes.put("parentEventId", getParentEventId());
+		attributes.put("extraData", getExtraData());
 
 		return attributes;
 	}
@@ -121,6 +125,30 @@ public class SystemEventWrapper implements SystemEvent,
 
 		if (type != null) {
 			setType(type);
+		}
+
+		String eventSet = (String)attributes.get("eventSet");
+
+		if (eventSet != null) {
+			setEventSet(eventSet);
+		}
+
+		String eventId = (String)attributes.get("eventId");
+
+		if (eventId != null) {
+			setEventId(eventId);
+		}
+
+		String parentEventId = (String)attributes.get("parentEventId");
+
+		if (parentEventId != null) {
+			setParentEventId(parentEventId);
+		}
+
+		String extraData = (String)attributes.get("extraData");
+
+		if (extraData != null) {
+			setExtraData(extraData);
 		}
 	}
 
@@ -379,6 +407,86 @@ public class SystemEventWrapper implements SystemEvent,
 	@Override
 	public void setType(int type) {
 		_systemEvent.setType(type);
+	}
+
+	/**
+	* Returns the event set of this system event.
+	*
+	* @return the event set of this system event
+	*/
+	@Override
+	public java.lang.String getEventSet() {
+		return _systemEvent.getEventSet();
+	}
+
+	/**
+	* Sets the event set of this system event.
+	*
+	* @param eventSet the event set of this system event
+	*/
+	@Override
+	public void setEventSet(java.lang.String eventSet) {
+		_systemEvent.setEventSet(eventSet);
+	}
+
+	/**
+	* Returns the event ID of this system event.
+	*
+	* @return the event ID of this system event
+	*/
+	@Override
+	public java.lang.String getEventId() {
+		return _systemEvent.getEventId();
+	}
+
+	/**
+	* Sets the event ID of this system event.
+	*
+	* @param eventId the event ID of this system event
+	*/
+	@Override
+	public void setEventId(java.lang.String eventId) {
+		_systemEvent.setEventId(eventId);
+	}
+
+	/**
+	* Returns the parent event ID of this system event.
+	*
+	* @return the parent event ID of this system event
+	*/
+	@Override
+	public java.lang.String getParentEventId() {
+		return _systemEvent.getParentEventId();
+	}
+
+	/**
+	* Sets the parent event ID of this system event.
+	*
+	* @param parentEventId the parent event ID of this system event
+	*/
+	@Override
+	public void setParentEventId(java.lang.String parentEventId) {
+		_systemEvent.setParentEventId(parentEventId);
+	}
+
+	/**
+	* Returns the extra data of this system event.
+	*
+	* @return the extra data of this system event
+	*/
+	@Override
+	public java.lang.String getExtraData() {
+		return _systemEvent.getExtraData();
+	}
+
+	/**
+	* Sets the extra data of this system event.
+	*
+	* @param extraData the extra data of this system event
+	*/
+	@Override
+	public void setExtraData(java.lang.String extraData) {
+		_systemEvent.setExtraData(extraData);
 	}
 
 	@Override

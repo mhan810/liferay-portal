@@ -329,12 +329,12 @@ public class PortletBagImpl implements PortletBag {
 	private ServletContext _servletContext;
 	private List<SocialActivityInterpreter> _socialActivityInterpreterInstances;
 	private SocialRequestInterpreter _socialRequestInterpreterInstance;
-	private List<UserNotificationInterpreter>
-		_userNotificationInterpreterInstances;
 	private List<StagedModelDataHandler<?>> _stagedModelDataHandlerInstances;
 	private TemplateHandler _templateHandlerInstance;
 	private List<TrashHandler> _trashHandlerInstances;
 	private URLEncoder _urlEncoderInstance;
+	private List<UserNotificationInterpreter>
+		_userNotificationInterpreterInstances;
 	private WebDAVStorage _webDAVStorageInstance;
 	private List<WorkflowHandler> _workflowHandlerInstances;
 	private Method _xmlRpcMethodInstance;
