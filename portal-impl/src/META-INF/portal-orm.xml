@@ -1171,6 +1171,10 @@
 			<basic name="type">
 				<column name="TYPE_" />
 			</basic>
+			<basic name="eventSet" />
+			<basic name="eventId" />
+			<basic name="parentEventId" />
+			<basic name="extraData" />
 			<transient name="className" />
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />

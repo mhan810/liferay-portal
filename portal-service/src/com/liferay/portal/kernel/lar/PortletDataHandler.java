@@ -75,6 +75,8 @@ public interface PortletDataHandler {
 	 */
 	public String[] getDataPortletPreferences();
 
+	long getDeletionCount(ManifestSummary manifestSummary);
+
 	public String[] getDeletionEventClassNames();
 
 	/**

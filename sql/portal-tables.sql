@@ -2086,7 +2086,11 @@ create table SystemEvent (
 	classNameId LONG,
 	classPK LONG,
 	classUuid VARCHAR(75) null,
-	type_ INTEGER
+	type_ INTEGER,
+	eventSet VARCHAR(75) null,
+	eventId VARCHAR(75) null,
+	parentEventId VARCHAR(75) null,
+	extraData TEXT null
 );
 
 create table Team (

@@ -129,6 +129,14 @@ public class SystemEventPersistenceTest {
 
 		newSystemEvent.setType(ServiceTestUtil.nextInt());
 
+		newSystemEvent.setEventSet(ServiceTestUtil.randomString());
+
+		newSystemEvent.setEventId(ServiceTestUtil.randomString());
+
+		newSystemEvent.setParentEventId(ServiceTestUtil.randomString());
+
+		newSystemEvent.setExtraData(ServiceTestUtil.randomString());
+
 		_persistence.update(newSystemEvent);
 
 		SystemEvent existingSystemEvent = _persistence.findByPrimaryKey(newSystemEvent.getPrimaryKey());
@@ -154,6 +162,14 @@ public class SystemEventPersistenceTest {
 			newSystemEvent.getClassUuid());
 		Assert.assertEquals(existingSystemEvent.getType(),
 			newSystemEvent.getType());
+		Assert.assertEquals(existingSystemEvent.getEventSet(),
+			newSystemEvent.getEventSet());
+		Assert.assertEquals(existingSystemEvent.getEventId(),
+			newSystemEvent.getEventId());
+		Assert.assertEquals(existingSystemEvent.getParentEventId(),
+			newSystemEvent.getParentEventId());
+		Assert.assertEquals(existingSystemEvent.getExtraData(),
+			newSystemEvent.getExtraData());
 	}
 
 	@Test
@@ -195,7 +211,8 @@ public class SystemEventPersistenceTest {
 			"systemEventId", true, "groupId", true, "companyId", true,
 			"userId", true, "userName", true, "createDate", true,
 			"classNameId", true, "classPK", true, "classUuid", true, "type",
-			true);
+			true, "eventSet", true, "eventId", true, "parentEventId", true,
+			"extraData", true);
 	}
 
 	@Test
@@ -332,6 +349,14 @@ public class SystemEventPersistenceTest {
 		systemEvent.setClassUuid(ServiceTestUtil.randomString());
 
 		systemEvent.setType(ServiceTestUtil.nextInt());
+
+		systemEvent.setEventSet(ServiceTestUtil.randomString());
+
+		systemEvent.setEventId(ServiceTestUtil.randomString());
+
+		systemEvent.setParentEventId(ServiceTestUtil.randomString());
+
+		systemEvent.setExtraData(ServiceTestUtil.randomString());
 
 		_persistence.update(systemEvent);
 

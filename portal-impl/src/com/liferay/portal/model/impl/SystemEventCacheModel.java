@@ -37,7 +37,7 @@ public class SystemEventCacheModel implements CacheModel<SystemEvent>,
 	Externalizable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(29);
 
 		sb.append("{systemEventId=");
 		sb.append(systemEventId);
@@ -59,6 +59,14 @@ public class SystemEventCacheModel implements CacheModel<SystemEvent>,
 		sb.append(classUuid);
 		sb.append(", type=");
 		sb.append(type);
+		sb.append(", eventSet=");
+		sb.append(eventSet);
+		sb.append(", eventId=");
+		sb.append(eventId);
+		sb.append(", parentEventId=");
+		sb.append(parentEventId);
+		sb.append(", extraData=");
+		sb.append(extraData);
 		sb.append("}");
 
 		return sb.toString();
@@ -99,6 +107,34 @@ public class SystemEventCacheModel implements CacheModel<SystemEvent>,
 
 		systemEventImpl.setType(type);
 
+		if (eventSet == null) {
+			systemEventImpl.setEventSet(StringPool.BLANK);
+		}
+		else {
+			systemEventImpl.setEventSet(eventSet);
+		}
+
+		if (eventId == null) {
+			systemEventImpl.setEventId(StringPool.BLANK);
+		}
+		else {
+			systemEventImpl.setEventId(eventId);
+		}
+
+		if (parentEventId == null) {
+			systemEventImpl.setParentEventId(StringPool.BLANK);
+		}
+		else {
+			systemEventImpl.setParentEventId(parentEventId);
+		}
+
+		if (extraData == null) {
+			systemEventImpl.setExtraData(StringPool.BLANK);
+		}
+		else {
+			systemEventImpl.setExtraData(extraData);
+		}
+
 		systemEventImpl.resetOriginalValues();
 
 		return systemEventImpl;
@@ -116,6 +152,10 @@ public class SystemEventCacheModel implements CacheModel<SystemEvent>,
 		classPK = objectInput.readLong();
 		classUuid = objectInput.readUTF();
 		type = objectInput.readInt();
+		eventSet = objectInput.readUTF();
+		eventId = objectInput.readUTF();
+		parentEventId = objectInput.readUTF();
+		extraData = objectInput.readUTF();
 	}
 
 	@Override
@@ -145,6 +185,34 @@ public class SystemEventCacheModel implements CacheModel<SystemEvent>,
 		}
 
 		objectOutput.writeInt(type);
+
+		if (eventSet == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(eventSet);
+		}
+
+		if (eventId == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(eventId);
+		}
+
+		if (parentEventId == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(parentEventId);
+		}
+
+		if (extraData == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(extraData);
+		}
 	}
 
 	public long systemEventId;
@@ -157,4 +225,8 @@ public class SystemEventCacheModel implements CacheModel<SystemEvent>,
 	public long classPK;
 	public String classUuid;
 	public int type;
+	public String eventSet;
+	public String eventId;
+	public String parentEventId;
+	public String extraData;
 }
