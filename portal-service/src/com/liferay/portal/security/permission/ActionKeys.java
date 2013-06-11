@@ -169,6 +169,8 @@ public class ActionKeys {
 	public static final String EXPORT_IMPORT_PORTLET_INFO =
 		"EXPORT_IMPORT_PORTLET_INFO";
 
+	public static final String EXPORT_PORTAL_DATA = "EXPORT_PORTAL_DATA";
+
 	public static final String EXPORT_USER = "EXPORT_USER";
 
 	public static final String GUEST_PREFERENCES = "GUEST_PREFERENCES";

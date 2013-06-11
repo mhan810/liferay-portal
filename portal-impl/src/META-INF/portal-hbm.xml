@@ -168,6 +168,7 @@
 	<import class="com.liferay.portlet.wiki.model.WikiPageResource" />
 	<import class="com.liferay.portlet.trash.model.TrashEntry" />
 	<import class="com.liferay.portlet.trash.model.TrashVersion" />
+	<import class="com.liferay.portlet.portaldata.model.PortalDataHandler" />
 	<class name="com.liferay.counter.model.impl.CounterImpl" table="Counter">
 		<id name="name" type="java.lang.String">
 			<generator class="assigned" />

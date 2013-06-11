@@ -228,6 +228,11 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
+		<servlet-name>Portal Data Servlet</servlet-name>
+		<servlet-class>com.liferay.portlet.portaldata.PortalDataServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
 		<servlet-name>Portal Delegator Servlet</servlet-name>
 		<servlet-class>com.liferay.portal.kernel.servlet.PortalDelegatorServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
@@ -801,6 +806,10 @@
 	<servlet-mapping>
 		<servlet-name>JSON Web Service Servlet</servlet-name>
 		<url-pattern>/api/jsonws/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Portal Data Servlet</servlet-name>
+		<url-pattern>/api/portaldata/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Remoting Servlet</servlet-name>
