@@ -1021,6 +1021,22 @@
 	<bean id="com.liferay.portlet.passwordpoliciesadmin.util.PasswordPoliciesAdminUtil" class="com.liferay.portlet.passwordpoliciesadmin.util.PasswordPoliciesAdminUtil">
 		<property name="passwordPoliciesAdmin" ref="com.liferay.portlet.passwordpoliciesadmin.util.PasswordPoliciesAdmin" />
 	</bean>
+	<bean id="com.liferay.portlet.portaldata.PortalDataPortletResolverUtil" class="com.liferay.portlet.portaldata.PortalDataPortletResolverUtil">
+		<property name="portalDataPortletResolver">
+			<bean class="com.liferay.portlet.portaldata.PortalDataPortletResolverImpl">
+				<property name="typePortletMap">
+					<map>
+						<!--<entry key="com.liferay.portal.model.LayoutPrototype" value="146"/>-->
+						<!--<entry key="com.liferay.portal.model.LayoutSetPrototype" value="149"/>-->
+						<entry key="com.liferay.portal.model.Organization" value="125"/>
+						<entry key="com.liferay.portal.model.PasswordPolicy" value="129"/>
+						<entry key="com.liferay.portal.model.Role" value="128"/>
+						<entry key="com.liferay.portal.model.UserGroup" value="127"/>
+					</map>
+				</property>
+			</bean>
+		</property>
+	</bean>
 	<bean id="com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplate" class="com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplateImpl" />
 	<bean id="com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplateUtil" class="com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplateUtil">
 		<property name="portletDisplayTemplate" ref="com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplate" />
