@@ -23,7 +23,9 @@ import java.util.Map;
 /**
  * @author Edward C. Han
  */
-public class PortalDataPortletResolverImpl implements PortalDataPortletResolver {
+public class PortalDataPortletResolverImpl
+	implements PortalDataPortletResolver {
+
 	public void addTypePortlet(Class type, String portletId) {
 		_typePortletMap.put(type, portletId);
 	}

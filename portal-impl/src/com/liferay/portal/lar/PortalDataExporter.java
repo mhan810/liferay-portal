@@ -17,8 +17,6 @@ package com.liferay.portal.lar;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
@@ -41,6 +39,7 @@ import java.util.Map;
  * @author Edward C. Han
  */
 public class PortalDataExporter {
+
 	public byte[] exportPortalData(
 			long companyId, Class type, Map<String, String[]> parameterMap,
 			Date startDate, Date endDate)
@@ -171,5 +170,4 @@ public class PortalDataExporter {
 		return layout;
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(PortalDataExporter.class);
 }

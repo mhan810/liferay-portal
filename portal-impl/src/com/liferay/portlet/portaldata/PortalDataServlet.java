@@ -33,53 +33,29 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.portaldata.service.PortalDataHandlerServiceUtil;
 
+import java.text.DateFormat;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
 
 /**
  * @author Edward C. Han
  */
 public class PortalDataServlet extends HttpServlet {
-	@Override
-	protected void service(
-			HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException {
-
-		String cmd = ParamUtil.getString(request, Constants.CMD);
-
-		try {
-			if (cmd.equals(Constants.EXPORT)) {
-				doExport(request, response);
-			}
-			else if (cmd.equals(Constants.IMPORT)) {
-				doImport(request);
-			}
-		}
-		catch (Exception e) {
-			if (_log.isErrorEnabled()) {
-				_log.error(e, e);
-			}
-
-			if (e instanceof IOException) {
-				throw (IOException) e;
-			}
-
-			throw new ServletException(e);
-		}
-	}
 
 	protected void doExport(
 			HttpServletRequest request, HttpServletResponse response)
-		throws PortalException, SystemException, IOException {
+		throws IOException, PortalException, SystemException {
 
 		long companyId = PortalUtil.getCompanyId(request);
 
@@ -87,8 +63,8 @@ public class PortalDataServlet extends HttpServlet {
 
 		String portletId = getPortletId(request, companyId);
 
-		UploadServletRequest uploadRequest =
-			PortalUtil.getUploadServletRequest(request);
+		UploadServletRequest uploadRequest = PortalUtil.getUploadServletRequest(
+			request);
 
 		Map<String, String[]> parameters = getParameters(uploadRequest);
 
@@ -113,14 +89,13 @@ public class PortalDataServlet extends HttpServlet {
 		}
 	}
 
-	protected void doImport(
-			HttpServletRequest request)
-		throws PortalException, SystemException, IOException {
+	protected void doImport(HttpServletRequest request)
+		throws IOException, PortalException, SystemException {
 
 		long companyId = PortalUtil.getCompanyId(request);
 
-		UploadServletRequest uploadRequest =
-			PortalUtil.getUploadServletRequest(request);
+		UploadServletRequest uploadRequest = PortalUtil.getUploadServletRequest(
+			request);
 
 		Map<String, String[]> parameters = getParameters(uploadRequest);
 
@@ -157,8 +132,9 @@ public class PortalDataServlet extends HttpServlet {
 			String paramJson = FileUtil.read(paramFile);
 
 			if (Validator.isNotNull(paramJson)) {
-				parameters = (Map<String, String[]>) JSONFactoryUtil.
-					deserialize(paramJson);
+				parameters =
+					(Map<String, String[]>)JSONFactoryUtil.deserialize(
+						paramJson);
 			}
 		}
 
@@ -169,8 +145,7 @@ public class PortalDataServlet extends HttpServlet {
 		return parameters;
 	}
 
-	protected String getPortletId(
-			HttpServletRequest request, long companyId)
+	protected String getPortletId(HttpServletRequest request, long companyId)
 		throws PortalException, SystemException {
 
 		String typeName = ParamUtil.getString(request, "type");
@@ -190,6 +165,33 @@ public class PortalDataServlet extends HttpServlet {
 		return portlet.getPortletId();
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		PortalDataServlet.class);
+	@Override
+	protected void service(
+			HttpServletRequest request, HttpServletResponse response)
+		throws IOException, ServletException {
+
+		String cmd = ParamUtil.getString(request, Constants.CMD);
+
+		try {
+			if (cmd.equals(Constants.EXPORT)) {
+				doExport(request, response);
+			}
+			else if (cmd.equals(Constants.IMPORT)) {
+				doImport(request);
+			}
+		}
+		catch (Exception e) {
+			if (_log.isErrorEnabled()) {
+				_log.error(e, e);
+			}
+
+			if (e instanceof IOException) {
+				throw (IOException)e;
+			}
+
+			throw new ServletException(e);
+		}
+	}
+
+	private static Log _log = LogFactoryUtil.getLog(PortalDataServlet.class);
 }

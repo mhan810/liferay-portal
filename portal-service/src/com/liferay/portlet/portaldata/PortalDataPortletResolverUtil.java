@@ -21,6 +21,7 @@ import com.liferay.portal.model.Portlet;
  * @author Edward C. Han
  */
 public class PortalDataPortletResolverUtil {
+
 	public static Portlet resolvePortlet(long companyId, Class type)
 		throws SystemException {
 

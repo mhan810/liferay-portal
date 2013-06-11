@@ -43,6 +43,7 @@ import java.util.Map;
  */
 public class PortalDataHandlerServiceImpl
 	extends PortalDataHandlerServiceBaseImpl {
+
 	public File exportPortalDataAsFile(
 			Class type, Map<String, String[]> parameters, Date startDate,
 			Date endDate)

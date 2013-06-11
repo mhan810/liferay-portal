@@ -37,6 +37,7 @@ import java.util.Map;
  * @author Edward C. Han
  */
 public class PortalDataImporter {
+
 	public void importPortalData(
 			long userId, long companyId, Class type,
 			Map<String, String[]> parameterMap, File file)

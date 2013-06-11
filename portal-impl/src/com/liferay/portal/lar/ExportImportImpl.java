@@ -94,6 +94,7 @@ import java.util.regex.Pattern;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.xerces.parsers.SAXParser;
@@ -108,23 +109,16 @@ import org.xml.sax.InputSource;
 public class ExportImportImpl implements ExportImport {
 
 	@Override
-	public Calendar getDate(
-		HttpServletRequest request, String paramPrefix) {
-
-		int dateMonth = ParamUtil.getInteger(
-			request, paramPrefix + "Month");
+	public Calendar getDate(HttpServletRequest request, String paramPrefix) {
+		int dateMonth = ParamUtil.getInteger(request, paramPrefix + "Month");
 		int dateDay = ParamUtil.getInteger(request, paramPrefix + "Day");
-		int dateYear = ParamUtil.getInteger(
-			request, paramPrefix + "Year");
-		int dateHour = ParamUtil.getInteger(
-			request, paramPrefix + "Hour");
-		int dateMinute = ParamUtil.getInteger(
-			request, paramPrefix + "Minute");
-		int dateAmPm = ParamUtil.getInteger(
-			request, paramPrefix + "AmPm");
+		int dateYear = ParamUtil.getInteger(request, paramPrefix + "Year");
+		int dateHour = ParamUtil.getInteger(request, paramPrefix + "Hour");
+		int dateMinute = ParamUtil.getInteger(request, paramPrefix + "Minute");
+		int dateAmPm = ParamUtil.getInteger(request, paramPrefix + "AmPm");
 
-		if (Validator.isNull(dateMonth) || Validator.isNull(dateYear)
-			|| Validator.isNull(dateDay)) {
+		if (Validator.isNull(dateMonth) || Validator.isNull(dateYear) ||
+			Validator.isNull(dateDay)) {
 
 			return null;
 		}
@@ -133,8 +127,8 @@ public class ExportImportImpl implements ExportImport {
 		TimeZone timeZone = TimeZoneUtil.getTimeZone(StringPool.UTC);
 
 		return getDate(
-			locale, timeZone, dateMonth, dateDay, dateYear, dateHour, dateMinute,
-			dateAmPm);
+			locale, timeZone, dateMonth, dateDay, dateYear, dateHour,
+			dateMinute, dateAmPm);
 	}
 
 	@Override
@@ -936,27 +930,6 @@ public class ExportImportImpl implements ExportImport {
 	}
 
 	protected Calendar getDate(
-		Locale locale, TimeZone timeZone, int dateMonth,
-		int dateDay, int dateYear, int dateHour, int dateMinute, int dateAmPm) {
-
-		if (dateAmPm == Calendar.PM) {
-			dateHour += 12;
-		}
-
-		Calendar calendar = CalendarFactoryUtil.getCalendar(timeZone, locale);
-
-		calendar.set(Calendar.MONTH, dateMonth);
-		calendar.set(Calendar.DATE, dateDay);
-		calendar.set(Calendar.YEAR, dateYear);
-		calendar.set(Calendar.HOUR_OF_DAY, dateHour);
-		calendar.set(Calendar.MINUTE, dateMinute);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
-
-		return calendar;
-	}
-
-	protected Calendar getDate(
 		boolean timeZoneSensitive, ThemeDisplay themeDisplay, int dateMonth,
 		int dateDay, int dateYear, int dateHour, int dateMinute, int dateAmPm) {
 
@@ -975,6 +948,27 @@ public class ExportImportImpl implements ExportImport {
 		return getDate(
 			locale, timeZone, dateMonth, dateDay, dateYear, dateHour,
 			dateMinute, dateAmPm);
+	}
+
+	protected Calendar getDate(
+		Locale locale, TimeZone timeZone, int dateMonth, int dateDay,
+		int dateYear, int dateHour, int dateMinute, int dateAmPm) {
+
+		if (dateAmPm == Calendar.PM) {
+			dateHour += 12;
+		}
+
+		Calendar calendar = CalendarFactoryUtil.getCalendar(timeZone, locale);
+
+		calendar.set(Calendar.MONTH, dateMonth);
+		calendar.set(Calendar.DATE, dateDay);
+		calendar.set(Calendar.YEAR, dateYear);
+		calendar.set(Calendar.HOUR_OF_DAY, dateHour);
+		calendar.set(Calendar.MINUTE, dateMinute);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+
+		return calendar;
 	}
 
 	protected Map<String, String[]> getDLReferenceParameters(
