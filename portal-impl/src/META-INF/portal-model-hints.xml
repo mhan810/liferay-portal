@@ -856,6 +856,9 @@
 		<field name="classPK" type="long" />
 		<field name="classUuid" type="String" />
 		<field name="type" type="int" />
+		<field name="eventSet" type="String" />
+		<field name="eventId" type="String" />
+		<field name="parentEventId" type="String" />
 		<field name="extraData" type="String">
 			<hint-collection name="CLOB" />
 		</field>
