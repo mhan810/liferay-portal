@@ -30,6 +30,7 @@ import java.net.URLConnection;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.jar.JarEntry;
@@ -41,6 +42,7 @@ import javax.servlet.ServletContext;
  * @author Brian Wing Shun Chan
  * @author Raymond Augé
  * @author James Lefeu
+ * @author Paul Shemansky
  */
 public class ServletContextUtil {
 
@@ -269,6 +271,87 @@ public class ServletContextUtil {
 		return new URI(url.getProtocol(), path, null);
 	}
 
+	/**
+	 * @param servletContext
+	 *            - The ServletContext you want to iterate through.
+	 * @param resourceList
+	 *            - An empty array which will be populated with paths, during
+	 *            traversal; this will include both directories and files, in
+	 *            unsorted order.
+	 * @param path
+	 *            - The root path to start at within the servlet resources
+	 *            hierarchy.
+	 * @param useRelativePath
+	 *            - whether or not to return full paths from root "/" in each of
+	 *            the returned resource entries.
+	 */
+	public static void listAllResourcesPaths(
+		ServletContext servletContext, List<String> resourceList, String path,
+		boolean useRelativePath) {
+
+		_listAllResources(
+			servletContext, null, resourceList, path, path, useRelativePath);
+	}
+
+	/**
+	 * @param servletContext
+	 *            - The ServletContext you want to iterate through.
+	 * @param resourceDirectoryPaths
+	 *            - An empty array which will be populated with paths of
+	 *            directories within the context, during traversal; this will
+	 *            include both directories and files, in unsorted order.
+	 * @param resourceFilePaths
+	 *            - An empty array which will be populated with paths of
+	 *            directories within the context, during traversal; this will
+	 *            include both directories and files, in unsorted order.
+	 * @param path
+	 *            - The root path to start at within the servlet resources
+	 *            hierarchy.
+	 * @param useRelativePath
+	 *            - whether or not to return full paths from root "/" in each of
+	 *            the returned resource entries.
+	 */
+	public static void listDirectoryAndResourcePaths(
+		ServletContext servletContext, List<String> resourceDirectoryPaths,
+		List<String> resourceFilePaths, String path, boolean useRelativePath) {
+
+		_listAllResources(
+			servletContext, resourceDirectoryPaths, resourceFilePaths, path,
+			path, useRelativePath);
+	}
+
+	private static List<String> _listAllResources(
+		ServletContext servletContext, List<String> directoryList,
+		List<String> resourceList, String rootPath, String currentPath,
+		boolean useRelativePath) {
+
+		Set<String> childPaths = servletContext.getResourcePaths(currentPath);
+		for (String childPath : childPaths) {
+			String entryName = null;
+			if (useRelativePath) {
+				entryName = childPath.substring(rootPath.length() - 1);
+			}
+			else {
+				entryName = childPath;
+			}
+			if (childPath.endsWith("/")) {
+				if (directoryList != null) {
+					directoryList.add(entryName);
+				}
+				else {
+					resourceList.add(entryName);
+				}
+				_listAllResources(
+					servletContext, directoryList, resourceList, rootPath,
+					childPath, useRelativePath);
+			}
+			else {
+				resourceList.add(entryName);
+			}
+		}
+		return resourceList;
+	}
+	
 	private static final String _EXT_CLASS = ".class";
 
 	private static final String _EXT_JAR = ".jar";
