@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.increment.BufferedIncrement;
 import com.liferay.portal.kernel.increment.NumberIncrement;
 import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
+import com.liferay.portal.kernel.lar.StagedModelDataHandler;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.FacetedSearcher;
 import com.liferay.portal.kernel.search.Field;
@@ -86,11 +88,18 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		assetEntryPersistence.remove(entry);
 
-		// System event
+		StagedModelDataHandler<?> stagedModelDataHandler =
+			StagedModelDataHandlerRegistryUtil.getStagedModelDataHandler(
+				entry.getClassName());
 
-		systemEventLocalService.addSystemEvent(
-			entry.getGroupId(), entry.getClassName(), entry.getClassPK(),
-			entry.getClassUuid(), SystemEventConstants.TYPE_DELETE);
+		if (stagedModelDataHandler == null) {
+
+			// System event
+
+			systemEventLocalService.addSystemEvent(
+				entry.getGroupId(), entry.getClassName(), entry.getClassPK(),
+				entry.getClassUuid(), SystemEventConstants.TYPE_DELETE);
+		}
 
 		// Links
 
