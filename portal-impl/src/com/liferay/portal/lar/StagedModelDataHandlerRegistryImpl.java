@@ -14,12 +14,16 @@
 
 package com.liferay.portal.lar;
 
+import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.lar.StagedModelDataHandler;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistry;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
+import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.model.ModelListener;
+import com.liferay.portal.service.persistence.BasePersistence;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +53,7 @@ public class StagedModelDataHandlerRegistryImpl
 	}
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	public void register(StagedModelDataHandler<?> stagedModelDataHandler) {
 		for (String className : stagedModelDataHandler.getClassNames()) {
 			if (_stagedModelDataHandlers.containsKey(className)) {
@@ -59,14 +64,48 @@ public class StagedModelDataHandlerRegistryImpl
 				continue;
 			}
 
+			BasePersistence persistence = getPersistence(className);
+
+			if (persistence != null) {
+				persistence.registerListener(
+					(ModelListener<?>)stagedModelDataHandler);
+			}
+
 			_stagedModelDataHandlers.put(className, stagedModelDataHandler);
 		}
 	}
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	public void unregister(StagedModelDataHandler<?> stagedModelDataHandler) {
 		for (String className : stagedModelDataHandler.getClassNames()) {
+			BasePersistence persistence = getPersistence(className);
+
+			if (persistence != null) {
+				persistence.unregisterListener(
+					(ModelListener<?>)stagedModelDataHandler);
+			}
+
 			_stagedModelDataHandlers.remove(className);
+		}
+	}
+
+	protected BasePersistence<?> getPersistence(String modelName) {
+		int pos = modelName.lastIndexOf(CharPool.PERIOD);
+
+		String entityName = modelName.substring(pos + 1);
+
+		pos = modelName.lastIndexOf(".model.");
+
+		String packagePath = modelName.substring(0, pos);
+
+		try {
+			return (BasePersistence<?>)PortalBeanLocatorUtil.locate(
+				packagePath + ".service.persistence." + entityName +
+					"Persistence");
+		}
+		catch (Exception e) {
+			return null;
 		}
 	}
 

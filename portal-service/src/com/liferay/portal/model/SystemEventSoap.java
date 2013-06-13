@@ -40,6 +40,8 @@ public class SystemEventSoap implements Serializable {
 		soapModel.setClassPK(model.getClassPK());
 		soapModel.setClassUuid(model.getClassUuid());
 		soapModel.setType(model.getType());
+		soapModel.setEventSetId(model.getEventSetId());
+		soapModel.setParentEventId(model.getParentEventId());
 		soapModel.setExtraData(model.getExtraData());
 
 		return soapModel;
@@ -173,6 +175,22 @@ public class SystemEventSoap implements Serializable {
 		_type = type;
 	}
 
+	public long getEventSetId() {
+		return _eventSetId;
+	}
+
+	public void setEventSetId(long eventSetId) {
+		_eventSetId = eventSetId;
+	}
+
+	public long getParentEventId() {
+		return _parentEventId;
+	}
+
+	public void setParentEventId(long parentEventId) {
+		_parentEventId = parentEventId;
+	}
+
 	public String getExtraData() {
 		return _extraData;
 	}
@@ -191,5 +209,7 @@ public class SystemEventSoap implements Serializable {
 	private long _classPK;
 	private String _classUuid;
 	private int _type;
+	private long _eventSetId;
+	private long _parentEventId;
 	private String _extraData;
 }

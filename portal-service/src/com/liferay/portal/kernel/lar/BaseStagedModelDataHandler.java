@@ -14,9 +14,15 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.ModelListenerException;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.model.StagedGroupedModel;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.model.SystemEventConstants;
+import com.liferay.portal.service.SystemEventLocalServiceUtil;
+
+import java.io.Serializable;
 
 /**
  * @author Mate Thurzo
@@ -24,7 +30,7 @@ import com.liferay.portal.model.StagedModel;
  * @author Zsolt Berentey
  */
 public abstract class BaseStagedModelDataHandler<T extends StagedModel>
-	implements StagedModelDataHandler<T> {
+	extends BaseStagedModeListener<T> implements StagedModelDataHandler<T> {
 
 	@Override
 	public void exportStagedModel(
@@ -90,6 +96,30 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);
+		}
+	}
+
+	@Override
+	public void onAfterRemove(T stagedModel) throws ModelListenerException {
+		if (stagedModel instanceof StagedGroupedModel) {
+			StagedGroupedModel stagedGroupedModel =
+				(StagedGroupedModel)stagedModel;
+
+			Serializable primaryKeyObj = stagedGroupedModel.getPrimaryKeyObj();
+
+			if (!(primaryKeyObj instanceof Long)) {
+				return;
+			}
+
+			try {
+				SystemEventLocalServiceUtil.addSystemEvent(
+					stagedGroupedModel.getGroupId(),
+					stagedModel.getModelClassName(), (Long)primaryKeyObj,
+					stagedModel.getUuid(), SystemEventConstants.TYPE_DELETE);
+			}
+			catch (Exception e) {
+				throw new ModelListenerException(e);
+			}
 		}
 	}
 
