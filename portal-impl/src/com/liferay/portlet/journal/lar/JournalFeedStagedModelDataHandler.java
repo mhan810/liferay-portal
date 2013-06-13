@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.lar;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -51,6 +53,18 @@ public class JournalFeedStagedModelDataHandler
 	extends BaseStagedModelDataHandler<JournalFeed> {
 
 	public static final String[] CLASS_NAMES = {JournalFeed.class.getName()};
+
+	@Override
+	public void deleteStagedModel(
+			String uuid, long groupId, String className, String extraData)
+		throws PortalException, SystemException {
+
+		JournalFeed journalFeed =
+			JournalFeedLocalServiceUtil.getJournalFeedByUuidAndGroupId(
+				uuid, groupId);
+
+		JournalFeedLocalServiceUtil.deleteFeed(journalFeed);
+	}
 
 	@Override
 	public String[] getClassNames() {
