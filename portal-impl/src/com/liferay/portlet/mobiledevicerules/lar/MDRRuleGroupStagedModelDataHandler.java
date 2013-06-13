@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.mobiledevicerules.lar;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -30,6 +32,18 @@ public class MDRRuleGroupStagedModelDataHandler
 	extends BaseStagedModelDataHandler<MDRRuleGroup> {
 
 	public static final String[] CLASS_NAMES = {MDRRuleGroup.class.getName()};
+
+	@Override
+	public void deleteStagedModel(
+			String uuid, long groupId, String className, String extraData)
+		throws PortalException, SystemException {
+
+		MDRRuleGroup mdrRuleGroup =
+			MDRRuleGroupLocalServiceUtil.getMDRRuleGroupByUuidAndGroupId(
+				uuid, groupId);
+
+		MDRRuleGroupLocalServiceUtil.deleteRuleGroup(mdrRuleGroup);
+	}
 
 	@Override
 	public String[] getClassNames() {
