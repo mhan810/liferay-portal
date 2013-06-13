@@ -21,11 +21,13 @@ import com.liferay.portal.kernel.increment.BufferedIncrement;
 import com.liferay.portal.kernel.increment.NumberIncrement;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.systemevents.SystemEvent;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -126,15 +128,15 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 		MBThread thread = mbThreadPersistence.findByPrimaryKey(threadId);
 
-		deleteThread(thread);
+		mbThreadLocalService.deleteThread(thread);
 	}
 
 	@Override
+	@SystemEvent(
+		action = SystemEventConstants.ACTION_SKIP, sendEvent = false,
+		type = SystemEventConstants.TYPE_DELETE)
 	public void deleteThread(MBThread thread)
 		throws PortalException, SystemException {
-
-		MBMessage rootMessage = mbMessagePersistence.findByPrimaryKey(
-			thread.getRootMessageId());
 
 		// Indexer
 
@@ -206,6 +208,9 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 		// Category
 
+		MBMessage rootMessage = mbMessagePersistence.findByPrimaryKey(
+			thread.getRootMessageId());
+
 		if ((rootMessage.getCategoryId() !=
 				MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) &&
 			(rootMessage.getCategoryId() !=
@@ -257,7 +262,7 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 		for (MBThread thread : threads) {
 			if (includeTrashedEntries || !thread.isInTrash()) {
-				deleteThread(thread);
+				mbThreadLocalService.deleteThread(thread);
 			}
 		}
 
