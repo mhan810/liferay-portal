@@ -467,12 +467,19 @@ public class PluginsEnvironmentBuilder {
 		}
 
 		for (String jar : portalJars) {
-			addClasspathEntry(sb, "/portal/lib/portal/" + jar, attributes);
+			if (!jar.equals("util-slf4j.jar")) {
+				addClasspathEntry(sb, "/portal/lib/portal/" + jar, attributes);
+			}
 		}
 
 		addClasspathEntry(sb, "/portal/portal-service/portal-service.jar");
 		addClasspathEntry(sb, "/portal/util-bridges/util-bridges.jar");
 		addClasspathEntry(sb, "/portal/util-java/util-java.jar");
+
+		if (portalJars.contains("util-slf4j.jar")) {
+			addClasspathEntry(sb, "/portal/util-slf4j/util-slf4j.jar");
+		}
+
 		addClasspathEntry(sb, "/portal/util-taglib/util-taglib.jar");
 
 		for (String jar : extGlobalJars) {

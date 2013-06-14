@@ -16,9 +16,12 @@ package com.liferay.portal.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntry;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.SystemEvent;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.service.base.SystemEventLocalServiceBaseImpl;
@@ -28,7 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Zsolt Berentey
  */
 public class SystemEventLocalServiceImpl
 	extends SystemEventLocalServiceBaseImpl {
@@ -48,6 +51,21 @@ public class SystemEventLocalServiceImpl
 			long userId, long groupId, long classNameId, long classPK,
 			String classUuid, int type, String extraData)
 		throws PortalException, SystemException {
+
+		SystemEventHierarchyEntry systemEventHierarchyEntry =
+			SystemEventHierarchyEntryThreadLocal.peek();
+
+		long action = SystemEventConstants.ACTION_NONE;
+
+		if (systemEventHierarchyEntry != null) {
+			action = systemEventHierarchyEntry.getAction();
+
+			if ((action == SystemEventConstants.ACTION_SKIP) &&
+				!systemEventHierarchyEntry.isAsset(classNameId, classPK)) {
+
+				return;
+			}
+		}
 
 		if (userId == 0) {
 			userId = PrincipalThreadLocal.getUserId();
@@ -75,7 +93,16 @@ public class SystemEventLocalServiceImpl
 			}
 		}
 
-		long systemEventId = counterLocalService.increment();
+		long systemEventId;
+
+		if ((systemEventHierarchyEntry != null) &&
+			systemEventHierarchyEntry.isAsset(classNameId, classPK)) {
+
+			systemEventId = systemEventHierarchyEntry.getEventId();
+		}
+		else {
+			systemEventId = counterLocalService.increment();
+		}
 
 		SystemEvent systemEvent = systemEventPersistence.create(systemEventId);
 
@@ -90,6 +117,27 @@ public class SystemEventLocalServiceImpl
 		systemEvent.setType(type);
 		systemEvent.setExtraData(extraData);
 
+		if ((action == SystemEventConstants.ACTION_GROUP) ||
+			(action == SystemEventConstants.ACTION_HIERARCHY)) {
+
+			systemEvent.setEventSetId(
+				systemEventHierarchyEntry.getEventSetId());
+		}
+		else {
+			systemEvent.setEventSetId(counterLocalService.increment());
+		}
+
+		if (action == SystemEventConstants.ACTION_HIERARCHY) {
+			if (systemEventHierarchyEntry.isAsset(classNameId, classPK)) {
+				systemEvent.setParentEventId(
+					systemEventHierarchyEntry.getParentEventId());
+			}
+			else {
+				systemEvent.setParentEventId(
+					systemEventHierarchyEntry.getEventId());
+			}
+		}
+
 		systemEventPersistence.update(systemEvent);
 	}
 
@@ -102,6 +150,17 @@ public class SystemEventLocalServiceImpl
 		addSystemEvent(
 			0, groupId, PortalUtil.getClassNameId(className), classPK,
 			classUuid, type, null);
+	}
+
+	@Override
+	public void addSystemEvent(
+			long groupId, String className, long classPK, String classUuid,
+			int type, String extraData)
+		throws PortalException, SystemException {
+
+		addSystemEvent(
+			0, groupId, PortalUtil.getClassNameId(className), classPK,
+			classUuid, type, extraData);
 	}
 
 	@Override

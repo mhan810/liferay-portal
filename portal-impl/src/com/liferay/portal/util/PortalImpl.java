@@ -181,7 +181,6 @@ import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
-import com.liferay.portlet.calendar.model.CalEvent;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.expando.ValueDataException;
@@ -1347,9 +1346,6 @@ public class PortalImpl implements Portal {
 		}
 		else if (className.startsWith("com.liferay.portlet.bookmarks")) {
 			portletId = PortletKeys.BOOKMARKS;
-		}
-		else if (className.startsWith("com.liferay.portlet.calendar")) {
-			portletId = PortletKeys.CALENDAR;
 		}
 		else if (className.startsWith("com.liferay.portlet.documentlibrary")) {
 			portletId = PortletKeys.DOCUMENT_LIBRARY;
@@ -5226,19 +5222,17 @@ public class PortalImpl implements Portal {
 	public long getValidUserId(long companyId, long userId)
 		throws PortalException, SystemException {
 
-		try {
-			User user = UserLocalServiceUtil.getUser(userId);
+		User user = UserLocalServiceUtil.fetchUser(userId);
 
-			if (user.getCompanyId() == companyId) {
-				return user.getUserId();
-			}
-			else {
-				return userId;
-			}
-		}
-		catch (NoSuchUserException nsue) {
+		if (user == null) {
 			return UserLocalServiceUtil.getDefaultUserId(companyId);
 		}
+
+		if (user.getCompanyId() == companyId) {
+			return user.getUserId();
+		}
+
+		return userId;
 	}
 
 	@Override
@@ -5358,7 +5352,6 @@ public class PortalImpl implements Portal {
 				"BOOKMARKSENTRY$]",
 			"[$CLASS_NAME_ID_COM.LIFERAY.PORTLET.BOOKMARKS.MODEL." +
 				"BOOKMARKSFOLDER$]",
-			"[$CLASS_NAME_ID_COM.LIFERAY.PORTLET.CALENDAR.MODEL.CALEVENT$]",
 			"[$CLASS_NAME_ID_COM.LIFERAY.PORTLET.DOCUMENTLIBRARY.MODEL." +
 				"DLFILEENTRY$]",
 			"[$CLASS_NAME_ID_COM.LIFERAY.PORTLET.DOCUMENTLIBRARY.MODEL." +
@@ -5395,8 +5388,8 @@ public class PortalImpl implements Portal {
 			getClassNameId(BlogsEntry.class),
 			getClassNameId(BookmarksEntry.class),
 			getClassNameId(BookmarksFolder.class),
-			getClassNameId(CalEvent.class), getClassNameId(DLFileEntry.class),
-			getClassNameId(DLFolder.class), getClassNameId(JournalFolder.class),
+			getClassNameId(DLFileEntry.class), getClassNameId(DLFolder.class),
+			getClassNameId(JournalFolder.class),
 			getClassNameId(MBMessage.class), getClassNameId(MBThread.class),
 			getClassNameId(WikiPage.class), ResourceConstants.SCOPE_COMPANY,
 			ResourceConstants.SCOPE_GROUP,

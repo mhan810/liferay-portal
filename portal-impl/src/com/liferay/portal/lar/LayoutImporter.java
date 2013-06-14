@@ -540,8 +540,6 @@ public class LayoutImporter {
 					getLayoutSetPrototypeByUuidAndCompanyId(
 						layoutSetPrototypeUuid, companyId);
 
-			Group layoutSetPrototypeGroup = layoutSetPrototype.getGroup();
-
 			for (Layout layout : previousLayouts) {
 				String sourcePrototypeLayoutUuid =
 					layout.getSourcePrototypeLayoutUuid();
@@ -551,8 +549,8 @@ public class LayoutImporter {
 				}
 
 				Layout sourcePrototypeLayout = LayoutUtil.fetchByUUID_G_P(
-					sourcePrototypeLayoutUuid,
-					layoutSetPrototypeGroup.getGroupId(), true);
+					sourcePrototypeLayoutUuid, layoutSetPrototype.getGroupId(),
+					true);
 
 				if (sourcePrototypeLayout == null) {
 					LayoutLocalServiceUtil.deleteLayout(
@@ -797,10 +795,16 @@ public class LayoutImporter {
 			UnicodeProperties settingsProperties =
 				layoutSet.getSettingsProperties();
 
-			settingsProperties.setProperty(
-				Sites.LAST_MERGE_TIME, String.valueOf(lastMergeTime));
+			String mergeFailFriendlyURLLayouts =
+				settingsProperties.getProperty(
+					Sites.MERGE_FAIL_FRIENDLY_URL_LAYOUTS);
 
-			LayoutSetLocalServiceUtil.updateLayoutSet(layoutSet);
+			if (Validator.isNull(mergeFailFriendlyURLLayouts)) {
+				settingsProperties.setProperty(
+					Sites.LAST_MERGE_TIME, String.valueOf(lastMergeTime));
+
+				LayoutSetLocalServiceUtil.updateLayoutSet(layoutSet);
+			}
 		}
 
 		zipReader.close();

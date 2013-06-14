@@ -476,7 +476,6 @@
 		<reference package-path="com.liferay.portlet.blogs" entity="BlogsEntry" />
 		<reference package-path="com.liferay.portlet.blogs" entity="BlogsStatsUser" />
 		<reference package-path="com.liferay.portlet.bookmarks" entity="BookmarksFolder" />
-		<reference package-path="com.liferay.portlet.calendar" entity="CalEvent" />
 		<reference package-path="com.liferay.portlet.documentlibrary" entity="DLApp" />
 		<reference package-path="com.liferay.portlet.documentlibrary" entity="DLFileEntryType" />
 		<reference package-path="com.liferay.portlet.journal" entity="JournalArticle" />
@@ -2053,6 +2052,8 @@
 		<column name="classPK" type="long" />
 		<column name="classUuid" type="String" />
 		<column name="type" type="int" />
+		<column name="eventSetId" type="long" />
+		<column name="parentEventId" type="long" />
 		<column name="extraData" type="String" />
 
 		<!-- Order -->

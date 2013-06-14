@@ -71,9 +71,11 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 			{ "classPK", Types.BIGINT },
 			{ "classUuid", Types.VARCHAR },
 			{ "type_", Types.INTEGER },
+			{ "eventSetId", Types.BIGINT },
+			{ "parentEventId", Types.BIGINT },
 			{ "extraData", Types.CLOB }
 		};
-	public static final String TABLE_SQL_CREATE = "create table SystemEvent (systemEventId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,classNameId LONG,classPK LONG,classUuid VARCHAR(75) null,type_ INTEGER,extraData TEXT null)";
+	public static final String TABLE_SQL_CREATE = "create table SystemEvent (systemEventId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,classNameId LONG,classPK LONG,classUuid VARCHAR(75) null,type_ INTEGER,eventSetId LONG,parentEventId LONG,extraData TEXT null)";
 	public static final String TABLE_SQL_DROP = "drop table SystemEvent";
 	public static final String ORDER_BY_JPQL = " ORDER BY systemEvent.createDate DESC";
 	public static final String ORDER_BY_SQL = " ORDER BY SystemEvent.createDate DESC";
@@ -144,6 +146,8 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 		attributes.put("classPK", getClassPK());
 		attributes.put("classUuid", getClassUuid());
 		attributes.put("type", getType());
+		attributes.put("eventSetId", getEventSetId());
+		attributes.put("parentEventId", getParentEventId());
 		attributes.put("extraData", getExtraData());
 
 		return attributes;
@@ -209,6 +213,18 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 		if (type != null) {
 			setType(type);
+		}
+
+		Long eventSetId = (Long)attributes.get("eventSetId");
+
+		if (eventSetId != null) {
+			setEventSetId(eventSetId);
+		}
+
+		Long parentEventId = (Long)attributes.get("parentEventId");
+
+		if (parentEventId != null) {
+			setParentEventId(parentEventId);
 		}
 
 		String extraData = (String)attributes.get("extraData");
@@ -409,6 +425,26 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 	}
 
 	@Override
+	public long getEventSetId() {
+		return _eventSetId;
+	}
+
+	@Override
+	public void setEventSetId(long eventSetId) {
+		_eventSetId = eventSetId;
+	}
+
+	@Override
+	public long getParentEventId() {
+		return _parentEventId;
+	}
+
+	@Override
+	public void setParentEventId(long parentEventId) {
+		_parentEventId = parentEventId;
+	}
+
+	@Override
 	public String getExtraData() {
 		if (_extraData == null) {
 			return StringPool.BLANK;
@@ -464,6 +500,8 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 		systemEventImpl.setClassPK(getClassPK());
 		systemEventImpl.setClassUuid(getClassUuid());
 		systemEventImpl.setType(getType());
+		systemEventImpl.setEventSetId(getEventSetId());
+		systemEventImpl.setParentEventId(getParentEventId());
 		systemEventImpl.setExtraData(getExtraData());
 
 		systemEventImpl.resetOriginalValues();
@@ -579,6 +617,10 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 		systemEventCacheModel.type = getType();
 
+		systemEventCacheModel.eventSetId = getEventSetId();
+
+		systemEventCacheModel.parentEventId = getParentEventId();
+
 		systemEventCacheModel.extraData = getExtraData();
 
 		String extraData = systemEventCacheModel.extraData;
@@ -592,7 +634,7 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(23);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{systemEventId=");
 		sb.append(getSystemEventId());
@@ -614,6 +656,10 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 		sb.append(getClassUuid());
 		sb.append(", type=");
 		sb.append(getType());
+		sb.append(", eventSetId=");
+		sb.append(getEventSetId());
+		sb.append(", parentEventId=");
+		sb.append(getParentEventId());
 		sb.append(", extraData=");
 		sb.append(getExtraData());
 		sb.append("}");
@@ -623,7 +669,7 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(37);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.portal.model.SystemEvent");
@@ -670,6 +716,14 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 		sb.append(getType());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>eventSetId</column-name><column-value><![CDATA[");
+		sb.append(getEventSetId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>parentEventId</column-name><column-value><![CDATA[");
+		sb.append(getParentEventId());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>extraData</column-name><column-value><![CDATA[");
 		sb.append(getExtraData());
 		sb.append("]]></column-value></column>");
@@ -702,6 +756,8 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 	private int _type;
 	private int _originalType;
 	private boolean _setOriginalType;
+	private long _eventSetId;
+	private long _parentEventId;
 	private String _extraData;
 	private long _columnBitmask;
 	private SystemEvent _escapedModel;
