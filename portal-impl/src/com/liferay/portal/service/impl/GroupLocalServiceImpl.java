@@ -20,7 +20,6 @@ import com.liferay.portal.GroupNameException;
 import com.liferay.portal.GroupParentException;
 import com.liferay.portal.NoSuchGroupException;
 import com.liferay.portal.NoSuchLayoutSetException;
-import com.liferay.portal.NoSuchUserException;
 import com.liferay.portal.RequiredGroupException;
 import com.liferay.portal.kernel.cache.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -656,8 +655,8 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	 *
 	 * <p>
 	 * The group is unstaged and its assets and resources including layouts,
-	 * membership requests, subscriptions, teams, blogs, bookmarks, calendar
-	 * events, image gallery, journals, message boards, polls, shopping related
+	 * membership requests, subscriptions, teams, blogs, bookmarks, events,
+	 * image gallery, journals, message boards, polls, shopping related
 	 * entities, software catalog, and wikis are also deleted.
 	 * </p>
 	 *
@@ -856,8 +855,8 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	 *
 	 * <p>
 	 * The group is unstaged and its assets and resources including layouts,
-	 * membership requests, subscriptions, teams, blogs, bookmarks, calendar
-	 * events, image gallery, journals, message boards, polls, shopping related
+	 * membership requests, subscriptions, teams, blogs, bookmarks, events,
+	 * image gallery, journals, message boards, polls, shopping related
 	 * entities, software catalog, and wikis are also deleted.
 	 * </p>
 	 *
@@ -3246,18 +3245,15 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		User user = null;
 
-		try {
-			user = userPersistence.findByPrimaryKey(group.getCreatorUserId());
+		user = userPersistence.fetchByPrimaryKey(group.getCreatorUserId());
 
+		if (user == null) {
+			user = userPersistence.fetchByPrimaryKey(
+				serviceContext.getUserId());
 		}
-		catch (NoSuchUserException nsue1) {
-			try {
-				user = userPersistence.findByPrimaryKey(
-					serviceContext.getUserId());
-			}
-			catch (NoSuchUserException nsue2) {
-				user = userLocalService.getDefaultUser(group.getCompanyId());
-			}
+
+		if (user == null) {
+			user = userLocalService.getDefaultUser(group.getCompanyId());
 		}
 
 		updateAsset(
@@ -3633,12 +3629,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 				ActionKeys.ADD_ENTRY, ActionKeys.PERMISSIONS,
 				ActionKeys.SUBSCRIBE});
 
-		setRolePermissions(
-			group, role, "com.liferay.portlet.calendar",
-			new String[] {
-				ActionKeys.ADD_EVENT, ActionKeys.EXPORT_ALL_EVENTS,
-				ActionKeys.PERMISSIONS});
-
 		// Power User role
 
 		role = roleLocalService.getRole(
@@ -3669,7 +3659,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		setRolePermissions(group, role, "com.liferay.portlet.asset");
 		setRolePermissions(group, role, "com.liferay.portlet.blogs");
 		setRolePermissions(group, role, "com.liferay.portlet.bookmarks");
-		setRolePermissions(group, role, "com.liferay.portlet.calendar");
 		setRolePermissions(group, role, "com.liferay.portlet.documentlibrary");
 		setRolePermissions(group, role, "com.liferay.portlet.imagegallery");
 		setRolePermissions(group, role, "com.liferay.portlet.messageboards");

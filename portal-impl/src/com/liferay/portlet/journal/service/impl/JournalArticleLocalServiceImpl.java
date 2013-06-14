@@ -37,6 +37,8 @@ import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.systemevents.SystemEvent;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.CharPool;
@@ -70,6 +72,7 @@ import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextUtil;
@@ -955,10 +958,16 @@ public class JournalArticleLocalServiceImpl
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
+	@SystemEvent(
+		action = SystemEventConstants.ACTION_SKIP, sendEvent = false)
 	public void deleteArticle(
 			JournalArticle article, String articleURL,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
+
+		JournalArticleResource articleResource =
+			journalArticleResourceLocalService.fetchArticleResource(
+				article.getGroupId(), article.getArticleId());
 
 		if (article.isApproved() &&
 			isLatestVersion(
@@ -1068,6 +1077,21 @@ public class JournalArticleLocalServiceImpl
 		// Article
 
 		journalArticlePersistence.remove(article);
+
+		if (articleResource != null) {
+
+			// System Event
+
+			JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+			extraDataJSONObject.put("version", article.getVersion());
+
+			systemEventLocalService.addSystemEvent(
+				article.getGroupId(), article.getModelClassName(),
+				article.getPrimaryKey(), articleResource.getUuid(),
+				SystemEventConstants.TYPE_DELETE,
+				extraDataJSONObject.toString());
+		}
 	}
 
 	/**
@@ -1116,13 +1140,29 @@ public class JournalArticleLocalServiceImpl
 			long groupId, String articleId, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		List<JournalArticle> articles = journalArticlePersistence.findByG_A(
-			groupId, articleId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			new ArticleVersionComparator(true));
+		SystemEventHierarchyEntryThreadLocal.push(JournalArticle.class, 0);
 
-		for (JournalArticle article : articles) {
-			deleteArticle(article, null, serviceContext);
+		try {
+			List<JournalArticle> articles = journalArticlePersistence.findByG_A(
+				groupId, articleId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+				new ArticleVersionComparator(true));
+
+			for (JournalArticle article : articles) {
+				deleteArticle(article, null, serviceContext);
+			}
 		}
+		finally {
+			SystemEventHierarchyEntryThreadLocal.pop();
+		}
+
+		JournalArticleResource articleResource =
+			journalArticleResourceLocalService.fetchArticleResource(
+				groupId, articleId);
+
+		systemEventLocalService.addSystemEvent(
+			groupId, JournalArticle.class.getName(),
+			articleResource.getResourcePrimKey(), articleResource.getUuid(),
+			SystemEventConstants.TYPE_DELETE);
 	}
 
 	/**

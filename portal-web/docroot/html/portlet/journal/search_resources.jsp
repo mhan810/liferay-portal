@@ -385,6 +385,8 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, entryEn
 								<c:when test="<%= (curArticle != null) && JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.VIEW) %>">
 
 									<%
+									String articleImageURL = curArticle.getArticleImageURL(themeDisplay);
+
 									PortletURL rowURL = liferayPortletResponse.createRenderURL();
 
 									rowURL.setParameter("struts_action", "/journal/edit_article");
@@ -406,7 +408,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, entryEn
 										rowCheckerName="<%= JournalArticle.class.getSimpleName() %>"
 										showCheckbox="<%= JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.DELETE) || JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.UPDATE) %>"
 										status="<%= curArticle.getStatus() %>"
-										thumbnailSrc='<%= themeDisplay.getPathThemeImages() + "/file_system/large/article.png" %>'
+										thumbnailSrc='<%= Validator.isNotNull(articleImageURL) ? articleImageURL : themeDisplay.getPathThemeImages() + "/file_system/large/article.png" %>'
 										title="<%= curArticle.getTitle(locale) %>"
 										url="<%= rowURL.toString() %>"
 									/>
