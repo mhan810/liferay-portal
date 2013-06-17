@@ -24,6 +24,9 @@ import com.liferay.portal.model.StagedModel;
  */
 public interface StagedModelDataHandler<T extends StagedModel> {
 
+	public boolean countStagedModel(
+		PortletDataContext portletDataContext, T stagedModel);
+
 	public void exportStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException;

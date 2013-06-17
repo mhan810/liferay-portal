@@ -286,6 +286,10 @@ public class LuceneHelperUtil {
 		getLuceneHelper().addTerm(booleanQuery, field, values, like);
 	}
 
+	public static void cleanUp(IndexSearcher indexSearcher) {
+		getLuceneHelper().cleanUp(indexSearcher);
+	}
+
 	public static int countScoredFieldNames(Query query, String[] fieldNames) {
 		return getLuceneHelper().countScoredFieldNames(query, fieldNames);
 	}

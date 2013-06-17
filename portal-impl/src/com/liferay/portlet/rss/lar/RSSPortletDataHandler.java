@@ -212,7 +212,7 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, article);
 
 			portletDataContext.addReferenceElement(
-				article, articleElement, article,
+				null, articleElement, article,
 				PortletDataContext.REFERENCE_TYPE_WEAK, false);
 		}
 

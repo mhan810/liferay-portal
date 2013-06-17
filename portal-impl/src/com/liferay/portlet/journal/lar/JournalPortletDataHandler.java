@@ -16,6 +16,8 @@ package com.liferay.portlet.journal.lar;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Projection;
+import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -87,7 +89,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 	public JournalPortletDataHandler() {
 		setDeletionSystemEventClassNames(
 			DDMStructure.class.getName(), DDMTemplate.class.getName(),
-			JournalArticle.class.getName(), JournalFeed.class.getName());
+			JournalArticle.class.getName(), JournalFeed.class.getName(),
+			JournalFolder.class.getName());
 		setDataLocalized(true);
 		setExportControls(
 			new PortletDataHandlerBoolean(
@@ -327,6 +330,11 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 							WorkflowConstants.STATUS_APPROVED,
 							WorkflowConstants.STATUS_EXPIRED
 						}));
+			}
+
+			@Override
+			protected Projection getCountProjection() {
+				return ProjectionFactoryUtil.countDistinct("articleId");
 			}
 
 			@Override

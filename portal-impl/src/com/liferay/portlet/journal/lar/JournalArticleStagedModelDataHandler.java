@@ -18,8 +18,8 @@ import com.liferay.portal.NoSuchImageException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportHelperUtil;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
-import com.liferay.portal.kernel.lar.ExportImportUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -78,6 +78,22 @@ public class JournalArticleStagedModelDataHandler
 	public static final String[] CLASS_NAMES = {JournalArticle.class.getName()};
 
 	@Override
+	public boolean countStagedModel(
+		PortletDataContext portletDataContext, JournalArticle article) {
+
+		if (portletDataContext.isPathProcessed(
+				ExportImportPathUtil.getModelPath(
+					article.getGroupId(),
+					JournalArticleResource.class.getName(),
+					article.getResourcePrimKey()))) {
+
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
 	public String[] getClassNames() {
 		return CLASS_NAMES;
 	}
@@ -118,12 +134,9 @@ public class JournalArticleStagedModelDataHandler
 					PortalUtil.getClassNameId(JournalArticle.class),
 					article.getStructureId(), true);
 
-			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, ddmStructure);
-
-			portletDataContext.addReferenceElement(
-				article, articleElement, ddmStructure,
-				PortletDataContext.REFERENCE_TYPE_STRONG, false);
+			StagedModelDataHandlerUtil.exportReferencedStagedModel(
+				portletDataContext, article, ddmStructure,
+				PortletDataContext.REFERENCE_TYPE_STRONG);
 
 			long parentStructureId = ddmStructure.getParentStructureId();
 
@@ -145,12 +158,9 @@ public class JournalArticleStagedModelDataHandler
 				PortalUtil.getClassNameId(DDMStructure.class),
 				article.getTemplateId(), true);
 
-			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, ddmTemplate);
-
-			portletDataContext.addReferenceElement(
-				article, articleElement, ddmTemplate,
-				PortletDataContext.REFERENCE_TYPE_STRONG, false);
+			StagedModelDataHandlerUtil.exportReferencedStagedModel(
+				portletDataContext, article, ddmTemplate,
+				PortletDataContext.REFERENCE_TYPE_STRONG);
 		}
 
 		if (article.isSmallImage()) {
@@ -159,7 +169,7 @@ public class JournalArticleStagedModelDataHandler
 
 			if (Validator.isNotNull(article.getSmallImageURL())) {
 				String smallImageURL =
-					ExportImportUtil.replaceExportContentReferences(
+					ExportImportHelperUtil.replaceExportContentReferences(
 						portletDataContext, article, articleElement,
 						article.getSmallImageURL().concat(StringPool.SPACE),
 						true);
@@ -193,7 +203,7 @@ public class JournalArticleStagedModelDataHandler
 
 		article.setStatusByUserUuid(article.getStatusByUserUuid());
 
-		String content = ExportImportUtil.replaceExportContentReferences(
+		String content = ExportImportHelperUtil.replaceExportContentReferences(
 			portletDataContext, article, articleElement, article.getContent(),
 			portletDataContext.getBooleanParameter(
 				JournalPortletDataHandler.NAMESPACE, "embedded-assets"));
@@ -280,7 +290,7 @@ public class JournalArticleStagedModelDataHandler
 		Element articleElement =
 			portletDataContext.getImportDataStagedModelElement(article);
 
-		content = ExportImportUtil.replaceImportContentReferences(
+		content = ExportImportHelperUtil.replaceImportContentReferences(
 			portletDataContext, articleElement, content, true);
 
 		article.setContent(content);
@@ -501,7 +511,7 @@ public class JournalArticleStagedModelDataHandler
 
 			if (Validator.isNotNull(article.getSmallImageURL())) {
 				String smallImageURL =
-					ExportImportUtil.replaceImportContentReferences(
+					ExportImportHelperUtil.replaceImportContentReferences(
 						portletDataContext, articleElement,
 						article.getSmallImageURL(), true);
 

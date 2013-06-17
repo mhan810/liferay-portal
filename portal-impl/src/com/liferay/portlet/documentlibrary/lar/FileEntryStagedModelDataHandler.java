@@ -127,12 +127,9 @@ public class FileEntryStagedModelDataHandler
 			Repository repository = RepositoryUtil.findByPrimaryKey(
 				fileEntry.getRepositoryId());
 
-			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, repository);
-
-			portletDataContext.addReferenceElement(
-				fileEntry, fileEntryElement, repository,
-				PortletDataContext.REFERENCE_TYPE_STRONG, false);
+			StagedModelDataHandlerUtil.exportReferencedStagedModel(
+				portletDataContext, fileEntry, FileEntry.class, repository,
+				Repository.class, PortletDataContext.REFERENCE_TYPE_STRONG);
 
 			portletDataContext.addClassedModel(
 				fileEntryElement, fileEntryPath, fileEntry,

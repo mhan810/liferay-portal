@@ -239,6 +239,8 @@ public class IndexAccessorImplTest extends PowerMockito {
 		}
 
 		indexSearcher.close();
+
+		indexReader.close();
 	}
 
 	private void _deleteDocuments(String key) throws Exception {

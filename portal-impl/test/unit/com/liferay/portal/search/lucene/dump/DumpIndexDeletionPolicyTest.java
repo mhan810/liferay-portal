@@ -317,6 +317,10 @@ public class DumpIndexDeletionPolicyTest {
 		TopDocs topDocs = indexSearcher.search(termQuery, 1);
 
 		Assert.assertEquals(totalHits, topDocs.totalHits);
+
+		indexSearcher.close();
+
+		indexReader.close();
 	}
 
 	private void _deleteDocument(String fieldName, String fieldValue)

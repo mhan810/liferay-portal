@@ -115,14 +115,14 @@ public class JournalTemplateServiceSoap {
 		}
 	}
 
-	public static com.liferay.portlet.journal.model.JournalTemplate[] getStructureTemplates(
+	public static com.liferay.portlet.journal.model.JournalTemplateSoap[] getStructureTemplates(
 		long groupId, java.lang.String structureId) throws RemoteException {
 		try {
 			java.util.List<com.liferay.portlet.journal.model.JournalTemplate> returnValue =
 				JournalTemplateServiceUtil.getStructureTemplates(groupId,
 					structureId);
 
-			return returnValue.toArray(new com.liferay.portlet.journal.model.JournalTemplate[returnValue.size()]);
+			return com.liferay.portlet.journal.model.JournalTemplateSoap.toSoapModels(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -162,7 +162,7 @@ public class JournalTemplateServiceSoap {
 		}
 	}
 
-	public static com.liferay.portlet.journal.model.JournalTemplate[] search(
+	public static com.liferay.portlet.journal.model.JournalTemplateSoap[] search(
 		long companyId, long[] groupIds, java.lang.String keywords,
 		java.lang.String structureId, java.lang.String structureIdComparator,
 		int start, int end, com.liferay.portal.kernel.util.OrderByComparator obc)
@@ -173,7 +173,7 @@ public class JournalTemplateServiceSoap {
 					keywords, structureId, structureIdComparator, start, end,
 					obc);
 
-			return returnValue.toArray(new com.liferay.portlet.journal.model.JournalTemplate[returnValue.size()]);
+			return com.liferay.portlet.journal.model.JournalTemplateSoap.toSoapModels(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -182,7 +182,7 @@ public class JournalTemplateServiceSoap {
 		}
 	}
 
-	public static com.liferay.portlet.journal.model.JournalTemplate[] search(
+	public static com.liferay.portlet.journal.model.JournalTemplateSoap[] search(
 		long companyId, long[] groupIds, java.lang.String templateId,
 		java.lang.String structureId, java.lang.String structureIdComparator,
 		java.lang.String name, java.lang.String description,
@@ -195,7 +195,7 @@ public class JournalTemplateServiceSoap {
 					templateId, structureId, structureIdComparator, name,
 					description, andOperator, start, end, obc);
 
-			return returnValue.toArray(new com.liferay.portlet.journal.model.JournalTemplate[returnValue.size()]);
+			return com.liferay.portlet.journal.model.JournalTemplateSoap.toSoapModels(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

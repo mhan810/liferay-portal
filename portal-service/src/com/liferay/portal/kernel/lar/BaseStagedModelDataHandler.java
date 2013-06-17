@@ -26,24 +26,19 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	implements StagedModelDataHandler<T> {
 
 	@Override
+	public boolean countStagedModel(
+		PortletDataContext portletDataContext, T stagedModel) {
+
+		return true;
+	}
+
+	@Override
 	public void exportStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException {
 
-		String path = ExportImportPathUtil.getModelPath(stagedModel);
-
-		if (portletDataContext.isPathExportedInScope(path)) {
-			return;
-		}
-
 		try {
 			doExportStagedModel(portletDataContext, (T)stagedModel.clone());
-
-			ManifestSummary manifestSummary =
-				portletDataContext.getManifestSummary();
-
-			manifestSummary.incrementModelAdditionCount(
-				getManifestSummaryKey(stagedModel));
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);
@@ -72,20 +67,8 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException {
 
-		String path = ExportImportPathUtil.getModelPath(stagedModel);
-
-		if (portletDataContext.isPathProcessed(path)) {
-			return;
-		}
-
 		try {
 			doImportStagedModel(portletDataContext, stagedModel);
-
-			ManifestSummary manifestSummary =
-				portletDataContext.getManifestSummary();
-
-			manifestSummary.incrementModelAdditionCount(
-				getManifestSummaryKey(stagedModel));
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);

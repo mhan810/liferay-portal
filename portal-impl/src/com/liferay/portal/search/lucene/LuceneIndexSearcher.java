@@ -297,9 +297,9 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 			throw new SearchException(e);
 		}
 		finally {
-			close(boboBrowser);
+			cleanUp(boboBrowser);
 
-			close(indexSearcher);
+			LuceneHelperUtil.cleanUp(indexSearcher);
 		}
 
 		if (_log.isDebugEnabled()) {
@@ -397,7 +397,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 			throw new SearchException(e);
 		}
 		finally {
-			close(indexSearcher);
+			LuceneHelperUtil.cleanUp(indexSearcher);
 		}
 
 		if (_log.isDebugEnabled()) {
@@ -409,7 +409,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 		return hits;
 	}
 
-	protected void close(BoboBrowser boboBrowser) {
+	protected void cleanUp(BoboBrowser boboBrowser) {
 		if (boboBrowser == null) {
 			return;
 		}
@@ -446,25 +446,6 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 					"Unable to clean up BoboIndexReader#_runtimeFacetDataMap",
 					e);
 			}
-		}
-	}
-
-	protected void close(IndexSearcher indexSearcher) {
-		if (indexSearcher == null) {
-			return;
-		}
-
-		try {
-			indexSearcher.close();
-
-			IndexReader indexReader = indexSearcher.getIndexReader();
-
-			if (indexReader != null) {
-				indexReader.close();
-			}
-		}
-		catch (IOException ioe) {
-			_log.error(ioe, ioe);
 		}
 	}
 

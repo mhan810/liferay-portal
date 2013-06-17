@@ -145,13 +145,13 @@ public class JournalStructureServiceSoap {
 		}
 	}
 
-	public static com.liferay.portlet.journal.model.JournalStructure[] getStructures(
+	public static com.liferay.portlet.journal.model.JournalStructureSoap[] getStructures(
 		long groupId) throws RemoteException {
 		try {
 			java.util.List<com.liferay.portlet.journal.model.JournalStructure> returnValue =
 				JournalStructureServiceUtil.getStructures(groupId);
 
-			return returnValue.toArray(new com.liferay.portlet.journal.model.JournalStructure[returnValue.size()]);
+			return com.liferay.portlet.journal.model.JournalStructureSoap.toSoapModels(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -160,13 +160,13 @@ public class JournalStructureServiceSoap {
 		}
 	}
 
-	public static com.liferay.portlet.journal.model.JournalStructure[] getStructures(
+	public static com.liferay.portlet.journal.model.JournalStructureSoap[] getStructures(
 		long[] groupIds) throws RemoteException {
 		try {
 			java.util.List<com.liferay.portlet.journal.model.JournalStructure> returnValue =
 				JournalStructureServiceUtil.getStructures(groupIds);
 
-			return returnValue.toArray(new com.liferay.portlet.journal.model.JournalStructure[returnValue.size()]);
+			return com.liferay.portlet.journal.model.JournalStructureSoap.toSoapModels(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -175,7 +175,7 @@ public class JournalStructureServiceSoap {
 		}
 	}
 
-	public static com.liferay.portlet.journal.model.JournalStructure[] search(
+	public static com.liferay.portlet.journal.model.JournalStructureSoap[] search(
 		long companyId, long[] groupIds, java.lang.String keywords, int start,
 		int end, com.liferay.portal.kernel.util.OrderByComparator obc)
 		throws RemoteException {
@@ -184,7 +184,7 @@ public class JournalStructureServiceSoap {
 				JournalStructureServiceUtil.search(companyId, groupIds,
 					keywords, start, end, obc);
 
-			return returnValue.toArray(new com.liferay.portlet.journal.model.JournalStructure[returnValue.size()]);
+			return com.liferay.portlet.journal.model.JournalStructureSoap.toSoapModels(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -193,7 +193,7 @@ public class JournalStructureServiceSoap {
 		}
 	}
 
-	public static com.liferay.portlet.journal.model.JournalStructure[] search(
+	public static com.liferay.portlet.journal.model.JournalStructureSoap[] search(
 		long companyId, long[] groupIds, java.lang.String structureId,
 		java.lang.String name, java.lang.String description,
 		boolean andOperator, int start, int end,
@@ -204,7 +204,7 @@ public class JournalStructureServiceSoap {
 				JournalStructureServiceUtil.search(companyId, groupIds,
 					structureId, name, description, andOperator, start, end, obc);
 
-			return returnValue.toArray(new com.liferay.portlet.journal.model.JournalStructure[returnValue.size()]);
+			return com.liferay.portlet.journal.model.JournalStructureSoap.toSoapModels(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

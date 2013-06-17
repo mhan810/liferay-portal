@@ -9,8 +9,7 @@
 <#assign actionCommand = action?substring(x + 1)>
 
 ${seleniumBuilderFileUtil.getVariableName(action?substring(0, x))}Action.${actionCommand}(
-
-<#assign functionName = seleniumBuilderFileUtil.getObjectName(actionCommand)>
+	<#assign functionName = seleniumBuilderFileUtil.getObjectName(actionCommand)>
 
 	<#list 1..seleniumBuilderContext.getFunctionLocatorCount(functionName) as i>
 		<#if actionElement.attributeValue("locator${i}")??>
@@ -63,7 +62,7 @@ ${seleniumBuilderFileUtil.getVariableName(action?substring(0, x))}Action.${actio
 			,
 		</#if>
 	</#list>
-)
+, commandScopeVariables)
 
 <#if actionElement.getName() == "execute">
 	;

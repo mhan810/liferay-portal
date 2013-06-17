@@ -1100,7 +1100,12 @@ public class PortletImporter {
 		throws Exception {
 
 		long defaultUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
+
+		String languageId = LocaleUtil.toLanguageId(
+			LocaleUtil.getMostRelevantLocale());
+
 		long plid = 0;
+		String portletSetupTitle = StringPool.BLANK;
 		String scopeType = StringPool.BLANK;
 		String scopeLayoutUuid = StringPool.BLANK;
 
@@ -1111,6 +1116,11 @@ public class PortletImporter {
 				javax.portlet.PortletPreferences jxPreferences =
 					PortletPreferencesFactoryUtil.getLayoutPortletSetup(
 						layout, portletId);
+
+				portletSetupTitle = GetterUtil.getString(
+					jxPreferences.getValue(
+						"portletSetupTitle_" + languageId,
+						PortalUtil.getPortletTitle(portletId, languageId)));
 
 				scopeType = GetterUtil.getString(
 					jxPreferences.getValue("lfrScopeType", null));
@@ -1240,6 +1250,8 @@ public class PortletImporter {
 					layout, portletId);
 
 			try {
+				jxPreferences.setValue(
+					"portletSetupTitle_" + languageId, portletSetupTitle);
 				jxPreferences.setValue("lfrScopeType", scopeType);
 				jxPreferences.setValue("lfrScopeLayoutUuid", scopeLayoutUuid);
 
@@ -1694,6 +1706,10 @@ public class PortletImporter {
 
 	protected void setPortletScope(
 		PortletDataContext portletDataContext, Element portletElement) {
+
+		if (ExportImportThreadLocal.isPortletImportInProcess()) {
+			return;
+		}
 
 		// Portlet data scope
 
