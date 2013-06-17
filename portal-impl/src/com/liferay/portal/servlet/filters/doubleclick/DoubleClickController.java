@@ -54,14 +54,14 @@ public class DoubleClickController implements Serializable {
 		}
 
 		if (firstRequest) {
-			try {
-				filterChain.doFilter(request, _bufferCacheServletResponse);
-			}
-			catch (Throwable t) {
-				_throwable = t;
-			}
-			finally {
-				synchronized (this) {
+			synchronized (this) {
+				try {
+					filterChain.doFilter(request, _bufferCacheServletResponse);
+				}
+				catch (Throwable t) {
+					_throwable = t;
+				}
+				finally {
 					_bufferCacheServletResponse = null;
 
 					notifyAll();
