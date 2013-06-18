@@ -51,7 +51,7 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "message_boards";
 
 	public MBPortletDataHandler() {
-		setDeletionSystemEventClassNames(
+		setDeletionSystemEventModelTypes(
 			MBBan.class.getName(), MBCategory.class.getName(),
 			MBMessage.class.getName(), MBThread.class.getName(),
 			MBThreadFlag.class.getName());

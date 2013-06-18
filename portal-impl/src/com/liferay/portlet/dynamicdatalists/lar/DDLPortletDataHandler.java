@@ -37,7 +37,7 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "dynamic_data_lists";
 
 	public DDLPortletDataHandler() {
-		setDeletionSystemEventClassNames(DDLRecordSet.class.getName());
+		setDeletionSystemEventModelTypes(DDLRecordSet.class.getName());
 		setDataLocalized(true);
 		setExportControls(
 			new PortletDataHandlerBoolean(

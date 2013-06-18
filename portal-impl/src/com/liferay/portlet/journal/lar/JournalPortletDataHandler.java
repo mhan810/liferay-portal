@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.util.PortalUtil;
@@ -88,8 +89,9 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "journal";
 
 	public JournalPortletDataHandler() {
-		setDeletionSystemEventClassNames(
-			DDMStructure.class.getName(), DDMTemplate.class.getName(),
+		setDeletionSystemEventModelTypes(
+			new StagedModelType(DDMStructure.class, JournalArticle.class),
+			new StagedModelType(DDMTemplate.class, DDMStructure.class),
 			JournalArticle.class.getName(), JournalFeed.class.getName(),
 			JournalFolder.class.getName());
 		setDataLocalized(true);
@@ -390,8 +392,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			}
 
 			@Override
-			protected String getManifestSummaryKey() {
-				return ManifestSummary.getManifestSummaryKey(
+			protected StagedModelType getStagedModelType() {
+				return new StagedModelType(
 					DDMStructure.class.getName(),
 					JournalArticle.class.getName());
 			}
@@ -441,8 +443,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			}
 
 			@Override
-			protected String getManifestSummaryKey() {
-				return ManifestSummary.getManifestSummaryKey(
+			protected StagedModelType getStagedModelType() {
+				return new StagedModelType(
 					DDMTemplate.class.getName(), DDMStructure.class.getName());
 			}
 
