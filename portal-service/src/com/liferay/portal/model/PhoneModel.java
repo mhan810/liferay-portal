@@ -38,7 +38,7 @@ import java.util.Date;
  * @generated
  */
 public interface PhoneModel extends AttachedModel, BaseModel<Phone>,
-	StagedAuditedModel {
+	StagedAuditedModel, TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

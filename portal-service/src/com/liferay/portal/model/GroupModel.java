@@ -35,7 +35,7 @@ import java.io.Serializable;
  * @see com.liferay.portal.model.impl.GroupModelImpl
  * @generated
  */
-public interface GroupModel extends AttachedModel, BaseModel<Group> {
+public interface GroupModel extends AttachedModel, BaseModel<Group>, TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

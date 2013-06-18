@@ -774,6 +774,20 @@ public class Entity {
 		return false;
 	}
 
+	public boolean isTypedModel() {
+		if (hasColumn("classNameId")) {
+			EntityColumn classNameIdCol = getColumn("classNameId");
+
+			String classNameIdColType = classNameIdCol.getType();
+
+			if (classNameIdColType.equals("long")) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public boolean isWorkflowEnabled() {
 		if (hasColumn("status") && hasColumn("statusByUserId") &&
 			hasColumn("statusByUserName") && hasColumn("statusDate")) {

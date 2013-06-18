@@ -41,7 +41,7 @@ import java.util.Map;
  * @generated
  */
 public interface RoleModel extends AttachedModel, BaseModel<Role>,
-	StagedAuditedModel {
+	StagedAuditedModel, TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

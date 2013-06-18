@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.documentlibrary.model;
 
+import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.model.ModelWrapper;
 
 import java.util.Date;
@@ -1039,6 +1040,11 @@ public class DLFolderWrapper implements DLFolder, ModelWrapper<DLFolder> {
 	@Override
 	public boolean isRoot() {
 		return _dlFolder.isRoot();
+	}
+
+	@Override
+	public StagedModelType getStagedModelType() {
+		return _dlFolder.getStagedModelType();
 	}
 
 	/**
