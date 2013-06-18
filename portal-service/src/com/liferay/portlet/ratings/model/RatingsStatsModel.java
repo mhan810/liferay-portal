@@ -17,6 +17,7 @@ package com.liferay.portlet.ratings.model;
 import com.liferay.portal.model.AttachedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.TypedModel;
 import com.liferay.portal.service.ServiceContext;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
@@ -36,7 +37,8 @@ import java.io.Serializable;
  * @see com.liferay.portlet.ratings.model.impl.RatingsStatsModelImpl
  * @generated
  */
-public interface RatingsStatsModel extends AttachedModel, BaseModel<RatingsStats> {
+public interface RatingsStatsModel extends AttachedModel, BaseModel<RatingsStats>,
+	TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

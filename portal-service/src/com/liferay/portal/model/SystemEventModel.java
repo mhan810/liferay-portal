@@ -37,7 +37,8 @@ import java.util.Date;
  * @see com.liferay.portal.model.impl.SystemEventModelImpl
  * @generated
  */
-public interface SystemEventModel extends AttachedModel, BaseModel<SystemEvent> {
+public interface SystemEventModel extends AttachedModel, BaseModel<SystemEvent>,
+	TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

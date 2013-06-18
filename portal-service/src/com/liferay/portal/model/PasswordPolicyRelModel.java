@@ -34,7 +34,7 @@ import java.io.Serializable;
  * @generated
  */
 public interface PasswordPolicyRelModel extends AttachedModel,
-	BaseModel<PasswordPolicyRel> {
+	BaseModel<PasswordPolicyRel>, TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

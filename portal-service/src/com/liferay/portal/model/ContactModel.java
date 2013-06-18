@@ -38,7 +38,7 @@ import java.util.Date;
  * @generated
  */
 public interface ContactModel extends AttachedModel, AuditedModel,
-	BaseModel<Contact> {
+	BaseModel<Contact>, TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

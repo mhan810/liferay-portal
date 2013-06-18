@@ -17,6 +17,7 @@ package com.liferay.portlet.trash.model;
 import com.liferay.portal.model.AttachedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.TypedModel;
 import com.liferay.portal.service.ServiceContext;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
@@ -36,7 +37,8 @@ import java.io.Serializable;
  * @see com.liferay.portlet.trash.model.impl.TrashVersionModelImpl
  * @generated
  */
-public interface TrashVersionModel extends AttachedModel, BaseModel<TrashVersion> {
+public interface TrashVersionModel extends AttachedModel, BaseModel<TrashVersion>,
+	TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
