@@ -52,7 +52,7 @@ public class CalendarPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "calendar";
 
 	public CalendarPortletDataHandler() {
-		setDeletionSystemEventClassNames(CalEvent.class.getName());
+		setDeletionSystemEventModelTypes(CalEvent.class.getName());
 		setExportControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "events", true, true, null,
