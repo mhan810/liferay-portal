@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.AttachedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.TypedModel;
 import com.liferay.portal.service.ServiceContext;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
@@ -40,7 +41,8 @@ import java.util.Date;
  * @see com.liferay.portlet.trash.model.impl.TrashEntryModelImpl
  * @generated
  */
-public interface TrashEntryModel extends AttachedModel, BaseModel<TrashEntry> {
+public interface TrashEntryModel extends AttachedModel, BaseModel<TrashEntry>,
+	TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

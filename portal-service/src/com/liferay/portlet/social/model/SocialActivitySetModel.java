@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.AttachedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.TypedModel;
 import com.liferay.portal.service.ServiceContext;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
@@ -38,7 +39,7 @@ import java.io.Serializable;
  * @generated
  */
 public interface SocialActivitySetModel extends AttachedModel,
-	BaseModel<SocialActivitySet> {
+	BaseModel<SocialActivitySet>, TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

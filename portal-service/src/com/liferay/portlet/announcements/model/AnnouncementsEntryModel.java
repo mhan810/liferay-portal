@@ -20,6 +20,7 @@ import com.liferay.portal.model.AttachedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.StagedAuditedModel;
+import com.liferay.portal.model.TypedModel;
 import com.liferay.portal.service.ServiceContext;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
@@ -42,7 +43,7 @@ import java.util.Date;
  * @generated
  */
 public interface AnnouncementsEntryModel extends AttachedModel,
-	BaseModel<AnnouncementsEntry>, StagedAuditedModel {
+	BaseModel<AnnouncementsEntry>, StagedAuditedModel, TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
