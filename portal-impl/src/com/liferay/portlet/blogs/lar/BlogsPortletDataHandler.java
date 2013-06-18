@@ -42,7 +42,7 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "blogs";
 
 	public BlogsPortletDataHandler() {
-		setDeletionSystemEventClassNames(BlogsEntry.class.getName());
+		setDeletionSystemEventModelTypes(BlogsEntry.class.getName());
 		setExportControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "entries", true, false, null,
