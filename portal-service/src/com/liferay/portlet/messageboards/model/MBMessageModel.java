@@ -20,6 +20,7 @@ import com.liferay.portal.model.AttachedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.StagedGroupedModel;
+import com.liferay.portal.model.TypedModel;
 import com.liferay.portal.model.WorkflowedModel;
 import com.liferay.portal.service.ServiceContext;
 
@@ -43,7 +44,7 @@ import java.util.Date;
  * @generated
  */
 public interface MBMessageModel extends AttachedModel, BaseModel<MBMessage>,
-	StagedGroupedModel, WorkflowedModel {
+	StagedGroupedModel, TypedModel, WorkflowedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

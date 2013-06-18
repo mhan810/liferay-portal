@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.documentlibrary.model;
 
+import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.model.ModelWrapper;
 
 import java.util.Date;
@@ -1150,6 +1151,11 @@ public class DLFileEntryWrapper implements DLFileEntry,
 	public void setExtraSettingsProperties(
 		com.liferay.portal.kernel.util.UnicodeProperties extraSettingsProperties) {
 		_dlFileEntry.setExtraSettingsProperties(extraSettingsProperties);
+	}
+
+	@Override
+	public StagedModelType getStagedModelType() {
+		return _dlFileEntry.getStagedModelType();
 	}
 
 	/**

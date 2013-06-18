@@ -38,7 +38,7 @@ import java.util.Date;
  * @generated
  */
 public interface SubscriptionModel extends AttachedModel, AuditedModel,
-	BaseModel<Subscription> {
+	BaseModel<Subscription>, TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
