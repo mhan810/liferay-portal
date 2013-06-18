@@ -56,6 +56,10 @@ public class PatcherUtil {
 		return getPatcher().getProperties();
 	}
 
+	public static boolean isCompatible(String[] fixPacks) {
+		return getPatcher().isCompatible(fixPacks);
+	}
+
 	public static boolean isConfigured() {
 		return getPatcher().isConfigured();
 	}

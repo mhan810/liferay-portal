@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.patcher.Patcher;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -166,6 +167,38 @@ public class PatcherImpl implements Patcher {
 		_properties = properties;
 
 		return _properties;
+	}
+
+	@Override
+	public boolean isCompatible(String[] fixPacks) {
+		for (String fixPack : fixPacks) {
+			int pos = fixPack.lastIndexOf('-');
+
+			if ((pos > 0) && (pos < (fixPack.length() -1))) {
+				String component = fixPack.substring(0, pos);
+				int version = GetterUtil.getInteger(fixPack.substring(pos + 1));
+
+				boolean satisfied = false;
+
+				for (String patchLevel : getPatchLevels()) {
+					if (patchLevel.startsWith(component)) {
+						int installedVersion = GetterUtil.getInteger(
+							patchLevel.substring(component.length() + 1));
+
+						if (installedVersion >= version) {
+							satisfied = true;
+							break;
+						}
+					}
+				}
+
+				if (!satisfied) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.patcher.PatcherUtil;
 import com.liferay.portal.kernel.plugin.License;
 import com.liferay.portal.kernel.plugin.PluginPackage;
 import com.liferay.portal.kernel.plugin.RemotePluginPackageRepository;
@@ -506,10 +507,35 @@ public class PluginPackageUtil {
 		Version currentVersion = Version.getInstance(ReleaseInfo.getVersion());
 
 		for (String version : versions) {
+			int pos = version.indexOf('#');
+
+			String fixPackRequirement = null;
+
+			if ((pos > 1) && (pos < (version.length() - 1))) {
+				if (version.endsWith("+")) {
+					fixPackRequirement = version.substring(
+						pos + 1, version.length() - 1);
+					version = version.substring(0, pos) + "+";
+				}
+				else {
+					fixPackRequirement = version.substring(pos + 1);
+					version = version.substring(0, pos);
+				}
+			}
+
 			Version supportedVersion = Version.getInstance(version);
 
 			if (supportedVersion.includes(currentVersion)) {
-				return true;
+				if (Validator.isNull(fixPackRequirement)) {
+					return true;
+				}
+				else {
+					String[] fixPacks = fixPackRequirement.split("\\+");
+
+					if (PatcherUtil.isCompatible(fixPacks)) {
+						return true;
+					}
+				}
 			}
 		}
 
