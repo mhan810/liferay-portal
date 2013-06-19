@@ -92,7 +92,8 @@ public class WorkflowHandlerRegistryUtil {
 			Map<String, Serializable> workflowContext)
 		throws PortalException, SystemException {
 
-		if (serviceContext.getWorkflowAction() !=
+		if (!WorkflowThreadLocal.isEnabled() ||
+			serviceContext.getWorkflowAction() !=
 				WorkflowConstants.ACTION_PUBLISH) {
 
 			return;
@@ -116,18 +117,13 @@ public class WorkflowHandlerRegistryUtil {
 		WorkflowHandler workflowHandler = getWorkflowHandler(className);
 
 		if (workflowHandler == null) {
-			if (WorkflowThreadLocal.isEnabled()) {
-				throw new WorkflowException(
-					"No workflow handler found for " + className);
-			}
-
-			return;
+			throw new WorkflowException(
+				"No workflow handler found for " + className);
 		}
 
 		WorkflowDefinitionLink workflowDefinitionLink = null;
 
-		if (WorkflowThreadLocal.isEnabled() &&
-			WorkflowEngineManagerUtil.isDeployed()) {
+		if (WorkflowEngineManagerUtil.isDeployed()) {
 
 			try {
 				workflowDefinitionLink =
