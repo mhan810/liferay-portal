@@ -171,6 +171,19 @@ public interface SocialRelationLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns the social relation with the matching UUID and company.
+	*
+	* @param uuid the social relation's UUID
+	* @param companyId the primary key of the company
+	* @return the matching social relation, or <code>null</code> if a matching social relation could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portlet.social.model.SocialRelation fetchSocialRelationByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Returns the social relation with the primary key.
 	*
 	* @param relationId the primary key of the social relation
@@ -188,6 +201,21 @@ public interface SocialRelationLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.portal.model.PersistedModel getPersistedModel(
 		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the social relation with the matching UUID and company.
+	*
+	* @param uuid the social relation's UUID
+	* @param companyId the primary key of the company
+	* @return the matching social relation
+	* @throws PortalException if a matching social relation could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portlet.social.model.SocialRelation getSocialRelationByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 

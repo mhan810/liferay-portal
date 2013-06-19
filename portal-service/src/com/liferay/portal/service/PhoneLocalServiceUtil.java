@@ -184,6 +184,20 @@ public class PhoneLocalServiceUtil {
 	}
 
 	/**
+	* Returns the phone with the matching UUID and company.
+	*
+	* @param uuid the phone's UUID
+	* @param companyId the primary key of the company
+	* @return the matching phone, or <code>null</code> if a matching phone could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.model.Phone fetchPhoneByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().fetchPhoneByUuidAndCompanyId(uuid, companyId);
+	}
+
+	/**
 	* Returns the phone with the primary key.
 	*
 	* @param phoneId the primary key of the phone
@@ -202,6 +216,22 @@ public class PhoneLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().getPersistedModel(primaryKeyObj);
+	}
+
+	/**
+	* Returns the phone with the matching UUID and company.
+	*
+	* @param uuid the phone's UUID
+	* @param companyId the primary key of the company
+	* @return the matching phone
+	* @throws PortalException if a matching phone could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.model.Phone getPhoneByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().getPhoneByUuidAndCompanyId(uuid, companyId);
 	}
 
 	/**
@@ -293,12 +323,6 @@ public class PhoneLocalServiceUtil {
 		long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		getService().deletePhones(companyId, className, classPK);
-	}
-
-	public static com.liferay.portal.model.Phone fetchPhoneByUuidAndCompanyId(
-		java.lang.String uuid, long companyId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().fetchPhoneByUuidAndCompanyId(uuid, companyId);
 	}
 
 	public static java.util.List<com.liferay.portal.model.Phone> getPhones()

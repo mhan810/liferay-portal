@@ -186,6 +186,20 @@ public class UserLocalServiceUtil {
 	}
 
 	/**
+	* Returns the user with the matching UUID and company.
+	*
+	* @param uuid the user's UUID
+	* @param companyId the primary key of the company
+	* @return the matching user, or <code>null</code> if a matching user could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.model.User fetchUserByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().fetchUserByUuidAndCompanyId(uuid, companyId);
+	}
+
+	/**
 	* Returns the user with the primary key.
 	*
 	* @param userId the primary key of the user
@@ -204,6 +218,22 @@ public class UserLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().getPersistedModel(primaryKeyObj);
+	}
+
+	/**
+	* Returns the user with the matching UUID and company.
+	*
+	* @param uuid the user's UUID
+	* @param companyId the primary key of the company
+	* @return the matching user
+	* @throws PortalException if a matching user could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.model.User getUserByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().getUserByUuidAndCompanyId(uuid, companyId);
 	}
 
 	/**
@@ -2176,22 +2206,6 @@ public class UserLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().getUserByUuid(uuid);
-	}
-
-	/**
-	* Returns the user with the UUID.
-	*
-	* @param uuid the user's UUID
-	* @param companyId the primary key of the user's company
-	* @return the user with the UUID
-	* @throws PortalException if a user with the UUID could not be found
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.portal.model.User getUserByUuidAndCompanyId(
-		java.lang.String uuid, long companyId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getUserByUuidAndCompanyId(uuid, companyId);
 	}
 
 	/**

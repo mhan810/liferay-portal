@@ -258,6 +258,35 @@ public abstract class JournalArticleLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the journal article with the matching UUID and company.
+	 *
+	 * @param uuid the journal article's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching journal article, or <code>null</code> if a matching journal article could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public JournalArticle fetchJournalArticleByUuidAndCompanyId(String uuid,
+		long companyId) throws SystemException {
+		return journalArticlePersistence.fetchByUuid_C_First(uuid, companyId,
+			null);
+	}
+
+	/**
+	 * Returns the journal article matching the UUID and group.
+	 *
+	 * @param uuid the journal article's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching journal article, or <code>null</code> if a matching journal article could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public JournalArticle fetchJournalArticleByUuidAndGroupId(String uuid,
+		long groupId) throws SystemException {
+		return journalArticlePersistence.fetchByUUID_G(uuid, groupId);
+	}
+
+	/**
 	 * Returns the journal article with the primary key.
 	 *
 	 * @param id the primary key of the journal article
@@ -275,6 +304,22 @@ public abstract class JournalArticleLocalServiceBaseImpl
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return journalArticlePersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns the journal article with the matching UUID and company.
+	 *
+	 * @param uuid the journal article's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching journal article
+	 * @throws PortalException if a matching journal article could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public JournalArticle getJournalArticleByUuidAndCompanyId(String uuid,
+		long companyId) throws PortalException, SystemException {
+		return journalArticlePersistence.findByUuid_C_First(uuid, companyId,
+			null);
 	}
 
 	/**

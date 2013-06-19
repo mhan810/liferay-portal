@@ -80,7 +80,7 @@ import com.liferay.portal.service.ThemeLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
-import com.liferay.portal.service.permission.PortletPermissionUtil;
+import com.liferay.portal.service.permission.PortalPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.theme.ThemeDisplayFactory;
 import com.liferay.portal.util.LayoutClone;
@@ -429,8 +429,8 @@ public class ServicePreAction extends Action {
 					 (!viewableGroup ||
 					  (!redirectToDefaultLayout &&
 					   !LayoutPermissionUtil.contains(
-						   permissionChecker, layout, false,
-						   ActionKeys.VIEW)))) {
+						   permissionChecker, layout, controlPanelCategory,
+						   false, ActionKeys.VIEW)))) {
 
 				if (user.isDefaultUser() &&
 					PropsValues.AUTH_LOGIN_PROMPT_ENABLED) {
@@ -793,34 +793,37 @@ public class ServicePreAction extends Action {
 		// Icons
 
 		themeDisplay.setShowAddContentIcon(false);
-		themeDisplay.setShowControlPanelIcon(signedIn);
+
+		boolean showControlPanelIcon = false;
+
+		if (signedIn &&
+			PortalPermissionUtil.contains(
+				permissionChecker, ActionKeys.VIEW_CONTROL_PANEL)) {
+
+			showControlPanelIcon = true;
+		}
+
+		themeDisplay.setShowControlPanelIcon(showControlPanelIcon);
+
 		themeDisplay.setShowHomeIcon(true);
 		themeDisplay.setShowMyAccountIcon(signedIn);
 		themeDisplay.setShowPageSettingsIcon(false);
 		themeDisplay.setShowPortalIcon(true);
 		themeDisplay.setShowSignInIcon(!signedIn);
 		themeDisplay.setShowSignOutIcon(signedIn);
+		themeDisplay.setShowStagingIcon(false);
 
 		boolean showSiteAdministrationIcon = false;
 
-		long controlPanelPlid = 0;
+		if (signedIn &&
+			GroupPermissionUtil.contains(
+				permissionChecker, group,
+				ActionKeys.VIEW_SITE_ADMINISTRATION)) {
 
-		if (signedIn && PropsValues.DOCKBAR_SHOW_SITE_CONTENT_ICON) {
-			controlPanelPlid = PortalUtil.getControlPanelPlid(companyId);
-
-			List<Portlet> siteAdministrationPortlets =
-				PortalUtil.getControlPanelPortlets(
-					PortletCategoryKeys.SITE_ADMINISTRATION, themeDisplay);
-
-			showSiteAdministrationIcon =
-				PortletPermissionUtil.hasControlPanelAccessPermission(
-					permissionChecker, scopeGroupId,
-					siteAdministrationPortlets);
+			showSiteAdministrationIcon = true;
 		}
 
 		themeDisplay.setShowSiteAdministrationIcon(showSiteAdministrationIcon);
-
-		themeDisplay.setShowStagingIcon(false);
 
 		// Session
 
@@ -927,6 +930,8 @@ public class ServicePreAction extends Action {
 						"Liferay.Dockbar.loadAddPanel();");
 				}
 			}
+
+			long controlPanelPlid = PortalUtil.getControlPanelPlid(companyId);;
 
 			if (hasUpdateLayoutPermission) {
 				themeDisplay.setShowPageSettingsIcon(true);
@@ -1210,7 +1215,6 @@ public class ServicePreAction extends Action {
 		}
 
 		if (group.isLayoutPrototype()) {
-			themeDisplay.setShowControlPanelIcon(false);
 			themeDisplay.setShowHomeIcon(false);
 			themeDisplay.setShowManageSiteMembershipsIcon(false);
 			themeDisplay.setShowMyAccountIcon(false);
@@ -1691,6 +1695,13 @@ public class ServicePreAction extends Action {
 			hasViewLayoutPermission = true;
 		}
 
+		String controlPanelCategory = null;
+
+		if (group.isControlPanel()) {
+			controlPanelCategory = ParamUtil.getString(
+				request, "controlPanelCategory");
+		}
+
 		List<Layout> accessibleLayouts = new ArrayList<Layout>();
 
 		for (int i = 0; i < layouts.size(); i++) {
@@ -1698,7 +1709,8 @@ public class ServicePreAction extends Action {
 
 			if (!curLayout.isHidden() &&
 				(LayoutPermissionUtil.contains(
-					permissionChecker, curLayout, false, ActionKeys.VIEW) ||
+					permissionChecker, curLayout, controlPanelCategory, false,
+					ActionKeys.VIEW) ||
 				 hasViewStagingPermission)) {
 
 				if (accessibleLayouts.isEmpty() && !hasViewLayoutPermission) {

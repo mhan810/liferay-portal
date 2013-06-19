@@ -287,6 +287,20 @@ public abstract class PhoneLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the phone with the matching UUID and company.
+	 *
+	 * @param uuid the phone's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching phone, or <code>null</code> if a matching phone could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public Phone fetchPhoneByUuidAndCompanyId(String uuid, long companyId)
+		throws SystemException {
+		return phonePersistence.fetchByUuid_C_First(uuid, companyId, null);
+	}
+
+	/**
 	 * Returns the phone with the primary key.
 	 *
 	 * @param phoneId the primary key of the phone
@@ -303,6 +317,21 @@ public abstract class PhoneLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return phonePersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns the phone with the matching UUID and company.
+	 *
+	 * @param uuid the phone's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching phone
+	 * @throws PortalException if a matching phone could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public Phone getPhoneByUuidAndCompanyId(String uuid, long companyId)
+		throws PortalException, SystemException {
+		return phonePersistence.findByUuid_C_First(uuid, companyId, null);
 	}
 
 	/**

@@ -48,6 +48,10 @@ public class PatcherUtil {
 		return _patcher;
 	}
 
+	public static String[] getPatchLevels() {
+		return getPatcher().getPatchLevels();
+	}
+
 	public static Properties getProperties() {
 		return getPatcher().getProperties();
 	}

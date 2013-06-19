@@ -184,6 +184,22 @@ public class AddressLocalServiceWrapper implements AddressLocalService,
 	}
 
 	/**
+	* Returns the address with the matching UUID and company.
+	*
+	* @param uuid the address's UUID
+	* @param companyId the primary key of the company
+	* @return the matching address, or <code>null</code> if a matching address could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portal.model.Address fetchAddressByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _addressLocalService.fetchAddressByUuidAndCompanyId(uuid,
+			companyId);
+	}
+
+	/**
 	* Returns the address with the primary key.
 	*
 	* @param addressId the primary key of the address
@@ -204,6 +220,23 @@ public class AddressLocalServiceWrapper implements AddressLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _addressLocalService.getPersistedModel(primaryKeyObj);
+	}
+
+	/**
+	* Returns the address with the matching UUID and company.
+	*
+	* @param uuid the address's UUID
+	* @param companyId the primary key of the company
+	* @return the matching address
+	* @throws PortalException if a matching address could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portal.model.Address getAddressByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _addressLocalService.getAddressByUuidAndCompanyId(uuid, companyId);
 	}
 
 	/**
@@ -308,14 +341,6 @@ public class AddressLocalServiceWrapper implements AddressLocalService,
 		long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		_addressLocalService.deleteAddresses(companyId, className, classPK);
-	}
-
-	@Override
-	public com.liferay.portal.model.Address fetchAddressByUuidAndCompanyId(
-		java.lang.String uuid, long companyId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _addressLocalService.fetchAddressByUuidAndCompanyId(uuid,
-			companyId);
 	}
 
 	@Override

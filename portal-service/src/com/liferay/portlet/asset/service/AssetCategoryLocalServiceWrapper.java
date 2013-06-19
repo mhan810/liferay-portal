@@ -192,6 +192,38 @@ public class AssetCategoryLocalServiceWrapper
 	}
 
 	/**
+	* Returns the asset category with the matching UUID and company.
+	*
+	* @param uuid the asset category's UUID
+	* @param companyId the primary key of the company
+	* @return the matching asset category, or <code>null</code> if a matching asset category could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.asset.model.AssetCategory fetchAssetCategoryByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryLocalService.fetchAssetCategoryByUuidAndCompanyId(uuid,
+			companyId);
+	}
+
+	/**
+	* Returns the asset category matching the UUID and group.
+	*
+	* @param uuid the asset category's UUID
+	* @param groupId the primary key of the group
+	* @return the matching asset category, or <code>null</code> if a matching asset category could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.asset.model.AssetCategory fetchAssetCategoryByUuidAndGroupId(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryLocalService.fetchAssetCategoryByUuidAndGroupId(uuid,
+			groupId);
+	}
+
+	/**
 	* Returns the asset category with the primary key.
 	*
 	* @param categoryId the primary key of the asset category
@@ -213,6 +245,24 @@ public class AssetCategoryLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _assetCategoryLocalService.getPersistedModel(primaryKeyObj);
+	}
+
+	/**
+	* Returns the asset category with the matching UUID and company.
+	*
+	* @param uuid the asset category's UUID
+	* @param companyId the primary key of the company
+	* @return the matching asset category
+	* @throws PortalException if a matching asset category could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.asset.model.AssetCategory getAssetCategoryByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryLocalService.getAssetCategoryByUuidAndCompanyId(uuid,
+			companyId);
 	}
 
 	/**

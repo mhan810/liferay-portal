@@ -289,6 +289,20 @@ public abstract class RoleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the role with the matching UUID and company.
+	 *
+	 * @param uuid the role's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching role, or <code>null</code> if a matching role could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public Role fetchRoleByUuidAndCompanyId(String uuid, long companyId)
+		throws SystemException {
+		return rolePersistence.fetchByUuid_C_First(uuid, companyId, null);
+	}
+
+	/**
 	 * Returns the role with the primary key.
 	 *
 	 * @param roleId the primary key of the role
@@ -305,6 +319,21 @@ public abstract class RoleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return rolePersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns the role with the matching UUID and company.
+	 *
+	 * @param uuid the role's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching role
+	 * @throws PortalException if a matching role could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public Role getRoleByUuidAndCompanyId(String uuid, long companyId)
+		throws PortalException, SystemException {
+		return rolePersistence.findByUuid_C_First(uuid, companyId, null);
 	}
 
 	/**

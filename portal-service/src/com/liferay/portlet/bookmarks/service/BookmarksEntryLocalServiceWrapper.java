@@ -192,6 +192,38 @@ public class BookmarksEntryLocalServiceWrapper
 	}
 
 	/**
+	* Returns the bookmarks entry with the matching UUID and company.
+	*
+	* @param uuid the bookmarks entry's UUID
+	* @param companyId the primary key of the company
+	* @return the matching bookmarks entry, or <code>null</code> if a matching bookmarks entry could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.bookmarks.model.BookmarksEntry fetchBookmarksEntryByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _bookmarksEntryLocalService.fetchBookmarksEntryByUuidAndCompanyId(uuid,
+			companyId);
+	}
+
+	/**
+	* Returns the bookmarks entry matching the UUID and group.
+	*
+	* @param uuid the bookmarks entry's UUID
+	* @param groupId the primary key of the group
+	* @return the matching bookmarks entry, or <code>null</code> if a matching bookmarks entry could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.bookmarks.model.BookmarksEntry fetchBookmarksEntryByUuidAndGroupId(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _bookmarksEntryLocalService.fetchBookmarksEntryByUuidAndGroupId(uuid,
+			groupId);
+	}
+
+	/**
 	* Returns the bookmarks entry with the primary key.
 	*
 	* @param entryId the primary key of the bookmarks entry
@@ -213,6 +245,24 @@ public class BookmarksEntryLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _bookmarksEntryLocalService.getPersistedModel(primaryKeyObj);
+	}
+
+	/**
+	* Returns the bookmarks entry with the matching UUID and company.
+	*
+	* @param uuid the bookmarks entry's UUID
+	* @param companyId the primary key of the company
+	* @return the matching bookmarks entry
+	* @throws PortalException if a matching bookmarks entry could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.bookmarks.model.BookmarksEntry getBookmarksEntryByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _bookmarksEntryLocalService.getBookmarksEntryByUuidAndCompanyId(uuid,
+			companyId);
 	}
 
 	/**

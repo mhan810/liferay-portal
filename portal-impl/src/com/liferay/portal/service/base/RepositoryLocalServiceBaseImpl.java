@@ -304,6 +304,34 @@ public abstract class RepositoryLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the repository with the matching UUID and company.
+	 *
+	 * @param uuid the repository's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching repository, or <code>null</code> if a matching repository could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public Repository fetchRepositoryByUuidAndCompanyId(String uuid,
+		long companyId) throws SystemException {
+		return repositoryPersistence.fetchByUuid_C_First(uuid, companyId, null);
+	}
+
+	/**
+	 * Returns the repository matching the UUID and group.
+	 *
+	 * @param uuid the repository's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching repository, or <code>null</code> if a matching repository could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public Repository fetchRepositoryByUuidAndGroupId(String uuid, long groupId)
+		throws SystemException {
+		return repositoryPersistence.fetchByUUID_G(uuid, groupId);
+	}
+
+	/**
 	 * Returns the repository with the primary key.
 	 *
 	 * @param repositoryId the primary key of the repository
@@ -321,6 +349,21 @@ public abstract class RepositoryLocalServiceBaseImpl
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return repositoryPersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns the repository with the matching UUID and company.
+	 *
+	 * @param uuid the repository's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching repository
+	 * @throws PortalException if a matching repository could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public Repository getRepositoryByUuidAndCompanyId(String uuid,
+		long companyId) throws PortalException, SystemException {
+		return repositoryPersistence.findByUuid_C_First(uuid, companyId, null);
 	}
 
 	/**

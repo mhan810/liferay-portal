@@ -237,6 +237,34 @@ public abstract class MBThreadLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the message boards thread with the matching UUID and company.
+	 *
+	 * @param uuid the message boards thread's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching message boards thread, or <code>null</code> if a matching message boards thread could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public MBThread fetchMBThreadByUuidAndCompanyId(String uuid, long companyId)
+		throws SystemException {
+		return mbThreadPersistence.fetchByUuid_C_First(uuid, companyId, null);
+	}
+
+	/**
+	 * Returns the message boards thread matching the UUID and group.
+	 *
+	 * @param uuid the message boards thread's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching message boards thread, or <code>null</code> if a matching message boards thread could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public MBThread fetchMBThreadByUuidAndGroupId(String uuid, long groupId)
+		throws SystemException {
+		return mbThreadPersistence.fetchByUUID_G(uuid, groupId);
+	}
+
+	/**
 	 * Returns the message boards thread with the primary key.
 	 *
 	 * @param threadId the primary key of the message boards thread
@@ -254,6 +282,21 @@ public abstract class MBThreadLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return mbThreadPersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns the message boards thread with the matching UUID and company.
+	 *
+	 * @param uuid the message boards thread's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching message boards thread
+	 * @throws PortalException if a matching message boards thread could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public MBThread getMBThreadByUuidAndCompanyId(String uuid, long companyId)
+		throws PortalException, SystemException {
+		return mbThreadPersistence.findByUuid_C_First(uuid, companyId, null);
 	}
 
 	/**

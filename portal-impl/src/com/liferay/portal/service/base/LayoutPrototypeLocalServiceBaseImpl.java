@@ -295,6 +295,21 @@ public abstract class LayoutPrototypeLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the layout prototype with the matching UUID and company.
+	 *
+	 * @param uuid the layout prototype's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching layout prototype, or <code>null</code> if a matching layout prototype could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public LayoutPrototype fetchLayoutPrototypeByUuidAndCompanyId(String uuid,
+		long companyId) throws SystemException {
+		return layoutPrototypePersistence.fetchByUuid_C_First(uuid, companyId,
+			null);
+	}
+
+	/**
 	 * Returns the layout prototype with the primary key.
 	 *
 	 * @param layoutPrototypeId the primary key of the layout prototype
@@ -312,6 +327,22 @@ public abstract class LayoutPrototypeLocalServiceBaseImpl
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return layoutPrototypePersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns the layout prototype with the matching UUID and company.
+	 *
+	 * @param uuid the layout prototype's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching layout prototype
+	 * @throws PortalException if a matching layout prototype could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public LayoutPrototype getLayoutPrototypeByUuidAndCompanyId(String uuid,
+		long companyId) throws PortalException, SystemException {
+		return layoutPrototypePersistence.findByUuid_C_First(uuid, companyId,
+			null);
 	}
 
 	/**

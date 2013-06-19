@@ -191,6 +191,22 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 	}
 
 	/**
+	* Returns the organization with the matching UUID and company.
+	*
+	* @param uuid the organization's UUID
+	* @param companyId the primary key of the company
+	* @return the matching organization, or <code>null</code> if a matching organization could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portal.model.Organization fetchOrganizationByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _organizationLocalService.fetchOrganizationByUuidAndCompanyId(uuid,
+			companyId);
+	}
+
+	/**
 	* Returns the organization with the primary key.
 	*
 	* @param organizationId the primary key of the organization
@@ -212,6 +228,24 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _organizationLocalService.getPersistedModel(primaryKeyObj);
+	}
+
+	/**
+	* Returns the organization with the matching UUID and company.
+	*
+	* @param uuid the organization's UUID
+	* @param companyId the primary key of the company
+	* @return the matching organization
+	* @throws PortalException if a matching organization could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portal.model.Organization getOrganizationByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _organizationLocalService.getOrganizationByUuidAndCompanyId(uuid,
+			companyId);
 	}
 
 	/**
@@ -774,14 +808,6 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 		long companyId, java.lang.String name)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _organizationLocalService.fetchOrganization(companyId, name);
-	}
-
-	@Override
-	public com.liferay.portal.model.Organization fetchOrganizationByUuidAndCompanyId(
-		java.lang.String uuid, long companyId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _organizationLocalService.fetchOrganizationByUuidAndCompanyId(uuid,
-			companyId);
 	}
 
 	/**

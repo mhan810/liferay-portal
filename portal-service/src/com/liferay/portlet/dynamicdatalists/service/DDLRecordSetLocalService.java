@@ -171,6 +171,32 @@ public interface DDLRecordSetLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns the d d l record set with the matching UUID and company.
+	*
+	* @param uuid the d d l record set's UUID
+	* @param companyId the primary key of the company
+	* @return the matching d d l record set, or <code>null</code> if a matching d d l record set could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portlet.dynamicdatalists.model.DDLRecordSet fetchDDLRecordSetByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the d d l record set matching the UUID and group.
+	*
+	* @param uuid the d d l record set's UUID
+	* @param groupId the primary key of the group
+	* @return the matching d d l record set, or <code>null</code> if a matching d d l record set could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portlet.dynamicdatalists.model.DDLRecordSet fetchDDLRecordSetByUuidAndGroupId(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Returns the d d l record set with the primary key.
 	*
 	* @param recordSetId the primary key of the d d l record set
@@ -188,6 +214,21 @@ public interface DDLRecordSetLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.portal.model.PersistedModel getPersistedModel(
 		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the d d l record set with the matching UUID and company.
+	*
+	* @param uuid the d d l record set's UUID
+	* @param companyId the primary key of the company
+	* @return the matching d d l record set
+	* @throws PortalException if a matching d d l record set could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portlet.dynamicdatalists.model.DDLRecordSet getDDLRecordSetByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 

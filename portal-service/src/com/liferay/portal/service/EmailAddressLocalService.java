@@ -169,6 +169,19 @@ public interface EmailAddressLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns the email address with the matching UUID and company.
+	*
+	* @param uuid the email address's UUID
+	* @param companyId the primary key of the company
+	* @return the matching email address, or <code>null</code> if a matching email address could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portal.model.EmailAddress fetchEmailAddressByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Returns the email address with the primary key.
 	*
 	* @param emailAddressId the primary key of the email address
@@ -186,6 +199,21 @@ public interface EmailAddressLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.portal.model.PersistedModel getPersistedModel(
 		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the email address with the matching UUID and company.
+	*
+	* @param uuid the email address's UUID
+	* @param companyId the primary key of the company
+	* @return the matching email address
+	* @throws PortalException if a matching email address could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portal.model.EmailAddress getEmailAddressByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
@@ -260,11 +288,6 @@ public interface EmailAddressLocalService extends BaseLocalService,
 
 	public void deleteEmailAddresses(long companyId,
 		java.lang.String className, long classPK)
-		throws com.liferay.portal.kernel.exception.SystemException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public com.liferay.portal.model.EmailAddress fetchEmailAddressByUuidAndCompanyId(
-		java.lang.String uuid, long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

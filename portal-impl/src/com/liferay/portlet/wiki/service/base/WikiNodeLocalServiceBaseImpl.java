@@ -227,6 +227,34 @@ public abstract class WikiNodeLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the wiki node with the matching UUID and company.
+	 *
+	 * @param uuid the wiki node's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching wiki node, or <code>null</code> if a matching wiki node could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public WikiNode fetchWikiNodeByUuidAndCompanyId(String uuid, long companyId)
+		throws SystemException {
+		return wikiNodePersistence.fetchByUuid_C_First(uuid, companyId, null);
+	}
+
+	/**
+	 * Returns the wiki node matching the UUID and group.
+	 *
+	 * @param uuid the wiki node's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching wiki node, or <code>null</code> if a matching wiki node could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public WikiNode fetchWikiNodeByUuidAndGroupId(String uuid, long groupId)
+		throws SystemException {
+		return wikiNodePersistence.fetchByUUID_G(uuid, groupId);
+	}
+
+	/**
 	 * Returns the wiki node with the primary key.
 	 *
 	 * @param nodeId the primary key of the wiki node
@@ -244,6 +272,21 @@ public abstract class WikiNodeLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return wikiNodePersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns the wiki node with the matching UUID and company.
+	 *
+	 * @param uuid the wiki node's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching wiki node
+	 * @throws PortalException if a matching wiki node could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public WikiNode getWikiNodeByUuidAndCompanyId(String uuid, long companyId)
+		throws PortalException, SystemException {
+		return wikiNodePersistence.findByUuid_C_First(uuid, companyId, null);
 	}
 
 	/**

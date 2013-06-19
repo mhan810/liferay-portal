@@ -187,6 +187,37 @@ public class WikiPageLocalServiceWrapper implements WikiPageLocalService,
 	}
 
 	/**
+	* Returns the wiki page with the matching UUID and company.
+	*
+	* @param uuid the wiki page's UUID
+	* @param companyId the primary key of the company
+	* @return the matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.wiki.model.WikiPage fetchWikiPageByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _wikiPageLocalService.fetchWikiPageByUuidAndCompanyId(uuid,
+			companyId);
+	}
+
+	/**
+	* Returns the wiki page matching the UUID and group.
+	*
+	* @param uuid the wiki page's UUID
+	* @param groupId the primary key of the group
+	* @return the matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.wiki.model.WikiPage fetchWikiPageByUuidAndGroupId(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _wikiPageLocalService.fetchWikiPageByUuidAndGroupId(uuid, groupId);
+	}
+
+	/**
 	* Returns the wiki page with the primary key.
 	*
 	* @param pageId the primary key of the wiki page
@@ -207,6 +238,24 @@ public class WikiPageLocalServiceWrapper implements WikiPageLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _wikiPageLocalService.getPersistedModel(primaryKeyObj);
+	}
+
+	/**
+	* Returns the wiki page with the matching UUID and company.
+	*
+	* @param uuid the wiki page's UUID
+	* @param companyId the primary key of the company
+	* @return the matching wiki page
+	* @throws PortalException if a matching wiki page could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.wiki.model.WikiPage getWikiPageByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _wikiPageLocalService.getWikiPageByUuidAndCompanyId(uuid,
+			companyId);
 	}
 
 	/**

@@ -189,6 +189,22 @@ public class EmailAddressLocalServiceWrapper implements EmailAddressLocalService
 	}
 
 	/**
+	* Returns the email address with the matching UUID and company.
+	*
+	* @param uuid the email address's UUID
+	* @param companyId the primary key of the company
+	* @return the matching email address, or <code>null</code> if a matching email address could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portal.model.EmailAddress fetchEmailAddressByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _emailAddressLocalService.fetchEmailAddressByUuidAndCompanyId(uuid,
+			companyId);
+	}
+
+	/**
 	* Returns the email address with the primary key.
 	*
 	* @param emailAddressId the primary key of the email address
@@ -210,6 +226,24 @@ public class EmailAddressLocalServiceWrapper implements EmailAddressLocalService
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _emailAddressLocalService.getPersistedModel(primaryKeyObj);
+	}
+
+	/**
+	* Returns the email address with the matching UUID and company.
+	*
+	* @param uuid the email address's UUID
+	* @param companyId the primary key of the company
+	* @return the matching email address
+	* @throws PortalException if a matching email address could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portal.model.EmailAddress getEmailAddressByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _emailAddressLocalService.getEmailAddressByUuidAndCompanyId(uuid,
+			companyId);
 	}
 
 	/**
@@ -308,14 +342,6 @@ public class EmailAddressLocalServiceWrapper implements EmailAddressLocalService
 		throws com.liferay.portal.kernel.exception.SystemException {
 		_emailAddressLocalService.deleteEmailAddresses(companyId, className,
 			classPK);
-	}
-
-	@Override
-	public com.liferay.portal.model.EmailAddress fetchEmailAddressByUuidAndCompanyId(
-		java.lang.String uuid, long companyId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _emailAddressLocalService.fetchEmailAddressByUuidAndCompanyId(uuid,
-			companyId);
 	}
 
 	@Override

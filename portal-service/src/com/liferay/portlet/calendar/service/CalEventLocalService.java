@@ -171,6 +171,32 @@ public interface CalEventLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns the cal event with the matching UUID and company.
+	*
+	* @param uuid the cal event's UUID
+	* @param companyId the primary key of the company
+	* @return the matching cal event, or <code>null</code> if a matching cal event could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portlet.calendar.model.CalEvent fetchCalEventByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the cal event matching the UUID and group.
+	*
+	* @param uuid the cal event's UUID
+	* @param groupId the primary key of the group
+	* @return the matching cal event, or <code>null</code> if a matching cal event could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portlet.calendar.model.CalEvent fetchCalEventByUuidAndGroupId(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Returns the cal event with the primary key.
 	*
 	* @param eventId the primary key of the cal event
@@ -187,6 +213,21 @@ public interface CalEventLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.portal.model.PersistedModel getPersistedModel(
 		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the cal event with the matching UUID and company.
+	*
+	* @param uuid the cal event's UUID
+	* @param companyId the primary key of the company
+	* @return the matching cal event
+	* @throws PortalException if a matching cal event could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portlet.calendar.model.CalEvent getCalEventByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 

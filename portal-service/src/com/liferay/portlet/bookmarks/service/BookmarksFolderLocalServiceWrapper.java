@@ -193,6 +193,38 @@ public class BookmarksFolderLocalServiceWrapper
 	}
 
 	/**
+	* Returns the bookmarks folder with the matching UUID and company.
+	*
+	* @param uuid the bookmarks folder's UUID
+	* @param companyId the primary key of the company
+	* @return the matching bookmarks folder, or <code>null</code> if a matching bookmarks folder could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.bookmarks.model.BookmarksFolder fetchBookmarksFolderByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _bookmarksFolderLocalService.fetchBookmarksFolderByUuidAndCompanyId(uuid,
+			companyId);
+	}
+
+	/**
+	* Returns the bookmarks folder matching the UUID and group.
+	*
+	* @param uuid the bookmarks folder's UUID
+	* @param groupId the primary key of the group
+	* @return the matching bookmarks folder, or <code>null</code> if a matching bookmarks folder could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.bookmarks.model.BookmarksFolder fetchBookmarksFolderByUuidAndGroupId(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _bookmarksFolderLocalService.fetchBookmarksFolderByUuidAndGroupId(uuid,
+			groupId);
+	}
+
+	/**
 	* Returns the bookmarks folder with the primary key.
 	*
 	* @param folderId the primary key of the bookmarks folder
@@ -214,6 +246,24 @@ public class BookmarksFolderLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _bookmarksFolderLocalService.getPersistedModel(primaryKeyObj);
+	}
+
+	/**
+	* Returns the bookmarks folder with the matching UUID and company.
+	*
+	* @param uuid the bookmarks folder's UUID
+	* @param companyId the primary key of the company
+	* @return the matching bookmarks folder
+	* @throws PortalException if a matching bookmarks folder could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.bookmarks.model.BookmarksFolder getBookmarksFolderByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _bookmarksFolderLocalService.getBookmarksFolderByUuidAndCompanyId(uuid,
+			companyId);
 	}
 
 	/**

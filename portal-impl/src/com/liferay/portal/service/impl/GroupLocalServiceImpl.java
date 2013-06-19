@@ -924,22 +924,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns the group with the matching UUID and company.
-	 *
-	 * @param  uuid the UUID
-	 * @param  companyId the primary key of the company
-	 * @return the matching group, or <code>null</code> if a matching group
-	 *         could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	@Override
-	public Group fetchGroupByUuidandCompanyId(String uuid, long companyId)
-		throws SystemException {
-
-		return groupPersistence.fetchByUuid_C_First(uuid, companyId, null);
-	}
-
-	/**
 	 * Returns the company group.
 	 *
 	 * @param  companyId the primary key of the company
@@ -3654,7 +3638,9 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		setRolePermissions(
 			group, role, Group.class.getName(),
-			new String[] {ActionKeys.MANAGE_LAYOUTS});
+			new String[] {
+				ActionKeys.MANAGE_LAYOUTS, ActionKeys.VIEW_SITE_ADMINISTRATION
+			});
 
 		setRolePermissions(group, role, "com.liferay.portlet.asset");
 		setRolePermissions(group, role, "com.liferay.portlet.blogs");

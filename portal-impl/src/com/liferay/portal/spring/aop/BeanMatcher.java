@@ -12,23 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.util.dependencies;
-
-import com.liferay.portal.model.UserGroup;
-import com.liferay.portal.service.ServiceTestUtil;
-import com.liferay.portal.service.UserGroupLocalServiceUtil;
-import com.liferay.portal.util.TestPropsValues;
+package com.liferay.portal.spring.aop;
 
 /**
- * @author Roberto Díaz
+ * @author Shuyang Zhou
  */
-public class UserGroupTestUtil {
+public interface BeanMatcher {
 
-	public static UserGroup addUserGroup() throws Exception {
-		return UserGroupLocalServiceUtil.addUserGroup(
-			TestPropsValues.getUserId(), TestPropsValues.getCompanyId(),
-			ServiceTestUtil.randomString(), ServiceTestUtil.randomString(50),
-			ServiceTestUtil.getServiceContext());
-	}
+	public boolean match(Class<?> beanClass, String beanName);
 
 }

@@ -232,6 +232,34 @@ public abstract class CalEventLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the cal event with the matching UUID and company.
+	 *
+	 * @param uuid the cal event's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching cal event, or <code>null</code> if a matching cal event could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public CalEvent fetchCalEventByUuidAndCompanyId(String uuid, long companyId)
+		throws SystemException {
+		return calEventPersistence.fetchByUuid_C_First(uuid, companyId, null);
+	}
+
+	/**
+	 * Returns the cal event matching the UUID and group.
+	 *
+	 * @param uuid the cal event's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching cal event, or <code>null</code> if a matching cal event could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public CalEvent fetchCalEventByUuidAndGroupId(String uuid, long groupId)
+		throws SystemException {
+		return calEventPersistence.fetchByUUID_G(uuid, groupId);
+	}
+
+	/**
 	 * Returns the cal event with the primary key.
 	 *
 	 * @param eventId the primary key of the cal event
@@ -249,6 +277,21 @@ public abstract class CalEventLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return calEventPersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns the cal event with the matching UUID and company.
+	 *
+	 * @param uuid the cal event's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching cal event
+	 * @throws PortalException if a matching cal event could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public CalEvent getCalEventByUuidAndCompanyId(String uuid, long companyId)
+		throws PortalException, SystemException {
+		return calEventPersistence.findByUuid_C_First(uuid, companyId, null);
 	}
 
 	/**

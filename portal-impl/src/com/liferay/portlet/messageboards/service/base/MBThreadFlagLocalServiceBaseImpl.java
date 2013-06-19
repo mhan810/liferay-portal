@@ -229,6 +229,34 @@ public abstract class MBThreadFlagLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the message boards thread flag with the matching UUID and company.
+	 *
+	 * @param uuid the message boards thread flag's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching message boards thread flag, or <code>null</code> if a matching message boards thread flag could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public MBThreadFlag fetchMBThreadFlagByUuidAndCompanyId(String uuid,
+		long companyId) throws SystemException {
+		return mbThreadFlagPersistence.fetchByUuid_C_First(uuid, companyId, null);
+	}
+
+	/**
+	 * Returns the message boards thread flag matching the UUID and group.
+	 *
+	 * @param uuid the message boards thread flag's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching message boards thread flag, or <code>null</code> if a matching message boards thread flag could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public MBThreadFlag fetchMBThreadFlagByUuidAndGroupId(String uuid,
+		long groupId) throws SystemException {
+		return mbThreadFlagPersistence.fetchByUUID_G(uuid, groupId);
+	}
+
+	/**
 	 * Returns the message boards thread flag with the primary key.
 	 *
 	 * @param threadFlagId the primary key of the message boards thread flag
@@ -246,6 +274,21 @@ public abstract class MBThreadFlagLocalServiceBaseImpl
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return mbThreadFlagPersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns the message boards thread flag with the matching UUID and company.
+	 *
+	 * @param uuid the message boards thread flag's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching message boards thread flag
+	 * @throws PortalException if a matching message boards thread flag could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public MBThreadFlag getMBThreadFlagByUuidAndCompanyId(String uuid,
+		long companyId) throws PortalException, SystemException {
+		return mbThreadFlagPersistence.findByUuid_C_First(uuid, companyId, null);
 	}
 
 	/**

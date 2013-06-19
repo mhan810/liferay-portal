@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -314,6 +315,10 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 	protected String fixSessionKey(
 		String fileName, String content, Pattern pattern) {
+
+		if (mainReleaseVersion.equals(MAIN_RELEASE_VERSION_6_1_0)) {
+			return content;
+		}
 
 		Matcher matcher = pattern.matcher(content);
 
@@ -723,12 +728,17 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		return line;
 	}
 
+	protected static final String MAIN_RELEASE_VERSION_6_1_0 = "6.1.0";
+
+	protected static final String MAIN_RELEASE_VERSION_6_2_0 = "6.2.0";
+
 	protected static FileImpl fileUtil = FileImpl.getInstance();
+	protected static String mainReleaseVersion;
 	protected static SAXReaderImpl saxReaderUtil = SAXReaderImpl.getInstance();
 	protected static SourceFormatterHelper sourceFormatterHelper;
 
 	private void _init(boolean useProperties, boolean throwException)
-		throws IOException {
+		throws Exception {
 
 		_errorMessages = new ArrayList<String>();
 
@@ -739,6 +749,8 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		if (_initialized) {
 			return;
 		}
+
+		_setVersion();
 
 		_excludes = StringUtil.split(
 			GetterUtil.getString(
@@ -756,6 +768,21 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		_throwException = throwException;
 
 		_initialized = true;
+	}
+
+	private void _setVersion() throws Exception {
+		String releaseInfoVersion = ReleaseInfo.getVersion();
+
+		if (releaseInfoVersion.startsWith("6.1")) {
+			mainReleaseVersion = MAIN_RELEASE_VERSION_6_1_0;
+		}
+		else if (releaseInfoVersion.startsWith("6.2")) {
+			mainReleaseVersion = MAIN_RELEASE_VERSION_6_2_0;
+		}
+		else {
+			throw new Exception(
+				"Invalid release information: " + ReleaseInfo.getVersion());
+		}
 	}
 
 	private static List<String> _errorMessages = new ArrayList<String>();

@@ -305,6 +305,20 @@ public abstract class UserLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the user with the matching UUID and company.
+	 *
+	 * @param uuid the user's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching user, or <code>null</code> if a matching user could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public User fetchUserByUuidAndCompanyId(String uuid, long companyId)
+		throws SystemException {
+		return userPersistence.fetchByUuid_C_First(uuid, companyId, null);
+	}
+
+	/**
 	 * Returns the user with the primary key.
 	 *
 	 * @param userId the primary key of the user
@@ -321,6 +335,21 @@ public abstract class UserLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return userPersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns the user with the matching UUID and company.
+	 *
+	 * @param uuid the user's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching user
+	 * @throws PortalException if a matching user could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public User getUserByUuidAndCompanyId(String uuid, long companyId)
+		throws PortalException, SystemException {
+		return userPersistence.findByUuid_C_First(uuid, companyId, null);
 	}
 
 	/**

@@ -240,6 +240,35 @@ public abstract class JournalFolderLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the journal folder with the matching UUID and company.
+	 *
+	 * @param uuid the journal folder's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching journal folder, or <code>null</code> if a matching journal folder could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public JournalFolder fetchJournalFolderByUuidAndCompanyId(String uuid,
+		long companyId) throws SystemException {
+		return journalFolderPersistence.fetchByUuid_C_First(uuid, companyId,
+			null);
+	}
+
+	/**
+	 * Returns the journal folder matching the UUID and group.
+	 *
+	 * @param uuid the journal folder's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching journal folder, or <code>null</code> if a matching journal folder could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public JournalFolder fetchJournalFolderByUuidAndGroupId(String uuid,
+		long groupId) throws SystemException {
+		return journalFolderPersistence.fetchByUUID_G(uuid, groupId);
+	}
+
+	/**
 	 * Returns the journal folder with the primary key.
 	 *
 	 * @param folderId the primary key of the journal folder
@@ -257,6 +286,21 @@ public abstract class JournalFolderLocalServiceBaseImpl
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return journalFolderPersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns the journal folder with the matching UUID and company.
+	 *
+	 * @param uuid the journal folder's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching journal folder
+	 * @throws PortalException if a matching journal folder could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public JournalFolder getJournalFolderByUuidAndCompanyId(String uuid,
+		long companyId) throws PortalException, SystemException {
+		return journalFolderPersistence.findByUuid_C_First(uuid, companyId, null);
 	}
 
 	/**

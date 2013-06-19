@@ -297,6 +297,35 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the layout with the matching UUID and company.
+	 *
+	 * @param uuid the layout's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching layout, or <code>null</code> if a matching layout could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public Layout fetchLayoutByUuidAndCompanyId(String uuid, long companyId)
+		throws SystemException {
+		return layoutPersistence.fetchByUuid_C_First(uuid, companyId, null);
+	}
+
+	/**
+	 * Returns the layout matching the UUID, group, and privacy.
+	 *
+	 * @param uuid the layout's UUID
+	 * @param groupId the primary key of the group
+	 * @param privateLayout whether the layout is private to the group
+	 * @return the matching layout, or <code>null</code> if a matching layout could not be found
+	  * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public Layout fetchLayoutByUuidAndGroupId(String uuid, long groupId,
+		boolean privateLayout) throws SystemException {
+		return layoutPersistence.fetchByUUID_G_P(uuid, groupId, privateLayout);
+	}
+
+	/**
 	 * Returns the layout with the primary key.
 	 *
 	 * @param plid the primary key of the layout
@@ -313,6 +342,21 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return layoutPersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns the layout with the matching UUID and company.
+	 *
+	 * @param uuid the layout's UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching layout
+	 * @throws PortalException if a matching layout could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public Layout getLayoutByUuidAndCompanyId(String uuid, long companyId)
+		throws PortalException, SystemException {
+		return layoutPersistence.findByUuid_C_First(uuid, companyId, null);
 	}
 
 	/**
