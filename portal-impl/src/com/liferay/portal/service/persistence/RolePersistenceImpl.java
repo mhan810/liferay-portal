@@ -49,6 +49,9 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.impl.RoleImpl;
 import com.liferay.portal.model.impl.RoleModelImpl;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.persistence.GroupPersistence;
+import com.liferay.portal.service.persistence.RolePersistence;
+import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;

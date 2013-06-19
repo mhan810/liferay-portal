@@ -29,6 +29,7 @@ import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutPrototypeModel;
 import com.liferay.portal.model.LayoutPrototypeSoap;
+import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 

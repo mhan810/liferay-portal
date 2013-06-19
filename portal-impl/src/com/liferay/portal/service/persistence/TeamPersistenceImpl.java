@@ -48,6 +48,9 @@ import com.liferay.portal.model.Team;
 import com.liferay.portal.model.impl.TeamImpl;
 import com.liferay.portal.model.impl.TeamModelImpl;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.persistence.TeamPersistence;
+import com.liferay.portal.service.persistence.UserGroupPersistence;
+import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;

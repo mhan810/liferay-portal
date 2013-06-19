@@ -39,6 +39,7 @@ import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.Shard;
 import com.liferay.portal.model.impl.ShardImpl;
 import com.liferay.portal.model.impl.ShardModelImpl;
+import com.liferay.portal.service.persistence.ShardPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;

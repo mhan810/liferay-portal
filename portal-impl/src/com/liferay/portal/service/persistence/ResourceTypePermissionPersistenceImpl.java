@@ -39,6 +39,7 @@ import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.ResourceTypePermission;
 import com.liferay.portal.model.impl.ResourceTypePermissionImpl;
 import com.liferay.portal.model.impl.ResourceTypePermissionModelImpl;
+import com.liferay.portal.service.persistence.ResourceTypePermissionPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;

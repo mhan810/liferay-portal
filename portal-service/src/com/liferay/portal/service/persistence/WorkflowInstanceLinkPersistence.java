@@ -15,6 +15,7 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.model.WorkflowInstanceLink;
+import com.liferay.portal.service.persistence.BasePersistence;
 
 /**
  * The persistence interface for the workflow instance link service.

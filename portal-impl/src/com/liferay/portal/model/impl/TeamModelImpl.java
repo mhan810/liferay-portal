@@ -25,6 +25,7 @@ import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.Team;
 import com.liferay.portal.model.TeamModel;
 import com.liferay.portal.model.TeamSoap;
+import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 

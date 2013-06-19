@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.model.Address;
 import com.liferay.portal.model.SystemEventConstants;
+import com.liferay.portal.service.persistence.SystemEventActionableDynamicQuery;
 import com.liferay.portal.util.PortalUtil;
 
 import java.util.Date;

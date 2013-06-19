@@ -15,6 +15,7 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.model.BackgroundTask;
+import com.liferay.portal.service.persistence.BasePersistence;
 
 /**
  * The persistence interface for the background task service.

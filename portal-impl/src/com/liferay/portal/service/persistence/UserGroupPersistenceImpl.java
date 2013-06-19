@@ -49,6 +49,10 @@ import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.model.impl.UserGroupImpl;
 import com.liferay.portal.model.impl.UserGroupModelImpl;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.persistence.GroupPersistence;
+import com.liferay.portal.service.persistence.TeamPersistence;
+import com.liferay.portal.service.persistence.UserGroupPersistence;
+import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;
