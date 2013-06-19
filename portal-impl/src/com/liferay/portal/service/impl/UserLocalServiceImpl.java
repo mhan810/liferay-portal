@@ -999,8 +999,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		workflowServiceContext.setAttribute("sendEmail", sendEmail);
 
 		WorkflowHandlerRegistryUtil.startWorkflowInstance(
-				companyId, workflowUserId, User.class.getName(), userId,
-				user, workflowServiceContext);
+				companyId, workflowUserId, User.class.getName(), userId, user,
+				workflowServiceContext);
 
 		if (serviceContext != null) {
 			String passwordUnencrypted = (String)serviceContext.getAttribute(
