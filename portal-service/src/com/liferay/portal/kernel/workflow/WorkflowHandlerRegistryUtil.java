@@ -93,8 +93,8 @@ public class WorkflowHandlerRegistryUtil {
 		throws PortalException, SystemException {
 
 		if (!WorkflowThreadLocal.isEnabled() ||
-			serviceContext.getWorkflowAction() !=
-				WorkflowConstants.ACTION_PUBLISH) {
+			(serviceContext.getWorkflowAction() !=
+				WorkflowConstants.ACTION_PUBLISH)) {
 
 			return;
 		}
@@ -124,7 +124,6 @@ public class WorkflowHandlerRegistryUtil {
 		WorkflowDefinitionLink workflowDefinitionLink = null;
 
 		if (WorkflowEngineManagerUtil.isDeployed()) {
-
 			try {
 				workflowDefinitionLink =
 					workflowHandler.getWorkflowDefinitionLink(
