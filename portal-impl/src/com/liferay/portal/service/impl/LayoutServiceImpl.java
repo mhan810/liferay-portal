@@ -65,6 +65,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
+
 /**
  * Provides the remote service for accessing, adding, deleting, exporting,
  * importing, scheduling publishing of, and updating layouts. Its methods
@@ -321,13 +323,15 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 			fos = new FileOutputStream(file, true);
 			fos.write(bytes);
 			fos.flush();
-			fos.close();
 		}
 		catch (FileNotFoundException e) {
 			throw new PortalException(e);
 		}
 		catch (IOException e) {
 			throw new SystemException(e);
+		}
+		finally {
+			IOUtils.closeQuietly(fos);
 		}
 	}
 

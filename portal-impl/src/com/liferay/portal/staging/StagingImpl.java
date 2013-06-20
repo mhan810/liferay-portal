@@ -114,6 +114,8 @@ import javax.portlet.PortletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.IOUtils;
+
 /**
  * @author Raymond Augé
  * @author Bruno Farache
@@ -386,9 +388,7 @@ public class StagingImpl implements Staging {
 
 			FileUtil.delete(file);
 
-			if (inputStream != null) {
-				inputStream.close();
-			}
+			IOUtils.closeQuietly(inputStream);
 		}
 
 	}
