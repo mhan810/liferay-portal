@@ -46,7 +46,7 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "bookmarks";
 
 	public BookmarksPortletDataHandler() {
-		setDeletionSystemEventClassNames(
+		setDeletionSystemEventModelTypes(
 			BookmarksEntry.class.getName(), BookmarksFolder.class.getName());
 		setExportControls(
 			new PortletDataHandlerBoolean(

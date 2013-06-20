@@ -36,7 +36,7 @@ import java.util.Date;
  * @see com.liferay.portal.model.impl.TicketModelImpl
  * @generated
  */
-public interface TicketModel extends AttachedModel, BaseModel<Ticket> {
+public interface TicketModel extends AttachedModel, BaseModel<Ticket>, TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

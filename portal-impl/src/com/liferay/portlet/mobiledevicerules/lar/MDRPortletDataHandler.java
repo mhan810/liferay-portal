@@ -45,7 +45,7 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "mobile_device_rules";
 
 	public MDRPortletDataHandler() {
-		setDeletionSystemEventClassNames(
+		setDeletionSystemEventModelTypes(
 			MDRAction.class.getName(), MDRRuleGroup.class.getName(),
 			MDRRuleGroupInstance.class.getName());
 		setExportControls(
