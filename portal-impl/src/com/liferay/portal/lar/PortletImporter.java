@@ -575,6 +575,8 @@ public class PortletImporter {
 			_log.info("Importing portlet takes " + stopWatch.getTime() + " ms");
 		}
 
+		_deletionSystemEventImporter.importDeletions(portletDataContext);
+
 		zipReader.close();
 	}
 
@@ -1973,6 +1975,8 @@ public class PortletImporter {
 
 	private static Log _log = LogFactoryUtil.getLog(PortletImporter.class);
 
+	private DeletionSystemEventImporter _deletionSystemEventImporter =
+		new DeletionSystemEventImporter();
 	private Element _headerElement;
 	private PermissionImporter _permissionImporter = new PermissionImporter();
 	private Element _rootElement;
