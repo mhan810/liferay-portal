@@ -25,9 +25,13 @@ import com.liferay.portal.kernel.scheduler.CronTrigger;
 import com.liferay.portal.kernel.scheduler.SchedulerEngineHelperUtil;
 import com.liferay.portal.kernel.scheduler.StorageType;
 import com.liferay.portal.kernel.scheduler.Trigger;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.TempFileUtil;
+import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.messaging.LayoutsLocalPublisherRequest;
@@ -47,8 +51,12 @@ import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.util.PwdGenerator;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.ArrayList;
@@ -296,6 +304,62 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	}
 
 	/**
+	 * Add data to file marked with token.
+	 * To create token use  createImportFileToken() method
+	 */
+	public void addToImportFile(String token, byte[] bytes)
+			throws PortalException, SystemException {
+
+		File file = getFileFromToken(token);
+
+		if (!file.exists()) {
+			throw new SystemException("Token does not exist");
+		}
+
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(file, true);
+			fos.write(bytes);
+			fos.flush();
+			fos.close();
+		}
+		catch (FileNotFoundException e) {
+			throw new PortalException(e);
+		}
+		catch (IOException e) {
+			throw new SystemException(e);
+		}
+	}
+
+	/**
+	 * Create token to server to be used for transfer data with chucks.
+	 *
+	 * @return token
+	 *
+	 * @throws SystemException if a system exception occurred
+	 */
+	public String createImportFileToken()
+			throws PortalException, SystemException {
+
+		StringBundler sb = new StringBundler();
+
+		sb.append(Time.getTimestamp());
+		sb.append(PwdGenerator.getPassword(PwdGenerator.KEY2, 8));
+
+		String token = sb.toString();
+
+		File file = getFileFromToken(token);
+
+		try {
+			file.createNewFile();
+			return token;
+		}
+		catch (IOException e) {
+			throw new SystemException(e);
+		}
+	}
+
+	/**
 	 * Deletes the layout with the primary key, also deleting the layout's child
 	 * layouts, and associated resources.
 	 *
@@ -353,6 +417,19 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 
 		TempFileUtil.deleteTempFile(
 			groupId, getUserId(), fileName, tempFolderName);
+	}
+
+	/**
+	 * Delete to token that has been used for tokenized lar transfer
+	 *
+	 * @param token to be removed
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void deleteToken(String token)
+		throws PortalException, SystemException {
+
+		File file = getFileFromToken(token);
+		FileUtil.delete(file);
 	}
 
 	/**
@@ -893,6 +970,40 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 
 		layoutLocalService.importLayouts(
 			getUserId(), groupId, privateLayout, parameterMap, is);
+	}
+
+	/**
+	 * Imports the layouts that has been earlier transferred by using token.
+	 *
+	 * @param  groupId the primary key of the group
+	 * @param  privateLayout whether the layout is private to the group
+	 * @param  parameterMap the mapping of parameters indicating which
+	 *         information will be imported. For information on the keys used in
+	 *         the map see {@link
+	 *         com.liferay.portal.kernel.lar.PortletDataHandlerKeys}.
+	 * @param  token to be imported
+	 * @throws PortalException if a group with the primary key could not be
+	 *         found, if the group did not have permission to manage the
+	 *         layouts, or if some other portal exception occurred
+	 * @throws SystemException if a system exception occurred
+	 * @see    com.liferay.portal.lar.LayoutImporter
+	 * @see
+	 */
+
+	@Override
+	public void importLayouts(
+			long groupId, boolean privateLayout,
+			Map<String, String[]> parameterMap, String token)
+					throws PortalException, SystemException {
+
+		File file = getFileFromToken(token);
+
+		try {
+			importLayouts(groupId, privateLayout, parameterMap, file);
+		}
+		finally {
+			deleteToken(token);
+		}
 	}
 
 	@Override
@@ -1576,6 +1687,11 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		}
 
 		return filteredLayouts;
+	}
+
+	protected File getFileFromToken(String token) {
+		return new File(
+			SystemProperties.get(SystemProperties.TMP_DIR), token + ".lar");
 	}
 
 }
