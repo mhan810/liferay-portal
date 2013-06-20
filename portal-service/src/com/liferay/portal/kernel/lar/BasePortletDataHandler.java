@@ -319,6 +319,9 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 				}
 			}
 
+			portletDataContext.addDeletionSystemEventModelTypes(
+				getDeletionSystemEventModelTypes());
+
 			return doImportData(
 				portletDataContext, portletId, portletPreferences, data);
 		}
