@@ -38,7 +38,7 @@ import java.util.Date;
  * @generated
  */
 public interface WorkflowInstanceLinkModel extends AttachedModel,
-	BaseModel<WorkflowInstanceLink>, GroupedModel {
+	BaseModel<WorkflowInstanceLink>, GroupedModel, TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

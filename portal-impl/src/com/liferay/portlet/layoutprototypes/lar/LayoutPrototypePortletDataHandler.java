@@ -17,7 +17,6 @@ package com.liferay.portlet.layoutprototypes.lar;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.DataLevel;
-import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Element;
@@ -112,15 +111,10 @@ public class LayoutPrototypePortletDataHandler extends BasePortletDataHandler {
 			PortletDataContext portletDataContext)
 		throws Exception {
 
-		ManifestSummary manifestSummary =
-			portletDataContext.getManifestSummary();
-
 		ActionableDynamicQuery layoutPrototypeExportActionableDynamicQuery =
 			new LayoutPrototypeExportActionableDynamicQuery(portletDataContext);
 
-		manifestSummary.addModelAdditionCount(
-			LayoutPrototype.class,
-			layoutPrototypeExportActionableDynamicQuery.performCount());
+		layoutPrototypeExportActionableDynamicQuery.performCount();
 	}
 
 }

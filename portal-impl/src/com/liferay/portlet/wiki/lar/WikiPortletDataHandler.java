@@ -54,7 +54,7 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "wiki";
 
 	public WikiPortletDataHandler() {
-		setDeletionSystemEventClassNames(
+		setDeletionSystemEventModelTypes(
 			WikiNode.class.getName(), WikiPage.class.getName());
 		setExportControls(
 			new PortletDataHandlerBoolean(

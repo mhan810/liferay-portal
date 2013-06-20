@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import com.liferay.portal.kernel.lar.StagedModelType;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -1722,6 +1724,11 @@ public class UserWrapper implements User, ModelWrapper<User> {
 	@Override
 	public void setPasswordUnencrypted(java.lang.String passwordUnencrypted) {
 		_user.setPasswordUnencrypted(passwordUnencrypted);
+	}
+
+	@Override
+	public StagedModelType getStagedModelType() {
+		return _user.getStagedModelType();
 	}
 
 	/**
