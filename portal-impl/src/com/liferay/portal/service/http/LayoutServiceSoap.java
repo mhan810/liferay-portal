@@ -305,6 +305,76 @@ public class LayoutServiceSoap {
 	}
 
 	/**
+	* Add bytes to a LAR file from a remote server identified by the file ID.
+	*
+	* For creating a file ID the {@link #createImportLayoutsFileId()} method
+	* should be used.
+	*
+	* @param fileId the file identified the byte array belongs to
+	* @param bytes the byte array containing LAR data pieces from the remote
+	server
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void appendToImportLayoutsFile(java.lang.String fileId,
+		byte[] bytes) throws RemoteException {
+		try {
+			LayoutServiceUtil.appendToImportLayoutsFile(fileId, bytes);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
+	* Create a file ID to be used for transferring LAR data pieces in chucks.
+	*
+	* The file ID is being created using the {@link
+	* com.liferay.kernel.util.Time#getTimestamp()} and using the {@link
+	* com.liferay.util.PwdGenerator#getPassword(String, int)}.
+	*
+	* This method not only generate a new file ID but also creates a temporary
+	* file where the data pieces can be added later using {@link
+	* #appendToImportLayoutsFile(String, byte[])}.
+	*
+	* @return the file ID can be used for transferring LAR data pieces
+	* @throws SystemException if a system exception occurred (the temporary
+	file could not be created)
+	*/
+	public static java.lang.String createImportLayoutsFileId()
+		throws RemoteException {
+		try {
+			java.lang.String returnValue = LayoutServiceUtil.createImportLayoutsFileId();
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
+	* Delete to temporary file what has been created for a specific file ID.
+	*
+	* @param fileId the file identifier what has been used to create the
+	temporary file
+	*/
+	public static void deleteImportLayoutsFileForId(java.lang.String fileId)
+		throws RemoteException {
+		try {
+			LayoutServiceUtil.deleteImportLayoutsFileForId(fileId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
 	* Deletes the layout with the primary key, also deleting the layout's child
 	* layouts, and associated resources.
 	*
@@ -672,35 +742,32 @@ public class LayoutServiceSoap {
 	* @param groupId the primary key of the group
 	* @param privateLayout whether the layout is private to the group
 	* @param layoutId the primary key of the layout
-	* @param parentLayoutId the primary key of the layout's new parent
-	layout
+	* @param parentLayoutId the primary key of the layout's new parent layout
 	* @param localeNamesMap the layout's locales and localized names
 	* @param localeTitlesMap the layout's locales and localized titles
-	* @param descriptionMap the locales and localized descriptions to
-	merge (optionally <code>null</code>)
+	* @param descriptionMap the locales and localized descriptions to merge
+	(optionally <code>null</code>)
 	* @param keywordsMap the locales and localized keywords to merge
 	(optionally <code>null</code>)
-	* @param robotsMap the locales and localized robots to merge
-	(optionally <code>null</code>)
+	* @param robotsMap the locales and localized robots to merge (optionally
+	<code>null</code>)
 	* @param type the layout's new type (optionally {@link
 	com.liferay.portal.model.LayoutConstants#TYPE_PORTLET})
 	* @param hidden whether the layout is hidden
-	* @param friendlyURLMap the layout's locales and localized friendly
-	URLs. To see how the URL is normalized when accessed see
-	{@link
+	* @param friendlyURLMap the layout's locales and localized friendly URLs.
+	To see how the URL is normalized when accessed see {@link
 	com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil#normalize(
 	String)}.
 	* @param iconImage whether the icon image will be updated
 	* @param iconBytes the byte array of the layout's new icon image
 	* @param serviceContext the service context to be applied. Can set the
-	modification date and expando bridge attributes for the
-	layout.
+	modification date and expando bridge attributes for the layout.
 	* @return the updated layout
-	* @throws PortalException if a group or layout with the primary key
-	could not be found, if the user did not have permission to
-	update the layout, if a unique friendly URL could not be
-	generated, if a valid parent layout ID to use could not be
-	found, or if the layout parameters were invalid
+	* @throws PortalException if a group or layout with the primary key could
+	not be found, if the user did not have permission to update the
+	layout, if a unique friendly URL could not be generated, if a
+	valid parent layout ID to use could not be found, or if the
+	layout parameters were invalid
 	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.portal.model.LayoutSoap updateLayout(
