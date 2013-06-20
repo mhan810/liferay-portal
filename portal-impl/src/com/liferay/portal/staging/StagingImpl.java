@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.staging.Staging;
 import com.liferay.portal.kernel.staging.StagingConstants;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.DateRange;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -94,7 +95,10 @@ import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortalPreferences;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -275,11 +279,14 @@ public class StagingImpl implements Staging {
 			throw ree;
 		}
 
-		byte[] bytes = null;
+		File file = null;
+
+		_log.debug("create lar to be exported");
 
 		if (layoutIdMap == null) {
-			bytes = LayoutLocalServiceUtil.exportLayouts(
-				sourceGroupId, privateLayout, parameterMap, startDate, endDate);
+			file = LayoutLocalServiceUtil.exportLayoutsAsFile(
+				sourceGroupId, privateLayout, null, parameterMap, startDate,
+				endDate);
 		}
 		else {
 			List<Layout> layouts = new ArrayList<Layout>();
@@ -319,14 +326,71 @@ public class StagingImpl implements Staging {
 					RemoteExportException.NO_LAYOUTS);
 			}
 
-			bytes = LayoutLocalServiceUtil.exportLayouts(
-				sourceGroupId, privateLayout, layoutIds, parameterMap,
-				startDate, endDate);
+			file = LayoutLocalServiceUtil.exportLayoutsAsFile(
+					sourceGroupId, privateLayout, layoutIds, parameterMap,
+					startDate, endDate);
 		}
 
-		LayoutServiceHttp.importLayouts(
-			httpPrincipal, remoteGroupId, remotePrivateLayout, parameterMap,
-			bytes);
+		InputStream inputStream = null;
+
+		String token = null;
+
+		try {
+			long fileSize = file.length();
+
+			int bufferSize = 10*1024*1024;
+
+			byte[] bytes = new byte[bufferSize];
+
+			_log.debug("file transfer started");
+
+			inputStream = new BufferedInputStream(
+					new FileInputStream(file), 64*1024);
+
+			token = LayoutServiceHttp.createImportFileToken(httpPrincipal);
+
+			int length = inputStream.read(bytes);
+
+			long bytesCopied = 0;
+
+			while (length > 0) {
+				byte[] bytesToSend = bytes;
+
+				if (length < bufferSize) {
+					bytesToSend = new byte[length];
+					System.arraycopy(bytes, 0, bytesToSend, 0, length);
+				}
+
+				LayoutServiceHttp.addToImportFile(
+					httpPrincipal, token, bytesToSend);
+
+				bytesCopied = bytesCopied + bytesToSend.length;
+
+				_log.debug(
+					String.format(
+						"%d of %d bytes moved ", bytesCopied, fileSize));
+
+				length = inputStream.read(bytes);
+			}
+
+			_log.debug("file transfer completed");
+			LayoutServiceHttp.importLayouts(
+				httpPrincipal, remoteGroupId, remotePrivateLayout, parameterMap,
+				token);
+			_log.debug("import layouts completed");
+		}
+		finally {
+			if (token != null) {
+				LayoutServiceHttp.deleteToken(httpPrincipal, token);
+			}
+
+			FileUtil.delete(file);
+
+			if (inputStream != null) {
+				inputStream.close();
+			}
+		}
+
 	}
 
 	@Override
