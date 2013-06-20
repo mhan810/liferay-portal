@@ -338,7 +338,7 @@ public class StagingImpl implements Staging {
 		try {
 			long fileSize = file.length();
 
-			int bufferSize = 10*1024*1024;
+			int bufferSize = PropsValues.STAGING_REMOTE_TRANSFER_BUFFER_SIZE;
 
 			byte[] bytes = new byte[bufferSize];
 
