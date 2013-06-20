@@ -178,6 +178,9 @@ public class DeletionSystemEventExporter {
 		deletionSystemEventElement.addAttribute(
 			"uuid", systemEvent.getClassUuid());
 
+		deletionSystemEventElement.addAttribute(
+			"extra-data", systemEvent.getExtraData());
+
 		ManifestSummary manifestSummary =
 			portletDataContext.getManifestSummary();
 
