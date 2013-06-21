@@ -50,10 +50,12 @@ public class MBThreadFlagStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		MBThreadFlag mbThreadFlag =
-			MBThreadFlagLocalServiceUtil.getMBThreadFlagByUuidAndGroupId(
+			MBThreadFlagLocalServiceUtil.fetchMBThreadFlagByUuidAndGroupId(
 				uuid, groupId);
 
-		MBThreadFlagLocalServiceUtil.deleteThreadFlag(mbThreadFlag);
+		if (mbThreadFlag != null) {
+			MBThreadFlagLocalServiceUtil.deleteThreadFlag(mbThreadFlag);
+		}
 	}
 
 	@Override

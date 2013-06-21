@@ -55,10 +55,12 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 
 		MDRRuleGroupInstance mdrRuleGroupInstance =
 			MDRRuleGroupInstanceLocalServiceUtil.
-				getMDRRuleGroupInstanceByUuidAndGroupId(uuid, groupId);
+				fetchMDRRuleGroupInstanceByUuidAndGroupId(uuid, groupId);
 
-		MDRRuleGroupInstanceLocalServiceUtil.deleteRuleGroupInstance(
-			mdrRuleGroupInstance);
+		if (mdrRuleGroupInstance != null) {
+			MDRRuleGroupInstanceLocalServiceUtil.deleteRuleGroupInstance(
+				mdrRuleGroupInstance);
+		}
 	}
 
 	@Override

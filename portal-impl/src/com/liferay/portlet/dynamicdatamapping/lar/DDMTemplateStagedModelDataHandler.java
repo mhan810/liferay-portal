@@ -58,10 +58,12 @@ public class DDMTemplateStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		DDMTemplate ddmTemplate =
-			DDMTemplateLocalServiceUtil.getDDMTemplateByUuidAndGroupId(
+			DDMTemplateLocalServiceUtil.fetchDDMTemplateByUuidAndGroupId(
 				uuid, groupId);
 
-		DDMTemplateLocalServiceUtil.deleteTemplate(ddmTemplate);
+		if (ddmTemplate != null) {
+			DDMTemplateLocalServiceUtil.deleteTemplate(ddmTemplate);
+		}
 	}
 
 	@Override

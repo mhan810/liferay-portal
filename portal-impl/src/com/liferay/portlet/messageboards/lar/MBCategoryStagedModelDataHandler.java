@@ -44,10 +44,12 @@ public class MBCategoryStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		MBCategory mbCategory =
-			MBCategoryLocalServiceUtil.getMBCategoryByUuidAndGroupId(
+			MBCategoryLocalServiceUtil.fetchMBCategoryByUuidAndGroupId(
 				uuid, groupId);
 
-		MBCategoryLocalServiceUtil.deleteCategory(mbCategory);
+		if (mbCategory != null) {
+			MBCategoryLocalServiceUtil.deleteCategory(mbCategory);
+		}
 	}
 
 	@Override

@@ -50,8 +50,8 @@ public class DLFileEntryTypeStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		DLFileEntryType dlFileEntryType =
-			DLFileEntryTypeLocalServiceUtil.getDLFileEntryTypeByUuidAndGroupId(
-				uuid, groupId);
+			DLFileEntryTypeLocalServiceUtil.
+				fetchDLFileEntryTypeByUuidAndGroupId(uuid, groupId);
 
 		if (dlFileEntryType != null) {
 			DLFileEntryTypeLocalServiceUtil.deleteFileEntryType(

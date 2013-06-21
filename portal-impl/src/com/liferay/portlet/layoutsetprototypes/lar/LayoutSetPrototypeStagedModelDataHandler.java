@@ -66,11 +66,13 @@ public class LayoutSetPrototypeStagedModelDataHandler
 
 		LayoutSetPrototype layoutSetPrototype =
 			LayoutSetPrototypeLocalServiceUtil.
-				getLayoutSetPrototypeByUuidAndCompanyId(
+				fetchLayoutSetPrototypeByUuidAndCompanyId(
 					uuid, group.getCompanyId());
 
-		LayoutSetPrototypeLocalServiceUtil.deleteLayoutSetPrototype(
-			layoutSetPrototype);
+		if (layoutSetPrototype != null) {
+			LayoutSetPrototypeLocalServiceUtil.deleteLayoutSetPrototype(
+				layoutSetPrototype);
+		}
 	}
 
 	@Override
