@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.layoutsadmin.lar;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -208,14 +209,12 @@ public class LayoutStagedModelDataHandlerTest
 	}
 
 	@Override
-	protected StagedModel getStagedModel(String uuid, Group group) {
-		try {
-			return LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-				uuid, group.getGroupId(), false);
-		}
-		catch (Exception e) {
-			return null;
-		}
+	@Override
+	protected StagedModel getStagedModel(String uuid, Group group)
+		throws SystemException {
+
+		return LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
+			uuid, group.getGroupId(), false);
 	}
 
 	@Override
