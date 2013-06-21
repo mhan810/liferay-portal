@@ -100,33 +100,27 @@ public class MBThreadFlagStagedModelDataHandler
 			PortletDataContext portletDataContext, MBThreadFlag threadFlag)
 		throws Exception {
 
+		Element element = portletDataContext.getImportDataStagedModelElement(
+			threadFlag);
+
+		long rootMessageId = GetterUtil.getLong(
+			element.attributeValue("root-message-id"));
+
+		String rootMessagePath = ExportImportPathUtil.getModelPath(
+			portletDataContext, MBMessage.class.getName(), rootMessageId);
+
+		MBMessage rootMessage =
+			(MBMessage)portletDataContext.getZipEntryAsObject(rootMessagePath);
+
+		StagedModelDataHandlerUtil.importStagedModel(
+			portletDataContext, rootMessage);
+
 		Map<Long, Long> threadIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
 				MBThread.class);
 
 		long threadId = MapUtil.getLong(
 			threadIds, threadFlag.getThreadId(), threadFlag.getThreadId());
-
-		if (threadId == threadFlag.getThreadId()) {
-			Element element =
-				portletDataContext.getImportDataStagedModelElement(threadFlag);
-
-			long rootMessageId = GetterUtil.getLong(
-				element.attributeValue("root-message-id"));
-
-			String rootMessagePath = ExportImportPathUtil.getModelPath(
-				portletDataContext, MBMessage.class.getName(), rootMessageId);
-
-			MBMessage rootMessage =
-				(MBMessage)portletDataContext.getZipEntryAsObject(
-					rootMessagePath);
-
-			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, rootMessage);
-
-			threadId = MapUtil.getLong(
-				threadIds, threadFlag.getThreadId(), threadFlag.getThreadId());
-		}
 
 		MBThread thread = MBThreadUtil.fetchByPrimaryKey(threadId);
 
@@ -138,6 +132,8 @@ public class MBThreadFlagStagedModelDataHandler
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			threadFlag, MBPortletDataHandler.NAMESPACE);
+
+		serviceContext.setUuid(threadFlag.getUuid());
 
 		MBThreadFlagLocalServiceUtil.addThreadFlag(
 			userId, thread, serviceContext);
