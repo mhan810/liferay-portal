@@ -49,10 +49,12 @@ public class DLFileShortcutStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		DLFileShortcut dlFileShortcut =
-			DLFileShortcutLocalServiceUtil.getDLFileShortcutByUuidAndGroupId(
+			DLFileShortcutLocalServiceUtil.fetchDLFileShortcutByUuidAndGroupId(
 				uuid, groupId);
 
-		DLFileShortcutLocalServiceUtil.deleteFileShortcut(dlFileShortcut);
+		if (dlFileShortcut != null) {
+			DLFileShortcutLocalServiceUtil.deleteFileShortcut(dlFileShortcut);
+		}
 	}
 
 	@Override

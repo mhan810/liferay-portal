@@ -46,10 +46,12 @@ public class DDLRecordSetStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		DDLRecordSet ddlRecordSet =
-			DDLRecordSetLocalServiceUtil.getDDLRecordSetByUuidAndGroupId(
+			DDLRecordSetLocalServiceUtil.fetchDDLRecordSetByUuidAndGroupId(
 				uuid, groupId);
 
-		DDLRecordSetLocalServiceUtil.deleteRecordSet(ddlRecordSet);
+		if (ddlRecordSet != null) {
+			DDLRecordSetLocalServiceUtil.deleteRecordSet(ddlRecordSet);
+		}
 	}
 
 	@Override

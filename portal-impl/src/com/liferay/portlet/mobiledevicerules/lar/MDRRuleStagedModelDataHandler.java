@@ -44,10 +44,12 @@ public class MDRRuleStagedModelDataHandler
 			String uuid, long groupId, String className, String extraData)
 		throws PortalException, SystemException {
 
-		MDRRule mdrRule = MDRRuleLocalServiceUtil.getMDRRuleByUuidAndGroupId(
+		MDRRule mdrRule = MDRRuleLocalServiceUtil.fetchMDRRuleByUuidAndGroupId(
 			uuid, groupId);
 
-		MDRRuleLocalServiceUtil.deleteRule(mdrRule);
+		if (mdrRule != null) {
+			MDRRuleLocalServiceUtil.deleteRule(mdrRule);
+		}
 	}
 
 	@Override

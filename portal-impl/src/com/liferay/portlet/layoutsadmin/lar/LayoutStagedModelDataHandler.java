@@ -100,10 +100,13 @@ public class LayoutStagedModelDataHandler
 
 		boolean privateLayout = extraDataJSONObject.getBoolean("privateLayout");
 
-		Layout layout = LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
+		Layout layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
 			uuid, groupId, privateLayout);
 
-		LayoutLocalServiceUtil.deleteLayout(layout);
+		if (layout != null) {
+			LayoutLocalServiceUtil.deleteLayout(
+				layout, true, new ServiceContext());
+		}
 	}
 
 	@Override

@@ -44,10 +44,12 @@ public class JournalFolderStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		JournalFolder folder =
-			JournalFolderLocalServiceUtil.getJournalFolderByUuidAndGroupId(
+			JournalFolderLocalServiceUtil.fetchJournalFolderByUuidAndGroupId(
 				uuid, groupId);
 
-		JournalFolderLocalServiceUtil.deleteFolder(folder);
+		if (folder != null) {
+			JournalFolderLocalServiceUtil.deleteFolder(folder);
+		}
 	}
 
 	@Override

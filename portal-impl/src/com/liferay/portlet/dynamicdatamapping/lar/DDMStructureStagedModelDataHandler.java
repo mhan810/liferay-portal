@@ -48,10 +48,12 @@ public class DDMStructureStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		DDMStructure ddmStructure =
-			DDMStructureLocalServiceUtil.getDDMStructureByUuidAndGroupId(
+			DDMStructureLocalServiceUtil.fetchDDMStructureByUuidAndGroupId(
 				uuid, groupId);
 
-		DDMStructureLocalServiceUtil.deleteStructure(ddmStructure);
+		if (ddmStructure != null) {
+			DDMStructureLocalServiceUtil.deleteStructure(ddmStructure);
+		}
 	}
 
 	@Override

@@ -54,10 +54,12 @@ public class MDRActionStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		MDRAction mdrAction =
-			MDRActionLocalServiceUtil.getMDRActionByUuidAndGroupId(
+			MDRActionLocalServiceUtil.fetchMDRActionByUuidAndGroupId(
 				uuid, groupId);
 
-		MDRActionLocalServiceUtil.deleteAction(mdrAction);
+		if (mdrAction != null) {
+			MDRActionLocalServiceUtil.deleteAction(mdrAction);
+		}
 	}
 
 	@Override

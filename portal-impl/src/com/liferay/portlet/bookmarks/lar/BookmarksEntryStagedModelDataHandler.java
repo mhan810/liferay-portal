@@ -46,10 +46,12 @@ public class BookmarksEntryStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		BookmarksEntry entry =
-			BookmarksEntryLocalServiceUtil.getBookmarksEntryByUuidAndGroupId(
+			BookmarksEntryLocalServiceUtil.fetchBookmarksEntryByUuidAndGroupId(
 				uuid, groupId);
 
-		BookmarksEntryLocalServiceUtil.deleteEntry(entry);
+		if (entry != null) {
+			BookmarksEntryLocalServiceUtil.deleteEntry(entry);
+		}
 	}
 
 	@Override

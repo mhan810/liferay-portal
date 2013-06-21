@@ -39,10 +39,12 @@ public class MDRRuleGroupStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		MDRRuleGroup mdrRuleGroup =
-			MDRRuleGroupLocalServiceUtil.getMDRRuleGroupByUuidAndGroupId(
+			MDRRuleGroupLocalServiceUtil.fetchMDRRuleGroupByUuidAndGroupId(
 				uuid, groupId);
 
-		MDRRuleGroupLocalServiceUtil.deleteRuleGroup(mdrRuleGroup);
+		if (mdrRuleGroup != null) {
+			MDRRuleGroupLocalServiceUtil.deleteRuleGroup(mdrRuleGroup);
+		}
 	}
 
 	@Override

@@ -42,10 +42,12 @@ public class MBBanStagedModelDataHandler
 			String uuid, long groupId, String className, String extraData)
 		throws PortalException, SystemException {
 
-		MBBan mbBan = MBBanLocalServiceUtil.getMBBanByUuidAndGroupId(
+		MBBan mbBan = MBBanLocalServiceUtil.fetchMBBanByUuidAndGroupId(
 			uuid, groupId);
 
-		MBBanLocalServiceUtil.deleteBan(mbBan);
+		if (mbBan != null) {
+			MBBanLocalServiceUtil.deleteBan(mbBan);
+		}
 	}
 
 	@Override
@@ -95,6 +97,8 @@ public class MBBanStagedModelDataHandler
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			ban, MBPortletDataHandler.NAMESPACE);
+
+		serviceContext.setUuid(ban.getUuid());
 
 		MBBanLocalServiceUtil.addBan(userId, user.getUserId(), serviceContext);
 	}

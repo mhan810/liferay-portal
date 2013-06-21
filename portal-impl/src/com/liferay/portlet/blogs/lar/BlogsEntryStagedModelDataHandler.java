@@ -52,10 +52,12 @@ public class BlogsEntryStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		BlogsEntry entry =
-			BlogsEntryLocalServiceUtil.getBlogsEntryByUuidAndGroupId(
+			BlogsEntryLocalServiceUtil.fetchBlogsEntryByUuidAndGroupId(
 				uuid, groupId);
 
-		BlogsEntryLocalServiceUtil.deleteEntry(entry);
+		if (entry != null) {
+			BlogsEntryLocalServiceUtil.deleteEntry(entry);
+		}
 	}
 
 	@Override
