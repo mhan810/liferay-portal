@@ -86,10 +86,12 @@ public class FileEntryStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		DLFileEntry dlFileEntry =
-			DLFileEntryLocalServiceUtil.getDLFileEntryByUuidAndGroupId(
+			DLFileEntryLocalServiceUtil.fetchDLFileEntryByUuidAndGroupId(
 				uuid, groupId);
 
-		DLFileEntryLocalServiceUtil.deleteFileEntry(dlFileEntry);
+		if (dlFileEntry != null) {
+			DLFileEntryLocalServiceUtil.deleteFileEntry(dlFileEntry);
+		}
 	}
 
 	@Override

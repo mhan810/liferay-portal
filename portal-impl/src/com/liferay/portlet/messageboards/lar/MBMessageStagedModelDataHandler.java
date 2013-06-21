@@ -58,10 +58,12 @@ public class MBMessageStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		MBMessage mbMessage =
-			MBMessageLocalServiceUtil.getMBMessageByUuidAndGroupId(
+			MBMessageLocalServiceUtil.fetchMBMessageByUuidAndGroupId(
 				uuid, groupId);
 
-		MBMessageLocalServiceUtil.deleteMessage(mbMessage);
+		if (mbMessage != null) {
+			MBMessageLocalServiceUtil.deleteMessage(mbMessage);
+		}
 	}
 
 	@Override

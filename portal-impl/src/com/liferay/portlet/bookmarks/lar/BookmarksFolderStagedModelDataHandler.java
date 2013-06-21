@@ -44,10 +44,12 @@ public class BookmarksFolderStagedModelDataHandler
 		throws PortalException, SystemException {
 
 		BookmarksFolder folder =
-			BookmarksFolderLocalServiceUtil.getBookmarksFolderByUuidAndGroupId(
-				uuid, groupId);
+			BookmarksFolderLocalServiceUtil.
+				fetchBookmarksFolderByUuidAndGroupId(uuid, groupId);
 
-		BookmarksFolderLocalServiceUtil.deleteFolder(folder);
+		if (folder != null) {
+			BookmarksFolderLocalServiceUtil.deleteFolder(folder);
+		}
 	}
 
 	@Override

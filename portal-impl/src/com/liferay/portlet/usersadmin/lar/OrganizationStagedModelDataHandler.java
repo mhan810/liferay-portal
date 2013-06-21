@@ -69,7 +69,9 @@ public class OrganizationStagedModelDataHandler
 			OrganizationLocalServiceUtil.fetchOrganizationByUuidAndCompanyId(
 				uuid, group.getCompanyId());
 
-		OrganizationLocalServiceUtil.deleteOrganization(organization);
+		if (organization != null) {
+			OrganizationLocalServiceUtil.deleteOrganization(organization);
+		}
 	}
 
 	@Override
