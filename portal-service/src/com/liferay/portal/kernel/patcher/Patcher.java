@@ -46,6 +46,8 @@ public interface Patcher {
 
 	public Properties getProperties();
 
+	public boolean isCompatible(String[] fixPacks);
+
 	public boolean isConfigured();
 
 }
