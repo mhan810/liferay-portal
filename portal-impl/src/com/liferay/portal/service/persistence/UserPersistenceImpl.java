@@ -49,6 +49,12 @@ import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.UserImpl;
 import com.liferay.portal.model.impl.UserModelImpl;
+import com.liferay.portal.service.persistence.GroupPersistence;
+import com.liferay.portal.service.persistence.OrganizationPersistence;
+import com.liferay.portal.service.persistence.RolePersistence;
+import com.liferay.portal.service.persistence.TeamPersistence;
+import com.liferay.portal.service.persistence.UserGroupPersistence;
+import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;

@@ -24,6 +24,7 @@ import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.model.UserGroupRoleModel;
 import com.liferay.portal.model.UserGroupRoleSoap;
+import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.persistence.UserGroupRolePK;
 import com.liferay.portal.util.PortalUtil;
 

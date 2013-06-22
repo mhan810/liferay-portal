@@ -48,6 +48,11 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.impl.GroupImpl;
 import com.liferay.portal.model.impl.GroupModelImpl;
+import com.liferay.portal.service.persistence.GroupPersistence;
+import com.liferay.portal.service.persistence.OrganizationPersistence;
+import com.liferay.portal.service.persistence.RolePersistence;
+import com.liferay.portal.service.persistence.UserGroupPersistence;
+import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;

@@ -15,6 +15,7 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.model.UserGroupRole;
+import com.liferay.portal.service.persistence.BasePersistence;
 
 /**
  * The persistence interface for the user group role service.

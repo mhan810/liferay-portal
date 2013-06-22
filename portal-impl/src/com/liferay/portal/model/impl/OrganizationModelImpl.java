@@ -25,6 +25,7 @@ import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.OrganizationModel;
 import com.liferay.portal.model.OrganizationSoap;
+import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 

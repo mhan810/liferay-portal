@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import com.liferay.portal.model.ModelWrapper;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

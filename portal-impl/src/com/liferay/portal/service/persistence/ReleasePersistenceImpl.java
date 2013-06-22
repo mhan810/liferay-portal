@@ -40,6 +40,7 @@ import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.Release;
 import com.liferay.portal.model.impl.ReleaseImpl;
 import com.liferay.portal.model.impl.ReleaseModelImpl;
+import com.liferay.portal.service.persistence.ReleasePersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;

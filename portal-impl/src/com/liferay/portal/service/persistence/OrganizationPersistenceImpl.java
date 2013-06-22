@@ -49,6 +49,9 @@ import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.impl.OrganizationImpl;
 import com.liferay.portal.model.impl.OrganizationModelImpl;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.persistence.GroupPersistence;
+import com.liferay.portal.service.persistence.OrganizationPersistence;
+import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;

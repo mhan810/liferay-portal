@@ -38,6 +38,7 @@ import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.UserGroupGroupRole;
 import com.liferay.portal.model.impl.UserGroupGroupRoleImpl;
 import com.liferay.portal.model.impl.UserGroupGroupRoleModelImpl;
+import com.liferay.portal.service.persistence.UserGroupGroupRolePersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;

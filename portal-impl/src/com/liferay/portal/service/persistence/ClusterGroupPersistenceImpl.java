@@ -36,6 +36,7 @@ import com.liferay.portal.model.ClusterGroup;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.impl.ClusterGroupImpl;
 import com.liferay.portal.model.impl.ClusterGroupModelImpl;
+import com.liferay.portal.service.persistence.ClusterGroupPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;

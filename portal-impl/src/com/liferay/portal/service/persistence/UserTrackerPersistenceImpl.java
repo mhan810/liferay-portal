@@ -39,6 +39,7 @@ import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.UserTracker;
 import com.liferay.portal.model.impl.UserTrackerImpl;
 import com.liferay.portal.model.impl.UserTrackerModelImpl;
+import com.liferay.portal.service.persistence.UserTrackerPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;

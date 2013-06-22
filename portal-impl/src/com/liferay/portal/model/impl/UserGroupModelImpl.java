@@ -25,6 +25,7 @@ import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.model.UserGroupModel;
 import com.liferay.portal.model.UserGroupSoap;
+import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 

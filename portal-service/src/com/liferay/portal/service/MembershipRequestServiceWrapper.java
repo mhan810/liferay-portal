@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import com.liferay.portal.service.ServiceWrapper;
+
 /**
  * Provides a wrapper for {@link MembershipRequestService}.
  *

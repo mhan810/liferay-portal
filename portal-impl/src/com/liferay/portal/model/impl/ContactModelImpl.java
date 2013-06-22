@@ -26,6 +26,7 @@ import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.Contact;
 import com.liferay.portal.model.ContactModel;
 import com.liferay.portal.model.ContactSoap;
+import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 
