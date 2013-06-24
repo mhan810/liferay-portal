@@ -37,7 +37,7 @@ public class SystemEventCacheModel implements CacheModel<SystemEvent>,
 	Externalizable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(23);
+		StringBundler sb = new StringBundler(29);
 
 		sb.append("{systemEventId=");
 		sb.append(systemEventId);
@@ -57,8 +57,14 @@ public class SystemEventCacheModel implements CacheModel<SystemEvent>,
 		sb.append(classPK);
 		sb.append(", classUuid=");
 		sb.append(classUuid);
+		sb.append(", referrerClassNameId=");
+		sb.append(referrerClassNameId);
 		sb.append(", type=");
 		sb.append(type);
+		sb.append(", eventSetId=");
+		sb.append(eventSetId);
+		sb.append(", parentSystemEventId=");
+		sb.append(parentSystemEventId);
 		sb.append(", extraData=");
 		sb.append(extraData);
 		sb.append("}");
@@ -99,7 +105,10 @@ public class SystemEventCacheModel implements CacheModel<SystemEvent>,
 			systemEventImpl.setClassUuid(classUuid);
 		}
 
+		systemEventImpl.setReferrerClassNameId(referrerClassNameId);
 		systemEventImpl.setType(type);
+		systemEventImpl.setEventSetId(eventSetId);
+		systemEventImpl.setParentSystemEventId(parentSystemEventId);
 
 		if (extraData == null) {
 			systemEventImpl.setExtraData(StringPool.BLANK);
@@ -124,7 +133,10 @@ public class SystemEventCacheModel implements CacheModel<SystemEvent>,
 		classNameId = objectInput.readLong();
 		classPK = objectInput.readLong();
 		classUuid = objectInput.readUTF();
+		referrerClassNameId = objectInput.readLong();
 		type = objectInput.readInt();
+		eventSetId = objectInput.readLong();
+		parentSystemEventId = objectInput.readLong();
 		extraData = objectInput.readUTF();
 	}
 
@@ -154,7 +166,10 @@ public class SystemEventCacheModel implements CacheModel<SystemEvent>,
 			objectOutput.writeUTF(classUuid);
 		}
 
+		objectOutput.writeLong(referrerClassNameId);
 		objectOutput.writeInt(type);
+		objectOutput.writeLong(eventSetId);
+		objectOutput.writeLong(parentSystemEventId);
 
 		if (extraData == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
@@ -173,6 +188,9 @@ public class SystemEventCacheModel implements CacheModel<SystemEvent>,
 	public long classNameId;
 	public long classPK;
 	public String classUuid;
+	public long referrerClassNameId;
 	public int type;
+	public long eventSetId;
+	public long parentSystemEventId;
 	public String extraData;
 }

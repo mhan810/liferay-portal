@@ -2050,7 +2050,10 @@ create table SystemEvent (
 	classNameId LONG,
 	classPK LONG,
 	classUuid VARCHAR(75) null,
+	referrerClassNameId LONG,
 	type_ INTEGER,
+	eventSetId LONG,
+	parentSystemEventId LONG,
 	extraData TEXT null
 );
 

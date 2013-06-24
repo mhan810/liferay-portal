@@ -26,6 +26,9 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.lar.MissingReferences;
 import com.liferay.portal.kernel.lar.PortletDataException;
+import com.liferay.portal.kernel.systemevents.SystemEvent;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntry;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -33,6 +36,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -57,6 +61,7 @@ import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.ResourcePermission;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.model.impl.VirtualLayout;
@@ -525,6 +530,9 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
+	@SystemEvent(
+		childAction = SystemEventConstants.ACTION_SKIP,
+		type = SystemEventConstants.TYPE_DELETE)
 	public void deleteLayout(
 			Layout layout, boolean updateLayoutSet,
 			ServiceContext serviceContext)
@@ -657,6 +665,17 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		if (updateLayoutSet) {
 			layoutSetLocalService.updatePageCount(
 				layout.getGroupId(), layout.isPrivateLayout());
+		}
+
+		SystemEventHierarchyEntry hierarchyEntry =
+			SystemEventHierarchyEntryThreadLocal.peek();
+
+		if ((hierarchyEntry != null) &&
+			hierarchyEntry.isCurrentAsset(
+				Layout.class.getName(), layout.getPlid())) {
+
+			hierarchyEntry.setExtraDataValue(
+				"privateLayout", StringUtil.valueOf(layout.isPrivateLayout()));
 		}
 	}
 
