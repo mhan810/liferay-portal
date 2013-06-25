@@ -102,6 +102,7 @@ boolean dlLinkToViewURL = false;
 boolean includeSystemPortlets = false;
 %>
 
+<%@ include file="/html/portlet/search/init-suggest.jsp" %>
 <%@ include file="/html/portlet/search/init-ext.jsp" %>
 
 <%!
