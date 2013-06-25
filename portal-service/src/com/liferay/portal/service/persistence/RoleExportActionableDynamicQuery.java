@@ -62,6 +62,14 @@ public class RoleExportActionableDynamicQuery extends RoleActionableDynamicQuery
 	@Override
 	protected void addCriteria(DynamicQuery dynamicQuery) {
 		_portletDataContext.addDateRangeCriteria(dynamicQuery, "modifiedDate");
+
+		if (getStagedModelType().getReferrerClassNameId() >= 0) {
+			Property classNameIdProperty = PropertyFactoryUtil.forName(
+					"classNameId");
+
+			dynamicQuery.add(classNameIdProperty.eq(getStagedModelType()
+														.getReferrerClassNameId()));
+		}
 	}
 
 	protected long getModelDeletionCount(final StagedModelType stagedModelType)
