@@ -14,12 +14,6 @@
 
 package com.liferay.portal.kernel.search;
 
-import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.util.PortletKeys;
-
-import java.util.Arrays;
-import java.util.Locale;
-
 /**
  * @author Michael C. Han
  */
@@ -31,44 +25,19 @@ public class QueryIndexingHitsProcessor implements HitsProcessor {
 	public boolean process(SearchContext searchContext, Hits hits)
 		throws SearchException {
 
-		float[] scores = hits.getScores();
+		QueryConfig queryConfig = searchContext.getQueryConfig();
 
-		if ((scores != null) && (scores.length != 0)) {
-			Arrays.sort(scores);
+		if (!queryConfig.isQueryIndexingEnabled()) {
+			return true;
+		}
 
-			if (scores[0] >= _scoresThreshold) {
-				addDocument(
-					searchContext.getCompanyId(), searchContext.getKeywords(),
-					searchContext.getLocale());
-			}
+		int threshold = queryConfig.getQueryIndexingThreshold();
+
+		if (hits.getLength() >= threshold) {
+			QuerySuggestionIndexerUtil.indexQuerySuggestion(searchContext);
 		}
 
 		return true;
 	}
-
-	public void setDocument(Document document) {
-		_document = document;
-	}
-
-	public void setScoresThreshold(float scoresThreshold) {
-		_scoresThreshold = scoresThreshold;
-	}
-
-	protected void addDocument(long companyId, String keywords, Locale locale)
-		throws SearchException {
-
-		Document document = (Document)_document.clone();
-
-		document.addKeyword(Field.COMPANY_ID, companyId);
-		document.addKeyword(Field.KEYWORD_SEARCH, keywords);
-		document.addKeyword(Field.LANGUAGE_ID, LocaleUtil.toLanguageId(locale));
-		document.addKeyword(Field.PORTLET_ID, PortletKeys.SEARCH);
-
-		SearchEngineUtil.addDocument(
-			SearchEngineUtil.getDefaultSearchEngineId(), companyId, document);
-	}
-
-	private Document _document;
-	private float _scoresThreshold = SCORES_THRESHOLD_DEFAULT;
 
 }
