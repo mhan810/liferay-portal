@@ -21,11 +21,13 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.systemevents.SystemEvent;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.asset.model.AssetEntry;
@@ -98,6 +100,9 @@ public class BookmarksFolderLocalServiceImpl
 
 	@Indexable(type = IndexableType.DELETE)
 	@Override
+	@SystemEvent(
+		childAction = SystemEventConstants.ACTION_SKIP, sendEvent = false,
+		type = SystemEventConstants.TYPE_DELETE)
 	public BookmarksFolder deleteFolder(BookmarksFolder folder)
 		throws PortalException, SystemException {
 
@@ -106,11 +111,12 @@ public class BookmarksFolderLocalServiceImpl
 
 	@Indexable(type = IndexableType.DELETE)
 	@Override
+	@SystemEvent(
+		childAction = SystemEventConstants.ACTION_SKIP, sendEvent = false,
+		type = SystemEventConstants.TYPE_DELETE)
 	public BookmarksFolder deleteFolder(
 			BookmarksFolder folder, boolean includeTrashedEntries)
 		throws PortalException, SystemException {
-
-		// Folders
 
 		List<BookmarksFolder> folders = bookmarksFolderPersistence.findByG_P_S(
 			folder.getGroupId(), folder.getFolderId(),
@@ -168,7 +174,7 @@ public class BookmarksFolderLocalServiceImpl
 		BookmarksFolder folder = bookmarksFolderPersistence.findByPrimaryKey(
 			folderId);
 
-		return deleteFolder(folder);
+		return bookmarksFolderLocalService.deleteFolder(folder);
 	}
 
 	@Indexable(type = IndexableType.DELETE)
@@ -180,7 +186,8 @@ public class BookmarksFolderLocalServiceImpl
 		BookmarksFolder folder = bookmarksFolderLocalService.getFolder(
 			folderId);
 
-		return deleteFolder(folder, includeTrashedEntries);
+		return bookmarksFolderLocalService.deleteFolder(
+			folder, includeTrashedEntries);
 	}
 
 	@Override

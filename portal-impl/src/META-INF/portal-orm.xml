@@ -1168,9 +1168,12 @@
 			<basic name="classNameId" />
 			<basic name="classPK" />
 			<basic name="classUuid" />
+			<basic name="referrerClassNameId" />
 			<basic name="type">
 				<column name="TYPE_" />
 			</basic>
+			<basic name="eventSetId" />
+			<basic name="parentSystemEventId" />
 			<basic name="extraData" />
 			<transient name="className" />
 			<transient name="modelAttributes" />
