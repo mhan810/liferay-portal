@@ -143,7 +143,7 @@ public class StagedModelType {
 
 	@Override
 	public String toString() {
-		if (_referrerClassNameId == 0) {
+		if (_referrerClassNameId <= 0) {
 			return _className;
 		}
 

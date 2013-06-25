@@ -55,6 +55,14 @@ public class ${entity.name}ExportActionableDynamicQuery extends ${entity.name}Ac
 	@Override
 	protected void addCriteria(DynamicQuery dynamicQuery) {
 		_portletDataContext.addDateRangeCriteria(dynamicQuery, "modifiedDate");
+
+		<#if entity.isTypedModel()>
+			if (getStagedModelType().getReferrerClassNameId() >= 0) {
+				Property classNameIdProperty = PropertyFactoryUtil.forName("classNameId");
+
+				dynamicQuery.add(classNameIdProperty.eq(getStagedModelType().getReferrerClassNameId()));
+			}
+		</#if>
 	}
 
 	protected long getModelDeletionCount(final StagedModelType stagedModelType) throws PortalException, SystemException {

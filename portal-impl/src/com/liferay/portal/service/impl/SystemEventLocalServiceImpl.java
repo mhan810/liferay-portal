@@ -124,7 +124,7 @@ public class SystemEventLocalServiceImpl
 
 		addSystemEvent(
 			0, groupId, group.getCompanyId(), className, classPK, classUuid,
-			type, null);
+			null, type, null);
 	}
 
 	@Override
