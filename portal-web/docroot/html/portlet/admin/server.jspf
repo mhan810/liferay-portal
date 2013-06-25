@@ -917,6 +917,19 @@ serverURL.setParameter("tabs3", tabs3);
 						</tr>
 						<tr>
 							<td>
+								<liferay-ui:message key="reload-related-queries" />
+							</td>
+							<td>
+
+								<%
+								String taglibReindexRelatedQueries = renderResponse.getNamespace() + "saveServer('reindexRelatedQueries');";
+								%>
+
+								<aui:button onClick="<%= taglibReindexRelatedQueries %>" value="execute" />
+							</td>
+						</tr>
+						<tr>
+							<td>
 								<liferay-ui:message key="reset-preview-and-thumbnail-files-for-documents-and-media-portlet" />
 							</td>
 							<td>
