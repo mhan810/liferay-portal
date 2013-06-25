@@ -917,7 +917,7 @@ serverURL.setParameter("tabs3", tabs3);
 						</tr>
 						<tr>
 							<td>
-								<liferay-ui:message key="reload-related-queries" />
+								<liferay-ui:message key="reindex-related-queries" />
 							</td>
 							<td>
 

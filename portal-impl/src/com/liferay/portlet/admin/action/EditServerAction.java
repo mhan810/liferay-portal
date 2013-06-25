@@ -198,7 +198,7 @@ public class EditServerAction extends PortletAction {
 		else if (cmd.equals("reindexDictionaries")) {
 			reindexDictionaries(actionRequest);
 		}
-		else if (cmd.equals("reloadRelatedQueries")) {
+		else if (cmd.equals("reindexRelatedQueries")) {
 			reindexRelatedQueries(actionRequest);
 		}
 		else if (cmd.equals("runScript")) {
