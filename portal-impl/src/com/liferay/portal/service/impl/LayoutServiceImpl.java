@@ -384,6 +384,18 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	}
 
 	/**
+	 * Delete to temporary file what has been created for a specific file ID.
+	 *
+	 * @param fileId the file identifier what has been used to create the
+	 *        temporary file
+	 */
+	public void deleteImportLayoutsFileForId(String fileId) {
+		File file = getImportLayoutsFileForId(fileId);
+
+		FileUtil.delete(file);
+	}
+
+	/**
 	 * Deletes the layout with the primary key, also deleting the layout's child
 	 * layouts, and associated resources.
 	 *
@@ -441,18 +453,6 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 
 		TempFileUtil.deleteTempFile(
 			groupId, getUserId(), fileName, tempFolderName);
-	}
-
-	/**
-	 * Delete to temporary file what has been created for a specific file ID.
-	 *
-	 * @param fileId the file identifier what has been used to create the
-	 *        temporary file
-	 */
-	public void deleteImportLayoutsFileForId(String fileId) {
-		File file = getImportLayoutsFileForId(fileId);
-
-		FileUtil.delete(file);
 	}
 
 	/**
