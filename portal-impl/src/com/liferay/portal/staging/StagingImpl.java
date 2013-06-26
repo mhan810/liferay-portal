@@ -342,9 +342,8 @@ public class StagingImpl implements Staging {
 		try {
 			long fileSize = file.length();
 
-			int bufferSize = PropsValues.STAGING_REMOTE_TRANSFER_BUFFER_SIZE;
-
-			byte[] bytes = new byte[bufferSize];
+			byte[] bytes =
+				new byte[PropsValues.STAGING_REMOTE_TRANSFER_BUFFER_SIZE];
 
 			if (_log.isDebugEnabled()) {
 				_log.debug("File transfer started");
@@ -362,7 +361,7 @@ public class StagingImpl implements Staging {
 			while (length > 0) {
 				byte[] bytesToSend = bytes;
 
-				if (length < bufferSize) {
+				if (length < PropsValues.STAGING_REMOTE_TRANSFER_BUFFER_SIZE) {
 					bytesToSend = new byte[length];
 
 					System.arraycopy(bytes, 0, bytesToSend, 0, length);
@@ -399,11 +398,10 @@ public class StagingImpl implements Staging {
 				LayoutServiceHttp.deleteToken(httpPrincipal, token);
 			}
 
-			FileUtil.delete(file);
-
 			IOUtils.closeQuietly(inputStream);
-		}
 
+			FileUtil.delete(file);
+		}
 	}
 
 	@Override

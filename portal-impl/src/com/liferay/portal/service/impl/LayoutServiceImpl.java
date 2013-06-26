@@ -54,7 +54,6 @@ import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.util.PwdGenerator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -327,10 +326,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 			fileOutputStream.write(bytes);
 			fileOutputStream.flush();
 		}
-		catch (FileNotFoundException e) {
-			throw new PortalException(e);
-		}
-		catch (IOException e) {
+		catch (Exception e) {
 			throw new SystemException(e);
 		}
 		finally {
@@ -357,7 +353,13 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		File file = getFileFromToken(token);
 
 		try {
-			file.createNewFile();
+			boolean createdSuccessFully = file.createNewFile();
+
+			if (!createdSuccessFully) {
+				throw new SystemException(
+					"Temporary file could not be created");
+			}
+
 			return token;
 		}
 		catch (IOException e) {
