@@ -337,7 +337,7 @@ public class StagingImpl implements Staging {
 
 		InputStream inputStream = null;
 
-		String token = null;
+		String fileId = null;
 
 		try {
 			long fileSize = file.length();
@@ -352,7 +352,7 @@ public class StagingImpl implements Staging {
 			inputStream = new BufferedInputStream(
 				new FileInputStream(file), 64 * 1024);
 
-			token = LayoutServiceHttp.createImportFileToken(httpPrincipal);
+			fileId = LayoutServiceHttp.createImportLayoutsFileId(httpPrincipal);
 
 			int length = inputStream.read(bytes);
 
@@ -367,8 +367,8 @@ public class StagingImpl implements Staging {
 					System.arraycopy(bytes, 0, bytesToSend, 0, length);
 				}
 
-				LayoutServiceHttp.addToImportFile(
-					httpPrincipal, token, bytesToSend);
+				LayoutServiceHttp.appendToImportLayoutsFile(
+					httpPrincipal, fileId, bytesToSend);
 
 				bytesCopied = bytesCopied + bytesToSend.length;
 
@@ -387,15 +387,16 @@ public class StagingImpl implements Staging {
 
 			LayoutServiceHttp.importLayouts(
 				httpPrincipal, remoteGroupId, remotePrivateLayout, parameterMap,
-				token);
+				fileId);
 
 			if (_log.isDebugEnabled()) {
 				_log.debug("Import layouts completed");
 			}
 		}
 		finally {
-			if (token != null) {
-				LayoutServiceHttp.deleteToken(httpPrincipal, token);
+			if (fileId != null) {
+				LayoutServiceHttp.deleteImportLayoutsFileForId(
+					httpPrincipal, fileId);
 			}
 
 			IOUtils.closeQuietly(inputStream);
