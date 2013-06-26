@@ -354,6 +354,32 @@ public class SearchEngineUtil {
 		}
 	}
 
+	public static void indexSuggestions(long companyId)
+		throws SearchException {
+
+		Set<String> searchEngineIds = getSearchEngineIds();
+
+		for (String searchEngineId : searchEngineIds) {
+			indexSuggestions(searchEngineId, companyId);
+		}
+	}
+
+	public static void indexSuggestions(String searchEngineId, long companyId)
+		throws SearchException {
+
+		SearchEngine searchEngine = getSearchEngine(searchEngineId);
+
+		SearchContext searchContext = new SearchContext();
+
+		searchContext.setCompanyId(companyId);
+		searchContext.setSearchEngineId(searchEngineId);
+
+		SpellCheckIndexWriter spellCheckIndexWriter =
+			searchEngine.getIndexWriter();
+
+		spellCheckIndexWriter.indexSuggestions(searchContext);
+	}
+
 	public static void indexDictionary(
 			String searchEngineId, long companyId, Locale locale)
 		throws SearchException {
