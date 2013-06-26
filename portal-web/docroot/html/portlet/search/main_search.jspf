@@ -143,7 +143,7 @@ boolean showMenu = advancedConfiguration || displayScopeFacet || displayAssetTyp
 
 	<aui:col cssClass="result" first="<%= !showMenu %>" span="10">
 
-		<%@include file="/html/portlet/search/main_search_suggest.jspf"%>
+		<%@include file="/html/portlet/search/main_search_suggest.jspf" %>
 
 		<liferay-ui:search-container
 			searchContainer="<%= mainSearchSearchContainer %>"

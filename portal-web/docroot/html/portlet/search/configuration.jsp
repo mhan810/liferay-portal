@@ -59,7 +59,7 @@
 
 	<br />
 
-	<%@ include file="/html/portlet/search/configuration_spell_check.jspf"%>
+	<%@ include file="/html/portlet/search/configuration_spell_check.jspf" %>
 
 	<aui:fieldset label="other-settings">
 		<c:if test="<%= permissionChecker.isCompanyAdmin() %>">

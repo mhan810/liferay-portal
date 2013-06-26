@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -27,11 +27,13 @@
 			%>
 
 			<aui:a href="javascript:;" onclick="<%= taglibSearchCollatedKeywords %>">
+
 				<%
 				KeywordsFormatter collatedKeywordsFormatter = new KeywordsFormatter(hits.getCollatedSpellCheckResult(), searchContext.getKeywords());
 				%>
 
-				<c:forEach var="suggestedKeyword" items="<%= collatedKeywordsFormatter.getSuggestedKeywords() %>">
+				<c:forEach items="<%= collatedKeywordsFormatter.getSuggestedKeywords() %>" var="suggestedKeyword">
+
 					<%
 					String suggestedKeyword = (String)pageContext.getAttribute("suggestedKeyword");
 					%>
@@ -54,29 +56,31 @@
 			<br />
 
 			<ul>
-				<c:forEach var="relatedQueryKeywords" items="<%= hits.getQuerySuggestions() %>">
+				<c:forEach items="<%= hits.getQuerySuggestions() %>" var="relatedQueryKeywords">
 
 					<%
 					String relatedQueryKeywords = (String)pageContext.getAttribute("relatedQueryKeywords");
 					String taglibSearchRelatedQuery = renderResponse.getNamespace() + "searchKeywords('" + HtmlUtil.escapeJS(relatedQueryKeywords) + "')";
 					%>
 
-					<c:if test="<%= Validator.isNotNull(relatedQueryKeywords) && !relatedQueryKeywords.equals(searchContext.getKeywords())%>">
+					<c:if test="<%= Validator.isNotNull(relatedQueryKeywords) && !relatedQueryKeywords.equals(searchContext.getKeywords()) %>">
 
 						<li>
 							<aui:a href="javascript:;" onclick="<%= taglibSearchRelatedQuery %>">
+
 								<%
 								KeywordsFormatter relatedQueryKeywordsFormatter = new KeywordsFormatter(relatedQueryKeywords, searchContext.getKeywords());
 								%>
 
-								<c:forEach var="relatedQueryKeyword" items="<%= relatedQueryKeywordsFormatter.getSuggestedKeywords() %>">
+								<c:forEach items="<%= relatedQueryKeywordsFormatter.getSuggestedKeywords() %>" var="relatedQueryKeyword">
+
 									<%
 									String relatedQueryKeyword = (String)pageContext.getAttribute("relatedQueryKeyword");
 									%>
 
-								    <span class='<%= relatedQueryKeywordsFormatter.isChanged(relatedQueryKeyword) ? "changed-keyword" : "unchanged-keyword" %>'>
+									<span class='<%= relatedQueryKeywordsFormatter.isChanged(relatedQueryKeyword) ? "changed-keyword" : "unchanged-keyword" %>'>
 										<%= HtmlUtil.escape(relatedQueryKeyword) %>
-								    </span>
+									</span>
 								</c:forEach>
 							</aui:a>
 						</li>

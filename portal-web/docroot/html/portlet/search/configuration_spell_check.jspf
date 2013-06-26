@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,8 +16,8 @@
 
 <%
 String namespace = liferayPortletResponse.getNamespace();
-String showOptionsMessage = LanguageUtil.get(pageContext, "show-spell-check-feature-options");
-String hideOptionsMessage = LanguageUtil.get(pageContext, "hide-spell-check-feature-options");
+String showOptionsMessage = LanguageUtil.get(pageContext, "show-spell-check-options");
+String hideOptionsMessage = LanguageUtil.get(pageContext, "hide-spell-check-options");
 %>
 
 <aui:fieldset label="spell-check-settings">
@@ -26,7 +26,7 @@ String hideOptionsMessage = LanguageUtil.get(pageContext, "hide-spell-check-feat
 	<div class='options-container <%= !autocompleteSuggestionsEnabled ? "aui-helper-hidden" : "" %>' id='<%= namespace + "autocompleteSuggestionsOptionsContainer" %>'>
 		<liferay-ui:toggle-area align="none" defaultShowContent="<%= autocompleteSuggestionsEnabled %>"
 								hideMessage="<%= hideOptionsMessage %>" id='<%= namespace + "autocompleteSuggestionsOptions" %>'
-								showMessage="<%= showOptionsMessage %>" >
+								showMessage="<%= showOptionsMessage %>">
 
 			<aui:input name="preferences--autocompleteSuggestionsMax--" size="10" type="text" value="<%= autocompleteSuggestionsMax %>" />
 
@@ -41,7 +41,7 @@ String hideOptionsMessage = LanguageUtil.get(pageContext, "hide-spell-check-feat
 	<div class='options-container <%= !collatedSpellCheckResultEnabled ? "aui-helper-hidden" : "" %>' id='<%= namespace + "collatedSpellCheckResultOptionsContainer" %>'>
 		<liferay-ui:toggle-area align="none" defaultShowContent="<%= collatedSpellCheckResultEnabled %>"
 								hideMessage="<%= hideOptionsMessage %>" id='<%= namespace + "collatedSpellCheckResultOptions" %>'
-								showMessage="<%= showOptionsMessage %>" >
+								showMessage="<%= showOptionsMessage %>">
 			<aui:input helpMessage="collated-spell-check-result-display-threshold-help" name="preferences--collatedSpellCheckResultDisplayThreshold--" size="10" type="text" value="<%= collatedSpellCheckResultDisplayThreshold %>" />
 		</liferay-ui:toggle-area>
 	</div>
@@ -51,7 +51,7 @@ String hideOptionsMessage = LanguageUtil.get(pageContext, "hide-spell-check-feat
 	<div class='options-container <%= !querySuggestionsEnabled ? "aui-helper-hidden" : "" %>' id='<%= namespace + "querySuggestionsOptionsContainer" %>'>
 		<liferay-ui:toggle-area align="none" defaultShowContent="<%= querySuggestionsEnabled %>"
 								hideMessage="<%= hideOptionsMessage %>" id='<%= namespace + "querySuggestionsOptions" %>'
-								showMessage="<%= showOptionsMessage %>" >
+								showMessage="<%= showOptionsMessage %>">
 			<aui:input name="preferences--querySuggestionsMax--" size="10" type="text" value="<%= querySuggestionsMax %>" />
 
 			<aui:input helpMessage="query-suggestions-display-threshold-help" name="preferences--querySuggestionsDisplayThreshold--" size="10" type="text" value="<%= querySuggestionsDisplayThreshold %>" />
@@ -63,7 +63,7 @@ String hideOptionsMessage = LanguageUtil.get(pageContext, "hide-spell-check-feat
 	<div class='options-container <%= !queryIndexingEnabled ? "aui-helper-hidden" : "" %>' id='<%= namespace + "queryIndexingOptionsContainer" %>'>
 		<liferay-ui:toggle-area align="none" defaultShowContent="<%= queryIndexingEnabled %>"
 								hideMessage="<%= hideOptionsMessage %>" id='<%= namespace + "queryIndexingOptions" %>'
-								showMessage="<%= showOptionsMessage %>" >
+								showMessage="<%= showOptionsMessage %>">
 
 			<aui:input helpMessage="query-indexing-threshold-help" name="preferences--queryIndexingThreshold--" size="10" type="text" value="<%= queryIndexingThreshold %>" />
 		</liferay-ui:toggle-area>
@@ -149,4 +149,3 @@ String hideOptionsMessage = LanguageUtil.get(pageContext, "hide-spell-check-feat
 		}
 	);
 </aui:script>
-
