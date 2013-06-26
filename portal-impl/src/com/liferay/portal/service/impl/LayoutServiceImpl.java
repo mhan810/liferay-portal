@@ -305,8 +305,15 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	}
 
 	/**
-	 * Add data to file marked with token.
-	 * To create token use  createImportFileToken() method
+	 * Add bytes to a LAR file from a remote server identified by the file ID.
+	 *
+	 * For creating a file ID the {@link #createImportLayoutsFileId()} method
+	 * should be used.
+	 *
+	 * @param  fileId the file identified the byte array belongs to
+	 * @param  bytes the byte array containing LAR data pieces from the remote
+	 *         server
+	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public void appendToImportLayoutsFile(String fileId, byte[] bytes)
@@ -336,11 +343,19 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	}
 
 	/**
-	 * Create token to server to be used for transfer data with chucks.
+	 * Create a file ID to be used for transferring LAR data pieces in chucks.
 	 *
-	 * @return token
+	 * The file ID is being created using the {@link
+	 * com.liferay.kernel.util.Time#getTimestamp()} and using the {@link
+	 * com.liferay.util.PwdGenerator#getPassword(String, int)}.
 	 *
-	 * @throws SystemException if a system exception occurred
+	 * This method not only generate a new file ID but also creates a temporary
+	 * file where the data pieces can be added later using {@link
+	 * #appendToImportLayoutsFile(String, byte[])}.
+	 *
+	 * @return the file ID can be used for transferring LAR data pieces
+	 * @throws SystemException if a system exception occurred (the temporary
+	 *         file could not be created)
 	 */
 	@Override
 	public String createImportLayoutsFileId() throws SystemException {
@@ -429,10 +444,10 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	}
 
 	/**
-	 * Delete to token that has been used for tokenized lar transfer
+	 * Delete to temporary file what has been created for a specific file ID.
 	 *
-	 * @param token to be removed
-	 * @throws SystemException if a system exception occurred
+	 * @param fileId the file identifier what has been used to create the
+	 *        temporary file
 	 */
 	public void deleteImportLayoutsFileForId(String fileId) {
 		File file = getImportLayoutsFileForId(fileId);
@@ -981,7 +996,8 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	}
 
 	/**
-	 * Imports the layouts that has been earlier transferred by using token.
+	 * Imports the layouts what has been earlier transferred by using a specific
+	 * file identifier.
 	 *
 	 * @param  groupId the primary key of the group
 	 * @param  privateLayout whether the layout is private to the group
@@ -989,7 +1005,8 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	 *         information will be imported. For information on the keys used in
 	 *         the map see {@link
 	 *         com.liferay.portal.kernel.lar.PortletDataHandlerKeys}.
-	 * @param  token to be imported
+	 * @param  fileId the file ID what has been used to transfer the LAR data
+	 *         chunks
 	 * @throws PortalException if a group with the primary key could not be
 	 *         found, if the group did not have permission to manage the
 	 *         layouts, or if some other portal exception occurred
@@ -1323,39 +1340,36 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	/**
 	 * Updates the layout with additional parameters.
 	 *
-	 * @param      groupId the primary key of the group
-	 * @param      privateLayout whether the layout is private to the group
-	 * @param      layoutId the primary key of the layout
-	 * @param      parentLayoutId the primary key of the layout's new parent
-	 *             layout
-	 * @param      localeNamesMap the layout's locales and localized names
-	 * @param      localeTitlesMap the layout's locales and localized titles
-	 * @param      descriptionMap the locales and localized descriptions to
-	 *             merge (optionally <code>null</code>)
-	 * @param      keywordsMap the locales and localized keywords to merge
-	 *             (optionally <code>null</code>)
-	 * @param      robotsMap the locales and localized robots to merge
-	 *             (optionally <code>null</code>)
-	 * @param      type the layout's new type (optionally {@link
-	 *             com.liferay.portal.model.LayoutConstants#TYPE_PORTLET})
-	 * @param      hidden whether the layout is hidden
-	 * @param      friendlyURLMap the layout's locales and localized friendly
-	 *             URLs. To see how the URL is normalized when accessed see
-	 *             {@link
-	 *             com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil#normalize(
-	 *             String)}.
-	 * @param      iconImage whether the icon image will be updated
-	 * @param      iconBytes the byte array of the layout's new icon image
-	 * @param      serviceContext the service context to be applied. Can set the
-	 *             modification date and expando bridge attributes for the
-	 *             layout.
-	 * @return     the updated layout
-	 * @throws     PortalException if a group or layout with the primary key
-	 *             could not be found, if the user did not have permission to
-	 *             update the layout, if a unique friendly URL could not be
-	 *             generated, if a valid parent layout ID to use could not be
-	 *             found, or if the layout parameters were invalid
-	 * @throws     SystemException if a system exception occurred
+	 * @param  groupId the primary key of the group
+	 * @param  privateLayout whether the layout is private to the group
+	 * @param  layoutId the primary key of the layout
+	 * @param  parentLayoutId the primary key of the layout's new parent layout
+	 * @param  localeNamesMap the layout's locales and localized names
+	 * @param  localeTitlesMap the layout's locales and localized titles
+	 * @param  descriptionMap the locales and localized descriptions to merge
+	 *         (optionally <code>null</code>)
+	 * @param  keywordsMap the locales and localized keywords to merge
+	 *         (optionally <code>null</code>)
+	 * @param  robotsMap the locales and localized robots to merge (optionally
+	 *         <code>null</code>)
+	 * @param  type the layout's new type (optionally {@link
+	 *         com.liferay.portal.model.LayoutConstants#TYPE_PORTLET})
+	 * @param  hidden whether the layout is hidden
+	 * @param  friendlyURLMap the layout's locales and localized friendly URLs.
+	 *         To see how the URL is normalized when accessed see {@link
+	 *         com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil#normalize(
+	 *         String)}.
+	 * @param  iconImage whether the icon image will be updated
+	 * @param  iconBytes the byte array of the layout's new icon image
+	 * @param  serviceContext the service context to be applied. Can set the
+	 *         modification date and expando bridge attributes for the layout.
+	 * @return the updated layout
+	 * @throws PortalException if a group or layout with the primary key could
+	 *         not be found, if the user did not have permission to update the
+	 *         layout, if a unique friendly URL could not be generated, if a
+	 *         valid parent layout ID to use could not be found, or if the
+	 *         layout parameters were invalid
+	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Layout updateLayout(
