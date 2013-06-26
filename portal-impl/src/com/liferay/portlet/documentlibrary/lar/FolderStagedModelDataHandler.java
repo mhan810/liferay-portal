@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.documentlibrary.lar;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -60,6 +62,20 @@ public class FolderStagedModelDataHandler
 	};
 
 	@Override
+	public void deleteStagedModel(
+			String uuid, long groupId, String className, String extraData)
+		throws PortalException, SystemException {
+
+		DLFolder folder =
+			DLFolderLocalServiceUtil.fetchDLFolderByUuidAndGroupId(
+				uuid, groupId);
+
+		if (folder != null) {
+			DLFolderLocalServiceUtil.deleteFolder(folder);
+		}
+	}
+
+	@Override
 	public String[] getClassNames() {
 		return CLASS_NAMES;
 	}
@@ -67,11 +83,6 @@ public class FolderStagedModelDataHandler
 	@Override
 	public String getDisplayName(Folder folder) {
 		return folder.getName();
-	}
-
-	@Override
-	public String getManifestSummaryKey(StagedModel stagedModel) {
-		return Folder.class.getName();
 	}
 
 	@Override

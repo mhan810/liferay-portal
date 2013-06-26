@@ -16,9 +16,14 @@ package com.liferay.portal.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntry;
+import com.liferay.portal.kernel.systemevents.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.SystemEvent;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.service.base.SystemEventLocalServiceBaseImpl;
@@ -27,30 +32,48 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Zsolt Berentey
  */
 public class SystemEventLocalServiceImpl
 	extends SystemEventLocalServiceBaseImpl {
 
 	@Override
 	public void addSystemEvent(
-			long userId, long groupId, String className, long classPK,
-			String classUuid, String referrerClassName, int type,
+			long userId, long groupId, long companyId, String className,
+			long classPK, String classUuid, String referrerClassName, int type,
 			String extraData)
 		throws PortalException, SystemException {
+
+		SystemEventHierarchyEntry systemEventHierarchyEntry =
+			SystemEventHierarchyEntryThreadLocal.peek();
+
+		long action = SystemEventConstants.ACTION_NONE;
+
+		if (systemEventHierarchyEntry != null) {
+			action = systemEventHierarchyEntry.getAction();
+
+			if ((action == SystemEventConstants.ACTION_SKIP) &&
+				!systemEventHierarchyEntry.isCurrentAsset(
+					className, classPK)) {
+
+				return;
+			}
+		}
 
 		if (userId == 0) {
 			userId = PrincipalThreadLocal.getUserId();
 		}
 
-		long companyId = 0;
 		String userName = StringPool.BLANK;
 
 		if (userId > 0) {
 			User user = userPersistence.findByPrimaryKey(userId);
 
-			companyId = user.getCompanyId();
 			userName = user.getFullName();
+
+			if (companyId == 0) {
+				companyId = user.getCompanyId();
+			}
 		}
 
 		if (companyId == 0) {
@@ -65,7 +88,30 @@ public class SystemEventLocalServiceImpl
 			}
 		}
 
-		long systemEventId = counterLocalService.increment();
+		Company company = companyLocalService.getCompany(companyId);
+
+		Group companyGroup = company.getGroup();
+
+		if (companyGroup.getGroupId() == groupId) {
+			groupId = 0;
+		}
+
+		if (Validator.isNotNull(referrerClassName) &&
+			referrerClassName.equals(className)) {
+
+			referrerClassName = null;
+		}
+
+		long systemEventId = 0;
+
+		if ((systemEventHierarchyEntry != null) &&
+			systemEventHierarchyEntry.isCurrentAsset(className, classPK)) {
+
+			systemEventId = systemEventHierarchyEntry.getSystemEventId();
+		}
+		else {
+			systemEventId = counterLocalService.increment();
+		}
 
 		SystemEvent systemEvent = systemEventPersistence.create(systemEventId);
 
@@ -80,6 +126,27 @@ public class SystemEventLocalServiceImpl
 		systemEvent.setReferrerClassName(referrerClassName);
 		systemEvent.setType(type);
 		systemEvent.setExtraData(extraData);
+
+		if ((action == SystemEventConstants.ACTION_GROUP) ||
+			(action == SystemEventConstants.ACTION_HIERARCHY)) {
+
+			systemEvent.setEventSetId(
+				systemEventHierarchyEntry.getEventSetId());
+		}
+		else {
+			systemEvent.setEventSetId(counterLocalService.increment());
+		}
+
+		if (action == SystemEventConstants.ACTION_HIERARCHY) {
+			if (systemEventHierarchyEntry.isCurrentAsset(className, classPK)) {
+				systemEvent.setParentSystemEventId(
+					systemEventHierarchyEntry.getParentSystemEventId());
+			}
+			else {
+				systemEvent.setParentSystemEventId(
+					systemEventHierarchyEntry.getSystemEventId());
+			}
+		}
 
 		systemEventPersistence.update(systemEvent);
 	}

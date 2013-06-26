@@ -89,8 +89,9 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		// System event
 
 		systemEventLocalService.addSystemEvent(
-			0, entry.getGroupId(), entry.getClassName(), entry.getClassPK(),
-			entry.getClassUuid(), null, SystemEventConstants.TYPE_DELETE, null);
+			0, entry.getGroupId(), entry.getCompanyId(), entry.getClassName(),
+			entry.getClassPK(), entry.getClassUuid(), null,
+			SystemEventConstants.TYPE_DELETE, StringPool.BLANK);
 
 		// Links
 

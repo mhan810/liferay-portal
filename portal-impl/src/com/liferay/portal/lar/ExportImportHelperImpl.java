@@ -15,6 +15,12 @@
 package com.liferay.portal.lar;
 
 import com.liferay.portal.LARFileException;
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Disjunction;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.DefaultConfigurationPortletDataHandler;
@@ -30,6 +36,7 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.StagedModelDataHandler;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -64,6 +71,7 @@ import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
@@ -71,6 +79,7 @@ import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.service.persistence.SystemEventActionableDynamicQuery;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
@@ -436,6 +445,81 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 	}
 
 	@Override
+	public long getModelDeletionCount(
+			final PortletDataContext portletDataContext,
+			final StagedModelType stagedModelType)
+		throws PortalException, SystemException {
+
+		ActionableDynamicQuery actionableDynamicQuery =
+			new SystemEventActionableDynamicQuery() {
+
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				Property companyIdProperty = PropertyFactoryUtil.forName(
+					"companyId");
+
+				dynamicQuery.add(
+					companyIdProperty.eq(portletDataContext.getCompanyId()));
+
+				Property groupIdProperty = PropertyFactoryUtil.forName(
+					"groupId");
+
+				Disjunction disjunction = RestrictionsFactoryUtil.disjunction();
+
+				disjunction.add(groupIdProperty.eq(0L));
+
+				disjunction.add(
+					groupIdProperty.eq(portletDataContext.getScopeGroupId()));
+
+				dynamicQuery.add(disjunction);
+
+				Property classNameIdProperty = PropertyFactoryUtil.forName(
+					"classNameId");
+
+				dynamicQuery.add(
+					classNameIdProperty.eq(stagedModelType.getClassNameId()));
+
+				Property referrerClassNameIdProperty =
+					PropertyFactoryUtil.forName("referrerClassNameId");
+
+				dynamicQuery.add(
+					referrerClassNameIdProperty.eq(
+						stagedModelType.getReferrerClassNameId()));
+
+				Property typeProperty = PropertyFactoryUtil.forName("type");
+
+				dynamicQuery.add(
+					typeProperty.eq(SystemEventConstants.TYPE_DELETE));
+
+				_addCreateDateProperty(dynamicQuery);
+			}
+
+			@Override
+			protected void performAction(Object object) {
+			}
+
+			private void _addCreateDateProperty(DynamicQuery dynamicQuery) {
+				if (!portletDataContext.hasDateRange()) {
+					return;
+				}
+
+				Property createDateProperty = PropertyFactoryUtil.forName(
+					"createDate");
+
+				Date startDate = portletDataContext.getStartDate();
+
+				dynamicQuery.add(createDateProperty.ge(startDate));
+
+				Date endDate = portletDataContext.getEndDate();
+
+				dynamicQuery.add(createDateProperty.le(endDate));
+			}
+		};
+
+		return actionableDynamicQuery.performCount();
+	}
+
+	@Override
 	public FileEntry getTempFileEntry(
 			long groupId, long userId, String folderName)
 		throws PortalException, SystemException {
@@ -773,7 +857,8 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 
 		List<Element> referenceDataElements =
 			portletDataContext.getReferenceDataElements(
-				entityElement, FileEntry.class);
+				entityElement, FileEntry.class,
+				PortletDataContext.REFERENCE_TYPE_DEPENDENCY);
 
 		for (Element referenceDataElement : referenceDataElements) {
 			String fileEntryUUID = referenceDataElement.attributeValue("uuid");
@@ -782,10 +867,14 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 				continue;
 			}
 
+			String path = referenceDataElement.attributeValue("path");
+
+			if (!content.contains("[$dl-reference=" + path + "$]")) {
+				continue;
+			}
+
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, referenceDataElement);
-
-			String path = referenceDataElement.attributeValue("path");
 
 			FileEntry fileEntry = null;
 

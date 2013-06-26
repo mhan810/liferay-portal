@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.lar.PortletDataContextListener;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -366,14 +367,11 @@ public class PortletDataContextImpl implements PortletDataContext {
 	}
 
 	@Override
-	public void addDeletionSystemEventClassNames(
-		String... deletionSystemEventClassNames) {
+	public void addDeletionSystemEventModelTypes(
+		StagedModelType... stagedModelTypes) {
 
-		for (String deletionSystemEventClassName :
-				deletionSystemEventClassNames) {
-
-			_deletionSystemEventClassNameIds.add(
-				PortalUtil.getClassNameId(deletionSystemEventClassName));
+		for (StagedModelType stagedModelType : stagedModelTypes) {
+			_deletionSystemEventModelTypes.add(stagedModelType);
 		}
 	}
 
@@ -844,8 +842,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 	}
 
 	@Override
-	public Set<Long> getDeletionSystemEventClassNameIds() {
-		return _deletionSystemEventClassNameIds;
+	public Set<StagedModelType> getDeletionSystemEventTypes() {
+		return _deletionSystemEventModelTypes;
 	}
 
 	@Override
@@ -1116,6 +1114,12 @@ public class PortletDataContextImpl implements PortletDataContext {
 			parentStagedModel, clazz, referenceType);
 
 		return getReferenceDataElements(referenceElements, clazz);
+	}
+
+	public List<Element> getReferenceElements(
+		StagedModel parentStagedModel, Class<?> clazz) {
+
+		return getReferenceElements(parentStagedModel, clazz, null);
 	}
 
 	@Override
@@ -2275,7 +2279,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 	private long _companyGroupId;
 	private long _companyId;
 	private String _dataStrategy;
-	private Set<Long> _deletionSystemEventClassNameIds = new HashSet<Long>();
+	private Set<StagedModelType> _deletionSystemEventModelTypes =
+		new HashSet<StagedModelType>();
 	private Date _endDate;
 	private Map<String, List<ExpandoColumn>> _expandoColumnsMap =
 		new HashMap<String, List<ExpandoColumn>>();

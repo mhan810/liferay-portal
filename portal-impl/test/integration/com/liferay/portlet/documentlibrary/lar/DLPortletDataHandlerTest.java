@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.documentlibrary.lar;
 
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
@@ -24,8 +25,16 @@ import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
+import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFileShortcutLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLAppTestUtil;
+
+import java.util.List;
 
 import org.junit.runner.RunWith;
 
@@ -58,6 +67,34 @@ public class DLPortletDataHandlerTest extends BasePortletDataHandlerTestCase {
 	@Override
 	protected PortletDataHandler createPortletDataHandler() {
 		return new DLPortletDataHandler();
+	}
+
+	@Override
+	protected void deleteStagedModels() throws Exception {
+		long groupId = stagingGroup.getGroupId();
+
+		List<DLFileShortcut> dlFileShortcuts =
+			DLFileShortcutLocalServiceUtil.getDLFileShortcuts(
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
+		for (DLFileShortcut dlFileShortcut : dlFileShortcuts) {
+			DLFileShortcutLocalServiceUtil.deleteFileShortcut(dlFileShortcut);
+		}
+
+		List<DLFileEntry> dlFileEntries =
+			DLFileEntryLocalServiceUtil.getFileEntries(
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
+		for (DLFileEntry fileEntry : dlFileEntries) {
+			DLFileEntryLocalServiceUtil.deleteFileEntry(fileEntry);
+		}
+
+		List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(
+			groupId, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+
+		for (DLFolder dlFolder : dlFolders) {
+			DLFolderLocalServiceUtil.deleteFolder(dlFolder);
+		}
 	}
 
 	@Override
