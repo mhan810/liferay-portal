@@ -309,8 +309,9 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	 * Add data to file marked with token.
 	 * To create token use  createImportFileToken() method
 	 */
+	@Override
 	public void addToImportFile(String token, byte[] bytes)
-			throws PortalException, SystemException {
+		throws SystemException {
 
 		File file = getFileFromToken(token);
 
@@ -318,11 +319,13 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 			throw new SystemException("Token does not exist");
 		}
 
-		FileOutputStream fos = null;
+		FileOutputStream fileOutputStream = null;
+
 		try {
-			fos = new FileOutputStream(file, true);
-			fos.write(bytes);
-			fos.flush();
+			fileOutputStream = new FileOutputStream(file, true);
+
+			fileOutputStream.write(bytes);
+			fileOutputStream.flush();
 		}
 		catch (FileNotFoundException e) {
 			throw new PortalException(e);
@@ -331,7 +334,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 			throw new SystemException(e);
 		}
 		finally {
-			IOUtils.closeQuietly(fos);
+			IOUtils.closeQuietly(fileOutputStream);
 		}
 	}
 
@@ -342,10 +345,9 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	 *
 	 * @throws SystemException if a system exception occurred
 	 */
-	public String createImportFileToken()
-			throws PortalException, SystemException {
-
-		StringBundler sb = new StringBundler();
+	@Override
+	public String createImportFileToken() throws SystemException {
+		StringBundler sb = new StringBundler(2);
 
 		sb.append(Time.getTimestamp());
 		sb.append(PwdGenerator.getPassword(PwdGenerator.KEY2, 8));
@@ -991,14 +993,12 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	 *         layouts, or if some other portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 * @see    com.liferay.portal.lar.LayoutImporter
-	 * @see
 	 */
-
 	@Override
 	public void importLayouts(
 			long groupId, boolean privateLayout,
 			Map<String, String[]> parameterMap, String token)
-					throws PortalException, SystemException {
+		throws PortalException, SystemException {
 
 		File file = getFileFromToken(token);
 

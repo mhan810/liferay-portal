@@ -331,8 +331,8 @@ public class StagingImpl implements Staging {
 			}
 
 			file = LayoutLocalServiceUtil.exportLayoutsAsFile(
-					sourceGroupId, privateLayout, layoutIds, parameterMap,
-					startDate, endDate);
+				sourceGroupId, privateLayout, layoutIds, parameterMap,
+				startDate, endDate);
 		}
 
 		InputStream inputStream = null;
@@ -351,7 +351,7 @@ public class StagingImpl implements Staging {
 			}
 
 			inputStream = new BufferedInputStream(
-					new FileInputStream(file), 64*1024);
+				new FileInputStream(file), 64 * 1024);
 
 			token = LayoutServiceHttp.createImportFileToken(httpPrincipal);
 
@@ -364,6 +364,7 @@ public class StagingImpl implements Staging {
 
 				if (length < bufferSize) {
 					bytesToSend = new byte[length];
+
 					System.arraycopy(bytes, 0, bytesToSend, 0, length);
 				}
 
