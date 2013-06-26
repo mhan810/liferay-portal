@@ -283,7 +283,9 @@ public class StagingImpl implements Staging {
 
 		File file = null;
 
-		_log.debug("create lar to be exported");
+		if (_log.isDebugEnabled()) {
+			_log.debug("Create LAR to be exported");
+		}
 
 		if (layoutIdMap == null) {
 			file = LayoutLocalServiceUtil.exportLayoutsAsFile(
@@ -344,7 +346,9 @@ public class StagingImpl implements Staging {
 
 			byte[] bytes = new byte[bufferSize];
 
-			_log.debug("file transfer started");
+			if (_log.isDebugEnabled()) {
+				_log.debug("File transfer started");
+			}
 
 			inputStream = new BufferedInputStream(
 					new FileInputStream(file), 64*1024);
@@ -368,18 +372,26 @@ public class StagingImpl implements Staging {
 
 				bytesCopied = bytesCopied + bytesToSend.length;
 
-				_log.debug(
-					String.format(
-						"%d of %d bytes moved ", bytesCopied, fileSize));
+				if (_log.isDebugEnabled()) {
+					_log.debug(
+						String.format(
+							"%d of %d bytes moved ", bytesCopied, fileSize));
+				}
 
 				length = inputStream.read(bytes);
 			}
 
-			_log.debug("file transfer completed");
+			if (_log.isDebugEnabled()) {
+				_log.debug("File transfer completed");
+			}
+
 			LayoutServiceHttp.importLayouts(
 				httpPrincipal, remoteGroupId, remotePrivateLayout, parameterMap,
 				token);
-			_log.debug("import layouts completed");
+
+			if (_log.isDebugEnabled()) {
+				_log.debug("Import layouts completed");
+			}
 		}
 		finally {
 			if (token != null) {
