@@ -17,7 +17,7 @@ package com.liferay.portal.kernel.search;
 /**
  * @author David Mendez Gonzalez
  */
-public interface CustomEntriesIndexer {
+public interface CustomEntryIndexer {
 
 	public static final long GLOBAL_GROUP_ID = 0L;
 
