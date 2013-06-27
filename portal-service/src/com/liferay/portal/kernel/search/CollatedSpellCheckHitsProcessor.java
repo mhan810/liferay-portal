@@ -42,9 +42,7 @@ public class CollatedSpellCheckHitsProcessor implements HitsProcessor {
 		String collatedKeywords = SearchEngineUtil.spellCheckKeywords(
 			searchContext);
 
-		if (_REMOVE_SUGGESTIONS_WHEN_EQUAL_TO_KEYWORDS &&
-			collatedKeywords.equals(searchContext.getKeywords())) {
-
+		if (collatedKeywords.equals(searchContext.getKeywords())) {
 			collatedKeywords = StringPool.BLANK;
 		}
 
@@ -52,8 +50,5 @@ public class CollatedSpellCheckHitsProcessor implements HitsProcessor {
 
 		return true;
 	}
-
-	private static final boolean
-		_REMOVE_SUGGESTIONS_WHEN_EQUAL_TO_KEYWORDS = true;
 
 }

@@ -43,16 +43,12 @@ public class QuerySuggestionHitsProcessor implements HitsProcessor {
 		String[] querySuggestions = SearchEngineUtil.suggestKeywordQueries(
 			searchContext, maxSuggestions);
 
-		if (_REMOVE_ORIGINAL_QUERY_FROM_SUGGESTIONS) {
-			querySuggestions = ArrayUtil.remove(
-				querySuggestions, searchContext.getKeywords());
-		}
+		querySuggestions = ArrayUtil.remove(
+			querySuggestions, searchContext.getKeywords());
 
 		hits.setQuerySuggestions(querySuggestions);
 
 		return true;
 	}
-
-	private static final boolean _REMOVE_ORIGINAL_QUERY_FROM_SUGGESTIONS = true;
 
 }
