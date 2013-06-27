@@ -35,6 +35,18 @@
 	<bean id="com.liferay.portal.kernel.repository.cmis.search.CMISSearchQueryBuilderUtil" class="com.liferay.portal.kernel.repository.cmis.search.CMISSearchQueryBuilderUtil">
 		<property name="cmisSearchQueryBuilder" ref="com.liferay.portal.kernel.repository.cmis.search.CMISSearchQueryBuilder" />
 	</bean>
+	<bean id="com.liferay.portal.kernel.search.DictionaryIndexerUtil" class="com.liferay.portal.kernel.search.DictionaryIndexerUtil" >
+		<property name="dictionaryIndexer">
+			<bean id="com.liferay.portal.kernel.search.DictionaryIndexer" class="com.liferay.portal.search.generic.DictionaryIndexerImpl" >
+				<property name="cacheKeyGenerator" ref="com.liferay.portal.cache.key.JavaMD5CacheKeyGenerator" />
+				<property name="document" ref="com.liferay.portal.kernel.search.Document" />
+			</bean>
+		</property>
+	</bean>
+	<bean id="com.liferay.portal.kernel.search.Document" class="com.liferay.portal.kernel.search.DocumentImpl" />
+	<bean id="com.liferay.portal.cache.key.JavaMD5CacheKeyGenerator" class="com.liferay.portal.cache.key.JavaMD5CacheKeyGenerator" >
+		<constructor-arg type="int" value="10" />
+	</bean>
 	<bean id="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilder" class="com.liferay.portal.repository.search.RepositorySearchQueryBuilderImpl">
 		<property name="analyzer" ref="org.apache.lucene.analysis.KeywordAnalyzer" />
 	</bean>
