@@ -20,7 +20,9 @@ import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
@@ -45,6 +47,21 @@ public class DLFileEntryTypeStagedModelDataHandler
 		{DLFileEntryType.class.getName()};
 
 	@Override
+	public void deleteStagedModel(
+			String uuid, long groupId, String className, String extraData)
+		throws PortalException, SystemException {
+
+		DLFileEntryType dlFileEntryType =
+			DLFileEntryTypeLocalServiceUtil.
+				fetchDLFileEntryTypeByUuidAndGroupId(uuid, groupId);
+
+		if (dlFileEntryType != null) {
+			DLFileEntryTypeLocalServiceUtil.deleteFileEntryType(
+				dlFileEntryType);
+		}
+	}
+
+	@Override
 	public String[] getClassNames() {
 		return CLASS_NAMES;
 	}
@@ -64,9 +81,13 @@ public class DLFileEntryTypeStagedModelDataHandler
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, ddmStructure);
 
-			portletDataContext.addReferenceElement(
+			Element referenceElement = portletDataContext.addReferenceElement(
 				fileEntryType, fileEntryTypeElement, ddmStructure,
 				PortletDataContext.REFERENCE_TYPE_STRONG, false);
+
+			referenceElement.addAttribute(
+				"structure-id",
+				StringUtil.valueOf(ddmStructure.getStructureId()));
 		}
 
 		portletDataContext.addClassedModel(
@@ -92,19 +113,27 @@ public class DLFileEntryTypeStagedModelDataHandler
 				portletDataContext, ddmStructureElement);
 		}
 
+		List<Element> ddmStructureReferenceElements =
+			portletDataContext.getReferenceElements(
+				fileEntryType, DDMStructure.class);
+
+		long[] ddmStructureIdsArray =
+			new long[ddmStructureReferenceElements.size()];
+
 		Map<Long, Long> ddmStructureIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
 				DDMStructure.class);
 
-		List<DDMStructure> ddmStructures = fileEntryType.getDDMStructures();
+		int i = 0;
 
-		long[] ddmStructureIdsArray = new long[ddmStructures.size()];
+		for (Element ddmStructureReferenceElement :
+				ddmStructureReferenceElements) {
 
-		for (int i = 0; i < ddmStructures.size(); i++) {
-			DDMStructure ddmStructure = ddmStructures.get(i);
+			long ddmStructureId = GetterUtil.getLong(
+				ddmStructureReferenceElement.attributeValue("class-pk"));
 
-			ddmStructureIdsArray[i] = MapUtil.getLong(
-				ddmStructureIds, ddmStructure.getStructureId());
+			ddmStructureIdsArray[i++] = MapUtil.getLong(
+				ddmStructureIds, ddmStructureId);
 		}
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(

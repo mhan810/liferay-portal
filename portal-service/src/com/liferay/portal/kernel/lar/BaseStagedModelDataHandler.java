@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
@@ -27,6 +29,11 @@ import com.liferay.portal.model.WorkflowedModel;
  */
 public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	implements StagedModelDataHandler<T> {
+
+	@Override
+	public abstract void deleteStagedModel(
+			String uuid, long groupId, String className, String extraData)
+		throws PortalException, SystemException;
 
 	@Override
 	public void exportStagedModel(
@@ -57,7 +64,7 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 					portletDataContext.getManifestSummary();
 
 				manifestSummary.incrementModelAdditionCount(
-					getManifestSummaryKey(stagedModel));
+					stagedModel.getStagedModelType());
 			}
 		}
 		catch (Exception e) {
@@ -79,15 +86,6 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	}
 
 	@Override
-	public String getManifestSummaryKey(StagedModel stagedModel) {
-		if (stagedModel == null) {
-			return getClassNames()[0];
-		}
-
-		return stagedModel.getModelClassName();
-	}
-
-	@Override
 	public void importStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException {
@@ -105,7 +103,7 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 				portletDataContext.getManifestSummary();
 
 			manifestSummary.incrementModelAdditionCount(
-				getManifestSummaryKey(stagedModel));
+				stagedModel.getStagedModelType());
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);

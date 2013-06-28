@@ -14,19 +14,24 @@
 
 package com.liferay.portlet.documentlibrary.lar;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
+import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.lar.BaseStagedModelDataHandlerTestCase;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
+import com.liferay.portal.repository.liferayrepository.model.LiferayFolder;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
+import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
-import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLAppTestUtil;
 
@@ -83,14 +88,36 @@ public class FileEntryStagedModelDataHandlerTest
 	}
 
 	@Override
-	protected StagedModel getStagedModel(String uuid, Group group) {
-		try {
-			return DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(
-				uuid, group.getGroupId());
-		}
-		catch (Exception e) {
-			return null;
-		}
+	protected void deleteStagedModel(
+			StagedModel stagedModel,
+			Map<String, List<StagedModel>> dependentStagedModelsMap,
+			Group group)
+		throws Exception {
+
+		DLFileEntryLocalServiceUtil.deleteFileEntry(
+			((LiferayFileEntry)stagedModel).getDLFileEntry());
+
+		List<StagedModel> dependentStagedModels = dependentStagedModelsMap.get(
+			Folder.class.getSimpleName());
+
+		LiferayFolder folder = (LiferayFolder)dependentStagedModels.get(0);
+
+		DLFolderLocalServiceUtil.deleteFolder((DLFolder)folder.getModel());
+	}
+
+	@Override
+	protected StagedModelType[] getDeletionSystemEventModelTypes() {
+		DLPortletDataHandler dlPortletDataHandler = new DLPortletDataHandler();
+
+		return dlPortletDataHandler.getDeletionSystemEventModelTypes();
+	}
+
+	@Override
+	protected StagedModel getStagedModel(String uuid, Group group)
+		throws SystemException {
+
+		return DLFileEntryLocalServiceUtil.fetchDLFileEntryByUuidAndGroupId(
+			uuid, group.getGroupId());
 	}
 
 	@Override
@@ -114,6 +141,26 @@ public class FileEntryStagedModelDataHandlerTest
 		}
 
 		return super.getStagedModelPath(groupId, stagedModel);
+	}
+
+	@Override
+	protected void validateDeletion(
+			Map<String, List<StagedModel>> dependentStagedModelsMap,
+			Group group)
+		throws Exception {
+
+		List<StagedModel> dependentStagedModels = dependentStagedModelsMap.get(
+			Folder.class.getSimpleName());
+
+		Assert.assertEquals(1, dependentStagedModels.size());
+
+		Folder folder = (Folder)dependentStagedModels.get(0);
+
+		DLFolder dlFolder =
+			DLFolderLocalServiceUtil.fetchDLFolderByUuidAndGroupId(
+				folder.getUuid(), group.getGroupId());
+
+		Assert.assertNull("Not Deleted: " + Folder.class, dlFolder);
 	}
 
 	@Override

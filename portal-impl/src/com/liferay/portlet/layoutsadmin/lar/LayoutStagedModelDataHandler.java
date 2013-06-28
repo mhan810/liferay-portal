@@ -18,6 +18,8 @@ import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -87,6 +89,29 @@ public class LayoutStagedModelDataHandler
 	extends BaseStagedModelDataHandler<Layout> {
 
 	public static final String[] CLASS_NAMES = {Layout.class.getName()};
+
+	@Override
+	public void deleteStagedModel(
+			String uuid, long groupId, String className, String extraData)
+		throws PortalException, SystemException {
+
+		boolean privateLayout = false;
+
+		if (Validator.isNotNull(extraData)) {
+			JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject(
+			extraData);
+
+			privateLayout = extraDataJSONObject.getBoolean("privateLayout");
+		}
+
+		Layout layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
+			uuid, groupId, privateLayout);
+
+		if (layout != null) {
+			LayoutLocalServiceUtil.deleteLayout(
+				layout, true, new ServiceContext());
+		}
+	}
 
 	@Override
 	public String[] getClassNames() {

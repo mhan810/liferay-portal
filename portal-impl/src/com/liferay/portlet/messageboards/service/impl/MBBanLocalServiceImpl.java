@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.systemevents.SystemEvent;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.model.SystemEventConstants;
@@ -84,7 +85,7 @@ public class MBBanLocalServiceImpl extends MBBanLocalServiceBaseImpl {
 	public void deleteBan(long banId) throws PortalException, SystemException {
 		MBBan ban = mbBanPersistence.findByPrimaryKey(banId);
 
-		deleteBan(ban);
+		mbBanLocalService.deleteBan(ban);
 	}
 
 	@Override
@@ -96,20 +97,16 @@ public class MBBanLocalServiceImpl extends MBBanLocalServiceBaseImpl {
 		try {
 			MBBan ban = mbBanPersistence.findByG_B(groupId, banUserId);
 
-			deleteBan(ban);
+			mbBanLocalService.deleteBan(ban);
 		}
 		catch (NoSuchBanException nsbe) {
 		}
 	}
 
 	@Override
+	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public void deleteBan(MBBan ban) throws PortalException, SystemException {
 		mbBanPersistence.remove(ban);
-
-		systemEventLocalService.addSystemEvent(
-			0, ban.getGroupId(), MBBan.class.getName(), ban.getBanId(),
-			ban.getUuid(), null, SystemEventConstants.TYPE_DELETE, null);
-
 	}
 
 	@Override

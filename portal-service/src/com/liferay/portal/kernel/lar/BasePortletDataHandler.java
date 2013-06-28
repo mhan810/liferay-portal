@@ -85,8 +85,8 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		}
 
 		try {
-			portletDataContext.addDeletionSystemEventClassNames(
-				getDeletionSystemEventClassNames());
+			portletDataContext.addDeletionSystemEventModelTypes(
+				getDeletionSystemEventModelTypes());
 
 			return doExportData(
 				portletDataContext, portletId, portletPreferences);
@@ -114,8 +114,8 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 	}
 
 	@Override
-	public String[] getDeletionSystemEventClassNames() {
-		return _deletionSystemEventClassNames;
+	public StagedModelType[] getDeletionSystemEventModelTypes() {
+		return _deletionSystemEventModelTypes;
 	}
 
 	@Override
@@ -319,6 +319,9 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 				}
 			}
 
+			portletDataContext.addDeletionSystemEventModelTypes(
+				getDeletionSystemEventModelTypes());
+
 			return doImportData(
 				portletDataContext, portletId, portletPreferences, data);
 		}
@@ -506,10 +509,10 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		_dataPortletPreferences = dataPortletPreferences;
 	}
 
-	protected void setDeletionSystemEventClassNames(
-		String... deletionSystemEventClassNames) {
+	protected void setDeletionSystemEventModelTypes(
+		StagedModelType... deletionSystemEventModelTypes) {
 
-		_deletionSystemEventClassNames = deletionSystemEventClassNames;
+		_deletionSystemEventModelTypes = deletionSystemEventModelTypes;
 	}
 
 	protected void setExportControls(
@@ -550,7 +553,8 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 	private DataLevel _dataLevel = DataLevel.SITE;
 	private boolean _dataLocalized;
 	private String[] _dataPortletPreferences = StringPool.EMPTY_ARRAY;
-	private String[] _deletionSystemEventClassNames = StringPool.EMPTY_ARRAY;
+	private StagedModelType[] _deletionSystemEventModelTypes =
+		new StagedModelType[0];
 	private PortletDataHandlerControl[] _exportControls =
 		new PortletDataHandlerControl[0];
 	private PortletDataHandlerControl[] _exportMetadataControls =

@@ -19,13 +19,13 @@ import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.messageboards.model.MBBan;
 import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBCategoryConstants;
 import com.liferay.portlet.messageboards.model.MBMessage;
-import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.model.MBThreadFlag;
 import com.liferay.portlet.messageboards.service.MBBanLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBCategoryLocalServiceUtil;
@@ -51,10 +51,11 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "message_boards";
 
 	public MBPortletDataHandler() {
-		setDeletionSystemEventClassNames(
-			MBBan.class.getName(), MBCategory.class.getName(),
-			MBMessage.class.getName(), MBThread.class.getName(),
-			MBThreadFlag.class.getName());
+		setDeletionSystemEventModelTypes(
+			new StagedModelType(MBBan.class),
+			new StagedModelType(MBCategory.class),
+			new StagedModelType(MBMessage.class),
+			new StagedModelType(MBThreadFlag.class));
 		setExportControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "messages", true, false, null,

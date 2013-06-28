@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.documentlibrary.lar;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -49,6 +51,7 @@ import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryMetadataLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil;
@@ -80,6 +83,20 @@ public class FileEntryStagedModelDataHandler
 	};
 
 	@Override
+	public void deleteStagedModel(
+			String uuid, long groupId, String className, String extraData)
+		throws PortalException, SystemException {
+
+		DLFileEntry dlFileEntry =
+			DLFileEntryLocalServiceUtil.fetchDLFileEntryByUuidAndGroupId(
+				uuid, groupId);
+
+		if (dlFileEntry != null) {
+			DLFileEntryLocalServiceUtil.deleteFileEntry(dlFileEntry);
+		}
+	}
+
+	@Override
 	public String[] getClassNames() {
 		return CLASS_NAMES;
 	}
@@ -87,11 +104,6 @@ public class FileEntryStagedModelDataHandler
 	@Override
 	public String getDisplayName(FileEntry fileEntry) {
 		return fileEntry.getTitle();
-	}
-
-	@Override
-	public String getManifestSummaryKey(StagedModel stagedModel) {
-		return FileEntry.class.getName();
 	}
 
 	@Override

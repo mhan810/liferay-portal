@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.lar.DataLevel;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.Team;
@@ -47,9 +48,8 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "roles_admin";
 
 	public RolesAdminPortletDataHandler() {
-		super();
-
 		setDataLevel(DataLevel.PORTAL);
+		setDeletionSystemEventModelTypes(new StagedModelType(Role.class));
 		setExportControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "system-roles", true, false));
@@ -96,41 +96,41 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 		ActionableDynamicQuery actionableDynamicQuery =
 			new RoleExportActionableDynamicQuery(portletDataContext) {
 
-				@Override
-				protected void addCriteria(DynamicQuery dynamicQuery) {
-					super.addCriteria(dynamicQuery);
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				super.addCriteria(dynamicQuery);
 
-					long classNameId = PortalUtil.getClassNameId(Team.class);
+				long classNameId = PortalUtil.getClassNameId(Team.class);
 
-					Property classNameIdProperty = PropertyFactoryUtil.forName(
-						"classNameId");
+				Property classNameIdProperty = PropertyFactoryUtil.forName(
+					"classNameId");
 
-					dynamicQuery.add(classNameIdProperty.ne(classNameId));
+				dynamicQuery.add(classNameIdProperty.ne(classNameId));
+			}
+
+			@Override
+			protected void performAction(Object object)
+				throws PortalException, SystemException {
+
+				Role role = (Role)object;
+
+				if (!portletDataContext.getBooleanParameter(
+						NAMESPACE, "system-roles")) {
+
+					return;
 				}
 
-				@Override
-				protected void performAction(Object object)
-					throws PortalException, SystemException {
+				long defaultUserId = UserLocalServiceUtil.getDefaultUserId(
+					portletDataContext.getCompanyId());
 
-					Role role = (Role)object;
-
-					if (!portletDataContext.getBooleanParameter(
-							NAMESPACE, "system-roles")) {
-
-						return;
-					}
-
-					long defaultUserId = UserLocalServiceUtil.getDefaultUserId(
-						portletDataContext.getCompanyId());
-
-					if (role.getUserId() == defaultUserId) {
-						return;
-					}
-
-					super.performAction(object);
+				if (role.getUserId() == defaultUserId) {
+					return;
 				}
 
-			};
+				super.performAction(object);
+			}
+
+		};
 
 		actionableDynamicQuery.performActions();
 
