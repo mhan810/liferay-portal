@@ -12,25 +12,17 @@
  * details.
  */
 
-package com.liferay.util.bridges.jsf.sun;
-
-import com.sun.faces.renderkit.RenderKitFactoryImpl;
-
-import java.util.HashMap;
-
-import javax.faces.render.RenderKitFactory;
+package com.liferay.portal.model;
 
 /**
- * @author Brian Myunghun Kim
+ * @author Zsolt Berentey
  */
-public class LiferayRenderKitFactoryImpl extends RenderKitFactoryImpl {
+public interface TypedModel {
 
-	public LiferayRenderKitFactoryImpl() {
-		super();
+	public String getClassName();
 
-		renderKits = new HashMap<String, RenderKitFactory>();
+	public long getClassNameId();
 
-		addRenderKit(HTML_BASIC_RENDER_KIT, new LiferayRenderKitImpl());
-	}
+	public void setClassNameId(long classNameId);
 
 }

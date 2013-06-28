@@ -14,6 +14,9 @@
 
 package com.liferay.portal.model;
 
+import com.liferay.portal.kernel.lar.StagedModelType;
+import com.liferay.portal.kernel.util.Validator;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -580,6 +583,30 @@ public class PhoneWrapper implements Phone, ModelWrapper<Phone> {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _phone.getType();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof PhoneWrapper)) {
+			return false;
+		}
+
+		PhoneWrapper phoneWrapper = (PhoneWrapper)obj;
+
+		if (Validator.equals(_phone, phoneWrapper._phone)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public StagedModelType getStagedModelType() {
+		return _phone.getStagedModelType();
 	}
 
 	/**

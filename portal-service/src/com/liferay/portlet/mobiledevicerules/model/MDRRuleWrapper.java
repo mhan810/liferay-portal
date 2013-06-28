@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.mobiledevicerules.model;
 
+import com.liferay.portal.kernel.lar.StagedModelType;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
 import java.util.Date;
@@ -811,6 +813,30 @@ public class MDRRuleWrapper implements MDRRule, ModelWrapper<MDRRule> {
 	public void setTypeSettingsProperties(
 		com.liferay.portal.kernel.util.UnicodeProperties typeSettingsProperties) {
 		_mdrRule.setTypeSettingsProperties(typeSettingsProperties);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof MDRRuleWrapper)) {
+			return false;
+		}
+
+		MDRRuleWrapper mdrRuleWrapper = (MDRRuleWrapper)obj;
+
+		if (Validator.equals(_mdrRule, mdrRuleWrapper._mdrRule)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public StagedModelType getStagedModelType() {
+		return _mdrRule.getStagedModelType();
 	}
 
 	/**

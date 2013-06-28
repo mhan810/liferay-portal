@@ -14,8 +14,11 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.model.WorkflowedModel;
 
 /**
  * @author Mate Thurzo
@@ -36,6 +39,16 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 			return;
 		}
 
+		if (stagedModel instanceof WorkflowedModel) {
+			WorkflowedModel workflowedModel = (WorkflowedModel)stagedModel;
+
+			if (!ArrayUtil.contains(
+					getExportableStatuses(), workflowedModel.getStatus())) {
+
+				return;
+			}
+		}
+
 		try {
 			doExportStagedModel(portletDataContext, (T)stagedModel.clone());
 
@@ -44,7 +57,7 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 					portletDataContext.getManifestSummary();
 
 				manifestSummary.incrementModelAdditionCount(
-					getManifestSummaryKey(stagedModel));
+					stagedModel.getStagedModelType());
 			}
 		}
 		catch (Exception e) {
@@ -61,12 +74,8 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	}
 
 	@Override
-	public String getManifestSummaryKey(StagedModel stagedModel) {
-		if (stagedModel == null) {
-			return getClassNames()[0];
-		}
-
-		return stagedModel.getModelClassName();
+	public int[] getExportableStatuses() {
+		return new int[] {WorkflowConstants.STATUS_APPROVED};
 	}
 
 	@Override
@@ -87,7 +96,7 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 				portletDataContext.getManifestSummary();
 
 			manifestSummary.incrementModelAdditionCount(
-				getManifestSummaryKey(stagedModel));
+				stagedModel.getStagedModelType());
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);

@@ -12,17 +12,15 @@
  * details.
  */
 
-package com.liferay.taglib.faces.validator;
+package com.liferay.taglib.aui;
 
-import javax.faces.webapp.ValidatorTag;
+import com.liferay.taglib.aui.base.BaseIconTag;
 
 /**
- * @author Neil Griffin
+ * @author Eduardo Lundgren
+ * @author Bruno Basto
+ * @author Nathan Cavanaugh
+ * @author Julio Camarero
  */
-public class EmailAddressValidatorTag extends ValidatorTag {
-
-	public EmailAddressValidatorTag() {
-		setValidatorId(EmailAddressValidator.class.getName());
-	}
-
+public class IconTag extends BaseIconTag {
 }

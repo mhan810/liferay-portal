@@ -14,6 +14,9 @@
 
 package com.liferay.portal.model;
 
+import com.liferay.portal.kernel.lar.StagedModelType;
+import com.liferay.portal.kernel.util.Validator;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -2004,6 +2007,30 @@ public class LayoutWrapper implements Layout, ModelWrapper<Layout> {
 	public void setTypeSettingsProperties(
 		com.liferay.portal.kernel.util.UnicodeProperties typeSettingsProperties) {
 		_layout.setTypeSettingsProperties(typeSettingsProperties);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof LayoutWrapper)) {
+			return false;
+		}
+
+		LayoutWrapper layoutWrapper = (LayoutWrapper)obj;
+
+		if (Validator.equals(_layout, layoutWrapper._layout)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public StagedModelType getStagedModelType() {
+		return _layout.getStagedModelType();
 	}
 
 	/**

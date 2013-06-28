@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.model;
 
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
 import java.util.Date;
@@ -1551,6 +1552,11 @@ public class JournalArticleWrapper implements JournalArticle,
 	}
 
 	@Override
+	public com.liferay.portal.kernel.lar.StagedModelType getStagedModelType() {
+		return _journalArticle.getStagedModelType();
+	}
+
+	@Override
 	public com.liferay.portlet.journal.model.JournalFolder getTrashContainer() {
 		return _journalArticle.getTrashContainer();
 	}
@@ -1568,6 +1574,26 @@ public class JournalArticleWrapper implements JournalArticle,
 	@Override
 	public void setSmallImageType(java.lang.String smallImageType) {
 		_journalArticle.setSmallImageType(smallImageType);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof JournalArticleWrapper)) {
+			return false;
+		}
+
+		JournalArticleWrapper journalArticleWrapper = (JournalArticleWrapper)obj;
+
+		if (Validator.equals(_journalArticle,
+					journalArticleWrapper._journalArticle)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

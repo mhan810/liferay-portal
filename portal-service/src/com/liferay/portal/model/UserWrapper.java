@@ -14,6 +14,9 @@
 
 package com.liferay.portal.model;
 
+import com.liferay.portal.kernel.lar.StagedModelType;
+import com.liferay.portal.kernel.util.Validator;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -1794,6 +1797,30 @@ public class UserWrapper implements User, ModelWrapper<User> {
 	@Override
 	public void setPasswordUnencrypted(java.lang.String passwordUnencrypted) {
 		_user.setPasswordUnencrypted(passwordUnencrypted);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof UserWrapper)) {
+			return false;
+		}
+
+		UserWrapper userWrapper = (UserWrapper)obj;
+
+		if (Validator.equals(_user, userWrapper._user)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public StagedModelType getStagedModelType() {
+		return _user.getStagedModelType();
 	}
 
 	/**

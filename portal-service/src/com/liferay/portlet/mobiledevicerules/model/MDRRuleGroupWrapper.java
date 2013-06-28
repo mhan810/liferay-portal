@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.mobiledevicerules.model;
 
+import com.liferay.portal.kernel.lar.StagedModelType;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
 import java.util.Date;
@@ -726,6 +728,30 @@ public class MDRRuleGroupWrapper implements MDRRuleGroup,
 	public java.util.List<com.liferay.portlet.mobiledevicerules.model.MDRRule> getRules()
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _mdrRuleGroup.getRules();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof MDRRuleGroupWrapper)) {
+			return false;
+		}
+
+		MDRRuleGroupWrapper mdrRuleGroupWrapper = (MDRRuleGroupWrapper)obj;
+
+		if (Validator.equals(_mdrRuleGroup, mdrRuleGroupWrapper._mdrRuleGroup)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public StagedModelType getStagedModelType() {
+		return _mdrRuleGroup.getStagedModelType();
 	}
 
 	/**

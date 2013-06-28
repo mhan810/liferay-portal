@@ -1,3 +1,4 @@
+<%--
 /**
  * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
@@ -11,21 +12,25 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+--%>
 
-package com.liferay.util.bridges.jsf.common;
+<%@ include file="/html/taglib/aui/icon/init.jsp" %>
 
-/**
- * <p>
- * This class provides a set of string constants that describe typical outcomes
- * from JSF actions.
- * </p>
- *
- * @author Neil Griffin
- */
-public class ActionOutcomes {
+<liferay-util:buffer var="iconContent">
+	<i class="icon-<%= image %>"></i>
 
-	public static final String FAILURE = "Failure";
+	<liferay-ui:message key="<%= label %>" />
+</liferay-util:buffer>
 
-	public static final String SUCCESS = "Success";
-
-}
+<c:choose>
+	<c:when test="<%= Validator.isNotNull(url) %>">
+		<aui:a cssClass="<%= cssClass %>" data="<%= data %>" href="<%= url %>" id="<%= id %>" target="<%= target %>">
+			<%= iconContent %>
+		</aui:a>
+	</c:when>
+	<c:otherwise>
+		<span class="<%= cssClass %>" <%= AUIUtil.buildData(data) %> id="<%= id %>">
+			<%= iconContent %>
+		</span>
+	</c:otherwise>
+</c:choose>

@@ -1,3 +1,4 @@
+<%--
 /**
  * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
@@ -11,28 +12,4 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-
-package com.liferay.util.bridges.jsf.sun;
-
-import com.sun.faces.renderkit.RenderKitImpl;
-
-import java.io.Writer;
-
-import javax.faces.context.ResponseWriter;
-
-/**
- * @author Brian Myunghun Kim
- */
-public class LiferayRenderKitImpl extends RenderKitImpl {
-
-	@Override
-	public ResponseWriter createResponseWriter(
-		Writer writer, String contentTypeList, String characterEncoding) {
-
-		WriterWrapper writerWrapper = new WriterWrapper(writer);
-
-		return super.createResponseWriter(
-			writerWrapper, contentTypeList, characterEncoding);
-	}
-
-}
+--%>

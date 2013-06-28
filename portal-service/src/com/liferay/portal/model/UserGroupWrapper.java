@@ -14,6 +14,9 @@
 
 package com.liferay.portal.model;
 
+import com.liferay.portal.kernel.lar.StagedModelType;
+import com.liferay.portal.kernel.util.Validator;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -539,6 +542,30 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _userGroup.hasPublicLayouts();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof UserGroupWrapper)) {
+			return false;
+		}
+
+		UserGroupWrapper userGroupWrapper = (UserGroupWrapper)obj;
+
+		if (Validator.equals(_userGroup, userGroupWrapper._userGroup)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public StagedModelType getStagedModelType() {
+		return _userGroup.getStagedModelType();
 	}
 
 	/**
