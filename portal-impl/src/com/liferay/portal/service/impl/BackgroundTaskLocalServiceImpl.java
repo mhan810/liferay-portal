@@ -58,6 +58,7 @@ public class BackgroundTaskLocalServiceImpl
 		throws PortalException, SystemException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
+
 		Date now = new Date();
 
 		final long backgroundTaskId = counterLocalService.increment();
