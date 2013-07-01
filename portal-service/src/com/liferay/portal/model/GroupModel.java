@@ -329,6 +329,20 @@ public interface GroupModel extends AttachedModel, BaseModel<Group> {
 	 */
 	public void setActive(boolean active);
 
+	/**
+	 * Returns the staging group count of this group.
+	 *
+	 * @return the staging group count of this group
+	 */
+	public int getStagingGroupCount();
+
+	/**
+	 * Sets the staging group count of this group.
+	 *
+	 * @param stagingGroupCount the staging group count of this group
+	 */
+	public void setStagingGroupCount(int stagingGroupCount);
+
 	@Override
 	public boolean isNew();
 

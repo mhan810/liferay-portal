@@ -61,6 +61,17 @@ import java.rmi.RemoteException;
  * @generated
  */
 public class GroupServiceSoap {
+	public static void activateStaging(long groupId) throws RemoteException {
+		try {
+			GroupServiceUtil.activateStaging(groupId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	/**
 	* Adds a group.
 	*
@@ -208,6 +219,18 @@ public class GroupServiceSoap {
 		throws RemoteException {
 		try {
 			GroupServiceUtil.checkRemoteStagingGroup(groupId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void deactivateStaging(long groupId)
+		throws RemoteException {
+		try {
+			GroupServiceUtil.deactivateStaging(groupId);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -1110,6 +1133,18 @@ public class GroupServiceSoap {
 					typeSettings);
 
 			return com.liferay.portal.model.GroupSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void updateRemoteGroup(long groupId,
+		java.lang.String stagedPortletIds) throws RemoteException {
+		try {
+			GroupServiceUtil.updateRemoteGroup(groupId, stagedPortletIds);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

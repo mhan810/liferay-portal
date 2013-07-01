@@ -63,6 +63,7 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 		attributes.put("friendlyURL", getFriendlyURL());
 		attributes.put("site", getSite());
 		attributes.put("active", getActive());
+		attributes.put("stagingGroupCount", getStagingGroupCount());
 
 		return attributes;
 	}
@@ -163,6 +164,12 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 
 		if (active != null) {
 			setActive(active);
+		}
+
+		Integer stagingGroupCount = (Integer)attributes.get("stagingGroupCount");
+
+		if (stagingGroupCount != null) {
+			setStagingGroupCount(stagingGroupCount);
 		}
 	}
 
@@ -561,6 +568,26 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 	@Override
 	public void setActive(boolean active) {
 		_group.setActive(active);
+	}
+
+	/**
+	* Returns the staging group count of this group.
+	*
+	* @return the staging group count of this group
+	*/
+	@Override
+	public int getStagingGroupCount() {
+		return _group.getStagingGroupCount();
+	}
+
+	/**
+	* Sets the staging group count of this group.
+	*
+	* @param stagingGroupCount the staging group count of this group
+	*/
+	@Override
+	public void setStagingGroupCount(int stagingGroupCount) {
+		_group.setStagingGroupCount(stagingGroupCount);
 	}
 
 	@Override

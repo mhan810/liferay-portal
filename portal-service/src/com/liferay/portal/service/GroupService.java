@@ -58,6 +58,10 @@ public interface GroupService extends BaseService {
 	*/
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
+	public void activateStaging(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	/**
 	* Adds a group.
 	*
@@ -157,6 +161,10 @@ public interface GroupService extends BaseService {
 	* @throws SystemException if a system exception occurred
 	*/
 	public void checkRemoteStagingGroup(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void deactivateStaging(long groupId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
@@ -769,6 +777,11 @@ public interface GroupService extends BaseService {
 	*/
 	public com.liferay.portal.model.Group updateGroup(long groupId,
 		java.lang.String typeSettings)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void updateRemoteGroup(long groupId,
+		java.lang.String stagedPortletIds)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 }

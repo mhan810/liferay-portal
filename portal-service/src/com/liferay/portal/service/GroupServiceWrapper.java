@@ -47,6 +47,13 @@ public class GroupServiceWrapper implements GroupService,
 		_groupService.setBeanIdentifier(beanIdentifier);
 	}
 
+	@Override
+	public void activateStaging(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_groupService.activateStaging(groupId);
+	}
+
 	/**
 	* Adds a group.
 	*
@@ -165,6 +172,13 @@ public class GroupServiceWrapper implements GroupService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		_groupService.checkRemoteStagingGroup(groupId);
+	}
+
+	@Override
+	public void deactivateStaging(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_groupService.deactivateStaging(groupId);
 	}
 
 	/**
@@ -851,6 +865,14 @@ public class GroupServiceWrapper implements GroupService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _groupService.updateGroup(groupId, typeSettings);
+	}
+
+	@Override
+	public void updateRemoteGroup(long groupId,
+		java.lang.String stagedPortletIds)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_groupService.updateRemoteGroup(groupId, stagedPortletIds);
 	}
 
 	/**

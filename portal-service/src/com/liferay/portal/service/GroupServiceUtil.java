@@ -56,6 +56,12 @@ public class GroupServiceUtil {
 		getService().setBeanIdentifier(beanIdentifier);
 	}
 
+	public static void activateStaging(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().activateStaging(groupId);
+	}
+
 	/**
 	* Adds a group.
 	*
@@ -172,6 +178,12 @@ public class GroupServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		getService().checkRemoteStagingGroup(groupId);
+	}
+
+	public static void deactivateStaging(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().deactivateStaging(groupId);
 	}
 
 	/**
@@ -831,6 +843,13 @@ public class GroupServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().updateGroup(groupId, typeSettings);
+	}
+
+	public static void updateRemoteGroup(long groupId,
+		java.lang.String stagedPortletIds)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().updateRemoteGroup(groupId, stagedPortletIds);
 	}
 
 	public static GroupService getService() {

@@ -78,9 +78,10 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			{ "typeSettings", Types.CLOB },
 			{ "friendlyURL", Types.VARCHAR },
 			{ "site", Types.BOOLEAN },
-			{ "active_", Types.BOOLEAN }
+			{ "active_", Types.BOOLEAN },
+			{ "stagingGroupCount", Types.INTEGER }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Group_ (uuid_ VARCHAR(75) null,groupId LONG not null primary key,companyId LONG,creatorUserId LONG,classNameId LONG,classPK LONG,parentGroupId LONG,liveGroupId LONG,treePath VARCHAR(75) null,name VARCHAR(150) null,description STRING null,type_ INTEGER,typeSettings TEXT null,friendlyURL VARCHAR(255) null,site BOOLEAN,active_ BOOLEAN)";
+	public static final String TABLE_SQL_CREATE = "create table Group_ (uuid_ VARCHAR(75) null,groupId LONG not null primary key,companyId LONG,creatorUserId LONG,classNameId LONG,classPK LONG,parentGroupId LONG,liveGroupId LONG,treePath VARCHAR(75) null,name VARCHAR(150) null,description STRING null,type_ INTEGER,typeSettings TEXT null,friendlyURL VARCHAR(255) null,site BOOLEAN,active_ BOOLEAN,stagingGroupCount INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table Group_";
 	public static final String ORDER_BY_JPQL = " ORDER BY group_.name ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Group_.name ASC";
@@ -138,6 +139,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		model.setFriendlyURL(soapModel.getFriendlyURL());
 		model.setSite(soapModel.getSite());
 		model.setActive(soapModel.getActive());
+		model.setStagingGroupCount(soapModel.getStagingGroupCount());
 
 		return model;
 	}
@@ -250,6 +252,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		attributes.put("friendlyURL", getFriendlyURL());
 		attributes.put("site", getSite());
 		attributes.put("active", getActive());
+		attributes.put("stagingGroupCount", getStagingGroupCount());
 
 		return attributes;
 	}
@@ -350,6 +353,12 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 
 		if (active != null) {
 			setActive(active);
+		}
+
+		Integer stagingGroupCount = (Integer)attributes.get("stagingGroupCount");
+
+		if (stagingGroupCount != null) {
+			setStagingGroupCount(stagingGroupCount);
 		}
 	}
 
@@ -736,6 +745,17 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		return _originalActive;
 	}
 
+	@Override
+	@JSON
+	public int getStagingGroupCount() {
+		return _stagingGroupCount;
+	}
+
+	@Override
+	public void setStagingGroupCount(int stagingGroupCount) {
+		_stagingGroupCount = stagingGroupCount;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -783,6 +803,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		groupImpl.setFriendlyURL(getFriendlyURL());
 		groupImpl.setSite(getSite());
 		groupImpl.setActive(getActive());
+		groupImpl.setStagingGroupCount(getStagingGroupCount());
 
 		groupImpl.resetOriginalValues();
 
@@ -950,12 +971,14 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 
 		groupCacheModel.active = getActive();
 
+		groupCacheModel.stagingGroupCount = getStagingGroupCount();
+
 		return groupCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(33);
+		StringBundler sb = new StringBundler(35);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -989,6 +1012,8 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		sb.append(getSite());
 		sb.append(", active=");
 		sb.append(getActive());
+		sb.append(", stagingGroupCount=");
+		sb.append(getStagingGroupCount());
 		sb.append("}");
 
 		return sb.toString();
@@ -996,7 +1021,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(52);
+		StringBundler sb = new StringBundler(55);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.portal.model.Group");
@@ -1066,6 +1091,10 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			"<column><column-name>active</column-name><column-value><![CDATA[");
 		sb.append(getActive());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>stagingGroupCount</column-name><column-value><![CDATA[");
+		sb.append(getStagingGroupCount());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -1112,6 +1141,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	private boolean _active;
 	private boolean _originalActive;
 	private boolean _setOriginalActive;
+	private int _stagingGroupCount;
 	private long _columnBitmask;
 	private Group _escapedModel;
 }
