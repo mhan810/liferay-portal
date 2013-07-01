@@ -25,9 +25,13 @@ import com.liferay.portal.kernel.scheduler.CronTrigger;
 import com.liferay.portal.kernel.scheduler.SchedulerEngineHelperUtil;
 import com.liferay.portal.kernel.scheduler.StorageType;
 import com.liferay.portal.kernel.scheduler.Trigger;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.TempFileUtil;
+import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.messaging.LayoutsLocalPublisherRequest;
@@ -47,8 +51,11 @@ import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.util.PwdGenerator;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.ArrayList;
@@ -56,6 +63,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * Provides the remote service for accessing, adding, deleting, exporting,
@@ -293,6 +302,97 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		return TempFileUtil.addTempFile(
 			groupId, getUserId(), fileName, tempFolderName, inputStream,
 			mimeType);
+	}
+
+	/**
+	 * Add bytes to a LAR file from a remote server identified by the file ID.
+	 *
+	 * For creating a file ID the {@link #createImportLayoutsFileId()} method
+	 * should be used.
+	 *
+	 * @param  fileId the file identified the byte array belongs to
+	 * @param  bytes the byte array containing LAR data pieces from the remote
+	 *         server
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public void appendToImportLayoutsFile(String fileId, byte[] bytes)
+		throws SystemException {
+
+		File file = getImportLayoutsFileForId(fileId);
+
+		if (!file.exists()) {
+			throw new SystemException(
+				"File for id " + fileId + " does not exist");
+		}
+
+		FileOutputStream fileOutputStream = null;
+
+		try {
+			fileOutputStream = new FileOutputStream(file, true);
+
+			fileOutputStream.write(bytes);
+			fileOutputStream.flush();
+		}
+		catch (Exception e) {
+			throw new SystemException(e);
+		}
+		finally {
+			IOUtils.closeQuietly(fileOutputStream);
+		}
+	}
+
+	/**
+	 * Create a file ID to be used for transferring LAR data pieces in chucks.
+	 *
+	 * The file ID is being created using the {@link
+	 * com.liferay.kernel.util.Time#getTimestamp()} and using the {@link
+	 * com.liferay.util.PwdGenerator#getPassword(String, int)}.
+	 *
+	 * This method not only generate a new file ID but also creates a temporary
+	 * file where the data pieces can be added later using {@link
+	 * #appendToImportLayoutsFile(String, byte[])}.
+	 *
+	 * @return the file ID can be used for transferring LAR data pieces
+	 * @throws SystemException if a system exception occurred (the temporary
+	 *         file could not be created)
+	 */
+	@Override
+	public String createImportLayoutsFileId() throws SystemException {
+		StringBundler sb = new StringBundler(2);
+
+		sb.append(Time.getTimestamp());
+		sb.append(PwdGenerator.getPassword(PwdGenerator.KEY2, 8));
+
+		String fileId = sb.toString();
+
+		File file = getImportLayoutsFileForId(fileId);
+
+		try {
+			boolean createdSuccessFully = file.createNewFile();
+
+			if (!createdSuccessFully) {
+				throw new SystemException(
+					"Temporary file could not be created");
+			}
+
+			return fileId;
+		}
+		catch (IOException e) {
+			throw new SystemException(e);
+		}
+	}
+
+	/**
+	 * Delete to temporary file what has been created for a specific file ID.
+	 *
+	 * @param fileId the file identifier what has been used to create the
+	 *        temporary file
+	 */
+	public void deleteImportLayoutsFileForId(String fileId) {
+		File file = getImportLayoutsFileForId(fileId);
+
+		FileUtil.delete(file);
 	}
 
 	/**
@@ -895,6 +995,43 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 			getUserId(), groupId, privateLayout, parameterMap, is);
 	}
 
+	/**
+	 * Imports the layouts what has been earlier transferred by using a specific
+	 * file identifier.
+	 *
+	 * @param  groupId the primary key of the group
+	 * @param  privateLayout whether the layout is private to the group
+	 * @param  parameterMap the mapping of parameters indicating which
+	 *         information will be imported. For information on the keys used in
+	 *         the map see {@link
+	 *         com.liferay.portal.kernel.lar.PortletDataHandlerKeys}.
+	 * @param  fileId the file ID what has been used to transfer the LAR data
+	 *         chunks
+	 * @throws PortalException if a group with the primary key could not be
+	 *         found, if the group did not have permission to manage the
+	 *         layouts, or if some other portal exception occurred
+	 * @throws SystemException if a system exception occurred
+	 * @see    com.liferay.portal.lar.LayoutImporter
+	 */
+	@Override
+	public void importLayouts(
+			long groupId, boolean privateLayout,
+			Map<String, String[]> parameterMap, String fileId)
+		throws PortalException, SystemException {
+
+		GroupPermissionUtil.check(
+			getPermissionChecker(), groupId, ActionKeys.EXPORT_IMPORT_LAYOUTS);
+
+		File file = getImportLayoutsFileForId(fileId);
+
+		try {
+			importLayouts(groupId, privateLayout, parameterMap, file);
+		}
+		finally {
+			deleteImportLayoutsFileForId(fileId);
+		}
+	}
+
 	@Override
 	public long importLayoutsInBackground(
 			String taskName, long groupId, boolean privateLayout,
@@ -1203,39 +1340,36 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	/**
 	 * Updates the layout with additional parameters.
 	 *
-	 * @param      groupId the primary key of the group
-	 * @param      privateLayout whether the layout is private to the group
-	 * @param      layoutId the primary key of the layout
-	 * @param      parentLayoutId the primary key of the layout's new parent
-	 *             layout
-	 * @param      localeNamesMap the layout's locales and localized names
-	 * @param      localeTitlesMap the layout's locales and localized titles
-	 * @param      descriptionMap the locales and localized descriptions to
-	 *             merge (optionally <code>null</code>)
-	 * @param      keywordsMap the locales and localized keywords to merge
-	 *             (optionally <code>null</code>)
-	 * @param      robotsMap the locales and localized robots to merge
-	 *             (optionally <code>null</code>)
-	 * @param      type the layout's new type (optionally {@link
-	 *             com.liferay.portal.model.LayoutConstants#TYPE_PORTLET})
-	 * @param      hidden whether the layout is hidden
-	 * @param      friendlyURLMap the layout's locales and localized friendly
-	 *             URLs. To see how the URL is normalized when accessed see
-	 *             {@link
-	 *             com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil#normalize(
-	 *             String)}.
-	 * @param      iconImage whether the icon image will be updated
-	 * @param      iconBytes the byte array of the layout's new icon image
-	 * @param      serviceContext the service context to be applied. Can set the
-	 *             modification date and expando bridge attributes for the
-	 *             layout.
-	 * @return     the updated layout
-	 * @throws     PortalException if a group or layout with the primary key
-	 *             could not be found, if the user did not have permission to
-	 *             update the layout, if a unique friendly URL could not be
-	 *             generated, if a valid parent layout ID to use could not be
-	 *             found, or if the layout parameters were invalid
-	 * @throws     SystemException if a system exception occurred
+	 * @param  groupId the primary key of the group
+	 * @param  privateLayout whether the layout is private to the group
+	 * @param  layoutId the primary key of the layout
+	 * @param  parentLayoutId the primary key of the layout's new parent layout
+	 * @param  localeNamesMap the layout's locales and localized names
+	 * @param  localeTitlesMap the layout's locales and localized titles
+	 * @param  descriptionMap the locales and localized descriptions to merge
+	 *         (optionally <code>null</code>)
+	 * @param  keywordsMap the locales and localized keywords to merge
+	 *         (optionally <code>null</code>)
+	 * @param  robotsMap the locales and localized robots to merge (optionally
+	 *         <code>null</code>)
+	 * @param  type the layout's new type (optionally {@link
+	 *         com.liferay.portal.model.LayoutConstants#TYPE_PORTLET})
+	 * @param  hidden whether the layout is hidden
+	 * @param  friendlyURLMap the layout's locales and localized friendly URLs.
+	 *         To see how the URL is normalized when accessed see {@link
+	 *         com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil#normalize(
+	 *         String)}.
+	 * @param  iconImage whether the icon image will be updated
+	 * @param  iconBytes the byte array of the layout's new icon image
+	 * @param  serviceContext the service context to be applied. Can set the
+	 *         modification date and expando bridge attributes for the layout.
+	 * @return the updated layout
+	 * @throws PortalException if a group or layout with the primary key could
+	 *         not be found, if the user did not have permission to update the
+	 *         layout, if a unique friendly URL could not be generated, if a
+	 *         valid parent layout ID to use could not be found, or if the
+	 *         layout parameters were invalid
+	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Layout updateLayout(
@@ -1576,6 +1710,11 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		}
 
 		return filteredLayouts;
+	}
+
+	protected File getImportLayoutsFileForId(String fileId) {
+		return new File(
+			SystemProperties.get(SystemProperties.TMP_DIR), fileId + ".lar");
 	}
 
 }
