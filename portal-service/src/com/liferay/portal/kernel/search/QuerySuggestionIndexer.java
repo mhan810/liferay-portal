@@ -14,21 +14,30 @@
 
 package com.liferay.portal.kernel.search;
 
+import java.io.File;
+
+import java.util.Locale;
+
 /**
- * @author Michael C. Han
+ * @author David Mendez Gonzalez
  */
-public interface SpellCheckIndexWriter {
+public interface QuerySuggestionIndexer {
 
-	public void clearDictionaryIndexes(SearchContext searchContext)
+	public static final String FILTER_TYPE_QUERY_SUGGESTION = "suggestion";
+
+	public String getUID(
+		long companyId, Locale locale, long[] groupIds, String keywords);
+
+	public void indexQuerySuggestion(
+			long companyId, long[] groupIds, Locale locale,
+			String querySuggestion)
 		throws SearchException;
 
-	public void indexDictionaries(SearchContext searchContext)
+	public void indexQuerySuggestion(SearchContext searchContext)
 		throws SearchException;
 
-	public void indexDictionary(SearchContext searchContext)
-		throws SearchException;
-
-	public void indexSuggestions(SearchContext searchContext)
+	public void indexQuerySuggestions(
+			long companyId, long[] groupIds, Locale locale, File file)
 		throws SearchException;
 
 }
