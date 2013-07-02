@@ -21,21 +21,19 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.service.http.TunnelUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
-
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import com.liferay.util.Encryptor;
+import com.liferay.util.EncryptorException;
 
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,9 +56,7 @@ public class TunnelingServletAuthVerifier implements AuthVerifier {
 
 		AuthVerifierResult authVerifierResult = new AuthVerifierResult();
 
-		String[] credentials = doVerify(
-			accessControlContext.getRequest(),
-			accessControlContext.getResponse());
+		String[] credentials = doVerify(accessControlContext.getRequest());
 
 		if (credentials != null) {
 			authVerifierResult.setPassword(credentials[1]);
@@ -71,8 +67,7 @@ public class TunnelingServletAuthVerifier implements AuthVerifier {
 		return authVerifierResult;
 	}
 
-	protected String[] doVerify(
-			HttpServletRequest request, HttpServletResponse response)
+	protected String[] doVerify(HttpServletRequest request)
 		throws AuthException {
 
 		// Get the Authorization header, if one was supplied
@@ -124,27 +119,24 @@ public class TunnelingServletAuthVerifier implements AuthVerifier {
 		String login = GetterUtil.getString(
 			decodedCredentials.substring(0, pos));
 		String password = decodedCredentials.substring(pos + 1);
-		String expectedPassword = StringPool.BLANK;
+
+		String expectedPassword = null;
 
 		SecretKeySpec keySpec = new SecretKeySpec(
 			PropsValues.TUNNELING_SERVLET_PRESHARED_SECRET.getBytes(),
-			"HmacSHA1");
+			TunnelUtil.TUNNEL_ENCRYPTION_ALGORITHM);
 
 		try {
-			Mac mac = Mac.getInstance("HmacSHA1");
-
-			mac.init(keySpec);
-
-			expectedPassword = new String(mac.doFinal(login.getBytes()));
+			expectedPassword = Encryptor.encrypt(keySpec, login);
 		}
-		catch (NoSuchAlgorithmException nsae) {
-		}
-		catch (InvalidKeyException ike) {
-			throw new AuthException("Invalid tunneling servlet preshared key");
+		catch (EncryptorException e) {
+			throw new AuthException("Unable to decrypt login.", e);
 		}
 
 		if (!password.equals(expectedPassword)) {
-			throw new AuthException();
+			throw new AuthException(
+				"TunnelingServletAuthVerifier preshared key does not match. " +
+					"Please check your configurations");
 		}
 
 		User user = null;

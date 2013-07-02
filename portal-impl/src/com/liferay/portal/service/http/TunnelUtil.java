@@ -15,6 +15,8 @@
 package com.liferay.portal.service.http;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -27,6 +29,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.auth.HttpPrincipal;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.util.Encryptor;
+import com.liferay.util.EncryptorException;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -36,10 +40,6 @@ import java.io.ObjectOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import javax.net.ssl.HostnameVerifier;
@@ -53,6 +53,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class TunnelUtil {
 
+	public static final String TUNNEL_ENCRYPTION_ALGORITHM = "HmacSHA1";
+
 	public static Object invoke(
 			HttpPrincipal httpPrincipal, MethodHandler methodHandler)
 		throws Exception {
@@ -62,24 +64,18 @@ public class TunnelUtil {
 				"The tunneling servlet preshared key is not set");
 		}
 
-		String password = StringPool.BLANK;
+		String login = httpPrincipal.getLogin();
+
+		String password = null;
 
 		SecretKeySpec keySpec = new SecretKeySpec(
 			PropsValues.TUNNELING_SERVLET_PRESHARED_SECRET.getBytes(),
-			"HmacSHA1");
+			TUNNEL_ENCRYPTION_ALGORITHM);
 
 		try {
-			Mac mac = Mac.getInstance("HmacSHA1");
-
-			mac.init(keySpec);
-
-			String login = httpPrincipal.getLogin();
-
-			password = new String(mac.doFinal(login.getBytes()));
+			password = Encryptor.encrypt(keySpec, login);
 		}
-		catch (NoSuchAlgorithmException nsae) {
-		}
-		catch (InvalidKeyException ike) {
+		catch (EncryptorException e) {
 			throw new PortalException(
 				"Invalid tunneling servlet preshared key");
 		}
@@ -108,6 +104,9 @@ public class TunnelUtil {
 			ois.close();
 		}
 		catch (EOFException eofe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Error while reading object", eofe);
+			}
 		}
 		catch (IOException ioe) {
 			String ioeMessage = ioe.getMessage();
@@ -187,5 +186,7 @@ public class TunnelUtil {
 
 	private static final boolean _VERIFY_SSL_HOSTNAME = GetterUtil.getBoolean(
 		PropsUtil.get(TunnelUtil.class.getName() + ".verify.ssl.hostname"));
+
+	private static Log _log = LogFactoryUtil.getLog(TunnelUtil.class);
 
 }
