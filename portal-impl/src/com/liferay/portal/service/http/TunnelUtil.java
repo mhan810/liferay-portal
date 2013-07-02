@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.auth.HttpPrincipal;
 import com.liferay.portal.security.auth.PrincipalException;
+import com.liferay.portal.util.PropsValues;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -48,6 +49,9 @@ public class TunnelUtil {
 	public static Object invoke(
 			HttpPrincipal httpPrincipal, MethodHandler methodHandler)
 		throws Exception {
+
+		httpPrincipal.setPassword(
+			PropsValues.TUNNELING_SERVLET_PRESHARED_SECRET);
 
 		HttpURLConnection urlc = _getConnection(httpPrincipal);
 
