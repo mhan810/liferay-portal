@@ -204,17 +204,11 @@ public class StagingImpl implements Staging {
 		Map<String, String[]> parameterMap = getStagingParameters(
 			portletRequest);
 
-		File file = LayoutLocalServiceUtil.exportPortletInfoAsFile(
-			sourcePlid, sourceGroupId, portletId, parameterMap, null, null);
+		// TODO: Obtain the date range
 
-		try {
-			LayoutLocalServiceUtil.importPortletInfo(
-				userId, targetPlid, targetGroupId, portletId, parameterMap,
-				file);
-		}
-		finally {
-			file.delete();
-		}
+		LayoutLocalServiceUtil.publishPortletInBackground(
+			userId, "", sourcePlid, targetPlid, sourceGroupId, targetGroupId,
+			portletId, parameterMap, null, null);
 	}
 
 	@Override
