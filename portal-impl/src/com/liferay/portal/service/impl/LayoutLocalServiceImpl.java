@@ -43,8 +43,10 @@ import com.liferay.portal.lar.PortletExporter;
 import com.liferay.portal.lar.PortletImporter;
 import com.liferay.portal.lar.backgroundtask.executor.LayoutExportBackgroundTaskExecutor;
 import com.liferay.portal.lar.backgroundtask.executor.LayoutImportBackgroundTaskExecutor;
+import com.liferay.portal.lar.backgroundtask.executor.LayoutStagingBackgroundTaskExecutor;
 import com.liferay.portal.lar.backgroundtask.executor.PortletExportBackgroundTaskExecutor;
 import com.liferay.portal.lar.backgroundtask.executor.PortletImportBackgroundTaskExecutor;
+import com.liferay.portal.lar.backgroundtask.executor.PortletStagingBackgroundTaskExecutor;
 import com.liferay.portal.model.BackgroundTask;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
@@ -1916,6 +1918,55 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		finally {
 			FileUtil.delete(file);
 		}
+	}
+
+	@Override
+	public long publishLayoutsInBackground(
+			long userId, String taskName, long sourceGroupId,
+			long targetGroupId, boolean privateLayout, long[] layoutIds,
+			Map<String, String[]> parameterMap, Date startDate, Date endDate)
+		throws PortalException, SystemException {
+
+		Map<String, Serializable> taskContextMap = buildTaskContextMap(
+			userId, sourceGroupId, privateLayout, layoutIds, parameterMap,
+			startDate, endDate);
+
+		taskContextMap.put("sourceGroupId", sourceGroupId);
+		taskContextMap.put("targetGroupId", targetGroupId);
+
+		BackgroundTask backgroundTask =
+			backgroundTaskLocalService.addBackgroundTask(
+				userId, sourceGroupId, taskName, null,
+				LayoutStagingBackgroundTaskExecutor.class, taskContextMap,
+				new ServiceContext());
+
+		return backgroundTask.getBackgroundTaskId();
+	}
+
+	@Override
+	public long publishPortletInBackground(
+			long userId, String taskName, long sourcePlid, long targetPlid,
+			long sourceGroupId, long targetGroupId, String portletId,
+			Map<String, String[]> parameterMap, Date startDate, Date endDate)
+		throws PortalException, SystemException {
+
+		Map<String, Serializable> taskContextMap = buildTaskContextMap(
+			userId, sourceGroupId, false, null, parameterMap,
+			startDate, endDate);
+
+		taskContextMap.put("sourcePlid", sourcePlid);
+		taskContextMap.put("targetPlid", targetPlid);
+		taskContextMap.put("sourceGroupId", sourceGroupId);
+		taskContextMap.put("targetGroupId", targetGroupId);
+		taskContextMap.put("portletId", portletId);
+
+		BackgroundTask backgroundTask =
+			backgroundTaskLocalService.addBackgroundTask(
+				userId, sourceGroupId, taskName, null,
+				PortletStagingBackgroundTaskExecutor.class, taskContextMap,
+				new ServiceContext());
+
+		return backgroundTask.getBackgroundTaskId();
 	}
 
 	/**
