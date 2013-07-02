@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.http;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -25,6 +26,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.auth.HttpPrincipal;
 import com.liferay.portal.security.auth.PrincipalException;
+import com.liferay.portal.util.PropsValues;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -33,6 +35,12 @@ import java.io.ObjectOutputStream;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -48,6 +56,35 @@ public class TunnelUtil {
 	public static Object invoke(
 			HttpPrincipal httpPrincipal, MethodHandler methodHandler)
 		throws Exception {
+
+		if (Validator.isNull(PropsValues.TUNNELING_SERVLET_PRESHARED_SECRET)) {
+			throw new PortalException(
+				"The tunneling servlet preshared key is not set");
+		}
+
+		String password = StringPool.BLANK;
+
+		SecretKeySpec keySpec = new SecretKeySpec(
+			PropsValues.TUNNELING_SERVLET_PRESHARED_SECRET.getBytes(),
+			"HmacSHA1");
+
+		try {
+			Mac mac = Mac.getInstance("HmacSHA1");
+
+			mac.init(keySpec);
+
+			String login = httpPrincipal.getLogin();
+
+			password = new String(mac.doFinal(login.getBytes()));
+		}
+		catch (NoSuchAlgorithmException nsae) {
+		}
+		catch (InvalidKeyException ike) {
+			throw new PortalException(
+				"Invalid tunneling servlet preshared key");
+		}
+
+		httpPrincipal.setPassword(password);
 
 		HttpURLConnection urlc = _getConnection(httpPrincipal);
 
