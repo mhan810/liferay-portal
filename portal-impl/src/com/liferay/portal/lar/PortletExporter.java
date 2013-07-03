@@ -168,7 +168,7 @@ public class PortletExporter {
 
 		String path = sb.toString();
 
-		if (!portletDataContext.isPathNotProcessed(path)) {
+		if (portletDataContext.isPathProcessed(path)) {
 			return;
 		}
 

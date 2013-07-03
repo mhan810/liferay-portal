@@ -87,14 +87,15 @@ public class GroupServiceSoap {
 	*/
 	public static com.liferay.portal.model.GroupSoap addGroup(
 		long parentGroupId, long liveGroupId, java.lang.String name,
-		java.lang.String description, int type, java.lang.String friendlyURL,
-		boolean site, boolean active,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		java.lang.String description, int type, boolean manualMembership,
+		int membershipRestriction, java.lang.String friendlyURL, boolean site,
+		boolean active, com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
 			com.liferay.portal.model.Group returnValue = GroupServiceUtil.addGroup(parentGroupId,
-					liveGroupId, name, description, type, friendlyURL, site,
-					active, serviceContext);
+					liveGroupId, name, description, type, manualMembership,
+					membershipRestriction, friendlyURL, site, active,
+					serviceContext);
 
 			return com.liferay.portal.model.GroupSoap.toSoapModel(returnValue);
 		}
@@ -128,7 +129,8 @@ public class GroupServiceSoap {
 	if a valid friendly URL could not be created for the group
 	* @throws SystemException if a system exception occurred
 	* @deprecated As of 6.2.0, replaced by {@link #addGroup(long, long, String,
-	String, int, String, boolean, boolean, ServiceContext)}
+	String, int, boolean, int, String, boolean, boolean,
+	ServiceContext)}
 	*/
 	public static com.liferay.portal.model.GroupSoap addGroup(
 		long parentGroupId, java.lang.String name,
@@ -235,6 +237,28 @@ public class GroupServiceSoap {
 	public static void deleteGroup(long groupId) throws RemoteException {
 		try {
 			GroupServiceUtil.deleteGroup(groupId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void disableStaging(long groupId) throws RemoteException {
+		try {
+			GroupServiceUtil.disableStaging(groupId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void enableStaging(long groupId) throws RemoteException {
+		try {
+			GroupServiceUtil.enableStaging(groupId);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -379,7 +403,8 @@ public class GroupServiceSoap {
 	access
 	* @throws PortalException if a portal exception occurred
 	* @throws SystemException if a system exception occurred
-	* @deprecated As of 6.2.0, replaced by {@link #getManageableSiteGroups(Collection, int)}
+	* @deprecated As of 6.2.0, replaced by {@link
+	#getManageableSiteGroups(Collection, int)}
 	*/
 	public static com.liferay.portal.model.GroupSoap[] getManageableSites(
 		java.util.Collection<com.liferay.portal.model.Portlet> portlets, int max)
@@ -1075,13 +1100,14 @@ public class GroupServiceSoap {
 	*/
 	public static com.liferay.portal.model.GroupSoap updateGroup(long groupId,
 		long parentGroupId, java.lang.String name,
-		java.lang.String description, int type, java.lang.String friendlyURL,
+		java.lang.String description, int type, boolean manualMembership,
+		int membershipRestriction, java.lang.String friendlyURL,
 		boolean active, com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
 			com.liferay.portal.model.Group returnValue = GroupServiceUtil.updateGroup(groupId,
-					parentGroupId, name, description, type, friendlyURL,
-					active, serviceContext);
+					parentGroupId, name, description, type, manualMembership,
+					membershipRestriction, friendlyURL, active, serviceContext);
 
 			return com.liferay.portal.model.GroupSoap.toSoapModel(returnValue);
 		}
@@ -1110,6 +1136,18 @@ public class GroupServiceSoap {
 					typeSettings);
 
 			return com.liferay.portal.model.GroupSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void updateStagedPortlets(long groupId,
+		java.lang.String stagedPortletIds) throws RemoteException {
+		try {
+			GroupServiceUtil.updateStagedPortlets(groupId, stagedPortletIds);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

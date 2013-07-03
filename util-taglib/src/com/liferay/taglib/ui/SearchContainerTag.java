@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.SearchContainerReference;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.taglib.util.ParamAndPropertyAncestorTagImpl;
@@ -37,8 +38,6 @@ import javax.servlet.jsp.JspException;
  * @author Raymond Augé
  */
 public class SearchContainerTag<R> extends ParamAndPropertyAncestorTagImpl {
-
-	public static final String DEFAULT_VAR = "searchContainer";
 
 	@Override
 	public int doEndTag() {
@@ -61,7 +60,7 @@ public class SearchContainerTag<R> extends ParamAndPropertyAncestorTagImpl {
 		_rowChecker = null;
 		_searchContainer = null;
 		_searchTerms = null;
-		_var = DEFAULT_VAR;
+		_var = SearchContainer.DEFAULT_VAR;
 
 		return EVAL_PAGE;
 	}
@@ -125,6 +124,16 @@ public class SearchContainerTag<R> extends ParamAndPropertyAncestorTagImpl {
 			}
 
 			pageContext.setAttribute(_var, _searchContainer);
+
+			SearchContainerReference searchContainerReference =
+				(SearchContainerReference)pageContext.getAttribute(
+					"searchContainerReference");
+
+			if ((searchContainerReference != null) &&
+				!_var.equals(SearchContainer.DEFAULT_VAR)) {
+
+				searchContainerReference.register(_var, _searchContainer);
+			}
 
 			return EVAL_BODY_INCLUDE;
 		}
@@ -316,6 +325,6 @@ public class SearchContainerTag<R> extends ParamAndPropertyAncestorTagImpl {
 	private SearchContainer<R> _searchContainer;
 	private DisplayTerms _searchTerms;
 	private int _total;
-	private String _var = DEFAULT_VAR;
+	private String _var = SearchContainer.DEFAULT_VAR;
 
 }

@@ -43,8 +43,11 @@ public class GroupSoap implements Serializable {
 		soapModel.setDescription(model.getDescription());
 		soapModel.setType(model.getType());
 		soapModel.setTypeSettings(model.getTypeSettings());
+		soapModel.setManualMembership(model.getManualMembership());
+		soapModel.setMembershipRestriction(model.getMembershipRestriction());
 		soapModel.setFriendlyURL(model.getFriendlyURL());
 		soapModel.setSite(model.getSite());
+		soapModel.setRemoteStagingGroupCount(model.getRemoteStagingGroupCount());
 		soapModel.setActive(model.getActive());
 
 		return soapModel;
@@ -202,6 +205,26 @@ public class GroupSoap implements Serializable {
 		_typeSettings = typeSettings;
 	}
 
+	public boolean getManualMembership() {
+		return _manualMembership;
+	}
+
+	public boolean isManualMembership() {
+		return _manualMembership;
+	}
+
+	public void setManualMembership(boolean manualMembership) {
+		_manualMembership = manualMembership;
+	}
+
+	public int getMembershipRestriction() {
+		return _membershipRestriction;
+	}
+
+	public void setMembershipRestriction(int membershipRestriction) {
+		_membershipRestriction = membershipRestriction;
+	}
+
 	public String getFriendlyURL() {
 		return _friendlyURL;
 	}
@@ -220,6 +243,14 @@ public class GroupSoap implements Serializable {
 
 	public void setSite(boolean site) {
 		_site = site;
+	}
+
+	public int getRemoteStagingGroupCount() {
+		return _remoteStagingGroupCount;
+	}
+
+	public void setRemoteStagingGroupCount(int remoteStagingGroupCount) {
+		_remoteStagingGroupCount = remoteStagingGroupCount;
 	}
 
 	public boolean getActive() {
@@ -247,7 +278,10 @@ public class GroupSoap implements Serializable {
 	private String _description;
 	private int _type;
 	private String _typeSettings;
+	private boolean _manualMembership;
+	private int _membershipRestriction;
 	private String _friendlyURL;
 	private boolean _site;
+	private int _remoteStagingGroupCount;
 	private boolean _active;
 }

@@ -15,12 +15,12 @@ delivery-type*)>
 
 <!ELEMENT description (#PCDATA)>
 
-<!ELEMENT delivery-type (name, type, defualt?, modifiable?)>
+<!ELEMENT delivery-type (name, type, default?, modifiable?)>
 
 <!ELEMENT name (#PCDATA)>
 
 <!ELEMENT type (#PCDATA)>
 
-<!ELEMENT defualt (#PCDATA)>
+<!ELEMENT default (#PCDATA)>
 
 <!ELEMENT modifiable (#PCDATA)>

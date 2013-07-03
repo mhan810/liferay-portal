@@ -945,13 +945,14 @@ public class GroupLocalServiceWrapper implements GroupLocalService,
 	public com.liferay.portal.model.Group addGroup(long userId,
 		long parentGroupId, java.lang.String className, long classPK,
 		long liveGroupId, java.lang.String name, java.lang.String description,
-		int type, java.lang.String friendlyURL, boolean site, boolean active,
+		int type, boolean manualMembership, int membershipRestriction,
+		java.lang.String friendlyURL, boolean site, boolean active,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _groupLocalService.addGroup(userId, parentGroupId, className,
-			classPK, liveGroupId, name, description, type, friendlyURL, site,
-			active, serviceContext);
+			classPK, liveGroupId, name, description, type, manualMembership,
+			membershipRestriction, friendlyURL, site, active, serviceContext);
 	}
 
 	/**
@@ -979,8 +980,8 @@ public class GroupLocalServiceWrapper implements GroupLocalService,
 	the group
 	* @throws SystemException if a system exception occurred
 	* @deprecated As of 6.2.0, replaced by {@link #addGroup(long, long, String,
-	long, long, String, String, int, String, boolean, boolean,
-	ServiceContext)}
+	long, long, String, String, int, boolean, int, String,
+	boolean, boolean, ServiceContext)}
 	*/
 	@Override
 	public com.liferay.portal.model.Group addGroup(long userId,
@@ -1021,8 +1022,8 @@ public class GroupLocalServiceWrapper implements GroupLocalService,
 	the group
 	* @throws SystemException if a system exception occurred
 	* @deprecated As of 6.2.0, replaced by {@link #addGroup(long, long, String,
-	long, long, String, String, int, String, boolean, boolean,
-	ServiceContext)}
+	long, long, String, String, int, boolean, int, String,
+	boolean, boolean, ServiceContext)}
 	*/
 	@Override
 	public com.liferay.portal.model.Group addGroup(long userId,
@@ -1061,8 +1062,8 @@ public class GroupLocalServiceWrapper implements GroupLocalService,
 	the group
 	* @throws SystemException if a system exception occurred
 	* @deprecated As of 6.2.0, replaced by {@link #addGroup(long, long, String,
-	long, long, String, String, int, String, boolean, boolean,
-	ServiceContext)}
+	long, long, String, String, int, boolean, int, String,
+	boolean, boolean, ServiceContext)}
 	*/
 	@Override
 	public com.liferay.portal.model.Group addGroup(long userId,
@@ -1108,6 +1109,20 @@ public class GroupLocalServiceWrapper implements GroupLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		_groupLocalService.checkSystemGroups(companyId);
+	}
+
+	@Override
+	public void disableStaging(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_groupLocalService.disableStaging(groupId);
+	}
+
+	@Override
+	public void enableStaging(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_groupLocalService.enableStaging(groupId);
 	}
 
 	/**
@@ -2963,12 +2978,14 @@ public class GroupLocalServiceWrapper implements GroupLocalService,
 	@Override
 	public com.liferay.portal.model.Group updateGroup(long groupId,
 		long parentGroupId, java.lang.String name,
-		java.lang.String description, int type, java.lang.String friendlyURL,
+		java.lang.String description, int type, boolean manualMembership,
+		int membershipRestriction, java.lang.String friendlyURL,
 		boolean active, com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _groupLocalService.updateGroup(groupId, parentGroupId, name,
-			description, type, friendlyURL, active, serviceContext);
+			description, type, manualMembership, membershipRestriction,
+			friendlyURL, active, serviceContext);
 	}
 
 	/**

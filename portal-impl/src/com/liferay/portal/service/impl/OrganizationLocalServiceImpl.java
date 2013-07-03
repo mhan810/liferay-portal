@@ -288,7 +288,9 @@ public class OrganizationLocalServiceImpl
 		Group group = groupLocalService.addGroup(
 			userId, parentGroupId, Organization.class.getName(), organizationId,
 			GroupConstants.DEFAULT_LIVE_GROUP_ID, name, null,
-			GroupConstants.TYPE_SITE_PRIVATE, null, site, true, null);
+			GroupConstants.TYPE_SITE_PRIVATE, false,
+			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, null, site, true,
+			null);
 
 		// Role
 
@@ -471,8 +473,7 @@ public class OrganizationLocalServiceImpl
 
 		// Expando
 
-		expandoValueLocalService.deleteValues(
-			Organization.class.getName(), organization.getOrganizationId());
+		expandoRowLocalService.deleteRows(organization.getOrganizationId());
 
 		// Password policy relation
 
@@ -1773,8 +1774,9 @@ public class OrganizationLocalServiceImpl
 		if (!oldName.equals(name) || organizationGroup) {
 			groupLocalService.updateGroup(
 				group.getGroupId(), parentGroupId, name, group.getDescription(),
-				group.getType(), group.getFriendlyURL(), group.isActive(),
-				null);
+				group.getType(), group.isManualMembership(),
+				group.getMembershipRestriction(), group.getFriendlyURL(),
+				group.isActive(), null);
 		}
 
 		if (group.isSite() != site) {

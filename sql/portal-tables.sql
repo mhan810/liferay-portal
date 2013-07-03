@@ -771,8 +771,11 @@ create table Group_ (
 	description STRING null,
 	type_ INTEGER,
 	typeSettings TEXT null,
+	manualMembership BOOLEAN,
+	membershipRestriction INTEGER,
 	friendlyURL VARCHAR(255) null,
 	site BOOLEAN,
+	remoteStagingGroupCount INTEGER,
 	active_ BOOLEAN
 );
 

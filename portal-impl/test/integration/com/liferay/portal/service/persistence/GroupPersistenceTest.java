@@ -137,9 +137,15 @@ public class GroupPersistenceTest {
 
 		newGroup.setTypeSettings(ServiceTestUtil.randomString());
 
+		newGroup.setManualMembership(ServiceTestUtil.randomBoolean());
+
+		newGroup.setMembershipRestriction(ServiceTestUtil.nextInt());
+
 		newGroup.setFriendlyURL(ServiceTestUtil.randomString());
 
 		newGroup.setSite(ServiceTestUtil.randomBoolean());
+
+		newGroup.setRemoteStagingGroupCount(ServiceTestUtil.nextInt());
 
 		newGroup.setActive(ServiceTestUtil.randomBoolean());
 
@@ -167,9 +173,15 @@ public class GroupPersistenceTest {
 		Assert.assertEquals(existingGroup.getType(), newGroup.getType());
 		Assert.assertEquals(existingGroup.getTypeSettings(),
 			newGroup.getTypeSettings());
+		Assert.assertEquals(existingGroup.getManualMembership(),
+			newGroup.getManualMembership());
+		Assert.assertEquals(existingGroup.getMembershipRestriction(),
+			newGroup.getMembershipRestriction());
 		Assert.assertEquals(existingGroup.getFriendlyURL(),
 			newGroup.getFriendlyURL());
 		Assert.assertEquals(existingGroup.getSite(), newGroup.getSite());
+		Assert.assertEquals(existingGroup.getRemoteStagingGroupCount(),
+			newGroup.getRemoteStagingGroupCount());
 		Assert.assertEquals(existingGroup.getActive(), newGroup.getActive());
 	}
 
@@ -211,8 +223,9 @@ public class GroupPersistenceTest {
 			"groupId", true, "companyId", true, "creatorUserId", true,
 			"classNameId", true, "classPK", true, "parentGroupId", true,
 			"liveGroupId", true, "treePath", true, "name", true, "description",
-			true, "type", true, "typeSettings", true, "friendlyURL", true,
-			"site", true, "active", true);
+			true, "type", true, "typeSettings", true, "manualMembership", true,
+			"membershipRestriction", true, "friendlyURL", true, "site", true,
+			"remoteStagingGroupCount", true, "active", true);
 	}
 
 	@Test
@@ -409,9 +422,15 @@ public class GroupPersistenceTest {
 
 		group.setTypeSettings(ServiceTestUtil.randomString());
 
+		group.setManualMembership(ServiceTestUtil.randomBoolean());
+
+		group.setMembershipRestriction(ServiceTestUtil.nextInt());
+
 		group.setFriendlyURL(ServiceTestUtil.randomString());
 
 		group.setSite(ServiceTestUtil.randomBoolean());
+
+		group.setRemoteStagingGroupCount(ServiceTestUtil.nextInt());
 
 		group.setActive(ServiceTestUtil.randomBoolean());
 

@@ -104,7 +104,6 @@ else {
 									dialog: {
 										constrain: true,
 										modal: true,
-										zIndex: Liferay.zIndex.WINDOW + 2,
 										width: 680
 									},
 									id: '<portlet:namespace />selectFolder',
@@ -168,6 +167,7 @@ else {
 <aui:script>
 	function <portlet:namespace />saveFolder() {
 		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= (folder == null) ? Constants.ADD : Constants.UPDATE %>";
+
 		submitForm(document.<portlet:namespace />fm);
 	}
 </aui:script>

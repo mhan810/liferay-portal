@@ -366,7 +366,7 @@
                 <classpath mode="compile">lib/portal/eclipselink.jar</classpath>
                 <classpath mode="compile">lib/portal/eclipse-core-runtime.jar</classpath>
                 <classpath mode="compile">lib/portal/ecs.jar</classpath>
-                <classpath mode="compile">lib/portal/ehcache-core.jar</classpath>
+                <classpath mode="compile">lib/portal/ehcache.jar</classpath>
                 <classpath mode="compile">lib/portal/ehcache-jgroupsreplication.jar</classpath>
                 <classpath mode="compile">lib/portal/fastutil.jar</classpath>
                 <classpath mode="compile">lib/portal/felix-fileinstall.jar</classpath>

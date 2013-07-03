@@ -54,13 +54,14 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_user_roles.jsp-po
 <liferay-ui:search-container
 	rowChecker="<%= (role.getType() == RoleConstants.TYPE_SITE) ? new UserGroupRoleUserChecker(renderResponse, group, role) : new OrganizationRoleUserChecker(renderResponse, organization, role) %>"
 	searchContainer="<%= new UserSearch(renderRequest, portletURL) %>"
+	var="userSearchContainer"
 >
 	<liferay-ui:search-form
 		page="/html/portlet/users_admin/user_search.jsp"
 	/>
 
 	<%
-	UserSearchTerms searchTerms = (UserSearchTerms)searchContainer.getSearchTerms();
+	UserSearchTerms searchTerms = (UserSearchTerms)userSearchContainer.getSearchTerms();
 
 	LinkedHashMap<String, Object> userParams = new LinkedHashMap<String, Object>();
 

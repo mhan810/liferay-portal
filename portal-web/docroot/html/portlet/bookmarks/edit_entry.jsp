@@ -112,7 +112,6 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 										dialog: {
 											constrain: true,
 											modal: true,
-											zIndex: Liferay.zIndex.WINDOW + 2,
 											width: 680
 										},
 										id: '<portlet:namespace />selectFolder',
@@ -191,6 +190,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 <aui:script>
 	function <portlet:namespace />saveEntry() {
 		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= (entry == null) ? Constants.ADD : Constants.UPDATE %>";
+
 		submitForm(document.<portlet:namespace />fm);
 	}
 </aui:script>

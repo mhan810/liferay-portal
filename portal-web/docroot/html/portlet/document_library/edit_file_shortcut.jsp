@@ -156,7 +156,6 @@ portletURL.setParameter("fileShortcutId", String.valueOf(fileShortcutId));
 					dialog: {
 						constrain: true,
 						modal: true,
-						zIndex: Liferay.zIndex.WINDOW + 2,
 						width: 680
 					},
 					id: '<portlet:namespace />selectGroup',
@@ -191,7 +190,6 @@ portletURL.setParameter("fileShortcutId", String.valueOf(fileShortcutId));
 					dialog: {
 						constrain: true,
 						modal: true,
-						zIndex: Liferay.zIndex.WINDOW + 2,
 						width: 680
 					},
 					id: <portlet:namespace />createSelectFileEntryId(),
@@ -220,6 +218,7 @@ portletURL.setParameter("fileShortcutId", String.valueOf(fileShortcutId));
 
 	function <portlet:namespace />saveFileShortcut() {
 		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= (fileShortcut == null) ? Constants.ADD : Constants.UPDATE %>";
+
 		submitForm(document.<portlet:namespace />fm);
 	}
 

@@ -206,6 +206,17 @@ window.YUI_config = {
 						'liferay-dockbar'
 					]
 				},
+				'liferay-dockbar-device-preview': {
+					path: 'dockbar_device_preview.js',
+					requires: [
+						'aui-dialog-iframe-deprecated',
+						'aui-event-input',
+						'aui-modal',
+						'liferay-portlet-base',
+						'liferay-util-window',
+						'liferay-widget-size-animation-plugin'
+					]
+				},
 				'liferay-dockbar-underlay': {
 					path: 'dockbar_underlay.js',
 					requires: [
@@ -580,14 +591,31 @@ window.YUI_config = {
 				'liferay-util-window': {
 					path: 'util_window.js',
 					requires: [
+						'aui-modal',
 						'aui-dialog-iframe-deprecated',
-						'aui-modal'
+						'event-resize',
+						'liferay-widget-zindex'
+					]
+				},
+				'liferay-widget-size-animation-plugin': {
+					path: 'widget_size_animation_plugin.js',
+					requires: [
+						'anim-easing',
+						'plugin',
+						'widget'
 					]
 				},
 				'liferay-xml-formatter': {
 					path: 'xml_formatter.js',
 					requires: [
 						'aui-base'
+					]
+				},
+				'liferay-widget-zindex': {
+					path: 'widget_zindex.js',
+					requires: [
+						'aui-modal',
+						'plugin'
 					]
 				}
 			},

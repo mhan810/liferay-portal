@@ -101,6 +101,7 @@ boolean splitThread = false;
 <aui:script>
 	function <portlet:namespace />moveThread() {
 		document.<portlet:namespace />fm.<portlet:namespace />body.value = <portlet:namespace />getHTML();
+
 		submitForm(document.<portlet:namespace />fm);
 	}
 
@@ -129,7 +130,6 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "mov
 					dialog: {
 						constrain: true,
 						modal: true,
-						zIndex: Liferay.zIndex.WINDOW + 2,
 						width: 680
 					},
 					id: '<portlet:namespace />selectCategory',

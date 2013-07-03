@@ -285,8 +285,11 @@
 				<column name="TYPE_" />
 			</basic>
 			<basic name="typeSettings" />
+			<basic name="manualMembership" />
+			<basic name="membershipRestriction" />
 			<basic name="friendlyURL" />
 			<basic name="site" />
+			<basic name="remoteStagingGroupCount" />
 			<basic name="active">
 				<column name="ACTIVE_" />
 			</basic>

@@ -170,39 +170,21 @@ public class I18nFilter extends BasePortalFilter {
 		LayoutSet layoutSet = (LayoutSet)request.getAttribute(
 			WebKeys.VIRTUAL_HOST_LAYOUT_SET);
 
-		if ((layoutSet != null) &&
-			(requestURI.startsWith(_PRIVATE_GROUP_SERVLET_MAPPING) ||
-			 requestURI.startsWith(_PRIVATE_USER_SERVLET_MAPPING) ||
-			 requestURI.startsWith(_PUBLIC_GROUP_SERVLET_MAPPING))) {
+		if (layoutSet != null) {
+			int[] groupFriendlyURLIndex = PortalUtil.getGroupFriendlyURLIndex(
+				requestURI);
 
-			int x = requestURI.indexOf(StringPool.SLASH, 1);
+			if (groupFriendlyURLIndex != null) {
+				int x = groupFriendlyURLIndex[0];
+				int y = groupFriendlyURLIndex[1];
 
-			if (x == -1) {
+				String groupFriendlyURL = requestURI.substring(x, y);
 
-				// /web
+				Group group = layoutSet.getGroup();
 
-				requestURI += StringPool.SLASH;
-
-				x = requestURI.indexOf(CharPool.SLASH, 1);
-			}
-
-			int y = requestURI.indexOf(CharPool.SLASH, x + 1);
-
-			if (y == -1) {
-
-				// /web/alpha
-
-				requestURI += StringPool.SLASH;
-
-				y = requestURI.indexOf(CharPool.SLASH, x + 1);
-			}
-
-			String groupFriendlyURL = requestURI.substring(x, y);
-
-			Group group = layoutSet.getGroup();
-
-			if (group.getFriendlyURL().equals(groupFriendlyURL)) {
-				redirect = contextPath + i18nPath + requestURI.substring(y);
+				if (groupFriendlyURL.equals(group.getFriendlyURL())) {
+					redirect = contextPath + i18nPath + requestURI.substring(y);
+				}
 			}
 		}
 
@@ -257,15 +239,6 @@ public class I18nFilter extends BasePortalFilter {
 
 		response.sendRedirect(redirect);
 	}
-
-	private static final String _PRIVATE_GROUP_SERVLET_MAPPING =
-		PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING;
-
-	private static final String _PRIVATE_USER_SERVLET_MAPPING =
-		PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING;
-
-	private static final String _PUBLIC_GROUP_SERVLET_MAPPING =
-		PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING;
 
 	private static Log _log = LogFactoryUtil.getLog(I18nFilter.class);
 

@@ -363,8 +363,11 @@
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="type" type="com.liferay.portal.dao.orm.hibernate.IntegerType" column="type_" />
 		<property name="typeSettings" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="manualMembership" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+		<property name="membershipRestriction" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		<property name="friendlyURL" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="site" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+		<property name="remoteStagingGroupCount" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		<property name="active" type="com.liferay.portal.dao.orm.hibernate.BooleanType" column="active_" />
 	</class>
 	<class name="com.liferay.portal.model.impl.ImageImpl" table="Image">

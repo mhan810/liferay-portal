@@ -18,9 +18,11 @@ import com.liferay.portal.NoSuchGroupException;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UniqueList;
 import com.liferay.portal.model.Group;
@@ -94,7 +96,8 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 	@Override
 	public Group addGroup(
 			long parentGroupId, long liveGroupId, String name,
-			String description, int type, String friendlyURL, boolean site,
+			String description, int type, boolean manualMembership,
+			int membershipRestriction, String friendlyURL, boolean site,
 			boolean active, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
@@ -110,7 +113,8 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 
 		Group group = groupLocalService.addGroup(
 			getUserId(), parentGroupId, null, 0, liveGroupId, name, description,
-			type, friendlyURL, site, active, serviceContext);
+			type, manualMembership, membershipRestriction, friendlyURL, site,
+			active, serviceContext);
 
 		if (site) {
 			SiteMembershipPolicyUtil.verifyPolicy(group);
@@ -142,7 +146,8 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 	 *             if a valid friendly URL could not be created for the group
 	 * @throws     SystemException if a system exception occurred
 	 * @deprecated As of 6.2.0, replaced by {@link #addGroup(long, long, String,
-	 *             String, int, String, boolean, boolean, ServiceContext)}
+	 *             String, int, boolean, int, String, boolean, boolean,
+	 *             ServiceContext)}
 	 */
 	@Override
 	public Group addGroup(
@@ -153,7 +158,9 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 
 		return addGroup(
 			parentGroupId, GroupConstants.DEFAULT_LIVE_GROUP_ID, name,
-			description, type, friendlyURL, site, active, serviceContext);
+			description, type, true,
+			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, friendlyURL, site,
+			active, serviceContext);
 	}
 
 	/**
@@ -240,6 +247,30 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 			getPermissionChecker(), groupId, ActionKeys.DELETE);
 
 		groupLocalService.deleteGroup(groupId);
+	}
+
+	@Override
+	public void disableStaging(long groupId)
+		throws PortalException, SystemException {
+
+		Group group = groupLocalService.getGroup(groupId);
+
+		GroupPermissionUtil.check(
+			getPermissionChecker(), group, ActionKeys.UPDATE);
+
+		groupLocalService.disableStaging(groupId);
+	}
+
+	@Override
+	public void enableStaging(long groupId)
+		throws PortalException, SystemException {
+
+		Group group = groupLocalService.getGroup(groupId);
+
+		GroupPermissionUtil.check(
+			getPermissionChecker(), group, ActionKeys.UPDATE);
+
+		groupLocalService.enableStaging(groupId);
 	}
 
 	/**
@@ -389,14 +420,15 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 	 * Returns a range of all the site groups for which the user has control
 	 * panel access.
 	 *
-	 * @param  portlets the portlets to manage
-	 * @param  max the upper bound of the range of groups to consider (not
-	 *         inclusive)
-	 * @return the range of site groups for which the user has Control Panel
-	 *         access
-	 * @throws PortalException if a portal exception occurred
-	 * @throws SystemException if a system exception occurred
-	 * @deprecated As of 6.2.0, replaced by {@link #getManageableSiteGroups(Collection, int)}
+	 * @param      portlets the portlets to manage
+	 * @param      max the upper bound of the range of groups to consider (not
+	 *             inclusive)
+	 * @return     the range of site groups for which the user has Control Panel
+	 *             access
+	 * @throws     PortalException if a portal exception occurred
+	 * @throws     SystemException if a system exception occurred
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 *             #getManageableSiteGroups(Collection, int)}
 	 */
 	@Override
 	public List<Group> getManageableSites(Collection<Portlet> portlets, int max)
@@ -1070,8 +1102,8 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 	@Override
 	public Group updateGroup(
 			long groupId, long parentGroupId, String name, String description,
-			int type, String friendlyURL, boolean active,
-			ServiceContext serviceContext)
+			int type, boolean manualMembership, int membershipRestriction,
+			String friendlyURL, boolean active, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		Group group = groupPersistence.findByPrimaryKey(groupId);
@@ -1107,8 +1139,9 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 				oldExpandoBridge.getAttributes();
 
 			group = groupLocalService.updateGroup(
-				groupId, parentGroupId, name, description, type, friendlyURL,
-				active, serviceContext);
+				groupId, parentGroupId, name, description, type,
+				manualMembership, membershipRestriction, friendlyURL, active,
+				serviceContext);
 
 			SiteMembershipPolicyUtil.verifyPolicy(
 				group, oldGroup, oldAssetCategories, oldAssetTags,
@@ -1118,8 +1151,9 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		}
 		else {
 			return groupLocalService.updateGroup(
-				groupId, parentGroupId, name, description, type, friendlyURL,
-				active, serviceContext);
+				groupId, parentGroupId, name, description, type,
+				manualMembership, membershipRestriction, friendlyURL, active,
+				serviceContext);
 		}
 	}
 
@@ -1159,6 +1193,26 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		else {
 			return groupLocalService.updateGroup(groupId, typeSettings);
 		}
+	}
+
+	@Override
+	public void updateStagedPortlets(long groupId, String stagedPortletIds)
+		throws PortalException, SystemException {
+
+		GroupPermissionUtil.check(
+			getPermissionChecker(), groupId, ActionKeys.UPDATE);
+
+		Group group = groupPersistence.findByPrimaryKey(groupId);
+
+		UnicodeProperties typeSettings = group.getTypeSettingsProperties();
+
+		for (String stagedPortletId : StringUtil.split(stagedPortletIds)) {
+			typeSettings.setProperty(
+				StagingUtil.getStagedPortletId(stagedPortletId),
+				Boolean.TRUE.toString());
+		}
+
+		groupLocalService.updateGroup(group);
 	}
 
 	protected List<Group> filterGroups(List<Group> groups)

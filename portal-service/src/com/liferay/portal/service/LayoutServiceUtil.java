@@ -385,12 +385,13 @@ public class LayoutServiceUtil {
 		java.lang.String taskName, long groupId, boolean privateLayout,
 		long[] layoutIds,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
-		java.util.Date startDate, java.util.Date endDate)
+		java.util.Date startDate, java.util.Date endDate,
+		java.lang.String fileName)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService()
 				   .exportLayoutsAsFileInBackground(taskName, groupId,
-			privateLayout, layoutIds, parameterMap, startDate, endDate);
+			privateLayout, layoutIds, parameterMap, startDate, endDate, fileName);
 	}
 
 	/**
@@ -421,6 +422,17 @@ public class LayoutServiceUtil {
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService()
 				   .exportPortletInfo(plid, groupId, portletId, parameterMap,
+			startDate, endDate);
+	}
+
+	public static byte[] exportPortletInfo(long companyId,
+		java.lang.String portletId,
+		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
+		java.util.Date startDate, java.util.Date endDate)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .exportPortletInfo(companyId, portletId, parameterMap,
 			startDate, endDate);
 	}
 
@@ -455,16 +467,40 @@ public class LayoutServiceUtil {
 			parameterMap, startDate, endDate);
 	}
 
-	public static long exportPortletInfoAsFileInBackground(
-		java.lang.String taskName, long plid, long groupId,
+	public static java.io.File exportPortletInfoAsFile(long companyId,
 		java.lang.String portletId,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
 		java.util.Date startDate, java.util.Date endDate)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService()
+				   .exportPortletInfoAsFile(companyId, portletId, parameterMap,
+			startDate, endDate);
+	}
+
+	public static long exportPortletInfoAsFileInBackground(long userId,
+		java.lang.String taskName, java.lang.String portletId,
+		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
+		java.util.Date startDate, java.util.Date endDate,
+		java.lang.String fileName)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .exportPortletInfoAsFileInBackground(userId, taskName,
+			portletId, parameterMap, startDate, endDate, fileName);
+	}
+
+	public static long exportPortletInfoAsFileInBackground(
+		java.lang.String taskName, long plid, long groupId,
+		java.lang.String portletId,
+		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
+		java.util.Date startDate, java.util.Date endDate,
+		java.lang.String fileName)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
 				   .exportPortletInfoAsFileInBackground(taskName, plid,
-			groupId, portletId, parameterMap, startDate, endDate);
+			groupId, portletId, parameterMap, startDate, endDate, fileName);
 	}
 
 	/**

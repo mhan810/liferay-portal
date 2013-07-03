@@ -725,12 +725,13 @@ public class LayoutLocalServiceWrapper implements LayoutLocalService,
 		java.lang.String taskName, long groupId, boolean privateLayout,
 		long[] layoutIds,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
-		java.util.Date startDate, java.util.Date endDate)
+		java.util.Date startDate, java.util.Date endDate,
+		java.lang.String fileName)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _layoutLocalService.exportLayoutsAsFileInBackground(userId,
 			taskName, groupId, privateLayout, layoutIds, parameterMap,
-			startDate, endDate);
+			startDate, endDate, fileName);
 	}
 
 	/**
@@ -759,6 +760,16 @@ public class LayoutLocalServiceWrapper implements LayoutLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _layoutLocalService.exportPortletInfo(plid, groupId, portletId,
+			parameterMap, startDate, endDate);
+	}
+
+	@Override
+	public byte[] exportPortletInfo(long companyId, java.lang.String portletId,
+		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
+		java.util.Date startDate, java.util.Date endDate)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _layoutLocalService.exportPortletInfo(companyId, portletId,
 			parameterMap, startDate, endDate);
 	}
 
@@ -792,15 +803,40 @@ public class LayoutLocalServiceWrapper implements LayoutLocalService,
 	}
 
 	@Override
-	public long exportPortletInfoAsFileInBackground(long userId,
-		java.lang.String taskName, long plid, long groupId,
+	public java.io.File exportPortletInfoAsFile(long companyId,
 		java.lang.String portletId,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
 		java.util.Date startDate, java.util.Date endDate)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
+		return _layoutLocalService.exportPortletInfoAsFile(companyId,
+			portletId, parameterMap, startDate, endDate);
+	}
+
+	@Override
+	public long exportPortletInfoAsFileInBackground(long userId,
+		java.lang.String taskName, long plid, long groupId,
+		java.lang.String portletId,
+		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
+		java.util.Date startDate, java.util.Date endDate,
+		java.lang.String fileName)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		return _layoutLocalService.exportPortletInfoAsFileInBackground(userId,
-			taskName, plid, groupId, portletId, parameterMap, startDate, endDate);
+			taskName, plid, groupId, portletId, parameterMap, startDate,
+			endDate, fileName);
+	}
+
+	@Override
+	public long exportPortletInfoAsFileInBackground(long userId,
+		java.lang.String taskName, java.lang.String portletId,
+		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
+		java.util.Date startDate, java.util.Date endDate,
+		java.lang.String fileName)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _layoutLocalService.exportPortletInfoAsFileInBackground(userId,
+			taskName, portletId, parameterMap, startDate, endDate, fileName);
 	}
 
 	@Override

@@ -805,8 +805,6 @@ public interface PropsKeys {
 
 	public static final String EHCACHE_SOCKET_START_PORT = "ehcache.socket.start.port";
 
-	public static final String EHCACHE_STATISTICS_ENABLED = "ehcache.statistics.enabled";
-
 	public static final String FACEBOOK_CONNECT_APP_ID = "facebook.connect.app.id";
 
 	public static final String FACEBOOK_CONNECT_APP_SECRET = "facebook.connect.app.secret";
@@ -2372,6 +2370,8 @@ public interface PropsKeys {
 	public static final String TRASH_ENTRY_CHECK_INTERVAL = "trash.entry.check.interval";
 
 	public static final String TRASH_SEARCH_LIMIT = "trash.search.limit";
+
+	public static final String TUNNELING_SERVLET_PRESHARED_SECRET = "tunneling.servlet.preshared.secret";
 
 	public static final String UPGRADE_DATABASE_TRANSACTIONS_DISABLED = "upgrade.database.transactions.disabled";
 

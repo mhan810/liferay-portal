@@ -413,6 +413,10 @@ public class GetterUtil {
 	public static boolean[] getBooleanValues(
 		Object value, boolean[] defaultValue) {
 
+		if (value == null) {
+			return defaultValue;
+		}
+
 		Class<?> clazz = value.getClass();
 
 		if (clazz.isArray()) {
@@ -476,6 +480,10 @@ public class GetterUtil {
 	public static Date[] getDateValues(
 		Object value, DateFormat dateFormat, Date[] defaultValue) {
 
+		if (value == null) {
+			return defaultValue;
+		}
+
 		Class<?> clazz = value.getClass();
 
 		if (clazz.isArray()) {
@@ -535,6 +543,10 @@ public class GetterUtil {
 	public static double[] getDoubleValues(
 		Object value, double[] defaultValue) {
 
+		if (value == null) {
+			return defaultValue;
+		}
+
 		Class<?> clazz = value.getClass();
 
 		if (clazz.isArray()) {
@@ -592,6 +604,10 @@ public class GetterUtil {
 	}
 
 	public static float[] getFloatValues(Object value, float[] defaultValue) {
+		if (value == null) {
+			return defaultValue;
+		}
+
 		Class<?> clazz = value.getClass();
 
 		if (clazz.isArray()) {
@@ -712,6 +728,10 @@ public class GetterUtil {
 	}
 
 	public static int[] getIntegerValues(Object value, int[] defaultValue) {
+		if (value == null) {
+			return defaultValue;
+		}
+
 		Class<?> clazz = value.getClass();
 
 		if (clazz.isArray()) {
@@ -830,6 +850,10 @@ public class GetterUtil {
 	}
 
 	public static long[] getLongValues(Object value, long[] defaultValue) {
+		if (value == null) {
+			return defaultValue;
+		}
+
 		Class<?> clazz = value.getClass();
 
 		if (!clazz.isArray()) {
@@ -899,6 +923,10 @@ public class GetterUtil {
 
 	public static Number[] getNumberValues(
 		Object value, Number[] defaultValue) {
+
+		if (value == null) {
+			return defaultValue;
+		}
 
 		Class<?> clazz = value.getClass();
 
@@ -979,6 +1007,10 @@ public class GetterUtil {
 	}
 
 	public static short[] getShortValues(Object value, short[] defaultValue) {
+		if (value == null) {
+			return defaultValue;
+		}
+
 		Class<?> clazz = value.getClass();
 
 		if (clazz.isArray()) {
@@ -1037,6 +1069,10 @@ public class GetterUtil {
 
 	public static String[] getStringValues(
 		Object value, String[] defaultValue) {
+
+		if (value == null) {
+			return defaultValue;
+		}
 
 		Class<?> clazz = value.getClass();
 

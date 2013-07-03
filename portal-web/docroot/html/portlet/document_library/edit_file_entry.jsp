@@ -292,7 +292,6 @@ portletURL.setParameter("fileEntryId", String.valueOf(fileEntryId));
 									dialog: {
 										constrain: true,
 										modal: true,
-										zIndex: Liferay.zIndex.WINDOW + 2,
 										width: 680
 									},
 									id: '<portlet:namespace />selectFolder',
@@ -508,6 +507,7 @@ portletURL.setParameter("fileEntryId", String.valueOf(fileEntryId));
 <aui:script>
 	function <portlet:namespace />changeFileEntryType() {
 		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.PREVIEW %>";
+
 		submitForm(document.<portlet:namespace />fm);
 	}
 
@@ -516,7 +516,8 @@ portletURL.setParameter("fileEntryId", String.valueOf(fileEntryId));
 	}
 
 	function <portlet:namespace />checkIn() {
-		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.UPDATE_AND_CHECKIN %>"
+		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.UPDATE_AND_CHECKIN %>";
+
 		submitForm(document.<portlet:namespace />fm);
 	}
 
@@ -532,6 +533,7 @@ portletURL.setParameter("fileEntryId", String.valueOf(fileEntryId));
 		}
 
 		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= (fileEntry == null) ? Constants.ADD : Constants.UPDATE %>";
+
 		submitForm(document.<portlet:namespace />fm);
 	}
 
