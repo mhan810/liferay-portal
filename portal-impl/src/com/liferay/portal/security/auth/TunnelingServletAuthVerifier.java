@@ -21,23 +21,20 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.http.TunnelUtil;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.PropsValues;
 import com.liferay.util.Encryptor;
 import com.liferay.util.EncryptorException;
+
+import java.security.InvalidKeyException;
 
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import javax.crypto.spec.SecretKeySpec;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Zsolt Berentey
@@ -92,11 +89,6 @@ public class TunnelingServletAuthVerifier implements AuthVerifier {
 			return null;
 		}
 
-		if (Validator.isNull(PropsValues.TUNNELING_SERVLET_PRESHARED_SECRET)) {
-			throw new AuthException(
-				"The tunneling servlet preshared key is not set");
-		}
-
 		String encodedCredentials = st.nextToken();
 
 		if (_log.isDebugEnabled()) {
@@ -122,20 +114,20 @@ public class TunnelingServletAuthVerifier implements AuthVerifier {
 
 		String expectedPassword = null;
 
-		SecretKeySpec keySpec = new SecretKeySpec(
-			PropsValues.TUNNELING_SERVLET_PRESHARED_SECRET.getBytes(),
-			TunnelUtil.TUNNEL_ENCRYPTION_ALGORITHM);
-
 		try {
-			expectedPassword = Encryptor.encrypt(keySpec, login);
+			expectedPassword = Encryptor.encrypt(
+				TunnelUtil.getPresharedKey(), login);
 		}
 		catch (EncryptorException e) {
 			throw new AuthException("Unable to decrypt login.", e);
 		}
+		catch (InvalidKeyException e) {
+			throw new AuthException(e);
+		}
 
 		if (!password.equals(expectedPassword)) {
 			throw new AuthException(
-				"TunnelingServletAuthVerifier preshared key does not match. " +
+				"Tunneling servlet preshared keys do not match. " +
 					"Please check your configurations");
 		}
 

@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.http;
 
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
@@ -30,7 +29,6 @@ import com.liferay.portal.security.auth.HttpPrincipal;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.util.Encryptor;
-import com.liferay.util.EncryptorException;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -39,6 +37,9 @@ import java.io.ObjectOutputStream;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import java.security.InvalidKeyException;
+import java.security.Key;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -53,32 +54,32 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class TunnelUtil {
 
-	public static final String TUNNEL_ENCRYPTION_ALGORITHM = "HmacSHA1";
+	public static Key getPresharedKey() throws InvalidKeyException {
+		String presharedKey = PropsValues.TUNNELING_SERVLET_PRESHARED_SECRET;
+
+		if (Validator.isNull(presharedKey)) {
+			throw new InvalidKeyException(
+				"The tunneling servlet preshared key is not set");
+		}
+
+		if ((presharedKey.length() != 16) && (presharedKey.length() != 32) &&
+			(presharedKey.length() != 64)) {
+
+			throw new InvalidKeyException(
+				"Invlaid tunneling servlet preshared key length. " +
+					"The key must be either 128, 256 or 512 bits long");
+		}
+
+		return new SecretKeySpec(
+			presharedKey.getBytes(), _TUNNEL_ENCRYPTION_ALGORITHM);
+	}
 
 	public static Object invoke(
 			HttpPrincipal httpPrincipal, MethodHandler methodHandler)
 		throws Exception {
 
-		if (Validator.isNull(PropsValues.TUNNELING_SERVLET_PRESHARED_SECRET)) {
-			throw new PortalException(
-				"The tunneling servlet preshared key is not set");
-		}
-
-		String login = httpPrincipal.getLogin();
-
-		String password = null;
-
-		SecretKeySpec keySpec = new SecretKeySpec(
-			PropsValues.TUNNELING_SERVLET_PRESHARED_SECRET.getBytes(),
-			TUNNEL_ENCRYPTION_ALGORITHM);
-
-		try {
-			password = Encryptor.encrypt(keySpec, login);
-		}
-		catch (EncryptorException e) {
-			throw new PortalException(
-				"Invalid tunneling servlet preshared key");
-		}
+		String password = Encryptor.encrypt(
+			getPresharedKey(), httpPrincipal.getLogin());
 
 		httpPrincipal.setPassword(password);
 
@@ -183,6 +184,8 @@ public class TunnelUtil {
 
 		return httpURLConnection;
 	}
+
+	private static final String _TUNNEL_ENCRYPTION_ALGORITHM = "AES";
 
 	private static final boolean _VERIFY_SSL_HOSTNAME = GetterUtil.getBoolean(
 		PropsUtil.get(TunnelUtil.class.getName() + ".verify.ssl.hostname"));
