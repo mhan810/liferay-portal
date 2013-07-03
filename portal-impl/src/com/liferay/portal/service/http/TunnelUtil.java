@@ -66,8 +66,8 @@ public class TunnelUtil {
 			(presharedKey.length() != 64)) {
 
 			throw new InvalidKeyException(
-				"Invlaid tunneling servlet preshared key length. " +
-					"The key must be either 128, 256 or 512 bits long");
+				"The configured preshared key must be either 16, 32 or 64 " +
+					"characters in length.");
 		}
 
 		return new SecretKeySpec(
