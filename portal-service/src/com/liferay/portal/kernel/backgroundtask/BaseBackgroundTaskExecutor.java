@@ -14,6 +14,10 @@
 
 package com.liferay.portal.kernel.backgroundtask;
 
+import java.io.Serializable;
+
+import java.util.Map;
+
 /**
  * @author Michael C. Han
  */
@@ -23,6 +27,16 @@ public abstract class BaseBackgroundTaskExecutor
 	@Override
 	public boolean isSerial() {
 		return _serial;
+	}
+
+	protected BackgroundTaskResult processError(
+		Map<String, Serializable> taskContextMap, String message) {
+
+		BackgroundTaskResult failureBackgroundTaskResult =
+			new BackgroundTaskResult(
+				BackgroundTaskConstants.STATUS_FAILED, message);
+
+		return failureBackgroundTaskResult;
 	}
 
 	protected void setSerial(boolean serial) {
