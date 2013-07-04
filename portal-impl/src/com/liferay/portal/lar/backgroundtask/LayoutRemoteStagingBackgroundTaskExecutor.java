@@ -15,7 +15,6 @@
 package com.liferay.portal.lar.backgroundtask;
 
 import com.liferay.portal.NoSuchLayoutException;
-import com.liferay.portal.RemoteExportException;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskResult;
 import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -58,6 +57,11 @@ public class LayoutRemoteStagingBackgroundTaskExecutor
 
 		long[] layoutIds = processLayoutIdMap(
 			layoutIdMap, httpPrincipal, remoteGroupId);
+
+		if ((layoutIds != null) && (layoutIds.length <= 0)) {
+			return processError(
+				taskContextMap, "there-are-no-layouts-in-the-exported-data");
+		}
 
 		long sourceGroupId = MapUtil.getLong(taskContextMap, "groupId");
 		boolean privateLayout = MapUtil.getBoolean(
@@ -163,13 +167,7 @@ public class LayoutRemoteStagingBackgroundTaskExecutor
 			}
 		}
 
-		long[] layoutIds = getLayoutIds(layouts);
-
-		if (layoutIds.length <= 0) {
-			throw new RemoteExportException(RemoteExportException.NO_LAYOUTS);
-		}
-
-		return layoutIds;
+		return getLayoutIds(layouts);
 	}
 
 }
