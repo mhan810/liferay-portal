@@ -64,11 +64,11 @@ String hideOptionsMessage = LanguageUtil.get(pageContext, "hide-spell-check-opti
 
 	var toggleNestedInputs = function(parentNode, newToggleValue) {
 
-		if(parentNode) {
+		if (parentNode) {
 			parentNode.all('input')
 				.each(
 					function(node) {
-						if(newToggleValue) {
+						if (newToggleValue) {
 							node.removeAttribute(_DISABLED);
 						}
 						else {
@@ -84,7 +84,7 @@ String hideOptionsMessage = LanguageUtil.get(pageContext, "hide-spell-check-opti
 
 	collatedSpellCheckResultEnabledCheckbox.after(
 		'change',
-		function(event){
+		function(event) {
 			var checked = collatedSpellCheckResultEnabledCheckbox.attr('checked');
 
 			collatedSpellCheckResultOptionsContainer.toggle(checked);
@@ -98,7 +98,7 @@ String hideOptionsMessage = LanguageUtil.get(pageContext, "hide-spell-check-opti
 
 	querySuggestionsEnabledCheckbox.after(
 		'change',
-		function(event){
+		function(event) {
 			var checked = querySuggestionsEnabledCheckbox.attr('checked');
 
 			querySuggestionsOptionsContainer.toggle(checked);
@@ -112,7 +112,7 @@ String hideOptionsMessage = LanguageUtil.get(pageContext, "hide-spell-check-opti
 
 	queryIndexingEnabledCheckbox.after(
 		'change',
-		function(event){
+		function(event) {
 			var checked = queryIndexingEnabledCheckbox.attr('checked');
 
 			queryIndexingOptionsContainer.toggle(checked);
