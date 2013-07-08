@@ -23,32 +23,33 @@ import com.liferay.portal.kernel.util.Validator;
 public class TemplateVariableDefinition {
 
 	public TemplateVariableDefinition(
-		String label, Class<?> clazz, String variableName) {
+		String label, Class<?> clazz, String name, String accessor) {
 
 		this(
-			label, clazz, StringPool.BLANK, variableName, label.concat("-help"),
-			false, null);
+			label, clazz, StringPool.BLANK, name, accessor,
+			label.concat("-help"), false, null);
 	}
 
 	public TemplateVariableDefinition(
-		String label, Class<?> clazz, String dataType, String variableName,
-		String help, boolean repeatable,
+		String label, Class<?> clazz, String dataType, String name,
+		String accessor, String help, boolean repeatable,
 		TemplateVariableCodeHandler templateVariableCodeHandler) {
 
 		_label = label;
 		_clazz = clazz;
 		_dataType = dataType;
-		_name = variableName;
+		_name = name;
+		_accessor = accessor;
 		_help = help;
 		_repeatable = repeatable;
 		_templateVariableCodeHandler = templateVariableCodeHandler;
 	}
 
 	public TemplateVariableDefinition(
-		String label, Class<?> clazz, String variableName,
+		String label, Class<?> clazz, String name,
 		TemplateVariableDefinition itemTemplateVariableDefinition) {
 
-		this(label, clazz, variableName);
+		this(label, clazz, name, StringPool.BLANK);
 
 		_itemTemplateVariableDefinition = itemTemplateVariableDefinition;
 	}
@@ -66,7 +67,9 @@ public class TemplateVariableDefinition {
 		TemplateVariableDefinition templateVariableDefinition =
 			(TemplateVariableDefinition)obj;
 
-		if (Validator.equals(_name, templateVariableDefinition._name)) {
+		if (Validator.equals(_name, templateVariableDefinition._name) &&
+			Validator.equals(_accessor, templateVariableDefinition._accessor)) {
+
 			return true;
 		}
 
@@ -79,6 +82,10 @@ public class TemplateVariableDefinition {
 		}
 
 		return _templateVariableCodeHandler.generate(this, language);
+	}
+
+	public String getAccessor() {
+		return _accessor;
 	}
 
 	public Class<?> getClazz() {
@@ -121,6 +128,7 @@ public class TemplateVariableDefinition {
 		return _repeatable;
 	}
 
+	private String _accessor;
 	private Class<?> _clazz;
 	private String _dataType;
 	private String _help;

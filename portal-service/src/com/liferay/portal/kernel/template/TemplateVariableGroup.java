@@ -30,10 +30,12 @@ public class TemplateVariableGroup {
 
 	public TemplateVariableDefinition addCollectionVariable(
 		String collectionLabel, Class<?> collectionClazz, String collectionName,
-		String itemLabel, Class<?> itemClazz, String itemName) {
+		String itemLabel, Class<?> itemClazz, String itemName,
+		String itemAccessor) {
 
 		TemplateVariableDefinition itemTemplateVariableDefinition =
-			new TemplateVariableDefinition(itemLabel, itemClazz, itemName);
+			new TemplateVariableDefinition(
+				itemLabel, itemClazz, itemName, itemAccessor);
 
 		TemplateVariableDefinition collectionTemplateVariableDefinition =
 			new TemplateVariableDefinition(
@@ -52,7 +54,7 @@ public class TemplateVariableGroup {
 
 		TemplateVariableDefinition templateVariableDefinition =
 			new TemplateVariableDefinition(
-				label, clazz, dataType, variableName, help, repeatable,
+				label, clazz, dataType, variableName, null, help, repeatable,
 				templateVariableCodeHandler);
 
 		_templateVariableDefinitions.add(templateVariableDefinition);
@@ -70,18 +72,24 @@ public class TemplateVariableGroup {
 			TemplateVariableDefinition templateVariableDefinition =
 				new TemplateVariableDefinition(
 					label, serviceClass, "service-locator",
-					serviceClass.getCanonicalName(), label + "-help", false,
-					null);
+					serviceClass.getCanonicalName(), null, label + "-help",
+					false, null);
 
 			_templateVariableDefinitions.add(templateVariableDefinition);
 		}
 	}
 
 	public TemplateVariableDefinition addVariable(
-		String label, Class<?> clazz, String variableName) {
+		String label, Class<?> clazz, String name) {
+
+		return addVariable(label, clazz, name, null);
+	}
+
+	public TemplateVariableDefinition addVariable(
+		String label, Class<?> clazz, String name, String accessor) {
 
 		TemplateVariableDefinition templateVariableDefinition =
-			new TemplateVariableDefinition(label, clazz, variableName);
+			new TemplateVariableDefinition(label, clazz, name, accessor);
 
 		_templateVariableDefinitions.add(templateVariableDefinition);
 

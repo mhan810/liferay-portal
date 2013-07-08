@@ -32,34 +32,14 @@ public class BackgroundTaskContextMapFactory {
 		Map<String, String[]> parameterMap, Date startDate, Date endDate,
 		String fileName) {
 
-		Map<String, Serializable> taskContextMap =
-			new HashMap<String, Serializable>();
-
-		if (endDate != null) {
-			taskContextMap.put("endDate", endDate);
-		}
-
-		taskContextMap.put("fileName", fileName);
-		taskContextMap.put("groupId", groupId);
+		Map<String, Serializable> taskContextMap = doBuildTaskContextMap(
+			userId, groupId, parameterMap, startDate, endDate, fileName);
 
 		if ((layoutIds != null) && (layoutIds.length > 0)) {
 			taskContextMap.put("layoutIds", layoutIds);
 		}
 
-		if (parameterMap != null) {
-			HashMap<String, String[]> serializableParameterMap =
-				new HashMap<String, String[]>(parameterMap);
-
-			taskContextMap.put("parameterMap", serializableParameterMap);
-		}
-
 		taskContextMap.put("privateLayout", privateLayout);
-
-		if (startDate != null) {
-			taskContextMap.put("startDate", startDate);
-		}
-
-		taskContextMap.put("userId", userId);
 
 		return taskContextMap;
 	}
@@ -69,11 +49,31 @@ public class BackgroundTaskContextMapFactory {
 		Map<String, String[]> parameterMap, Date startDate, Date endDate,
 		String fileName) {
 
+		Map<String, Serializable> taskContextMap = doBuildTaskContextMap(
+			userId, groupId, parameterMap, startDate, endDate, fileName);
+
+		taskContextMap.put("plid", plid);
+
+		if (Validator.isNotNull(portletId)) {
+			taskContextMap.put("portletId", portletId);
+		}
+
+		return taskContextMap;
+	}
+
+	protected static Map<String, Serializable> doBuildTaskContextMap(
+		long userId, long groupId, Map<String, String[]> parameterMap,
+		Date startDate, Date endDate, String fileName) {
+
 		Map<String, Serializable> taskContextMap =
 			new HashMap<String, Serializable>();
 
 		if (endDate != null) {
 			taskContextMap.put("endDate", endDate);
+		}
+
+		if (startDate != null) {
+			taskContextMap.put("startDate", startDate);
 		}
 
 		taskContextMap.put("fileName", fileName);
@@ -84,16 +84,6 @@ public class BackgroundTaskContextMapFactory {
 				new HashMap<String, String[]>(parameterMap);
 
 			taskContextMap.put("parameterMap", serializableParameterMap);
-		}
-
-		taskContextMap.put("plid", plid);
-
-		if (Validator.isNotNull(portletId)) {
-			taskContextMap.put("portletId", portletId);
-		}
-
-		if (startDate != null) {
-			taskContextMap.put("startDate", startDate);
 		}
 
 		taskContextMap.put("userId", userId);

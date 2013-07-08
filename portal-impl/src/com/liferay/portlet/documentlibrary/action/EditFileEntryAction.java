@@ -547,10 +547,7 @@ public class EditFileEntryAction extends PortletAction {
 				SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA,
 			data);
 
-		SessionMessages.add(
-			actionRequest,
-			liferayPortletConfig.getPortletId() +
-				SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE);
+		hideDefaultSuccessMessage(liferayPortletConfig, actionRequest);
 	}
 
 	protected void deleteTempFileEntry(

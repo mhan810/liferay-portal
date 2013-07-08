@@ -253,6 +253,18 @@ public class PortletAction extends Action {
 		return getResources();
 	}
 
+	protected void hideDefaultSuccessMessage(
+		PortletConfig portletConfig, PortletRequest portletRequest) {
+
+		LiferayPortletConfig liferayPortletConfig =
+			(LiferayPortletConfig)portletConfig;
+
+		SessionMessages.add(
+			portletRequest,
+			liferayPortletConfig.getPortletId() +
+				SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE);
+	}
+
 	protected boolean isCheckMethodOnProcessAction() {
 		return _CHECK_METHOD_ON_PROCESS_ACTION;
 	}

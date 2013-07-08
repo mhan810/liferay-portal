@@ -1,4 +1,6 @@
 <definition>
+	<execute test-case="CPCategoriesAcceptance" />
+
 	<execute test-case="CPPagetemplatesAcceptance" />
 
 	<execute test-case="CPSitemembershipsAcceptance" />
@@ -17,5 +19,11 @@
 
 	<execute test-case="PGWebcontentlistAcceptance" />
 
+	<execute test-case="RecyclebinBlogsAcceptance" />
+
+	<execute test-case="RecyclebinMessageboardsAcceptance" />
+
+	<execute test-case="RecyclebinWebcontentAcceptance" />
+	
 	<execute test-case="DockbarAcceptance" />
 </definition>
