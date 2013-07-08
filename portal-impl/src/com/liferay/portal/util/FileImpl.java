@@ -848,6 +848,13 @@ public class FileImpl implements com.liferay.portal.kernel.util.File {
 	}
 
 	@Override
+	public void write(File file, byte[] bytes, int offset, int length)
+		throws IOException {
+
+		write(file, bytes, offset, bytes.length, false);
+	}
+
+	@Override
 	public void write(
 			File file, byte[] bytes, int offset, int length, boolean append)
 		throws IOException {
