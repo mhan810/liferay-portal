@@ -97,6 +97,7 @@ boolean includeSystemPortlets = false;
 %>
 
 <%@ include file="/html/portlet/search/init-ext.jsp" %>
+<%@ include file="/html/portlet/search/init-suggest.jsp" %>
 
 <%!
 private String _buildAssetCategoryPath(AssetCategory assetCategory, Locale locale) throws Exception {

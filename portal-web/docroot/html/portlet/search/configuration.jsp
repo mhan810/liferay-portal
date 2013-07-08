@@ -59,6 +59,8 @@
 
 	<br />
 
+	<%@ include file="/html/portlet/search/configuration_spell_check.jspf" %>
+
 	<aui:fieldset label="other-settings">
 		<c:if test="<%= permissionChecker.isCompanyAdmin() %>">
 			<aui:input helpMessage="display-results-in-document-form-help" name="preferences--displayResultsInDocumentForm--" type="checkbox" value="<%= displayResultsInDocumentForm %>" />
