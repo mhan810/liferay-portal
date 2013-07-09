@@ -94,7 +94,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		FileOutputStream fileOutputStream = null;
 
 		try {
-			tempFile = FileUtil.createTempFile();
+			tempFile = FileUtil.createTempFile("lar");
 
 			fileOutputStream = new FileOutputStream(tempFile);
 
