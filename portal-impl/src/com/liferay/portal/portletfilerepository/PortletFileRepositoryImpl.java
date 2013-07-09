@@ -95,6 +95,7 @@ public class PortletFileRepositoryImpl implements PortletFileRepository {
 
 		serviceContext.setAddGroupPermissions(true);
 		serviceContext.setAddGuestPermissions(true);
+		serviceContext.setIndexingEnabled(false);
 
 		Repository repository = addPortletRepository(
 			groupId, portletId, serviceContext);
