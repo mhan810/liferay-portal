@@ -342,10 +342,24 @@ public class StagingImpl implements Staging {
 				httpPrincipal, remoteGroupId, md5Checksum);
 
 			while ((readBytes = fileInputStream.read(byteBuffer)) >= 0) {
+				if (readBytes < bufferSize) {
+					byte[] tempByteBuffer = new byte[byteBuffer.length];
+
+					System.arraycopy(
+						byteBuffer, 0, tempByteBuffer, 0, byteBuffer.length);
+
+					byteBuffer = new byte[readBytes];
+
+					System.arraycopy(
+						tempByteBuffer, 0, byteBuffer, 0, readBytes);
+				}
+
 				StagingServiceHttp.stage(
 					httpPrincipal, stagingRequestId, fileName, byteBuffer);
 
-				byteBuffer = new byte[bufferSize];
+				if (readBytes < bufferSize) {
+					byteBuffer = new byte[bufferSize];
+				}
 			}
 
 			StagingServiceHttp.publish(
