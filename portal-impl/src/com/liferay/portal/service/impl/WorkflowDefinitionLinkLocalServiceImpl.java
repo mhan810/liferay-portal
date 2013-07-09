@@ -52,6 +52,7 @@ public class WorkflowDefinitionLinkLocalServiceImpl
 		throws PortalException, SystemException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
+		groupId = StagingUtil.getLiveGroupId(groupId);
 		long classNameId = PortalUtil.getClassNameId(className);
 		Date now = new Date();
 
@@ -130,13 +131,10 @@ public class WorkflowDefinitionLinkLocalServiceImpl
 			return null;
 		}
 
+		groupId = StagingUtil.getLiveGroupId(groupId);
 		long classNameId = PortalUtil.getClassNameId(className);
 
 		WorkflowDefinitionLink workflowDefinitionLink = null;
-
-		if (groupId > 0) {
-			groupId = StagingUtil.getLiveGroupId(groupId);
-		}
 
 		workflowDefinitionLink =
 			workflowDefinitionLinkPersistence.fetchByG_C_C_C_T(
@@ -288,6 +286,7 @@ public class WorkflowDefinitionLinkLocalServiceImpl
 		throws PortalException, SystemException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
+		groupId = StagingUtil.getLiveGroupId(groupId);
 		long classNameId = PortalUtil.getClassNameId(className);
 		Date now = new Date();
 

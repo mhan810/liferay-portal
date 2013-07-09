@@ -58,10 +58,22 @@ String initMethod = (String)request.getAttribute("liferay-ui:input-editor:initMe
 boolean inlineEdit = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:inlineEdit"));
 String inlineEditSaveURL = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:inlineEditSaveURL"));
 
+String onBlurMethod = (String)request.getAttribute("liferay-ui:input-editor:onBlurMethod");
+
+if (Validator.isNotNull(onBlurMethod)) {
+	onBlurMethod = namespace + onBlurMethod;
+}
+
 String onChangeMethod = (String)request.getAttribute("liferay-ui:input-editor:onChangeMethod");
 
 if (Validator.isNotNull(onChangeMethod)) {
 	onChangeMethod = namespace + onChangeMethod;
+}
+
+String onFocusMethod = (String)request.getAttribute("liferay-ui:input-editor:onFocusMethod");
+
+if (Validator.isNotNull(onFocusMethod)) {
+	onFocusMethod = namespace + onFocusMethod;
 }
 
 boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:resizable"));
@@ -141,10 +153,13 @@ if (!inlineEdit) {
 			return window['<%= name %>'].getCkData();
 		},
 
-		<%
-		if (Validator.isNotNull(onChangeMethod)) {
-		%>
+		<c:if test="<%= Validator.isNotNull(onBlurMethod) %>">
+			onBlurCallback: function() {
+				<%= HtmlUtil.escapeJS(onBlurMethod) %>(CKEDITOR.instances['<%= name %>']);
+			},
+		</c:if>
 
+		<c:if test="<%= Validator.isNotNull(onChangeMethod) %>">
 			onChangeCallback: function() {
 				var ckEditor = CKEDITOR.instances['<%= name %>'];
 				var dirty = ckEditor.checkDirty();
@@ -155,10 +170,13 @@ if (!inlineEdit) {
 					ckEditor.resetDirty();
 				}
 			},
+		</c:if>
 
-		<%
-		}
-		%>
+		<c:if test="<%= Validator.isNotNull(onFocusMethod) %>">
+			onFocusCallback: function() {
+				<%= HtmlUtil.escapeJS(onFocusMethod) %>(CKEDITOR.instances['<%= name %>']);
+			},
+		</c:if>
 
 		setHTML: function(value) {
 			CKEDITOR.instances['<%= name %>'].setData(value);
@@ -248,10 +266,7 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 
 		var customDataProcessorLoaded = false;
 
-		<%
-		if (useCustomDataProcessor) {
-		%>
-
+		<c:if test="<%= useCustomDataProcessor %>">
 			ckEditor.on(
 				'customDataProcessorLoaded',
 				function() {
@@ -262,10 +277,7 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 					}
 				}
 			);
-
-		<%
-		}
-		%>
+		</c:if>
 
 		var instanceReady = false;
 
@@ -273,23 +285,24 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 			'instanceReady',
 			function() {
 
-			<c:choose>
-				<c:when test="<%= useCustomDataProcessor %>">
-					instanceReady = true;
+				<c:choose>
+					<c:when test="<%= useCustomDataProcessor %>">
+						instanceReady = true;
 
-					if (customDataProcessorLoaded) {
+						if (customDataProcessorLoaded) {
+							initData();
+						}
+					</c:when>
+					<c:otherwise>
 						initData();
-					}
-				</c:when>
-				<c:otherwise>
-					initData();
-				</c:otherwise>
-			</c:choose>
+					</c:otherwise>
+				</c:choose>
 
-	<%
-			if (Validator.isNotNull(onChangeMethod)) {
-				%>
+				<c:if test="<%= Validator.isNotNull(onBlurMethod) %>">
+					CKEDITOR.instances['<%= name %>'].on('blur', window['<%= name %>'].onBlurCallback);
+				</c:if>
 
+				<c:if test="<%= Validator.isNotNull(onChangeMethod) %>">
 					setInterval(
 						function() {
 							try {
@@ -300,10 +313,11 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 						},
 						300
 					);
+				</c:if>
 
-				<%
-				}
-				%>
+				<c:if test="<%= Validator.isNotNull(onFocusMethod) %>">
+					CKEDITOR.instances['<%= name %>'].on('focus', window['<%= name %>'].onFocusCallback);
+				</c:if>
 
 			}
 		);

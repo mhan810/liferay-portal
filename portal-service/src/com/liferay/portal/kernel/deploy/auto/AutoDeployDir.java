@@ -226,7 +226,12 @@ public class AutoDeployDir {
 	}
 
 	protected void scanDirectory() {
-		File[] files = _deployDir.listFiles();
+		File[] files = null;
+
+		if (_deployDir == null || !_deployDir.isDirectory() ||
+			(files = _deployDir.listFiles()) == null) {
+			return;
+		}
 
 		Set<String> blacklistedFileNames = _blacklistFileTimestamps.keySet();
 

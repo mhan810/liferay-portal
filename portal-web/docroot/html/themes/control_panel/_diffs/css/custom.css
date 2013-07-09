@@ -102,7 +102,7 @@ $dockbarOpenGradientStart: #00A0FF;
 					font-weight: normal;
 				}
 
-				span img {
+				.control-panel-home-link img {
 					display: none;
 				}
 			}
@@ -538,6 +538,10 @@ $dockbarOpenGradientStart: #00A0FF;
 		.control-group {
 			margin-bottom: 0;
 		}
+	}
+
+	.textboxlistentry-holder {
+		margin-left: 0;
 	}
 
 	/* ---------- My Account Popup ---------- */
