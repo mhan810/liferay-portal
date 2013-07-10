@@ -29,12 +29,12 @@ public interface DictionaryIndexer {
 		long companyId, long[] groupIds, Locale locale, String keywords);
 
 	public void indexDictionary(
-		SearchContext searchContext, InputStream inputStream)
+			long companyId, long[] groupIds, Locale locale,
+			InputStream inputStream)
 		throws SearchException;
 
 	public void indexDictionary(
-			long companyId, long[] groupIds, Locale locale,
-			InputStream inputStream)
+			SearchContext searchContext, InputStream inputStream)
 		throws SearchException;
 
 }

@@ -24,26 +24,24 @@ import java.util.Locale;
 public class DictionaryIndexerUtil {
 
 	public static void indexDictionary(
-			SearchContext searchContext, InputStream inputStream)
-		throws SearchException {
-
-		_dictionaryIndexer.indexDictionary(searchContext, inputStream);
-	}
-
-	public static void indexDictionary(
-			long companyId, long[] groupIds, Locale locale, InputStream inputStream)
+			long companyId, long[] groupIds, Locale locale,
+			InputStream inputStream)
 		throws SearchException {
 
 		_dictionaryIndexer.indexDictionary(
 			companyId, groupIds, locale, inputStream);
 	}
 
-	public void setDictionaryIndexer(
-		DictionaryIndexer dictionaryIndexer) {
+	public static void indexDictionary(
+			SearchContext searchContext, InputStream inputStream)
+		throws SearchException {
 
-		_dictionaryIndexer = dictionaryIndexer;
+		_dictionaryIndexer.indexDictionary(searchContext, inputStream);
 	}
 
+	public void setDictionaryIndexer(DictionaryIndexer dictionaryIndexer) {
+		_dictionaryIndexer = dictionaryIndexer;
+	}
 
 	private static DictionaryIndexer _dictionaryIndexer;
 }

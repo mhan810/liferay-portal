@@ -39,18 +39,18 @@ public class CustomEntriesRegistryUtil {
 
 	}
 
-	public void addCustomEntries(
-		Map<ClassLoader, List<CustomEntry>> customEntries) {
-
-		_customEntries.putAll(customEntries);
+	public static Map<ClassLoader, List<CustomEntry>> getCustomEntries() {
+		return _customEntries;
 	}
 
 	public static List<CustomEntry> getCustomEntries(ClassLoader classLoader) {
 		return _customEntries.get(classLoader);
 	}
 
-	public static Map<ClassLoader, List<CustomEntry>> getCustomEntries() {
-		return _customEntries;
+	public void addCustomEntries(
+		Map<ClassLoader, List<CustomEntry>> customEntries) {
+
+		_customEntries.putAll(customEntries);
 	}
 
 	private static Map<ClassLoader, List<CustomEntry>> _customEntries =

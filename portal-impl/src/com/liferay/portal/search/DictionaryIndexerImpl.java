@@ -77,16 +77,6 @@ public class DictionaryIndexerImpl implements DictionaryIndexer {
 
 	@Override
 	public void indexDictionary(
-		SearchContext searchContext, InputStream inputStream)
-		throws SearchException {
-
-		indexDictionary(
-			searchContext.getCompanyId(), searchContext.getGroupIds(),
-			searchContext.getLocale(), inputStream);
-	}
-
-	@Override
-	public void indexDictionary(
 			long companyId, long[] groupIds, Locale locale,
 			InputStream inputStream)
 		throws SearchException {
@@ -115,7 +105,6 @@ public class DictionaryIndexerImpl implements DictionaryIndexer {
 
 			if (line.charAt(0) == CustomEntryIndexer.UNICODE_BYTE_ORDER_MARK) {
 				line = line.substring(1);
-
 			}
 
 			int lineCounter = 0;
@@ -178,6 +167,16 @@ public class DictionaryIndexerImpl implements DictionaryIndexer {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void indexDictionary(
+			SearchContext searchContext, InputStream inputStream)
+		throws SearchException {
+
+		indexDictionary(
+			searchContext.getCompanyId(), searchContext.getGroupIds(),
+			searchContext.getLocale(), inputStream);
 	}
 
 	public void setBatchSize(int batchSize) {
@@ -252,12 +251,12 @@ public class DictionaryIndexerImpl implements DictionaryIndexer {
 
 	private static final int _DEFAULT_BATCH_SIZE = 1000;
 
+	private static Log _log = LogFactoryUtil.getLog(
+		DictionaryIndexerImpl.class);
+
 	private static CacheKeyGenerator _cacheKeyGenerator;
 
 	private int _batchSize = _DEFAULT_BATCH_SIZE;
 	private Document _document;
-
-	private static Log _log = LogFactoryUtil.getLog(
-		DictionaryIndexerImpl.class);
 
 }

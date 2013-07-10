@@ -133,8 +133,8 @@ public class QuerySuggestionIndexerImpl implements QuerySuggestionIndexer {
 
 				if (lineCounter == _batchSize || line == null) {
 					SearchEngineUtil.addDocuments(
-						SearchEngineUtil.getDefaultSearchEngineId(),
-						companyId, documents);
+						SearchEngineUtil.getDefaultSearchEngineId(), companyId,
+						documents);
 
 					documents.clear();
 
@@ -215,6 +215,16 @@ public class QuerySuggestionIndexerImpl implements QuerySuggestionIndexer {
 		return document;
 	}
 
+	protected void indexQuerySuggestion(
+			long companyId, long[] groupIds, Locale locale,
+			String querySuggestion)
+		throws SearchException {
+
+		indexQuerySuggestions(
+			companyId, groupIds, locale,
+			Collections.singletonList(querySuggestion));
+	}
+
 	protected void indexQuerySuggestions(
 			long companyId, long[] groupIds, Locale locale,
 			List<String> querySuggestions)
@@ -239,26 +249,17 @@ public class QuerySuggestionIndexerImpl implements QuerySuggestionIndexer {
 			suggestionsDocuments);
 	}
 
-	protected void indexQuerySuggestion(
-			long companyId, long[] groupIds, Locale locale,
-			String querySuggestion)
-		throws SearchException {
-
-		indexQuerySuggestions(
-			companyId, groupIds, locale,
-			Collections.singletonList(querySuggestion));
-	}
-
 	private static final int _DEFAULT_BATCH_SIZE = 1000;
+
 	private static final int _DEFAULT_MAX_N_GRAMS = 50;
+
+	private static Log _log = LogFactoryUtil.getLog(
+		QuerySuggestionIndexerImpl.class);
 
 	private static CacheKeyGenerator _cacheKeyGenerator;
 
 	private int _batchSize = _DEFAULT_BATCH_SIZE;
 	private Document _document;
 	private int _maxNGrams =_DEFAULT_MAX_N_GRAMS;
-
-	private static Log _log = LogFactoryUtil.getLog(
-		(QuerySuggestionIndexerImpl.class));
 
 }
