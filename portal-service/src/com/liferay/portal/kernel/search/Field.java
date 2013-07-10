@@ -123,6 +123,8 @@ public class Field implements Serializable {
 
 	public static final String SNIPPET = "snippet";
 
+	public static final String SPELL_CHECK_WEIGHT = "spellCheckWeight";
+
 	public static final String SPELL_CHECK_WORD = "spellCheckWord";
 
 	public static final String STAGING_GROUP = "stagingGroup";
