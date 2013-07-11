@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.backgroundtask;
 
+import com.liferay.portal.DuplicateLockException;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.BackgroundTask;
 import com.liferay.portal.model.Lock;
@@ -21,6 +22,7 @@ import com.liferay.portal.service.LockLocalServiceUtil;
 
 /**
  * @author Michael C. Han
+ * @author Zsolt Berentey
  */
 public class SerialBackgroundTaskExecutor implements BackgroundTaskExecutor {
 
@@ -36,16 +38,29 @@ public class SerialBackgroundTaskExecutor implements BackgroundTaskExecutor {
 
 		Lock lock = null;
 
+		String owner =
+			backgroundTask.getName() + StringPool.POUND +
+				backgroundTask.getBackgroundTaskId();
+
 		try {
 			if (isSerial()) {
-				String owner =
-					backgroundTask.getName() + StringPool.POUND +
-						backgroundTask.getBackgroundTaskId();
+				while (true) {
+					try {
+						lock = LockLocalServiceUtil.lock(
+							BackgroundTaskExecutor.class.getName(),
+							backgroundTask.getTaskExecutorClassName(), owner,
+							false);
 
-				lock = LockLocalServiceUtil.lock(
-					backgroundTask.getUserId(),
-					BackgroundTaskExecutor.class.getName(),
-					backgroundTask.getTaskExecutorClassName(), owner, false, 0);
+						break;
+					}
+					catch (Exception e) {
+						continue;
+					}
+				}
+
+				if (!lock.isNew()) {
+					throw new DuplicateLockException(lock);
+				}
 			}
 
 			return _backgroundTaskExecutor.execute(backgroundTask);
@@ -53,8 +68,8 @@ public class SerialBackgroundTaskExecutor implements BackgroundTaskExecutor {
 		finally {
 			if (lock != null) {
 				LockLocalServiceUtil.unlock(
-					BaseBackgroundTaskExecutor.class.getName(),
-					backgroundTask.getTaskExecutorClassName());
+					BackgroundTaskExecutor.class.getName(),
+					backgroundTask.getTaskExecutorClassName(), owner, false);
 			}
 		}
 	}
