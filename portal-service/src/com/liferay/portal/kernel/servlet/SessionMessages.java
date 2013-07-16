@@ -375,15 +375,14 @@ public class SessionMessages {
 	}
 
 	public static int size(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return 0;
-        } else {
-            return size(session);
-        }
+		return size(request.getSession(false));
 	}
 
 	public static int size(HttpSession session) {
+		if (session == null) {
+			return 0;
+		}
+
 		Map<String, Object> map = _getMap(session, false);
 
 		if (map == null) {
