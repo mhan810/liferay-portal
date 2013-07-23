@@ -16,23 +16,6 @@
 
 <%@ include file="/html/portlet/portal_settings/init.jsp" %>
 
-<%
-User user2 = company.getDefaultUser();
-
-Locale[] locales = LanguageUtil.getAvailableLocales();
-String[] languageIds = LocaleUtil.toLanguageIds(locales);
-
-String timeZoneId = ParamUtil.getString(request, "timeZoneId", user2.getTimeZoneId());
-String languageId = ParamUtil.getString(request, "languageId", user2.getLanguageId());
-String availableLocales = StringUtil.merge(languageIds);
-
-boolean companySecurityCommunityLogo = company.isSiteLogo();
-
-String defaultRegularThemeId = PrefsPropsUtil.getString(company.getCompanyId(), PropsKeys.DEFAULT_REGULAR_THEME_ID, PropsValues.DEFAULT_REGULAR_THEME_ID);
-String defaultWapThemeId = PrefsPropsUtil.getString(company.getCompanyId(), PropsKeys.DEFAULT_WAP_THEME_ID, PropsValues.DEFAULT_WAP_THEME_ID);
-String defaultControlPanelThemeId = PrefsPropsUtil.getString(company.getCompanyId(), PropsKeys.CONTROL_PANEL_LAYOUT_REGULAR_THEME_ID, PropsValues.CONTROL_PANEL_LAYOUT_REGULAR_THEME_ID);
-%>
-
 <liferay-ui:error-marker key="errorSection" value="displaySettings" />
 
 <h3><liferay-ui:message key="language-and-time-zone" /></h3>
@@ -43,12 +26,16 @@ String defaultControlPanelThemeId = PrefsPropsUtil.getString(company.getCompanyI
 	<aui:select label="default-language" name="languageId">
 
 		<%
-		Locale locale2 = LocaleUtil.fromLanguageId(languageId);
+		User defaultUser = company.getDefaultUser();
 
-		for (int i = 0; i < locales.length; i++) {
+		String languageId = ParamUtil.getString(request, "languageId", defaultUser.getLanguageId());
+
+		Locale companyLocale = LocaleUtil.fromLanguageId(languageId);
+
+		for (Locale availableLocale : LanguageUtil.getAvailableLocales()) {
 		%>
 
-			<aui:option label="<%= locales[i].getDisplayName(locale) %>" lang="<%= LocaleUtil.toW3cLanguageId(locales[i]) %>" selected="<%= (locale2.getLanguage().equals(locales[i].getLanguage()) && locale2.getCountry().equals(locales[i].getCountry())) %>" value="<%= LocaleUtil.toLanguageId(locales[i]) %>" />
+			<aui:option label="<%= availableLocale.getDisplayName(locale) %>" lang="<%= LocaleUtil.toW3cLanguageId(availableLocale) %>" selected="<%= Validator.equals(companyLocale.getLanguage(), availableLocale.getLanguage()) && Validator.equals(companyLocale.getCountry(), availableLocale.getCountry()) %>" value="<%= LocaleUtil.toLanguageId(availableLocale) %>" />
 
 		<%
 		}
@@ -57,28 +44,32 @@ String defaultControlPanelThemeId = PrefsPropsUtil.getString(company.getCompanyI
 	</aui:select>
 
 	<aui:fieldset cssClass="available-languages" label="available-languages">
-		<aui:input name='<%= "settings--" + PropsKeys.LOCALES + "--" %>' type="hidden" value="<%= availableLocales %>" />
 
 		<%
-		Set<String> availableLanguageIdsSet = SetUtil.fromArray(PropsValues.LOCALES);
+		String[] availableLanguageIds = LocaleUtil.toLanguageIds(LanguageUtil.getAvailableLocales());
+		%>
+
+		<aui:input name='<%= "settings--" + PropsKeys.LOCALES + "--" %>' type="hidden" value="<%= StringUtil.merge(availableLanguageIds) %>" />
+
+		<%
 
 		// Left list
 
 		List leftList = new ArrayList();
 
-		for (String curLanguageId : languageIds) {
-			leftList.add(new KeyValuePair(curLanguageId, LocaleUtil.fromLanguageId(curLanguageId).getDisplayName(locale)));
+		for (Locale availableLocale : LanguageUtil.getAvailableLocales()) {
+			leftList.add(new KeyValuePair(LocaleUtil.toLanguageId(availableLocale), availableLocale.getDisplayName(locale)));
 		}
 
 		// Right list
 
 		List rightList = new ArrayList();
 
-		Arrays.sort(languageIds);
+		for (String propsValuesLanguageId : SetUtil.fromArray(PropsValues.LOCALES)) {
+			if (!ArrayUtil.contains(availableLanguageIds, propsValuesLanguageId)) {
+				Locale propsValuesLocale = LocaleUtil.fromLanguageId(propsValuesLanguageId);
 
-		for (String curLanguageId : availableLanguageIdsSet) {
-			if (Arrays.binarySearch(languageIds, curLanguageId) < 0) {
-				rightList.add(new KeyValuePair(curLanguageId, LocaleUtil.fromLanguageId(curLanguageId).getDisplayName(locale)));
+				rightList.add(new KeyValuePair(propsValuesLanguageId, propsValuesLocale.getDisplayName(locale)));
 			}
 		}
 
@@ -96,13 +87,19 @@ String defaultControlPanelThemeId = PrefsPropsUtil.getString(company.getCompanyI
 		/>
 	</aui:fieldset>
 
+	<%
+	User defaultUser = company.getDefaultUser();
+
+	String timeZoneId = ParamUtil.getString(request, "timeZoneId", defaultUser.getTimeZoneId());
+	%>
+
 	<aui:input label="time-zone" name="timeZoneId" type="timeZone" value="<%= timeZoneId %>" />
 </aui:fieldset>
 
 <h3><liferay-ui:message key="logo" /></h3>
 
 <aui:fieldset>
-	<aui:input label="allow-site-administrators-to-use-their-own-logo" name='<%= "settings--" + PropsKeys.COMPANY_SECURITY_SITE_LOGO + "--" %>' type="checkbox" value="<%= companySecurityCommunityLogo %>" />
+	<aui:input label="allow-site-administrators-to-use-their-own-logo" name='<%= "settings--" + PropsKeys.COMPANY_SECURITY_SITE_LOGO + "--" %>' type="checkbox" value="<%= company.isSiteLogo() %>" />
 
 	<portlet:renderURL var="editCompanyLogoURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 		<portlet:param name="struts_action" value="/portal_settings/edit_company_logo" />
@@ -119,17 +116,15 @@ String defaultControlPanelThemeId = PrefsPropsUtil.getString(company.getCompanyI
 
 <h3><liferay-ui:message key="look-and-feel" /></h3>
 
-<%
-List<Theme> themes = null;
-boolean deployed = false;
-%>
-
 <aui:fieldset>
 	<aui:select label='<%= PropsValues.MOBILE_DEVICE_STYLING_WAP_ENABLED? "default-regular-theme" : "default-theme" %>' name='<%= "settings--" + PropsKeys.DEFAULT_REGULAR_THEME_ID + "--" %>'>
 
 		<%
-		themes = ThemeLocalServiceUtil.getThemes(company.getCompanyId(), 0, user.getUserId(), false);
-		deployed = false;
+		String defaultRegularThemeId = PrefsPropsUtil.getString(company.getCompanyId(), PropsKeys.DEFAULT_REGULAR_THEME_ID, PropsValues.DEFAULT_REGULAR_THEME_ID);
+
+		boolean deployed = false;
+
+		List<Theme> themes = ThemeLocalServiceUtil.getThemes(company.getCompanyId(), 0, user.getUserId(), false);
 
 		for (Theme curTheme: themes) {
 			if (Validator.equals(defaultRegularThemeId, curTheme.getThemeId())) {
@@ -152,8 +147,11 @@ boolean deployed = false;
 		<aui:select helpMessage="default-mobile-theme-help" label="default-mobile-theme" name='<%= "settings--" + PropsKeys.DEFAULT_WAP_THEME_ID + "--" %>'>
 
 			<%
-			themes = ThemeLocalServiceUtil.getThemes(company.getCompanyId(), 0, user.getUserId(), true);
-			deployed = false;
+			String defaultWapThemeId = PrefsPropsUtil.getString(company.getCompanyId(), PropsKeys.DEFAULT_WAP_THEME_ID, PropsValues.DEFAULT_WAP_THEME_ID);
+
+			boolean deployed = false;
+
+			List<Theme> themes = ThemeLocalServiceUtil.getThemes(company.getCompanyId(), 0, user.getUserId(), true);
 
 			for (Theme curTheme: themes) {
 				if (Validator.equals(defaultWapThemeId, curTheme.getThemeId())) {
@@ -176,8 +174,11 @@ boolean deployed = false;
 	<aui:select label="default-control-panel-theme" name='<%= "settings--" + PropsKeys.CONTROL_PANEL_LAYOUT_REGULAR_THEME_ID + "--" %>'>
 
 		<%
-		themes = ThemeLocalServiceUtil.getThemes(company.getCompanyId(), 0, user.getUserId(), false);
-		deployed = false;
+		String defaultControlPanelThemeId = PrefsPropsUtil.getString(company.getCompanyId(), PropsKeys.CONTROL_PANEL_LAYOUT_REGULAR_THEME_ID, PropsValues.CONTROL_PANEL_LAYOUT_REGULAR_THEME_ID);
+
+		boolean deployed = false;
+
+		List<Theme> themes = ThemeLocalServiceUtil.getThemes(company.getCompanyId(), 0, user.getUserId(), false);
 
 		Theme controlPanelTheme = ThemeLocalServiceUtil.getTheme(company.getCompanyId(), "controlpanel", false);
 

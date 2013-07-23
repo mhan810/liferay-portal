@@ -709,6 +709,153 @@ public class ArrayUtil {
 		return set.toArray(new String[set.size()]);
 	}
 
+	public static boolean[] filter(
+		boolean[] array, PredicateFilter<Boolean> predicateFilter) {
+
+		if ((array == null) || (array.length == 0)) {
+			return array;
+		}
+
+		List<Boolean> filteredArray = new ArrayList<Boolean>();
+
+		for (boolean b : array) {
+			if (predicateFilter.filter(b)) {
+				filteredArray.add(b);
+			}
+		}
+
+		return toArray(
+			filteredArray.toArray(new Boolean[filteredArray.size()]));
+	}
+
+	public static byte[] filter(
+		byte[] array, PredicateFilter<Byte> predicateFilter) {
+
+		if ((array == null) || (array.length == 0)) {
+			return array;
+		}
+
+		List<Byte> filteredArray = new ArrayList<Byte>();
+
+		for (byte b : array) {
+			if (predicateFilter.filter(b)) {
+				filteredArray.add(b);
+			}
+		}
+
+		return toArray(filteredArray.toArray(new Byte[filteredArray.size()]));
+	}
+
+	public static char[] filter(
+		char[] array, PredicateFilter<Character> predicateFilter) {
+
+		if ((array == null) || (array.length == 0)) {
+			return array;
+		}
+
+		List<Character> filteredArray = new ArrayList<Character>();
+
+		for (char c : array) {
+			if (predicateFilter.filter(c)) {
+				filteredArray.add(c);
+			}
+		}
+
+		return toArray(
+			filteredArray.toArray(new Character[filteredArray.size()]));
+	}
+
+	public static double[] filter(
+		double[] array, PredicateFilter<Double> predicateFilter) {
+
+		if ((array == null) || (array.length == 0)) {
+			return array;
+		}
+
+		List<Double> filteredArray = new ArrayList<Double>();
+
+		for (double d : array) {
+			if (predicateFilter.filter(d)) {
+				filteredArray.add(d);
+			}
+		}
+
+		return toArray(filteredArray.toArray(new Double[filteredArray.size()]));
+	}
+
+	public static float[] filter(
+		float[] array, PredicateFilter<Float> predicateFilter) {
+
+		if ((array == null) || (array.length == 0)) {
+			return array;
+		}
+
+		List<Float> filteredArray = new ArrayList<Float>();
+
+		for (float f : array) {
+			if (predicateFilter.filter(f)) {
+				filteredArray.add(f);
+			}
+		}
+
+		return toArray(filteredArray.toArray(new Float[filteredArray.size()]));
+	}
+
+	public static int[] filter(
+		int[] array, PredicateFilter<Integer> predicateFilter) {
+
+		if ((array == null) || (array.length == 0)) {
+			return array;
+		}
+
+		List<Integer> filteredArray = new ArrayList<Integer>();
+
+		for (int i : array) {
+			if (predicateFilter.filter(i)) {
+				filteredArray.add(i);
+			}
+		}
+
+		return toArray(
+			filteredArray.toArray(new Integer[filteredArray.size()]));
+	}
+
+	public static long[] filter(
+		long[] array, PredicateFilter<Long> predicateFilter) {
+
+		if ((array == null) ||(array.length == 0)) {
+			return array;
+		}
+
+		List<Long> filteredArray = new ArrayList<Long>();
+
+		for (long l : array) {
+			if (predicateFilter.filter(l)) {
+				filteredArray.add(l);
+			}
+		}
+
+		return toArray(filteredArray.toArray(new Long[filteredArray.size()]));
+	}
+
+	public static short[] filter(
+		short[] array, PredicateFilter<Short> predicateFilter) {
+
+		if ((array == null) || (array.length == 0)) {
+			return array;
+		}
+
+		List<Short> filteredArray = new ArrayList<Short>();
+
+		for (short s : array) {
+			if (predicateFilter.filter(s)) {
+				filteredArray.add(s);
+			}
+		}
+
+		return toArray(filteredArray.toArray(new Short[filteredArray.size()]));
+	}
+
 	public static int getLength(Object[] array) {
 		if (array == null) {
 			return 0;

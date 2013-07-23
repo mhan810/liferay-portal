@@ -40,8 +40,8 @@ public class SeleniumWrapper implements Selenium {
 	}
 
 	@Override
-	public void addScript(String scriptContent, String scriptTagId) {
-		_selenium.addScript(scriptContent, scriptTagId);
+	public void addScript(String script, String scriptTagId) {
+		_selenium.addScript(script, scriptTagId);
 	}
 
 	@Override

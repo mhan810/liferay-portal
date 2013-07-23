@@ -196,6 +196,12 @@ public class PortalUtil {
 		return getPortal().generateRandomKey(request, input);
 	}
 
+	public static String getAbsoluteURL(
+		HttpServletRequest request, String url) {
+
+		return getPortal().getAbsoluteURL(request, url);
+	}
+
 	public static LayoutQueryStringComposite
 		getActualLayoutQueryStringComposite(
 			long groupId, boolean privateLayout, String friendlyURL,
@@ -219,7 +225,7 @@ public class PortalUtil {
 
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link
-	 *             com.liferay.portal.kernel.language.LanguageUtil.getAvailableLocales(
+	 *             com.liferay.portal.kernel.language.LanguageUtil#getAvailableLocales(
 	 *             )}
 	 */
 	public static Locale[] getAlternateLocales(HttpServletRequest request)
@@ -1358,6 +1364,12 @@ public class PortalUtil {
 		throws PortalException, SystemException {
 
 		return getPortal().getSiteAndCompanyGroupIds(themeDisplay);
+	}
+
+	public static Locale getSiteDefaultLocale(long groupId)
+		throws PortalException, SystemException {
+
+		return getPortal().getSiteDefaultLocale(groupId);
 	}
 
 	public static long getSiteGroupId(long scopeGroupId)

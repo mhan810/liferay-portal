@@ -93,7 +93,7 @@ public class WebDriverToSeleniumBridge
 	}
 
 	@Override
-	public void addScript(String scriptContent, String scriptTagId) {
+	public void addScript(String script, String scriptTagId) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -200,7 +200,22 @@ public class WebDriverToSeleniumBridge
 		else {
 			WebElement webElement = getWebElement(locator);
 
-			webElement.click();
+			try {
+				webElement.click();
+			}
+			catch (Exception e) {
+				WrapsDriver wrapsDriver = (WrapsDriver)webElement;
+
+				WebDriver webDriver = wrapsDriver.getWrappedDriver();
+
+				JavascriptExecutor javascriptExecutor =
+					(JavascriptExecutor)webDriver;
+
+				javascriptExecutor.executeScript(
+					"arguments[0].scrollIntoView();", webElement);
+
+				webElement.click();
+			}
 		}
 	}
 
@@ -234,7 +249,22 @@ public class WebDriverToSeleniumBridge
 				action.perform();
 			}
 			else {
-				webElement.click();
+				try {
+					webElement.click();
+				}
+				catch (Exception e) {
+					WrapsDriver wrapsDriver = (WrapsDriver)webElement;
+
+					WebDriver webDriver = wrapsDriver.getWrappedDriver();
+
+					JavascriptExecutor javascriptExecutor =
+						(JavascriptExecutor)webDriver;
+
+					javascriptExecutor.executeScript(
+						"arguments[0].scrollIntoView();", webElement);
+
+					webElement.click();
+				}
 			}
 		}
 	}

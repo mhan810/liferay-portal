@@ -39,25 +39,21 @@ import com.liferay.portal.kernel.util.TempFileUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UniqueList;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
-import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextUtil;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.Portal;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.SubscriptionSender;
 import com.liferay.portlet.PortletURLFactoryUtil;
-import com.liferay.portlet.asset.NoSuchEntryException;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
@@ -1774,11 +1770,10 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			if ((oldStatus != WorkflowConstants.STATUS_APPROVED) &&
 				(page.getVersion() != WikiPageConstants.VERSION_DEFAULT)) {
 
-				try {
-					AssetEntry draftAssetEntry =
-						assetEntryLocalService.getEntry(
-							WikiPage.class.getName(), page.getPrimaryKey());
+				AssetEntry draftAssetEntry = assetEntryLocalService.fetchEntry(
+					WikiPage.class.getName(), page.getPrimaryKey());
 
+				if (draftAssetEntry != null) {
 					long[] assetCategoryIds = draftAssetEntry.getCategoryIds();
 					String[] assetTagNames = draftAssetEntry.getTagNames();
 
@@ -1807,8 +1802,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 					assetEntryLocalService.deleteEntry(
 						draftAssetEntry.getEntryId());
-				}
-				catch (NoSuchEntryException nsee) {
 				}
 			}
 
@@ -1969,8 +1962,18 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		PortletFileRepositoryUtil.deletePortletFileEntry(fileEntryId);
 	}
 
-	protected String getPageLayoutURL(
-		Layout layout, ServiceContext serviceContext) {
+	protected String getDiffsURL(
+			WikiNode node, WikiPage page, WikiPage previousVersionPage,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		if (previousVersionPage == null) {
+			return StringPool.BLANK;
+		}
+
+		if (Validator.isNotNull(serviceContext.getLayoutFullURL())) {
+			return StringPool.BLANK;
+		}
 
 		HttpServletRequest request = serviceContext.getRequest();
 
@@ -1978,17 +1981,73 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			return StringPool.BLANK;
 		}
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		String portletId = null;
+		long plid = LayoutConstants.DEFAULT_PLID;
+		String strutsAction = null;
 
-		try {
-			String pageLayoutURL = PortalUtil.getLayoutURL(
-				layout, themeDisplay);
-
-			return pageLayoutURL;
+		if (serviceContext.getPlid() != LayoutConstants.DEFAULT_PLID) {
+			portletId = PortletKeys.WIKI;
+			plid = serviceContext.getPlid();
+			strutsAction = "/wiki/compare_versions";
 		}
-		catch (Exception e) {
+		else {
+			portletId = PortletKeys.WIKI_ADMIN;
+			plid = PortalUtil.getControlPanelPlid(
+				serviceContext.getCompanyId());
+			strutsAction = "/wiki_admin/compare_versions";
+		}
+
+		PortletURL portletURL = PortletURLFactoryUtil.create(
+			request, portletId, plid, PortletRequest.RENDER_PHASE);
+
+		portletURL.setParameter("struts_action", strutsAction);
+		portletURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
+		portletURL.setParameter("title", page.getTitle());
+		portletURL.setParameter(
+			"sourceVersion", String.valueOf(previousVersionPage.getVersion()));
+		portletURL.setParameter(
+			"targetVersion", String.valueOf(page.getVersion()));
+		portletURL.setParameter("type", "html");
+
+		return portletURL.toString();
+	}
+
+	protected String getPageURL(
+			WikiNode node, WikiPage page, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		if (Validator.isNotNull(serviceContext.getLayoutFullURL())) {
 			return StringPool.BLANK;
+		}
+
+		HttpServletRequest request = serviceContext.getRequest();
+
+		if (request == null) {
+			return StringPool.BLANK;
+		}
+
+		String layoutFullURL = getLayoutURL(
+			node.getGroupId(), PortletKeys.WIKI, serviceContext);
+
+		if (Validator.isNotNull(layoutFullURL)) {
+			return layoutFullURL + Portal.FRIENDLY_URL_SEPARATOR + "wiki/" +
+				node.getNodeId() + StringPool.SLASH +
+					HttpUtil.encodeURL(page.getTitle());
+		}
+		else {
+			long controlPanelPlid = PortalUtil.getControlPanelPlid(
+				serviceContext.getCompanyId());
+
+			PortletURL portletURL = PortletURLFactoryUtil.create(
+				request, PortletKeys.WIKI_ADMIN, controlPanelPlid,
+				PortletRequest.RENDER_PHASE);
+
+			portletURL.setParameter(
+				"struts_action", "/wiki_admin/view_page_activities");
+			portletURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
+			portletURL.setParameter("title", page.getTitle());
+
+			return portletURL.toString();
 		}
 	}
 
@@ -2077,7 +2136,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		}
 
 		String portalURL = serviceContext.getPortalURL();
-		String layoutFullURL = serviceContext.getLayoutFullURL();
 
 		WikiPage previousVersionPage = getPreviousVersionPage(page);
 
@@ -2105,82 +2163,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		else {
 			pageContent = page.getContent();
 			pageContent = WikiUtil.processContent(pageContent);
-		}
-
-		String pageURL = StringPool.BLANK;
-		String diffsURL = StringPool.BLANK;
-
-		HttpServletRequest request = serviceContext.getRequest();
-
-		if (Validator.isNotNull(layoutFullURL) && (request != null)) {
-			long controlPanelPlid = PortalUtil.getControlPanelPlid(
-				serviceContext.getCompanyId());
-
-			long wikiPlid = serviceContext.getPlid();
-
-			if (wikiPlid == controlPanelPlid) {
-				wikiPlid = PortalUtil.getPlidFromPortletId(
-					node.getGroupId(), PortletKeys.WIKI);
-
-				if (wikiPlid != LayoutConstants.DEFAULT_PLID) {
-					Layout layout = layoutLocalService.getLayout(wikiPlid);
-
-					layoutFullURL = getPageLayoutURL(layout, serviceContext);
-				}
-			}
-
-			if (wikiPlid != LayoutConstants.DEFAULT_PLID) {
-				pageURL =
-					layoutFullURL + Portal.FRIENDLY_URL_SEPARATOR + "wiki/" +
-						node.getNodeId() + StringPool.SLASH +
-							HttpUtil.encodeURL(page.getTitle());
-			}
-			else {
-				PortletURL portletURL = PortletURLFactoryUtil.create(
-					request, PortletKeys.WIKI_ADMIN, controlPanelPlid,
-					PortletRequest.RENDER_PHASE);
-
-				portletURL.setParameter(
-					"struts_action", "/wiki_admin/view_page_activities");
-				portletURL.setParameter(
-					"nodeId", String.valueOf(node.getNodeId()));
-				portletURL.setParameter("title", page.getTitle());
-
-				pageURL = portletURL.toString();
-			}
-
-			if (previousVersionPage != null) {
-				String portletId = null;
-				long plid = LayoutConstants.DEFAULT_PLID;
-				String strutsAction = null;
-
-				if (wikiPlid != LayoutConstants.DEFAULT_PLID) {
-					portletId = PortletKeys.WIKI;
-					plid = wikiPlid;
-					strutsAction = "/wiki/compare_versions";
-				}
-				else {
-					portletId = PortletKeys.WIKI_ADMIN;
-					plid = controlPanelPlid;
-					strutsAction = "/wiki_admin/compare_versions";
-				}
-
-				PortletURL portletURL = PortletURLFactoryUtil.create(
-					request, portletId, plid, PortletRequest.RENDER_PHASE);
-
-				portletURL.setParameter("struts_action", strutsAction);
-				portletURL.setParameter(
-					"nodeId", String.valueOf(node.getNodeId()));
-				portletURL.setParameter("title", page.getTitle());
-				portletURL.setParameter(
-					"sourceVersion",
-					String.valueOf(previousVersionPage.getVersion()));
-				portletURL.setParameter(
-					"targetVersion", String.valueOf(page.getVersion()));
-				portletURL.setParameter("type", "html");
-
-				diffsURL = portletURL.toString();
-			}
 		}
 
 		String fromName = WikiUtil.getEmailFromName(
@@ -2212,10 +2194,13 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		subscriptionSender.setBody(body);
 		subscriptionSender.setCompanyId(page.getCompanyId());
 		subscriptionSender.setContextAttributes(
-			"[$DIFFS_URL$]", diffsURL, "[$NODE_NAME$]", node.getName(),
-			"[$PAGE_DATE_UPDATE$]", page.getModifiedDate(), "[$PAGE_ID$]",
-			page.getPageId(), "[$PAGE_SUMMARY$]", page.getSummary(),
-			"[$PAGE_TITLE$]", page.getTitle(), "[$PAGE_URL$]", pageURL);
+			"[$DIFFS_URL$]",
+			getDiffsURL(node, page, previousVersionPage, serviceContext),
+			"[$NODE_NAME$]", node.getName(), "[$PAGE_DATE_UPDATE$]",
+			page.getModifiedDate(), "[$PAGE_ID$]", page.getPageId(),
+			"[$PAGE_SUMMARY$]", page.getSummary(), "[$PAGE_TITLE$]",
+			page.getTitle(), "[$PAGE_URL$]",
+			getPageURL(node, page, serviceContext));
 		subscriptionSender.setContextAttribute(
 			"[$PAGE_CONTENT$]", pageContent, false);
 		subscriptionSender.setContextAttribute(

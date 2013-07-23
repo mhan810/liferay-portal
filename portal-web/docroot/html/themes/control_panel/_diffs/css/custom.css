@@ -177,11 +177,6 @@ $dockbarOpenGradientStart: #0EA6F9;
 		}
 	}
 
-	.input-localized .input-localized-content {
-		margin-left: 6px;
-		margin-top: 0;
-	}
-
 	/* ---------- Dockbar ---------- */
 
 	.dockbar {
@@ -202,6 +197,22 @@ $dockbarOpenGradientStart: #0EA6F9;
 			padding-left: 0;
 			padding-right: 0;
 
+			.brand {
+				&, > a {
+					color: #FFF;
+					font-weight: lighter;
+					text-shadow: none;
+				}
+
+				.control-panel-back-link {
+					margin: 0 15px;
+
+					&:hover, &:focus {
+						text-decoration: none;
+					}
+				}
+			}
+
 			.nav-account-controls {
 				float: right;
 
@@ -211,7 +222,6 @@ $dockbarOpenGradientStart: #0EA6F9;
 					background-color: $dockbarOpenGradientEnd;
 				}
 			}
-
 			.nav-add-controls {
 				> li {
 					&.active a {
@@ -234,11 +244,11 @@ $dockbarOpenGradientStart: #0EA6F9;
 
 					/* ---------- Menu Icons ---------- */
 
-					[class^="icon-"], [class*=" icon-"] {
-						vertical-align: top;
-
-						&:before {
-							content: '';
+					&.control-panel-apps, &.control-panel-configuration, &.control-panel-sites, &.control-panel-users {
+						[class^="icon-"], [class*=" icon-"] {
+							&:before {
+								content: '';
+							}
 						}
 					}
 
@@ -246,6 +256,7 @@ $dockbarOpenGradientStart: #0EA6F9;
 						background: none no-repeat 50%;
 						height: 21px;
 						width: 24px;
+						vertical-align: top;
 					}
 
 					.icon-cog, .icon-globe, .icon-th, .icon-user {
@@ -662,7 +673,7 @@ $dockbarOpenGradientStart: #0EA6F9;
 		}
 
 		.accordion .accordion-group {
-			@inclucd border-radius(0);
+			@include border-radius(0);
 			@include box-shadow(-3px 0px 2px -2px #F5F5F5);
 
 			.accordion-heading {

@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
@@ -46,26 +47,21 @@ public class PortletDisplayTemplatePortletDataHandler
 	public static final String NAMESPACE = "portlet_display_templates";
 
 	public PortletDisplayTemplatePortletDataHandler() {
-		long ddmTemplateClassNameId = PortalUtil.getClassNameId(
-			DDMTemplate.class);
-
-		for (long classNameId : TemplateHandlerRegistryUtil.getClassNameIds()) {
-			stagedModelTypes.add(
-				new StagedModelType(ddmTemplateClassNameId, classNameId));
-		}
+		setExportControls(
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "application-display-templates", true, true));
 	}
 
 	@Override
 	public StagedModelType[] getDeletionSystemEventStagedModelTypes() {
-		return stagedModelTypes.toArray(
-			new StagedModelType[stagedModelTypes.size()]);
+		return getStagedModelTypes();
 	}
 
 	@Override
 	public long getExportModelCount(ManifestSummary manifestSummary) {
 		long totalModelCount = -1;
 
-		for (StagedModelType stagedModelType : stagedModelTypes) {
+		for (StagedModelType stagedModelType : getStagedModelTypes()) {
 			long modelCount = manifestSummary.getModelAdditionCount(
 				stagedModelType.getClassName(),
 				stagedModelType.getReferrerClassName());
@@ -132,11 +128,12 @@ public class PortletDisplayTemplatePortletDataHandler
 			PortletPreferences portletPreferences)
 		throws Exception {
 
-		for (StagedModelType modeType : stagedModelTypes) {
+		for (StagedModelType stagedModelType : getStagedModelTypes()) {
 			ActionableDynamicQuery actionableDynamicQuery =
 				getDDMTemplateActionableDynamicQuery(
 					portletDataContext,
-					new Long[] {modeType.getReferrerClassNameId()}, modeType);
+					new Long[] {stagedModelType.getReferrerClassNameId()},
+					stagedModelType);
 
 			actionableDynamicQuery.performCount();
 		}
@@ -178,7 +175,28 @@ public class PortletDisplayTemplatePortletDataHandler
 		};
 	}
 
-	protected List<StagedModelType> stagedModelTypes =
-		new ArrayList<StagedModelType>();
+	protected StagedModelType[] getStagedModelTypes() {
+		if (_stagedModelTypes != null) {
+			return _stagedModelTypes;
+		}
+
+		List<StagedModelType> stagedModelTypes =
+			new ArrayList<StagedModelType>();
+
+		long ddmTemplateClassNameId = PortalUtil.getClassNameId(
+			DDMTemplate.class);
+
+		for (long classNameId : TemplateHandlerRegistryUtil.getClassNameIds()) {
+			stagedModelTypes.add(
+				new StagedModelType(ddmTemplateClassNameId, classNameId));
+		}
+
+		_stagedModelTypes = stagedModelTypes.toArray(
+			new StagedModelType[stagedModelTypes.size()]);
+
+		return _stagedModelTypes;
+	}
+
+	private StagedModelType[] _stagedModelTypes;
 
 }

@@ -293,13 +293,6 @@ public class ServicePreAction extends Action {
 
 		PermissionThreadLocal.setPermissionChecker(permissionChecker);
 
-		// Locale
-
-		String i18nLanguageId = (String)request.getAttribute(
-			WebKeys.I18N_LANGUAGE_ID);
-
-		Locale locale = PortalUtil.getLocale(request, response, true);
-
 		// Cookie support
 
 		try {
@@ -646,6 +639,13 @@ public class ServicePreAction extends Action {
 			request.setAttribute(WebKeys.LAYOUTS, layouts);
 		}
 
+		// Locale
+
+		String i18nLanguageId = (String)request.getAttribute(
+			WebKeys.I18N_LANGUAGE_ID);
+
+		Locale locale = PortalUtil.getLocale(request, response, true);
+
 		// Scope
 
 		long scopeGroupId = PortalUtil.getScopeGroupId(request);
@@ -738,51 +738,26 @@ public class ServicePreAction extends Action {
 		themeDisplay.setCompanyLogo(companyLogo);
 		themeDisplay.setCompanyLogoHeight(companyLogoHeight);
 		themeDisplay.setCompanyLogoWidth(companyLogoWidth);
-		themeDisplay.setRealCompanyLogo(realCompanyLogo);
-		themeDisplay.setRealCompanyLogoHeight(realCompanyLogoHeight);
-		themeDisplay.setRealCompanyLogoWidth(realCompanyLogoWidth);
-		themeDisplay.setUser(user);
-		themeDisplay.setRealUser(realUser);
+		themeDisplay.setControlPanelCategory(controlPanelCategory);
+		themeDisplay.setDoAsGroupId(doAsGroupId);
 		themeDisplay.setDoAsUserId(doAsUserId);
 		themeDisplay.setDoAsUserLanguageId(doAsUserLanguageId);
-		themeDisplay.setDoAsGroupId(doAsGroupId);
-		themeDisplay.setRefererGroupId(refererGroupId);
-		themeDisplay.setRefererPlid(refererPlid);
-		themeDisplay.setControlPanelCategory(controlPanelCategory);
-		themeDisplay.setLayoutSet(layoutSet);
-		themeDisplay.setLayoutSetLogo(layoutSetLogo);
-		themeDisplay.setLayout(layout);
-		themeDisplay.setLayouts(layouts);
-		themeDisplay.setUnfilteredLayouts(unfilteredLayouts);
-		themeDisplay.setPlid(plid);
-		themeDisplay.setPpid(ppid);
-		themeDisplay.setLayoutTypePortlet(layoutTypePortlet);
-		themeDisplay.setScopeGroupId(scopeGroupId);
-		themeDisplay.setSiteGroupId(siteGroupId);
-		themeDisplay.setSignedIn(signedIn);
-		themeDisplay.setPermissionChecker(permissionChecker);
-		themeDisplay.setLocale(locale);
-		themeDisplay.setLanguageId(LocaleUtil.toLanguageId(locale));
 		themeDisplay.setI18nLanguageId(i18nLanguageId);
 		themeDisplay.setI18nPath(i18nPath);
-		themeDisplay.setTimeZone(timeZone);
-		themeDisplay.setLookAndFeel(theme, colorScheme);
-		themeDisplay.setThemeCssFastLoad(themeCssFastLoad);
-		themeDisplay.setThemeImagesFastLoad(themeImagesFastLoad);
-		themeDisplay.setThemeJsBarebone(themeJsBarebone);
-		themeDisplay.setThemeJsFastLoad(themeJsFastLoad);
-		themeDisplay.setServerName(request.getServerName());
-		themeDisplay.setServerPort(request.getServerPort());
-		themeDisplay.setSecure(request.isSecure());
+		themeDisplay.setIsolated(isolated);
+		themeDisplay.setLanguageId(LocaleUtil.toLanguageId(locale));
+		themeDisplay.setLayout(layout);
+		themeDisplay.setLayouts(layouts);
+		themeDisplay.setLayoutSet(layoutSet);
+		themeDisplay.setLayoutSetLogo(layoutSetLogo);
+		themeDisplay.setLayoutTypePortlet(layoutTypePortlet);
 		themeDisplay.setLifecycle(lifecycle);
 		themeDisplay.setLifecycleAction(lifecycle.equals("1"));
 		themeDisplay.setLifecycleEvent(lifecycle.equals("3"));
 		themeDisplay.setLifecycleRender(lifecycle.equals("0"));
 		themeDisplay.setLifecycleResource(lifecycle.equals("2"));
-		themeDisplay.setStateExclusive(LiferayWindowState.isExclusive(request));
-		themeDisplay.setStateMaximized(LiferayWindowState.isMaximized(request));
-		themeDisplay.setStatePopUp(LiferayWindowState.isPopUp(request));
-		themeDisplay.setIsolated(isolated);
+		themeDisplay.setLocale(locale);
+		themeDisplay.setLookAndFeel(theme, colorScheme);
 		themeDisplay.setPathApplet(contextPath.concat("/applets"));
 		themeDisplay.setPathCms(contextPath.concat("/cms"));
 		themeDisplay.setPathContext(contextPath);
@@ -795,6 +770,33 @@ public class ServicePreAction extends Action {
 		themeDisplay.setPathJavaScript(contextPath.concat("/html/js"));
 		themeDisplay.setPathMain(mainPath);
 		themeDisplay.setPathSound(contextPath.concat("/html/sound"));
+		themeDisplay.setPermissionChecker(permissionChecker);
+		themeDisplay.setPlid(plid);
+		themeDisplay.setPpid(ppid);
+		themeDisplay.setRealCompanyLogo(realCompanyLogo);
+		themeDisplay.setRealCompanyLogoHeight(realCompanyLogoHeight);
+		themeDisplay.setRealCompanyLogoWidth(realCompanyLogoWidth);
+		themeDisplay.setRealUser(realUser);
+		themeDisplay.setRefererGroupId(refererGroupId);
+		themeDisplay.setRefererPlid(refererPlid);
+		themeDisplay.setScopeGroupId(scopeGroupId);
+		themeDisplay.setSecure(request.isSecure());
+		themeDisplay.setServerName(request.getServerName());
+		themeDisplay.setServerPort(request.getServerPort());
+		themeDisplay.setSignedIn(signedIn);
+		themeDisplay.setSiteDefaultLocale(
+			PortalUtil.getSiteDefaultLocale(siteGroupId));
+		themeDisplay.setSiteGroupId(siteGroupId);
+		themeDisplay.setStateExclusive(LiferayWindowState.isExclusive(request));
+		themeDisplay.setStateMaximized(LiferayWindowState.isMaximized(request));
+		themeDisplay.setStatePopUp(LiferayWindowState.isPopUp(request));
+		themeDisplay.setThemeCssFastLoad(themeCssFastLoad);
+		themeDisplay.setThemeImagesFastLoad(themeImagesFastLoad);
+		themeDisplay.setThemeJsBarebone(themeJsBarebone);
+		themeDisplay.setThemeJsFastLoad(themeJsFastLoad);
+		themeDisplay.setTimeZone(timeZone);
+		themeDisplay.setUnfilteredLayouts(unfilteredLayouts);
+		themeDisplay.setUser(user);
 
 		// Icons
 
@@ -1240,7 +1242,6 @@ public class ServicePreAction extends Action {
 			themeDisplay.setShowLayoutTemplatesIcon(false);
 			themeDisplay.setShowPageCustomizationIcon(false);
 			themeDisplay.setShowPageSettingsIcon(false);
-			themeDisplay.setShowSiteAdministrationIcon(false);
 			themeDisplay.setShowSiteMapSettingsIcon(false);
 			themeDisplay.setShowSiteSettingsIcon(false);
 		}

@@ -1036,18 +1036,18 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	public void updatePreferences(long companyId, UnicodeProperties properties)
 		throws PortalException, SystemException {
 
-		PortletPreferences preferences = PrefsPropsUtil.getPreferences(
+		PortletPreferences portletPreferences = PrefsPropsUtil.getPreferences(
 			companyId);
 
 		try {
-			String newLocales = properties.getProperty(PropsKeys.LOCALES);
+			String newLanguageIds = properties.getProperty(PropsKeys.LOCALES);
 
-			if (newLocales != null) {
-				String oldLocales = preferences.getValue(
+			if (newLanguageIds != null) {
+				String oldLanguageIds = portletPreferences.getValue(
 					PropsKeys.LOCALES, StringPool.BLANK);
 
-				if (!Validator.equals(oldLocales, newLocales)) {
-					validateLocales(newLocales);
+				if (!Validator.equals(oldLanguageIds, newLanguageIds)) {
+					validateLanguageIds(newLanguageIds);
 
 					LanguageUtil.resetAvailableLocales(companyId);
 
@@ -1081,22 +1081,23 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 				String propsUtilValue = PropsUtil.get(key);
 
 				if (!value.equals(propsUtilValue)) {
-					preferences.setValue(key, value);
+					portletPreferences.setValue(key, value);
 				}
 				else {
-					String preferencesValue = preferences.getValue(key, null);
+					String portletPreferencesValue =
+						portletPreferences.getValue(key, null);
 
-					if (preferencesValue != null) {
+					if (portletPreferencesValue != null) {
 						resetKeys.add(key);
 					}
 				}
 			}
 
 			for (String key : resetKeys) {
-				preferences.reset(key);
+				portletPreferences.reset(key);
 			}
 
-			preferences.store();
+			portletPreferences.store();
 		}
 		catch (LocaleException le) {
 			throw le;
@@ -1315,11 +1316,13 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		}
 	}
 
-	protected void validateLocales(String locales) throws PortalException {
-		String[] localesArray = StringUtil.split(locales, StringPool.COMMA);
+	protected void validateLanguageIds(String languageIds)
+		throws PortalException {
 
-		for (String locale : localesArray) {
-			if (!ArrayUtil.contains(PropsValues.LOCALES, locale)) {
+		for (String languageId :
+				StringUtil.split(languageIds, StringPool.COMMA)) {
+
+			if (!ArrayUtil.contains(PropsValues.LOCALES, languageId)) {
 				throw new LocaleException();
 			}
 		}

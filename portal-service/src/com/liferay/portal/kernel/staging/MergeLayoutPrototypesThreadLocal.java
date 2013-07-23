@@ -25,6 +25,10 @@ import java.util.Set;
  */
 public class MergeLayoutPrototypesThreadLocal {
 
+	public static void clearMergeComplete() {
+		_mergeComplete.remove();
+	}
+
 	public static boolean isInProgress() {
 		return _inProgress.get();
 	}
@@ -69,9 +73,9 @@ public class MergeLayoutPrototypesThreadLocal {
 		sb.append(methodName);
 
 		for (int i = 0; i < arguments.length; i++) {
-			sb.append(parameterTypes[0].getClass().getName());
+			sb.append(parameterTypes[i].getName());
 
-			sb.append(arguments.toString());
+			sb.append(arguments[i]);
 		}
 
 		return sb.toString();

@@ -236,6 +236,46 @@ public class ArrayUtil_IW {
 		return ArrayUtil.distinct(array, comparator);
 	}
 
+	public boolean[] filter(boolean[] array,
+		com.liferay.portal.kernel.util.PredicateFilter<java.lang.Boolean> predicateFilter) {
+		return ArrayUtil.filter(array, predicateFilter);
+	}
+
+	public byte[] filter(byte[] array,
+		com.liferay.portal.kernel.util.PredicateFilter<java.lang.Byte> predicateFilter) {
+		return ArrayUtil.filter(array, predicateFilter);
+	}
+
+	public char[] filter(char[] array,
+		com.liferay.portal.kernel.util.PredicateFilter<java.lang.Character> predicateFilter) {
+		return ArrayUtil.filter(array, predicateFilter);
+	}
+
+	public double[] filter(double[] array,
+		com.liferay.portal.kernel.util.PredicateFilter<java.lang.Double> predicateFilter) {
+		return ArrayUtil.filter(array, predicateFilter);
+	}
+
+	public float[] filter(float[] array,
+		com.liferay.portal.kernel.util.PredicateFilter<java.lang.Float> predicateFilter) {
+		return ArrayUtil.filter(array, predicateFilter);
+	}
+
+	public int[] filter(int[] array,
+		com.liferay.portal.kernel.util.PredicateFilter<java.lang.Integer> predicateFilter) {
+		return ArrayUtil.filter(array, predicateFilter);
+	}
+
+	public long[] filter(long[] array,
+		com.liferay.portal.kernel.util.PredicateFilter<java.lang.Long> predicateFilter) {
+		return ArrayUtil.filter(array, predicateFilter);
+	}
+
+	public short[] filter(short[] array,
+		com.liferay.portal.kernel.util.PredicateFilter<java.lang.Short> predicateFilter) {
+		return ArrayUtil.filter(array, predicateFilter);
+	}
+
 	public int getLength(java.lang.Object[] array) {
 		return ArrayUtil.getLength(array);
 	}
