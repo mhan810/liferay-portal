@@ -21,7 +21,10 @@ import com.liferay.portal.kernel.backgroundtask.BackgroundTaskResult;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatus;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatusRegistryUtil;
 import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.lar.MissingReference;
+import com.liferay.portal.kernel.lar.MissingReferences;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -87,6 +90,7 @@ public class LayoutRemoteStagingBackgroundTaskExecutor
 
 		File file = null;
 		FileInputStream fileInputStream = null;
+		MissingReferences missingReferences = null;
 
 		try {
 			file = exportLayoutsAsFile(
@@ -124,8 +128,13 @@ public class LayoutRemoteStagingBackgroundTaskExecutor
 					new byte[PropsValues.STAGING_REMOTE_TRANSFER_BUFFER_SIZE];
 			}
 
+			missingReferences = StagingServiceHttp.validateStagingRequest(
+				httpPrincipal, remoteGroupId, stagingRequestId, privateLayout,
+				parameterMap);
+
 			StagingServiceHttp.publishStagingRequest(
-				httpPrincipal, stagingRequestId, privateLayout, parameterMap);
+				httpPrincipal, remoteGroupId, stagingRequestId, privateLayout,
+				parameterMap);
 		}
 		finally {
 			StreamUtil.cleanUp(fileInputStream);
@@ -138,8 +147,23 @@ public class LayoutRemoteStagingBackgroundTaskExecutor
 			}
 		}
 
-		return new BackgroundTaskResult(
+		BackgroundTaskResult backgroundTaskResult = new BackgroundTaskResult(
 			BackgroundTaskConstants.STATUS_SUCCESSFUL);
+
+		Map<String, MissingReference> weakMissingReferences =
+			missingReferences.getWeakMissingReferences();
+
+		if ((weakMissingReferences != null) &&
+			!weakMissingReferences.isEmpty()) {
+
+			JSONArray jsonArray = StagingUtil.getWarningMessagesJSONArray(
+				getLocale(backgroundTask), weakMissingReferences,
+				backgroundTask.getTaskContextMap());
+
+			backgroundTaskResult.setStatusMessage(jsonArray.toString());
+		}
+
+		return backgroundTaskResult;
 	}
 
 	@Override
