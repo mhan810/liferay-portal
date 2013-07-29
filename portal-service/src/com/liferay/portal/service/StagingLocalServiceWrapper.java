@@ -64,13 +64,13 @@ public class StagingLocalServiceWrapper implements StagingLocalService,
 	}
 
 	@Override
-	public void publishStagingRequest(long userId, long stagingRequestId,
-		boolean privateLayout,
+	public void publishStagingRequest(long userId, long groupId,
+		long stagingRequestId, boolean privateLayout,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		_stagingLocalService.publishStagingRequest(userId, stagingRequestId,
-			privateLayout, parameterMap);
+		_stagingLocalService.publishStagingRequest(userId, groupId,
+			stagingRequestId, privateLayout, parameterMap);
 	}
 
 	@Override
@@ -80,6 +80,17 @@ public class StagingLocalServiceWrapper implements StagingLocalService,
 			com.liferay.portal.kernel.exception.SystemException {
 		_stagingLocalService.updateStagingRequest(userId, stagingRequestId,
 			fileName, bytes);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.lar.MissingReferences validateStagingRequest(
+		long userId, long groupId, long stagingRequestId,
+		boolean privateLayout,
+		java.util.Map<java.lang.String, java.lang.String[]> parameterMap)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _stagingLocalService.validateStagingRequest(userId, groupId,
+			stagingRequestId, privateLayout, parameterMap);
 	}
 
 	/**
