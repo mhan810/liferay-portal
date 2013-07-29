@@ -46,7 +46,7 @@
 		</div>
 	</c:if>
 
-	<c:if test="<%= querySuggestionsEnabled && Validator.isNotNull(hits.getQuerySuggestions()) %>">
+	<c:if test="<%= querySuggestionEnabled && Validator.isNotNull(hits.getQuerySuggestions()) %>">
 
 		<div class="query-suggestions">
 			<span class="label">
