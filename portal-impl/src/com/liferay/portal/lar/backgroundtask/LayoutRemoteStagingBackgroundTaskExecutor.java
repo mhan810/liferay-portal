@@ -16,16 +16,8 @@ package com.liferay.portal.lar.backgroundtask;
 
 import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.RemoteExportException;
-import com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskResult;
-import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatus;
-import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatusRegistryUtil;
-import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.lar.MissingReference;
 import com.liferay.portal.kernel.lar.MissingReferences;
-import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -51,14 +43,7 @@ import java.util.Map;
  * @author Mate Thurzo
  */
 public class LayoutRemoteStagingBackgroundTaskExecutor
-	extends BaseBackgroundTaskExecutor {
-
-	public LayoutRemoteStagingBackgroundTaskExecutor() {
-		setBackgroundTaskStatusMessageTranslator(
-			new DefaultExportImportBackgroundTaskStatusMessageTranslator());
-
-		setSerial(true);
-	}
+	extends BaseStagingBackgroundTaskExecutor {
 
 	@Override
 	public BackgroundTaskResult execute(BackgroundTask backgroundTask)
@@ -80,11 +65,7 @@ public class LayoutRemoteStagingBackgroundTaskExecutor
 		HttpPrincipal httpPrincipal = (HttpPrincipal)taskContextMap.get(
 			"httpPrincipal");
 
-		BackgroundTaskStatus backgroundTaskStatus =
-			BackgroundTaskStatusRegistryUtil.getBackgroundTaskStatus(
-				backgroundTask.getBackgroundTaskId());
-
-		backgroundTaskStatus.clearAttributes();
+		clearBackgroundTaskStatus(backgroundTask);
 
 		long stagingRequestId = 0;
 
@@ -147,31 +128,7 @@ public class LayoutRemoteStagingBackgroundTaskExecutor
 			}
 		}
 
-		BackgroundTaskResult backgroundTaskResult = new BackgroundTaskResult(
-			BackgroundTaskConstants.STATUS_SUCCESSFUL);
-
-		Map<String, MissingReference> weakMissingReferences =
-			missingReferences.getWeakMissingReferences();
-
-		if ((weakMissingReferences != null) &&
-			!weakMissingReferences.isEmpty()) {
-
-			JSONArray jsonArray = StagingUtil.getWarningMessagesJSONArray(
-				getLocale(backgroundTask), weakMissingReferences,
-				backgroundTask.getTaskContextMap());
-
-			backgroundTaskResult.setStatusMessage(jsonArray.toString());
-		}
-
-		return backgroundTaskResult;
-	}
-
-	@Override
-	public String handleException(BackgroundTask backgroundTask, Exception e) {
-		JSONObject jsonObject = StagingUtil.getExceptionMessagesJSONObject(
-			getLocale(backgroundTask), e, backgroundTask.getTaskContextMap());
-
-		return jsonObject.toString();
+		return processMissingReferences(backgroundTask, missingReferences);
 	}
 
 	protected File exportLayoutsAsFile(
