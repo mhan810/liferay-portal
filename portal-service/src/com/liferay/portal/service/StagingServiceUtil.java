@@ -69,13 +69,14 @@ public class StagingServiceUtil {
 		return getService().createStagingRequest(groupId, checksum);
 	}
 
-	public static void publishStagingRequest(long stagingRequestId,
-		boolean privateLayout,
+	public static void publishStagingRequest(long groupId,
+		long stagingRequestId, boolean privateLayout,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		getService()
-			.publishStagingRequest(stagingRequestId, privateLayout, parameterMap);
+			.publishStagingRequest(groupId, stagingRequestId, privateLayout,
+			parameterMap);
 	}
 
 	public static void updateStagingRequest(long stagingRequestId,
@@ -83,6 +84,16 @@ public class StagingServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		getService().updateStagingRequest(stagingRequestId, fileName, bytes);
+	}
+
+	public static com.liferay.portal.kernel.lar.MissingReferences validateStagingRequest(
+		long groupId, long stagingRequestId, boolean privateLayout,
+		java.util.Map<java.lang.String, java.lang.String[]> parameterMap)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .validateStagingRequest(groupId, stagingRequestId,
+			privateLayout, parameterMap);
 	}
 
 	public static StagingService getService() {

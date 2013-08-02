@@ -16,6 +16,7 @@ package com.liferay.portal.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.lar.MissingReferences;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -51,14 +52,15 @@ public class StagingServiceImpl extends StagingServiceBaseImpl {
 
 	@Override
 	public void publishStagingRequest(
-			long stagingRequestId, boolean privateLayout,
+			long groupId, long stagingRequestId, boolean privateLayout,
 			Map<String, String[]> parameterMap)
 		throws PortalException, SystemException {
 
 		checkPermission(stagingRequestId);
 
 		stagingLocalService.publishStagingRequest(
-			getUserId(), stagingRequestId, privateLayout, parameterMap);
+			getUserId(), groupId, stagingRequestId, privateLayout,
+			parameterMap);
 	}
 
 	@Override
@@ -70,6 +72,19 @@ public class StagingServiceImpl extends StagingServiceBaseImpl {
 
 		stagingLocalService.updateStagingRequest(
 			getUserId(), stagingRequestId, fileName, bytes);
+	}
+
+	@Override
+	public MissingReferences validateStagingRequest(
+			long groupId, long stagingRequestId, boolean privateLayout,
+			Map<String, String[]> parameterMap)
+		throws PortalException, SystemException {
+
+		checkPermission(stagingRequestId);
+
+		return stagingLocalService.validateStagingRequest(
+			getUserId(), groupId, stagingRequestId, privateLayout,
+			parameterMap);
 	}
 
 	protected void checkPermission(long stagingRequestId)
