@@ -129,12 +129,10 @@ public class LayoutRemoteStagingBackgroundTaskExecutor
 			}
 
 			missingReferences = StagingServiceHttp.validateStagingRequest(
-				httpPrincipal, remoteGroupId, stagingRequestId, privateLayout,
-				parameterMap);
+				httpPrincipal, stagingRequestId, privateLayout, parameterMap);
 
 			StagingServiceHttp.publishStagingRequest(
-				httpPrincipal, remoteGroupId, stagingRequestId, privateLayout,
-				parameterMap);
+				httpPrincipal, stagingRequestId, privateLayout, parameterMap);
 		}
 		finally {
 			StreamUtil.cleanUp(fileInputStream);
