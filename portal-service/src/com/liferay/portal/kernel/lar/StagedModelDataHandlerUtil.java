@@ -50,6 +50,26 @@ public class StagedModelDataHandlerUtil {
 		}
 	}
 
+	public static <T extends StagedModel> void exportReferencedStagedModel(
+			PortletDataContext portletDataContext, T stagedModel)
+		throws PortletDataException {
+
+		if (stagedModel instanceof StagedGroupedModel) {
+			StagedGroupedModel stagedGroupedModel =
+				(StagedGroupedModel)stagedModel;
+
+			if (portletDataContext.isCompanyStagedGroupedModel(
+					stagedGroupedModel)) {
+
+				portletDataContext.addMissingReference(stagedModel);
+
+				return;
+			}
+		}
+
+		exportStagedModel(portletDataContext, stagedModel);
+	}
+
 	public static <T extends StagedModel, U extends StagedModel> Element
 		exportReferencedStagedModel(
 			PortletDataContext portletDataContext, T referrerStagedModel,
