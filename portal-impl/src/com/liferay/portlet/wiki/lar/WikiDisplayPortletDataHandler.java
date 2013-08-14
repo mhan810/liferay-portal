@@ -121,13 +121,14 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		StagedModelDataHandlerUtil.exportStagedModel(portletDataContext, node);
+		StagedModelDataHandlerUtil.exportReferencedStagedModel(
+			portletDataContext, node);
 
 		List<WikiPage> pages = WikiPageLocalServiceUtil.getPages(
 			node.getNodeId(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
 		for (WikiPage page : pages) {
-			StagedModelDataHandlerUtil.exportStagedModel(
+			StagedModelDataHandlerUtil.exportReferencedStagedModel(
 				portletDataContext, page);
 		}
 

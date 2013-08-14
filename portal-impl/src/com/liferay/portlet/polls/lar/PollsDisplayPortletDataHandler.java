@@ -116,11 +116,11 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		StagedModelDataHandlerUtil.exportStagedModel(
+		StagedModelDataHandlerUtil.exportReferencedStagedModel(
 			portletDataContext, question);
 
 		for (PollsChoice choice : question.getChoices()) {
-			StagedModelDataHandlerUtil.exportStagedModel(
+			StagedModelDataHandlerUtil.exportReferencedStagedModel(
 				portletDataContext, choice);
 		}
 
@@ -128,7 +128,7 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 				PollsPortletDataHandler.NAMESPACE, "votes")) {
 
 			for (PollsVote vote : question.getVotes()) {
-				StagedModelDataHandlerUtil.exportStagedModel(
+				StagedModelDataHandlerUtil.exportReferencedStagedModel(
 					portletDataContext, vote);
 			}
 		}

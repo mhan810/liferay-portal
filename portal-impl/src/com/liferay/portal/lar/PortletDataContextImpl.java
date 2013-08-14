@@ -435,6 +435,13 @@ public class PortletDataContextImpl implements PortletDataContext {
 	}
 
 	@Override
+	public void addMissingReference(ClassedModel classedModel) {
+		String referenceKey = getReferenceKey(classedModel);
+
+		_missingReferences.add(referenceKey);
+	}
+
+	@Override
 	public void addPermissions(Class<?> clazz, long classPK)
 		throws PortalException, SystemException {
 
@@ -600,10 +607,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 			referrerClassedModel, element, classedModel, className, binPath,
 			referenceType, false);
 
-		String referenceKey = classedModel.getModelClassName();
-
-		referenceKey = referenceKey.concat(StringPool.POUND).concat(
-			String.valueOf(classedModel.getPrimaryKeyObj()));
+		String referenceKey = getReferenceKey(classedModel);
 
 		if (missing) {
 			if (_references.contains(referenceKey)) {
@@ -906,6 +910,13 @@ public class PortletDataContextImpl implements PortletDataContext {
 			String path = ExportImportPathUtil.getModelPath(stagedModel);
 
 			element = getDataElement(groupElement, "path", path);
+
+			if (element != null) {
+				return element;
+			}
+
+			element = getDataElement(
+				groupElement, "uuid", stagedModel.getUuid());
 
 			if (element != null) {
 				return element;
@@ -2260,6 +2271,13 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 		return getReferenceElements(
 			stagedModelElement, clazz, 0, null, 0, referenceType);
+	}
+
+	protected String getReferenceKey(ClassedModel classedModel) {
+		String referenceKey = classedModel.getModelClassName();
+
+		return referenceKey.concat(StringPool.POUND).concat(
+			String.valueOf(classedModel.getPrimaryKeyObj()));
 	}
 
 	protected long getUserId(AuditedModel auditedModel) {

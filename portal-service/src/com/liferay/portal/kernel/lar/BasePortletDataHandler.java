@@ -401,7 +401,7 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 					portletDataContext.getGroupId(), displayStyle);
 
 			if (ddmTemplate != null) {
-				StagedModelDataHandlerUtil.exportStagedModel(
+				StagedModelDataHandlerUtil.exportReferencedStagedModel(
 					portletDataContext, ddmTemplate);
 			}
 

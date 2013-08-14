@@ -212,12 +212,9 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 
 			articleElement.addAttribute("path", path);
 
-			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, article);
-
-			portletDataContext.addReferenceElement(
-				article, articleElement, article,
-				PortletDataContext.REFERENCE_TYPE_WEAK, false);
+			StagedModelDataHandlerUtil.exportReferencedStagedModel(
+				portletDataContext, article, article,
+				PortletDataContext.REFERENCE_TYPE_WEAK);
 		}
 
 		return getExportDataRootElementString(rootElement);
