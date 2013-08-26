@@ -83,6 +83,12 @@ public class LuceneSpellCheckIndexWriter extends BaseSpellCheckIndexWriter {
 		}
 	}
 
+	@Override
+	public void indexSuggestions(SearchContext searchContext)
+		throws SearchException {
+
+	}
+
 	protected void addField(
 		Document document, String fieldName, String fieldValue,
 		Field.Store fieldStore, FieldInfo.IndexOptions indexOptions,

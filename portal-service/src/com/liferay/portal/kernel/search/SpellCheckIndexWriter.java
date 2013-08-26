@@ -38,4 +38,7 @@ public interface SpellCheckIndexWriter {
 	public void indexSpellCheckerDictionary(SearchContext searchContext)
 		throws SearchException;
 
+	public void indexSuggestions(SearchContext searchContext)
+		throws SearchException;
+
 }

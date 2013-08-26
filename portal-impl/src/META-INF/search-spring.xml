@@ -46,26 +46,42 @@
 			<bean class="com.liferay.portal.search.DefaultCollatorImpl" />
 		</property>
 	</bean>
+	<bean id="com.liferay.portal.kernel.search.DictionaryIndexerUtil" class="com.liferay.portal.kernel.search.DictionaryIndexerUtil" >
+		<property name="dictionaryIndexer">
+			<bean id="com.liferay.portal.kernel.search.DictionaryIndexer" class="com.liferay.portal.search.DictionaryIndexerImpl" >
+				<property name="cacheKeyGenerator" ref="com.liferay.portal.cache.key.JavaMD5CacheKeyGenerator" />
+				<property name="document" ref="com.liferay.portal.kernel.search.Document" />
+			</bean>
+		</property>
+	</bean>
+	<bean id="com.liferay.portal.kernel.search.Document" class="com.liferay.portal.kernel.search.DocumentImpl" />
 	<bean id="com.liferay.portal.kernel.search.HitsProcessorRegistryUtil" class="com.liferay.portal.kernel.search.HitsProcessorRegistryUtil">
 		<property name="defaultHitsProcessor">
 			<bean class="com.liferay.portal.kernel.search.CompositeHitsProcessor">
 				<property name="hitsProcessors">
 					<util:list>
 						<bean class="com.liferay.portal.kernel.search.CollatedSpellCheckHitsProcessor" />
-						<bean class="com.liferay.portal.kernel.search.QueryIndexingHitsProcessor">
-							<property name="document">
-								<bean class="com.liferay.portal.kernel.search.DocumentImpl" />
-							</property>
-						</bean>
+						<bean class="com.liferay.portal.kernel.search.QueryIndexingHitsProcessor" />
 						<bean class="com.liferay.portal.kernel.search.QuerySuggestionHitsProcessor" />
 					</util:list>
 				</property>
 			</bean>
 		</property>
 	</bean>
+	<bean id="com.liferay.portal.cache.key.JavaMD5CacheKeyGenerator" class="com.liferay.portal.cache.key.JavaMD5CacheKeyGenerator" >
+		<constructor-arg type="int" value="10" />
+	</bean>
 	<bean id="com.liferay.portal.kernel.search.NGramHolderBuilderUtil" class="com.liferay.portal.kernel.search.NGramHolderBuilderUtil">
 		<property name="NGramHolderBuilder">
 			<bean class="com.liferay.portal.search.NGramHolderBuilderImpl" />
+		</property>
+	</bean>
+	<bean id="com.liferay.portal.kernel.search.QuerySuggestionIndexerUtil" class="com.liferay.portal.kernel.search.QuerySuggestionIndexerUtil">
+		<property name="querySuggestionIndexer">
+			<bean class="com.liferay.portal.search.QuerySuggestionIndexerImpl" >
+				<property name="cacheKeyGenerator" ref="com.liferay.portal.cache.key.JavaMD5CacheKeyGenerator" />
+				<property name="document" ref="com.liferay.portal.kernel.search.Document" />
+			</bean>
 		</property>
 	</bean>
 	<bean id="com.liferay.portal.kernel.search.QueryTranslator" class="com.liferay.portal.search.lucene.QueryTranslatorImpl" />

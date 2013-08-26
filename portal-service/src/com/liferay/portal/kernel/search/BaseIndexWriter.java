@@ -104,6 +104,18 @@ public abstract class BaseIndexWriter
 		_spellCheckIndexWriter.indexSpellCheckerDictionary(searchContext);
 	}
 
+	public void indexSuggestions(SearchContext searchContext)
+		throws SearchException {
+
+		if (_spellCheckIndexWriter == null) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("No spell check index writer configured");
+			}
+		}
+
+		_spellCheckIndexWriter.indexSuggestions(searchContext);
+	}
+
 	public void setSpellCheckIndexWriter(
 		SpellCheckIndexWriter spellCheckIndexWriter) {
 

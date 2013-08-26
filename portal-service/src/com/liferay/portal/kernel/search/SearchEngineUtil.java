@@ -427,6 +427,30 @@ public class SearchEngineUtil {
 		indexWriter.indexSpellCheckerDictionary(searchContext);
 	}
 
+	public static void indexSuggestions(long companyId) throws SearchException {
+
+		Set<String> searchEngineIds = getSearchEngineIds();
+
+		for (String searchEngineId : searchEngineIds) {
+			indexSuggestions(searchEngineId, companyId);
+		}
+	}
+
+	public static void indexSuggestions(String searchEngineId, long companyId)
+		throws SearchException {
+
+		SearchEngine searchEngine = getSearchEngine(searchEngineId);
+
+		IndexWriter indexWriter = searchEngine.getIndexWriter();
+
+		SearchContext searchContext = new SearchContext();
+
+		searchContext.setCompanyId(companyId);
+		searchContext.setSearchEngineId(searchEngineId);
+
+		indexWriter.indexSuggestions(searchContext);
+	}
+
 	public static boolean isIndexReadOnly() {
 		PortalRuntimePermission.checkGetBeanProperty(
 			SearchEngineUtil.class, "indexReadOnly");
