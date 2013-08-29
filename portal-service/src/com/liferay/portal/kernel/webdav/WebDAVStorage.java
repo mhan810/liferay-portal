@@ -37,6 +37,8 @@ public interface WebDAVStorage {
 	public int deleteResource(WebDAVRequest webDAVRequest)
 		throws WebDAVException;
 
+	public DAVMethodFactory getDAVMethodFactory();
+
 	public Resource getResource(WebDAVRequest webDAVRequest)
 		throws WebDAVException;
 

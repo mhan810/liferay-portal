@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.webdav.methods;
+package com.liferay.portal.kernel.webdav.methods;
 
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.webdav.WebDAVException;

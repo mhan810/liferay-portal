@@ -243,7 +243,7 @@
 		</property>
 	</bean>
 	<bean id="com.liferay.portal.kernel.metadata.RawMetadataProcessorUtil" class="com.liferay.portal.kernel.metadata.RawMetadataProcessorUtil">
-		   <property name="rawMetadataProcessor" ref="com.liferay.portal.kernel.metadata.RawMetadataProcessor" />
+		<property name="rawMetadataProcessor" ref="com.liferay.portal.kernel.metadata.RawMetadataProcessor" />
 	</bean>
 	<bean id="com.liferay.portal.kernel.microsofttranslator.MicrosoftTranslatorFactoryUtil" class="com.liferay.portal.kernel.microsofttranslator.MicrosoftTranslatorFactoryUtil">
 		<property name="microsoftTranslatorFactory">
@@ -552,6 +552,15 @@
 			<bean class="com.liferay.portal.webcache.WebCachePoolImpl">
 				<property name="singleVMPool" ref="com.liferay.portal.kernel.cache.SingleVMPool" />
 			</bean>
+		</property>
+	</bean>
+	<bean id="com.liferay.portal.kernel.webdav.DAVMethodFactoryUtil" class="com.liferay.portal.kernel.webdav.DAVMethodFactoryUtil" depends-on="com.liferay.portal.kernel.xml.SAXReaderUtil">
+		<property name="DAVMethodFactoryMap">
+			<map>
+				<entry key="webdav">
+					<bean class="com.liferay.portal.webdav.methods.WebDAVMethodFactory" />
+				</entry>
+			</map>
 		</property>
 	</bean>
 	<bean id="com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil" class="com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil">

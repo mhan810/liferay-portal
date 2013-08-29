@@ -74,6 +74,11 @@ public class WebDAVStorageWrapper implements WebDAVStorage {
 	}
 
 	@Override
+	public DAVMethodFactory getDAVMethodFactory() {
+		return _webDAVStorage.getDAVMethodFactory();
+	}
+
+	@Override
 	public String getToken() {
 		return _webDAVStorage.getToken();
 	}
