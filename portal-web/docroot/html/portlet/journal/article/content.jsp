@@ -586,7 +586,7 @@ if (Validator.isNotNull(content)) {
 			var chooseLanguageText = A.one('#<portlet:namespace />chooseLanguageText');
 			var translationsMessage = A.one('#<portlet:namespace />translationsMessage');
 
-			var taglibWorkflowStatus = A.one('#<portlet:namespace />journalArticleBody .taglib-workflow-status');
+			var taglibWorkflowStatus = A.one('#<portlet:namespace />journalArticleWrapper .taglib-workflow-status');
 			var statusNode = taglibWorkflowStatus.one('.workflow-status strong');
 
 			statusNode.html(newStatusMessage);
@@ -670,7 +670,7 @@ if (Validator.isNotNull(content)) {
 				},
 				eventName: '<portlet:namespace />selectStructure',
 				groupId: <%= groupId %>,
-				refererPortletName: '<%= PortletKeys.JOURNAL %>',
+				refererPortletName: '<%= PortletKeys.JOURNAL_CONTENT %>',
 				showGlobalScope: true,
 				struts_action: '/dynamic_data_mapping/select_structure',
 				title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>'
@@ -697,7 +697,7 @@ if (Validator.isNotNull(content)) {
 				},
 				eventName: '<portlet:namespace />selectTemplate',
 				groupId: <%= groupId %>,
-				refererPortletName: '<%= PortletKeys.JOURNAL %>',
+				refererPortletName: '<%= PortletKeys.JOURNAL_CONTENT %>',
 				struts_action: '/dynamic_data_mapping/select_template',
 				title: '<%= UnicodeLanguageUtil.get(pageContext, "templates") %>'
 			},

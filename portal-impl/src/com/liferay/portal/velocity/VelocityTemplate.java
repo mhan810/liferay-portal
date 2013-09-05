@@ -45,7 +45,7 @@ public class VelocityTemplate extends AbstractTemplate {
 		TemplateResource templateResource,
 		TemplateResource errorTemplateResource, VelocityContext velocityContext,
 		VelocityEngine velocityEngine,
-		TemplateContextHelper templateContextHelper) {
+		TemplateContextHelper templateContextHelper, boolean privileged) {
 
 		super(
 			templateResource, errorTemplateResource, templateContextHelper,
@@ -60,6 +60,7 @@ public class VelocityTemplate extends AbstractTemplate {
 		}
 
 		_velocityEngine = velocityEngine;
+		_privileged = privileged;
 	}
 
 	@Override
@@ -131,8 +132,17 @@ public class VelocityTemplate extends AbstractTemplate {
 			TemplateConstants.LANG_TYPE_VM, templateResource);
 
 		try {
-			Template template = AccessController.doPrivileged(
-				new TemplatePrivilegedExceptionAction(templateResource));
+			Template template = null;
+
+			if (_privileged) {
+				template = AccessController.doPrivileged(
+					new TemplatePrivilegedExceptionAction(templateResource));
+			}
+			else {
+				template = _velocityEngine.getTemplate(
+					getTemplateResourceUUID(templateResource),
+					TemplateConstants.DEFAUT_ENCODING);
+			}
 
 			template.merge(_velocityContext, writer);
 		}
@@ -145,6 +155,7 @@ public class VelocityTemplate extends AbstractTemplate {
 		}
 	}
 
+	private boolean _privileged;
 	private VelocityContext _velocityContext;
 	private VelocityEngine _velocityEngine;
 

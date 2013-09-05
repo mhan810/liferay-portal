@@ -12,9 +12,8 @@
  * details.
  */
 
-package com.liferay.portal.webdav.methods;
+package com.liferay.portal.kernel.webdav.methods;
 
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.webdav.WebDAVException;
 import com.liferay.portal.kernel.webdav.WebDAVRequest;
 
@@ -46,13 +45,10 @@ public interface Method {
 
 	public static final String PUT = "PUT";
 
-	public static final String[] SUPPORTED_METHODS_ARRAY = {
+	public static final String[] SUPPORTED_METHOD_NAMES = {
 		COPY, DELETE, GET, HEAD, LOCK, MKCOL, MOVE, OPTIONS, PROPFIND,
 		PROPPATCH, PUT, Method.UNLOCK
 	};
-
-	public static final String SUPPORTED_METHODS = StringUtil.merge(
-		SUPPORTED_METHODS_ARRAY);
 
 	public static final String UNLOCK = "UNLOCK";
 

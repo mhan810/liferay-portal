@@ -55,7 +55,7 @@ public class LuceneSpellCheckIndexWriter extends BaseSpellCheckIndexWriter {
 
 		Term term = new Term(
 			com.liferay.portal.kernel.search.Field.TYPE,
-			SuggestionConstants.QUERY_SUGGESTION_TYPE);
+			SuggestionConstants.TYPE_QUERY_SUGGESTION);
 
 		try {
 			LuceneHelperUtil.deleteDocuments(
@@ -72,7 +72,7 @@ public class LuceneSpellCheckIndexWriter extends BaseSpellCheckIndexWriter {
 
 		Term term = new Term(
 			com.liferay.portal.kernel.search.Field.TYPE,
-			SuggestionConstants.SPELL_CHECKER_TYPE);
+			SuggestionConstants.TYPE_SPELL_CHECKER);
 
 		try {
 			LuceneHelperUtil.deleteDocuments(

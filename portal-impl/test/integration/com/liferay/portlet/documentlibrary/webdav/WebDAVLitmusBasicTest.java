@@ -18,8 +18,8 @@ import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Tuple;
+import com.liferay.portal.kernel.webdav.methods.Method;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
-import com.liferay.portal.webdav.methods.Method;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,11 +50,12 @@ public class WebDAVLitmusBasicTest extends BaseWebDAVTestCase {
 
 		Map<String, String> headers = getHeaders(tuple);
 
-		String allowMethods = headers.get("Allow");
+		String allowMethodNames = headers.get("Allow");
 
-		for (String method : Method.SUPPORTED_METHODS_ARRAY) {
+		for (String methodName : Method.SUPPORTED_METHOD_NAMES) {
 			Assert.assertTrue(
-				"Does not allow " + method, allowMethods.contains(method));
+				"Does not allow " + methodName,
+				allowMethodNames.contains(methodName));
 		}
 	}
 

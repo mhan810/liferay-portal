@@ -24,6 +24,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.trash.model.TrashEntry;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.portlet.PortletURL;
@@ -60,6 +61,13 @@ public class TrashUtil {
 
 		getTrash().deleteEntriesAttachments(
 			companyId, repositoryId, date, attachmentFileNames);
+	}
+
+	public static HashMap<Long, Integer> getDependentStatusMap(
+			long entryId, String className)
+		throws SystemException {
+
+		return getTrash().getDependentStatusMap(entryId, className);
 	}
 
 	public static List<TrashEntry> getEntries(Hits hits)
