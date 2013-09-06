@@ -231,7 +231,7 @@ if (Validator.isNotNull(content)) {
 										<%= HtmlUtil.escape(ddmStructureName) %>
 									</span>
 
-									<c:if test="<%= (ddmStructure != null) && DDMStructurePermission.contains(permissionChecker, ddmStructure, ActionKeys.UPDATE) %>">
+									<c:if test="<%= (ddmStructure != null) && DDMStructurePermission.contains(permissionChecker, ddmStructure, PortletKeys.JOURNAL, ActionKeys.UPDATE) %>">
 										<liferay-ui:icon id="editDDMStructure" image="edit" url="javascript:;" />
 									</c:if>
 
@@ -300,7 +300,7 @@ if (Validator.isNotNull(content)) {
 												<%= HtmlUtil.escape(curDDMTemplate.getName(locale)) %>
 											</span>
 
-											<c:if test="<%= DDMTemplatePermission.contains(permissionChecker, curDDMTemplate, ActionKeys.UPDATE) %>">
+											<c:if test="<%= DDMTemplatePermission.contains(permissionChecker, curDDMTemplate, PortletKeys.JOURNAL, ActionKeys.UPDATE) %>">
 												<c:if test="<%= curDDMTemplate.isSmallImage() %>">
 													<img class="article-template-image" id="<portlet:namespace />templateImage" src="<%= _getTemplateImage(themeDisplay, curDDMTemplate) %>" />
 												</c:if>
@@ -579,23 +579,19 @@ if (Validator.isNotNull(content)) {
 			var A = AUI();
 
 			document.<portlet:namespace />fm1.<portlet:namespace />formDate.value = formDate;
+			document.<portlet:namespace />fm1.<portlet:namespace />version.value = newVersion;
 
-			var availableTranslationContainer = A.one('#<portlet:namespace />availableTranslationContainer');
-			var availableTranslationsLinks = A.one('#<portlet:namespace />availableTranslationsLinks');
+			var taglibWorkflowStatus = A.one('#<portlet:namespace />journalArticleWrapper .taglib-workflow-status');
 
-			var chooseLanguageText = A.one('#<portlet:namespace />chooseLanguageText');
-			var translationsMessage = A.one('#<portlet:namespace />translationsMessage');
-
-			var taglibWorkflowStatus = A.one('#<portlet:namespace />journalArticleBody .taglib-workflow-status');
 			var statusNode = taglibWorkflowStatus.one('.workflow-status strong');
 
 			statusNode.html(newStatusMessage);
 
 			var versionNode = taglibWorkflowStatus.one('.workflow-version strong');
 
-			document.<portlet:namespace />fm1.<portlet:namespace />version.value = newVersion;
-
 			versionNode.html(newVersion);
+
+			var availableTranslationContainer = A.one('#<portlet:namespace />availableTranslationContainer');
 
 			var translationLink = availableTranslationContainer.one('.journal-article-translation-' + newLanguageId);
 
@@ -611,17 +607,21 @@ if (Validator.isNotNull(content)) {
 				}
 			}
 			else if (!translationLink) {
-				statusNode.removeClass('workflow-status-approved');
-				statusNode.addClass('workflow-status-draft');
+				var availableTranslationsLinks = A.one('#<portlet:namespace />availableTranslationsLinks');
+				var translationsMessage = A.one('#<portlet:namespace />translationsMessage');
+
+				statusNode.replaceClass('workflow-status-approved', 'workflow-status-draft');
+
 				statusNode.html('<%= UnicodeLanguageUtil.get(pageContext, "draft") %>');
 
 				availableTranslationContainer.addClass('contains-translations');
+
 				availableTranslationsLinks.show();
 				translationsMessage.show();
 
 				var TPL_TRANSLATION = '<a class="lfr-token journal-article-translation-{newLanguageId}" href="javascript:;"><img alt="" src="<%= themeDisplay.getPathThemeImages() %>/language/{newLanguageId}.png" />{newLanguage}</a>';
 
-				translationLinkTpl = A.Lang.sub(
+				var translationLinkTpl = A.Lang.sub(
 					TPL_TRANSLATION,
 					{
 						newLanguageId: newLanguageId,
@@ -670,7 +670,7 @@ if (Validator.isNotNull(content)) {
 				},
 				eventName: '<portlet:namespace />selectStructure',
 				groupId: <%= groupId %>,
-				refererPortletName: '<%= PortletKeys.JOURNAL %>',
+				refererPortletName: '<%= PortletKeys.JOURNAL_CONTENT %>',
 				showGlobalScope: true,
 				struts_action: '/dynamic_data_mapping/select_structure',
 				title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>'
@@ -697,7 +697,7 @@ if (Validator.isNotNull(content)) {
 				},
 				eventName: '<portlet:namespace />selectTemplate',
 				groupId: <%= groupId %>,
-				refererPortletName: '<%= PortletKeys.JOURNAL %>',
+				refererPortletName: '<%= PortletKeys.JOURNAL_CONTENT %>',
 				struts_action: '/dynamic_data_mapping/select_template',
 				title: '<%= UnicodeLanguageUtil.get(pageContext, "templates") %>'
 			},
@@ -786,7 +786,7 @@ if (Validator.isNotNull(content)) {
 		);
 	}
 
-	<c:if test="<%= (ddmStructure != null) && DDMStructurePermission.contains(permissionChecker, ddmStructure, ActionKeys.UPDATE) %>">
+	<c:if test="<%= (ddmStructure != null) && DDMStructurePermission.contains(permissionChecker, ddmStructure, PortletKeys.JOURNAL, ActionKeys.UPDATE) %>">
 		var editDDMStructure = A.one('#<portlet:namespace />editDDMStructure');
 
 		if (editDDMStructure) {

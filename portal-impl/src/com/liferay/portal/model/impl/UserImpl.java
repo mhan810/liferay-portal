@@ -131,10 +131,10 @@ public class UserImpl extends UserBaseImpl {
 	@Override
 	public String getDigest(String password) {
 		if (Validator.isNull(getScreenName())) {
-			throw new IllegalStateException("Screen name cannot be null");
+			throw new IllegalStateException("Screen name is null");
 		}
 		else if (Validator.isNull(getEmailAddress())) {
-			throw new IllegalStateException("Email address cannot be null");
+			throw new IllegalStateException("Email address is null");
 		}
 
 		StringBundler sb = new StringBundler(5);

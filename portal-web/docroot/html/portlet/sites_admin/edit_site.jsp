@@ -27,6 +27,8 @@ Group group = (Group)request.getAttribute(WebKeys.GROUP);
 
 long groupId = BeanParamUtil.getLong(group, request, "groupId");
 
+long parentGroupId = ParamUtil.getLong(request, "parentGroupSearchContainerPrimaryKeys", GroupConstants.DEFAULT_PARENT_GROUP_ID);
+
 Group liveGroup = null;
 
 long liveGroupId = 0;
@@ -117,6 +119,10 @@ if ((group != null) && group.isCompany()) {
 	miscellaneousSections = new String[0];
 }
 
+if ((group != null) && group.hasLocalOrRemoteStagingGroup()) {
+	advancedSections = ArrayUtil.remove(advancedSections, "staging");
+}
+
 String[][] categorySections = {mainSections, seoSections, advancedSections, miscellaneousSections};
 %>
 
@@ -127,8 +133,10 @@ String[][] categorySections = {mainSections, seoSections, advancedSections, misc
 		PortalUtil.addPortletBreadcrumbEntry(request, group.getDescriptiveName(locale), null);
 		PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "edit"), currentURL);
 	}
-	else {
-		PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "add-site"), currentURL);
+	else if (parentGroupId != GroupConstants.DEFAULT_PARENT_GROUP_ID) {
+		Group parentGroup = GroupLocalServiceUtil.getGroup(parentGroupId);
+
+		PortalUtil.addPortletBreadcrumbEntry(request, parentGroup.getDescriptiveName(locale), null);
 	}
 	%>
 
@@ -147,6 +155,16 @@ String[][] categorySections = {mainSections, seoSections, advancedSections, misc
 	else if (layoutSetPrototype != null) {
 		localizeTitle= false;
 		title = layoutSetPrototype.getName(locale);
+	}
+	else if (parentGroupId != GroupConstants.DEFAULT_PARENT_GROUP_ID) {
+		title = "new-child-site";
+	%>
+
+		<div id="breadcrumb">
+			<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showCurrentPortlet="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+		</div>
+
+	<%
 	}
 	%>
 

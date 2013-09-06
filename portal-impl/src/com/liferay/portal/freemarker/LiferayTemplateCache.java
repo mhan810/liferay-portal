@@ -107,18 +107,15 @@ public class LiferayTemplateCache extends TemplateCache {
 		throws IOException {
 
 		if (templateId == null) {
-			throw new IllegalArgumentException(
-				"Argument \"name\" cannot be null");
+			throw new IllegalArgumentException("Argument \"name\" is null");
 		}
 
 		if (locale == null) {
-			throw new IllegalArgumentException(
-				"Argument \"locale\" cannot be null");
+			throw new IllegalArgumentException("Argument \"locale\" is null");
 		}
 
 		if (encoding == null) {
-			throw new IllegalArgumentException(
-				"Argument \"encoding\" cannot be null");
+			throw new IllegalArgumentException("Argument \"encoding\" is null");
 		}
 
 		TemplateResource templateResource = null;

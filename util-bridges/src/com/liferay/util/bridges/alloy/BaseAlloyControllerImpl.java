@@ -125,6 +125,16 @@ public abstract class BaseAlloyControllerImpl implements AlloyController {
 
 	@Override
 	public void execute() throws Exception {
+		if (permissioned &&
+			!AlloyPermission.contains(
+				themeDisplay.getPermissionChecker(),
+				themeDisplay.getScopeGroupId(), portlet.getRootPortletId(),
+				controllerPath, actionPath)) {
+
+			renderError(
+				"you-do-not-have-permission-to-access-the-requested-resource");
+		}
+
 		Method method = getMethod(actionPath);
 
 		if (method == null) {
@@ -793,6 +803,10 @@ public abstract class BaseAlloyControllerImpl implements AlloyController {
 		return search(null, keywords, sorts);
 	}
 
+	protected void setPermissioned(boolean permissioned) {
+		this.permissioned = permissioned;
+	}
+
 	protected String translate(String pattern, Object... arguments) {
 		return LanguageUtil.format(locale, pattern, arguments);
 	}
@@ -900,6 +914,7 @@ public abstract class BaseAlloyControllerImpl implements AlloyController {
 	protected Map<String, Method> methodsMap;
 	protected MimeResponse mimeResponse;
 	protected PageContext pageContext;
+	protected boolean permissioned;
 	protected Portlet portlet;
 	protected PortletContext portletContext;
 	protected PortletRequest portletRequest;

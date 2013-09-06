@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
@@ -12,10 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/taglib/aui/nav_bar/init.jsp" %>
+package com.liferay.portal.kernel.webdav.methods;
 
-		</div>
-	</div>
-</div>
+import java.util.List;
+
+/**
+ * @author Brian Wing Shun Chan
+ */
+public interface MethodFactoryRegistry {
+
+	public MethodFactory getDefaultMethodFactory();
+
+	public List<MethodFactory> getMethodFactories();
+
+	public MethodFactory getMethodFactory(String className);
+
+	public void registerMethodFactory(MethodFactory methodFactory);
+
+	public void unregisterMethodFactory(MethodFactory methodFactory);
+
+}

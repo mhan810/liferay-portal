@@ -19,8 +19,8 @@ package com.liferay.portal.kernel.search;
  */
 public class SuggestionConstants {
 
-	public static final String QUERY_SUGGESTION_TYPE = "querySuggestion";
+	public static final String TYPE_QUERY_SUGGESTION = "querySuggestion";
 
-	public static final String SPELL_CHECKER_TYPE = "spellChecker";
+	public static final String TYPE_SPELL_CHECKER = "spellChecker";
 
 }

@@ -192,6 +192,18 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		return content;
 	}
 
+	protected static boolean isInJavaTermTypeGroup(
+		int javaTermType, int[] javaTermTypeGroup) {
+
+		for (int type : javaTermTypeGroup) {
+			if (javaTermType == type) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	protected List<String> addParameterTypes(
 		String line, List<String> parameterTypes) {
 
@@ -589,28 +601,30 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 	}
 
 	protected String fixIncorrectEmptyLineBeforeCloseCurlyBrace(
-		String content) {
+		String content, String fileName) {
+
+		if (fileName.endsWith("AnnotationLocatorTest.java")) {
+			return content;
+		}
 
 		Pattern pattern = Pattern.compile("\n\n(\t+)}\n");
 
 		Matcher matcher = pattern.matcher(content);
 
-		int x = 0;
-
-		while (matcher.find(x)) {
+		while (matcher.find()) {
 			String tabs = matcher.group(1);
 			int tabCount = tabs.length();
 
-			int y = matcher.start();
+			int pos = matcher.start();
 
 			while (true) {
-				y = content.lastIndexOf("\n" + tabs, y - 1);
+				pos = content.lastIndexOf("\n" + tabs, pos - 1);
 
-				if (content.charAt(y + tabCount + 1) == CharPool.TAB) {
+				if (content.charAt(pos + tabCount + 1) == CharPool.TAB) {
 					continue;
 				}
 
-				String codeBlock = content.substring(y + tabCount + 1);
+				String codeBlock = content.substring(pos + tabCount + 1);
 
 				String firstLine = codeBlock.substring(
 					0, codeBlock.indexOf("\n"));
@@ -625,10 +639,8 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 				}
 
 				return StringUtil.replaceFirst(
-					content, "\n\n" + tabs + "}\n", "\n" + tabs + "}\n", y);
+					content, "\n\n" + tabs + "}\n", "\n" + tabs + "}\n", pos);
 			}
-
-			x = matcher.end();
 		}
 
 		return content;
@@ -706,8 +718,10 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 
 				requiresEmptyLine = true;
 			}
-			else if (StringUtil.isUpperCase(javaTermName) ||
-					 StringUtil.isUpperCase(previousJavaTermName)) {
+			else if ((StringUtil.isUpperCase(javaTermName) &&
+					  !StringUtil.isLowerCase(javaTermName)) ||
+					 (StringUtil.isUpperCase(previousJavaTermName) &&
+					  !StringUtil.isLowerCase(previousJavaTermName))) {
 
 				requiresEmptyLine = true;
 			}
@@ -821,10 +835,6 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		}
 
 		String newContent = content;
-
-		if (!fileName.endsWith("AnnotationLocatorTest.java")) {
-			newContent = fixIncorrectEmptyLineBeforeCloseCurlyBrace(newContent);
-		}
 
 		if (newContent.contains("$\n */")) {
 			processErrorMessage(fileName, "*: " + fileName);
@@ -1032,7 +1042,10 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		String oldContent = newContent;
 
 		while (true) {
-			newContent = formatJava(fileName, oldContent);
+			newContent = fixIncorrectEmptyLineBeforeCloseCurlyBrace(
+				oldContent, fileName);
+
+			newContent = formatJava(fileName, newContent);
 
 			newContent = StringUtil.replace(newContent, "\n\n\n", "\n\n");
 
@@ -2480,18 +2493,6 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		}
 	}
 
-	protected boolean isInJavaTermTypeGroup(
-		int javaTermType, int[] javaTermTypeGroup) {
-
-		for (int type : javaTermTypeGroup) {
-			if (javaTermType == type) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	protected boolean isValidJavaParameter(String javaParameter) {
 		int quoteCount = StringUtil.count(javaParameter, StringPool.QUOTE);
 
@@ -2636,9 +2637,11 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 				}
 				else {
 					content = StringUtil.replaceFirst(
-						content, javaTermContent, previousJavaTermContent);
+						content, "\n" + javaTermContent,
+						"\n" + previousJavaTermContent);
 					content = StringUtil.replaceLast(
-						content, previousJavaTermContent, javaTermContent);
+						content, "\n" + previousJavaTermContent,
+						"\n" + javaTermContent);
 
 					return content;
 				}

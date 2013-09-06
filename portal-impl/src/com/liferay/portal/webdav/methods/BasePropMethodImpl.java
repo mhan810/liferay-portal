@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.webdav.Resource;
 import com.liferay.portal.kernel.webdav.WebDAVRequest;
 import com.liferay.portal.kernel.webdav.WebDAVStorage;
 import com.liferay.portal.kernel.webdav.WebDAVUtil;
+import com.liferay.portal.kernel.webdav.methods.Method;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.Namespace;
@@ -403,15 +404,14 @@ public abstract class BasePropMethodImpl implements Method {
 
 			return status;
 		}
-		else {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					"No resource found for " + storage.getRootPath() +
-						webDAVRequest.getPath());
-			}
 
-			return HttpServletResponse.SC_NOT_FOUND;
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				"No resource found for " + storage.getRootPath() +
+					webDAVRequest.getPath());
 		}
+
+		return HttpServletResponse.SC_NOT_FOUND;
 	}
 
 	private static final List<QName> _ALL_COLLECTION_PROPS = Arrays.asList(

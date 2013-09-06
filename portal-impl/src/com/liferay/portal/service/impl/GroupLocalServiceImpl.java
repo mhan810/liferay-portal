@@ -76,8 +76,10 @@ import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.Portlet;
+import com.liferay.portal.model.ResourceAction;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.ResourcePermission;
+import com.liferay.portal.model.ResourceTypePermission;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
@@ -3858,13 +3860,72 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			}
 		}
 
+		// Join by role permissions
+
+		List<?> rolePermissions = (List<?>)params.remove("rolePermissions");
+
+		if (rolePermissions != null) {
+			String resourceName = (String)rolePermissions.get(0);
+			Integer resourceScope = (Integer)rolePermissions.get(1);
+			String resourceActionId = (String)rolePermissions.get(2);
+			Long resourceRoleId = (Long)rolePermissions.get(3);
+
+			ResourceAction resourceAction =
+				resourceActionLocalService.fetchResourceAction(
+					resourceName, resourceActionId);
+
+			if (resourceAction != null) {
+				long bitwiseValue = resourceAction.getBitwiseValue();
+
+				if (resourceBlockLocalService.isSupported(resourceName)) {
+					iterator = groups.iterator();
+
+					while (iterator.hasNext()) {
+						Group group = iterator.next();
+
+						ResourceTypePermission resourceTypePermission =
+							resourceTypePermissionPersistence.fetchByC_G_N_R(
+								companyId, group.getGroupId(), resourceName,
+								resourceRoleId);
+
+						if ((resourceTypePermission == null) ||
+							((resourceTypePermission.getActionIds() &
+							  bitwiseValue) == 0)) {
+
+							iterator.remove();
+						}
+					}
+				}
+				else {
+					iterator = groups.iterator();
+
+					while (iterator.hasNext()) {
+						Group group = iterator.next();
+
+						ResourcePermission resourcePermission =
+							resourcePermissionPersistence.fetchByC_N_S_P_R(
+								companyId, resourceName, resourceScope,
+									String.valueOf(group.getGroupId()),
+									resourceRoleId);
+
+						if ((resourcePermission == null) ||
+							((resourcePermission.getActionIds() &
+							  bitwiseValue) == 0)) {
+
+							iterator.remove();
+						}
+					}
+				}
+			}
+		}
+
+		// Join by Groups_Roles
+
 		Long userId = (Long)params.remove("usersGroups");
 
 		if (userId == null) {
 			return groups;
 		}
-
-		// Join by Groups_Roles
 
 		Set<Group> resultGroups = new HashSet<Group>(groups);
 

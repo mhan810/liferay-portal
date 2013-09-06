@@ -58,7 +58,7 @@ public abstract class BaseSpellCheckIndexWriter
 					searchContext.getCompanyId(), languageId,
 					PropsKeys.INDEX_SEARCH_QUERY_SUGGESTION_DICTIONARY,
 					Field.KEYWORD_SEARCH,
-					SuggestionConstants.QUERY_SUGGESTION_TYPE, 0);
+					SuggestionConstants.TYPE_QUERY_SUGGESTION, 0);
 			}
 		}
 		catch (Exception e) {
@@ -74,7 +74,7 @@ public abstract class BaseSpellCheckIndexWriter
 			indexKeywords(
 				searchContext.getCompanyId(), searchContext.getLanguageId(),
 				PropsKeys.INDEX_SEARCH_QUERY_SUGGESTION_DICTIONARY,
-				Field.KEYWORD_SEARCH, SuggestionConstants.QUERY_SUGGESTION_TYPE,
+				Field.KEYWORD_SEARCH, SuggestionConstants.TYPE_QUERY_SUGGESTION,
 				0);
 		}
 		catch (Exception e) {
@@ -92,7 +92,7 @@ public abstract class BaseSpellCheckIndexWriter
 					searchContext.getCompanyId(), languageId,
 					PropsKeys.INDEX_SEARCH_SPELL_CHECKER_DICTIONARY,
 					Field.SPELL_CHECK_WORD,
-					SuggestionConstants.SPELL_CHECKER_TYPE, 0);
+					SuggestionConstants.TYPE_SPELL_CHECKER, 0);
 			}
 		}
 		catch (Exception e) {
@@ -108,7 +108,7 @@ public abstract class BaseSpellCheckIndexWriter
 			indexKeywords(
 				searchContext.getCompanyId(), searchContext.getLanguageId(),
 				PropsKeys.INDEX_SEARCH_SPELL_CHECKER_DICTIONARY,
-				Field.SPELL_CHECK_WORD, SuggestionConstants.SPELL_CHECKER_TYPE,
+				Field.SPELL_CHECK_WORD, SuggestionConstants.TYPE_SPELL_CHECKER,
 				0);
 		}
 		catch (Exception e) {

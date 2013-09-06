@@ -99,7 +99,7 @@ public class PrincipalBean {
 		}
 
 		if (Validator.isNull(name)) {
-			throw new PrincipalException("Principal cannot be null");
+			throw new PrincipalException("Principal is null");
 		}
 		else {
 			for (int i = 0; i < ANONYMOUS_NAMES.length; i++) {

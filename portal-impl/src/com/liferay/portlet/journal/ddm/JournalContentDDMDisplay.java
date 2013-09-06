@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
@@ -12,10 +11,19 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/taglib/aui/nav_bar/init.jsp" %>
+package com.liferay.portlet.journal.ddm;
 
-<div class="navbar <%= cssClass %>" id="<%= id %>" <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %>>
-	<div class="navbar-inner">
-		<div class="container">
+import com.liferay.portal.util.PortletKeys;
+
+/**
+ * @author Eduardo Garcia
+ */
+public class JournalContentDDMDisplay extends JournalDDMDisplay {
+
+	@Override
+	public String getPortletId() {
+		return PortletKeys.JOURNAL_CONTENT;
+	}
+
+}

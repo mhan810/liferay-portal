@@ -118,7 +118,7 @@ public class SubscriptionSender implements Serializable {
 			String inferredClassName = null;
 			long inferredClassPK = 0;
 
-			if (!_persistestedSubscribersOVPs.isEmpty()) {
+			if (_persistestedSubscribersOVPs.size() > 1) {
 				ObjectValuePair<String, Long> objectValuePair =
 					_persistestedSubscribersOVPs.get(
 						_persistestedSubscribersOVPs.size() - 1);
@@ -145,8 +145,6 @@ public class SubscriptionSender implements Serializable {
 					catch (PortalException pe) {
 						_log.error(
 							"Unable to process subscription: " + subscription);
-
-						continue;
 					}
 				}
 
@@ -386,6 +384,26 @@ public class SubscriptionSender implements Serializable {
 		return SubscriptionPermissionUtil.contains(
 			permissionChecker, subscription.getClassName(),
 			subscription.getClassPK(), inferredClassName, inferredClassPK);
+	}
+
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #hasPermission(Subscription,
+	 *             String, long, User)}
+	 */
+	protected boolean hasPermission(Subscription subscription, User user)
+		throws Exception {
+
+		return hasPermission(subscription, null, 0, user);
+	}
+
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 *             #notifySubscriber(Subscription, String, long)}
+	 */
+	protected void notifySubscriber(Subscription subscription)
+		throws Exception {
+
+		notifySubscriber(subscription, null, 0);
 	}
 
 	protected void notifySubscriber(

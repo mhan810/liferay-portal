@@ -189,7 +189,7 @@ public class PortalSecurityManagerImpl extends SecurityManager
 	@Override
 	public void checkMemberAccess(Class<?> clazz, int accessibility) {
 		if (clazz == null) {
-			throw new NullPointerException("Class cannot be null");
+			throw new NullPointerException("Class is null");
 		}
 
 		ClassLoader clazzClassLoader = ClassLoaderUtil.getClassLoader(clazz);

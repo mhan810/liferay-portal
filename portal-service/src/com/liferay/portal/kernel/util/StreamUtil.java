@@ -135,11 +135,11 @@ public class StreamUtil {
 		throws IOException {
 
 		if (inputStream == null) {
-			throw new IllegalArgumentException("Input stream cannot be null");
+			throw new IllegalArgumentException("Input stream is null");
 		}
 
 		if (outputStream == null) {
-			throw new IllegalArgumentException("Output stream cannot be null");
+			throw new IllegalArgumentException("Output stream is null");
 		}
 
 		if (bufferSize <= 0) {

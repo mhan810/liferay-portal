@@ -360,7 +360,9 @@ public class StripFilter extends BasePortalFilter {
 			filterChain);
 
 		String contentType = GetterUtil.getString(
-			bufferCacheServletResponse.getContentType()).toLowerCase();
+			bufferCacheServletResponse.getContentType());
+
+		contentType = contentType.toLowerCase();
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Stripping content of type " + contentType);

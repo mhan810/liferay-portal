@@ -16,9 +16,11 @@ package com.liferay.portlet.messageboards.service.permission;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.staging.permission.StagingPermissionUtil;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.messageboards.NoSuchCategoryException;
 import com.liferay.portlet.messageboards.model.MBCategory;
@@ -72,12 +74,11 @@ public class MBCategoryPermission {
 
 			return MBPermission.contains(permissionChecker, groupId, actionId);
 		}
-		else {
-			MBCategory category = MBCategoryLocalServiceUtil.getCategory(
-				categoryId);
 
-			return contains(permissionChecker, category, actionId);
-		}
+		MBCategory category = MBCategoryLocalServiceUtil.getCategory(
+			categoryId);
+
+		return contains(permissionChecker, category, actionId);
 	}
 
 	public static boolean contains(
@@ -98,6 +99,15 @@ public class MBCategoryPermission {
 
 		if (actionId.equals(ActionKeys.ADD_CATEGORY)) {
 			actionId = ActionKeys.ADD_SUBCATEGORY;
+		}
+
+		Boolean hasPermission = StagingPermissionUtil.hasPermission(
+			permissionChecker, category.getGroupId(),
+			MBCategory.class.getName(), category.getCategoryId(),
+			PortletKeys.MESSAGE_BOARDS, actionId);
+
+		if (hasPermission != null) {
+			return hasPermission.booleanValue();
 		}
 
 		if (MBBanLocalServiceUtil.hasBan(

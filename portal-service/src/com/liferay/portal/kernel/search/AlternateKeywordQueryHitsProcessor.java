@@ -43,11 +43,11 @@ public class AlternateKeywordQueryHitsProcessor implements HitsProcessor {
 
 		searchContext.overrideKeywords(spellCheckedKeywords);
 
-		String[] additionalQuerySuggestions =
-			SearchEngineUtil.suggestKeywordQueries(searchContext, 5);
+		String[] querySuggestions = SearchEngineUtil.suggestKeywordQueries(
+			searchContext, 5);
 
-		if (ArrayUtil.isNotEmpty(additionalQuerySuggestions)) {
-			searchContext.setKeywords(additionalQuerySuggestions[0]);
+		if (ArrayUtil.isNotEmpty(querySuggestions)) {
+			searchContext.setKeywords(querySuggestions[0]);
 		}
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();

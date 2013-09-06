@@ -145,7 +145,7 @@ public abstract class MimeResponseImpl
 	@Override
 	public void setContentType(String contentType) {
 		if (Validator.isNull(contentType)) {
-			throw new IllegalArgumentException("Content type cannot be null");
+			throw new IllegalArgumentException("Content type is null");
 		}
 
 		String lifecycle = getLifecycle();

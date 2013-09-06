@@ -162,13 +162,13 @@ public class DLFileEntryTypeServiceTest {
 	@Test
 	public void testCheckDefaultFileEntryTypes() throws Exception {
 		Assert.assertNotNull(
-			DLFileEntryTypeConstants.NAME_BASIC_DOCUMENT + " cannot be null",
+			DLFileEntryTypeConstants.NAME_BASIC_DOCUMENT + " is null",
 			_basicDocumentDLFileEntryType);
 		Assert.assertNotNull(
-			DLFileEntryTypeConstants.NAME_CONTRACT + " cannot be null",
+			DLFileEntryTypeConstants.NAME_CONTRACT + " is null",
 			_contractDLFileEntryType);
 		Assert.assertNotNull(
-			DLFileEntryTypeConstants.NAME_MARKETING_BANNER + " cannot be null",
+			DLFileEntryTypeConstants.NAME_MARKETING_BANNER + " is null",
 			_marketingBannerDLFileEntryType);
 	}
 

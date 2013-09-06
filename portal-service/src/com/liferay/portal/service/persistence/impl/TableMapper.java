@@ -21,7 +21,6 @@ import com.liferay.portal.model.BaseModel;
 import java.util.List;
 
 /**
- *
  * @author Shuyang Zhou
  */
 public interface TableMapper<L extends BaseModel<L>, R extends BaseModel<R>> {
