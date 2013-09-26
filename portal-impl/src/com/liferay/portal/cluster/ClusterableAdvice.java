@@ -79,10 +79,6 @@ public class ClusterableAdvice
 		MethodHandler methodHandler = createMethodHandler(
 			clusterable.acceptor(), methodInvocation);
 
-		if (methodHandler == null) {
-			return;
-		}
-
 		ClusterRequest clusterRequest = ClusterRequest.createMulticastRequest(
 			methodHandler, true);
 

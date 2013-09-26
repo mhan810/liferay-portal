@@ -112,8 +112,6 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 			_clusterEventListener =
 				new ClusterMasterTokenClusterEventListener();
 
-			_clusterExecutor.addClusterEventListener(_clusterEventListener);
-
 			String masterAddressString = getMasterAddressString();
 
 			if (!_localClusterNodeAddress.equals(masterAddressString)) {
@@ -121,6 +119,8 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 			}
 
 			_enabled = true;
+
+			_clusterExecutor.addClusterEventListener(_clusterEventListener);
 		}
 		catch (Exception e) {
 			throw new RuntimeException(
@@ -341,8 +341,7 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 				getMasterAddressString();
 			}
 			catch (Exception e) {
-				_log.error(
-					"Unable to update cluster master lock", e);
+				_log.error("Unable to update cluster master lock", e);
 			}
 		}
 	}
