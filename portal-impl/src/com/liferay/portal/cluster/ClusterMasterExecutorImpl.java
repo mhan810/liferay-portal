@@ -112,15 +112,14 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 			_clusterEventListener =
 				new ClusterMasterTokenClusterEventListener();
 
-			String masterAddressString = getMasterAddressString();
+			_clusterExecutor.addClusterEventListener(_clusterEventListener);
 
-			if (!_localClusterNodeAddress.equals(masterAddressString)) {
-				notifyMasterTokenTransitionListeners(false);
-			}
+			String masterAddressString = getMasterAddressString();
 
 			_enabled = true;
 
-			_clusterExecutor.addClusterEventListener(_clusterEventListener);
+			notifyMasterTokenTransitionListeners(
+				_localClusterNodeAddress.equals(masterAddressString));
 		}
 		catch (Exception e) {
 			throw new RuntimeException(
@@ -206,13 +205,10 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 			return lock.getOwner();
 		}
 
-		if (master) {
-			notifyMasterTokenTransitionListeners(true);
+		_master = master;
 
-			_master = true;
-		}
-		else {
-			notifyMasterTokenTransitionListeners(false);
+		if (_enabled) {
+			notifyMasterTokenTransitionListeners(master);
 		}
 
 		return lock.getOwner();
@@ -247,7 +243,7 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 	private Set<ClusterMasterTokenTransitionListener>
 		_clusterMasterTokenTransitionListeners =
 		new HashSet<ClusterMasterTokenTransitionListener>();
-	private boolean _enabled;
+	private volatile boolean _enabled;
 	private volatile String _localClusterNodeAddress;
 
 	private static class LocalFuture<T> implements Future<T> {
