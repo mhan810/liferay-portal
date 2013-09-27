@@ -574,10 +574,10 @@ public class ClusterSchedulerEngine
 
 		String owner = null;
 
-		Lock lock = null;
-
 		while (true) {
 			try {
+				Lock lock = null;
+
 				if (owner == null) {
 					lock = LockLocalServiceUtil.lock(
 						_LOCK_CLASS_NAME, _LOCK_CLASS_NAME,
@@ -589,14 +589,12 @@ public class ClusterSchedulerEngine
 						_localClusterNodeAddress);
 				}
 
-				Address address = AddressSerializerUtil.deserialize(
-					lock.getOwner());
+				owner = lock.getOwner();
+
+				Address address = AddressSerializerUtil.deserialize(owner);
 
 				if (ClusterExecutorUtil.isClusterNodeAlive(address)) {
 					break;
-				}
-				else {
-					owner = lock.getOwner();
 				}
 			}
 			catch (Exception e) {
@@ -608,20 +606,20 @@ public class ClusterSchedulerEngine
 			}
 		}
 
-		boolean master = _localClusterNodeAddress.equals(lock.getOwner());
+		boolean master = _localClusterNodeAddress.equals(owner);
 
 		if (master == _master) {
-			return lock.getOwner();
+			return owner;
 		}
 
 		if (master) {
 			slaveToMaster();
 		}
 		else {
-			masterToSlave(lock.getOwner(), asynchronous);
+			masterToSlave(owner, asynchronous);
 		}
 
-		return lock.getOwner();
+		return owner;
 	}
 
 	protected void initMemoryClusteredJobs(

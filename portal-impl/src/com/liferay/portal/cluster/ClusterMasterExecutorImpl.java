@@ -165,10 +165,10 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 	protected String getMasterAddressString() throws SystemException {
 		String owner = null;
 
-		Lock lock = null;
-
 		while (true) {
 			try {
+				Lock lock = null;
+
 				if (owner == null) {
 					lock = LockLocalServiceUtil.lock(
 						_LOCK_CLASS_NAME, _LOCK_CLASS_NAME,
@@ -180,14 +180,12 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 						_localClusterNodeAddress);
 				}
 
-				Address address = AddressSerializerUtil.deserialize(
-					lock.getOwner());
+				owner = lock.getOwner();
+
+				Address address = AddressSerializerUtil.deserialize(owner);
 
 				if (_clusterExecutor.isClusterNodeAlive(address)) {
 					break;
-				}
-				else {
-					owner = lock.getOwner();
 				}
 			}
 			catch (Exception e) {
@@ -199,10 +197,10 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 			}
 		}
 
-		boolean master = _localClusterNodeAddress.equals(lock.getOwner());
+		boolean master = _localClusterNodeAddress.equals(owner);
 
 		if (master == _master) {
-			return lock.getOwner();
+			return owner;
 		}
 
 		_master = master;
@@ -211,7 +209,7 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 			notifyMasterTokenTransitionListeners(master);
 		}
 
-		return lock.getOwner();
+		return owner;
 	}
 
 	protected void notifyMasterTokenTransitionListeners(
