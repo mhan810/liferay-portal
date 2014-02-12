@@ -59,6 +59,7 @@ import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
@@ -6549,9 +6550,8 @@ public class JournalArticleLocalServiceImpl
 
 		User user = userPersistence.findByPrimaryKey(article.getUserId());
 
-		articleURL +=
-			"&groupId=" + article.getGroupId() + "&articleId=" +
-				article.getArticleId() + "&version=" + article.getVersion();
+		articleURL = setArticleURL(articleURL, article.getGroupId(),
+				article.getFolderId(), article.getArticleId());
 
 		String fromName = JournalUtil.getEmailFromName(
 			preferences, article.getCompanyId());
@@ -6618,6 +6618,22 @@ public class JournalArticleLocalServiceImpl
 		subscriptionSender.addRuntimeSubscribers(toAddress, toName);
 
 		subscriptionSender.flushNotificationsAsync();
+	}
+
+	protected String setArticleURL(
+		String articleURL, long groupId, String folderId, double articleId) {
+
+		StringBundler sb = new StringBundler(7);
+
+		sb.append(articleURL);
+		sb.append("&_15_groupId=");
+		sb.append(groupId);
+		sb.append("&_15_folderId=");
+		sb.append(folderId);
+		sb.append("&_15_articleId=");
+		sb.append(articleId);
+
+		return sb.toString();
 	}
 
 	protected void updateDDMStructureXSD(
