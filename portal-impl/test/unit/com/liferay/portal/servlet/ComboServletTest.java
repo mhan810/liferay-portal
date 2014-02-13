@@ -14,148 +14,136 @@
 
 package com.liferay.portal.servlet;
 
+import com.liferay.portal.cache.SingleVMPoolImpl;
 import com.liferay.portal.cache.memory.MemoryPortalCacheManager;
 import com.liferay.portal.kernel.cache.SingleVMPoolUtil;
-import com.liferay.portal.kernel.servlet.ServletContextUtil;
-import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.servlet.ServletContextPool;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 
-import javax.servlet.ServletContext;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import org.mockito.Mockito;
 
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import org.springframework.mock.web.MockServletConfig;
 import org.springframework.mock.web.MockServletContext;
 
+import static org.mockito.Mockito.verify;
+
 /**
- * @author László Csontos
+ * @author Carlos Sierra Andrés
  */
-@PrepareForTest({ComboServlet.class, SingleVMPoolUtil.class})
 @RunWith(PowerMockRunner.class)
 public class ComboServletTest extends PowerMockito {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
-		mockStatic(SingleVMPoolUtil.class);
-
-		MemoryPortalCacheManager<Serializable, Object>
+		MemoryPortalCacheManager<Serializable, Serializable>
 			memoryPortalCacheManager =
-				new MemoryPortalCacheManager<Serializable, Object>();
+				new MemoryPortalCacheManager<Serializable, Serializable>();
 
 		memoryPortalCacheManager.afterPropertiesSet();
 
-		String className = ComboServlet.class.getName();
+		SingleVMPoolImpl singleVMPoolImpl = new SingleVMPoolImpl();
 
-		when(
-			SingleVMPoolUtil.getCache(className)
-		).thenReturn(
-			memoryPortalCacheManager.getCache(className)
-		);
+		singleVMPoolImpl.setPortalCacheManager(memoryPortalCacheManager);
 
-		String fileContentBagClass =
-			className + CharPool.PERIOD + "FileContentBag";
+		SingleVMPoolUtil singleVMPoolUtil = new SingleVMPoolUtil();
 
-		when(
-			SingleVMPoolUtil.getCache(fileContentBagClass)
-		).thenReturn(
-			memoryPortalCacheManager.getCache(fileContentBagClass)
-		);
+		singleVMPoolUtil.setSingleVMPool(singleVMPoolImpl);
+	}
 
+	@Before
+	public void setUp() throws IOException, ServletException {
 		_comboServlet = new ComboServlet();
+
+		_portalServletContext = spy(new MockServletContext());
+
+		ServletConfig servletConfig = new MockServletConfig(
+			_portalServletContext);
+
+		_portalServletContext.setContextPath("portal");
+
+		File tempFile = _temporaryFolder.newFile();
+
+		URI tempFileURI = tempFile.toURI();
+
+		when(
+			_portalServletContext.getResource(Mockito.anyString())
+		).thenReturn(
+			tempFileURI.toURL()
+		);
+
+		_comboServlet.init(servletConfig);
+
+		_pluginServletContext = spy(new MockServletContext("plugin-context"));
+
+		when(
+			_pluginServletContext.getResource(Mockito.anyString())
+		).thenReturn(
+			tempFileURI.toURL()
+		);
+
+		ServletContextPool.put("plugin-context", _pluginServletContext);
+	}
+
+	@Test(expected = ServletException.class)
+	public void testGetResourceFromNonexistingPluginContext() throws Exception {
+		_comboServlet.getResourceURL(
+			"non-existing-plugin-context:/js/javascript.js");
 	}
 
 	@Test
-	public void testGetResourceURLWithUnixDir() throws Exception {
-		ServletContext servletContext = getServletContext(
-			_WAS_DEFAULT_PATH_UNIX);
+	public void testGetResourceFromPluginContext() throws Exception {
+		_comboServlet.getResourceURL("plugin-context:/js/javascript.js");
 
-		testGetResourceURL(
-			servletContext, CharPool.SLASH + _JAVASCRIPT_DIR, false);
+		verify(_pluginServletContext);
+
+		_pluginServletContext.getResource("/js/javascript.js");
 	}
 
 	@Test
-	public void testGetResourceURLWithWindowsDir() throws Exception {
-		ServletContext servletContext = getServletContext(
-			_WAS_DEFAULT_PATH_WINDOWS);
-
-		testGetResourceURL(
-			servletContext, CharPool.SLASH + _JAVASCRIPT_DIR, false);
-	}
-
-	@Test
-	public void testGetResourceURLWithWrongContext() throws Exception {
-		ServletContext servletContext = getServletContext(null);
-
-		testGetResourceURL(servletContext, null, true);
-	}
-
-	@Test
-	public void testGetResourceURLWithWrongPath() throws Exception {
-		ServletContext servletContext = getServletContext(
-			_WAS_DEFAULT_PATH_UNIX);
-
-		testGetResourceURL(servletContext, "/dummyPath", true);
-	}
-
-	protected ServletContext getServletContext(final String path) {
-		return new MockServletContext() {
-
-			@Override
-			public URL getResource(String resourcePath)
-				throws MalformedURLException {
-
-				if (path == null) {
-					return null;
-				}
-
-				return new URL("file:" + path + resourcePath);
-			}
-
-		};
-	}
-
-	protected void testGetResourceURL(
-			ServletContext servletContext, String path, boolean expectNull)
+	public void testGetResourceFromPluginContextWithInitialSlash()
 		throws Exception {
 
-		String rootPath = "dummyPath";
+		_comboServlet.getResourceURL("/plugin-context:/js/javascript.js");
 
-		if (!expectNull) {
-			rootPath = ServletContextUtil.getRootPath(servletContext);
-		}
+		verify(_pluginServletContext);
 
-		URL resourceURL = Whitebox.invokeMethod(
-			_comboServlet, "getResourceURL", servletContext, rootPath, path);
-
-		if (expectNull) {
-			Assert.assertNull(resourceURL);
-		}
-		else {
-			Assert.assertEquals(servletContext.getResource(path), resourceURL);
-		}
+		_pluginServletContext.getResource("/js/javascript.js");
 	}
 
-	private static final String _JAVASCRIPT_DIR = "html/js";
+	@Test
+	public void testGetResourceFromPortalContext() throws Exception {
+		String path = "/js/javascript.js";
 
-	private static final String _WAS_DEFAULT_PATH_UNIX =
-		"/opt/IBM/WebSphere/AppServer/profiles/appsrv01" +
-			"/installedApps/cell1/lportal_war.ear/lportal.war";
+		_comboServlet.getResourceURL("/js/javascript.js");
 
-	private static final String _WAS_DEFAULT_PATH_WINDOWS =
-		"C:/Program Files/IBM/WebSphere/AppServer/profiles/appsrv01" +
-			"/installedApps/cell1/lportal_war.ear/lportal.war";
+		verify(_portalServletContext);
 
-	private static ComboServlet _comboServlet;
+		_portalServletContext.getResource(path);
+	}
+
+	private ComboServlet _comboServlet;
+	private MockServletContext _pluginServletContext;
+	private MockServletContext _portalServletContext;
+
+	@Rule
+	private TemporaryFolder _temporaryFolder = new TemporaryFolder();
 
 }

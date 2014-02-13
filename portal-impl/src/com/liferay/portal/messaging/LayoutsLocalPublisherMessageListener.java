@@ -14,22 +14,23 @@
 
 package com.liferay.portal.messaging;
 
+import com.liferay.portal.kernel.lar.ExportImportDateUtil;
 import com.liferay.portal.kernel.messaging.BaseMessageStatusMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageStatus;
-import com.liferay.portal.kernel.messaging.sender.MessageSender;
-import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Time;
+import com.liferay.portal.model.ExportImportConfiguration;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
+import com.liferay.portal.service.ExportImportConfigurationLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
@@ -45,6 +46,7 @@ import java.util.Map;
 /**
  * @author Bruno Farache
  * @author Raymond Augé
+ * @author Daniel Kocsis
  */
 public class LayoutsLocalPublisherMessageListener
 	extends BaseMessageStatusMessageListener {
@@ -52,39 +54,37 @@ public class LayoutsLocalPublisherMessageListener
 	public LayoutsLocalPublisherMessageListener() {
 	}
 
-	/**
-	 * @deprecated As of 6.1.0
-	 */
-	@Deprecated
-	public LayoutsLocalPublisherMessageListener(
-		SingleDestinationMessageSender statusSender,
-		MessageSender responseSender) {
-
-		super(statusSender, responseSender);
-	}
-
 	@Override
 	protected void doReceive(Message message, MessageStatus messageStatus)
 		throws Exception {
 
-		LayoutsLocalPublisherRequest publisherRequest =
-			(LayoutsLocalPublisherRequest)message.getPayload();
+		long exportImportConfigurationId = GetterUtil.getLong(
+			message.getPayload());
 
-		messageStatus.setPayload(publisherRequest);
+		ExportImportConfiguration exportImportConfiguration =
+			ExportImportConfigurationLocalServiceUtil.
+				getExportImportConfiguration(exportImportConfigurationId);
 
-		String command = publisherRequest.getCommand();
-		long userId = publisherRequest.getUserId();
-		long sourceGroupId = publisherRequest.getSourceGroupId();
-		long targetGroupId = publisherRequest.getTargetGroupId();
-		boolean privateLayout = publisherRequest.isPrivateLayout();
-		Map<Long, Boolean> layoutIdMap = publisherRequest.getLayoutIdMap();
-		Map<String, String[]> parameterMap = publisherRequest.getParameterMap();
-		Date startDate = publisherRequest.getStartDate();
-		Date endDate = publisherRequest.getEndDate();
+		messageStatus.setPayload(exportImportConfiguration);
+
+		Map<String, Serializable> settingsMap =
+			exportImportConfiguration.getSettingsMap();
+
+		long userId = MapUtil.getLong(settingsMap, "userId");
+		long sourceGroupId = MapUtil.getLong(settingsMap, "sourceGroupId");
+		long targetGroupId = MapUtil.getLong(settingsMap, "targetGroupId");
+		boolean privateLayout = MapUtil.getBoolean(
+			settingsMap, "privateLayout");
+		Map<Long, Boolean> layoutIdMap = (Map<Long, Boolean>)settingsMap.get(
+			"layoutIdMap");
+		Map<String, String[]> parameterMap =
+			(Map<String, String[]>)settingsMap.get("parameterMap");
+		Date startDate = (Date)settingsMap.get("startDate");
+		Date endDate = (Date)settingsMap.get("endDate");
 
 		String range = MapUtil.getString(parameterMap, "range");
 
-		if (range.equals("fromLastPublishDate")) {
+		if (range.equals(ExportImportDateUtil.RANGE_FROM_LAST_PUBLISH_DATE)) {
 			LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
 				sourceGroupId, privateLayout);
 
@@ -97,16 +97,11 @@ public class LayoutsLocalPublisherMessageListener
 				startDate = new Date(lastPublishDate);
 			}
 		}
-		else if (range.equals("last")) {
+		else if (range.equals(ExportImportDateUtil.RANGE_LAST)) {
 			int last = MapUtil.getInteger(parameterMap, "last");
 
 			if (last > 0) {
-				Date scheduledFireTime =
-					publisherRequest.getScheduledFireTime();
-
-				if (scheduledFireTime == null) {
-					scheduledFireTime = new Date();
-				}
+				Date scheduledFireTime = new Date();
 
 				startDate = new Date(
 					scheduledFireTime.getTime() - (last * Time.HOUR));
@@ -153,16 +148,12 @@ public class LayoutsLocalPublisherMessageListener
 		ServiceContextThreadLocal.pushServiceContext(serviceContext);
 
 		try {
-			if (command.equals(
-					LayoutsLocalPublisherRequest.COMMAND_ALL_PAGES)) {
-
+			if (layoutIdMap == null) {
 				StagingUtil.publishLayouts(
 					userId, sourceGroupId, targetGroupId, privateLayout,
 					parameterMap, startDate, endDate);
 			}
-			else if (command.equals(
-						LayoutsLocalPublisherRequest.COMMAND_SELECTED_PAGES)) {
-
+			else {
 				StagingUtil.publishLayouts(
 					userId, sourceGroupId, targetGroupId, privateLayout,
 					layoutIdMap, parameterMap, startDate, endDate);

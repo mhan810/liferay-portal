@@ -377,6 +377,18 @@ public abstract class BaseIndexer implements Indexer {
 	}
 
 	@Override
+	public boolean isVisible(long classPK, int status) throws Exception {
+		return true;
+	}
+
+	@Override
+	public boolean isVisibleRelatedEntry(long classPK, int status)
+		throws Exception {
+
+		return true;
+	}
+
+	@Override
 	public void postProcessContextQuery(
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
@@ -1357,19 +1369,17 @@ public abstract class BaseIndexer implements Indexer {
 		SearchContext searchContext) {
 
 		List<Document> docs = new ArrayList<Document>();
+		int excludeDocsSize = 0;
+		boolean hasMore = false;
 		List<Float> scores = new ArrayList<Float>();
-
-		int start = searchContext.getStart();
-		int end = searchContext.getEnd();
 
 		String paginationType = GetterUtil.getString(
 			searchContext.getAttribute("paginationType"), "more");
-
-		boolean hasMore = false;
+		int status = GetterUtil.getInteger(
+			searchContext.getAttribute(Field.STATUS),
+			WorkflowConstants.STATUS_APPROVED);
 
 		Document[] documents = hits.getDocs();
-
-		int excludeDocsSize = 0;
 
 		for (int i = 0; i < documents.length; i++) {
 			try {
@@ -1385,7 +1395,8 @@ public abstract class BaseIndexer implements Indexer {
 				if ((indexer.isFilterSearch() &&
 					 indexer.hasPermission(
 						 permissionChecker, entryClassName, entryClassPK,
-						 ActionKeys.VIEW)) ||
+						 ActionKeys.VIEW) &&
+					 indexer.isVisibleRelatedEntry(entryClassPK, status)) ||
 					!indexer.isFilterSearch() ||
 					!indexer.isPermissionAware()) {
 
@@ -1400,8 +1411,9 @@ public abstract class BaseIndexer implements Indexer {
 				excludeDocsSize++;
 			}
 
-			if (paginationType.equals("more") && (end > 0) &&
-				(end < documents.length) && (docs.size() >= end)) {
+			if (paginationType.equals("more") && (searchContext.getEnd() > 0) &&
+				(searchContext.getEnd() < documents.length) &&
+				(docs.size() >= searchContext.getEnd())) {
 
 				hasMore = true;
 
@@ -1417,12 +1429,16 @@ public abstract class BaseIndexer implements Indexer {
 
 		hits.setLength(length);
 
-		if ((start != QueryUtil.ALL_POS) && (end != QueryUtil.ALL_POS)) {
+		if ((searchContext.getStart() != QueryUtil.ALL_POS) &&
+			(searchContext.getEnd() != QueryUtil.ALL_POS)) {
+
+			int end = searchContext.getEnd();
+
 			if (end > length) {
 				end = length;
 			}
 
-			docs = docs.subList(start, end);
+			docs = docs.subList(searchContext.getStart(), end);
 		}
 
 		hits.setDocs(docs.toArray(new Document[docs.size()]));
@@ -1625,6 +1641,17 @@ public abstract class BaseIndexer implements Indexer {
 		}
 
 		return null;
+	}
+
+	protected boolean isVisible(int entryStatus, int queryStatus) {
+		if (((queryStatus != WorkflowConstants.STATUS_ANY) &&
+			 (entryStatus == queryStatus)) ||
+			(entryStatus != WorkflowConstants.STATUS_IN_TRASH)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	protected Document newDocument() {

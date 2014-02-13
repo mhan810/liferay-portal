@@ -14,8 +14,13 @@
 
 package com.liferay.taglib.theme;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.PortletSettings;
+import com.liferay.portlet.PortletSettingsFactoryUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -37,11 +42,9 @@ public class DefineObjectsTag extends TagSupport {
 			return SKIP_BODY;
 		}
 
-		pageContext.setAttribute("themeDisplay", themeDisplay);
-		pageContext.setAttribute("company", themeDisplay.getCompany());
 		pageContext.setAttribute("account", themeDisplay.getAccount());
-		pageContext.setAttribute("user", themeDisplay.getUser());
-		pageContext.setAttribute("realUser", themeDisplay.getRealUser());
+		pageContext.setAttribute("colorScheme", themeDisplay.getColorScheme());
+		pageContext.setAttribute("company", themeDisplay.getCompany());
 		pageContext.setAttribute("contact", themeDisplay.getContact());
 
 		if (themeDisplay.getLayout() != null) {
@@ -52,30 +55,67 @@ public class DefineObjectsTag extends TagSupport {
 			pageContext.setAttribute("layouts", themeDisplay.getLayouts());
 		}
 
-		pageContext.setAttribute("plid", new Long(themeDisplay.getPlid()));
-
 		if (themeDisplay.getLayoutTypePortlet() != null) {
 			pageContext.setAttribute(
 				"layoutTypePortlet", themeDisplay.getLayoutTypePortlet());
 		}
 
-		pageContext.setAttribute(
-			"scopeGroupId", new Long(themeDisplay.getScopeGroupId()));
+		pageContext.setAttribute("locale", themeDisplay.getLocale());
 		pageContext.setAttribute(
 			"permissionChecker", themeDisplay.getPermissionChecker());
-		pageContext.setAttribute("locale", themeDisplay.getLocale());
-		pageContext.setAttribute("timeZone", themeDisplay.getTimeZone());
-		pageContext.setAttribute("theme", themeDisplay.getTheme());
-		pageContext.setAttribute("colorScheme", themeDisplay.getColorScheme());
+		pageContext.setAttribute("plid", new Long(themeDisplay.getPlid()));
 		pageContext.setAttribute(
 			"portletDisplay", themeDisplay.getPortletDisplay());
+		pageContext.setAttribute("realUser", themeDisplay.getRealUser());
+		pageContext.setAttribute(
+			"scopeGroupId", new Long(themeDisplay.getScopeGroupId()));
+		pageContext.setAttribute("theme", themeDisplay.getTheme());
+		pageContext.setAttribute("themeDisplay", themeDisplay);
+		pageContext.setAttribute("timeZone", themeDisplay.getTimeZone());
+		pageContext.setAttribute("user", themeDisplay.getUser());
+
+		setPortletSettings(themeDisplay);
 
 		// Deprecated
 
 		pageContext.setAttribute(
-			"portletGroupId", new Long(themeDisplay.getScopeGroupId()));
+			"portletGroupId", themeDisplay.getScopeGroupId());
 
 		return SKIP_BODY;
+	}
+
+	protected void setPortletSettings(ThemeDisplay themeDisplay) {
+		try {
+			PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+			PortletSettings companyPortletSettings =
+				PortletSettingsFactoryUtil.getCompanyPortletSettings(
+					themeDisplay.getCompanyId(), portletDisplay.getId());
+
+			pageContext.setAttribute(
+				"companyPortletSettings", companyPortletSettings);
+
+			PortletSettings groupPortletSettings =
+				PortletSettingsFactoryUtil.getGroupPortletSettings(
+					themeDisplay.getSiteGroupId(), portletDisplay.getId());
+
+			pageContext.setAttribute(
+				"groupPortletSettings", groupPortletSettings);
+
+			PortletSettings portletInstancePortletSettings =
+				PortletSettingsFactoryUtil.getPortletInstancePortletSettings(
+					themeDisplay.getLayout(), portletDisplay.getId());
+
+			pageContext.setAttribute(
+				"portletInstancePortletSettings",
+				portletInstancePortletSettings);
+		}
+		catch (SystemException se) {
+			throw new RuntimeException(se);
+		}
+		catch (PortalException pe) {
+			throw new RuntimeException(pe);
+		}
 	}
 
 }

@@ -12,26 +12,16 @@
  * details.
  */
 
-package com.liferay.portal.servlet.filters.aggregate;
+package com.liferay.portal.tools.sass;
 
 /**
- * @author Raymond Augé
- * @author Eduardo Lundgren
+ * @author Minhchau Dang
+ * @author Shuyang Zhou
  */
-public interface AggregateContext {
+public interface SassFragment {
 
-	public String getContent(String path);
+	public String getLtrContent();
 
-	public String getFullPath(String path);
-
-	public String getResourcePath(String path);
-
-	public String popPath();
-
-	public void pushPath(String path);
-
-	public String shiftPath();
-
-	public void unshiftPath(String path);
+	public String getRtlContent();
 
 }

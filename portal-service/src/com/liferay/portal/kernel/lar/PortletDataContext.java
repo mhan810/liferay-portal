@@ -92,6 +92,12 @@ public interface PortletDataContext extends Serializable {
 	@Deprecated
 	public static final String ROOT_PATH_PORTLETS = "/portlets/";
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             BaseStagedModelDataHandler#exportAssetCategories(
+	 *             PortletDataContext, StagedModel)}
+	 */
+	@Deprecated
 	public void addAssetCategories(Class<?> clazz, long classPK)
 		throws SystemException;
 
@@ -254,6 +260,10 @@ public interface PortletDataContext extends Serializable {
 	@Deprecated
 	public Map<String, long[]> getAssetCategoryIdsMap();
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public Map<String, String[]> getAssetCategoryUuidsMap();
 
 	public Map<String, List<AssetLink>> getAssetLinksMap();

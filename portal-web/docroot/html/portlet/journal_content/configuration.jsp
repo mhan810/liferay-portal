@@ -142,6 +142,8 @@ catch (NoSuchArticleException nsae) {
 
 	ArticleSearch searchContainer = new ArticleSearch(dynamicRenderRequest, configurationRenderURL);
 
+	searchContainer.setEmptyResultsMessage("no-web-content-was-found-that-matched-the-specified-filters");
+
 	List<String> headerNames = searchContainer.getHeaderNames();
 
 	headerNames.clear();
