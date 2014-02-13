@@ -457,6 +457,8 @@ public class JournalArticleLocalServiceImpl
 		PortletPreferences preferences =
 			ServiceContextUtil.getPortletPreferences(serviceContext);
 
+		articleURL = setArticleURL(articleURL, groupId, folderId, articleId);
+
 		sendEmail(
 			article, articleURL, preferences, "requested", serviceContext);
 
@@ -937,6 +939,10 @@ public class JournalArticleLocalServiceImpl
 				isLatestVersion(
 					article.getGroupId(), article.getArticleId(),
 					article.getVersion())) {
+
+				articleURL = setArticleURL(
+					articleURL, article.getGroupId(), article.getFolderId(),
+					article.getArticleId());
 
 				sendEmail(
 					article, articleURL, preferences, "denied", serviceContext);
@@ -4904,6 +4910,9 @@ public class JournalArticleLocalServiceImpl
 		if (serviceContext.getWorkflowAction() ==
 				WorkflowConstants.ACTION_PUBLISH) {
 
+			articleURL = setArticleURL(
+				articleURL, groupId, folderId, articleId);
+
 			sendEmail(
 				article, articleURL, preferences, "requested", serviceContext);
 
@@ -5431,6 +5440,9 @@ public class JournalArticleLocalServiceImpl
 						ServiceContextUtil.getPortletPreferences(
 							serviceContext);
 
+					articleURL = setArticleURL(
+						articleURL, groupId, folderId, articleId);
+
 					sendEmail(
 						article, articleURL, preferences, msg, serviceContext);
 				}
@@ -5756,6 +5768,9 @@ public class JournalArticleLocalServiceImpl
 				portletPreferencesLocalService.getPreferences(
 					article.getCompanyId(), ownerId, ownerType, plid,
 					portletId);
+
+			articleURL = setArticleURL(
+				articleURL, groupId, folderId, articleId);
 
 			sendEmail(
 				article, articleURL, preferences, "review",
@@ -6549,9 +6564,6 @@ public class JournalArticleLocalServiceImpl
 			article.getCompanyId());
 
 		User user = userPersistence.findByPrimaryKey(article.getUserId());
-
-		articleURL = setArticleURL(articleURL, article.getGroupId(),
-				article.getFolderId(), article.getArticleId());
 
 		String fromName = JournalUtil.getEmailFromName(
 			preferences, article.getCompanyId());
