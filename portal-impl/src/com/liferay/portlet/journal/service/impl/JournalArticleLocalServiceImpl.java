@@ -6309,6 +6309,22 @@ public class JournalArticleLocalServiceImpl
 		return dateInterval;
 	}
 
+	protected String getFullArticleURL(
+		String articleURL, long groupId, long folderId, String articleId) {
+
+		StringBundler sb = new StringBundler(7);
+
+		sb.append(articleURL);
+		sb.append("&_15_groupId=");
+		sb.append(groupId);
+		sb.append("&_15_folderId=");
+		sb.append(folderId);
+		sb.append("&_15_articleId=");
+		sb.append(articleId);
+
+		return sb.toString();
+	}
+
 	protected String getUniqueUrlTitle(
 			long id, long groupId, String articleId, String title)
 		throws PortalException, SystemException {
@@ -6635,22 +6651,6 @@ public class JournalArticleLocalServiceImpl
 		subscriptionSender.addRuntimeSubscribers(toAddress, toName);
 
 		subscriptionSender.flushNotificationsAsync();
-	}
-
-	protected String getFullArticleURL(
-		String articleURL, long groupId, long folderId, String articleId) {
-
-		StringBundler sb = new StringBundler(7);
-
-		sb.append(articleURL);
-		sb.append("&_15_groupId=");
-		sb.append(groupId);
-		sb.append("&_15_folderId=");
-		sb.append(folderId);
-		sb.append("&_15_articleId=");
-		sb.append(articleId);
-
-		return sb.toString();
 	}
 
 	protected void updateDDMStructureXSD(
