@@ -459,7 +459,8 @@ public class JournalArticleLocalServiceImpl
 		PortletPreferences preferences =
 			ServiceContextUtil.getPortletPreferences(serviceContext);
 
-		articleURL = setArticleURL(articleURL, groupId, folderId, articleId);
+		articleURL = getFullArticleURL(
+			articleURL, groupId, folderId, articleId);
 
 		sendEmail(
 			article, articleURL, preferences, "requested", serviceContext);
@@ -944,7 +945,7 @@ public class JournalArticleLocalServiceImpl
 					article.getGroupId(), article.getArticleId(),
 					article.getVersion())) {
 
-				articleURL = setArticleURL(
+				articleURL = getFullArticleURL(
 					articleURL, article.getGroupId(), article.getFolderId(),
 					article.getArticleId());
 
@@ -4914,7 +4915,7 @@ public class JournalArticleLocalServiceImpl
 		if (serviceContext.getWorkflowAction() ==
 				WorkflowConstants.ACTION_PUBLISH) {
 
-			articleURL = setArticleURL(
+			articleURL = getFullArticleURL(
 				articleURL, groupId, folderId, articleId);
 
 			sendEmail(
@@ -5446,7 +5447,7 @@ public class JournalArticleLocalServiceImpl
 						ServiceContextUtil.getPortletPreferences(
 							serviceContext);
 
-					articleURL = setArticleURL(
+					articleURL = getFullArticleURL(
 						articleURL, article.getGroupId(), article.getFolderId(),
 						article.getArticleId());
 
@@ -6636,7 +6637,7 @@ public class JournalArticleLocalServiceImpl
 		subscriptionSender.flushNotificationsAsync();
 	}
 
-	protected String setArticleURL(
+	protected String getFullArticleURL(
 		String articleURL, long groupId, long folderId, String articleId) {
 
 		StringBundler sb = new StringBundler(7);
