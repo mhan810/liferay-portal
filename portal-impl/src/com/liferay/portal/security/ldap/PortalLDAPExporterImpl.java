@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Contact;
 import com.liferay.portal.model.User;
@@ -218,6 +219,15 @@ public class PortalLDAPExporterImpl implements PortalLDAPExporter {
 			User user, Map<String, Serializable> userExpandoAttributes)
 		throws Exception {
 
+		exportToLDAP(user, userExpandoAttributes, null);
+	}
+
+	@Override
+	public void exportToLDAP(
+			User user, Map<String, Serializable> userExpandoAttributes,
+			String originalEmailAddress)
+		throws Exception {
+
 		if (user.isDefaultUser() ||
 			(user.getStatus() != WorkflowConstants.STATUS_APPROVED)) {
 
@@ -254,8 +264,22 @@ public class PortalLDAPExporterImpl implements PortalLDAPExporter {
 				user.getEmailAddress());
 
 			if (binding == null) {
-				binding = addUser(
-					ldapServerId, ldapContext, user, userMappings);
+				String emailAddress = user.getEmailAddress();
+
+				if (Validator.isNotNull(originalEmailAddress) &&
+					!emailAddress.equals(originalEmailAddress)) {
+
+					emailAddress = originalEmailAddress;
+				}
+
+				binding = PortalLDAPUtil.getUser(
+					ldapServerId, user.getCompanyId(), user.getScreenName(),
+					emailAddress);
+
+				if (binding == null) {
+					binding = addUser(
+						ldapServerId, ldapContext, user, userMappings);
+				}
 			}
 
 			Name name = new CompositeName();

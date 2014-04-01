@@ -39,4 +39,9 @@ public interface PortalLDAPExporter {
 			User user, Map<String, Serializable> userExpandoAttributes)
 		throws Exception;
 
+	public void exportToLDAP(
+			User user, Map<String, Serializable> userExpandoAttributes,
+			String originalEmailAddress)
+		throws Exception;
+
 }
