@@ -111,25 +111,18 @@ public class WorkflowHandlerRegistryUtil {
 			return;
 		}
 
-		WorkflowInstanceLink workflowInstanceLink =
-			WorkflowInstanceLinkLocalServiceUtil.fetchWorkflowInstanceLink(
-				companyId, groupId, className, classPK);
+		boolean hasWorkflowInstanceInProgress = _hasWorkflowInstanceInProgress(
+			companyId, groupId, className, classPK);
 
-		if (workflowInstanceLink != null) {
-			WorkflowInstance workflowInstance =
-				WorkflowInstanceManagerUtil.getWorkflowInstance(
-					companyId, workflowInstanceLink.getWorkflowInstanceId());
-
-			if (!workflowInstance.isComplete()) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(
-						"Workflow already started for class " + className +
-							" with primary key " + classPK + " in group " +
-								groupId);
-				}
-
-				return;
+		if (hasWorkflowInstanceInProgress) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Workflow already started for class " + className +
+						" with primary key " + classPK + " in group " +
+							groupId);
 			}
+
+			return;
 		}
 
 		WorkflowDefinitionLink workflowDefinitionLink = null;
@@ -229,6 +222,29 @@ public class WorkflowHandlerRegistryUtil {
 		}
 
 		return null;
+	}
+
+	private static boolean _hasWorkflowInstanceInProgress(
+			long companyId, long groupId, String className, long classPK)
+		throws PortalException, SystemException {
+
+		WorkflowInstanceLink workflowInstanceLink =
+			WorkflowInstanceLinkLocalServiceUtil.fetchWorkflowInstanceLink(
+				companyId, groupId, className, classPK);
+
+		if (workflowInstanceLink == null) {
+			return false;
+		}
+
+		WorkflowInstance workflowInstance =
+			WorkflowInstanceManagerUtil.getWorkflowInstance(
+				companyId, workflowInstanceLink.getWorkflowInstanceId());
+
+		if (!workflowInstance.isComplete()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private WorkflowHandlerRegistryUtil() {
