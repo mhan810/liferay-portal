@@ -116,14 +116,20 @@ public class WorkflowHandlerRegistryUtil {
 				companyId, groupId, className, classPK);
 
 		if (workflowInstanceLink != null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Workflow already started for class " + className +
-						" with primary key " + classPK + " in group " +
-							groupId);
-			}
+			WorkflowInstance workflowInstance =
+				WorkflowInstanceManagerUtil.getWorkflowInstance(
+					companyId, workflowInstanceLink.getWorkflowInstanceId());
 
-			return;
+			if (!workflowInstance.isComplete()) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Workflow already started for class " + className +
+							" with primary key " + classPK + " in group " +
+								groupId);
+				}
+
+				return;
+			}
 		}
 
 		WorkflowDefinitionLink workflowDefinitionLink = null;
