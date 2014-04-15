@@ -14,7 +14,6 @@
 
 package com.liferay.portal.security.ldap;
 
-import com.liferay.portal.NoSuchUserException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.ldap.LDAPUtil;
@@ -122,15 +121,10 @@ public class LDAPSettingsUtil {
 			long companyId, String screenName)
 		throws PortalException, SystemException {
 
-		try {
-			User user = UserLocalServiceUtil.getUserByScreenName(
-				companyId, screenName);
+		User user = UserLocalServiceUtil.getUserByScreenName(
+			companyId, screenName);
 
-			return user.getLdapServerId();
-		}
-		catch (NoSuchUserException nsue) {
-			return -1;
-		}
+		return user.getLdapServerId();
 	}
 
 	public static String getPropertyPostfix(long ldapServerId) {
