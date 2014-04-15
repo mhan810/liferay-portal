@@ -131,6 +131,7 @@ import com.liferay.portal.security.pwd.PwdToolkitUtil;
 import com.liferay.portal.security.pwd.RegExpToolkit;
 import com.liferay.portal.service.BaseServiceImpl;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.base.UserLocalServiceBaseImpl;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PrefsPropsUtil;
@@ -4160,6 +4161,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		validateEmailAddress(user, emailAddress1, emailAddress2);
 
+		storeOriginalEmailAddress(user.getEmailAddress());
+
 		setEmailAddress(
 			user, password, user.getFirstName(), user.getMiddleName(),
 			user.getLastName(), emailAddress1);
@@ -4201,6 +4204,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		User user = userPersistence.findByPrimaryKey(userId);
 
 		validateEmailAddress(user, emailAddress1, emailAddress2);
+
+		storeOriginalEmailAddress(user.getEmailAddress(), serviceContext);
 
 		Company company = companyPersistence.findByPrimaryKey(
 			user.getCompanyId());
@@ -5152,6 +5157,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			userId, screenName, emailAddress, openId, firstName, middleName,
 			lastName, smsSn);
 
+		storeOriginalEmailAddress(user.getEmailAddress(), serviceContext);
+
 		if (Validator.isNotNull(newPassword1) ||
 			Validator.isNotNull(newPassword2)) {
 
@@ -5490,6 +5497,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				throw new DuplicateUserEmailAddressException(
 					"{userId=" + user.getUserId() + "}");
 			}
+
+			storeOriginalEmailAddress(user.getEmailAddress());
 
 			setEmailAddress(
 				user, StringPool.BLANK, user.getFirstName(),
@@ -6097,6 +6106,22 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		user.setEmailAddress(emailAddress);
 		user.setDigest(StringPool.BLANK);
+	}
+
+	protected void storeOriginalEmailAddress(String emailAddress) {
+		storeOriginalEmailAddress(emailAddress, null);
+	}
+
+	protected void storeOriginalEmailAddress(
+		String emailAddress, ServiceContext serviceContext) {
+
+		if (serviceContext == null) {
+			serviceContext = new ServiceContext();
+		}
+
+		serviceContext.setAttribute("originalEmailAddress", emailAddress);
+
+		ServiceContextThreadLocal.pushServiceContext(serviceContext);
 	}
 
 	protected void updateGroups(

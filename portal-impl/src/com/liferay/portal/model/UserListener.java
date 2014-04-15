@@ -88,12 +88,18 @@ public class UserListener extends BaseModelListener<User> {
 
 		Map<String, Serializable> expandoBridgeAttributes = null;
 
+		String originalEmailAddress = null;
+
 		if (serviceContext != null) {
 			expandoBridgeAttributes =
 				serviceContext.getExpandoBridgeAttributes();
+
+			originalEmailAddress = (String)serviceContext.getAttribute(
+				"originalEmailAddress");
 		}
 
-		PortalLDAPExporterUtil.exportToLDAP(user, expandoBridgeAttributes);
+		PortalLDAPExporterUtil.exportToLDAP(
+			user, expandoBridgeAttributes, originalEmailAddress);
 	}
 
 	protected void updateMembershipRequestStatus(long userId, long groupId)

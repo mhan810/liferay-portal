@@ -53,6 +53,15 @@ public class PortalLDAPExporterUtil {
 		getPortalLDAPExporter().exportToLDAP(user, userExpandoAttributes);
 	}
 
+	public static void exportToLDAP(
+			User user, Map<String, Serializable> userExpandoAttributes,
+			String originalEmailAddress)
+		throws Exception {
+
+		getPortalLDAPExporter().exportToLDAP(
+			user, userExpandoAttributes, originalEmailAddress);
+	}
+
 	public static PortalLDAPExporter getPortalLDAPExporter() {
 		PortalRuntimePermission.checkGetBeanProperty(
 			PortalLDAPExporterUtil.class);
