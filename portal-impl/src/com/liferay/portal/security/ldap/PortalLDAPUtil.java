@@ -295,20 +295,15 @@ public class PortalLDAPUtil {
 			long companyId, String screenName, String emailAddress)
 		throws Exception {
 
-		if (Validator.isNotNull(emailAddress) &&
-			Validator.isNotNull(screenName)) {
+		long preferredLDAPServerId = LDAPSettingsUtil.getPreferredLDAPServerId(
+			companyId, screenName);
 
-			long preferredLDAPServerId =
-				LDAPSettingsUtil.getPreferredLDAPServerId(
-					companyId, screenName);
+		if (preferredLDAPServerId >= 0) {
+			if (hasUser(
+					preferredLDAPServerId, companyId, screenName,
+					emailAddress)) {
 
-			if (preferredLDAPServerId >= 0) {
-				if (hasUser(
-						preferredLDAPServerId, companyId, screenName,
-						emailAddress)) {
-
-					return preferredLDAPServerId;
-				}
+				return preferredLDAPServerId;
 			}
 		}
 
