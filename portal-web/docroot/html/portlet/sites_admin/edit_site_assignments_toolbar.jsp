@@ -28,7 +28,6 @@ if (group == null) {
 }
 %>
 
-
 <aui:nav-bar>
 	<aui:nav>
 		<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group, ActionKeys.ASSIGN_MEMBERS) %>">

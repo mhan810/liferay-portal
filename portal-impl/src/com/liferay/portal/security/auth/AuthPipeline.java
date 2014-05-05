@@ -176,8 +176,7 @@ public class AuthPipeline {
 			AuthFailure authFailure = (AuthFailure)InstancePool.get(
 				authFailureClassName);
 
-			_registerAuthFailure(
-				PropsKeys.AUTH_MAX_FAILURES, authFailure);
+			_registerAuthFailure(PropsKeys.AUTH_MAX_FAILURES, authFailure);
 		}
 
 		Filter authenticatorFilter = registry.getFilter(
@@ -194,8 +193,7 @@ public class AuthPipeline {
 			Authenticator authenticator = (Authenticator)InstancePool.get(
 				authenticatorClassName);
 
-			_registerAuthenticator(
-				PropsKeys.AUTH_PIPELINE_POST, authenticator);
+			_registerAuthenticator(PropsKeys.AUTH_PIPELINE_POST, authenticator);
 		}
 
 		_authenticators.put(PropsKeys.AUTH_PIPELINE_PRE, new Authenticator[0]);
@@ -204,8 +202,7 @@ public class AuthPipeline {
 			Authenticator authenticator = (Authenticator)InstancePool.get(
 				authenticatorClassName);
 
-			_registerAuthenticator(
-				PropsKeys.AUTH_PIPELINE_PRE, authenticator);
+			_registerAuthenticator(PropsKeys.AUTH_PIPELINE_PRE, authenticator);
 		}
 	}
 
@@ -356,13 +353,13 @@ public class AuthPipeline {
 
 	private Map<String, Authenticator[]> _authenticators =
 		new HashMap<String, Authenticator[]>();
-	private Map<String, AuthFailure[]> _authFailures =
-		new HashMap<String, AuthFailure[]>();
 	private Map<Authenticator, ServiceRegistration<Authenticator>>
 		_authenticatorServiceRegistrations =
 			new ServiceRegistrationMap<Authenticator>();
 	private ServiceTracker<Authenticator, Authenticator>
 		_authenticatorServiceTracker;
+	private Map<String, AuthFailure[]> _authFailures =
+		new HashMap<String, AuthFailure[]>();
 	private Map<AuthFailure, ServiceRegistration<AuthFailure>>
 		_authFailureServiceRegistrations =
 			new ServiceRegistrationMap<AuthFailure>();

@@ -185,7 +185,6 @@ svn://svn.liferay.com/repos/public/alloy/trunk/sandbox/taglibs.
 		</delete>
 
 		<path id="antlr.classpath">
-			<pathelement path="${classpath}" />
 			<fileset dir="${project.dir}/lib/portal" includes="antlr2.jar,antlr3.jar,antlr3-runtime.jar,stringtemplate.jar" />
 		</path>
 
@@ -1452,11 +1451,6 @@ public class Creole10Parser]]></replacevalue>
 		<copy todir="${portal-impl.classes.dir}" preservelastmodified="true">
 			<fileset dir="src" excludes="**/*.java,**/META-INF/javadocs-all*.xml" />
 		</copy>
-
-		<gradle-execute
-			gradleModuleDir="/registry"
-			gradleTask=":registry-api:compileJava"
-		/>
 	</target>
 
 	<target name="compile-test">

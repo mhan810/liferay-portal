@@ -18,27 +18,15 @@
 					<encoding>UTF-8</encoding>
 				</source-folder>
 				<source-folder>
-					<label>osgi\bootstrap\src</label>
+					<label>modules\core\registry-api\src</label>
 					<type>java</type>
-					<location>osgi/bootstrap/src</location>
+					<location>modules/core/registry-api/src</location>
 					<encoding>UTF-8</encoding>
 				</source-folder>
 				<source-folder>
-					<label>osgi\modules\registry\registry-api\src\main\java</label>
+					<label>modules\core\registry-impl\src</label>
 					<type>java</type>
-					<location>osgi/modules/registry/registry-api/src/main/java</location>
-					<encoding>UTF-8</encoding>
-				</source-folder>
-				<source-folder>
-					<label>osgi\modules\registry\registry-impl\src\main\java</label>
-					<type>java</type>
-					<location>osgi/modules/registry/registry-impl/src/main/java</location>
-					<encoding>UTF-8</encoding>
-				</source-folder>
-				<source-folder>
-					<label>osgi\modules\registry\registry-test\src\main\java</label>
-					<type>java</type>
-					<location>osgi/modules/registry/registry-test/src/main/java</location>
+					<location>modules/core/registry-impl/src</location>
 					<encoding>UTF-8</encoding>
 				</source-folder>
 				<source-folder>
@@ -564,8 +552,7 @@
 				<classpath mode="compile">lib/portal/xstream.jar</classpath>
 				<classpath mode="compile">lib/portal/xuggle-xuggler.jar</classpath>
 				<classpath mode="compile">lib/portal/xz.jar</classpath>
-				<classpath mode="compile">osgi/lib/common/core/osgi.cmpn.jar</classpath>
-				<classpath mode="compile">osgi/lib/common/core/osgi.core.jar</classpath>
+				<classpath mode="compile">modules/core/registry-impl/lib/org.eclipse.osgi.jar</classpath>
 				<source-level>1.5</source-level>
 			</compilation-unit>
 		</java-data>

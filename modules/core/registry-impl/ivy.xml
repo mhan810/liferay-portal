@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<ivy-module
+	version="2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
+>
+	<info module="registry-impl" organisation="com.liferay" />
+
+	<dependencies defaultconf="default">
+		<dependency name="org.eclipse.osgi" org="org.eclipse.tycho" rev="3.8.0.v20120529-1548" />
+	</dependencies>
+</ivy-module>

@@ -137,7 +137,7 @@ public class ModuleFrameworkUtilAdapter {
 	private static ModuleFramework _moduleFramework;
 	private static ModuleFrameworkAdapterHelper _moduleFrameworkAdapterHelper =
 		new ModuleFrameworkAdapterHelper(
-			"com.liferay.osgi.bootstrap.ModuleFrameworkUtil");
+			"com.liferay.portal.bootstrap.ModuleFrameworkUtil");
 
 	static {
 		_moduleFramework =

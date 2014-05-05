@@ -235,6 +235,8 @@ log
 
 /tools/liferay-doclet
 
+/tools/sdk
+
 /tools/selenium/*.exe
 /tools/selenium/extensions/ide.*.js
 

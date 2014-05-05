@@ -45,30 +45,23 @@
 		<fileset dir="${project.dir}/lib/development" includes="*.jar" />
 		<fileset dir="${project.dir}/lib/global" includes="*.jar" />
 		<fileset dir="${project.dir}/lib/portal" includes="*.jar" />
-		<fileset dir="${project.dir}/osgi/lib/common/core" includes="*.jar" />
-		<fileset dir="${project.dir}/osgi/lib/common/portal" includes="org.phidias.compile.jar" />
 	</path>
 
 	<path id="project.classpath">
 		<pathelement path="${classpath}" />
-		<pathelement path="${project.dir}/osgi/modules/registry/registry-api/build/classes/main" />
 		<path refid="lib.classpath" />
 	</path>
 
 	<path id="test.classpath">
-		<pathelement path="test-classes/${test.type}" />
 		<pathelement path="${classpath}" />
-		<pathelement path="${imported.classpath}" />
-		<pathelement path="${project.dir}/osgi/modules/registry/registry-api/build/classes/main" />
+		<pathelement path="test-classes/${test.type}" />
 		<fileset dir="${project.dir}/lib/development" includes="*.jar" excludes="jalopy.jar,jetty*.jar,tomcat*.jar" />
 		<fileset dir="${project.dir}/lib/global" includes="*.jar" />
 		<fileset dir="${project.dir}/lib/portal" includes="*.jar" excludes="ant.jar" />
-		<fileset dir="${project.dir}/osgi/lib/common/core" includes="*.jar" />
 	</path>
 
 	<path id="web.classpath">
-		<pathelement location="${project.dir}/portal-service/classes" />
-		<pathelement path="${project.dir}/osgi/modules/registry/registry-api/build/classes/main" />
+		<pathelement path="${classpath}" />
 		<fileset dir="${project.dir}/lib/development" includes="jsp-api.jar,mail.jar,servlet-api.jar" />
 		<fileset dir="${project.dir}/lib/global" includes="*.jar" />
 		<fileset dir="${project.dir}/lib/portal" includes="bnd.jar" />
@@ -485,6 +478,28 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		</then>
 	</if>
 
+	<macrodef name="ant-execute">
+		<attribute default="build.xml" name="ant.build.file" />
+		<attribute name="ant.dir" />
+		<attribute name="ant.target" />
+
+		<sequential>
+			<if>
+				<os family="unix" />
+				<then>
+					<exec dir="@{ant.dir}" executable="${ant.home}/bin/ant" failonerror="true">
+						<arg line="-f @{ant.build.file} @{ant.target}" />
+					</exec>
+				</then>
+				<else>
+					<exec dir="@{ant.dir}" executable="${ant.home}/bin/ant.bat" failonerror="true">
+						<arg line="-f @{ant.build.file} @{ant.target}" />
+					</exec>
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
 	<macrodef name="baseline-jar-macro">
 		<attribute name="bndRootFile" />
 		<attribute name="file" />
@@ -773,28 +788,6 @@ Please set the environment variable ANT_OPTS to the recommended value of
 					</if>
 				</sequential>
 			</for>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="gradle-execute">
-		<attribute name="gradleModuleDir" default="" />
-		<attribute name="gradleTask" />
-		<attribute name="gradleTaskArgs" default="-Dorg.gradle.project.appServerLibGlobalDir=${app.server.lib.global.dir} -Dorg.gradle.project.appServerLibPortalDir=${app.server.lib.portal.dir} -Dorg.gradle.project.liferayHome=${liferay.home}" />
-
-		<sequential>
-			<if>
-				<os family="unix" />
-				<then>
-					<exec append="true" dir="${project.dir}/osgi/modules@{gradleModuleDir}" executable="${project.dir}/tools/gradle/gradlew">
-						<arg line="--daemon -q @{gradleTask} @{gradleTaskArgs}" />
-					</exec>
-				</then>
-				<else>
-					<exec append="true" dir="${project.dir}/osgi/modules@{gradleModuleDir}" executable="${project.dir}/tools/gradle/gradlew.bat">
-						<arg line="--daemon -q @{gradleTask} @{gradleTaskArgs}" />
-					</exec>
-				</else>
-			</if>
 		</sequential>
 	</macrodef>
 
