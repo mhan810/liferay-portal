@@ -1547,7 +1547,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 	 *         or if the current user did not have permission to update the user
 	 */
 	@Override
-	public User updatePassword(
+	public void updatePassword(
 			long userId, String password1, String password2,
 			boolean passwordReset)
 		throws PortalException {
@@ -1555,7 +1555,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 		UserPermissionUtil.check(
 			getPermissionChecker(), userId, ActionKeys.UPDATE);
 
-		return userLocalService.updatePassword(
+		userLocalService.updatePassword(
 			userId, password1, password2, passwordReset);
 	}
 
