@@ -166,11 +166,11 @@ public class FacebookConnectAction extends PortletAction {
 		user = UserLocalServiceUtil.updateLastLogin(
 			user.getUserId(), user.getLoginIP());
 
-		user = UserLocalServiceUtil.updatePasswordReset(
-			user.getUserId(), false);
+		UserLocalServiceUtil.updatePasswordReset(user.getUserId(), false);
 
-		user = UserLocalServiceUtil.updateEmailAddressVerified(
-			user.getUserId(), true);
+		UserLocalServiceUtil.updateEmailAddressVerified(user.getUserId(), true);
+
+		user = UserLocalServiceUtil.getUserById(companyId, user.getUserId());
 
 		session.setAttribute(WebKeys.FACEBOOK_USER_EMAIL_ADDRESS, emailAddress);
 

@@ -469,7 +469,7 @@ public class SetupWizardUtil {
 			}
 		}
 
-		user = UserLocalServiceUtil.updatePasswordReset(user.getUserId(), true);
+		UserLocalServiceUtil.updatePasswordReset(user.getUserId(), true);
 
 		HttpSession session = request.getSession();
 
