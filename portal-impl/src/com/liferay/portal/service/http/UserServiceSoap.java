@@ -1414,14 +1414,12 @@ public class UserServiceSoap {
 	* @throws PortalException if a user with the primary key could not be found
 	or if the current user did not have permission to update the user
 	*/
-	public static com.liferay.portal.model.UserSoap updatePassword(
-		long userId, java.lang.String password1, java.lang.String password2,
-		boolean passwordReset) throws RemoteException {
+	public static void updatePassword(long userId, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset)
+		throws RemoteException {
 		try {
-			com.liferay.portal.model.User returnValue = UserServiceUtil.updatePassword(userId,
-					password1, password2, passwordReset);
-
-			return com.liferay.portal.model.UserSoap.toSoapModel(returnValue);
+			UserServiceUtil.updatePassword(userId, password1, password2,
+				passwordReset);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

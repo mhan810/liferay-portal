@@ -1010,12 +1010,10 @@ public class UserServiceUtil {
 	* @throws PortalException if a user with the primary key could not be found
 	or if the current user did not have permission to update the user
 	*/
-	public static com.liferay.portal.model.User updatePassword(long userId,
-		java.lang.String password1, java.lang.String password2,
-		boolean passwordReset)
+	public static void updatePassword(long userId, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService()
-				   .updatePassword(userId, password1, password2, passwordReset);
+		getService().updatePassword(userId, password1, password2, passwordReset);
 	}
 
 	/**

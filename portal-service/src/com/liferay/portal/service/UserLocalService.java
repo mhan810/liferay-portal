@@ -2397,9 +2397,8 @@ public interface UserLocalService extends BaseLocalService,
 	* @return the user
 	* @throws PortalException if a user with the primary key could not be found
 	*/
-	public com.liferay.portal.model.User updatePassword(long userId,
-		java.lang.String password1, java.lang.String password2,
-		boolean passwordReset)
+	public void updatePassword(long userId, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	/**
@@ -2416,9 +2415,8 @@ public interface UserLocalService extends BaseLocalService,
 	* @return the user
 	* @throws PortalException if a user with the primary key could not be found
 	*/
-	public com.liferay.portal.model.User updatePassword(long userId,
-		java.lang.String password1, java.lang.String password2,
-		boolean passwordReset, boolean silentUpdate)
+	public void updatePassword(long userId, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset, boolean silentUpdate)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	/**
@@ -2434,9 +2432,9 @@ public interface UserLocalService extends BaseLocalService,
 	* @return the user
 	* @throws PortalException if a user with the primary key could not be found
 	*/
-	public com.liferay.portal.model.User updatePasswordManually(long userId,
-		java.lang.String password, boolean passwordEncrypted,
-		boolean passwordReset, java.util.Date passwordModifiedDate)
+	public void updatePasswordManually(long userId, java.lang.String password,
+		boolean passwordEncrypted, boolean passwordReset,
+		java.util.Date passwordModifiedDate)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	/**
@@ -2449,8 +2447,7 @@ public interface UserLocalService extends BaseLocalService,
 	* @return the user
 	* @throws PortalException if a user with the primary key could not be found
 	*/
-	public com.liferay.portal.model.User updatePasswordReset(long userId,
-		boolean passwordReset)
+	public void updatePasswordReset(long userId, boolean passwordReset)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	/**
