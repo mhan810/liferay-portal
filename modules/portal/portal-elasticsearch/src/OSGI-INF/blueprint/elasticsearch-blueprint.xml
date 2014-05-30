@@ -45,6 +45,7 @@
 
 	<bean id="com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnection" class="com.liferay.portal.search.elasticsearch.connection.EmbeddedElasticsearchConnection">
 		<property name="clusterName" value="LiferayElasticSearch" />
+		<property name="configFileName" value="/META-INF/elasticsearch-embedded.yml" />
 		<property name="indexFactory" ref="com.liferay.portal.search.elasticsearch.index.IndexFactory" />
 	</bean>
 
@@ -54,7 +55,7 @@
 	<bean id="com.liferay.portal.search.elasticsearch.index.IndexFactory" class="com.liferay.portal.search.elasticsearch.index.CompanyIndexFactory">
 		<property name="typeMappings">
 			<map>
-				<entry key="LiferayDocumentType" value="META-INF/type_mappings.json" />
+				<entry key="LiferayDocumentType" value="/META-INF/type_mappings.json" />
 			</map>
 		</property>
 	</bean>
