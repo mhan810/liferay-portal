@@ -15,6 +15,7 @@ Import-Package: \
 	*;resolution:="optional"
 Include-Resource: \
 	${replace;${libs};^;@lib/},\
+	META-INF/services=src/META-INF/services
 	classes
 
 Private-Package: \
