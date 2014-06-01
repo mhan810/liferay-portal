@@ -12,7 +12,7 @@
 		<dependency name="elasticsearch-analysis-icu" org="org.elasticsearch" rev="2.1.0" />
 		<dependency name="elasticsearch-analysis-kuromoji" org="org.elasticsearch" rev="2.1.0" />
 		<dependency name="elasticsearch-analysis-smartcn" org="org.elasticsearch" rev="2.1.0" />
-		<dependency org="com.ibm.icu" name="icu4j" rev="53.1" />
+		<dependency name="icu4j" org="com.ibm.icu" rev="53.1" />
 		<dependency name="lucene-analyzers-common" org="org.apache.lucene" rev="4.7.2" />
 		<dependency name="lucene-analyzers-icu" org="org.apache.lucene" rev="4.7.2" />
 		<dependency name="lucene-analyzers-kuromoji" org="org.apache.lucene" rev="4.7.2" />
