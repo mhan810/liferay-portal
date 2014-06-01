@@ -53,6 +53,7 @@
 		<property name="elasticsearchConnection" ref="com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnection" />
 	</bean>
 	<bean id="com.liferay.portal.search.elasticsearch.index.IndexFactory" class="com.liferay.portal.search.elasticsearch.index.CompanyIndexFactory">
+		<property name="companyLocalService" ref="com.liferay.portal.service.CompanyLocalService" />
 		<property name="typeMappings">
 			<map>
 				<entry key="LiferayDocumentType" value="/META-INF/type_mappings.json" />
