@@ -26,16 +26,18 @@ import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectio
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch.io.StringOutputStream;
 import com.liferay.portal.service.CompanyLocalService;
+
+import java.util.List;
+import java.util.concurrent.Future;
+
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequestBuilder;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.common.io.stream.OutputStreamStreamOutput;
-
-import java.util.List;
-import java.util.concurrent.Future;
 
 /**
  * @author Michael C. Han
@@ -113,6 +115,10 @@ public class ElasticsearchEngineConfigurator
 			elasticsearchConnectionManager.getElasticsearchConnection();
 
 		elasticsearchConnection.close();
+
+		Client client = elasticsearchConnectionManager.getClient();
+
+		client.close();
 	}
 
 	@Override
