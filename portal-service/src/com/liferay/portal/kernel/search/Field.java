@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.util.StringPool;
 
 import java.io.Serializable;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -175,6 +176,10 @@ public class Field implements Serializable {
 
 	public static final String VIEW_COUNT = "viewCount";
 
+	public Field(String name) {
+		_name = name;
+	}
+
 	public Field(String name, Map<Locale, String> localizedValues) {
 		_name = name;
 		_localizedValues = localizedValues;
@@ -220,6 +225,10 @@ public class Field implements Serializable {
 		setTokenized(tokenized);
 	}
 
+	public void addNestedField(Field nested) {
+		_nestedFields.put(nested.getName(), nested);
+	}
+
 	public float getBoost() {
 		return _boost;
 	}
@@ -230,6 +239,11 @@ public class Field implements Serializable {
 
 	public String getName() {
 		return _name;
+	}
+
+	public Map<String, Field> getNestedFields() {
+
+		return _nestedFields;
 	}
 
 	public Class<? extends Number> getNumericClass() {
@@ -270,6 +284,10 @@ public class Field implements Serializable {
 		_boost = boost;
 	}
 
+	public void setLocalizedValues(Map<Locale, String> localizedValues) {
+		_localizedValues = localizedValues;
+	}
+
 	public void setName(String name) {
 		_name = name;
 	}
@@ -297,6 +315,7 @@ public class Field implements Serializable {
 	private float _boost = 1;
 	private Map<Locale, String> _localizedValues;
 	private String _name;
+	private Map<String, Field> _nestedFields = new HashMap<String, Field>();
 	private boolean _numeric;
 	private Class<? extends Number> _numericClass;
 	private boolean _tokenized;
