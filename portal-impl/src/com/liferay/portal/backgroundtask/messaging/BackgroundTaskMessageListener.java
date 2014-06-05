@@ -30,13 +30,24 @@ import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.util.InstanceFactory;
+import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StackTraceUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.BackgroundTask;
+import com.liferay.portal.model.User;
+import com.liferay.portal.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.BackgroundTaskLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.ClassLoaderUtil;
+
+import java.io.Serializable;
+
+import java.util.Map;
 
 /**
  * @author Michael C. Han
@@ -59,6 +70,20 @@ public class BackgroundTaskMessageListener extends BaseMessageListener {
 		if (backgroundTask == null) {
 			return;
 		}
+
+		Map<String, Serializable> contextMap =
+			backgroundTask.getTaskContextMap();
+
+		long userId = MapUtil.getLong(contextMap, "userId");
+
+		PrincipalThreadLocal.setName(userId);
+
+		User user = UserLocalServiceUtil.getUserById(userId);
+
+		PermissionChecker permissionChecker =
+			PermissionCheckerFactoryUtil.create(user);
+
+		PermissionThreadLocal.setPermissionChecker(permissionChecker);
 
 		BackgroundTaskExecutor backgroundTaskExecutor = null;
 		BackgroundTaskStatusMessageListener
