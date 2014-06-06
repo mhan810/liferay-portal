@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatusRegistryUtil
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskThreadLocal;
 import com.liferay.portal.kernel.backgroundtask.ClassLoaderAwareBackgroundTaskExecutor;
 import com.liferay.portal.kernel.backgroundtask.SerialBackgroundTaskExecutor;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
@@ -80,8 +81,14 @@ public class BackgroundTaskMessageListener extends BaseMessageListener {
 
 		User user = UserLocalServiceUtil.getUserById(userId);
 
-		PermissionChecker permissionChecker =
-			PermissionCheckerFactoryUtil.create(user);
+		PermissionChecker permissionChecker = null;
+
+		try {
+			permissionChecker = PermissionCheckerFactoryUtil.create(user);
+		}
+		catch (Exception e) {
+			throw new SystemException(e);
+		}
 
 		PermissionThreadLocal.setPermissionChecker(permissionChecker);
 
