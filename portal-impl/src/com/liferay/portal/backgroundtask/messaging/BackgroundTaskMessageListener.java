@@ -72,10 +72,10 @@ public class BackgroundTaskMessageListener extends BaseMessageListener {
 			return;
 		}
 
-		Map<String, Serializable> contextMap =
+		Map<String, Serializable> taskContextMap =
 			backgroundTask.getTaskContextMap();
 
-		long userId = MapUtil.getLong(contextMap, "userId");
+		long userId = MapUtil.getLong(taskContextMap, "userId");
 
 		PrincipalThreadLocal.setName(userId);
 
