@@ -227,8 +227,8 @@ public class Field implements Serializable {
 		setTokenized(tokenized);
 	}
 
-	public void addNestedField(Field nested) {
-		_nestedFields.put(nested.getName(), nested);
+	public void addNestedField(Field nestedField) {
+		_nestedFields.put(nestedField.getName(), nestedField);
 	}
 
 	public float getBoost() {
@@ -244,7 +244,6 @@ public class Field implements Serializable {
 	}
 
 	public Map<String, Field> getNestedFields() {
-
 		return _nestedFields;
 	}
 
