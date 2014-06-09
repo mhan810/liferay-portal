@@ -14,8 +14,10 @@
 
 package com.liferay.portal.kernel.search;
 
+import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -39,135 +41,167 @@ public class DocumentTest extends PowerMockito {
 
 	@Before
 	public void setUp() throws Exception {
+		setUpOrderedDependencies();
+	}
 
-		mockStatic(PropsUtil.class);
+	@Test
+	public void testGetFields() {
+		Map<String, Field> fields = _document.getFields();
 
-		when(PropsUtil.get(PropsKeys.INDEX_DATE_FORMAT_PATTERN)).thenReturn(
-			"yyyyMMddHHmmss");
+		Assert.assertEquals(1, fields.size());
+	}
 
-		when(PropsUtil.get(PropsKeys.INDEX_SORTABLE_TEXT_FIELDS)).thenReturn(
-			"firstName,jobTitle,lastName,name,screenName,title");
+	@Test
+	public void testGetNestedField() {
+		Field field = _document.getField(_fieldName);
 
-		when(
-			PropsUtil.get(PropsKeys.INDEX_SORTABLE_TEXT_FIELDS_TRUNCATED_LENGTH)
-			).thenReturn("255");
+		Assert.assertNotNull(field);
+
+		Assert.assertEquals("name", field.getName());
+		Assert.assertEquals(_fieldValue, field.getValue());
+
+		Field localizedField = _document.getField(_localizedFieldName);
+
+		Assert.assertNotNull(localizedField);
+
+		Assert.assertEquals("name", localizedField.getName());
+		Assert.assertEquals(
+			_localizedFieldValues.get(Locale.ENGLISH),
+			getLocalizedFieldValue(localizedField, Locale.ENGLISH));
+	}
+
+	@Test
+	public void testGetNestedFieldValue() {
+		String value = getNestedFieldValue(_fieldName, null);
+
+		Assert.assertEquals(_fieldValue, value);
+
+		String localizedValue = getNestedFieldValue(
+			_localizedFieldName, Locale.ENGLISH);
+
+		Assert.assertEquals(
+			_localizedFieldValues.get(Locale.ENGLISH), localizedValue);
+	}
+
+	@Test
+	public void testHasNestedFields() {
+		boolean hasNestedFields = hasNestedFields(_document, split(_fieldName));
+
+		Assert.assertTrue(hasNestedFields);
+
+		hasNestedFields = hasNestedFields(
+			_document, split(_localizedFieldName));
+
+		Assert.assertTrue(hasNestedFields);
+	}
+
+	protected String getFieldValue(Field field, Locale locale) {
+		if (locale == null) {
+			return field.getValue();
+		}
+
+		Map<Locale, String> localizedValues = field.getLocalizedValues();
+
+		if (localizedValues != null) {
+			return localizedValues.get(locale);
+		}
+
+		return null;
+	}
+
+	protected String getLocalizedFieldValue(Field field, Locale locale) {
+		Map<Locale, String> localizedValues = field.getLocalizedValues();
+
+		return localizedValues.get(locale);
+	}
+
+	protected String getNestedFieldValue(String name, Locale locale) {
+		Map<String, Field> fields = _document.getFields();
+
+		String[] nestedFieldNames = split(name);
+
+		Field field = fields.get(nestedFieldNames[0]);
+
+		if (field == null) {
+			return null;
+		}
+
+		for (int i = 1; i < nestedFieldNames.length; i++) {
+			String fieldName = nestedFieldNames[i];
+
+			Map<String, Field> nestedFields = field.getNestedFields();
+
+			if (!nestedFields.containsKey(fieldName)) {
+				return null;
+			}
+
+			field = nestedFields.get(fieldName);
+		}
+
+		return getFieldValue(field, locale);
+	}
+
+	protected boolean hasNestedFields(Document document, String... fieldNames) {
+		Map<String, Field> fields = document.getFields();
+
+		if (!fields.containsKey(fieldNames[0])) {
+			return false;
+		}
+
+		Field field = fields.get(fieldNames[0]);
+
+		for (int i = 1; i < fieldNames.length; i++) {
+			Map<String, Field> nestedFields = field.getNestedFields();
+
+			if (!nestedFields.containsKey(fieldNames[i])) {
+				return false;
+			}
+
+			field = nestedFields.get(fieldNames[i]);
+		}
+
+		return true;
+	}
+
+	protected void setUpDocument() {
+		_document = new DocumentImpl();
+
+		_document.addText(_fieldName, _fieldValue);
 
 		_localizedFieldValues.put(Locale.ENGLISH, "contract");
-		_document = new DocumentImpl();
-		_document.addText(_fieldName, _fieldValue);
+
 		_document.addLocalizedText(_localizedFieldName, _localizedFieldValues);
 	}
 
-	@Test
-	public final void testAddNestedField() {
-
-		Map<String, Field> fields = _document.getFields();
-
-		Assert.assertEquals(1, fields.size());
-		Assert.assertTrue(containsFields(_document, _fieldName.split("\\.")));
-		Assert.assertTrue(containsFields(_document,
-		_localizedFieldName.split("\\.")));
-
-		Assert.assertEquals(_fieldValue, getNestedValue(_fieldName));
-		Assert.assertEquals(_localizedFieldValues.get(Locale.ENGLISH),
-		getNestedValue(_localizedFieldName, Locale.ENGLISH));
+	protected void setUpOrderedDependencies() {
+		setUpPropsUtil();
+		setUpDocument();
 	}
 
-	@Test
-	public final void testGetNestedField() {
+	protected void setUpPropsUtil() {
+		mockStatic(PropsUtil.class);
 
-		Field field = _document.getField(_fieldName);
-		Field localizedField = _document.getField(_localizedFieldName);
-		Map<String, Field> fields = _document.getFields();
+		when(
+			PropsUtil.get(PropsKeys.INDEX_DATE_FORMAT_PATTERN)
+		).thenReturn(
+			"yyyyMMddHHmmss"
+		);
 
-		Assert.assertEquals(1, fields.size());
-		Assert.assertNotNull(field);
-		Assert.assertNotNull(localizedField);
-		Assert.assertEquals("name", field.getName());
-		Assert.assertEquals(_fieldValue, field.getValue());
-		Assert.assertEquals("name", localizedField.getName());
-		Assert.assertEquals(_localizedFieldValues.get(Locale.ENGLISH),
-		localizedField.getLocalizedValues().get(Locale.ENGLISH));
+		when(
+			PropsUtil.get(PropsKeys.INDEX_SORTABLE_TEXT_FIELDS)
+		).thenReturn(
+			"firstName,jobTitle,lastName,name,screenName,title"
+		);
+
+		when(
+			PropsUtil.get(PropsKeys.INDEX_SORTABLE_TEXT_FIELDS_TRUNCATED_LENGTH)
+		).thenReturn(
+			"255"
+		);
 	}
 
-	private boolean containsFields(Document document,
-	String... hierarchicalFieldNames) {
-
-		boolean contain = true;
-
-		Field field = document.getFields().get(hierarchicalFieldNames[0]);
-
-		if (field == null) {
-			contain = false;
-		}
-		else {
-			Field currentField = field;
-
-			for (int i = 1; i < hierarchicalFieldNames.length; i++) {
-				String fieldName = hierarchicalFieldNames[i];
-
-				if (currentField.getNestedFields().containsKey(fieldName)) {
-					currentField =
-						currentField.getNestedFields().get(fieldName);
-				}
-				else {
-					contain = false;
-					break;
-				}
-			}
-		}
-
-		return contain;
-	}
-
-	private String getFieldValue(Field field, Locale locale) {
-
-		String value = null;
-
-		if (locale == null) {
-			value = field.getValue();
-		}
-		else {
-			if (field.getLocalizedValues() != null) {
-				value = field.getLocalizedValues().get(locale);
-			}
-		}
-
-		return value;
-	}
-
-	private String getNestedValue(String name) {
-
-		return getNestedValue(name, null);
-	}
-
-	private String getNestedValue(String name, Locale locale) {
-
-		String value = null;
-
-		String[] hierarchicalFieldNames = name.split("\\.");
-
-		Field field = _document.getFields().get(hierarchicalFieldNames[0]);
-
-		if (field != null) {
-			Field currentField = field;
-
-			for (int i = 1; i < hierarchicalFieldNames.length; i++) {
-				String fieldName = hierarchicalFieldNames[i];
-
-				if (currentField.getNestedFields().containsKey(fieldName)) {
-					currentField =
-						currentField.getNestedFields().get(fieldName);
-
-					value = getFieldValue(currentField, locale);
-				}
-				else {
-					break;
-				}
-			}
-		}
-
-		return value;
+	protected String[] split(String fieldName) {
+		return StringUtil.split(fieldName, CharPool.PERIOD);
 	}
 
 	private DocumentImpl _document;
