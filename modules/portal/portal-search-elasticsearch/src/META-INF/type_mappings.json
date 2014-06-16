@@ -305,5 +305,90 @@
 				}
 			}
 		]
+	},
+		"FormContentDocumentType": {
+		"numeric_detection": true,
+		"_all": {
+			"enabled": false
+		},
+		"_id": {
+			"index": "not_analyzed",
+			"path": "id"
+		},
+		"_timestamp": {
+			"enabled": true,
+			"path": "formContentDatetime",
+			"format": "yyyy/MM/dd HH:mm:ss.SSS"
+		},
+		"_size": {
+			"enabled": true
+		},
+		"properties": {
+			"companyId": {
+				"index": "not_analyzed",
+				"type": "long",
+				"store": true
+			},
+			"contentId": {
+				"index": "not_analyzed",
+				"type": "long",
+				"store": true
+			},
+			"fields": {
+				"type": "nested",
+				"properties": {
+					"calculatedValues": {
+						"type": "nested",
+						"properties": {
+							"locale": {
+								"index": "analyzed",
+								"type": "string",
+								"store": true
+							},
+							"value": {
+								"index": "analyzed",
+								"type": "string",
+								"store": true
+							}
+						}
+					},
+					"fieldName": {
+						"index": "analyzed",
+						"type": "string",
+						"store": true
+					}
+				}
+			},
+			"groupId": {
+				"index": "not_analyzed",
+				"type": "long",
+				"store": true
+			},
+			"id": {
+			    "index": "not_analyzed",
+				"type": "long",
+				"store": true
+			},
+			"name": {
+				"index": "analyzed",
+				"type": "string",
+				"store": true
+			},
+			"structureId": {
+				"index": "not_analyzed",
+				"type": "long",
+				"store": true
+			},
+			"userId": {
+				"index": "not_analyzed",
+				"type": "long",
+				"store": true
+			},
+			"userName": {
+				"index": "analyzed",
+				"type": "string",
+				"store": true
+			}
+		}
 	}
 }
