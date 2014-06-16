@@ -45,8 +45,6 @@ public class ElasticsearchEngineConfigurator
 		ElasticsearchConnection elasticsearchConnection =
 			_elasticsearchConnectionManager.getElasticsearchConnection();
 
-		elasticsearchConnection.initialize();
-
 		Client client = elasticsearchConnection.getClient();
 
 		AdminClient adminClient = client.admin();
