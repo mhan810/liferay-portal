@@ -16,6 +16,7 @@ package com.liferay.portal.kernel.search;
 
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -45,6 +46,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Brian Wing Shun Chan
@@ -109,12 +112,10 @@ public class DocumentImpl implements Document {
 
 		String sortableFieldName = getSortableFieldName(name);
 
-		Field field = new Field(sortableFieldName, datesTime);
+		Field field = createField(sortableFieldName, datesTime);
 
 		field.setNumeric(true);
 		field.setNumericClass(Long.class);
-
-		_fields.put(sortableFieldName, field);
 
 		addKeyword(name, dates);
 	}
@@ -319,15 +320,13 @@ public class DocumentImpl implements Document {
 			value = StringUtil.toLowerCase(value);
 		}
 
-		Field field = new Field(name, value);
+		Field field = createField(name, value);
 
 		for (String fieldName : Field.UNSCORED_FIELD_NAMES) {
 			if (StringUtil.equalsIgnoreCase(name, fieldName)) {
 				field.setBoost(0);
 			}
 		}
-
-		_fields.put(name, field);
 	}
 
 	@Override
@@ -336,9 +335,7 @@ public class DocumentImpl implements Document {
 			return;
 		}
 
-		Field field = new Field(name, values);
-
-		_fields.put(name, field);
+		createField(name, values);
 	}
 
 	@Override
@@ -368,9 +365,7 @@ public class DocumentImpl implements Document {
 			values = lowerCaseValues;
 		}
 
-		Field field = new Field(name, values);
-
-		_fields.put(name, field);
+		createField(name, values);
 	}
 
 	@Override
@@ -379,11 +374,9 @@ public class DocumentImpl implements Document {
 			return;
 		}
 
-		Field field = new Field(name, values);
+		Field field = createField(name, values);
 
 		field.setTokenized(true);
-
-		_fields.put(name, field);
 	}
 
 	/**
@@ -513,12 +506,10 @@ public class DocumentImpl implements Document {
 
 		String sortableFieldName = getSortableFieldName(name);
 
-		Field field = new Field(sortableFieldName, values);
+		Field field = createField(sortableFieldName, values);
 
 		field.setNumeric(true);
 		field.setNumericClass(clazz);
-
-		_fields.put(sortableFieldName, field);
 
 		addKeyword(name, values);
 	}
@@ -529,11 +520,9 @@ public class DocumentImpl implements Document {
 			return;
 		}
 
-		Field field = new Field(name, value);
+		Field field = createField(name, value);
 
 		field.setTokenized(true);
-
-		_fields.put(name, field);
 
 		if (_sortableTextFields.contains(name)) {
 			String truncatedValue = value;
@@ -553,11 +542,9 @@ public class DocumentImpl implements Document {
 			return;
 		}
 
-		Field field = new Field(name, values);
+		Field field = createField(name, values);
 
 		field.setTokenized(true);
-
-		_fields.put(name, field);
 	}
 
 	@Override
@@ -636,10 +623,10 @@ public class DocumentImpl implements Document {
 
 		String localizedName = getLocalizedName(locale, name);
 
-		Field field = _fields.get(localizedName);
+		Field field = getField(localizedName);
 
 		if (field == null) {
-			field = _fields.get(name);
+			field = getField(name);
 		}
 
 		if (field == null) {
@@ -657,12 +644,12 @@ public class DocumentImpl implements Document {
 
 		String localizedName = getLocalizedName(locale, name);
 
-		Field field = _fields.get(localizedName);
+		Field field = getField(localizedName);
 
 		if (field == null) {
 			localizedName = getLocalizedName(locale, defaultName);
 
-			field = _fields.get(localizedName);
+			field = getField(localizedName);
 		}
 
 		if (field == null) {
@@ -674,7 +661,7 @@ public class DocumentImpl implements Document {
 
 	@Override
 	public String get(String name) {
-		Field field = _fields.get(name);
+		Field field = getField(name);
 
 		if (field == null) {
 			return StringPool.BLANK;
@@ -685,7 +672,7 @@ public class DocumentImpl implements Document {
 
 	@Override
 	public String get(String name, String defaultName) {
-		Field field = _fields.get(name);
+		Field field = getField(name);
 
 		if (field == null) {
 			return get(defaultName);
@@ -704,7 +691,11 @@ public class DocumentImpl implements Document {
 
 	@Override
 	public Field getField(String name) {
-		return _fields.get(name);
+		if (isNestedField(name)) {
+			return getNestedField(name);
+		}
+
+		return getField(name, false);
 	}
 
 	@Override
@@ -723,7 +714,7 @@ public class DocumentImpl implements Document {
 
 	@Override
 	public String getUID() {
-		Field field = _fields.get(Field.UID);
+		Field field = getField(Field.UID);
 
 		if (field == null) {
 			throw new RuntimeException("UID is not set");
@@ -734,7 +725,7 @@ public class DocumentImpl implements Document {
 
 	@Override
 	public String[] getValues(String name) {
-		Field field = _fields.get(name);
+		Field field = getField(name);
 
 		if (field == null) {
 			return new String[] {StringPool.BLANK};
@@ -798,12 +789,111 @@ public class DocumentImpl implements Document {
 		return sb.toString();
 	}
 
+	protected Field createField(String name) {
+		if (isNestedField(name)) {
+			return createNestedField(name);
+		}
+
+		return getField(name, true);
+	}
+
+	protected Field createField(
+		String name, Map<Locale, String> localizedValues) {
+
+		Field field = createField(name);
+
+		field.setLocalizedValues(localizedValues);
+
+		return field;
+	}
+
+	protected Field createField(String name, String... values) {
+		Field field = createField(name);
+
+		field.setValues(values);
+
+		return field;
+	}
+
+	protected Field createNestedField(String name) {
+		String[] fieldNames = StringUtil.split(name, CharPool.PERIOD);
+
+		String nestedFieldName = fieldNames[fieldNames.length - 1];
+
+		Field nestedField = new Field(nestedFieldName);
+
+		Field field = nestedField;
+
+		Field parentField = null;
+
+		for (int i = fieldNames.length - 2; i > 0; i--) {
+			parentField = new Field(fieldNames[i]);
+
+			parentField.addNestedField(field);
+
+			field = parentField;
+		}
+
+		parentField = getField(fieldNames[0], true);
+
+		parentField.addNestedField(field);
+
+		return nestedField;
+	}
+
+	protected Field getField(String name, boolean createIfAbsent) {
+		Field field = _fields.get(name);
+
+		if (field != null) {
+			return field;
+		}
+
+		if (createIfAbsent) {
+			field = new Field(name);
+
+			_fields.put(name, field);
+		}
+
+		return field;
+	}
+
+	protected Field getNestedField(String name) {
+		String[] fieldNames = StringUtil.split(name, CharPool.PERIOD);
+
+		Field field = getField(fieldNames[0], false);
+
+		if (field == null) {
+			return null;
+		}
+
+		for (int i = 1; i < fieldNames.length; i++) {
+			Map<String, Field> nestedFields = field.getNestedFields();
+
+			field = nestedFields.get(fieldNames[i]);
+
+			if (field == null) {
+				return null;
+			}
+		}
+
+		return field;
+	}
+
+	protected boolean isNestedField(String name) {
+		Matcher matcher = _NESTED_FIELD_PATTERN.matcher(name);
+
+		return matcher.matches();
+	}
+
 	protected void setSortableTextFields(Set<String> sortableTextFields) {
 		_sortableTextFields = sortableTextFields;
 	}
 
 	private static final String _INDEX_DATE_FORMAT_PATTERN = PropsUtil.get(
 		PropsKeys.INDEX_DATE_FORMAT_PATTERN);
+
+	private static final Pattern _NESTED_FIELD_PATTERN = Pattern.compile(
+		"(\\w+)(\\.\\w+)+");
 
 	private static final String _SORTABLE_FIELD_SUFFIX = "sortable";
 
