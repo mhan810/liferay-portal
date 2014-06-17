@@ -41,57 +41,91 @@ public class DefaultElasticsearchDocumentFactory
 
 		XContentBuilder xContentBuilder = XContentFactory.jsonBuilder();
 
-		xContentBuilder.startObject();
-
 		Map<String, Field> fields = document.getFields();
 
-		for (Field field : fields.values()) {
-			String name = field.getName();
+		addFields(fields, xContentBuilder);
 
-			if (!field.isLocalized()) {
-				for (String value : field.getValues()) {
-					if (Validator.isNull(value)) {
-						continue;
-					}
+		return xContentBuilder.string();
+	}
 
-					xContentBuilder.field(name, value.trim());
+	protected void addField(XContentBuilder xContentBuilder, Field field)
+		throws IOException {
+
+		String name = field.getName();
+
+		if (field.isLocalized()) {
+			addLocalizedFieldValues(
+				xContentBuilder, name, field.getLocalizedValues());
+		}
+		else {
+			for (String value : field.getValues()) {
+				if (Validator.isNull(value)) {
+					continue;
 				}
+
+				xContentBuilder.field(name, value.trim());
+			}
+		}
+	}
+
+	protected void addFields(
+			Map<String, Field> fields, XContentBuilder xContentBuilder)
+		throws IOException {
+
+		xContentBuilder.startObject();
+
+		for (Field field : fields.values()) {
+			Map<String, Field> nestedFields = field.getNestedFields();
+
+			if (nestedFields.isEmpty()) {
+				addField(xContentBuilder, field);
 			}
 			else {
-				Map<Locale, String> localizedValues =
-					field.getLocalizedValues();
-
-				for (Map.Entry<Locale, String> entry :
-						localizedValues.entrySet()) {
-
-					String value = entry.getValue();
-
-					if (Validator.isNull(value)) {
-						continue;
-					}
-
-					Locale locale = entry.getKey();
-
-					String languageId = LocaleUtil.toLanguageId(locale);
-
-					String defaultLanguageId = LocaleUtil.toLanguageId(
-						LocaleUtil.getDefault());
-
-					if (languageId.equals(defaultLanguageId)) {
-						xContentBuilder.field(name, value.trim());
-					}
-
-					String localizedName = DocumentImpl.getLocalizedName(
-						languageId, name);
-
-					xContentBuilder.field(localizedName, value.trim());
-				}
+				addNestedField(xContentBuilder, field);
 			}
 		}
 
 		xContentBuilder.endObject();
+	}
 
-		return xContentBuilder.string();
+	protected void addLocalizedFieldValues(
+			XContentBuilder xContentBuilder, String name,
+			Map<Locale, String> localizedValues)
+		throws IOException {
+
+		for (Map.Entry<Locale, String> entry : localizedValues.entrySet()) {
+			String value = entry.getValue();
+
+			if (Validator.isNull(value)) {
+				continue;
+			}
+
+			Locale locale = entry.getKey();
+
+			String languageId = LocaleUtil.toLanguageId(locale);
+
+			String defaultLanguageId = LocaleUtil.toLanguageId(
+				LocaleUtil.getDefault());
+
+			if (languageId.equals(defaultLanguageId)) {
+				xContentBuilder.field(name, value.trim());
+			}
+
+			String localizedName = DocumentImpl.getLocalizedName(
+				languageId, name);
+
+			xContentBuilder.field(localizedName, value.trim());
+		}
+	}
+
+	protected void addNestedField(XContentBuilder xContentBuilder, Field field)
+		throws IOException {
+
+		xContentBuilder.startArray(field.getName());
+
+		addFields(field.getNestedFields(), xContentBuilder);
+
+		xContentBuilder.endArray();
 	}
 
 }

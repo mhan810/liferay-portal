@@ -1,4 +1,89 @@
 {
+	"DDMContentDocumentType": {
+		"_all": {
+			"enabled": false
+		},
+		"_id": {
+			"index": "not_analyzed",
+			"path": "id"
+		},
+		"_size": {
+			"enabled": true
+		},
+		"_timestamp": {
+			"enabled": true,
+			"format": "yyyy/MM/dd HH:mm:ss.SSS",
+			"path": "ddmDocumentDateTime"
+		},
+		"numeric_detection": true,
+		"properties": {
+			"companyId": {
+				"index": "not_analyzed",
+				"store": true,
+				"type": "long"
+			},
+			"contentId": {
+				"index": "not_analyzed",
+				"store": true,
+				"type": "long"
+			},
+			"fields": {
+				"type": "nested",
+				"properties": {
+					"calculatedValues": {
+						"properties": {
+							"locale": {
+								"index": "analyzed",
+								"store": true,
+								"type": "string"
+							},
+							"value": {
+								"index": "analyzed",
+								"store": true,
+								"type": "string"
+							}
+						},
+						"type": "nested"
+					},
+					"fieldName": {
+						"index": "analyzed",
+						"store": true,
+						"type": "string"
+					}
+				}
+			},
+			"groupId": {
+				"index": "not_analyzed",
+				"store": true,
+				"type": "long"
+			},
+			"id": {
+				"index": "not_analyzed",
+				"store": true,
+				"type": "long"
+			},
+			"name": {
+				"index": "analyzed",
+				"store": true,
+				"type": "string"
+			},
+			"structureId": {
+				"index": "not_analyzed",
+				"store": true,
+				"type": "long"
+			},
+			"userId": {
+				"index": "not_analyzed",
+				"store": true,
+				"type": "long"
+			},
+			"userName": {
+				"index": "analyzed",
+				"store": true,
+				"type": "string"
+			}
+		}
+	},
 	"KeywordQueryDocumentType": {
 		"properties": {
 			"groupId": {
