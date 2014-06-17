@@ -1,6 +1,5 @@
 {
-
-	"DDMDocumentType": {
+	"DDMContentDocumentType": {
 		"_all": {
 			"enabled": false
 		},
@@ -13,75 +12,75 @@
 		},
 		"_timestamp": {
 			"enabled": true,
-			"path": "ddmDocumentDatetime",
-			"format": "yyyy/MM/dd HH:mm:ss.SSS"
+			"format": "yyyy/MM/dd HH:mm:ss.SSS",
+			"path": "ddmDocumentDateTime"
 		},
 		"numeric_detection": true,
 		"properties": {
 			"companyId": {
 				"index": "not_analyzed",
-				"type": "long",
-				"store": true
+				"store": true,
+				"type": "long"
 			},
 			"contentId": {
 				"index": "not_analyzed",
-				"type": "long",
-				"store": true
-			},
-			"groupId": {
-				"index": "not_analyzed",
-				"type": "long",
-				"store": true
+				"store": true,
+				"type": "long"
 			},
 			"fields": {
 				"type": "nested",
 				"properties": {
 					"calculatedValues": {
-						"type": "nested",
 						"properties": {
 							"locale": {
 								"index": "analyzed",
-								"type": "string",
-								"store": true
+								"store": true,
+								"type": "string"
 							},
 							"value": {
 								"index": "analyzed",
-								"type": "string",
-								"store": true
+								"store": true,
+								"type": "string"
 							}
-						}
+						},
+						"type": "nested"
 					},
 					"fieldName": {
 						"index": "analyzed",
-						"type": "string",
-						"store": true
+						"store": true,
+						"type": "string"
 					}
 				}
 			},
+			"groupId": {
+				"index": "not_analyzed",
+				"store": true,
+				"type": "long"
+			},
 			"id": {
-			    "index": "not_analyzed",
-				"type": "long",
-				"store": true
+				"index": "not_analyzed",
+				"store": true,
+				"type": "long"
 			},
 			"name": {
 				"index": "analyzed",
-				"type": "string",
-				"store": true
+				"store": true,
+				"type": "string"
 			},
 			"structureId": {
 				"index": "not_analyzed",
-				"type": "long",
-				"store": true
+				"store": true,
+				"type": "long"
 			},
 			"userId": {
 				"index": "not_analyzed",
-				"type": "long",
-				"store": true
+				"store": true,
+				"type": "long"
 			},
 			"userName": {
 				"index": "analyzed",
-				"type": "string",
-				"store": true
+				"store": true,
+				"type": "string"
 			}
 		}
 	},
