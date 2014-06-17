@@ -37,7 +37,7 @@
 
 	<!-- Elasticsearch connection -->
 
-	<bean class="com.liferay.portal.search.elasticsearch.connection.EmbeddedElasticsearchConnection" id="com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnection">
+	<bean class="com.liferay.portal.search.elasticsearch.connection.EmbeddedElasticsearchConnection" id="com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnection" init-method="initialize">
 		<property name="clusterName" value="LiferayElasticSearch" />
 		<property name="configFileName" value="/META-INF/elasticsearch-embedded.yml" />
 		<property name="indexFactory" ref="com.liferay.portal.search.elasticsearch.index.IndexFactory" />
