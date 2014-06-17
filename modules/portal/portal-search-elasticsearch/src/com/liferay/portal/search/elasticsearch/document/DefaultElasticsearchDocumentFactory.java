@@ -91,8 +91,10 @@ public class DefaultElasticsearchDocumentFactory
 			}
 		}
 
-	private void _addFields(Map<String, Field> fields,
-	XContentBuilder xContentBuilder) throws IOException {
+	private void _addFields(
+		Map<String, Field> fields, XContentBuilder xContentBuilder)
+			throws IOException {
+
 		xContentBuilder.startObject();
 
 		for (Field field : fields.values()) {
