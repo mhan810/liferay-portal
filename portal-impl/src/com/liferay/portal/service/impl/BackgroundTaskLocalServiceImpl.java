@@ -14,11 +14,14 @@
 
 package com.liferay.portal.service.impl;
 
+import com.liferay.portal.cluster.ClusterableContextThreadLocal;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutor;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatus;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatusRegistry;
 import com.liferay.portal.kernel.bean.BeanReference;
+import com.liferay.portal.kernel.cluster.ClusterInvokeAcceptor;
+import com.liferay.portal.kernel.cluster.ClusterInvokeThreadLocal;
 import com.liferay.portal.kernel.cluster.Clusterable;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -28,6 +31,7 @@ import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackRegistryUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -36,6 +40,7 @@ import com.liferay.portal.model.BackgroundTask;
 import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.User;
 import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
+import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.base.BackgroundTaskLocalServiceBaseImpl;
 import com.liferay.portal.util.PortletKeys;
@@ -93,6 +98,11 @@ public class BackgroundTaskLocalServiceImpl
 		backgroundTask.setStatus(BackgroundTaskConstants.STATUS_NEW);
 
 		backgroundTaskPersistence.update(backgroundTask);
+
+		if (ClusterInvokeThreadLocal.isEnabled()) {
+			ClusterableContextThreadLocal.putThreadLocalContext(
+				"userId", userId);
+		}
 
 		TransactionCommitCallbackRegistryUtil.registerCallback(
 			new Callable<Void>() {
@@ -529,7 +539,8 @@ public class BackgroundTaskLocalServiceImpl
 		MessageBusUtil.sendMessage(DestinationNames.BACKGROUND_TASK, message);
 	}
 
-	@Clusterable(onMaster = true)
+	@Clusterable(
+		acceptor = BackgroundTaskClusterAcceptor.class, onMaster = true)
 	@Override
 	public void triggerBackgroundTask(long backgroundTaskId) {
 		Message message = new Message();
@@ -537,6 +548,20 @@ public class BackgroundTaskLocalServiceImpl
 		message.put("backgroundTaskId", backgroundTaskId);
 
 		MessageBusUtil.sendMessage(DestinationNames.BACKGROUND_TASK, message);
+	}
+
+	private static class BackgroundTaskClusterAcceptor
+			implements ClusterInvokeAcceptor {
+
+		@Override
+		public boolean accept(Map<String, Serializable> context) {
+			Long userId = GetterUtil.getLong(context.get("userId"));
+
+			PrincipalThreadLocal.setName(userId);
+
+			return true;
+		}
+
 	}
 
 	@BeanReference(type = BackgroundTaskStatusRegistry.class)
