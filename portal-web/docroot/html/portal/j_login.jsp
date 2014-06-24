@@ -19,7 +19,7 @@
 <%
 String jSecurityCheck = "j_security_check";
 
-if (!ServerDetector.isWebSphere()) {
+if (!ServerDetector.isWebSphereFamily()) {
 	jSecurityCheck = themeDisplay.getPathMain() + "/portal/" + jSecurityCheck;
 }
 

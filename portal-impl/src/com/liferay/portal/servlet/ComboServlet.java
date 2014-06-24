@@ -125,7 +125,7 @@ public class ComboServlet extends HttpServlet {
 
 		Enumeration<String> enu = request.getParameterNames();
 
-		if (ServerDetector.isWebSphere()) {
+		if (ServerDetector.isWebSphereFamily()) {
 			Map<String, String[]> parameterMap = HttpUtil.getParameterMap(
 				request.getQueryString());
 

@@ -45,7 +45,7 @@ public class GZipFilter extends BasePortalFilter {
 			if (ServerDetector.isJBoss() || ServerDetector.isJetty() ||
 				ServerDetector.isJOnAS() || ServerDetector.isOC4J() ||
 				ServerDetector.isTomcat() || ServerDetector.isWebLogic() ||
-				ServerDetector.isWebSphere()) {
+				ServerDetector.isWebSphereFamily()) {
 
 				_filterEnabled = true;
 			}

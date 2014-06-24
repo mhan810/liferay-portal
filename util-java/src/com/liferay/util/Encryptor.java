@@ -214,7 +214,7 @@ public class Encryptor {
 			providerClass = Class.forName(PROVIDER_CLASS);
 		}
 		catch (ClassNotFoundException cnfe) {
-			if (ServerDetector.isWebSphere() &&
+			if (ServerDetector.isWebSphereFamily() &&
 				PROVIDER_CLASS.equals(SUN_PROVIDER_CLASS)) {
 
 				if (_log.isWarnEnabled()) {

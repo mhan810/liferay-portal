@@ -207,7 +207,7 @@ public class PortalSecurityManagerImpl extends SecurityManager
 			addWebLogicHook();
 		}
 
-		if (ServerDetector.isWebSphere()) {
+		if (ServerDetector.isWebSphereFamily()) {
 			addWebSphereHook();
 		}
 	}

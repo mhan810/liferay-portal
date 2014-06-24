@@ -31,7 +31,7 @@ public class AspectJUtil {
 
 		Method method = null;
 
-		if (ServerDetector.isWebSphere()) {
+		if (ServerDetector.isWebSphereFamily()) {
 			Class<?> declaringType = methodSignature.getDeclaringType();
 			String name = methodSignature.getName();
 			Class<?>[] parameterTypes = methodSignature.getParameterTypes();
