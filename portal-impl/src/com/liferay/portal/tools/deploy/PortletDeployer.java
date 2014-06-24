@@ -102,7 +102,7 @@ public class PortletDeployer extends BaseDeployer {
 
 		StringBundler sb = new StringBundler();
 
-		if (ServerDetector.isWebSphere()) {
+		if (ServerDetector.isWebSphereFamily()) {
 			sb.append("<context-param>");
 			sb.append("<param-name>");
 			sb.append("com.ibm.websphere.portletcontainer.");

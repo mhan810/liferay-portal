@@ -239,14 +239,16 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 			!appServerType.equals(ServerDetector.RESIN_ID) &&
 			!appServerType.equals(ServerDetector.TOMCAT_ID) &&
 			!appServerType.equals(ServerDetector.WEBLOGIC_ID) &&
-			!appServerType.equals(ServerDetector.WEBSPHERE_ID)) {
+			!appServerType.equals(ServerDetector.WEBSPHERE_ID) &&
+			!appServerType.equals(ServerDetector.WEBSPHERE_LP_ID)) {
 
 			throw new IllegalArgumentException(
 				appServerType + " is not a valid application server type");
 		}
 
 		if (appServerType.equals(ServerDetector.GLASSFISH_ID) ||
-			appServerType.equals(ServerDetector.WEBSPHERE_ID)) {
+			appServerType.equals(ServerDetector.WEBSPHERE_ID) ||
+			appServerType.equals(ServerDetector.WEBSPHERE_LP_ID)) {
 
 			unpackWar = false;
 		}
