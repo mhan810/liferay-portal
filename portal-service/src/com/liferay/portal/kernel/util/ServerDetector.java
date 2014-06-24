@@ -17,6 +17,10 @@ package com.liferay.portal.kernel.util;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
+import java.lang.reflect.Method;
+
+import java.util.Map;
+
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
@@ -45,6 +49,8 @@ public class ServerDetector {
 	public static final String WEBLOGIC_ID = "weblogic";
 
 	public static final String WEBSPHERE_ID = "websphere";
+
+	public static final String WEBSPHERE_LP_ID = "websphere_lp";
 
 	public static ServerDetector getInstance() {
 		if (_instance == null) {
@@ -94,6 +100,9 @@ public class ServerDetector {
 		}
 		else if (serverId.equals(WEBSPHERE_ID)) {
 			serverDetector._webSphere = true;
+		}
+		else if (serverId.equals(WEBSPHERE_LP_ID)) {
+			serverDetector._webSphereLP = true;
 		}
 		else {
 			serverDetector._init();
@@ -156,6 +165,14 @@ public class ServerDetector {
 
 	public static boolean isWebSphere() {
 		return getInstance()._webSphere;
+	}
+
+	public static boolean isWebSphereFamily() {
+		return isWebSphere() || isWebSphereLP();
+	}
+
+	public static boolean isWebSphereLP() {
+		return getInstance()._webSphereLP;
 	}
 
 	public static void setSupportsHotDeploy(boolean supportsHotDeploy) {
@@ -241,6 +258,10 @@ public class ServerDetector {
 		else if (_isWebSphere()) {
 			_serverId = WEBSPHERE_ID;
 			_webSphere = true;
+		}
+		else if (_isWebSphereLP()) {
+			_serverId = WEBSPHERE_LP_ID;
+			_webSphereLP = true;
 		}
 
 		if (_serverId == null) {
@@ -339,6 +360,64 @@ public class ServerDetector {
 		return _detect("/com/ibm/websphere/product/VersionInfo.class");
 	}
 
+	private boolean _isWebSphereLP() {
+		try {
+			ClassLoader contextClassLoader =
+				Thread.currentThread().getContextClassLoader();
+
+			Class productInfoClazz = contextClassLoader.loadClass(
+				"com.ibm.ws.kernel.productinfo.ProductInfo");
+
+			Method getAllProductInfo = productInfoClazz.getMethod(
+				"getAllProductInfo");
+			Method getVersion = productInfoClazz.getMethod("getVersion");
+			Method getId = productInfoClazz.getMethod("getId");
+
+			Map<String, Object> map =
+				(Map<String, Object>)getAllProductInfo.invoke(null);
+
+			Object webshereProductInfo = map.get(
+				_WEBSPHERE_LP_PRODUCTINFO_ENTRY);
+
+			if (webshereProductInfo == null) {
+				if (_log.isErrorEnabled()) {
+					_log.error(
+						"Websphere Liberty Profile class " +
+							productInfoClazz.getName() +
+							" located but no entry located for product info " +
+							_WEBSPHERE_LP_PRODUCTINFO_ENTRY);
+				}
+
+				return false;
+			}
+
+			String id = (String)getId.invoke(webshereProductInfo);
+			String version = (String)getVersion.invoke(webshereProductInfo);
+
+			return (id.equals("com.ibm.websphere.appserver") &&
+				version.startsWith("8.5.5"));
+		}
+		catch (ClassNotFoundException cnfe) {
+			return false;
+		}
+		catch (NoSuchMethodException nsme) {
+			if (_log.isErrorEnabled()) {
+				_log.error(
+					"Websphere LP class found but methods do not match", nsme);
+			}
+		}
+		catch (Exception e) {
+			if (_log.isErrorEnabled()) {
+				_log.error("Error detecting Websphere LP: ", e);
+			}
+		}
+
+		return false;
+	}
+
+	private static final String _WEBSPHERE_LP_PRODUCTINFO_ENTRY =
+		"com.ibm.websphere.appserver";
+
 	private static Log _log = LogFactoryUtil.getLog(ServerDetector.class);
 
 	private static ServerDetector _instance;
@@ -358,5 +437,6 @@ public class ServerDetector {
 	private boolean _tomcat;
 	private boolean _webLogic;
 	private boolean _webSphere;
+	private boolean _webSphereLP;
 
 }
