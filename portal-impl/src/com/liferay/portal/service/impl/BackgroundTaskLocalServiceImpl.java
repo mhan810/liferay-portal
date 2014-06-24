@@ -551,7 +551,7 @@ public class BackgroundTaskLocalServiceImpl
 	}
 
 	private static class BackgroundTaskClusterAcceptor
-			implements ClusterInvokeAcceptor {
+		implements ClusterInvokeAcceptor {
 
 		@Override
 		public boolean accept(Map<String, Serializable> context) {
