@@ -106,8 +106,11 @@ public class BrowserLauncher implements Runnable {
 		runtime.exec("cmd.exe /c start " + PropsValues.BROWSER_LAUNCHER_URL);
 	}
 
+	/**
+	 * Order matters. See LPS-48525.
+	 */
 	private static final String[] _BROWSERS = {
-		"firefox", "mozilla", "konqueror", "opera"
+		"xdg-open", "firefox", "mozilla", "konqueror", "opera"
 	};
 
 }

@@ -23,8 +23,6 @@ import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -820,8 +818,5 @@ public class JournalArticleStagedModelDataHandler
 
 		return existingArticle;
 	}
-
-	private static Log _log = LogFactoryUtil.getLog(
-		JournalArticleStagedModelDataHandler.class);
 
 }

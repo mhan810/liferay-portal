@@ -19,7 +19,7 @@
 <%
 String toolbarItem = ParamUtil.getString(request, "toolbarItem", "browse");
 
-long groupId = ParamUtil.getLong(request, "groupId");
+long groupId = ParamUtil.getLong(request, "groupId", GroupConstants.DEFAULT_PARENT_GROUP_ID);
 String sitesListView = ParamUtil.get(request, "sitesListView", SiteConstants.LIST_VIEW_TREE);
 
 PortletURL portletURL = renderResponse.createRenderURL();
@@ -56,9 +56,7 @@ String searchURLString = searchURL.toString();
 
 		PKParser pkParser = new PKParser(nslse.getMessage());
 
-		long groupId = pkParser.getLong("groupId");
-
-		Group group = GroupLocalServiceUtil.getGroup(groupId);
+		Group group = GroupLocalServiceUtil.getGroup(pkParser.getLong("groupId"));
 		%>
 
 		<liferay-ui:message arguments="<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>" key="site-x-does-not-have-any-private-pages" translateArguments="<%= false %>" />

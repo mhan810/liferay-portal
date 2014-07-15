@@ -203,6 +203,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.portlet.PortletPreferences;
 
@@ -722,6 +723,20 @@ public class DataFactory {
 	}
 
 	public void initContext(Properties properties) {
+		String timeZoneId = properties.getProperty("sample.sql.db.time.zone");
+
+		if (Validator.isNotNull(timeZoneId)) {
+			TimeZone timeZone = TimeZone.getTimeZone(timeZoneId);
+
+			if (timeZone != null) {
+				TimeZone.setDefault(timeZone);
+
+				_simpleDateFormat =
+					FastDateFormatFactoryUtil.getSimpleDateFormat(
+						"yyyy-MM-dd HH:mm:ss", timeZone);
+			}
+		}
+
 		_assetPublisherQueryName = GetterUtil.getString(
 			properties.getProperty("sample.sql.asset.publisher.query.name"));
 
