@@ -1,49 +1,4 @@
 {
-	"KeywordQueryDocumentType": {
-		"properties": {
-			"groupId": {
-				"index": "not_analyzed",
-				"store": "yes",
-				"type": "string"
-			},
-			"priority": {
-				"index": "not_analyzed",
-				"store": "yes",
-				"type": "float"
-			},
-			"uid": {
-				"index": "not_analyzed",
-				"store": "yes",
-				"type": "string"
-			}
-		},
-		"dynamic_templates": [
-			{
-				"template_": {
-					"match": "*",
-					"match_mapping_type": "string",
-					"mapping": {
-						"index": "not_analyzed",
-						"index_options": "docs",
-						"omit_norms": "yes",
-						"store": "no",
-						"type": "string"
-					}
-				}
-			},
-			{
-				"template_keywordSearch": {
-					"match": "keywordSearch_*",
-					"match_mapping_type": "string",
-					"mapping": {
-						"index": "analyzed",
-						"store": "yes",
-						"type": "string"
-					}
-				}
-			}
-		]
-	},
 	"LiferayDocumentType": {
 		"_all" : {"enabled" : true},
 		"_type": {"store": "yes"},
@@ -270,51 +225,6 @@
 			{
 				"template_web_content/": {
 					"match": "web_content/*",
-					"match_mapping_type": "string",
-					"mapping": {
-						"index": "analyzed",
-						"store": "yes",
-						"type": "string"
-					}
-				}
-			}
-		]
-	},
-	"SpellCheckDocumentType": {
-		"properties": {
-			"groupId": {
-				"index": "not_analyzed",
-				"store": "yes",
-				"type": "string"
-			},
-			"priority": {
-				"index": "not_analyzed",
-				"store": "yes",
-				"type": "float"
-			},
-			"uid": {
-				"index": "not_analyzed",
-				"store": "yes",
-				"type": "string"
-			}
-		},
-		"dynamic_templates": [
-			{
-				"template_": {
-					"match": "*",
-					"match_mapping_type": "string",
-					"mapping": {
-						"index": "not_analyzed",
-						"index_options": "docs",
-						"omit_norms": "yes",
-						"store": "no",
-						"type": "string"
-					}
-				}
-			},
-			{
-				"template_spellCheckWord": {
-					"match": "spellCheckWord_*",
 					"match_mapping_type": "string",
 					"mapping": {
 						"index": "analyzed",
