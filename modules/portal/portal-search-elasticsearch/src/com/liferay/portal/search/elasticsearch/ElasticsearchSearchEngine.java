@@ -22,10 +22,14 @@ import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectio
 import com.liferay.portal.search.elasticsearch.index.IndexFactory;
 import com.liferay.portal.search.elasticsearch.util.LogUtil;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.elasticsearch.action.ListenableActionFuture;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthStatus;
+import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequestBuilder;
+import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryResponse;
 import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotRequestBuilder;
 import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotResponse;
 import org.elasticsearch.action.admin.cluster.snapshots.delete.DeleteSnapshotRequestBuilder;
@@ -33,6 +37,7 @@ import org.elasticsearch.action.admin.cluster.snapshots.delete.DeleteSnapshotRes
 import org.elasticsearch.action.admin.cluster.snapshots.restore.RestoreSnapshotRequestBuilder;
 import org.elasticsearch.action.admin.cluster.snapshots.restore.RestoreSnapshotResponse;
 import org.elasticsearch.client.ClusterAdminClient;
+import org.elasticsearch.common.settings.ImmutableSettings;
 
 /**
  * @author Michael C. Han
@@ -53,6 +58,8 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 		createSnapshotRequestBuilder.setWaitForCompletion(true);
 
 		try {
+			_createBackupRepository(clusterAdminClient);
+
 			Future<CreateSnapshotResponse> future =
 				createSnapshotRequestBuilder.execute();
 
@@ -169,6 +176,22 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 
 	public void setIndexFactory(IndexFactory indexFactory) {
 		_indexFactory = indexFactory;
+	}
+
+	private void _createBackupRepository(ClusterAdminClient clusterAdminClient) throws ExecutionException, InterruptedException {
+		ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder();
+
+		builder.put("location", "/tmp/liferay_backup");
+
+		PutRepositoryRequestBuilder putRepositoryRequestBuilder =
+			clusterAdminClient.preparePutRepository(
+				_BACKUP_REPOSITORY_NAME).setType("fs").setSettings(builder);
+
+		ListenableActionFuture<PutRepositoryResponse> execute = putRepositoryRequestBuilder.execute();
+
+		PutRepositoryResponse putRepositoryResponse = execute.get();
+
+		_log.info("Created repo " + putRepositoryResponse.toString());
 	}
 
 	private static final String _BACKUP_REPOSITORY_NAME = "liferay_backup";
