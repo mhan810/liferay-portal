@@ -40,6 +40,7 @@ import java.util.Set;
 public class FieldsToDDMFormValuesConverterImpl
 	implements FieldsToDDMFormValuesConverter {
 
+	@Override
 	public DDMFormValues convert(DDMStructure ddmStructure, Fields fields)
 		throws PortalException {
 
