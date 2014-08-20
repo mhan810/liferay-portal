@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.test.DeleteAfterTestRun;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.test.listeners.MainServletExecutionTestListener;
@@ -48,6 +47,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -107,6 +107,13 @@ public class FacetSearchTest {
 		calendar.add(Calendar.YEAR, -2);
 
 		addUsers(_USER_COUNT_LAST_TWO_YEAR, calendar.getTime());
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		for (User user : _users) {
+			UserLocalServiceUtil.deleteUser(user);
+		}
 	}
 
 	@Test
@@ -285,8 +292,6 @@ public class FacetSearchTest {
 		"yyyyMMddHHmmss");
 	private String _facetConfigurationsJSON;
 	private String _randomLastName;
-
-	@DeleteAfterTestRun
 	private List<User> _users = new ArrayList<User>();
 
 }
