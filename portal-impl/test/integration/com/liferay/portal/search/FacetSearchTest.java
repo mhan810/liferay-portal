@@ -281,9 +281,9 @@ public class FacetSearchTest {
 
 	private static final int _USERS_COUNT_LAST_YEAR = 2;
 
-	private String _facetConfigurationsJSON;
 	private Format _format = FastDateFormatFactoryUtil.getSimpleDateFormat(
 		"yyyyMMddHHmmss");
+	private String _facetConfigurationsJSON;
 	private String _randomLastName;
 
 	@DeleteAfterTestRun
