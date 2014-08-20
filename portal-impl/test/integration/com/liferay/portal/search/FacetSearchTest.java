@@ -87,26 +87,26 @@ public class FacetSearchTest {
 
 		calendar.add(Calendar.MINUTE, -1);
 
-		addUsers(_USERS_COUNT_LAST_24_HOURS, calendar.getTime());
+		addUsers(_USER_COUNT_LAST_24_HRS, calendar.getTime());
 
 		calendar.add(Calendar.DATE, -3);
 
-		addUsers(_USERS_COUNT_LAST_WEEK, calendar.getTime());
+		addUsers(_USER_COUNT_LAST_WEEK, calendar.getTime());
 
 		calendar.add(Calendar.MONTH, -1);
 		calendar.add(Calendar.DATE, 7);
 
-		addUsers(_USERS_COUNT_LAST_MONTH, calendar.getTime());
+		addUsers(_USER_COUNT_LAST_MONTH, calendar.getTime());
 
 		calendar.add(Calendar.MONTH, 2);
 		calendar.add(Calendar.YEAR, -1);
 
-		addUsers(_USERS_COUNT_LAST_YEAR, calendar.getTime());
+		addUsers(_USER_COUNT_LAST_YEAR, calendar.getTime());
 
 		calendar.add(Calendar.MONTH, 5);
 		calendar.add(Calendar.YEAR, -2);
 
-		addUsers(_USERS_COUNT_LAST_TWO_YEARS, calendar.getTime());
+		addUsers(_USER_COUNT_LAST_TWO_YEAR, calendar.getTime());
 	}
 
 	@Test
@@ -115,7 +115,7 @@ public class FacetSearchTest {
 
 		searchCount(
 			CalendarUtil.getGTDate(calendar), CalendarUtil.getLTDate(calendar),
-			_USERS_COUNT_LAST_24_HOURS);
+			_USER_COUNT_LAST_24_HRS);
 	}
 
 	@Test
@@ -128,8 +128,8 @@ public class FacetSearchTest {
 
 		searchCount(
 			CalendarUtil.getGTDate(calendar), endDate,
-			_USERS_COUNT_LAST_24_HOURS + _USERS_COUNT_LAST_WEEK +
-				_USERS_COUNT_LAST_MONTH);
+			_USER_COUNT_LAST_24_HRS + _USER_COUNT_LAST_WEEK +
+				_USER_COUNT_LAST_MONTH);
 	}
 
 	@Test
@@ -145,9 +145,9 @@ public class FacetSearchTest {
 
 		searchCount(
 			CalendarUtil.getGTDate(calendar), endDate,
-			_USERS_COUNT_LAST_24_HOURS + _USERS_COUNT_LAST_WEEK +
-				_USERS_COUNT_LAST_MONTH + _USERS_COUNT_LAST_YEAR +
-				_USERS_COUNT_LAST_TWO_YEARS);
+			_USER_COUNT_LAST_24_HRS + _USER_COUNT_LAST_WEEK +
+				_USER_COUNT_LAST_MONTH + _USER_COUNT_LAST_YEAR +
+				_USER_COUNT_LAST_TWO_YEAR);
 	}
 
 	@Test
@@ -160,7 +160,7 @@ public class FacetSearchTest {
 
 		searchCount(
 			CalendarUtil.getGTDate(calendar), endDate,
-			_USERS_COUNT_LAST_24_HOURS + _USERS_COUNT_LAST_WEEK);
+			_USER_COUNT_LAST_24_HRS + _USER_COUNT_LAST_WEEK);
 	}
 
 	@Test
@@ -173,8 +173,8 @@ public class FacetSearchTest {
 
 		searchCount(
 			CalendarUtil.getGTDate(calendar), endDate,
-			_USERS_COUNT_LAST_24_HOURS + _USERS_COUNT_LAST_WEEK +
-				_USERS_COUNT_LAST_MONTH + _USERS_COUNT_LAST_YEAR);
+			_USER_COUNT_LAST_24_HRS + _USER_COUNT_LAST_WEEK +
+				_USER_COUNT_LAST_MONTH + _USER_COUNT_LAST_YEAR);
 	}
 
 	@Test
@@ -271,15 +271,15 @@ public class FacetSearchTest {
 		return hits.getLength();
 	}
 
-	private static final int _USERS_COUNT_LAST_24_HOURS = 2;
+	private static final int _USER_COUNT_LAST_24_HRS = 2;
 
-	private static final int _USERS_COUNT_LAST_MONTH = 2;
+	private static final int _USER_COUNT_LAST_MONTH = 2;
 
-	private static final int _USERS_COUNT_LAST_TWO_YEARS = 2;
+	private static final int _USER_COUNT_LAST_TWO_YEAR = 2;
 
-	private static final int _USERS_COUNT_LAST_WEEK = 2;
+	private static final int _USER_COUNT_LAST_WEEK = 2;
 
-	private static final int _USERS_COUNT_LAST_YEAR = 2;
+	private static final int _USER_COUNT_LAST_YEAR = 2;
 
 	private Format _format = FastDateFormatFactoryUtil.getSimpleDateFormat(
 		"yyyyMMddHHmmss");
