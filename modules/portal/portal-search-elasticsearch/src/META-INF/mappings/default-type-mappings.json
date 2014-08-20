@@ -12,6 +12,16 @@
 				}
 			},
 			{
+				"template_assetCategoryTitles": {
+					"match": "assetCategoryTitles*",
+					"match_mapping_type": "string",
+					"mapping": {
+						"index": "analyzed",
+						"type": "string"
+					}
+				}
+			},
+			{
 				"template_expando": {
 					"match": "expando_*",
 					"match_mapping_type": "string",
@@ -379,9 +389,8 @@
 				"type": "string"
 			},
 			"createDate": {
-				"format" : "yyyyMMddHHmmss",
 				"index": "not_analyzed",
-				"type": "date"
+				"type": "string"
 			},
 			"companyId": {
 				"index": "not_analyzed",
@@ -399,9 +408,8 @@
 				"type": "string"
 			},
 			"expirationDate": {
-				"format" : "yyyyMMddHHmmss",
 				"index": "not_analyzed",
-				"type": "date"
+				"type": "string"
 			},
 			"groupId": {
 				"index": "not_analyzed",
@@ -409,9 +417,8 @@
 				"type": "string"
 			},
 			"modified": {
-				"format" : "yyyyMMddHHmmss",
 				"index": "not_analyzed",
-				"type": "date"
+				"type": "string"
 			},
 			"portletId": {
 				"index": "not_analyzed",
@@ -419,14 +426,12 @@
 				"type": "string"
 			},
 			"publishDate": {
-				"format" : "yyyyMMddHHmmss",
 				"index": "not_analyzed",
-				"type": "date"
+				"type": "string"
 			},
 			"removedDate": {
-				"format" : "yyyyMMddHHmmss",
 				"index": "not_analyzed",
-				"type": "date"
+				"type": "string"
 			},
 			"removedByUser": {
 				"index": "not_analyzed",
