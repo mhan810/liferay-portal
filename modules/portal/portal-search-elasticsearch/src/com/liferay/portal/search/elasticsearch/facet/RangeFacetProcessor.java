@@ -46,10 +46,10 @@ public class RangeFacetProcessor implements FacetProcessor {
 			return;
 		}
 
-		DefaultRangeBuilder defaultRangeBuilder = new DefaultRangeBuilder(
+		BaseRangeBuilder rangeBuilder = new BaseRangeBuilder(
 			facetConfiguration.getFieldName());
 
-		defaultRangeBuilder.field(facetConfiguration.getFieldName());
+		rangeBuilder.field(facetConfiguration.getFieldName());
 
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject rangeJSONObject = jsonArray.getJSONObject(i);
@@ -61,10 +61,10 @@ public class RangeFacetProcessor implements FacetProcessor {
 
 			String[] rangeParts = range.split(StringPool.SPACE);
 
-			defaultRangeBuilder.addRange(rangeParts[0], rangeParts[2]);
+			rangeBuilder.addRange(rangeParts[0], rangeParts[2]);
 		}
 
-		searchRequestBuilder.addAggregation(defaultRangeBuilder);
+		searchRequestBuilder.addAggregation(rangeBuilder);
 	}
 
 }

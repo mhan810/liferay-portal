@@ -24,42 +24,42 @@ import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder;
 /**
  * @author Michael C. Han
  */
-public class DefaultRangeBuilder extends AbstractRangeBuilder<RangeBuilder> {
+public class BaseRangeBuilder extends AbstractRangeBuilder<RangeBuilder> {
 
-	public DefaultRangeBuilder(String name) {
+	public BaseRangeBuilder(String name) {
 		super(name, InternalRange.TYPE.name());
 	}
 
-	public DefaultRangeBuilder addRange(String from, String to) {
+	public BaseRangeBuilder addRange(String from, String to) {
 		return addRange(null, from, to);
 	}
 
-	public DefaultRangeBuilder addRange(String key, String from, String to) {
+	public BaseRangeBuilder addRange(String key, String from, String to) {
 		ranges.add(new Range(key, from, to));
 
 		return this;
 	}
 
-	public DefaultRangeBuilder addUnboundedFrom(String from) {
+	public BaseRangeBuilder addUnboundedFrom(String from) {
 		return addUnboundedFrom(null, from);
 	}
 
-	public DefaultRangeBuilder addUnboundedFrom(String key, String from) {
+	public BaseRangeBuilder addUnboundedFrom(String key, String from) {
 		ranges.add(new Range(key, from, null));
 		return this;
 	}
 
-	public DefaultRangeBuilder addUnboundedTo(String to) {
+	public BaseRangeBuilder addUnboundedTo(String to) {
 		return addUnboundedTo(null, to);
 	}
 
-	public DefaultRangeBuilder addUnboundedTo(String key, String to) {
+	public BaseRangeBuilder addUnboundedTo(String key, String to) {
 		ranges.add(new Range(key, null, to));
 
 		return this;
 	}
 
-	public DefaultRangeBuilder format(String format) {
+	public BaseRangeBuilder format(String format) {
 		_format = format;
 
 		return this;
