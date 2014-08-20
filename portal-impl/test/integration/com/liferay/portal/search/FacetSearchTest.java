@@ -67,12 +67,10 @@ public class FacetSearchTest {
 
 	@Before
 	public void setUp() throws Exception {
-		int initialUsersCount = 0;
+		int initialUsersCount;
 
-		Class<?> clazz = getClass();
-
-		_facetConfigurationsJSON = StringUtil.read(
-			clazz.getClassLoader(),
+		_facetConfiguration = StringUtil.read(
+			getClass().getClassLoader(),
 			"com/liferay/portal/search/dependencies/facet-configurations.json",
 			true);
 
@@ -107,6 +105,9 @@ public class FacetSearchTest {
 		calendar.add(Calendar.YEAR, -2);
 
 		addUsers(_USER_COUNT_LAST_TWO_YEAR, calendar.getTime());
+
+		_dateFormat = FastDateFormatFactoryUtil.getSimpleDateFormat(
+			_INDEX_DATE_FORMAT_PATTERN);
 	}
 
 	@After
@@ -196,8 +197,8 @@ public class FacetSearchTest {
 
 		for (Document doc : hits.getDocs()) {
 			Assert.assertNotNull(doc.get("firstName"));
-			Assert.assertNotNull(doc.get("lastName"));
 			Assert.assertNotNull(doc.get("middleName"));
+			Assert.assertNotNull(doc.get("lastName"));
 		}
 	}
 
@@ -206,7 +207,7 @@ public class FacetSearchTest {
 			User user = UserTestUtil.addUser(
 				RandomTestUtil.randomString(), false,
 				RandomTestUtil.randomString(), _randomLastName,
-				new long[] {TestPropsValues.getGroupId()});
+				new long[]{TestPropsValues.getGroupId()});
 
 			user.setModifiedDate(modifiedDate);
 
@@ -237,7 +238,7 @@ public class FacetSearchTest {
 		searchContext.addFacet(scopeFacet);
 
 		List<FacetConfiguration> facetConfigurations =
-			FacetConfigurationUtil.load(_facetConfigurationsJSON);
+			FacetConfigurationUtil.load(_facetConfiguration);
 
 		for (FacetConfiguration facetConfiguration : facetConfigurations) {
 			Facet facet = FacetFactoryUtil.create(
@@ -262,9 +263,8 @@ public class FacetSearchTest {
 
 		if ((startDate != null) && (endDate != null)) {
 			searchContext.setAttribute(
-				"modified",
-				"[" + _format.format(startDate) + " TO " +
-					_format.format(endDate) + "]");
+				"modified", "[" + _dateFormat.format(startDate) + " TO " +
+					_dateFormat.format(endDate) + "]");
 		}
 
 		Indexer indexer = FacetedSearcher.getInstance();
@@ -278,6 +278,8 @@ public class FacetSearchTest {
 		return hits.getLength();
 	}
 
+	private static final String _INDEX_DATE_FORMAT_PATTERN = "yyyyMMddHHmmss";
+
 	private static final int _USER_COUNT_LAST_24_HRS = 2;
 
 	private static final int _USER_COUNT_LAST_MONTH = 2;
@@ -288,9 +290,8 @@ public class FacetSearchTest {
 
 	private static final int _USER_COUNT_LAST_YEAR = 2;
 
-	private Format _format = FastDateFormatFactoryUtil.getSimpleDateFormat(
-		"yyyyMMddHHmmss");
-	private String _facetConfigurationsJSON;
+	private Format _dateFormat;
+	private String _facetConfiguration;
 	private String _randomLastName;
 	private List<User> _users = new ArrayList<User>();
 
