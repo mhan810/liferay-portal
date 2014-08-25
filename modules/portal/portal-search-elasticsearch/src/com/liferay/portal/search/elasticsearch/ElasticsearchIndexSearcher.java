@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.HitsImpl;
+import com.liferay.portal.kernel.search.IndexSearcher;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
@@ -37,11 +38,12 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch.facet.ElasticsearchFacetFieldCollector;
-import com.liferay.portal.search.elasticsearch.facet.FacetProcessorUtil;
+import com.liferay.portal.search.elasticsearch.facet.FacetProcessor;
 import com.liferay.portal.search.elasticsearch.util.DocumentTypes;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -51,6 +53,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.time.StopWatch;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import org.elasticsearch.action.ActionFuture;
 import org.elasticsearch.action.search.SearchRequest;
@@ -76,6 +84,7 @@ import org.elasticsearch.search.sort.SortOrder;
  * @author Michael C. Han
  * @author Milen Dyankov
  */
+@Component(immediate = true, service = IndexSearcher.class)
 public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 
 	@Override
@@ -101,6 +110,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		return hits;
 	}
 
+	@Reference
 	public void setElasticsearchConnectionManager(
 		ElasticsearchConnectionManager elasticsearchConnectionManager) {
 
@@ -122,7 +132,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 				continue;
 			}
 
-			FacetProcessorUtil.processFacet(searchRequestBuilder, facet);
+			processFacet(searchRequestBuilder, facet);
 		}
 	}
 
@@ -459,10 +469,57 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		}
 	}
 
+	public static void processFacet(
+		SearchRequestBuilder searchRequestBuilder, Facet facet) {
+
+		Class<?> clazz = facet.getClass();
+
+		FacetProcessor facetProcessor = _facetProcessors.get(clazz.getName());
+
+		if (facetProcessor == null) {
+			facetProcessor = _defaultFacetProcessor;
+		}
+
+		facetProcessor.processFacet(searchRequestBuilder, facet);
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MANDATORY,
+		target = "(&(!(class.name=*))(default.facet.processor=*))"
+	)
+	public void setDefaultFacetProcessor(FacetProcessor defaultFacetProcessor) {
+		_defaultFacetProcessor = defaultFacetProcessor;
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(&(class.name=*)(!(default.facet.processor=*)))"
+	)
+	public void setFacetProcessor(
+		FacetProcessor facetProcessor, Map<String, Object> properties) {
+
+		String className = MapUtil.getString(properties, "class.name");
+
+		_facetProcessors.put(className, facetProcessor);
+	}
+
+	public void unsetFacetProcessor(
+		FacetProcessor facetProcessor, Map<String, Object> properties) {
+
+		String className = MapUtil.getString(properties, "class.name");
+
+		_facetProcessors.remove(className);
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		ElasticsearchIndexSearcher.class);
 
+	private static FacetProcessor _defaultFacetProcessor;
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
+	private static Map<String, FacetProcessor> _facetProcessors =
+		new HashMap<String, FacetProcessor>();
 	private int _maxResultSize = 1000;
 	private Pattern _pattern = Pattern.compile("<em>(.*?)</em>");
 
