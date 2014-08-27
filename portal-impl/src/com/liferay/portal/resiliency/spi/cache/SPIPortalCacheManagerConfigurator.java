@@ -14,9 +14,9 @@
 
 package com.liferay.portal.resiliency.spi.cache;
 
-import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheManager;
+import com.liferay.portal.kernel.cache.PortalCacheProvider;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.proxy.ExceptionHandler;
 import com.liferay.portal.kernel.nio.intraband.proxy.TargetLocator;
@@ -56,7 +56,8 @@ public class SPIPortalCacheManagerConfigurator {
 		Future<String[]> future =
 			IntrabandProxyInstallationUtil.installSkeleton(
 				registrationReference, PortalCache.class,
-				new IntrabandPortalCacheTargetLocator(false));
+				new IntrabandPortalCacheTargetLocator(
+					portalCacheManager.getName(), false));
 
 		String[] skeletonProxyMethodSignatures = future.get();
 
@@ -69,7 +70,8 @@ public class SPIPortalCacheManagerConfigurator {
 
 		future = IntrabandProxyInstallationUtil.installSkeleton(
 			registrationReference, PortalCacheManager.class,
-			new IntrabandPortalCacheTargetLocator(true));
+			new IntrabandPortalCacheTargetLocator(
+				portalCacheManager.getName(), true));
 
 		skeletonProxyMethodSignatures = future.get();
 
@@ -92,16 +94,16 @@ public class SPIPortalCacheManagerConfigurator {
 		return portalCacheManager;
 	}
 
-	private static final String _BEAN_NAME_MULTI_VM_PORTAL_CACHE_MANAGER =
-		"com.liferay.portal.kernel.cache.MultiVMPortalCacheManager";
-
 	private static ExceptionHandler _exceptionHandler =
 		new WarnLogExceptionHandler();
 
 	private static class IntrabandPortalCacheTargetLocator
 		implements TargetLocator {
 
-		public IntrabandPortalCacheTargetLocator(boolean manager) {
+		public IntrabandPortalCacheTargetLocator(
+			String portalCacheManagerName, boolean manager) {
+
+			_portalCacheManagerName = portalCacheManagerName;
 			_manager = manager;
 		}
 
@@ -119,19 +121,13 @@ public class SPIPortalCacheManagerConfigurator {
 
 			objectInputStream.defaultReadObject();
 
-			_portalCacheManager =
-				(PortalCacheManager<?, ?>)PortalBeanLocatorUtil.locate(
-					_BEAN_NAME_MULTI_VM_PORTAL_CACHE_MANAGER);
-
-			if (_portalCacheManager == null) {
-				throw new IllegalStateException(
-					"Unable to locate bean " +
-						_BEAN_NAME_MULTI_VM_PORTAL_CACHE_MANAGER);
-			}
+			_portalCacheManager = PortalCacheProvider.getPortalCacheManager(
+				_portalCacheManagerName);
 		}
 
 		private boolean _manager;
 		private transient PortalCacheManager<?, ?> _portalCacheManager;
+		private String _portalCacheManagerName;
 
 	}
 

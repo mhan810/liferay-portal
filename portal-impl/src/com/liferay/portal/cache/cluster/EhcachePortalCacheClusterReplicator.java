@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Properties;
 
 import net.sf.ehcache.CacheException;
+import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.event.CacheEventListener;
@@ -73,11 +74,13 @@ public class EhcachePortalCacheClusterReplicator implements CacheEventListener {
 			return;
 		}
 
+		CacheManager cacheManager = ehcache.getCacheManager();
 		Serializable key = (Serializable)element.getObjectKey();
 
 		PortalCacheClusterEvent portalCacheClusterEvent =
 			new PortalCacheClusterEvent(
-				ehcache.getName(), key, PortalCacheClusterEventType.PUT);
+				cacheManager.getName(), ehcache.getName(), key,
+				PortalCacheClusterEventType.PUT);
 
 		if (_replicatePutsViaCopy) {
 			portalCacheClusterEvent.setElementValue(
@@ -98,11 +101,13 @@ public class EhcachePortalCacheClusterReplicator implements CacheEventListener {
 			return;
 		}
 
+		CacheManager cacheManager = ehcache.getCacheManager();
 		Serializable key = (Serializable)element.getObjectKey();
 
 		PortalCacheClusterEvent portalCacheClusterEvent =
 			new PortalCacheClusterEvent(
-				ehcache.getName(), key, PortalCacheClusterEventType.REMOVE);
+				cacheManager.getName(), ehcache.getName(), key,
+				PortalCacheClusterEventType.REMOVE);
 
 		PortalCacheClusterLinkUtil.sendEvent(portalCacheClusterEvent);
 	}
@@ -119,9 +124,12 @@ public class EhcachePortalCacheClusterReplicator implements CacheEventListener {
 
 		Serializable key = (Serializable)element.getObjectKey();
 
+		CacheManager cacheManager = ehcache.getCacheManager();
+
 		PortalCacheClusterEvent portalCacheClusterEvent =
 			new PortalCacheClusterEvent(
-				ehcache.getName(), key, PortalCacheClusterEventType.UPDATE);
+				cacheManager.getName(), ehcache.getName(), key,
+				PortalCacheClusterEventType.UPDATE);
 
 		if (_replicateUpdatesViaCopy) {
 			portalCacheClusterEvent.setElementValue(
@@ -140,9 +148,11 @@ public class EhcachePortalCacheClusterReplicator implements CacheEventListener {
 			return;
 		}
 
+		CacheManager cacheManager = ehcache.getCacheManager();
+
 		PortalCacheClusterEvent portalCacheClusterEvent =
 			new PortalCacheClusterEvent(
-				ehcache.getName(), null,
+				cacheManager.getName(), ehcache.getName(), null,
 				PortalCacheClusterEventType.REMOVE_ALL);
 
 		PortalCacheClusterLinkUtil.sendEvent(portalCacheClusterEvent);

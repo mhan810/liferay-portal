@@ -1265,6 +1265,13 @@ public class LayoutServiceUtil {
 		return getService().updateParentLayoutId(plid, parentPlid);
 	}
 
+	public static com.liferay.portal.model.Layout updateParentLayoutIdAndPriority(
+		long plid, long parentPlid, int priority)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateParentLayoutIdAndPriority(plid, parentPlid, priority);
+	}
+
 	/**
 	* Updates the priority of the layout matching the group, layout ID, and
 	* privacy, setting the layout's priority based on the priorities of the

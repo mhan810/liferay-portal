@@ -146,6 +146,8 @@ public class DDLRecordServiceTest extends BaseDDLServiceTestCase {
 		addRecord(
 			"Bloggs","Another description example",
 			WorkflowConstants.ACTION_PUBLISH);
+
+		waitForIndexRefresh();
 	}
 
 	protected SearchContext getSearchContext(String keywords) throws Exception {
@@ -157,6 +159,10 @@ public class DDLRecordServiceTest extends BaseDDLServiceTestCase {
 		searchContext.setKeywords(keywords);
 
 		return searchContext;
+	}
+
+	protected void waitForIndexRefresh() throws Exception {
+		Thread.sleep(1000);
 	}
 
 	protected DDLRecordSet recordSet;

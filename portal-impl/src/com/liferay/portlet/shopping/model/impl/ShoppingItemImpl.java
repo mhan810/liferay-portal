@@ -32,6 +32,8 @@ import java.util.List;
  */
 public class ShoppingItemImpl extends ShoppingItemBaseImpl {
 
+	public static final int STOCK_QUANTITY_INFINITE_STOCK = -1;
+
 	public ShoppingItemImpl() {
 	}
 
@@ -74,6 +76,15 @@ public class ShoppingItemImpl extends ShoppingItemBaseImpl {
 	@Override
 	public List<ShoppingItemPrice> getItemPrices() throws PortalException {
 		return ShoppingItemPriceLocalServiceUtil.getItemPrices(getItemId());
+	}
+
+	@Override
+	public boolean hasInfiniteStock() {
+		if (getStockQuantity() == STOCK_QUANTITY_INFINITE_STOCK) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override

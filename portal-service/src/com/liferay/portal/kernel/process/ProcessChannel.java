@@ -12,29 +12,21 @@
  * details.
  */
 
-package com.liferay.portlet.shopping;
+package com.liferay.portal.kernel.process;
 
-import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.concurrent.NoticeableFuture;
+
+import java.io.Serializable;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Shuyang Zhou
  */
-public class AmazonException extends PortalException {
+public interface ProcessChannel<T extends Serializable> {
 
-	public AmazonException() {
-		super();
-	}
+	public NoticeableFuture<T> getProcessNoticeableFuture();
 
-	public AmazonException(String msg) {
-		super(msg);
-	}
-
-	public AmazonException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
-
-	public AmazonException(Throwable cause) {
-		super(cause);
-	}
+	public <V extends Serializable> NoticeableFuture<V> write(
+			ProcessCallable<V> processCallable)
+		throws ProcessException;
 
 }

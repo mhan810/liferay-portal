@@ -1455,6 +1455,10 @@ public interface LayoutLocalService extends BaseLocalService,
 		long parentPlid)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
+	public com.liferay.portal.model.Layout updateParentLayoutIdAndPriority(
+		long plid, long parentPlid, int priority)
+		throws com.liferay.portal.kernel.exception.PortalException;
+
 	/**
 	* Updates the priorities of the layouts.
 	*

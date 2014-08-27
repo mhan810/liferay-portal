@@ -1058,6 +1058,21 @@ public class LayoutServiceSoap {
 		}
 	}
 
+	public static com.liferay.portal.model.LayoutSoap updateParentLayoutIdAndPriority(
+		long plid, long parentPlid, int priority) throws RemoteException {
+		try {
+			com.liferay.portal.model.Layout returnValue = LayoutServiceUtil.updateParentLayoutIdAndPriority(plid,
+					parentPlid, priority);
+
+			return com.liferay.portal.model.LayoutSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	/**
 	* Updates the priority of the layout matching the group, layout ID, and
 	* privacy.

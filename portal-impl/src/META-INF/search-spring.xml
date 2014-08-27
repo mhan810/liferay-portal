@@ -180,10 +180,10 @@
 		<constructor-arg>
 			<util:map map-class="java.util.LinkedHashMap">
 				<entry key="articleId" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
-				<entry key="assetCategoryTitles?(_.+)?" value-ref="com.liferay.portal.search.lucene.LikeKeywordAnalyzer" />
-				<entry key="assetTagNames" value-ref="com.liferay.portal.search.lucene.LikeKeywordAnalyzer" />
+				<entry key="assetCategoryTitles?(_.+)?" value-ref="org.apache.lucene.analysis.standard.StandardAnalyzer" />
+				<entry key="assetTagNames" value-ref="org.apache.lucene.analysis.standard.StandardAnalyzer" />
 				<entry key="ddm/.*" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
-				<entry key="emailAddress" value-ref="com.liferay.portal.search.lucene.LikeKeywordAnalyzer" />
+				<entry key="emailAddress" value-ref="org.apache.lucene.analysis.standard.StandardAnalyzer" />
 				<entry key="entryClassName" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
 				<entry key="entryClassPK" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
 				<entry key="extension" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
@@ -191,7 +191,7 @@
 				<entry key="groupRoleId" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
 				<entry key="installedVersion" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
 				<entry key="layoutUuid" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
-				<entry key="license" value-ref="com.liferay.portal.search.lucene.LikeKeywordAnalyzer" />
+				<entry key="license" value-ref="org.apache.lucene.analysis.standard.StandardAnalyzer" />
 				<!--<entry key="path">
 					<bean id="org.apache.lucene.analysis.miscellaneous.PatternAnalyzer" class="org.apache.lucene.analysis.miscellaneous.PatternAnalyzer">
 						<constructor-arg ref="org.apache.lucene.util.Version" />
@@ -206,17 +206,17 @@
 						</constructor-arg>
 					</bean>
 				</entry>-->
-				<entry key="path" value-ref="com.liferay.portal.search.lucene.LikeKeywordAnalyzer" />
+				<entry key="path" value-ref="org.apache.lucene.analysis.standard.StandardAnalyzer" />
 				<entry key="roleId" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
 				<entry key="rootEntryClassPK" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
 				<entry key="status" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
 				<entry key="structureId" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
-				<entry key="tag" value-ref="com.liferay.portal.search.lucene.LikeKeywordAnalyzer" />
+				<entry key="tag" value-ref="org.apache.lucene.analysis.standard.StandardAnalyzer" />
 				<entry key="templateId" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
-				<entry key="treePath" value-ref="com.liferay.portal.search.lucene.LikeKeywordAnalyzer" />
+				<entry key="treePath" value-ref="org.apache.lucene.analysis.standard.StandardAnalyzer" />
 				<entry key="type" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
 				<entry key="userId" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
-				<entry key="userName" value-ref="com.liferay.portal.search.lucene.LikeKeywordAnalyzer" />
+				<entry key="userName" value-ref="org.apache.lucene.analysis.standard.StandardAnalyzer" />
 				<entry key=".*_ar_SA" value-ref="org.apache.lucene.analysis.ar.ArabicAnalyzer" />
 				<entry key=".*_bg_BG" value-ref="org.apache.lucene.analysis.bg.BulgarianAnalyzer" />
 				<entry key=".*_ca_[A-Z]{2}" value-ref="org.apache.lucene.analysis.ca.CatalanAnalyzer" />
