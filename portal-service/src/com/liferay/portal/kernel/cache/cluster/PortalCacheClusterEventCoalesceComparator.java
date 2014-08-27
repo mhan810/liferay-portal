@@ -36,13 +36,16 @@ public class PortalCacheClusterEventCoalesceComparator
 		}
 
 		if (Validator.equals(
-				portalCacheClusterEvent1.getCacheName(),
-				portalCacheClusterEvent2.getCacheName()) &&
-			Validator.equals(
 				portalCacheClusterEvent1.getElementKey(),
 				portalCacheClusterEvent2.getElementKey()) &&
 			(portalCacheClusterEvent1.getEventType() ==
-				portalCacheClusterEvent2.getEventType())) {
+				portalCacheClusterEvent2.getEventType()) &&
+			Validator.equals(
+				portalCacheClusterEvent1.getPortalCacheManagerName(),
+				portalCacheClusterEvent2.getPortalCacheManagerName()) &&
+			Validator.equals(
+				portalCacheClusterEvent1.getPortalCacheName(),
+				portalCacheClusterEvent2.getPortalCacheName())) {
 
 			portalCacheClusterEvent1.setElementValue(
 				portalCacheClusterEvent2.getElementValue());

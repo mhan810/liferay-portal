@@ -1774,6 +1774,14 @@ public class LayoutLocalServiceWrapper implements LayoutLocalService,
 		return _layoutLocalService.updateParentLayoutId(plid, parentPlid);
 	}
 
+	@Override
+	public com.liferay.portal.model.Layout updateParentLayoutIdAndPriority(
+		long plid, long parentPlid, int priority)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutLocalService.updateParentLayoutIdAndPriority(plid,
+			parentPlid, priority);
+	}
+
 	/**
 	* Updates the priorities of the layouts.
 	*

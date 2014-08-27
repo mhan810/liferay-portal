@@ -1067,6 +1067,10 @@ public interface LayoutService extends BaseService {
 		long parentPlid)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
+	public com.liferay.portal.model.Layout updateParentLayoutIdAndPriority(
+		long plid, long parentPlid, int priority)
+		throws com.liferay.portal.kernel.exception.PortalException;
+
 	/**
 	* Updates the priority of the layout matching the group, layout ID, and
 	* privacy, setting the layout's priority based on the priorities of the

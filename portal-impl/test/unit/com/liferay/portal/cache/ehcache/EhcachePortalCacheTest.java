@@ -14,8 +14,10 @@
 
 package com.liferay.portal.cache.ehcache;
 
+import com.liferay.portal.cache.MockPortalCacheManager;
 import com.liferay.portal.cache.TestCacheListener;
 import com.liferay.portal.kernel.cache.CacheListenerScope;
+import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 
 import java.io.Serializable;
@@ -71,11 +73,14 @@ public class EhcachePortalCacheTest {
 
 	@Before
 	public void setUp() {
-		_cacheManager.addCache(_CACHE_NAME);
+		_cacheManager.addCache(_PORTAL_CACHE_NAME);
 
-		Cache cache = _cacheManager.getCache(_CACHE_NAME);
+		Cache cache = _cacheManager.getCache(_PORTAL_CACHE_NAME);
 
-		_ehcachePortalCache = new EhcachePortalCache<String, String>(cache);
+		_ehcachePortalCache = new EhcachePortalCache<String, String>(
+			new MockPortalCacheManager<String, String>(
+				_PORTAL_CACHE_MANAGER_NAME),
+			cache);
 
 		_ehcachePortalCache.put(_KEY_1, _VALUE_1);
 
@@ -268,7 +273,16 @@ public class EhcachePortalCacheTest {
 
 	@Test
 	public void testGetName() {
-		Assert.assertEquals(_CACHE_NAME, _ehcachePortalCache.getName());
+		Assert.assertEquals(_PORTAL_CACHE_NAME, _ehcachePortalCache.getName());
+	}
+
+	@Test
+	public void testGetPortalCacheManager() {
+		PortalCacheManager<String, String> portalCacheManager =
+			_ehcachePortalCache.getPortalCacheManager();
+
+		Assert.assertEquals(
+			_PORTAL_CACHE_MANAGER_NAME, portalCacheManager.getName());
 	}
 
 	@Test
@@ -511,11 +525,14 @@ public class EhcachePortalCacheTest {
 		_defaultCacheListener.reset();
 	}
 
-	private static final String _CACHE_NAME = "CACHE_NAME";
-
 	private static final String _KEY_1 = "KEY_1";
 
 	private static final String _KEY_2 = "KEY_2";
+
+	private static final String _PORTAL_CACHE_MANAGER_NAME =
+		"PORTAL_CACHE_MANAGER_NAME";
+
+	private static final String _PORTAL_CACHE_NAME = "PORTAL_CACHE_NAME";
 
 	private static final String _VALUE_1 = "VALUE_1";
 

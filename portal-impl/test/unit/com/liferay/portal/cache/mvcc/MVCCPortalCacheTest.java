@@ -14,6 +14,7 @@
 
 package com.liferay.portal.cache.mvcc;
 
+import com.liferay.portal.cache.MockPortalCacheManager;
 import com.liferay.portal.cache.TestCacheListener;
 import com.liferay.portal.cache.cluster.ClusterReplicationThreadLocal;
 import com.liferay.portal.cache.memory.MemoryPortalCache;
@@ -51,7 +52,9 @@ public class MVCCPortalCacheTest {
 	@Before
 	public void setUp() {
 		_portalCache = new MemoryPortalCache<String, MVCCModel>(
-			_CACHE_NAME, 16);
+			new MockPortalCacheManager<String, MVCCModel>(
+				_PORTAL_CACHE_MANAGER_NAME),
+			_PORTAL_CACHE_NAME, 16);
 
 		_mvccPortalCache = new MVCCPortalCache<String, MVCCModel>(
 			(LowLevelCache<String, MVCCModel>)_portalCache);
@@ -66,7 +69,9 @@ public class MVCCPortalCacheTest {
 	public void testForHiddenBridge() {
 		@SuppressWarnings("rawtypes")
 		MVCCPortalCache mvccPortalCache = new MVCCPortalCache(
-			new MemoryPortalCache(_CACHE_NAME, 16));
+			new MemoryPortalCache(
+				new MockPortalCacheManager(_PORTAL_CACHE_MANAGER_NAME),
+				_PORTAL_CACHE_NAME, 16));
 
 		Serializable key = _KEY_1;
 		Object value = new MockMVCCModel(_VERSION_1);
@@ -338,11 +343,14 @@ public class MVCCPortalCacheTest {
 		Assert.assertEquals(version, mvccModel.getMvccVersion());
 	}
 
-	private static final String _CACHE_NAME = "CACHE_NAME";
-
 	private static final String _KEY_1 = "KEY_1";
 
 	private static final String _KEY_2 = "KEY_2";
+
+	private static final String _PORTAL_CACHE_MANAGER_NAME =
+		"PORTAL_CACHE_MANAGER_NAME";
+
+	private static final String _PORTAL_CACHE_NAME = "PORTAL_CACHE_NAME";
 
 	private static final long _VERSION_0 = 0;
 

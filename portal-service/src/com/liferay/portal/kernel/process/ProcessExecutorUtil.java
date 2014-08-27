@@ -14,7 +14,6 @@
 
 package com.liferay.portal.kernel.process;
 
-import com.liferay.portal.kernel.concurrent.NoticeableFuture;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 
 import java.io.Serializable;
@@ -24,7 +23,7 @@ import java.io.Serializable;
  */
 public class ProcessExecutorUtil {
 
-	public static <T extends Serializable> NoticeableFuture<T> execute(
+	public static <T extends Serializable> ProcessChannel<T> execute(
 			ProcessConfig processConfig, ProcessCallable<T> processCallable)
 		throws ProcessException {
 

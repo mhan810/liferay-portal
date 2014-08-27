@@ -11,30 +11,19 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+package com.liferay.portal.search.elasticsearch.facet;
 
-package com.liferay.portlet.shopping;
-
-import com.liferay.portal.kernel.exception.PortalException;
+import org.osgi.service.component.annotations.Component;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Raymond Augé
  */
-public class AmazonException extends PortalException {
-
-	public AmazonException() {
-		super();
-	}
-
-	public AmazonException(String msg) {
-		super(msg);
-	}
-
-	public AmazonException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
-
-	public AmazonException(Throwable cause) {
-		super(cause);
-	}
-
+@Component(
+	immediate = true,
+	property = {
+		"class.name=com.liferay.portal.kernel.search.facet.ModifiedFacet"
+	},
+	service = FacetProcessor.class
+)
+public class ModifiedFacetProcessor extends RangeFacetProcessor {
 }
