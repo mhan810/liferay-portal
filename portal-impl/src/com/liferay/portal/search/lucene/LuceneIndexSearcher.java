@@ -562,6 +562,10 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 
 			Document subsetDocument = getDocument(document);
 
+			if (queryConfig.getHighlightFieldNames() == null) {
+				queryConfig.addHighlightFieldNames();
+			}
+
 			String[] highlightFieldNames = queryConfig.getHighlightFieldNames();
 
 			for (String highlightFieldName : highlightFieldNames) {
