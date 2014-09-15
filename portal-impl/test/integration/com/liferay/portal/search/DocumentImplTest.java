@@ -244,6 +244,8 @@ public class DocumentImplTest {
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();
 
+		queryConfig.addHighlightFieldNames();
+
 		queryConfig.setSelectedFieldNames(getSelectedFieldNames());
 
 		return searchContext;
