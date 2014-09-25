@@ -2053,6 +2053,8 @@ public interface PropsKeys {
 
 	public static final String PORTAL_FABRIC_SERVER_HOST = "portal.fabric.server.host";
 
+	public static final String PORTAL_FABRIC_SERVER_INET_SOCKET_ADDRESSES = "portal.fabric.server.inet.socket.addresses";
+
 	public static final String PORTAL_FABRIC_SERVER_PORT = "portal.fabric.server.port";
 
 	public static final String PORTAL_FABRIC_SERVER_REGISTRATION_GROUP_THREAD_COUNT = "portal.fabric.server.registeration.group.thread.count";
