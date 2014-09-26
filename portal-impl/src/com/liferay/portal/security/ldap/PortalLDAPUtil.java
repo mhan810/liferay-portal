@@ -14,6 +14,8 @@
 
 package com.liferay.portal.security.ldap;
 
+import com.liferay.portal.kernel.ldap.LDAPFilterException;
+import com.liferay.portal.kernel.ldap.LDAPUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.log.LogUtil;
@@ -145,8 +147,19 @@ public class PortalLDAPUtil {
 			String groupFilter = PrefsPropsUtil.getString(
 				companyId, PropsKeys.LDAP_IMPORT_GROUP_SEARCH_FILTER + postfix);
 
+			if (!LDAPUtil.isValidFilter(groupFilter)) {
+				StringBundler sb = new StringBundler(4);
+
+				sb.append(PropsKeys.LDAP_IMPORT_GROUP_SEARCH_FILTER);
+				sb.append(postfix);
+				sb.append(" specifies an invalid filter:");
+				sb.append(groupFilter);
+
+				throw new LDAPFilterException(sb.toString());
+			}
+
 			StringBundler sb = new StringBundler(
-				Validator.isNotNull(groupFilter) ? 11 : 5);
+				Validator.isNotNull(groupFilter) ? 9 : 5);
 
 			if (Validator.isNotNull(groupFilter)) {
 				sb.append(StringPool.OPEN_PARENTHESIS);
@@ -165,9 +178,7 @@ public class PortalLDAPUtil {
 			sb.append(StringPool.CLOSE_PARENTHESIS);
 
 			if (Validator.isNotNull(groupFilter)) {
-				sb.append(StringPool.OPEN_PARENTHESIS);
 				sb.append(groupFilter);
-				sb.append(StringPool.CLOSE_PARENTHESIS);
 				sb.append(StringPool.CLOSE_PARENTHESIS);
 			}
 
@@ -460,8 +471,19 @@ public class PortalLDAPUtil {
 			String userFilter = PrefsPropsUtil.getString(
 				companyId, PropsKeys.LDAP_IMPORT_USER_SEARCH_FILTER + postfix);
 
+			if (!LDAPUtil.isValidFilter(userFilter)) {
+				StringBundler sb = new StringBundler(4);
+
+				sb.append(PropsKeys.LDAP_IMPORT_USER_SEARCH_FILTER);
+				sb.append(postfix);
+				sb.append(" specifies an invalid filter:");
+				sb.append(userFilter);
+
+				throw new LDAPFilterException(sb.toString());
+			}
+
 			StringBundler sb = new StringBundler(
-				Validator.isNotNull(userFilter) ? 11 : 5);
+				Validator.isNotNull(userFilter) ? 9 : 5);
 
 			if (Validator.isNotNull(userFilter)) {
 				sb.append(StringPool.OPEN_PARENTHESIS);
@@ -500,9 +522,7 @@ public class PortalLDAPUtil {
 			sb.append(StringPool.CLOSE_PARENTHESIS);
 
 			if (Validator.isNotNull(userFilter)) {
-				sb.append(StringPool.OPEN_PARENTHESIS);
 				sb.append(userFilter);
-				sb.append(StringPool.CLOSE_PARENTHESIS);
 				sb.append(StringPool.CLOSE_PARENTHESIS);
 			}
 
