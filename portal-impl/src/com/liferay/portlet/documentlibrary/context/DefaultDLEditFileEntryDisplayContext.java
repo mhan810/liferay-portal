@@ -175,6 +175,10 @@ public class DefaultDLEditFileEntryDisplayContext
 
 	private boolean _hasFolderWorkflowDefinitionLink() {
 		try {
+			if (_dlFileEntryType == null) {
+				return false;
+			}
+
 			ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 				WebKeys.THEME_DISPLAY);
 

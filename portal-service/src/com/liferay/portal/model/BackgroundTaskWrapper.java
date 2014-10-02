@@ -18,6 +18,8 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.util.Validator;
 
+import java.io.Serializable;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +65,7 @@ public class BackgroundTaskWrapper implements BackgroundTask,
 		attributes.put("name", getName());
 		attributes.put("servletContextNames", getServletContextNames());
 		attributes.put("taskExecutorClassName", getTaskExecutorClassName());
-		attributes.put("taskContext", getTaskContext());
+		attributes.put("taskContextMap", getTaskContextMap());
 		attributes.put("completed", getCompleted());
 		attributes.put("completionDate", getCompletionDate());
 		attributes.put("status", getStatus());
@@ -142,10 +144,11 @@ public class BackgroundTaskWrapper implements BackgroundTask,
 			setTaskExecutorClassName(taskExecutorClassName);
 		}
 
-		String taskContext = (String)attributes.get("taskContext");
+		Map<String, Serializable> taskContextMap = (Map<String, Serializable>)attributes.get(
+				"taskContextMap");
 
-		if (taskContext != null) {
-			setTaskContext(taskContext);
+		if (taskContextMap != null) {
+			setTaskContextMap(taskContextMap);
 		}
 
 		Boolean completed = (Boolean)attributes.get("completed");
@@ -356,15 +359,10 @@ public class BackgroundTaskWrapper implements BackgroundTask,
 	}
 
 	/**
-	* Returns the task context of this background task.
+	* Returns the task context map of this background task.
 	*
-	* @return the task context of this background task
+	* @return the task context map of this background task
 	*/
-	@Override
-	public java.lang.String getTaskContext() {
-		return _backgroundTask.getTaskContext();
-	}
-
 	@Override
 	public java.util.Map<java.lang.String, java.io.Serializable> getTaskContextMap() {
 		return _backgroundTask.getTaskContextMap();
@@ -614,13 +612,14 @@ public class BackgroundTaskWrapper implements BackgroundTask,
 	}
 
 	/**
-	* Sets the task context of this background task.
+	* Sets the task context map of this background task.
 	*
-	* @param taskContext the task context of this background task
+	* @param taskContextMap the task context map of this background task
 	*/
 	@Override
-	public void setTaskContext(java.lang.String taskContext) {
-		_backgroundTask.setTaskContext(taskContext);
+	public void setTaskContextMap(
+		java.util.Map<java.lang.String, java.io.Serializable> taskContextMap) {
+		_backgroundTask.setTaskContextMap(taskContextMap);
 	}
 
 	/**

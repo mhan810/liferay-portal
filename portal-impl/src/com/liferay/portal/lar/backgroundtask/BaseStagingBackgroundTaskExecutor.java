@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatus;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatusRegistryUtil;
 import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
 import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.lar.MissingReference;
 import com.liferay.portal.kernel.lar.MissingReferences;
@@ -31,6 +30,7 @@ import com.liferay.portal.service.BackgroundTaskLocalServiceUtil;
 
 import java.io.Serializable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -69,21 +69,20 @@ public abstract class BaseStagingBackgroundTaskExecutor
 			BackgroundTaskLocalServiceUtil.fetchBackgroundTask(
 				backgroundTaskId);
 
-		if (backgroundTask == null) {
+		if ((backgroundTask == null) || Validator.isNull(backgroundTaskState)) {
 			return;
 		}
 
 		Map<String, Serializable> taskContextMap =
 			backgroundTask.getTaskContextMap();
 
-		if (Validator.isNull(backgroundTaskState)) {
-			return;
+		if (taskContextMap == null) {
+			taskContextMap = new HashMap<String, Serializable>();
 		}
 
 		taskContextMap.put(backgroundTaskState, Boolean.TRUE);
 
-		backgroundTask.setTaskContext(
-			JSONFactoryUtil.serialize(taskContextMap));
+		backgroundTask.setTaskContextMap(taskContextMap);
 
 		BackgroundTaskLocalServiceUtil.updateBackgroundTask(backgroundTask);
 	}

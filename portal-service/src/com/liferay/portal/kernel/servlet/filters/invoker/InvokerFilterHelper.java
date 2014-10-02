@@ -16,16 +16,22 @@ package com.liferay.portal.kernel.servlet.filters.invoker;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.servlet.LiferayFilter;
 import com.liferay.portal.kernel.servlet.PluginContextListener;
+import com.liferay.portal.kernel.servlet.ServletContextPool;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.InstanceFactory;
-import com.liferay.portal.kernel.util.PortalLifecycle;
-import com.liferay.portal.kernel.util.PortalLifecycleUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
+import com.liferay.registry.util.StringPlus;
 
 import java.io.InputStream;
 
@@ -49,6 +55,8 @@ import javax.servlet.http.HttpServletRequest;
 public class InvokerFilterHelper {
 
 	public void destroy() {
+		_serviceTracker.close();
+
 		for (Map.Entry<String, Filter> entry : _filters.entrySet()) {
 			Filter filter = entry.getValue();
 
@@ -82,6 +90,21 @@ public class InvokerFilterHelper {
 			ServletContext servletContext = filterConfig.getServletContext();
 
 			readLiferayFilterWebXML(servletContext, "/WEB-INF/liferay-web.xml");
+
+			Registry registry = RegistryUtil.getRegistry();
+
+			String servletContextName = GetterUtil.getString(
+				servletContext.getServletContextName());
+
+			com.liferay.registry.Filter filter = registry.getFilter(
+				"(&(objectClass=" + Filter.class.getName() +
+					")(servlet-context-name=" + servletContextName +
+						")(servlet-filter-name=*))");
+
+			_serviceTracker = registry.trackServices(
+				filter, new FilterServiceTrackerCustomizer());
+
+			_serviceTracker.open();
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -242,34 +265,8 @@ public class InvokerFilterHelper {
 			return;
 		}
 
-		boolean filterEnabled = true;
-
-		if (filter instanceof LiferayFilter) {
-
-			// We no longer remove disabled filters because they can be enabled
-			// at runtime by a hook. The performance difference is negligible
-			// since most filters are assumed to be enabled.
-
-			//LiferayFilter liferayFilter = (LiferayFilter)filter;
-
-			//filterEnabled = liferayFilter.isFilterEnabled();
-		}
-
-		if (filterEnabled) {
-			_filterConfigs.put(filterName, filterConfig);
-			_filters.put(filterName, filter);
-		}
-		else {
-			if (filter instanceof PortalLifecycle) {
-				PortalLifecycle portalLifecycle = (PortalLifecycle)filter;
-
-				PortalLifecycleUtil.removeDestroy(portalLifecycle);
-			}
-
-			if (_log.isDebugEnabled()) {
-				_log.debug("Removing disabled filter " + filter.getClass());
-			}
-		}
+		_filterConfigs.put(filterName, filterConfig);
+		_filters.put(filterName, filter);
 	}
 
 	protected void initFilterMapping(
@@ -361,6 +358,33 @@ public class InvokerFilterHelper {
 		}
 	}
 
+	protected void registerFilterMapping(
+		String filterName, List<String> urlPatterns, List<String> dispatchers,
+		String positionFilterName,
+		boolean after) {
+
+		Filter filter = getFilter(filterName);
+
+		FilterConfig filterConfig = _filterConfigs.get(filterName);
+
+		if (filterConfig == null) {
+			filterConfig = getFilterConfig(filterName);
+		}
+
+		if (filter == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("No filter exists with filter mapping " + filterName);
+			}
+
+			return;
+		}
+
+		FilterMapping filterMapping = new FilterMapping(
+			filter, filterConfig, urlPatterns, dispatchers);
+
+		registerFilterMapping(filterMapping, positionFilterName, after);
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(InvokerFilterHelper.class);
 
 	private Map<String, FilterConfig> _filterConfigs =
@@ -370,5 +394,126 @@ public class InvokerFilterHelper {
 	private Map<String, Filter> _filters = new HashMap<String, Filter>();
 	private List<InvokerFilter> _invokerFilters =
 		new ArrayList<InvokerFilter>();
+	private ServiceTracker<Filter, FilterMapping> _serviceTracker;
+
+	private class FilterServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer<Filter, FilterMapping> {
+
+		@Override
+		public FilterMapping addingService(
+			ServiceReference<Filter> serviceReference) {
+
+			Registry registry = RegistryUtil.getRegistry();
+
+			Filter filter = registry.getService(serviceReference);
+
+			String afterFilter = GetterUtil.getString(
+				serviceReference.getProperty("after-filter"));
+			String beforeFilter = GetterUtil.getString(
+				serviceReference.getProperty("before-filter"));
+			List<String> dispatchers = StringPlus.asList(
+				serviceReference.getProperty("dispatcher"));
+			String servletContextName = GetterUtil.getString(
+				serviceReference.getProperty("servlet-context-name"),
+				StringPool.BLANK);
+			String servletFilterName = GetterUtil.getString(
+				serviceReference.getProperty("servlet-filter-name"));
+			List<String> urlPatterns = StringPlus.asList(
+				serviceReference.getProperty("url-pattern"));
+
+			String positionFilterName = beforeFilter;
+			boolean after = false;
+
+			if (Validator.isNotNull(afterFilter)) {
+				positionFilterName = afterFilter;
+				after = true;
+			}
+
+			Map<String, String> initParameterMap =
+				new HashMap<String, String>();
+
+			Map<String, Object> properties = serviceReference.getProperties();
+
+			for (String key : properties.keySet()) {
+				if (!key.startsWith("init.param.")) {
+					continue;
+				}
+
+				String value = GetterUtil.getString(
+					serviceReference.getProperty(key));
+
+				initParameterMap.put(key, value);
+			}
+
+			ServletContext servletContext = ServletContextPool.get(
+				servletContextName);
+
+			FilterConfig filterConfig = new InvokerFilterConfig(
+				servletContext, servletFilterName, initParameterMap);
+
+			try {
+				filter.init(filterConfig);
+			}
+			catch (ServletException se) {
+				_log.error(se, se);
+
+				registry.ungetService(serviceReference);
+
+				return null;
+			}
+
+			_filterConfigs.put(servletFilterName, filterConfig);
+
+			registerFilter(servletFilterName, filter);
+
+			FilterMapping filterMapping = new FilterMapping(
+				filter, filterConfig, urlPatterns, dispatchers);
+
+			registerFilterMapping(filterMapping, positionFilterName, after);
+
+			return filterMapping;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<Filter> serviceReference,
+			FilterMapping filterMapping) {
+
+			removedService(serviceReference, filterMapping);
+
+			addingService(serviceReference);
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<Filter> serviceReference,
+			FilterMapping filterMapping) {
+
+			Registry registry = RegistryUtil.getRegistry();
+
+			registry.ungetService(serviceReference);
+
+			String servletFilterName = GetterUtil.getString(
+				serviceReference.getProperty("servlet-filter-name"));
+
+			unregisterFilterMapping(filterMapping);
+
+			_filterConfigs.remove(servletFilterName);
+
+			Filter filter = _filters.remove(servletFilterName);
+
+			if (filter == null) {
+				return;
+			}
+
+			try {
+				filter.destroy();
+			}
+			catch (Exception e) {
+				_log.error(e, e);
+			}
+		}
+
+	}
 
 }

@@ -404,7 +404,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 			<#if column.isPrimitiveType()>
 				${serviceBuilder.getPrimitiveObj(column.type)}
 			<#else>
-				${column.type}
+				${column.genericizedType}
 			</#if>
 
 			${column.name} =
@@ -412,7 +412,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 			<#if column.isPrimitiveType()>
 				(${serviceBuilder.getPrimitiveObj(column.type)})
 			<#else>
-				(${column.type})
+				(${column.genericizedType})
 			</#if>
 
 			attributes.get("${column.name}");
@@ -453,7 +453,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		</#if>
 
 		@Override
-		public ${column.type} get${column.methodName}() {
+		public ${column.genericizedType} get${column.methodName}() {
 			<#if column.type == "String" && column.isConvertNull()>
 				if (_${column.name} == null) {
 					return StringPool.BLANK;
@@ -536,7 +536,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		</#if>
 
 		@Override
-		public void set${column.methodName}(${column.type} ${column.name}) {
+		public void set${column.methodName}(${column.genericizedType} ${column.name}) {
 			<#if column.name == "uuid">
 				<#if column.isFinderPath()>
 					if (_originalUuid == null) {
@@ -1382,7 +1382,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		<#if (column.type == "Blob") && column.lazy>
 			private ${entity.name}${column.methodName}BlobModel _${column.name}BlobModel;
 		<#else>
-			private ${column.type} _${column.name};
+			private ${column.genericizedType} _${column.name};
 
 			<#if column.localized>
 				private String _${column.name}CurrentLanguageId;

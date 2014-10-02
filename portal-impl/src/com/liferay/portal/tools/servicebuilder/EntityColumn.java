@@ -136,6 +136,14 @@ public class EntityColumn implements Cloneable, Comparable<EntityColumn> {
 		return _ejbName;
 	}
 
+	public String getGenericizedType() {
+		if (_type.equals("Map")) {
+			return "Map<String, Serializable>";
+		}
+
+		return _type;
+	}
+
 	public String getHumanCondition(boolean arrayable) {
 		StringBundler sb = new StringBundler(6);
 

@@ -34,6 +34,7 @@ page import="com.liferay.portlet.asset.model.AssetTag" %><%@
 page import="com.liferay.portlet.asset.model.AssetTagProperty" %><%@
 page import="com.liferay.portlet.asset.service.AssetTagLocalServiceUtil" %><%@
 page import="com.liferay.portlet.asset.service.AssetTagPropertyLocalServiceUtil" %><%@
+page import="com.liferay.xsl.content.web.configuration.XSLContentConfiguration" %><%@
 page import="com.liferay.xsl.content.web.util.XSLContentUtil" %>
 
 <%@ page import="java.net.URL" %>

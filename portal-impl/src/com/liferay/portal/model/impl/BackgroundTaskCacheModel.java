@@ -26,8 +26,10 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * The cache model class for representing BackgroundTask in entity cache.
@@ -75,8 +77,8 @@ public class BackgroundTaskCacheModel implements CacheModel<BackgroundTask>,
 		sb.append(servletContextNames);
 		sb.append(", taskExecutorClassName=");
 		sb.append(taskExecutorClassName);
-		sb.append(", taskContext=");
-		sb.append(taskContext);
+		sb.append(", taskContextMap=");
+		sb.append(taskContextMap);
 		sb.append(", completed=");
 		sb.append(completed);
 		sb.append(", completionDate=");
@@ -142,13 +144,7 @@ public class BackgroundTaskCacheModel implements CacheModel<BackgroundTask>,
 			backgroundTaskImpl.setTaskExecutorClassName(taskExecutorClassName);
 		}
 
-		if (taskContext == null) {
-			backgroundTaskImpl.setTaskContext(StringPool.BLANK);
-		}
-		else {
-			backgroundTaskImpl.setTaskContext(taskContext);
-		}
-
+		backgroundTaskImpl.setTaskContextMap(taskContextMap);
 		backgroundTaskImpl.setCompleted(completed);
 
 		if (completionDate == Long.MIN_VALUE) {
@@ -173,7 +169,8 @@ public class BackgroundTaskCacheModel implements CacheModel<BackgroundTask>,
 	}
 
 	@Override
-	public void readExternal(ObjectInput objectInput) throws IOException {
+	public void readExternal(ObjectInput objectInput)
+		throws ClassNotFoundException, IOException {
 		mvccVersion = objectInput.readLong();
 		backgroundTaskId = objectInput.readLong();
 		groupId = objectInput.readLong();
@@ -185,7 +182,7 @@ public class BackgroundTaskCacheModel implements CacheModel<BackgroundTask>,
 		name = objectInput.readUTF();
 		servletContextNames = objectInput.readUTF();
 		taskExecutorClassName = objectInput.readUTF();
-		taskContext = objectInput.readUTF();
+		taskContextMap = (Map<String, Serializable>)objectInput.readObject();
 		completed = objectInput.readBoolean();
 		completionDate = objectInput.readLong();
 		status = objectInput.readInt();
@@ -232,13 +229,7 @@ public class BackgroundTaskCacheModel implements CacheModel<BackgroundTask>,
 			objectOutput.writeUTF(taskExecutorClassName);
 		}
 
-		if (taskContext == null) {
-			objectOutput.writeUTF(StringPool.BLANK);
-		}
-		else {
-			objectOutput.writeUTF(taskContext);
-		}
-
+		objectOutput.writeObject(taskContextMap);
 		objectOutput.writeBoolean(completed);
 		objectOutput.writeLong(completionDate);
 		objectOutput.writeInt(status);
@@ -262,7 +253,7 @@ public class BackgroundTaskCacheModel implements CacheModel<BackgroundTask>,
 	public String name;
 	public String servletContextNames;
 	public String taskExecutorClassName;
-	public String taskContext;
+	public Map<String, Serializable> taskContextMap;
 	public boolean completed;
 	public long completionDate;
 	public int status;
