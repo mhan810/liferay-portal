@@ -13,6 +13,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.Serializable;
 
 import java.util.Date;
 import java.util.Map;
@@ -137,7 +138,7 @@ public class ${entity.name}CacheModel implements CacheModel<${entity.name}>, Ext
 			<#elseif column.type == "String">
 				${column.name} = objectInput.readUTF();
 			<#elseif column.type != "Blob">
-				${column.name} = (${column.type})objectInput.readObject();
+				${column.name} = (${column.genericizedType})objectInput.readObject();
 			</#if>
 		</#list>
 
@@ -175,7 +176,7 @@ public class ${entity.name}CacheModel implements CacheModel<${entity.name}>, Ext
 			<#if column.type == "Date">
 				public long ${column.name};
 			<#else>
-				public ${column.type} ${column.name};
+				public ${column.genericizedType} ${column.name};
 			</#if>
 		</#if>
 	</#list>

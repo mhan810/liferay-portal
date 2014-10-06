@@ -1011,9 +1011,18 @@
 				</entry>
 			</map>
 		</property>
+		<property name="storageEngineId">
+			<util:constant static-field="com.liferay.portlet.dynamicdatamapping.storage.StorageEngineUtil.SYSTEM_ENGINE_ID" />
+		</property>
+	</bean>
+	<bean id="com.liferay.portlet.dynamicdatamapping.storage.StorageEngineRegistry" class="com.liferay.portlet.dynamicdatamapping.storage.StorageEngineRegistryImpl">
+		<property name="defaultStorageEngine" ref="com.liferay.portlet.dynamicdatamapping.storage.StorageEngine" />
 	</bean>
 	<bean id="com.liferay.portlet.dynamicdatamapping.storage.StorageEngineUtil" class="com.liferay.portlet.dynamicdatamapping.storage.StorageEngineUtil">
-		<property name="storageEngine" ref="com.liferay.portlet.dynamicdatamapping.storage.StorageEngine" />
+		<property name="defaultStorageEngineId">
+			<util:constant static-field="com.liferay.portlet.dynamicdatamapping.storage.StorageEngineUtil.SYSTEM_ENGINE_ID" />
+		</property>
+		<property name="storageEngineRegistry" ref="com.liferay.portlet.dynamicdatamapping.storage.StorageEngineRegistry" />
 	</bean>
 	<bean id="com.liferay.portlet.dynamicdatamapping.storage.query.ConditionFactoryUtil" class="com.liferay.portlet.dynamicdatamapping.storage.query.ConditionFactoryUtil">
 		<property name="conditionFactory">

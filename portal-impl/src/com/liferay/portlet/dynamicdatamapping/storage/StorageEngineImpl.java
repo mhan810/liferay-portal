@@ -149,6 +149,11 @@ public class StorageEngineImpl implements StorageEngine {
 	}
 
 	@Override
+	public String getStorageEngineId() {
+		return _storageEngineId;
+	}
+
+	@Override
 	public List<Fields> query(
 			long ddmStructureId, List<String> fieldNames, Condition condition,
 			OrderByComparator<Fields> orderByComparator)
@@ -179,6 +184,10 @@ public class StorageEngineImpl implements StorageEngine {
 		Map<String, StorageAdapter> storageAdapters) {
 
 		_storageAdapters = storageAdapters;
+	}
+
+	public void setStorageEngineId(String storageEngineId) {
+		_storageEngineId = storageEngineId;
 	}
 
 	@Override
@@ -249,5 +258,6 @@ public class StorageEngineImpl implements StorageEngine {
 	private StorageAdapter _defaultStorageAdapter;
 	private Map<String, StorageAdapter> _storageAdapters =
 		new HashMap<String, StorageAdapter>();
+	private String _storageEngineId;
 
 }

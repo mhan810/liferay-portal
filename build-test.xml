@@ -1218,16 +1218,6 @@ create database lportal2 character set utf8;</echo>
 			value="${env.JENKINS_HOME}/jobs/${env.JOB_NAME}/builds/${previous.build.number}"
 		/>
 
-		<copy
-			file="git-commit-plugins"
-			todir="${changelog.dir}"
-		/>
-
-		<copy
-			file="git-commit-portal"
-			todir="${changelog.dir}"
-		/>
-
 		<if>
 			<and>
 				<available file="${previous.changelog.dir}/git-build-log.html" />
@@ -1638,17 +1628,33 @@ create database lportal2 character set utf8;</echo>
 
 		<loadfile property="test.suites.xml.content" srcfile="test-results/TESTS-TestSuites.xml" />
 
-		<propertyregex
-			input="${test.suites.xml.content}"
-			override="true"
-			property="test.suites.xml.content"
-			regexp="&lt;properties[\s\S.]*?&lt;testcase"
-			replace="&lt;testcase"
+		<replaceregexp
+			file="test-results/TESTS-TestSuites.xml"
+			flags="g"
+			match="\s*\&lt;/?propert[^\n^\r]*[\n\r]"
+			replace=""
 		/>
 
 		<echo file="test-results/TESTS-TestSuites.xml">${test.suites.xml.content}</echo>
 
 		<echo message="A report with all the test results can be found at test-results/html/index.html." />
+	</target>
+
+	<target name="move-file">
+		<fail message="Please set the property ${file}." unless="file" />
+		<fail message="Please set the property ${tofile}." unless="tofile" />
+
+		<if>
+			<available file="${file}" />
+			<then>
+				<move file="${file}" tofile="${tofile}" />
+
+				<echo message="Moved file ${file} to ${tofile}." />
+			</then>
+			<else>
+				<echo message="File ${file} does not exist." />
+			</else>
+		</if>
 	</target>
 
 	<target name="parse-test-class">
@@ -2135,6 +2141,10 @@ tck.url=true</echo>
 					tofile="${tstamp.value}/WEB-INF/classes/portal-ext.properties"
 				/>
 
+				<echo append="true" file="${tstamp.value}/WEB-INF/classes/portal-ext.properties">
+
+module.framework.properties.osgi.console=11312</echo>
+
 				<zip
 					basedir="${tstamp.value}"
 					destfile="${test.build.liferay.portal.zip.file.name}"
@@ -2148,6 +2158,10 @@ tck.url=true</echo>
 					file="portal-impl/src/portal-ext.properties"
 					tofile="${app.server.classes.portal.dir}/portal-ext.properties"
 				/>
+
+				<echo append="true" file="${app.server.classes.portal.dir}/portal-ext.properties">
+
+module.framework.properties.osgi.console=11312</echo>
 			</else>
 		</if>
 	</target>

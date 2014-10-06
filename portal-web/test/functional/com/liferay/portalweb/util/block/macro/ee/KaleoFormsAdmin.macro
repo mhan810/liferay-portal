@@ -38,8 +38,7 @@
 
 		<execute action="CPKaleoformsadminNewprocess#assertClick" locator-key1="ADD_WORKFLOW_BUTTON" value1="Add Workflow" />
 
-		<execute action="CPKaleoformsadminNewprocessAddworkflow#type" locator-key1="NAME_FIELD" value1="${workflowDefinitionTitle}" />
-		<execute action="CPKaleoformsadminNewprocessAddworkflow#type" locator-key1="TITLE_FIELD" value1="${workflowDefinitionTitle}" />
+		<execute action="Kaleodesigner#type" locator-key1="TITLE_FIELD" value1="${workflowDefinitionTitle}" />
 	</command>
 
 	<command name="assignForm">
@@ -184,6 +183,15 @@
 		</execute>
 	</command>
 
+	<command name="deleteWorkflowDraft">
+		<var name="key_workflowDefinitionTitle" value="${workflowDefinitionTitle}" />
+
+		<execute action="CPKaleoformsadminNewprocess#click" locator-key1="WORKFLOW_UNPUBLISHED_TABLE_ACTIONS" />
+		<execute action="CPKaleoformsadminNewprocess#assertClickNoError" locator-key1="WORKFLOW_UNPUBLISHED_MENULIST_DELETE" value1="Delete" />
+		<execute action="CPKaleoformsadminNewprocess#confirm" locator-key1="CONFIRMATION" value1="Are you sure you want to delete this? It will be deleted immediately." />
+		<execute action="CPKaleoformsadminNewprocess#assertTextEquals" locator-key1="SUCCESS_MESSAGE" value1="Your request completed successfully." />
+	</command>
+
 	<command name="editFieldSet">
 		<execute macro="KaleoFormsAdmin#viewFieldsStepCmd">
 			<var name="kfProcessName" value="${kfProcessName}" />
@@ -258,7 +266,16 @@
 
 		<execute action="CPKaleoformsadminNewprocess#click" locator-key1="WORKFLOW_TABLE_ACTIONS" />
 		<execute action="CPKaleoformsadminNewprocess#assertClick" locator-key1="WORKFLOW_MENULIST_EDIT" value1="Edit" />
-		<execute action="CPKaleoformsadminNewprocessEditworkflow#type" locator-key1="TITLE_FIELD" value1="${workflowDefinitionTitleEdit}" />
+
+		<execute action="Kaleodesigner#type" locator-key1="TITLE_FIELD" value1="${workflowDefinitionTitleEdit}" />
+	</command>
+
+	<command name="editWorkflowDraft">
+		<var name="key_workflowDefinitionTitle" value="${workflowDefinitionTitle}" />
+
+		<execute action="CPKaleoformsadminNewprocess#assertTextEquals" locator-key1="WORKFLOW_UNPUBLISHED_TABLE_TITLE" value1="${workflowDefinitionTitle}" />
+		<execute action="CPKaleoformsadminNewprocess#click" locator-key1="WORKFLOW_UNPUBLISHED_TABLE_ACTIONS" />
+		<execute action="CPKaleoformsadminNewprocess#assertClick" locator-key1="WORKFLOW_UNPUBLISHED_MENULIST_EDIT" value1="Edit" />
 	</command>
 
 	<command name="exportRecords">
@@ -368,13 +385,24 @@
 	</command>
 
 	<command name="publishWorkflow">
-		<execute action="CPKaleoformsadminNewprocessAddworkflow#assertTextEquals" locator-key1="SAVE_AS_DRAFT_BUTTON" value1="Save as Draft" />
-		<execute action="CPKaleoformsadminNewprocessAddworkflow#assertClick" locator-key1="CANCEL_BUTTON" value1="Cancel" />
-		<execute action="CPKaleoformsadminNewprocessAddworkflow#assertClick" locator-key1="PUBLISH_BUTTON" value1="Publish" />
+		<execute action="Kaleodesigner#assertClick" locator-key1="PUBLISH_BUTTON" value1="Publish" />
 
 		<execute action="CPKaleoformsadminNewprocess#assertTextEquals" locator-key1="SUCCESS_MESSAGE" value1="Your request completed successfully." />
 
 		<execute macro="KaleoFormsAdmin#viewSelectedWorkflow" />
+	</command>
+
+	<command name="saveAndContinueForm">
+		<execute action="CPKaleoformsadminNewprocessSelectformNewform#selectFrame" locator-key1="FORM_IFRAME" />
+		<execute action="CPKaleoformsadminNewprocessSelectformNewform#assertClick" locator-key1="SAVE_AND_CONTINUE_BUTTON" value1="Save and Continue" />
+		<execute action="CPKaleoformsadminNewprocessSelectformNewform#assertTextEquals" locator-key1="SUCCESS_MESSAGE" value1="Your request completed successfully." />
+		<execute action="CPKaleoformsadminNewprocessSelectformNewform#selectFrame" value1="relative=top" />
+	</command>
+
+	<command name="saveAsDraftWorkflow">
+		<execute action="Kaleodesigner#assertClick" locator-key1="SAVE_AS_DRAFT_BUTTON" value1="Save as Draft" />
+
+		<execute action="CPKaleoformsadminNewprocess#assertTextEquals" locator-key1="SUCCESS_MESSAGE" value1="Your request completed successfully." />
 	</command>
 
 	<command name="saveFieldSet">
@@ -392,8 +420,7 @@
 	<command name="saveForm">
 		<execute action="CPKaleoformsadminNewprocessSelectformNewform#selectFrame" locator-key1="FORM_IFRAME" />
 		<execute action="CPKaleoformsadminNewprocessSelectformNewform#assertClick" locator-key1="SAVE_BUTTON" value1="Save" />
-
-		<execute action="CPKaleoformsadminNewprocessSelectform#selectFrameTop" />
+		<execute action="CPKaleoformsadminNewprocessSelectformNewform#selectFrame" value1="relative=top" />
 	</command>
 
 	<command name="saveProcess">
@@ -491,7 +518,8 @@
 	</command>
 
 	<command name="viewNoUnpublishedWorkflowDefinitions">
-		<execute action="CPKaleoformsadminNewprocess#assertClick" locator-key1="WORKFLOW_NAVIGATION_UNPUBLISHED_TAB" value1="Unpublished" />
+		<execute macro="KaleoFormsAdmin#viewUnpublishedWorkflowDefinitions" />
+
 		<execute action="CPKaleoformsadminNewprocess#assertTextEquals" locator-key1="INFO_MESSAGE" value1="There are no unpublished definitions." />
 	</command>
 
@@ -610,6 +638,10 @@
 		<execute macro="KaleoFormsAdmin#next" />
 	</command>
 
+	<command name="viewPublishedWorkflowDefinitions">
+		<execute action="CPKaleoformsadminNewprocess#assertClick" locator-key1="WORKFLOW_NAVIGATION_PUBLISHED_TAB" value1="Published" />
+	</command>
+
 	<command name="viewSelectedWorkflow">
 		<if>
 			<isset var="workflowDefinitionTitleEdit" />
@@ -628,6 +660,10 @@
 		<execute action="CPKaleoformsadminNewprocess#assertTextNotPresent" locator-key1="FORMS_TABLE_TASK" value1="${workflowTask}" />
 		<execute action="CPKaleoformsadminNewprocess#assertElementNotPresent" locator-key1="FORMS_TABLE_FORM" />
 		<execute action="CPKaleoformsadminNewprocess#assertElementNotPresent" locator-key1="FORMS_TABLE_ASSIGN_FORM_BUTTON" />
+	</command>
+
+	<command name="viewUnpublishedWorkflowDefinitions">
+		<execute action="CPKaleoformsadminNewprocess#assertClick" locator-key1="WORKFLOW_NAVIGATION_UNPUBLISHED_TAB" value1="Unpublished" />
 	</command>
 
 	<command name="viewWorkflowStepCmd">

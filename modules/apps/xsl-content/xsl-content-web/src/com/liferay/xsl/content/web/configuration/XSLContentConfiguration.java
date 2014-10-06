@@ -12,23 +12,17 @@
  * details.
  */
 
-package com.liferay.portal.kernel.cache;
+package com.liferay.xsl.content.web.configuration;
 
-import java.io.Serializable;
-
-import java.util.Properties;
+import aQute.bnd.annotation.metatype.Meta;
 
 /**
- * @author Tina Tian
+ * @author Raymond Augé
  */
-public interface ListenerFactory {
+@Meta.OCD(id = "com.liferay.xsl.content.web", localization = "content.Language")
+public interface XSLContentConfiguration {
 
-	public BootstrapLoader createBootstrapLoader(Properties properties);
-
-	public CacheListener<? extends Serializable, ?> createCacheListener(
-		Properties properties);
-
-	public CacheManagerListener createCacheManagerListener(
-		Properties properties);
+	@Meta.AD(id = "xsl.secure.processing.enabled", deflt = "true")
+	public boolean isXslSecureProcessingEnabled();
 
 }

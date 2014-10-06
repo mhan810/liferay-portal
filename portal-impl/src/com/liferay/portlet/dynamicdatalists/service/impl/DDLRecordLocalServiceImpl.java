@@ -341,6 +341,11 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 		return ddlRecordFinder.countByR_S(recordSetId, status);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             DDLRecordVersionLocalServiceImpl#getRecordVersion(long)}
+	 */
+	@Deprecated
 	@Override
 	public DDLRecordVersion getRecordVersion(long recordVersionId)
 		throws PortalException {
@@ -348,6 +353,12 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 		return ddlRecordVersionPersistence.findByPrimaryKey(recordVersionId);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             DDLRecordVersionLocalServiceImpl#getRecordVersion(long,
+	 *             String)}
+	 */
+	@Deprecated
 	@Override
 	public DDLRecordVersion getRecordVersion(long recordId, String version)
 		throws PortalException {
@@ -355,6 +366,12 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 		return ddlRecordVersionPersistence.findByR_V(recordId, version);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             DDLRecordVersionLocalServiceImpl#getRecordVersions(long, int,
+	 *             int, OrderByComparator)}
+	 */
+	@Deprecated
 	@Override
 	public List<DDLRecordVersion> getRecordVersions(
 		long recordId, int start, int end,
@@ -364,18 +381,25 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 			recordId, start, end, orderByComparator);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             DDLRecordVersionLocalServiceImpl#getRecordVersionsCount(
+	 *             long)}
+	 */
+	@Deprecated
 	@Override
 	public int getRecordVersionsCount(long recordId) {
 		return ddlRecordVersionPersistence.countByRecordId(recordId);
 	}
 
 	@Override
-	public void revertRecordVersion(
+	public void revertRecord(
 			long userId, long recordId, String version,
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		DDLRecordVersion recordVersion = getRecordVersion(recordId, version);
+		DDLRecordVersion recordVersion =
+			ddlRecordVersionLocalService.getRecordVersion(recordId, version);
 
 		if (!recordVersion.isApproved()) {
 			return;
@@ -389,6 +413,20 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 		ddlRecordLocalService.updateRecord(
 			userId, recordId, true, recordVersion.getDisplayIndex(), fields,
 			false, serviceContext);
+	}
+
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #revertRecord(long, long,
+	 *             String, ServiceContext)}
+	 */
+	@Deprecated
+	@Override
+	public void revertRecordVersion(
+			long userId, long recordId, String version,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		revertRecord(userId, recordId, version, serviceContext);
 	}
 
 	@Override

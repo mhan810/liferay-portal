@@ -95,7 +95,7 @@
 			<var name="campaignEndDate" value="1/1/2015" />
 			<var name="campaignEndTime" value="12:00 PM" />
 			<var name="campaignName" value="Campaign Name" />
-			<var name="campaignPrioritySelect" value="3" />
+			<var name="campaignPriorityField" value="3" />
 			<var name="campaignStartDate" value="1/1/2014" />
 			<var name="campaignStartTime" value="12:00 AM" />
 			<var name="userSegmentSelect" value="User Segment Name Age" />
@@ -118,7 +118,7 @@
 			<var name="campaignEndDate" value="1/1/2015" />
 			<var name="campaignEndTime" value="12:00 PM" />
 			<var name="campaignName" value="Campaign Name Higher Priority" />
-			<var name="campaignPrioritySelect" value="2" />
+			<var name="campaignPriorityField" value="2" />
 			<var name="campaignStartDate" value="1/1/2014" />
 			<var name="campaignStartTime" value="12:00 AM" />
 			<var name="userSegmentSelect" value="User Segment Name Signed In" />
@@ -215,7 +215,7 @@
 			<var name="campaignEndDate" value="1/1/2015" />
 			<var name="campaignEndTime" value="12:00 PM" />
 			<var name="campaignName" value="Campaign Name" />
-			<var name="campaignPrioritySelect" value="3" />
+			<var name="campaignPriorityField" value="3" />
 			<var name="campaignStartDate" value="1/1/2014" />
 			<var name="campaignStartTime" value="12:00 AM" />
 			<var name="userSegmentSelect" value="User Segment Name" />
@@ -305,7 +305,7 @@
 			<var name="campaignEndDate" value="1/1/2099" />
 			<var name="campaignEndTime" value="12:00 PM" />
 			<var name="campaignName" value="Campaign Name" />
-			<var name="campaignPrioritySelect" value="3" />
+			<var name="campaignPriorityField" value="3" />
 			<var name="campaignStartDate" value="1/1/2014" />
 			<var name="campaignStartTime" value="12:00 AM" />
 			<var name="userSegmentSelect" value="User Segment Name" />
@@ -443,7 +443,7 @@
 			<var name="campaignEndDate" value="1/1/2015" />
 			<var name="campaignEndTime" value="12:00 PM" />
 			<var name="campaignName" value="Campaign Name" />
-			<var name="campaignPrioritySelect" value="3" />
+			<var name="campaignPriorityField" value="3" />
 			<var name="campaignStartDate" value="1/1/2014" />
 			<var name="campaignStartTime" value="12:00 AM" />
 			<var name="userSegmentSelect" value="User Segment Name" />
@@ -537,7 +537,7 @@
 			<var name="campaignEndDate" value="1/1/2015" />
 			<var name="campaignEndTime" value="12:00 PM" />
 			<var name="campaignName" value="Campaign Name" />
-			<var name="campaignPrioritySelect" value="3" />
+			<var name="campaignPriorityField" value="3" />
 			<var name="campaignStartDate" value="1/1/2014" />
 			<var name="campaignStartTime" value="12:00 AM" />
 			<var name="userSegmentSelect" value="User Segment Name" />
@@ -627,7 +627,7 @@
 			<var name="campaignEndDate" value="1/1/2099" />
 			<var name="campaignEndTime" value="12:00 PM" />
 			<var name="campaignName" value="Campaign Name" />
-			<var name="campaignPrioritySelect" value="3" />
+			<var name="campaignPriorityField" value="3" />
 			<var name="campaignStartDate" value="1/1/2014" />
 			<var name="campaignStartTime" value="12:00 AM" />
 			<var name="userSegmentSelect" value="User Segment Name" />
@@ -765,7 +765,7 @@
 			<var name="campaignEndDate" value="1/1/2015" />
 			<var name="campaignEndTime" value="12:00 PM" />
 			<var name="campaignName" value="Campaign Name" />
-			<var name="campaignPrioritySelect" value="3" />
+			<var name="campaignPriorityField" value="3" />
 			<var name="campaignStartDate" value="1/1/2014" />
 			<var name="campaignStartTime" value="12:00 AM" />
 			<var name="userSegmentSelect" value="Male Users" />
@@ -827,6 +827,10 @@
 			<var name="portletOption" value="Configuration" />
 		</execute>
 
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletOption" value="Configuration" />
+		</execute>
+
 		<execute macro="UserSegmentContentDisplayPortlet#configureDisplayContent">
 			<var name="belongs" value="true" />
 			<var name="contentTitle" value="Web Content Title" />
@@ -837,6 +841,17 @@
 		</execute>
 
 		<execute macro="UserSegmentContentDisplayPortlet#savePG" />
+
+		<execute macro="Page#gotoPG">
+			<var name="pageName" value="Test Page Name" />
+			<var name="pageStaging" value="true" />
+			<var name="siteName" value="Site Name" />
+			<var name="siteURL" value="true" />
+		</execute>
+
+		<execute macro="UserSegmentContentListPortlet#configureDisplayFilter">
+			<var name="assetTypeFilter" value="Web Content Article" />
+		</execute>
 
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="Test Page Name" />
@@ -959,7 +974,7 @@
 			<var name="campaignEndDate" value="1/1/2015" />
 			<var name="campaignEndTime" value="12:00 PM" />
 			<var name="campaignName" value="Campaign Name" />
-			<var name="campaignPrioritySelect" value="3" />
+			<var name="campaignPriorityField" value="3" />
 			<var name="campaignStartDate" value="1/1/2014" />
 			<var name="campaignStartTime" value="12:00 AM" />
 			<var name="userSegmentSelect" value="User Segment Name (Global)" />
@@ -1027,7 +1042,7 @@
 			<var name="campaignEndDate" value="1/1/2015" />
 			<var name="campaignEndTime" value="12:00 PM" />
 			<var name="campaignName" value="Campaign Name" />
-			<var name="campaignPrioritySelect" value="2" />
+			<var name="campaignPriorityField" value="2" />
 			<var name="campaignStartDate" value="1/1/2014" />
 			<var name="campaignStartTime" value="12:00 AM" />
 			<var name="userSegmentSelect" value="User Segment Name (Site Name)" />
@@ -1384,6 +1399,10 @@
 
 		<execute action="Home#refresh" />
 
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletOption" value="Configuration" />
+		</execute>
+
 		<execute macro="UserSegmentContentDisplayPortlet#configureDisplayContent">
 			<var name="belongs" value="true" />
 			<var name="contentTitle" value="Web Content Title All" />
@@ -1480,6 +1499,10 @@
 
 		<execute action="Home#refresh" />
 
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletOption" value="Configuration" />
+		</execute>
+
 		<execute macro="UserSegmentContentDisplayPortlet#configureDisplayContent">
 			<var name="belongs" value="true" />
 			<var name="contentTitle" value="Web Content Title Any" />
@@ -1559,6 +1582,10 @@
 		</execute>
 
 		<execute action="Home#refresh" />
+
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletOption" value="Configuration" />
+		</execute>
 
 		<execute macro="UserSegmentContentDisplayPortlet#configureDisplayContent">
 			<var name="belongs" value="true" />
@@ -1684,6 +1711,10 @@
 
 		<execute action="Home#refresh" />
 
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletOption" value="Configuration" />
+		</execute>
+
 		<execute macro="UserSegmentContentDisplayPortlet#configureDisplayContent">
 			<var name="contentTitle" value="Web Content Title Female" />
 			<var name="contentType" value="Web Content Article" />
@@ -1801,6 +1832,10 @@
 
 		<execute action="Home#refresh" />
 
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletOption" value="Configuration" />
+		</execute>
+
 		<execute macro="UserSegmentContentDisplayPortlet#configureDisplayContent">
 			<var name="belongs" value="true" />
 			<var name="contentTitle" value="Web Content Title" />
@@ -1889,6 +1924,10 @@
 		</execute>
 
 		<execute action="Home#refresh" />
+
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletOption" value="Configuration" />
+		</execute>
 
 		<execute macro="UserSegmentContentDisplayPortlet#configureDisplayContent">
 			<var name="belongs" value="true" />

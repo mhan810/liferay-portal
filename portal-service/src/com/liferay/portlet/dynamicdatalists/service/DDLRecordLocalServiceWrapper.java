@@ -416,6 +416,12 @@ public class DDLRecordLocalServiceWrapper implements DDLRecordLocalService,
 		return _ddlRecordLocalService.getRecord(recordId);
 	}
 
+	/**
+	* @deprecated As of 7.0.0, replaced by {@link
+	com.liferay.portlet.dynamicdatalists.service.impl.DDLRecordVersionLocalServiceImpl#getRecordVersion(
+	long, String)}
+	*/
+	@Deprecated
 	@Override
 	public com.liferay.portlet.dynamicdatalists.model.DDLRecordVersion getRecordVersion(
 		long recordId, java.lang.String version)
@@ -423,6 +429,12 @@ public class DDLRecordLocalServiceWrapper implements DDLRecordLocalService,
 		return _ddlRecordLocalService.getRecordVersion(recordId, version);
 	}
 
+	/**
+	* @deprecated As of 7.0.0, replaced by {@link
+	com.liferay.portlet.dynamicdatalists.service.impl.DDLRecordVersionLocalServiceImpl#getRecordVersion(
+	long)}
+	*/
+	@Deprecated
 	@Override
 	public com.liferay.portlet.dynamicdatalists.model.DDLRecordVersion getRecordVersion(
 		long recordVersionId)
@@ -430,6 +442,12 @@ public class DDLRecordLocalServiceWrapper implements DDLRecordLocalService,
 		return _ddlRecordLocalService.getRecordVersion(recordVersionId);
 	}
 
+	/**
+	* @deprecated As of 7.0.0, replaced by {@link
+	com.liferay.portlet.dynamicdatalists.service.impl.DDLRecordVersionLocalServiceImpl#getRecordVersions(
+	long, int, int, OrderByComparator)}
+	*/
+	@Deprecated
 	@Override
 	public java.util.List<com.liferay.portlet.dynamicdatalists.model.DDLRecordVersion> getRecordVersions(
 		long recordId, int start, int end,
@@ -438,6 +456,12 @@ public class DDLRecordLocalServiceWrapper implements DDLRecordLocalService,
 			orderByComparator);
 	}
 
+	/**
+	* @deprecated As of 7.0.0, replaced by {@link
+	com.liferay.portlet.dynamicdatalists.service.impl.DDLRecordVersionLocalServiceImpl#getRecordVersionsCount(
+	long)}
+	*/
+	@Deprecated
 	@Override
 	public int getRecordVersionsCount(long recordId) {
 		return _ddlRecordLocalService.getRecordVersionsCount(recordId);
@@ -468,6 +492,20 @@ public class DDLRecordLocalServiceWrapper implements DDLRecordLocalService,
 		return _ddlRecordLocalService.getRecordsCount(recordSetId, status);
 	}
 
+	@Override
+	public void revertRecord(long userId, long recordId,
+		java.lang.String version,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_ddlRecordLocalService.revertRecord(userId, recordId, version,
+			serviceContext);
+	}
+
+	/**
+	* @deprecated As of 7.0.0, replaced by {@link #revertRecord(long, long,
+	String, ServiceContext)}
+	*/
+	@Deprecated
 	@Override
 	public void revertRecordVersion(long userId, long recordId,
 		java.lang.String version,

@@ -130,6 +130,119 @@ public class JSONWebServiceInvokerTest extends BaseJSONWebServiceTestCase {
 	}
 
 	@Test
+	public void testCreateArgumentInstances() throws Exception {
+
+		// Style 1
+
+		Map<String, Object> map = new LinkedHashMap<>();
+
+		Map<String, Object> params = new LinkedHashMap<>();
+
+		params.put("+fooData", null);
+
+		map.put("/foo/use1", params);
+
+		String json = toJSON(map);
+
+		JSONWebServiceAction jsonWebServiceAction = prepareInvokerAction(json);
+
+		Object result = jsonWebServiceAction.invoke();
+
+		JSONWebServiceInvokerAction.InvokerResult invokerResult =
+			(JSONWebServiceInvokerAction.InvokerResult)result;
+
+		Assert.assertEquals(
+			"using #1: h=177/id=-1/n=John Doe/v=foo!",
+			invokerResult.getResult());
+
+		// Style 2
+
+		map.clear();
+
+		map.put("/foo/use2", params);
+
+		json = toJSON(map);
+
+		jsonWebServiceAction = prepareInvokerAction(json);
+
+		try {
+			jsonWebServiceAction.invoke();
+
+			Assert.fail();
+		}
+		catch (Exception ignore) {
+		}
+
+		map.clear();
+
+		params.clear();
+
+		params.put("+fooData:" + FooDataImpl.class.getName(), null);
+
+		map.put("/foo/use2", params);
+
+		json = toJSON(map);
+
+		jsonWebServiceAction = prepareInvokerAction(json);
+
+		result = jsonWebServiceAction.invoke();
+
+		invokerResult = (JSONWebServiceInvokerAction.InvokerResult)result;
+
+		Assert.assertEquals(
+			"using #2: h=177/id=-1/n=John Doe/v=foo!",
+			invokerResult.getResult());
+
+		// Style 3
+
+		map.clear();
+
+		params.clear();
+
+		params.put("+fooData", FooDataImpl.class.getName());
+
+		map.put("/foo/use2", params);
+
+		json = toJSON(map);
+
+		jsonWebServiceAction = prepareInvokerAction(json);
+
+		result = jsonWebServiceAction.invoke();
+
+		invokerResult = (JSONWebServiceInvokerAction.InvokerResult)result;
+
+		Assert.assertEquals(
+			"using #2: h=177/id=-1/n=John Doe/v=foo!",
+			invokerResult.getResult());
+
+		// Style 4
+
+		map.clear();
+
+		params.clear();
+
+		Map<String, Object> fooObj = new HashMap<>();
+
+		fooObj.put("name", "Jane Doe");
+
+		params.put("fooData", fooObj);
+
+		map.put("/foo/use1", params);
+
+		json = toJSON(map);
+
+		jsonWebServiceAction = prepareInvokerAction(json);
+
+		result = jsonWebServiceAction.invoke();
+
+		invokerResult = (JSONWebServiceInvokerAction.InvokerResult)result;
+
+		Assert.assertEquals(
+			"using #1: h=177/id=-1/n=Jane Doe/v=foo!",
+			invokerResult.getResult());
+	}
+
+	@Test
 	public void testFiltering() throws Exception {
 		Map<String, Object> map1 = new LinkedHashMap<String, Object>();
 

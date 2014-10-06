@@ -158,7 +158,7 @@ public class ${entity.name}Clp extends BaseModelImpl<${entity.name}> implements 
 			<#if column.isPrimitiveType()>
 				${serviceBuilder.getPrimitiveObj(column.type)}
 			<#else>
-				${column.type}
+				${column.genericizedType}
 			</#if>
 
 			${column.name} =
@@ -166,7 +166,7 @@ public class ${entity.name}Clp extends BaseModelImpl<${entity.name}> implements 
 			<#if column.isPrimitiveType()>
 				(${serviceBuilder.getPrimitiveObj(column.type)})
 			<#else>
-				(${column.type})
+				(${column.genericizedType})
 			</#if>
 
 			attributes.get("${column.name}");
@@ -204,7 +204,7 @@ public class ${entity.name}Clp extends BaseModelImpl<${entity.name}> implements 
 		</#if>
 
 		@Override
-		public ${column.type} get${column.methodName}() {
+		public ${column.genericizedType} get${column.methodName}() {
 			return _${column.name};
 		}
 
@@ -259,7 +259,7 @@ public class ${entity.name}Clp extends BaseModelImpl<${entity.name}> implements 
 		</#if>
 
 		@Override
-		public void set${column.methodName}(${column.type} ${column.name}) {
+		public void set${column.methodName}(${column.genericizedType} ${column.name}) {
 			_${column.name} = ${column.name};
 
 			if (_${entity.varName}RemoteModel != null) {
@@ -1053,7 +1053,7 @@ public class ${entity.name}Clp extends BaseModelImpl<${entity.name}> implements 
 	}
 
 	<#list entity.regularColList as column>
-		private ${column.type} _${column.name};
+		private ${column.genericizedType} _${column.name};
 
 		<#if column.localized>
 			private String _${column.name}CurrentLanguageId;

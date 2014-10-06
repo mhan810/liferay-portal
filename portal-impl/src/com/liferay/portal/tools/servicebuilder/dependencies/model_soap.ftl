@@ -104,7 +104,7 @@ public class ${entity.name}Soap implements Serializable {
 	}
 
 	<#list entity.regularColList as column>
-		public ${column.type} get${column.methodName}() {
+		public ${column.genericizedType} get${column.methodName}() {
 			return _${column.name};
 		}
 
@@ -114,13 +114,13 @@ public class ${entity.name}Soap implements Serializable {
 			}
 		</#if>
 
-		public void set${column.methodName}(${column.type} ${column.name}) {
+		public void set${column.methodName}(${column.genericizedType} ${column.name}) {
 			_${column.name} = ${column.name};
 		}
 	</#list>
 
 	<#list entity.regularColList as column>
-		private ${column.type} _${column.name};
+		private ${column.genericizedType} _${column.name};
 	</#list>
 
 }

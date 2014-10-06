@@ -9,6 +9,8 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
 
+import java.io.Serializable;
+
 import java.sql.Blob;
 
 import java.util.Date;
@@ -59,7 +61,7 @@ public class ${entity.name}Wrapper implements ${entity.name}, ModelWrapper<${ent
 			<#if column.isPrimitiveType()>
 				${serviceBuilder.getPrimitiveObj(column.type)}
 			<#else>
-				${column.type}
+				${column.genericizedType}
 			</#if>
 
 			${column.name} =
@@ -67,7 +69,7 @@ public class ${entity.name}Wrapper implements ${entity.name}, ModelWrapper<${ent
 			<#if column.isPrimitiveType()>
 				(${serviceBuilder.getPrimitiveObj(column.type)})
 			<#else>
-				(${column.type})
+				(${column.genericizedType})
 			</#if>
 
 			attributes.get("${column.name}");

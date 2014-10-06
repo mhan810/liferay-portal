@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.dynamicdatamapping.storage;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.service.ServiceContext;
@@ -22,11 +24,14 @@ import com.liferay.portlet.dynamicdatamapping.storage.query.Condition;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Eduardo Lundgren
  */
 public class StorageEngineUtil {
+
+	public static final String SYSTEM_ENGINE_ID = "SYSTEM_ENGINE";
 
 	public static long create(
 			long companyId, long ddmStructureId, Fields fields,
@@ -45,6 +50,12 @@ public class StorageEngineUtil {
 		throws StorageException {
 
 		getStorageEngine().deleteByDDMStructure(ddmStructureId);
+	}
+
+	public static String getDefaultStorageEngineId() {
+		PortalRuntimePermission.checkGetBeanProperty(StorageEngineUtil.class);
+
+		return _defaultStorageEngineId;
 	}
 
 	public static Fields getFields(long classPK) throws StorageException {
@@ -107,9 +118,37 @@ public class StorageEngineUtil {
 	}
 
 	public static StorageEngine getStorageEngine() {
+		String defaultStorageEngineId = getDefaultStorageEngineId();
+
+		return getStorageEngine(defaultStorageEngineId);
+	}
+
+	public static StorageEngine getStorageEngine(String storageEngineId) {
 		PortalRuntimePermission.checkGetBeanProperty(StorageEngineUtil.class);
 
-		return _storageEngine;
+		StorageEngine storageEngine = _storageEngineRegistry.getStorageEngine(
+			storageEngineId);
+
+		if (storageEngine == null) {
+			if (getDefaultStorageEngineId().equals(storageEngineId)) {
+				throw new IllegalStateException(
+					"Unable to find storage engine " + storageEngineId);
+			}
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"There is no storage engine configured with ID " +
+						storageEngineId);
+			}
+		}
+
+		return storageEngine;
+	}
+
+	public static Set<String> getStorageEngineIds() {
+		PortalRuntimePermission.checkGetBeanProperty(StorageEngineUtil.class);
+
+		return _storageEngineRegistry.getStorageEngineIds();
 	}
 
 	public static List<Fields> query(
@@ -127,6 +166,14 @@ public class StorageEngineUtil {
 		return getStorageEngine().queryCount(ddmStructureId, condition);
 	}
 
+	public static void setDefaultStorageEngineId(
+		String defaultStorageEngineId) {
+
+		PortalRuntimePermission.checkSetBeanProperty(StorageEngineUtil.class);
+
+		_defaultStorageEngineId = defaultStorageEngineId;
+	}
+
 	public static void update(
 			long classPK, Fields fields, boolean mergeFields,
 			ServiceContext serviceContext)
@@ -142,12 +189,17 @@ public class StorageEngineUtil {
 		getStorageEngine().update(classPK, fields, serviceContext);
 	}
 
-	public void setStorageEngine(StorageEngine storageEngine) {
+	public void setStorageEngineRegistry(
+		StorageEngineRegistry storageEngineRegistry) {
+
 		PortalRuntimePermission.checkSetBeanProperty(getClass());
 
-		_storageEngine = storageEngine;
+		_storageEngineRegistry = storageEngineRegistry;
 	}
 
-	private static StorageEngine _storageEngine;
+	private static Log _log = LogFactoryUtil.getLog(StorageEngineUtil.class);
+
+	private static String _defaultStorageEngineId;
+	private static StorageEngineRegistry _storageEngineRegistry;
 
 }
