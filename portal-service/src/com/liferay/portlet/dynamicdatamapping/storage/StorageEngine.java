@@ -20,4 +20,7 @@ package com.liferay.portlet.dynamicdatamapping.storage;
  * @author Marcellus Tavares
  */
 public interface StorageEngine extends StorageAdapter {
+
+	public String getStorageEngineId();
+
 }
