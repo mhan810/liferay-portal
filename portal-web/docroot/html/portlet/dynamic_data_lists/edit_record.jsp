@@ -23,6 +23,7 @@ DDLRecord record = (DDLRecord)request.getAttribute(WebKeys.DYNAMIC_DATA_LISTS_RE
 
 long recordId = BeanParamUtil.getLong(record, request, "recordId");
 
+long groupId = BeanParamUtil.getLong(record, request, "groupId", scopeGroupId);
 long recordSetId = BeanParamUtil.getLong(record, request, "recordSetId");
 
 long formDDMTemplateId = ParamUtil.getLong(request, "formDDMTemplateId");
@@ -85,8 +86,9 @@ if (translating) {
 <aui:form action="<%= editRecordURL %>" cssClass="lfr-dynamic-form" enctype="multipart/form-data" method="post" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
-	<aui:input name="recordSetId" type="hidden" value="<%= recordSetId %>" />
 	<aui:input name="recordId" type="hidden" value="<%= recordId %>" />
+	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
+	<aui:input name="recordSetId" type="hidden" value="<%= recordSetId %>" />
 	<aui:input name="defaultLanguageId" type="hidden" value="<%= defaultLanguageId %>" />
 	<aui:input name="languageId" type="hidden" value="<%= languageId %>" />
 	<aui:input name="workflowAction" type="hidden" value="<%= WorkflowConstants.ACTION_PUBLISH %>" />

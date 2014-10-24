@@ -298,11 +298,11 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 			Set<JobKey> jobKeys = scheduler.getJobKeys(
 				GroupMatcher.jobGroupEquals(groupName));
 
+			scheduler.pauseJobs(GroupMatcher.jobGroupEquals(groupName));
+
 			for (JobKey jobKey : jobKeys) {
 				updateJobState(scheduler, jobKey, TriggerState.PAUSED, false);
 			}
-
-			scheduler.pauseJobs(GroupMatcher.jobGroupEquals(groupName));
 		}
 		catch (Exception e) {
 			throw new SchedulerException(
@@ -327,9 +327,9 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 
 			JobKey jobKey = new JobKey(jobName, groupName);
 
-			updateJobState(scheduler, jobKey, TriggerState.PAUSED, false);
-
 			scheduler.pauseJob(jobKey);
+
+			updateJobState(scheduler, jobKey, TriggerState.PAUSED, false);
 		}
 		catch (Exception e) {
 			throw new SchedulerException(
@@ -356,11 +356,11 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 			Set<JobKey> jobKeys = scheduler.getJobKeys(
 				GroupMatcher.jobGroupEquals(groupName));
 
+			scheduler.resumeJobs(GroupMatcher.jobGroupEquals(groupName));
+
 			for (JobKey jobKey : jobKeys) {
 				updateJobState(scheduler, jobKey, TriggerState.NORMAL, false);
 			}
-
-			scheduler.resumeJobs(GroupMatcher.jobGroupEquals(groupName));
 		}
 		catch (Exception e) {
 			throw new SchedulerException(
@@ -386,9 +386,9 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 
 			JobKey jobKey = new JobKey(jobName, groupName);
 
-			updateJobState(scheduler, jobKey, TriggerState.NORMAL, false);
-
 			scheduler.resumeJob(jobKey);
+
+			updateJobState(scheduler, jobKey, TriggerState.NORMAL, false);
 		}
 		catch (Exception e) {
 			throw new SchedulerException(
@@ -987,6 +987,8 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 
 			jobBuilder.withIdentity(trigger.getJobKey());
 
+			jobBuilder.storeDurably();
+
 			JobDetail jobDetail = jobBuilder.build();
 
 			JobDataMap jobDataMap = jobDetail.getJobDataMap();
@@ -1096,12 +1098,6 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 
 		unregisterMessageListener(scheduler, jobKey);
 
-		if (scheduler == _memoryScheduler) {
-			scheduler.unscheduleJob(triggerKey);
-
-			return;
-		}
-
 		JobDataMap jobDataMap = jobDetail.getJobDataMap();
 
 		JobState jobState = getJobState(jobDataMap);
@@ -1152,12 +1148,12 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 				return;
 			}
 
-			updateJobState(scheduler, jobKey, TriggerState.NORMAL, true);
-
 			synchronized (this) {
 				scheduler.deleteJob(jobKey);
 				scheduler.scheduleJob(jobDetail, quartzTrigger);
 			}
+
+			updateJobState(scheduler, jobKey, TriggerState.NORMAL, true);
 		}
 	}
 

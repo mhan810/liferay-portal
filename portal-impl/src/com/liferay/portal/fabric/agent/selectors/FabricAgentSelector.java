@@ -12,19 +12,20 @@
  * details.
  */
 
-package com.liferay.portlet.dynamicdatalists.service;
+package com.liferay.portal.fabric.agent.selectors;
 
-import com.liferay.portlet.dynamicdatalists.util.test.DDLRecordTestUtil;
-import com.liferay.portlet.dynamicdatamapping.service.BaseDDMServiceTestCase;
+import com.liferay.portal.fabric.agent.FabricAgent;
+import com.liferay.portal.kernel.process.ProcessCallable;
+
+import java.util.Collection;
 
 /**
- * @author Marcellus Tavares
+ * @author Shuyang Zhou
  */
-public class BaseDDLServiceTestCase extends BaseDDMServiceTestCase {
+public interface FabricAgentSelector {
 
-	@Override
-	protected String getBasePath() {
-		return DDLRecordTestUtil.getBasePath();
-	}
+	public Collection<FabricAgent> select(
+		Collection<FabricAgent> fabricAgents,
+		ProcessCallable<?> processCallable);
 
 }
