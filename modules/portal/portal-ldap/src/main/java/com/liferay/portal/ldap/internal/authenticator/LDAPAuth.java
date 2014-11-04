@@ -14,10 +14,10 @@
 
 package com.liferay.portal.ldap.internal.authenticator;
 
+import com.liferay.portal.NoSuchUserException;
 import com.liferay.portal.PasswordExpiredException;
 import com.liferay.portal.UserLockoutException;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.ldap.LDAPFilterException;
+import com.liferay.portal.authenticator.ldap.configuration.LDAPAuthConfiguration;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.AutoResetThreadLocal;
@@ -363,8 +363,7 @@ public class LDAPAuth implements Authenticator {
 			}
 		}
 		catch (Exception e) {
-			if (e instanceof LDAPFilterException ||
-				e instanceof PasswordExpiredException ||
+			if (e instanceof PasswordExpiredException ||
 				e instanceof UserLockoutException) {
 
 				throw e;
@@ -407,12 +406,8 @@ public class LDAPAuth implements Authenticator {
 			_log.debug("Authenticator is enabled");
 		}
 
-		long preferredLDAPServerId = getPreferredLDAPServer(
-			companyId, emailAddress, screenName, userId);
-
 		int preferredLDAPServerResult = authenticateAgainstPreferredLDAPServer(
-			companyId, preferredLDAPServerId, emailAddress, screenName, userId,
-			password);
+			companyId, emailAddress, screenName, userId, password);
 
 		LDAPImportConfiguration ldapImportConfiguration =
 			_ldapImportConfigurationProvider.getConfiguration(companyId);
@@ -430,16 +425,6 @@ public class LDAPAuth implements Authenticator {
 
 		for (LDAPServerConfiguration ldapServerConfiguration :
 				ldapServerConfigurations) {
-
-			if (preferredLDAPServerId ==
-					ldapServerConfiguration.ldapServerId()) {
-
-				if (_log.isDebugEnabled()) {
-					_log.debug("Bypassing preferred ldap server id");
-				}
-
-				continue;
-			}
 
 			int result = authenticate(
 				ldapServerConfiguration.ldapServerId(), companyId, emailAddress,
@@ -459,11 +444,43 @@ public class LDAPAuth implements Authenticator {
 	}
 
 	protected int authenticateAgainstPreferredLDAPServer(
-			long companyId, long ldapServerId, String emailAddress,
-			String screenName, long userId, String password)
+			long companyId, String emailAddress, String screenName, long userId,
+			String password)
 		throws Exception {
 
 		int result = DNE;
+
+		User user = null;
+
+		try {
+			if (userId > 0) {
+				user = _userLocalService.getUserById(companyId, userId);
+			}
+			else if (Validator.isNotNull(emailAddress)) {
+				user = _userLocalService.getUserByEmailAddress(
+					companyId, emailAddress);
+			}
+			else if (Validator.isNotNull(screenName)) {
+				user = _userLocalService.getUserByScreenName(
+					companyId, screenName);
+			}
+			else {
+				if (_log.isDebugEnabled()) {
+					_log.debug("Unable to get preferred LDAP server");
+				}
+
+				return result;
+			}
+		}
+		catch (NoSuchUserException nsue) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Unable to get preferred LDAP server", nsue);
+			}
+
+			return result;
+		}
+
+		long ldapServerId = user.getLdapServerId();
 
 		if (ldapServerId < 0) {
 			return result;
@@ -477,6 +494,12 @@ public class LDAPAuth implements Authenticator {
 
 		if (Validator.isNull(providerUrl)) {
 			return result;
+		}
+
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				"Using LDAP server ID " + ldapServerId +
+					" to authenticate user " + user.getUserId());
 		}
 
 		result = authenticate(
@@ -570,44 +593,6 @@ public class LDAPAuth implements Authenticator {
 		sb.append(MapUtil.getString(env, Context.SECURITY_CREDENTIALS));
 
 		return sb.toString();
-	}
-
-	protected long getPreferredLDAPServer(
-			long companyId, String emailAddress, String screenName, long userId)
-		throws PortalException {
-
-		User user = null;
-
-		if (userId > 0) {
-			user = _userLocalService.fetchUserById(userId);
-		}
-		else if (Validator.isNotNull(emailAddress)) {
-			user = _userLocalService.fetchUserByEmailAddress(
-				companyId, emailAddress);
-		}
-		else if (Validator.isNotNull(screenName)) {
-			user = _userLocalService.fetchUserByScreenName(
-				companyId, screenName);
-		}
-		else {
-			if (_log.isDebugEnabled()) {
-				_log.debug("Unable to get preferred LDAP server");
-			}
-
-			return -1;
-		}
-
-		if (user == null) {
-			return -1;
-		}
-
-		if (_log.isDebugEnabled()) {
-			_log.debug(
-				"Using LDAP server ID " + user.getLdapServerId() +
-					" to authenticate user " + userId);
-		}
-
-		return user.getLdapServerId();
 	}
 
 	protected String removeEncryptionAlgorithm(String ldapPassword) {
