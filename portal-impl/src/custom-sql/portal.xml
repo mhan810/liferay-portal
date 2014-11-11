@@ -1376,11 +1376,11 @@
 				User_
 			LEFT JOIN
 				AnnouncementsDelivery ON
-					(AnnouncementsDelivery.userId = User_.userId) AND
-					(AnnouncementsDelivery.type_ = ?) AND
-					(User_.defaultUser = [$FALSE$])
+					(AnnouncementsDelivery.userId = User_.userId)
 			WHERE
-				(AnnouncementsDelivery.userId IS NULL)
+				(AnnouncementsDelivery.userId IS NULL) AND
+				(AnnouncementsDelivery.type_ = ?) AND
+				(User_.defaultUser = [$FALSE$])
 		]]>
 	</sql>
 	<sql id="com.liferay.portal.service.persistence.UserFinder.findByNoContacts">
