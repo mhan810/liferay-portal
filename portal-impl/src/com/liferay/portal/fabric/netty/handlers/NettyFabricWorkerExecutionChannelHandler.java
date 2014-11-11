@@ -134,9 +134,7 @@ public class NettyFabricWorkerExecutionChannelHandler
 		final Map<Path, Path> bootstrapPaths = new LinkedHashMap<Path, Path>();
 
 		for (String pathString :
-				StringUtil.split(
-					processConfig.getBootstrapClassPath(),
-					File.pathSeparatorChar)) {
+				processConfig.getBootstrapClassPathElements()) {
 
 			bootstrapPaths.put(Paths.get(pathString), null);
 		}
@@ -145,11 +143,7 @@ public class NettyFabricWorkerExecutionChannelHandler
 
 		final Map<Path, Path> runtimePaths = new LinkedHashMap<Path, Path>();
 
-		for (String pathString :
-				StringUtil.split(
-					processConfig.getRuntimeClassPath(),
-					File.pathSeparatorChar)) {
-
+		for (String pathString : processConfig.getRuntimeClassPathElements()) {
 			runtimePaths.put(Paths.get(pathString), null);
 		}
 
@@ -395,6 +389,7 @@ public class NettyFabricWorkerExecutionChannelHandler
 		private final String _bootstrapClassPath;
 		private final Map<Path, Path> _inputPaths;
 		private final String _runtimeClassPath;
+
 	}
 
 	protected class PostFabricWorkerExecutionFutureListener
@@ -466,6 +461,7 @@ public class NettyFabricWorkerExecutionChannelHandler
 		private final LoadedPaths _loadedPaths;
 		private final NettyFabricWorkerConfig<Serializable>
 			_nettyFabricWorkerConfig;
+
 	}
 
 	protected class PostFabricWorkerFinishFutureListener

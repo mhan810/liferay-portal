@@ -100,7 +100,7 @@ public class FriendlyURLServletTest {
 		Object[] actualRedirectArray = _friendlyURLServlet.getRedirect(
 			_request, path, mainPath, Collections.<String, String[]>emptyMap());
 
-		Assert.assertEquals(actualRedirectArray, expectedRedirectArray);
+		Assert.assertArrayEquals(actualRedirectArray, expectedRedirectArray);
 	}
 
 	private final FriendlyURLServlet _friendlyURLServlet =

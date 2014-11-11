@@ -488,19 +488,7 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		<attribute name="ant.target" />
 
 		<sequential>
-			<if>
-				<os family="unix" />
-				<then>
-					<exec dir="@{ant.dir}" executable="${ant.home}/bin/ant" failonerror="true">
-						<arg line="-f @{ant.build.file} @{ant.target}" />
-					</exec>
-				</then>
-				<else>
-					<exec dir="@{ant.dir}" executable="${ant.home}/bin/ant.bat" failonerror="true">
-						<arg line="-f @{ant.build.file} @{ant.target}" />
-					</exec>
-				</else>
-			</if>
+			<ant antfile="@{ant.build.file}" dir="@{ant.dir}" target="@{ant.target}" inheritAll="false" />
 		</sequential>
 	</macrodef>
 
@@ -987,10 +975,12 @@ Please set the environment variable ANT_OPTS to the recommended value of
 	</macrodef>
 
 	<macrodef name="setup-test-classpath">
+		<attribute name="test.type" />
+
 		<sequential>
 			<ivy:resolve log="download-only">
 				<dependency name="arquillian-junit-container" org="org.jboss.arquillian.junit" rev="1.1.2.Final" />
-				<dependency name="com.liferay.arquillian.extension" org="com.liferay" rev="latest.integration" />
+				<dependency name="com.liferay.arquillian.extension" org="com.liferay" rev="1.0.0-SNAPSHOT" />
 				<exclude org="junit" />
 			</ivy:resolve>
 
@@ -999,7 +989,7 @@ Please set the environment variable ANT_OPTS to the recommended value of
 			</path>
 
 			<path id="test.classpath">
-				<pathelement path="test-classes/${test.type}" />
+				<pathelement path="test-classes/@{test.type}" />
 				<pathelement path="${classpath}" />
 				<pathelement path="${test.additional.classpath}" />
 				<path refid="test-ivy.classpath" />
@@ -1103,7 +1093,9 @@ rerun your task.
 		<if>
 			<available file="test/${test.type}" type="dir" />
 			<then>
-				<setup-test-classpath />
+				<setup-test-classpath
+					test.type="${test.type}"
+				/>
 
 				<mkdir dir="test-classes/${test.type}" />
 				<mkdir dir="test-results/${test.type}" />
@@ -1334,7 +1326,9 @@ rerun your task.
 			setonempty="false"
 		/>
 
-		<setup-test-classpath />
+		<setup-test-classpath
+			test.type="${test.type}"
+		/>
 
 		<if>
 			<not>
@@ -1431,7 +1425,9 @@ rerun your task.
 			</then>
 		</if>
 
-		<setup-test-classpath />
+		<setup-test-classpath
+			test.type="${test.type}"
+		/>
 
 		<if>
 			<available file="test/${test.dir}" type="dir" />
@@ -1624,7 +1620,9 @@ rerun your task.
 			replace="com."
 		/>
 
-		<setup-test-classpath />
+		<setup-test-classpath
+			test.type="${test.type}"
+		/>
 
 		<junit dir="${project.dir}" fork="on" forkmode="once" haltonfailure="${junit.halt.on.failure}" jvm="${junit.jvm}" outputtoformatters="false" printsummary="on" showoutput="true">
 			<sysproperty key="junit.aspectj.dump" file="woven-classes" />
