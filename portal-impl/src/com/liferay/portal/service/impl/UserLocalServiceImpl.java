@@ -3070,11 +3070,26 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 *         <code>null</code>)
 	 * @return the matching users
 	 * @see    com.liferay.portlet.usersadmin.util.UserIndexer
+	 *
+	 * @deprecated As of 7.0.0, replaced by {@link #search(long, String, int,
+	 *         java.util.LinkedHashMap, int, int,
+	 *         com.liferay.portal.kernel.search.Sort[])}
 	 */
+	@Deprecated
 	@Override
 	public Hits search(
 		long companyId, String keywords, int status,
 		LinkedHashMap<String, Object> params, int start, int end, Sort sort) {
+
+		return search(
+			companyId, keywords, status, params, start, end, new Sort[] {sort});
+	}
+
+	@Override
+	public Hits search(
+		long companyId, String keywords, int status,
+		LinkedHashMap<String, Object> params, int start, int end,
+		Sort[] sorts) {
 
 		String firstName = null;
 		String middleName = null;
@@ -3117,7 +3132,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			SearchContext searchContext = buildSearchContext(
 				companyId, firstName, middleName, lastName, fullName,
 				screenName, emailAddress, street, city, zip, region, country,
-				status, params, andOperator, start, end, sort);
+				status, params, andOperator, start, end, sorts);
 
 			return indexer.search(searchContext);
 		}
@@ -3214,13 +3229,31 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 *         <code>null</code>)
 	 * @return the matching users
 	 * @see    com.liferay.portlet.usersadmin.util.UserIndexer
+	 *
+	 * @deprecated As of 7.0.0, replaced by {@link #search(long, String, String,
+	 *         String, String, String, int, java.util.LinkedHashMap, boolean,
+	 *         int, int, com.liferay.portal.kernel.search.Sort[])}
 	 */
+	@Deprecated
 	@Override
 	public Hits search(
 		long companyId, String firstName, String middleName, String lastName,
 		String screenName, String emailAddress, int status,
 		LinkedHashMap<String, Object> params, boolean andSearch, int start,
 		int end, Sort sort) {
+
+		return search(
+			companyId, firstName, middleName, lastName, screenName,
+			emailAddress, status, params, andSearch, start, end,
+			new Sort[] {sort});
+	}
+
+	@Override
+	public Hits search(
+		long companyId, String firstName, String middleName, String lastName,
+		String screenName, String emailAddress, int status,
+		LinkedHashMap<String, Object> params, boolean andSearch, int start,
+		int end, Sort[] sorts) {
 
 		try {
 			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
@@ -3229,7 +3262,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			SearchContext searchContext = buildSearchContext(
 				companyId, firstName, middleName, lastName, null, screenName,
 				emailAddress, null, null, null, null, null, status, params,
-				andSearch, start, end, sort);
+				andSearch, start, end, sorts);
 
 			return indexer.search(searchContext);
 		}
@@ -3438,10 +3471,27 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			params, start, end, null);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #searchUsers(long, String,
+	 *         int, java.util.LinkedHashMap, int, int,
+	 *         com.liferay.portal.kernel.search.Sort[])}
+	 */
+	@Deprecated
 	@Override
 	public BaseModelSearchResult<User> searchUsers(
 			long companyId, String keywords, int status,
 			LinkedHashMap<String, Object> params, int start, int end, Sort sort)
+		throws PortalException {
+
+		return searchUsers(
+			companyId, keywords, status, params, start, end, new Sort[] {sort});
+	}
+
+	@Override
+	public BaseModelSearchResult<User> searchUsers(
+			long companyId, String keywords, int status,
+			LinkedHashMap<String, Object> params, int start, int end,
+			Sort[] sorts)
 		throws PortalException {
 
 		String firstName = null;
@@ -3481,11 +3531,17 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		SearchContext searchContext = buildSearchContext(
 			companyId, firstName, middleName, lastName, fullName, screenName,
 			emailAddress, street, city, zip, region, country, status, params,
-			andOperator, start, end, sort);
+			andOperator, start, end, sorts);
 
 		return searchUsers(searchContext);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #searchUsers(long, String,
+	 *         int, java.util.LinkedHashMap, int, int,
+	 *         com.liferay.portal.kernel.search.Sort[])}
+	 */
+	@Deprecated
 	@Override
 	public BaseModelSearchResult<User> searchUsers(
 			long companyId, String firstName, String middleName,
@@ -3494,10 +3550,24 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			int end, Sort sort)
 		throws PortalException {
 
+		return searchUsers(
+			companyId, firstName, middleName, lastName, screenName,
+			emailAddress, status, params, andSearch, start, end,
+			new Sort[] {sort});
+	}
+
+	@Override
+	public BaseModelSearchResult<User> searchUsers(
+			long companyId, String firstName, String middleName,
+			String lastName, String screenName, String emailAddress, int status,
+			LinkedHashMap<String, Object> params, boolean andSearch, int start,
+			int end, Sort[] sorts)
+		throws PortalException {
+
 		SearchContext searchContext = buildSearchContext(
 			companyId, firstName, middleName, lastName, null, screenName,
 			emailAddress, null, null, null, null, null, status, params,
-			andSearch, start, end, sort);
+			andSearch, start, end, sorts);
 
 		return searchUsers(searchContext);
 	}
@@ -5885,7 +5955,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		String fullName, String screenName, String emailAddress, String street,
 		String city, String zip, String region, String country, int status,
 		LinkedHashMap<String, Object> params, boolean andSearch, int start,
-		int end, Sort sort) {
+		int end, Sort[] sorts) {
 
 		SearchContext searchContext = new SearchContext();
 
@@ -5921,8 +5991,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			}
 		}
 
-		if (sort != null) {
-			searchContext.setSorts(sort);
+		if (sorts != null) {
+			searchContext.setSorts(sorts);
 		}
 
 		searchContext.setStart(start);
