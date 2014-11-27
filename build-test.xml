@@ -72,6 +72,15 @@
 						</copy>
 
 						<if>
+	  					 	<available file="${liferay.home}/deploy" />
+							<then>
+								<copy todir="${test.app.server.parent.dir}/deploy">
+									<fileset dir="${liferay.home}/deploy" />
+								</copy>
+							</then>
+						</if>
+
+						<if>
 	  					 	<available file="${liferay.home}/osgi" />
 							<then>
 								<copy todir="${test.app.server.parent.dir}/osgi">
@@ -1310,10 +1319,16 @@ create database lportal${database.index} character set utf8;</echo>
 	</target>
 
 	<target name="deploy-required-plugins">
-		<ant antfile="build-test-plugins.xml" target="deploy-simple-server-plugins">
-			<property name="plugin.types" value="portlets" />
-			<property name="plugins.includes" value="marketplace-portlet" />
-		</ant>
+		<ant dir="${lp.plugins.dir}/portlets/marketplace-portlet" target="direct-deploy" />
+
+		<if>
+			<equals arg1="${marketplace.staging.enabled}" arg2="true" />
+			<then>
+				<echo append="true" file="${app.server.deploy.dir}/marketplace-portlet/WEB-INF/classes/portlet.properties">
+
+${marketplace.portlet.properties}</echo>
+			</then>
+		</if>
 	</target>
 
 	<target name="deploy-specified-plugins">
@@ -1381,38 +1396,6 @@ create database lportal${database.index} character set utf8;</echo>
 				</ant>
 			</then>
 		</if>
-
-		<!--
-		Copy plugin files to additional deploy directories if additional bundles
-		are present.
-		-->
-
-		<if>
-			<isset property="app.server.bundles.size" />
-			<then>
-				<var name="app.server.bundle.index" value="1" />
-
-				<antelope:repeat count="${app.server.bundles.size}">
-					<set-app-server-properties
-						app.server.bundle.index="${app.server.bundle.index}"
-					/>
-
-					<copy todir="${test.app.server.parent.dir}/deploy">
-						<fileset dir="${liferay.home}/deploy" />
-					</copy>
-
-					<math
-						datatype="int"
-						operand1="${app.server.bundle.index}"
-						operand2="1"
-						operation="+"
-						result="app.server.bundle.index"
-					/>
-				</antelope:repeat>
-
-				<var name="app.server.bundle.index" unset="true" />
-			</then>
-		</if>
 	</target>
 
 	<target name="evaluate-logs">
@@ -1450,6 +1433,51 @@ create database lportal${database.index} character set utf8;</echo>
 		</if>
 
 		<antcall target="clean-up-logs" />
+	</target>
+
+	<target name="generate-backup-results-xml" depends="generate-test-properties">
+		<if>
+			<and>
+				<isset property="env.JENKINS_HOME" />
+				<isset property="jenkins.shared.user.content.dir" />
+			</and>
+			<then>
+				<ant target="record-git-commit-portal" />
+
+				<if>
+					<not>
+						<isset property="test.method.name" />
+					</not>
+					<then>
+						<property name="test.method.name" value="" />
+					</then>
+				</if>
+
+				<property name="results.xml.file" value="portal-web/test-results/functional/TEST-${env.BUILD_FLOW_JOB_NAME}_${env.BUILD_FLOW_BUILD_NUMBER}_${test.class}.xml" />
+
+				<echo file="${results.xml.file}"><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite>
+<testcase classname="${test.class.name}" name="${test.method.name}" time="0.00">
+<failure message="Jenkins failure prior to running test">Jenkins failure prior to running test<failure>
+</testcase>
+<system-out>
+<![CDATA[]]]]><![CDATA[>
+</system-out>
+<system-err>
+<![CDATA[]]]]><![CDATA[>
+</system-err>
+</testsuite>]]></echo>
+
+				<record-testray-components />
+
+				<antcall target="build-test-results-xml" />
+
+				<copy
+					file="${results.xml.file}"
+					tofile="${jenkins.shared.user.content.dir}/jobs/${env.BUILD_FLOW_JOB_NAME}/builds/${env.BUILD_FLOW_BUILD_NUMBER}/test-results/TEST-${env.BUILD_FLOW_JOB_NAME}_${env.BUILD_FLOW_BUILD_NUMBER}_${test.class}.xml"
+				/>
+			</then>
+		</if>
 	</target>
 
 	<target name="generate-changelog" depends="record-git-commit-plugins,record-git-commit-portal">
@@ -1704,12 +1732,12 @@ create database lportal${database.index} character set utf8;</echo>
 		<if>
 			<contains string="${test.class}" substring="#" />
 			<then>
-				<antcallback return="test.method.name,test.simple.class.name" target="parse-test-class" />
+				<antcallback return="test.class.name,test.method.name,test.simple.class.name" target="parse-test-class" />
 			</then>
 			<elseif>
 				<isset property="test.class" />
 				<then>
-					<antcallback return="test.simple.class.name" target="parse-test-class" />
+					<antcallback return="test.class.name,test.simple.class.name" target="parse-test-class" />
 
 					<property name="test.method.name" value="[A-Za-z]*" />
 				</then>
@@ -1916,6 +1944,8 @@ create database lportal${database.index} character set utf8;</echo>
 
 	<target name="parse-test-class">
 		<script classpathref="project.classpath" language="beanshell">
+			import org.apache.tools.ant.DirectoryScanner;
+
 			String testClass = project.getProperty("test.class");
 
 			String testSimpleClassName = testClass;
@@ -1939,7 +1969,37 @@ create database lportal${database.index} character set utf8;</echo>
 			}
 
 			project.setProperty("test.simple.class.name", testSimpleClassName);
+
+			String testName = testSimpleClassName.substring(0, testSimpleClassName.length() - 8);
+
+			project.setProperty("test.name", testName);
+
+			try {
+				DirectoryScanner directoryScanner = new DirectoryScanner();
+
+				directoryScanner.setBasedir(project.getBaseDir());
+				directoryScanner.setIncludes(new String[] {"**/test/functional/**/" + testName + ".testcase"});
+
+				directoryScanner.scan();
+
+				String[] fileNames = directoryScanner.getIncludedFiles();
+
+				String fileName = fileNames[0];
+
+				int x = fileName.indexOf("/test/functional/") + 17;
+
+				String className = fileName.substring(x);
+
+				className = className.replaceAll("/", ".");
+				className = className.replaceAll(".testcase", "TestCase");
+
+				project.setProperty("test.class.name", className);
+			}
+			catch (Exception e) {
+			}
 		</script>
+
+		<fail message="${test.name}.testcase does not exist." unless="test.class.name" />
 
 		<if>
 			<not>
@@ -3698,6 +3758,67 @@ if (ppstate.equals("normal")) {
 		<echo file="test.package.names.properties">${test.package.names.properties.content}</echo>
 	</target>
 
+	<target name="record-test-plugin-names">
+		<script classpathref="project.classpath" language="beanshell">
+			<![CDATA[
+				import org.apache.tools.ant.DirectoryScanner;
+
+				Set getPluginNames() {
+					Set pluginNames = new TreeSet();
+
+					DirectoryScanner directoryScanner = new DirectoryScanner();
+
+					directoryScanner.setBasedir(project.getProperty("lp.plugins.dir"));
+					directoryScanner.setIncludes(new String[] {"**/hooks/*/build.xml", "**/layoutpl/*/build.xml", "**/portlets/*/build.xml", "**/themes/*/build.xml", "**/webs/*/build.xml"});
+
+					directoryScanner.scan();
+
+					String[] fileNames = directoryScanner.getIncludedFiles();
+
+					Arrays.sort(fileNames);
+
+					for (String fileName : fileNames) {
+						int x = fileName.indexOf("/");
+						int y = fileName.lastIndexOf("/");
+
+						if (File.separator.equals("\\")) {
+							x = fileName.indexOf("\\");
+							y = fileName.lastIndexOf("\\");
+						}
+
+						String pluginName = fileName.substring(x + 1, y);
+
+						pluginNames.add(pluginName);
+					}
+
+					return pluginNames;
+				}
+
+				StringBuilder sb = new StringBuilder();
+
+				Set pluginNames = getPluginNames();
+
+				sb.append("TEST_PLUGIN_NAMES=");
+
+				Iterator iterator = pluginNames.iterator();
+
+				while (iterator.hasNext()) {
+					String pluginName = iterator.next();
+
+					sb.append(pluginName);
+
+					if (iterator.hasNext()) {
+						sb.append(" ");
+					}
+				}
+
+				project.setProperty("test.plugin.names.properties.content", sb.toString());
+			]]>
+		</script>
+
+		<echo file="test.plugin.names.properties">${test.plugin.names.properties.content}</echo>
+	</target>
+
 	<target name="replace-file">
 		<fail message="Please set the property ${file}." unless="file" />
 		<fail message="Please set the property ${token}." unless="token" />
@@ -3880,21 +4001,7 @@ if (ppstate.equals("normal")) {
 			</then>
 		</if>
 
-		<if>
-			<isset property="app.server.bundles.size" />
-			<then>
-				<prepare-additional-bundles />
-			</then>
-		</if>
-
 		<antcall target="check-inet-address" />
-
-		<if>
-			<equals arg1="${cluster.enabled}" arg2="true" />
-			<then>
-				<prepare-test-cluster-properties />
-			</then>
-		</if>
 
 		<if>
 			<equals arg1="${database.jndi.enabled}" arg2="true" />
@@ -3911,6 +4018,17 @@ if (ppstate.equals("normal")) {
 				<antcall target="start-android-device" />
 
 				<antcall target="start-appium" />
+			</then>
+		</if>
+
+		<if>
+			<isset property="web.xml.timeout" />
+			<then>
+				<replace
+					file="${app.server.dir}/webapps/ROOT/WEB-INF/web.xml"
+					token="&lt;session-timeout&gt;30&lt;/session-timeout&gt;"
+					value="&lt;session-timeout&gt;${web.xml.timeout}&lt;/session-timeout&gt;"
+				/>
 			</then>
 		</if>
 
@@ -3953,13 +4071,16 @@ if (ppstate.equals("normal")) {
 		<antcall target="deploy-specified-plugins" />
 
 		<if>
-			<isset property="web.xml.timeout" />
+			<isset property="app.server.bundles.size" />
 			<then>
-				<replace
-					file="${app.server.dir}/webapps/ROOT/WEB-INF/web.xml"
-					token="&lt;session-timeout&gt;30&lt;/session-timeout&gt;"
-					value="&lt;session-timeout&gt;${web.xml.timeout}&lt;/session-timeout&gt;"
-				/>
+				<prepare-additional-bundles />
+			</then>
+		</if>
+
+		<if>
+			<equals arg1="${cluster.enabled}" arg2="true" />
+			<then>
+				<prepare-test-cluster-properties />
 			</then>
 		</if>
 

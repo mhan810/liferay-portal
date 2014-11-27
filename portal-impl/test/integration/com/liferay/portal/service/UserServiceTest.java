@@ -26,11 +26,11 @@ import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
+import com.liferay.portal.test.LiferayIntegrationTestRule;
 import com.liferay.portal.test.MainServletTestRule;
 import com.liferay.portal.test.ResetDatabaseTestRule;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousMailTestRule;
-import com.liferay.portal.test.runners.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.test.GroupTestUtil;
@@ -59,13 +59,14 @@ import org.junit.runner.RunWith;
 @RunWith(Enclosed.class)
 public class UserServiceTest {
 
-	@RunWith(LiferayIntegrationJUnitTestRunner.class)
 	public static class WhenCompanySecurityStrangersWithMXDisabled {
 
 		@ClassRule
+		@Rule
 		public static final AggregateTestRule aggregateTestRule =
 			new AggregateTestRule(
-				MainServletTestRule.INSTANCE, ResetDatabaseTestRule.INSTANCE);
+				new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+				ResetDatabaseTestRule.INSTANCE);
 
 		@Test(expected = ReservedUserEmailAddressException.class)
 		public void shouldNotAddUser() throws Exception {
@@ -146,19 +147,16 @@ public class UserServiceTest {
 			}
 		}
 
-		@Rule
-		public final ResetDatabaseTestRule resetDatabaseTestRule =
-			ResetDatabaseTestRule.INSTANCE;
-
 	}
 
-	@RunWith(LiferayIntegrationJUnitTestRunner.class)
 	public static class WhenGettingUserByEmailAddress {
 
 		@ClassRule
+		@Rule
 		public static final AggregateTestRule aggregateTestRule =
 			new AggregateTestRule(
-				MainServletTestRule.INSTANCE, ResetDatabaseTestRule.INSTANCE);
+				new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+				ResetDatabaseTestRule.INSTANCE);
 
 		@Test(expected = NoSuchUserException.class)
 		public void shouldFailIfUserDeleted() throws Exception {
@@ -180,19 +178,16 @@ public class UserServiceTest {
 			Assert.assertEquals(user, retrievedUser);
 		}
 
-		@Rule
-		public final ResetDatabaseTestRule resetDatabaseTestRule =
-			ResetDatabaseTestRule.INSTANCE;
-
 	}
 
-	@RunWith(LiferayIntegrationJUnitTestRunner.class)
 	public static class WhenGroupAdminUnsetsGroupUsers {
 
 		@ClassRule
+		@Rule
 		public static final AggregateTestRule aggregateTestRule =
 			new AggregateTestRule(
-				MainServletTestRule.INSTANCE, ResetDatabaseTestRule.INSTANCE);
+				new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+				ResetDatabaseTestRule.INSTANCE);
 
 		@Before
 		public void setUp() throws Exception {
@@ -257,23 +252,20 @@ public class UserServiceTest {
 					organizationOwnerUser.getUserId()));
 		}
 
-		@Rule
-		public final ResetDatabaseTestRule resetDatabaseTestRule =
-			ResetDatabaseTestRule.INSTANCE;
-
 		private Group _group;
 		private User _groupAdminUser;
 		private Organization _organization;
 
 	}
 
-	@RunWith(LiferayIntegrationJUnitTestRunner.class)
 	public static class WhenGroupOwnerUnsetsGroupUsers {
 
 		@ClassRule
+		@Rule
 		public static final AggregateTestRule aggregateTestRule =
 			new AggregateTestRule(
-				MainServletTestRule.INSTANCE, ResetDatabaseTestRule.INSTANCE);
+				new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+				ResetDatabaseTestRule.INSTANCE);
 
 		@Before
 		public void setUp() throws Exception {
@@ -341,10 +333,6 @@ public class UserServiceTest {
 					organizationOwnerUser.getUserId()));
 		}
 
-		@Rule
-		public final ResetDatabaseTestRule resetDatabaseTestRule =
-			ResetDatabaseTestRule.INSTANCE;
-
 		private Group _group;
 		private User _groupOwnerUser;
 		private Organization _organization;
@@ -352,13 +340,14 @@ public class UserServiceTest {
 
 	}
 
-	@RunWith(LiferayIntegrationJUnitTestRunner.class)
 	public static class WhenOrganizationAdminUnsetsUsersForNonSiteOrganization {
 
 		@ClassRule
+		@Rule
 		public static final AggregateTestRule aggregateTestRule =
 			new AggregateTestRule(
-				MainServletTestRule.INSTANCE, ResetDatabaseTestRule.INSTANCE);
+				new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+				ResetDatabaseTestRule.INSTANCE);
 
 		@Before
 		public void setUp() throws Exception {
@@ -398,23 +387,20 @@ public class UserServiceTest {
 					_organizationOwnerUser.getUserId()));
 		}
 
-		@Rule
-		public final ResetDatabaseTestRule resetDatabaseTestRule =
-			ResetDatabaseTestRule.INSTANCE;
-
 		private Organization _organization;
 		private User _organizationAdminUser;
 		private User _organizationOwnerUser;
 
 	}
 
-	@RunWith(LiferayIntegrationJUnitTestRunner.class)
 	public static class WhenOrganizationAdminUnsetsUsersForSiteOrganization {
 
 		@ClassRule
+		@Rule
 		public static final AggregateTestRule aggregateTestRule =
 			new AggregateTestRule(
-				MainServletTestRule.INSTANCE, ResetDatabaseTestRule.INSTANCE);
+				new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+				ResetDatabaseTestRule.INSTANCE);
 
 		@Before
 		public void setUp() throws Exception {
@@ -451,22 +437,19 @@ public class UserServiceTest {
 					_group.getGroupId(), groupOwnerUser.getUserId()));
 		}
 
-		@Rule
-		public final ResetDatabaseTestRule resetDatabaseTestRule =
-			ResetDatabaseTestRule.INSTANCE;
-
 		private Group _group;
 		private User _organizationAdminUser;
 
 	}
 
-	@RunWith(LiferayIntegrationJUnitTestRunner.class)
 	public static class WhenOrganizationOwnerUnsetsUsersForNonSiteOrganization {
 
 		@ClassRule
+		@Rule
 		public static final AggregateTestRule aggregateTestRule =
 			new AggregateTestRule(
-				MainServletTestRule.INSTANCE, ResetDatabaseTestRule.INSTANCE);
+				new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+				ResetDatabaseTestRule.INSTANCE);
 
 		@Before
 		public void setUp() throws Exception {
@@ -506,22 +489,19 @@ public class UserServiceTest {
 					otherOrganizationOwnerUser.getUserId()));
 		}
 
-		@Rule
-		public final ResetDatabaseTestRule resetDatabaseTestRule =
-			ResetDatabaseTestRule.INSTANCE;
-
 		private Organization _organization;
 		private User _organizationOwnerUser;
 
 	}
 
-	@RunWith(LiferayIntegrationJUnitTestRunner.class)
 	public static class WhenOrganizationOwnerUnsetsUsersForSiteOrganization {
 
 		@ClassRule
+		@Rule
 		public static final AggregateTestRule aggregateTestRule =
 			new AggregateTestRule(
-				MainServletTestRule.INSTANCE, ResetDatabaseTestRule.INSTANCE);
+				new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+				ResetDatabaseTestRule.INSTANCE);
 
 		@Before
 		public void setUp() throws Exception {
@@ -558,23 +538,20 @@ public class UserServiceTest {
 					_group.getGroupId(), groupOwnerUser.getUserId()));
 		}
 
-		@Rule
-		public final ResetDatabaseTestRule resetDatabaseTestRule =
-			ResetDatabaseTestRule.INSTANCE;
-
 		private Group _group;
 		private User _organizationOwnerUser;
 
 	}
 
-	@RunWith(LiferayIntegrationJUnitTestRunner.class)
 	@Sync
 	public static class WhenPortalSendsPasswordEmail {
 
 		@ClassRule
-		public static final AggregateTestRule classAggregateTestRule =
+		@Rule
+		public static final AggregateTestRule aggregateTestRule =
 			new AggregateTestRule(
-				MainServletTestRule.INSTANCE, ResetDatabaseTestRule.INSTANCE,
+				new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+				ResetDatabaseTestRule.INSTANCE,
 				SynchronousMailTestRule.INSTANCE);
 
 		@Before
@@ -685,12 +662,6 @@ public class UserServiceTest {
 				MailServiceTestUtil.lastMailMessageContains(
 					"email_password_reset_body.tmpl"));
 		}
-
-		@Rule
-		public final AggregateTestRule methodAggregateTestRule =
-			new AggregateTestRule(
-				ResetDatabaseTestRule.INSTANCE,
-				SynchronousMailTestRule.INSTANCE);
 
 		protected void givenThatCompanySendsNewPassword() throws Exception {
 			PortletPreferences portletPreferences =

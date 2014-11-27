@@ -23,11 +23,11 @@ import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.impl.VirtualLayout;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.test.LiferayIntegrationTestRule;
 import com.liferay.portal.test.MainServletTestRule;
 import com.liferay.portal.test.ResetDatabaseTestRule;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationTestRule;
-import com.liferay.portal.test.runners.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.test.GroupTestUtil;
@@ -46,7 +46,6 @@ import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -55,14 +54,16 @@ import org.springframework.mock.web.MockHttpServletRequest;
  * @author Laszlo Csontos
  * @author Eduardo Garcia
  */
-@RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
 public class FindActionTest {
 
 	@ClassRule
-	public static final AggregateTestRule classAggregateTestRule =
+	@Rule
+	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
-			MainServletTestRule.INSTANCE, ResetDatabaseTestRule.INSTANCE);
+			new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+			ResetDatabaseTestRule.INSTANCE,
+			SynchronousDestinationTestRule.INSTANCE);
 
 	@Test
 	public void testGetPlidAndPortletIdViewInContext() throws Exception {
@@ -121,12 +122,6 @@ public class FindActionTest {
 
 		Assert.assertNull(layout);
 	}
-
-	@Rule
-	public final AggregateTestRule methodAggregateTestRule =
-		new AggregateTestRule(
-			ResetDatabaseTestRule.INSTANCE,
-			SynchronousDestinationTestRule.INSTANCE);
 
 	protected void addLayouts(
 			boolean portletExists, boolean blogEntryWithDifferentGroup)

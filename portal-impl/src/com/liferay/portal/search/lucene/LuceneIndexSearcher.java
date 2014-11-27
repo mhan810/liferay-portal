@@ -228,6 +228,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 			}
 
 			browseRequest.setCount(end);
+
 			browseRequest.setOffset(0);
 			browseRequest.setQuery(
 				(org.apache.lucene.search.Query)QueryTranslatorUtil.translate(
