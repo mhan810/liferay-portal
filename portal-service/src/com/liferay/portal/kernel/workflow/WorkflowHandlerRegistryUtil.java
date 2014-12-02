@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.transaction.TransactionCommitCallbackRegistryUt
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.WorkflowDefinitionLink;
 import com.liferay.portal.model.WorkflowInstanceLink;
 import com.liferay.portal.service.ServiceContext;
@@ -163,7 +164,8 @@ public class WorkflowHandlerRegistryUtil {
 			WorkflowConstants.CONTEXT_ENTRY_TYPE,
 			workflowHandler.getType(LocaleUtil.getDefault()));
 		workflowContext.put(
-			WorkflowConstants.CONTEXT_SERVICE_CONTEXT, serviceContext);
+			WorkflowConstants.CONTEXT_SERVICE_CONTEXT,
+			getSecureServiceContext(serviceContext));
 		workflowContext.put(
 			WorkflowConstants.CONTEXT_TASK_COMMENTS,
 			GetterUtil.getString(serviceContext.getAttribute("comments")));
@@ -245,6 +247,23 @@ public class WorkflowHandlerRegistryUtil {
 		}
 
 		return null;
+	}
+
+	protected static ServiceContext getSecureServiceContext(
+		ServiceContext serviceContext) {
+
+		ServiceContext secureServiceContext =
+			(ServiceContext)serviceContext.clone();
+
+		Map<String, String> headers = secureServiceContext.getHeaders();
+
+		if (headers != null) {
+			headers.remove(WebKeys.COOKIE);
+
+			secureServiceContext.setHeaders(headers);
+		}
+
+		return secureServiceContext;
 	}
 
 	private WorkflowHandlerRegistryUtil() {
