@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<project name="fabric-client-launcher" basedir="." default="generate">
+	<target name="generate">
+		<ant dir="../../portal-service" target="jar" />
+		<ant dir="../../portal-impl" target="compile" />
+
+		<mkdir dir="temp/lib" />
+
+		<copy file="config.properties" todir="temp/lib" />
+		<copy file="system.properties" todir="temp/lib" />
+		<copy file="run.bat" todir="temp" />
+		<copy file="run.sh" todir="temp" />
+		<copy file="${basedir}/../../portal-service/portal-service.jar" todir="temp/lib" />
+		<copy file="${basedir}/../../lib/portal/netty-all.jar" todir="temp/lib" />
+
+		<jar basedir="${basedir}/../../portal-impl/classes" includes="com/liferay/portal/fabric/**/*" destfile="temp/lib/fabric-client.jar" />
+
+		<zip basedir="temp" destfile="fabric-client-launcher.zip" />
+
+		<delete dir="temp" />
+	</target>
+</project>
