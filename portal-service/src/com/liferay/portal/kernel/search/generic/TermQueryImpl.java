@@ -12,21 +12,31 @@
  * details.
  */
 
-package com.liferay.portal.search.generic;
+package com.liferay.portal.kernel.search.generic;
 
 import com.liferay.portal.kernel.search.BaseQueryImpl;
 import com.liferay.portal.kernel.search.QueryTerm;
-import com.liferay.portal.kernel.search.WildcardQuery;
+import com.liferay.portal.kernel.search.TermQuery;
 
 /**
  * @author Michael C. Han
  */
-public class WildcardQueryImpl extends BaseQueryImpl implements WildcardQuery {
+public class TermQueryImpl extends BaseQueryImpl implements TermQuery {
 
-	public WildcardQueryImpl(QueryTerm queryTerm) {
+	
+	public TermQueryImpl(QueryTerm queryTerm) {
 		_queryTerm = queryTerm;
 	}
 
+	public TermQueryImpl(String field, int value) {
+		this(field, String.valueOf(value));
+	}
+	
+	public TermQueryImpl(String field, String value) {
+		this(new QueryTermImpl(field, value));
+	}
+
+	
 	@Override
 	public QueryTerm getQueryTerm() {
 		return _queryTerm;
