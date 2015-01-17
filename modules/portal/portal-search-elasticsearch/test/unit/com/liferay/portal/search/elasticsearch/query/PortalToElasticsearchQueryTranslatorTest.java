@@ -14,11 +14,13 @@
 
 package com.liferay.portal.search.elasticsearch.query;
 
-import com.liferay.portal.kernel.search.TermQuery;
-import com.liferay.portal.search.lucene.TermQueryImpl;
+import com.liferay.portal.kernel.search.Query;
 
-import org.junit.Assert;
+import org.elasticsearch.index.query.QueryBuilder;
+
 import org.junit.Test;
+
+import org.mockito.Mockito;
 
 /**
  * @author André de Oliveira
@@ -26,11 +28,22 @@ import org.junit.Test;
 public class PortalToElasticsearchQueryTranslatorTest {
 
 	@Test
-	public void testTermQuery() {
-		TermQuery query = new TermQueryImpl("foo", "bar");
+	public void testFallbackToQueryString() throws Exception {
+		Query query = Mockito.mock(Query.class);
+
+		Mockito.when(query.toString()).thenReturn("foo:bar");
+
+		assertTranslate("{\"query_string\":{\"query\":\"foo:bar\"}}", query);
+	}
+
+	protected void assertTranslate(String expected, Query query)
+		throws Exception {
+
 		ElasticsearchQuery elasticsearchQuery = _translator.translate(query);
-		String json = elasticsearchQuery.toJson();
-		Assert.assertTrue(json.contains("\"query\" : \"foo:bar\""));
+
+		QueryBuilder queryBuilder = elasticsearchQuery.getQueryBuilder();
+
+		QueryBuilderTestUtil.assertJsonContains(expected, queryBuilder);
 	}
 
 	private final PortalToElasticsearchQueryTranslator _translator =

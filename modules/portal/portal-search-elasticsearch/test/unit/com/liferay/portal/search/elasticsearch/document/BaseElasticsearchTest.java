@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.TermQuery;
+import com.liferay.portal.kernel.search.generic.TermQueryImpl;
 import com.liferay.portal.kernel.util.Localization;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -66,8 +67,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 public abstract class BaseElasticsearchTest extends PowerMockito {
 
 	public Hits search(String field, String value) throws SearchException {
-		TermQuery termQuery =
-			new com.liferay.portal.search.lucene.TermQueryImpl(field, value);
+		TermQuery termQuery = new TermQueryImpl(field, value);
 
 		return _elasticsearchIndexSearcher.search(
 			getSearchContext(), termQuery);

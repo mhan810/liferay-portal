@@ -15,9 +15,11 @@
 package com.liferay.portal.search.elasticsearch.query;
 
 import com.liferay.portal.kernel.search.Query;
+import com.liferay.portal.kernel.search.generic.TermQueryImpl;
 
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
 
 /**
  * @author André de Oliveira
@@ -25,9 +27,25 @@ import org.elasticsearch.index.query.QueryBuilders;
 public class PortalToElasticsearchQueryTranslator {
 
 	public ElasticsearchQuery translate(Query query) {
-		QueryBuilder queryBuilder = QueryBuilders.queryString(query.toString());
+		return new ElasticsearchQuery(_translateQuery(query));
+	}
 
-		return new ElasticsearchQuery(queryBuilder);
+	private QueryStringQueryBuilder _fallbackToQueryString(Query query) {
+		return QueryBuilders.queryString(query.toString());
+	}
+
+	private QueryBuilder _translateQuery(Query query) {
+		if (query instanceof TermQueryImpl) {
+			return _translateTermQuery((TermQueryImpl)query);
+		}
+
+		return _fallbackToQueryString(query);
+	}
+
+	private QueryBuilder _translateTermQuery(TermQueryImpl termQuery) {
+		TermQueryTranslator termQueryTranslator = new TermQueryTranslator();
+
+		return termQueryTranslator.translate(termQuery);
 	}
 
 }
