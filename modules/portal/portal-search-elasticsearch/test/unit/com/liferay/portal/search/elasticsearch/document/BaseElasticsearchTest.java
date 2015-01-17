@@ -76,6 +76,7 @@ public abstract class BaseElasticsearchTest extends PowerMockito {
 	@Before()
 	public final void setUp() throws Exception {
 		_documentFactory = new DefaultElasticsearchDocumentFactory();
+
 		setUpPropsUtil();
 		setUpLocalizationUtil();
 		setUpElasticsearch();
@@ -155,7 +156,7 @@ public abstract class BaseElasticsearchTest extends PowerMockito {
 		return "SYSTEM_ENGINE";
 	}
 
-	protected void setUpElasticsearch() {
+	protected void setUpElasticsearch() throws Exception {
 		setUpElasticsearchConnectionManager();
 		setUpElasticsearchUpdateDocumentCommandImpl();
 		setUpElasticsearchIndexSearcher();
@@ -180,20 +181,17 @@ public abstract class BaseElasticsearchTest extends PowerMockito {
 			_elasticsearchConnectionManager);
 	}
 
-	protected void setUpElasticsearchUpdateDocumentCommandImpl() {
+	protected void setUpElasticsearchUpdateDocumentCommandImpl()
+		throws Exception {
+
 		_updateDocumentCommand = spy(
 			new ElasticsearchUpdateDocumentCommandImpl());
 
-		try {
-			_updateDocumentCommand.setElasticsearchDocumentFactory(
-				new DefaultElasticsearchDocumentFactory());
+		_updateDocumentCommand.setElasticsearchDocumentFactory(
+			new DefaultElasticsearchDocumentFactory());
 
-			_updateDocumentCommand.setElasticsearchConnectionManager(
-				_elasticsearchConnectionManager);
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		_updateDocumentCommand.setElasticsearchConnectionManager(
+			_elasticsearchConnectionManager);
 	}
 
 	protected void setUpLocalizationUtil() {
