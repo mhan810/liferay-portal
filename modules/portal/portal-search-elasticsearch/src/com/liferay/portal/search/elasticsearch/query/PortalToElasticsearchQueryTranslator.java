@@ -15,6 +15,7 @@
 package com.liferay.portal.search.elasticsearch.query;
 
 import com.liferay.portal.kernel.search.Query;
+import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.search.generic.TermQueryImpl;
 
 import org.elasticsearch.index.query.QueryBuilder;
@@ -34,7 +35,18 @@ public class PortalToElasticsearchQueryTranslator {
 		return QueryBuilders.queryString(query.toString());
 	}
 
+	private QueryBuilder _translateBooleanQuery(BooleanQueryImpl booleanQuery) {
+		BooleanQueryTranslator booleanQueryTranslator =
+			new BooleanQueryTranslator();
+
+		return booleanQueryTranslator.translate(booleanQuery);
+	}
+
 	private QueryBuilder _translateQuery(Query query) {
+		if (query instanceof BooleanQueryImpl) {
+			return _translateBooleanQuery((BooleanQueryImpl)query);
+		}
+
 		if (query instanceof TermQueryImpl) {
 			return _translateTermQuery((TermQueryImpl)query);
 		}
