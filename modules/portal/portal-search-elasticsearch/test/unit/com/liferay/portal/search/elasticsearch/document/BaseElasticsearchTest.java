@@ -14,24 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch.document;
 
-
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.math.RandomUtils;
-import org.elasticsearch.client.Client;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.mockito.Matchers;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
@@ -50,7 +32,27 @@ import com.liferay.portal.search.elasticsearch.ElasticsearchIndexSearcher;
 import com.liferay.portal.search.elasticsearch.ElasticsearchUpdateDocumentCommandImpl;
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch.connection.EmbeddedElasticsearchConnection;
-import com.liferay.portal.kernel.search.generic.TermQueryImpl;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.math.RandomUtils;
+
+import org.elasticsearch.client.Client;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.runner.RunWith;
+
+import org.mockito.Matchers;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  * @author Miguel Angelo Caldas Gallindo
@@ -64,10 +66,11 @@ import com.liferay.portal.kernel.search.generic.TermQueryImpl;
 public abstract class BaseElasticsearchTest extends PowerMockito {
 
 	public Hits search(String field, String value) throws SearchException {
-		TermQuery termQuery = new TermQueryImpl(field, value);
+		TermQuery termQuery =
+			new com.liferay.portal.search.lucene.TermQueryImpl(field, value);
 
-		return _elasticsearchIndexSearcher.search(getSearchContext(), termQuery
-			);
+		return _elasticsearchIndexSearcher.search(
+			getSearchContext(), termQuery);
 	}
 
 	@Before()
@@ -85,13 +88,11 @@ public abstract class BaseElasticsearchTest extends PowerMockito {
 		doAfterRunTest();
 		_embeddedConnection.close();
 		_deleteDataDirectory();
-		
 	}
 
 	public String updateDocument(Document document) throws SearchException {
 		return _updateDocumentCommand.updateDocument(
-			getDocumentType(), getSearchContext(),
-			document, false);
+			getDocumentType(), getSearchContext(), document, false);
 	}
 
 	protected DocumentImpl createDocumentWithRequiredData() {
@@ -99,8 +100,7 @@ public abstract class BaseElasticsearchTest extends PowerMockito {
 
 		document.addUID(Field.PORTLET_ID, RandomUtils.nextLong());
 
-		document.addKeyword(
-			Field.COMPANY_ID, getCompanyId());
+		document.addKeyword(Field.COMPANY_ID, getCompanyId());
 		document.addKeyword(Field.ENTRY_CLASS_NAME, Document.class.getName());
 		document.addKeyword(Field.ENTRY_CLASS_PK, RandomUtils.nextLong());
 		document.addKeyword(Field.GROUP_ID, RandomUtils.nextLong());
@@ -122,6 +122,14 @@ public abstract class BaseElasticsearchTest extends PowerMockito {
 		return _elasticsearchConnectionManager.getClient();
 	}
 
+	protected String getCompanyId() {
+		return "1";
+	}
+
+	protected String getDocumentType() {
+		return "LiferayDocumentType";
+	}
+
 	protected SearchContext getSearchContext() {
 		SearchContext searchContext = new SearchContext();
 
@@ -129,7 +137,7 @@ public abstract class BaseElasticsearchTest extends PowerMockito {
 		searchContext.setSearchEngineId(getSystemEngine());
 
 		searchContext.setCommitImmediately(true);
-		
+
 		searchContext.setStart(QueryUtil.ALL_POS);
 		searchContext.setEnd(QueryUtil.ALL_POS);
 
@@ -143,6 +151,10 @@ public abstract class BaseElasticsearchTest extends PowerMockito {
 		return searchContext;
 	}
 
+	protected String getSystemEngine() {
+		return "SYSTEM_ENGINE";
+	}
+
 	protected void setUpElasticsearch() {
 		setUpElasticsearchConnectionManager();
 		setUpElasticsearchUpdateDocumentCommandImpl();
@@ -152,8 +164,10 @@ public abstract class BaseElasticsearchTest extends PowerMockito {
 	protected void setUpElasticsearchConnectionManager() {
 		_elasticsearchConnectionManager = new ElasticsearchConnectionManager();
 		_embeddedConnection = new EmbeddedElasticsearchConnection();
-		_embeddedConnection.setConfigFileName("META-INF/elasticsearch-embedded-test.yml");
-		_embeddedConnection.setTestConfigFileName("META-INF/elasticsearch-embedded-test.yml");
+		_embeddedConnection.setConfigFileName(
+			"META-INF/elasticsearch-embedded-test.yml");
+		_embeddedConnection.setTestConfigFileName(
+			"META-INF/elasticsearch-embedded-test.yml");
 		_embeddedConnection.initialize();
 		_elasticsearchConnectionManager.setElasticsearchConnection(
 			_embeddedConnection);
@@ -221,22 +235,11 @@ public abstract class BaseElasticsearchTest extends PowerMockito {
 			).thenReturn("255");
 	}
 
-	
-	protected String getCompanyId() {
-		return "1";
-	}
-	
-	protected String getSystemEngine(){
-		return "SYSTEM_ENGINE";
-	}
-	
-	protected String getDocumentType(){
-		return "LiferayDocumentType";
-	}
-	
+	protected DefaultElasticsearchDocumentFactory _documentFactory;
+
 	private void _deleteDataDirectory() {
 		try {
-			FileUtils.deleteDirectory(new File("/Users/miguelangelo/Liferay/git/liferay-portal/modules/portal/portal-search-elasticsearch/elasticsearch-test"));
+			FileUtils.deleteDirectory(new File("elasticsearch-test"));
 		}
 		catch (IOException e) {
 			throw new RuntimeException(
@@ -244,9 +247,7 @@ public abstract class BaseElasticsearchTest extends PowerMockito {
 					"server", e);
 		}
 	}
-	
-	
-	protected DefaultElasticsearchDocumentFactory _documentFactory;
+
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
 	private ElasticsearchIndexSearcher _elasticsearchIndexSearcher;
 	private EmbeddedElasticsearchConnection _embeddedConnection;

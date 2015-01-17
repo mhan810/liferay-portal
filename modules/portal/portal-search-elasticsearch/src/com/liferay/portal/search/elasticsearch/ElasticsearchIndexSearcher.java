@@ -52,6 +52,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.time.StopWatch;
+
 import org.elasticsearch.action.ActionFuture;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -71,6 +72,7 @@ import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -80,6 +82,10 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(immediate = true, service = IndexSearcher.class)
 public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
+
+	public String buildNativeQueryFromGenericQuery(Query query) {
+		return query.toString();
+	}
 
 	@Override
 	public Hits search(SearchContext searchContext, Query query)
@@ -132,8 +138,8 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 				stopWatch.stop();
 
 				_log.info(
-					"Searching " + buildNativeQueryFromGenericQuery(query) + " took " +
-						stopWatch.getTime() + " ms");
+					"Searching " + buildNativeQueryFromGenericQuery(query) +
+					" took " + stopWatch.getTime() + " ms");
 			}
 		}
 	}
@@ -170,8 +176,8 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 				stopWatch.stop();
 
 				_log.info(
-					"Searching " + buildNativeQueryFromGenericQuery(query) + " took " +
-						stopWatch.getTime() + " ms");
+					"Searching " + buildNativeQueryFromGenericQuery(query) +
+					" took " + stopWatch.getTime() + " ms");
 			}
 		}
 	}
@@ -414,7 +420,8 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			searchRequestBuilder.setSize(0);
 		}
 
-		QueryBuilder queryBuilder = QueryBuilders.queryString(buildNativeQueryFromGenericQuery(query));
+		QueryBuilder queryBuilder = QueryBuilders.queryString(
+			buildNativeQueryFromGenericQuery(query));
 
 		searchRequestBuilder.setQuery(queryBuilder);
 
@@ -440,11 +447,6 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		}
 
 		return searchResponse;
-	}
-
-	public String buildNativeQueryFromGenericQuery(Query query) {
-
-		return query.toString();
 	}
 
 	protected Document processSearchHit(

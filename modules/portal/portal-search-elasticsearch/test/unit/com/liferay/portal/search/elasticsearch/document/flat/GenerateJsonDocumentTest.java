@@ -14,10 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch.document.flat;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.search.elasticsearch.document.BaseElasticsearchTest;
 
@@ -27,9 +23,13 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
-public class GenerateJsonDocumentTest
-extends BaseElasticsearchTest {
+
+/**
+ * @author Miguel Angelo Caldas Gallindo
+ */
+public class GenerateJsonDocumentTest extends BaseElasticsearchTest {
 
 	@Override
 	public void doAfterRunTest() {
@@ -41,11 +41,9 @@ extends BaseElasticsearchTest {
 
 	@Test
 	public void testGetDocumentWithLocalizableSimpleField() throws Exception {
-
 		DocumentImpl document = createDocumentWithRequiredData();
 
-		Map<Locale, String> localizedFieldValues =
-			new HashMap<Locale, String>();
+		Map<Locale, String> localizedFieldValues = new HashMap<>();
 		localizedFieldValues.clear();
 		localizedFieldValues.put(Locale.ENGLISH, "developer");
 		localizedFieldValues.put(new Locale("pt", "BR"), "desenvolvedor");
@@ -57,7 +55,6 @@ extends BaseElasticsearchTest {
 
 	@Test
 	public void testGetDocumentWithSimpleField() throws Exception {
-
 		DocumentImpl document = createDocumentWithRequiredData();
 
 		document.addText("tags", "liferay");
@@ -65,12 +62,12 @@ extends BaseElasticsearchTest {
 		_assertAllConditions(document);
 	}
 
-	private void _assertAllConditions(DocumentImpl document) throws IOException
-	{
+	private void _assertAllConditions(DocumentImpl document)
+		throws IOException {
 
 		String elasticSearchDocument = generateElasticsearchJson(document);
-		assertNotNull(elasticSearchDocument);
-		assertNotEquals("", elasticSearchDocument);
+		Assert.assertNotNull(elasticSearchDocument);
+		Assert.assertNotEquals("", elasticSearchDocument);
 //
 //		String id = indexJsonDocument(elasticSearchDocument);
 //		String documentFromElasticSearch = getIndexedJsonDocument(id);

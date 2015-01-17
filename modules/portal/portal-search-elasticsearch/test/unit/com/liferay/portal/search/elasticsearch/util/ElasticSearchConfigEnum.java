@@ -26,10 +26,9 @@ public enum ElasticSearchConfigEnum {
 	}
 
 	private ElasticSearchConfigEnum(String configName) {
-
 		_configName = configName;
 	}
 
-	private String _configName;
+	private final String _configName;
 
 }

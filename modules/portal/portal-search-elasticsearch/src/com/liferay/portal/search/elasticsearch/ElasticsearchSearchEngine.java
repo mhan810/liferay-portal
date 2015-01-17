@@ -14,6 +14,27 @@
 
 package com.liferay.portal.search.elasticsearch;
 
+import com.liferay.portal.kernel.cluster.Priority;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.BooleanClauseFactory;
+import com.liferay.portal.kernel.search.BooleanQueryFactory;
+import com.liferay.portal.kernel.search.IndexSearcher;
+import com.liferay.portal.kernel.search.IndexWriter;
+import com.liferay.portal.kernel.search.SearchEngine;
+import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.search.TermQueryFactory;
+import com.liferay.portal.kernel.search.TermRangeQueryFactory;
+import com.liferay.portal.kernel.util.PortalRunMode;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.SystemProperties;
+import com.liferay.portal.kernel.util.Time;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
+import com.liferay.portal.search.elasticsearch.index.IndexFactory;
+import com.liferay.portal.search.elasticsearch.util.LogUtil;
+
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -40,30 +61,10 @@ import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.collect.ImmutableList;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.repositories.RepositoryMissingException;
+
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-
-import com.liferay.portal.kernel.cluster.Priority;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.search.BooleanClauseFactory;
-import com.liferay.portal.kernel.search.BooleanQueryFactory;
-import com.liferay.portal.kernel.search.IndexSearcher;
-import com.liferay.portal.kernel.search.IndexWriter;
-import com.liferay.portal.kernel.search.SearchEngine;
-import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.kernel.search.TermQueryFactory;
-import com.liferay.portal.kernel.search.TermRangeQueryFactory;
-import com.liferay.portal.kernel.util.PortalRunMode;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.SystemProperties;
-import com.liferay.portal.kernel.util.Time;
-import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
-import com.liferay.portal.search.elasticsearch.index.IndexFactory;
-import com.liferay.portal.search.elasticsearch.util.LogUtil;
 
 /**
  * @author Michael C. Han
@@ -153,7 +154,6 @@ public class ElasticsearchSearchEngine implements SearchEngine {
 
 	@Override
 	public void initialize(long companyId) {
-
 		ClusterHealthResponse clusterHealthResponse = null;
 
 		if (PortalRunMode.isTestMode()) {
@@ -186,6 +186,7 @@ public class ElasticsearchSearchEngine implements SearchEngine {
 	public boolean isClusteredWrite() {
 
 		// TODO Auto-generated method stub
+
 		return false;
 	}
 
@@ -193,6 +194,7 @@ public class ElasticsearchSearchEngine implements SearchEngine {
 	public boolean isLuceneBased() {
 
 		// TODO Auto-generated method stub
+
 		return false;
 	}
 
@@ -226,7 +228,6 @@ public class ElasticsearchSearchEngine implements SearchEngine {
 
 	@Override
 	public void removeCompany(long companyId) {
-
 		try {
 			_indexFactory.deleteIndices(
 				_elasticsearchConnectionManager.getAdminClient(), companyId);
@@ -324,7 +325,6 @@ public class ElasticsearchSearchEngine implements SearchEngine {
 	public void setIndexSearcher(IndexSearcher indexSearcher) {
 		_indexSearcher = indexSearcher;
 	}
-
 
 	@Reference
 	public void setIndexWriter(IndexWriter indexWriter) {
@@ -442,12 +442,14 @@ public class ElasticsearchSearchEngine implements SearchEngine {
 			}
 		}
 	}
-	
+
 	private static final String _BACKUP_REPOSITORY_NAME = "liferay_backup";
+
 	private static final String _VENDOR = "Elasticsearch";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ElasticsearchSearchEngine.class);
+
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
 	private IndexFactory _indexFactory;
 	private IndexSearcher _indexSearcher;

@@ -25,6 +25,10 @@ import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.search.elasticsearch.document.BaseElasticsearchTest;
 
 import org.junit.Test;
+
+/**
+ * @author Miguel Angelo Caldas Gallindo
+ */
 public class SearchNestedFieldsTest extends BaseElasticsearchTest {
 
 	@Override
@@ -46,16 +50,11 @@ public class SearchNestedFieldsTest extends BaseElasticsearchTest {
 
 		updateDocument(document);
 
-		verifySearch(1, "fields.movie.title.value",
-			"matrix");
-		verifySearch(1,
-			"fields.movie.details.language.value", "english");
-		verifySearch(1,
-			"fields.movie.cast.actors.name.value", "keanu");
-		verifySearch(1,
-			"fields.movie.cast.actors.character.value", "Trinity");
-		verifySearch(1,
-			"fields.movie.directors.value", "Lana");
+		verifySearch(1, "fields.movie.title.value", "matrix");
+		verifySearch(1, "fields.movie.details.language.value", "english");
+		verifySearch(1, "fields.movie.cast.actors.name.value", "keanu");
+		verifySearch(1, "fields.movie.cast.actors.character.value", "Trinity");
+		verifySearch(1, "fields.movie.directors.value", "Lana");
 	}
 
 	protected DocumentImpl createDocuments() {

@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch.document.nested;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -41,7 +40,6 @@ extends BaseElasticsearchTest {
 
 	@Test
 	public void testAddDocument() throws Exception {
-
 		DocumentImpl document = createDocumentWithRequiredData();
 
 		document.addText("liferay.blogs.posts.tags.name", "liferay");
@@ -53,11 +51,9 @@ extends BaseElasticsearchTest {
 
 	@Test
 	public void testAddDocumentWithLocalizable() throws Exception {
-
 		DocumentImpl document = createDocumentWithRequiredData();
 
-		Map<Locale, String> localizedFieldValues =
-			new HashMap<Locale, String>();
+		Map<Locale, String> localizedFieldValues = new HashMap<>();
 		localizedFieldValues.clear();
 		localizedFieldValues.put(Locale.ENGLISH, "contract");
 		localizedFieldValues.put(new Locale("pt", "BR"), "contrato");
@@ -71,11 +67,9 @@ extends BaseElasticsearchTest {
 	}
 
 	private void _assertAllConditions(String id, DocumentImpl document)
-		throws IOException
-	{
+		throws IOException {
 
-		String generatedJsonDocument = generateElasticsearchJson(document
-			);
+		String generatedJsonDocument = generateElasticsearchJson(document );
 		assertNotNull(generatedJsonDocument);
 		assertNotEquals("", generatedJsonDocument);
 

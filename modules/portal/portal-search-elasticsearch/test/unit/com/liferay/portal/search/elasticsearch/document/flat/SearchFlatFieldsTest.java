@@ -39,34 +39,32 @@ public class SearchFlatFieldsTest extends BaseElasticsearchTest {
 	}
 
 	@Test
+	public void testSearchArticleId() throws Exception {
+		indexDocument(_PT);
+		indexDocument(_EN);
+		assertSearch("articleId", _ARTICLE_ID, 2);
+	}
+
+	@Test
 	public void testSearchByLanguageIdEN() throws Exception {
 		indexDocument(_EN);
 
 		assertSearch("languageId", _EN, 1);
-	}	
-	
+	}
+
 	@Test
 	public void testSearchByLanguageIdPT() throws Exception {
 		indexDocument(_PT);
 
 		assertSearch("languageId", _PT, 1);
 	}
-	
-	@Test
-	public void testSearchArticleId() throws Exception {
 
-		indexDocument(_PT);
-		indexDocument(_EN);
-		assertSearch("articleId", _ARTICLE_ID, 2);
-	}
-	
-	
 	protected Hits assertSearch(
-			final String field, final String value, final int expected) 
+			final String field, final String value, final int expected)
 		throws Exception {
 
 		RetryAssertExecutor retry = new RetryAssertExecutor(1000);
-		
+
 		return retry.execute(new Callable<Hits>() {
 
 			@Override
@@ -75,9 +73,9 @@ public class SearchFlatFieldsTest extends BaseElasticsearchTest {
 				assertEquals(expected, hits.getLength());
 				return hits;
 			}
-		});		
+		});
 	}
-	
+
 	protected DocumentImpl createDocument(String locale) {
 		DocumentImpl document = createDocumentWithRequiredData();
 
@@ -92,7 +90,7 @@ public class SearchFlatFieldsTest extends BaseElasticsearchTest {
 
 		updateDocument(document);
 	}
-	
+
 	private static final String _ARTICLE_ID = "123";
 
 	private static final String _EN = "en";
