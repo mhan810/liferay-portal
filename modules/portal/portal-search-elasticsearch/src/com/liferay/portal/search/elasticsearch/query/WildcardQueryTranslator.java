@@ -12,35 +12,24 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search.generic;
+package com.liferay.portal.search.elasticsearch.query;
 
-import com.liferay.portal.kernel.search.BaseQueryImpl;
 import com.liferay.portal.kernel.search.QueryTerm;
-import com.liferay.portal.kernel.search.WildcardQuery;
+import com.liferay.portal.kernel.search.generic.WildcardQueryImpl;
+
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.WildcardQueryBuilder;
 
 /**
- * @author Michael C. Han
+ * @author Miguel Angelo Caldas Gallindo
  */
-public class WildcardQueryImpl extends BaseQueryImpl implements WildcardQuery {
+public class WildcardQueryTranslator {
 
-	public WildcardQueryImpl(QueryTerm queryTerm) {
-		_queryTerm = queryTerm;
-	}
-	
-	public WildcardQueryImpl(String field, String value) {
-		this(new QueryTermImpl(field, value));
-	}
-	
-	@Override
-	public QueryTerm getQueryTerm() {
-		return _queryTerm;
-	}
+	public WildcardQueryBuilder translate(WildcardQueryImpl query) {
+		QueryTerm queryTerm = query.getQueryTerm();
 
-	@Override
-	public Object getWrappedQuery() {
-		return this;
+		return QueryBuilders.wildcardQuery(
+			queryTerm.getField(), queryTerm.getValue());
 	}
-
-	private final QueryTerm _queryTerm;
 
 }

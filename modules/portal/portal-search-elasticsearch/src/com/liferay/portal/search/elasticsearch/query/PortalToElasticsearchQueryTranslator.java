@@ -23,6 +23,8 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 
 import com.liferay.portal.kernel.search.generic.TermRangeQueryImpl;
+import com.liferay.portal.kernel.search.generic.WildcardQueryImpl;
+
 /**
  * @author André de Oliveira
  * @author Miguel Angelo Caldas Gallindo
@@ -56,6 +58,10 @@ public class PortalToElasticsearchQueryTranslator {
 		if (query instanceof TermQueryImpl) {
 			return _translateTermQuery((TermQueryImpl)query);
 		}
+		
+		if (query instanceof WildcardQueryImpl) {
+			return _translateWildcardQuery((WildcardQueryImpl)query);
+		}
 
 		return _fallbackToQueryString(query);
 	}
@@ -72,6 +78,14 @@ public class PortalToElasticsearchQueryTranslator {
 		TermQueryTranslator termQueryTranslator = new TermQueryTranslator();
 
 		return termQueryTranslator.translate(termQuery);
+	}
+	
+	private QueryBuilder _translateWildcardQuery(
+			WildcardQueryImpl wildcardQuery) {
+		WildcardQueryTranslator wildcardQueryTranslator = 
+			new WildcardQueryTranslator();
+		
+		return wildcardQueryTranslator.translate(wildcardQuery);
 	}
 
 }
