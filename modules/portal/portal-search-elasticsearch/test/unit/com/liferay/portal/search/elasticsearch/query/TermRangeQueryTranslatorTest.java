@@ -21,7 +21,7 @@ import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.junit.Test;
 
 /**
- * @author André de Oliveira
+ * @author Miguel Angelo Caldas Gallindo
  */
 public class TermRangeQueryTranslatorTest {
 
