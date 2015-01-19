@@ -22,8 +22,10 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 
+import com.liferay.portal.kernel.search.generic.TermRangeQueryImpl;
 /**
  * @author André de Oliveira
+ * @author Miguel Angelo Caldas Gallindo
  */
 public class PortalToElasticsearchQueryTranslator {
 
@@ -46,12 +48,24 @@ public class PortalToElasticsearchQueryTranslator {
 		if (query instanceof BooleanQueryImpl) {
 			return _translateBooleanQuery((BooleanQueryImpl)query);
 		}
+		
+		if (query instanceof TermRangeQueryImpl) {
+			return _translateRangeTermQuery((TermRangeQueryImpl)query);
+		}
 
 		if (query instanceof TermQueryImpl) {
 			return _translateTermQuery((TermQueryImpl)query);
 		}
 
 		return _fallbackToQueryString(query);
+	}
+	
+	private QueryBuilder _translateRangeTermQuery(
+		TermRangeQueryImpl termRangeQuery) {
+		TermRangeQueryTranslator termRangeQueryTranslator = 
+			new TermRangeQueryTranslator();
+		
+		return termRangeQueryTranslator.translate(termRangeQuery);
 	}
 
 	private QueryBuilder _translateTermQuery(TermQueryImpl termQuery) {
