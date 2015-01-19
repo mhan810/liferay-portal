@@ -22,6 +22,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 
+import com.liferay.portal.kernel.search.MoreLikeThisQuery;
 import com.liferay.portal.kernel.search.generic.TermRangeQueryImpl;
 import com.liferay.portal.kernel.search.generic.WildcardQueryImpl;
 
@@ -51,6 +52,10 @@ public class PortalToElasticsearchQueryTranslator {
 			return _translateBooleanQuery((BooleanQueryImpl)query);
 		}
 		
+		if (query instanceof MoreLikeThisQueryImpl) {
+			return _translateMoreLikeThisQuery((MoreLikeThisQuery)query);
+		}
+		
 		if (query instanceof TermRangeQueryImpl) {
 			return _translateRangeTermQuery((TermRangeQueryImpl)query);
 		}
@@ -64,6 +69,14 @@ public class PortalToElasticsearchQueryTranslator {
 		}
 
 		return _fallbackToQueryString(query);
+	}
+	
+	private QueryBuilder _translateMoreLikeThisQuery(
+		MoreLikeThisQuery moreLikeThisQuery) {
+		MoreLikeThisQueryTranslator moreLikeThisQueryTranslator = 
+			new MoreLikeThisQueryTranslator();
+		
+		return moreLikeThisQueryTranslator.translate(moreLikeThisQuery);
 	}
 	
 	private QueryBuilder _translateRangeTermQuery(
