@@ -14,18 +14,20 @@
 
 package com.liferay.portal.search.elasticsearch.query;
 
-import com.liferay.portal.kernel.search.QueryTerm;
-import com.liferay.portal.kernel.search.generic.TermQueryImpl;
-
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 
+import com.liferay.portal.kernel.search.QueryTerm;
+import com.liferay.portal.kernel.search.TermQuery;
+
 /**
  * @author André de Oliveira
+ * @author Miguel Angelo Caldas Gallindo
  */
-public class TermQueryTranslator {
-
-	public TermQueryBuilder translate(TermQueryImpl query) {
+public class TermQueryTranslator
+implements QueryTranslator<TermQueryBuilder, TermQuery> {
+	
+	public TermQueryBuilder translate(TermQuery query) {
 		QueryTerm queryTerm = query.getQueryTerm();
 
 		return QueryBuilders.termQuery(

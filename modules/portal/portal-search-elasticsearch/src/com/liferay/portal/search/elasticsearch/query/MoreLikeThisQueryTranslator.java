@@ -22,7 +22,8 @@ import com.liferay.portal.kernel.search.MoreLikeThisQuery;
 /**
  * @author Miguel Angelo Caldas Gallindo
  */
-public class MoreLikeThisQueryTranslator {
+public class MoreLikeThisQueryTranslator 
+implements QueryTranslator<MoreLikeThisQueryBuilder, MoreLikeThisQuery> {
 
 	public MoreLikeThisQueryBuilder translate(MoreLikeThisQuery query) {
 

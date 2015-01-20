@@ -17,14 +17,15 @@ package com.liferay.portal.search.elasticsearch.query;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 
-import com.liferay.portal.kernel.search.generic.TermRangeQueryImpl;
+import com.liferay.portal.kernel.search.TermRangeQuery;
 
 /**
  * @author Miguel Angelo Caldas Gallindo
  */
-public class TermRangeQueryTranslator {
-
-	public RangeQueryBuilder translate(TermRangeQueryImpl query) {
+public class TermRangeQueryTranslator
+implements QueryTranslator<RangeQueryBuilder, TermRangeQuery> {
+	
+	public RangeQueryBuilder translate(TermRangeQuery query) {
 
 		return QueryBuilders
             .rangeQuery(query.getField())

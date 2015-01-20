@@ -14,20 +14,23 @@
 
 package com.liferay.portal.search.elasticsearch.query;
 
-import com.liferay.portal.kernel.search.BooleanClause;
-import com.liferay.portal.kernel.search.BooleanClauseOccur;
-import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
-
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
+import com.liferay.portal.kernel.search.BooleanClause;
+import com.liferay.portal.kernel.search.BooleanClauseOccur;
+import com.liferay.portal.kernel.search.BooleanQuery;
+
 /**
  * @author André de Oliveira
+ * @author Miguel Angelo Caldas Gallindo
  */
-public class BooleanQueryTranslator {
+public class BooleanQueryTranslator 
+implements QueryTranslator<BoolQueryBuilder, BooleanQuery> {
 
-	public BoolQueryBuilder translate(BooleanQueryImpl booleanQuery) {
+	@Override
+	public BoolQueryBuilder translate(BooleanQuery booleanQuery) {
 		BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
 
 		for (BooleanClause clause : booleanQuery.clauses()) {
