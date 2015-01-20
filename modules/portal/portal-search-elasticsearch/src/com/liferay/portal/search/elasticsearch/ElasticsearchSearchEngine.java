@@ -14,14 +14,17 @@
 
 package com.liferay.portal.search.elasticsearch;
 
+import com.liferay.portal.kernel.cluster.Priority;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.search.BaseSearchEngine;
+import com.liferay.portal.kernel.search.BooleanClauseFactory;
+import com.liferay.portal.kernel.search.BooleanQueryFactory;
 import com.liferay.portal.kernel.search.IndexSearcher;
 import com.liferay.portal.kernel.search.IndexWriter;
 import com.liferay.portal.kernel.search.SearchEngine;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.search.TermQueryFactory;
+import com.liferay.portal.kernel.search.TermRangeQueryFactory;
 import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -69,12 +72,11 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"clusteredWrite=false", "luceneBased=true",
-		"search.engine.id=SYSTEM_ENGINE", "vendor=Elasticsearch"
+		"search.engine.id=SYSTEM_ENGINE"
 	},
 	service = {ElasticsearchSearchEngine.class, SearchEngine.class}
 )
-public class ElasticsearchSearchEngine extends BaseSearchEngine {
+public class ElasticsearchSearchEngine implements SearchEngine {
 
 	@Override
 	public synchronized String backup(long companyId, String backupName)
@@ -111,9 +113,47 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 	}
 
 	@Override
-	public void initialize(long companyId) {
-		super.initialize(companyId);
+	public BooleanClauseFactory getBooleanClauseFactory() {
+		return null;
+	}
 
+	@Override
+	public BooleanQueryFactory getBooleanQueryFactory() {
+		return null;
+	}
+
+	@Override
+	public Priority getClusteredWritePriority() {
+		return null;
+	}
+
+	@Override
+	public IndexSearcher getIndexSearcher() {
+		return _indexSearcher;
+	}
+
+	@Override
+	public IndexWriter getIndexWriter() {
+		return _indexWriter;
+	}
+
+	@Override
+	public TermQueryFactory getTermQueryFactory() {
+		return null;
+	}
+
+	@Override
+	public TermRangeQueryFactory getTermRangeQueryFactory() {
+		return null;
+	}
+
+	@Override
+	public String getVendor() {
+		return _VENDOR;
+	}
+
+	@Override
+	public void initialize(long companyId) {
 		ClusterHealthResponse clusterHealthResponse = null;
 
 		if (PortalRunMode.isTestMode()) {
@@ -140,6 +180,22 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 		catch (Exception e) {
 			throw new IllegalStateException(e);
 		}
+	}
+
+	@Override
+	public boolean isClusteredWrite() {
+
+		// TODO Auto-generated method stub
+
+		return false;
+	}
+
+	@Override
+	public boolean isLuceneBased() {
+
+		// TODO Auto-generated method stub
+
+		return false;
 	}
 
 	@Override
@@ -172,8 +228,6 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 
 	@Override
 	public void removeCompany(long companyId) {
-		super.removeCompany(companyId);
-
 		try {
 			_indexFactory.deleteIndices(
 				_elasticsearchConnectionManager.getAdminClient(), companyId);
@@ -267,16 +321,14 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 		_indexFactory = indexFactory;
 	}
 
-	@Override
 	@Reference
 	public void setIndexSearcher(IndexSearcher indexSearcher) {
-		super.setIndexSearcher(indexSearcher);
+		_indexSearcher = indexSearcher;
 	}
 
-	@Override
 	@Reference
 	public void setIndexWriter(IndexWriter indexWriter) {
-		super.setIndexWriter(indexWriter);
+		_indexWriter = indexWriter;
 	}
 
 	public void unsetElasticsearchConnectionManager(
@@ -291,9 +343,6 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 
 	@Activate
 	protected void activate(Map<String, Object> properties) {
-		setClusteredWrite(MapUtil.getBoolean(properties, "clusteredWrite"));
-		setLuceneBased(MapUtil.getBoolean(properties, "luceneBased"));
-		setVendor(MapUtil.getString(properties, "vendor"));
 	}
 
 	protected void createBackupRepository(ClusterAdminClient clusterAdminClient)
@@ -396,10 +445,14 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 
 	private static final String _BACKUP_REPOSITORY_NAME = "liferay_backup";
 
+	private static final String _VENDOR = "Elasticsearch";
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		ElasticsearchSearchEngine.class);
 
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
 	private IndexFactory _indexFactory;
+	private IndexSearcher _indexSearcher;
+	private IndexWriter _indexWriter;
 
 }

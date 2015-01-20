@@ -12,23 +12,27 @@
  * details.
  */
 
-package com.liferay.portal.search.generic;
+package com.liferay.portal.search.elasticsearch.query;
+
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
 
 import com.liferay.portal.kernel.search.TermRangeQuery;
-import com.liferay.portal.kernel.search.TermRangeQueryFactory;
 
 /**
- * @author Raymond Augé
+ * @author Miguel Angelo Caldas Gallindo
  */
-public class TermRangeQueryFactoryImpl implements TermRangeQueryFactory {
+public class TermRangeQueryTranslator
+implements QueryTranslator<RangeQueryBuilder, TermRangeQuery> {
+	
+	public RangeQueryBuilder translate(TermRangeQuery query) {
 
-	@Override
-	public TermRangeQuery create(
-		String field, String lowerTerm, String upperTerm, boolean includesLower,
-		boolean includesUpper) {
-
-		return new TermRangeQueryImpl(
-			field, lowerTerm, upperTerm, includesLower, includesUpper);
+		return QueryBuilders
+            .rangeQuery(query.getField())
+            .from(query.getLowerTerm())
+            .to(query.getUpperTerm())
+            .includeLower(query.includesLower())
+            .includeUpper(query.includesUpper());
 	}
 
 }

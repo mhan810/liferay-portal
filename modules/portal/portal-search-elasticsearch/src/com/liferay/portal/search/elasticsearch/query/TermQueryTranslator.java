@@ -12,31 +12,26 @@
  * details.
  */
 
-package com.liferay.portal.search.generic;
+package com.liferay.portal.search.elasticsearch.query;
 
-import com.liferay.portal.kernel.search.BaseQueryImpl;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermQueryBuilder;
+
 import com.liferay.portal.kernel.search.QueryTerm;
 import com.liferay.portal.kernel.search.TermQuery;
 
 /**
- * @author Michael C. Han
+ * @author André de Oliveira
+ * @author Miguel Angelo Caldas Gallindo
  */
-public class TermQueryImpl extends BaseQueryImpl implements TermQuery {
+public class TermQueryTranslator
+implements QueryTranslator<TermQueryBuilder, TermQuery> {
+	
+	public TermQueryBuilder translate(TermQuery query) {
+		QueryTerm queryTerm = query.getQueryTerm();
 
-	public TermQueryImpl(QueryTerm queryTerm) {
-		_queryTerm = queryTerm;
+		return QueryBuilders.termQuery(
+			queryTerm.getField(), queryTerm.getValue());
 	}
-
-	@Override
-	public QueryTerm getQueryTerm() {
-		return _queryTerm;
-	}
-
-	@Override
-	public Object getWrappedQuery() {
-		return this;
-	}
-
-	private final QueryTerm _queryTerm;
 
 }

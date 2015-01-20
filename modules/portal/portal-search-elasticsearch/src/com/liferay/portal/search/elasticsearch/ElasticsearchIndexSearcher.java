@@ -41,6 +41,8 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch.facet.ElasticsearchFacetFieldCollector;
 import com.liferay.portal.search.elasticsearch.facet.FacetProcessor;
+import com.liferay.portal.search.elasticsearch.query.ElasticsearchQuery;
+import com.liferay.portal.search.elasticsearch.query.PortalToElasticsearchQueryTranslator;
 import com.liferay.portal.search.elasticsearch.util.DocumentTypes;
 
 import java.util.ArrayList;
@@ -61,7 +63,6 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHitField;
 import org.elasticsearch.search.SearchHits;
@@ -87,12 +88,20 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 	public Hits search(SearchContext searchContext, Query query)
 		throws SearchException {
 
-		StopWatch stopWatch = new StopWatch();
-
-		stopWatch.start();
-
 		try {
-			int total = (int)searchCount(searchContext, query);
+			StopWatch stopWatch = new StopWatch();
+
+			stopWatch.start();
+
+			PortalToElasticsearchQueryTranslator translator =
+				new PortalToElasticsearchQueryTranslator();
+
+			ElasticsearchQuery elasticsearchQuery = translator.translate(query);
+
+			QueryConfig queryConfig = query.getQueryConfig();
+
+			int total = (int)searchCount(
+				searchContext, elasticsearchQuery, queryConfig);
 
 			int start = searchContext.getStart();
 			int end = searchContext.getEnd();
@@ -109,12 +118,20 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			end = startAndEnd[1];
 
 			SearchResponse searchResponse = doSearch(
-				searchContext, query, start, end);
+				searchContext, elasticsearchQuery, queryConfig, start, end);
 
 			Hits hits = processSearchResponse(
 				searchResponse, searchContext, query);
 
 			hits.setStart(stopWatch.getStartTime());
+
+			stopWatch.stop();
+
+			if (_log.isInfoEnabled()) {
+				_log.info(
+					"Searching " + elasticsearchQuery.toJson() + " took " +
+					stopWatch.getTime() + " ms");
+			}
 
 			return hits;
 		}
@@ -129,32 +146,35 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 
 			return new HitsImpl();
 		}
-		finally {
-			if (_log.isInfoEnabled()) {
-				stopWatch.stop();
-
-				_log.info(
-					"Searching " + query.toString() + " took " +
-						stopWatch.getTime() + " ms");
-			}
-		}
 	}
 
-	public long searchCount(SearchContext searchContext, Query query)
+	public long searchCount(
+			SearchContext searchContext, ElasticsearchQuery elasticsearchQuery,
+			QueryConfig queryConfig)
 		throws SearchException {
 
-		StopWatch stopWatch = new StopWatch();
-
-		stopWatch.start();
-
 		try {
+			StopWatch stopWatch = new StopWatch();
+
+			stopWatch.start();
+
 			SearchResponse searchResponse = doSearch(
-				searchContext, query, searchContext.getStart(),
-				searchContext.getEnd(), true);
+				searchContext, elasticsearchQuery, queryConfig,
+				searchContext.getStart(), searchContext.getEnd(), true);
 
 			SearchHits searchHits = searchResponse.getHits();
 
-			return searchHits.getTotalHits();
+			long totalHits = searchHits.getTotalHits();
+
+			stopWatch.stop();
+
+			if (_log.isInfoEnabled()) {
+				_log.info(
+					"Searching " + elasticsearchQuery.toJson() + " took " +
+					stopWatch.getTime() + " ms");
+			}
+
+			return totalHits;
 		}
 		catch (Exception e) {
 			if (_log.isWarnEnabled()) {
@@ -166,15 +186,6 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			}
 
 			return 0;
-		}
-		finally {
-			if (_log.isInfoEnabled()) {
-				stopWatch.stop();
-
-				_log.info(
-					"Searching " + query.toString() + " took " +
-						stopWatch.getTime() + " ms");
-			}
 		}
 	}
 
@@ -377,21 +388,20 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 	}
 
 	protected SearchResponse doSearch(
-			SearchContext searchContext, Query query, int start, int end)
-		throws Exception {
+		SearchContext searchContext, ElasticsearchQuery elasticsearchQuery,
+		QueryConfig queryConfig, int start, int end) {
 
-		return doSearch(searchContext, query, start, end, false);
+		return doSearch(
+			searchContext, elasticsearchQuery, queryConfig, start, end, false);
 	}
 
 	protected SearchResponse doSearch(
-		SearchContext searchContext, Query query, int start, int end,
-		boolean count) {
+		SearchContext searchContext, ElasticsearchQuery elasticsearchQuery,
+		QueryConfig queryConfig, int start, int end, boolean count) {
 
 		Client client = _elasticsearchConnectionManager.getClient();
 
 		SearchRequestBuilder searchRequestBuilder = null;
-
-		QueryConfig queryConfig = query.getQueryConfig();
 
 		String[] selectedIndexNames = queryConfig.getSelectedIndexNames();
 
@@ -416,7 +426,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			searchRequestBuilder.setSize(0);
 		}
 
-		QueryBuilder queryBuilder = QueryBuilders.queryString(query.toString());
+		QueryBuilder queryBuilder = elasticsearchQuery.getQueryBuilder();
 
 		searchRequestBuilder.setQuery(queryBuilder);
 
@@ -438,7 +448,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		if (_log.isInfoEnabled()) {
 			_log.info(
 				"The search engine processed " + queryBuilder.toString() +
-					"in " + searchResponse.getTook());
+					" in " + searchResponse.getTook());
 		}
 
 		return searchResponse;

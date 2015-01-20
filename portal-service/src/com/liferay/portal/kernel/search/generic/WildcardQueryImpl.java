@@ -12,35 +12,35 @@
  * details.
  */
 
-package com.liferay.portal.search.generic;
+package com.liferay.portal.kernel.search.generic;
 
-import com.liferay.portal.kernel.search.BooleanClause;
-import com.liferay.portal.kernel.search.BooleanClauseOccur;
-import com.liferay.portal.kernel.search.Query;
+import com.liferay.portal.kernel.search.BaseQueryImpl;
+import com.liferay.portal.kernel.search.QueryTerm;
+import com.liferay.portal.kernel.search.WildcardQuery;
 
 /**
  * @author Michael C. Han
  */
-public class BooleanClauseImpl implements BooleanClause {
+public class WildcardQueryImpl extends BaseQueryImpl implements WildcardQuery {
 
-	public BooleanClauseImpl(
-		Query query, BooleanClauseOccur booleanClauseOccur) {
-
-		_query = query;
-		_booleanClauseOccur = booleanClauseOccur;
+	public WildcardQueryImpl(QueryTerm queryTerm) {
+		_queryTerm = queryTerm;
+	}
+	
+	public WildcardQueryImpl(String field, String value) {
+		this(new QueryTermImpl(field, value));
+	}
+	
+	@Override
+	public QueryTerm getQueryTerm() {
+		return _queryTerm;
 	}
 
 	@Override
-	public BooleanClauseOccur getBooleanClauseOccur() {
-		return _booleanClauseOccur;
+	public Object getWrappedQuery() {
+		return this;
 	}
 
-	@Override
-	public Query getQuery() {
-		return _query;
-	}
-
-	private final BooleanClauseOccur _booleanClauseOccur;
-	private final Query _query;
+	private final QueryTerm _queryTerm;
 
 }
