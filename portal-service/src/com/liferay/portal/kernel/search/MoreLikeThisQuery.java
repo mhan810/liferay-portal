@@ -16,7 +16,10 @@ package com.liferay.portal.kernel.search;
 
 import java.util.List;
 
-public interface MoreLikeThisQuery {
+/**
+ * @author Miguel Angelo Caldas Gallindo
+ */
+public interface MoreLikeThisQuery extends Query {
 
 	Object getWrappedQuery();
 
