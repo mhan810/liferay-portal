@@ -21,17 +21,12 @@ import com.liferay.portal.kernel.search.MoreLikeThisQuery;
 import com.liferay.portal.kernel.search.generic.MoreLikeThisQueryImpl;
 
 /**
- * @author André de Oliveira
+ * @author Miguel Angelo Caldas Gallindo
  */
 public class MoreLikeThisQueryTranslatorTest {
 
 	@Test
 	public void testMoreLikeThisQuery() throws Exception {
-		
-		/*
-		String likeText,
-		int maxQueryTerms, int minTermFreq, String... fields
-		 */
 		
 		MoreLikeThisQuery query = new MoreLikeThisQueryImpl(
 			"Gallindo", 12,1, "name.first", "name.last");
@@ -45,14 +40,14 @@ public class MoreLikeThisQueryTranslatorTest {
 	}
 
 	protected void assertTranslate(
-			String expected, MoreLikeThisQuery termRangeQuery)
+			String expected, MoreLikeThisQuery moreLikeThisQuery)
 		throws Exception {
 
-		MoreLikeThisQueryBuilder termRangeQueryBuilder = _translator.translate(
-			termRangeQuery);
+		MoreLikeThisQueryBuilder mltQueryBuilder = _translator.translate(
+			moreLikeThisQuery);
 
 		QueryBuilderTestUtil.assertJsonContains(
-			expected, termRangeQueryBuilder);
+			expected, mltQueryBuilder);
 	}
 
 	private final MoreLikeThisQueryTranslator _translator = 

@@ -14,12 +14,12 @@
 
 package com.liferay.portal.search.elasticsearch.query;
 
-import com.liferay.portal.kernel.search.BooleanClauseOccur;
-import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
-
 import org.elasticsearch.index.query.BoolQueryBuilder;
-
 import org.junit.Test;
+
+import com.liferay.portal.kernel.search.BooleanClauseOccur;
+import com.liferay.portal.kernel.search.BooleanQuery;
+import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 
 /**
  * @author André de Oliveira
@@ -44,7 +44,7 @@ public class BooleanQueryTranslatorTest {
 	}
 
 	protected void assertTranslate(
-			String expected, BooleanQueryImpl booleanQuery)
+			String expected, BooleanQuery booleanQuery)
 		throws Exception {
 
 		BoolQueryBuilder boolQueryBuilder = _translator.translate(booleanQuery);
