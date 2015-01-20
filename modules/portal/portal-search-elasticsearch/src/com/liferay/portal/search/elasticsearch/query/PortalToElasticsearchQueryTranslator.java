@@ -16,6 +16,7 @@ package com.liferay.portal.search.elasticsearch.query;
 
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
+import com.liferay.portal.kernel.search.generic.MoreLikeThisQueryImpl;
 import com.liferay.portal.kernel.search.generic.TermQueryImpl;
 
 import org.elasticsearch.index.query.QueryBuilder;
