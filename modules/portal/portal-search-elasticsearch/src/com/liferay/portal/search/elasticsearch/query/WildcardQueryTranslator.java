@@ -17,20 +17,33 @@ package com.liferay.portal.search.elasticsearch.query;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.WildcardQueryBuilder;
 
+import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.QueryTerm;
 import com.liferay.portal.kernel.search.WildcardQuery;
 
 /**
  * @author Miguel Angelo Caldas Gallindo
  */
-public class WildcardQueryTranslator
-implements QueryTranslator<WildcardQueryBuilder, WildcardQuery> {
+public class WildcardQueryTranslator implements QueryTranslator {
 
-	public WildcardQueryBuilder translate(WildcardQuery query) {
+	@Override
+	public ElasticsearchQuery translate(Query originalQuery) {
+		
+		WildcardQuery query = (WildcardQuery)originalQuery;
+		
 		QueryTerm queryTerm = query.getQueryTerm();
 
-		return QueryBuilders.wildcardQuery(
+		WildcardQueryBuilder queryBuilder = QueryBuilders.wildcardQuery(
 			queryTerm.getField(), queryTerm.getValue());
+		
+		String queryString = queryBuilder.toString();
+
+		ElasticsearchQuery elasticsearchQuery = new ElasticsearchQuery(query);
+		
+		elasticsearchQuery.setQueryBuilder(queryBuilder);
+		elasticsearchQuery.setQueryString(queryString);
+		
+		return elasticsearchQuery;
 	}
 
 }

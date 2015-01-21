@@ -17,22 +17,34 @@ package com.liferay.portal.search.elasticsearch.query;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 
+import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.TermRangeQuery;
 
 /**
  * @author Miguel Angelo Caldas Gallindo
  */
-public class TermRangeQueryTranslator
-implements QueryTranslator<RangeQueryBuilder, TermRangeQuery> {
+public class TermRangeQueryTranslator implements QueryTranslator {
 	
-	public RangeQueryBuilder translate(TermRangeQuery query) {
+	@Override
+	public ElasticsearchQuery translate(Query originalQuery) {
 
-		return QueryBuilders
+		TermRangeQuery query = (TermRangeQuery)originalQuery;
+		
+		RangeQueryBuilder queryBuilder = QueryBuilders
             .rangeQuery(query.getField())
             .from(query.getLowerTerm())
             .to(query.getUpperTerm())
             .includeLower(query.includesLower())
             .includeUpper(query.includesUpper());
+		
+		String queryString = queryBuilder.toString();
+
+		ElasticsearchQuery elasticsearchQuery = new ElasticsearchQuery(query);
+		
+		elasticsearchQuery.setQueryBuilder(queryBuilder);
+		elasticsearchQuery.setQueryString(queryString);
+		
+		return elasticsearchQuery;
 	}
 
 }

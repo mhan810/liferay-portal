@@ -21,23 +21,34 @@ import org.elasticsearch.index.query.QueryBuilders;
 import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
+import com.liferay.portal.kernel.search.Query;
 
 /**
  * @author André de Oliveira
  * @author Miguel Angelo Caldas Gallindo
  */
 public class BooleanQueryTranslator 
-implements QueryTranslator<BoolQueryBuilder, BooleanQuery> {
+implements QueryTranslator {
 
 	@Override
-	public BoolQueryBuilder translate(BooleanQuery booleanQuery) {
-		BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+	public ElasticsearchQuery translate(Query originalQuery) {
+		
+		BooleanQuery query = (BooleanQuery)originalQuery;
+		
+		BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
 
-		for (BooleanClause clause : booleanQuery.clauses()) {
-			_addClause(clause, boolQuery);
+		for (BooleanClause clause : query.clauses()) {
+			_addClause(clause, queryBuilder);
 		}
 
-		return boolQuery;
+		String queryString = queryBuilder.toString();
+
+		ElasticsearchQuery elasticsearchQuery = new ElasticsearchQuery(query);
+		
+		elasticsearchQuery.setQueryBuilder(queryBuilder);
+		elasticsearchQuery.setQueryString(queryString);
+		
+		return elasticsearchQuery;
 	}
 
 	private void _addClause(BooleanClause clause, BoolQueryBuilder boolQuery) {

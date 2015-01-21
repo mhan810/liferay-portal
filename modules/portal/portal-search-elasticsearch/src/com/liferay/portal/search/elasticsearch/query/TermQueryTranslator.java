@@ -17,6 +17,7 @@ package com.liferay.portal.search.elasticsearch.query;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 
+import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.QueryTerm;
 import com.liferay.portal.kernel.search.TermQuery;
 
@@ -24,14 +25,26 @@ import com.liferay.portal.kernel.search.TermQuery;
  * @author André de Oliveira
  * @author Miguel Angelo Caldas Gallindo
  */
-public class TermQueryTranslator
-implements QueryTranslator<TermQueryBuilder, TermQuery> {
+public class TermQueryTranslator implements QueryTranslator {
 	
-	public TermQueryBuilder translate(TermQuery query) {
+	@Override
+	public ElasticsearchQuery translate(Query originalQuery) {
+		
+		TermQuery query = (TermQuery)originalQuery;
+		
 		QueryTerm queryTerm = query.getQueryTerm();
 
-		return QueryBuilders.termQuery(
-			queryTerm.getField(), queryTerm.getValue());
+		TermQueryBuilder queryBuilder = 
+			QueryBuilders.termQuery(queryTerm.getField(), queryTerm.getValue());
+		
+		String queryString = queryBuilder.toString();
+
+		ElasticsearchQuery elasticsearchQuery = new ElasticsearchQuery(query);
+		
+		elasticsearchQuery.setQueryBuilder(queryBuilder);
+		elasticsearchQuery.setQueryString(queryString);
+		
+		return elasticsearchQuery;
 	}
 
 }

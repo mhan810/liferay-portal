@@ -14,31 +14,59 @@
 
 package com.liferay.portal.search.elasticsearch.query;
 
-import com.liferay.portal.kernel.util.Validator;
-
 import org.elasticsearch.index.query.QueryBuilder;
+
+import com.liferay.portal.kernel.search.Query;
+import com.liferay.portal.kernel.search.QueryConfig;
+
 
 /**
  * @author André de Oliveira
+ * @author Michael C. Han
  */
-public class ElasticsearchQuery {
+public class ElasticsearchQuery implements Query {
 
-	public ElasticsearchQuery(QueryBuilder queryBuilder) {
-		if (Validator.isNull(queryBuilder)) {
-			throw new NullPointerException();
-		}
-
-		_queryBuilder = queryBuilder;
+	public ElasticsearchQuery(Query query) {
+		_originalQuery = query;
 	}
-
+	
 	public QueryBuilder getQueryBuilder() {
-		return _queryBuilder;
+		return queryBuilder;
+	}
+	
+	@Override
+	public QueryConfig getQueryConfig() {
+		return _originalQuery.getQueryConfig();
 	}
 
-	public String toJson() {
-		return _queryBuilder.toString();
+	public String getQueryString() {
+		return _queryString;
 	}
 
-	private final QueryBuilder _queryBuilder;
+	@Override
+	public Object getWrappedQuery() {
+		return _originalQuery;
+	}
+	
+	public void setQueryBuilder(QueryBuilder queryBuilder) {
+		this.queryBuilder = queryBuilder;
+	}
+	
+	@Override
+	public void setQueryConfig(QueryConfig queryConfig) {
+		_originalQuery.setQueryConfig(queryConfig);
+	}
 
+	public void setQueryString(String queryString) {
+		_queryString = queryString;
+	}
+
+	@Override
+	public String toString() {
+		return _queryString;
+	}
+
+	private final Query _originalQuery;
+	private QueryBuilder queryBuilder;
+	private transient String _queryString;
 }

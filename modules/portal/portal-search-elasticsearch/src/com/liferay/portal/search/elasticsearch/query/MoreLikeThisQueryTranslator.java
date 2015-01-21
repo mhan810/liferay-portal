@@ -18,19 +18,32 @@ import org.elasticsearch.index.query.MoreLikeThisQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
 import com.liferay.portal.kernel.search.MoreLikeThisQuery;
+import com.liferay.portal.kernel.search.Query;
 
 /**
  * @author Miguel Angelo Caldas Gallindo
  */
-public class MoreLikeThisQueryTranslator 
-implements QueryTranslator<MoreLikeThisQueryBuilder, MoreLikeThisQuery> {
+public class MoreLikeThisQueryTranslator implements QueryTranslator {
 
-	public MoreLikeThisQueryBuilder translate(MoreLikeThisQuery query) {
+	@Override
+	public ElasticsearchQuery translate(Query originalQuery) {
 
-		return QueryBuilders.moreLikeThisQuery(query.getFields())
+		MoreLikeThisQuery query = (MoreLikeThisQuery)originalQuery;
+		
+		MoreLikeThisQueryBuilder queryBuilder = 
+		QueryBuilders.moreLikeThisQuery(query.getFields())
 			.likeText(query.getLikeText())
 			.minTermFreq(query.getMinTermFreq())
 			.maxQueryTerms(query.getMaxQueryTerms());
+		
+		String queryString = queryBuilder.toString();
+
+		ElasticsearchQuery elasticsearchQuery = new ElasticsearchQuery(query);
+		
+		elasticsearchQuery.setQueryBuilder(queryBuilder);
+		elasticsearchQuery.setQueryString(queryString);
+		
+		return elasticsearchQuery;
 	}
 
 }

@@ -34,21 +34,25 @@ import com.liferay.portal.kernel.search.generic.WildcardQueryImpl;
 public class PortalToElasticsearchQueryTranslator {
 
 	public ElasticsearchQuery translate(Query query) {
-		return new ElasticsearchQuery(_translateQuery(query));
+		return _translateQuery(query);
 	}
 
-	private QueryStringQueryBuilder _fallbackToQueryString(Query query) {
-		return QueryBuilders.queryString(query.toString());
+	private ElasticsearchQuery _fallbackToQueryString(Query query) {
+		
+		SimpleQueryTranslator simpleTranslator = new SimpleQueryTranslator();
+		
+		return simpleTranslator.translate(query);
 	}
 
-	private QueryBuilder _translateBooleanQuery(BooleanQueryImpl booleanQuery) {
+	private ElasticsearchQuery _translateBooleanQuery(
+		BooleanQueryImpl booleanQuery) {
 		BooleanQueryTranslator booleanQueryTranslator =
 			new BooleanQueryTranslator();
 
 		return booleanQueryTranslator.translate(booleanQuery);
 	}
 
-	private QueryBuilder _translateQuery(Query query) {
+	private ElasticsearchQuery _translateQuery(Query query) {
 		if (query instanceof BooleanQueryImpl) {
 			return _translateBooleanQuery((BooleanQueryImpl)query);
 		}
@@ -72,7 +76,7 @@ public class PortalToElasticsearchQueryTranslator {
 		return _fallbackToQueryString(query);
 	}
 	
-	private QueryBuilder _translateMoreLikeThisQuery(
+	private ElasticsearchQuery _translateMoreLikeThisQuery(
 		MoreLikeThisQuery moreLikeThisQuery) {
 		MoreLikeThisQueryTranslator moreLikeThisQueryTranslator = 
 			new MoreLikeThisQueryTranslator();
@@ -80,7 +84,7 @@ public class PortalToElasticsearchQueryTranslator {
 		return moreLikeThisQueryTranslator.translate(moreLikeThisQuery);
 	}
 	
-	private QueryBuilder _translateRangeTermQuery(
+	private ElasticsearchQuery _translateRangeTermQuery(
 		TermRangeQueryImpl termRangeQuery) {
 		TermRangeQueryTranslator termRangeQueryTranslator = 
 			new TermRangeQueryTranslator();
@@ -88,13 +92,13 @@ public class PortalToElasticsearchQueryTranslator {
 		return termRangeQueryTranslator.translate(termRangeQuery);
 	}
 
-	private QueryBuilder _translateTermQuery(TermQueryImpl termQuery) {
+	private ElasticsearchQuery _translateTermQuery(TermQueryImpl termQuery) {
 		TermQueryTranslator termQueryTranslator = new TermQueryTranslator();
 
 		return termQueryTranslator.translate(termQuery);
 	}
 	
-	private QueryBuilder _translateWildcardQuery(
+	private ElasticsearchQuery _translateWildcardQuery(
 			WildcardQueryImpl wildcardQuery) {
 		WildcardQueryTranslator wildcardQueryTranslator = 
 			new WildcardQueryTranslator();

@@ -16,12 +16,31 @@ package com.liferay.portal.search.elasticsearch.query;
 
 import com.liferay.portal.kernel.search.Query;
 
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.osgi.service.component.annotations.Component;
+
 /**
- * @author Miguel Angelo Caldas Gallindo
  * @author Michael C. Han
  */
-public interface QueryTranslator {
+@Component(immediate = true, service = QueryTranslator.class)
+public class SimpleQueryTranslator implements QueryTranslator {
 
-	public ElasticsearchQuery translate(Query originalQuery);
+	@Override
+	public ElasticsearchQuery translate(Query originalQuery) {
+
+		QueryBuilder queryBuilder = 
+			QueryBuilders.queryString(originalQuery.toString());
+
+		String queryString = queryBuilder.toString();
+
+		ElasticsearchQuery elasticsearchQuery = 
+			new ElasticsearchQuery(originalQuery);
+		
+		elasticsearchQuery.setQueryBuilder(queryBuilder);
+		elasticsearchQuery.setQueryString(queryString);
+		
+		return elasticsearchQuery;
+	}
 
 }
