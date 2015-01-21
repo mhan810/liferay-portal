@@ -129,8 +129,8 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 
 			if (_log.isInfoEnabled()) {
 				_log.info(
-					"Searching " + elasticsearchQuery.toJson() + " took " +
-					stopWatch.getTime() + " ms");
+					"Searching " + elasticsearchQuery.getQueryString() + 
+					" took " + stopWatch.getTime() + " ms");
 			}
 
 			return hits;
@@ -170,8 +170,8 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 
 			if (_log.isInfoEnabled()) {
 				_log.info(
-					"Searching " + elasticsearchQuery.toJson() + " took " +
-					stopWatch.getTime() + " ms");
+					"Searching " + elasticsearchQuery.getQueryString() + 
+					" took " + stopWatch.getTime() + " ms");
 			}
 
 			return totalHits;
