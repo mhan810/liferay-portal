@@ -17,7 +17,6 @@ package com.liferay.portal.search.elasticsearch.query;
 import com.liferay.portal.kernel.search.generic.TermRangeQueryImpl;
 
 import org.elasticsearch.index.query.RangeQueryBuilder;
-
 import org.junit.Test;
 
 /**
@@ -37,14 +36,15 @@ public class TermRangeQueryTranslatorTest {
 	}
 
 	protected void assertTranslate(
-			String expected, TermRangeQueryImpl termRangeQuery)
+			String expected, TermRangeQueryImpl originalQuery)
 		throws Exception {
 
-		RangeQueryBuilder termRangeQueryBuilder = _translator.translate(
-			termRangeQuery);
+		ElasticsearchQuery elasticsearchQuery = 
+			_translator.translate(originalQuery);
 
-		QueryBuilderTestUtil.assertJsonContains(
-			expected, termRangeQueryBuilder);
+		String jsonQuery = elasticsearchQuery.getQueryString();
+		
+		QueryBuilderTestUtil.assertJsonContains(expected, jsonQuery);
 	}
 
 	private final TermRangeQueryTranslator _translator = 

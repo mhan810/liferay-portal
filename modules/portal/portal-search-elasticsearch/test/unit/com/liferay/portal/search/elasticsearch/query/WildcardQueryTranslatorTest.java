@@ -14,11 +14,9 @@
 
 package com.liferay.portal.search.elasticsearch.query;
 
-import com.liferay.portal.kernel.search.generic.WildcardQueryImpl;
-
-import org.elasticsearch.index.query.WildcardQueryBuilder;
-
 import org.junit.Test;
+
+import com.liferay.portal.kernel.search.generic.WildcardQueryImpl;
 
 /**
  * @author Miguel Angelo Caldas Gallindo
@@ -34,13 +32,15 @@ public class WildcardQueryTranslatorTest {
 	}
 
 	protected void assertTranslate(
-			String expected, WildcardQueryImpl wildcardQuery)
+			String expected, WildcardQueryImpl originalQuery)
 		throws Exception {
 
-		WildcardQueryBuilder wildcardQueryBuilder = _translator.translate(
-			wildcardQuery);
+		ElasticsearchQuery elasticsearchQuery = 
+			_translator.translate(originalQuery);
 
-		QueryBuilderTestUtil.assertJsonContains(expected, wildcardQueryBuilder);
+		String jsonQuery = elasticsearchQuery.getQueryString();
+		
+		QueryBuilderTestUtil.assertJsonContains(expected, jsonQuery);
 	}
 
 	private final WildcardQueryTranslator _translator = 

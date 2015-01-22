@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch.query;
 
-import org.elasticsearch.index.query.MoreLikeThisQueryBuilder;
 import org.junit.Test;
 
 import com.liferay.portal.kernel.search.MoreLikeThisQuery;
@@ -40,14 +39,15 @@ public class MoreLikeThisQueryTranslatorTest {
 	}
 
 	protected void assertTranslate(
-			String expected, MoreLikeThisQuery moreLikeThisQuery)
+			String expected, MoreLikeThisQuery originalQuery)
 		throws Exception {
 
-		MoreLikeThisQueryBuilder mltQueryBuilder = _translator.translate(
-			moreLikeThisQuery);
+		ElasticsearchQuery elasticsearchQuery = 
+			_translator.translate(originalQuery);
 
-		QueryBuilderTestUtil.assertJsonContains(
-			expected, mltQueryBuilder);
+		String jsonQuery = elasticsearchQuery.getQueryString();
+		
+		QueryBuilderTestUtil.assertJsonContains(expected, jsonQuery);
 	}
 
 	private final MoreLikeThisQueryTranslator _translator = 

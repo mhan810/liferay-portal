@@ -41,9 +41,9 @@ public class PortalToElasticsearchQueryTranslatorTest {
 
 		ElasticsearchQuery elasticsearchQuery = _translator.translate(query);
 
-		QueryBuilder queryBuilder = elasticsearchQuery.getQueryBuilder();
+		String json = elasticsearchQuery.getQueryString();
 
-		QueryBuilderTestUtil.assertJsonContains(expected, queryBuilder);
+		QueryBuilderTestUtil.assertJsonContains(expected, json);
 	}
 
 	private final PortalToElasticsearchQueryTranslator _translator =

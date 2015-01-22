@@ -17,12 +17,13 @@ package com.liferay.portal.search.elasticsearch.query;
 import org.elasticsearch.common.xcontent.ToXContent;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.common.xcontent.json.JsonXContent;
 import org.elasticsearch.index.query.QueryBuilder;
-
 import org.junit.Assert;
 
 /**
  * @author André de Oliveira
+ * @author Miguel Angelo Caldas Gallindo
  */
 public class QueryBuilderTestUtil {
 
@@ -32,8 +33,16 @@ public class QueryBuilderTestUtil {
 
 		String json = toJson(queryBuilder);
 
-		if (!json.contains(expected)) {
-			Assert.assertEquals(expected, json);
+		assertJsonContains(expected, json);
+	}
+
+	public static void assertJsonContains(String expected, String json) {
+
+		String plainExpected = planifyJson(expected);
+		String plainJson = planifyJson(json);
+		
+		if (!plainJson.contains(plainExpected)) {
+			Assert.assertEquals(plainExpected, plainJson);
 		}
 	}
 
@@ -48,4 +57,14 @@ public class QueryBuilderTestUtil {
 		return xContentBuilder.string();
 	}
 
+	private static String planifyJson(String json) {
+		
+		String plainJson = json.replaceAll(" : ", ":");
+		plainJson = plainJson.replaceAll("\n *", "");
+		plainJson = plainJson.replaceAll(" *\\] *", "");
+		plainJson = plainJson.replaceAll(" *\\[ *", "");
+		plainJson = plainJson.replaceAll(" *, *", "");
+		
+		return plainJson;
+	}
 }

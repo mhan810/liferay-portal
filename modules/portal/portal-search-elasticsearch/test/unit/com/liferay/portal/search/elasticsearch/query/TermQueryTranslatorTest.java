@@ -17,11 +17,11 @@ package com.liferay.portal.search.elasticsearch.query;
 import com.liferay.portal.kernel.search.generic.TermQueryImpl;
 
 import org.elasticsearch.index.query.TermQueryBuilder;
-
 import org.junit.Test;
 
 /**
  * @author André de Oliveira
+ * @author Miguel Angelo Caldas Gallindo
  */
 public class TermQueryTranslatorTest {
 
@@ -32,12 +32,15 @@ public class TermQueryTranslatorTest {
 		assertTranslate("{\"term\":{\"foo\":\"bar\"}}", query);
 	}
 
-	protected void assertTranslate(String expected, TermQueryImpl termQuery)
+	protected void assertTranslate(String expected, TermQueryImpl originalQuery)
 		throws Exception {
 
-		TermQueryBuilder termQueryBuilder = _translator.translate(termQuery);
+		ElasticsearchQuery elasticsearchQuery = 
+			_translator.translate(originalQuery);
 
-		QueryBuilderTestUtil.assertJsonContains(expected, termQueryBuilder);
+		String jsonQuery = elasticsearchQuery.getQueryString();
+		
+		QueryBuilderTestUtil.assertJsonContains(expected, jsonQuery);
 	}
 
 	private final TermQueryTranslator _translator = new TermQueryTranslator();
