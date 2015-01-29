@@ -34,8 +34,8 @@ import com.liferay.portal.sso.ntlm.NetlogonConnectionManager;
 import com.liferay.portal.sso.ntlm.NtlmManager;
 import com.liferay.portal.sso.ntlm.NtlmUserAccount;
 import com.liferay.portal.sso.ntlm.configuration.NTLMConfiguration;
+import com.liferay.portal.sso.ntlm.util.WebKeys;
 import com.liferay.portal.util.PortalInstances;
-import com.liferay.portal.util.WebKeys;
 
 import java.util.Map;
 import java.util.Properties;

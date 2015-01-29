@@ -23,8 +23,8 @@ import com.liferay.portal.security.auth.AutoLogin;
 import com.liferay.portal.security.auth.BaseAutoLogin;
 import com.liferay.portal.security.exportimport.UserImporterUtil;
 import com.liferay.portal.sso.ntlm.configuration.NTLMConfiguration;
+import com.liferay.portal.sso.ntlm.util.WebKeys;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.WebKeys;
 
 import java.util.Map;
 
