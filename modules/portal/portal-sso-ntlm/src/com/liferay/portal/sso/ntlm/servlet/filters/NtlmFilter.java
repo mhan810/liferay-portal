@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.sso.ntlm.NetlogonConnectionManager;
 import com.liferay.portal.sso.ntlm.NtlmManager;
 import com.liferay.portal.sso.ntlm.NtlmUserAccount;
 import com.liferay.portal.sso.ntlm.configuration.NTLMConfiguration;
@@ -54,6 +55,7 @@ import jcifs.util.Base64;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Bruno Farache
@@ -114,6 +116,13 @@ public class NtlmFilter extends BaseFilter {
 		return false;
 	}
 
+	@Reference
+	public void setNetlogonConnectionManager(
+		NetlogonConnectionManager netlogonConnectionManager) {
+
+		_netlogonConnectionManager = netlogonConnectionManager;
+	}
+
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
@@ -156,8 +165,8 @@ public class NtlmFilter extends BaseFilter {
 
 		if (ntlmManager == null) {
 			ntlmManager = new NtlmManager(
-				domain, domainController, domainControllerName, serviceAccount,
-				servicePassword);
+				_netlogonConnectionManager, domain, domainController,
+				domainControllerName, serviceAccount, servicePassword);
 
 			_ntlmManagers.put(companyId, ntlmManager);
 		}
@@ -322,6 +331,7 @@ public class NtlmFilter extends BaseFilter {
 
 	private static final Log _log = LogFactoryUtil.getLog(NtlmFilter.class);
 
+	private NetlogonConnectionManager _netlogonConnectionManager;
 	private volatile NTLMConfiguration _ntlmConfiguration;
 	private final Map<Long, NtlmManager> _ntlmManagers =
 		new ConcurrentHashMap<>();
