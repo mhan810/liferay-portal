@@ -99,7 +99,7 @@ public interface LDAPConfiguration {
 
 	@Meta.AD(
 		deflt = "follow", id = "referral",
-		optionValues = {"follow", "ingore", "throws"}
+		optionValues = {"follow", "ingore", "throws"}, required = false
 	)
 	public String referral();
 
