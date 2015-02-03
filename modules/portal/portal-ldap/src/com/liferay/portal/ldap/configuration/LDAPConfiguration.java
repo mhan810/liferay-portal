@@ -29,7 +29,7 @@ public interface LDAPConfiguration {
 	public boolean exportGroupEnabled();
 
 	@Meta.AD(
-		deflt = "com.sun.jndi.LdapCtxFactory", id = "factory.initial",
+		deflt = "com.sun.jndi.ldap.LdapCtxFactory", id = "factory.initial",
 		required = false
 	)
 	public String factoryInitial();
