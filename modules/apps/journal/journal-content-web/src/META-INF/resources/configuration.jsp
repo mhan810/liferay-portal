@@ -66,7 +66,7 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 				<liferay-portlet:renderURL portletName="<%= PortletKeys.DYNAMIC_DATA_MAPPING %>" var="editTemplateURL">
 					<portlet:param name="struts_action" value="/dynamic_data_mapping/edit_template" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
-					<portlet:param name="refererPortletName" value="<%= JournalContentPortletKeys.JOURNAL_CONTENT %>" />
+					<portlet:param name="refererPortletName" value="<%= PortletKeys.JOURNAL %>" />
 					<portlet:param name="groupId" value="<%= String.valueOf(tableIteratorObj.getGroupId()) %>" />
 					<portlet:param name="templateId" value="<%= String.valueOf(tableIteratorObj.getTemplateId()) %>" />
 				</liferay-portlet:renderURL>
@@ -155,7 +155,7 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 			String portletId = PortletProviderUtil.getPortletId(JournalArticle.class.getName(), PortletProvider.Action.BROWSE);
 			%>
 
-			<liferay-portlet:renderURL portletName="<%= portletId %>" refererPlid="<%= PortalUtil.getControlPanelPlid(company.getCompanyId()) %>" var="selectWebContentURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+			<liferay-portlet:renderURL plid="<%= PortalUtil.getControlPanelPlid(company.getCompanyId()) %>" portletName="<%= portletId %>" var="selectWebContentURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 				<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
 				<portlet:param name="selectedGroupIds" value="<%= StringUtil.merge(PortalUtil.getSharedContentSiteGroupIds(company.getCompanyId(), scopeGroupId, user.getUserId())) %>" />
 				<portlet:param name="typeSelection" value="<%= JournalArticle.class.getName() %>" />

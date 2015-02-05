@@ -1,0 +1,1 @@
+apply from: "../tools/sdk/settings.gradle";

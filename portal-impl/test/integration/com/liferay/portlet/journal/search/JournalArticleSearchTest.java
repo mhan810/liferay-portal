@@ -15,7 +15,12 @@
 package com.liferay.portlet.journal.search;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.search.BooleanQuery;
+import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchEngineUtil;
+import com.liferay.portal.kernel.test.IdempotentRetryAssert;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
@@ -26,7 +31,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.search.BaseSearchTestCase;
+import com.liferay.portal.search.test.BaseSearchTestCase;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.MainServletTestRule;
@@ -52,7 +57,10 @@ import com.liferay.portlet.journal.util.test.JournalTestUtil;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
+import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -71,6 +79,19 @@ public class JournalArticleSearchTest extends BaseSearchTestCase {
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
 			SynchronousDestinationTestRule.INSTANCE);
+
+	@Test
+	public void testMatchNotOnlyCompanyIdButAlsoQueryTerms() throws Exception {
+		SearchContext searchContext = new SearchContext();
+
+		searchContext.setCompanyId(TestPropsValues.getCompanyId());
+
+		BooleanQuery query = BooleanQueryFactoryUtil.create(searchContext);
+
+		query.addTerm("title", RandomTestUtil.randomString());
+
+		assertEquals(0, query, searchContext);
+	}
 
 	@Ignore()
 	@Override
@@ -131,6 +152,27 @@ public class JournalArticleSearchTest extends BaseSearchTestCase {
 		return JournalTestUtil.addArticleWithWorkflow(
 			group.getGroupId(), folderId, keywords,
 			RandomTestUtil.randomString(50), approved, serviceContext);
+	}
+
+	protected void assertEquals(
+			final long length, final BooleanQuery query,
+			final SearchContext searchContext)
+		throws Exception {
+
+		IdempotentRetryAssert.retryAssert(
+			3, TimeUnit.SECONDS,
+			new Callable<Void>() {
+
+				@Override
+				public Void call() throws Exception {
+					Hits hits = SearchEngineUtil.search(searchContext, query);
+
+					Assert.assertEquals(length, hits.getLength());
+
+					return null;
+				}
+
+			});
 	}
 
 	@Override

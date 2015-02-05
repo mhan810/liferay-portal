@@ -29,7 +29,7 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
 import com.liferay.portlet.journal.util.test.JournalTestUtil;
-import com.liferay.portlet.subscriptions.BaseSubscriptionLocalizedContentTestCase;
+import com.liferay.portlet.subscriptions.test.BaseSubscriptionLocalizedContentTestCase;
 
 import javax.portlet.PortletPreferences;
 

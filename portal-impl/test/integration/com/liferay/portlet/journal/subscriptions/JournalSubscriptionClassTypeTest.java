@@ -34,7 +34,7 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.util.test.JournalTestUtil;
-import com.liferay.portlet.subscriptions.BaseSubscriptionClassTypeTestCase;
+import com.liferay.portlet.subscriptions.test.BaseSubscriptionClassTypeTestCase;
 
 import java.util.List;
 

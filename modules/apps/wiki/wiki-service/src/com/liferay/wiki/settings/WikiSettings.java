@@ -25,7 +25,7 @@ import com.liferay.portal.kernel.settings.SettingsFactory;
 import com.liferay.portal.kernel.settings.SettingsFactoryUtil;
 import com.liferay.portal.kernel.settings.TypedSettings;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.wiki.util.WikiConstants;
+import com.liferay.wiki.constants.WikiConstants;
 
 import java.util.Map;
 
