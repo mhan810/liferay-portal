@@ -17,7 +17,6 @@ package com.liferay.portal.ldap.internal.authenticator;
 import com.liferay.portal.NoSuchUserException;
 import com.liferay.portal.PasswordExpiredException;
 import com.liferay.portal.UserLockoutException;
-import com.liferay.portal.authenticator.ldap.configuration.LDAPAuthConfiguration;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.AutoResetThreadLocal;
