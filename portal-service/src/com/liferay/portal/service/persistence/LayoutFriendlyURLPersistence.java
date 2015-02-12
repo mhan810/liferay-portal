@@ -26,7 +26,7 @@ import com.liferay.portal.model.LayoutFriendlyURL;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see LayoutFriendlyURLPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.LayoutFriendlyURLPersistenceImpl
  * @see LayoutFriendlyURLUtil
  * @generated
  */

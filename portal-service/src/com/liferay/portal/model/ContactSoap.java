@@ -240,19 +240,19 @@ public class ContactSoap implements Serializable {
 		_lastName = lastName;
 	}
 
-	public int getPrefixId() {
+	public long getPrefixId() {
 		return _prefixId;
 	}
 
-	public void setPrefixId(int prefixId) {
+	public void setPrefixId(long prefixId) {
 		_prefixId = prefixId;
 	}
 
-	public int getSuffixId() {
+	public long getSuffixId() {
 		return _suffixId;
 	}
 
-	public void setSuffixId(int suffixId) {
+	public void setSuffixId(long suffixId) {
 		_suffixId = suffixId;
 	}
 
@@ -411,8 +411,8 @@ public class ContactSoap implements Serializable {
 	private String _firstName;
 	private String _middleName;
 	private String _lastName;
-	private int _prefixId;
-	private int _suffixId;
+	private long _prefixId;
+	private long _suffixId;
 	private boolean _male;
 	private Date _birthday;
 	private String _smsSn;

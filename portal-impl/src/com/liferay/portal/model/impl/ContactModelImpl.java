@@ -85,8 +85,8 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 			{ "firstName", Types.VARCHAR },
 			{ "middleName", Types.VARCHAR },
 			{ "lastName", Types.VARCHAR },
-			{ "prefixId", Types.INTEGER },
-			{ "suffixId", Types.INTEGER },
+			{ "prefixId", Types.BIGINT },
+			{ "suffixId", Types.BIGINT },
 			{ "male", Types.BOOLEAN },
 			{ "birthday", Types.TIMESTAMP },
 			{ "smsSn", Types.VARCHAR },
@@ -105,7 +105,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 			{ "jobClass", Types.VARCHAR },
 			{ "hoursOfOperation", Types.VARCHAR }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Contact_ (mvccVersion LONG default 0,contactId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,accountId LONG,parentContactId LONG,emailAddress VARCHAR(75) null,firstName VARCHAR(75) null,middleName VARCHAR(75) null,lastName VARCHAR(75) null,prefixId INTEGER,suffixId INTEGER,male BOOLEAN,birthday DATE null,smsSn VARCHAR(75) null,aimSn VARCHAR(75) null,facebookSn VARCHAR(75) null,icqSn VARCHAR(75) null,jabberSn VARCHAR(75) null,msnSn VARCHAR(75) null,mySpaceSn VARCHAR(75) null,skypeSn VARCHAR(75) null,twitterSn VARCHAR(75) null,ymSn VARCHAR(75) null,employeeStatusId VARCHAR(75) null,employeeNumber VARCHAR(75) null,jobTitle VARCHAR(100) null,jobClass VARCHAR(75) null,hoursOfOperation VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table Contact_ (mvccVersion LONG default 0,contactId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,accountId LONG,parentContactId LONG,emailAddress VARCHAR(75) null,firstName VARCHAR(75) null,middleName VARCHAR(75) null,lastName VARCHAR(75) null,prefixId LONG,suffixId LONG,male BOOLEAN,birthday DATE null,smsSn VARCHAR(75) null,aimSn VARCHAR(75) null,facebookSn VARCHAR(75) null,icqSn VARCHAR(75) null,jabberSn VARCHAR(75) null,msnSn VARCHAR(75) null,mySpaceSn VARCHAR(75) null,skypeSn VARCHAR(75) null,twitterSn VARCHAR(75) null,ymSn VARCHAR(75) null,employeeStatusId VARCHAR(75) null,employeeNumber VARCHAR(75) null,jobTitle VARCHAR(100) null,jobClass VARCHAR(75) null,hoursOfOperation VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table Contact_";
 	public static final String ORDER_BY_JPQL = " ORDER BY contact.contactId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Contact_.contactId ASC";
@@ -371,13 +371,13 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 			setLastName(lastName);
 		}
 
-		Integer prefixId = (Integer)attributes.get("prefixId");
+		Long prefixId = (Long)attributes.get("prefixId");
 
 		if (prefixId != null) {
 			setPrefixId(prefixId);
 		}
 
-		Integer suffixId = (Integer)attributes.get("suffixId");
+		Long suffixId = (Long)attributes.get("suffixId");
 
 		if (suffixId != null) {
 			setSuffixId(suffixId);
@@ -762,23 +762,23 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@JSON
 	@Override
-	public int getPrefixId() {
+	public long getPrefixId() {
 		return _prefixId;
 	}
 
 	@Override
-	public void setPrefixId(int prefixId) {
+	public void setPrefixId(long prefixId) {
 		_prefixId = prefixId;
 	}
 
 	@JSON
 	@Override
-	public int getSuffixId() {
+	public long getSuffixId() {
 		return _suffixId;
 	}
 
 	@Override
-	public void setSuffixId(int suffixId) {
+	public void setSuffixId(long suffixId) {
 		_suffixId = suffixId;
 	}
 
@@ -1665,8 +1665,8 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	private String _firstName;
 	private String _middleName;
 	private String _lastName;
-	private int _prefixId;
-	private int _suffixId;
+	private long _prefixId;
+	private long _suffixId;
 	private boolean _male;
 	private Date _birthday;
 	private String _smsSn;

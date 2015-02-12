@@ -28,7 +28,7 @@ import com.liferay.portlet.social.model.SocialActivityCounter;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SocialActivityCounterPersistenceImpl
+ * @see com.liferay.portlet.social.service.persistence.impl.SocialActivityCounterPersistenceImpl
  * @see SocialActivityCounterUtil
  * @generated
  */

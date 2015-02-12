@@ -27,7 +27,7 @@ import com.liferay.portlet.asset.model.AssetLink;
 import java.util.List;
 
 /**
- * The persistence utility for the asset link service. This utility wraps {@link AssetLinkPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
+ * The persistence utility for the asset link service. This utility wraps {@link com.liferay.portlet.asset.service.persistence.impl.AssetLinkPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author Brian Wing Shun Chan
  * @see AssetLinkPersistence
- * @see AssetLinkPersistenceImpl
+ * @see com.liferay.portlet.asset.service.persistence.impl.AssetLinkPersistenceImpl
  * @generated
  */
 @ProviderType

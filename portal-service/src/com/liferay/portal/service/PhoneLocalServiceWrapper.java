@@ -50,7 +50,7 @@ public class PhoneLocalServiceWrapper implements PhoneLocalService,
 	@Override
 	public com.liferay.portal.model.Phone addPhone(long userId,
 		java.lang.String className, long classPK, java.lang.String number,
-		java.lang.String extension, int typeId, boolean primary)
+		java.lang.String extension, long typeId, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _phoneLocalService.addPhone(userId, className, classPK, number,
 			extension, typeId, primary);
@@ -59,7 +59,7 @@ public class PhoneLocalServiceWrapper implements PhoneLocalService,
 	@Override
 	public com.liferay.portal.model.Phone addPhone(long userId,
 		java.lang.String className, long classPK, java.lang.String number,
-		java.lang.String extension, int typeId, boolean primary,
+		java.lang.String extension, long typeId, boolean primary,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _phoneLocalService.addPhone(userId, className, classPK, number,
@@ -338,7 +338,7 @@ public class PhoneLocalServiceWrapper implements PhoneLocalService,
 
 	@Override
 	public com.liferay.portal.model.Phone updatePhone(long phoneId,
-		java.lang.String number, java.lang.String extension, int typeId,
+		java.lang.String number, java.lang.String extension, long typeId,
 		boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _phoneLocalService.updatePhone(phoneId, number, extension,

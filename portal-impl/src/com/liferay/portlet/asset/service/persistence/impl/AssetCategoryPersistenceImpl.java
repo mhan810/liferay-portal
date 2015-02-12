@@ -74,7 +74,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see AssetCategoryPersistence
- * @see AssetCategoryUtil
+ * @see com.liferay.portlet.asset.service.persistence.AssetCategoryUtil
  * @generated
  */
 @ProviderType

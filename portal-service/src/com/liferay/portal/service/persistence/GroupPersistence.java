@@ -26,7 +26,7 @@ import com.liferay.portal.model.Group;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see GroupPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.GroupPersistenceImpl
  * @see GroupUtil
  * @generated
  */

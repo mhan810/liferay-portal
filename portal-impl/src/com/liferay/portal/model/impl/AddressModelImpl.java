@@ -89,11 +89,11 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 			{ "zip", Types.VARCHAR },
 			{ "regionId", Types.BIGINT },
 			{ "countryId", Types.BIGINT },
-			{ "typeId", Types.INTEGER },
+			{ "typeId", Types.BIGINT },
 			{ "mailing", Types.BOOLEAN },
 			{ "primary_", Types.BOOLEAN }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Address (mvccVersion LONG default 0,uuid_ VARCHAR(75) null,addressId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,street1 VARCHAR(75) null,street2 VARCHAR(75) null,street3 VARCHAR(75) null,city VARCHAR(75) null,zip VARCHAR(75) null,regionId LONG,countryId LONG,typeId INTEGER,mailing BOOLEAN,primary_ BOOLEAN)";
+	public static final String TABLE_SQL_CREATE = "create table Address (mvccVersion LONG default 0,uuid_ VARCHAR(75) null,addressId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,street1 VARCHAR(75) null,street2 VARCHAR(75) null,street3 VARCHAR(75) null,city VARCHAR(75) null,zip VARCHAR(75) null,regionId LONG,countryId LONG,typeId LONG,mailing BOOLEAN,primary_ BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table Address";
 	public static final String ORDER_BY_JPQL = " ORDER BY address.createDate ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Address.createDate ASC";
@@ -346,7 +346,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 			setCountryId(countryId);
 		}
 
-		Integer typeId = (Integer)attributes.get("typeId");
+		Long typeId = (Long)attributes.get("typeId");
 
 		if (typeId != null) {
 			setTypeId(typeId);
@@ -683,12 +683,12 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 
 	@JSON
 	@Override
-	public int getTypeId() {
+	public long getTypeId() {
 		return _typeId;
 	}
 
 	@Override
-	public void setTypeId(int typeId) {
+	public void setTypeId(long typeId) {
 		_typeId = typeId;
 	}
 
@@ -1170,7 +1170,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	private String _zip;
 	private long _regionId;
 	private long _countryId;
-	private int _typeId;
+	private long _typeId;
 	private boolean _mailing;
 	private boolean _originalMailing;
 	private boolean _setOriginalMailing;

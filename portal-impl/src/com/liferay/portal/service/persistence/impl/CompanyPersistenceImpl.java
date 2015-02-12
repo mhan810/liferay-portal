@@ -59,7 +59,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see CompanyPersistence
- * @see CompanyUtil
+ * @see com.liferay.portal.service.persistence.CompanyUtil
  * @generated
  */
 @ProviderType

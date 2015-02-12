@@ -28,7 +28,7 @@ import com.liferay.portlet.softwarecatalog.model.SCLicense;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SCLicensePersistenceImpl
+ * @see com.liferay.portlet.softwarecatalog.service.persistence.impl.SCLicensePersistenceImpl
  * @see SCLicenseUtil
  * @generated
  */

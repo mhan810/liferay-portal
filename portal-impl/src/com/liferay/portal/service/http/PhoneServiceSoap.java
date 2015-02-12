@@ -71,7 +71,7 @@ public class PhoneServiceSoap {
 	@Deprecated
 	public static com.liferay.portal.model.PhoneSoap addPhone(
 		java.lang.String className, long classPK, java.lang.String number,
-		java.lang.String extension, int typeId, boolean primary)
+		java.lang.String extension, long typeId, boolean primary)
 		throws RemoteException {
 		try {
 			com.liferay.portal.model.Phone returnValue = PhoneServiceUtil.addPhone(className,
@@ -88,7 +88,7 @@ public class PhoneServiceSoap {
 
 	public static com.liferay.portal.model.PhoneSoap addPhone(
 		java.lang.String className, long classPK, java.lang.String number,
-		java.lang.String extension, int typeId, boolean primary,
+		java.lang.String extension, long typeId, boolean primary,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
@@ -145,7 +145,7 @@ public class PhoneServiceSoap {
 	}
 
 	public static com.liferay.portal.model.PhoneSoap updatePhone(long phoneId,
-		java.lang.String number, java.lang.String extension, int typeId,
+		java.lang.String number, java.lang.String extension, long typeId,
 		boolean primary) throws RemoteException {
 		try {
 			com.liferay.portal.model.Phone returnValue = PhoneServiceUtil.updatePhone(phoneId,

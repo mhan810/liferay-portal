@@ -355,14 +355,14 @@ public interface AddressModel extends AttachedModel, BaseModel<Address>,
 	 *
 	 * @return the type ID of this address
 	 */
-	public int getTypeId();
+	public long getTypeId();
 
 	/**
 	 * Sets the type ID of this address.
 	 *
 	 * @param typeId the type ID of this address
 	 */
-	public void setTypeId(int typeId);
+	public void setTypeId(long typeId);
 
 	/**
 	 * Returns the mailing of this address.

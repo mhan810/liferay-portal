@@ -59,7 +59,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see EmailAddressPersistence
- * @see EmailAddressUtil
+ * @see com.liferay.portal.service.persistence.EmailAddressUtil
  * @generated
  */
 @ProviderType

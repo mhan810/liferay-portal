@@ -68,7 +68,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see AssetEntryPersistence
- * @see AssetEntryUtil
+ * @see com.liferay.portlet.asset.service.persistence.AssetEntryUtil
  * @generated
  */
 @ProviderType

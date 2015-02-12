@@ -187,11 +187,11 @@ public class WebsiteSoap implements Serializable {
 		_url = url;
 	}
 
-	public int getTypeId() {
+	public long getTypeId() {
 		return _typeId;
 	}
 
-	public void setTypeId(int typeId) {
+	public void setTypeId(long typeId) {
 		_typeId = typeId;
 	}
 
@@ -218,6 +218,6 @@ public class WebsiteSoap implements Serializable {
 	private long _classNameId;
 	private long _classPK;
 	private String _url;
-	private int _typeId;
+	private long _typeId;
 	private boolean _primary;
 }

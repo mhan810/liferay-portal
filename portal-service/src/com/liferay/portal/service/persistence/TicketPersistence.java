@@ -26,7 +26,7 @@ import com.liferay.portal.model.Ticket;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see TicketPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.TicketPersistenceImpl
  * @see TicketUtil
  * @generated
  */

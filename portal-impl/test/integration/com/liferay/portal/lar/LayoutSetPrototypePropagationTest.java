@@ -49,8 +49,8 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.MainServletTestRule;
-import com.liferay.portal.test.util.LayoutTestUtil;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portal.util.test.LayoutTestUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.dynamicdatamapping.util.test.DDMStructureTestUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -61,6 +61,7 @@ import com.liferay.portlet.sites.util.SitesUtil;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.portlet.PortletPreferences;
@@ -173,6 +174,34 @@ public class LayoutSetPrototypePropagationTest
 
 		Assert.assertEquals(
 			_initialPrototypeLayoutCount + 1, getGroupLayoutCount());
+	}
+
+	@Test
+	public void testLayoutPropagationWithFriendlyURLConflict()
+		throws Exception {
+
+		LayoutSet layoutSet = group.getPublicLayoutSet();
+
+		List<Layout> initialMergeFailFriendlyURLLayouts =
+			SitesUtil.getMergeFailFriendlyURLLayouts(layoutSet);
+
+		setLinkEnabled(true);
+
+		LayoutTestUtil.addLayout(group.getGroupId(), "test", false);
+		LayoutTestUtil.addLayout(
+			_layoutSetPrototypeGroup.getGroupId(), "test", true);
+
+		propagateChanges(group);
+
+		layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
+			layoutSet.getLayoutSetId());
+
+		List<Layout> mergeFailFriendlyURLLayouts =
+			SitesUtil.getMergeFailFriendlyURLLayouts(layoutSet);
+
+		Assert.assertEquals(
+			initialMergeFailFriendlyURLLayouts.size() + 1,
+			mergeFailFriendlyURLLayouts.size());
 	}
 
 	@Test

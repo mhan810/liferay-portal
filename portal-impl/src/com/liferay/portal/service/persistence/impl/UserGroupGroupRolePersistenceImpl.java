@@ -55,7 +55,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see UserGroupGroupRolePersistence
- * @see UserGroupGroupRoleUtil
+ * @see com.liferay.portal.service.persistence.UserGroupGroupRoleUtil
  * @generated
  */
 @ProviderType

@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see SCProductScreenshotPersistence
- * @see SCProductScreenshotUtil
+ * @see com.liferay.portlet.softwarecatalog.service.persistence.SCProductScreenshotUtil
  * @generated
  */
 @ProviderType

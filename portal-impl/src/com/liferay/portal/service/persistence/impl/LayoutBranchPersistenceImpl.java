@@ -57,7 +57,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see LayoutBranchPersistence
- * @see LayoutBranchUtil
+ * @see com.liferay.portal.service.persistence.LayoutBranchUtil
  * @generated
  */
 @ProviderType

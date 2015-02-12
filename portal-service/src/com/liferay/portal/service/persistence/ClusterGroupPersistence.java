@@ -26,7 +26,7 @@ import com.liferay.portal.model.ClusterGroup;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ClusterGroupPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.ClusterGroupPersistenceImpl
  * @see ClusterGroupUtil
  * @generated
  */

@@ -56,7 +56,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see WorkflowInstanceLinkPersistence
- * @see WorkflowInstanceLinkUtil
+ * @see com.liferay.portal.service.persistence.WorkflowInstanceLinkUtil
  * @generated
  */
 @ProviderType

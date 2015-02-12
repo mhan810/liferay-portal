@@ -54,19 +54,20 @@ public interface JournalFeed extends JournalFeedModel, PersistedModel {
 	public java.lang.String getTemplateId();
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link #setRendererTemplateKey()}
+	* @deprecated As of 7.0.0, replaced by {@link
+	#setDDMRendererTemplateKey(String)}
 	*/
 	@java.lang.Deprecated()
 	public void setRendererTemplateId(java.lang.String rendererTemplateKey);
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link #setDDMStructureKey()}
+	* @deprecated As of 7.0.0, replaced by {@link #setDDMStructureKey(String)}
 	*/
 	@java.lang.Deprecated()
 	public void setStructureId(java.lang.String structureKey);
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link #setDDMTemplateKey()}
+	* @deprecated As of 7.0.0, replaced by {@link #setDDMTemplateKey(String)}
 	*/
 	@java.lang.Deprecated()
 	public void setTemplateId(java.lang.String templateKey);

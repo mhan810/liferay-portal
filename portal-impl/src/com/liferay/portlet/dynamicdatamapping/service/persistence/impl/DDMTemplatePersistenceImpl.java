@@ -64,7 +64,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DDMTemplatePersistence
- * @see DDMTemplateUtil
+ * @see com.liferay.portlet.dynamicdatamapping.service.persistence.DDMTemplateUtil
  * @generated
  */
 @ProviderType

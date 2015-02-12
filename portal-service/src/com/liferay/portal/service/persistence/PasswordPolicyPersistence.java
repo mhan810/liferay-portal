@@ -26,7 +26,7 @@ import com.liferay.portal.model.PasswordPolicy;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see PasswordPolicyPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.PasswordPolicyPersistenceImpl
  * @see PasswordPolicyUtil
  * @generated
  */

@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DDMStructureLayoutPersistence
- * @see DDMStructureLayoutUtil
+ * @see com.liferay.portlet.dynamicdatamapping.service.persistence.DDMStructureLayoutUtil
  * @generated
  */
 @ProviderType

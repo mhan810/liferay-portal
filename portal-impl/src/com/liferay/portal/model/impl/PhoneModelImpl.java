@@ -83,10 +83,10 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 			{ "classPK", Types.BIGINT },
 			{ "number_", Types.VARCHAR },
 			{ "extension", Types.VARCHAR },
-			{ "typeId", Types.INTEGER },
+			{ "typeId", Types.BIGINT },
 			{ "primary_", Types.BOOLEAN }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Phone (mvccVersion LONG default 0,uuid_ VARCHAR(75) null,phoneId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,number_ VARCHAR(75) null,extension VARCHAR(75) null,typeId INTEGER,primary_ BOOLEAN)";
+	public static final String TABLE_SQL_CREATE = "create table Phone (mvccVersion LONG default 0,uuid_ VARCHAR(75) null,phoneId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,number_ VARCHAR(75) null,extension VARCHAR(75) null,typeId LONG,primary_ BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table Phone";
 	public static final String ORDER_BY_JPQL = " ORDER BY phone.createDate ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Phone.createDate ASC";
@@ -296,7 +296,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 			setExtension(extension);
 		}
 
-		Integer typeId = (Integer)attributes.get("typeId");
+		Long typeId = (Long)attributes.get("typeId");
 
 		if (typeId != null) {
 			setTypeId(typeId);
@@ -557,12 +557,12 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 
 	@JSON
 	@Override
-	public int getTypeId() {
+	public long getTypeId() {
 		return _typeId;
 	}
 
 	@Override
-	public void setTypeId(int typeId) {
+	public void setTypeId(long typeId) {
 		_typeId = typeId;
 	}
 
@@ -935,7 +935,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 	private boolean _setOriginalClassPK;
 	private String _number;
 	private String _extension;
-	private int _typeId;
+	private long _typeId;
 	private boolean _primary;
 	private boolean _originalPrimary;
 	private boolean _setOriginalPrimary;

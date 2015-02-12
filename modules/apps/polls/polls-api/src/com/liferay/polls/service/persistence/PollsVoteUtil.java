@@ -30,7 +30,7 @@ import org.osgi.util.tracker.ServiceTracker;
 import java.util.List;
 
 /**
- * The persistence utility for the polls vote service. This utility wraps {@link PollsVotePersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
+ * The persistence utility for the polls vote service. This utility wraps {@link com.liferay.polls.service.persistence.impl.PollsVotePersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -38,7 +38,7 @@ import java.util.List;
  *
  * @author Brian Wing Shun Chan
  * @see PollsVotePersistence
- * @see PollsVotePersistenceImpl
+ * @see com.liferay.polls.service.persistence.impl.PollsVotePersistenceImpl
  * @generated
  */
 @ProviderType

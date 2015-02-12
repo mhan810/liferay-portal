@@ -59,7 +59,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see PhonePersistence
- * @see PhoneUtil
+ * @see com.liferay.portal.service.persistence.PhoneUtil
  * @generated
  */
 @ProviderType

@@ -28,7 +28,7 @@ import com.liferay.portlet.documentlibrary.model.DLFileVersion;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DLFileVersionPersistenceImpl
+ * @see com.liferay.portlet.documentlibrary.service.persistence.impl.DLFileVersionPersistenceImpl
  * @see DLFileVersionUtil
  * @generated
  */

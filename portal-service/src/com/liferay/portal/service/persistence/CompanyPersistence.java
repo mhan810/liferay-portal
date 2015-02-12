@@ -26,7 +26,7 @@ import com.liferay.portal.model.Company;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see CompanyPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.CompanyPersistenceImpl
  * @see CompanyUtil
  * @generated
  */

@@ -28,7 +28,7 @@ import com.liferay.portlet.documentlibrary.model.DLContent;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DLContentPersistenceImpl
+ * @see com.liferay.portlet.documentlibrary.service.persistence.impl.DLContentPersistenceImpl
  * @see DLContentUtil
  * @generated
  */

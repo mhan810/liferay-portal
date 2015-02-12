@@ -247,6 +247,14 @@ public interface User extends UserModel, PersistedModel {
 	@com.liferay.portal.kernel.bean.AutoEscape()
 	public java.lang.String getFullName();
 
+	/**
+	* Returns the user's full name.
+	*
+	* @return the user's full name
+	*/
+	@com.liferay.portal.kernel.bean.AutoEscape()
+	public java.lang.String getFullName(boolean usePrefix, boolean useSuffix);
+
 	public com.liferay.portal.model.Group getGroup();
 
 	public long getGroupId();
@@ -387,6 +395,12 @@ public interface User extends UserModel, PersistedModel {
 	public java.util.List<com.liferay.portal.model.Team> getTeams();
 
 	public java.util.TimeZone getTimeZone();
+
+	public java.util.Date getUnlockDate()
+		throws com.liferay.portal.kernel.exception.PortalException;
+
+	public java.util.Date getUnlockDate(
+		com.liferay.portal.model.PasswordPolicy passwordPolicy);
 
 	public long[] getUserGroupIds();
 

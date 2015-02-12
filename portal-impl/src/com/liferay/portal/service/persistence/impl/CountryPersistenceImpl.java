@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see CountryPersistence
- * @see CountryUtil
+ * @see com.liferay.portal.service.persistence.CountryUtil
  * @generated
  */
 @ProviderType

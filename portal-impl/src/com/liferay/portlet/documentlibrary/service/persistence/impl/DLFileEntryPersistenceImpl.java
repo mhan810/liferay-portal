@@ -64,7 +64,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DLFileEntryPersistence
- * @see DLFileEntryUtil
+ * @see com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryUtil
  * @generated
  */
 @ProviderType

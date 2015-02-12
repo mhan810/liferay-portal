@@ -129,7 +129,7 @@ public class MembershipRequestWrapper implements MembershipRequest,
 			setReplierUserId(replierUserId);
 		}
 
-		Integer statusId = (Integer)attributes.get("statusId");
+		Long statusId = (Long)attributes.get("statusId");
 
 		if (statusId != null) {
 			setStatusId(statusId);
@@ -273,7 +273,7 @@ public class MembershipRequestWrapper implements MembershipRequest,
 	* @return the status ID of this membership request
 	*/
 	@Override
-	public int getStatusId() {
+	public long getStatusId() {
 		return _membershipRequest.getStatusId();
 	}
 
@@ -471,7 +471,7 @@ public class MembershipRequestWrapper implements MembershipRequest,
 	* @param statusId the status ID of this membership request
 	*/
 	@Override
-	public void setStatusId(int statusId) {
+	public void setStatusId(long statusId) {
 		_membershipRequest.setStatusId(statusId);
 	}
 

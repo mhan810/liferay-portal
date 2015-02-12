@@ -243,7 +243,7 @@ journalContentDisplayContext.incrementViewCounter();
 					<portlet:param name="struts_action" value="/dynamic_data_mapping/edit_template" />
 					<portlet:param name="redirect" value="<%= redirectURL.toString() %>" />
 					<portlet:param name="showBackURL" value="<%= Boolean.FALSE.toString() %>" />
-					<portlet:param name="refererPortletName" value="<%= JournalContentPortletKeys.JOURNAL_CONTENT %>" />
+					<portlet:param name="refererPortletName" value="<%= PortletKeys.JOURNAL %>" />
 					<portlet:param name="groupId" value="<%= String.valueOf(ddmTemplate.getGroupId()) %>" />
 					<portlet:param name="templateId" value="<%= String.valueOf(ddmTemplate.getTemplateId()) %>" />
 					<portlet:param name="showCacheableInput" value="<%= Boolean.TRUE.toString() %>" />
@@ -351,11 +351,16 @@ journalContentDisplayContext.incrementViewCounter();
 
 		<portlet:actionURL name="invokeTaglibDiscussion" var="discussionURL" />
 
+		<portlet:resourceURL var="discussionPaginationURL">
+			<portlet:param name="invokeTaglibDiscussion" value="<%= Boolean.TRUE.toString() %>" />
+		</portlet:resourceURL>
+
 		<liferay-ui:discussion
 			className="<%= JournalArticle.class.getName() %>"
 			classPK="<%= articleDisplay.getResourcePrimKey() %>"
 			formAction="<%= discussionURL %>"
 			hideControls="<%= journalContentDisplayContext.isPrint() %>"
+			paginationURL="<%= discussionPaginationURL %>"
 			ratingsEnabled="<%= journalContentDisplayContext.isEnableCommentRatings() && !journalContentDisplayContext.isPrint() %>"
 			redirect="<%= currentURL %>"
 			userId="<%= articleDisplay.getUserId() %>"

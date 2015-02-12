@@ -28,7 +28,7 @@ import com.liferay.portlet.calendar.model.CalEvent;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see CalEventPersistenceImpl
+ * @see com.liferay.portlet.calendar.service.persistence.impl.CalEventPersistenceImpl
  * @see CalEventUtil
  * @generated
  */

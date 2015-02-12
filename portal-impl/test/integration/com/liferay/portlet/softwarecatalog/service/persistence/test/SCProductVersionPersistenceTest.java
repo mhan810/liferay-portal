@@ -68,6 +68,10 @@ public class SCProductVersionPersistenceTest {
 	@Before
 	public void setUp() {
 		_persistence = SCProductVersionUtil.getPersistence();
+
+		Class<?> clazz = _persistence.getClass();
+
+		_dynamicQueryClassLoader = clazz.getClassLoader();
 	}
 
 	@After
@@ -365,7 +369,7 @@ public class SCProductVersionPersistenceTest {
 		SCProductVersion newSCProductVersion = addSCProductVersion();
 
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCProductVersion.class,
-				SCProductVersion.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("productVersionId",
 				newSCProductVersion.getProductVersionId()));
@@ -382,7 +386,7 @@ public class SCProductVersionPersistenceTest {
 	@Test
 	public void testDynamicQueryByPrimaryKeyMissing() throws Exception {
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCProductVersion.class,
-				SCProductVersion.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("productVersionId",
 				RandomTestUtil.nextLong()));
@@ -398,7 +402,7 @@ public class SCProductVersionPersistenceTest {
 		SCProductVersion newSCProductVersion = addSCProductVersion();
 
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCProductVersion.class,
-				SCProductVersion.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.setProjection(ProjectionFactoryUtil.property(
 				"productVersionId"));
@@ -420,7 +424,7 @@ public class SCProductVersionPersistenceTest {
 	@Test
 	public void testDynamicQueryByProjectionMissing() throws Exception {
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCProductVersion.class,
-				SCProductVersion.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.setProjection(ProjectionFactoryUtil.property(
 				"productVersionId"));
@@ -485,4 +489,5 @@ public class SCProductVersionPersistenceTest {
 
 	private List<SCProductVersion> _scProductVersions = new ArrayList<SCProductVersion>();
 	private SCProductVersionPersistence _persistence;
+	private ClassLoader _dynamicQueryClassLoader;
 }

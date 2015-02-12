@@ -102,8 +102,8 @@ public class DDLRecordServiceWrapper implements DDLRecordService,
 	}
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link #revertRecord(long, long,
-	String, ServiceContext)}
+	* @deprecated As of 7.0.0, replaced by {@link #revertRecord(long, String,
+	ServiceContext)}
 	*/
 	@Deprecated
 	@Override

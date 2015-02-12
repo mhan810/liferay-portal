@@ -56,7 +56,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ResourceBlockPermissionPersistence
- * @see ResourceBlockPermissionUtil
+ * @see com.liferay.portal.service.persistence.ResourceBlockPermissionUtil
  * @generated
  */
 @ProviderType

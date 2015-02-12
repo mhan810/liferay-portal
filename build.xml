@@ -864,7 +864,7 @@
 			<then>
 				<copy
 					file="git-commit-plugins"
-					todir="${env.JENKINS_HOME}/jobs/${env.JOB_NAME}/builds/${env.BUILD_NUMBER}"
+					todir="${env.JENKINS_HOME}/userContent/jobs/${env.JOB_NAME}/builds/${env.BUILD_NUMBER}"
 				/>
 			</then>
 		</if>
@@ -882,7 +882,7 @@
 			<then>
 				<copy
 					file="git-commit-portal"
-					todir="${env.JENKINS_HOME}/jobs/${env.JOB_NAME}/builds/${env.BUILD_NUMBER}"
+					todir="${env.JENKINS_HOME}/userContent/jobs/${env.JOB_NAME}/builds/${env.BUILD_NUMBER}"
 				/>
 			</then>
 		</if>
@@ -1028,12 +1028,18 @@
 			clean.delete.ivy.md5=true
 			clean.delete.lib=true
 			ivy.home=${project.dir}/.ivy
+			junit.test.excludes=${junit.test.excludes}
 			liferay.home=${liferay.home}
+			lp.portal.project.dir=${project.dir}
 			module.framework.base.dir=${liferay.home}/osgi
 		</echo>
 
 		<copy file="${project.dir}/tools/sdk/build.${env.COMPUTERNAME}.properties" tofile="${project.dir}/tools/sdk/build.${env.HOST}.properties" />
 		<copy file="${project.dir}/tools/sdk/build.${env.COMPUTERNAME}.properties" tofile="${project.dir}/tools/sdk/build.${env.HOSTNAME}.properties" />
+	</target>
+
+	<target name="setup-testable-tomcat">
+		<setup-testable-tomcat />
 	</target>
 
 	<target name="sort-xml-attributes">

@@ -16,7 +16,6 @@ package com.liferay.portal.template.freemarker;
 
 import aQute.bnd.annotation.metatype.Configurable;
 
-import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.SetUtil;
@@ -48,7 +47,9 @@ import org.osgi.service.component.annotations.Modified;
 @Component(
 	configurationPid = "com.liferay.portal.template.freemarker",
 	configurationPolicy = ConfigurationPolicy.OPTIONAL, immediate = true,
-	service = TemplateContextHelper.class
+	service = {
+		FreeMarkerTemplateContextHelper.class, TemplateContextHelper.class
+	}
 )
 public class FreeMarkerTemplateContextHelper extends TemplateContextHelper {
 
@@ -59,8 +60,10 @@ public class FreeMarkerTemplateContextHelper extends TemplateContextHelper {
 	}
 
 	@Override
-	public void prepare(Template template, HttpServletRequest request) {
-		super.prepare(template, request);
+	public void prepare(
+		Map<String, Object> contextObjects, HttpServletRequest request) {
+
+		super.prepare(contextObjects, request);
 
 		// Theme display
 
@@ -75,12 +78,12 @@ public class FreeMarkerTemplateContextHelper extends TemplateContextHelper {
 			String servletContextName = GetterUtil.getString(
 				theme.getServletContextName());
 
-			template.put(
+			contextObjects.put(
 				"fullCssPath",
 				StringPool.SLASH + servletContextName +
 					theme.getFreeMarkerTemplateLoader() + theme.getCssPath());
 
-			template.put(
+			contextObjects.put(
 				"fullTemplatesPath",
 				StringPool.SLASH + servletContextName +
 					theme.getFreeMarkerTemplateLoader() +
@@ -88,7 +91,7 @@ public class FreeMarkerTemplateContextHelper extends TemplateContextHelper {
 
 			// Init
 
-			template.put(
+			contextObjects.put(
 				"init",
 				StringPool.SLASH + themeDisplay.getPathContext() +
 					TemplateConstants.SERVLET_SEPARATOR +
@@ -106,7 +109,7 @@ public class FreeMarkerTemplateContextHelper extends TemplateContextHelper {
 				Object value = entry.getValue();
 
 				if (Validator.isNotNull(key)) {
-					template.put(key, value);
+					contextObjects.put(key, value);
 				}
 			}
 		}

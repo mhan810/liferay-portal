@@ -37,6 +37,25 @@ public class JournalArticleLocalServiceWrapper
 	/**
 	* Adds a web content article with additional parameters.
 	*
+	* <p>
+	* The web content articles hold HTML content wrapped in XML. The XML lets
+	* you specify the article's default locale and available locales. Here is a
+	* content example:
+	* </p>
+	*
+	* <p>
+	* <pre>
+	* <code>
+	* &lt;?xml version='1.0' encoding='UTF-8'?&gt;
+	* &lt;root default-locale="en_US" available-locales="en_US"&gt;
+	*     &lt;static-content language-id="en_US"&gt;
+	*         &lt;![CDATA[&lt;p&gt;&lt;b&gt;&lt;i&gt;test&lt;i&gt; content&lt;b&gt;&lt;/p&gt;]]&gt;
+	*     &lt;/static-content&gt;
+	* &lt;/root&gt;
+	* </code>
+	* </pre>
+	* </p>
+	*
 	* @param userId the primary key of the web content article's creator/owner
 	* @param groupId the primary key of the web content article's group
 	* @param folderId the primary key of the web content article folder
@@ -55,9 +74,7 @@ public class JournalArticleLocalServiceWrapper
 	* @param titleMap the web content article's locales and localized titles
 	* @param descriptionMap the web content article's locales and localized
 	descriptions
-	* @param content the HTML content wrapped in XML. For more information,
-	see the content example in the class description for {@link
-	JournalArticleLocalServiceImpl}.
+	* @param content the HTML content wrapped in XML
 	* @param ddmStructureKey the primary key of the web content article's DDM
 	structure, if the article is related to a DDM structure, or
 	<code>null</code> otherwise
@@ -154,8 +171,11 @@ public class JournalArticleLocalServiceWrapper
 	* @param descriptionMap the web content article's locales and localized
 	descriptions
 	* @param content the HTML content wrapped in XML. For more information,
-	see the content example in the class description for {@link
-	JournalArticleLocalServiceImpl}.
+	see the content example in the {@link #addArticle(long, long,
+	long, long, long, String, boolean, double, Map, Map, String,
+	String, String, String, int, int, int, int, int, int, int, int,
+	int, int, boolean, int, int, int, int, int, boolean, boolean,
+	boolean, String, File, Map, String, ServiceContext)} description.
 	* @param ddmStructureKey the primary key of the web content article's DDM
 	structure, if the article is related to a DDM structure, or
 	<code>null</code> otherwise
@@ -3508,8 +3528,11 @@ public class JournalArticleLocalServiceWrapper
 	* @param articleId the primary key of the web content article
 	* @param version the web content article's version
 	* @param content the HTML content wrapped in XML. For more information,
-	see the content example in the class description for {@link
-	JournalArticleLocalServiceImpl}.
+	see the content example in the {@link #addArticle(long, long,
+	long, long, long, String, boolean, double, Map, Map, String,
+	String, String, String, int, int, int, int, int, int, int, int,
+	int, int, boolean, int, int, int, int, int, boolean, boolean,
+	boolean, String, File, Map, String, ServiceContext)} description.
 	* @param serviceContext the service context to be applied. Can set the
 	modification date, expando bridge attributes, asset category IDs,
 	asset tag names, asset link entry IDs, workflow actions, the and
@@ -3547,8 +3570,11 @@ public class JournalArticleLocalServiceWrapper
 	* @param descriptionMap the web content article's locales and localized
 	descriptions
 	* @param content the HTML content wrapped in XML. For more information,
-	see the content example in the class description for {@link
-	JournalArticleLocalServiceImpl}.
+	see the content example in the {@link #addArticle(long, long,
+	long, long, long, String, boolean, double, Map, Map, String,
+	String, String, String, int, int, int, int, int, int, int, int,
+	int, int, boolean, int, int, int, int, int, boolean, boolean,
+	boolean, String, File, Map, String, ServiceContext)} description.
 	* @param ddmStructureKey the primary key of the web content article's DDM
 	structure, if the article is related to a DDM structure, or
 	<code>null</code> otherwise
@@ -3660,8 +3686,11 @@ public class JournalArticleLocalServiceWrapper
 	* @param descriptionMap the web content article's locales and localized
 	descriptions
 	* @param content the HTML content wrapped in XML. For more information,
-	see the content example in the class description for {@link
-	JournalArticleLocalServiceImpl}.
+	see the content example in the {@link #addArticle(long, long,
+	long, long, long, String, boolean, double, Map, Map, String,
+	String, String, String, int, int, int, int, int, int, int, int,
+	int, int, boolean, int, int, int, int, int, boolean, boolean,
+	boolean, String, File, Map, String, ServiceContext)} description.
 	* @param layoutUuid the unique string identifying the web content
 	article's display page
 	* @param serviceContext the service context to be applied. Can set the
@@ -3719,8 +3748,11 @@ public class JournalArticleLocalServiceWrapper
 	* @param title the translated web content article title
 	* @param description the translated web content article description
 	* @param content the HTML content wrapped in XML. For more information,
-	see the content example in the class description for {@link
-	JournalArticleLocalServiceImpl}.
+	see the content example in the {@link #addArticle(long, long,
+	long, long, long, String, boolean, double, Map, Map, String,
+	String, String, String, int, int, int, int, int, int, int, int,
+	int, int, boolean, int, int, int, int, int, boolean, boolean,
+	boolean, String, File, Map, String, ServiceContext)} description.
 	* @param images the web content's images
 	* @param serviceContext the service context to be applied. Can set the
 	modification date and "urlTitle" attribute for the web content
@@ -3773,8 +3805,11 @@ public class JournalArticleLocalServiceWrapper
 	* @param articleId the primary key of the web content article
 	* @param version the web content article's version
 	* @param content the HTML content wrapped in XML. For more information,
-	see the content example in the class description for {@link
-	JournalArticleLocalServiceImpl}.
+	see the content example in the {@link #addArticle(long, long,
+	long, long, long, String, boolean, double, Map, Map, String,
+	String, String, String, int, int, int, int, int, int, int, int,
+	int, int, boolean, int, int, int, int, int, boolean, boolean,
+	boolean, String, File, Map, String, ServiceContext)} description.
 	* @return the updated web content article
 	* @throws PortalException if a matching web content article could not be
 	found

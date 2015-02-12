@@ -28,7 +28,7 @@ import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup;
  * </p>
  *
  * @author Edward C. Han
- * @see MDRRuleGroupPersistenceImpl
+ * @see com.liferay.portlet.mobiledevicerules.service.persistence.impl.MDRRuleGroupPersistenceImpl
  * @see MDRRuleGroupUtil
  * @generated
  */

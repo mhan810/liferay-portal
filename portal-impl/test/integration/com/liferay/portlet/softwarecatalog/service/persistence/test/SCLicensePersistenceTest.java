@@ -63,6 +63,10 @@ public class SCLicensePersistenceTest {
 	@Before
 	public void setUp() {
 		_persistence = SCLicenseUtil.getPersistence();
+
+		Class<?> clazz = _persistence.getClass();
+
+		_dynamicQueryClassLoader = clazz.getClassLoader();
 	}
 
 	@After
@@ -328,7 +332,7 @@ public class SCLicensePersistenceTest {
 		SCLicense newSCLicense = addSCLicense();
 
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCLicense.class,
-				SCLicense.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("licenseId",
 				newSCLicense.getLicenseId()));
@@ -345,7 +349,7 @@ public class SCLicensePersistenceTest {
 	@Test
 	public void testDynamicQueryByPrimaryKeyMissing() throws Exception {
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCLicense.class,
-				SCLicense.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("licenseId",
 				RandomTestUtil.nextLong()));
@@ -361,7 +365,7 @@ public class SCLicensePersistenceTest {
 		SCLicense newSCLicense = addSCLicense();
 
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCLicense.class,
-				SCLicense.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.setProjection(ProjectionFactoryUtil.property("licenseId"));
 
@@ -382,7 +386,7 @@ public class SCLicensePersistenceTest {
 	@Test
 	public void testDynamicQueryByProjectionMissing() throws Exception {
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCLicense.class,
-				SCLicense.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.setProjection(ProjectionFactoryUtil.property("licenseId"));
 
@@ -416,4 +420,5 @@ public class SCLicensePersistenceTest {
 
 	private List<SCLicense> _scLicenses = new ArrayList<SCLicense>();
 	private SCLicensePersistence _persistence;
+	private ClassLoader _dynamicQueryClassLoader;
 }

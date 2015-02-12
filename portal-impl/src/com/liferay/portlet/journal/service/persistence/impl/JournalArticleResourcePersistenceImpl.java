@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see JournalArticleResourcePersistence
- * @see JournalArticleResourceUtil
+ * @see com.liferay.portlet.journal.service.persistence.JournalArticleResourceUtil
  * @generated
  */
 @ProviderType

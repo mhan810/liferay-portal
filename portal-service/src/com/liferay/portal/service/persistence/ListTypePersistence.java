@@ -26,7 +26,7 @@ import com.liferay.portal.model.ListType;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ListTypePersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.ListTypePersistenceImpl
  * @see ListTypeUtil
  * @generated
  */
@@ -137,7 +137,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @throws com.liferay.portal.NoSuchListTypeException if a list type with the primary key could not be found
 	*/
 	public com.liferay.portal.model.ListType[] findByType_PrevAndNext(
-		int listTypeId, java.lang.String type,
+		long listTypeId, java.lang.String type,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.model.ListType> orderByComparator)
 		throws com.liferay.portal.NoSuchListTypeException;
 
@@ -155,6 +155,59 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @return the number of matching list types
 	*/
 	public int countByType(java.lang.String type);
+
+	/**
+	* Returns the list type where name = &#63; and type = &#63; or throws a {@link com.liferay.portal.NoSuchListTypeException} if it could not be found.
+	*
+	* @param name the name
+	* @param type the type
+	* @return the matching list type
+	* @throws com.liferay.portal.NoSuchListTypeException if a matching list type could not be found
+	*/
+	public com.liferay.portal.model.ListType findByN_T(java.lang.String name,
+		java.lang.String type)
+		throws com.liferay.portal.NoSuchListTypeException;
+
+	/**
+	* Returns the list type where name = &#63; and type = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param name the name
+	* @param type the type
+	* @return the matching list type, or <code>null</code> if a matching list type could not be found
+	*/
+	public com.liferay.portal.model.ListType fetchByN_T(java.lang.String name,
+		java.lang.String type);
+
+	/**
+	* Returns the list type where name = &#63; and type = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param name the name
+	* @param type the type
+	* @param retrieveFromCache whether to use the finder cache
+	* @return the matching list type, or <code>null</code> if a matching list type could not be found
+	*/
+	public com.liferay.portal.model.ListType fetchByN_T(java.lang.String name,
+		java.lang.String type, boolean retrieveFromCache);
+
+	/**
+	* Removes the list type where name = &#63; and type = &#63; from the database.
+	*
+	* @param name the name
+	* @param type the type
+	* @return the list type that was removed
+	*/
+	public com.liferay.portal.model.ListType removeByN_T(
+		java.lang.String name, java.lang.String type)
+		throws com.liferay.portal.NoSuchListTypeException;
+
+	/**
+	* Returns the number of list types where name = &#63; and type = &#63;.
+	*
+	* @param name the name
+	* @param type the type
+	* @return the number of matching list types
+	*/
+	public int countByN_T(java.lang.String name, java.lang.String type);
 
 	/**
 	* Caches the list type in the entity cache if it is enabled.
@@ -177,7 +230,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @param listTypeId the primary key for the new list type
 	* @return the new list type
 	*/
-	public com.liferay.portal.model.ListType create(int listTypeId);
+	public com.liferay.portal.model.ListType create(long listTypeId);
 
 	/**
 	* Removes the list type with the primary key from the database. Also notifies the appropriate model listeners.
@@ -186,7 +239,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @return the list type that was removed
 	* @throws com.liferay.portal.NoSuchListTypeException if a list type with the primary key could not be found
 	*/
-	public com.liferay.portal.model.ListType remove(int listTypeId)
+	public com.liferay.portal.model.ListType remove(long listTypeId)
 		throws com.liferay.portal.NoSuchListTypeException;
 
 	public com.liferay.portal.model.ListType updateImpl(
@@ -199,7 +252,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @return the list type
 	* @throws com.liferay.portal.NoSuchListTypeException if a list type with the primary key could not be found
 	*/
-	public com.liferay.portal.model.ListType findByPrimaryKey(int listTypeId)
+	public com.liferay.portal.model.ListType findByPrimaryKey(long listTypeId)
 		throws com.liferay.portal.NoSuchListTypeException;
 
 	/**
@@ -208,7 +261,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @param listTypeId the primary key of the list type
 	* @return the list type, or <code>null</code> if a list type with the primary key could not be found
 	*/
-	public com.liferay.portal.model.ListType fetchByPrimaryKey(int listTypeId);
+	public com.liferay.portal.model.ListType fetchByPrimaryKey(long listTypeId);
 
 	@Override
 	public java.util.Map<java.io.Serializable, com.liferay.portal.model.ListType> fetchByPrimaryKeys(

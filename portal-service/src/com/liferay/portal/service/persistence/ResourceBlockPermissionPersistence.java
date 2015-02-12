@@ -26,7 +26,7 @@ import com.liferay.portal.model.ResourceBlockPermission;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ResourceBlockPermissionPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.ResourceBlockPermissionPersistenceImpl
  * @see ResourceBlockPermissionUtil
  * @generated
  */

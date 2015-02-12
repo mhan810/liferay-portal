@@ -28,7 +28,7 @@ import com.liferay.portlet.messageboards.model.MBBan;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see MBBanPersistenceImpl
+ * @see com.liferay.portlet.messageboards.service.persistence.impl.MBBanPersistenceImpl
  * @see MBBanUtil
  * @generated
  */

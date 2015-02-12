@@ -743,6 +743,16 @@ public class UserWrapper implements User, ModelWrapper<User> {
 	}
 
 	/**
+	* Returns the user's full name.
+	*
+	* @return the user's full name
+	*/
+	@Override
+	public java.lang.String getFullName(boolean usePrefix, boolean useSuffix) {
+		return _user.getFullName(usePrefix, useSuffix);
+	}
+
+	/**
 	* Returns the grace login count of this user.
 	*
 	* @return the grace login count of this user
@@ -1283,6 +1293,18 @@ public class UserWrapper implements User, ModelWrapper<User> {
 	@Override
 	public java.lang.String getTimeZoneId() {
 		return _user.getTimeZoneId();
+	}
+
+	@Override
+	public java.util.Date getUnlockDate()
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _user.getUnlockDate();
+	}
+
+	@Override
+	public java.util.Date getUnlockDate(
+		com.liferay.portal.model.PasswordPolicy passwordPolicy) {
+		return _user.getUnlockDate(passwordPolicy);
 	}
 
 	@Override

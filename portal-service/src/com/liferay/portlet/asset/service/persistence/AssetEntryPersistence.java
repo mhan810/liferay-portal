@@ -28,7 +28,7 @@ import com.liferay.portlet.asset.model.AssetEntry;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AssetEntryPersistenceImpl
+ * @see com.liferay.portlet.asset.service.persistence.impl.AssetEntryPersistenceImpl
  * @see AssetEntryUtil
  * @generated
  */

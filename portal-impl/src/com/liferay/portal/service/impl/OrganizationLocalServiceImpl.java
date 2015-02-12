@@ -187,7 +187,7 @@ public class OrganizationLocalServiceImpl
 	@Override
 	public Organization addOrganization(
 			long userId, long parentOrganizationId, String name, String type,
-			boolean recursable, long regionId, long countryId, int statusId,
+			boolean recursable, long regionId, long countryId, long statusId,
 			String comments, boolean site, ServiceContext serviceContext)
 		throws PortalException {
 
@@ -228,7 +228,7 @@ public class OrganizationLocalServiceImpl
 	@Override
 	public Organization addOrganization(
 			long userId, long parentOrganizationId, String name, String type,
-			long regionId, long countryId, int statusId, String comments,
+			long regionId, long countryId, long statusId, String comments,
 			boolean site, ServiceContext serviceContext)
 		throws PortalException {
 
@@ -1764,7 +1764,7 @@ public class OrganizationLocalServiceImpl
 	public Organization updateOrganization(
 			long companyId, long organizationId, long parentOrganizationId,
 			String name, String type, boolean recursable, long regionId,
-			long countryId, int statusId, String comments, boolean site,
+			long countryId, long statusId, String comments, boolean site,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -1804,7 +1804,7 @@ public class OrganizationLocalServiceImpl
 	public Organization updateOrganization(
 			long companyId, long organizationId, long parentOrganizationId,
 			String name, String type, long regionId, long countryId,
-			int statusId, String comments, boolean logo, byte[] logoBytes,
+			long statusId, String comments, boolean logo, byte[] logoBytes,
 			boolean site, ServiceContext serviceContext)
 		throws PortalException {
 
@@ -1973,7 +1973,7 @@ public class OrganizationLocalServiceImpl
 	public Organization updateOrganization(
 			long companyId, long organizationId, long parentOrganizationId,
 			String name, String type, long regionId, long countryId,
-			int statusId, String comments, boolean site,
+			long statusId, String comments, boolean site,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -2191,7 +2191,7 @@ public class OrganizationLocalServiceImpl
 
 	protected void validate(
 			long companyId, long organizationId, long parentOrganizationId,
-			String name, String type, long countryId, int statusId)
+			String name, String type, long countryId, long statusId)
 		throws PortalException {
 
 		if (!ArrayUtil.contains(PropsValues.ORGANIZATIONS_TYPES, type)) {
@@ -2281,7 +2281,7 @@ public class OrganizationLocalServiceImpl
 
 	protected void validate(
 			long companyId, long parentOrganizationId, String name, String type,
-			long countryId, int statusId)
+			long countryId, long statusId)
 		throws PortalException {
 
 		validate(

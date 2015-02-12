@@ -21,6 +21,7 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Daniel Kocsis
@@ -39,6 +40,16 @@ public class ExportImportLifecycleEventImpl
 	}
 
 	@Override
+	public boolean getProcessFlag(int processFlag) {
+		return _processFlags.get(processFlag);
+	}
+
+	@Override
+	public Map<Integer, Boolean> getProcessFlags() {
+		return _processFlags;
+	}
+
+	@Override
 	public void setAttributes(Serializable... attributes) {
 		_attributes.addAll(ListUtil.fromArray(attributes));
 	}
@@ -48,7 +59,13 @@ public class ExportImportLifecycleEventImpl
 		_code = code;
 	}
 
+	@Override
+	public void setProcessFlags(Map<Integer, Boolean> processFlags) {
+		_processFlags = processFlags;
+	}
+
 	private final List<Serializable> _attributes = new ArrayList<>();
 	private int _code;
+	private Map<Integer, Boolean> _processFlags;
 
 }

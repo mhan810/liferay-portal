@@ -26,7 +26,7 @@ import aQute.bnd.annotation.ProviderType;
  * @generated
  */
 @ProviderType
-public interface ListType extends ListTypeModel {
+public interface ListType extends ListTypeModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

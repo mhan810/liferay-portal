@@ -55,7 +55,7 @@ import com.liferay.portal.service.EmailAddressServiceUtil;
 public class EmailAddressServiceHttp {
 	public static com.liferay.portal.model.EmailAddress addEmailAddress(
 		HttpPrincipal httpPrincipal, java.lang.String className, long classPK,
-		java.lang.String address, int typeId, boolean primary)
+		java.lang.String address, long typeId, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(EmailAddressServiceUtil.class,
@@ -88,7 +88,7 @@ public class EmailAddressServiceHttp {
 
 	public static com.liferay.portal.model.EmailAddress addEmailAddress(
 		HttpPrincipal httpPrincipal, java.lang.String className, long classPK,
-		java.lang.String address, int typeId, boolean primary,
+		java.lang.String address, long typeId, boolean primary,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -214,7 +214,7 @@ public class EmailAddressServiceHttp {
 
 	public static com.liferay.portal.model.EmailAddress updateEmailAddress(
 		HttpPrincipal httpPrincipal, long emailAddressId,
-		java.lang.String address, int typeId, boolean primary)
+		java.lang.String address, long typeId, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(EmailAddressServiceUtil.class,
@@ -248,11 +248,11 @@ public class EmailAddressServiceHttp {
 	private static Log _log = LogFactoryUtil.getLog(EmailAddressServiceHttp.class);
 	private static final Class<?>[] _addEmailAddressParameterTypes0 = new Class[] {
 			java.lang.String.class, long.class, java.lang.String.class,
-			int.class, boolean.class
+			long.class, boolean.class
 		};
 	private static final Class<?>[] _addEmailAddressParameterTypes1 = new Class[] {
 			java.lang.String.class, long.class, java.lang.String.class,
-			int.class, boolean.class,
+			long.class, boolean.class,
 			com.liferay.portal.service.ServiceContext.class
 		};
 	private static final Class<?>[] _deleteEmailAddressParameterTypes2 = new Class[] {
@@ -265,6 +265,6 @@ public class EmailAddressServiceHttp {
 			java.lang.String.class, long.class
 		};
 	private static final Class<?>[] _updateEmailAddressParameterTypes5 = new Class[] {
-			long.class, java.lang.String.class, int.class, boolean.class
+			long.class, java.lang.String.class, long.class, boolean.class
 		};
 }

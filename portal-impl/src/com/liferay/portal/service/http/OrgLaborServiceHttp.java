@@ -54,7 +54,7 @@ import com.liferay.portal.service.OrgLaborServiceUtil;
 @ProviderType
 public class OrgLaborServiceHttp {
 	public static com.liferay.portal.model.OrgLabor addOrgLabor(
-		HttpPrincipal httpPrincipal, long organizationId, int typeId,
+		HttpPrincipal httpPrincipal, long organizationId, long typeId,
 		int sunOpen, int sunClose, int monOpen, int monClose, int tueOpen,
 		int tueClose, int wedOpen, int wedClose, int thuOpen, int thuClose,
 		int friOpen, int friClose, int satOpen, int satClose)
@@ -183,7 +183,7 @@ public class OrgLaborServiceHttp {
 	}
 
 	public static com.liferay.portal.model.OrgLabor updateOrgLabor(
-		HttpPrincipal httpPrincipal, long orgLaborId, int typeId, int sunOpen,
+		HttpPrincipal httpPrincipal, long orgLaborId, long typeId, int sunOpen,
 		int sunClose, int monOpen, int monClose, int tueOpen, int tueClose,
 		int wedOpen, int wedClose, int thuOpen, int thuClose, int friOpen,
 		int friClose, int satOpen, int satClose)
@@ -221,7 +221,7 @@ public class OrgLaborServiceHttp {
 
 	private static Log _log = LogFactoryUtil.getLog(OrgLaborServiceHttp.class);
 	private static final Class<?>[] _addOrgLaborParameterTypes0 = new Class[] {
-			long.class, int.class, int.class, int.class, int.class, int.class,
+			long.class, long.class, int.class, int.class, int.class, int.class,
 			int.class, int.class, int.class, int.class, int.class, int.class,
 			int.class, int.class, int.class, int.class
 		};
@@ -235,7 +235,7 @@ public class OrgLaborServiceHttp {
 			long.class
 		};
 	private static final Class<?>[] _updateOrgLaborParameterTypes4 = new Class[] {
-			long.class, int.class, int.class, int.class, int.class, int.class,
+			long.class, long.class, int.class, int.class, int.class, int.class,
 			int.class, int.class, int.class, int.class, int.class, int.class,
 			int.class, int.class, int.class, int.class
 		};

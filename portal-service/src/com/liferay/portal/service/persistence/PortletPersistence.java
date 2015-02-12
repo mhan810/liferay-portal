@@ -26,7 +26,7 @@ import com.liferay.portal.model.Portlet;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see PortletPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.PortletPersistenceImpl
  * @see PortletUtil
  * @generated
  */

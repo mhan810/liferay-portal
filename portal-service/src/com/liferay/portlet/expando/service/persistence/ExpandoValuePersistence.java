@@ -28,7 +28,7 @@ import com.liferay.portlet.expando.model.ExpandoValue;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ExpandoValuePersistenceImpl
+ * @see com.liferay.portlet.expando.service.persistence.impl.ExpandoValuePersistenceImpl
  * @see ExpandoValueUtil
  * @generated
  */

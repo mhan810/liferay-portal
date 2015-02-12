@@ -27,7 +27,7 @@ import com.liferay.portlet.journal.model.JournalArticleImage;
 import java.util.List;
 
 /**
- * The persistence utility for the journal article image service. This utility wraps {@link JournalArticleImagePersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
+ * The persistence utility for the journal article image service. This utility wraps {@link com.liferay.portlet.journal.service.persistence.impl.JournalArticleImagePersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author Brian Wing Shun Chan
  * @see JournalArticleImagePersistence
- * @see JournalArticleImagePersistenceImpl
+ * @see com.liferay.portlet.journal.service.persistence.impl.JournalArticleImagePersistenceImpl
  * @generated
  */
 @ProviderType

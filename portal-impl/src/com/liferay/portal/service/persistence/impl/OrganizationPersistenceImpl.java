@@ -66,7 +66,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see OrganizationPersistence
- * @see OrganizationUtil
+ * @see com.liferay.portal.service.persistence.OrganizationUtil
  * @generated
  */
 @ProviderType

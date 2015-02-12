@@ -59,7 +59,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DLFileRankPersistence
- * @see DLFileRankUtil
+ * @see com.liferay.portlet.documentlibrary.service.persistence.DLFileRankUtil
  * @generated
  */
 @ProviderType

@@ -57,7 +57,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see AnnouncementsFlagPersistence
- * @see AnnouncementsFlagUtil
+ * @see com.liferay.portlet.announcements.service.persistence.AnnouncementsFlagUtil
  * @generated
  */
 @ProviderType

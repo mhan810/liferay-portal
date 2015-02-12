@@ -100,7 +100,8 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 
 			SyncFileService.update(syncFile);
 
-			SyncFileService.updateFileKeySyncFile(syncFile);
+			FileUtil.writeFileKey(
+				filePath, String.valueOf(syncFile.getSyncFileId()));
 		}
 		else {
 			SyncFileService.update(syncFile);
@@ -170,10 +171,14 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 	protected void downloadFile(
 		SyncFile syncFile, String sourceVersion, boolean patch) {
 
-		if (patch) {
+		String targetVersion = syncFile.getVersion();
+
+		if (patch && !sourceVersion.equals("PWC") &&
+			!targetVersion.equals("PWC") &&
+			(Double.valueOf(sourceVersion) < Double.valueOf(targetVersion))) {
+
 			FileEventUtil.downloadPatch(
-				sourceVersion, getSyncAccountId(), syncFile,
-				syncFile.getVersion());
+				sourceVersion, getSyncAccountId(), syncFile, targetVersion);
 		}
 		else {
 			FileEventUtil.downloadFile(getSyncAccountId(), syncFile);
@@ -211,7 +216,8 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 
 			sourceSyncFile.setState(SyncFile.STATE_SYNCED);
 
-			SyncFileService.updateFileKeySyncFile(sourceSyncFile);
+			FileUtil.writeFileKey(
+				targetFilePath, String.valueOf(sourceSyncFile.getSyncFileId()));
 		}
 		else {
 			downloadFile(sourceSyncFile, null, false);
@@ -396,7 +402,9 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 
 				SyncFileService.update(sourceSyncFile);
 
-				SyncFileService.updateFileKeySyncFile(sourceSyncFile);
+				FileUtil.writeFileKey(
+					targetFilePath,
+					String.valueOf(sourceSyncFile.getSyncFileId()));
 			}
 			else {
 				downloadFile(sourceSyncFile, null, false);
@@ -408,6 +416,11 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 			downloadFile(
 				sourceSyncFile, sourceVersion,
 				!IODeltaUtil.isIgnoredFilePatchingExtension(targetSyncFile));
+		}
+		else {
+			sourceSyncFile.setState(SyncFile.STATE_SYNCED);
+
+			SyncFileService.update(sourceSyncFile);
 		}
 	}
 

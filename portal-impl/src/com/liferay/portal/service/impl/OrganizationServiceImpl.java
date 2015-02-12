@@ -120,7 +120,7 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 	@Override
 	public Organization addOrganization(
 			long parentOrganizationId, String name, String type,
-			boolean recursable, long regionId, long countryId, int statusId,
+			boolean recursable, long regionId, long countryId, long statusId,
 			String comments, boolean site, List<Address> addresses,
 			List<EmailAddress> emailAddresses, List<OrgLabor> orgLabors,
 			List<Phone> phones, List<Website> websites,
@@ -169,7 +169,7 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 	@Override
 	public Organization addOrganization(
 			long parentOrganizationId, String name, String type,
-			boolean recursable, long regionId, long countryId, int statusId,
+			boolean recursable, long regionId, long countryId, long statusId,
 			String comments, boolean site, ServiceContext serviceContext)
 		throws PortalException {
 
@@ -213,7 +213,7 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 	@Override
 	public Organization addOrganization(
 			long parentOrganizationId, String name, String type, long regionId,
-			long countryId, int statusId, String comments, boolean site,
+			long countryId, long statusId, String comments, boolean site,
 			List<Address> addresses, List<EmailAddress> emailAddresses,
 			List<OrgLabor> orgLabors, List<Phone> phones,
 			List<Website> websites, ServiceContext serviceContext)
@@ -296,7 +296,7 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 	@Override
 	public Organization addOrganization(
 			long parentOrganizationId, String name, String type, long regionId,
-			long countryId, int statusId, String comments, boolean site,
+			long countryId, long statusId, String comments, boolean site,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -685,7 +685,7 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 	public Organization updateOrganization(
 			long organizationId, long parentOrganizationId, String name,
 			String type, boolean recursable, long regionId, long countryId,
-			int statusId, String comments, boolean site,
+			long statusId, String comments, boolean site,
 			List<Address> addresses, List<EmailAddress> emailAddresses,
 			List<OrgLabor> orgLabors, List<Phone> phones,
 			List<Website> websites, ServiceContext serviceContext)
@@ -731,7 +731,7 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 	public Organization updateOrganization(
 			long organizationId, long parentOrganizationId, String name,
 			String type, boolean recursable, long regionId, long countryId,
-			int statusId, String comments, boolean site,
+			long statusId, String comments, boolean site,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -774,7 +774,7 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 	@Override
 	public Organization updateOrganization(
 			long organizationId, long parentOrganizationId, String name,
-			String type, long regionId, long countryId, int statusId,
+			String type, long regionId, long countryId, long statusId,
 			String comments, boolean logo, byte[] logoBytes, boolean site,
 			List<Address> addresses, List<EmailAddress> emailAddresses,
 			List<OrgLabor> orgLabors, List<Phone> phones,
@@ -891,7 +891,7 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 	@Override
 	public Organization updateOrganization(
 			long organizationId, long parentOrganizationId, String name,
-			String type, long regionId, long countryId, int statusId,
+			String type, long regionId, long countryId, long statusId,
 			String comments, boolean site, List<Address> addresses,
 			List<EmailAddress> emailAddresses, List<OrgLabor> orgLabors,
 			List<Phone> phones, List<Website> websites,
@@ -931,7 +931,7 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 	@Override
 	public Organization updateOrganization(
 			long organizationId, long parentOrganizationId, String name,
-			String type, long regionId, long countryId, int statusId,
+			String type, long regionId, long countryId, long statusId,
 			String comments, boolean site, ServiceContext serviceContext)
 		throws PortalException {
 

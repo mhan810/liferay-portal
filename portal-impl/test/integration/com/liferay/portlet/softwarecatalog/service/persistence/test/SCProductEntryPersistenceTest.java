@@ -68,6 +68,10 @@ public class SCProductEntryPersistenceTest {
 	@Before
 	public void setUp() {
 		_persistence = SCProductEntryUtil.getPersistence();
+
+		Class<?> clazz = _persistence.getClass();
+
+		_dynamicQueryClassLoader = clazz.getClassLoader();
 	}
 
 	@After
@@ -417,7 +421,7 @@ public class SCProductEntryPersistenceTest {
 		SCProductEntry newSCProductEntry = addSCProductEntry();
 
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCProductEntry.class,
-				SCProductEntry.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("productEntryId",
 				newSCProductEntry.getProductEntryId()));
@@ -434,7 +438,7 @@ public class SCProductEntryPersistenceTest {
 	@Test
 	public void testDynamicQueryByPrimaryKeyMissing() throws Exception {
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCProductEntry.class,
-				SCProductEntry.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("productEntryId",
 				RandomTestUtil.nextLong()));
@@ -450,7 +454,7 @@ public class SCProductEntryPersistenceTest {
 		SCProductEntry newSCProductEntry = addSCProductEntry();
 
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCProductEntry.class,
-				SCProductEntry.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.setProjection(ProjectionFactoryUtil.property(
 				"productEntryId"));
@@ -472,7 +476,7 @@ public class SCProductEntryPersistenceTest {
 	@Test
 	public void testDynamicQueryByProjectionMissing() throws Exception {
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCProductEntry.class,
-				SCProductEntry.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.setProjection(ProjectionFactoryUtil.property(
 				"productEntryId"));
@@ -549,4 +553,5 @@ public class SCProductEntryPersistenceTest {
 
 	private List<SCProductEntry> _scProductEntries = new ArrayList<SCProductEntry>();
 	private SCProductEntryPersistence _persistence;
+	private ClassLoader _dynamicQueryClassLoader;
 }

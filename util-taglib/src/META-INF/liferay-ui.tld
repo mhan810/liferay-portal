@@ -1061,6 +1061,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>paginationURL</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>permissionClassName</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2039,6 +2044,11 @@
 		<body-content>JSP</body-content>
 		<attribute>
 			<name>allowBrowseDocuments</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>autoCreate</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

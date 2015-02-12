@@ -64,6 +64,10 @@ public class SCFrameworkVersionPersistenceTest {
 	@Before
 	public void setUp() {
 		_persistence = SCFrameworkVersionUtil.getPersistence();
+
+		Class<?> clazz = _persistence.getClass();
+
+		_dynamicQueryClassLoader = clazz.getClassLoader();
 	}
 
 	@After
@@ -378,7 +382,7 @@ public class SCFrameworkVersionPersistenceTest {
 		SCFrameworkVersion newSCFrameworkVersion = addSCFrameworkVersion();
 
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCFrameworkVersion.class,
-				SCFrameworkVersion.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("frameworkVersionId",
 				newSCFrameworkVersion.getFrameworkVersionId()));
@@ -395,7 +399,7 @@ public class SCFrameworkVersionPersistenceTest {
 	@Test
 	public void testDynamicQueryByPrimaryKeyMissing() throws Exception {
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCFrameworkVersion.class,
-				SCFrameworkVersion.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("frameworkVersionId",
 				RandomTestUtil.nextLong()));
@@ -411,7 +415,7 @@ public class SCFrameworkVersionPersistenceTest {
 		SCFrameworkVersion newSCFrameworkVersion = addSCFrameworkVersion();
 
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCFrameworkVersion.class,
-				SCFrameworkVersion.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.setProjection(ProjectionFactoryUtil.property(
 				"frameworkVersionId"));
@@ -433,7 +437,7 @@ public class SCFrameworkVersionPersistenceTest {
 	@Test
 	public void testDynamicQueryByProjectionMissing() throws Exception {
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCFrameworkVersion.class,
-				SCFrameworkVersion.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.setProjection(ProjectionFactoryUtil.property(
 				"frameworkVersionId"));
@@ -479,4 +483,5 @@ public class SCFrameworkVersionPersistenceTest {
 
 	private List<SCFrameworkVersion> _scFrameworkVersions = new ArrayList<SCFrameworkVersion>();
 	private SCFrameworkVersionPersistence _persistence;
+	private ClassLoader _dynamicQueryClassLoader;
 }

@@ -26,7 +26,7 @@ import com.liferay.portal.model.PluginSetting;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see PluginSettingPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.PluginSettingPersistenceImpl
  * @see PluginSettingUtil
  * @generated
  */

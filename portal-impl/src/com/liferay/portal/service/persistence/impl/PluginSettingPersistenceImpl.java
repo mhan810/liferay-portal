@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see PluginSettingPersistence
- * @see PluginSettingUtil
+ * @see com.liferay.portal.service.persistence.PluginSettingUtil
  * @generated
  */
 @ProviderType

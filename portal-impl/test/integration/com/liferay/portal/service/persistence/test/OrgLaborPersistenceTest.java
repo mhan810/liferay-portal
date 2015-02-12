@@ -116,7 +116,7 @@ public class OrgLaborPersistenceTest {
 
 		newOrgLabor.setOrganizationId(RandomTestUtil.nextLong());
 
-		newOrgLabor.setTypeId(RandomTestUtil.nextInt());
+		newOrgLabor.setTypeId(RandomTestUtil.nextLong());
 
 		newOrgLabor.setSunOpen(RandomTestUtil.nextInt());
 
@@ -445,7 +445,7 @@ public class OrgLaborPersistenceTest {
 
 		orgLabor.setOrganizationId(RandomTestUtil.nextLong());
 
-		orgLabor.setTypeId(RandomTestUtil.nextInt());
+		orgLabor.setTypeId(RandomTestUtil.nextLong());
 
 		orgLabor.setSunOpen(RandomTestUtil.nextInt());
 

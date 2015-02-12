@@ -22,6 +22,7 @@ Export-Package:\
 	com.liferay.portal.security.lang,\
 	com.liferay.portal.service.http,\
 	com.liferay.portal.servlet.filters.authverifier,\
+	com.liferay.portal.service.permission,\
 	com.liferay.portal.spring.aop,\
 	com.liferay.portal.spring.bean,\
 	com.liferay.portal.spring.context,\
@@ -30,8 +31,12 @@ Export-Package:\
 	com.liferay.portal.systemevent,\
 	com.liferay.portal.template,\
 	com.liferay.portal.tools,\
+	com.liferay.portal.upgrade.util,\
+	com.liferay.portal.upgrade.util.classname,\
+	com.liferay.portal.upgrade.util.classname.dependency,\
 	com.liferay.portal.upgrade.v7_0_0,\
 	com.liferay.portal.upload,\
+	com.liferay.portal.util,\
 	com.liferay.portal.verify,\
 	com.liferay.portal.xml,\
 	com.liferay.portlet,\

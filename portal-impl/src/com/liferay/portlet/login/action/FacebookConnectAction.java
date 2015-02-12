@@ -141,8 +141,8 @@ public class FacebookConnectAction extends PortletAction {
 		String firstName = jsonObject.getString("first_name");
 		String middleName = StringPool.BLANK;
 		String lastName = jsonObject.getString("last_name");
-		int prefixId = 0;
-		int suffixId = 0;
+		long prefixId = 0;
+		long suffixId = 0;
 		boolean male = Validator.equals(jsonObject.getString("gender"), "male");
 		int birthdayMonth = Calendar.JANUARY;
 		int birthdayDay = 1;

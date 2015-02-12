@@ -28,7 +28,7 @@ import com.liferay.portlet.social.model.SocialRelation;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SocialRelationPersistenceImpl
+ * @see com.liferay.portlet.social.service.persistence.impl.SocialRelationPersistenceImpl
  * @see SocialRelationUtil
  * @generated
  */

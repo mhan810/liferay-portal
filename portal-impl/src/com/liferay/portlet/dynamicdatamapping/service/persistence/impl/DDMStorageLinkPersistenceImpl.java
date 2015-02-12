@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DDMStorageLinkPersistence
- * @see DDMStorageLinkUtil
+ * @see com.liferay.portlet.dynamicdatamapping.service.persistence.DDMStorageLinkUtil
  * @generated
  */
 @ProviderType

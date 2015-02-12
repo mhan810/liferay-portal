@@ -26,7 +26,7 @@ import com.liferay.portal.model.UserIdMapper;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see UserIdMapperPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.UserIdMapperPersistenceImpl
  * @see UserIdMapperUtil
  * @generated
  */

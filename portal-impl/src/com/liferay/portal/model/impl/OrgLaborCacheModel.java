@@ -152,7 +152,7 @@ public class OrgLaborCacheModel implements CacheModel<OrgLabor>, Externalizable,
 		mvccVersion = objectInput.readLong();
 		orgLaborId = objectInput.readLong();
 		organizationId = objectInput.readLong();
-		typeId = objectInput.readInt();
+		typeId = objectInput.readLong();
 		sunOpen = objectInput.readInt();
 		sunClose = objectInput.readInt();
 		monOpen = objectInput.readInt();
@@ -175,7 +175,7 @@ public class OrgLaborCacheModel implements CacheModel<OrgLabor>, Externalizable,
 		objectOutput.writeLong(mvccVersion);
 		objectOutput.writeLong(orgLaborId);
 		objectOutput.writeLong(organizationId);
-		objectOutput.writeInt(typeId);
+		objectOutput.writeLong(typeId);
 		objectOutput.writeInt(sunOpen);
 		objectOutput.writeInt(sunClose);
 		objectOutput.writeInt(monOpen);
@@ -195,7 +195,7 @@ public class OrgLaborCacheModel implements CacheModel<OrgLabor>, Externalizable,
 	public long mvccVersion;
 	public long orgLaborId;
 	public long organizationId;
-	public int typeId;
+	public long typeId;
 	public int sunOpen;
 	public int sunClose;
 	public int monOpen;

@@ -59,7 +59,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ExpandoValuePersistence
- * @see ExpandoValueUtil
+ * @see com.liferay.portlet.expando.service.persistence.ExpandoValueUtil
  * @generated
  */
 @ProviderType

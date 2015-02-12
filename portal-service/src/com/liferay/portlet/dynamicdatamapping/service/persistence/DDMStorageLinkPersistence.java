@@ -28,7 +28,7 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMStorageLink;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DDMStorageLinkPersistenceImpl
+ * @see com.liferay.portlet.dynamicdatamapping.service.persistence.impl.DDMStorageLinkPersistenceImpl
  * @see DDMStorageLinkUtil
  * @generated
  */

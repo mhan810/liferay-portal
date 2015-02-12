@@ -64,6 +64,7 @@
 	<bean id="com.liferay.portal.service.LayoutSetPrototypeService" class="com.liferay.portal.service.impl.LayoutSetPrototypeServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.LayoutSetPrototypePersistence" class="com.liferay.portal.service.persistence.impl.LayoutSetPrototypePersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.LayoutTemplateLocalService" class="com.liferay.portal.service.impl.LayoutTemplateLocalServiceImpl" />
+	<bean id="com.liferay.portal.service.ListTypeLocalService" class="com.liferay.portal.service.impl.ListTypeLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.ListTypeService" class="com.liferay.portal.service.impl.ListTypeServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.ListTypePersistence" class="com.liferay.portal.service.persistence.impl.ListTypePersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.LockLocalService" class="com.liferay.portal.service.impl.LockLocalServiceImpl" />

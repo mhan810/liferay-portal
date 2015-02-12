@@ -26,7 +26,7 @@ import com.liferay.portal.model.Account;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AccountPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.AccountPersistenceImpl
  * @see AccountUtil
  * @generated
  */

@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see SocialRelationPersistence
- * @see SocialRelationUtil
+ * @see com.liferay.portlet.social.service.persistence.SocialRelationUtil
  * @generated
  */
 @ProviderType

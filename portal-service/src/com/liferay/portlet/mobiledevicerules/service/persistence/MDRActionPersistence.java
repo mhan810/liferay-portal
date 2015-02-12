@@ -28,7 +28,7 @@ import com.liferay.portlet.mobiledevicerules.model.MDRAction;
  * </p>
  *
  * @author Edward C. Han
- * @see MDRActionPersistenceImpl
+ * @see com.liferay.portlet.mobiledevicerules.service.persistence.impl.MDRActionPersistenceImpl
  * @see MDRActionUtil
  * @generated
  */

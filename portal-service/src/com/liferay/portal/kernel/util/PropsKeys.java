@@ -615,6 +615,8 @@ public interface PropsKeys {
 
 	public static final String DISCUSSION_COMMENTS_ALWAYS_EDITABLE_BY_OWNER = "discussion.comments.always.editable.by.owner";
 
+	public static final String DISCUSSION_COMMENTS_DELTA_VALUE = "discussion.comments.delta.value";
+
 	public static final String DISCUSSION_EMAIL_BODY = "discussion.email.body";
 
 	public static final String DISCUSSION_EMAIL_COMMENTS_ADDED_ENABLED = "discussion.email.comments.added.enabled";
@@ -1747,8 +1749,6 @@ public interface PropsKeys {
 
 	public static final String MODULE_FRAMEWORK_STATE_DIR = "module.framework.state.dir";
 
-	public static final String MODULE_FRAMEWORK_SYSTEM_BUNDLE_IGNORED_FRAGMENTS = "module.framework.system.bundle.ignored.fragments";
-
 	public static final String MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA = "module.framework.system.packages.extra";
 
 	public static final String MODULE_FRAMEWORK_WEB_GENERATOR_DEFAULT_SERVLET_PACKAGES = "module.framework.web.generator.default.servlet.packages";
@@ -2637,9 +2637,9 @@ public interface PropsKeys {
 
 	public static final String USER_NOTIFICATION_EVENT_CONFIRMATION_ENABLED = "user.notification.event.confirmation.enabled";
 
-	public static final String USER_PERSONAL_SPACE_LAYOUT_FRIENDLY_URL = "user.personal.space.layout.friendly.url";
+	public static final String USER_PERSONAL_PANEL_LAYOUT_FRIENDLY_URL = "user.personal.panel.layout.friendly.url";
 
-	public static final String USER_PERSONAL_SPACE_LAYOUT_NAME = "user.personal.space.layout.name";
+	public static final String USER_PERSONAL_PANEL_LAYOUT_NAME = "user.personal.panel.layout.name";
 
 	public static final String USERS_ADMIN_ORGANIZATION_COLUMN_LIMIT = "users.admin.organization.column.limit";
 

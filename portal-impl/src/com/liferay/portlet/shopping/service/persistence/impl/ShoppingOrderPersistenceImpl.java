@@ -62,7 +62,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ShoppingOrderPersistence
- * @see ShoppingOrderUtil
+ * @see com.liferay.portlet.shopping.service.persistence.ShoppingOrderUtil
  * @generated
  */
 @ProviderType

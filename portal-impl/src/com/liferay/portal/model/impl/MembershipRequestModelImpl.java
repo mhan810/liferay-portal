@@ -79,9 +79,9 @@ public class MembershipRequestModelImpl extends BaseModelImpl<MembershipRequest>
 			{ "replyComments", Types.VARCHAR },
 			{ "replyDate", Types.TIMESTAMP },
 			{ "replierUserId", Types.BIGINT },
-			{ "statusId", Types.INTEGER }
+			{ "statusId", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table MembershipRequest (mvccVersion LONG default 0,membershipRequestId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,createDate DATE null,comments STRING null,replyComments STRING null,replyDate DATE null,replierUserId LONG,statusId INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table MembershipRequest (mvccVersion LONG default 0,membershipRequestId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,createDate DATE null,comments STRING null,replyComments STRING null,replyDate DATE null,replierUserId LONG,statusId LONG)";
 	public static final String TABLE_SQL_DROP = "drop table MembershipRequest";
 	public static final String ORDER_BY_JPQL = " ORDER BY membershipRequest.createDate DESC";
 	public static final String ORDER_BY_SQL = " ORDER BY MembershipRequest.createDate DESC";
@@ -271,7 +271,7 @@ public class MembershipRequestModelImpl extends BaseModelImpl<MembershipRequest>
 			setReplierUserId(replierUserId);
 		}
 
-		Integer statusId = (Integer)attributes.get("statusId");
+		Long statusId = (Long)attributes.get("statusId");
 
 		if (statusId != null) {
 			setStatusId(statusId);
@@ -458,12 +458,12 @@ public class MembershipRequestModelImpl extends BaseModelImpl<MembershipRequest>
 
 	@JSON
 	@Override
-	public int getStatusId() {
+	public long getStatusId() {
 		return _statusId;
 	}
 
 	@Override
-	public void setStatusId(int statusId) {
+	public void setStatusId(long statusId) {
 		_columnBitmask |= STATUSID_COLUMN_BITMASK;
 
 		if (!_setOriginalStatusId) {
@@ -475,7 +475,7 @@ public class MembershipRequestModelImpl extends BaseModelImpl<MembershipRequest>
 		_statusId = statusId;
 	}
 
-	public int getOriginalStatusId() {
+	public long getOriginalStatusId() {
 		return _originalStatusId;
 	}
 
@@ -761,8 +761,8 @@ public class MembershipRequestModelImpl extends BaseModelImpl<MembershipRequest>
 	private String _replyComments;
 	private Date _replyDate;
 	private long _replierUserId;
-	private int _statusId;
-	private int _originalStatusId;
+	private long _statusId;
+	private long _originalStatusId;
 	private boolean _setOriginalStatusId;
 	private long _columnBitmask;
 	private MembershipRequest _escapedModel;

@@ -81,7 +81,7 @@ public class MembershipRequestServiceSoap {
 		}
 	}
 
-	public static void deleteMembershipRequests(long groupId, int statusId)
+	public static void deleteMembershipRequests(long groupId, long statusId)
 		throws RemoteException {
 		try {
 			MembershipRequestServiceUtil.deleteMembershipRequests(groupId,
@@ -109,7 +109,7 @@ public class MembershipRequestServiceSoap {
 	}
 
 	public static void updateStatus(long membershipRequestId,
-		java.lang.String reviewComments, int statusId,
+		java.lang.String reviewComments, long statusId,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {

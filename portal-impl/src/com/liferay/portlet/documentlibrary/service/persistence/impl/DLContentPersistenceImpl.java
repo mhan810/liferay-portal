@@ -61,7 +61,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DLContentPersistence
- * @see DLContentUtil
+ * @see com.liferay.portlet.documentlibrary.service.persistence.DLContentUtil
  * @generated
  */
 @ProviderType

@@ -26,7 +26,7 @@ import com.liferay.portal.model.Subscription;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SubscriptionPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.SubscriptionPersistenceImpl
  * @see SubscriptionUtil
  * @generated
  */

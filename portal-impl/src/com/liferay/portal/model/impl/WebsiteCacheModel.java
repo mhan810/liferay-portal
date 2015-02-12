@@ -181,7 +181,7 @@ public class WebsiteCacheModel implements CacheModel<Website>, Externalizable,
 		classNameId = objectInput.readLong();
 		classPK = objectInput.readLong();
 		url = objectInput.readUTF();
-		typeId = objectInput.readInt();
+		typeId = objectInput.readLong();
 		primary = objectInput.readBoolean();
 	}
 
@@ -220,7 +220,7 @@ public class WebsiteCacheModel implements CacheModel<Website>, Externalizable,
 			objectOutput.writeUTF(url);
 		}
 
-		objectOutput.writeInt(typeId);
+		objectOutput.writeLong(typeId);
 		objectOutput.writeBoolean(primary);
 	}
 
@@ -235,6 +235,6 @@ public class WebsiteCacheModel implements CacheModel<Website>, Externalizable,
 	public long classNameId;
 	public long classPK;
 	public String url;
-	public int typeId;
+	public long typeId;
 	public boolean primary;
 }

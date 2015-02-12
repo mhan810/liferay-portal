@@ -57,7 +57,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ImagePersistence
- * @see ImageUtil
+ * @see com.liferay.portal.service.persistence.ImageUtil
  * @generated
  */
 @ProviderType

@@ -74,7 +74,7 @@
 		<field name="zip" type="String" />
 		<field name="regionId" type="long" />
 		<field name="countryId" type="long" />
-		<field name="typeId" type="int" />
+		<field name="typeId" type="long" />
 		<field name="mailing" type="boolean" />
 		<field name="primary" type="boolean" />
 	</model>
@@ -165,8 +165,8 @@
 		<field name="firstName" type="String" />
 		<field name="middleName" type="String" />
 		<field name="lastName" type="String" />
-		<field name="prefixId" type="int" />
-		<field name="suffixId" type="int" />
+		<field name="prefixId" type="long" />
+		<field name="suffixId" type="long" />
 		<field name="male" type="boolean" />
 		<field name="birthday" type="Date">
 			<hint name="year-range-delta">70</hint>
@@ -217,7 +217,7 @@
 			<hint name="display-width">210</hint>
 			<validator name="email" />
 		</field>
-		<field name="typeId" type="int" />
+		<field name="typeId" type="long" />
 		<field name="primary" type="boolean" />
 	</model>
 	<model name="com.liferay.portal.model.ExportImportConfiguration">
@@ -522,7 +522,7 @@
 	</model>
 	<model name="com.liferay.portal.model.ListType">
 		<field name="mvccVersion" type="long" />
-		<field name="listTypeId" type="int" />
+		<field name="listTypeId" type="long" />
 		<field name="name" type="String" />
 		<field name="type" type="String" />
 	</model>
@@ -559,7 +559,7 @@
 		</field>
 		<field name="replyDate" type="Date" />
 		<field name="replierUserId" type="long" />
-		<field name="statusId" type="int" />
+		<field name="statusId" type="long" />
 	</model>
 	<model name="com.liferay.portal.model.Organization">
 		<field name="mvccVersion" type="long" />
@@ -585,7 +585,7 @@
 		<field name="recursable" type="boolean" />
 		<field name="regionId" type="long" />
 		<field name="countryId" type="long" />
-		<field name="statusId" type="int" />
+		<field name="statusId" type="long" />
 		<field name="comments" type="String">
 			<hint-collection name="TEXTAREA" />
 			<hint name="display-width">400</hint>
@@ -602,7 +602,7 @@
 		<field name="mvccVersion" type="long" />
 		<field name="orgLaborId" type="long" />
 		<field name="organizationId" type="long" />
-		<field name="typeId" type="int" />
+		<field name="typeId" type="long" />
 		<field name="sunOpen" type="int" />
 		<field name="sunClose" type="int" />
 		<field name="monOpen" type="int" />
@@ -704,7 +704,7 @@
 		<field name="extension" type="String">
 			<hint name="display-width">50</hint>
 		</field>
-		<field name="typeId" type="int" />
+		<field name="typeId" type="long" />
 		<field name="primary" type="boolean" />
 	</model>
 	<model name="com.liferay.portal.model.PluginSetting">
@@ -1174,7 +1174,7 @@
 			<hint name="display-width">210</hint>
 			<validator name="url" />
 		</field>
-		<field name="typeId" type="int" />
+		<field name="typeId" type="long" />
 		<field name="primary" type="boolean" />
 	</model>
 	<model name="com.liferay.portal.model.WorkflowDefinitionLink">

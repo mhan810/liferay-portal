@@ -28,7 +28,7 @@ import com.liferay.portlet.journal.model.JournalArticleImage;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see JournalArticleImagePersistenceImpl
+ * @see com.liferay.portlet.journal.service.persistence.impl.JournalArticleImagePersistenceImpl
  * @see JournalArticleImageUtil
  * @generated
  */

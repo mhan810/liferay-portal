@@ -28,7 +28,7 @@ import com.liferay.portlet.messageboards.model.MBStatsUser;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see MBStatsUserPersistenceImpl
+ * @see com.liferay.portlet.messageboards.service.persistence.impl.MBStatsUserPersistenceImpl
  * @see MBStatsUserUtil
  * @generated
  */

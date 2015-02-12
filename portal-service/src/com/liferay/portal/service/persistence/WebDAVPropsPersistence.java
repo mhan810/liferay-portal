@@ -26,7 +26,7 @@ import com.liferay.portal.model.WebDAVProps;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see WebDAVPropsPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.WebDAVPropsPersistenceImpl
  * @see WebDAVPropsUtil
  * @generated
  */

@@ -238,14 +238,14 @@ public interface MembershipRequestModel extends BaseModel<MembershipRequest>,
 	 *
 	 * @return the status ID of this membership request
 	 */
-	public int getStatusId();
+	public long getStatusId();
 
 	/**
 	 * Sets the status ID of this membership request.
 	 *
 	 * @param statusId the status ID of this membership request
 	 */
-	public void setStatusId(int statusId);
+	public void setStatusId(long statusId);
 
 	@Override
 	public boolean isNew();

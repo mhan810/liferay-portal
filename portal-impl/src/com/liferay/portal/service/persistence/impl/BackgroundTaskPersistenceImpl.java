@@ -59,7 +59,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see BackgroundTaskPersistence
- * @see BackgroundTaskUtil
+ * @see com.liferay.portal.service.persistence.BackgroundTaskUtil
  * @generated
  */
 @ProviderType

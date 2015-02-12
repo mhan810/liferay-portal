@@ -56,7 +56,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see PasswordPolicyRelPersistence
- * @see PasswordPolicyRelUtil
+ * @see com.liferay.portal.service.persistence.PasswordPolicyRelUtil
  * @generated
  */
 @ProviderType

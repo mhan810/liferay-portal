@@ -66,7 +66,7 @@ public class OrgLaborModelImpl extends BaseModelImpl<OrgLabor>
 			{ "mvccVersion", Types.BIGINT },
 			{ "orgLaborId", Types.BIGINT },
 			{ "organizationId", Types.BIGINT },
-			{ "typeId", Types.INTEGER },
+			{ "typeId", Types.BIGINT },
 			{ "sunOpen", Types.INTEGER },
 			{ "sunClose", Types.INTEGER },
 			{ "monOpen", Types.INTEGER },
@@ -82,7 +82,7 @@ public class OrgLaborModelImpl extends BaseModelImpl<OrgLabor>
 			{ "satOpen", Types.INTEGER },
 			{ "satClose", Types.INTEGER }
 		};
-	public static final String TABLE_SQL_CREATE = "create table OrgLabor (mvccVersion LONG default 0,orgLaborId LONG not null primary key,organizationId LONG,typeId INTEGER,sunOpen INTEGER,sunClose INTEGER,monOpen INTEGER,monClose INTEGER,tueOpen INTEGER,tueClose INTEGER,wedOpen INTEGER,wedClose INTEGER,thuOpen INTEGER,thuClose INTEGER,friOpen INTEGER,friClose INTEGER,satOpen INTEGER,satClose INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table OrgLabor (mvccVersion LONG default 0,orgLaborId LONG not null primary key,organizationId LONG,typeId LONG,sunOpen INTEGER,sunClose INTEGER,monOpen INTEGER,monClose INTEGER,tueOpen INTEGER,tueClose INTEGER,wedOpen INTEGER,wedClose INTEGER,thuOpen INTEGER,thuClose INTEGER,friOpen INTEGER,friClose INTEGER,satOpen INTEGER,satClose INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table OrgLabor";
 	public static final String ORDER_BY_JPQL = " ORDER BY orgLabor.organizationId ASC, orgLabor.typeId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY OrgLabor.organizationId ASC, OrgLabor.typeId ASC";
@@ -241,7 +241,7 @@ public class OrgLaborModelImpl extends BaseModelImpl<OrgLabor>
 			setOrganizationId(organizationId);
 		}
 
-		Integer typeId = (Integer)attributes.get("typeId");
+		Long typeId = (Long)attributes.get("typeId");
 
 		if (typeId != null) {
 			setTypeId(typeId);
@@ -379,12 +379,12 @@ public class OrgLaborModelImpl extends BaseModelImpl<OrgLabor>
 
 	@JSON
 	@Override
-	public int getTypeId() {
+	public long getTypeId() {
 		return _typeId;
 	}
 
 	@Override
-	public void setTypeId(int typeId) {
+	public void setTypeId(long typeId) {
 		_columnBitmask = -1L;
 
 		_typeId = typeId;
@@ -865,7 +865,7 @@ public class OrgLaborModelImpl extends BaseModelImpl<OrgLabor>
 	private long _organizationId;
 	private long _originalOrganizationId;
 	private boolean _setOriginalOrganizationId;
-	private int _typeId;
+	private long _typeId;
 	private int _sunOpen;
 	private int _sunClose;
 	private int _monOpen;

@@ -621,7 +621,7 @@ public interface GroupLocalService extends BaseLocalService,
 
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link
-	Group#getDescriptiveName(Locale)
+	Group#getDescriptiveName(Locale)}
 	*/
 	@java.lang.Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -631,7 +631,7 @@ public interface GroupLocalService extends BaseLocalService,
 
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link
-	Group#getDescriptiveName(Locale)
+	Group#getDescriptiveName(Locale)}
 	*/
 	@java.lang.Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

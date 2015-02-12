@@ -145,7 +145,7 @@ public class OrganizationPersistenceTest {
 
 		newOrganization.setCountryId(RandomTestUtil.nextLong());
 
-		newOrganization.setStatusId(RandomTestUtil.nextInt());
+		newOrganization.setStatusId(RandomTestUtil.nextLong());
 
 		newOrganization.setComments(RandomTestUtil.randomString());
 
@@ -595,7 +595,7 @@ public class OrganizationPersistenceTest {
 
 		organization.setCountryId(RandomTestUtil.nextLong());
 
-		organization.setStatusId(RandomTestUtil.nextInt());
+		organization.setStatusId(RandomTestUtil.nextLong());
 
 		organization.setComments(RandomTestUtil.randomString());
 

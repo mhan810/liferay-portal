@@ -59,7 +59,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see SocialActivityCounterPersistence
- * @see SocialActivityCounterUtil
+ * @see com.liferay.portlet.social.service.persistence.SocialActivityCounterUtil
  * @generated
  */
 @ProviderType

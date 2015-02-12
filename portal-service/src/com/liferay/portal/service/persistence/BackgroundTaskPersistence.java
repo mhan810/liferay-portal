@@ -26,7 +26,7 @@ import com.liferay.portal.model.BackgroundTask;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see BackgroundTaskPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.BackgroundTaskPersistenceImpl
  * @see BackgroundTaskUtil
  * @generated
  */

@@ -316,7 +316,7 @@ public interface DDLRecordLocalService extends BaseLocalService,
 
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link
-	DDLRecordVersionLocalServiceImpl#getLatestRecordVersion(
+	com.liferay.portlet.dynamicdatalists.service.DDLRecordVersionLocalService#getLatestRecordVersion(
 	long)}
 	*/
 	@java.lang.Deprecated
@@ -347,8 +347,8 @@ public interface DDLRecordLocalService extends BaseLocalService,
 
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link
-	DDLRecordVersionLocalServiceImpl#getRecordVersion(long,
-	String)}
+	com.liferay.portlet.dynamicdatalists.service.DDLRecordVersionLocalService#getRecordVersion(
+	long, String)}
 	*/
 	@java.lang.Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -358,7 +358,8 @@ public interface DDLRecordLocalService extends BaseLocalService,
 
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link
-	DDLRecordVersionLocalServiceImpl#getRecordVersion(long)}
+	com.liferay.portlet.dynamicdatalists.service.DDLRecordVersionLocalService#getRecordVersion(
+	long)}
 	*/
 	@java.lang.Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -368,8 +369,8 @@ public interface DDLRecordLocalService extends BaseLocalService,
 
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link
-	DDLRecordVersionLocalServiceImpl#getRecordVersions(long, int,
-	int, OrderByComparator)}
+	com.liferay.portlet.dynamicdatalists.service.DDLRecordVersionLocalService#getRecordVersions(
+	long, int, int, OrderByComparator)}
 	*/
 	@java.lang.Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -379,7 +380,7 @@ public interface DDLRecordLocalService extends BaseLocalService,
 
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link
-	DDLRecordVersionLocalServiceImpl#getRecordVersionsCount(
+	com.liferay.portlet.dynamicdatalists.service.DDLRecordVersionLocalService#getRecordVersionsCount(
 	long)}
 	*/
 	@java.lang.Deprecated

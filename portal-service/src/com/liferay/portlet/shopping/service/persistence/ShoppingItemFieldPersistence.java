@@ -28,7 +28,7 @@ import com.liferay.portlet.shopping.model.ShoppingItemField;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ShoppingItemFieldPersistenceImpl
+ * @see com.liferay.portlet.shopping.service.persistence.impl.ShoppingItemFieldPersistenceImpl
  * @see ShoppingItemFieldUtil
  * @generated
  */

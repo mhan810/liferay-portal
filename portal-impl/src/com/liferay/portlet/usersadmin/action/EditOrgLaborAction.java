@@ -116,7 +116,7 @@ public class EditOrgLaborAction extends PortletAction {
 
 		long organizationId = ParamUtil.getLong(
 			actionRequest, "organizationId");
-		int typeId = ParamUtil.getInteger(actionRequest, "typeId");
+		long typeId = ParamUtil.getLong(actionRequest, "typeId");
 
 		int sunOpen = ParamUtil.getInteger(actionRequest, "sunOpen");
 		int sunClose = ParamUtil.getInteger(actionRequest, "sunClose");

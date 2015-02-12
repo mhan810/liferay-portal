@@ -28,7 +28,7 @@ import com.liferay.portlet.asset.model.AssetTagStats;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AssetTagStatsPersistenceImpl
+ * @see com.liferay.portlet.asset.service.persistence.impl.AssetTagStatsPersistenceImpl
  * @see AssetTagStatsUtil
  * @generated
  */

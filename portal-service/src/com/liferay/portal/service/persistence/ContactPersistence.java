@@ -26,7 +26,7 @@ import com.liferay.portal.model.Contact;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ContactPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.ContactPersistenceImpl
  * @see ContactUtil
  * @generated
  */

@@ -26,7 +26,7 @@ import com.liferay.portal.model.PasswordTracker;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see PasswordTrackerPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.PasswordTrackerPersistenceImpl
  * @see PasswordTrackerUtil
  * @generated
  */

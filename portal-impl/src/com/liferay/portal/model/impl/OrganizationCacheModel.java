@@ -219,7 +219,7 @@ public class OrganizationCacheModel implements CacheModel<Organization>,
 		recursable = objectInput.readBoolean();
 		regionId = objectInput.readLong();
 		countryId = objectInput.readLong();
-		statusId = objectInput.readInt();
+		statusId = objectInput.readLong();
 		comments = objectInput.readUTF();
 		logoId = objectInput.readLong();
 	}
@@ -275,7 +275,7 @@ public class OrganizationCacheModel implements CacheModel<Organization>,
 		objectOutput.writeBoolean(recursable);
 		objectOutput.writeLong(regionId);
 		objectOutput.writeLong(countryId);
-		objectOutput.writeInt(statusId);
+		objectOutput.writeLong(statusId);
 
 		if (comments == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
@@ -302,7 +302,7 @@ public class OrganizationCacheModel implements CacheModel<Organization>,
 	public boolean recursable;
 	public long regionId;
 	public long countryId;
-	public int statusId;
+	public long statusId;
 	public String comments;
 	public long logoId;
 }

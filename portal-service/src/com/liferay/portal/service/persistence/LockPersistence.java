@@ -26,7 +26,7 @@ import com.liferay.portal.model.Lock;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see LockPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.LockPersistenceImpl
  * @see LockUtil
  * @generated
  */

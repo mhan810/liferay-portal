@@ -16,9 +16,9 @@
 		</osgi:service-properties>
 	</osgi:service>
 	<bean id="com.liferay.bookmarks.service.persistence.BookmarksEntryPersistence" class="com.liferay.bookmarks.service.persistence.impl.BookmarksEntryPersistenceImpl" parent="basePersistence" />
-	<osgi:service ref="com.liferay.bookmarks.service.persistence.BookmarksEntryPersistence" interface="com.liferay.bookmarks.service.persistence.BookmarksEntryPersistence" />
+	<osgi:service interface="com.liferay.bookmarks.service.persistence.BookmarksEntryPersistence" ref="com.liferay.bookmarks.service.persistence.BookmarksEntryPersistence" />
 	<bean id="com.liferay.bookmarks.service.persistence.BookmarksEntryFinder" class="com.liferay.bookmarks.service.persistence.impl.BookmarksEntryFinderImpl" parent="basePersistence" />
-	<osgi:service ref="com.liferay.bookmarks.service.persistence.BookmarksEntryFinder" interface="com.liferay.bookmarks.service.persistence.BookmarksEntryFinder" />
+	<osgi:service interface="com.liferay.bookmarks.service.persistence.BookmarksEntryFinder" ref="com.liferay.bookmarks.service.persistence.BookmarksEntryFinder" />
 	<bean id="com.liferay.bookmarks.service.BookmarksFolderLocalService" class="com.liferay.bookmarks.service.impl.BookmarksFolderLocalServiceImpl" />
 	<osgi:service interface="com.liferay.bookmarks.service.BookmarksFolderLocalService" ref="com.liferay.bookmarks.service.BookmarksFolderLocalService">
 		<osgi:service-properties>
@@ -34,7 +34,7 @@
 		</osgi:service-properties>
 	</osgi:service>
 	<bean id="com.liferay.bookmarks.service.persistence.BookmarksFolderPersistence" class="com.liferay.bookmarks.service.persistence.impl.BookmarksFolderPersistenceImpl" parent="basePersistence" />
-	<osgi:service ref="com.liferay.bookmarks.service.persistence.BookmarksFolderPersistence" interface="com.liferay.bookmarks.service.persistence.BookmarksFolderPersistence" />
+	<osgi:service interface="com.liferay.bookmarks.service.persistence.BookmarksFolderPersistence" ref="com.liferay.bookmarks.service.persistence.BookmarksFolderPersistence" />
 	<bean id="com.liferay.bookmarks.service.persistence.BookmarksFolderFinder" class="com.liferay.bookmarks.service.persistence.impl.BookmarksFolderFinderImpl" parent="basePersistence" />
-	<osgi:service ref="com.liferay.bookmarks.service.persistence.BookmarksFolderFinder" interface="com.liferay.bookmarks.service.persistence.BookmarksFolderFinder" />
+	<osgi:service interface="com.liferay.bookmarks.service.persistence.BookmarksFolderFinder" ref="com.liferay.bookmarks.service.persistence.BookmarksFolderFinder" />
 </beans>

@@ -181,7 +181,7 @@ public class EmailAddressCacheModel implements CacheModel<EmailAddress>,
 		classNameId = objectInput.readLong();
 		classPK = objectInput.readLong();
 		address = objectInput.readUTF();
-		typeId = objectInput.readInt();
+		typeId = objectInput.readLong();
 		primary = objectInput.readBoolean();
 	}
 
@@ -220,7 +220,7 @@ public class EmailAddressCacheModel implements CacheModel<EmailAddress>,
 			objectOutput.writeUTF(address);
 		}
 
-		objectOutput.writeInt(typeId);
+		objectOutput.writeLong(typeId);
 		objectOutput.writeBoolean(primary);
 	}
 
@@ -235,6 +235,6 @@ public class EmailAddressCacheModel implements CacheModel<EmailAddress>,
 	public long classNameId;
 	public long classPK;
 	public String address;
-	public int typeId;
+	public long typeId;
 	public boolean primary;
 }

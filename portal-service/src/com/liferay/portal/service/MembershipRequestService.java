@@ -51,7 +51,7 @@ public interface MembershipRequestService extends BaseService {
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
-	public void deleteMembershipRequests(long groupId, int statusId)
+	public void deleteMembershipRequests(long groupId, long statusId)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	/**
@@ -74,7 +74,7 @@ public interface MembershipRequestService extends BaseService {
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
 	public void updateStatus(long membershipRequestId,
-		java.lang.String reviewComments, int statusId,
+		java.lang.String reviewComments, long statusId,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException;
 }

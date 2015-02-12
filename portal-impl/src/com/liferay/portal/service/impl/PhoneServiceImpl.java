@@ -37,7 +37,7 @@ public class PhoneServiceImpl extends PhoneServiceBaseImpl {
 	@Override
 	public Phone addPhone(
 			String className, long classPK, String number, String extension,
-			int typeId, boolean primary)
+			long typeId, boolean primary)
 		throws PortalException {
 
 		CommonPermissionUtil.check(
@@ -51,7 +51,7 @@ public class PhoneServiceImpl extends PhoneServiceBaseImpl {
 	@Override
 	public Phone addPhone(
 			String className, long classPK, String number, String extension,
-			int typeId, boolean primary, ServiceContext serviceContext)
+			long typeId, boolean primary, ServiceContext serviceContext)
 		throws PortalException {
 
 		CommonPermissionUtil.check(
@@ -99,7 +99,7 @@ public class PhoneServiceImpl extends PhoneServiceBaseImpl {
 
 	@Override
 	public Phone updatePhone(
-			long phoneId, String number, String extension, int typeId,
+			long phoneId, String number, String extension, long typeId,
 			boolean primary)
 		throws PortalException {
 

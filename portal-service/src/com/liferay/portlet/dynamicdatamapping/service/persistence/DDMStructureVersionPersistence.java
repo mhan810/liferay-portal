@@ -28,7 +28,7 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMStructureVersion;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DDMStructureVersionPersistenceImpl
+ * @see com.liferay.portlet.dynamicdatamapping.service.persistence.impl.DDMStructureVersionPersistenceImpl
  * @see DDMStructureVersionUtil
  * @generated
  */

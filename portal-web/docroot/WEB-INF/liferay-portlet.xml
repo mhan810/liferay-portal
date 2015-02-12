@@ -234,6 +234,7 @@
 		<scopeable>true</scopeable>
 		<private-request-attributes>false</private-request-attributes>
 		<private-session-attributes>false</private-session-attributes>
+		<autopropagated-parameters>showMountFolder</autopropagated-parameters>
 		<render-weight>50</render-weight>
 		<header-portlet-css>/html/portlet/document_library/css/main.css</header-portlet-css>
 		<header-portlet-css>/html/portlet/dynamic_data_mapping/css/main.css</header-portlet-css>
@@ -510,22 +511,6 @@
 		<render-weight>50</render-weight>
 		<header-portlet-css>/html/portlet/announcements/css/main.css</header-portlet-css>
 		<css-class-wrapper>portlet-announcements</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>85</portlet-name>
-		<icon>/html/icons/site_map.png</icon>
-		<struts-path>site_map</struts-path>
-		<configuration-action-class>com.liferay.portal.kernel.portlet.DefaultConfigurationAction</configuration-action-class>
-		<template-handler>com.liferay.portlet.sitemap.template.SiteMapPortletDisplayTemplateHandler</template-handler>
-		<preferences-owned-by-group>true</preferences-owned-by-group>
-		<use-default-template>false</use-default-template>
-		<layout-cacheable>true</layout-cacheable>
-		<instanceable>true</instanceable>
-		<private-request-attributes>false</private-request-attributes>
-		<private-session-attributes>false</private-session-attributes>
-		<render-weight>50</render-weight>
-		<css-class-wrapper>portlet-site-map</css-class-wrapper>
-		<add-default-resource>true</add-default-resource>
 	</portlet>
 	<portlet>
 		<portlet-name>86</portlet-name>

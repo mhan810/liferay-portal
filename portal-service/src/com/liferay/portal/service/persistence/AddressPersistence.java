@@ -26,7 +26,7 @@ import com.liferay.portal.model.Address;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AddressPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.AddressPersistenceImpl
  * @see AddressUtil
  * @generated
  */

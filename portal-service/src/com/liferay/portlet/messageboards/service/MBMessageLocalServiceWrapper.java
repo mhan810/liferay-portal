@@ -412,8 +412,8 @@ public class MBMessageLocalServiceWrapper implements MBMessageLocalService,
 	}
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link #getDiscussionMessageDisplay(
-	long, long, String, long, int)}
+	* @deprecated As of 7.0.0, replaced by {@link
+	#getDiscussionMessageDisplay(long, long, String, long, int)}
 	*/
 	@Deprecated
 	@Override

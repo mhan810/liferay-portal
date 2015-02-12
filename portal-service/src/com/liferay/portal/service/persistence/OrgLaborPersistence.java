@@ -26,7 +26,7 @@ import com.liferay.portal.model.OrgLabor;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see OrgLaborPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.OrgLaborPersistenceImpl
  * @see OrgLaborUtil
  * @generated
  */

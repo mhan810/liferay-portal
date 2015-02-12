@@ -510,6 +510,8 @@ public class PropsValues {
 
 	public static final boolean DISCUSSION_COMMENTS_ALWAYS_EDITABLE_BY_OWNER = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.DISCUSSION_COMMENTS_ALWAYS_EDITABLE_BY_OWNER));
 
+	public static final int DISCUSSION_COMMENTS_DELTA_VALUE = GetterUtil.getInteger(PropsUtil.get(PropsKeys.DISCUSSION_COMMENTS_DELTA_VALUE));
+
 	public static final boolean DISCUSSION_SUBSCRIBE_BY_DEFAULT = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.DISCUSSION_SUBSCRIBE_BY_DEFAULT));
 
 	public static final String[] DL_CHAR_BLACKLIST = PropsUtil.getArray(PropsKeys.DL_CHAR_BLACKLIST);
@@ -1204,8 +1206,6 @@ public class PropsValues {
 
 	public static final String MODULE_FRAMEWORK_STATE_DIR = PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_STATE_DIR);
 
-	public static final String[] MODULE_FRAMEWORK_SYSTEM_BUNDLE_IGNORED_FRAGMENTS = PropsUtil.getArray(PropsKeys.MODULE_FRAMEWORK_SYSTEM_BUNDLE_IGNORED_FRAGMENTS);
-
 	public static final String[] MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA = PropsUtil.getArray(PropsKeys.MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA);
 
 	public static final String[] MODULE_FRAMEWORK_WEB_GENERATOR_DEFAULT_SERVLET_PACKAGES = PropsUtil.getArray(PropsKeys.MODULE_FRAMEWORK_WEB_GENERATOR_DEFAULT_SERVLET_PACKAGES);
@@ -1439,7 +1439,7 @@ public class PropsValues {
 	public static final int PORTAL_FABRIC_SERVER_BOSS_GROUP_THREAD_COUNT = GetterUtil.getInteger(PropsUtil.get(PropsKeys.PORTAL_FABRIC_SERVER_BOSS_GROUP_THREAD_COUNT));
 
 	public static final int PORTAL_FABRIC_SERVER_FILE_SERVER_FOLDER_COMPRESSION_LEVEL = GetterUtil.getInteger(PropsUtil.get(PropsKeys.PORTAL_FABRIC_SERVER_FILE_SERVER_FOLDER_COMPRESSION_LEVEL));
-	
+
 	public static final int PORTAL_FABRIC_SERVER_FILE_SERVER_GROUP_THREAD_COUNT = GetterUtil.getInteger(PropsUtil.get(PropsKeys.PORTAL_FABRIC_SERVER_FILE_SERVER_GROUP_THREAD_COUNT));
 
 	public static final String PORTAL_FABRIC_SERVER_HOST = PropsUtil.get(PropsKeys.PORTAL_FABRIC_SERVER_HOST);
@@ -1856,9 +1856,9 @@ public class PropsValues {
 
 	public static boolean USER_NOTIFICATION_EVENT_CONFIRMATION_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.USER_NOTIFICATION_EVENT_CONFIRMATION_ENABLED));
 
-	public static final String USER_PERSONAL_SPACE_LAYOUT_FRIENDLY_URL = PropsUtil.get(PropsKeys.USER_PERSONAL_SPACE_LAYOUT_FRIENDLY_URL);
+	public static final String USER_PERSONAL_PANEL_LAYOUT_FRIENDLY_URL = PropsUtil.get(PropsKeys.USER_PERSONAL_PANEL_LAYOUT_FRIENDLY_URL);
 
-	public static final String USER_PERSONAL_SPACE_LAYOUT_NAME = PropsUtil.get(PropsKeys.USER_PERSONAL_SPACE_LAYOUT_NAME);
+	public static final String USER_PERSONAL_PANEL_LAYOUT_NAME = PropsUtil.get(PropsKeys.USER_PERSONAL_PANEL_LAYOUT_NAME);
 
 	public static final int USERS_ADMIN_ORGANIZATION_COLUMN_LIMIT = GetterUtil.getInteger(PropsUtil.get(PropsKeys.USERS_ADMIN_ORGANIZATION_COLUMN_LIMIT), 50);
 

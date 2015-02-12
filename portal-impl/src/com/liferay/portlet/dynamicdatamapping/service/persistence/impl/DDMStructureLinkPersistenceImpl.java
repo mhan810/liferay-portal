@@ -57,7 +57,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DDMStructureLinkPersistence
- * @see DDMStructureLinkUtil
+ * @see com.liferay.portlet.dynamicdatamapping.service.persistence.DDMStructureLinkUtil
  * @generated
  */
 @ProviderType

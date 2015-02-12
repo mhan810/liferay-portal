@@ -57,7 +57,7 @@ public class AddressServiceHttp {
 		HttpPrincipal httpPrincipal, java.lang.String className, long classPK,
 		java.lang.String street1, java.lang.String street2,
 		java.lang.String street3, java.lang.String city, java.lang.String zip,
-		long regionId, long countryId, int typeId, boolean mailing,
+		long regionId, long countryId, long typeId, boolean mailing,
 		boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -94,7 +94,7 @@ public class AddressServiceHttp {
 		HttpPrincipal httpPrincipal, java.lang.String className, long classPK,
 		java.lang.String street1, java.lang.String street2,
 		java.lang.String street3, java.lang.String city, java.lang.String zip,
-		long regionId, long countryId, int typeId, boolean mailing,
+		long regionId, long countryId, long typeId, boolean mailing,
 		boolean primary,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -222,7 +222,7 @@ public class AddressServiceHttp {
 		HttpPrincipal httpPrincipal, long addressId, java.lang.String street1,
 		java.lang.String street2, java.lang.String street3,
 		java.lang.String city, java.lang.String zip, long regionId,
-		long countryId, int typeId, boolean mailing, boolean primary)
+		long countryId, long typeId, boolean mailing, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(AddressServiceUtil.class,
@@ -259,13 +259,13 @@ public class AddressServiceHttp {
 			java.lang.String.class, long.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class, long.class,
-			long.class, int.class, boolean.class, boolean.class
+			long.class, long.class, boolean.class, boolean.class
 		};
 	private static final Class<?>[] _addAddressParameterTypes1 = new Class[] {
 			java.lang.String.class, long.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class, long.class,
-			long.class, int.class, boolean.class, boolean.class,
+			long.class, long.class, boolean.class, boolean.class,
 			com.liferay.portal.service.ServiceContext.class
 		};
 	private static final Class<?>[] _deleteAddressParameterTypes2 = new Class[] {
@@ -280,7 +280,7 @@ public class AddressServiceHttp {
 	private static final Class<?>[] _updateAddressParameterTypes5 = new Class[] {
 			long.class, java.lang.String.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class,
-			java.lang.String.class, long.class, long.class, int.class,
+			java.lang.String.class, long.class, long.class, long.class,
 			boolean.class, boolean.class
 		};
 }

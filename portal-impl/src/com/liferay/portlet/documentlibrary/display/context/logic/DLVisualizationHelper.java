@@ -19,7 +19,7 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.documentlibrary.display.context.util.DLRequestHelper;
 
 /**
- * @author Ivan Zaera
+ * @author Iván Zaera
  */
 public class DLVisualizationHelper {
 
@@ -37,6 +37,11 @@ public class DLVisualizationHelper {
 		}
 
 		return false;
+	}
+
+	public boolean isMountFolderVisible() {
+		return ParamUtil.getBoolean(
+			_dlRequestHelper.getRequest(), "showMountFolder", true);
 	}
 
 	public boolean isShowMinimalActionsButton() {

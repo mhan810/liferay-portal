@@ -65,6 +65,10 @@ public class SCProductScreenshotPersistenceTest {
 	@Before
 	public void setUp() {
 		_persistence = SCProductScreenshotUtil.getPersistence();
+
+		Class<?> clazz = _persistence.getClass();
+
+		_dynamicQueryClassLoader = clazz.getClassLoader();
 	}
 
 	@After
@@ -361,7 +365,7 @@ public class SCProductScreenshotPersistenceTest {
 		SCProductScreenshot newSCProductScreenshot = addSCProductScreenshot();
 
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCProductScreenshot.class,
-				SCProductScreenshot.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("productScreenshotId",
 				newSCProductScreenshot.getProductScreenshotId()));
@@ -378,7 +382,7 @@ public class SCProductScreenshotPersistenceTest {
 	@Test
 	public void testDynamicQueryByPrimaryKeyMissing() throws Exception {
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCProductScreenshot.class,
-				SCProductScreenshot.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("productScreenshotId",
 				RandomTestUtil.nextLong()));
@@ -394,7 +398,7 @@ public class SCProductScreenshotPersistenceTest {
 		SCProductScreenshot newSCProductScreenshot = addSCProductScreenshot();
 
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCProductScreenshot.class,
-				SCProductScreenshot.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.setProjection(ProjectionFactoryUtil.property(
 				"productScreenshotId"));
@@ -416,7 +420,7 @@ public class SCProductScreenshotPersistenceTest {
 	@Test
 	public void testDynamicQueryByProjectionMissing() throws Exception {
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(SCProductScreenshot.class,
-				SCProductScreenshot.class.getClassLoader());
+				_dynamicQueryClassLoader);
 
 		dynamicQuery.setProjection(ProjectionFactoryUtil.property(
 				"productScreenshotId"));
@@ -482,4 +486,5 @@ public class SCProductScreenshotPersistenceTest {
 
 	private List<SCProductScreenshot> _scProductScreenshots = new ArrayList<SCProductScreenshot>();
 	private SCProductScreenshotPersistence _persistence;
+	private ClassLoader _dynamicQueryClassLoader;
 }

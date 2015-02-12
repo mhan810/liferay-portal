@@ -26,7 +26,7 @@ import com.liferay.portal.model.LayoutBranch;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see LayoutBranchPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.LayoutBranchPersistenceImpl
  * @see LayoutBranchUtil
  * @generated
  */

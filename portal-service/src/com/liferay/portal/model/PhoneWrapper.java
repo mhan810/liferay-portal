@@ -144,7 +144,7 @@ public class PhoneWrapper implements Phone, ModelWrapper<Phone> {
 			setExtension(extension);
 		}
 
-		Integer typeId = (Integer)attributes.get("typeId");
+		Long typeId = (Long)attributes.get("typeId");
 
 		if (typeId != null) {
 			setTypeId(typeId);
@@ -309,7 +309,7 @@ public class PhoneWrapper implements Phone, ModelWrapper<Phone> {
 	* @return the type ID of this phone
 	*/
 	@Override
-	public int getTypeId() {
+	public long getTypeId() {
 		return _phone.getTypeId();
 	}
 
@@ -542,7 +542,7 @@ public class PhoneWrapper implements Phone, ModelWrapper<Phone> {
 	* @param typeId the type ID of this phone
 	*/
 	@Override
-	public void setTypeId(int typeId) {
+	public void setTypeId(long typeId) {
 		_phone.setTypeId(typeId);
 	}
 

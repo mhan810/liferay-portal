@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see TrashEntryPersistence
- * @see TrashEntryUtil
+ * @see com.liferay.portlet.trash.service.persistence.TrashEntryUtil
  * @generated
  */
 @ProviderType

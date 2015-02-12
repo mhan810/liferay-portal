@@ -28,7 +28,7 @@ import com.liferay.portlet.social.model.SocialActivityLimit;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SocialActivityLimitPersistenceImpl
+ * @see com.liferay.portlet.social.service.persistence.impl.SocialActivityLimitPersistenceImpl
  * @see SocialActivityLimitUtil
  * @generated
  */

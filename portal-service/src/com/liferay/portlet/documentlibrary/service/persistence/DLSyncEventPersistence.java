@@ -28,7 +28,7 @@ import com.liferay.portlet.documentlibrary.model.DLSyncEvent;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DLSyncEventPersistenceImpl
+ * @see com.liferay.portlet.documentlibrary.service.persistence.impl.DLSyncEventPersistenceImpl
  * @see DLSyncEventUtil
  * @generated
  */

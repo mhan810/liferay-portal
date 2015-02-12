@@ -48,14 +48,14 @@ public class WebsiteServiceUtil {
 	@Deprecated
 	public static com.liferay.portal.model.Website addWebsite(
 		java.lang.String className, long classPK, java.lang.String url,
-		int typeId, boolean primary)
+		long typeId, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().addWebsite(className, classPK, url, typeId, primary);
 	}
 
 	public static com.liferay.portal.model.Website addWebsite(
 		java.lang.String className, long classPK, java.lang.String url,
-		int typeId, boolean primary,
+		long typeId, boolean primary,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
@@ -98,7 +98,7 @@ public class WebsiteServiceUtil {
 	}
 
 	public static com.liferay.portal.model.Website updateWebsite(
-		long websiteId, java.lang.String url, int typeId, boolean primary)
+		long websiteId, java.lang.String url, long typeId, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().updateWebsite(websiteId, url, typeId, primary);
 	}

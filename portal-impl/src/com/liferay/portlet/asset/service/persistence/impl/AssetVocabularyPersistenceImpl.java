@@ -65,7 +65,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see AssetVocabularyPersistence
- * @see AssetVocabularyUtil
+ * @see com.liferay.portlet.asset.service.persistence.AssetVocabularyUtil
  * @generated
  */
 @ProviderType

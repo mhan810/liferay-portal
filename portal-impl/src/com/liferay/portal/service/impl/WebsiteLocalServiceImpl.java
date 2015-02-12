@@ -40,8 +40,8 @@ public class WebsiteLocalServiceImpl extends WebsiteLocalServiceBaseImpl {
 	@Deprecated
 	@Override
 	public Website addWebsite(
-			long userId, String className, long classPK, String url, int typeId,
-			boolean primary)
+			long userId, String className, long classPK, String url,
+			long typeId, boolean primary)
 		throws PortalException {
 
 		return addWebsite(
@@ -51,8 +51,8 @@ public class WebsiteLocalServiceImpl extends WebsiteLocalServiceBaseImpl {
 
 	@Override
 	public Website addWebsite(
-			long userId, String className, long classPK, String url, int typeId,
-			boolean primary, ServiceContext serviceContext)
+			long userId, String className, long classPK, String url,
+			long typeId, boolean primary, ServiceContext serviceContext)
 		throws PortalException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
@@ -130,7 +130,7 @@ public class WebsiteLocalServiceImpl extends WebsiteLocalServiceBaseImpl {
 
 	@Override
 	public Website updateWebsite(
-			long websiteId, String url, int typeId, boolean primary)
+			long websiteId, String url, long typeId, boolean primary)
 		throws PortalException {
 
 		validate(websiteId, 0, 0, 0, url, typeId, primary);
@@ -170,7 +170,7 @@ public class WebsiteLocalServiceImpl extends WebsiteLocalServiceBaseImpl {
 
 	protected void validate(
 			long websiteId, long companyId, long classNameId, long classPK,
-			String url, int typeId, boolean primary)
+			String url, long typeId, boolean primary)
 		throws PortalException {
 
 		if (!Validator.isUrl(url)) {

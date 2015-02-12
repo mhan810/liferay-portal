@@ -26,7 +26,7 @@ import com.liferay.portal.model.UserTrackerPath;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see UserTrackerPathPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.UserTrackerPathPersistenceImpl
  * @see UserTrackerPathUtil
  * @generated
  */

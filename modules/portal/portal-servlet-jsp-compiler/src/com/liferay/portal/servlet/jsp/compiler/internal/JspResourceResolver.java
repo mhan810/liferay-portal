@@ -14,17 +14,18 @@
 
 package com.liferay.portal.servlet.jsp.compiler.internal;
 
+import java.io.IOException;
+
 import java.net.JarURLConnection;
 import java.net.URL;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -33,8 +34,9 @@ import org.apache.felix.utils.log.Logger;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Filter;
-import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.wiring.BundleCapability;
+import org.osgi.framework.wiring.BundleWire;
 import org.osgi.framework.wiring.BundleWiring;
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -45,14 +47,12 @@ import org.phidias.compile.ResourceResolver;
  */
 public class JspResourceResolver implements ResourceResolver {
 
-	public JspResourceResolver(JspResourceCache jspResourceCache) {
-		_jspResourceCache = jspResourceCache;
+	public JspResourceResolver(Bundle bundle, Bundle jspBundle, Logger logger) {
+		_bundle = bundle;
+		_jspBundle = jspBundle;
+		_logger = logger;
 
-		Bundle bundle = FrameworkUtil.getBundle(getClass());
-
-		BundleContext bundleContext = bundle.getBundleContext();
-
-		_logger = new Logger(bundleContext);
+		BundleContext bundleContext = _bundle.getBundleContext();
 
 		Filter filter = null;
 
@@ -77,7 +77,9 @@ public class JspResourceResolver implements ResourceResolver {
 		URL url = bundle.getResource(name);
 
 		if ((url == null) && (bundle.getBundleId() == 0)) {
-			return _frameworkClassLoader.getResource(name);
+			ClassLoader classLoader = bundleWiring.getClassLoader();
+
+			return classLoader.getResource(name);
 		}
 
 		return bundle.getResource(name);
@@ -88,15 +90,22 @@ public class JspResourceResolver implements ResourceResolver {
 		BundleWiring bundleWiring, String path, String filePattern,
 		int options) {
 
-		Collection<String> resources = bundleWiring.listResources(
-			path, filePattern, options);
+		Collection<String> resources = null;
 
 		Bundle bundle = bundleWiring.getBundle();
 
-		if (((resources == null) || resources.isEmpty()) &&
-			(bundle.getBundleId() == 0)) {
-
-			return handleSystemBundle(bundleWiring, path, filePattern, options);
+		if (bundle.equals(_bundle) || bundle.equals(_jspBundle)) {
+			resources = bundleWiring.listResources(path, filePattern, options);
+		}
+		else if (exportsPackage(bundleWiring, path.replace('/', '.'))) {
+			if (bundle.getBundleId() == 0) {
+				resources = handleSystemBundle(
+					bundleWiring, path, filePattern, options);
+			}
+			else {
+				resources = bundleWiring.listResources(
+					path, filePattern, options);
+			}
 		}
 
 		return resources;
@@ -108,8 +117,7 @@ public class JspResourceResolver implements ResourceResolver {
 
 		String key = path + '/' + fileRegex;
 
-		Collection<String> resources = _jspResourceCache.getResources(
-			bundleWiring, key);
+		Collection<String> resources = _jspResourceCache.get(key);
 
 		if (resources != null) {
 			return resources;
@@ -117,18 +125,35 @@ public class JspResourceResolver implements ResourceResolver {
 
 		resources = new ArrayList<>();
 
-		Map<String, List<URL>> extraPackageMap = _serviceTracker.getService();
-
-		if (extraPackageMap == null) {
-			return resources;
-		}
-
 		String packageName = path.replace('/', '.');
 
-		List<URL> urls = extraPackageMap.get(packageName);
+		List<URL> urls = null;
+
+		Map<String, List<URL>> extraPackageMap = _serviceTracker.getService();
+
+		if (extraPackageMap != null) {
+			urls = extraPackageMap.get(packageName);
+		}
+
+		if (((urls == null) || urls.isEmpty()) &&
+			exportsPackage(bundleWiring, packageName)) {
+
+			ClassLoader classLoader = bundleWiring.getClassLoader();
+
+			try {
+				Enumeration<URL> enumeration = classLoader.getResources(path);
+
+				if ((enumeration != null) && enumeration.hasMoreElements()) {
+					urls = Collections.list(enumeration);
+				}
+			}
+			catch (IOException ioe) {
+				_logger.log(Logger.LOG_ERROR, ioe.getMessage(), ioe);
+			}
+		}
 
 		if ((urls == null) || urls.isEmpty()) {
-			_jspResourceCache.putResources(bundleWiring, key, resources);
+			_jspResourceCache.put(key, resources);
 
 			return resources;
 		}
@@ -163,31 +188,34 @@ public class JspResourceResolver implements ResourceResolver {
 			}
 		}
 
-		_jspResourceCache.putResources(bundleWiring, key, resources);
+		_jspResourceCache.put(key, resources);
 
 		return resources;
 	}
 
-	private static final ClassLoader _frameworkClassLoader;
+	private boolean exportsPackage(
+		BundleWiring bundleWiring, String packageName) {
 
-	static {
-		if (System.getSecurityManager() != null) {
-			_frameworkClassLoader = AccessController.doPrivileged(
-				new PrivilegedAction<ClassLoader>() {
+		List<BundleWire> providedWires = bundleWiring.getProvidedWires(
+			"osgi.wiring.package");
 
-					@Override
-					public ClassLoader run() {
-						return Bundle.class.getClassLoader();
-					}
+		for (BundleWire bundleWire : providedWires) {
+			BundleCapability bundleCapability = bundleWire.getCapability();
 
-				});
+			Map<String, Object> attributes = bundleCapability.getAttributes();
+
+			if (packageName.equals(attributes.get("osgi.wiring.package"))) {
+				return true;
+			}
 		}
-		else {
-			_frameworkClassLoader = Bundle.class.getClassLoader();
-		}
+
+		return false;
 	}
 
-	private final JspResourceCache _jspResourceCache;
+	private final Bundle _bundle;
+	private final Bundle _jspBundle;
+	private final Map<String, Collection<String>> _jspResourceCache =
+		new ConcurrentHashMap<>();
 	private final Logger _logger;
 	private final ServiceTracker<Map<String, List<URL>>, Map<String, List<URL>>>
 		_serviceTracker;

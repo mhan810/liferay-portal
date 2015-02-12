@@ -50,7 +50,7 @@ public class AddressLocalServiceImpl extends AddressLocalServiceBaseImpl {
 	public Address addAddress(
 			long userId, String className, long classPK, String street1,
 			String street2, String street3, String city, String zip,
-			long regionId, long countryId, int typeId, boolean mailing,
+			long regionId, long countryId, long typeId, boolean mailing,
 			boolean primary)
 		throws PortalException {
 
@@ -64,7 +64,7 @@ public class AddressLocalServiceImpl extends AddressLocalServiceBaseImpl {
 	public Address addAddress(
 			long userId, String className, long classPK, String street1,
 			String street2, String street3, String city, String zip,
-			long regionId, long countryId, int typeId, boolean mailing,
+			long regionId, long countryId, long typeId, boolean mailing,
 			boolean primary, ServiceContext serviceContext)
 		throws PortalException {
 
@@ -153,7 +153,7 @@ public class AddressLocalServiceImpl extends AddressLocalServiceBaseImpl {
 	@Override
 	public Address updateAddress(
 			long addressId, String street1, String street2, String street3,
-			String city, String zip, long regionId, long countryId, int typeId,
+			String city, String zip, long regionId, long countryId, long typeId,
 			boolean mailing, boolean primary)
 		throws PortalException {
 
@@ -220,7 +220,7 @@ public class AddressLocalServiceImpl extends AddressLocalServiceBaseImpl {
 	protected void validate(
 			long addressId, long companyId, long classNameId, long classPK,
 			String street1, String city, String zip, long regionId,
-			long countryId, int typeId, boolean mailing, boolean primary)
+			long countryId, long typeId, boolean mailing, boolean primary)
 		throws PortalException {
 
 		if (Validator.isNull(street1)) {

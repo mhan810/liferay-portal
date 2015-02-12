@@ -83,10 +83,10 @@ public class EmailAddressModelImpl extends BaseModelImpl<EmailAddress>
 			{ "classNameId", Types.BIGINT },
 			{ "classPK", Types.BIGINT },
 			{ "address", Types.VARCHAR },
-			{ "typeId", Types.INTEGER },
+			{ "typeId", Types.BIGINT },
 			{ "primary_", Types.BOOLEAN }
 		};
-	public static final String TABLE_SQL_CREATE = "create table EmailAddress (mvccVersion LONG default 0,uuid_ VARCHAR(75) null,emailAddressId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,address VARCHAR(75) null,typeId INTEGER,primary_ BOOLEAN)";
+	public static final String TABLE_SQL_CREATE = "create table EmailAddress (mvccVersion LONG default 0,uuid_ VARCHAR(75) null,emailAddressId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,address VARCHAR(75) null,typeId LONG,primary_ BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table EmailAddress";
 	public static final String ORDER_BY_JPQL = " ORDER BY emailAddress.createDate ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY EmailAddress.createDate ASC";
@@ -288,7 +288,7 @@ public class EmailAddressModelImpl extends BaseModelImpl<EmailAddress>
 			setAddress(address);
 		}
 
-		Integer typeId = (Integer)attributes.get("typeId");
+		Long typeId = (Long)attributes.get("typeId");
 
 		if (typeId != null) {
 			setTypeId(typeId);
@@ -533,12 +533,12 @@ public class EmailAddressModelImpl extends BaseModelImpl<EmailAddress>
 
 	@JSON
 	@Override
-	public int getTypeId() {
+	public long getTypeId() {
 		return _typeId;
 	}
 
 	@Override
-	public void setTypeId(int typeId) {
+	public void setTypeId(long typeId) {
 		_typeId = typeId;
 	}
 
@@ -895,7 +895,7 @@ public class EmailAddressModelImpl extends BaseModelImpl<EmailAddress>
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
 	private String _address;
-	private int _typeId;
+	private long _typeId;
 	private boolean _primary;
 	private boolean _originalPrimary;
 	private boolean _setOriginalPrimary;

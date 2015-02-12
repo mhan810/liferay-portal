@@ -28,7 +28,7 @@ import com.liferay.portlet.asset.model.AssetCategoryProperty;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AssetCategoryPropertyPersistenceImpl
+ * @see com.liferay.portlet.asset.service.persistence.impl.AssetCategoryPropertyPersistenceImpl
  * @see AssetCategoryPropertyUtil
  * @generated
  */

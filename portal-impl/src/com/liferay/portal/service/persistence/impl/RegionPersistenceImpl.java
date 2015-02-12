@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see RegionPersistence
- * @see RegionUtil
+ * @see com.liferay.portal.service.persistence.RegionUtil
  * @generated
  */
 @ProviderType

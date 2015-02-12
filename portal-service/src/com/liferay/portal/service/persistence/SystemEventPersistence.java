@@ -26,7 +26,7 @@ import com.liferay.portal.model.SystemEvent;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SystemEventPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.SystemEventPersistenceImpl
  * @see SystemEventUtil
  * @generated
  */

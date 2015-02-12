@@ -61,7 +61,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ResourcePermissionPersistence
- * @see ResourcePermissionUtil
+ * @see com.liferay.portal.service.persistence.ResourcePermissionUtil
  * @generated
  */
 @ProviderType

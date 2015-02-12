@@ -61,7 +61,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see LayoutSetPrototypePersistence
- * @see LayoutSetPrototypeUtil
+ * @see com.liferay.portal.service.persistence.LayoutSetPrototypeUtil
  * @generated
  */
 @ProviderType

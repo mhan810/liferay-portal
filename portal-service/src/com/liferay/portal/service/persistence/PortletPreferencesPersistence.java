@@ -26,7 +26,7 @@ import com.liferay.portal.model.PortletPreferences;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see PortletPreferencesPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.PortletPreferencesPersistenceImpl
  * @see PortletPreferencesUtil
  * @generated
  */

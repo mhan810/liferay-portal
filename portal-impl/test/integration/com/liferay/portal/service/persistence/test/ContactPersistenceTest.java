@@ -141,9 +141,9 @@ public class ContactPersistenceTest {
 
 		newContact.setLastName(RandomTestUtil.randomString());
 
-		newContact.setPrefixId(RandomTestUtil.nextInt());
+		newContact.setPrefixId(RandomTestUtil.nextLong());
 
-		newContact.setSuffixId(RandomTestUtil.nextInt());
+		newContact.setSuffixId(RandomTestUtil.nextLong());
 
 		newContact.setMale(RandomTestUtil.randomBoolean());
 
@@ -558,9 +558,9 @@ public class ContactPersistenceTest {
 
 		contact.setLastName(RandomTestUtil.randomString());
 
-		contact.setPrefixId(RandomTestUtil.nextInt());
+		contact.setPrefixId(RandomTestUtil.nextLong());
 
-		contact.setSuffixId(RandomTestUtil.nextInt());
+		contact.setSuffixId(RandomTestUtil.nextLong());
 
 		contact.setMale(RandomTestUtil.randomBoolean());
 

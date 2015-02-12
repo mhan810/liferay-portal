@@ -33,10 +33,6 @@ public class WebKeys implements com.liferay.portal.kernel.util.WebKeys {
 
 	public static final String ASSET_LAYOUT_TAG_NAMES = "ASSET_LAYOUT_TAG_NAMES";
 
-	public static final String ASSET_PUBLISHER_ABSTRACT_LENGTH = "ASSET_PUBLISHER_ABSTRACT_LENGTH";
-
-	public static final String ASSET_PUBLISHER_VIEW_URL = "ASSET_PUBLISHER_VIEW_URL";
-
 	public static final String ASSET_TAG = "ASSET_TAG";
 
 	public static final String ASSET_VOCABULARIES = "ASSET_VOCABULARIES";
@@ -288,10 +284,6 @@ public class WebKeys implements com.liferay.portal.kernel.util.WebKeys {
 	public static final String NETVIBES = "NETVIBES";
 
 	public static final String NOTES_LIST = "NOTES_LIST";
-
-	public static final String NTLM_REMOTE_USER = "NTLM_REMOTE_USER";
-
-	public static final String NTLM_USER_ACCOUNT = "NTLM_USER_ACCOUNT";
 
 	public static final String OPEN_ID_DISCO = "openid-disco";
 

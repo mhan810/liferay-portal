@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ServiceComponentPersistence
- * @see ServiceComponentUtil
+ * @see com.liferay.portal.service.persistence.ServiceComponentUtil
  * @generated
  */
 @ProviderType

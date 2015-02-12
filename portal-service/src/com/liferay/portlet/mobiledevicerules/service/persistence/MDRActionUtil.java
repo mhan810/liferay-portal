@@ -27,7 +27,7 @@ import com.liferay.portlet.mobiledevicerules.model.MDRAction;
 import java.util.List;
 
 /**
- * The persistence utility for the m d r action service. This utility wraps {@link MDRActionPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
+ * The persistence utility for the m d r action service. This utility wraps {@link com.liferay.portlet.mobiledevicerules.service.persistence.impl.MDRActionPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author Edward C. Han
  * @see MDRActionPersistence
- * @see MDRActionPersistenceImpl
+ * @see com.liferay.portlet.mobiledevicerules.service.persistence.impl.MDRActionPersistenceImpl
  * @generated
  */
 @ProviderType

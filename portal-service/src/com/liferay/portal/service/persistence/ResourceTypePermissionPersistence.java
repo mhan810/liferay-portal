@@ -26,7 +26,7 @@ import com.liferay.portal.model.ResourceTypePermission;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ResourceTypePermissionPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.ResourceTypePermissionPersistenceImpl
  * @see ResourceTypePermissionUtil
  * @generated
  */

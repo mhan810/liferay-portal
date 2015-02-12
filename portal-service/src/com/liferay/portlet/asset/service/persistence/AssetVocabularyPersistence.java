@@ -28,7 +28,7 @@ import com.liferay.portlet.asset.model.AssetVocabulary;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AssetVocabularyPersistenceImpl
+ * @see com.liferay.portlet.asset.service.persistence.impl.AssetVocabularyPersistenceImpl
  * @see AssetVocabularyUtil
  * @generated
  */

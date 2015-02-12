@@ -147,7 +147,7 @@ public class OrganizationTestUtil {
 			new ServiceContext());
 	}
 
-	private static int _getListTypeId(String type) throws Exception {
+	private static long _getListTypeId(String type) throws Exception {
 		List<ListType> listTypes = ListTypeServiceUtil.getListTypes(type);
 
 		ListType listType = listTypes.get(0);

@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.CacheField;
 import com.liferay.portal.model.ModelHintsUtil;
+import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ResourceActionsUtil;
 import com.liferay.portal.tools.ArgumentsUtil;
 import com.liferay.portal.tools.ToolDependencies;
@@ -3762,11 +3763,28 @@ public class ServiceBuilder {
 		}
 
 		for (DocletTag tag : tags) {
+			String tagValue = tag.getValue();
+
 			sb.append(indentation);
 			sb.append(" * @");
 			sb.append(tag.getName());
 			sb.append(" ");
-			sb.append(tag.getValue());
+
+			if (_currentTplName.equals(_tplServiceSoap)) {
+				if (tagValue.startsWith(PortalException.class.getName())) {
+					tagValue = tagValue.replaceFirst(
+						PortalException.class.getName(), "RemoteException");
+				}
+				else if (tagValue.startsWith(
+							PrincipalException.class.getName())) {
+
+					tagValue = tagValue.replaceFirst(
+						PrincipalException.class.getName(), "RemoteException");
+				}
+			}
+
+			sb.append(tagValue);
+
 			sb.append("\n");
 		}
 
@@ -5023,6 +5041,8 @@ public class ServiceBuilder {
 	private String _processTemplate(String name, Map<String, Object> context)
 		throws Exception {
 
+		_currentTplName = name;
+
 		return StringUtil.strip(FreeMarkerUtil.process(name, context), '\r');
 	}
 
@@ -5189,6 +5209,7 @@ public class ServiceBuilder {
 	private boolean _build;
 	private long _buildNumber;
 	private boolean _buildNumberIncrement;
+	private String _currentTplName;
 	private List<Entity> _ejbList;
 	private Map<String, EntityMapping> _entityMappings;
 	private Map<String, Entity> _entityPool = new HashMap<>();

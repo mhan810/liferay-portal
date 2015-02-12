@@ -26,7 +26,7 @@ import com.liferay.portal.model.Team;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see TeamPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.TeamPersistenceImpl
  * @see TeamUtil
  * @generated
  */

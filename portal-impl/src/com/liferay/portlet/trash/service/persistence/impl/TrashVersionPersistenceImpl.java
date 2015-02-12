@@ -57,7 +57,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see TrashVersionPersistence
- * @see TrashVersionUtil
+ * @see com.liferay.portlet.trash.service.persistence.TrashVersionUtil
  * @generated
  */
 @ProviderType

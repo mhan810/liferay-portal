@@ -59,7 +59,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see UserNotificationEventPersistence
- * @see UserNotificationEventUtil
+ * @see com.liferay.portal.service.persistence.UserNotificationEventUtil
  * @generated
  */
 @ProviderType

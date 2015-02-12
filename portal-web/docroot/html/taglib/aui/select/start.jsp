@@ -49,7 +49,7 @@
 		<c:if test="<%= Validator.isNotNull(listType) %>">
 
 			<%
-			int listTypeId = ParamUtil.getInteger(request, name, BeanParamUtil.getInteger(bean, request, listTypeFieldName));
+			long listTypeId = ParamUtil.getLong(request, name, BeanParamUtil.getLong(bean, request, listTypeFieldName));
 
 			List<ListType> listTypeModels = ListTypeServiceUtil.getListTypes(listType);
 

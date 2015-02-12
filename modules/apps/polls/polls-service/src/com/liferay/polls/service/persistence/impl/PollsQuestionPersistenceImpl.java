@@ -62,7 +62,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see PollsQuestionPersistence
- * @see PollsQuestionUtil
+ * @see com.liferay.polls.service.persistence.PollsQuestionUtil
  * @generated
  */
 @ProviderType

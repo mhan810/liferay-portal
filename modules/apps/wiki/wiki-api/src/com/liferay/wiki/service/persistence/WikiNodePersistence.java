@@ -28,7 +28,7 @@ import com.liferay.wiki.model.WikiNode;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see WikiNodePersistenceImpl
+ * @see com.liferay.wiki.service.persistence.impl.WikiNodePersistenceImpl
  * @see WikiNodeUtil
  * @generated
  */

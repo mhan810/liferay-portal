@@ -26,7 +26,7 @@ import com.liferay.portal.model.Role;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see RolePersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.RolePersistenceImpl
  * @see RoleUtil
  * @generated
  */

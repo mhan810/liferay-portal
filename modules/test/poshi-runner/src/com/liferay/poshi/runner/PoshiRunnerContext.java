@@ -17,6 +17,7 @@ package com.liferay.poshi.runner;
 import com.liferay.poshi.runner.util.FileUtil;
 import com.liferay.poshi.runner.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,39 @@ import org.dom4j.Element;
  */
 public class PoshiRunnerContext {
 
+	public static List<Element> getActionCaseElements(String classCommandName) {
+		List<Element> actionCaseElements = new ArrayList<>();
+
+		List<String> relatedClassCommandNames =
+			_getRelatedActionClassCommandNames(classCommandName);
+
+		for (String relatedClassCommandName : relatedClassCommandNames) {
+			Element commandElement = getActionCommandElement(
+				relatedClassCommandName);
+
+			if (commandElement != null) {
+				List<Element> caseElements = commandElement.elements();
+
+				for (Element caseElement : caseElements) {
+					actionCaseElements.add(caseElement);
+				}
+			}
+		}
+
+		return actionCaseElements;
+	}
+
 	public static Element getActionCommandElement(String classCommandName) {
 		return _commandElements.get("action#" + classCommandName);
+	}
+
+	public static int getActionLocatorCount(String classCommandName) {
+		String commandName =
+			PoshiRunnerGetterUtil.getCommandNameFromClassCommandName(
+				classCommandName);
+
+		return PoshiRunnerContext.getFunctionLocatorCount(
+			StringUtil.upperCaseFirstLetter(commandName));
 	}
 
 	public static Element getActionRootElement(String className) {
@@ -77,6 +109,33 @@ public class PoshiRunnerContext {
 		return _rootElements.get("testcase#" + className);
 	}
 
+	private static List<String> _getRelatedActionClassCommandNames(
+		String classCommandName) {
+
+		List<String> relatedClassCommandNames = new ArrayList<>();
+
+		relatedClassCommandNames.add(classCommandName);
+
+		String className =
+			PoshiRunnerGetterUtil.getClassNameFromClassCommandName(
+				classCommandName);
+		String commandName =
+			PoshiRunnerGetterUtil.getCommandNameFromClassCommandName(
+				classCommandName);
+
+		while (_actionExtendClassName.get(className) != null) {
+			String extendClassName = _actionExtendClassName.get(className);
+
+			relatedClassCommandNames.add(extendClassName + "#" + commandName);
+
+			className = extendClassName;
+		}
+
+		relatedClassCommandNames.add("BaseLiferay#" + commandName);
+
+		return relatedClassCommandNames;
+	}
+
 	private static void _readPathFile(String filePath, String className)
 		throws Exception {
 
@@ -112,6 +171,8 @@ public class PoshiRunnerContext {
 						break;
 					}
 				}
+
+				_actionExtendClassName.put(className, locator);
 			}
 
 			_pathLocators.put(className + "#" + locatorKey, locator);
@@ -146,24 +207,6 @@ public class PoshiRunnerContext {
 				Element rootElement =
 					PoshiRunnerGetterUtil.getRootElementFromFilePath(filePath);
 
-				if (classType.equals("function")) {
-					String xml = rootElement.asXML();
-
-					for (int i = 1;; i++) {
-						if (xml.contains("${locator" + i + "}")) {
-							continue;
-						}
-
-						if (i > 1) {
-							i--;
-						}
-
-						_functionLocatorCounts.put(className, i);
-
-						break;
-					}
-				}
-
 				_rootElements.put(classType + "#" + className, rootElement);
 
 				if (rootElement.element("set-up") != null) {
@@ -192,6 +235,31 @@ public class PoshiRunnerContext {
 
 					_commandElements.put(
 						classType + "#" + classCommandName, commandElement);
+				}
+
+				if (classType.equals("function")) {
+					Element defaultCommandElement = getFunctionCommandElement(
+						className + "#" +
+							rootElement.attributeValue("default"));
+
+					_commandElements.put(
+						classType + "#" + className, defaultCommandElement);
+
+					String xml = rootElement.asXML();
+
+					for (int i = 1;; i++) {
+						if (xml.contains("${locator" + i + "}")) {
+							continue;
+						}
+
+						if (i > 1) {
+							i--;
+						}
+
+						_functionLocatorCounts.put(className, i);
+
+						break;
+					}
 				}
 			}
 			else if (classType.equals("path")) {
@@ -240,6 +308,8 @@ public class PoshiRunnerContext {
 		PoshiRunnerGetterUtil.getCanonicalPath(
 			"../../../portal-web/test/functional/com/liferay/portalweb/");
 
+	private static final Map<String, String> _actionExtendClassName =
+		new HashMap<>();
 	private static final Map<String, Element> _commandElements =
 		new HashMap<>();
 	private static String[] _filePaths;

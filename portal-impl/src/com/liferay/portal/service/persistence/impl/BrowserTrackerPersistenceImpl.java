@@ -56,7 +56,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see BrowserTrackerPersistence
- * @see BrowserTrackerUtil
+ * @see com.liferay.portal.service.persistence.BrowserTrackerUtil
  * @generated
  */
 @ProviderType

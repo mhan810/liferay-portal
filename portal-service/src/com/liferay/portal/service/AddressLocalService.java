@@ -67,14 +67,14 @@ public interface AddressLocalService extends BaseLocalService,
 		java.lang.String className, long classPK, java.lang.String street1,
 		java.lang.String street2, java.lang.String street3,
 		java.lang.String city, java.lang.String zip, long regionId,
-		long countryId, int typeId, boolean mailing, boolean primary)
+		long countryId, long typeId, boolean mailing, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	public com.liferay.portal.model.Address addAddress(long userId,
 		java.lang.String className, long classPK, java.lang.String street1,
 		java.lang.String street2, java.lang.String street3,
 		java.lang.String city, java.lang.String zip, long regionId,
-		long countryId, int typeId, boolean mailing, boolean primary,
+		long countryId, long typeId, boolean mailing, boolean primary,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
@@ -292,7 +292,7 @@ public interface AddressLocalService extends BaseLocalService,
 	public com.liferay.portal.model.Address updateAddress(long addressId,
 		java.lang.String street1, java.lang.String street2,
 		java.lang.String street3, java.lang.String city, java.lang.String zip,
-		long regionId, long countryId, int typeId, boolean mailing,
+		long regionId, long countryId, long typeId, boolean mailing,
 		boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException;
 }

@@ -56,7 +56,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see OrgLaborPersistence
- * @see OrgLaborUtil
+ * @see com.liferay.portal.service.persistence.OrgLaborUtil
  * @generated
  */
 @ProviderType

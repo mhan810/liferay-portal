@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see PortletPersistence
- * @see PortletUtil
+ * @see com.liferay.portal.service.persistence.PortletUtil
  * @generated
  */
 @ProviderType

@@ -19,8 +19,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>ARTICLE_HEADER</td>
-	<td>//div[contains(@class,'portlet-content-container')]//h3[contains(.,'${key_kbArticleTitle}')]</td>
+	<td>HEADER_TITLE</td>
+	<td>//h3[@class='header-title']/span</td>
 	<td></td>
 </tr>
 <tr>
@@ -29,33 +29,33 @@
 	<td></td>
 </tr>
 <tr>
-	<td>CURRENT_PARENT_TITLE</td>
-	<td>//input[contains(@class,'form-text lfr-input-resource')]</td>
+	<td>CURRENT_PARENT_TITLE_FIELD</td>
+	<td>//input[contains(@id,'currentParentTitle')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>CURRENT_PARENT_PRIORITY</td>
-	<td>//input[@title='Priority']</td>
+	<td>CURRENT_PARENT_PRIORITY_FIELD</td>
+	<td>//input[contains(@id,'currentPriority')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>NEW_PARENT_TITLE</td>
-	<td>//div[contains(@class,'kb-new-parent')]//input[contains(@class,'form-text lfr-input-resource')]</td>
+	<td>NEW_PARENT_TITLE_FIELD</td>
+	<td>//input[contains(@id,'parentTitle')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>NEW_PARENT_PRIORITY</td>
-	<td>//div[contains(@class,'kb-new-parent')]//input[@title='Priority']</td>
+	<td>NEW_PARENT_PRIORITY_FIELD</td>
+	<td>//input[contains(@id,'parentPriority')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>SELECT_PARENT</td>
-	<td>//div/a[contains(.,'Select Parent »')]</td>
+	<td>SELECT_BUTTON</td>
+	<td>//button[contains(.,'Select')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>SAVE_BUTTON</td>
-	<td>//button[contains(.,'Save')]</td>
+	<td>MOVE_BUTTON</td>
+	<td>//button[contains(.,'Move')]</td>
 	<td></td>
 </tr>
 <tr>

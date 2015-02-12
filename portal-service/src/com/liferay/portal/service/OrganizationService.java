@@ -101,7 +101,7 @@ public interface OrganizationService extends BaseService {
 	public com.liferay.portal.model.Organization addOrganization(
 		long parentOrganizationId, java.lang.String name,
 		java.lang.String type, boolean recursable, long regionId,
-		long countryId, int statusId, java.lang.String comments, boolean site,
+		long countryId, long statusId, java.lang.String comments, boolean site,
 		java.util.List<com.liferay.portal.model.Address> addresses,
 		java.util.List<com.liferay.portal.model.EmailAddress> emailAddresses,
 		java.util.List<com.liferay.portal.model.OrgLabor> orgLabors,
@@ -146,7 +146,7 @@ public interface OrganizationService extends BaseService {
 	public com.liferay.portal.model.Organization addOrganization(
 		long parentOrganizationId, java.lang.String name,
 		java.lang.String type, boolean recursable, long regionId,
-		long countryId, int statusId, java.lang.String comments, boolean site,
+		long countryId, long statusId, java.lang.String comments, boolean site,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
@@ -184,7 +184,7 @@ public interface OrganizationService extends BaseService {
 	*/
 	public com.liferay.portal.model.Organization addOrganization(
 		long parentOrganizationId, java.lang.String name,
-		java.lang.String type, long regionId, long countryId, int statusId,
+		java.lang.String type, long regionId, long countryId, long statusId,
 		java.lang.String comments, boolean site,
 		java.util.List<com.liferay.portal.model.Address> addresses,
 		java.util.List<com.liferay.portal.model.EmailAddress> emailAddresses,
@@ -222,7 +222,7 @@ public interface OrganizationService extends BaseService {
 	*/
 	public com.liferay.portal.model.Organization addOrganization(
 		long parentOrganizationId, java.lang.String name,
-		java.lang.String type, long regionId, long countryId, int statusId,
+		java.lang.String type, long regionId, long countryId, long statusId,
 		java.lang.String comments, boolean site,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException;
@@ -467,7 +467,7 @@ public interface OrganizationService extends BaseService {
 	public com.liferay.portal.model.Organization updateOrganization(
 		long organizationId, long parentOrganizationId, java.lang.String name,
 		java.lang.String type, boolean recursable, long regionId,
-		long countryId, int statusId, java.lang.String comments, boolean site,
+		long countryId, long statusId, java.lang.String comments, boolean site,
 		java.util.List<com.liferay.portal.model.Address> addresses,
 		java.util.List<com.liferay.portal.model.EmailAddress> emailAddresses,
 		java.util.List<com.liferay.portal.model.OrgLabor> orgLabors,
@@ -509,7 +509,7 @@ public interface OrganizationService extends BaseService {
 	public com.liferay.portal.model.Organization updateOrganization(
 		long organizationId, long parentOrganizationId, java.lang.String name,
 		java.lang.String type, boolean recursable, long regionId,
-		long countryId, int statusId, java.lang.String comments, boolean site,
+		long countryId, long statusId, java.lang.String comments, boolean site,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
@@ -546,7 +546,7 @@ public interface OrganizationService extends BaseService {
 	*/
 	public com.liferay.portal.model.Organization updateOrganization(
 		long organizationId, long parentOrganizationId, java.lang.String name,
-		java.lang.String type, long regionId, long countryId, int statusId,
+		java.lang.String type, long regionId, long countryId, long statusId,
 		java.lang.String comments, boolean logo, byte[] logoBytes,
 		boolean site,
 		java.util.List<com.liferay.portal.model.Address> addresses,
@@ -594,7 +594,7 @@ public interface OrganizationService extends BaseService {
 	@java.lang.Deprecated
 	public com.liferay.portal.model.Organization updateOrganization(
 		long organizationId, long parentOrganizationId, java.lang.String name,
-		java.lang.String type, long regionId, long countryId, int statusId,
+		java.lang.String type, long regionId, long countryId, long statusId,
 		java.lang.String comments, boolean site,
 		java.util.List<com.liferay.portal.model.Address> addresses,
 		java.util.List<com.liferay.portal.model.EmailAddress> emailAddresses,
@@ -630,7 +630,7 @@ public interface OrganizationService extends BaseService {
 	*/
 	public com.liferay.portal.model.Organization updateOrganization(
 		long organizationId, long parentOrganizationId, java.lang.String name,
-		java.lang.String type, long regionId, long countryId, int statusId,
+		java.lang.String type, long regionId, long countryId, long statusId,
 		java.lang.String comments, boolean site,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException;

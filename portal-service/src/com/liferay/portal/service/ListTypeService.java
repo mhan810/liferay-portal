@@ -55,7 +55,7 @@ public interface ListTypeService extends BaseService {
 	public java.lang.String getBeanIdentifier();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public com.liferay.portal.model.ListType getListType(int listTypeId)
+	public com.liferay.portal.model.ListType getListType(long listTypeId)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -69,9 +69,10 @@ public interface ListTypeService extends BaseService {
 	*/
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
-	public void validate(int listTypeId, long classNameId, java.lang.String type)
+	public void validate(long listTypeId, long classNameId,
+		java.lang.String type)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
-	public void validate(int listTypeId, java.lang.String type)
+	public void validate(long listTypeId, java.lang.String type)
 		throws com.liferay.portal.kernel.exception.PortalException;
 }

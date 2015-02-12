@@ -43,9 +43,11 @@ if (assetEntry != null) {
 	headerTitle = headerTitle.concat(StringPool.COLON + StringPool.SPACE + assetRenderer.getTitle(locale));
 }
 
-PortletURL viewFullContentURL = renderResponse.createRenderURL();
+String portletId = PortletProviderUtil.getPortletId(className, PortletProvider.Action.VIEW);
 
-viewFullContentURL.setParameter("struts_action", "/workflow_tasks/view_content");
+PortletURL viewFullContentURL = PortletURLFactoryUtil.create(request, portletId, plid, PortletRequest.RENDER_PHASE);
+
+viewFullContentURL.setParameter("mvcPath", "/html/portlet/asset_publisher/view_content.jsp");
 viewFullContentURL.setParameter("redirect", currentURL);
 
 if (assetEntry != null) {
@@ -106,7 +108,6 @@ request.setAttribute(WebKeys.WORKFLOW_ASSET_PREVIEW, Boolean.TRUE);
 					String path = workflowHandler.render(classPK, renderRequest, renderResponse, AssetRenderer.TEMPLATE_ABSTRACT);
 
 					request.setAttribute(WebKeys.ASSET_RENDERER, assetRenderer);
-					request.setAttribute(WebKeys.ASSET_PUBLISHER_ABSTRACT_LENGTH, 200);
 					%>
 
 					<c:choose>
@@ -123,8 +124,8 @@ request.setAttribute(WebKeys.WORKFLOW_ASSET_PREVIEW, Boolean.TRUE);
 					%>
 
 					<liferay-ui:asset-metadata
-						className="<%= className %>"
-						classPK="<%= classPK %>"
+						className="<%= assetEntry.getClassName() %>"
+						classPK="<%= assetEntry.getClassPK() %>"
 						metadataFields="<%= metadataFields %>"
 					/>
 				</liferay-ui:panel>
@@ -216,11 +217,16 @@ request.setAttribute(WebKeys.WORKFLOW_ASSET_PREVIEW, Boolean.TRUE);
 					<portlet:param name="struts_action" value="/workflow_instances/edit_workflow_instance_discussion" />
 				</portlet:actionURL>
 
+				<portlet:resourceURL var="discussionPaginationURL">
+					<portlet:param name="struts_action" value="/workflow_instances/edit_workflow_instance_discussion" />
+				</portlet:resourceURL>
+
 				<liferay-ui:discussion
 					className="<%= WorkflowInstance.class.getName() %>"
 					classPK="<%= workflowInstance.getWorkflowInstanceId() %>"
 					formAction="<%= discussionURL %>"
 					formName="fm1"
+					paginationURL="<%= discussionPaginationURL %>"
 					ratingsEnabled="<%= false %>"
 					redirect="<%= currentURL %>"
 					userId="<%= user.getUserId() %>"

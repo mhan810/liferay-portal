@@ -191,7 +191,7 @@ public class PhoneCacheModel implements CacheModel<Phone>, Externalizable,
 		classPK = objectInput.readLong();
 		number = objectInput.readUTF();
 		extension = objectInput.readUTF();
-		typeId = objectInput.readInt();
+		typeId = objectInput.readLong();
 		primary = objectInput.readBoolean();
 	}
 
@@ -237,7 +237,7 @@ public class PhoneCacheModel implements CacheModel<Phone>, Externalizable,
 			objectOutput.writeUTF(extension);
 		}
 
-		objectOutput.writeInt(typeId);
+		objectOutput.writeLong(typeId);
 		objectOutput.writeBoolean(primary);
 	}
 
@@ -253,6 +253,6 @@ public class PhoneCacheModel implements CacheModel<Phone>, Externalizable,
 	public long classPK;
 	public String number;
 	public String extension;
-	public int typeId;
+	public long typeId;
 	public boolean primary;
 }

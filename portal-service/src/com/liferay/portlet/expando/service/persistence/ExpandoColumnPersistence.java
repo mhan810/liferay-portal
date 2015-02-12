@@ -28,7 +28,7 @@ import com.liferay.portlet.expando.model.ExpandoColumn;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ExpandoColumnPersistenceImpl
+ * @see com.liferay.portlet.expando.service.persistence.impl.ExpandoColumnPersistenceImpl
  * @see ExpandoColumnUtil
  * @generated
  */

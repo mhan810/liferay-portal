@@ -41,7 +41,7 @@ public class ListTypeServiceWrapper implements ListTypeService,
 	}
 
 	@Override
-	public com.liferay.portal.model.ListType getListType(int listTypeId)
+	public com.liferay.portal.model.ListType getListType(long listTypeId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _listTypeService.getListType(listTypeId);
 	}
@@ -63,13 +63,14 @@ public class ListTypeServiceWrapper implements ListTypeService,
 	}
 
 	@Override
-	public void validate(int listTypeId, long classNameId, java.lang.String type)
+	public void validate(long listTypeId, long classNameId,
+		java.lang.String type)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_listTypeService.validate(listTypeId, classNameId, type);
 	}
 
 	@Override
-	public void validate(int listTypeId, java.lang.String type)
+	public void validate(long listTypeId, java.lang.String type)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_listTypeService.validate(listTypeId, type);
 	}

@@ -28,7 +28,7 @@ import com.liferay.portal.service.persistence.BasePersistence;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see BookmarksEntryPersistenceImpl
+ * @see com.liferay.bookmarks.service.persistence.impl.BookmarksEntryPersistenceImpl
  * @see BookmarksEntryUtil
  * @generated
  */

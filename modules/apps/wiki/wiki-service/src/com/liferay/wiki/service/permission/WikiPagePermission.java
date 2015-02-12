@@ -35,7 +35,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	property = {
-		"model.class.name=com.liferay.portlet.wiki.model.WikiPage"
+		"model.class.name=com.liferay.wiki.model.WikiPage"
 	}
 )
 public class WikiPagePermission implements BaseModelPermissionChecker {

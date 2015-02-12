@@ -71,7 +71,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see MBMessagePersistence
- * @see MBMessageUtil
+ * @see com.liferay.portlet.messageboards.service.persistence.MBMessageUtil
  * @generated
  */
 @ProviderType

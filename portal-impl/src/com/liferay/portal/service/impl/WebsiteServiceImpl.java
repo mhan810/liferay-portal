@@ -36,7 +36,7 @@ public class WebsiteServiceImpl extends WebsiteServiceBaseImpl {
 	@Deprecated
 	@Override
 	public Website addWebsite(
-			String className, long classPK, String url, int typeId,
+			String className, long classPK, String url, long typeId,
 			boolean primary)
 		throws PortalException {
 
@@ -49,7 +49,7 @@ public class WebsiteServiceImpl extends WebsiteServiceBaseImpl {
 
 	@Override
 	public Website addWebsite(
-			String className, long classPK, String url, int typeId,
+			String className, long classPK, String url, long typeId,
 			boolean primary, ServiceContext serviceContext)
 		throws PortalException {
 
@@ -98,7 +98,7 @@ public class WebsiteServiceImpl extends WebsiteServiceBaseImpl {
 
 	@Override
 	public Website updateWebsite(
-			long websiteId, String url, int typeId, boolean primary)
+			long websiteId, String url, long typeId, boolean primary)
 		throws PortalException {
 
 		Website website = websitePersistence.findByPrimaryKey(websiteId);

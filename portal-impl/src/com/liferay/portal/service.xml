@@ -55,7 +55,7 @@
 		<column name="zip" type="String" />
 		<column name="regionId" type="long" />
 		<column name="countryId" type="long" />
-		<column name="typeId" type="int" />
+		<column name="typeId" type="long" />
 		<column name="mailing" type="boolean" />
 		<column name="primary" type="boolean" />
 
@@ -318,8 +318,8 @@
 		<column name="firstName" type="String" />
 		<column name="middleName" type="String" />
 		<column name="lastName" type="String" />
-		<column name="prefixId" type="int" />
-		<column name="suffixId" type="int" />
+		<column name="prefixId" type="long" />
+		<column name="suffixId" type="long" />
 		<column name="male" type="boolean" />
 		<column name="birthday" type="Date" />
 		<column name="smsSn" type="String" />
@@ -416,7 +416,7 @@
 		<column name="classNameId" type="long" />
 		<column name="classPK" type="long" />
 		<column name="address" type="String" />
-		<column name="typeId" type="int" />
+		<column name="typeId" type="long" />
 		<column name="primary" type="boolean" />
 
 		<!-- Order -->
@@ -1263,11 +1263,11 @@
 
 		<reference package-path="com.liferay.portal" entity="PluginSetting" />
 	</entity>
-	<entity name="ListType" local-service="false" remote-service="true">
+	<entity name="ListType" local-service="true" remote-service="true">
 
 		<!-- PK fields -->
 
-		<column name="listTypeId" type="int" primary="true" />
+		<column name="listTypeId" type="long" primary="true" />
 
 		<!-- Other fields -->
 
@@ -1283,6 +1283,10 @@
 		<!-- Finder methods -->
 
 		<finder name="Type" return-type="Collection">
+			<finder-column name="type" />
+		</finder>
+		<finder name="N_T" return-type="ListType">
+			<finder-column name="name" />
 			<finder-column name="type" />
 		</finder>
 
@@ -1347,7 +1351,7 @@
 		<column name="replyComments" type="String" />
 		<column name="replyDate" type="Date" />
 		<column name="replierUserId" type="long" />
-		<column name="statusId" type="int" />
+		<column name="statusId" type="long" />
 
 		<!-- Order -->
 
@@ -1406,7 +1410,7 @@
 		<column name="recursable" type="boolean" />
 		<column name="regionId" type="long" />
 		<column name="countryId" type="long" />
-		<column name="statusId" type="int" />
+		<column name="statusId" type="long" />
 		<column name="comments" type="String" />
 		<column name="logoId" type="long" />
 
@@ -1495,7 +1499,7 @@
 		<!-- Other fields -->
 
 		<column name="organizationId" type="long" />
-		<column name="typeId" type="int" />
+		<column name="typeId" type="long" />
 		<column name="sunOpen" type="int" />
 		<column name="sunClose" type="int" />
 		<column name="monOpen" type="int" />
@@ -1682,7 +1686,7 @@
 		<column name="classPK" type="long" />
 		<column name="number" type="String" />
 		<column name="extension" type="String" />
-		<column name="typeId" type="int" />
+		<column name="typeId" type="long" />
 		<column name="primary" type="boolean" />
 
 		<!-- Order -->
@@ -3199,7 +3203,7 @@
 		<column name="classNameId" type="long" />
 		<column name="classPK" type="long" />
 		<column name="url" type="String" />
-		<column name="typeId" type="int" />
+		<column name="typeId" type="long" />
 		<column name="primary" type="boolean" />
 
 		<!-- Order -->
@@ -3427,8 +3431,6 @@
 		<exception>RequiredRole</exception>
 		<exception>RequiredUser</exception>
 		<exception>RequiredUserGroup</exception>
-		<exception>ReservedUserEmailAddress</exception>
-		<exception>ReservedUserId</exception>
 		<exception>ResourcePrimKey</exception>
 		<exception>RoleAssignment</exception>
 		<exception>RoleName</exception>

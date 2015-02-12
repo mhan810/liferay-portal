@@ -37,7 +37,7 @@ public class EmailAddressServiceImpl extends EmailAddressServiceBaseImpl {
 	@Deprecated
 	@Override
 	public EmailAddress addEmailAddress(
-			String className, long classPK, String address, int typeId,
+			String className, long classPK, String address, long typeId,
 			boolean primary)
 		throws PortalException {
 
@@ -50,7 +50,7 @@ public class EmailAddressServiceImpl extends EmailAddressServiceBaseImpl {
 
 	@Override
 	public EmailAddress addEmailAddress(
-			String className, long classPK, String address, int typeId,
+			String className, long classPK, String address, long typeId,
 			boolean primary, ServiceContext serviceContext)
 		throws PortalException {
 
@@ -103,7 +103,7 @@ public class EmailAddressServiceImpl extends EmailAddressServiceBaseImpl {
 
 	@Override
 	public EmailAddress updateEmailAddress(
-			long emailAddressId, String address, int typeId, boolean primary)
+			long emailAddressId, String address, long typeId, boolean primary)
 		throws PortalException {
 
 		EmailAddress emailAddress = emailAddressPersistence.findByPrimaryKey(

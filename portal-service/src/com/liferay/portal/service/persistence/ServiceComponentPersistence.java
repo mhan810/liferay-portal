@@ -26,7 +26,7 @@ import com.liferay.portal.model.ServiceComponent;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ServiceComponentPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.ServiceComponentPersistenceImpl
  * @see ServiceComponentUtil
  * @generated
  */

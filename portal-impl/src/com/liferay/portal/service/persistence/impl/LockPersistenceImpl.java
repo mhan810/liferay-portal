@@ -62,7 +62,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see LockPersistence
- * @see LockUtil
+ * @see com.liferay.portal.service.persistence.LockUtil
  * @generated
  */
 @ProviderType

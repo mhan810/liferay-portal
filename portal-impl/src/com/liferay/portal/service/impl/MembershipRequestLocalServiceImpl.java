@@ -92,7 +92,7 @@ public class
 	}
 
 	@Override
-	public void deleteMembershipRequests(long groupId, int statusId) {
+	public void deleteMembershipRequests(long groupId, long statusId) {
 		List<MembershipRequest> membershipRequests =
 			membershipRequestPersistence.findByG_S(groupId, statusId);
 
@@ -113,7 +113,7 @@ public class
 
 	@Override
 	public List<MembershipRequest> getMembershipRequests(
-		long userId, long groupId, int statusId) {
+		long userId, long groupId, long statusId) {
 
 		return membershipRequestPersistence.findByG_U_S(
 			groupId, userId, statusId);
@@ -121,7 +121,7 @@ public class
 
 	@Override
 	public boolean hasMembershipRequest(
-		long userId, long groupId, int statusId) {
+		long userId, long groupId, long statusId) {
 
 		List<MembershipRequest> membershipRequests = getMembershipRequests(
 			userId, groupId, statusId);
@@ -150,7 +150,8 @@ public class
 	@Override
 	public void updateStatus(
 			long replierUserId, long membershipRequestId, String replyComments,
-			int statusId, boolean addUserToGroup, ServiceContext serviceContext)
+			long statusId, boolean addUserToGroup,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		validate(replyComments);

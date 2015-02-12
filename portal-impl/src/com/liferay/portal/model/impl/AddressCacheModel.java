@@ -232,7 +232,7 @@ public class AddressCacheModel implements CacheModel<Address>, Externalizable,
 		zip = objectInput.readUTF();
 		regionId = objectInput.readLong();
 		countryId = objectInput.readLong();
-		typeId = objectInput.readInt();
+		typeId = objectInput.readLong();
 		mailing = objectInput.readBoolean();
 		primary = objectInput.readBoolean();
 	}
@@ -302,7 +302,7 @@ public class AddressCacheModel implements CacheModel<Address>, Externalizable,
 
 		objectOutput.writeLong(regionId);
 		objectOutput.writeLong(countryId);
-		objectOutput.writeInt(typeId);
+		objectOutput.writeLong(typeId);
 		objectOutput.writeBoolean(mailing);
 		objectOutput.writeBoolean(primary);
 	}
@@ -324,7 +324,7 @@ public class AddressCacheModel implements CacheModel<Address>, Externalizable,
 	public String zip;
 	public long regionId;
 	public long countryId;
-	public int typeId;
+	public long typeId;
 	public boolean mailing;
 	public boolean primary;
 }

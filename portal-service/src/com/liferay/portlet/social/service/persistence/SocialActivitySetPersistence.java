@@ -28,7 +28,7 @@ import com.liferay.portlet.social.model.SocialActivitySet;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SocialActivitySetPersistenceImpl
+ * @see com.liferay.portlet.social.service.persistence.impl.SocialActivitySetPersistenceImpl
  * @see SocialActivitySetUtil
  * @generated
  */

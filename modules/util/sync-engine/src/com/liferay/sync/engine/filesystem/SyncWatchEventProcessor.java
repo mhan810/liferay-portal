@@ -73,6 +73,8 @@ public class SyncWatchEventProcessor implements Runnable {
 						return;
 					}
 
+					_pendingTypePKSyncFileIds.remove(syncFile.getSyncFileId());
+
 					for (SyncWatchEvent syncWatchEvent : syncWatchEvents) {
 						try {
 							processSyncWatchEvent(syncWatchEvent);
@@ -139,8 +141,8 @@ public class SyncWatchEventProcessor implements Runnable {
 			targetFilePath.toString());
 
 		if (syncFile == null) {
-			syncFile = SyncFileService.fetchSyncFileByFileKey(
-				FileUtil.getFileKey(targetFilePath), _syncAccountId);
+			syncFile = SyncFileService.fetchSyncFile(
+				FileUtil.getFileKey(targetFilePath));
 		}
 
 		if (syncFile == null) {
@@ -263,8 +265,13 @@ public class SyncWatchEventProcessor implements Runnable {
 			return;
 		}
 
-		SyncFile syncFile = SyncFileService.fetchSyncFileByFileKey(
-			FileUtil.getFileKey(targetFilePath), _syncAccountId);
+		SyncFile syncFile = SyncFileService.fetchSyncFile(
+			targetFilePath.toString());
+
+		if (syncFile == null) {
+			syncFile = SyncFileService.fetchSyncFile(
+				FileUtil.getFileKey(targetFilePath));
+		}
 
 		if (syncFile == null) {
 			SyncFileService.addFolderSyncFile(
@@ -277,6 +284,8 @@ public class SyncWatchEventProcessor implements Runnable {
 		Path sourceFilePath = Paths.get(syncFile.getFilePathName());
 
 		if (targetFilePath.equals(sourceFilePath)) {
+			FileUtil.writeFileKey(
+				targetFilePath, String.valueOf(syncFile.getSyncFileId()));
 		}
 		else if (Files.exists(sourceFilePath)) {
 			SyncFileService.addFolderSyncFile(

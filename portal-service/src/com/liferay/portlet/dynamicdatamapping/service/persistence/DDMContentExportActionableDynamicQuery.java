@@ -29,7 +29,7 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMContent;
 
 /**
  * @author Brian Wing Shun Chan
- * @deprecated As of 7.0.0, replaced by {@link com.liferay.portlet.dynamicdatamapping.service.DDMContentLocalServiceUtil#getExportActionableDynamicQuery()}
+ * @deprecated As of 7.0.0, replaced by {@link com.liferay.portlet.dynamicdatamapping.service.DDMContentLocalServiceUtil#getExportActionableDynamicQuery(PortletDataContext)}
  * @generated
  */
 @Deprecated

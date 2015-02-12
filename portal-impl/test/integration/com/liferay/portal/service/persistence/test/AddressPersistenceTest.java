@@ -146,7 +146,7 @@ public class AddressPersistenceTest {
 
 		newAddress.setCountryId(RandomTestUtil.nextLong());
 
-		newAddress.setTypeId(RandomTestUtil.nextInt());
+		newAddress.setTypeId(RandomTestUtil.nextLong());
 
 		newAddress.setMailing(RandomTestUtil.randomBoolean());
 
@@ -577,7 +577,7 @@ public class AddressPersistenceTest {
 
 		address.setCountryId(RandomTestUtil.nextLong());
 
-		address.setTypeId(RandomTestUtil.nextInt());
+		address.setTypeId(RandomTestUtil.nextLong());
 
 		address.setMailing(RandomTestUtil.randomBoolean());
 

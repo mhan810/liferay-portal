@@ -2,7 +2,7 @@
 
 <deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
 	<service name="Portal_UserService" provider="java:RPC" style="rpc" use="encoded">
-		<arrayMapping xmlns:ns="urn:http.service.portal.liferay.com" xmlns:cmp-ns="http://model.announcements.portlet.liferay.com" qname="ns:ArrayOf_tns13_AnnouncementsDeliverySoap" type="java:com.liferay.portlet.announcements.model.AnnouncementsDeliverySoap[]" innerType="cmp-ns:AnnouncementsDeliverySoap" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"></arrayMapping>
+		<arrayMapping xmlns:ns="urn:http.service.portal.liferay.com" xmlns:cmp-ns="http://model.announcements.portlet.liferay.com" qname="ns:ArrayOf_tns14_AnnouncementsDeliverySoap" type="java:com.liferay.portlet.announcements.model.AnnouncementsDeliverySoap[]" innerType="cmp-ns:AnnouncementsDeliverySoap" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"></arrayMapping>
 		<arrayMapping xmlns:ns="urn:http.service.portal.liferay.com" xmlns:cmp-ns="http://model.portal.liferay.com" qname="ns:ArrayOf_tns5_AddressSoap" type="java:com.liferay.portal.model.AddressSoap[]" innerType="cmp-ns:AddressSoap" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"></arrayMapping>
 		<arrayMapping xmlns:ns="urn:http.service.portal.liferay.com" xmlns:cmp-ns="http://model.portal.liferay.com" qname="ns:ArrayOf_tns5_EmailAddressSoap" type="java:com.liferay.portal.model.EmailAddressSoap[]" innerType="cmp-ns:EmailAddressSoap" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"></arrayMapping>
 		<arrayMapping xmlns:ns="urn:http.service.portal.liferay.com" xmlns:cmp-ns="http://model.portal.liferay.com" qname="ns:ArrayOf_tns5_PhoneSoap" type="java:com.liferay.portal.model.PhoneSoap[]" innerType="cmp-ns:PhoneSoap" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"></arrayMapping>
@@ -24,6 +24,7 @@
 		<typeMapping xmlns:ns="http://service.portal.liferay.com" qname="ns:ServiceContext" type="java:com.liferay.portal.service.ServiceContext" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"></typeMapping>
 		<typeMapping xmlns:ns="http://theme.portal.liferay.com" qname="ns:PortletDisplay" type="java:com.liferay.portal.theme.PortletDisplay" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"></typeMapping>
 		<typeMapping xmlns:ns="http://theme.portal.liferay.com" qname="ns:ThemeDisplay" type="java:com.liferay.portal.theme.ThemeDisplay" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"></typeMapping>
+		<typeMapping xmlns:ns="http://toolbar.portlet.kernel.portal.liferay.com" qname="ns:PortletToolbar" type="java:com.liferay.portal.kernel.portlet.toolbar.PortletToolbar" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"></typeMapping>
 		<typeMapping xmlns:ns="http://util.kernel.portal.liferay.com" qname="ns:StringBundler" type="java:com.liferay.portal.kernel.util.StringBundler" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"></typeMapping>
 		<typeMapping xmlns:ns="http://xml.apache.org/xml-soap" qname="ns:mapItem" type="java:org.apache.xml.xml_soap.MapItem" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"></typeMapping>
 		<operation xmlns:operNS="urn:http.service.portal.liferay.com" name="addGroupUsers" qname="operNS:addGroupUsers" soapAction="">
@@ -65,8 +66,8 @@
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="firstName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="middleName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="lastName" type="tns:string"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:int"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:int"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:long"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:long"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="male" type="tns:boolean"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayMonth" type="tns:int"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayDay" type="tns:int"></parameter>
@@ -80,7 +81,7 @@
 			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="emailAddresses" type="tns:ArrayOf_tns5_EmailAddressSoap"></parameter>
 			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="phones" type="tns:ArrayOf_tns5_PhoneSoap"></parameter>
 			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="websites" type="tns:ArrayOf_tns5_WebsiteSoap"></parameter>
-			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="announcementsDelivers" type="tns:ArrayOf_tns13_AnnouncementsDeliverySoap"></parameter>
+			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="announcementsDelivers" type="tns:ArrayOf_tns14_AnnouncementsDeliverySoap"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="sendEmail" type="tns:boolean"></parameter>
 			<parameter xmlns:tns="http://service.portal.liferay.com" qname="serviceContext" type="tns:ServiceContext"></parameter>
 		</operation>
@@ -98,8 +99,8 @@
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="firstName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="middleName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="lastName" type="tns:string"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:int"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:int"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:long"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:long"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="male" type="tns:boolean"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayMonth" type="tns:int"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayDay" type="tns:int"></parameter>
@@ -126,8 +127,8 @@
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="firstName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="middleName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="lastName" type="tns:string"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:int"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:int"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:long"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:long"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="male" type="tns:boolean"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayMonth" type="tns:int"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayDay" type="tns:int"></parameter>
@@ -141,7 +142,7 @@
 			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="emailAddresses" type="tns:ArrayOf_tns5_EmailAddressSoap"></parameter>
 			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="phones" type="tns:ArrayOf_tns5_PhoneSoap"></parameter>
 			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="websites" type="tns:ArrayOf_tns5_WebsiteSoap"></parameter>
-			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="announcementsDelivers" type="tns:ArrayOf_tns13_AnnouncementsDeliverySoap"></parameter>
+			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="announcementsDelivers" type="tns:ArrayOf_tns14_AnnouncementsDeliverySoap"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="sendEmail" type="tns:boolean"></parameter>
 			<parameter xmlns:tns="http://service.portal.liferay.com" qname="serviceContext" type="tns:ServiceContext"></parameter>
 		</operation>
@@ -159,8 +160,8 @@
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="firstName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="middleName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="lastName" type="tns:string"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:int"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:int"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:long"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:long"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="male" type="tns:boolean"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayMonth" type="tns:int"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayDay" type="tns:int"></parameter>
@@ -315,8 +316,8 @@
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="firstName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="middleName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="lastName" type="tns:string"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:int"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:int"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:long"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:long"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="male" type="tns:boolean"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayMonth" type="tns:int"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayDay" type="tns:int"></parameter>
@@ -388,8 +389,8 @@
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="firstName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="middleName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="lastName" type="tns:string"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:int"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:int"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:long"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:long"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="male" type="tns:boolean"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayMonth" type="tns:int"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayDay" type="tns:int"></parameter>
@@ -414,7 +415,7 @@
 			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="emailAddresses" type="tns:ArrayOf_tns5_EmailAddressSoap"></parameter>
 			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="phones" type="tns:ArrayOf_tns5_PhoneSoap"></parameter>
 			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="websites" type="tns:ArrayOf_tns5_WebsiteSoap"></parameter>
-			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="announcementsDelivers" type="tns:ArrayOf_tns13_AnnouncementsDeliverySoap"></parameter>
+			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="announcementsDelivers" type="tns:ArrayOf_tns14_AnnouncementsDeliverySoap"></parameter>
 			<parameter xmlns:tns="http://service.portal.liferay.com" qname="serviceContext" type="tns:ServiceContext"></parameter>
 		</operation>
 		<operation xmlns:operNS="urn:http.service.portal.liferay.com" xmlns:rtns="http://model.portal.liferay.com" name="updateUser" qname="operNS:updateUser" returnQName="updateUserReturn" returnType="rtns:UserSoap" soapAction="">
@@ -436,8 +437,8 @@
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="firstName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="middleName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="lastName" type="tns:string"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:int"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:int"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:long"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:long"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="male" type="tns:boolean"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayMonth" type="tns:int"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayDay" type="tns:int"></parameter>
@@ -462,7 +463,7 @@
 			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="emailAddresses" type="tns:ArrayOf_tns5_EmailAddressSoap"></parameter>
 			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="phones" type="tns:ArrayOf_tns5_PhoneSoap"></parameter>
 			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="websites" type="tns:ArrayOf_tns5_WebsiteSoap"></parameter>
-			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="announcementsDelivers" type="tns:ArrayOf_tns13_AnnouncementsDeliverySoap"></parameter>
+			<parameter xmlns:tns="urn:http.service.portal.liferay.com" qname="announcementsDelivers" type="tns:ArrayOf_tns14_AnnouncementsDeliverySoap"></parameter>
 			<parameter xmlns:tns="http://service.portal.liferay.com" qname="serviceContext" type="tns:ServiceContext"></parameter>
 		</operation>
 		<operation xmlns:operNS="urn:http.service.portal.liferay.com" xmlns:rtns="http://model.portal.liferay.com" name="updateUser" qname="operNS:updateUser" returnQName="updateUserReturn" returnType="rtns:UserSoap" soapAction="">
@@ -484,8 +485,8 @@
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="firstName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="middleName" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="lastName" type="tns:string"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:int"></parameter>
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:int"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="prefixId" type="tns:long"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="suffixId" type="tns:long"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="male" type="tns:boolean"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayMonth" type="tns:int"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="birthdayDay" type="tns:int"></parameter>
@@ -510,7 +511,7 @@
 		</operation>
 		<parameter name="allowedMethods" value="addGroupUsers addOrganizationUsers addPasswordPolicyUsers addRoleUsers addTeamUsers addUser addUserGroupUsers addUserWithWorkflow deletePortrait deleteRoleUser deleteUser getCompanyUsers getCompanyUsersCount getGroupUserIds getGroupUsers getOrganizationUserIds getOrganizationUsers getRoleUserIds getUserByEmailAddress getUserById getUserByScreenName getUserGroupUsers getUserIdByEmailAddress getUserIdByScreenName hasGroupUser hasRoleUser sendPasswordByEmailAddress sendPasswordByScreenName sendPasswordByUserId setRoleUsers setUserGroupUsers unsetGroupTeamsUsers unsetGroupUsers unsetOrganizationUsers unsetPasswordPolicyUsers unsetRoleUsers unsetTeamUsers unsetUserGroupUsers updateAgreedToTermsOfUse updateEmailAddress updateIncompleteUser updateLockoutById updateOpenId updateOrganizations updatePassword updatePortrait updateReminderQuery updateScreenName updateStatus updateUser" />
 		<parameter name="className" value="com.liferay.portal.service.http.UserServiceSoap" />
-		<parameter name="schemaUnqualified" value="http://model.announcements.portlet.liferay.com,http://model.portal.liferay.com,http://persistence.service.portal.liferay.com,http://service.portal.liferay.com,http://theme.portal.liferay.com,http://util.kernel.portal.liferay.com,http://xml.apache.org/xml-soap,urn:http.service.portal.liferay.com" />
+		<parameter name="schemaUnqualified" value="http://model.announcements.portlet.liferay.com,http://model.portal.liferay.com,http://persistence.service.portal.liferay.com,http://service.portal.liferay.com,http://theme.portal.liferay.com,http://toolbar.portlet.kernel.portal.liferay.com,http://util.kernel.portal.liferay.com,http://xml.apache.org/xml-soap,urn:http.service.portal.liferay.com" />
 		<parameter name="typeMappingVersion" value="1.2" />
 		<parameter name="wsdlPortType" value="UserServiceSoap" />
 		<parameter name="wsdlServiceElement" value="UserServiceSoapService" />

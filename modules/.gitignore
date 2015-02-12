@@ -8,6 +8,7 @@
 /*/*/lib
 /*/*/test-classes
 /*/*/test-results
+/*/*/tmp
 /*/*/*/bin
 /*/*/*/docroot/WEB-INF/classes
 /*/*/*/docroot/WEB-INF/lib
@@ -18,3 +19,4 @@
 /*/*/*/lib
 /*/*/*/test-classes
 /*/*/*/test-results
+/*/*/*/tmp

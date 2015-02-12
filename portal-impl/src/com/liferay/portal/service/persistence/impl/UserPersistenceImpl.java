@@ -69,7 +69,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see UserPersistence
- * @see UserUtil
+ * @see com.liferay.portal.service.persistence.UserUtil
  * @generated
  */
 @ProviderType

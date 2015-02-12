@@ -27,7 +27,7 @@ import com.liferay.portlet.messageboards.model.MBBan;
 import java.util.List;
 
 /**
- * The persistence utility for the message boards ban service. This utility wraps {@link MBBanPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
+ * The persistence utility for the message boards ban service. This utility wraps {@link com.liferay.portlet.messageboards.service.persistence.impl.MBBanPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author Brian Wing Shun Chan
  * @see MBBanPersistence
- * @see MBBanPersistenceImpl
+ * @see com.liferay.portlet.messageboards.service.persistence.impl.MBBanPersistenceImpl
  * @generated
  */
 @ProviderType

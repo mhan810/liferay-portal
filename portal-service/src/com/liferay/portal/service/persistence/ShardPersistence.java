@@ -26,7 +26,7 @@ import com.liferay.portal.model.Shard;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ShardPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.ShardPersistenceImpl
  * @see ShardUtil
  * @generated
  */

@@ -51,8 +51,7 @@ public interface BlogsEntryService extends BaseService {
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link #addEntry(String, String,
 	String, String, int, int, int, int, int, boolean, boolean,
-	String[], boolean, String, String, InputStream,
-	ServiceContext)}
+	String[], ImageSelector, ImageSelector, ServiceContext)}
 	*/
 	@java.lang.Deprecated
 	public com.liferay.portlet.blogs.model.BlogsEntry addEntry(
@@ -181,7 +180,8 @@ public interface BlogsEntryService extends BaseService {
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link #updateEntry(long, String,
 	String, String, String, int, int, int, int, int, boolean,
-	boolean, String[], boolean, String, long, ServiceContext)}
+	boolean, String[], ImageSelector, ImageSelector,
+	ServiceContext)}
 	*/
 	@java.lang.Deprecated
 	public com.liferay.portlet.blogs.model.BlogsEntry updateEntry(

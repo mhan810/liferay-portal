@@ -81,11 +81,11 @@ public class ListTypeSoap implements Serializable {
 	public ListTypeSoap() {
 	}
 
-	public int getPrimaryKey() {
+	public long getPrimaryKey() {
 		return _listTypeId;
 	}
 
-	public void setPrimaryKey(int pk) {
+	public void setPrimaryKey(long pk) {
 		setListTypeId(pk);
 	}
 
@@ -97,11 +97,11 @@ public class ListTypeSoap implements Serializable {
 		_mvccVersion = mvccVersion;
 	}
 
-	public int getListTypeId() {
+	public long getListTypeId() {
 		return _listTypeId;
 	}
 
-	public void setListTypeId(int listTypeId) {
+	public void setListTypeId(long listTypeId) {
 		_listTypeId = listTypeId;
 	}
 
@@ -122,7 +122,7 @@ public class ListTypeSoap implements Serializable {
 	}
 
 	private long _mvccVersion;
-	private int _listTypeId;
+	private long _listTypeId;
 	private String _name;
 	private String _type;
 }

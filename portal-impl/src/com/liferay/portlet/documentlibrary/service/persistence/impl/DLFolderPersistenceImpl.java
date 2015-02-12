@@ -67,7 +67,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DLFolderPersistence
- * @see DLFolderUtil
+ * @see com.liferay.portlet.documentlibrary.service.persistence.DLFolderUtil
  * @generated
  */
 @ProviderType

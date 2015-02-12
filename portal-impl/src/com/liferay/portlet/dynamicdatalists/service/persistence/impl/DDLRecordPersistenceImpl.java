@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DDLRecordPersistence
- * @see DDLRecordUtil
+ * @see com.liferay.portlet.dynamicdatalists.service.persistence.DDLRecordUtil
  * @generated
  */
 @ProviderType

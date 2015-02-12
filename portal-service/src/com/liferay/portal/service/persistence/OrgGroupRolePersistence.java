@@ -26,7 +26,7 @@ import com.liferay.portal.model.OrgGroupRole;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see OrgGroupRolePersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.OrgGroupRolePersistenceImpl
  * @see OrgGroupRoleUtil
  * @generated
  */

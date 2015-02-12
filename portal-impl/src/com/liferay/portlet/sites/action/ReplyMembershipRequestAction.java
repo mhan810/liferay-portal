@@ -59,7 +59,7 @@ public class ReplyMembershipRequestAction extends PortletAction {
 			long membershipRequestId = ParamUtil.getLong(
 				actionRequest, "membershipRequestId");
 
-			int statusId = ParamUtil.getInteger(actionRequest, "statusId");
+			long statusId = ParamUtil.getLong(actionRequest, "statusId");
 			String replyComments = ParamUtil.getString(
 				actionRequest, "replyComments");
 

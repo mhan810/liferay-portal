@@ -26,7 +26,7 @@ import com.liferay.portal.model.User;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see UserPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.UserPersistenceImpl
  * @see UserUtil
  * @generated
  */

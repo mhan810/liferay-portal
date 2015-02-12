@@ -59,7 +59,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DDMStructureVersionPersistence
- * @see DDMStructureVersionUtil
+ * @see com.liferay.portlet.dynamicdatamapping.service.persistence.DDMStructureVersionUtil
  * @generated
  */
 @ProviderType

@@ -71,7 +71,7 @@ public class EmailAddressServiceSoap {
 	@Deprecated
 	public static com.liferay.portal.model.EmailAddressSoap addEmailAddress(
 		java.lang.String className, long classPK, java.lang.String address,
-		int typeId, boolean primary) throws RemoteException {
+		long typeId, boolean primary) throws RemoteException {
 		try {
 			com.liferay.portal.model.EmailAddress returnValue = EmailAddressServiceUtil.addEmailAddress(className,
 					classPK, address, typeId, primary);
@@ -87,7 +87,7 @@ public class EmailAddressServiceSoap {
 
 	public static com.liferay.portal.model.EmailAddressSoap addEmailAddress(
 		java.lang.String className, long classPK, java.lang.String address,
-		int typeId, boolean primary,
+		long typeId, boolean primary,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
@@ -145,7 +145,7 @@ public class EmailAddressServiceSoap {
 	}
 
 	public static com.liferay.portal.model.EmailAddressSoap updateEmailAddress(
-		long emailAddressId, java.lang.String address, int typeId,
+		long emailAddressId, java.lang.String address, long typeId,
 		boolean primary) throws RemoteException {
 		try {
 			com.liferay.portal.model.EmailAddress returnValue = EmailAddressServiceUtil.updateEmailAddress(emailAddressId,

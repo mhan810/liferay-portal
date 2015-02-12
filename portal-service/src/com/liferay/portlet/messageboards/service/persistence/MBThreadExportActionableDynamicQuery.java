@@ -33,7 +33,7 @@ import com.liferay.portlet.messageboards.model.MBThread;
 
 /**
  * @author Brian Wing Shun Chan
- * @deprecated As of 7.0.0, replaced by {@link com.liferay.portlet.messageboards.service.MBThreadLocalServiceUtil#getExportActionableDynamicQuery()}
+ * @deprecated As of 7.0.0, replaced by {@link com.liferay.portlet.messageboards.service.MBThreadLocalServiceUtil#getExportActionableDynamicQuery(PortletDataContext)}
  * @generated
  */
 @Deprecated

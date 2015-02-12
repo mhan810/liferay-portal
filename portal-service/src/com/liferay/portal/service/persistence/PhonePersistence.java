@@ -26,7 +26,7 @@ import com.liferay.portal.model.Phone;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see PhonePersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.PhonePersistenceImpl
  * @see PhoneUtil
  * @generated
  */

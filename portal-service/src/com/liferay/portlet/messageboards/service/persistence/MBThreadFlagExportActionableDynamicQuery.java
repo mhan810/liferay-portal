@@ -29,7 +29,7 @@ import com.liferay.portlet.messageboards.model.MBThreadFlag;
 
 /**
  * @author Brian Wing Shun Chan
- * @deprecated As of 7.0.0, replaced by {@link com.liferay.portlet.messageboards.service.MBThreadFlagLocalServiceUtil#getExportActionableDynamicQuery()}
+ * @deprecated As of 7.0.0, replaced by {@link com.liferay.portlet.messageboards.service.MBThreadFlagLocalServiceUtil#getExportActionableDynamicQuery(PortletDataContext)}
  * @generated
  */
 @Deprecated

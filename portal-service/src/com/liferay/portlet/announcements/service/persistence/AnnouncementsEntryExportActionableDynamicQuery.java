@@ -31,7 +31,7 @@ import com.liferay.portlet.announcements.model.AnnouncementsEntry;
 
 /**
  * @author Brian Wing Shun Chan
- * @deprecated As of 7.0.0, replaced by {@link com.liferay.portlet.announcements.service.AnnouncementsEntryLocalServiceUtil#getExportActionableDynamicQuery()}
+ * @deprecated As of 7.0.0, replaced by {@link com.liferay.portlet.announcements.service.AnnouncementsEntryLocalServiceUtil#getExportActionableDynamicQuery(PortletDataContext)}
  * @generated
  */
 @Deprecated

@@ -28,7 +28,7 @@ import com.liferay.portlet.journal.model.JournalFeed;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see JournalFeedPersistenceImpl
+ * @see com.liferay.portlet.journal.service.persistence.impl.JournalFeedPersistenceImpl
  * @see JournalFeedUtil
  * @generated
  */

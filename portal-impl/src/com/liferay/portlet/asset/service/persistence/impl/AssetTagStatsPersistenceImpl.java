@@ -57,7 +57,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see AssetTagStatsPersistence
- * @see AssetTagStatsUtil
+ * @see com.liferay.portlet.asset.service.persistence.AssetTagStatsUtil
  * @generated
  */
 @ProviderType

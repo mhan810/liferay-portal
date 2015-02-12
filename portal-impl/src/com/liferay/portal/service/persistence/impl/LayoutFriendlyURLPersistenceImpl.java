@@ -59,7 +59,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see LayoutFriendlyURLPersistence
- * @see LayoutFriendlyURLUtil
+ * @see com.liferay.portal.service.persistence.LayoutFriendlyURLUtil
  * @generated
  */
 @ProviderType

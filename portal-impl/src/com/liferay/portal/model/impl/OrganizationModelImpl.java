@@ -85,11 +85,11 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 			{ "recursable", Types.BOOLEAN },
 			{ "regionId", Types.BIGINT },
 			{ "countryId", Types.BIGINT },
-			{ "statusId", Types.INTEGER },
+			{ "statusId", Types.BIGINT },
 			{ "comments", Types.VARCHAR },
 			{ "logoId", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Organization_ (mvccVersion LONG default 0,uuid_ VARCHAR(75) null,organizationId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,parentOrganizationId LONG,treePath STRING null,name VARCHAR(100) null,type_ VARCHAR(75) null,recursable BOOLEAN,regionId LONG,countryId LONG,statusId INTEGER,comments STRING null,logoId LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Organization_ (mvccVersion LONG default 0,uuid_ VARCHAR(75) null,organizationId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,parentOrganizationId LONG,treePath STRING null,name VARCHAR(100) null,type_ VARCHAR(75) null,recursable BOOLEAN,regionId LONG,countryId LONG,statusId LONG,comments STRING null,logoId LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Organization_";
 	public static final String ORDER_BY_JPQL = " ORDER BY organization.name ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Organization_.name ASC";
@@ -340,7 +340,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 			setCountryId(countryId);
 		}
 
-		Integer statusId = (Integer)attributes.get("statusId");
+		Long statusId = (Long)attributes.get("statusId");
 
 		if (statusId != null) {
 			setStatusId(statusId);
@@ -636,12 +636,12 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 
 	@JSON
 	@Override
-	public int getStatusId() {
+	public long getStatusId() {
 		return _statusId;
 	}
 
 	@Override
-	public void setStatusId(int statusId) {
+	public void setStatusId(long statusId) {
 		_statusId = statusId;
 	}
 
@@ -1060,7 +1060,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 	private boolean _recursable;
 	private long _regionId;
 	private long _countryId;
-	private int _statusId;
+	private long _statusId;
 	private String _comments;
 	private long _logoId;
 	private long _columnBitmask;

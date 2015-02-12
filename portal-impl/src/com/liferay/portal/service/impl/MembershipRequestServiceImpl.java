@@ -37,7 +37,7 @@ public class MembershipRequestServiceImpl
 	}
 
 	@Override
-	public void deleteMembershipRequests(long groupId, int statusId)
+	public void deleteMembershipRequests(long groupId, long statusId)
 		throws PortalException {
 
 		GroupPermissionUtil.check(
@@ -57,7 +57,7 @@ public class MembershipRequestServiceImpl
 
 	@Override
 	public void updateStatus(
-			long membershipRequestId, String reviewComments, int statusId,
+			long membershipRequestId, String reviewComments, long statusId,
 			ServiceContext serviceContext)
 		throws PortalException {
 

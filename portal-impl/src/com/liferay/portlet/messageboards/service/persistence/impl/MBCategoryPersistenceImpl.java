@@ -64,7 +64,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see MBCategoryPersistence
- * @see MBCategoryUtil
+ * @see com.liferay.portlet.messageboards.service.persistence.MBCategoryUtil
  * @generated
  */
 @ProviderType

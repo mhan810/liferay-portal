@@ -57,7 +57,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see UserTrackerPathPersistence
- * @see UserTrackerPathUtil
+ * @see com.liferay.portal.service.persistence.UserTrackerPathUtil
  * @generated
  */
 @ProviderType

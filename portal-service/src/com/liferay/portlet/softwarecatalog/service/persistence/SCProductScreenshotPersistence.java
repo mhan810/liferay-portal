@@ -28,7 +28,7 @@ import com.liferay.portlet.softwarecatalog.model.SCProductScreenshot;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SCProductScreenshotPersistenceImpl
+ * @see com.liferay.portlet.softwarecatalog.service.persistence.impl.SCProductScreenshotPersistenceImpl
  * @see SCProductScreenshotUtil
  * @generated
  */

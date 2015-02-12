@@ -47,7 +47,7 @@ public interface OrgLaborService extends BaseService {
 	 * Never modify or reference this interface directly. Always use {@link OrgLaborServiceUtil} to access the org labor remote service. Add custom service methods to {@link com.liferay.portal.service.impl.OrgLaborServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
 	public com.liferay.portal.model.OrgLabor addOrgLabor(long organizationId,
-		int typeId, int sunOpen, int sunClose, int monOpen, int monClose,
+		long typeId, int sunOpen, int sunClose, int monOpen, int monClose,
 		int tueOpen, int tueClose, int wedOpen, int wedClose, int thuOpen,
 		int thuClose, int friOpen, int friClose, int satOpen, int satClose)
 		throws com.liferay.portal.kernel.exception.PortalException;
@@ -79,7 +79,7 @@ public interface OrgLaborService extends BaseService {
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
 	public com.liferay.portal.model.OrgLabor updateOrgLabor(long orgLaborId,
-		int typeId, int sunOpen, int sunClose, int monOpen, int monClose,
+		long typeId, int sunOpen, int sunClose, int monOpen, int monClose,
 		int tueOpen, int tueClose, int wedOpen, int wedClose, int thuOpen,
 		int thuClose, int friOpen, int friClose, int satOpen, int satClose)
 		throws com.liferay.portal.kernel.exception.PortalException;

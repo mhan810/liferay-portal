@@ -28,7 +28,7 @@ import com.liferay.portlet.asset.model.AssetLink;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AssetLinkPersistenceImpl
+ * @see com.liferay.portlet.asset.service.persistence.impl.AssetLinkPersistenceImpl
  * @see AssetLinkUtil
  * @generated
  */

@@ -56,7 +56,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ContactPersistence
- * @see ContactUtil
+ * @see com.liferay.portal.service.persistence.ContactUtil
  * @generated
  */
 @ProviderType

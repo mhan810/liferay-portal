@@ -28,7 +28,7 @@ import com.liferay.portlet.documentlibrary.model.DLFolder;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DLFolderPersistenceImpl
+ * @see com.liferay.portlet.documentlibrary.service.persistence.impl.DLFolderPersistenceImpl
  * @see DLFolderUtil
  * @generated
  */

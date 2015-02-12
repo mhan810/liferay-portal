@@ -62,7 +62,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see PasswordPolicyPersistence
- * @see PasswordPolicyUtil
+ * @see com.liferay.portal.service.persistence.PasswordPolicyUtil
  * @generated
  */
 @ProviderType

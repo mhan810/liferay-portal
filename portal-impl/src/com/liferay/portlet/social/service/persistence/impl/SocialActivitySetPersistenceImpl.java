@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see SocialActivitySetPersistence
- * @see SocialActivitySetUtil
+ * @see com.liferay.portlet.social.service.persistence.SocialActivitySetUtil
  * @generated
  */
 @ProviderType

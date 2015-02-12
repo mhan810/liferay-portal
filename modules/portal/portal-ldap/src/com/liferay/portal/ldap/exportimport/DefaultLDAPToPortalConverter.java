@@ -154,13 +154,13 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 
 		Contact contact = ContactUtil.create(0);
 
-		int prefixId = getListTypeId(
+		long prefixId = getListTypeId(
 			attributes, contactMappings, ContactConverterKeys.PREFIX,
 			ListTypeConstants.CONTACT_PREFIX);
 
 		contact.setPrefixId(prefixId);
 
-		int suffixId = getListTypeId(
+		long suffixId = getListTypeId(
 			attributes, contactMappings, ContactConverterKeys.SUFFIX,
 			ListTypeConstants.CONTACT_SUFFIX);
 
@@ -327,7 +327,7 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 		return expandoAttributes;
 	}
 
-	protected int getListTypeId(
+	protected long getListTypeId(
 			Attributes attributes, Properties contactMappings,
 			String contactMappingsKey, String listTypeType)
 		throws Exception {

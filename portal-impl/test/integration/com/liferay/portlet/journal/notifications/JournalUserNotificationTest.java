@@ -26,7 +26,7 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
 import com.liferay.portlet.journal.util.test.JournalTestUtil;
-import com.liferay.portlet.notifications.BaseUserNotificationTestCase;
+import com.liferay.portlet.notifications.test.BaseUserNotificationTestCase;
 
 import org.junit.ClassRule;
 import org.junit.Rule;

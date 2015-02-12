@@ -57,7 +57,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ResourceActionPersistence
- * @see ResourceActionUtil
+ * @see com.liferay.portal.service.persistence.ResourceActionUtil
  * @generated
  */
 @ProviderType

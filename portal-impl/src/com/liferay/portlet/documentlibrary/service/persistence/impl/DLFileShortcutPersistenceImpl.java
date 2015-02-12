@@ -62,7 +62,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DLFileShortcutPersistence
- * @see DLFileShortcutUtil
+ * @see com.liferay.portlet.documentlibrary.service.persistence.DLFileShortcutUtil
  * @generated
  */
 @ProviderType

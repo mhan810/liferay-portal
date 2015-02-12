@@ -29,7 +29,7 @@ import com.liferay.portlet.messageboards.model.MBBan;
 
 /**
  * @author Brian Wing Shun Chan
- * @deprecated As of 7.0.0, replaced by {@link com.liferay.portlet.messageboards.service.MBBanLocalServiceUtil#getExportActionableDynamicQuery()}
+ * @deprecated As of 7.0.0, replaced by {@link com.liferay.portlet.messageboards.service.MBBanLocalServiceUtil#getExportActionableDynamicQuery(PortletDataContext)}
  * @generated
  */
 @Deprecated

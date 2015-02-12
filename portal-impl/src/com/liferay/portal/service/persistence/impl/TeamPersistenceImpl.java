@@ -63,7 +63,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see TeamPersistence
- * @see TeamUtil
+ * @see com.liferay.portal.service.persistence.TeamUtil
  * @generated
  */
 @ProviderType

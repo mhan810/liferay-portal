@@ -71,7 +71,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see CalEventPersistence
- * @see CalEventUtil
+ * @see com.liferay.portlet.calendar.service.persistence.CalEventUtil
  * @generated
  */
 @ProviderType

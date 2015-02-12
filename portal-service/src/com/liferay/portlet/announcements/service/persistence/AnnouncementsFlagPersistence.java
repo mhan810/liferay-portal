@@ -28,7 +28,7 @@ import com.liferay.portlet.announcements.model.AnnouncementsFlag;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AnnouncementsFlagPersistenceImpl
+ * @see com.liferay.portlet.announcements.service.persistence.impl.AnnouncementsFlagPersistenceImpl
  * @see AnnouncementsFlagUtil
  * @generated
  */

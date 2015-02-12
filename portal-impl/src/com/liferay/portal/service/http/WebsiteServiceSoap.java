@@ -71,7 +71,7 @@ public class WebsiteServiceSoap {
 	@Deprecated
 	public static com.liferay.portal.model.WebsiteSoap addWebsite(
 		java.lang.String className, long classPK, java.lang.String url,
-		int typeId, boolean primary) throws RemoteException {
+		long typeId, boolean primary) throws RemoteException {
 		try {
 			com.liferay.portal.model.Website returnValue = WebsiteServiceUtil.addWebsite(className,
 					classPK, url, typeId, primary);
@@ -87,7 +87,7 @@ public class WebsiteServiceSoap {
 
 	public static com.liferay.portal.model.WebsiteSoap addWebsite(
 		java.lang.String className, long classPK, java.lang.String url,
-		int typeId, boolean primary,
+		long typeId, boolean primary,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
@@ -144,7 +144,7 @@ public class WebsiteServiceSoap {
 	}
 
 	public static com.liferay.portal.model.WebsiteSoap updateWebsite(
-		long websiteId, java.lang.String url, int typeId, boolean primary)
+		long websiteId, java.lang.String url, long typeId, boolean primary)
 		throws RemoteException {
 		try {
 			com.liferay.portal.model.Website returnValue = WebsiteServiceUtil.updateWebsite(websiteId,

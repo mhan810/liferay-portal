@@ -28,7 +28,7 @@ import com.liferay.portlet.messageboards.model.MBThread;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see MBThreadPersistenceImpl
+ * @see com.liferay.portlet.messageboards.service.persistence.impl.MBThreadPersistenceImpl
  * @see MBThreadUtil
  * @generated
  */

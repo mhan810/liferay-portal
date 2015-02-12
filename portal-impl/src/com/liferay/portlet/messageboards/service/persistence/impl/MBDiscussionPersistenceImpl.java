@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see MBDiscussionPersistence
- * @see MBDiscussionUtil
+ * @see com.liferay.portlet.messageboards.service.persistence.MBDiscussionUtil
  * @generated
  */
 @ProviderType

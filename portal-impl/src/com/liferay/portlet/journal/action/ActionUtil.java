@@ -88,9 +88,7 @@ public class ActionUtil {
 			ActionRequest actionRequest, String deleteArticleId)
 		throws Exception {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+		long groupId = ParamUtil.getLong(actionRequest, "groupId");
 		String articleId = deleteArticleId;
 		String articleURL = ParamUtil.getString(actionRequest, "articleURL");
 		double version = 0;
@@ -103,8 +101,7 @@ public class ActionUtil {
 
 		if (pos == -1) {
 			JournalArticleServiceUtil.deleteArticle(
-				themeDisplay.getScopeGroupId(), articleId, articleURL,
-				serviceContext);
+				groupId, articleId, articleURL, serviceContext);
 		}
 		else {
 			articleId = articleId.substring(0, pos);
@@ -113,8 +110,7 @@ public class ActionUtil {
 					pos + EditArticleAction.VERSION_SEPARATOR.length()));
 
 			JournalArticleServiceUtil.deleteArticle(
-				themeDisplay.getScopeGroupId(), articleId, version, articleURL,
-				serviceContext);
+				groupId, articleId, version, articleURL, serviceContext);
 		}
 
 		JournalUtil.removeRecentArticle(actionRequest, articleId, version);
@@ -124,9 +120,7 @@ public class ActionUtil {
 			ActionRequest actionRequest, String expireArticleId)
 		throws Exception {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+		long groupId = ParamUtil.getLong(actionRequest, "groupId");
 		String articleId = expireArticleId;
 		String articleURL = ParamUtil.getString(actionRequest, "articleURL");
 		double version = 0;
@@ -139,8 +133,7 @@ public class ActionUtil {
 
 		if (pos == -1) {
 			JournalArticleServiceUtil.expireArticle(
-				themeDisplay.getScopeGroupId(), articleId, articleURL,
-				serviceContext);
+				groupId, articleId, articleURL, serviceContext);
 		}
 		else {
 			articleId = articleId.substring(0, pos);
@@ -149,8 +142,7 @@ public class ActionUtil {
 					pos + EditArticleAction.VERSION_SEPARATOR.length()));
 
 			JournalArticleServiceUtil.expireArticle(
-				themeDisplay.getScopeGroupId(), articleId, version, articleURL,
-				serviceContext);
+				groupId, articleId, version, articleURL, serviceContext);
 		}
 
 		JournalUtil.removeRecentArticle(actionRequest, articleId, version);

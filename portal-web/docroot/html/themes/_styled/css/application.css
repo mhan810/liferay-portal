@@ -874,6 +874,21 @@ input.switch {
 /* ---------- Alloy editor ---------- */
 
 .alloy-editor {
+	&.alloy-editor-placeholder {
+		color: #2B4259;
+		padding-left: 10px;
+
+		&:empty:not(:focus) {
+			background: transparent;
+			border-left: 2px solid #DBDDE1;
+			color: #B0B4BB;
+		}
+
+		&.readonly {
+			color: #CCC;
+		}
+	}
+
 	outline: 0;
 
 	a {
@@ -899,7 +914,7 @@ input.switch {
 	}
 }
 
-.alloy-editor-container {
+.alloy-editor-wrapper {
 	.lfr-source-editor {
 		display: none;
 	}

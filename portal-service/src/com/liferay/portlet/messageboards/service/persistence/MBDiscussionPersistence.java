@@ -28,7 +28,7 @@ import com.liferay.portlet.messageboards.model.MBDiscussion;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see MBDiscussionPersistenceImpl
+ * @see com.liferay.portlet.messageboards.service.persistence.impl.MBDiscussionPersistenceImpl
  * @see MBDiscussionUtil
  * @generated
  */

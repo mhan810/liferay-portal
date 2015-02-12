@@ -28,7 +28,7 @@ import com.liferay.portlet.shopping.model.ShoppingCoupon;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ShoppingCouponPersistenceImpl
+ * @see com.liferay.portlet.shopping.service.persistence.impl.ShoppingCouponPersistenceImpl
  * @see ShoppingCouponUtil
  * @generated
  */

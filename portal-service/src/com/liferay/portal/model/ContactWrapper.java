@@ -181,13 +181,13 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 			setLastName(lastName);
 		}
 
-		Integer prefixId = (Integer)attributes.get("prefixId");
+		Long prefixId = (Long)attributes.get("prefixId");
 
 		if (prefixId != null) {
 			setPrefixId(prefixId);
 		}
 
-		Integer suffixId = (Integer)attributes.get("suffixId");
+		Long suffixId = (Long)attributes.get("suffixId");
 
 		if (suffixId != null) {
 			setSuffixId(suffixId);
@@ -592,7 +592,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the prefix ID of this contact
 	*/
 	@Override
-	public int getPrefixId() {
+	public long getPrefixId() {
 		return _contact.getPrefixId();
 	}
 
@@ -637,7 +637,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the suffix ID of this contact
 	*/
 	@Override
-	public int getSuffixId() {
+	public long getSuffixId() {
 		return _contact.getSuffixId();
 	}
 
@@ -1030,7 +1030,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param prefixId the prefix ID of this contact
 	*/
 	@Override
-	public void setPrefixId(int prefixId) {
+	public void setPrefixId(long prefixId) {
 		_contact.setPrefixId(prefixId);
 	}
 
@@ -1075,7 +1075,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param suffixId the suffix ID of this contact
 	*/
 	@Override
-	public void setSuffixId(int suffixId) {
+	public void setSuffixId(long suffixId) {
 		_contact.setSuffixId(suffixId);
 	}
 

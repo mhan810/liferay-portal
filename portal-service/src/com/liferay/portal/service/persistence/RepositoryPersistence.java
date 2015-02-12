@@ -26,7 +26,7 @@ import com.liferay.portal.model.Repository;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see RepositoryPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.RepositoryPersistenceImpl
  * @see RepositoryUtil
  * @generated
  */

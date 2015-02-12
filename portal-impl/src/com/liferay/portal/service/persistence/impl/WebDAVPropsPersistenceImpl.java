@@ -56,7 +56,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see WebDAVPropsPersistence
- * @see WebDAVPropsUtil
+ * @see com.liferay.portal.service.persistence.WebDAVPropsUtil
  * @generated
  */
 @ProviderType

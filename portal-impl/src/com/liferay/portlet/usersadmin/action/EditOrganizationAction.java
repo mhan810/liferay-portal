@@ -217,7 +217,7 @@ public class EditOrganizationAction extends PortletAction {
 			actionRequest, "parentOrganizationSearchContainerPrimaryKeys",
 			OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID);
 		String name = ParamUtil.getString(actionRequest, "name");
-		int statusId = ParamUtil.getInteger(actionRequest, "statusId");
+		long statusId = ParamUtil.getLong(actionRequest, "statusId");
 		String type = ParamUtil.getString(actionRequest, "type");
 		long regionId = ParamUtil.getLong(actionRequest, "regionId");
 		long countryId = ParamUtil.getLong(actionRequest, "countryId");

@@ -16,10 +16,14 @@ package com.liferay.portlet.assetpublisher;
 
 import com.liferay.portal.kernel.portlet.PortletLayoutListener;
 import com.liferay.portal.kernel.portlet.PortletLayoutListenerException;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutTypePortletConstants;
 import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.SubscriptionLocalServiceUtil;
+import com.liferay.portlet.asset.util.AssetUtil;
 import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 
@@ -44,8 +48,12 @@ public class AssetPublisherPortletLayoutListener
 		try {
 			Layout layout = LayoutLocalServiceUtil.getLayout(plid);
 
-			JournalArticleLocalServiceUtil.deleteLayoutArticleReferences(
-				layout.getGroupId(), layout.getUuid());
+			if (AssetUtil.isDefaultAssetPublisher(
+					layout, portletId, StringPool.BLANK)) {
+
+				JournalArticleLocalServiceUtil.deleteLayoutArticleReferences(
+					layout.getGroupId(), layout.getUuid());
+			}
 
 			SubscriptionLocalServiceUtil.deleteSubscriptions(
 				layout.getCompanyId(), PortletPreferences.class.getName(),
@@ -58,6 +66,22 @@ public class AssetPublisherPortletLayoutListener
 
 	@Override
 	public void onSetup(String portletId, long plid) {
+	}
+
+	@Override
+	public void updatePropertiesOnRemoveFromLayout(
+			String portletId, UnicodeProperties typeSettingsProperties)
+		throws PortletLayoutListenerException {
+
+		String defaultAssetPublisherPortletId =
+			typeSettingsProperties.getProperty(
+				LayoutTypePortletConstants.DEFAULT_ASSET_PUBLISHER_PORTLET_ID);
+
+		if (portletId.equals(defaultAssetPublisherPortletId)) {
+			typeSettingsProperties.setProperty(
+				LayoutTypePortletConstants.DEFAULT_ASSET_PUBLISHER_PORTLET_ID,
+				StringPool.BLANK);
+		}
 	}
 
 }

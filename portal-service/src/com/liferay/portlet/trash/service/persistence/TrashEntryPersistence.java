@@ -28,7 +28,7 @@ import com.liferay.portlet.trash.model.TrashEntry;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see TrashEntryPersistenceImpl
+ * @see com.liferay.portlet.trash.service.persistence.impl.TrashEntryPersistenceImpl
  * @see TrashEntryUtil
  * @generated
  */

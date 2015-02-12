@@ -56,7 +56,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see CounterPersistence
- * @see CounterUtil
+ * @see com.liferay.counter.service.persistence.CounterUtil
  * @generated
  */
 @ProviderType

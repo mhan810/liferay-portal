@@ -28,7 +28,7 @@ import com.liferay.portlet.messageboards.model.MBMailingList;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see MBMailingListPersistenceImpl
+ * @see com.liferay.portlet.messageboards.service.persistence.impl.MBMailingListPersistenceImpl
  * @see MBMailingListUtil
  * @generated
  */

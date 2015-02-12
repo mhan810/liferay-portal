@@ -66,7 +66,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see RolePersistence
- * @see RoleUtil
+ * @see com.liferay.portal.service.persistence.RoleUtil
  * @generated
  */
 @ProviderType

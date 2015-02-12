@@ -59,7 +59,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ShoppingCouponPersistence
- * @see ShoppingCouponUtil
+ * @see com.liferay.portlet.shopping.service.persistence.ShoppingCouponUtil
  * @generated
  */
 @ProviderType

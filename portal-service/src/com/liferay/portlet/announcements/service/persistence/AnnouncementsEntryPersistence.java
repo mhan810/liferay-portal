@@ -28,7 +28,7 @@ import com.liferay.portlet.announcements.model.AnnouncementsEntry;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AnnouncementsEntryPersistenceImpl
+ * @see com.liferay.portlet.announcements.service.persistence.impl.AnnouncementsEntryPersistenceImpl
  * @see AnnouncementsEntryUtil
  * @generated
  */

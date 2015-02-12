@@ -745,7 +745,8 @@ public class JournalFeedWrapper implements JournalFeed,
 	}
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link #setRendererTemplateKey()}
+	* @deprecated As of 7.0.0, replaced by {@link
+	#setDDMRendererTemplateKey(String)}
 	*/
 	@Deprecated
 	@Override
@@ -754,7 +755,7 @@ public class JournalFeedWrapper implements JournalFeed,
 	}
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link #setDDMStructureKey()}
+	* @deprecated As of 7.0.0, replaced by {@link #setDDMStructureKey(String)}
 	*/
 	@Deprecated
 	@Override
@@ -784,7 +785,7 @@ public class JournalFeedWrapper implements JournalFeed,
 	}
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link #setDDMTemplateKey()}
+	* @deprecated As of 7.0.0, replaced by {@link #setDDMTemplateKey(String)}
 	*/
 	@Deprecated
 	@Override

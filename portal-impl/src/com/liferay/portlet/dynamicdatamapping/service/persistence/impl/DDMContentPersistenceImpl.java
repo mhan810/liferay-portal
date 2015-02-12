@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DDMContentPersistence
- * @see DDMContentUtil
+ * @see com.liferay.portlet.dynamicdatamapping.service.persistence.DDMContentUtil
  * @generated
  */
 @ProviderType

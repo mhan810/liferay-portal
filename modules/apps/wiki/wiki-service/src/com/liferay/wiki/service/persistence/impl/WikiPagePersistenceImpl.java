@@ -70,7 +70,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see WikiPagePersistence
- * @see WikiPageUtil
+ * @see com.liferay.wiki.service.persistence.WikiPageUtil
  * @generated
  */
 @ProviderType

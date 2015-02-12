@@ -62,7 +62,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see WikiNodePersistence
- * @see WikiNodeUtil
+ * @see com.liferay.wiki.service.persistence.WikiNodeUtil
  * @generated
  */
 @ProviderType

@@ -760,7 +760,7 @@ public class GroupLocalServiceUtil {
 
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link
-	Group#getDescriptiveName(Locale)
+	Group#getDescriptiveName(Locale)}
 	*/
 	@Deprecated
 	public static java.lang.String getGroupDescriptiveName(
@@ -771,7 +771,7 @@ public class GroupLocalServiceUtil {
 
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link
-	Group#getDescriptiveName(Locale)
+	Group#getDescriptiveName(Locale)}
 	*/
 	@Deprecated
 	public static java.lang.String getGroupDescriptiveName(long groupId,

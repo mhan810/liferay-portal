@@ -19,7 +19,7 @@ import com.liferay.portlet.documentlibrary.display.context.util.DLRequestHelper;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Ivan Zaera
+ * @author Iván Zaera
  */
 public class DLDisplayRequestHelper extends DLRequestHelper {
 

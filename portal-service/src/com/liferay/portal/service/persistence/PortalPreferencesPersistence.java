@@ -26,7 +26,7 @@ import com.liferay.portal.model.PortalPreferences;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see PortalPreferencesPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.PortalPreferencesPersistenceImpl
  * @see PortalPreferencesUtil
  * @generated
  */

@@ -29,7 +29,7 @@ birthdayCalendar.set(Calendar.DATE, 1);
 birthdayCalendar.set(Calendar.YEAR, 1970);
 %>
 
-<portlet:actionURL secure="<%= PropsValues.COMPANY_SECURITY_AUTH_REQUIRES_HTTPS || request.isSecure() %>" var="createAccountURL">
+<portlet:actionURL secure="<%= PropsValues.COMPANY_SECURITY_AUTH_REQUIRES_HTTPS || request.isSecure() %>" var="createAccountURL" windowState="<%= LiferayWindowState.MAXIMIZED.toString() %>">
 	<portlet:param name="struts_action" value="/login/create_account" />
 </portlet:actionURL>
 
@@ -68,12 +68,14 @@ birthdayCalendar.set(Calendar.YEAR, 1970);
 	<liferay-ui:error exception="<%= NoSuchRegionException.class %>" message="please-select-a-region" />
 	<liferay-ui:error exception="<%= PhoneNumberException.class %>" message="please-enter-a-valid-phone-number" />
 	<liferay-ui:error exception="<%= RequiredFieldException.class %>" message="please-fill-out-all-required-fields" />
-	<liferay-ui:error exception="<%= ReservedUserEmailAddressException.class %>" message="the-email-address-you-requested-is-reserved" />
-	<liferay-ui:error exception="<%= ReservedUserIdException.class %>" message="the-user-id-you-requested-is-reserved" />
 	<liferay-ui:error exception="<%= TermsOfUseException.class %>" message="you-must-agree-to-the-terms-of-use" />
 	<liferay-ui:error exception="<%= UserEmailAddressException.class %>" message="please-enter-a-valid-email-address" />
 	<liferay-ui:error exception="<%= UserEmailAddressException.MustNotBeDuplicate.class %>" message="the-email-address-you-requested-is-already-taken" />
+	<liferay-ui:error exception="<%= UserEmailAddressException.MustNotBePOP3User.class %>" message="the-email-address-you-requested-is-reserved" />
+	<liferay-ui:error exception="<%= UserEmailAddressException.MustNotBeReserved.class %>" message="the-email-address-you-requested-is-reserved" />
+	<liferay-ui:error exception="<%= UserEmailAddressException.MustNotUseCompanyMx.class %>" message="the-email-address-you-requested-is-not-valid-because-its-domain-is-reserved" />
 	<liferay-ui:error exception="<%= UserIdException.class %>" message="please-enter-a-valid-user-id" />
+	<liferay-ui:error exception="<%= UserIdException.MustNotBeReserved.class %>" message="the-user-id-you-requested-is-reserved" />
 
 	<liferay-ui:error exception="<%= UserPasswordException.MustBeLonger.class %>">
 
@@ -99,9 +101,25 @@ birthdayCalendar.set(Calendar.YEAR, 1970);
 	<liferay-ui:error exception="<%= UserPasswordException.MustNotBeNull.class %>" message="the-password-cannot-be-blank" />
 	<liferay-ui:error exception="<%= UserPasswordException.MustNotBeTrivial.class %>" message="that-password-uses-common-words-please-enter-a-password-that-is-harder-to-guess-i-e-contains-a-mix-of-numbers-and-letters" />
 	<liferay-ui:error exception="<%= UserPasswordException.MustNotContainDictionaryWords.class %>" message="that-password-uses-common-dictionary-words" />
-	<liferay-ui:error exception="<%= UserScreenNameException.class %>" message="please-enter-a-valid-screen-name" />
-	<liferay-ui:error exception="<%= UserScreenNameException.MustNotBeDuplicate.class %>" message="the-screen-name-you-requested-is-already-taken" />
+
+	<liferay-ui:error exception="<%= UserScreenNameException.MustBeAlphaNumeric.class %>" focusField="screenName">
+
+		<%
+		UserScreenNameException.MustBeAlphaNumeric usn = (UserScreenNameException.MustBeAlphaNumeric)errorException;
+		%>
+
+		<liferay-ui:message arguments="<%= usn.getValidSpecialCharsAsString() %>" key="please-enter-a-valid-alphanumeric-screen-name" translateArguments="<%= false %>" />
+	</liferay-ui:error>
+
+	<liferay-ui:error exception="<%= UserScreenNameException.MustNotBeDuplicate.class %>" focusField="screenName" message="the-screen-name-you-requested-is-already-taken" />
+	<liferay-ui:error exception="<%= UserScreenNameException.MustNotBeNull.class %>" focusField="screenName" message="the-screen-name-cannot-be-blank" />
+	<liferay-ui:error exception="<%= UserScreenNameException.MustNotBeNumeric.class %>" focusField="screenName" message="the-screen-name-cannot-contain-only-numeric-values" />
 	<liferay-ui:error exception="<%= UserScreenNameException.MustNotBeReserved.class %>" message="the-screen-name-you-requested-is-reserved" />
+	<liferay-ui:error exception="<%= UserScreenNameException.MustNotBeReservedForAnonymous.class %>" focusField="screenName" message="the-screen-name-you-requested-is-reserved-for-the-anonymous-user" />
+	<liferay-ui:error exception="<%= UserScreenNameException.MustNotBeUsedByGroup.class %>" focusField="screenName" message="the-screen-name-you-requested-is-already-taken-by-a-site" />
+	<liferay-ui:error exception="<%= UserScreenNameException.MustProduceValidFriendlyURL.class %>" focusField="screenName" message="the-screen-name-you-requested-must-produce-a-valid-friendly-url" />
+	<liferay-ui:error exception="<%= UserScreenNameException.MustValidate.class %>" focusField="screenName" message="please-enter-a-valid-screen-name" />
+
 	<liferay-ui:error exception="<%= WebsiteURLException.class %>" message="please-enter-a-valid-url" />
 
 	<c:if test='<%= SessionMessages.contains(request, "openIdUserInformationMissing") %>'>
@@ -114,17 +132,44 @@ birthdayCalendar.set(Calendar.YEAR, 1970);
 
 	<aui:fieldset column="<%= true %>">
 		<aui:col width="<%= 50 %>">
-			<%@ include file="/html/portlet/login/create_account_user_name.jspf" %>
 
-			<c:if test="<%= !PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.USERS_SCREEN_NAME_ALWAYS_AUTOGENERATE) %>">
-				<aui:input model="<%= User.class %>" name="screenName" />
+			<%
+			Boolean autoGenerateScreenName = PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.USERS_SCREEN_NAME_ALWAYS_AUTOGENERATE);
+			%>
+
+			<c:if test="<%= !autoGenerateScreenName %>">
+				<aui:input autoFocus="<%= true %>" model="<%= User.class %>" name="screenName" />
 			</c:if>
 
-			<aui:input autoFocus="<%= true %>" model="<%= User.class %>" name="emailAddress">
+			<aui:input autoFocus="<%= autoGenerateScreenName %>" model="<%= User.class %>" name="emailAddress">
 				<c:if test="<%= PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.USERS_EMAIL_ADDRESS_REQUIRED) %>">
 					<aui:validator name="required" />
 				</c:if>
 			</aui:input>
+
+			<%
+			User selUser = null;
+			Contact selContact = null;
+
+			Locale userLocale = null;
+
+			String languageId = request.getParameter("languageId");
+
+			if (Validator.isNotNull(languageId)) {
+				userLocale = LocaleUtil.fromLanguageId(languageId);
+			}
+			else {
+				User defaultUser = company.getDefaultUser();
+
+				userLocale = LocaleUtil.fromLanguageId(defaultUser.getLanguageId());
+			}
+
+			String detailsLanguageStrutsAction = "/login/create_account";
+			%>
+
+			<%@ include file="/html/portlet/users_admin/user/details_language.jspf" %>
+
+			<%@ include file="/html/portlet/users_admin/user/details_user_name.jspf" %>
 		</aui:col>
 
 		<aui:col width="<%= 50 %>">

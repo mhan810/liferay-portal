@@ -64,7 +64,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see SCFrameworkVersionPersistence
- * @see SCFrameworkVersionUtil
+ * @see com.liferay.portlet.softwarecatalog.service.persistence.SCFrameworkVersionUtil
  * @generated
  */
 @ProviderType

@@ -57,7 +57,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see VirtualHostPersistence
- * @see VirtualHostUtil
+ * @see com.liferay.portal.service.persistence.VirtualHostUtil
  * @generated
  */
 @ProviderType

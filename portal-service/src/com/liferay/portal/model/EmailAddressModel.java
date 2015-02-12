@@ -267,14 +267,14 @@ public interface EmailAddressModel extends AttachedModel, BaseModel<EmailAddress
 	 *
 	 * @return the type ID of this email address
 	 */
-	public int getTypeId();
+	public long getTypeId();
 
 	/**
 	 * Sets the type ID of this email address.
 	 *
 	 * @param typeId the type ID of this email address
 	 */
-	public void setTypeId(int typeId);
+	public void setTypeId(long typeId);
 
 	/**
 	 * Returns the primary of this email address.

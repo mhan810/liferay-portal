@@ -26,7 +26,7 @@ import com.liferay.portal.model.Region;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see RegionPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.RegionPersistenceImpl
  * @see RegionUtil
  * @generated
  */

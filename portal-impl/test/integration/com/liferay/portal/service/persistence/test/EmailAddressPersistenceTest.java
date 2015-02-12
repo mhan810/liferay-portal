@@ -134,7 +134,7 @@ public class EmailAddressPersistenceTest {
 
 		newEmailAddress.setAddress(RandomTestUtil.randomString());
 
-		newEmailAddress.setTypeId(RandomTestUtil.nextInt());
+		newEmailAddress.setTypeId(RandomTestUtil.nextLong());
 
 		newEmailAddress.setPrimary(RandomTestUtil.randomBoolean());
 
@@ -529,7 +529,7 @@ public class EmailAddressPersistenceTest {
 
 		emailAddress.setAddress(RandomTestUtil.randomString());
 
-		emailAddress.setTypeId(RandomTestUtil.nextInt());
+		emailAddress.setTypeId(RandomTestUtil.nextLong());
 
 		emailAddress.setPrimary(RandomTestUtil.randomBoolean());
 

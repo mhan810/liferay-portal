@@ -355,8 +355,8 @@ public class OpenIdAction extends PortletAction {
 		long facebookId = 0;
 		Locale locale = themeDisplay.getLocale();
 		String middleName = StringPool.BLANK;
-		int prefixId = 0;
-		int suffixId = 0;
+		long prefixId = 0;
+		long suffixId = 0;
 		boolean male = true;
 		int birthdayMonth = Calendar.JANUARY;
 		int birthdayDay = 1;

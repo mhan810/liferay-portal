@@ -55,7 +55,7 @@ public class BlogsEntryLocalServiceWrapper implements BlogsEntryLocalService,
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link #addEntry(long, String,
 	String, String, String, int, int, int, int, int, boolean,
-	boolean, String[], boolean, String, String, InputStream,
+	boolean, String[], ImageSelector, ImageSelector,
 	ServiceContext)}
 	*/
 	@Deprecated
@@ -843,7 +843,7 @@ public class BlogsEntryLocalServiceWrapper implements BlogsEntryLocalService,
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link #updateEntry(long, long,
 	String, String, String, String, int, int, int, int, int,
-	boolean, boolean, String[], boolean, String, long,
+	boolean, boolean, String[], ImageSelector, ImageSelector,
 	ServiceContext)}
 	*/
 	@Deprecated

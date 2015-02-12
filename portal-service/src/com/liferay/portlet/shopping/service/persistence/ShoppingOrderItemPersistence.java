@@ -28,7 +28,7 @@ import com.liferay.portlet.shopping.model.ShoppingOrderItem;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ShoppingOrderItemPersistenceImpl
+ * @see com.liferay.portlet.shopping.service.persistence.impl.ShoppingOrderItemPersistenceImpl
  * @see ShoppingOrderItemUtil
  * @generated
  */

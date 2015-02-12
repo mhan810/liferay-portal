@@ -106,14 +106,14 @@ public interface OrgLaborModel extends BaseModel<OrgLabor>, MVCCModel {
 	 *
 	 * @return the type ID of this org labor
 	 */
-	public int getTypeId();
+	public long getTypeId();
 
 	/**
 	 * Sets the type ID of this org labor.
 	 *
 	 * @param typeId the type ID of this org labor
 	 */
-	public void setTypeId(int typeId);
+	public void setTypeId(long typeId);
 
 	/**
 	 * Returns the sun open of this org labor.

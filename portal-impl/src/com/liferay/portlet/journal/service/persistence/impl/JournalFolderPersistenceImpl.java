@@ -67,7 +67,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see JournalFolderPersistence
- * @see JournalFolderUtil
+ * @see com.liferay.portlet.journal.service.persistence.JournalFolderUtil
  * @generated
  */
 @ProviderType

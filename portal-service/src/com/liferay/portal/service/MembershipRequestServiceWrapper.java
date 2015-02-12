@@ -41,7 +41,7 @@ public class MembershipRequestServiceWrapper implements MembershipRequestService
 	}
 
 	@Override
-	public void deleteMembershipRequests(long groupId, int statusId)
+	public void deleteMembershipRequests(long groupId, long statusId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_membershipRequestService.deleteMembershipRequests(groupId, statusId);
 	}
@@ -75,7 +75,7 @@ public class MembershipRequestServiceWrapper implements MembershipRequestService
 
 	@Override
 	public void updateStatus(long membershipRequestId,
-		java.lang.String reviewComments, int statusId,
+		java.lang.String reviewComments, long statusId,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_membershipRequestService.updateStatus(membershipRequestId,

@@ -27,7 +27,7 @@ import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup;
 import java.util.List;
 
 /**
- * The persistence utility for the m d r rule group service. This utility wraps {@link MDRRuleGroupPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
+ * The persistence utility for the m d r rule group service. This utility wraps {@link com.liferay.portlet.mobiledevicerules.service.persistence.impl.MDRRuleGroupPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author Edward C. Han
  * @see MDRRuleGroupPersistence
- * @see MDRRuleGroupPersistenceImpl
+ * @see com.liferay.portlet.mobiledevicerules.service.persistence.impl.MDRRuleGroupPersistenceImpl
  * @generated
  */
 @ProviderType

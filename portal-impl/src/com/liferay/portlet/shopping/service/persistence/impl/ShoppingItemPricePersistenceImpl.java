@@ -57,7 +57,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ShoppingItemPricePersistence
- * @see ShoppingItemPriceUtil
+ * @see com.liferay.portlet.shopping.service.persistence.ShoppingItemPriceUtil
  * @generated
  */
 @ProviderType

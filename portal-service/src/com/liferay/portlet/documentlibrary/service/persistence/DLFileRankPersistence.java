@@ -28,7 +28,7 @@ import com.liferay.portlet.documentlibrary.model.DLFileRank;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DLFileRankPersistenceImpl
+ * @see com.liferay.portlet.documentlibrary.service.persistence.impl.DLFileRankPersistenceImpl
  * @see DLFileRankUtil
  * @generated
  */

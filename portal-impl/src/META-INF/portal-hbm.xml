@@ -211,7 +211,7 @@
 		<property name="zip" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="regionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="countryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property name="typeId" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="typeId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="mailing" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="primary" type="com.liferay.portal.dao.orm.hibernate.BooleanType" column="primary_" />
 	</class>
@@ -298,8 +298,8 @@
 		<property name="firstName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="middleName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="lastName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property name="prefixId" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
-		<property name="suffixId" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="prefixId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="suffixId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="male" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="birthday" type="org.hibernate.type.TimestampType" />
 		<property name="smsSn" type="com.liferay.portal.dao.orm.hibernate.StringType" />
@@ -347,7 +347,7 @@
 		<property name="classNameId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="classPK" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="address" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property name="typeId" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="typeId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="primary" type="com.liferay.portal.dao.orm.hibernate.BooleanType" column="primary_" />
 	</class>
 	<class name="com.liferay.portal.model.impl.ExportImportConfigurationImpl" table="ExportImportConfiguration" dynamic-update="true">
@@ -600,7 +600,7 @@
 	</class>
 	<class name="com.liferay.portal.model.impl.ListTypeImpl" table="ListType" dynamic-update="true">
 		<cache usage="read-write" />
-		<id name="listTypeId" type="int">
+		<id name="listTypeId" type="long">
 			<generator class="assigned" />
 		</id>
 		<version name="mvccVersion" type="long" access="com.liferay.portal.dao.orm.hibernate.PrivatePropertyAccessor" />
@@ -638,7 +638,7 @@
 		<property name="replyComments" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="replyDate" type="org.hibernate.type.TimestampType" />
 		<property name="replierUserId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property name="statusId" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="statusId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.liferay.portal.model.impl.OrganizationImpl" table="Organization_" dynamic-update="true">
 		<cache usage="read-write" />
@@ -659,7 +659,7 @@
 		<property name="recursable" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="regionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="countryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property name="statusId" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="statusId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="comments" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="logoId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
@@ -679,7 +679,7 @@
 		</id>
 		<version name="mvccVersion" type="long" access="com.liferay.portal.dao.orm.hibernate.PrivatePropertyAccessor" />
 		<property name="organizationId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property name="typeId" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="typeId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="sunOpen" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		<property name="sunClose" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		<property name="monOpen" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
@@ -771,7 +771,7 @@
 		<property name="classPK" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="number" type="com.liferay.portal.dao.orm.hibernate.StringType" column="number_" />
 		<property name="extension" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property name="typeId" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="typeId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="primary" type="com.liferay.portal.dao.orm.hibernate.BooleanType" column="primary_" />
 	</class>
 	<class name="com.liferay.portal.model.impl.PluginSettingImpl" table="PluginSetting" dynamic-update="true">
@@ -1248,7 +1248,7 @@
 		<property name="classNameId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="classPK" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="url" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property name="typeId" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="typeId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="primary" type="com.liferay.portal.dao.orm.hibernate.BooleanType" column="primary_" />
 	</class>
 	<class name="com.liferay.portal.model.impl.WorkflowDefinitionLinkImpl" table="WorkflowDefinitionLink" dynamic-update="true">

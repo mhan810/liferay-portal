@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see LayoutSetBranchPersistence
- * @see LayoutSetBranchUtil
+ * @see com.liferay.portal.service.persistence.LayoutSetBranchUtil
  * @generated
  */
 @ProviderType

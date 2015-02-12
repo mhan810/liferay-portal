@@ -72,7 +72,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see BlogsEntryPersistence
- * @see BlogsEntryUtil
+ * @see com.liferay.portlet.blogs.service.persistence.BlogsEntryUtil
  * @generated
  */
 @ProviderType

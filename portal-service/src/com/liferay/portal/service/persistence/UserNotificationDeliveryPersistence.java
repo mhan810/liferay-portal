@@ -26,7 +26,7 @@ import com.liferay.portal.model.UserNotificationDelivery;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see UserNotificationDeliveryPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.UserNotificationDeliveryPersistenceImpl
  * @see UserNotificationDeliveryUtil
  * @generated
  */

@@ -26,7 +26,7 @@ import com.liferay.portal.model.Image;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ImagePersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.ImagePersistenceImpl
  * @see ImageUtil
  * @generated
  */

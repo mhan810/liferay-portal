@@ -28,7 +28,7 @@ import com.liferay.portal.service.persistence.BasePersistence;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see CounterPersistenceImpl
+ * @see com.liferay.counter.service.persistence.impl.CounterPersistenceImpl
  * @see CounterUtil
  * @generated
  */

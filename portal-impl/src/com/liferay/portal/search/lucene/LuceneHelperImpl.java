@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.lucene;
 
-import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.ClusterEvent;
 import com.liferay.portal.kernel.cluster.ClusterEventListener;
 import com.liferay.portal.kernel.cluster.ClusterEventType;
@@ -40,6 +39,7 @@ import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.messaging.proxy.MessageValuesThreadLocal;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.QueryPreProcessConfiguration;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -234,14 +234,8 @@ public class LuceneHelperImpl implements LuceneHelper {
 
 		Analyzer analyzer = getAnalyzer();
 
-		if (analyzer instanceof PerFieldAnalyzer) {
-			PerFieldAnalyzer perFieldAnalyzer = (PerFieldAnalyzer)analyzer;
-
-			Analyzer fieldAnalyzer = perFieldAnalyzer.getAnalyzer(field);
-
-			if (fieldAnalyzer instanceof LikeKeywordAnalyzer) {
-				like = true;
-			}
+		if (_queryPreProcessConfiguration.isSubstringSearchAlways(field)) {
+			like = true;
 		}
 
 		if (like) {
@@ -455,7 +449,7 @@ public class LuceneHelperImpl implements LuceneHelper {
 
 	@Override
 	public InputStream getLoadIndexesInputStreamFromCluster(
-		long companyId, Address bootupAddress) {
+		long companyId, String bootupClusterNodeId) {
 
 		if (!isLoadIndexFromClusterEnabled()) {
 			return null;
@@ -465,7 +459,7 @@ public class LuceneHelperImpl implements LuceneHelper {
 
 		try {
 			ObjectValuePair<String, URL> bootupClusterNodeObjectValuePair =
-				_getBootupClusterNodeObjectValuePair(bootupAddress);
+				_getBootupClusterNodeObjectValuePair(bootupClusterNodeId);
 
 			URL url = bootupClusterNodeObjectValuePair.getValue();
 
@@ -677,6 +671,12 @@ public class LuceneHelperImpl implements LuceneHelper {
 		_analyzer = analyzer;
 	}
 
+	public void setQueryPreProcessConfiguration(
+		QueryPreProcessConfiguration queryPreProcessConfiguration) {
+
+		_queryPreProcessConfiguration = queryPreProcessConfiguration;
+	}
+
 	public void setVersion(Version version) {
 		_version = version;
 	}
@@ -820,13 +820,14 @@ public class LuceneHelperImpl implements LuceneHelper {
 	}
 
 	private ObjectValuePair<String, URL>
-			_getBootupClusterNodeObjectValuePair(Address bootupAddress) {
+			_getBootupClusterNodeObjectValuePair(
+				String bootupClusterNodeId) {
 
 		ClusterRequest clusterRequest = ClusterRequest.createUnicastRequest(
 			new MethodHandler(
 				_createTokenMethodKey,
 				_CLUSTER_LINK_NODE_BOOTUP_RESPONSE_TIMEOUT),
-			bootupAddress);
+			bootupClusterNodeId);
 
 		FutureClusterResponses futureClusterResponses =
 			ClusterExecutorUtil.execute(clusterRequest);
@@ -957,12 +958,11 @@ public class LuceneHelperImpl implements LuceneHelper {
 	private void _loadIndexFromCluster(
 		final IndexAccessor indexAccessor, long localLastGeneration) {
 
-		List<Address> clusterNodeAddresses =
-			ClusterExecutorUtil.getClusterNodeAddresses();
+		List<ClusterNode> clusterNodes = ClusterExecutorUtil.getClusterNodes();
 
-		int clusterNodeAddressesCount = clusterNodeAddresses.size();
+		int clusterNodeCount = clusterNodes.size();
 
-		if (clusterNodeAddressesCount <= 1) {
+		if (clusterNodeCount <= 1) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
 					"Do not load indexes because there is either one portal " +
@@ -981,8 +981,7 @@ public class LuceneHelperImpl implements LuceneHelper {
 			ClusterExecutorUtil.execute(
 				clusterRequest,
 				new LoadIndexClusterResponseCallback(
-					indexAccessor, clusterNodeAddressesCount,
-					localLastGeneration));
+					indexAccessor, clusterNodeCount, localLastGeneration));
 
 		futureClusterResponses.addFutureListener(
 			new BaseFutureListener<ClusterNodeResponses>() {
@@ -1021,6 +1020,7 @@ public class LuceneHelperImpl implements LuceneHelper {
 		new ConcurrentHashMap<>();
 	private final LoadIndexClusterEventListener _loadIndexClusterEventListener;
 	private ThreadPoolExecutor _luceneIndexThreadPoolExecutor;
+	private QueryPreProcessConfiguration _queryPreProcessConfiguration;
 	private Version _version;
 
 	private static class ShutdownSyncJob implements Runnable {
@@ -1058,11 +1058,11 @@ public class LuceneHelperImpl implements LuceneHelper {
 				return;
 			}
 
-			List<Address> clusterNodeAddresses =
-				ClusterExecutorUtil.getClusterNodeAddresses();
+			List<ClusterNode> currentClusterNodes =
+				ClusterExecutorUtil.getClusterNodes();
 			List<ClusterNode> clusterNodes = clusterEvent.getClusterNodes();
 
-			if ((clusterNodeAddresses.size() - clusterNodes.size()) > 1) {
+			if ((currentClusterNodes.size() - clusterNodes.size()) > 1) {
 				if (_log.isDebugEnabled()) {
 					_log.debug(
 						"Number of original cluster members is greater than " +
@@ -1115,7 +1115,7 @@ public class LuceneHelperImpl implements LuceneHelper {
 
 		@Override
 		public void callback(BlockingQueue<ClusterNodeResponse> blockingQueue) {
-			Address bootupAddress = null;
+			ClusterNode bootupClusterNode = null;
 
 			do {
 				_clusterNodeAddressesCount--;
@@ -1150,7 +1150,8 @@ public class LuceneHelperImpl implements LuceneHelper {
 							(Long)clusterNodeResponse.getResult();
 
 						if (remoteLastGeneration > _localLastGeneration) {
-							bootupAddress = clusterNodeResponse.getAddress();
+							bootupClusterNode =
+								clusterNodeResponse.getClusterNode();
 
 							break;
 						}
@@ -1172,23 +1173,24 @@ public class LuceneHelperImpl implements LuceneHelper {
 							" has invalid InetSocketAddress");
 				}
 			}
-			while ((bootupAddress == null) && (_clusterNodeAddressesCount > 1));
+			while ((bootupClusterNode == null) &&
+				(_clusterNodeAddressesCount > 1));
 
-			if (bootupAddress == null) {
+			if (bootupClusterNode == null) {
 				return;
 			}
 
 			if (_log.isInfoEnabled()) {
 				_log.info(
 					"Start loading lucene index files from cluster node " +
-						bootupAddress);
+						bootupClusterNode);
 			}
 
 			InputStream inputStream = null;
 
 			try {
 				inputStream = getLoadIndexesInputStreamFromCluster(
-					_companyId, bootupAddress);
+					_companyId, bootupClusterNode.getClusterNodeId());
 
 				_indexAccessor.loadIndex(inputStream);
 

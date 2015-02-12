@@ -50,7 +50,7 @@ public class ListTypeServiceUtil {
 		return getService().getBeanIdentifier();
 	}
 
-	public static com.liferay.portal.model.ListType getListType(int listTypeId)
+	public static com.liferay.portal.model.ListType getListType(long listTypeId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getListType(listTypeId);
 	}
@@ -69,13 +69,13 @@ public class ListTypeServiceUtil {
 		getService().setBeanIdentifier(beanIdentifier);
 	}
 
-	public static void validate(int listTypeId, long classNameId,
+	public static void validate(long listTypeId, long classNameId,
 		java.lang.String type)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().validate(listTypeId, classNameId, type);
 	}
 
-	public static void validate(int listTypeId, java.lang.String type)
+	public static void validate(long listTypeId, java.lang.String type)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().validate(listTypeId, type);
 	}

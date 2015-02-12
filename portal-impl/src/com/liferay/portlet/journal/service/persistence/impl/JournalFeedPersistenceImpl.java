@@ -62,7 +62,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see JournalFeedPersistence
- * @see JournalFeedUtil
+ * @see com.liferay.portlet.journal.service.persistence.JournalFeedUtil
  * @generated
  */
 @ProviderType

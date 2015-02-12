@@ -28,7 +28,7 @@ import com.liferay.portlet.dynamicdatalists.model.DDLRecordVersion;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DDLRecordVersionPersistenceImpl
+ * @see com.liferay.portlet.dynamicdatalists.service.persistence.impl.DDLRecordVersionPersistenceImpl
  * @see DDLRecordVersionUtil
  * @generated
  */

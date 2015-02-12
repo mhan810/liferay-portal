@@ -54,12 +54,12 @@ public interface WebsiteLocalService extends BaseLocalService,
 	@java.lang.Deprecated
 	public com.liferay.portal.model.Website addWebsite(long userId,
 		java.lang.String className, long classPK, java.lang.String url,
-		int typeId, boolean primary)
+		long typeId, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	public com.liferay.portal.model.Website addWebsite(long userId,
 		java.lang.String className, long classPK, java.lang.String url,
-		int typeId, boolean primary,
+		long typeId, boolean primary,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
@@ -285,6 +285,6 @@ public interface WebsiteLocalService extends BaseLocalService,
 		com.liferay.portal.model.Website website);
 
 	public com.liferay.portal.model.Website updateWebsite(long websiteId,
-		java.lang.String url, int typeId, boolean primary)
+		java.lang.String url, long typeId, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException;
 }

@@ -26,7 +26,7 @@ import com.liferay.portal.model.UserGroupGroupRole;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see UserGroupGroupRolePersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.UserGroupGroupRolePersistenceImpl
  * @see UserGroupGroupRoleUtil
  * @generated
  */

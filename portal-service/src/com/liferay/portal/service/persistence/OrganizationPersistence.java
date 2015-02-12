@@ -26,7 +26,7 @@ import com.liferay.portal.model.Organization;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see OrganizationPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.OrganizationPersistenceImpl
  * @see OrganizationUtil
  * @generated
  */

@@ -28,7 +28,7 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMTemplateVersion;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DDMTemplateVersionPersistenceImpl
+ * @see com.liferay.portlet.dynamicdatamapping.service.persistence.impl.DDMTemplateVersionPersistenceImpl
  * @see DDMTemplateVersionUtil
  * @generated
  */

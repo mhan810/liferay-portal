@@ -28,7 +28,7 @@ import com.liferay.portlet.journal.model.JournalContentSearch;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see JournalContentSearchPersistenceImpl
+ * @see com.liferay.portlet.journal.service.persistence.impl.JournalContentSearchPersistenceImpl
  * @see JournalContentSearchUtil
  * @generated
  */

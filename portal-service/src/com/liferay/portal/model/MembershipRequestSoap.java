@@ -180,11 +180,11 @@ public class MembershipRequestSoap implements Serializable {
 		_replierUserId = replierUserId;
 	}
 
-	public int getStatusId() {
+	public long getStatusId() {
 		return _statusId;
 	}
 
-	public void setStatusId(int statusId) {
+	public void setStatusId(long statusId) {
 		_statusId = statusId;
 	}
 
@@ -198,5 +198,5 @@ public class MembershipRequestSoap implements Serializable {
 	private String _replyComments;
 	private Date _replyDate;
 	private long _replierUserId;
-	private int _statusId;
+	private long _statusId;
 }

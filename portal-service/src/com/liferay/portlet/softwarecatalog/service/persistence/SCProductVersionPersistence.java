@@ -28,7 +28,7 @@ import com.liferay.portlet.softwarecatalog.model.SCProductVersion;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SCProductVersionPersistenceImpl
+ * @see com.liferay.portlet.softwarecatalog.service.persistence.impl.SCProductVersionPersistenceImpl
  * @see SCProductVersionUtil
  * @generated
  */

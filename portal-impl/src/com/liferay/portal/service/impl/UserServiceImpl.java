@@ -15,7 +15,7 @@
 package com.liferay.portal.service.impl;
 
 import com.liferay.portal.RequiredUserException;
-import com.liferay.portal.ReservedUserEmailAddressException;
+import com.liferay.portal.UserEmailAddressException;
 import com.liferay.portal.UserFieldException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.search.Indexer;
@@ -307,8 +307,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			long companyId, boolean autoPassword, String password1,
 			String password2, boolean autoScreenName, String screenName,
 			String emailAddress, long facebookId, String openId, Locale locale,
-			String firstName, String middleName, String lastName, int prefixId,
-			int suffixId, boolean male, int birthdayMonth, int birthdayDay,
+			String firstName, String middleName, String lastName, long prefixId,
+			long suffixId, boolean male, int birthdayMonth, int birthdayDay,
 			int birthdayYear, String jobTitle, long[] groupIds,
 			long[] organizationIds, long[] roleIds, long[] userGroupIds,
 			boolean sendEmail, ServiceContext serviceContext)
@@ -390,8 +390,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			long companyId, boolean autoPassword, String password1,
 			String password2, boolean autoScreenName, String screenName,
 			String emailAddress, long facebookId, String openId, Locale locale,
-			String firstName, String middleName, String lastName, int prefixId,
-			int suffixId, boolean male, int birthdayMonth, int birthdayDay,
+			String firstName, String middleName, String lastName, long prefixId,
+			long suffixId, boolean male, int birthdayMonth, int birthdayDay,
 			int birthdayYear, String jobTitle, long[] groupIds,
 			long[] organizationIds, long[] roleIds, long[] userGroupIds,
 			List<Address> addresses, List<EmailAddress> emailAddresses,
@@ -502,8 +502,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			long companyId, boolean autoPassword, String password1,
 			String password2, boolean autoScreenName, String screenName,
 			String emailAddress, long facebookId, String openId, Locale locale,
-			String firstName, String middleName, String lastName, int prefixId,
-			int suffixId, boolean male, int birthdayMonth, int birthdayDay,
+			String firstName, String middleName, String lastName, long prefixId,
+			long suffixId, boolean male, int birthdayMonth, int birthdayDay,
 			int birthdayYear, String jobTitle, long[] groupIds,
 			long[] organizationIds, long[] roleIds, long[] userGroupIds,
 			boolean sendEmail, ServiceContext serviceContext)
@@ -598,8 +598,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			long companyId, boolean autoPassword, String password1,
 			String password2, boolean autoScreenName, String screenName,
 			String emailAddress, long facebookId, String openId, Locale locale,
-			String firstName, String middleName, String lastName, int prefixId,
-			int suffixId, boolean male, int birthdayMonth, int birthdayDay,
+			String firstName, String middleName, String lastName, long prefixId,
+			long suffixId, boolean male, int birthdayMonth, int birthdayDay,
 			int birthdayYear, String jobTitle, long[] groupIds,
 			long[] organizationIds, long[] roleIds, long[] userGroupIds,
 			List<Address> addresses, List<EmailAddress> emailAddresses,
@@ -1505,8 +1505,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			long companyId, boolean autoPassword, String password1,
 			String password2, boolean autoScreenName, String screenName,
 			String emailAddress, long facebookId, String openId, Locale locale,
-			String firstName, String middleName, String lastName, int prefixId,
-			int suffixId, boolean male, int birthdayMonth, int birthdayDay,
+			String firstName, String middleName, String lastName, long prefixId,
+			long suffixId, boolean male, int birthdayMonth, int birthdayDay,
 			int birthdayYear, String jobTitle, boolean updateUserInformation,
 			boolean sendEmail, ServiceContext serviceContext)
 		throws PortalException {
@@ -1807,7 +1807,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			String openId, boolean portrait, byte[] portraitBytes,
 			String languageId, String timeZoneId, String greeting,
 			String comments, String firstName, String middleName,
-			String lastName, int prefixId, int suffixId, boolean male,
+			String lastName, long prefixId, long suffixId, boolean male,
 			int birthdayMonth, int birthdayDay, int birthdayYear, String smsSn,
 			String aimSn, String facebookSn, String icqSn, String jabberSn,
 			String msnSn, String mySpaceSn, String skypeSn, String twitterSn,
@@ -2175,7 +2175,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			String screenName, String emailAddress, long facebookId,
 			String openId, String languageId, String timeZoneId,
 			String greeting, String comments, String firstName,
-			String middleName, String lastName, int prefixId, int suffixId,
+			String middleName, String lastName, long prefixId, long suffixId,
 			boolean male, int birthdayMonth, int birthdayDay, int birthdayYear,
 			String smsSn, String aimSn, String facebookSn, String icqSn,
 			String jabberSn, String msnSn, String mySpaceSn, String skypeSn,
@@ -2265,7 +2265,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			String screenName, String emailAddress, long facebookId,
 			String openId, String languageId, String timeZoneId,
 			String greeting, String comments, String firstName,
-			String middleName, String lastName, int prefixId, int suffixId,
+			String middleName, String lastName, long prefixId, long suffixId,
 			boolean male, int birthdayMonth, int birthdayDay, int birthdayYear,
 			String smsSn, String aimSn, String facebookSn, String icqSn,
 			String jabberSn, String msnSn, String mySpaceSn, String skypeSn,
@@ -2333,7 +2333,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			if (!company.isStrangersWithMx() &&
 				company.hasCompanyMx(emailAddress)) {
 
-				throw new ReservedUserEmailAddressException();
+				throw new UserEmailAddressException.MustNotUseCompanyMx(
+					emailAddress);
 			}
 		}
 	}
@@ -2709,7 +2710,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 				user.getCompanyId());
 
 			if (!company.isStrangersWithMx()) {
-				throw new ReservedUserEmailAddressException();
+				throw new UserEmailAddressException.MustNotUseCompanyMx(
+					emailAddress);
 			}
 		}
 	}
@@ -2750,7 +2752,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 
 	protected void validateUpdatePermission(
 			User user, String screenName, String emailAddress, String firstName,
-			String middleName, String lastName, int prefixId, int suffixId,
+			String middleName, String lastName, long prefixId, long suffixId,
 			int birthdayMonth, int birthdayDay, int birthdayYear, boolean male,
 			String jobTitle)
 		throws PortalException {

@@ -59,7 +59,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see TicketPersistence
- * @see TicketUtil
+ * @see com.liferay.portal.service.persistence.TicketUtil
  * @generated
  */
 @ProviderType

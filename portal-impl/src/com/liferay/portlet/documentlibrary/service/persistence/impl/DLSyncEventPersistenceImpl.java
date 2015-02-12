@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DLSyncEventPersistence
- * @see DLSyncEventUtil
+ * @see com.liferay.portlet.documentlibrary.service.persistence.DLSyncEventUtil
  * @generated
  */
 @ProviderType

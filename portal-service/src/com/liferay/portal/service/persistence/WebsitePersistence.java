@@ -26,7 +26,7 @@ import com.liferay.portal.model.Website;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see WebsitePersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.WebsitePersistenceImpl
  * @see WebsiteUtil
  * @generated
  */

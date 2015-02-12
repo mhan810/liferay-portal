@@ -57,7 +57,7 @@ public interface OrgLaborLocalService extends BaseLocalService,
 		com.liferay.portal.model.OrgLabor orgLabor);
 
 	public com.liferay.portal.model.OrgLabor addOrgLabor(long organizationId,
-		int typeId, int sunOpen, int sunClose, int monOpen, int monClose,
+		long typeId, int sunOpen, int sunClose, int monOpen, int monClose,
 		int tueOpen, int tueClose, int wedOpen, int wedClose, int thuOpen,
 		int thuClose, int friOpen, int friClose, int satOpen, int satClose)
 		throws com.liferay.portal.kernel.exception.PortalException;
@@ -239,7 +239,7 @@ public interface OrgLaborLocalService extends BaseLocalService,
 		com.liferay.portal.model.OrgLabor orgLabor);
 
 	public com.liferay.portal.model.OrgLabor updateOrgLabor(long orgLaborId,
-		int typeId, int sunOpen, int sunClose, int monOpen, int monClose,
+		long typeId, int sunOpen, int sunClose, int monOpen, int monClose,
 		int tueOpen, int tueClose, int wedOpen, int wedClose, int thuOpen,
 		int thuClose, int friOpen, int friClose, int satOpen, int satClose)
 		throws com.liferay.portal.kernel.exception.PortalException;

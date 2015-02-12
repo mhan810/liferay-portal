@@ -26,7 +26,7 @@ import com.liferay.portal.model.LayoutPrototype;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see LayoutPrototypePersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.LayoutPrototypePersistenceImpl
  * @see LayoutPrototypeUtil
  * @generated
  */

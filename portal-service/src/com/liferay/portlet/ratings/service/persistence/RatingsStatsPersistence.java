@@ -28,7 +28,7 @@ import com.liferay.portlet.ratings.model.RatingsStats;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see RatingsStatsPersistenceImpl
+ * @see com.liferay.portlet.ratings.service.persistence.impl.RatingsStatsPersistenceImpl
  * @see RatingsStatsUtil
  * @generated
  */

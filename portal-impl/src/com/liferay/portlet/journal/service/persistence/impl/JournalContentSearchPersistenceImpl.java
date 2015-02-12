@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see JournalContentSearchPersistence
- * @see JournalContentSearchUtil
+ * @see com.liferay.portlet.journal.service.persistence.JournalContentSearchUtil
  * @generated
  */
 @ProviderType

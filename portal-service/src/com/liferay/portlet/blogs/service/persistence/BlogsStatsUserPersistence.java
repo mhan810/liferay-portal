@@ -28,7 +28,7 @@ import com.liferay.portlet.blogs.model.BlogsStatsUser;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see BlogsStatsUserPersistenceImpl
+ * @see com.liferay.portlet.blogs.service.persistence.impl.BlogsStatsUserPersistenceImpl
  * @see BlogsStatsUserUtil
  * @generated
  */

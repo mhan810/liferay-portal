@@ -134,7 +134,7 @@ public class WebsitePersistenceTest {
 
 		newWebsite.setUrl(RandomTestUtil.randomString());
 
-		newWebsite.setTypeId(RandomTestUtil.nextInt());
+		newWebsite.setTypeId(RandomTestUtil.nextLong());
 
 		newWebsite.setPrimary(RandomTestUtil.randomBoolean());
 
@@ -520,7 +520,7 @@ public class WebsitePersistenceTest {
 
 		website.setUrl(RandomTestUtil.randomString());
 
-		website.setTypeId(RandomTestUtil.nextInt());
+		website.setTypeId(RandomTestUtil.nextLong());
 
 		website.setPrimary(RandomTestUtil.randomBoolean());
 

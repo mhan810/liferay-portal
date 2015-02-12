@@ -28,7 +28,7 @@ import com.liferay.portlet.messageboards.model.MBThreadFlag;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see MBThreadFlagPersistenceImpl
+ * @see com.liferay.portlet.messageboards.service.persistence.impl.MBThreadFlagPersistenceImpl
  * @see MBThreadFlagUtil
  * @generated
  */

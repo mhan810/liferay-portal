@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DLFileEntryMetadataPersistence
- * @see DLFileEntryMetadataUtil
+ * @see com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryMetadataUtil
  * @generated
  */
 @ProviderType

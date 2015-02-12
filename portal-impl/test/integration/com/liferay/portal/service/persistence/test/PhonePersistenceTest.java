@@ -136,7 +136,7 @@ public class PhonePersistenceTest {
 
 		newPhone.setExtension(RandomTestUtil.randomString());
 
-		newPhone.setTypeId(RandomTestUtil.nextInt());
+		newPhone.setTypeId(RandomTestUtil.nextLong());
 
 		newPhone.setPrimary(RandomTestUtil.randomBoolean());
 
@@ -520,7 +520,7 @@ public class PhonePersistenceTest {
 
 		phone.setExtension(RandomTestUtil.randomString());
 
-		phone.setTypeId(RandomTestUtil.nextInt());
+		phone.setTypeId(RandomTestUtil.nextLong());
 
 		phone.setPrimary(RandomTestUtil.randomBoolean());
 

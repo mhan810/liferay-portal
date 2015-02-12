@@ -131,7 +131,7 @@ public class MembershipRequestPersistenceTest {
 
 		newMembershipRequest.setReplierUserId(RandomTestUtil.nextLong());
 
-		newMembershipRequest.setStatusId(RandomTestUtil.nextInt());
+		newMembershipRequest.setStatusId(RandomTestUtil.nextLong());
 
 		_membershipRequests.add(_persistence.update(newMembershipRequest));
 
@@ -191,9 +191,9 @@ public class MembershipRequestPersistenceTest {
 	public void testCountByG_S() {
 		try {
 			_persistence.countByG_S(RandomTestUtil.nextLong(),
-				RandomTestUtil.nextInt());
+				RandomTestUtil.nextLong());
 
-			_persistence.countByG_S(0L, 0);
+			_persistence.countByG_S(0L, 0L);
 		}
 		catch (Exception e) {
 			Assert.fail(e.getMessage());
@@ -204,9 +204,9 @@ public class MembershipRequestPersistenceTest {
 	public void testCountByG_U_S() {
 		try {
 			_persistence.countByG_U_S(RandomTestUtil.nextLong(),
-				RandomTestUtil.nextLong(), RandomTestUtil.nextInt());
+				RandomTestUtil.nextLong(), RandomTestUtil.nextLong());
 
-			_persistence.countByG_U_S(0L, 0L, 0);
+			_persistence.countByG_U_S(0L, 0L, 0L);
 		}
 		catch (Exception e) {
 			Assert.fail(e.getMessage());
@@ -475,7 +475,7 @@ public class MembershipRequestPersistenceTest {
 
 		membershipRequest.setReplierUserId(RandomTestUtil.nextLong());
 
-		membershipRequest.setStatusId(RandomTestUtil.nextInt());
+		membershipRequest.setStatusId(RandomTestUtil.nextLong());
 
 		_membershipRequests.add(_persistence.update(membershipRequest));
 

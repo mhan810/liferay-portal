@@ -31,7 +31,7 @@ import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroupInstance;
 
 /**
  * @author Edward C. Han
- * @deprecated As of 7.0.0, replaced by {@link com.liferay.portlet.mobiledevicerules.service.MDRRuleGroupInstanceLocalServiceUtil#getExportActionableDynamicQuery()}
+ * @deprecated As of 7.0.0, replaced by {@link com.liferay.portlet.mobiledevicerules.service.MDRRuleGroupInstanceLocalServiceUtil#getExportActionableDynamicQuery(PortletDataContext)}
  * @generated
  */
 @Deprecated

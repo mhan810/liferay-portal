@@ -167,7 +167,7 @@ public class OrganizationWrapper implements Organization,
 			setCountryId(countryId);
 		}
 
-		Integer statusId = (Integer)attributes.get("statusId");
+		Long statusId = (Long)attributes.get("statusId");
 
 		if (statusId != null) {
 			setStatusId(statusId);
@@ -428,7 +428,7 @@ public class OrganizationWrapper implements Organization,
 	* @return the status ID of this organization
 	*/
 	@Override
-	public int getStatusId() {
+	public long getStatusId() {
 		return _organization.getStatusId();
 	}
 
@@ -736,7 +736,7 @@ public class OrganizationWrapper implements Organization,
 	* @param statusId the status ID of this organization
 	*/
 	@Override
-	public void setStatusId(int statusId) {
+	public void setStatusId(long statusId) {
 		_organization.setStatusId(statusId);
 	}
 

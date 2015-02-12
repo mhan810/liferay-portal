@@ -69,7 +69,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see AnnouncementsEntryPersistence
- * @see AnnouncementsEntryUtil
+ * @see com.liferay.portlet.announcements.service.persistence.AnnouncementsEntryUtil
  * @generated
  */
 @ProviderType

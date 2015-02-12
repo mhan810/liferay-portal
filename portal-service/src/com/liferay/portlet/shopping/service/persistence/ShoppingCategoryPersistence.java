@@ -28,7 +28,7 @@ import com.liferay.portlet.shopping.model.ShoppingCategory;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ShoppingCategoryPersistenceImpl
+ * @see com.liferay.portlet.shopping.service.persistence.impl.ShoppingCategoryPersistenceImpl
  * @see ShoppingCategoryUtil
  * @generated
  */

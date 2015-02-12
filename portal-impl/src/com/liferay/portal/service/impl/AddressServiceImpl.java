@@ -40,7 +40,7 @@ public class AddressServiceImpl extends AddressServiceBaseImpl {
 	public Address addAddress(
 			String className, long classPK, String street1, String street2,
 			String street3, String city, String zip, long regionId,
-			long countryId, int typeId, boolean mailing, boolean primary)
+			long countryId, long typeId, boolean mailing, boolean primary)
 		throws PortalException {
 
 		CommonPermissionUtil.check(
@@ -55,7 +55,7 @@ public class AddressServiceImpl extends AddressServiceBaseImpl {
 	public Address addAddress(
 			String className, long classPK, String street1, String street2,
 			String street3, String city, String zip, long regionId,
-			long countryId, int typeId, boolean mailing, boolean primary,
+			long countryId, long typeId, boolean mailing, boolean primary,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -105,7 +105,7 @@ public class AddressServiceImpl extends AddressServiceBaseImpl {
 	@Override
 	public Address updateAddress(
 			long addressId, String street1, String street2, String street3,
-			String city, String zip, long regionId, long countryId, int typeId,
+			String city, String zip, long regionId, long countryId, long typeId,
 			boolean mailing, boolean primary)
 		throws PortalException {
 

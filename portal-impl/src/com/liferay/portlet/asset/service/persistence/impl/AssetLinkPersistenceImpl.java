@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see AssetLinkPersistence
- * @see AssetLinkUtil
+ * @see com.liferay.portlet.asset.service.persistence.AssetLinkUtil
  * @generated
  */
 @ProviderType

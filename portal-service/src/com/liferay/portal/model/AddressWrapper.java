@@ -180,7 +180,7 @@ public class AddressWrapper implements Address, ModelWrapper<Address> {
 			setCountryId(countryId);
 		}
 
-		Integer typeId = (Integer)attributes.get("typeId");
+		Long typeId = (Long)attributes.get("typeId");
 
 		if (typeId != null) {
 			setTypeId(typeId);
@@ -410,7 +410,7 @@ public class AddressWrapper implements Address, ModelWrapper<Address> {
 	* @return the type ID of this address
 	*/
 	@Override
-	public int getTypeId() {
+	public long getTypeId() {
 		return _address.getTypeId();
 	}
 
@@ -713,7 +713,7 @@ public class AddressWrapper implements Address, ModelWrapper<Address> {
 	* @param typeId the type ID of this address
 	*/
 	@Override
-	public void setTypeId(int typeId) {
+	public void setTypeId(long typeId) {
 		_address.setTypeId(typeId);
 	}
 

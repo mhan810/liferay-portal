@@ -26,6 +26,10 @@ import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ListType;
 import com.liferay.portal.model.ListTypeModel;
 import com.liferay.portal.model.ListTypeSoap;
+import com.liferay.portal.service.ServiceContext;
+
+import com.liferay.portlet.expando.model.ExpandoBridge;
+import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
 
 import java.io.Serializable;
 
@@ -61,11 +65,11 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 	public static final String TABLE_NAME = "ListType";
 	public static final Object[][] TABLE_COLUMNS = {
 			{ "mvccVersion", Types.BIGINT },
-			{ "listTypeId", Types.INTEGER },
+			{ "listTypeId", Types.BIGINT },
 			{ "name", Types.VARCHAR },
 			{ "type_", Types.VARCHAR }
 		};
-	public static final String TABLE_SQL_CREATE = "create table ListType (mvccVersion LONG default 0,listTypeId INTEGER not null primary key,name VARCHAR(75) null,type_ VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table ListType (mvccVersion LONG default 0,listTypeId LONG not null primary key,name VARCHAR(75) null,type_ VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table ListType";
 	public static final String ORDER_BY_JPQL = " ORDER BY listType.name ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY ListType.name ASC";
@@ -81,8 +85,8 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.portal.util.PropsUtil.get(
 				"value.object.column.bitmask.enabled.com.liferay.portal.model.ListType"),
 			true);
-	public static final long TYPE_COLUMN_BITMASK = 1L;
-	public static final long NAME_COLUMN_BITMASK = 2L;
+	public static final long NAME_COLUMN_BITMASK = 1L;
+	public static final long TYPE_COLUMN_BITMASK = 2L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -132,12 +136,12 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 	}
 
 	@Override
-	public int getPrimaryKey() {
+	public long getPrimaryKey() {
 		return _listTypeId;
 	}
 
 	@Override
-	public void setPrimaryKey(int primaryKey) {
+	public void setPrimaryKey(long primaryKey) {
 		setListTypeId(primaryKey);
 	}
 
@@ -148,7 +152,7 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 
 	@Override
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
-		setPrimaryKey(((Integer)primaryKeyObj).intValue());
+		setPrimaryKey(((Long)primaryKeyObj).longValue());
 	}
 
 	@Override
@@ -184,7 +188,7 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 			setMvccVersion(mvccVersion);
 		}
 
-		Integer listTypeId = (Integer)attributes.get("listTypeId");
+		Long listTypeId = (Long)attributes.get("listTypeId");
 
 		if (listTypeId != null) {
 			setListTypeId(listTypeId);
@@ -216,12 +220,12 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 
 	@JSON
 	@Override
-	public int getListTypeId() {
+	public long getListTypeId() {
 		return _listTypeId;
 	}
 
 	@Override
-	public void setListTypeId(int listTypeId) {
+	public void setListTypeId(long listTypeId) {
 		_listTypeId = listTypeId;
 	}
 
@@ -240,7 +244,15 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 	public void setName(String name) {
 		_columnBitmask = -1L;
 
+		if (_originalName == null) {
+			_originalName = _name;
+		}
+
 		_name = name;
+	}
+
+	public String getOriginalName() {
+		return GetterUtil.getString(_originalName);
 	}
 
 	@JSON
@@ -271,6 +283,19 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 
 	public long getColumnBitmask() {
 		return _columnBitmask;
+	}
+
+	@Override
+	public ExpandoBridge getExpandoBridge() {
+		return ExpandoBridgeFactoryUtil.getExpandoBridge(0,
+			ListType.class.getName(), getPrimaryKey());
+	}
+
+	@Override
+	public void setExpandoBridgeAttributes(ServiceContext serviceContext) {
+		ExpandoBridge expandoBridge = getExpandoBridge();
+
+		expandoBridge.setAttributes(serviceContext);
 	}
 
 	@Override
@@ -322,7 +347,7 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 
 		ListType listType = (ListType)obj;
 
-		int primaryKey = listType.getPrimaryKey();
+		long primaryKey = listType.getPrimaryKey();
 
 		if (getPrimaryKey() == primaryKey) {
 			return true;
@@ -334,7 +359,7 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 
 	@Override
 	public int hashCode() {
-		return getPrimaryKey();
+		return (int)getPrimaryKey();
 	}
 
 	@Override
@@ -350,6 +375,8 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 	@Override
 	public void resetOriginalValues() {
 		ListTypeModelImpl listTypeModelImpl = this;
+
+		listTypeModelImpl._originalName = listTypeModelImpl._name;
 
 		listTypeModelImpl._originalType = listTypeModelImpl._type;
 
@@ -435,8 +462,9 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 			ListType.class
 		};
 	private long _mvccVersion;
-	private int _listTypeId;
+	private long _listTypeId;
 	private String _name;
+	private String _originalName;
 	private String _type;
 	private String _originalType;
 	private long _columnBitmask;

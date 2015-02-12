@@ -70,6 +70,7 @@ import com.liferay.portal.model.PortletItem;
 import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionCacheUtil;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletItemLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
@@ -222,7 +223,8 @@ public class PortletImporter {
 			ExportImportLifecycleManager.fireExportImportLifecycleEvent(
 				ExportImportLifecycleConstants.EVENT_PORTLET_IMPORT_SUCCEEDED,
 				PortletDataContextFactoryUtil.clonePortletDataContext(
-					portletDataContext));
+					portletDataContext),
+				userId);
 		}
 		catch (Throwable t) {
 			ExportImportLifecycleManager.fireExportImportLifecycleEvent(
@@ -312,6 +314,20 @@ public class PortletImporter {
 			PortletDataContext portletDataContext,
 			PortletPreferences portletPreferences)
 		throws Exception {
+
+		Group group = GroupLocalServiceUtil.getGroup(
+			portletDataContext.getGroupId());
+
+		if (!group.isStagedPortlet(portletDataContext.getPortletId())) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Do not delete portlet data for " +
+						portletDataContext.getPortletId() +
+							" because the portlet is not staged");
+			}
+
+			return null;
+		}
 
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
 			portletDataContext.getCompanyId(),

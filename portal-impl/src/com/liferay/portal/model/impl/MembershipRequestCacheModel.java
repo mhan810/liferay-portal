@@ -166,7 +166,7 @@ public class MembershipRequestCacheModel implements CacheModel<MembershipRequest
 		replyComments = objectInput.readUTF();
 		replyDate = objectInput.readLong();
 		replierUserId = objectInput.readLong();
-		statusId = objectInput.readInt();
+		statusId = objectInput.readLong();
 	}
 
 	@Override
@@ -195,7 +195,7 @@ public class MembershipRequestCacheModel implements CacheModel<MembershipRequest
 
 		objectOutput.writeLong(replyDate);
 		objectOutput.writeLong(replierUserId);
-		objectOutput.writeInt(statusId);
+		objectOutput.writeLong(statusId);
 	}
 
 	public long mvccVersion;
@@ -208,5 +208,5 @@ public class MembershipRequestCacheModel implements CacheModel<MembershipRequest
 	public String replyComments;
 	public long replyDate;
 	public long replierUserId;
-	public int statusId;
+	public long statusId;
 }

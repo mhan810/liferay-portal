@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see RatingsEntryPersistence
- * @see RatingsEntryUtil
+ * @see com.liferay.portlet.ratings.service.persistence.RatingsEntryUtil
  * @generated
  */
 @ProviderType

@@ -26,7 +26,7 @@ import com.liferay.portal.model.ResourceAction;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ResourceActionPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.ResourceActionPersistenceImpl
  * @see ResourceActionUtil
  * @generated
  */

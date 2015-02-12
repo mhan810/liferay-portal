@@ -28,7 +28,7 @@ import com.liferay.wiki.model.WikiPageResource;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see WikiPageResourcePersistenceImpl
+ * @see com.liferay.wiki.service.persistence.impl.WikiPageResourcePersistenceImpl
  * @see WikiPageResourceUtil
  * @generated
  */

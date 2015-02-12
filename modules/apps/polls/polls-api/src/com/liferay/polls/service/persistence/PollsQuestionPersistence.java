@@ -28,7 +28,7 @@ import com.liferay.portal.service.persistence.BasePersistence;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see PollsQuestionPersistenceImpl
+ * @see com.liferay.polls.service.persistence.impl.PollsQuestionPersistenceImpl
  * @see PollsQuestionUtil
  * @generated
  */

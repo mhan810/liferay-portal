@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see DDLRecordVersionPersistence
- * @see DDLRecordVersionUtil
+ * @see com.liferay.portlet.dynamicdatalists.service.persistence.DDLRecordVersionUtil
  * @generated
  */
 @ProviderType

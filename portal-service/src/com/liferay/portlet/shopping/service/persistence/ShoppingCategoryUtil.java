@@ -27,7 +27,7 @@ import com.liferay.portlet.shopping.model.ShoppingCategory;
 import java.util.List;
 
 /**
- * The persistence utility for the shopping category service. This utility wraps {@link ShoppingCategoryPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
+ * The persistence utility for the shopping category service. This utility wraps {@link com.liferay.portlet.shopping.service.persistence.impl.ShoppingCategoryPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author Brian Wing Shun Chan
  * @see ShoppingCategoryPersistence
- * @see ShoppingCategoryPersistenceImpl
+ * @see com.liferay.portlet.shopping.service.persistence.impl.ShoppingCategoryPersistenceImpl
  * @generated
  */
 @ProviderType

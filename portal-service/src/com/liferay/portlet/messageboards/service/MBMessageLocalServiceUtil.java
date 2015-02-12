@@ -387,8 +387,8 @@ public class MBMessageLocalServiceUtil {
 	}
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link #getDiscussionMessageDisplay(
-	long, long, String, long, int)}
+	* @deprecated As of 7.0.0, replaced by {@link
+	#getDiscussionMessageDisplay(long, long, String, long, int)}
 	*/
 	@Deprecated
 	public static com.liferay.portlet.messageboards.model.MBMessageDisplay getDiscussionMessageDisplay(

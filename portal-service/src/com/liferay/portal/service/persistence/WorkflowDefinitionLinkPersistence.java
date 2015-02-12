@@ -26,7 +26,7 @@ import com.liferay.portal.model.WorkflowDefinitionLink;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see WorkflowDefinitionLinkPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.WorkflowDefinitionLinkPersistenceImpl
  * @see WorkflowDefinitionLinkUtil
  * @generated
  */

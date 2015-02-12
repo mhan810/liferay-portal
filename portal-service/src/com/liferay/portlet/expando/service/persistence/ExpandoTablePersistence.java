@@ -28,7 +28,7 @@ import com.liferay.portlet.expando.model.ExpandoTable;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ExpandoTablePersistenceImpl
+ * @see com.liferay.portlet.expando.service.persistence.impl.ExpandoTablePersistenceImpl
  * @see ExpandoTableUtil
  * @generated
  */

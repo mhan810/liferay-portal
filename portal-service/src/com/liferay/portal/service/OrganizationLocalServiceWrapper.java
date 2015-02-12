@@ -142,7 +142,7 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 	public com.liferay.portal.model.Organization addOrganization(long userId,
 		long parentOrganizationId, java.lang.String name,
 		java.lang.String type, boolean recursable, long regionId,
-		long countryId, int statusId, java.lang.String comments, boolean site,
+		long countryId, long statusId, java.lang.String comments, boolean site,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _organizationLocalService.addOrganization(userId,
@@ -182,7 +182,7 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 	@Override
 	public com.liferay.portal.model.Organization addOrganization(long userId,
 		long parentOrganizationId, java.lang.String name,
-		java.lang.String type, long regionId, long countryId, int statusId,
+		java.lang.String type, long regionId, long countryId, long statusId,
 		java.lang.String comments, boolean site,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -1521,8 +1521,9 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 	public com.liferay.portal.model.Organization updateOrganization(
 		long companyId, long organizationId, long parentOrganizationId,
 		java.lang.String name, java.lang.String type, boolean recursable,
-		long regionId, long countryId, int statusId, java.lang.String comments,
-		boolean site, com.liferay.portal.service.ServiceContext serviceContext)
+		long regionId, long countryId, long statusId,
+		java.lang.String comments, boolean site,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _organizationLocalService.updateOrganization(companyId,
 			organizationId, parentOrganizationId, name, type, recursable,
@@ -1559,7 +1560,7 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 	public com.liferay.portal.model.Organization updateOrganization(
 		long companyId, long organizationId, long parentOrganizationId,
 		java.lang.String name, java.lang.String type, long regionId,
-		long countryId, int statusId, java.lang.String comments, boolean logo,
+		long countryId, long statusId, java.lang.String comments, boolean logo,
 		byte[] logoBytes, boolean site,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -1600,7 +1601,7 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 	public com.liferay.portal.model.Organization updateOrganization(
 		long companyId, long organizationId, long parentOrganizationId,
 		java.lang.String name, java.lang.String type, long regionId,
-		long countryId, int statusId, java.lang.String comments, boolean site,
+		long countryId, long statusId, java.lang.String comments, boolean site,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _organizationLocalService.updateOrganization(companyId,

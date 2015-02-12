@@ -154,8 +154,8 @@ public class TCKAction extends Action {
 			String firstName = "TCK";
 			String middleName = StringPool.BLANK;
 			String lastName = "User";
-			int prefixId = 0;
-			int suffixId = 0;
+			long prefixId = 0;
+			long suffixId = 0;
 			boolean male = true;
 			int birthdayMonth = Calendar.JANUARY;
 			int birthdayDay = 1;

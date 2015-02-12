@@ -26,7 +26,7 @@ import com.liferay.portal.model.Release;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ReleasePersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.ReleasePersistenceImpl
  * @see ReleaseUtil
  * @generated
  */

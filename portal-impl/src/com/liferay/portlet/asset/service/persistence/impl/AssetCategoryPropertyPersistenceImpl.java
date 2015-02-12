@@ -59,7 +59,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see AssetCategoryPropertyPersistence
- * @see AssetCategoryPropertyUtil
+ * @see com.liferay.portlet.asset.service.persistence.AssetCategoryPropertyUtil
  * @generated
  */
 @ProviderType

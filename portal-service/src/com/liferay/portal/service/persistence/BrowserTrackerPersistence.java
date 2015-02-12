@@ -26,7 +26,7 @@ import com.liferay.portal.model.BrowserTracker;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see BrowserTrackerPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.BrowserTrackerPersistenceImpl
  * @see BrowserTrackerUtil
  * @generated
  */

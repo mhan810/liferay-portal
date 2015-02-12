@@ -26,7 +26,7 @@ import com.liferay.portal.service.ServiceContext;
 import java.util.List;
 
 /**
- * The persistence utility for the membership request service. This utility wraps {@link MembershipRequestPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
+ * The persistence utility for the membership request service. This utility wraps {@link com.liferay.portal.service.persistence.impl.MembershipRequestPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -34,7 +34,7 @@ import java.util.List;
  *
  * @author Brian Wing Shun Chan
  * @see MembershipRequestPersistence
- * @see MembershipRequestPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.MembershipRequestPersistenceImpl
  * @generated
  */
 @ProviderType
@@ -398,7 +398,7 @@ public class MembershipRequestUtil {
 	* @return the matching membership requests
 	*/
 	public static java.util.List<com.liferay.portal.model.MembershipRequest> findByG_S(
-		long groupId, int statusId) {
+		long groupId, long statusId) {
 		return getPersistence().findByG_S(groupId, statusId);
 	}
 
@@ -416,7 +416,7 @@ public class MembershipRequestUtil {
 	* @return the range of matching membership requests
 	*/
 	public static java.util.List<com.liferay.portal.model.MembershipRequest> findByG_S(
-		long groupId, int statusId, int start, int end) {
+		long groupId, long statusId, int start, int end) {
 		return getPersistence().findByG_S(groupId, statusId, start, end);
 	}
 
@@ -435,7 +435,7 @@ public class MembershipRequestUtil {
 	* @return the ordered range of matching membership requests
 	*/
 	public static java.util.List<com.liferay.portal.model.MembershipRequest> findByG_S(
-		long groupId, int statusId, int start, int end,
+		long groupId, long statusId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.model.MembershipRequest> orderByComparator) {
 		return getPersistence()
 				   .findByG_S(groupId, statusId, start, end, orderByComparator);
@@ -451,7 +451,7 @@ public class MembershipRequestUtil {
 	* @throws com.liferay.portal.NoSuchMembershipRequestException if a matching membership request could not be found
 	*/
 	public static com.liferay.portal.model.MembershipRequest findByG_S_First(
-		long groupId, int statusId,
+		long groupId, long statusId,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.model.MembershipRequest> orderByComparator)
 		throws com.liferay.portal.NoSuchMembershipRequestException {
 		return getPersistence()
@@ -467,7 +467,7 @@ public class MembershipRequestUtil {
 	* @return the first matching membership request, or <code>null</code> if a matching membership request could not be found
 	*/
 	public static com.liferay.portal.model.MembershipRequest fetchByG_S_First(
-		long groupId, int statusId,
+		long groupId, long statusId,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.model.MembershipRequest> orderByComparator) {
 		return getPersistence()
 				   .fetchByG_S_First(groupId, statusId, orderByComparator);
@@ -483,7 +483,7 @@ public class MembershipRequestUtil {
 	* @throws com.liferay.portal.NoSuchMembershipRequestException if a matching membership request could not be found
 	*/
 	public static com.liferay.portal.model.MembershipRequest findByG_S_Last(
-		long groupId, int statusId,
+		long groupId, long statusId,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.model.MembershipRequest> orderByComparator)
 		throws com.liferay.portal.NoSuchMembershipRequestException {
 		return getPersistence()
@@ -499,7 +499,7 @@ public class MembershipRequestUtil {
 	* @return the last matching membership request, or <code>null</code> if a matching membership request could not be found
 	*/
 	public static com.liferay.portal.model.MembershipRequest fetchByG_S_Last(
-		long groupId, int statusId,
+		long groupId, long statusId,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.model.MembershipRequest> orderByComparator) {
 		return getPersistence()
 				   .fetchByG_S_Last(groupId, statusId, orderByComparator);
@@ -516,7 +516,7 @@ public class MembershipRequestUtil {
 	* @throws com.liferay.portal.NoSuchMembershipRequestException if a membership request with the primary key could not be found
 	*/
 	public static com.liferay.portal.model.MembershipRequest[] findByG_S_PrevAndNext(
-		long membershipRequestId, long groupId, int statusId,
+		long membershipRequestId, long groupId, long statusId,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.model.MembershipRequest> orderByComparator)
 		throws com.liferay.portal.NoSuchMembershipRequestException {
 		return getPersistence()
@@ -530,7 +530,7 @@ public class MembershipRequestUtil {
 	* @param groupId the group ID
 	* @param statusId the status ID
 	*/
-	public static void removeByG_S(long groupId, int statusId) {
+	public static void removeByG_S(long groupId, long statusId) {
 		getPersistence().removeByG_S(groupId, statusId);
 	}
 
@@ -541,7 +541,7 @@ public class MembershipRequestUtil {
 	* @param statusId the status ID
 	* @return the number of matching membership requests
 	*/
-	public static int countByG_S(long groupId, int statusId) {
+	public static int countByG_S(long groupId, long statusId) {
 		return getPersistence().countByG_S(groupId, statusId);
 	}
 
@@ -554,7 +554,7 @@ public class MembershipRequestUtil {
 	* @return the matching membership requests
 	*/
 	public static java.util.List<com.liferay.portal.model.MembershipRequest> findByG_U_S(
-		long groupId, long userId, int statusId) {
+		long groupId, long userId, long statusId) {
 		return getPersistence().findByG_U_S(groupId, userId, statusId);
 	}
 
@@ -573,7 +573,7 @@ public class MembershipRequestUtil {
 	* @return the range of matching membership requests
 	*/
 	public static java.util.List<com.liferay.portal.model.MembershipRequest> findByG_U_S(
-		long groupId, long userId, int statusId, int start, int end) {
+		long groupId, long userId, long statusId, int start, int end) {
 		return getPersistence()
 				   .findByG_U_S(groupId, userId, statusId, start, end);
 	}
@@ -594,7 +594,7 @@ public class MembershipRequestUtil {
 	* @return the ordered range of matching membership requests
 	*/
 	public static java.util.List<com.liferay.portal.model.MembershipRequest> findByG_U_S(
-		long groupId, long userId, int statusId, int start, int end,
+		long groupId, long userId, long statusId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.model.MembershipRequest> orderByComparator) {
 		return getPersistence()
 				   .findByG_U_S(groupId, userId, statusId, start, end,
@@ -612,7 +612,7 @@ public class MembershipRequestUtil {
 	* @throws com.liferay.portal.NoSuchMembershipRequestException if a matching membership request could not be found
 	*/
 	public static com.liferay.portal.model.MembershipRequest findByG_U_S_First(
-		long groupId, long userId, int statusId,
+		long groupId, long userId, long statusId,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.model.MembershipRequest> orderByComparator)
 		throws com.liferay.portal.NoSuchMembershipRequestException {
 		return getPersistence()
@@ -630,7 +630,7 @@ public class MembershipRequestUtil {
 	* @return the first matching membership request, or <code>null</code> if a matching membership request could not be found
 	*/
 	public static com.liferay.portal.model.MembershipRequest fetchByG_U_S_First(
-		long groupId, long userId, int statusId,
+		long groupId, long userId, long statusId,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.model.MembershipRequest> orderByComparator) {
 		return getPersistence()
 				   .fetchByG_U_S_First(groupId, userId, statusId,
@@ -648,7 +648,7 @@ public class MembershipRequestUtil {
 	* @throws com.liferay.portal.NoSuchMembershipRequestException if a matching membership request could not be found
 	*/
 	public static com.liferay.portal.model.MembershipRequest findByG_U_S_Last(
-		long groupId, long userId, int statusId,
+		long groupId, long userId, long statusId,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.model.MembershipRequest> orderByComparator)
 		throws com.liferay.portal.NoSuchMembershipRequestException {
 		return getPersistence()
@@ -666,7 +666,7 @@ public class MembershipRequestUtil {
 	* @return the last matching membership request, or <code>null</code> if a matching membership request could not be found
 	*/
 	public static com.liferay.portal.model.MembershipRequest fetchByG_U_S_Last(
-		long groupId, long userId, int statusId,
+		long groupId, long userId, long statusId,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.model.MembershipRequest> orderByComparator) {
 		return getPersistence()
 				   .fetchByG_U_S_Last(groupId, userId, statusId,
@@ -685,7 +685,7 @@ public class MembershipRequestUtil {
 	* @throws com.liferay.portal.NoSuchMembershipRequestException if a membership request with the primary key could not be found
 	*/
 	public static com.liferay.portal.model.MembershipRequest[] findByG_U_S_PrevAndNext(
-		long membershipRequestId, long groupId, long userId, int statusId,
+		long membershipRequestId, long groupId, long userId, long statusId,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.model.MembershipRequest> orderByComparator)
 		throws com.liferay.portal.NoSuchMembershipRequestException {
 		return getPersistence()
@@ -700,7 +700,7 @@ public class MembershipRequestUtil {
 	* @param userId the user ID
 	* @param statusId the status ID
 	*/
-	public static void removeByG_U_S(long groupId, long userId, int statusId) {
+	public static void removeByG_U_S(long groupId, long userId, long statusId) {
 		getPersistence().removeByG_U_S(groupId, userId, statusId);
 	}
 
@@ -712,7 +712,7 @@ public class MembershipRequestUtil {
 	* @param statusId the status ID
 	* @return the number of matching membership requests
 	*/
-	public static int countByG_U_S(long groupId, long userId, int statusId) {
+	public static int countByG_U_S(long groupId, long userId, long statusId) {
 		return getPersistence().countByG_U_S(groupId, userId, statusId);
 	}
 

@@ -46,10 +46,9 @@ public class SyncFilePersistence extends BasePersistenceImpl<SyncFile, Long> {
 		Where<SyncFile, Long> where = queryBuilder.where();
 
 		where.eq("syncAccountId", syncAccountId);
-
-		where.and();
-
 		where.eq("uiEvent", uiEvent);
+
+		where.and(2);
 
 		return where.countOf();
 	}
@@ -72,23 +71,6 @@ public class SyncFilePersistence extends BasePersistenceImpl<SyncFile, Long> {
 		fieldValues.put("filePathName", filePathName);
 
 		List<SyncFile> syncFiles = queryForFieldValuesArgs(fieldValues);
-
-		if ((syncFiles == null) || syncFiles.isEmpty()) {
-			return null;
-		}
-
-		return syncFiles.get(0);
-	}
-
-	public SyncFile fetchByFK_S(String fileKey, long syncAccountId)
-		throws SQLException {
-
-		Map<String, Object> fieldValues = new HashMap<>();
-
-		fieldValues.put("fileKey", fileKey);
-		fieldValues.put("syncAccountId", syncAccountId);
-
-		List<SyncFile> syncFiles = queryForFieldValues(fieldValues);
 
 		if ((syncFiles == null) || syncFiles.isEmpty()) {
 			return null;
@@ -132,18 +114,13 @@ public class SyncFilePersistence extends BasePersistenceImpl<SyncFile, Long> {
 		filePathName = StringUtils.replace(filePathName, "\\", "\\\\");
 
 		where.like("filePathName", new SelectArg(filePathName + "/%"));
-
-		where.and();
-
 		where.lt("localSyncTime", localSyncTime);
-
-		where.and();
-
-		where.eq("state", SyncFile.STATE_SYNCED);
-
-		where.and();
-
+		where.or(
+			where.eq("state", SyncFile.STATE_SYNCED),
+			where.eq("uiEvent", SyncFile.UI_EVENT_UPLOADING));
 		where.ne("type", SyncFile.TYPE_SYSTEM);
+
+		where.and(4);
 
 		return query(queryBuilder.prepare());
 	}

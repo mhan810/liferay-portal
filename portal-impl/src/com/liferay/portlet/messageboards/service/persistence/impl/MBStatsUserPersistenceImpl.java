@@ -57,7 +57,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see MBStatsUserPersistence
- * @see MBStatsUserUtil
+ * @see com.liferay.portlet.messageboards.service.persistence.MBStatsUserUtil
  * @generated
  */
 @ProviderType

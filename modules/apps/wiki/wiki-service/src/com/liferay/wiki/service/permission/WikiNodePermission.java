@@ -30,7 +30,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	property = {
-		"model.class.name=com.liferay.portlet.wiki.model.WikiNode"
+		"model.class.name=com.liferay.wiki.model.WikiNode"
 	}
 )
 public class WikiNodePermission implements BaseModelPermissionChecker {

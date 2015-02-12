@@ -28,7 +28,7 @@ import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DLFileEntryTypePersistenceImpl
+ * @see com.liferay.portlet.documentlibrary.service.persistence.impl.DLFileEntryTypePersistenceImpl
  * @see DLFileEntryTypeUtil
  * @generated
  */

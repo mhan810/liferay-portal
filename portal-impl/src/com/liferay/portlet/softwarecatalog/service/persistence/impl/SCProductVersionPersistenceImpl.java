@@ -64,7 +64,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see SCProductVersionPersistence
- * @see SCProductVersionUtil
+ * @see com.liferay.portlet.softwarecatalog.service.persistence.SCProductVersionUtil
  * @generated
  */
 @ProviderType

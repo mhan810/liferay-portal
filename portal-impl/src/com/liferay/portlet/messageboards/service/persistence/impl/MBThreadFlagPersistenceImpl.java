@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see MBThreadFlagPersistence
- * @see MBThreadFlagUtil
+ * @see com.liferay.portlet.messageboards.service.persistence.MBThreadFlagUtil
  * @generated
  */
 @ProviderType

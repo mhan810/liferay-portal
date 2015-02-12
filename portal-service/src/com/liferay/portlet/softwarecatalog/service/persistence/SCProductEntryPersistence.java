@@ -28,7 +28,7 @@ import com.liferay.portlet.softwarecatalog.model.SCProductEntry;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SCProductEntryPersistenceImpl
+ * @see com.liferay.portlet.softwarecatalog.service.persistence.impl.SCProductEntryPersistenceImpl
  * @see SCProductEntryUtil
  * @generated
  */

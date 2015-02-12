@@ -131,7 +131,7 @@ public class LDAPUser {
 		return _user.getPortraitId();
 	}
 
-	public int getPrefixId() {
+	public long getPrefixId() {
 		return _contact.getPrefixId();
 	}
 
@@ -167,7 +167,7 @@ public class LDAPUser {
 		return _user.getStatus();
 	}
 
-	public int getSuffixId() {
+	public long getSuffixId() {
 		return _contact.getSuffixId();
 	}
 
@@ -349,7 +349,7 @@ public class LDAPUser {
 		_portraitBytes = portraitBytes;
 	}
 
-	public void setPrefixId(int prefixId) {
+	public void setPrefixId(long prefixId) {
 		_contact.setPrefixId(prefixId);
 	}
 
@@ -389,7 +389,7 @@ public class LDAPUser {
 		_user.setStatus(status);
 	}
 
-	public void setSuffixId(int suffixId) {
+	public void setSuffixId(long suffixId) {
 		_contact.setSuffixId(suffixId);
 	}
 

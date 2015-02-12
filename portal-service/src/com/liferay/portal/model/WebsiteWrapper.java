@@ -137,7 +137,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 			setUrl(url);
 		}
 
-		Integer typeId = (Integer)attributes.get("typeId");
+		Long typeId = (Long)attributes.get("typeId");
 
 		if (typeId != null) {
 			setTypeId(typeId);
@@ -272,7 +272,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	* @return the type ID of this website
 	*/
 	@Override
-	public int getTypeId() {
+	public long getTypeId() {
 		return _website.getTypeId();
 	}
 
@@ -495,7 +495,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	* @param typeId the type ID of this website
 	*/
 	@Override
-	public void setTypeId(int typeId) {
+	public void setTypeId(long typeId) {
 		_website.setTypeId(typeId);
 	}
 

@@ -28,7 +28,7 @@ import com.liferay.portlet.messageboards.model.MBMessage;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see MBMessagePersistenceImpl
+ * @see com.liferay.portlet.messageboards.service.persistence.impl.MBMessagePersistenceImpl
  * @see MBMessageUtil
  * @generated
  */

@@ -26,7 +26,7 @@ import com.liferay.portal.model.WorkflowInstanceLink;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see WorkflowInstanceLinkPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.WorkflowInstanceLinkPersistenceImpl
  * @see WorkflowInstanceLinkUtil
  * @generated
  */

@@ -65,7 +65,7 @@ import java.rmi.RemoteException;
 @ProviderType
 public class OrgLaborServiceSoap {
 	public static com.liferay.portal.model.OrgLaborSoap addOrgLabor(
-		long organizationId, int typeId, int sunOpen, int sunClose,
+		long organizationId, long typeId, int sunOpen, int sunClose,
 		int monOpen, int monClose, int tueOpen, int tueClose, int wedOpen,
 		int wedClose, int thuOpen, int thuClose, int friOpen, int friClose,
 		int satOpen, int satClose) throws RemoteException {
@@ -125,7 +125,7 @@ public class OrgLaborServiceSoap {
 	}
 
 	public static com.liferay.portal.model.OrgLaborSoap updateOrgLabor(
-		long orgLaborId, int typeId, int sunOpen, int sunClose, int monOpen,
+		long orgLaborId, long typeId, int sunOpen, int sunClose, int monOpen,
 		int monClose, int tueOpen, int tueClose, int wedOpen, int wedClose,
 		int thuOpen, int thuClose, int friOpen, int friClose, int satOpen,
 		int satClose) throws RemoteException {

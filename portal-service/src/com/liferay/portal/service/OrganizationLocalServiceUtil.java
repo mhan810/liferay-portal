@@ -146,7 +146,7 @@ public class OrganizationLocalServiceUtil {
 	public static com.liferay.portal.model.Organization addOrganization(
 		long userId, long parentOrganizationId, java.lang.String name,
 		java.lang.String type, boolean recursable, long regionId,
-		long countryId, int statusId, java.lang.String comments, boolean site,
+		long countryId, long statusId, java.lang.String comments, boolean site,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
@@ -186,7 +186,7 @@ public class OrganizationLocalServiceUtil {
 	*/
 	public static com.liferay.portal.model.Organization addOrganization(
 		long userId, long parentOrganizationId, java.lang.String name,
-		java.lang.String type, long regionId, long countryId, int statusId,
+		java.lang.String type, long regionId, long countryId, long statusId,
 		java.lang.String comments, boolean site,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -1431,8 +1431,9 @@ public class OrganizationLocalServiceUtil {
 	public static com.liferay.portal.model.Organization updateOrganization(
 		long companyId, long organizationId, long parentOrganizationId,
 		java.lang.String name, java.lang.String type, boolean recursable,
-		long regionId, long countryId, int statusId, java.lang.String comments,
-		boolean site, com.liferay.portal.service.ServiceContext serviceContext)
+		long regionId, long countryId, long statusId,
+		java.lang.String comments, boolean site,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateOrganization(companyId, organizationId,
@@ -1469,7 +1470,7 @@ public class OrganizationLocalServiceUtil {
 	public static com.liferay.portal.model.Organization updateOrganization(
 		long companyId, long organizationId, long parentOrganizationId,
 		java.lang.String name, java.lang.String type, long regionId,
-		long countryId, int statusId, java.lang.String comments, boolean logo,
+		long countryId, long statusId, java.lang.String comments, boolean logo,
 		byte[] logoBytes, boolean site,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -1510,7 +1511,7 @@ public class OrganizationLocalServiceUtil {
 	public static com.liferay.portal.model.Organization updateOrganization(
 		long companyId, long organizationId, long parentOrganizationId,
 		java.lang.String name, java.lang.String type, long regionId,
-		long countryId, int statusId, java.lang.String comments, boolean site,
+		long countryId, long statusId, java.lang.String comments, boolean site,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()

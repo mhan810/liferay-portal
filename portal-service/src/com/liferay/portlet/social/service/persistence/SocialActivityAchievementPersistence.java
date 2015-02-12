@@ -28,7 +28,7 @@ import com.liferay.portlet.social.model.SocialActivityAchievement;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SocialActivityAchievementPersistenceImpl
+ * @see com.liferay.portlet.social.service.persistence.impl.SocialActivityAchievementPersistenceImpl
  * @see SocialActivityAchievementUtil
  * @generated
  */

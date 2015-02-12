@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ShardPersistence
- * @see ShardUtil
+ * @see com.liferay.portal.service.persistence.ShardUtil
  * @generated
  */
 @ProviderType

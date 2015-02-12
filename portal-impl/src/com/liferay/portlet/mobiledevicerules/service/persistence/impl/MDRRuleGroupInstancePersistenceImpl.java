@@ -62,7 +62,7 @@ import java.util.Set;
  *
  * @author Edward C. Han
  * @see MDRRuleGroupInstancePersistence
- * @see MDRRuleGroupInstanceUtil
+ * @see com.liferay.portlet.mobiledevicerules.service.persistence.MDRRuleGroupInstanceUtil
  * @generated
  */
 @ProviderType

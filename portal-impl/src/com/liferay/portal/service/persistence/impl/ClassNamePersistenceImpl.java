@@ -57,7 +57,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ClassNamePersistence
- * @see ClassNameUtil
+ * @see com.liferay.portal.service.persistence.ClassNameUtil
  * @generated
  */
 @ProviderType

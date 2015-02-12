@@ -355,8 +355,8 @@ public class ContactCacheModel implements CacheModel<Contact>, Externalizable,
 		firstName = objectInput.readUTF();
 		middleName = objectInput.readUTF();
 		lastName = objectInput.readUTF();
-		prefixId = objectInput.readInt();
-		suffixId = objectInput.readInt();
+		prefixId = objectInput.readLong();
+		suffixId = objectInput.readLong();
 		male = objectInput.readBoolean();
 		birthday = objectInput.readLong();
 		smsSn = objectInput.readUTF();
@@ -426,8 +426,8 @@ public class ContactCacheModel implements CacheModel<Contact>, Externalizable,
 			objectOutput.writeUTF(lastName);
 		}
 
-		objectOutput.writeInt(prefixId);
-		objectOutput.writeInt(suffixId);
+		objectOutput.writeLong(prefixId);
+		objectOutput.writeLong(suffixId);
 		objectOutput.writeBoolean(male);
 		objectOutput.writeLong(birthday);
 
@@ -552,8 +552,8 @@ public class ContactCacheModel implements CacheModel<Contact>, Externalizable,
 	public String firstName;
 	public String middleName;
 	public String lastName;
-	public int prefixId;
-	public int suffixId;
+	public long prefixId;
+	public long suffixId;
 	public boolean male;
 	public long birthday;
 	public String smsSn;

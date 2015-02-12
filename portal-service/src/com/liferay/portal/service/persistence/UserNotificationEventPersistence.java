@@ -26,7 +26,7 @@ import com.liferay.portal.model.UserNotificationEvent;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see UserNotificationEventPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.UserNotificationEventPersistenceImpl
  * @see UserNotificationEventUtil
  * @generated
  */

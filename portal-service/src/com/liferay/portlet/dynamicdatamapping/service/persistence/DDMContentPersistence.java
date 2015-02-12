@@ -28,7 +28,7 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMContent;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DDMContentPersistenceImpl
+ * @see com.liferay.portlet.dynamicdatamapping.service.persistence.impl.DDMContentPersistenceImpl
  * @see DDMContentUtil
  * @generated
  */

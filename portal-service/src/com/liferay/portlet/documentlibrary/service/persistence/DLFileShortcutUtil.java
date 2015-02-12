@@ -27,7 +27,7 @@ import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import java.util.List;
 
 /**
- * The persistence utility for the document library file shortcut service. This utility wraps {@link DLFileShortcutPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
+ * The persistence utility for the document library file shortcut service. This utility wraps {@link com.liferay.portlet.documentlibrary.service.persistence.impl.DLFileShortcutPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author Brian Wing Shun Chan
  * @see DLFileShortcutPersistence
- * @see DLFileShortcutPersistenceImpl
+ * @see com.liferay.portlet.documentlibrary.service.persistence.impl.DLFileShortcutPersistenceImpl
  * @generated
  */
 @ProviderType

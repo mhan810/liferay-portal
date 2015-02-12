@@ -28,7 +28,7 @@ import com.liferay.portlet.softwarecatalog.model.SCFrameworkVersion;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SCFrameworkVersionPersistenceImpl
+ * @see com.liferay.portlet.softwarecatalog.service.persistence.impl.SCFrameworkVersionPersistenceImpl
  * @see SCFrameworkVersionUtil
  * @generated
  */

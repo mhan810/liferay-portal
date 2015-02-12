@@ -28,7 +28,7 @@ import com.liferay.portlet.expando.model.ExpandoRow;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ExpandoRowPersistenceImpl
+ * @see com.liferay.portlet.expando.service.persistence.impl.ExpandoRowPersistenceImpl
  * @see ExpandoRowUtil
  * @generated
  */

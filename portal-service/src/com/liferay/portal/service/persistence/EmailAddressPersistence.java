@@ -26,7 +26,7 @@ import com.liferay.portal.model.EmailAddress;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see EmailAddressPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.EmailAddressPersistenceImpl
  * @see EmailAddressUtil
  * @generated
  */

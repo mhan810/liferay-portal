@@ -61,8 +61,8 @@ public class OpenSSOAutoLogin extends BaseAutoLogin {
 		long facebookId = 0;
 		String openId = StringPool.BLANK;
 		String middleName = StringPool.BLANK;
-		int prefixId = 0;
-		int suffixId = 0;
+		long prefixId = 0;
+		long suffixId = 0;
 		boolean male = true;
 		int birthdayMonth = Calendar.JANUARY;
 		int birthdayDay = 1;

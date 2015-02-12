@@ -127,11 +127,11 @@ public class OrgLaborSoap implements Serializable {
 		_organizationId = organizationId;
 	}
 
-	public int getTypeId() {
+	public long getTypeId() {
 		return _typeId;
 	}
 
-	public void setTypeId(int typeId) {
+	public void setTypeId(long typeId) {
 		_typeId = typeId;
 	}
 
@@ -250,7 +250,7 @@ public class OrgLaborSoap implements Serializable {
 	private long _mvccVersion;
 	private long _orgLaborId;
 	private long _organizationId;
-	private int _typeId;
+	private long _typeId;
 	private int _sunOpen;
 	private int _sunClose;
 	private int _monOpen;

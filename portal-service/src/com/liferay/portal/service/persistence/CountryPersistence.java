@@ -26,7 +26,7 @@ import com.liferay.portal.model.Country;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see CountryPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.CountryPersistenceImpl
  * @see CountryUtil
  * @generated
  */

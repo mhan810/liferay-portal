@@ -28,7 +28,7 @@ import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DLFileShortcutPersistenceImpl
+ * @see com.liferay.portlet.documentlibrary.service.persistence.impl.DLFileShortcutPersistenceImpl
  * @see DLFileShortcutUtil
  * @generated
  */

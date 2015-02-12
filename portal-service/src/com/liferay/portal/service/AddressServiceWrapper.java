@@ -41,7 +41,7 @@ public class AddressServiceWrapper implements AddressService,
 		java.lang.String className, long classPK, java.lang.String street1,
 		java.lang.String street2, java.lang.String street3,
 		java.lang.String city, java.lang.String zip, long regionId,
-		long countryId, int typeId, boolean mailing, boolean primary)
+		long countryId, long typeId, boolean mailing, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _addressService.addAddress(className, classPK, street1, street2,
 			street3, city, zip, regionId, countryId, typeId, mailing, primary);
@@ -52,7 +52,7 @@ public class AddressServiceWrapper implements AddressService,
 		java.lang.String className, long classPK, java.lang.String street1,
 		java.lang.String street2, java.lang.String street3,
 		java.lang.String city, java.lang.String zip, long regionId,
-		long countryId, int typeId, boolean mailing, boolean primary,
+		long countryId, long typeId, boolean mailing, boolean primary,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _addressService.addAddress(className, classPK, street1, street2,
@@ -103,7 +103,7 @@ public class AddressServiceWrapper implements AddressService,
 	public com.liferay.portal.model.Address updateAddress(long addressId,
 		java.lang.String street1, java.lang.String street2,
 		java.lang.String street3, java.lang.String city, java.lang.String zip,
-		long regionId, long countryId, int typeId, boolean mailing,
+		long regionId, long countryId, long typeId, boolean mailing,
 		boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _addressService.updateAddress(addressId, street1, street2,

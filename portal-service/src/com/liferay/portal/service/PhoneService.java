@@ -54,12 +54,12 @@ public interface PhoneService extends BaseService {
 	@java.lang.Deprecated
 	public com.liferay.portal.model.Phone addPhone(java.lang.String className,
 		long classPK, java.lang.String number, java.lang.String extension,
-		int typeId, boolean primary)
+		long typeId, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	public com.liferay.portal.model.Phone addPhone(java.lang.String className,
 		long classPK, java.lang.String number, java.lang.String extension,
-		int typeId, boolean primary,
+		long typeId, boolean primary,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
@@ -90,7 +90,7 @@ public interface PhoneService extends BaseService {
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
 	public com.liferay.portal.model.Phone updatePhone(long phoneId,
-		java.lang.String number, java.lang.String extension, int typeId,
+		java.lang.String number, java.lang.String extension, long typeId,
 		boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException;
 }

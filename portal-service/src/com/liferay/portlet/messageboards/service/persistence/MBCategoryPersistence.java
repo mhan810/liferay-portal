@@ -28,7 +28,7 @@ import com.liferay.portlet.messageboards.model.MBCategory;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see MBCategoryPersistenceImpl
+ * @see com.liferay.portlet.messageboards.service.persistence.impl.MBCategoryPersistenceImpl
  * @see MBCategoryUtil
  * @generated
  */

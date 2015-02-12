@@ -63,7 +63,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see BookmarksEntryPersistence
- * @see BookmarksEntryUtil
+ * @see com.liferay.bookmarks.service.persistence.BookmarksEntryUtil
  * @generated
  */
 @ProviderType

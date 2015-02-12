@@ -67,7 +67,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see MBThreadPersistence
- * @see MBThreadUtil
+ * @see com.liferay.portlet.messageboards.service.persistence.MBThreadUtil
  * @generated
  */
 @ProviderType

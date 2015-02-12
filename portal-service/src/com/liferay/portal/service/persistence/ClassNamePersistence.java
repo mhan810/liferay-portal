@@ -26,7 +26,7 @@ import com.liferay.portal.model.ClassName;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ClassNamePersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.ClassNamePersistenceImpl
  * @see ClassNameUtil
  * @generated
  */

@@ -267,14 +267,14 @@ public interface WebsiteModel extends AttachedModel, BaseModel<Website>,
 	 *
 	 * @return the type ID of this website
 	 */
-	public int getTypeId();
+	public long getTypeId();
 
 	/**
 	 * Sets the type ID of this website.
 	 *
 	 * @param typeId the type ID of this website
 	 */
-	public void setTypeId(int typeId);
+	public void setTypeId(long typeId);
 
 	/**
 	 * Returns the primary of this website.

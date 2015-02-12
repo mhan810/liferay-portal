@@ -64,7 +64,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ExpandoColumnPersistence
- * @see ExpandoColumnUtil
+ * @see com.liferay.portlet.expando.service.persistence.ExpandoColumnUtil
  * @generated
  */
 @ProviderType

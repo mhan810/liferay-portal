@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see MBBanPersistence
- * @see MBBanUtil
+ * @see com.liferay.portlet.messageboards.service.persistence.MBBanUtil
  * @generated
  */
 @ProviderType

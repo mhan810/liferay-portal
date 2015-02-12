@@ -26,7 +26,7 @@ import com.liferay.portal.model.ResourceBlock;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ResourceBlockPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.ResourceBlockPersistenceImpl
  * @see ResourceBlockUtil
  * @generated
  */

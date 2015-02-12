@@ -71,7 +71,6 @@ import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
 import com.liferay.portlet.asset.service.permission.AssetTagPermission;
 import com.liferay.portlet.asset.service.permission.AssetVocabularyPermission;
 import com.liferay.portlet.asset.service.persistence.AssetEntryQuery;
-import com.liferay.portlet.assetpublisher.util.AssetSearcher;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecord;
@@ -93,7 +92,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.portlet.PortletMode;
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
@@ -103,6 +101,8 @@ import javax.servlet.http.HttpServletRequest;
  * @author Jorge Ferrer
  */
 public class AssetUtil {
+
+	public static final int ASSET_ENTRY_ABSTRACT_LENGTH = 200;
 
 	public static final String CLASSNAME_SEPARATOR = "_CLASSNAME_";
 
@@ -458,23 +458,6 @@ public class AssetUtil {
 
 		Map<String, PortletURL> addPortletURLs = new TreeMap<>(
 			new ModelResourceComparator(themeDisplay.getLocale()));
-
-		if (Validator.isNull(redirect)) {
-			PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
-			PortletURL redirectURL =
-				liferayPortletResponse.createLiferayPortletURL(
-					themeDisplay.getPlid(), portletDisplay.getId(),
-					PortletRequest.RENDER_PHASE, false);
-
-			redirectURL.setParameter(
-				"mvcPath",
-				"/html/portlet/asset_publisher/add_asset_redirect.jsp");
-			redirectURL.setParameter("redirect", themeDisplay.getURLCurrent());
-			redirectURL.setWindowState(LiferayWindowState.POP_UP);
-
-			redirect = redirectURL.toString();
-		}
 
 		for (long classNameId : classNameIds) {
 			String className = PortalUtil.getClassName(classNameId);

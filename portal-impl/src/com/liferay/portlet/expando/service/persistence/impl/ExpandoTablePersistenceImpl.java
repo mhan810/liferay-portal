@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see ExpandoTablePersistence
- * @see ExpandoTableUtil
+ * @see com.liferay.portlet.expando.service.persistence.ExpandoTableUtil
  * @generated
  */
 @ProviderType

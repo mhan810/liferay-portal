@@ -51,7 +51,7 @@ public class EmailAddressLocalServiceWrapper implements EmailAddressLocalService
 	@Override
 	public com.liferay.portal.model.EmailAddress addEmailAddress(long userId,
 		java.lang.String className, long classPK, java.lang.String address,
-		int typeId, boolean primary)
+		long typeId, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _emailAddressLocalService.addEmailAddress(userId, className,
 			classPK, address, typeId, primary);
@@ -60,7 +60,7 @@ public class EmailAddressLocalServiceWrapper implements EmailAddressLocalService
 	@Override
 	public com.liferay.portal.model.EmailAddress addEmailAddress(long userId,
 		java.lang.String className, long classPK, java.lang.String address,
-		int typeId, boolean primary,
+		long typeId, boolean primary,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _emailAddressLocalService.addEmailAddress(userId, className,
@@ -348,7 +348,7 @@ public class EmailAddressLocalServiceWrapper implements EmailAddressLocalService
 
 	@Override
 	public com.liferay.portal.model.EmailAddress updateEmailAddress(
-		long emailAddressId, java.lang.String address, int typeId,
+		long emailAddressId, java.lang.String address, long typeId,
 		boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _emailAddressLocalService.updateEmailAddress(emailAddressId,

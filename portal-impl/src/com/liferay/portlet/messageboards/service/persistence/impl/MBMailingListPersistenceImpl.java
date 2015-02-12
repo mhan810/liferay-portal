@@ -60,7 +60,7 @@ import java.util.Set;
  *
  * @author Brian Wing Shun Chan
  * @see MBMailingListPersistence
- * @see MBMailingListUtil
+ * @see com.liferay.portlet.messageboards.service.persistence.MBMailingListUtil
  * @generated
  */
 @ProviderType

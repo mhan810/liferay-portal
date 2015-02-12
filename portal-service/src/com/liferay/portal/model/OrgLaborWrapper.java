@@ -92,7 +92,7 @@ public class OrgLaborWrapper implements OrgLabor, ModelWrapper<OrgLabor> {
 			setOrganizationId(organizationId);
 		}
 
-		Integer typeId = (Integer)attributes.get("typeId");
+		Long typeId = (Long)attributes.get("typeId");
 
 		if (typeId != null) {
 			setTypeId(typeId);
@@ -375,7 +375,7 @@ public class OrgLaborWrapper implements OrgLabor, ModelWrapper<OrgLabor> {
 	* @return the type ID of this org labor
 	*/
 	@Override
-	public int getTypeId() {
+	public long getTypeId() {
 		return _orgLabor.getTypeId();
 	}
 
@@ -623,7 +623,7 @@ public class OrgLaborWrapper implements OrgLabor, ModelWrapper<OrgLabor> {
 	* @param typeId the type ID of this org labor
 	*/
 	@Override
-	public void setTypeId(int typeId) {
+	public void setTypeId(long typeId) {
 		_orgLabor.setTypeId(typeId);
 	}
 

@@ -38,8 +38,8 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 	@Override
 	public Contact addContact(
 			long userId, String className, long classPK, String emailAddress,
-			String firstName, String middleName, String lastName, int prefixId,
-			int suffixId, boolean male, int birthdayMonth, int birthdayDay,
+			String firstName, String middleName, String lastName, long prefixId,
+			long suffixId, boolean male, int birthdayMonth, int birthdayDay,
 			int birthdayYear, String smsSn, String aimSn, String facebookSn,
 			String icqSn, String jabberSn, String msnSn, String mySpaceSn,
 			String skypeSn, String twitterSn, String ymSn, String jobTitle)
@@ -154,7 +154,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 	@Override
 	public Contact updateContact(
 			long contactId, String emailAddress, String firstName,
-			String middleName, String lastName, int prefixId, int suffixId,
+			String middleName, String lastName, long prefixId, long suffixId,
 			boolean male, int birthdayMonth, int birthdayDay, int birthdayYear,
 			String smsSn, String aimSn, String facebookSn, String icqSn,
 			String jabberSn, String msnSn, String mySpaceSn, String skypeSn,

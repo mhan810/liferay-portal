@@ -17,6 +17,8 @@
 		<attribute name="app.server.lib.portal.dir" />
 
 		<sequential>
+			<property file="${project.dir}/portal-impl/src/portal.properties" prefix="portal" />
+
 			<propertyregex
 				input="${portal.setup.liferay.pool.provider.jar.url[hikaricp]}"
 				property="mirrors.hikaricp.url"
@@ -1003,8 +1005,6 @@ release was successful.</echo>
 
 	<target name="resolve-dynamic-jars">
 		<sequential>
-			<property file="${project.dir}/portal-impl/src/portal.properties" prefix="portal" />
-
 			<if>
 				<equals arg1="${app.server.type}" arg2="glassfish" />
 				<then>

@@ -27,7 +27,7 @@ import com.liferay.portlet.shopping.model.ShoppingCart;
 import java.util.List;
 
 /**
- * The persistence utility for the shopping cart service. This utility wraps {@link ShoppingCartPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
+ * The persistence utility for the shopping cart service. This utility wraps {@link com.liferay.portlet.shopping.service.persistence.impl.ShoppingCartPersistenceImpl} and provides direct access to the database for CRUD operations. This utility should only be used by the service layer, as it must operate within a transaction. Never access this utility in a JSP, controller, model, or other front-end class.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author Brian Wing Shun Chan
  * @see ShoppingCartPersistence
- * @see ShoppingCartPersistenceImpl
+ * @see com.liferay.portlet.shopping.service.persistence.impl.ShoppingCartPersistenceImpl
  * @generated
  */
 @ProviderType

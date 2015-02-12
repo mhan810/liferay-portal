@@ -26,7 +26,7 @@ import com.liferay.portal.model.LayoutSet;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see LayoutSetPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.LayoutSetPersistenceImpl
  * @see LayoutSetUtil
  * @generated
  */

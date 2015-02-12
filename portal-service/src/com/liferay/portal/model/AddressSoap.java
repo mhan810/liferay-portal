@@ -242,11 +242,11 @@ public class AddressSoap implements Serializable {
 		_countryId = countryId;
 	}
 
-	public int getTypeId() {
+	public long getTypeId() {
 		return _typeId;
 	}
 
-	public void setTypeId(int typeId) {
+	public void setTypeId(long typeId) {
 		_typeId = typeId;
 	}
 
@@ -291,7 +291,7 @@ public class AddressSoap implements Serializable {
 	private String _zip;
 	private long _regionId;
 	private long _countryId;
-	private int _typeId;
+	private long _typeId;
 	private boolean _mailing;
 	private boolean _primary;
 }

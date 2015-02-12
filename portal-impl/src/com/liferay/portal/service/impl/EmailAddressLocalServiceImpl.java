@@ -43,7 +43,7 @@ public class EmailAddressLocalServiceImpl
 	@Override
 	public EmailAddress addEmailAddress(
 			long userId, String className, long classPK, String address,
-			int typeId, boolean primary)
+			long typeId, boolean primary)
 		throws PortalException {
 
 		return addEmailAddress(
@@ -54,7 +54,7 @@ public class EmailAddressLocalServiceImpl
 	@Override
 	public EmailAddress addEmailAddress(
 			long userId, String className, long classPK, String address,
-			int typeId, boolean primary, ServiceContext serviceContext)
+			long typeId, boolean primary, ServiceContext serviceContext)
 		throws PortalException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
@@ -139,7 +139,7 @@ public class EmailAddressLocalServiceImpl
 
 	@Override
 	public EmailAddress updateEmailAddress(
-			long emailAddressId, String address, int typeId, boolean primary)
+			long emailAddressId, String address, long typeId, boolean primary)
 		throws PortalException {
 
 		validate(emailAddressId, 0, 0, 0, address, typeId, primary);
@@ -184,7 +184,7 @@ public class EmailAddressLocalServiceImpl
 
 	protected void validate(
 			long emailAddressId, long companyId, long classNameId, long classPK,
-			String address, int typeId, boolean primary)
+			String address, long typeId, boolean primary)
 		throws PortalException {
 
 		if (!Validator.isEmailAddress(address)) {

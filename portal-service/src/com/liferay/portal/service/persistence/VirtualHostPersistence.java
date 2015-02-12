@@ -26,7 +26,7 @@ import com.liferay.portal.model.VirtualHost;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see VirtualHostPersistenceImpl
+ * @see com.liferay.portal.service.persistence.impl.VirtualHostPersistenceImpl
  * @see VirtualHostUtil
  * @generated
  */
