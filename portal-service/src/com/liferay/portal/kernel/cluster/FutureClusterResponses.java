@@ -43,18 +43,22 @@ public class FutureClusterResponses
 		_expectedReplyNodeIds = new HashSet<>(clusterNodeIds);
 }
 
-	public void addClusterNodeResponse(
+	public boolean addClusterNodeResponse(
 		ClusterNodeResponse clusterNodeResponse) {
 
-		_clusterNodeResponses.addClusterResponse(clusterNodeResponse);
+		ClusterNode clusterNode = clusterNodeResponse.getClusterNode();
 
-		if (_counter.decrementAndGet() == 0) {
-			set(_clusterNodeResponses);
+		if (_expectedReplyNodeIds.contains(clusterNode.getClusterNodeId())) {
+			_clusterNodeResponses.addClusterResponse(clusterNodeResponse);
+
+			if (_counter.decrementAndGet() == 0) {
+				set(_clusterNodeResponses);
+			}
+
+			return true;
 		}
-	}
 
-	public boolean expectsReply(String clusterNodeId) {
-		return _expectedReplyNodeIds.contains(clusterNodeId);
+		return false;
 	}
 
 	@Override
