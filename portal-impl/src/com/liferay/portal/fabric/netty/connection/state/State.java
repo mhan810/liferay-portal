@@ -12,24 +12,17 @@
  * details.
  */
 
-package com.liferay.portal.fabric.client;
+package com.liferay.portal.fabric.netty.connection.state;
 
-import com.liferay.portal.fabric.connection.FabricConnection;
-import com.liferay.portal.kernel.concurrent.NoticeableFuture;
-
-import java.net.SocketAddress;
-
-import java.util.Map;
+import io.netty.util.concurrent.Future;
 
 /**
  * @author Shuyang Zhou
  */
-public interface FabricClient {
+public interface State {
 
-	public FabricConnection connect(SocketAddress socketAddress);
+	public void proceed();
 
-	public Map<SocketAddress, FabricConnection> getFabricConnections();
-
-	public NoticeableFuture<?> shutdown();
+	public Future<?> terminate();
 
 }

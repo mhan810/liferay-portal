@@ -12,13 +12,36 @@
  * details.
  */
 
-package com.liferay.portal.fabric.netty.client;
+package com.liferay.portal.fabric.netty.connection.state;
+
+import io.netty.channel.Channel;
+import io.netty.util.concurrent.Future;
 
 /**
  * @author Shuyang Zhou
  */
-public interface NettyFabricClientShutdownCallback {
+public class UnregisteredState extends BaseState {
 
-	public void shutdown();
+	public UnregisteredState(Context context, Channel channel) {
+		super(context);
+
+		this.channel = channel;
+	}
+
+	@Override
+	public Future<?> doTerminate() {
+		return channel.close();
+	}
+
+	@Override
+	public void proceed() {
+		State state = new ScheduledState(context);
+
+		if (context.transit(this, state)) {
+			state.proceed();
+		}
+	}
+
+	protected final Channel channel;
 
 }

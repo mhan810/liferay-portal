@@ -14,7 +14,9 @@
 
 package com.liferay.portal.fabric.netty.handlers;
 
+import com.liferay.portal.fabric.connection.FabricConnection;
 import com.liferay.portal.fabric.netty.agent.NettyFabricAgentStub;
+import com.liferay.portal.fabric.netty.client.NettyFabricClientConfig;
 import com.liferay.portal.fabric.netty.rpc.RPCUtil;
 import com.liferay.portal.fabric.worker.FabricWorker;
 import com.liferay.portal.kernel.concurrent.AsyncBroker;
@@ -27,6 +29,7 @@ import io.netty.util.AttributeKey;
 
 import java.io.Serializable;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
@@ -59,14 +62,17 @@ public class NettyChannelAttributes {
 		return (AsyncBroker<Long, T>)asyncBroker;
 	}
 
+	public static FabricConnection getFabricConnection(Channel channel) {
+		Attribute<FabricConnection> attribute = channel.attr(
+			_fabricConnectionKey);
+
+		return attribute.get();
+	}
+
 	public static <T extends Serializable> FabricWorker<T> getFabricWorker(
 		Channel channel, long id) {
 
 		Map<Long, FabricWorker<?>> fabricWorkers = getFabricWorkers(channel);
-
-		if (fabricWorkers == null) {
-			return null;
-		}
 
 		return (FabricWorker<T>)fabricWorkers.get(id);
 	}
@@ -75,7 +81,13 @@ public class NettyChannelAttributes {
 		Attribute<Map<Long, FabricWorker<?>>> attribute = channel.attr(
 			_fabricWorkersKey);
 
-		return attribute.get();
+		Map<Long, FabricWorker<?>> fabricWorkers = attribute.get();
+
+		if (fabricWorkers == null) {
+			return Collections.emptyMap();
+		}
+
+		return fabricWorkers;
 	}
 
 	public static NettyFabricAgentStub getNettyFabricAgentStub(
@@ -83,6 +95,15 @@ public class NettyChannelAttributes {
 
 		Attribute<NettyFabricAgentStub> attribute = channel.attr(
 			_nettyFabricAgentStubKey);
+
+		return attribute.get();
+	}
+
+	public static NettyFabricClientConfig getNettyFabricClientConfig(
+		Channel channel) {
+
+		Attribute<NettyFabricClientConfig> attribute = channel.attr(
+			_nettyFabricClientConfigKey);
 
 		return attribute.get();
 	}
@@ -143,6 +164,15 @@ public class NettyChannelAttributes {
 			});
 	}
 
+	public static void setFabricConnection(
+		Channel channel, FabricConnection fabricConnection) {
+
+		Attribute<FabricConnection> attribute = channel.attr(
+			_fabricConnectionKey);
+
+		attribute.set(fabricConnection);
+	}
+
 	public static void setNettyFabricAgentStub(
 		Channel channel, NettyFabricAgentStub nettyFabricAgentStub) {
 
@@ -152,9 +182,20 @@ public class NettyChannelAttributes {
 		attribute.set(nettyFabricAgentStub);
 	}
 
+	public static void setNettyFabricClientConfig(
+		Channel channel, NettyFabricClientConfig fabricAgentRegistry) {
+
+		Attribute<NettyFabricClientConfig> attribute = channel.attr(
+			_nettyFabricClientConfigKey);
+
+		attribute.set(fabricAgentRegistry);
+	}
+
 	private static final AttributeKey<AsyncBroker<Long, Serializable>>
 		_asyncBrokerKey = AttributeKey.valueOf(
 			RPCUtil.class.getName() + "-AsyncBroker");
+	private static final AttributeKey<FabricConnection> _fabricConnectionKey =
+		AttributeKey.valueOf(FabricConnection.class.getName());
 	private static final AttributeKey<Map<Long, FabricWorker<?>>>
 		_fabricWorkersKey = AttributeKey.valueOf(
 			NettyChannelAttributes.class.getName() + "-FabricWorkers");
@@ -163,5 +204,8 @@ public class NettyChannelAttributes {
 	private static final AttributeKey<NettyFabricAgentStub>
 		_nettyFabricAgentStubKey = AttributeKey.valueOf(
 			NettyFabricAgentStub.class.getName());
+	private static final AttributeKey<NettyFabricClientConfig>
+		_nettyFabricClientConfigKey = AttributeKey.valueOf(
+			NettyFabricClientConfig.class.getName());
 
 }

@@ -14,6 +14,7 @@
 
 package com.liferay.portal.fabric.netty.util;
 
+import com.liferay.portal.kernel.concurrent.DefaultNoticeableFuture;
 import com.liferay.portal.kernel.concurrent.FutureListener;
 import com.liferay.portal.kernel.concurrent.NoticeableFuture;
 import com.liferay.portal.kernel.log.Log;
@@ -26,6 +27,7 @@ import io.netty.channel.EventLoop;
 import io.netty.channel.embedded.EmbeddedChannel;
 import io.netty.util.concurrent.EventExecutorGroup;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -109,6 +111,53 @@ public class NettyUtil {
 						_log.debug(
 							"Cancelled scheduled cancellation for " +
 								noticeableFuture);
+					}
+				}
+
+			});
+	}
+
+	public static void syncFully(io.netty.util.concurrent.Future<?> future)
+		throws InterruptedException {
+
+		future.sync();
+
+		final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+		future.addListener(
+			new io.netty.util.concurrent.FutureListener<Object>() {
+
+				@Override
+				public void operationComplete(
+					io.netty.util.concurrent.Future<Object> future) {
+
+					countDownLatch.countDown();
+				}
+
+			});
+
+		countDownLatch.await();
+	}
+
+	public static <T> void syncFutures(
+		io.netty.util.concurrent.Future<? extends T> future,
+		final DefaultNoticeableFuture<T> defaultNoticeableFuture) {
+
+		future.addListener(
+			new io.netty.util.concurrent.FutureListener<T>() {
+
+				@Override
+				public void operationComplete(
+					io.netty.util.concurrent.Future<T> future) {
+
+					if (future.isSuccess()) {
+						defaultNoticeableFuture.set(future.getNow());
+					}
+					else if (future.isCancelled()) {
+						defaultNoticeableFuture.cancel(true);
+					}
+					else {
+						defaultNoticeableFuture.setException(future.cause());
 					}
 				}
 

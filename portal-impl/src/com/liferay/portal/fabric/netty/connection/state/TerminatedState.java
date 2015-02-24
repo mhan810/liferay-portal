@@ -12,24 +12,34 @@
  * details.
  */
 
-package com.liferay.portal.fabric.client;
+package com.liferay.portal.fabric.netty.connection.state;
 
-import com.liferay.portal.fabric.connection.FabricConnection;
-import com.liferay.portal.kernel.concurrent.NoticeableFuture;
-
-import java.net.SocketAddress;
-
-import java.util.Map;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.ImmediateEventExecutor;
+import io.netty.util.concurrent.SucceededFuture;
 
 /**
  * @author Shuyang Zhou
  */
-public interface FabricClient {
+public class TerminatedState implements State {
 
-	public FabricConnection connect(SocketAddress socketAddress);
+	@Override
+	public void proceed() {
+	}
 
-	public Map<SocketAddress, FabricConnection> getFabricConnections();
+	@Override
+	public Future<?> terminate() {
+		return new SucceededFuture<>(ImmediateEventExecutor.INSTANCE, null);
+	}
 
-	public NoticeableFuture<?> shutdown();
+	@Override
+	public String toString() {
+		return TerminatedState.class.getSimpleName();
+	}
+
+	protected static final State INSTANCE = new TerminatedState();
+
+	private TerminatedState() {
+	}
 
 }

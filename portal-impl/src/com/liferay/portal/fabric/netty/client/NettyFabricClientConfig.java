@@ -15,16 +15,24 @@
 package com.liferay.portal.fabric.netty.client;
 
 import com.liferay.portal.fabric.netty.fileserver.CompressionLevel;
+import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SystemProperties;
 
 import java.io.File;
 import java.io.Serializable;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+
 import java.nio.file.Path;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -39,6 +47,56 @@ public class NettyFabricClientConfig implements Serializable {
 		_repositoryFolder = new File(
 			SystemProperties.get(SystemProperties.TMP_DIR),
 			"NettyFabricClient-repository-" + id);
+
+		String propertyValue = GetterUtil.getString(
+			_properties.getProperty(
+				PropsKeys.PORTAL_FABRIC_SERVER_INET_SOCKET_ADDRESSES),
+				"localhost:8923");
+
+		String[] fabricServerInetSocketAddresses = StringUtil.split(
+			propertyValue, CharPool.COMMA);
+
+		List<InetSocketAddress> inetSocketAddresses = new ArrayList<>();
+
+		for (String fabricServerInetSocketAddress :
+				fabricServerInetSocketAddresses) {
+
+			fabricServerInetSocketAddress =
+				fabricServerInetSocketAddress.trim();
+
+			String[] parts = StringUtil.split(
+				fabricServerInetSocketAddress, CharPool.COLON);
+
+			if (parts.length != 2) {
+				throw new IllegalStateException(
+					"Unable to parse : " + propertyValue + ", " +
+						fabricServerInetSocketAddress +
+							" is not in form of \"hostname:port\"");
+			}
+
+			try {
+				inetSocketAddresses.add(
+					new InetSocketAddress(
+						InetAddress.getByName(parts[0]),
+						GetterUtil.getIntegerStrict(parts[1])));
+			}
+			catch (UnknownHostException uhe) {
+				throw new IllegalArgumentException(
+					"Unable to parse : " + propertyValue + ", " + parts[0] +
+						" failed to resolve", uhe);
+			}
+			catch (NumberFormatException nfe) {
+				throw new IllegalArgumentException(
+					"Unable to parse : " + propertyValue + ", " + parts[1] +
+						" can not be parsed to int value", nfe);
+			}
+			catch (IllegalArgumentException iae) {
+				throw new IllegalArgumentException(
+					"Unable to parse : " + propertyValue, iae);
+			}
+		}
+
+		_fabricServerInetSocketAddresses = inetSocketAddresses;
 	}
 
 	public int getEventLoopGroupThreadCount() {
@@ -55,11 +113,15 @@ public class NettyFabricClientConfig implements Serializable {
 			1);
 	}
 
-	public int getExecutionTimeout() {
-		return GetterUtil.getInteger(
+	public long getExecutionTimeout() {
+		return GetterUtil.getLong(
 			_properties.getProperty(
 				PropsKeys.PORTAL_FABRIC_CLIENT_EXECUTION_TIMEOUT),
 			600000);
+	}
+
+	public List<InetSocketAddress> getFabricServerInetSocketAddresses() {
+		return _fabricServerInetSocketAddresses;
 	}
 
 	public CompressionLevel getFileServerFolderCompressionLevel() {
@@ -77,26 +139,21 @@ public class NettyFabricClientConfig implements Serializable {
 			1);
 	}
 
-	public String getNettyFabricServerHost() {
-		return GetterUtil.getString(
-			_properties.getProperty(PropsKeys.PORTAL_FABRIC_SERVER_HOST),
-			"localhost");
-	}
-
-	public int getNettyFabricServerPort() {
-		return GetterUtil.getInteger(
-			_properties.getProperty(PropsKeys.PORTAL_FABRIC_SERVER_PORT), 8923);
-	}
-
 	public int getReconnectCount() {
-		return GetterUtil.getInteger(
+		int reconnectCount = GetterUtil.getInteger(
 			_properties.getProperty(
 				PropsKeys.PORTAL_FABRIC_CLIENT_RECONNECT_COUNT),
 			3);
+
+		if (reconnectCount < 0) {
+			reconnectCount = Integer.MAX_VALUE;
+		}
+
+		return reconnectCount;
 	}
 
 	public long getReconnectInterval() {
-		return GetterUtil.getInteger(
+		return GetterUtil.getLong(
 			_properties.getProperty(
 				PropsKeys.PORTAL_FABRIC_CLIENT_RECONNECT_INTERVAL),
 			10000);
@@ -124,18 +181,18 @@ public class NettyFabricClientConfig implements Serializable {
 		return GetterUtil.getLong(
 			_properties.getProperty(
 				PropsKeys.PORTAL_FABRIC_SHUTDOWN_QUIET_PERIOD),
-			1);
+			0);
 	}
 
 	public long getShutdownTimeout() {
 		return GetterUtil.getLong(
 			_properties.getProperty(PropsKeys.PORTAL_FABRIC_SHUTDOWN_TIMEOUT),
-			1);
+			60000);
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(31);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{eventLoopGroupThreadCount=");
 		sb.append(getEventLoopGroupThreadCount());
@@ -149,10 +206,6 @@ public class NettyFabricClientConfig implements Serializable {
 		sb.append(getFileServerGroupThreadCount());
 		sb.append(", id=");
 		sb.append(_id);
-		sb.append(", nettyFabricServetHost=");
-		sb.append(getNettyFabricServerHost());
-		sb.append(", nettyFabricServerPort=");
-		sb.append(getNettyFabricServerPort());
 		sb.append(", reconnectCount=");
 		sb.append(getReconnectCount());
 		sb.append(", reconnectInterval=");
@@ -174,6 +227,7 @@ public class NettyFabricClientConfig implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private final List<InetSocketAddress> _fabricServerInetSocketAddresses;
 	private final String _id;
 	private final Properties _properties;
 	private final File _repositoryFolder;
