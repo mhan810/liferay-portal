@@ -14,10 +14,14 @@
 
 package com.liferay.portal.fabric.netty.handlers;
 
+import com.liferay.portal.fabric.agent.FabricAgentRegistry;
+import com.liferay.portal.fabric.connection.FabricConnection;
+import com.liferay.portal.fabric.local.agent.LocalFabricAgent;
 import com.liferay.portal.fabric.local.worker.EmbeddedProcessChannel;
 import com.liferay.portal.fabric.local.worker.LocalFabricWorker;
 import com.liferay.portal.fabric.netty.NettyTestUtil;
 import com.liferay.portal.fabric.netty.agent.NettyFabricAgentStub;
+import com.liferay.portal.fabric.netty.client.NettyFabricClientConfig;
 import com.liferay.portal.fabric.repository.MockRepository;
 import com.liferay.portal.fabric.worker.FabricWorker;
 import com.liferay.portal.kernel.concurrent.AsyncBroker;
@@ -25,6 +29,7 @@ import com.liferay.portal.kernel.concurrent.DefaultNoticeableFuture;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.rule.NewEnv;
+import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.test.rule.AdviseWith;
 import com.liferay.portal.test.rule.AspectJNewEnvTestRule;
 
@@ -34,8 +39,12 @@ import io.netty.util.Attribute;
 
 import java.io.Serializable;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+
 import java.nio.file.Paths;
 
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -177,6 +186,50 @@ public class NettyChannelAttributesTest {
 	}
 
 	@Test
+	public void testGetSetFabricAgentRegistry() {
+		Assert.assertNull(
+			NettyChannelAttributes.getFabricAgentRegistry(_embeddedChannel));
+
+		FabricAgentRegistry fabricAgentRegistry = new FabricAgentRegistry(
+			new LocalFabricAgent(null));
+
+		NettyChannelAttributes.setFabricAgentRegistry(
+			_embeddedChannel, fabricAgentRegistry);
+
+		Assert.assertSame(
+			fabricAgentRegistry,
+			NettyChannelAttributes.getFabricAgentRegistry(_embeddedChannel));
+	}
+
+	@Test
+	public void testGetSetFabricConnection() {
+		Assert.assertNull(
+			NettyChannelAttributes.getFabricConnection(_embeddedChannel));
+
+		FabricConnection fabricConnection =
+			(FabricConnection)ProxyUtil.newProxyInstance(
+				FabricConnection.class.getClassLoader(),
+				new Class<?>[] {FabricConnection.class},
+				new InvocationHandler() {
+
+					@Override
+					public Object invoke(
+						Object proxy, Method method, Object[] args) {
+
+						return null;
+					}
+
+				});
+
+		NettyChannelAttributes.setFabricConnection(
+			_embeddedChannel, fabricConnection);
+
+		Assert.assertSame(
+			fabricConnection,
+			NettyChannelAttributes.getFabricConnection(_embeddedChannel));
+	}
+
+	@Test
 	public void testGetSetNettyFabricAgentStub() {
 		Assert.assertNull(
 			NettyChannelAttributes.getNettyFabricAgentStub(_embeddedChannel));
@@ -191,6 +244,24 @@ public class NettyChannelAttributesTest {
 		Assert.assertSame(
 			nettyFabricAgentStub,
 			NettyChannelAttributes.getNettyFabricAgentStub(_embeddedChannel));
+	}
+
+	@Test
+	public void testGetSetNettyFabricClientConfig() {
+		Assert.assertNull(
+			NettyChannelAttributes.getNettyFabricClientConfig(
+				_embeddedChannel));
+
+		NettyFabricClientConfig nettyFabricClientConfig =
+			new NettyFabricClientConfig("testId", new Properties());
+
+		NettyChannelAttributes.setNettyFabricClientConfig(
+			_embeddedChannel, nettyFabricClientConfig);
+
+		Assert.assertSame(
+			nettyFabricClientConfig,
+			NettyChannelAttributes.getNettyFabricClientConfig(
+				_embeddedChannel));
 	}
 
 	@Test

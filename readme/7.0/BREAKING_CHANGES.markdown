@@ -20,7 +20,7 @@ feature or API will be dropped in an upcoming version.
 replaces an old API, in spite of the old API being kept in Liferay Portal for
 backwards compatibility.
 
-*This document has been reviewed through commit `6e73e36`.*
+*This document has been reviewed through commit `7763533`.*
 
 ## Breaking Changes Contribution Guidelines
 
@@ -979,7 +979,7 @@ IDs.
 
 ------------------------------------------------------------------------------
 
-### Moved the `AssetPublisherUtil` class and removed it from the public API 
+### Moved the `AssetPublisherUtil` Class and Removed It from the Public API
 - **Date:** 2015-Feb-11
 - **JIRA Ticket:** LPS-52744
 
@@ -1007,27 +1007,56 @@ different parts of the portal.
 
 ---------------------------------------
 
-### Removed operations that have Fields class as reference from the StorageAdapter interface
+### Removed Operations That Used the `Fields` Class from the `StorageAdapter` Interface
 - **Date:** 2015-Feb-11
 - **JIRA Ticket:** LPS-53021
 
 #### What changed?
 
-All operations that used to have Fields class as reference were removed from 
-StorageAdapter interface.
+All operations that used the `Fields` class have been removed from the
+`StorageAdapter` interface.
 
 #### Who is affected?
 
-This affects developers who have written code that calls directly those 
+This affects developers who have written code that directly calls these 
 operations. 
 
 #### How should I update my code?
 
-You should replace your code to use DDMFormValues class instead of the Fields 
+You should update your code to use the `DDMFormValues` class instead of the
+`Fields` class.
+
+#### Why was this change made?
+
+This change has been made due to the deprecation of the `Fields` class. 
+
+---------------------------------------
+
+### DLProcessor needs to implement a new method getType()
+- **Date:** 2015-Feb-17
+- **JIRA Ticket:** LPS-53574
+
+#### What changed?
+
+DLProcessor has a new method getType()
+
+#### Who is affected?
+
+All developers who have created DLProcessor
+
+#### How should I update my code?
+
+You need to implement the method in the DLProcessor and return the type of
+Processor. You can check the class DLProcessorConstants to see the types.
 class.
 
 #### Why was this change made?
 
-This change was made due deprecation of the Fields class. 
+Before we were forcing developers to extend one of the existing DLProcessors and
+we were checking the instance of the class to determine what type of processor
+was.
+
+With the new change developers don't need to extend any particular class to
+create their own DLProcessor.
 
 ---------------------------------------

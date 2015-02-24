@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.elasticsearch.spi.document.ElasticsearchDocumentFactory;
 
 import java.io.IOException;
 
@@ -196,10 +197,9 @@ public class DefaultElasticsearchDocumentFactory
 		else {
 			Class<?> numericClass = field.getNumericClass();
 
-			if (numericClass.equals(BigDecimal.class)) {
-				return new BigDecimal(value);
-			}
-			else if (numericClass.equals(Double.class)) {
+			if (numericClass.equals(BigDecimal.class) ||
+				numericClass.equals(Double.class)) {
+
 				return Double.valueOf(value);
 			}
 			else if (numericClass.equals(Float.class)) {

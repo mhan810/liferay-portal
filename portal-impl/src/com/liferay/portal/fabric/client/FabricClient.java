@@ -14,15 +14,22 @@
 
 package com.liferay.portal.fabric.client;
 
-import java.util.concurrent.Future;
+import com.liferay.portal.fabric.connection.FabricConnection;
+import com.liferay.portal.kernel.concurrent.NoticeableFuture;
+
+import java.net.SocketAddress;
+
+import java.util.Map;
 
 /**
  * @author Shuyang Zhou
  */
 public interface FabricClient {
 
-	public void connect() throws Exception;
+	public FabricConnection connect(SocketAddress socketAddress);
 
-	public Future<?> disconnect() throws Exception;
+	public Map<SocketAddress, FabricConnection> getFabricConnections();
+
+	public NoticeableFuture<?> shutdown();
 
 }

@@ -264,18 +264,13 @@ public class ClusterRequestReceiver extends BaseReceiver {
 
 		ClusterNode clusterNode = clusterNodeResponse.getClusterNode();
 
-		if (futureClusterResponses.expectsReply(
-				clusterNode.getClusterNodeId())) {
+		if (!futureClusterResponses.addClusterNodeResponse(
+				clusterNodeResponse) &&
+			_log.isWarnEnabled()) {
 
-			futureClusterResponses.addClusterNodeResponse(clusterNodeResponse);
-		}
-		else {
-			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Unexpected cluster node ID " +
-						clusterNode.getClusterNodeId() +
-							" for response container with UUID " + uuid);
-			}
+			_log.warn(
+				"Unexpected cluster node ID " + clusterNode.getClusterNodeId() +
+					" for response container with UUID " + uuid);
 		}
 	}
 

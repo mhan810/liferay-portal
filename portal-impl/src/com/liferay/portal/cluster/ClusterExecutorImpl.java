@@ -14,6 +14,7 @@
 
 package com.liferay.portal.cluster;
 
+import com.liferay.portal.fabric.netty.cluster.NettyFabricClusterUtil;
 import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.ClusterEvent;
 import com.liferay.portal.kernel.cluster.ClusterEventListener;
@@ -228,6 +229,11 @@ public class ClusterExecutorImpl
 
 		if (PropsValues.LIVE_USERS_ENABLED) {
 			addClusterEventListener(new LiveUsersClusterEventListenerImpl());
+		}
+
+		if (PropsValues.PORTAL_FABRIC_ENABLED) {
+			addClusterEventListener(
+				NettyFabricClusterUtil.CLUSTER_EVENT_LISTENER);
 		}
 
 		try {

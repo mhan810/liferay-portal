@@ -19,11 +19,13 @@ import com.liferay.portal.fabric.netty.codec.serialization.AnnotatedObjectDecode
 import com.liferay.portal.fabric.netty.codec.serialization.AnnotatedObjectEncoder;
 import com.liferay.portal.fabric.netty.fileserver.FileHelperUtil;
 import com.liferay.portal.fabric.netty.fileserver.handlers.FileRequestChannelHandler;
+import com.liferay.portal.fabric.netty.handlers.NettyChannelAttributes;
 import com.liferay.portal.fabric.netty.handlers.NettyFabricAgentRegistrationChannelHandler;
 import com.liferay.portal.fabric.netty.rpc.handlers.NettyRPCChannelHandler;
 import com.liferay.portal.fabric.netty.util.NettyUtil;
 import com.liferay.portal.fabric.server.FabricServer;
 import com.liferay.portal.kernel.concurrent.DefaultNoticeableFuture;
+import com.liferay.portal.kernel.concurrent.NoticeableFuture;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.NamedThreadFactory;
@@ -47,6 +49,8 @@ import io.netty.util.concurrent.EventExecutorGroup;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.FutureListener;
 
+import java.net.InetSocketAddress;
+
 import java.nio.file.Files;
 
 import java.util.concurrent.TimeUnit;
@@ -62,6 +66,15 @@ public class NettyFabricServer implements FabricServer {
 
 		_fabricAgentRegistry = fabricAgentRegistry;
 		_nettyFabricServerConfig = nettyFabricServerConfig;
+
+		_inetSocketAddress = new InetSocketAddress(
+			_nettyFabricServerConfig.getNettyFabricServerHost(),
+			_nettyFabricServerConfig.getNettyFabricServerPort());
+	}
+
+	@Override
+	public InetSocketAddress getInetSocketAddress() {
+		return _inetSocketAddress;
 	}
 
 	@Override
@@ -105,9 +118,7 @@ public class NettyFabricServer implements FabricServer {
 
 		serverBootstrap.group(bossEventLoopGroup, workerEventLoopGroup);
 
-		ChannelFuture channelFuture = serverBootstrap.bind(
-			_nettyFabricServerConfig.getNettyFabricServerHost(),
-			_nettyFabricServerConfig.getNettyFabricServerPort());
+		ChannelFuture channelFuture = serverBootstrap.bind(_inetSocketAddress);
 
 		_serverChannel = channelFuture.channel();
 
@@ -117,7 +128,7 @@ public class NettyFabricServer implements FabricServer {
 	}
 
 	@Override
-	public synchronized java.util.concurrent.Future<?> stop()
+	public synchronized NoticeableFuture<Void> stop()
 		throws InterruptedException {
 
 		if (_serverChannel == null) {
@@ -129,7 +140,7 @@ public class NettyFabricServer implements FabricServer {
 
 		EventLoopGroup bossEventLoopGroup = eventLoop.parent();
 
-		DefaultNoticeableFuture<?> defaultNoticeableFuture =
+		DefaultNoticeableFuture<Void> defaultNoticeableFuture =
 			new DefaultNoticeableFuture<>();
 
 		try {
@@ -172,6 +183,9 @@ public class NettyFabricServer implements FabricServer {
 
 		@Override
 		protected void initChannel(SocketChannel socketChannel) {
+			NettyChannelAttributes.setFabricAgentRegistry(
+				socketChannel, _fabricAgentRegistry);
+
 			ChannelPipeline channelPipeline = socketChannel.pipeline();
 
 			channelPipeline.addLast(
@@ -228,18 +242,15 @@ public class NettyFabricServer implements FabricServer {
 				return;
 			}
 
-			String serverAddress =
-				_nettyFabricServerConfig.getNettyFabricServerHost() + ":" +
-					_nettyFabricServerConfig.getNettyFabricServerPort();
-
 			if (channelFuture.isCancelled()) {
 				_log.error(
 					"Cancelled starting Netty fabric server on " +
-						serverAddress);
+						_inetSocketAddress);
 			}
 			else {
 				_log.error(
-					"Unable to start Netty fabric server on " + serverAddress,
+					"Unable to start Netty fabric server on " +
+						_inetSocketAddress,
 					channelFuture.cause());
 			}
 
@@ -282,6 +293,7 @@ public class NettyFabricServer implements FabricServer {
 		NettyFabricServer.class);
 
 	private final FabricAgentRegistry _fabricAgentRegistry;
+	private final InetSocketAddress _inetSocketAddress;
 	private final NettyFabricServerConfig _nettyFabricServerConfig;
 	private volatile Channel _serverChannel;
 

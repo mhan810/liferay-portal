@@ -15,6 +15,7 @@
 package com.liferay.portal.lar;
 
 import com.liferay.portal.kernel.lar.ExportImportDateUtil;
+import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.Sync;
@@ -35,6 +36,8 @@ import com.liferay.portal.util.test.LayoutTestUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.portlet.PortletPreferences;
 
@@ -68,6 +71,93 @@ public class ExportImportDateUtilTest {
 
 		_portletPreferences = PortletPreferencesFactoryUtil.getPortletSetup(
 			_layout, PortletKeys.LAYOUTS_ADMIN, null);
+	}
+
+	@Test
+	public void testGetLastPublishDateFromLastPublishDate() throws Exception {
+		PortletDataContext portletDataContext = new PortletDataContextImpl();
+
+		portletDataContext.setGroupId(_group.getGroupId());
+
+		Date portletDataContextLastPublishDate = new Date();
+
+		updateLastPublishDate(
+			portletDataContext,
+			ExportImportDateUtil.RANGE_FROM_LAST_PUBLISH_DATE,
+			portletDataContextLastPublishDate);
+
+		Date portletLastPublishDate = new Date();
+
+		updateLastPublishDate(_portletPreferences, portletLastPublishDate);
+
+		Date lastPublishDate = ExportImportDateUtil.getLastPublishDate(
+			portletDataContext, _portletPreferences);
+
+		Assert.assertEquals(portletDataContextLastPublishDate, lastPublishDate);
+	}
+
+	@Test
+	public void testGetLastPublishDateNotFromLastPublishDate()
+		throws Exception {
+
+		PortletDataContext portletDataContext = new PortletDataContextImpl();
+
+		portletDataContext.setGroupId(_group.getGroupId());
+
+		Date portletDataContextLastPublishDate = new Date();
+
+		updateLastPublishDate(
+			portletDataContext, ExportImportDateUtil.RANGE_ALL,
+			portletDataContextLastPublishDate);
+
+		Date portletLastPublishDate = new Date();
+
+		updateLastPublishDate(_portletPreferences, portletLastPublishDate);
+
+		Date lastPublishDate = ExportImportDateUtil.getLastPublishDate(
+			portletDataContext, _portletPreferences);
+
+		Assert.assertEquals(portletDataContextLastPublishDate, lastPublishDate);
+	}
+
+	@Test
+	public void testGetLastPublishDateWithoutPorltetLastPublishDate()
+		throws Exception {
+
+		PortletDataContext portletDataContext = new PortletDataContextImpl();
+
+		portletDataContext.setGroupId(_group.getGroupId());
+
+		updateLastPublishDate(
+			portletDataContext,
+			ExportImportDateUtil.RANGE_FROM_LAST_PUBLISH_DATE, new Date());
+
+		Date lastPublishDate = ExportImportDateUtil.getLastPublishDate(
+			portletDataContext, _portletPreferences);
+
+		Assert.assertNull(lastPublishDate);
+	}
+
+	@Test
+	public void testGetLastPublishDateWithoutPortletDataContextLastPublishDate()
+		throws Exception {
+
+		PortletDataContext portletDataContext = new PortletDataContextImpl();
+
+		portletDataContext.setGroupId(_group.getGroupId());
+
+		updateLastPublishDate(
+			portletDataContext,
+			ExportImportDateUtil.RANGE_FROM_LAST_PUBLISH_DATE, null);
+
+		Date portletLastPublishDate = new Date();
+
+		updateLastPublishDate(_portletPreferences, portletLastPublishDate);
+
+		Date lastPublishDate = ExportImportDateUtil.getLastPublishDate(
+			portletDataContext, _portletPreferences);
+
+		Assert.assertEquals(portletLastPublishDate, lastPublishDate);
 	}
 
 	@Test
@@ -360,6 +450,24 @@ public class ExportImportDateUtilTest {
 		LayoutSetLocalServiceUtil.updateSettings(
 			layoutSet.getGroupId(), layoutSet.isPrivateLayout(),
 			settingsProperties.toString());
+	}
+
+	protected void updateLastPublishDate(
+			PortletDataContext portletDataContext, String range, Date startDate)
+		throws Exception {
+
+		Map<String, String[]> parameterMap =
+			portletDataContext.getParameterMap();
+
+		if (portletDataContext.getParameterMap() == null) {
+			parameterMap = new HashMap<>();
+
+			portletDataContext.setParameterMap(parameterMap);
+		}
+
+		parameterMap.put("range", new String[] {range});
+
+		portletDataContext.setStartDate(startDate);
 	}
 
 	protected void updateLastPublishDate(

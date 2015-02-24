@@ -96,6 +96,24 @@ public class NettyFabricAgentRegistrationChannelHandler
 	}
 
 	@Override
+	public void handlerRemoved(ChannelHandlerContext channelHandlerContext)
+		throws Exception {
+
+		ChannelFutureListener channelFutureListener =
+			_postDisconnectChannelFutureListener;
+
+		if (channelFutureListener != null) {
+			Channel channel = channelHandlerContext.channel();
+
+			ChannelFuture channelFuture = channel.closeFuture();
+
+			channelFuture.removeListener(channelFutureListener);
+		}
+
+		super.handlerRemoved(channelHandlerContext);
+	}
+
+	@Override
 	protected void channelRead0(
 			ChannelHandlerContext channelHandlerContext,
 			NettyFabricAgentConfig nettyFabricAgentConfig)
@@ -161,9 +179,11 @@ public class NettyFabricAgentRegistrationChannelHandler
 
 			ChannelFuture channelFuture = _channel.closeFuture();
 
-			channelFuture.addListener(
+			_postDisconnectChannelFutureListener =
 				new PostDisconnectChannelFutureListener(
-					_channel, _nettyFabricAgentStub, _repository));
+					_channel, _nettyFabricAgentStub, _repository);
+
+			channelFuture.addListener(_postDisconnectChannelFutureListener);
 		}
 
 		private final Channel _channel;
@@ -212,6 +232,7 @@ public class NettyFabricAgentRegistrationChannelHandler
 	private final EventExecutorGroup _eventExecutorGroup;
 	private final FabricAgentRegistry _fabricAgentRegistry;
 	private final long _getFileTimeout;
+	private volatile ChannelFutureListener _postDisconnectChannelFutureListener;
 	private final Path _repositoryParentPath;
 	private final long _rpcRelayTimeout;
 	private final long _startupTimeout;

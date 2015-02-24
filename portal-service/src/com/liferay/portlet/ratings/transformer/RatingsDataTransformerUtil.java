@@ -21,11 +21,15 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
-import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portlet.ratings.RatingsType;
+import com.liferay.portlet.ratings.definition.PortletRatingsDefinitionUtil;
+import com.liferay.portlet.ratings.definition.PortletRatingsDefinitionValues;
 import com.liferay.portlet.ratings.service.RatingsEntryLocalServiceUtil;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.ServiceTracker;
+
+import java.util.Map;
 
 import javax.portlet.PortletPreferences;
 
@@ -34,6 +38,10 @@ import javax.portlet.PortletPreferences;
  * @author Sergio González
  */
 public class RatingsDataTransformerUtil {
+
+	public static String getPropertyKey(String className) {
+		return className + StringPool.UNDERLINE + "RatingsType";
+	}
 
 	public static void transformCompanyRatingsData(
 			final long companyId, PortletPreferences oldPortletPreferences,
@@ -61,10 +69,6 @@ public class RatingsDataTransformerUtil {
 		_serviceTracker.open();
 	}
 
-	private String _getPropertyKey(String className) {
-		return className + StringPool.UNDERLINE + "RatingsType";
-	}
-
 	private void _transformCompanyRatingsData(
 			final long companyId, PortletPreferences oldPortletPreferences,
 			UnicodeProperties properties)
@@ -77,19 +81,31 @@ public class RatingsDataTransformerUtil {
 			return;
 		}
 
-		for (String portletId : PortletRatingsDefinitionUtil.getPortletIds()) {
-			String[] classNames = PortletRatingsDefinitionUtil.getClassNames(
-				portletId);
+		Map<String, PortletRatingsDefinitionValues>
+			portletRatingsDefinitionValuesMap =
+				PortletRatingsDefinitionUtil.
+					getPortletRatingsDefinitionValuesMap();
 
-			for (final String className : classNames) {
-				String propertyKey = _getPropertyKey(className);
+		for (String className : portletRatingsDefinitionValuesMap.keySet()) {
+			String propertyKey = getPropertyKey(className);
 
-				_transformRatingsData(
-					"companyId", companyId, className,
-					oldPortletPreferences.getValue(
-						propertyKey, StringPool.BLANK),
-					properties.getProperty(propertyKey));
+			RatingsType fromRatingsType = RatingsType.parse(
+				oldPortletPreferences.getValue(propertyKey, StringPool.BLANK));
+
+			if (fromRatingsType == null) {
+				PortletRatingsDefinitionValues portletRatingsDefinitionValues =
+					portletRatingsDefinitionValuesMap.get(className);
+
+				fromRatingsType =
+					portletRatingsDefinitionValues.getDefaultRatingsType();
 			}
+
+			RatingsType toRatingsType = RatingsType.parse(
+				properties.getProperty(propertyKey));
+
+			_transformRatingsData(
+				"companyId", companyId, className, fromRatingsType,
+				toRatingsType);
 		}
 	}
 
@@ -105,31 +121,40 @@ public class RatingsDataTransformerUtil {
 			return;
 		}
 
-		for (String portletId : PortletRatingsDefinitionUtil.getPortletIds()) {
-			String[] classNames = PortletRatingsDefinitionUtil.getClassNames(
-				portletId);
+		Map<String, PortletRatingsDefinitionValues>
+			portletRatingsDefinitionValuesMap =
+				PortletRatingsDefinitionUtil.
+					getPortletRatingsDefinitionValuesMap();
 
-			for (final String className : classNames) {
-				String propertyKey = _getPropertyKey(className);
+		for (String className : portletRatingsDefinitionValuesMap.keySet()) {
+			String propertyKey = getPropertyKey(className);
 
-				_transformRatingsData(
-					"groupId", groupId, className,
-					oldProperties.getProperty(propertyKey),
-					properties.getProperty(propertyKey));
+			RatingsType fromRatingsType = RatingsType.parse(
+				oldProperties.getProperty(propertyKey));
+
+			if (fromRatingsType == null) {
+				PortletRatingsDefinitionValues portletRatingsDefinitionValues =
+					portletRatingsDefinitionValuesMap.get(className);
+
+				fromRatingsType =
+					portletRatingsDefinitionValues.getDefaultRatingsType();
 			}
+
+			RatingsType toRatingsType = RatingsType.parse(
+				properties.getProperty(propertyKey));
+
+			_transformRatingsData(
+				"groupId", groupId, className, fromRatingsType, toRatingsType);
 		}
 	}
 
 	private void _transformRatingsData(
 			final String classPKFieldName, final long classPKFieldValue,
-			final String className, String fromRatingsType,
-			String toRatingsType)
+			final String className, RatingsType fromRatingsType,
+			RatingsType toRatingsType)
 		throws PortalException {
 
-		if (Validator.isNull(fromRatingsType) ||
-			Validator.isNull(toRatingsType) ||
-			fromRatingsType.equals(toRatingsType)) {
-
+		if ((toRatingsType == null) || fromRatingsType.equals(toRatingsType)) {
 			return;
 		}
 
