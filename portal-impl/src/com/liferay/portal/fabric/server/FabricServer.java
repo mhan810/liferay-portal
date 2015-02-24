@@ -16,10 +16,14 @@ package com.liferay.portal.fabric.server;
 
 import com.liferay.portal.kernel.concurrent.NoticeableFuture;
 
+import java.net.InetSocketAddress;
+
 /**
  * @author Shuyang Zhou
  */
 public interface FabricServer {
+
+	public InetSocketAddress getInetSocketAddress();
 
 	public void start() throws Exception;
 

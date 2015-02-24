@@ -16,6 +16,8 @@ package com.liferay.portal.fabric.server;
 
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 
+import java.net.InetSocketAddress;
+
 import java.util.concurrent.Future;
 
 /**
@@ -27,6 +29,10 @@ public class FabricServerUtil {
 		PortalRuntimePermission.checkGetBeanProperty(FabricServerUtil.class);
 
 		return _fabricServer;
+	}
+
+	public static InetSocketAddress getInetSocketAddress() {
+		return getFabricServer().getInetSocketAddress();
 	}
 
 	public static void start() throws Exception {

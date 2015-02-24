@@ -27,6 +27,7 @@ import com.liferay.portal.fabric.netty.rpc.ChannelThreadLocal;
 import com.liferay.portal.fabric.netty.rpc.RPCCallable;
 import com.liferay.portal.fabric.netty.rpc.RPCUtil;
 import com.liferay.portal.fabric.netty.rpc.SyncProcessRPCCallable;
+import com.liferay.portal.fabric.server.FabricServerUtil;
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.cluster.ClusterEvent;
 import com.liferay.portal.kernel.cluster.ClusterEventListener;
@@ -57,7 +58,6 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.net.UnknownHostException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -101,20 +101,21 @@ public class NettyFabricClusterUtil {
 			UPDATE_CLUSTER_LAYOUT_FUTURE_LISTENER);
 	}
 
-	protected static InetSocketAddress getFabricSeverInetSocketAddress()
-		throws UnknownHostException {
+	protected static InetSocketAddress getFabricServerInetSocketAddress() {
+		InetSocketAddress inetSocketAddress =
+			FabricServerUtil.getInetSocketAddress();
 
-		InetAddress inetAddress = InetAddress.getByName(
-			PropsValues.PORTAL_FABRIC_SERVER_HOST);
+		InetAddress inetAddress = inetSocketAddress.getAddress();
 
 		if (inetAddress.isAnyLocalAddress()) {
 			ClusterNode clusterNode = ClusterExecutorUtil.getLocalClusterNode();
 
-			inetAddress = clusterNode.getBindInetAddress();
+			inetSocketAddress = new InetSocketAddress(
+				clusterNode.getBindInetAddress(),
+				PropsValues.PORTAL_FABRIC_SERVER_PORT);
 		}
 
-		return new InetSocketAddress(
-			inetAddress, PropsValues.PORTAL_FABRIC_SERVER_PORT);
+		return inetSocketAddress;
 	}
 
 	protected static void notifyFabricAgents(
@@ -159,7 +160,7 @@ public class NettyFabricClusterUtil {
 			new MethodHandler(
 				new MethodKey(
 					NettyFabricClusterUtil.class,
-					"getFabricSeverInetSocketAddress"));
+					"getFabricServerInetSocketAddress"));
 
 	protected static final FutureListener<ClusterNodeResponses>
 		UPDATE_CLUSTER_LAYOUT_FUTURE_LISTENER =
@@ -190,19 +191,10 @@ public class NettyFabricClusterUtil {
 						}
 					}
 
-					InetSocketAddress originInetSocketAddress = null;
+					InetSocketAddress originInetSocketAddress =
+						getFabricServerInetSocketAddress();
 
-					try {
-						originInetSocketAddress =
-							getFabricSeverInetSocketAddress();
-
-						inetSocketAddresses.add(originInetSocketAddress);
-					}
-					catch (UnknownHostException uhe) {
-						_log.error(
-							"Unable to get origin fabric server inet socket " +
-								"address", uhe);
-					}
+					inetSocketAddresses.add(originInetSocketAddress);
 
 					notifyFabricAgents(
 						inetSocketAddresses, originInetSocketAddress);

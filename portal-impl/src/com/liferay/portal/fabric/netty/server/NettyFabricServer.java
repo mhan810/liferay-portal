@@ -49,6 +49,8 @@ import io.netty.util.concurrent.EventExecutorGroup;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.FutureListener;
 
+import java.net.InetSocketAddress;
+
 import java.nio.file.Files;
 
 import java.util.concurrent.TimeUnit;
@@ -64,6 +66,15 @@ public class NettyFabricServer implements FabricServer {
 
 		_fabricAgentRegistry = fabricAgentRegistry;
 		_nettyFabricServerConfig = nettyFabricServerConfig;
+
+		_inetSocketAddress = new InetSocketAddress(
+			_nettyFabricServerConfig.getNettyFabricServerHost(),
+			_nettyFabricServerConfig.getNettyFabricServerPort());
+	}
+
+	@Override
+	public InetSocketAddress getInetSocketAddress() {
+		return _inetSocketAddress;
 	}
 
 	@Override
@@ -107,9 +118,7 @@ public class NettyFabricServer implements FabricServer {
 
 		serverBootstrap.group(bossEventLoopGroup, workerEventLoopGroup);
 
-		ChannelFuture channelFuture = serverBootstrap.bind(
-			_nettyFabricServerConfig.getNettyFabricServerHost(),
-			_nettyFabricServerConfig.getNettyFabricServerPort());
+		ChannelFuture channelFuture = serverBootstrap.bind(_inetSocketAddress);
 
 		_serverChannel = channelFuture.channel();
 
@@ -233,18 +242,15 @@ public class NettyFabricServer implements FabricServer {
 				return;
 			}
 
-			String serverAddress =
-				_nettyFabricServerConfig.getNettyFabricServerHost() + ":" +
-					_nettyFabricServerConfig.getNettyFabricServerPort();
-
 			if (channelFuture.isCancelled()) {
 				_log.error(
 					"Cancelled starting Netty fabric server on " +
-						serverAddress);
+						_inetSocketAddress);
 			}
 			else {
 				_log.error(
-					"Unable to start Netty fabric server on " + serverAddress,
+					"Unable to start Netty fabric server on " +
+						_inetSocketAddress,
 					channelFuture.cause());
 			}
 
@@ -287,6 +293,7 @@ public class NettyFabricServer implements FabricServer {
 		NettyFabricServer.class);
 
 	private final FabricAgentRegistry _fabricAgentRegistry;
+	private final InetSocketAddress _inetSocketAddress;
 	private final NettyFabricServerConfig _nettyFabricServerConfig;
 	private volatile Channel _serverChannel;
 
