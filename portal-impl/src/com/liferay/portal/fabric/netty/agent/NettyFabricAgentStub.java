@@ -211,6 +211,10 @@ public class NettyFabricAgentStub implements FabricAgent {
 		}
 	}
 
+	public Channel getChannel() {
+		return _channel;
+	}
+
 	@Override
 	public FabricStatus getFabricStatus() {
 		return new RemoteFabricStatus(

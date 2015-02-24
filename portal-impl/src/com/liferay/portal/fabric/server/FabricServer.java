@@ -14,7 +14,7 @@
 
 package com.liferay.portal.fabric.server;
 
-import java.util.concurrent.Future;
+import com.liferay.portal.kernel.concurrent.NoticeableFuture;
 
 /**
  * @author Shuyang Zhou
@@ -23,6 +23,6 @@ public interface FabricServer {
 
 	public void start() throws Exception;
 
-	public Future<?> stop() throws Exception;
+	public NoticeableFuture<Void> stop() throws Exception;
 
 }

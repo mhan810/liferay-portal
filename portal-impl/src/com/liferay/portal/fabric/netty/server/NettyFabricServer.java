@@ -19,11 +19,13 @@ import com.liferay.portal.fabric.netty.codec.serialization.AnnotatedObjectDecode
 import com.liferay.portal.fabric.netty.codec.serialization.AnnotatedObjectEncoder;
 import com.liferay.portal.fabric.netty.fileserver.FileHelperUtil;
 import com.liferay.portal.fabric.netty.fileserver.handlers.FileRequestChannelHandler;
+import com.liferay.portal.fabric.netty.handlers.NettyChannelAttributes;
 import com.liferay.portal.fabric.netty.handlers.NettyFabricAgentRegistrationChannelHandler;
 import com.liferay.portal.fabric.netty.rpc.handlers.NettyRPCChannelHandler;
 import com.liferay.portal.fabric.netty.util.NettyUtil;
 import com.liferay.portal.fabric.server.FabricServer;
 import com.liferay.portal.kernel.concurrent.DefaultNoticeableFuture;
+import com.liferay.portal.kernel.concurrent.NoticeableFuture;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.NamedThreadFactory;
@@ -117,7 +119,7 @@ public class NettyFabricServer implements FabricServer {
 	}
 
 	@Override
-	public synchronized java.util.concurrent.Future<?> stop()
+	public synchronized NoticeableFuture<Void> stop()
 		throws InterruptedException {
 
 		if (_serverChannel == null) {
@@ -129,7 +131,7 @@ public class NettyFabricServer implements FabricServer {
 
 		EventLoopGroup bossEventLoopGroup = eventLoop.parent();
 
-		DefaultNoticeableFuture<?> defaultNoticeableFuture =
+		DefaultNoticeableFuture<Void> defaultNoticeableFuture =
 			new DefaultNoticeableFuture<>();
 
 		try {
@@ -172,6 +174,9 @@ public class NettyFabricServer implements FabricServer {
 
 		@Override
 		protected void initChannel(SocketChannel socketChannel) {
+			NettyChannelAttributes.setFabricAgentRegistry(
+				socketChannel, _fabricAgentRegistry);
+
 			ChannelPipeline channelPipeline = socketChannel.pipeline();
 
 			channelPipeline.addLast(

@@ -14,6 +14,7 @@
 
 package com.liferay.portal.fabric.netty.handlers;
 
+import com.liferay.portal.fabric.agent.FabricAgentRegistry;
 import com.liferay.portal.fabric.connection.FabricConnection;
 import com.liferay.portal.fabric.netty.agent.NettyFabricAgentStub;
 import com.liferay.portal.fabric.netty.client.NettyFabricClientConfig;
@@ -60,6 +61,13 @@ public class NettyChannelAttributes {
 		}
 
 		return (AsyncBroker<Long, T>)asyncBroker;
+	}
+
+	public static FabricAgentRegistry getFabricAgentRegistry(Channel channel) {
+		Attribute<FabricAgentRegistry> attribute = channel.attr(
+			_fabricAgentRegistryKey);
+
+		return attribute.get();
 	}
 
 	public static FabricConnection getFabricConnection(Channel channel) {
@@ -164,6 +172,15 @@ public class NettyChannelAttributes {
 			});
 	}
 
+	public static void setFabricAgentRegistry(
+		Channel channel, FabricAgentRegistry fabricAgentRegistry) {
+
+		Attribute<FabricAgentRegistry> attribute = channel.attr(
+			_fabricAgentRegistryKey);
+
+		attribute.set(fabricAgentRegistry);
+	}
+
 	public static void setFabricConnection(
 		Channel channel, FabricConnection fabricConnection) {
 
@@ -194,6 +211,9 @@ public class NettyChannelAttributes {
 	private static final AttributeKey<AsyncBroker<Long, Serializable>>
 		_asyncBrokerKey = AttributeKey.valueOf(
 			RPCUtil.class.getName() + "-AsyncBroker");
+	private static final AttributeKey<FabricAgentRegistry>
+		_fabricAgentRegistryKey = AttributeKey.valueOf(
+			FabricAgentRegistry.class.getName());
 	private static final AttributeKey<FabricConnection> _fabricConnectionKey =
 		AttributeKey.valueOf(FabricConnection.class.getName());
 	private static final AttributeKey<Map<Long, FabricWorker<?>>>
