@@ -403,21 +403,14 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			boolean count)
 		throws Exception {
 
-		Client client = _elasticsearchConnectionManager.getClient();
-
-		SearchRequestBuilder searchRequestBuilder = null;
-
 		QueryConfig queryConfig = query.getQueryConfig();
 
-		String[] selectedIndexNames = queryConfig.getSelectedIndexNames();
+		Client client = _elasticsearchConnectionManager.getClient();
 
-		if (ArrayUtil.isEmpty(selectedIndexNames)) {
-			searchRequestBuilder = client.prepareSearch(
-				String.valueOf(searchContext.getCompanyId()));
-		}
-		else {
-			searchRequestBuilder = client.prepareSearch(selectedIndexNames);
-		}
+		SearchRequestBuilder searchRequestBuilder = client.prepareSearch(
+			getSelectedIndexNames(queryConfig, searchContext));
+
+		searchRequestBuilder.setTypes(getSelectedTypes(queryConfig));
 
 		if (!count) {
 			addFacets(searchRequestBuilder, searchContext);
@@ -435,15 +428,6 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		QueryBuilder queryBuilder = _queryTranslator.translate(query);
 
 		searchRequestBuilder.setQuery(queryBuilder);
-
-		String[] selectedTypes = queryConfig.getSelectedTypes();
-
-		if (ArrayUtil.isEmpty(selectedTypes)) {
-			searchRequestBuilder.setTypes(DocumentTypes.LIFERAY);
-		}
-		else {
-			searchRequestBuilder.setTypes(selectedTypes);
-		}
 
 		SearchResponse searchResponse = doRequest(client, searchRequestBuilder);
 
@@ -478,6 +462,28 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		Hits hits = processResponse(searchResponse, searchContext, query);
 
 		return hits;
+	}
+
+	protected String[] getSelectedIndexNames(
+		QueryConfig queryConfig, SearchContext searchContext) {
+
+		String[] selectedIndexNames = queryConfig.getSelectedIndexNames();
+
+		if (ArrayUtil.isNotEmpty(selectedIndexNames)) {
+			return selectedIndexNames;
+		}
+
+		return new String[]{String.valueOf(searchContext.getCompanyId())};
+	}
+
+	protected String[] getSelectedTypes(QueryConfig queryConfig) {
+		String[] selectedTypes = queryConfig.getSelectedTypes();
+
+		if (ArrayUtil.isNotEmpty(selectedTypes)) {
+			return selectedTypes;
+		}
+
+		return new String[]{DocumentTypes.LIFERAY};
 	}
 
 	protected Hits processResponse(
