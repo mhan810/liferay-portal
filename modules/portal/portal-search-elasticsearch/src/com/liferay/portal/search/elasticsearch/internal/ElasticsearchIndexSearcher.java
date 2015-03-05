@@ -24,16 +24,15 @@ import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.HitsImpl;
-import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.QuerySuggester;
-import com.liferay.portal.kernel.search.QueryTranslator;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.collector.FacetCollector;
+import com.liferay.portal.kernel.search.query.QueryTranslator;
 import com.liferay.portal.kernel.search.util.SearchUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -85,10 +84,9 @@ import org.osgi.service.component.annotations.Reference;
 public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 
 	@Override
-	public String getQueryString(SearchContext searchContext, Query query)
-		throws ParseException {
-
-		QueryBuilder queryBuilder = _queryTranslator.translate(query);
+	public String getQueryString(SearchContext searchContext, Query query) {
+		QueryBuilder queryBuilder = _queryTranslator.translate(
+			query, searchContext);
 
 		return queryBuilder.toString();
 	}
@@ -425,7 +423,8 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			searchRequestBuilder.setSize(0);
 		}
 
-		QueryBuilder queryBuilder = _queryTranslator.translate(query);
+		QueryBuilder queryBuilder = _queryTranslator.translate(
+			query, searchContext);
 
 		searchRequestBuilder.setQuery(queryBuilder);
 
