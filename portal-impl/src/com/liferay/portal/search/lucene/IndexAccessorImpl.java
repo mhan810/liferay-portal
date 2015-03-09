@@ -582,7 +582,7 @@ public class IndexAccessorImpl implements IndexAccessor {
 	private Directory _directory;
 	private final DumpIndexDeletionPolicy _dumpIndexDeletionPolicy =
 		new DumpIndexDeletionPolicy();
-	private IndexSearcherManager _indexSearcherManager;
+	private final IndexSearcherManager _indexSearcherManager;
 	private IndexWriter _indexWriter;
 	private final String _path;
 	private ScheduledExecutorService _scheduledExecutorService;
