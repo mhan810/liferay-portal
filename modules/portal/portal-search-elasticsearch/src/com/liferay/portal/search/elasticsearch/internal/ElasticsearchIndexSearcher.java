@@ -381,9 +381,19 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		}
 	}
 
+	protected SearchResponse doRequest(
+		Client client, SearchRequestBuilder searchRequestBuilder) {
+
+		SearchRequest searchRequest = searchRequestBuilder.request();
+
+		ActionFuture<SearchResponse> future = client.search(searchRequest);
+
+		return future.actionGet();
+	}
+
 	protected SearchResponse doSearch(
 			SearchContext searchContext, Query query, int start, int end)
-		throws ParseException {
+		throws Exception {
 
 		return doSearch(searchContext, query, start, end, false);
 	}
@@ -391,7 +401,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 	protected SearchResponse doSearch(
 			SearchContext searchContext, Query query, int start, int end,
 			boolean count)
-		throws ParseException {
+		throws Exception {
 
 		Client client = _elasticsearchConnectionManager.getClient();
 
@@ -435,23 +445,19 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			searchRequestBuilder.setTypes(selectedTypes);
 		}
 
-		SearchRequest searchRequest = searchRequestBuilder.request();
-
-		ActionFuture<SearchResponse> future = client.search(searchRequest);
-
-		SearchResponse searchResponse = future.actionGet();
+		SearchResponse searchResponse = doRequest(client, searchRequestBuilder);
 
 		if (_log.isInfoEnabled()) {
 			_log.info(
 				"The search engine processed " + queryBuilder.toString() +
-					"in " + searchResponse.getTook());
+					" in " + searchResponse.getTook());
 		}
 
 		return searchResponse;
 	}
 
 	protected long doSearchCount(SearchContext searchContext, Query query)
-			throws Exception {
+		throws Exception {
 
 		SearchResponse searchResponse = doSearch(
 			searchContext, query, searchContext.getStart(),
@@ -469,39 +475,12 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		SearchResponse searchResponse = doSearch(
 			searchContext, query, start, end);
 
-		Hits hits = processSearchResponse(searchResponse, searchContext, query);
+		Hits hits = processResponse(searchResponse, searchContext, query);
 
 		return hits;
 	}
 
-	protected Document processSearchHit(
-		SearchHit searchHit, QueryConfig queryConfig) {
-
-		Document document = new DocumentImpl();
-
-		Map<String, SearchHitField> searchHitFields = searchHit.getFields();
-
-		for (Map.Entry<String, SearchHitField> entry :
-				searchHitFields.entrySet()) {
-
-			SearchHitField searchHitField = entry.getValue();
-
-			Collection<Object> fieldValues = searchHitField.getValues();
-
-			Field field = new Field(
-				entry.getKey(),
-				ArrayUtil.toStringArray(
-					fieldValues.toArray(new Object[fieldValues.size()])));
-
-			document.add(field);
-		}
-
-		populateUID(document, queryConfig);
-
-		return document;
-	}
-
-	protected Hits processSearchResponse(
+	protected Hits processResponse(
 		SearchResponse searchResponse, SearchContext searchContext,
 		Query query) {
 
@@ -542,6 +521,33 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		hits.setSearchTime((float)timeValue.getSecondsFrac());
 
 		return hits;
+	}
+
+	protected Document processSearchHit(
+		SearchHit searchHit, QueryConfig queryConfig) {
+
+		Document document = new DocumentImpl();
+
+		Map<String, SearchHitField> searchHitFields = searchHit.getFields();
+
+		for (Map.Entry<String, SearchHitField> entry :
+				searchHitFields.entrySet()) {
+
+			SearchHitField searchHitField = entry.getValue();
+
+			Collection<Object> fieldValues = searchHitField.getValues();
+
+			Field field = new Field(
+				entry.getKey(),
+				ArrayUtil.toStringArray(
+					fieldValues.toArray(new Object[fieldValues.size()])));
+
+			document.add(field);
+		}
+
+		populateUID(document, queryConfig);
+
+		return document;
 	}
 
 	protected void updateFacetCollectors(
