@@ -27,11 +27,4 @@ import aQute.bnd.annotation.ProviderType;
  */
 @ProviderType
 public class ServiceACProfileImpl extends ServiceACProfileBaseImpl {
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. All methods that expect a service a c profile model instance should use the {@link com.liferay.portal.ac.profile.model.ServiceACProfile} interface instead.
-	 */
-	public ServiceACProfileImpl() {
-	}
 }
