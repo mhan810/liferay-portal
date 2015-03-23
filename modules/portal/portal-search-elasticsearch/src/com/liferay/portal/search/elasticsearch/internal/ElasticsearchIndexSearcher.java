@@ -118,11 +118,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			start = startAndEnd[0];
 			end = startAndEnd[1];
 
-			SearchResponse searchResponse = doSearch(
-				searchContext, query, start, end);
-
-			Hits hits = processSearchResponse(
-				searchResponse, searchContext, query);
+			Hits hits = doSearchHits(searchContext, query, start, end);
 
 			hits.setStart(stopWatch.getStartTime());
 
@@ -158,13 +154,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		stopWatch.start();
 
 		try {
-			SearchResponse searchResponse = doSearch(
-				searchContext, query, searchContext.getStart(),
-				searchContext.getEnd(), true);
-
-			SearchHits searchHits = searchResponse.getHits();
-
-			return searchHits.getTotalHits();
+			return doSearchCount(searchContext, query);
 		}
 		catch (Exception e) {
 			if (_log.isWarnEnabled()) {
@@ -458,6 +448,30 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		}
 
 		return searchResponse;
+	}
+
+	protected long doSearchCount(SearchContext searchContext, Query query)
+			throws Exception {
+
+		SearchResponse searchResponse = doSearch(
+			searchContext, query, searchContext.getStart(),
+			searchContext.getEnd(), true);
+
+		SearchHits searchHits = searchResponse.getHits();
+
+		return searchHits.getTotalHits();
+	}
+
+	protected Hits doSearchHits(
+			SearchContext searchContext, Query query, int start, int end)
+		throws Exception {
+
+		SearchResponse searchResponse = doSearch(
+			searchContext, query, start, end);
+
+		Hits hits = processSearchResponse(searchResponse, searchContext, query);
+
+		return hits;
 	}
 
 	protected Document processSearchHit(
