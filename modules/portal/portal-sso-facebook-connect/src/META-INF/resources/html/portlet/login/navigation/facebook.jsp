@@ -14,13 +14,7 @@
  */
 --%>
 
-<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
-
-<%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
-
-<%@ page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %>
-<%@ page import="com.liferay.portal.kernel.util.HttpUtil" %>
-<%@ page import="com.liferay.portal.sso.facebook.connect.constants.FacebookConnectWebKeys" %>
+<%@ include file="/html/portlet/login/navigation/init.jsp" %>
 
 <portlet:renderURL var="loginRedirectURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 	<portlet:param name="struts_action" value="/login/login_redirect" />

@@ -3752,7 +3752,7 @@ public class PortalImpl implements Portal {
 	 */
 	@Deprecated
 	@Override
-	public long getParentGroupId(long groupId) throws PortalException {
+	public long getParentGroupId(long groupId) {
 		return getSiteGroupId(groupId);
 	}
 
@@ -5192,7 +5192,7 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
-	public long getSiteGroupId(long groupId) throws PortalException {
+	public long getSiteGroupId(long groupId) {
 		if (groupId <= 0) {
 			return 0;
 		}

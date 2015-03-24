@@ -744,6 +744,46 @@ public class VerifyProperties extends VerifyProcess {
 			"com.liferay.portal.sso.ntlm"
 		},
 
+		// OpenID
+
+		new String[] {
+			"open.id.auth.enabled", "enabled", "com.liferay.portal.sso.openid"
+		},
+		new String[] {
+			"open.id.providers", "providers", "com.liferay.portal.sso.openid"
+		},
+		new String[] {
+			"open.id.ax.schema[default]", "ax.schema",
+			"com.liferay.portal.sso.openid"
+		},
+		new String[] {
+			"open.id.ax.type.email[default]", "ax.type.email",
+			"com.liferay.portal.sso.openid"
+		},
+		new String[] {
+			"open.id.ax.type.firstname[default]", "ax.type.firstname",
+			"com.liferay.portal.sso.openid"
+		},
+		new String[] {
+			"open.id.ax.type.lastname[default]", "ax.type.lastname",
+			"com.liferay.portal.sso.openid"
+		},
+		new String[] {
+			"open.id.ax.schema[yahoo]", "ax.schema",
+			"com.liferay.portal.sso.openid"
+		},
+		new String[] {
+			"open.id.ax.type.email[yahoo]", "ax.type.email",
+			"com.liferay.portal.sso.openid"
+		},
+		new String[] {
+			"open.id.ax.type.fullname[yahoo]", "ax.type.fullname",
+			"com.liferay.portal.sso.openid"
+		},
+		new String[] {
+			"open.id.url[yahoo]", "url", "com.liferay.portal.sso.openid"
+		},
+
 		// OpenSSO
 
 		new String[] {
@@ -977,7 +1017,9 @@ public class VerifyProperties extends VerifyProcess {
 		"permissions.thread.local.cache.max.size",
 		"permissions.user.check.algorithm", "persistence.provider",
 		"ratings.max.score", "ratings.min.score", "scheduler.classes",
-		"schema.run.minimal", "shard.available.names", "staging.lock.enabled",
+		"schema.run.minimal", "shard.available.names",
+		"siteminder.auth.enabled", "siteminder.import.from.ldap",
+		"siteminder.user.header", "staging.lock.enabled",
 		"webdav.storage.class", "webdav.storage.show.edit.url",
 		"webdav.storage.show.view.url", "webdav.storage.tokens",
 		"wiki.email.page.added.signature", "wiki.email.page.updated.signature",
