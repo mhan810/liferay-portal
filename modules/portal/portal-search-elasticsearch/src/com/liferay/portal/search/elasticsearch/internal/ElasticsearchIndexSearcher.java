@@ -472,7 +472,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			return selectedIndexNames;
 		}
 
-		return new String[]{String.valueOf(searchContext.getCompanyId())};
+		return new String[] {String.valueOf(searchContext.getCompanyId())};
 	}
 
 	protected String[] getSelectedTypes(QueryConfig queryConfig) {
@@ -482,7 +482,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			return selectedTypes;
 		}
 
-		return new String[]{DocumentTypes.LIFERAY};
+		return new String[] {DocumentTypes.LIFERAY};
 	}
 
 	protected Hits processResponse(
