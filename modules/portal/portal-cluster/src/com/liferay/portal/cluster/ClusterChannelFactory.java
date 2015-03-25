@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.cluster;
+package com.liferay.portal.cluster;
 
 /**
  * @author Tina Tian
