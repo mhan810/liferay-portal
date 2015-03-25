@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.cluster;
+package com.liferay.portal.cluster.internal;
 
 import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.ClusterChannel;
@@ -24,7 +24,7 @@ import com.liferay.portal.kernel.cluster.ClusterExecutor;
 import com.liferay.portal.kernel.cluster.ClusterInvokeThreadLocal;
 import com.liferay.portal.kernel.cluster.ClusterNode;
 import com.liferay.portal.kernel.cluster.ClusterNodeResponse;
-import com.liferay.portal.kernel.cluster.ClusterReceiver;
+import com.liferay.portal.cluster.ClusterReceiver;
 import com.liferay.portal.kernel.cluster.ClusterRequest;
 import com.liferay.portal.kernel.cluster.FutureClusterResponses;
 import com.liferay.portal.kernel.concurrent.ConcurrentReferenceValueHashMap;

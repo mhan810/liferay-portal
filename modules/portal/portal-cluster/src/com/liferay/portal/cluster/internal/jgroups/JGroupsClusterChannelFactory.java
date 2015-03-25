@@ -12,11 +12,11 @@
  * details.
  */
 
-package com.liferay.portal.cluster;
+package com.liferay.portal.cluster.internal.jgroups;
 
 import com.liferay.portal.kernel.cluster.ClusterChannel;
 import com.liferay.portal.kernel.cluster.ClusterChannelFactory;
-import com.liferay.portal.kernel.cluster.ClusterReceiver;
+import com.liferay.portal.cluster.ClusterReceiver;
 
 /**
  * @author Tina Tian
