@@ -27,6 +27,21 @@ import java.util.concurrent.Future;
 @ProviderType
 public class ClusterMasterExecutorUtil {
 
+	public static void addClusterMasterTokenTransitionListener(
+		ClusterMasterTokenTransitionListener
+			clusterMasterTokenTransitionListener) {
+
+		ClusterMasterExecutor clusterMasterExecutor =
+			getClusterMasterExecutor();
+
+		if (clusterMasterExecutor == null) {
+			return;
+		}
+
+		_clusterMasterExecutor.addClusterMasterTokenTransitionListener(
+			clusterMasterTokenTransitionListener);
+	}
+
 	public static <T> Future<T> executeOnMaster(MethodHandler methodHandler) {
 		ClusterMasterExecutor clusterMasterExecutor =
 			getClusterMasterExecutor();
@@ -40,17 +55,6 @@ public class ClusterMasterExecutorUtil {
 
 	public static ClusterMasterExecutor getClusterMasterExecutor() {
 		return _clusterMasterExecutor;
-	}
-
-	public static void initialize() {
-		ClusterMasterExecutor clusterMasterExecutor =
-			getClusterMasterExecutor();
-
-		if (clusterMasterExecutor == null) {
-			return;
-		}
-
-		_clusterMasterExecutor.initialize();
 	}
 
 	public static boolean isEnabled() {
@@ -75,7 +79,7 @@ public class ClusterMasterExecutorUtil {
 		return _clusterMasterExecutor.isMaster();
 	}
 
-	public static void registerClusterMasterTokenTransitionListener(
+	public static void removeClusterMasterTokenTransitionListener(
 		ClusterMasterTokenTransitionListener
 			clusterMasterTokenTransitionListener) {
 
@@ -86,22 +90,7 @@ public class ClusterMasterExecutorUtil {
 			return;
 		}
 
-		_clusterMasterExecutor.registerClusterMasterTokenTransitionListener(
-			clusterMasterTokenTransitionListener);
-	}
-
-	public static void unregisterClusterMasterTokenTransitionListener(
-		ClusterMasterTokenTransitionListener
-			clusterMasterTokenTransitionListener) {
-
-		ClusterMasterExecutor clusterMasterExecutor =
-			getClusterMasterExecutor();
-
-		if (clusterMasterExecutor == null) {
-			return;
-		}
-
-		_clusterMasterExecutor.unregisterClusterMasterTokenTransitionListener(
+		_clusterMasterExecutor.removeClusterMasterTokenTransitionListener(
 			clusterMasterTokenTransitionListener);
 	}
 
