@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.util.PropsValues;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -162,6 +161,9 @@ public class ClusterLinkImpl implements ClusterLink {
 
 		Collections.sort(keys);
 
+		String transportChannelNamePrefix =
+			clusterLinkConfiguration.channelNamePrefix() + "transport-";
+
 		for (int i = 0; i < keys.size(); i++) {
 			String customName = keys.get(i);
 
@@ -171,8 +173,7 @@ public class ClusterLinkImpl implements ClusterLink {
 
 			ClusterChannel clusterChannel =
 				_clusterChannelFactory.createClusterChannel(
-					value, _LIFERAY_TRANSPORT_CHANNEL_NAME + i,
-					clusterReceiver);
+					value, transportChannelNamePrefix + i, clusterReceiver);
 
 			_clusterReceivers.add(clusterReceiver);
 			_localTransportAddresses.add(clusterChannel.getLocalAddress());
@@ -261,9 +262,6 @@ public class ClusterLinkImpl implements ClusterLink {
 	}
 
 	protected volatile ClusterLinkConfiguration clusterLinkConfiguration;
-
-	private static final String _LIFERAY_TRANSPORT_CHANNEL_NAME =
-		PropsValues.CLUSTER_LINK_CHANNEL_NAME_PREFIX + "transport-";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ClusterLinkImpl.class);
