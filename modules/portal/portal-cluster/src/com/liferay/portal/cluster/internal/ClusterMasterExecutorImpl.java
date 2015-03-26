@@ -14,6 +14,9 @@
 
 package com.liferay.portal.cluster.internal;
 
+import aQute.bnd.annotation.metatype.Configurable;
+
+import com.liferay.portal.cluster.configuration.ClusterLinkConfiguration;
 import com.liferay.portal.kernel.cluster.ClusterEvent;
 import com.liferay.portal.kernel.cluster.ClusterEventListener;
 import com.liferay.portal.kernel.cluster.ClusterExecutor;
@@ -29,35 +32,41 @@ import com.liferay.portal.kernel.concurrent.NoticeableFutureConverter;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.resiliency.spi.SPIUtil;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Lock;
 import com.liferay.portal.service.LockLocalServiceUtil;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = ClusterMasterExecutor.class)
 public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 
-	public void destroy() {
-		if (!_enabled) {
-			return;
-		}
+	@Override
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
+	)
+	public void addClusterMasterTokenTransitionListener(
+		ClusterMasterTokenTransitionListener
+			clusterMasterTokenTransitionListener) {
 
-		try {
-			_clusterExecutor.removeClusterEventListener(_clusterEventListener);
-
-			LockLocalServiceUtil.unlock(
-				_LOCK_CLASS_NAME, _LOCK_CLASS_NAME, _localClusterNodeId);
-		}
-		catch (SystemException se) {
-			if (_log.isWarnEnabled()) {
-				_log.warn("Unable to destroy the cluster master executor", se);
-			}
-		}
+		_clusterMasterTokenTransitionListeners.add(
+			clusterMasterTokenTransitionListener);
 	}
 
 	@Override
@@ -114,28 +123,6 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 	}
 
 	@Override
-	public void initialize() {
-		if (!_clusterExecutor.isEnabled()) {
-			return;
-		}
-
-		ClusterNode localClusterNode = _clusterExecutor.getLocalClusterNode();
-
-		_localClusterNodeId = localClusterNode.getClusterNodeId();
-
-		_clusterEventListener = new ClusterMasterTokenClusterEventListener();
-
-		_clusterExecutor.addClusterEventListener(_clusterEventListener);
-
-		String masterClusterNodeId = getMasterClusterNodeId();
-
-		_enabled = true;
-
-		notifyMasterTokenTransitionListeners(
-			_localClusterNodeId.equals(masterClusterNodeId));
-	}
-
-	@Override
 	public boolean isEnabled() {
 		return _enabled;
 	}
@@ -150,16 +137,12 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 	}
 
 	@Override
-	public void registerClusterMasterTokenTransitionListener(
+	public void removeClusterMasterTokenTransitionListener(
 		ClusterMasterTokenTransitionListener
 			clusterMasterTokenTransitionListener) {
 
-		_clusterMasterTokenTransitionListeners.add(
+		_clusterMasterTokenTransitionListeners.remove(
 			clusterMasterTokenTransitionListener);
-	}
-
-	public void setClusterExecutor(ClusterExecutor clusterExecutor) {
-		_clusterExecutor = clusterExecutor;
 	}
 
 	public void setClusterMasterTokenTransitionListeners(
@@ -170,13 +153,35 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 			clusterMasterTokenTransitionListeners);
 	}
 
-	@Override
-	public void unregisterClusterMasterTokenTransitionListener(
-		ClusterMasterTokenTransitionListener
-			clusterMasterTokenTransitionListener) {
+	@Activate
+	protected void activate(Map<String, Object> properties) {
+		clusterLinkConfiguration = Configurable.createConfigurable(
+			ClusterLinkConfiguration.class, properties);
 
-		_clusterMasterTokenTransitionListeners.remove(
-			clusterMasterTokenTransitionListener);
+		initialize();
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		if (_clusterEventListener != null) {
+			try {
+				_clusterExecutor.removeClusterEventListener(
+					_clusterEventListener);
+
+				LockLocalServiceUtil.unlock(
+					_LOCK_CLASS_NAME, _LOCK_CLASS_NAME, _localClusterNodeId);
+			}
+			catch (SystemException se) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Unable to destroy the cluster master executor", se);
+				}
+			}
+		}
+
+		_clusterEventListener = null;
+		_enabled = false;
+		_localClusterNodeId = null;
 	}
 
 	protected String getMasterClusterNodeId() {
@@ -233,6 +238,44 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 		return owner;
 	}
 
+	protected void initialize() {
+		if (!clusterLinkConfiguration.enabled() || SPIUtil.isSPI()) {
+			return;
+		}
+
+		ClusterNode localClusterNode = _clusterExecutor.getLocalClusterNode();
+
+		_localClusterNodeId = localClusterNode.getClusterNodeId();
+
+		_clusterEventListener = new ClusterMasterTokenClusterEventListener();
+
+		_clusterExecutor.addClusterEventListener(_clusterEventListener);
+
+		String masterClusterNodeId = getMasterClusterNodeId();
+
+		_enabled = true;
+
+		notifyMasterTokenTransitionListeners(
+			_localClusterNodeId.equals(masterClusterNodeId));
+	}
+
+	@Modified
+	protected synchronized void modified(Map<String, Object> properties) {
+		clusterLinkConfiguration = Configurable.createConfigurable(
+			ClusterLinkConfiguration.class, properties);
+
+		if (!clusterLinkConfiguration.enabled() &&
+			(_clusterEventListener != null)) {
+
+			deactivate();
+		}
+		else if (clusterLinkConfiguration.enabled() &&
+				 (_clusterEventListener == null)) {
+
+			initialize();
+		}
+	}
+
 	protected void notifyMasterTokenTransitionListeners(
 		boolean masterTokenAcquired) {
 
@@ -248,6 +291,13 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 			}
 		}
 	}
+
+	@Reference
+	protected void setClusterExecutor(ClusterExecutor clusterExecutor) {
+		_clusterExecutor = clusterExecutor;
+	}
+
+	protected volatile ClusterLinkConfiguration clusterLinkConfiguration;
 
 	private static final String _LOCK_CLASS_NAME =
 		ClusterMasterExecutorImpl.class.getName();
