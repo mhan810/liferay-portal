@@ -1925,6 +1925,15 @@ public class ClusterSchedulerEngineTest {
 		implements ClusterMasterExecutor {
 
 		@Override
+		public void addClusterMasterTokenTransitionListener(
+			ClusterMasterTokenTransitionListener
+				clusterMasterTokenAcquisitionListener) {
+
+			_clusterMasterTokenTransitionListener =
+				clusterMasterTokenAcquisitionListener;
+		}
+
+		@Override
 		public <T> NoticeableFuture<T> executeOnMaster(
 			MethodHandler methodHandler) {
 
@@ -1972,12 +1981,15 @@ public class ClusterSchedulerEngineTest {
 		}
 
 		@Override
-		public void registerClusterMasterTokenTransitionListener(
+		public void removeClusterMasterTokenTransitionListener(
 			ClusterMasterTokenTransitionListener
 				clusterMasterTokenAcquisitionListener) {
 
-			_clusterMasterTokenTransitionListener =
-				clusterMasterTokenAcquisitionListener;
+			if (_clusterMasterTokenTransitionListener ==
+					clusterMasterTokenAcquisitionListener) {
+
+				_clusterMasterTokenTransitionListener = null;
+			}
 		}
 
 		public void reset(
@@ -1990,18 +2002,6 @@ public class ClusterSchedulerEngineTest {
 
 		public void setException(boolean exception) {
 			_exception = exception;
-		}
-
-		@Override
-		public void unregisterClusterMasterTokenTransitionListener(
-			ClusterMasterTokenTransitionListener
-				clusterMasterTokenAcquisitionListener) {
-
-			if (_clusterMasterTokenTransitionListener ==
-					clusterMasterTokenAcquisitionListener) {
-
-				_clusterMasterTokenTransitionListener = null;
-			}
 		}
 
 		private ClusterMasterTokenTransitionListener
