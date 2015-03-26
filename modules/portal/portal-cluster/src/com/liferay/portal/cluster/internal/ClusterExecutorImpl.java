@@ -14,9 +14,13 @@
 
 package com.liferay.portal.cluster.internal;
 
+import aQute.bnd.annotation.metatype.Configurable;
+
+import com.liferay.portal.cluster.ClusterChannel;
+import com.liferay.portal.cluster.ClusterChannelFactory;
+import com.liferay.portal.cluster.ClusterReceiver;
+import com.liferay.portal.cluster.configuration.ClusterLinkConfiguration;
 import com.liferay.portal.kernel.cluster.Address;
-import com.liferay.portal.kernel.cluster.ClusterChannel;
-import com.liferay.portal.kernel.cluster.ClusterChannelFactory;
 import com.liferay.portal.kernel.cluster.ClusterEvent;
 import com.liferay.portal.kernel.cluster.ClusterEventListener;
 import com.liferay.portal.kernel.cluster.ClusterException;
@@ -24,15 +28,13 @@ import com.liferay.portal.kernel.cluster.ClusterExecutor;
 import com.liferay.portal.kernel.cluster.ClusterInvokeThreadLocal;
 import com.liferay.portal.kernel.cluster.ClusterNode;
 import com.liferay.portal.kernel.cluster.ClusterNodeResponse;
-import com.liferay.portal.cluster.ClusterReceiver;
 import com.liferay.portal.kernel.cluster.ClusterRequest;
 import com.liferay.portal.kernel.cluster.FutureClusterResponses;
 import com.liferay.portal.kernel.concurrent.ConcurrentReferenceValueHashMap;
-import com.liferay.portal.kernel.executor.PortalExecutorManagerUtil;
+import com.liferay.portal.kernel.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.memory.FinalizeManager;
-import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashUtil;
@@ -42,7 +44,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.util.PortalInetSocketAddressEventListener;
-import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.Serializable;
@@ -63,39 +64,37 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+
 /**
  * @author Tina Tian
  * @author Shuyang Zhou
  */
-@DoPrivileged
+@Component(
+	configurationPid = "com.liferay.portal.cluster.configuration.ClusterLinkConfiguration",
+	immediate = true,
+	service = {
+		ClusterExecutor.class, PortalInetSocketAddressEventListener.class
+	}
+)
 public class ClusterExecutorImpl
 	implements ClusterExecutor, PortalInetSocketAddressEventListener {
 
 	@Override
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
+	)
 	public void addClusterEventListener(
 		ClusterEventListener clusterEventListener) {
 
-		if (!isEnabled()) {
-			return;
-		}
-
 		_clusterEventListeners.addIfAbsent(clusterEventListener);
-	}
-
-	@Override
-	public void destroy() {
-		if (!isEnabled()) {
-			return;
-		}
-
-		_clusterChannel.close();
-
-		_executorService.shutdownNow();
-
-		_clusterEventListeners.clear();
-		_clusterNodeStatuses.clear();
-		_futureClusterResponses.clear();
-		_localClusterNodeStatus = null;
 	}
 
 	@Override
@@ -165,10 +164,6 @@ public class ClusterExecutorImpl
 
 	@Override
 	public List<ClusterEventListener> getClusterEventListeners() {
-		if (!isEnabled()) {
-			return Collections.emptyList();
-		}
-
 		return Collections.unmodifiableList(_clusterEventListeners);
 	}
 
@@ -198,24 +193,13 @@ public class ClusterExecutorImpl
 		return _localClusterNodeStatus.getClusterNode();
 	}
 
-	@Override
 	public void initialize() {
 		if (!isEnabled()) {
 			return;
 		}
 
-		_executorService = PortalExecutorManagerUtil.getPortalExecutor(
+		_executorService = _portalExecutorManager.getPortalExecutor(
 			ClusterExecutorImpl.class.getName());
-
-		PortalUtil.addPortalInetSocketAddressEventListener(this);
-
-		if (PropsValues.CLUSTER_LINK_DEBUG_ENABLED) {
-			addClusterEventListener(new DebuggingClusterEventListenerImpl());
-		}
-
-		if (PropsValues.LIVE_USERS_ENABLED) {
-			addClusterEventListener(new LiveUsersClusterEventListenerImpl());
-		}
 
 		_clusterReceiver = new ClusterRequestReceiver(this);
 
@@ -242,6 +226,8 @@ public class ClusterExecutorImpl
 		sendNotifyRequest();
 
 		_clusterReceiver.openLatch();
+
+		manageDebugClusterEventListener();
 	}
 
 	@Override
@@ -255,7 +241,7 @@ public class ClusterExecutorImpl
 
 	@Override
 	public boolean isEnabled() {
-		return PropsValues.CLUSTER_LINK_ENABLED;
+		return clusterLinkConfiguration.enabled();
 	}
 
 	@Override
@@ -296,20 +282,38 @@ public class ClusterExecutorImpl
 		_clusterEventListeners.remove(clusterEventListener);
 	}
 
-	public void setClusterChannelFactory(
-		ClusterChannelFactory clusterChannelFactory) {
-
-		_clusterChannelFactory = clusterChannelFactory;
-	}
-
 	public void setClusterEventListeners(
 		List<ClusterEventListener> clusterEventListeners) {
 
-		if (!isEnabled()) {
-			return;
+		_clusterEventListeners.addAllAbsent(clusterEventListeners);
+	}
+
+	@Activate
+	protected void activate(Map<String, Object> properties) {
+		clusterLinkConfiguration = Configurable.createConfigurable(
+			ClusterLinkConfiguration.class, properties);
+
+		initialize();
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		if (_clusterChannel != null) {
+			_clusterChannel.close();
 		}
 
-		_clusterEventListeners.addAllAbsent(clusterEventListeners);
+		_clusterChannel = null;
+
+		if (_executorService != null) {
+			_executorService.shutdownNow();
+		}
+
+		_executorService = null;
+
+		_clusterEventListeners.clear();
+		_clusterNodeStatuses.clear();
+		_futureClusterResponses.clear();
+		_localClusterNodeStatus = null;
 	}
 
 	protected ClusterNodeResponse executeClusterRequest(
@@ -427,6 +431,22 @@ public class ClusterExecutorImpl
 		return clusterNodeResponse;
 	}
 
+	protected void manageDebugClusterEventListener() {
+		if (clusterLinkConfiguration.debugEnabled() &&
+			(_debugClusterEventListener == null)) {
+
+			_debugClusterEventListener =
+				new DebuggingClusterEventListenerImpl();
+
+			addClusterEventListener(_debugClusterEventListener);
+		}
+		else if (!clusterLinkConfiguration.debugEnabled() &&
+				 (_debugClusterEventListener != null)) {
+
+			removeClusterEventListener(_debugClusterEventListener);
+		}
+	}
+
 	protected void memberRemoved(List<Address> departAddresses) {
 		List<ClusterNode> departClusterNodes = new ArrayList<>();
 
@@ -455,12 +475,43 @@ public class ClusterExecutorImpl
 		fireClusterEvent(clusterEvent);
 	}
 
+	@Modified
+	protected synchronized void modified(Map<String, Object> properties) {
+		clusterLinkConfiguration = Configurable.createConfigurable(
+			ClusterLinkConfiguration.class, properties);
+
+		if (!clusterLinkConfiguration.enabled() && (_clusterChannel != null)) {
+			deactivate();
+		}
+		else if (clusterLinkConfiguration.enabled() &&
+				 (_clusterChannel == null)) {
+
+			initialize();
+		}
+	}
+
 	protected void sendNotifyRequest() {
 		ClusterRequest clusterRequest = ClusterRequest.createMulticastRequest(
 			_localClusterNodeStatus, true);
 
 		_clusterChannel.sendMulticastMessage(clusterRequest);
 	}
+
+	@Reference(unbind = "-")
+	protected void setClusterChannelFactory(
+		ClusterChannelFactory clusterChannelFactory) {
+
+		_clusterChannelFactory = clusterChannelFactory;
+	}
+
+	@Reference(unbind = "-")
+	protected void setPortalExecutorManager(
+		PortalExecutorManager portalExecutorManager) {
+
+		_portalExecutorManager = portalExecutorManager;
+	}
+
+	protected volatile ClusterLinkConfiguration clusterLinkConfiguration;
 
 	private boolean _memberJoined(ClusterNodeStatus clusterNodeStatus) {
 		ClusterNodeStatus oldClusterNodeStatus = _clusterNodeStatuses.put(
@@ -499,11 +550,13 @@ public class ClusterExecutorImpl
 	private final Map<String, ClusterNodeStatus> _clusterNodeStatuses =
 		new ConcurrentHashMap<>();
 	private ClusterReceiver _clusterReceiver;
+	private ClusterEventListener _debugClusterEventListener;
 	private ExecutorService _executorService;
 	private final Map<String, FutureClusterResponses> _futureClusterResponses =
 		new ConcurrentReferenceValueHashMap<>(
 			FinalizeManager.WEAK_REFERENCE_FACTORY);
 	private ClusterNodeStatus _localClusterNodeStatus;
+	private PortalExecutorManager _portalExecutorManager;
 
 	private static class ClusterNodeStatus implements Serializable {
 
