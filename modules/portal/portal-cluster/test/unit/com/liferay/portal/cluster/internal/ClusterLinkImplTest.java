@@ -15,9 +15,9 @@
 package com.liferay.portal.cluster.internal;
 
 import com.liferay.portal.cluster.ClusterChannel;
+import com.liferay.portal.cluster.configuration.ClusterLinkConfiguration;
+import com.liferay.portal.cluster.ClusterReceiver;
 import com.liferay.portal.kernel.cluster.Address;
-import com.liferay.portal.kernel.cluster.ClusterChannel;
-import com.liferay.portal.kernel.cluster.ClusterReceiver;
 import com.liferay.portal.kernel.cluster.Priority;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.test.CaptureHandler;
@@ -29,11 +29,12 @@ import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.test.rule.AdviseWith;
 import com.liferay.portal.test.rule.AspectJNewEnvTestRule;
-import com.liferay.portal.test.rule.PortalExecutorManagerTestRule;
 
 import java.io.Serializable;
 
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -45,7 +46,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
 import org.junit.Assert;
-import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -56,19 +56,9 @@ import org.junit.Test;
 @NewEnv(type = NewEnv.Type.CLASSLOADER)
 public class ClusterLinkImplTest extends BaseClusterTestCase {
 
-	@ClassRule
-	@Rule
-	public static final PortalExecutorManagerTestRule aggregateTestRule =
-		PortalExecutorManagerTestRule.INSTANCE;
-
-	@AdviseWith(
-		adviceClasses = {
-			EnableClusterLinkAdvice.class,
-			TransportationConfigurationAdvice.class
-		}
-	)
+	@AdviseWith(adviceClasses = {TransportationConfigurationAdvice.class})
 	@Test
-	public void testDestroy() {
+	public void testDeactivate() {
 		TransportationConfigurationAdvice.setChannelCount(1);
 
 		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl();
@@ -85,24 +75,18 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		Assert.assertFalse(clusterChannel.isClosed());
 		Assert.assertFalse(executorService.isShutdown());
 
-		clusterLinkImpl.destroy();
+		clusterLinkImpl.deactivate();
 
 		Assert.assertTrue(clusterChannel.isClosed());
 		Assert.assertTrue(executorService.isShutdown());
 	}
 
-	@AdviseWith(adviceClasses = {DisableClusterLinkAdvice.class})
 	@Test
 	public void testDisabledClusterLink() {
 
 		// Test 1, initialize
 
-		ClusterLinkImpl clusterLinkImpl = new ClusterLinkImpl();
-
-		clusterLinkImpl.setClusterChannelFactory(
-			new TestClusterChannelFactory());
-
-		clusterLinkImpl.initialize();
+		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl(false);
 
 		List<TestClusterChannel> clusterChannels =
 			TestClusterChannel.getClusterChannels();
@@ -110,7 +94,7 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		Assert.assertTrue(clusterChannels.isEmpty());
 		Assert.assertNull(clusterLinkImpl.getExecutorService());
 
-		// Test 2, send unitcast message
+		// Test 2, send unicast message
 
 		List<Serializable> multicastMessages =
 			TestClusterChannel.getMulticastMessages();
@@ -134,15 +118,10 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 
 		// Test 4, destroy
 
-		clusterLinkImpl.destroy();
+		clusterLinkImpl.deactivate();
 	}
 
-	@AdviseWith(
-		adviceClasses = {
-			EnableClusterLinkAdvice.class,
-			TransportationConfigurationAdvice.class
-		}
-	)
+	@AdviseWith(adviceClasses = {TransportationConfigurationAdvice.class})
 	@Test
 	public void testGetChannel() {
 		TransportationConfigurationAdvice.setChannelCount(2);
@@ -183,12 +162,7 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		Assert.assertTrue(clusterChannels.contains(clusterChannel2));
 	}
 
-	@AdviseWith(
-		adviceClasses = {
-			EnableClusterLinkAdvice.class,
-			TransportationConfigurationAdvice.class
-		}
-	)
+	@AdviseWith(adviceClasses = {TransportationConfigurationAdvice.class})
 	@Test
 	public void testInitChannels() {
 		try (CaptureHandler captureHandler =
@@ -241,22 +215,12 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		}
 	}
 
-	@AdviseWith(
-		adviceClasses = {
-			EnableClusterLinkAdvice.class,
-			TransportationConfigurationAdvice.class
-		}
-	)
+	@AdviseWith(adviceClasses = {TransportationConfigurationAdvice.class})
 	@Test
 	public void testInitialize() {
 		TransportationConfigurationAdvice.setChannelCount(2);
 
-		ClusterLinkImpl clusterLinkImpl = new ClusterLinkImpl();
-
-		clusterLinkImpl.setClusterChannelFactory(
-			new TestClusterChannelFactory());
-
-		clusterLinkImpl.initialize();
+		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl();
 
 		Assert.assertNotNull(clusterLinkImpl.getExecutorService());
 
@@ -277,12 +241,7 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		}
 	}
 
-	@AdviseWith(
-		adviceClasses = {
-			EnableClusterLinkAdvice.class,
-			TransportationConfigurationAdvice.class
-		}
-	)
+	@AdviseWith(adviceClasses = {TransportationConfigurationAdvice.class})
 	@Test
 	public void testSendMulticastMessage() {
 		TransportationConfigurationAdvice.setChannelCount(1);
@@ -308,7 +267,6 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 
 	@AdviseWith(
 		adviceClasses = {
-			EnableClusterLinkAdvice.class,
 			TransportationConfigurationAdvice.class
 		}
 	)
@@ -385,12 +343,48 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 	}
 
 	protected ClusterLinkImpl getClusterLinkImpl() {
+		return getClusterLinkImpl(true);
+	}
+
+	protected ClusterLinkImpl getClusterLinkImpl(final boolean enabled) {
 		ClusterLinkImpl clusterLinkImpl = new ClusterLinkImpl();
 
 		clusterLinkImpl.setClusterChannelFactory(
 			new TestClusterChannelFactory());
 
-		clusterLinkImpl.initialize();
+		clusterLinkImpl.setPortalExecutorManager(
+			new MockPortalExecutorManager());
+
+		clusterLinkImpl.clusterLinkConfiguration =
+			new MockClusterLinkConfiguration(true, enabled);
+
+		Map<String, Object> properties = new Hashtable<>();
+
+		properties.put(
+			"channel.properties.transport.0",
+			"UDP(bind_addr=localhost;mcast_group_addr=239.255.0.2;" +
+				"mcast_port=23302):" +
+				"PING(timeout=2000;num_initial_members=20;" +
+				"break_on_coord_rsp=true):" +
+				"MERGE3(min_interval=10000;max_interval=30000):" +
+				"FD_SOCK:FD_ALL:VERIFY_SUSPECT(timeout=1500):" +
+				"pbcast.NAKACK2(xmit_interval=1000;xmit_table_num_rows=100;" +
+				"xmit_table_msgs_per_row=2000;" +
+				"xmit_table_max_compaction_time=30000;max_msg_batch_size=500;" +
+				"use_mcast_xmit=false;discard_delivered_msgs=true):" +
+				"UNICAST2(max_bytes=10M;xmit_table_num_rows=100;" +
+				"xmit_table_msgs_per_row=2000;" +
+				"xmit_table_max_compaction_time=60000;" +
+				"max_msg_batch_size=500):" +
+				"pbcast.STABLE(stability_delay=1000;desired_avg_gossip=50000;" +
+				"max_bytes=4M):" +
+				"pbcast.GMS(join_timeout=3000;print_local_addr=true;" +
+				"view_bundling=true):UFC(max_credits=2M;min_threshold=0.4):" +
+				"MFC(max_credits=2M;min_threshold=0.4):" +
+				"FRAG2(frag_size=61440):" +
+				"RSVP(resend_interval=2000;timeout=10000)");
+
+		clusterLinkImpl.initialize(properties);
 
 		return clusterLinkImpl;
 	}

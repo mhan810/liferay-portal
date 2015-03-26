@@ -14,6 +14,7 @@
 
 package com.liferay.portal.cluster.internal;
 
+import com.liferay.portal.cluster.configuration.ClusterLinkConfiguration;
 import com.liferay.portal.kernel.cluster.ClusterEventListener;
 import com.liferay.portal.kernel.cluster.ClusterMasterTokenTransitionListener;
 import com.liferay.portal.kernel.cluster.ClusterNode;
@@ -24,35 +25,26 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
-import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.CodeCoverageAssertor;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
-import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.impl.LockImpl;
 import com.liferay.portal.service.LockLocalServiceUtil;
 import com.liferay.portal.service.impl.LockLocalServiceImpl;
-import com.liferay.portal.test.rule.PortalExecutorManagerTestRule;
-import com.liferay.portal.util.PortalImpl;
-import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.PropsImpl;
-import com.liferay.portal.uuid.PortalUUIDImpl;
 
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -60,24 +52,10 @@ import org.junit.Test;
  */
 public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 
-	@ClassRule
-	@Rule
-	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			CodeCoverageAssertor.INSTANCE,
-			PortalExecutorManagerTestRule.INSTANCE);
-
 	@Before
+	@Override
 	public void setUp() {
-		PortalUtil portalUtil = new PortalUtil();
-
-		portalUtil.setPortal(new PortalImpl());
-
-		PortalUUIDUtil portalUUIDUtil = new PortalUUIDUtil();
-
-		portalUUIDUtil.setPortalUUID(new PortalUUIDImpl());
-
-		PropsUtil.setProps(new PropsImpl());
+		super.setUp();
 
 		ReflectionTestUtil.setFieldValue(
 			LockLocalServiceUtil.class, "_service", _mockLockLocalService);
@@ -89,7 +67,12 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		// Test 1, cluster event listener is invoked when lock is not changed
 
 		ClusterMasterExecutorImpl clusterMasterExecutorImpl =
-			new ClusterMasterExecutorImpl();
+			createMasterExecutorImpl(true);
+
+		clusterMasterExecutorImpl.setClusterExecutor(
+			new MockClusterExecutor(true));
+
+		clusterMasterExecutorImpl.initialize();
 
 		MockClusterExecutor mockClusterExecutor = new MockClusterExecutor(true);
 
@@ -126,7 +109,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		// Test 1, register cluster master token transition listener
 
 		ClusterMasterExecutorImpl clusterMasterExecutorImpl =
-			new ClusterMasterExecutorImpl();
+			createMasterExecutorImpl(true);
 
 		Set<ClusterMasterTokenTransitionListener>
 			clusterMasterTokenTransitionListeners =
@@ -162,12 +145,12 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 	}
 
 	@Test
-	public void testDestroy() {
+	public void testDeactivate() {
 
-		// Test 1, desctory when cluster link is enabled
+		// Test 1, destroy when cluster link is enabled
 
 		ClusterMasterExecutorImpl clusterMasterExecutorImpl =
-			new ClusterMasterExecutorImpl();
+			createMasterExecutorImpl(true);
 
 		MockClusterExecutor mockClusterExecutor = new MockClusterExecutor(true);
 
@@ -181,25 +164,30 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		Assert.assertEquals(1, clusterEventListeners.size());
 		Assert.assertNotNull(_mockLockLocalService.getLock());
 
-		clusterMasterExecutorImpl.destroy();
+		clusterMasterExecutorImpl.deactivate();
 
 		Assert.assertTrue(clusterEventListeners.isEmpty());
 		Assert.assertNull(_mockLockLocalService.getLock());
 
 		// Test 2, destory when cluster link is disabled
 
-		clusterMasterExecutorImpl = new ClusterMasterExecutorImpl();
+		clusterMasterExecutorImpl = createMasterExecutorImpl(false);
 
 		clusterMasterExecutorImpl.setClusterExecutor(
 			new MockClusterExecutor(false));
 
 		clusterMasterExecutorImpl.initialize();
 
-		clusterMasterExecutorImpl.destroy();
+		clusterMasterExecutorImpl.deactivate();
 
 		// Test 3, destory with exception when log is enabled
 
-		clusterMasterExecutorImpl = new ClusterMasterExecutorImpl();
+		clusterMasterExecutorImpl = createMasterExecutorImpl(true);
+
+		clusterMasterExecutorImpl.setClusterExecutor(
+			new MockClusterExecutor(true));
+
+		clusterMasterExecutorImpl.initialize();
 
 		clusterMasterExecutorImpl.setClusterExecutor(
 			new MockClusterExecutor(true));
@@ -212,7 +200,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 				JDKLoggerTestUtil.configureJDKLogger(
 					ClusterMasterExecutorImpl.class.getName(), Level.WARNING)) {
 
-			clusterMasterExecutorImpl.destroy();
+			clusterMasterExecutorImpl.deactivate();
 
 			List<LogRecord> logRecords = captureHandler.getLogRecords();
 
@@ -231,7 +219,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 				JDKLoggerTestUtil.configureJDKLogger(
 					ClusterMasterExecutorImpl.class.getName(), Level.OFF)) {
 
-			clusterMasterExecutorImpl.destroy();
+			clusterMasterExecutorImpl.deactivate();
 
 			List<LogRecord> logRecords = captureHandler.getLogRecords();
 
@@ -245,7 +233,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		// Test 1, execute without exception when log is eanbled
 
 		ClusterMasterExecutorImpl clusterMasterExecutorImpl =
-			new ClusterMasterExecutorImpl();
+			createMasterExecutorImpl(false);
 
 		clusterMasterExecutorImpl.setClusterExecutor(
 			new MockClusterExecutor(false));
@@ -333,7 +321,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		// Test 1, execute without exception
 
 		ClusterMasterExecutorImpl clusterMasterExecutorImpl =
-			new ClusterMasterExecutorImpl();
+			createMasterExecutorImpl(true);
 
 		MockClusterExecutor mockClusterExecutor = new MockClusterExecutor(true);
 
@@ -372,7 +360,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		// Test 1, master to slave
 
 		ClusterMasterExecutorImpl clusterMasterExecutorImpl =
-			new ClusterMasterExecutorImpl();
+			createMasterExecutorImpl(true);
 
 		MockClusterExecutor mockClusterExecutor = new MockClusterExecutor(true);
 
@@ -419,7 +407,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		// Test 1, current owner is not alive
 
 		ClusterMasterExecutorImpl clusterMasterExecutorImpl =
-			new ClusterMasterExecutorImpl();
+			createMasterExecutorImpl(true);
 
 		MockClusterExecutor mockClusterExecutor = new MockClusterExecutor(true);
 
@@ -509,7 +497,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		// Test 1, initialize when cluster link is disabled
 
 		ClusterMasterExecutorImpl clusterMasterExecutorImpl =
-			new ClusterMasterExecutorImpl();
+			createMasterExecutorImpl(false);
 
 		clusterMasterExecutorImpl.setClusterExecutor(
 			new MockClusterExecutor(false));
@@ -523,7 +511,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 
 		Assert.assertNull(_mockLockLocalService.getLock());
 
-		clusterMasterExecutorImpl = new ClusterMasterExecutorImpl();
+		clusterMasterExecutorImpl = createMasterExecutorImpl(true);
 
 		clusterMasterExecutorImpl.setClusterExecutor(
 			new MockClusterExecutor(true));
@@ -543,7 +531,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 
 		Assert.assertNotNull(_mockLockLocalService.getLock());
 
-		clusterMasterExecutorImpl = new ClusterMasterExecutorImpl();
+		clusterMasterExecutorImpl = createMasterExecutorImpl(true);
 
 		clusterMasterExecutorImpl.setClusterExecutor(mockClusterExecutor);
 
@@ -559,7 +547,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		// Test 1, notify when master is required
 
 		ClusterMasterExecutorImpl clusterMasterExecutorImpl =
-			new ClusterMasterExecutorImpl();
+			createMasterExecutorImpl(true);
 
 		MockClusterMasterTokenTransitionListener
 			mockClusterMasterTokenTransitionListener =
@@ -579,7 +567,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 
 		// Test 2, notify when master is released
 
-		clusterMasterExecutorImpl = new ClusterMasterExecutorImpl();
+		clusterMasterExecutorImpl = createMasterExecutorImpl(true);
 
 		mockClusterMasterTokenTransitionListener =
 			new MockClusterMasterTokenTransitionListener();
@@ -595,6 +583,18 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		Assert.assertTrue(
 			mockClusterMasterTokenTransitionListener.
 				isMasterTokenReleasedNotified());
+	}
+
+	protected ClusterMasterExecutorImpl createMasterExecutorImpl(
+		final boolean enabled) {
+
+		ClusterMasterExecutorImpl clusterMasterExecutorImpl =
+			new ClusterMasterExecutorImpl();
+
+		clusterMasterExecutorImpl.clusterLinkConfiguration =
+			new MockClusterLinkConfiguration(false, enabled);
+
+		return clusterMasterExecutorImpl;
 	}
 
 	private static final MethodHandler _BAD_METHOD_HANDLER = new MethodHandler(
@@ -660,7 +660,40 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 
 			setClusterChannelFactory(new TestClusterChannelFactory());
 
-			initialize();
+			clusterLinkConfiguration = new MockClusterLinkConfiguration(
+				false, _enabled);
+
+			setPortalExecutorManager(new MockPortalExecutorManager());
+
+			Map<String, Object> properties = new Hashtable<>();
+
+			properties.put(
+				"channel.properties.control",
+				"UDP(bind_addr=localhost;mcast_group_addr=239.255.0.1;" +
+					"mcast_port=23301):" +
+					"PING(timeout=2000;num_initial_members=20;" +
+					"break_on_coord_rsp=true):" +
+					"MERGE3(min_interval=10000;max_interval=30000):" +
+					"FD_SOCK:FD_ALL:VERIFY_SUSPECT(timeout=1500):" +
+					"pbcast.NAKACK2(xmit_interval=1000;" +
+					"xmit_table_num_rows=100;xmit_table_msgs_per_row=2000;" +
+					"xmit_table_max_compaction_time=30000;" +
+					"max_msg_batch_size=500;" +
+					"use_mcast_xmit=false;discard_delivered_msgs=true):" +
+					"UNICAST2(max_bytes=10M;xmit_table_num_rows=100;" +
+					"xmit_table_msgs_per_row=2000;" +
+					"xmit_table_max_compaction_time=60000;" +
+					"max_msg_batch_size=500):" +
+					"pbcast.STABLE(stability_delay=1000;" +
+					"desired_avg_gossip=50000;max_bytes=4M):" +
+					"pbcast.GMS(join_timeout=3000;print_local_addr=true;" +
+					"view_bundling=true):" +
+					"UFC(max_credits=2M;min_threshold=0.4):" +
+					"MFC(max_credits=2M;min_threshold=0.4):" +
+					"FRAG2(frag_size=61440):" +
+					"RSVP(resend_interval=2000;timeout=10000)");
+
+			initialize(properties);
 		}
 
 		private final boolean _enabled;
