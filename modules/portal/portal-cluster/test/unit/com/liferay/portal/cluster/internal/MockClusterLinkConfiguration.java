@@ -14,22 +14,34 @@
 
 package com.liferay.portal.cluster.internal;
 
-import com.liferay.portal.cluster.ClusterChannel;
-import com.liferay.portal.cluster.ClusterChannelFactory;
-import com.liferay.portal.cluster.ClusterReceiver;
+import com.liferay.portal.cluster.configuration.ClusterLinkConfiguration;
 
 /**
- * @author Tina Tian
+ * @author Michael C. Han
  */
-public class TestClusterChannelFactory implements ClusterChannelFactory {
+public class MockClusterLinkConfiguration implements ClusterLinkConfiguration {
+
+	public MockClusterLinkConfiguration(boolean debugEnabled, boolean enabled) {
+		_debugEnabled = debugEnabled;
+		_enabled = enabled;
+	}
 
 	@Override
-	public ClusterChannel createClusterChannel(
-		String channelProperties, String clusterName,
-		ClusterReceiver clusterReceiver) {
-
-		return new TestClusterChannel(
-			channelProperties, clusterName, clusterReceiver);
+	public String channelNamePrefix() {
+		return "liferay-cluster-link";
 	}
+
+	@Override
+	public boolean debugEnabled() {
+		return _debugEnabled;
+	}
+
+	@Override
+	public boolean enabled() {
+		return _enabled;
+	}
+
+	private final boolean _debugEnabled;
+	private final boolean _enabled;
 
 }
