@@ -21,6 +21,9 @@ public class ClusterPropsKeys {
 
 	public static final String AUTO_DETECT_ADDRESS = "autodetect.address";
 
+	public static final String CHANNEL_PROPERTIES_CONTROL =
+		"channel.properties.control";
+
 	public static final String CHANNEL_PROPERTIES_TRANSPORT_PREFIX =
 		"channel.properties.transport";
 

@@ -20,6 +20,7 @@ import com.liferay.portal.cluster.ClusterChannel;
 import com.liferay.portal.cluster.ClusterChannelFactory;
 import com.liferay.portal.cluster.ClusterReceiver;
 import com.liferay.portal.cluster.configuration.ClusterLinkConfiguration;
+import com.liferay.portal.cluster.internal.constants.ClusterPropsKeys;
 import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.ClusterEvent;
 import com.liferay.portal.kernel.cluster.ClusterEventListener;
@@ -40,11 +41,12 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashUtil;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.MethodHandler;
+import com.liferay.portal.kernel.util.Props;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.util.PortalInetSocketAddressEventListener;
-import com.liferay.portal.util.PropsValues;
 
 import java.io.Serializable;
 
@@ -193,43 +195,6 @@ public class ClusterExecutorImpl
 		return _localClusterNodeStatus.getClusterNode();
 	}
 
-	public void initialize() {
-		if (!isEnabled()) {
-			return;
-		}
-
-		_executorService = _portalExecutorManager.getPortalExecutor(
-			ClusterExecutorImpl.class.getName());
-
-		_clusterReceiver = new ClusterRequestReceiver(this);
-
-		_clusterChannel = _clusterChannelFactory.createClusterChannel(
-			PropsValues.CLUSTER_LINK_CHANNEL_PROPERTIES_CONTROL,
-			_LIFERAY_CONTROL_CHANNEL_NAME, _clusterReceiver);
-
-		ClusterNode localClusterNode = new ClusterNode(
-			PortalUUIDUtil.generate(), _clusterChannel.getBindInetAddress());
-
-		_localClusterNodeStatus = new ClusterNodeStatus(
-			localClusterNode, _clusterChannel.getLocalAddress());
-
-		if (Validator.isNotNull(PropsValues.PORTAL_INSTANCE_PROTOCOL)) {
-			localClusterNode.setPortalProtocol(
-				PropsValues.PORTAL_INSTANCE_PROTOCOL);
-
-			localClusterNode.setPortalInetSocketAddress(
-				getConfiguredPortalInetSocketAddress());
-		}
-
-		_memberJoined(_localClusterNodeStatus);
-
-		sendNotifyRequest();
-
-		_clusterReceiver.openLatch();
-
-		manageDebugClusterEventListener();
-	}
-
 	@Override
 	public boolean isClusterNodeAlive(String clusterNodeId) {
 		if (!isEnabled()) {
@@ -293,7 +258,26 @@ public class ClusterExecutorImpl
 		clusterLinkConfiguration = Configurable.createConfigurable(
 			ClusterLinkConfiguration.class, properties);
 
-		initialize();
+		String controlChannelProperties = getControlChannelProperties(
+			properties);
+
+		initialize(controlChannelProperties);
+	}
+
+	protected void configurePortalInstanceCommunications() {
+		if ((_localClusterNodeStatus == null) ||
+			Validator.isNull(_props.get(PropsKeys.PORTAL_INSTANCE_PROTOCOL))) {
+
+			return;
+		}
+
+		ClusterNode localClusterNode = _localClusterNodeStatus.getClusterNode();
+
+		localClusterNode.setPortalProtocol(
+			_props.get(PropsKeys.PORTAL_INSTANCE_PROTOCOL));
+
+		localClusterNode.setPortalInetSocketAddress(
+			getConfiguredPortalInetSocketAddress(_props));
 	}
 
 	@Deactivate
@@ -358,20 +342,25 @@ public class ClusterExecutorImpl
 		return _clusterChannel;
 	}
 
-	protected InetSocketAddress getConfiguredPortalInetSocketAddress() {
-		if (Validator.isNull(PropsValues.PORTAL_INSTANCE_INET_SOCKET_ADDRESS)) {
+	protected InetSocketAddress getConfiguredPortalInetSocketAddress(
+		Props props) {
+
+		String portalInstanceInetSocketAddress = props.get(
+			PropsKeys.PORTAL_INSTANCE_INET_SOCKET_ADDRESS);
+
+		if (Validator.isNull(portalInstanceInetSocketAddress)) {
 			throw new IllegalArgumentException(
 				"Portal instance host name and port needs to be set in the " +
 					"property \"portal.instance.inet.socket.address\"");
 		}
 
 		String[] parts = StringUtil.split(
-			PropsValues.PORTAL_INSTANCE_INET_SOCKET_ADDRESS, CharPool.COLON);
+			portalInstanceInetSocketAddress, CharPool.COLON);
 
 		if (parts.length != 2) {
 			throw new IllegalArgumentException(
 				"Unable to parse the portal instance host name and port from " +
-					PropsValues.PORTAL_INSTANCE_INET_SOCKET_ADDRESS);
+					portalInstanceInetSocketAddress);
 		}
 
 		InetAddress hostInetAddress = null;
@@ -382,7 +371,7 @@ public class ClusterExecutorImpl
 		catch (UnknownHostException uhe) {
 			throw new IllegalArgumentException(
 				"Unable to parse the portal instance host name and port from " +
-					PropsValues.PORTAL_INSTANCE_INET_SOCKET_ADDRESS, uhe);
+					portalInstanceInetSocketAddress, uhe);
 		}
 
 		int port = -1;
@@ -393,7 +382,7 @@ public class ClusterExecutorImpl
 		catch (NumberFormatException nfe) {
 			throw new IllegalArgumentException(
 				"Unable to parse portal InetSocketAddress port from " +
-					PropsValues.PORTAL_INSTANCE_INET_SOCKET_ADDRESS, nfe);
+					portalInstanceInetSocketAddress, nfe);
 		}
 
 		return new InetSocketAddress(hostInetAddress, port);
@@ -429,6 +418,44 @@ public class ClusterExecutorImpl
 		}
 
 		return clusterNodeResponse;
+	}
+
+	protected void initialize(String channelPropertiesControl) {
+		if (!isEnabled()) {
+			return;
+		}
+
+		if (Validator.isNull(channelPropertiesControl)) {
+			throw new IllegalStateException(
+				PropsKeys.CLUSTER_LINK_CHANNEL_PROPERTIES_CONTROL + " or " +
+					ClusterPropsKeys.CHANNEL_PROPERTIES_CONTROL + " not set.");
+		}
+
+		_executorService = _portalExecutorManager.getPortalExecutor(
+			ClusterExecutorImpl.class.getName());
+
+		_clusterReceiver = new ClusterRequestReceiver(this);
+
+		_clusterChannel = _clusterChannelFactory.createClusterChannel(
+			channelPropertiesControl,
+			clusterLinkConfiguration.channelNamePrefix() + "control",
+			_clusterReceiver);
+
+		ClusterNode localClusterNode = new ClusterNode(
+			PortalUUIDUtil.generate(), _clusterChannel.getBindInetAddress());
+
+		_localClusterNodeStatus = new ClusterNodeStatus(
+			localClusterNode, _clusterChannel.getLocalAddress());
+
+		_memberJoined(_localClusterNodeStatus);
+
+		sendNotifyRequest();
+
+		_clusterReceiver.openLatch();
+
+		configurePortalInstanceCommunications();
+
+		manageDebugClusterEventListener();
 	}
 
 	protected void manageDebugClusterEventListener() {
@@ -486,7 +513,10 @@ public class ClusterExecutorImpl
 		else if (clusterLinkConfiguration.enabled() &&
 				 (_clusterChannel == null)) {
 
-			initialize();
+			String controlChannelProperties = getControlChannelProperties(
+				properties);
+
+			initialize(controlChannelProperties);
 		}
 	}
 
@@ -509,6 +539,11 @@ public class ClusterExecutorImpl
 		PortalExecutorManager portalExecutorManager) {
 
 		_portalExecutorManager = portalExecutorManager;
+	}
+
+	@Reference(unbind = "-")
+	protected void setProps(Props props) {
+		_props = props;
 	}
 
 	protected volatile ClusterLinkConfiguration clusterLinkConfiguration;
@@ -537,8 +572,17 @@ public class ClusterExecutorImpl
 		return true;
 	}
 
-	private static final String _LIFERAY_CONTROL_CHANNEL_NAME =
-		PropsValues.CLUSTER_LINK_CHANNEL_NAME_PREFIX + "control";
+	private String getControlChannelProperties(Map<String, Object> properties) {
+		String controlChannepProperties = GetterUtil.getString(
+			properties.get(ClusterPropsKeys.CHANNEL_PROPERTIES_CONTROL));
+
+		if (Validator.isNull(controlChannepProperties)) {
+			controlChannepProperties = _props.get(
+				PropsKeys.CLUSTER_LINK_CHANNEL_PROPERTIES_CONTROL);
+		}
+
+		return controlChannepProperties;
+	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ClusterExecutorImpl.class);
@@ -557,6 +601,7 @@ public class ClusterExecutorImpl
 			FinalizeManager.WEAK_REFERENCE_FACTORY);
 	private ClusterNodeStatus _localClusterNodeStatus;
 	private PortalExecutorManager _portalExecutorManager;
+	private Props _props;
 
 	private static class ClusterNodeStatus implements Serializable {
 
