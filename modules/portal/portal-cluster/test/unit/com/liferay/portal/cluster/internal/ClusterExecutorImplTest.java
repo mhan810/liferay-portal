@@ -14,19 +14,26 @@
 
 package com.liferay.portal.cluster.internal;
 
+import com.liferay.portal.cluster.configuration.ClusterExecutorConfiguration;
+import com.liferay.portal.cluster.internal.constants.ClusterPropsKeys;
 import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.ClusterEvent;
 import com.liferay.portal.kernel.cluster.ClusterEventListener;
 import com.liferay.portal.kernel.cluster.ClusterInvokeThreadLocal;
+import com.liferay.portal.kernel.cluster.ClusterLink;
 import com.liferay.portal.kernel.cluster.ClusterNode;
 import com.liferay.portal.kernel.cluster.ClusterNodeResponse;
 import com.liferay.portal.kernel.cluster.ClusterNodeResponses;
 import com.liferay.portal.kernel.cluster.ClusterRequest;
 import com.liferay.portal.kernel.cluster.FutureClusterResponses;
+import com.liferay.portal.kernel.cluster.Priority;
+import com.liferay.portal.kernel.configuration.Filter;
+import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.test.rule.NewEnv;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.ObjectValuePair;
+import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.test.rule.AspectJNewEnvTestRule;
 
@@ -35,7 +42,10 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 
 import org.junit.Assert;
@@ -58,7 +68,7 @@ public class ClusterExecutorImplTest extends BaseClusterTestCase {
 		List<ClusterEventListener> clusterEventListeners =
 			clusterExecutorImpl.getClusterEventListeners();
 
-		Assert.assertEquals(1, clusterEventListeners.size());
+		Assert.assertEquals(0, clusterEventListeners.size());
 
 		ClusterEventListener clusterEventListener = new ClusterEventListener() {
 
@@ -72,7 +82,7 @@ public class ClusterExecutorImplTest extends BaseClusterTestCase {
 
 		clusterEventListeners = clusterExecutorImpl.getClusterEventListeners();
 
-		Assert.assertEquals(2, clusterEventListeners.size());
+		Assert.assertEquals(1, clusterEventListeners.size());
 
 		// Test 2, remove cluster event listener
 
@@ -80,7 +90,7 @@ public class ClusterExecutorImplTest extends BaseClusterTestCase {
 
 		clusterEventListeners = clusterExecutorImpl.getClusterEventListeners();
 
-		Assert.assertEquals(1, clusterEventListeners.size());
+		Assert.assertEquals(0, clusterEventListeners.size());
 
 		// Test 3, set cluster event listener
 
@@ -92,7 +102,7 @@ public class ClusterExecutorImplTest extends BaseClusterTestCase {
 
 		clusterEventListeners = clusterExecutorImpl.getClusterEventListeners();
 
-		Assert.assertEquals(2, clusterEventListeners.size());
+		Assert.assertEquals(1, clusterEventListeners.size());
 	}
 
 	@Test
@@ -117,6 +127,28 @@ public class ClusterExecutorImplTest extends BaseClusterTestCase {
 
 		Assert.assertTrue(clusterChannel.isClosed());
 		Assert.assertTrue(executorService.isShutdown());
+	}
+
+	@Test
+	public void testDebugClusterEventListener() {
+		ClusterExecutorImpl clusterExecutorImpl = getClusterExecutorImpl();
+		clusterExecutorImpl.clusterExecutorConfiguration =
+			new ClusterExecutorConfiguration() {
+				@Override
+				public boolean debugEnabled() {
+					return true;
+				}
+			};
+
+		clusterExecutorImpl.manageDebugClusterEventListener();
+
+		List<ClusterEventListener> clusterEventListeners =
+			clusterExecutorImpl.getClusterEventListeners();
+
+		Assert.assertEquals(1, clusterEventListeners.size());
+		Assert.assertEquals(
+			DebuggingClusterEventListenerImpl.class.getName(),
+			clusterEventListeners.get(0).getClass().getName());
 	}
 
 	@Test
@@ -344,6 +376,62 @@ public class ClusterExecutorImplTest extends BaseClusterTestCase {
 		final boolean debugEnabled, final boolean enabled) {
 
 		ClusterExecutorImpl clusterExecutorImpl = new ClusterExecutorImpl();
+		clusterExecutorImpl.setClusterLink(new ClusterLink() {
+			@Override
+			public boolean isEnabled() {
+				return enabled;
+			}
+
+			@Override
+			public void sendMulticastMessage(
+				Message message, Priority priority) {
+			}
+
+			@Override
+			public void sendUnicastMessage(
+				Address address, Message message, Priority priority) {
+			}
+		});
+
+		clusterExecutorImpl.setProps(new Props() {
+
+			@Override
+			public boolean contains(String key) {
+				return false;
+			}
+
+			@Override
+			public String get(String key) {
+				return null;
+			}
+
+			@Override
+			public String get(String key, Filter filter) {
+				return null;
+			}
+
+			@Override
+			public String[] getArray(String key) {
+				return null;
+			}
+
+			@Override
+			public String[] getArray(String key, Filter filter) {
+				return null;
+			}
+
+			@Override
+			public Properties getProperties() {
+				return null;
+			}
+
+			@Override
+			public Properties getProperties(
+				String prefix, boolean removePrefix) {
+
+				return null;
+			}
+		});
 
 		clusterExecutorImpl.setClusterChannelFactory(
 			new TestClusterChannelFactory());
@@ -351,8 +439,7 @@ public class ClusterExecutorImplTest extends BaseClusterTestCase {
 		clusterExecutorImpl.setPortalExecutorManager(
 			new MockPortalExecutorManager());
 
-		clusterExecutorImpl.clusterLinkConfiguration =
-			new MockClusterLinkConfiguration(debugEnabled, enabled);
+		Map<String, Object> properties = new HashMap<>();
 
 		String channelControlProperties =
 			"UDP(bind_addr=localhost;mcast_group_addr=239.255.0.1;" +
@@ -377,7 +464,11 @@ public class ClusterExecutorImplTest extends BaseClusterTestCase {
 				"FRAG2(frag_size=61440):" +
 				"RSVP(resend_interval=2000;timeout=10000)";
 
-		clusterExecutorImpl.initialize(channelControlProperties);
+		properties.put(
+			ClusterPropsKeys.CHANNEL_PROPERTIES_CONTROL,
+			channelControlProperties);
+
+		clusterExecutorImpl.activate(properties);
 
 		return clusterExecutorImpl;
 	}
