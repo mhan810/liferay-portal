@@ -144,7 +144,8 @@ public class LuceneHelperImplTest {
 
 	@AdviseWith(
 		adviceClasses = {
-			DisableIndexOnStartUpAdvice.class, EnableClusterLinkAdvice.class,
+			ClusterExecutorUtilAdvice.class, DisableIndexOnStartUpAdvice.class,
+			EnableClusterLinkAdvice.class,
 			EnableLuceneReplicateWriteAdvice.class
 		}
 	)
@@ -176,7 +177,8 @@ public class LuceneHelperImplTest {
 
 	@AdviseWith(
 		adviceClasses = {
-			DisableIndexOnStartUpAdvice.class, EnableClusterLinkAdvice.class,
+			ClusterExecutorUtilAdvice.class, DisableIndexOnStartUpAdvice.class,
+			EnableClusterLinkAdvice.class,
 			EnableLuceneReplicateWriteAdvice.class,
 			SkipGetBootupClusterNodeObjectValuePairAdvice.class
 		}
@@ -217,7 +219,8 @@ public class LuceneHelperImplTest {
 
 	@AdviseWith(
 		adviceClasses = {
-			DisableIndexOnStartUpAdvice.class, EnableClusterLinkAdvice.class,
+			ClusterExecutorUtilAdvice.class, DisableIndexOnStartUpAdvice.class,
+			EnableClusterLinkAdvice.class,
 			EnableLuceneReplicateWriteAdvice.class,
 			LuceneClusterUtilAdvice.class
 		}
@@ -280,7 +283,8 @@ public class LuceneHelperImplTest {
 
 	@AdviseWith(
 		adviceClasses = {
-			DisableIndexOnStartUpAdvice.class, EnableClusterLinkAdvice.class,
+			ClusterExecutorUtilAdvice.class, DisableIndexOnStartUpAdvice.class,
+			EnableClusterLinkAdvice.class,
 			EnableLuceneReplicateWriteAdvice.class,
 			LuceneClusterUtilAdvice.class
 		}
@@ -318,7 +322,8 @@ public class LuceneHelperImplTest {
 
 	@AdviseWith(
 		adviceClasses = {
-			DisableIndexOnStartUpAdvice.class, EnableClusterLinkAdvice.class,
+			ClusterExecutorUtilAdvice.class, DisableIndexOnStartUpAdvice.class,
+			EnableClusterLinkAdvice.class,
 			EnableLuceneReplicateWriteAdvice.class,
 			SkipGetLoadIndexesInputStreamFromClusterAdvice.class
 		}
@@ -358,7 +363,8 @@ public class LuceneHelperImplTest {
 
 	@AdviseWith(
 		adviceClasses = {
-			DisableIndexOnStartUpAdvice.class, DisableClusterLinkAdvice.class,
+			ClusterExecutorUtilAdvice.class, DisableIndexOnStartUpAdvice.class,
+			DisableClusterLinkAdvice.class,
 			EnableLuceneReplicateWriteAdvice.class
 		}
 	)
@@ -376,8 +382,8 @@ public class LuceneHelperImplTest {
 
 	@AdviseWith(
 		adviceClasses = {
-			DisableIndexOnStartUpAdvice.class, EnableClusterLinkAdvice.class,
-			EnableLuceneReplicateWriteAdvice.class
+			ClusterExecutorUtilAdvice.class, DisableIndexOnStartUpAdvice.class,
+			EnableClusterLinkAdvice.class, EnableLuceneReplicateWriteAdvice.class
 		}
 	)
 	@Test
@@ -526,6 +532,13 @@ public class LuceneHelperImplTest {
 
 	@Aspect
 	public static class ClusterExecutorUtilAdvice {
+
+		@Around(
+			"execution(private com.liferay.portal.kernel.cluster." +
+				"ClusterExecutorUtil.new())"
+		)
+		public void ClusterExecutorUtil() {
+		}
 
 		@Around(
 			"execution(* com.liferay.portal.kernel.cluster." +

@@ -381,7 +381,7 @@ public class ClusterSchedulerEngineTest {
 				ClusterableContextThreadLocalAdvice.getAndClearThreadLocals()));
 	}
 
-	@NewEnv(type = NewEnv.Type.NONE)
+	@AdviseWith(adviceClasses = {ClusterMasterExecutorUtilAdvice.class})
 	@Test
 	public void testGetSchedulerJobs() throws SchedulerException {
 		_mockClusterMasterExecutor.reset(true, 0, 0);
@@ -396,7 +396,7 @@ public class ClusterSchedulerEngineTest {
 		Assert.assertEquals(6, schedulerResponses.size());
 	}
 
-	@NewEnv(type = NewEnv.Type.NONE)
+	@AdviseWith(adviceClasses = {ClusterMasterExecutorUtilAdvice.class})
 	@Test
 	public void testGetSetBeanIdentifier() {
 		String beanIdentifier = "BeanIdentifier";
@@ -407,7 +407,7 @@ public class ClusterSchedulerEngineTest {
 			beanIdentifier, _clusterSchedulerEngine.getBeanIdentifier());
 	}
 
-	@NewEnv(type = NewEnv.Type.NONE)
+	@AdviseWith(adviceClasses = {ClusterMasterExecutorUtilAdvice.class})
 	@Test
 	public void testMasterToSlave() throws SchedulerException {
 
@@ -996,7 +996,7 @@ public class ClusterSchedulerEngineTest {
 				ClusterableContextThreadLocalAdvice.getAndClearThreadLocals()));
 	}
 
-	@NewEnv(type = NewEnv.Type.NONE)
+	@AdviseWith(adviceClasses = {ClusterMasterExecutorUtilAdvice.class})
 	@Test
 	public void testShutdown() throws SchedulerException {
 		_clusterSchedulerEngine.start();
@@ -1013,7 +1013,6 @@ public class ClusterSchedulerEngineTest {
 	}
 
 	@AdviseWith(adviceClasses = {ClusterMasterExecutorUtilAdvice.class})
-	@NewEnv(type = NewEnv.Type.NONE)
 	@Test
 	public void testSlaveToMaster() throws SchedulerException {
 
@@ -1840,6 +1839,13 @@ public class ClusterSchedulerEngineTest {
 
 	@Aspect
 	public static class ClusterMasterExecutorUtilAdvice {
+
+		@Around(
+			"execution(private com.liferay.portal.kernel.cluster." +
+				"ClusterMasterExecutorUtil.new())"
+		)
+		public void ClusterMasterExecutorUtil() {
+		}
 
 		@Around(
 			"execution(* com.liferay.portal.kernel.cluster." +
