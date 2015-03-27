@@ -502,9 +502,7 @@ public class ClusterExecutorImpl
 	}
 
 	@Modified
-	protected synchronized void modified(
-		Map<String, Object> properties) {
-
+	protected synchronized void modified(Map<String, Object> properties) {
 		clusterLinkConfiguration = Configurable.createConfigurable(
 			ClusterLinkConfiguration.class, properties);
 

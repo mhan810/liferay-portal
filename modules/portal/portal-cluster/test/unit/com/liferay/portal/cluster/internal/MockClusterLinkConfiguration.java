@@ -27,18 +27,8 @@ public class MockClusterLinkConfiguration implements ClusterLinkConfiguration {
 	}
 
 	@Override
-	public String autoDetectAddress() {
-		return "localhost";
-	}
-
-	@Override
 	public String channelNamePrefix() {
 		return "liferay-cluster-link";
-	}
-
-	@Override
-	public String channelSystemProperties() {
-		return "";
 	}
 
 	@Override

@@ -14,7 +14,6 @@
 
 package com.liferay.portal.cluster.internal;
 
-import com.liferay.portal.cluster.configuration.ClusterLinkConfiguration;
 import com.liferay.portal.kernel.cluster.ClusterEventListener;
 import com.liferay.portal.kernel.cluster.ClusterMasterTokenTransitionListener;
 import com.liferay.portal.kernel.cluster.ClusterNode;
@@ -123,7 +122,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 			mockClusterMasterTokenTransitionListener =
 				new MockClusterMasterTokenTransitionListener();
 
-		clusterMasterExecutorImpl.registerClusterMasterTokenTransitionListener(
+		clusterMasterExecutorImpl.addClusterMasterTokenTransitionListener(
 			mockClusterMasterTokenTransitionListener);
 
 		Assert.assertEquals(1, clusterMasterTokenTransitionListeners.size());
@@ -131,7 +130,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		// Test 2, unregister cluster master token transition listener
 
 		clusterMasterExecutorImpl.
-			unregisterClusterMasterTokenTransitionListener(
+			removeClusterMasterTokenTransitionListener(
 				mockClusterMasterTokenTransitionListener);
 
 		Assert.assertTrue(clusterMasterTokenTransitionListeners.isEmpty());
@@ -376,7 +375,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 			mockClusterMasterTokenTransitionListener =
 				new MockClusterMasterTokenTransitionListener();
 
-		clusterMasterExecutorImpl.registerClusterMasterTokenTransitionListener(
+		clusterMasterExecutorImpl.addClusterMasterTokenTransitionListener(
 			mockClusterMasterTokenTransitionListener);
 
 		_mockLockLocalService.setLock(otherClusterNodeId);
@@ -553,7 +552,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 			mockClusterMasterTokenTransitionListener =
 				new MockClusterMasterTokenTransitionListener();
 
-		clusterMasterExecutorImpl.registerClusterMasterTokenTransitionListener(
+		clusterMasterExecutorImpl.addClusterMasterTokenTransitionListener(
 			mockClusterMasterTokenTransitionListener);
 
 		clusterMasterExecutorImpl.notifyMasterTokenTransitionListeners(true);
@@ -572,7 +571,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		mockClusterMasterTokenTransitionListener =
 			new MockClusterMasterTokenTransitionListener();
 
-		clusterMasterExecutorImpl.registerClusterMasterTokenTransitionListener(
+		clusterMasterExecutorImpl.addClusterMasterTokenTransitionListener(
 			mockClusterMasterTokenTransitionListener);
 
 		clusterMasterExecutorImpl.notifyMasterTokenTransitionListeners(false);
