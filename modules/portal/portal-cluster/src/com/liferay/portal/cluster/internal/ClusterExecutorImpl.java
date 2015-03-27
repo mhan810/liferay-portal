@@ -18,8 +18,8 @@ import aQute.bnd.annotation.metatype.Configurable;
 
 import com.liferay.portal.cluster.ClusterChannel;
 import com.liferay.portal.cluster.ClusterChannelFactory;
-import com.liferay.portal.cluster.ClusterReceiver;
 import com.liferay.portal.cluster.configuration.ClusterLinkConfiguration;
+import com.liferay.portal.cluster.internal.constants.ClusterPropsKeys;
 import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.ClusterEvent;
 import com.liferay.portal.kernel.cluster.ClusterEventListener;
@@ -195,44 +195,6 @@ public class ClusterExecutorImpl
 		}
 
 		return _localClusterNodeStatus.getClusterNode();
-	}
-
-	public void initialize(Map<String, Object> properties) {
-		if (!isEnabled()) {
-			return;
-		}
-
-		_channelPropertiesControl = (String)properties.get(
-			_CHANNEL_PROPERTIES_CONTROL);
-
-		if (Validator.isNull(_channelPropertiesControl)) {
-			throw new IllegalStateException(
-				_CHANNEL_PROPERTIES_CONTROL + " not set.");
-		}
-
-		_executorService = _portalExecutorManager.getPortalExecutor(
-			ClusterExecutorImpl.class.getName());
-
-		_clusterReceiver = new ClusterRequestReceiver(this);
-
-		_clusterChannel = _clusterChannelFactory.createClusterChannel(
-			_channelPropertiesControl,
-			clusterLinkConfiguration.channelNamePrefix() + "control",
-			_clusterReceiver);
-
-		ClusterNode localClusterNode = new ClusterNode(
-			PortalUUIDUtil.generate(), _clusterChannel.getBindInetAddress());
-
-		_localClusterNodeStatus = new ClusterNodeStatus(
-			localClusterNode, _clusterChannel.getLocalAddress());
-
-		_memberJoined(_localClusterNodeStatus);
-
-		sendNotifyRequest();
-
-		_clusterReceiver.openLatch();
-
-		manageDebugClusterEventListener();
 	}
 
 	@Override
@@ -457,6 +419,45 @@ public class ClusterExecutorImpl
 		return clusterNodeResponse;
 	}
 
+	protected void initialize(Map<String, Object> properties) {
+		if (!isEnabled()) {
+			return;
+		}
+
+		String channelPropertiesControl = (String)properties.get(
+			ClusterPropsKeys.CHANNEL_PROPERTIES_CONTROL);
+
+		if (Validator.isNull(channelPropertiesControl)) {
+			throw new IllegalStateException(
+				ClusterPropsKeys.CHANNEL_PROPERTIES_CONTROL + " not set.");
+		}
+
+		_executorService = _portalExecutorManager.getPortalExecutor(
+			ClusterExecutorImpl.class.getName());
+
+		ClusterRequestReceiver clusterReceiver = new ClusterRequestReceiver(
+			this);
+
+		_clusterChannel = _clusterChannelFactory.createClusterChannel(
+			channelPropertiesControl,
+			clusterLinkConfiguration.channelNamePrefix() + "control",
+			clusterReceiver);
+
+		ClusterNode localClusterNode = new ClusterNode(
+			PortalUUIDUtil.generate(), _clusterChannel.getBindInetAddress());
+
+		_localClusterNodeStatus = new ClusterNodeStatus(
+			localClusterNode, _clusterChannel.getLocalAddress());
+
+		_memberJoined(_localClusterNodeStatus);
+
+		sendNotifyRequest();
+
+		clusterReceiver.openLatch();
+
+		manageDebugClusterEventListener();
+	}
+
 	protected void manageDebugClusterEventListener() {
 		if (clusterLinkConfiguration.debugEnabled() &&
 			(_debugClusterEventListener == null)) {
@@ -537,6 +538,17 @@ public class ClusterExecutorImpl
 		_portalExecutorManager = portalExecutorManager;
 	}
 
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC
+	)
+	protected void setProps(Props props) {
+		configurePortalInstanceCommunications(props);
+	}
+
+	protected void unsetProps(Props props) {
+	}
+
 	protected volatile ClusterLinkConfiguration clusterLinkConfiguration;
 
 	private boolean _memberJoined(ClusterNodeStatus clusterNodeStatus) {
@@ -563,20 +575,15 @@ public class ClusterExecutorImpl
 		return true;
 	}
 
-	private static final String _CHANNEL_PROPERTIES_CONTROL =
-		"channel.properties.control";
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		ClusterExecutorImpl.class);
 
-	private String _channelPropertiesControl;
 	private ClusterChannel _clusterChannel;
 	private ClusterChannelFactory _clusterChannelFactory;
 	private final CopyOnWriteArrayList<ClusterEventListener>
 		_clusterEventListeners = new CopyOnWriteArrayList<>();
 	private final Map<String, ClusterNodeStatus> _clusterNodeStatuses =
 		new ConcurrentHashMap<>();
-	private ClusterReceiver _clusterReceiver;
 	private ClusterEventListener _debugClusterEventListener;
 	private ExecutorService _executorService;
 	private final Map<String, FutureClusterResponses> _futureClusterResponses =

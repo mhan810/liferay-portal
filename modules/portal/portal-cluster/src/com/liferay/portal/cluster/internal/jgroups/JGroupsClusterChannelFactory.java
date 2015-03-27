@@ -17,6 +17,7 @@ package com.liferay.portal.cluster.internal.jgroups;
 import com.liferay.portal.cluster.ClusterChannel;
 import com.liferay.portal.cluster.ClusterChannelFactory;
 import com.liferay.portal.cluster.ClusterReceiver;
+import com.liferay.portal.cluster.internal.constants.ClusterPropsKeys;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.CharPool;
@@ -40,7 +41,9 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"autodetect.address=www.google.com:80"
+		"autodetect.address=www.google.com:80", "jgroups.bind_addr=localhost",
+		"jgroups.mping.mcast_addr=239.255.0.3",
+		"jgroups.mping.mcast_port=23303", "jgroups.mping.ip_ttl=8"
 	},
 	service = ClusterChannelFactory.class
 )
@@ -63,7 +66,7 @@ public class JGroupsClusterChannelFactory implements ClusterChannelFactory {
 
 	protected void initBindAddress(Map<String, Object> properties) {
 		String autodetectAddress = GetterUtil.getString(
-			properties.get(_AUTO_DETECT_ADDRESS));
+			properties.get(ClusterPropsKeys.AUTO_DETECT_ADDRESS));
 
 		if (Validator.isNull(autodetectAddress)) {
 			return;
@@ -129,8 +132,6 @@ public class JGroupsClusterChannelFactory implements ClusterChannelFactory {
 			}
 		}
 	}
-
-	private static final String _AUTO_DETECT_ADDRESS = "autodetect.address";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		JGroupsClusterChannelFactory.class);

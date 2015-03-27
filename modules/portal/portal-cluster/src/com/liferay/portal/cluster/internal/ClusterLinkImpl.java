@@ -20,6 +20,7 @@ import com.liferay.portal.cluster.ClusterChannel;
 import com.liferay.portal.cluster.ClusterChannelFactory;
 import com.liferay.portal.cluster.ClusterReceiver;
 import com.liferay.portal.cluster.configuration.ClusterLinkConfiguration;
+import com.liferay.portal.cluster.internal.constants.ClusterPropsKeys;
 import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.ClusterInvokeThreadLocal;
 import com.liferay.portal.kernel.cluster.ClusterLink;
@@ -146,7 +147,9 @@ public class ClusterLinkImpl implements ClusterLink {
 		Properties transportProperties = new Properties();
 
 		for (String propertyKey : properties.keySet()) {
-			if (propertyKey.startsWith(_CHANNEL_PROPERTIES_TRANSPORT)) {
+			if (propertyKey.startsWith(
+					ClusterPropsKeys.CHANNEL_PROPERTIES_TRANSPORT)) {
+
 				transportProperties.put(
 					propertyKey, properties.get(propertyKey));
 			}
@@ -272,9 +275,6 @@ public class ClusterLinkImpl implements ClusterLink {
 	}
 
 	protected volatile ClusterLinkConfiguration clusterLinkConfiguration;
-
-	private static final String _CHANNEL_PROPERTIES_TRANSPORT =
-		"channel.properties.transport";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ClusterLinkImpl.class);
