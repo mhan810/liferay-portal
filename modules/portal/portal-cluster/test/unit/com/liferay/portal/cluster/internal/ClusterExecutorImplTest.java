@@ -27,16 +27,8 @@ import com.liferay.portal.kernel.test.rule.NewEnv;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.ObjectValuePair;
-import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
-import com.liferay.portal.test.rule.AdviseWith;
 import com.liferay.portal.test.rule.AspectJNewEnvTestRule;
-import com.liferay.portal.test.rule.PortalExecutorManagerTestRule;
-import com.liferay.portal.util.PortalImpl;
-import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.PropsImpl;
-import com.liferay.portal.uuid.PortalUUIDImpl;
 
 import java.io.Serializable;
 
@@ -46,13 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -62,30 +48,6 @@ import org.junit.Test;
 @NewEnv(type = NewEnv.Type.CLASSLOADER)
 public class ClusterExecutorImplTest extends BaseClusterTestCase {
 
-	@ClassRule
-	@Rule
-	public static final PortalExecutorManagerTestRule aggregateTestRule =
-		PortalExecutorManagerTestRule.INSTANCE;
-
-	@Before
-	public void setUp() {
-		PortalUtil portalUtil = new PortalUtil();
-
-		portalUtil.setPortal(new PortalImpl());
-
-		PortalUUIDUtil portalUUIDUtil = new PortalUUIDUtil();
-
-		portalUUIDUtil.setPortalUUID(new PortalUUIDImpl());
-
-		PropsUtil.setProps(new PropsImpl());
-	}
-
-	@AdviseWith(
-		adviceClasses = {
-			EnableClusterLinkAdvice.class,
-			EnableClusterExecutorDebugAdvice.class
-		}
-	)
 	@Test
 	public void testClusterEventListener() {
 
@@ -133,10 +95,10 @@ public class ClusterExecutorImplTest extends BaseClusterTestCase {
 		Assert.assertEquals(2, clusterEventListeners.size());
 	}
 
-	@AdviseWith(adviceClasses = {EnableClusterLinkAdvice.class})
 	@Test
-	public void testDestroy() {
-		ClusterExecutorImpl clusterExecutorImpl = getClusterExecutorImpl();
+	public void testDeactivate() {
+		ClusterExecutorImpl clusterExecutorImpl = getClusterExecutorImpl(
+			true, true);
 
 		List<TestClusterChannel> clusterChannels =
 			TestClusterChannel.getClusterChannels();
@@ -151,24 +113,19 @@ public class ClusterExecutorImplTest extends BaseClusterTestCase {
 		Assert.assertFalse(executorService.isShutdown());
 		Assert.assertFalse(clusterChannel.isClosed());
 
-		clusterExecutorImpl.destroy();
+		clusterExecutorImpl.deactivate();
 
 		Assert.assertTrue(clusterChannel.isClosed());
 		Assert.assertTrue(executorService.isShutdown());
 	}
 
-	@AdviseWith(adviceClasses = {DisableClusterLinkAdvice.class})
 	@Test
 	public void testDisabledClusterLink() {
 
 		// Test 1, initialize
 
-		ClusterExecutorImpl clusterExecutorImpl = getClusterExecutorImpl();
-
-		clusterExecutorImpl.setClusterChannelFactory(
-			new TestClusterChannelFactory());
-
-		clusterExecutorImpl.initialize();
+		ClusterExecutorImpl clusterExecutorImpl = getClusterExecutorImpl(
+			true, false);
 
 		List<TestClusterChannel> clusterChannels =
 			TestClusterChannel.getClusterChannels();
@@ -200,10 +157,9 @@ public class ClusterExecutorImplTest extends BaseClusterTestCase {
 
 		// Test 4, destroy
 
-		clusterExecutorImpl.destroy();
+		clusterExecutorImpl.deactivate();
 	}
 
-	@AdviseWith(adviceClasses = {EnableClusterLinkAdvice.class})
 	@Test
 	public void testExecute() throws Exception {
 
@@ -314,7 +270,6 @@ public class ClusterExecutorImplTest extends BaseClusterTestCase {
 		Assert.assertEquals(clusterRequest, receivedMessage.getKey());
 	}
 
-	@AdviseWith(adviceClasses = {EnableClusterLinkAdvice.class})
 	@Test
 	public void testExecuteClusterRequest() throws Exception {
 		ClusterExecutorImpl clusterExecutorImpl = getClusterExecutorImpl();
@@ -381,29 +336,48 @@ public class ClusterExecutorImplTest extends BaseClusterTestCase {
 	public final AspectJNewEnvTestRule aspectJNewEnvTestRule =
 		AspectJNewEnvTestRule.INSTANCE;
 
-	@Aspect
-	public static class EnableClusterExecutorDebugAdvice {
-
-		@Around(
-			"set(* com.liferay.portal.util.PropsValues." +
-				"CLUSTER_LINK_DEBUG_ENABLED)"
-		)
-		public Object enableClusterExecutorDebug(
-				ProceedingJoinPoint proceedingJoinPoint)
-			throws Throwable {
-
-			return proceedingJoinPoint.proceed(new Object[] {Boolean.TRUE});
-		}
-
+	protected ClusterExecutorImpl getClusterExecutorImpl() {
+		return getClusterExecutorImpl(true, true);
 	}
 
-	protected ClusterExecutorImpl getClusterExecutorImpl() {
+	protected ClusterExecutorImpl getClusterExecutorImpl(
+		final boolean debugEnabled, final boolean enabled) {
+
 		ClusterExecutorImpl clusterExecutorImpl = new ClusterExecutorImpl();
 
 		clusterExecutorImpl.setClusterChannelFactory(
 			new TestClusterChannelFactory());
 
-		clusterExecutorImpl.initialize();
+		clusterExecutorImpl.setPortalExecutorManager(
+			new MockPortalExecutorManager());
+
+		clusterExecutorImpl.clusterLinkConfiguration =
+			new MockClusterLinkConfiguration(debugEnabled, enabled);
+
+		String channelControlProperties =
+			"UDP(bind_addr=localhost;mcast_group_addr=239.255.0.1;" +
+				"mcast_port=23301):" +
+				"PING(timeout=2000;num_initial_members=20;" +
+				"break_on_coord_rsp=true):" +
+				"MERGE3(min_interval=10000;max_interval=30000):" +
+				"FD_SOCK:FD_ALL:VERIFY_SUSPECT(timeout=1500):" +
+				"pbcast.NAKACK2(xmit_interval=1000;xmit_table_num_rows=100;" +
+				"xmit_table_msgs_per_row=2000;" +
+				"xmit_table_max_compaction_time=30000;max_msg_batch_size=500;" +
+				"use_mcast_xmit=false;discard_delivered_msgs=true):" +
+				"UNICAST2(max_bytes=10M;xmit_table_num_rows=100;" +
+				"xmit_table_msgs_per_row=2000;" +
+				"xmit_table_max_compaction_time=60000;" +
+				"max_msg_batch_size=500):" +
+				"pbcast.STABLE(stability_delay=1000;desired_avg_gossip=50000;" +
+				"max_bytes=4M):" +
+				"pbcast.GMS(join_timeout=3000;print_local_addr=true;" +
+				"view_bundling=true):UFC(max_credits=2M;min_threshold=0.4):" +
+				"MFC(max_credits=2M;min_threshold=0.4):" +
+				"FRAG2(frag_size=61440):" +
+				"RSVP(resend_interval=2000;timeout=10000)";
+
+		clusterExecutorImpl.initialize(channelControlProperties);
 
 		return clusterExecutorImpl;
 	}
