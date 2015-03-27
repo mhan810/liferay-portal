@@ -14,9 +14,6 @@
 
 package com.liferay.portal.cluster.internal;
 
-import aQute.bnd.annotation.metatype.Configurable;
-
-import com.liferay.portal.cluster.configuration.ClusterLinkConfiguration;
 import com.liferay.portal.kernel.cluster.ClusterEvent;
 import com.liferay.portal.kernel.cluster.ClusterEventListener;
 import com.liferay.portal.kernel.cluster.ClusterExecutor;
@@ -39,13 +36,11 @@ import com.liferay.portal.model.Lock;
 import com.liferay.portal.service.LockLocalServiceUtil;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
@@ -154,10 +149,7 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 	}
 
 	@Activate
-	protected void activate(Map<String, Object> properties) {
-		clusterLinkConfiguration = Configurable.createConfigurable(
-			ClusterLinkConfiguration.class, properties);
-
+	protected void activate() {
 		initialize();
 	}
 
@@ -239,7 +231,7 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 	}
 
 	protected void initialize() {
-		if (!clusterLinkConfiguration.enabled() || SPIUtil.isSPI()) {
+		if (!_clusterExecutor.isEnabled() || SPIUtil.isSPI()) {
 			return;
 		}
 
@@ -257,23 +249,6 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 
 		notifyMasterTokenTransitionListeners(
 			_localClusterNodeId.equals(masterClusterNodeId));
-	}
-
-	@Modified
-	protected synchronized void modified(Map<String, Object> properties) {
-		clusterLinkConfiguration = Configurable.createConfigurable(
-			ClusterLinkConfiguration.class, properties);
-
-		if (!clusterLinkConfiguration.enabled() &&
-			(_clusterEventListener != null)) {
-
-			deactivate();
-		}
-		else if (clusterLinkConfiguration.enabled() &&
-				 (_clusterEventListener == null)) {
-
-			initialize();
-		}
 	}
 
 	protected void notifyMasterTokenTransitionListeners(
@@ -297,8 +272,6 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 		_clusterExecutor = clusterExecutor;
 	}
 
-	protected volatile ClusterLinkConfiguration clusterLinkConfiguration;
-
 	private static final String _LOCK_CLASS_NAME =
 		ClusterMasterExecutorImpl.class.getName();
 
@@ -311,7 +284,7 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 	private ClusterExecutor _clusterExecutor;
 	private final Set<ClusterMasterTokenTransitionListener>
 		_clusterMasterTokenTransitionListeners = new HashSet<>();
-	private volatile boolean _enabled;
+	private boolean _enabled;
 	private volatile String _localClusterNodeId;
 
 	private class ClusterMasterTokenClusterEventListener
