@@ -333,14 +333,6 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 		_setupInitialBundles();
 	}
 
-	private void _setupPrerequisiteFrameworkServices(
-		BundleContext bundleContext) {
-
-		bundleContext.registerService(
-			Props.class, PropsUtil.getProps(),
-			new HashMapDictionary<String, Object>());
-	}
-
 	@Override
 	public void startRuntime() throws Exception {
 		if (_framework == null) {
@@ -880,6 +872,14 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 
 			_installInitialBundle(initialBundle);
 		}
+	}
+
+	private void _setupPrerequisiteFrameworkServices(
+		BundleContext bundleContext) {
+
+		bundleContext.registerService(
+			Props.class, PropsUtil.getProps(),
+			new HashMapDictionary<String, Object>());
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
