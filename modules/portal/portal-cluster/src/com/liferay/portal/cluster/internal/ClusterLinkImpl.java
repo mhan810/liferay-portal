@@ -20,6 +20,7 @@ import com.liferay.portal.cluster.ClusterChannel;
 import com.liferay.portal.cluster.ClusterChannelFactory;
 import com.liferay.portal.cluster.ClusterReceiver;
 import com.liferay.portal.cluster.configuration.ClusterLinkConfiguration;
+import com.liferay.portal.cluster.internal.constants.ClusterPropsKeys;
 import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.ClusterInvokeThreadLocal;
 import com.liferay.portal.kernel.cluster.ClusterLink;
@@ -28,11 +29,10 @@ import com.liferay.portal.kernel.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
-import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.messaging.MessageBus;
+import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.util.PropsValues;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +46,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 /**
  * @author Shuyang Zhou
@@ -96,7 +98,9 @@ public class ClusterLinkImpl implements ClusterLink {
 		clusterLinkConfiguration = Configurable.createConfigurable(
 			ClusterLinkConfiguration.class, properties);
 
-		initialize();
+		Properties transportProperties = getTransportProperties(properties);
+
+		initialize(transportProperties);
 	}
 
 	@Deactivate
@@ -139,9 +143,29 @@ public class ClusterLinkImpl implements ClusterLink {
 		return _localTransportAddresses;
 	}
 
-	protected void initChannels() throws Exception {
-		Properties transportProperties = PropsUtil.getProperties(
-			PropsKeys.CLUSTER_LINK_CHANNEL_PROPERTIES_TRANSPORT, true);
+	protected Properties getTransportProperties(
+		Map<String, Object> properties) {
+
+		Properties transportProperties = new Properties();
+
+		for (String key : properties.keySet()) {
+			if (key.startsWith(
+					ClusterPropsKeys.CHANNEL_PROPERTIES_TRANSPORT_PREFIX)) {
+
+				transportProperties.put(key, properties.get(key));
+			}
+		}
+
+		if (transportProperties.isEmpty()) {
+			transportProperties = _props.getProperties(
+				PropsKeys.CLUSTER_LINK_CHANNEL_PROPERTIES_TRANSPORT, true);
+		}
+
+		return transportProperties;
+	}
+
+	protected void initChannels(Properties transportProperties)
+		throws Exception {
 
 		_channelCount = transportProperties.size();
 
@@ -162,6 +186,9 @@ public class ClusterLinkImpl implements ClusterLink {
 
 		Collections.sort(keys);
 
+		String transportChannelNamePrefix =
+			clusterLinkConfiguration.channelNamePrefix() + "transport-";
+
 		for (int i = 0; i < keys.size(); i++) {
 			String customName = keys.get(i);
 
@@ -171,8 +198,7 @@ public class ClusterLinkImpl implements ClusterLink {
 
 			ClusterChannel clusterChannel =
 				_clusterChannelFactory.createClusterChannel(
-					value, _LIFERAY_TRANSPORT_CHANNEL_NAME + i,
-					clusterReceiver);
+					value, transportChannelNamePrefix + i, clusterReceiver);
 
 			_clusterReceivers.add(clusterReceiver);
 			_localTransportAddresses.add(clusterChannel.getLocalAddress());
@@ -180,7 +206,7 @@ public class ClusterLinkImpl implements ClusterLink {
 		}
 	}
 
-	protected void initialize() {
+	protected void initialize(Properties transportProperties) {
 		if (!isEnabled()) {
 			return;
 		}
@@ -189,7 +215,7 @@ public class ClusterLinkImpl implements ClusterLink {
 			ClusterLinkImpl.class.getName());
 
 		try {
-			initChannels();
+			initChannels(transportProperties);
 		}
 		catch (Exception e) {
 			if (_log.isErrorEnabled()) {
@@ -217,7 +243,9 @@ public class ClusterLinkImpl implements ClusterLink {
 		else if (clusterLinkConfiguration.enabled() &&
 				 (_transportChannels == null)) {
 
-			initialize();
+			Properties transportProperties = getTransportProperties(properties);
+
+			initialize(transportProperties);
 		}
 	}
 
@@ -234,7 +262,7 @@ public class ClusterLinkImpl implements ClusterLink {
 			ClusterInvokeThreadLocal.setEnabled(false);
 
 			try {
-				MessageBusUtil.sendMessage(destinationName, message);
+				_messageBus.sendMessage(destinationName, message);
 			}
 			finally {
 				ClusterInvokeThreadLocal.setEnabled(true);
@@ -253,6 +281,14 @@ public class ClusterLinkImpl implements ClusterLink {
 		_clusterChannelFactory = clusterChannelFactory;
 	}
 
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC
+	)
+	protected void setMessageBus(MessageBus messageBus) {
+		_messageBus = messageBus;
+	}
+
 	@Reference(unbind = "-")
 	protected void setPortalExecutorManager(
 		PortalExecutorManager portalExecutorManager) {
@@ -260,10 +296,16 @@ public class ClusterLinkImpl implements ClusterLink {
 		_portalExecutorManager = portalExecutorManager;
 	}
 
-	protected volatile ClusterLinkConfiguration clusterLinkConfiguration;
+	@Reference(unbind = "-")
+	protected void setProps(Props props) {
+		_props = props;
+	}
 
-	private static final String _LIFERAY_TRANSPORT_CHANNEL_NAME =
-		PropsValues.CLUSTER_LINK_CHANNEL_NAME_PREFIX + "transport-";
+	protected void unsetMessageBus(MessageBus messageBus) {
+		_messageBus = null;
+	}
+
+	protected volatile ClusterLinkConfiguration clusterLinkConfiguration;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ClusterLinkImpl.class);
@@ -273,7 +315,9 @@ public class ClusterLinkImpl implements ClusterLink {
 	private List<ClusterReceiver> _clusterReceivers;
 	private ExecutorService _executorService;
 	private List<Address> _localTransportAddresses;
+	private MessageBus _messageBus;
 	private PortalExecutorManager _portalExecutorManager;
+	private Props _props;
 	private List<ClusterChannel> _transportChannels;
 
 }
