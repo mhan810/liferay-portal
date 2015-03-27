@@ -107,10 +107,6 @@ public class LuceneHelperImplTest {
 
 		_mockClusterExecutor = new MockClusterExecutor();
 
-		ClusterExecutorUtil clusterExecutorUtil = new ClusterExecutorUtil();
-
-		clusterExecutorUtil.setClusterExecutor(_mockClusterExecutor);
-
 		Class<LuceneHelperImpl> luceneHelperImplClass = LuceneHelperImpl.class;
 
 		Constructor<LuceneHelperImpl> luceneHelperImplConstructor =
@@ -529,6 +525,19 @@ public class LuceneHelperImplTest {
 		AspectJNewEnvTestRule.INSTANCE;
 
 	@Aspect
+	public static class ClusterExecutorUtilAdvice {
+
+		@Around(
+			"execution(* com.liferay.portal.kernel.cluster." +
+				"ClusterExecutorUtil.getClusterExecutor(..))"
+		)
+		public ClusterExecutor getClusterExecutor() {
+			return _mockClusterExecutor;
+		}
+
+	}
+
+	@Aspect
 	public static class DisableClusterLinkAdvice {
 
 		@Around(
@@ -701,55 +710,20 @@ public class LuceneHelperImplTest {
 	private static final byte[] _RESPONSE_MESSAGE =
 		"Response Message".getBytes();
 
+	private static InetAddress _localhostInetAddress;
+	private static MockClusterExecutor _mockClusterExecutor;
+
 	private CaptureHandler _captureHandler;
-	private InetAddress _localhostInetAddress;
 	private LuceneHelperImpl _luceneHelperImpl;
-	private MockClusterExecutor _mockClusterExecutor;
 	private MockIndexAccessor _mockIndexAccessor;
 
-	private static class MockURLConnection extends URLConnection {
-
-		public MockURLConnection(URL url) {
-			super(url);
-		}
-
-		public void assertOutputContent(String outputContent) {
-			Assert.assertEquals(
-				outputContent, _unsyncByteArrayOutputStream.toString());
-		}
-
-		@Override
-		public void connect() {
-		}
-
-		@Override
-		public InputStream getInputStream() {
-			return new UnsyncByteArrayInputStream(_RESPONSE_MESSAGE);
-		}
-
-		@Override
-		public OutputStream getOutputStream() {
-			return _unsyncByteArrayOutputStream;
-		}
-
-		private final UnsyncByteArrayOutputStream _unsyncByteArrayOutputStream =
-			new UnsyncByteArrayOutputStream();
-
-	}
-
-	private class MockClusterExecutor implements ClusterExecutor {
+	private static class MockClusterExecutor implements ClusterExecutor {
 
 		@Override
 		public void addClusterEventListener(
 			ClusterEventListener clusterEventListener) {
 
 			_clusterEventListeners.add(clusterEventListener);
-		}
-
-		@Override
-		public void destroy() {
-			_clusterNodes.clear();
-			_clusterEventListeners.clear();
 		}
 
 		@Override
@@ -812,10 +786,6 @@ public class LuceneHelperImplTest {
 
 		public String getLocalClusterNodeId() {
 			return _CLUSTER_NODE_ID_PREFIX + 0;
-		}
-
-		@Override
-		public void initialize() {
 		}
 
 		@Override
@@ -905,6 +875,36 @@ public class LuceneHelperImplTest {
 		private boolean _invokeMethodThrowException = false;
 		private int _port = -1;
 		private InetAddress _portalInetAddress;
+
+	}
+
+	private static class MockURLConnection extends URLConnection {
+
+		public MockURLConnection(URL url) {
+			super(url);
+		}
+
+		public void assertOutputContent(String outputContent) {
+			Assert.assertEquals(
+				outputContent, _unsyncByteArrayOutputStream.toString());
+		}
+
+		@Override
+		public void connect() {
+		}
+
+		@Override
+		public InputStream getInputStream() {
+			return new UnsyncByteArrayInputStream(_RESPONSE_MESSAGE);
+		}
+
+		@Override
+		public OutputStream getOutputStream() {
+			return _unsyncByteArrayOutputStream;
+		}
+
+		private final UnsyncByteArrayOutputStream _unsyncByteArrayOutputStream =
+			new UnsyncByteArrayOutputStream();
 
 	}
 
