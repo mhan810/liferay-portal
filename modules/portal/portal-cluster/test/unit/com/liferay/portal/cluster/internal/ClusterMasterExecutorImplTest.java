@@ -129,9 +129,8 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 
 		// Test 2, unregister cluster master token transition listener
 
-		clusterMasterExecutorImpl.
-			removeClusterMasterTokenTransitionListener(
-				mockClusterMasterTokenTransitionListener);
+		clusterMasterExecutorImpl.removeClusterMasterTokenTransitionListener(
+			mockClusterMasterTokenTransitionListener);
 
 		Assert.assertTrue(clusterMasterTokenTransitionListeners.isEmpty());
 

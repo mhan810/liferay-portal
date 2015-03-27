@@ -16,6 +16,7 @@ package com.liferay.portal.cluster.internal;
 
 import com.liferay.portal.cluster.ClusterChannel;
 import com.liferay.portal.cluster.ClusterReceiver;
+import com.liferay.portal.cluster.internal.constants.ClusterPropsKeys;
 import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.Priority;
 import com.liferay.portal.kernel.messaging.Message;
@@ -23,10 +24,8 @@ import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.rule.NewEnv;
-import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ObjectValuePair;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.test.rule.AdviseWith;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.test.rule.AspectJNewEnvTestRule;
 
 import java.io.Serializable;
@@ -34,15 +33,10 @@ import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 
 import org.junit.Assert;
 import org.junit.Rule;
@@ -55,12 +49,9 @@ import org.junit.Test;
 @NewEnv(type = NewEnv.Type.CLASSLOADER)
 public class ClusterLinkImplTest extends BaseClusterTestCase {
 
-	@AdviseWith(adviceClasses = {TransportationConfigurationAdvice.class})
 	@Test
 	public void testDeactivate() {
-		TransportationConfigurationAdvice.setChannelCount(1);
-
-		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl();
+		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl(true, 1);
 
 		List<TestClusterChannel> clusterChannels =
 			TestClusterChannel.getClusterChannels();
@@ -85,7 +76,7 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 
 		// Test 1, initialize
 
-		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl(false);
+		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl(false, 1);
 
 		List<TestClusterChannel> clusterChannels =
 			TestClusterChannel.getClusterChannels();
@@ -120,12 +111,9 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		clusterLinkImpl.deactivate();
 	}
 
-	@AdviseWith(adviceClasses = {TransportationConfigurationAdvice.class})
 	@Test
 	public void testGetChannel() {
-		TransportationConfigurationAdvice.setChannelCount(2);
-
-		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl();
+		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl(true, 2);
 
 		ClusterChannel clusterChannel1 = clusterLinkImpl.getChannel(
 			Priority.LEVEL1);
@@ -161,7 +149,6 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		Assert.assertTrue(clusterChannels.contains(clusterChannel2));
 	}
 
-	@AdviseWith(adviceClasses = {TransportationConfigurationAdvice.class})
 	@Test
 	public void testInitChannels() {
 		try (CaptureHandler captureHandler =
@@ -170,13 +157,10 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 
 			// Test 1, create ClusterLinkImpl#MAX_CHANNEL_COUNT channels
 
-			TransportationConfigurationAdvice.setChannelCount(
-				ClusterLinkImpl.MAX_CHANNEL_COUNT + 1);
-
 			List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 			try {
-				getClusterLinkImpl();
+				getClusterLinkImpl(true, ClusterLinkImpl.MAX_CHANNEL_COUNT + 1);
 
 				Assert.fail();
 			}
@@ -190,12 +174,10 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 
 			// Test 2, create 0 channels
 
-			TransportationConfigurationAdvice.setChannelCount(0);
-
 			logRecords = captureHandler.resetLogLevel(Level.SEVERE);
 
 			try {
-				getClusterLinkImpl();
+				getClusterLinkImpl(true, 0);
 
 				Assert.fail();
 			}
@@ -214,12 +196,9 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		}
 	}
 
-	@AdviseWith(adviceClasses = {TransportationConfigurationAdvice.class})
 	@Test
 	public void testInitialize() {
-		TransportationConfigurationAdvice.setChannelCount(2);
-
-		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl();
+		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl(true, 2);
 
 		Assert.assertNotNull(clusterLinkImpl.getExecutorService());
 
@@ -240,12 +219,9 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		}
 	}
 
-	@AdviseWith(adviceClasses = {TransportationConfigurationAdvice.class})
 	@Test
 	public void testSendMulticastMessage() {
-		TransportationConfigurationAdvice.setChannelCount(1);
-
-		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl();
+		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl(true, 1);
 
 		List<Serializable> multicastMessages =
 			TestClusterChannel.getMulticastMessages();
@@ -264,16 +240,9 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		Assert.assertTrue(unicastMessages.isEmpty());
 	}
 
-	@AdviseWith(
-		adviceClasses = {
-			TransportationConfigurationAdvice.class
-		}
-	)
 	@Test
 	public void testSendUnicastMessage() {
-		TransportationConfigurationAdvice.setChannelCount(1);
-
-		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl();
+		ClusterLinkImpl clusterLinkImpl = getClusterLinkImpl(true, 1);
 
 		List<Serializable> multicastMessages =
 			TestClusterChannel.getMulticastMessages();
@@ -302,50 +271,9 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 	public final AspectJNewEnvTestRule aspectJNewEnvTestRule =
 		AspectJNewEnvTestRule.INSTANCE;
 
-	@Aspect
-	public static class TransportationConfigurationAdvice {
+	protected ClusterLinkImpl getClusterLinkImpl(
+		final boolean enabled, int numChannels) {
 
-		public static void setChannelCount(int channelCount) {
-			_CHANNEL_COUNT = channelCount;
-		}
-
-		@Around(
-			"execution(* com.liferay.portal.util.PropsUtil.getProperties(" +
-				"String, boolean))"
-		)
-		public Object getTransportationConfigurationProperties(
-				ProceedingJoinPoint proceedingJoinPoint)
-			throws Throwable {
-
-			Object[] arguments = proceedingJoinPoint.getArgs();
-
-			if (PropsKeys.CLUSTER_LINK_CHANNEL_PROPERTIES_TRANSPORT.equals(
-					arguments[0]) &&
-				Boolean.TRUE.equals(arguments[1])) {
-
-				Properties properties = new Properties();
-
-				for (int i = 0; i < _CHANNEL_COUNT; i++) {
-					properties.put(
-						PropsKeys.CLUSTER_LINK_CHANNEL_PROPERTIES_TRANSPORT +
-							CharPool.POUND + i, "channel properties");
-				}
-
-				return properties;
-			}
-
-			return proceedingJoinPoint.proceed();
-		}
-
-		private static int _CHANNEL_COUNT = 0;
-
-	}
-
-	protected ClusterLinkImpl getClusterLinkImpl() {
-		return getClusterLinkImpl(true);
-	}
-
-	protected ClusterLinkImpl getClusterLinkImpl(final boolean enabled) {
 		ClusterLinkImpl clusterLinkImpl = new ClusterLinkImpl();
 
 		clusterLinkImpl.setClusterChannelFactory(
@@ -359,29 +287,34 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 
 		Map<String, Object> properties = new Hashtable<>();
 
-		properties.put(
-			"channel.properties.transport.0",
-			"UDP(bind_addr=localhost;mcast_group_addr=239.255.0.2;" +
-				"mcast_port=23302):" +
-				"PING(timeout=2000;num_initial_members=20;" +
-				"break_on_coord_rsp=true):" +
-				"MERGE3(min_interval=10000;max_interval=30000):" +
-				"FD_SOCK:FD_ALL:VERIFY_SUSPECT(timeout=1500):" +
-				"pbcast.NAKACK2(xmit_interval=1000;xmit_table_num_rows=100;" +
-				"xmit_table_msgs_per_row=2000;" +
-				"xmit_table_max_compaction_time=30000;max_msg_batch_size=500;" +
-				"use_mcast_xmit=false;discard_delivered_msgs=true):" +
-				"UNICAST2(max_bytes=10M;xmit_table_num_rows=100;" +
-				"xmit_table_msgs_per_row=2000;" +
-				"xmit_table_max_compaction_time=60000;" +
-				"max_msg_batch_size=500):" +
-				"pbcast.STABLE(stability_delay=1000;desired_avg_gossip=50000;" +
-				"max_bytes=4M):" +
-				"pbcast.GMS(join_timeout=3000;print_local_addr=true;" +
-				"view_bundling=true):UFC(max_credits=2M;min_threshold=0.4):" +
-				"MFC(max_credits=2M;min_threshold=0.4):" +
-				"FRAG2(frag_size=61440):" +
-				"RSVP(resend_interval=2000;timeout=10000)");
+		for (int i = 0; i < numChannels; i++) {
+			properties.put(
+				ClusterPropsKeys.CHANNEL_PROPERTIES_TRANSPORT +
+					StringPool.PERIOD + i,
+				"UDP(bind_addr=localhost;mcast_group_addr=239.255.0.2;" +
+					"mcast_port=23302):" +
+					"PING(timeout=2000;num_initial_members=20;" +
+					"break_on_coord_rsp=true):" +
+					"MERGE3(min_interval=10000;max_interval=30000):" +
+					"FD_SOCK:FD_ALL:VERIFY_SUSPECT(timeout=1500):" +
+					"pbcast.NAKACK2(xmit_interval=1000;" +
+					"xmit_table_num_rows=100;xmit_table_msgs_per_row=2000;" +
+					"xmit_table_max_compaction_time=30000;" +
+					"max_msg_batch_size=500;use_mcast_xmit=false;" +
+					"discard_delivered_msgs=true):" +
+					"UNICAST2(max_bytes=10M;xmit_table_num_rows=100;" +
+					"xmit_table_msgs_per_row=2000;" +
+					"xmit_table_max_compaction_time=60000;" +
+					"max_msg_batch_size=500):" +
+					"pbcast.STABLE(stability_delay=1000;" +
+					"desired_avg_gossip=50000;max_bytes=4M):" +
+					"pbcast.GMS(join_timeout=3000;print_local_addr=true;" +
+					"view_bundling=true):" +
+					"UFC(max_credits=2M;min_threshold=0.4):" +
+					"MFC(max_credits=2M;min_threshold=0.4):" +
+					"FRAG2(frag_size=61440):" +
+					"RSVP(resend_interval=2000;timeout=10000)");
+		}
 
 		clusterLinkImpl.initialize(properties);
 

@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
@@ -175,10 +176,11 @@ public class ClusterLinkImpl implements ClusterLink {
 		Collections.sort(keys);
 
 		String transportChannelNamePrefix =
-			clusterLinkConfiguration.channelNamePrefix() + "transport-";
+			clusterLinkConfiguration.channelNamePrefix() + "transport" +
+				StringPool.PERIOD;
 
 		for (int i = 0; i < keys.size(); i++) {
-			String customName = keys.get(i);
+			String customName = keys.get(i) + i;
 
 			String value = transportProperties.getProperty(customName);
 
