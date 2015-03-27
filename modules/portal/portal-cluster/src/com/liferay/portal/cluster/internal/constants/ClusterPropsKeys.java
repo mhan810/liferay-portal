@@ -30,4 +30,6 @@ public class ClusterPropsKeys {
 	public static final String CHANNEL_SYSTEM_PROPERTIES =
 		"channel.system.properties";
 
+	public static final String DEFAULT_CHANNEL_NAME_PREFIX = "liferay-channel-";
+
 }

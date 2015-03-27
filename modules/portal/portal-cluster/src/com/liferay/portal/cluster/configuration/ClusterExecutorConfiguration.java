@@ -20,17 +20,11 @@ import aQute.bnd.annotation.metatype.Meta;
  * @author Michael C. Han
  */
 @Meta.OCD(
-	id = "com.liferay.portal.cluster.configuration.ClusterLinkConfiguration"
+	id = "com.liferay.portal.cluster.configuration.ClusterExecutorConfiguration"
 )
-public interface ClusterLinkConfiguration {
-
-	@Meta.AD(deflt = "liferay-channel-", required = false)
-	public String channelNamePrefix();
+public interface ClusterExecutorConfiguration {
 
 	@Meta.AD(deflt = "false", required = false)
 	public boolean debugEnabled();
-
-	@Meta.AD(deflt = "false", required = false)
-	public boolean enabled();
 
 }

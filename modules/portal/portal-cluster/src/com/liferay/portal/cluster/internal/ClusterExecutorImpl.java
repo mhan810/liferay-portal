@@ -19,7 +19,7 @@ import aQute.bnd.annotation.metatype.Configurable;
 import com.liferay.portal.cluster.ClusterChannel;
 import com.liferay.portal.cluster.ClusterChannelFactory;
 import com.liferay.portal.cluster.ClusterReceiver;
-import com.liferay.portal.cluster.configuration.ClusterLinkConfiguration;
+import com.liferay.portal.cluster.configuration.ClusterExecutorConfiguration;
 import com.liferay.portal.cluster.internal.constants.ClusterPropsKeys;
 import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.ClusterEvent;
@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.cluster.ClusterEventListener;
 import com.liferay.portal.kernel.cluster.ClusterException;
 import com.liferay.portal.kernel.cluster.ClusterExecutor;
 import com.liferay.portal.kernel.cluster.ClusterInvokeThreadLocal;
+import com.liferay.portal.kernel.cluster.ClusterLink;
 import com.liferay.portal.kernel.cluster.ClusterNode;
 import com.liferay.portal.kernel.cluster.ClusterNodeResponse;
 import com.liferay.portal.kernel.cluster.ClusterRequest;
@@ -79,7 +80,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
  * @author Shuyang Zhou
  */
 @Component(
-	configurationPid = "com.liferay.portal.cluster.configuration.ClusterLinkConfiguration",
+	configurationPid = "com.liferay.portal.cluster.configuration.ClusterExecutorConfiguration",
 	immediate = true,
 	service = {
 		ClusterExecutor.class, PortalInetSocketAddressEventListener.class
@@ -206,7 +207,7 @@ public class ClusterExecutorImpl
 
 	@Override
 	public boolean isEnabled() {
-		return clusterLinkConfiguration.enabled();
+		return _clusterLink.isEnabled();
 	}
 
 	@Override
@@ -255,8 +256,8 @@ public class ClusterExecutorImpl
 
 	@Activate
 	protected void activate(Map<String, Object> properties) {
-		clusterLinkConfiguration = Configurable.createConfigurable(
-			ClusterLinkConfiguration.class, properties);
+		clusterExecutorConfiguration = Configurable.createConfigurable(
+			ClusterExecutorConfiguration.class, properties);
 
 		String controlChannelProperties = getControlChannelProperties(
 			properties);
@@ -436,9 +437,12 @@ public class ClusterExecutorImpl
 
 		_clusterReceiver = new ClusterRequestReceiver(this);
 
+		String channelNamePrefix = GetterUtil.getString(
+			PropsKeys.CLUSTER_LINK_CHANNEL_NAME_PREFIX,
+			ClusterPropsKeys.DEFAULT_CHANNEL_NAME_PREFIX);
+
 		_clusterChannel = _clusterChannelFactory.createClusterChannel(
-			channelPropertiesControl,
-			clusterLinkConfiguration.channelNamePrefix() + "control",
+			channelPropertiesControl, channelNamePrefix + "control",
 			_clusterReceiver);
 
 		ClusterNode localClusterNode = new ClusterNode(
@@ -459,7 +463,7 @@ public class ClusterExecutorImpl
 	}
 
 	protected void manageDebugClusterEventListener() {
-		if (clusterLinkConfiguration.debugEnabled() &&
+		if (clusterExecutorConfiguration.debugEnabled() &&
 			(_debugClusterEventListener == null)) {
 
 			_debugClusterEventListener =
@@ -467,7 +471,7 @@ public class ClusterExecutorImpl
 
 			addClusterEventListener(_debugClusterEventListener);
 		}
-		else if (!clusterLinkConfiguration.debugEnabled() &&
+		else if (!clusterExecutorConfiguration.debugEnabled() &&
 				 (_debugClusterEventListener != null)) {
 
 			removeClusterEventListener(_debugClusterEventListener);
@@ -504,20 +508,10 @@ public class ClusterExecutorImpl
 
 	@Modified
 	protected synchronized void modified(Map<String, Object> properties) {
-		clusterLinkConfiguration = Configurable.createConfigurable(
-			ClusterLinkConfiguration.class, properties);
+		clusterExecutorConfiguration = Configurable.createConfigurable(
+			ClusterExecutorConfiguration.class, properties);
 
-		if (!clusterLinkConfiguration.enabled() && (_clusterChannel != null)) {
-			deactivate();
-		}
-		else if (clusterLinkConfiguration.enabled() &&
-				 (_clusterChannel == null)) {
-
-			String controlChannelProperties = getControlChannelProperties(
-				properties);
-
-			initialize(controlChannelProperties);
-		}
+		manageDebugClusterEventListener();
 	}
 
 	protected void sendNotifyRequest() {
@@ -535,6 +529,11 @@ public class ClusterExecutorImpl
 	}
 
 	@Reference(unbind = "-")
+	protected void setClusterLink(ClusterLink clusterLink) {
+		_clusterLink = clusterLink;
+	}
+
+	@Reference(unbind = "-")
 	protected void setPortalExecutorManager(
 		PortalExecutorManager portalExecutorManager) {
 
@@ -546,7 +545,8 @@ public class ClusterExecutorImpl
 		_props = props;
 	}
 
-	protected volatile ClusterLinkConfiguration clusterLinkConfiguration;
+	protected volatile ClusterExecutorConfiguration
+		clusterExecutorConfiguration;
 
 	private boolean _memberJoined(ClusterNodeStatus clusterNodeStatus) {
 		ClusterNodeStatus oldClusterNodeStatus = _clusterNodeStatuses.put(
@@ -591,6 +591,7 @@ public class ClusterExecutorImpl
 	private ClusterChannelFactory _clusterChannelFactory;
 	private final CopyOnWriteArrayList<ClusterEventListener>
 		_clusterEventListeners = new CopyOnWriteArrayList<>();
+	private ClusterLink _clusterLink;
 	private final Map<String, ClusterNodeStatus> _clusterNodeStatuses =
 		new ConcurrentHashMap<>();
 	private ClusterReceiver _clusterReceiver;

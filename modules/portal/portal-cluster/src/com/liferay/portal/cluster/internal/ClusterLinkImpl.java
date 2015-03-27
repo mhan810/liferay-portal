@@ -14,12 +14,9 @@
 
 package com.liferay.portal.cluster.internal;
 
-import aQute.bnd.annotation.metatype.Configurable;
-
 import com.liferay.portal.cluster.ClusterChannel;
 import com.liferay.portal.cluster.ClusterChannelFactory;
 import com.liferay.portal.cluster.ClusterReceiver;
-import com.liferay.portal.cluster.configuration.ClusterLinkConfiguration;
 import com.liferay.portal.cluster.internal.constants.ClusterPropsKeys;
 import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.ClusterInvokeThreadLocal;
@@ -30,6 +27,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBus;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.Validator;
@@ -44,7 +42,6 @@ import java.util.concurrent.ExecutorService;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
@@ -52,15 +49,12 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 /**
  * @author Shuyang Zhou
  */
-@Component(
-	configurationPid = "com.liferay.portal.cluster.configuration.ClusterLinkConfiguration",
-	immediate = true, service = ClusterLink.class
-)
+@Component(immediate = true, service = ClusterLink.class)
 public class ClusterLinkImpl implements ClusterLink {
 
 	@Override
 	public boolean isEnabled() {
-		return clusterLinkConfiguration.enabled();
+		return _enabled;
 	}
 
 	@Override
@@ -95,8 +89,8 @@ public class ClusterLinkImpl implements ClusterLink {
 
 	@Activate
 	protected void activate(Map<String, Object> properties) {
-		clusterLinkConfiguration = Configurable.createConfigurable(
-			ClusterLinkConfiguration.class, properties);
+		_enabled = GetterUtil.getBoolean(
+			_props.get(PropsKeys.CLUSTER_LINK_ENABLED));
 
 		Properties transportProperties = getTransportProperties(properties);
 
@@ -186,8 +180,11 @@ public class ClusterLinkImpl implements ClusterLink {
 
 		Collections.sort(keys);
 
-		String transportChannelNamePrefix =
-			clusterLinkConfiguration.channelNamePrefix() + "transport-";
+		String channelNamePrefix = GetterUtil.getString(
+			PropsKeys.CLUSTER_LINK_CHANNEL_NAME_PREFIX,
+			ClusterPropsKeys.DEFAULT_CHANNEL_NAME_PREFIX);
+
+		String transportChannelNamePrefix = channelNamePrefix + "transport-";
 
 		for (int i = 0; i < keys.size(); i++) {
 			String customName = keys.get(i);
@@ -227,25 +224,6 @@ public class ClusterLinkImpl implements ClusterLink {
 
 		for (ClusterReceiver clusterReceiver : _clusterReceivers) {
 			clusterReceiver.openLatch();
-		}
-	}
-
-	@Modified
-	protected synchronized void modified(Map<String, Object> properties) {
-		clusterLinkConfiguration = Configurable.createConfigurable(
-			ClusterLinkConfiguration.class, properties);
-
-		if (!clusterLinkConfiguration.enabled() &&
-			(_transportChannels != null)) {
-
-			deactivate();
-		}
-		else if (clusterLinkConfiguration.enabled() &&
-				 (_transportChannels == null)) {
-
-			Properties transportProperties = getTransportProperties(properties);
-
-			initialize(transportProperties);
 		}
 	}
 
@@ -305,14 +283,13 @@ public class ClusterLinkImpl implements ClusterLink {
 		_messageBus = null;
 	}
 
-	protected volatile ClusterLinkConfiguration clusterLinkConfiguration;
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		ClusterLinkImpl.class);
 
 	private int _channelCount;
 	private ClusterChannelFactory _clusterChannelFactory;
 	private List<ClusterReceiver> _clusterReceivers;
+	private boolean _enabled;
 	private ExecutorService _executorService;
 	private List<Address> _localTransportAddresses;
 	private MessageBus _messageBus;
