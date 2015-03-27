@@ -19,18 +19,23 @@ import com.liferay.portal.cluster.ClusterReceiver;
 import com.liferay.portal.cluster.internal.constants.ClusterPropsKeys;
 import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.Priority;
+import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.rule.NewEnv;
 import com.liferay.portal.kernel.util.ObjectValuePair;
+import com.liferay.portal.kernel.util.Props;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.test.rule.AspectJNewEnvTestRule;
 
 import java.io.Serializable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -274,6 +279,48 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		final boolean enabled, int numChannels) {
 
 		ClusterLinkImpl clusterLinkImpl = new ClusterLinkImpl();
+		clusterLinkImpl.setProps(new Props() {
+			@Override
+			public boolean contains(String key) {
+				return true;
+			}
+
+			@Override
+			public String get(String key) {
+				if (PropsKeys.CLUSTER_LINK_ENABLED.equals(key)) {
+					return String.valueOf(enabled);
+				}
+
+				return StringPool.BLANK;
+			}
+
+			@Override
+			public String get(String key, Filter filter) {
+				return null;
+			}
+
+			@Override
+			public String[] getArray(String key) {
+				return null;
+			}
+
+			@Override
+			public String[] getArray(String key, Filter filter) {
+				return null;
+			}
+
+			@Override
+			public Properties getProperties() {
+				return new Properties();
+			}
+
+			@Override
+			public Properties getProperties(
+				String prefix, boolean removePrefix) {
+
+				return new Properties();
+			}
+		});
 
 		clusterLinkImpl.setClusterChannelFactory(
 			new TestClusterChannelFactory());
@@ -281,10 +328,7 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		clusterLinkImpl.setPortalExecutorManager(
 			new MockPortalExecutorManager());
 
-		clusterLinkImpl.clusterLinkConfiguration =
-			new MockClusterLinkConfiguration(true, enabled);
-
-		Properties properties = new Properties();
+		Map<String, Object> properties = new HashMap<>();
 
 		for (int i = 0; i < numChannels; i++) {
 			properties.put(
@@ -315,7 +359,7 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 					"RSVP(resend_interval=2000;timeout=10000)");
 		}
 
-		clusterLinkImpl.initialize(properties);
+		clusterLinkImpl.activate(properties);
 
 		return clusterLinkImpl;
 	}

@@ -14,18 +14,22 @@
 
 package com.liferay.portal.cluster.internal;
 
+import com.liferay.portal.cluster.configuration.ClusterExecutorConfiguration;
 import com.liferay.portal.kernel.cluster.ClusterEventListener;
+import com.liferay.portal.kernel.cluster.ClusterExecutor;
 import com.liferay.portal.kernel.cluster.ClusterMasterTokenTransitionListener;
 import com.liferay.portal.kernel.cluster.ClusterNode;
 import com.liferay.portal.kernel.cluster.ClusterRequest;
 import com.liferay.portal.kernel.cluster.FutureClusterResponses;
 import com.liferay.portal.kernel.concurrent.NoticeableFuture;
+import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
+import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.impl.LockImpl;
@@ -36,6 +40,7 @@ import java.io.Serializable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -587,9 +592,49 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		ClusterMasterExecutorImpl clusterMasterExecutorImpl =
 			new ClusterMasterExecutorImpl();
 
-		clusterMasterExecutorImpl.clusterLinkConfiguration =
-			new MockClusterLinkConfiguration(false, enabled);
+		clusterMasterExecutorImpl.setClusterExecutor(new ClusterExecutor() {
+			@Override
+			public void addClusterEventListener(
+				ClusterEventListener clusterEventListener) {
+			}
 
+			@Override
+			public FutureClusterResponses execute(
+				ClusterRequest clusterRequest) {
+
+				return null;
+			}
+
+			@Override
+			public List<ClusterEventListener> getClusterEventListeners() {
+				return null;
+			}
+
+			@Override
+			public List<ClusterNode> getClusterNodes() {
+				return null;
+			}
+
+			@Override
+			public ClusterNode getLocalClusterNode() {
+				return null;
+			}
+
+			@Override
+			public boolean isClusterNodeAlive(String clusterNodeId) {
+				return enabled;
+			}
+
+			@Override
+			public boolean isEnabled() {
+				return enabled;
+			}
+
+			@Override
+			public void removeClusterEventListener(
+				ClusterEventListener clusterEventListener) {
+			}
+		});
 		return clusterMasterExecutorImpl;
 	}
 
@@ -656,10 +701,53 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 
 			setClusterChannelFactory(new TestClusterChannelFactory());
 
-			clusterLinkConfiguration = new MockClusterLinkConfiguration(
-				false, _enabled);
+			clusterExecutorConfiguration = new ClusterExecutorConfiguration() {
+				@Override
+				public boolean debugEnabled() {
+					return false;
+				}
+			};
 
 			setPortalExecutorManager(new MockPortalExecutorManager());
+
+			setProps(new Props() {
+				@Override
+				public boolean contains(String key) {
+					return false;
+				}
+
+				@Override
+				public String get(String key) {
+					return null;
+				}
+
+				@Override
+				public String get(String key, Filter filter) {
+					return null;
+				}
+
+				@Override
+				public String[] getArray(String key) {
+					return null;
+				}
+
+				@Override
+				public String[] getArray(String key, Filter filter) {
+					return null;
+				}
+
+				@Override
+				public Properties getProperties() {
+					return null;
+				}
+
+				@Override
+				public Properties getProperties(
+					String prefix, boolean removePrefix) {
+
+					return null;
+				}
+			});
 
 			String channelControlProperties =
 				"UDP(bind_addr=localhost;mcast_group_addr=239.255.0.1;" +
