@@ -25,6 +25,7 @@ public class MockPortalExecutorManager implements PortalExecutorManager {
 	@Override
 	public ThreadPoolExecutor getPortalExecutor(String name) {
 		return new ThreadPoolExecutor(0, 1) {
+
 			@Override
 			public void execute(Runnable runnable) {
 				runnable.run();
@@ -38,6 +39,7 @@ public class MockPortalExecutorManager implements PortalExecutorManager {
 		String name, boolean createIfAbsent) {
 
 		return new ThreadPoolExecutor(0, 1) {
+
 			@Override
 			public void execute(Runnable runnable) {
 				runnable.run();
