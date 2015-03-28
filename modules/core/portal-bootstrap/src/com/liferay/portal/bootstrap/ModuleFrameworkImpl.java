@@ -328,9 +328,9 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 		ServiceTrackerMapFactoryUtil.setServiceTrackerMapFactory(
 			new ServiceTrackerMapFactoryImpl(_framework.getBundleContext()));
 
-		_setupPrerequisiteFrameworkServices(_framework.getBundleContext());
+		_setUpPrerequisiteFrameworkServices(_framework.getBundleContext());
 
-		_setupInitialBundles();
+		_setUpInitialBundles();
 	}
 
 	@Override
@@ -866,7 +866,7 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 			properties);
 	}
 
-	private void _setupInitialBundles() throws Exception {
+	private void _setUpInitialBundles() throws Exception {
 		for (String initialBundle :
 				PropsValues.MODULE_FRAMEWORK_INITIAL_BUNDLES) {
 
@@ -874,7 +874,7 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 		}
 	}
 
-	private void _setupPrerequisiteFrameworkServices(
+	private void _setUpPrerequisiteFrameworkServices(
 		BundleContext bundleContext) {
 
 		bundleContext.registerService(
