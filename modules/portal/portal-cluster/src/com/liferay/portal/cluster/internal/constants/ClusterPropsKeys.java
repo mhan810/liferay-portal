@@ -12,22 +12,19 @@
  * details.
  */
 
-package com.liferay.portal.kernel.cluster;
-
-import com.liferay.portal.kernel.messaging.Message;
+package com.liferay.portal.cluster.internal.constants;
 
 /**
- * @author Shuyang Zhou
+ * @author Michael C. Han
  */
-public interface ClusterLink {
+public interface ClusterPropsKeys {
 
-	public static final int MAX_CHANNEL_COUNT = Priority.values().length;
+	public static final String AUTO_DETECT_ADDRESS = "autodetect.address";
 
-	public boolean isEnabled();
+	public static final String CHANNEL_PROPERTIES_CONTROL =
+		"channel.properties.control";
 
-	public void sendMulticastMessage(Message message, Priority priority);
-
-	public void sendUnicastMessage(
-		Address address, Message message, Priority priority);
+	public static final String CHANNEL_PROPERTIES_TRANSPORT =
+		"channel.properties.transport";
 
 }
