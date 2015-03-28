@@ -21,6 +21,8 @@ public class ClusterPropsKeys {
 
 	public static final String AUTODETECT_ADDRESS = "autodetect.address";
 
+	public static final String CHANNEL_NAME_PREFIX_DEFAULT = "liferay-channel-";
+
 	public static final String CHANNEL_PROPERTIES_CONTROL =
 		"channel.properties.control";
 
@@ -29,7 +31,5 @@ public class ClusterPropsKeys {
 
 	public static final String CHANNEL_SYSTEM_PROPERTIES =
 		"channel.system.properties";
-
-	public static final String DEFAULT_CHANNEL_NAME_PREFIX = "liferay-channel-";
 
 }

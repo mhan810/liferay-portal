@@ -182,7 +182,7 @@ public class ClusterLinkImpl implements ClusterLink {
 
 		String channelNamePrefix = GetterUtil.getString(
 			PropsKeys.CLUSTER_LINK_CHANNEL_NAME_PREFIX,
-			ClusterPropsKeys.DEFAULT_CHANNEL_NAME_PREFIX);
+			ClusterPropsKeys.CHANNEL_NAME_PREFIX_DEFAULT);
 
 		String transportChannelNamePrefix = channelNamePrefix + "transport-";
 

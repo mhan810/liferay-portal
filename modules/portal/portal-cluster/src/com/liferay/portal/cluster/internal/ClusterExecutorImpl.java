@@ -439,7 +439,7 @@ public class ClusterExecutorImpl
 
 		String channelNamePrefix = GetterUtil.getString(
 			PropsKeys.CLUSTER_LINK_CHANNEL_NAME_PREFIX,
-			ClusterPropsKeys.DEFAULT_CHANNEL_NAME_PREFIX);
+			ClusterPropsKeys.CHANNEL_NAME_PREFIX_DEFAULT);
 
 		_clusterChannel = _clusterChannelFactory.createClusterChannel(
 			channelPropertiesControl, channelNamePrefix + "control",
