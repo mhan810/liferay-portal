@@ -75,7 +75,7 @@ public class JGroupsClusterChannelFactory implements ClusterChannelFactory {
 		initSystemProperties(channelSystemProperties);
 
 		String autodetectAddress = GetterUtil.getString(
-			properties.get(ClusterPropsKeys.AUTO_DETECT_ADDRESS));
+			properties.get(ClusterPropsKeys.AUTODETECT_ADDRESS));
 
 		if (Validator.isNull(autodetectAddress)) {
 			autodetectAddress = GetterUtil.getString(
@@ -128,7 +128,7 @@ public class JGroupsClusterChannelFactory implements ClusterChannelFactory {
 		}
 		catch (IOException e) {
 			if (_log.isErrorEnabled()) {
-				_log.error("Unable to detect bind address for jgroups", e);
+				_log.error("Unable to detect bind address for JGroups", e);
 			}
 		}
 	}
@@ -161,8 +161,6 @@ public class JGroupsClusterChannelFactory implements ClusterChannelFactory {
 	protected void setProps(Props props) {
 		_props = props;
 	}
-
-	private static final String _AUTO_DETECT_ADDRESS = "autodetect.address";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		JGroupsClusterChannelFactory.class);
