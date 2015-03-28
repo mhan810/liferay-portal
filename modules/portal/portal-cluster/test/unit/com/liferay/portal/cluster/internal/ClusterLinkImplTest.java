@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.test.rule.NewEnv;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.test.rule.AspectJNewEnvTestRule;
 
@@ -276,51 +277,55 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		AspectJNewEnvTestRule.INSTANCE;
 
 	protected ClusterLinkImpl getClusterLinkImpl(
-		final boolean enabled, int numChannels) {
+		final boolean enabled, int channels) {
 
 		ClusterLinkImpl clusterLinkImpl = new ClusterLinkImpl();
-		clusterLinkImpl.setProps(new Props() {
-			@Override
-			public boolean contains(String key) {
-				return true;
-			}
 
-			@Override
-			public String get(String key) {
-				if (PropsKeys.CLUSTER_LINK_ENABLED.equals(key)) {
-					return String.valueOf(enabled);
+		clusterLinkImpl.setProps(
+			new Props() {
+
+				@Override
+				public boolean contains(String key) {
+					return true;
 				}
 
-				return StringPool.BLANK;
-			}
+				@Override
+				public String get(String key) {
+					if (PropsKeys.CLUSTER_LINK_ENABLED.equals(key)) {
+						return String.valueOf(enabled);
+					}
 
-			@Override
-			public String get(String key, Filter filter) {
-				return null;
-			}
+					return StringPool.BLANK;
+				}
 
-			@Override
-			public String[] getArray(String key) {
-				return null;
-			}
+				@Override
+				public String get(String key, Filter filter) {
+					return null;
+				}
 
-			@Override
-			public String[] getArray(String key, Filter filter) {
-				return null;
-			}
+				@Override
+				public String[] getArray(String key) {
+					return null;
+				}
 
-			@Override
-			public Properties getProperties() {
-				return new Properties();
-			}
+				@Override
+				public String[] getArray(String key, Filter filter) {
+					return null;
+				}
 
-			@Override
-			public Properties getProperties(
-				String prefix, boolean removePrefix) {
+				@Override
+				public Properties getProperties() {
+					return new Properties();
+				}
 
-				return new Properties();
-			}
-		});
+				@Override
+				public Properties getProperties(
+					String prefix, boolean removePrefix) {
+
+					return new Properties();
+				}
+
+			});
 
 		clusterLinkImpl.setClusterChannelFactory(
 			new TestClusterChannelFactory());
@@ -330,33 +335,37 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 
 		Map<String, Object> properties = new HashMap<>();
 
-		for (int i = 0; i < numChannels; i++) {
+		StringBundler sb = new StringBundler();
+
+		sb.append("UDP(bind_addr=localhost;mcast_group_addr=239.255.0.2;");
+		sb.append("mcast_port=23302):");
+		sb.append("PING(timeout=2000;num_initial_members=20;");
+		sb.append("break_on_coord_rsp=true):");
+		sb.append("MERGE3(min_interval=10000;max_interval=30000):");
+		sb.append("FD_SOCK:FD_ALL:VERIFY_SUSPECT(timeout=1500):");
+		sb.append("pbcast.NAKACK2(xmit_interval=1000;");
+		sb.append("xmit_table_num_rows=100;xmit_table_msgs_per_row=2000;");
+		sb.append("xmit_table_max_compaction_time=30000;");
+		sb.append("max_msg_batch_size=500;use_mcast_xmit=false;");
+		sb.append("discard_delivered_msgs=true):");
+		sb.append("UNICAST2(max_bytes=10M;xmit_table_num_rows=100;");
+		sb.append("xmit_table_msgs_per_row=2000;");
+		sb.append("xmit_table_max_compaction_time=60000;");
+		sb.append("max_msg_batch_size=500):");
+		sb.append("pbcast.STABLE(stability_delay=1000;");
+		sb.append("desired_avg_gossip=50000;max_bytes=4M):");
+		sb.append("pbcast.GMS(join_timeout=3000;print_local_addr=true;");
+		sb.append("view_bundling=true):");
+		sb.append("UFC(max_credits=2M;min_threshold=0.4):");
+		sb.append("MFC(max_credits=2M;min_threshold=0.4):");
+		sb.append("FRAG2(frag_size=61440):");
+		sb.append("RSVP(resend_interval=2000;timeout=10000)");
+
+		for (int i = 0; i < channels; i++) {
 			properties.put(
 				ClusterPropsKeys.CHANNEL_PROPERTIES_TRANSPORT_PREFIX +
 					StringPool.PERIOD + i,
-				"UDP(bind_addr=localhost;mcast_group_addr=239.255.0.2;" +
-					"mcast_port=23302):" +
-					"PING(timeout=2000;num_initial_members=20;" +
-					"break_on_coord_rsp=true):" +
-					"MERGE3(min_interval=10000;max_interval=30000):" +
-					"FD_SOCK:FD_ALL:VERIFY_SUSPECT(timeout=1500):" +
-					"pbcast.NAKACK2(xmit_interval=1000;" +
-					"xmit_table_num_rows=100;xmit_table_msgs_per_row=2000;" +
-					"xmit_table_max_compaction_time=30000;" +
-					"max_msg_batch_size=500;use_mcast_xmit=false;" +
-					"discard_delivered_msgs=true):" +
-					"UNICAST2(max_bytes=10M;xmit_table_num_rows=100;" +
-					"xmit_table_msgs_per_row=2000;" +
-					"xmit_table_max_compaction_time=60000;" +
-					"max_msg_batch_size=500):" +
-					"pbcast.STABLE(stability_delay=1000;" +
-					"desired_avg_gossip=50000;max_bytes=4M):" +
-					"pbcast.GMS(join_timeout=3000;print_local_addr=true;" +
-					"view_bundling=true):" +
-					"UFC(max_credits=2M;min_threshold=0.4):" +
-					"MFC(max_credits=2M;min_threshold=0.4):" +
-					"FRAG2(frag_size=61440):" +
-					"RSVP(resend_interval=2000;timeout=10000)");
+				sb.toString());
 		}
 
 		clusterLinkImpl.activate(properties);
