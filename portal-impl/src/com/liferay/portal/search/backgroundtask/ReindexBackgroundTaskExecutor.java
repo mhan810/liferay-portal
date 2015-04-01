@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.backgroundtask;
 
-import com.liferay.portal.dao.shard.ShardUtil;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskResult;
 import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
@@ -31,16 +30,12 @@ import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.messaging.proxy.MessageValuesThreadLocal;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.BackgroundTask;
-import com.liferay.portal.search.SearchEngineInitializer;
 import com.liferay.portal.search.lucene.LuceneHelper;
 import com.liferay.portal.search.lucene.LuceneHelperUtil;
 import com.liferay.portal.search.lucene.cluster.LuceneClusterUtil;
@@ -57,9 +52,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Andrew Betts
  */
-public class IndexBackgroundTaskExecutor extends BaseBackgroundTaskExecutor {
+public abstract class ReindexBackgroundTaskExecutor
+	extends BaseBackgroundTaskExecutor {
 
-	public IndexBackgroundTaskExecutor() {
+	public ReindexBackgroundTaskExecutor() {
 		setIsolationLevel(BackgroundTaskConstants.ISOLATION_LEVEL_COMPANY);
 	}
 
@@ -73,12 +69,15 @@ public class IndexBackgroundTaskExecutor extends BaseBackgroundTaskExecutor {
 		String className = (String)taskContextMap.get("className");
 		long[] companyIds = (long[])taskContextMap.get("companyIds");
 
-		doReindex(className, companyIds);
+		reindex(className, companyIds);
 
 		return BackgroundTaskResult.SUCCESS;
 	}
 
-	protected void doReindex(String className, long[] companyIds)
+	protected abstract Set<String> doReindex(
+		String className, long[] companyIds) throws Exception;
+
+	protected void reindex(String className, long[] companyIds)
 		throws Exception {
 
 		if (LuceneHelperUtil.isLoadIndexFromClusterEnabled()) {
@@ -86,57 +85,10 @@ public class IndexBackgroundTaskExecutor extends BaseBackgroundTaskExecutor {
 				LuceneHelper.SKIP_LOAD_INDEX_FROM_CLUSTER, true);
 		}
 
-		Set<String> usedSearchEngineIds = new HashSet<>();
+		Set<String> usedSearchEngineIds = doReindex(className, companyIds);
 
-		if (Validator.isNull(className)) {
-			for (long companyId : companyIds) {
-				try {
-					SearchEngineInitializer searchEngineInitializer =
-						new SearchEngineInitializer(companyId);
-
-					searchEngineInitializer.reindex();
-
-					usedSearchEngineIds.addAll(
-						searchEngineInitializer.getUsedSearchEngineIds());
-				}
-				catch (Exception e) {
-					_log.error(e, e);
-				}
-			}
-		}
-		else {
-			Indexer indexer = IndexerRegistryUtil.getIndexer(className);
-
-			if (indexer == null) {
-				return;
-			}
-
-			Set<String> searchEngineIds = new HashSet<>();
-
-			searchEngineIds.add(indexer.getSearchEngineId());
-
-			for (String searchEngineId : searchEngineIds) {
-				for (long companyId : companyIds) {
-					SearchEngineUtil.deleteEntityDocuments(
-						searchEngineId, companyId, className, true);
-				}
-			}
-
-			for (long companyId : companyIds) {
-				ShardUtil.pushCompanyService(companyId);
-
-				try {
-					indexer.reindex(new String[] {String.valueOf(companyId)});
-
-					usedSearchEngineIds.add(indexer.getSearchEngineId());
-				}
-				catch (Exception e) {
-					_log.error(e, e);
-				}
-				finally {
-					ShardUtil.popCompanyService();
-				}
-			}
+		if (usedSearchEngineIds == null) {
+			return;
 		}
 
 		if (!LuceneHelperUtil.isLoadIndexFromClusterEnabled()) {
@@ -227,13 +179,13 @@ public class IndexBackgroundTaskExecutor extends BaseBackgroundTaskExecutor {
 
 		ThreadPoolExecutor threadPoolExecutor =
 			PortalExecutorManagerUtil.getPortalExecutor(
-				IndexBackgroundTaskExecutor.class.getName());
+				ReindexIndexerBackgroundTaskExecutor.class.getName());
 
 		threadPoolExecutor.execute(masterClusterLoadingSyncJob);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		IndexBackgroundTaskExecutor.class);
+		ReindexBackgroundTaskExecutor.class);
 
 	private static final MethodKey _loadIndexesFromClusterMethodKey =
 		new MethodKey(
