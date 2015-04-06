@@ -14,12 +14,38 @@
 
 package com.liferay.portal.kernel.scheduler;
 
+import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.BasePortalLifecycle;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
 
 /**
  * @author Tina Tian
  */
 public class SchedulerLifecycle extends BasePortalLifecycle {
+
+	public SchedulerLifecycle() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(
+			ClusterMasterExecutor.class,
+			new ClusterMasterExecutorServiceTrackerCustomizer());
+
+		_serviceTracker.open();
+	}
+
+	protected synchronized void clusteredInit() throws Exception {
+		if ((_serviceTracker.getService() == null) || !_portalInitialized) {
+			return;
+		}
+
+		SchedulerEngineHelperUtil.start();
+	}
 
 	@Override
 	protected void doPortalDestroy() throws Exception {
@@ -27,7 +53,60 @@ public class SchedulerLifecycle extends BasePortalLifecycle {
 
 	@Override
 	protected void doPortalInit() throws Exception {
-		SchedulerEngineHelperUtil.start();
+		_portalInitialized = true;
+
+		if (!SchedulerEngineHelperUtil.isClusteredSchedulerEngine()) {
+			SchedulerEngineHelperUtil.start();
+		}
+		else {
+			clusteredInit();
+		}
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		SchedulerLifecycle.class);
+
+	private volatile boolean _portalInitialized;
+	private final ServiceTracker<ClusterMasterExecutor, ClusterMasterExecutor>
+		_serviceTracker;
+
+	private class ClusterMasterExecutorServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer
+			<ClusterMasterExecutor, ClusterMasterExecutor> {
+
+		@Override
+		public ClusterMasterExecutor addingService(
+			ServiceReference<ClusterMasterExecutor> serviceReference) {
+
+			Registry registry = RegistryUtil.getRegistry();
+
+			ClusterMasterExecutor clusterMasterExecutor = registry.getService(
+				serviceReference);
+
+			try {
+				clusteredInit();
+			}
+			catch (Exception e) {
+				if (_log.isWarnEnabled()) {
+					_log.warn("Unable to start scheduling engine", e);
+				}
+			}
+
+			return clusterMasterExecutor;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<ClusterMasterExecutor> serviceReference,
+			ClusterMasterExecutor clusterMasterExecutor) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<ClusterMasterExecutor> serviceReference,
+			ClusterMasterExecutor clusterMasterExecutor) {
+		}
+
 	}
 
 }
