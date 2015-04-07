@@ -2055,6 +2055,10 @@ public class ClusterSchedulerEngineTest {
 		}
 
 		@Override
+		public void initialize() {
+		}
+
+		@Override
 		public boolean isEnabled() {
 			return true;
 		}
