@@ -180,48 +180,6 @@ public class LuceneHelperImplTest {
 			ClusterExecutorUtilAdvice.class, DisableIndexOnStartUpAdvice.class,
 			EnableClusterLinkAdvice.class,
 			EnableLuceneReplicateWriteAdvice.class,
-			SkipGetBootupClusterNodeObjectValuePairAdvice.class
-		}
-	)
-	@Test
-	public void testGetLoadIndexesInputStreamFromCluster() throws Exception {
-		URL url = new URL("http://127.0.0.1:80/lucene/dump");
-
-		final MockURLConnection mockURLConnection = new MockURLConnection(url);
-
-		ReflectionTestUtil.setFieldValue(
-			url, "handler",
-			new URLStreamHandler() {
-
-				@Override
-				protected URLConnection openConnection(URL url) {
-					return mockURLConnection;
-				}
-
-			});
-
-		SkipGetBootupClusterNodeObjectValuePairAdvice.setURL(url);
-
-		InputStream inputStream =
-			_luceneHelperImpl.getLoadIndexesInputStreamFromCluster(
-				_COMPANY_ID, StringPool.BLANK);
-
-		Assert.assertNotNull(inputStream);
-
-		_mockIndexAccessor.loadIndex(inputStream);
-
-		mockURLConnection.assertOutputContent(
-			"transientToken=&companyId=" + _COMPANY_ID);
-
-		Assert.assertArrayEquals(
-			_RESPONSE_MESSAGE, _mockIndexAccessor.getResponseMessage());
-	}
-
-	@AdviseWith(
-		adviceClasses = {
-			ClusterExecutorUtilAdvice.class, DisableIndexOnStartUpAdvice.class,
-			EnableClusterLinkAdvice.class,
-			EnableLuceneReplicateWriteAdvice.class,
 			LuceneClusterUtilAdvice.class
 		}
 	)
