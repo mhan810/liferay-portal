@@ -1,0 +1,5 @@
+Bundle-Name: Liferay Portal Search Lucene
+Bundle-SymbolicName: com.liferay.portal.search.lucene
+Bundle-Version: 1.0.0
+Include-Resource:\
+	classes
