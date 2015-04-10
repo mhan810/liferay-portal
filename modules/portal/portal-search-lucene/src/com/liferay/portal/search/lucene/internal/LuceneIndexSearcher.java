@@ -61,7 +61,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.search.lucene.QueryTranslator;
+import com.liferay.portal.search.lucene.internal.query.QueryTranslator;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.IOException;
