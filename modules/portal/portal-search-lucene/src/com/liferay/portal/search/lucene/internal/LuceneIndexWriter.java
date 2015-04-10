@@ -33,12 +33,16 @@ import java.util.Map;
 
 import org.apache.lucene.index.Term;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Bruno Farache
  * @author Brian Wing Shun Chan
  * @author Allen Chiang
  * @author Alex Wallace
  */
+@Component(immediate = true, service = LuceneIndexWriter.class)
 public class LuceneIndexWriter extends BaseIndexWriter {
 
 	@Override
@@ -110,10 +114,6 @@ public class LuceneIndexWriter extends BaseIndexWriter {
 		}
 	}
 
-	public void setLuceneHelper(LuceneHelper luceneHelper) {
-		_luceneHelper = luceneHelper;
-	}
-
 	@Override
 	public void updateDocument(SearchContext searchContext, Document document)
 		throws SearchException {
@@ -141,6 +141,18 @@ public class LuceneIndexWriter extends BaseIndexWriter {
 		for (Document document : documents) {
 			updateDocument(searchContext, document);
 		}
+	}
+
+	@Reference
+	protected void setLuceneHelper(LuceneHelper luceneHelper) {
+		_luceneHelper = luceneHelper;
+	}
+
+	@Reference
+	protected void setLuceneSpellCheckIndexWriter(
+		LuceneSpellCheckIndexWriter luceneSpellCheckIndexWriter) {
+
+		super.setSpellCheckIndexWriter(luceneSpellCheckIndexWriter);
 	}
 
 	private void _addLuceneFieldable(
