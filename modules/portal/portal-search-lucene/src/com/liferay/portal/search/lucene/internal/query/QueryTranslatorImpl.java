@@ -12,13 +12,15 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene;
+package com.liferay.portal.search.lucene.internal.query;
 
 import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.StringQueryImpl;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.search.lucene.LuceneHelper;
+import com.liferay.portal.search.lucene.QueryTranslator;
 
 import org.apache.lucene.queryParser.QueryParser;
 

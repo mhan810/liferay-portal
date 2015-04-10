@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene;
+package com.liferay.portal.search.lucene.internal.query;
 
 import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
