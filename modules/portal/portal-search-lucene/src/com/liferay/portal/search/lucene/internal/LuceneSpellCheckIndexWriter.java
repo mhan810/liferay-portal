@@ -44,9 +44,13 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.util.ReaderUtil;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = LuceneSpellCheckIndexWriter.class)
 public class LuceneSpellCheckIndexWriter extends BaseSpellCheckIndexWriter {
 
 	@Override
@@ -80,10 +84,6 @@ public class LuceneSpellCheckIndexWriter extends BaseSpellCheckIndexWriter {
 		catch (IOException e) {
 			throw new SearchException(e);
 		}
-	}
-
-	public void setLuceneHelper(LuceneHelper luceneHelper) {
-		_luceneHelper = luceneHelper;
 	}
 
 	protected void addField(
@@ -317,6 +317,11 @@ public class LuceneSpellCheckIndexWriter extends BaseSpellCheckIndexWriter {
 		}
 
 		return true;
+	}
+
+	@Reference(unbind = "-")
+	protected void setLuceneHelper(LuceneHelper luceneHelper) {
+		_luceneHelper = luceneHelper;
 	}
 
 	private static final int _MINIMUM_WORD_LENGTH = 3;
