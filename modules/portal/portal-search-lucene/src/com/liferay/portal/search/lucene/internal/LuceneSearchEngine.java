@@ -15,17 +15,48 @@
 package com.liferay.portal.search.lucene.internal;
 
 import com.liferay.portal.kernel.search.BaseSearchEngine;
+import com.liferay.portal.kernel.search.BooleanQueryFactory;
+import com.liferay.portal.kernel.search.IndexSearcher;
+import com.liferay.portal.kernel.search.IndexWriter;
+import com.liferay.portal.kernel.search.SearchEngine;
+import com.liferay.portal.kernel.search.TermQueryFactory;
+import com.liferay.portal.kernel.search.TermRangeQueryFactory;
+import com.liferay.portal.kernel.search.generic.BooleanClauseFactoryImpl;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.SystemProperties;
+import com.liferay.portal.search.lucene.internal.query.BooleanQueryFactoryImpl;
+import com.liferay.portal.search.lucene.internal.query.TermQueryFactoryImpl;
+import com.liferay.portal.search.lucene.internal.query.TermRangeQueryFactoryImpl;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
+
+import org.apache.lucene.util.Version;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  */
+@Component(
+	immediate = true,
+	property = {
+		"search.engine.id=SYSTEM_ENGINE", "vendor=Lucene", "version=LUCENE_35"
+	},
+	service = {LuceneSearchEngine.class, SearchEngine.class}
+)
 public class LuceneSearchEngine extends BaseSearchEngine {
 
 	@Override
@@ -91,8 +122,63 @@ public class LuceneSearchEngine extends BaseSearchEngine {
 		}
 	}
 
-	public void setLuceneHelper(LuceneHelper luceneHelper) {
-		_luceneHelper = luceneHelper;
+	@Override
+	@Reference(service = BooleanQueryFactoryImpl.class)
+	public void setBooleanQueryFactory(
+		BooleanQueryFactory booleanQueryFactory) {
+
+		super.setBooleanQueryFactory(booleanQueryFactory);
+	}
+
+	@Override
+	@Reference(service = LuceneIndexSearcher.class)
+	public void setIndexSearcher(IndexSearcher indexSearcher) {
+		super.setIndexSearcher(indexSearcher);
+	}
+
+	@Override
+	@Reference(service = LuceneIndexWriter.class)
+	public void setIndexWriter(IndexWriter indexWriter) {
+		super.setIndexWriter(indexWriter);
+	}
+
+	@Override
+	@Reference(service = TermQueryFactoryImpl.class)
+	public void setTermQueryFactory(TermQueryFactory termQueryFactory) {
+		super.setTermQueryFactory(termQueryFactory);
+	}
+
+	@Override
+	@Reference(service = TermRangeQueryFactoryImpl.class)
+	public void setTermRangeQueryFactory(
+		TermRangeQueryFactory termRangeQueryFactory) {
+
+		super.setTermRangeQueryFactory(termRangeQueryFactory);
+	}
+
+	@Activate
+	protected void activate(ComponentContext componentContext) {
+		Dictionary<String, Object> dictionary =
+			componentContext.getProperties();
+
+		setBooleanClauseFactory(new BooleanClauseFactoryImpl());
+
+		setVendor(GetterUtil.getString(dictionary.get("vendor"), "Lucene"));
+
+		Version version = Version.valueOf(
+			GetterUtil.getString(dictionary.get("version"), "LUCENE_35"));
+
+		BundleContext bundleContext = componentContext.getBundleContext();
+
+		_serviceRegistration = bundleContext.registerService(
+			Version.class, version, new Hashtable<String, Object>());
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		if (_serviceRegistration != null) {
+			_serviceRegistration.unregister();
+		}
 	}
 
 	protected String getFileName(String backupName) {
@@ -100,6 +186,12 @@ public class LuceneSearchEngine extends BaseSearchEngine {
 			File.separator + backupName;
 	}
 
+	@Reference
+	protected void setLuceneHelper(LuceneHelper luceneHelper) {
+		_luceneHelper = luceneHelper;
+	}
+
 	private LuceneHelper _luceneHelper;
+	private ServiceRegistration<Version> _serviceRegistration;
 
 }
