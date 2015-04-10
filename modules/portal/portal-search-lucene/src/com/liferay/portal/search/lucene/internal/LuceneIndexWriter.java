@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.search.SpellCheckIndexWriter;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -115,6 +116,14 @@ public class LuceneIndexWriter extends BaseIndexWriter {
 	}
 
 	@Override
+	@Reference(service = LuceneSpellCheckIndexWriter.class)
+	public void setSpellCheckIndexWriter(
+		SpellCheckIndexWriter spellCheckIndexWriter) {
+
+		super.setSpellCheckIndexWriter(spellCheckIndexWriter);
+	}
+
+	@Override
 	public void updateDocument(SearchContext searchContext, Document document)
 		throws SearchException {
 
@@ -146,13 +155,6 @@ public class LuceneIndexWriter extends BaseIndexWriter {
 	@Reference
 	protected void setLuceneHelper(LuceneHelper luceneHelper) {
 		_luceneHelper = luceneHelper;
-	}
-
-	@Reference
-	protected void setLuceneSpellCheckIndexWriter(
-		LuceneSpellCheckIndexWriter luceneSpellCheckIndexWriter) {
-
-		super.setSpellCheckIndexWriter(luceneSpellCheckIndexWriter);
 	}
 
 	private void _addLuceneFieldable(
