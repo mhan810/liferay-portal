@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search;
+package com.liferay.portal.search.lucene.internal;
 
 import com.browseengine.bobo.api.BrowseFacet;
 import com.browseengine.bobo.api.FacetAccessible;

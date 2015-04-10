@@ -12,31 +12,18 @@
  * details.
  */
 
-package com.liferay.portal.search;
+package com.liferay.portal.search.lucene.internal;
 
-import com.browseengine.bobo.api.BrowseFacet;
-
-import com.liferay.portal.kernel.search.facet.collector.TermCollector;
+import org.apache.lucene.search.spell.SuggestWord;
 
 /**
- * @author Raymond Augé
+ * @author Michael C. Han
  */
-public class BoboTermCollector implements TermCollector {
-
-	public BoboTermCollector(BrowseFacet browseFacet) {
-		_browseFacet = browseFacet;
-	}
+public class DefaultRelevancyChecker implements RelevancyChecker {
 
 	@Override
-	public int getFrequency() {
-		return _browseFacet.getFacetValueHitCount();
+	public boolean isRelevant(SuggestWord suggestWord) {
+		return true;
 	}
-
-	@Override
-	public String getTerm() {
-		return _browseFacet.getValue();
-	}
-
-	private final BrowseFacet _browseFacet;
 
 }

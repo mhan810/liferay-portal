@@ -12,34 +12,28 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene;
+package com.liferay.portal.search.lucene.internal;
 
-import com.liferay.portal.kernel.search.BaseQueryImpl;
-import com.liferay.portal.kernel.search.Query;
+import org.apache.lucene.search.DefaultSimilarity;
 
 /**
- * @author Bruno Farache
+ * @author Daeyoung Song
  */
-public class LuceneQueryImpl extends BaseQueryImpl implements Query {
+public class FieldWeightSimilarity extends DefaultSimilarity {
 
-	public LuceneQueryImpl(org.apache.lucene.search.Query query) {
-		_query = query;
-	}
-
-	public org.apache.lucene.search.Query getQuery() {
-		return _query;
+	@Override
+	public float coord(int overlap, int maxOverlap) {
+		return 1;
 	}
 
 	@Override
-	public Object getWrappedQuery() {
-		return _query;
+	public float idf(int docFreq, int numDocs) {
+		return 1;
 	}
 
 	@Override
-	public String toString() {
-		return _query.toString();
+	public float queryNorm(float sumOfSquaredWeights) {
+		return 1;
 	}
-
-	private final org.apache.lucene.search.Query _query;
 
 }
