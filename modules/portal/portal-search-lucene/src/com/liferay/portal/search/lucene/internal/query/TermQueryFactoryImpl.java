@@ -17,9 +17,12 @@ package com.liferay.portal.search.lucene.internal.query;
 import com.liferay.portal.kernel.search.TermQuery;
 import com.liferay.portal.kernel.search.TermQueryFactory;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@Component(immediate = true, service = TermQueryFactory.class)
 public class TermQueryFactoryImpl implements TermQueryFactory {
 
 	@Override
