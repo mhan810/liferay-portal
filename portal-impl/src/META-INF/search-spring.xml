@@ -159,9 +159,6 @@
 		<property name="queryPreProcessConfiguration" ref="com.liferay.portal.kernel.search.QueryPreProcessConfiguration" />
 		<property name="version" ref="org.apache.lucene.util.Version" />
 	</bean>
-	<bean id="com.liferay.portal.search.lucene.LuceneHelperUtil" class="com.liferay.portal.search.lucene.LuceneHelperUtil">
-		<property name="luceneHelper" ref="com.liferay.portal.search.lucene.LuceneHelperImpl" />
-	</bean>
 	<bean id="com.liferay.portal.search.lucene.LuceneQuerySuggester" class="com.liferay.portal.search.lucene.LuceneQuerySuggester">
 		<property name="luceneHelper" ref="com.liferay.portal.search.lucene.LuceneHelperImpl" />
 		<property name="stringDistance" ref="org.apache.lucene.search.spell.StringDistance" />
