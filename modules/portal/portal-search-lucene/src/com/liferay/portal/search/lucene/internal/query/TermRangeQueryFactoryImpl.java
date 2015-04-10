@@ -17,9 +17,12 @@ package com.liferay.portal.search.lucene.internal.query;
 import com.liferay.portal.kernel.search.TermRangeQuery;
 import com.liferay.portal.kernel.search.TermRangeQueryFactory;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Raymond Augé
  */
+@Component(immediate = true, service = TermRangeQueryFactory.class)
 public class TermRangeQueryFactoryImpl implements TermRangeQueryFactory {
 
 	@Override

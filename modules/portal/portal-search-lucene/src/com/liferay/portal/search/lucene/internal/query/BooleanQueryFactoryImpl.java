@@ -16,10 +16,15 @@ package com.liferay.portal.search.lucene.internal.query;
 
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.BooleanQueryFactory;
+import com.liferay.portal.search.lucene.QueryTranslator;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@Component(immediate = true, service = BooleanQueryFactory.class)
 public class BooleanQueryFactoryImpl implements BooleanQueryFactory {
 
 	@Override
@@ -27,11 +32,13 @@ public class BooleanQueryFactoryImpl implements BooleanQueryFactory {
 		return new BooleanQueryImpl(_luceneQueryHelper, _queryTranslator);
 	}
 
-	public void setLuceneQueryHelper(LuceneQueryHelper luceneQueryHelper) {
+	@Reference
+	protected void setLuceneQueryHelper(LuceneQueryHelper luceneQueryHelper) {
 		_luceneQueryHelper = luceneQueryHelper;
 	}
 
-	public void setQueryTranslator(QueryTranslator<?> queryTranslator) {
+	@Reference
+	protected void setQueryTranslator(QueryTranslator<?> queryTranslator) {
 		_queryTranslator = queryTranslator;
 	}
 
