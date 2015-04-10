@@ -12,38 +12,34 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene;
+package com.liferay.portal.search.lucene.internal.query;
 
-import java.io.IOException;
-
-import java.util.List;
-
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.Term;
+import com.liferay.portal.kernel.search.BaseQueryImpl;
+import com.liferay.portal.kernel.search.Query;
 
 /**
- * @author Michael C. Han
+ * @author Bruno Farache
  */
-public class SpellCheckerUtil {
+public class LuceneQueryImpl extends BaseQueryImpl implements Query {
 
-	public static boolean isValidWord(
-			String localizedFieldName, String word,
-			List<IndexReader> indexReaders)
-		throws IOException {
-
-		if (indexReaders.isEmpty()) {
-			return false;
-		}
-
-		Term term = new Term(localizedFieldName, word);
-
-		for (IndexReader indexReader : indexReaders) {
-			if (indexReader.docFreq(term) > 0) {
-				return true;
-			}
-		}
-
-		return false;
+	public LuceneQueryImpl(org.apache.lucene.search.Query query) {
+		_query = query;
 	}
+
+	public org.apache.lucene.search.Query getQuery() {
+		return _query;
+	}
+
+	@Override
+	public Object getWrappedQuery() {
+		return _query;
+	}
+
+	@Override
+	public String toString() {
+		return _query.toString();
+	}
+
+	private final org.apache.lucene.search.Query _query;
 
 }

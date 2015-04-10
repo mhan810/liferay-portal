@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene.highlight;
+package com.liferay.portal.search.lucene.internal.highlight;
 
 import java.util.HashSet;
 import java.util.LinkedList;
