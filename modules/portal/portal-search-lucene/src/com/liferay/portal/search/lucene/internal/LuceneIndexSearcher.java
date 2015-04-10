@@ -45,6 +45,7 @@ import com.liferay.portal.kernel.search.HitsImpl;
 import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.QueryConfig;
+import com.liferay.portal.kernel.search.QuerySuggester;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Sort;
@@ -350,6 +351,12 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 		return hits;
 	}
 
+	@Override
+	@Reference(service = LuceneQuerySuggester.class)
+	public void setQuerySuggester(QuerySuggester querySuggester) {
+		super.setQuerySuggester(querySuggester);
+	}
+
 	protected void cleanUp(BoboBrowser boboBrowser) {
 		if (boboBrowser == null) {
 			return;
@@ -511,13 +518,6 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 	@Reference(unbind = "-")
 	protected void setLuceneHelper(LuceneHelper luceneHelper) {
 		_luceneHelper = luceneHelper;
-	}
-
-	@Reference
-	protected void setLuceneQuerySuggester(
-		LuceneQuerySuggester luceneQuerySuggester) {
-
-		super.setQuerySuggester(luceneQuerySuggester);
 	}
 
 	@Reference(unbind = "-")
