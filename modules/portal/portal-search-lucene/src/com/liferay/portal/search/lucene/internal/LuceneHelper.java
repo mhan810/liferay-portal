@@ -95,8 +95,6 @@ public interface LuceneHelper {
 			long companyId, IndexSearcher indexSearcher)
 		throws IOException;
 
-	public void shutdown();
-
 	public void shutdown(long companyId);
 
 	public void startup(long companyId);

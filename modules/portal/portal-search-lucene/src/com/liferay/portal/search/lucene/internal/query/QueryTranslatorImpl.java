@@ -19,9 +19,10 @@ import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.StringQueryImpl;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.search.lucene.QueryTranslator;
-import com.liferay.portal.search.lucene.internal.LuceneHelper;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.util.Version;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -42,8 +43,7 @@ public class QueryTranslatorImpl implements QueryTranslator<Object> {
 		}
 		else if (query instanceof StringQueryImpl) {
 			QueryParser queryParser = new QueryParser(
-				_luceneHelper.getVersion(), StringPool.BLANK,
-				_luceneHelper.getAnalyzer());
+				_version, StringPool.BLANK, _analyzer);
 
 			try {
 				return queryParser.parse(query.toString());
@@ -63,11 +63,17 @@ public class QueryTranslatorImpl implements QueryTranslator<Object> {
 		}
 	}
 
-	@Reference
-	protected void setLuceneHelper(LuceneHelper luceneHelper) {
-		_luceneHelper = luceneHelper;
+	@Reference(unbind = "-")
+	protected void setAnalyzer(Analyzer analyzer) {
+		_analyzer = analyzer;
 	}
 
-	private LuceneHelper _luceneHelper;
+	@Reference(unbind = "-")
+	protected void setVersion(Version version) {
+		_version = version;
+	}
+
+	private Analyzer _analyzer;
+	private Version _version;
 
 }

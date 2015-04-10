@@ -15,15 +15,11 @@
 package com.liferay.portal.search.lucene.internal;
 
 import com.liferay.portal.kernel.concurrent.ThreadPoolExecutor;
-import com.liferay.portal.kernel.executor.PortalExecutorManagerUtil;
+import com.liferay.portal.kernel.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.messaging.Destination;
-import com.liferay.portal.kernel.messaging.MessageBus;
-import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -41,11 +37,9 @@ import java.io.OutputStream;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.time.StopWatch;
@@ -67,6 +61,10 @@ import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.search.highlight.WeightedTerm;
 import org.apache.lucene.util.Version;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Brian Wing Shun Chan
  * @author Harry Mark
@@ -76,12 +74,13 @@ import org.apache.lucene.util.Version;
  * @author Hugo Huijser
  * @author Andrea Di Giorgi
  */
+@Component(immediate = true, service = LuceneHelper.class)
 public class LuceneHelperImpl implements LuceneHelper {
 
 	public LuceneHelperImpl() {
 		if (PropsValues.INDEX_ON_STARTUP && PropsValues.INDEX_WITH_THREAD) {
 			_luceneIndexThreadPoolExecutor =
-				PortalExecutorManagerUtil.getPortalExecutor(
+				_portalExecutorManager.getPortalExecutor(
 					LuceneHelperImpl.class.getName());
 		}
 
@@ -399,76 +398,6 @@ public class LuceneHelperImpl implements LuceneHelper {
 		indexAccessor.releaseIndexSearcher(indexSearcher);
 	}
 
-	public void setAnalyzer(Analyzer analyzer) {
-		_analyzer = analyzer;
-	}
-
-	public void setVersion(Version version) {
-		_version = version;
-	}
-
-	@Override
-	public void shutdown() {
-		if (_luceneIndexThreadPoolExecutor != null) {
-			_luceneIndexThreadPoolExecutor.shutdownNow();
-
-			try {
-				_luceneIndexThreadPoolExecutor.awaitTermination(
-					60, TimeUnit.SECONDS);
-			}
-			catch (InterruptedException ie) {
-				_log.error("Lucene indexer shutdown interrupted", ie);
-			}
-		}
-
-		MessageBus messageBus = MessageBusUtil.getMessageBus();
-
-		for (String searchEngineId : SearchEngineUtil.getSearchEngineIds()) {
-			String searchWriterDestinationName =
-				SearchEngineUtil.getSearchWriterDestinationName(searchEngineId);
-
-			Destination searchWriteDestination = messageBus.getDestination(
-				searchWriterDestinationName);
-
-			if (searchWriteDestination != null) {
-				ThreadPoolExecutor threadPoolExecutor =
-					PortalExecutorManagerUtil.getPortalExecutor(
-						searchWriterDestinationName);
-
-				int maxPoolSize = threadPoolExecutor.getMaxPoolSize();
-
-				CountDownLatch countDownLatch = new CountDownLatch(maxPoolSize);
-
-				ShutdownSyncJob shutdownSyncJob = new ShutdownSyncJob(
-					countDownLatch);
-
-				for (int i = 0; i < maxPoolSize; i++) {
-					threadPoolExecutor.submit(shutdownSyncJob);
-				}
-
-				try {
-					countDownLatch.await();
-				}
-				catch (InterruptedException ie) {
-					_log.error("Shutdown waiting interrupted", ie);
-				}
-
-				List<Runnable> runnables = threadPoolExecutor.shutdownNow();
-
-				if (_log.isDebugEnabled()) {
-					_log.debug(
-						"Cancelled appending indexing jobs: " + runnables);
-				}
-
-				searchWriteDestination.close(true);
-			}
-		}
-
-		for (IndexAccessor indexAccessor : _indexAccessors.values()) {
-			indexAccessor.close();
-		}
-	}
-
 	@Override
 	public void shutdown(long companyId) {
 		IndexAccessor indexAccessor = getIndexAccessor(companyId);
@@ -499,7 +428,7 @@ public class LuceneHelperImpl implements LuceneHelper {
 				// PropsValues#INDEX_ON_STARTUP to true.
 
 				_luceneIndexThreadPoolExecutor =
-					PortalExecutorManagerUtil.getPortalExecutor(
+					_portalExecutorManager.getPortalExecutor(
 						LuceneHelperImpl.class.getName());
 			}
 
@@ -519,6 +448,42 @@ public class LuceneHelperImpl implements LuceneHelper {
 		indexAccessor.updateDocument(term, document);
 	}
 
+	@Deactivate
+	protected void deactivate() {
+		if (_luceneIndexThreadPoolExecutor != null) {
+			_luceneIndexThreadPoolExecutor.shutdownNow();
+
+			try {
+				_luceneIndexThreadPoolExecutor.awaitTermination(
+					60, TimeUnit.SECONDS);
+			}
+			catch (InterruptedException ie) {
+				_log.error("Lucene indexer shutdown interrupted", ie);
+			}
+		}
+
+		for (IndexAccessor indexAccessor : _indexAccessors.values()) {
+			indexAccessor.close();
+		}
+	}
+
+	@Reference(unbind = "-")
+	protected void setAnalyzer(Analyzer analyzer) {
+		_analyzer = analyzer;
+	}
+
+	@Reference(unbind = "-")
+	protected void setPortalExecutorManager(
+		PortalExecutorManager portalExecutorManager) {
+
+		_portalExecutorManager = portalExecutorManager;
+	}
+
+	@Reference(unbind = "-")
+	protected void setVersion(Version version) {
+		_version = version;
+	}
+
 	private static final int _LUCENE_BOOLEAN_QUERY_CLAUSE_MAX_SIZE =
 		GetterUtil.getInteger(
 			PropsUtil.get(PropsKeys.LUCENE_BOOLEAN_QUERY_CLAUSE_MAX_SIZE),
@@ -529,29 +494,7 @@ public class LuceneHelperImpl implements LuceneHelper {
 		new ConcurrentHashMap<>();
 	private final Log _log = LogFactoryUtil.getLog(LuceneHelperImpl.class);
 	private ThreadPoolExecutor _luceneIndexThreadPoolExecutor;
+	private PortalExecutorManager _portalExecutorManager;
 	private Version _version;
-
-	private class ShutdownSyncJob implements Runnable {
-
-		public ShutdownSyncJob(CountDownLatch countDownLatch) {
-			_countDownLatch = countDownLatch;
-		}
-
-		@Override
-		public void run() {
-			_countDownLatch.countDown();
-
-			try {
-				synchronized (this) {
-					wait();
-				}
-			}
-			catch (InterruptedException ie) {
-			}
-		}
-
-		private final CountDownLatch _countDownLatch;
-
-	}
 
 }
