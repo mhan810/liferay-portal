@@ -12,28 +12,15 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene;
+package com.liferay.portal.search.lucene.internal;
 
-import org.apache.lucene.search.DefaultSimilarity;
+import org.apache.lucene.search.spell.SuggestWord;
 
 /**
- * @author Daeyoung Song
+ * @author Michael C. Han
  */
-public class FieldWeightSimilarity extends DefaultSimilarity {
+public interface RelevancyChecker {
 
-	@Override
-	public float coord(int overlap, int maxOverlap) {
-		return 1;
-	}
-
-	@Override
-	public float idf(int docFreq, int numDocs) {
-		return 1;
-	}
-
-	@Override
-	public float queryNorm(float sumOfSquaredWeights) {
-		return 1;
-	}
+	public boolean isRelevant(SuggestWord suggestWord);
 
 }
