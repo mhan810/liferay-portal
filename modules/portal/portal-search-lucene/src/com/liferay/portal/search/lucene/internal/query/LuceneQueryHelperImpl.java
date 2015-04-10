@@ -38,9 +38,13 @@ import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.util.Version;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = LuceneQueryHelper.class)
 public class LuceneQueryHelperImpl implements LuceneQueryHelper {
 
 	@Override
@@ -332,17 +336,20 @@ public class LuceneQueryHelperImpl implements LuceneQueryHelper {
 		}
 	}
 
-	public void setAnalyzer(Analyzer analyzer) {
+	@Reference
+	protected void setAnalyzer(Analyzer analyzer) {
 		_analyzer = analyzer;
 	}
 
-	public void setQueryPreProcessConfiguration(
+	@Reference
+	protected void setQueryPreProcessConfiguration(
 		QueryPreProcessConfiguration queryPreProcessConfiguration) {
 
 		_queryPreProcessConfiguration = queryPreProcessConfiguration;
 	}
 
-	public void setVersion(Version version) {
+	@Reference
+	protected void setVersion(Version version) {
 		_version = version;
 	}
 
