@@ -85,9 +85,13 @@ import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.highlight.Formatter;
 import org.apache.lucene.search.highlight.TokenGroup;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Bruno Farache
  */
+@Component(immediate = true, service = LuceneIndexSearcher.class)
 public class LuceneIndexSearcher extends BaseIndexSearcher {
 
 	@Override
@@ -346,14 +350,6 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 		return hits;
 	}
 
-	public void setLuceneHelper(LuceneHelper luceneHelper) {
-		_luceneHelper = luceneHelper;
-	}
-
-	public void setQueryTranslator(QueryTranslator<?> queryTranslator) {
-		_queryTranslator = queryTranslator;
-	}
-
 	protected void cleanUp(BoboBrowser boboBrowser) {
 		if (boboBrowser == null) {
 			return;
@@ -510,6 +506,23 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 			snippet);
 
 		return snippet;
+	}
+
+	@Reference(unbind = "-")
+	protected void setLuceneHelper(LuceneHelper luceneHelper) {
+		_luceneHelper = luceneHelper;
+	}
+
+	@Reference
+	protected void setLuceneQuerySuggester(
+		LuceneQuerySuggester luceneQuerySuggester) {
+
+		super.setQuerySuggester(luceneQuerySuggester);
+	}
+
+	@Reference(unbind = "-")
+	protected void setQueryTranslator(QueryTranslator<?> queryTranslator) {
+		_queryTranslator = queryTranslator;
 	}
 
 	protected Hits toHits(
