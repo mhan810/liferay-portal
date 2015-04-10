@@ -12,30 +12,24 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene;
+package com.liferay.portal.search.lucene.internal.query;
 
-import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.BooleanQueryFactory;
+import com.liferay.portal.kernel.search.TermQuery;
+import com.liferay.portal.kernel.search.TermQueryFactory;
 
 /**
  * @author Brian Wing Shun Chan
  */
-public class BooleanQueryFactoryImpl implements BooleanQueryFactory {
+public class TermQueryFactoryImpl implements TermQueryFactory {
 
 	@Override
-	public BooleanQuery create() {
-		return new BooleanQueryImpl(_luceneQueryHelper, _queryTranslator);
+	public TermQuery create(String field, long value) {
+		return new TermQueryImpl(field, value);
 	}
 
-	public void setLuceneQueryHelper(LuceneQueryHelper luceneQueryHelper) {
-		_luceneQueryHelper = luceneQueryHelper;
+	@Override
+	public TermQuery create(String field, String value) {
+		return new TermQueryImpl(field, value);
 	}
-
-	public void setQueryTranslator(QueryTranslator<?> queryTranslator) {
-		_queryTranslator = queryTranslator;
-	}
-
-	private LuceneQueryHelper _luceneQueryHelper;
-	private QueryTranslator<?> _queryTranslator;
 
 }
