@@ -24,6 +24,4 @@ public interface QueryTranslator<T> {
 
 	public T translate(Query query) throws ParseException;
 
-	public Object translateForSolr(Query query) throws ParseException;
-
 }
