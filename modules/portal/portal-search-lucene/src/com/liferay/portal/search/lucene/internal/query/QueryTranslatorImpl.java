@@ -17,22 +17,20 @@ package com.liferay.portal.search.lucene.internal.query;
 import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.StringQueryImpl;
-import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.search.lucene.LuceneHelper;
 import com.liferay.portal.search.lucene.QueryTranslator;
 
 import org.apache.lucene.queryParser.QueryParser;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Brian Wing Shun Chan
  */
-@DoPrivileged
+@Component(immediate = true, service = QueryTranslator.class)
 public class QueryTranslatorImpl implements QueryTranslator<Object> {
-
-	public void setLuceneHelper(LuceneHelper luceneHelper) {
-		_luceneHelper = luceneHelper;
-	}
 
 	@Override
 	public Object translate(Query query) throws ParseException {
@@ -63,6 +61,11 @@ public class QueryTranslatorImpl implements QueryTranslator<Object> {
 		else {
 			return null;
 		}
+	}
+
+	@Reference
+	protected void setLuceneHelper(LuceneHelper luceneHelper) {
+		_luceneHelper = luceneHelper;
 	}
 
 	private LuceneHelper _luceneHelper;
