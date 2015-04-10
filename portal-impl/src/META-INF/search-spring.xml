@@ -69,9 +69,6 @@
 		<property name="analyzer" ref="com.liferay.portal.search.lucene.PerFieldAnalyzer" />
 	</bean>
 	<bean id="com.liferay.portal.kernel.search.QueryTranslator" class="com.liferay.portal.search.lucene.QueryTranslatorImpl" />
-	<bean id="com.liferay.portal.kernel.search.QueryTranslatorUtil" class="com.liferay.portal.kernel.search.QueryTranslatorUtil">
-		<property name="queryTranslator" ref="com.liferay.portal.kernel.search.QueryTranslator" />
-	</bean>
 	<bean id="com.liferay.portal.kernel.search.SearchEngineUtil" class="com.liferay.portal.kernel.search.SearchEngineUtil">
 		<property name="excludedEntryClassNames">
 			<list>
@@ -130,6 +127,7 @@
 
 	<bean id="com.liferay.portal.search.lucene.LuceneIndexSearcher" class="com.liferay.portal.search.lucene.LuceneIndexSearcher">
 		<property name="querySuggester" ref="com.liferay.portal.search.lucene.LuceneQuerySuggester" />
+		<property name="queryTranslator" ref="com.liferay.portal.kernel.search.QueryTranslator" />
 	</bean>
 	<bean id="com.liferay.portal.search.lucene.LuceneIndexWriter" class="com.liferay.portal.search.lucene.LuceneIndexWriter">
 		<property name="spellCheckIndexWriter" ref="com.liferay.portal.search.lucene.LuceneSpellCheckIndexWriter" />
@@ -139,7 +137,9 @@
 			<bean class="com.liferay.portal.kernel.search.generic.BooleanClauseFactoryImpl" />
 		</property>
 		<property name="booleanQueryFactory" >
-			<bean class="com.liferay.portal.search.lucene.BooleanQueryFactoryImpl" />
+			<bean class="com.liferay.portal.search.lucene.BooleanQueryFactoryImpl">
+				<property name="queryTranslator" ref="com.liferay.portal.kernel.search.QueryTranslator" />
+			</bean>
 		</property>
 		<property name="clusteredWrite">
 			<util:constant static-field="com.liferay.portal.util.PropsValues.LUCENE_REPLICATE_WRITE" />

@@ -45,7 +45,6 @@ import com.liferay.portal.kernel.search.HitsImpl;
 import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.QueryConfig;
-import com.liferay.portal.kernel.search.QueryTranslatorUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Sort;
@@ -96,8 +95,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 		throws ParseException {
 
 		org.apache.lucene.search.Query luceneQuery =
-			(org.apache.lucene.search.Query)QueryTranslatorUtil.translate(
-				query);
+			(org.apache.lucene.search.Query)_queryTranslator.translate(query);
 
 		return luceneQuery.toString();
 	}
@@ -245,7 +243,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 
 			browseRequest.setOffset(0);
 			browseRequest.setQuery(
-				(org.apache.lucene.search.Query)QueryTranslatorUtil.translate(
+				(org.apache.lucene.search.Query)_queryTranslator.translate(
 					query));
 			browseRequest.setSort(sortFields);
 
@@ -348,6 +346,10 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 		return hits;
 	}
 
+	public void setQueryTranslator(QueryTranslator queryTranslator) {
+		_queryTranslator = queryTranslator;
+	}
+
 	protected void cleanUp(BoboBrowser boboBrowser) {
 		if (boboBrowser == null) {
 			return;
@@ -441,7 +443,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 
 		try {
 			queryTerms = LuceneHelperUtil.getQueryTerms(
-				(org.apache.lucene.search.Query)QueryTranslatorUtil.translate(
+				(org.apache.lucene.search.Query)_queryTranslator.translate(
 					query));
 		}
 		catch (ParseException pe) {
@@ -461,7 +463,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 
 		try {
 			org.apache.lucene.search.Query luceneQuery =
-				(org.apache.lucene.search.Query)QueryTranslatorUtil.translate(
+				(org.apache.lucene.search.Query)_queryTranslator.translate(
 					query);
 
 			String[] values = doc.getValues(snippetField);
@@ -532,8 +534,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 			indexReader.getFieldNames(IndexReader.FieldOption.INDEXED));
 
 		org.apache.lucene.search.Query luceneQuery =
-			(org.apache.lucene.search.Query)QueryTranslatorUtil.translate(
-				query);
+			(org.apache.lucene.search.Query)_queryTranslator.translate(query);
 
 		int scoredFieldNamesCount = LuceneHelperUtil.countScoredFieldNames(
 			luceneQuery, ArrayUtil.toStringArray(indexedFieldNames.toArray()));
@@ -643,6 +644,8 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 			throw new ExceptionInInitializerError(e);
 		}
 	}
+
+	private QueryTranslator _queryTranslator;
 
 	private class TermCollectingFormatter implements Formatter {
 

@@ -24,7 +24,13 @@ public class BooleanQueryFactoryImpl implements BooleanQueryFactory {
 
 	@Override
 	public BooleanQuery create() {
-		return new BooleanQueryImpl();
+		return new BooleanQueryImpl(_queryTranslator);
 	}
+
+	public void setQueryTranslator(QueryTranslator queryTranslator) {
+		_queryTranslator = queryTranslator;
+	}
+
+	private QueryTranslator _queryTranslator;
 
 }
