@@ -141,15 +141,8 @@
 				<property name="queryTranslator" ref="com.liferay.portal.kernel.search.QueryTranslator" />
 			</bean>
 		</property>
-		<property name="clusteredWrite">
-			<util:constant static-field="com.liferay.portal.util.PropsValues.LUCENE_REPLICATE_WRITE" />
-		</property>
-		<property name="clusteredWritePriority">
-			<util:constant static-field="com.liferay.portal.kernel.cluster.Priority.LEVEL5" />
-		</property>
 		<property name="indexSearcher" ref="com.liferay.portal.search.lucene.LuceneIndexSearcher" />
 		<property name="indexWriter" ref="com.liferay.portal.search.lucene.LuceneIndexWriter" />
-		<property name="luceneBased" value="true" />
 		<property name="termQueryFactory">
 			<bean class="com.liferay.portal.search.lucene.TermQueryFactoryImpl" />
 		</property>
