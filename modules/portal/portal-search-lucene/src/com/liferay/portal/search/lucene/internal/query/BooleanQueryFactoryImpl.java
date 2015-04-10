@@ -16,7 +16,6 @@ package com.liferay.portal.search.lucene.internal.query;
 
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.BooleanQueryFactory;
-import com.liferay.portal.search.lucene.QueryTranslator;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
