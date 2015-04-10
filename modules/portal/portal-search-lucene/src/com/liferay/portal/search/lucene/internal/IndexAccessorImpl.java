@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene;
+package com.liferay.portal.search.lucene.internal;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -24,8 +24,8 @@ import com.liferay.portal.kernel.resiliency.spi.SPI;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.InstanceFactory;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.search.lucene.dump.DumpIndexDeletionPolicy;
-import com.liferay.portal.search.lucene.dump.IndexCommitSerializationUtil;
+import com.liferay.portal.search.lucene.internal.dump.DumpIndexDeletionPolicy;
+import com.liferay.portal.search.lucene.internal.dump.IndexCommitSerializationUtil;
 import com.liferay.portal.util.ClassLoaderUtil;
 import com.liferay.portal.util.PropsValues;
 

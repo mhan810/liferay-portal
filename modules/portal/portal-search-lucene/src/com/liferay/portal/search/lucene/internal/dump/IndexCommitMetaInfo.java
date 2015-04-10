@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene.dump;
+package com.liferay.portal.search.lucene.internal.dump;
 
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;

@@ -12,11 +12,11 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene.dump;
+package com.liferay.portal.search.lucene.internal.dump;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.search.lucene.dump.IndexCommitMetaInfo.Segment;
+import com.liferay.portal.search.lucene.internal.dump.IndexCommitMetaInfo.Segment;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.IOException;
