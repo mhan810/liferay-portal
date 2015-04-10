@@ -48,14 +48,23 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.spell.LevensteinDistance;
 import org.apache.lucene.search.spell.StringDistance;
 import org.apache.lucene.search.spell.SuggestWord;
 import org.apache.lucene.search.spell.SuggestWordQueue;
 import org.apache.lucene.util.ReaderUtil;
 
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
+
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = LuceneQuerySuggester.class)
 public class LuceneQuerySuggester extends BaseQuerySuggester {
 
 	public void setBoostEnd(float boostEnd) {
@@ -66,24 +75,10 @@ public class LuceneQuerySuggester extends BaseQuerySuggester {
 		_boostStart = boostStart;
 	}
 
-	public void setLuceneHelper(LuceneHelper luceneHelper) {
-		_luceneHelper = luceneHelper;
-	}
-
 	public void setQuerySuggestionMaxNGramLength(
 		int querySuggestionMaxNGramLength) {
 
 		_querySuggestionMaxNGramLength = querySuggestionMaxNGramLength;
-	}
-
-	public void setStringDistance(StringDistance stringDistance) {
-		_stringDistance = stringDistance;
-	}
-
-	public void setSuggestWordComparator(
-		Comparator<SuggestWord> suggestWordComparator) {
-
-		_suggestWordComparator = suggestWordComparator;
 	}
 
 	@Override
@@ -137,6 +132,13 @@ public class LuceneQuerySuggester extends BaseQuerySuggester {
 			catch (IOException ioe) {
 				_log.error("Unable to release searcher", ioe);
 			}
+		}
+	}
+
+	@Activate
+	protected void activate(Map<String, Object> properties) {
+		if (_stringDistance == null) {
+			_stringDistance = new LevensteinDistance();
 		}
 	}
 
@@ -300,6 +302,31 @@ public class LuceneQuerySuggester extends BaseQuerySuggester {
 		return words;
 	}
 
+	@Reference(unbind = "-")
+	protected void setLuceneHelper(LuceneHelper luceneHelper) {
+		_luceneHelper = luceneHelper;
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected void setStringDistance(StringDistance stringDistance) {
+		_stringDistance = stringDistance;
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected void setSuggestWordComparator(
+		Comparator<SuggestWord> suggestWordComparator) {
+
+		_suggestWordComparator = suggestWordComparator;
+	}
+
 	protected Map<String, List<String>> spellCheckKeywords(
 			List<String> keywords, String localizedFieldName,
 			SearchContext searchContext, String languageId, int max)
@@ -374,6 +401,16 @@ public class LuceneQuerySuggester extends BaseQuerySuggester {
 				_log.error("Unable to release searcher", ioe);
 			}
 		}
+	}
+
+	protected void unsetStringDistaince(StringDistance stringDistance) {
+		_stringDistance = null;
+	}
+
+	protected void unsetSuggestWordComparator(
+		Comparator<SuggestWord> suggestWordComparator) {
+
+		_suggestWordComparator = null;
 	}
 
 	private static final float _SCORES_THRESHOLD_DEFAULT = 0.5f;
