@@ -37,6 +37,7 @@
 	<!-- Util -->
 
 	<bean id="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilder" class="com.liferay.portal.repository.search.RepositorySearchQueryBuilderImpl">
+		<property name="luceneHelper" ref="com.liferay.portal.search.lucene.LuceneHelperImpl" />
 		<property name="analyzer" ref="org.apache.lucene.analysis.KeywordAnalyzer" />
 	</bean>
 	<bean id="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilderUtil" class="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilderUtil">
@@ -68,7 +69,6 @@
 	<bean id="com.liferay.portal.kernel.search.QueryPreProcessConfiguration" class="com.liferay.portal.search.QueryPreProcessConfigurationImpl">
 		<property name="analyzer" ref="com.liferay.portal.search.lucene.PerFieldAnalyzer" />
 	</bean>
-	<bean id="com.liferay.portal.kernel.search.QueryTranslator" class="com.liferay.portal.search.lucene.QueryTranslatorImpl" />
 	<bean id="com.liferay.portal.kernel.search.SearchEngineUtil" class="com.liferay.portal.kernel.search.SearchEngineUtil">
 		<property name="excludedEntryClassNames">
 			<list>
@@ -114,7 +114,6 @@
 		<property name="booleanQueryFactory" >
 			<bean class="com.liferay.portal.kernel.search.generic.BooleanQueryFactoryImpl" />
 		</property>
-		<property name="luceneBased" value="false" />
 		<property name="termQueryFactory">
 			<bean class="com.liferay.portal.kernel.search.generic.TermQueryFactoryImpl" />
 		</property>
@@ -126,10 +125,12 @@
 	<!-- Lucene search engine -->
 
 	<bean id="com.liferay.portal.search.lucene.LuceneIndexSearcher" class="com.liferay.portal.search.lucene.LuceneIndexSearcher">
+		<property name="luceneHelper" ref="com.liferay.portal.search.lucene.LuceneHelperImpl" />
 		<property name="querySuggester" ref="com.liferay.portal.search.lucene.LuceneQuerySuggester" />
-		<property name="queryTranslator" ref="com.liferay.portal.kernel.search.QueryTranslator" />
+		<property name="queryTranslator" ref="com.liferay.portal.search.lucene.QueryTranslator" />
 	</bean>
 	<bean id="com.liferay.portal.search.lucene.LuceneIndexWriter" class="com.liferay.portal.search.lucene.LuceneIndexWriter">
+		<property name="luceneHelper" ref="com.liferay.portal.search.lucene.LuceneHelperImpl" />
 		<property name="spellCheckIndexWriter" ref="com.liferay.portal.search.lucene.LuceneSpellCheckIndexWriter" />
 	</bean>
 	<bean id="com.liferay.portal.search.lucene.LuceneSearchEngineImpl" class="com.liferay.portal.search.lucene.LuceneSearchEngine">
@@ -138,11 +139,13 @@
 		</property>
 		<property name="booleanQueryFactory" >
 			<bean class="com.liferay.portal.search.lucene.BooleanQueryFactoryImpl">
-				<property name="queryTranslator" ref="com.liferay.portal.kernel.search.QueryTranslator" />
+				<property name="luceneHelper" ref="com.liferay.portal.search.lucene.LuceneHelperImpl" />
+				<property name="queryTranslator" ref="com.liferay.portal.search.lucene.QueryTranslator" />
 			</bean>
 		</property>
 		<property name="indexSearcher" ref="com.liferay.portal.search.lucene.LuceneIndexSearcher" />
 		<property name="indexWriter" ref="com.liferay.portal.search.lucene.LuceneIndexWriter" />
+		<property name="luceneHelper" ref="com.liferay.portal.search.lucene.LuceneHelperImpl" />
 		<property name="termQueryFactory">
 			<bean class="com.liferay.portal.search.lucene.TermQueryFactoryImpl" />
 		</property>
@@ -160,9 +163,15 @@
 		<property name="luceneHelper" ref="com.liferay.portal.search.lucene.LuceneHelperImpl" />
 	</bean>
 	<bean id="com.liferay.portal.search.lucene.LuceneQuerySuggester" class="com.liferay.portal.search.lucene.LuceneQuerySuggester">
+		<property name="luceneHelper" ref="com.liferay.portal.search.lucene.LuceneHelperImpl" />
 		<property name="stringDistance" ref="org.apache.lucene.search.spell.StringDistance" />
 	</bean>
-	<bean id="com.liferay.portal.search.lucene.LuceneSpellCheckIndexWriter" class="com.liferay.portal.search.lucene.LuceneSpellCheckIndexWriter" />
+	<bean id="com.liferay.portal.search.lucene.LuceneSpellCheckIndexWriter" class="com.liferay.portal.search.lucene.LuceneSpellCheckIndexWriter">
+		<property name="luceneHelper" ref="com.liferay.portal.search.lucene.LuceneHelperImpl" />
+	</bean>
+	<bean id="com.liferay.portal.search.lucene.QueryTranslator" class="com.liferay.portal.search.lucene.QueryTranslatorImpl">
+		<property name="luceneHelper" ref="com.liferay.portal.search.lucene.LuceneHelperImpl" />
+	</bean>
 
 	<!-- Lucene analyzers -->
 

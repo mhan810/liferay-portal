@@ -116,7 +116,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 		BrowseRequest browseRequest = null;
 
 		try {
-			indexSearcher = LuceneHelperUtil.getIndexSearcher(
+			indexSearcher = _luceneHelper.getIndexSearcher(
 				searchContext.getCompanyId());
 
 			List<FacetHandler<?>> facetHandlers = new ArrayList<>();
@@ -329,7 +329,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 			cleanUp(boboBrowser);
 
 			try {
-				LuceneHelperUtil.releaseIndexSearcher(
+				_luceneHelper.releaseIndexSearcher(
 					searchContext.getCompanyId(), indexSearcher);
 			}
 			catch (IOException ioe) {
@@ -344,6 +344,10 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 		}
 
 		return hits;
+	}
+
+	public void setLuceneHelper(LuceneHelper luceneHelper) {
+		_luceneHelper = luceneHelper;
 	}
 
 	public void setQueryTranslator(QueryTranslator queryTranslator) {
@@ -442,7 +446,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 		Set<String> queryTerms = new HashSet<>();
 
 		try {
-			queryTerms = LuceneHelperUtil.getQueryTerms(
+			queryTerms = _luceneHelper.getQueryTerms(
 				(org.apache.lucene.search.Query)_queryTranslator.translate(
 					query));
 		}
@@ -472,7 +476,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 				new TermCollectingFormatter();
 
 			if (ArrayUtil.isNotEmpty(values)) {
-				snippet = LuceneHelperUtil.getSnippet(
+				snippet = _luceneHelper.getSnippet(
 					luceneQuery, snippetField, StringUtil.merge(values),
 					termCollectingFormatter);
 			}
@@ -486,7 +490,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 					return StringPool.BLANK;
 				}
 
-				snippet = LuceneHelperUtil.getSnippet(
+				snippet = _luceneHelper.getSnippet(
 					luceneQuery, field, StringUtil.merge(values),
 					termCollectingFormatter);
 			}
@@ -536,7 +540,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 		org.apache.lucene.search.Query luceneQuery =
 			(org.apache.lucene.search.Query)_queryTranslator.translate(query);
 
-		int scoredFieldNamesCount = LuceneHelperUtil.countScoredFieldNames(
+		int scoredFieldNamesCount = _luceneHelper.countScoredFieldNames(
 			luceneQuery, ArrayUtil.toStringArray(indexedFieldNames.toArray()));
 
 		Hits hits = new HitsImpl();
@@ -645,6 +649,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 		}
 	}
 
+	private LuceneHelper _luceneHelper;
 	private QueryTranslator _queryTranslator;
 
 	private class TermCollectingFormatter implements Formatter {

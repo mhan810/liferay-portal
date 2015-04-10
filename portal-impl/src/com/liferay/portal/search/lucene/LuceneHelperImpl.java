@@ -85,6 +85,18 @@ import org.apache.lucene.util.Version;
  */
 public class LuceneHelperImpl implements LuceneHelper {
 
+	public LuceneHelperImpl() {
+		if (PropsValues.INDEX_ON_STARTUP && PropsValues.INDEX_WITH_THREAD) {
+			_luceneIndexThreadPoolExecutor =
+				PortalExecutorManagerUtil.getPortalExecutor(
+					LuceneHelperImpl.class.getName());
+		}
+
+		BooleanQuery.setMaxClauseCount(_LUCENE_BOOLEAN_QUERY_CLAUSE_MAX_SIZE);
+
+		IndexAccessorImpl.luceneHelper = this;
+	}
+
 	@Override
 	public void addDate(Document doc, String field, Date value) {
 		doc.add(LuceneFields.getDate(field, value));
@@ -809,16 +821,6 @@ public class LuceneHelperImpl implements LuceneHelper {
 		IndexAccessor indexAccessor = getIndexAccessor(companyId);
 
 		indexAccessor.updateDocument(term, document);
-	}
-
-	private LuceneHelperImpl() {
-		if (PropsValues.INDEX_ON_STARTUP && PropsValues.INDEX_WITH_THREAD) {
-			_luceneIndexThreadPoolExecutor =
-				PortalExecutorManagerUtil.getPortalExecutor(
-					LuceneHelperImpl.class.getName());
-		}
-
-		BooleanQuery.setMaxClauseCount(_LUCENE_BOOLEAN_QUERY_CLAUSE_MAX_SIZE);
 	}
 
 	private void _includeIfUnique(

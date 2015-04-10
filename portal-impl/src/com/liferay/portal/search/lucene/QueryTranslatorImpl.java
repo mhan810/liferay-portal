@@ -28,6 +28,10 @@ import org.apache.lucene.queryParser.QueryParser;
 @DoPrivileged
 public class QueryTranslatorImpl implements QueryTranslator<Object> {
 
+	public void setLuceneHelper(LuceneHelper luceneHelper) {
+		_luceneHelper = luceneHelper;
+	}
+
 	@Override
 	public Object translate(Query query) throws ParseException {
 		if (query instanceof BooleanQueryImpl) {
@@ -38,8 +42,8 @@ public class QueryTranslatorImpl implements QueryTranslator<Object> {
 		}
 		else if (query instanceof StringQueryImpl) {
 			QueryParser queryParser = new QueryParser(
-				LuceneHelperUtil.getVersion(), StringPool.BLANK,
-				LuceneHelperUtil.getAnalyzer());
+				_luceneHelper.getVersion(), StringPool.BLANK,
+				_luceneHelper.getAnalyzer());
 
 			try {
 				return queryParser.parse(query.toString());
@@ -58,5 +62,7 @@ public class QueryTranslatorImpl implements QueryTranslator<Object> {
 			return null;
 		}
 	}
+
+	private LuceneHelper _luceneHelper;
 
 }
