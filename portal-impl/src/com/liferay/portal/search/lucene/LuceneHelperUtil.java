@@ -45,7 +45,7 @@ import org.apache.lucene.util.Version;
 public class LuceneHelperUtil {
 
 	public static void addDate(Document doc, String field, Date value) {
-		doc.add(LuceneFields.getDate(field, value));
+		getLuceneHelper().addDate(doc, field, value);
 	}
 
 	public static void addDocument(long companyId, Document document)
@@ -57,31 +57,31 @@ public class LuceneHelperUtil {
 	public static void addExactTerm(
 		BooleanQuery booleanQuery, String field, boolean value) {
 
-		addExactTerm(booleanQuery, field, String.valueOf(value));
+		getLuceneHelper().addExactTerm(booleanQuery, field, value);
 	}
 
 	public static void addExactTerm(
 		BooleanQuery booleanQuery, String field, double value) {
 
-		addExactTerm(booleanQuery, field, String.valueOf(value));
+		getLuceneHelper().addExactTerm(booleanQuery, field, value);
 	}
 
 	public static void addExactTerm(
 		BooleanQuery booleanQuery, String field, int value) {
 
-		addExactTerm(booleanQuery, field, String.valueOf(value));
+		getLuceneHelper().addExactTerm(booleanQuery, field, value);
 	}
 
 	public static void addExactTerm(
 		BooleanQuery booleanQuery, String field, long value) {
 
-		addExactTerm(booleanQuery, field, String.valueOf(value));
+		getLuceneHelper().addExactTerm(booleanQuery, field, value);
 	}
 
 	public static void addExactTerm(
 		BooleanQuery booleanQuery, String field, short value) {
 
-		addExactTerm(booleanQuery, field, String.valueOf(value));
+		getLuceneHelper().addExactTerm(booleanQuery, field, value);
 	}
 
 	public static void addExactTerm(
@@ -142,8 +142,7 @@ public class LuceneHelperUtil {
 		BooleanQuery booleanQuery, String field, int startValue, int endValue) {
 
 		getLuceneHelper().addRangeTerm(
-			booleanQuery, field, String.valueOf(startValue),
-			String.valueOf(endValue));
+			booleanQuery, field, startValue, endValue);
 	}
 
 	public static void addRangeTerm(
@@ -160,8 +159,7 @@ public class LuceneHelperUtil {
 		long endValue) {
 
 		getLuceneHelper().addRangeTerm(
-			booleanQuery, field, String.valueOf(startValue),
-			String.valueOf(endValue));
+			booleanQuery, field, startValue, endValue);
 	}
 
 	public static void addRangeTerm(
@@ -169,8 +167,7 @@ public class LuceneHelperUtil {
 		Long endValue) {
 
 		getLuceneHelper().addRangeTerm(
-			booleanQuery, field, String.valueOf(startValue),
-			String.valueOf(endValue));
+			booleanQuery, field, startValue, endValue);
 	}
 
 	public static void addRangeTerm(
@@ -202,37 +199,37 @@ public class LuceneHelperUtil {
 	public static void addRequiredTerm(
 		BooleanQuery booleanQuery, String field, boolean value) {
 
-		addRequiredTerm(booleanQuery, field, String.valueOf(value));
+		getLuceneHelper().addRequiredTerm(booleanQuery, field, value);
 	}
 
 	public static void addRequiredTerm(
 		BooleanQuery booleanQuery, String field, double value) {
 
-		addRequiredTerm(booleanQuery, field, String.valueOf(value));
+		getLuceneHelper().addRequiredTerm(booleanQuery, field, value);
 	}
 
 	public static void addRequiredTerm(
 		BooleanQuery booleanQuery, String field, int value) {
 
-		addRequiredTerm(booleanQuery, field, String.valueOf(value));
+		getLuceneHelper().addRequiredTerm(booleanQuery, field, value);
 	}
 
 	public static void addRequiredTerm(
 		BooleanQuery booleanQuery, String field, long value) {
 
-		addRequiredTerm(booleanQuery, field, String.valueOf(value));
+		getLuceneHelper().addRequiredTerm(booleanQuery, field, value);
 	}
 
 	public static void addRequiredTerm(
 		BooleanQuery booleanQuery, String field, short value) {
 
-		addRequiredTerm(booleanQuery, field, String.valueOf(value));
+		getLuceneHelper().addRequiredTerm(booleanQuery, field, value);
 	}
 
 	public static void addRequiredTerm(
 		BooleanQuery booleanQuery, String field, String value) {
 
-		addRequiredTerm(booleanQuery, field, value, false);
+		getLuceneHelper().addRequiredTerm(booleanQuery, field, value);
 	}
 
 	public static void addRequiredTerm(
@@ -251,13 +248,13 @@ public class LuceneHelperUtil {
 	public static void addTerm(
 		BooleanQuery booleanQuery, String field, long value) {
 
-		addTerm(booleanQuery, field, String.valueOf(value));
+		getLuceneHelper().addTerm(booleanQuery, field, value);
 	}
 
 	public static void addTerm(
 		BooleanQuery booleanQuery, String field, String value) {
 
-		addTerm(booleanQuery, field, value, false);
+		getLuceneHelper().addTerm(booleanQuery, field, value);
 	}
 
 	public static void addTerm(
@@ -348,14 +345,15 @@ public class LuceneHelperUtil {
 		Formatter formatter = new SimpleHTMLFormatter(
 			StringPool.BLANK, StringPool.BLANK);
 
-		return getSnippet(query, field, s, formatter);
+		return getLuceneHelper().getSnippet(query, field, s, formatter);
 	}
 
 	public static String getSnippet(
 			Query query, String field, String s, Formatter formatter)
 		throws IOException {
 
-		return getSnippet(query, field, s, 3, 80, "...", formatter);
+		return getLuceneHelper().getSnippet(
+			query, field, s, 3, 80, "...", formatter);
 	}
 
 	public static String getSnippet(

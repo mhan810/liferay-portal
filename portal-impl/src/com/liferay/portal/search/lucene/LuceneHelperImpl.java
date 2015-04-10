@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +70,7 @@ import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.SimpleFragmenter;
+import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.search.highlight.WeightedTerm;
 import org.apache.lucene.util.Version;
 
@@ -84,12 +86,52 @@ import org.apache.lucene.util.Version;
 public class LuceneHelperImpl implements LuceneHelper {
 
 	@Override
+	public void addDate(Document doc, String field, Date value) {
+		doc.add(LuceneFields.getDate(field, value));
+	}
+
+	@Override
 	public void addDocument(long companyId, Document document)
 		throws IOException {
 
 		IndexAccessor indexAccessor = getIndexAccessor(companyId);
 
 		indexAccessor.addDocument(document);
+	}
+
+	@Override
+	public void addExactTerm(
+		BooleanQuery booleanQuery, String field, boolean value) {
+
+		addExactTerm(booleanQuery, field, String.valueOf(value));
+	}
+
+	@Override
+	public void addExactTerm(
+		BooleanQuery booleanQuery, String field, double value) {
+
+		addExactTerm(booleanQuery, field, String.valueOf(value));
+	}
+
+	@Override
+	public void addExactTerm(
+		BooleanQuery booleanQuery, String field, int value) {
+
+		addExactTerm(booleanQuery, field, String.valueOf(value));
+	}
+
+	@Override
+	public void addExactTerm(
+		BooleanQuery booleanQuery, String field, long value) {
+
+		addExactTerm(booleanQuery, field, String.valueOf(value));
+	}
+
+	@Override
+	public void addExactTerm(
+		BooleanQuery booleanQuery, String field, short value) {
+
+		addExactTerm(booleanQuery, field, String.valueOf(value));
 	}
 
 	@Override
@@ -121,6 +163,25 @@ public class LuceneHelperImpl implements LuceneHelper {
 		booleanQuery.add(numericRangeQuery, BooleanClause.Occur.SHOULD);
 	}
 
+	@Override
+	public void addNumericRangeTerm(
+		BooleanQuery booleanQuery, String field, short startValue,
+		short endValue) {
+
+		addNumericRangeTerm(
+			booleanQuery, field, (long)startValue, (long)endValue);
+	}
+
+	@Override
+	public void addNumericRangeTerm(
+		BooleanQuery booleanQuery, String field, Short startValue,
+		Short endValue) {
+
+		addNumericRangeTerm(
+			booleanQuery, field, GetterUtil.getLong(startValue),
+			GetterUtil.getLong(endValue));
+	}
+
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link
 	 *             #addNumericRangeTerm(BooleanQuery, String, Long, Long)}
@@ -134,6 +195,35 @@ public class LuceneHelperImpl implements LuceneHelper {
 		addNumericRangeTerm(
 			booleanQuery, field, GetterUtil.getLong(startValue),
 			GetterUtil.getLong(endValue));
+	}
+
+	@Override
+	public void addRangeTerm(
+		BooleanQuery booleanQuery, String field, int startValue, int endValue) {
+
+		addRangeTerm(
+			booleanQuery, field, String.valueOf(startValue),
+			String.valueOf(endValue));
+	}
+
+	@Override
+	public void addRangeTerm(
+		BooleanQuery booleanQuery, String field, long startValue,
+		long endValue) {
+
+		addRangeTerm(
+			booleanQuery, field, String.valueOf(startValue),
+			String.valueOf(endValue));
+	}
+
+	@Override
+	public void addRangeTerm(
+		BooleanQuery booleanQuery, String field, Long startValue,
+		Long endValue) {
+
+		addRangeTerm(
+			booleanQuery, field, String.valueOf(startValue),
+			String.valueOf(endValue));
 	}
 
 	@Override
@@ -161,6 +251,48 @@ public class LuceneHelperImpl implements LuceneHelper {
 
 	@Override
 	public void addRequiredTerm(
+		BooleanQuery booleanQuery, String field, boolean value) {
+
+		addRequiredTerm(booleanQuery, field, String.valueOf(value));
+	}
+
+	@Override
+	public void addRequiredTerm(
+		BooleanQuery booleanQuery, String field, double value) {
+
+		addRequiredTerm(booleanQuery, field, String.valueOf(value));
+	}
+
+	@Override
+	public void addRequiredTerm(
+		BooleanQuery booleanQuery, String field, int value) {
+
+		addRequiredTerm(booleanQuery, field, String.valueOf(value));
+	}
+
+	@Override
+	public void addRequiredTerm(
+		BooleanQuery booleanQuery, String field, long value) {
+
+		addRequiredTerm(booleanQuery, field, String.valueOf(value));
+	}
+
+	@Override
+	public void addRequiredTerm(
+		BooleanQuery booleanQuery, String field, short value) {
+
+		addRequiredTerm(booleanQuery, field, String.valueOf(value));
+	}
+
+	@Override
+	public void addRequiredTerm(
+		BooleanQuery booleanQuery, String field, String value) {
+
+		addRequiredTerm(booleanQuery, field, value, false);
+	}
+
+	@Override
+	public void addRequiredTerm(
 		BooleanQuery booleanQuery, String field, String value, boolean like) {
 
 		addRequiredTerm(booleanQuery, field, new String[] {value}, like);
@@ -182,6 +314,16 @@ public class LuceneHelperImpl implements LuceneHelper {
 		}
 
 		booleanQuery.add(query, BooleanClause.Occur.MUST);
+	}
+
+	@Override
+	public void addTerm(BooleanQuery booleanQuery, String field, long value) {
+		addTerm(booleanQuery, field, String.valueOf(value));
+	}
+
+	@Override
+	public void addTerm(BooleanQuery booleanQuery, String field, String value) {
+		addTerm(booleanQuery, field, value, false);
 	}
 
 	@Override
@@ -441,6 +583,24 @@ public class LuceneHelperImpl implements LuceneHelper {
 		indexSearcher.setSimilarity(new FieldWeightSimilarity());
 
 		return indexSearcher;
+	}
+
+	@Override
+	public String getSnippet(Query query, String field, String s)
+		throws IOException {
+
+		Formatter formatter = new SimpleHTMLFormatter(
+			StringPool.BLANK, StringPool.BLANK);
+
+		return getSnippet(query, field, s, formatter);
+	}
+
+	@Override
+	public String getSnippet(
+			Query query, String field, String s, Formatter formatter)
+		throws IOException {
+
+		return getSnippet(query, field, s, 3, 80, "...", formatter);
 	}
 
 	@Override
@@ -740,17 +900,15 @@ public class LuceneHelperImpl implements LuceneHelper {
 			PropsUtil.get(PropsKeys.LUCENE_BOOLEAN_QUERY_CLAUSE_MAX_SIZE),
 			BooleanQuery.getMaxClauseCount());
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		LuceneHelperImpl.class);
-
 	private Analyzer _analyzer;
 	private final Map<Long, IndexAccessor> _indexAccessors =
 		new ConcurrentHashMap<>();
+	private final Log _log = LogFactoryUtil.getLog(LuceneHelperImpl.class);
 	private ThreadPoolExecutor _luceneIndexThreadPoolExecutor;
 	private QueryPreProcessConfiguration _queryPreProcessConfiguration;
 	private Version _version;
 
-	private static class ShutdownSyncJob implements Runnable {
+	private class ShutdownSyncJob implements Runnable {
 
 		public ShutdownSyncJob(CountDownLatch countDownLatch) {
 			_countDownLatch = countDownLatch;
