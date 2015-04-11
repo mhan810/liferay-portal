@@ -34,9 +34,13 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.util.Version;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = RepositorySearchQueryTermBuilder.class)
 public class LuceneRepositorySearchQueryTermBuilder
 	implements RepositorySearchQueryTermBuilder {
 
@@ -74,14 +78,6 @@ public class LuceneRepositorySearchQueryTermBuilder
 		}
 	}
 
-	public void setAnalyzer(Analyzer analyzer) {
-		_analyzer = analyzer;
-	}
-
-	public void setVersion(Version version) {
-		_version = version;
-	}
-
 	protected org.apache.lucene.search.BooleanClause.Occur
 		getBooleanClauseOccur(BooleanClauseOccur occur) {
 
@@ -108,6 +104,16 @@ public class LuceneRepositorySearchQueryTermBuilder
 		}
 
 		return BooleanClauseOccur.SHOULD;
+	}
+
+	@Reference(unbind = "-")
+	protected void setAnalyzer(Analyzer analyzer) {
+		_analyzer = analyzer;
+	}
+
+	@Reference(unbind = "-")
+	protected void setVersion(Version version) {
+		_version = version;
 	}
 
 	protected void translateQuery(
