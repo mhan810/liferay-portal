@@ -79,6 +79,7 @@
 				<value>firstName</value>
 				<value>lastName</value>
 				<value>license</value>
+				<value>middleName</value>
 				<value>path</value>
 				<value>screenName</value>
 				<value>tag</value>
