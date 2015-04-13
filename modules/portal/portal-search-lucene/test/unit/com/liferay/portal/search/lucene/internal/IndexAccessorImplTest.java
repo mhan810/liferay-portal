@@ -12,14 +12,10 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene.dump;
+package com.liferay.portal.search.lucene.internal;
 
-import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.search.lucene.IndexAccessorImpl;
-import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.test.rule.MainServletTestRule;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.ByteArrayInputStream;
@@ -37,8 +33,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -46,12 +40,6 @@ import org.junit.Test;
  * @author Mate Thurzo
  */
 public class IndexAccessorImplTest {
-
-	@ClassRule
-	@Rule
-	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE);
 
 	@AfterClass
 	public static void tearDownClass() throws Exception {
