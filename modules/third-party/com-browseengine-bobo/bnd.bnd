@@ -1,0 +1,5 @@
+Bundle-SymbolicName: com.ctc.wstx
+Bundle-Version: 3.2.4.LIFERAY-PATCHED-1
+Export-Package:\
+	com.browseengine.bobo.*
+Include-Resource: classes
