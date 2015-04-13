@@ -12,20 +12,15 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene;
+package com.liferay.portal.search.lucene.internal.analyzer;
 
-import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
-import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.test.rule.MainServletTestRule;
+import com.liferay.portal.kernel.util.HashMapDictionary;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Fieldable;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
 
 import org.mockito.Mockito;
@@ -37,16 +32,16 @@ import org.powermock.api.mockito.PowerMockito;
  */
 public class PerFieldAnalyzerTest extends PowerMockito {
 
-	@ClassRule
-	@Rule
-	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE);
-
 	@Before
 	public void setUp() {
-		_perFieldAnalyzer = (PerFieldAnalyzer)PortalBeanLocatorUtil.locate(
-			PerFieldAnalyzer.class.getName());
+		_perFieldAnalyzer = new PerFieldAnalyzer();
+
+		HashMapDictionary<String, Object> hashMapDictionary =
+			new HashMapDictionary<>();
+
+		hashMapDictionary.put("version", "LUCENE_35");
+
+		_perFieldAnalyzer.activate(new MockComponentContext(hashMapDictionary));
 	}
 
 	@Test
