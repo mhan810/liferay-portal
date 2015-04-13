@@ -34,17 +34,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.Map;
 
-import org.apache.lucene.util.Version;
-
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -53,7 +46,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"search.engine.id=SYSTEM_ENGINE", "vendor=Lucene", "version=LUCENE_35"
+		"search.engine.id=SYSTEM_ENGINE", "vendor=Lucene"
 	},
 	service = {LuceneSearchEngine.class, SearchEngine.class}
 )
@@ -157,28 +150,10 @@ public class LuceneSearchEngine extends BaseSearchEngine {
 	}
 
 	@Activate
-	protected void activate(ComponentContext componentContext) {
-		Dictionary<String, Object> dictionary =
-			componentContext.getProperties();
-
+	protected void activate(Map<String, Object> properties) {
 		setBooleanClauseFactory(new BooleanClauseFactoryImpl());
 
-		setVendor(GetterUtil.getString(dictionary.get("vendor"), "Lucene"));
-
-		Version version = Version.valueOf(
-			GetterUtil.getString(dictionary.get("version"), "LUCENE_35"));
-
-		BundleContext bundleContext = componentContext.getBundleContext();
-
-		_serviceRegistration = bundleContext.registerService(
-			Version.class, version, new Hashtable<String, Object>());
-	}
-
-	@Deactivate
-	protected void deactivate() {
-		if (_serviceRegistration != null) {
-			_serviceRegistration.unregister();
-		}
+		setVendor(GetterUtil.getString(properties.get("vendor"), "Lucene"));
 	}
 
 	protected String getFileName(String backupName) {
@@ -192,6 +167,5 @@ public class LuceneSearchEngine extends BaseSearchEngine {
 	}
 
 	private LuceneHelper _luceneHelper;
-	private ServiceRegistration<Version> _serviceRegistration;
 
 }
