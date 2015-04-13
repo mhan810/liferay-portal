@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene;
+package com.liferay.portal.search.lucene.internal.analyzer;
 
 import java.io.IOException;
 import java.io.Reader;
