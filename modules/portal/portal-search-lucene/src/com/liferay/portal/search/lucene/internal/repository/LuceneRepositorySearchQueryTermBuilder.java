@@ -24,7 +24,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.util.lucene.KeywordsUtil;
+import com.liferay.portal.search.util.KeywordsUtil;
 
 import java.util.HashSet;
 import java.util.Set;

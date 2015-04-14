@@ -22,7 +22,7 @@ import org.osgi.service.component.annotations.Component;
 /**
  * @author Raymond Augé
  */
-@Component(immediate = true, service = TermRangeQueryFactory.class)
+@Component(immediate = true, service = TermRangeQueryFactoryImpl.class)
 public class TermRangeQueryFactoryImpl implements TermRangeQueryFactory {
 
 	@Override
