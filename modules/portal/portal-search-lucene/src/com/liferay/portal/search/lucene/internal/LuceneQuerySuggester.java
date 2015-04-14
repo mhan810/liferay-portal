@@ -403,7 +403,7 @@ public class LuceneQuerySuggester extends BaseQuerySuggester {
 		}
 	}
 
-	protected void unsetStringDistaince(StringDistance stringDistance) {
+	protected void unsetStringDistance(StringDistance stringDistance) {
 		_stringDistance = null;
 	}
 

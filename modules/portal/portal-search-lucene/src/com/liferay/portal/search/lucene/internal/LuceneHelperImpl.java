@@ -14,6 +14,8 @@
 
 package com.liferay.portal.search.lucene.internal;
 
+import aQute.bnd.annotation.metatype.Configurable;
+
 import com.liferay.portal.kernel.concurrent.ThreadPoolExecutor;
 import com.liferay.portal.kernel.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
@@ -21,14 +23,13 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.SearchEngineInitializer;
+import com.liferay.portal.search.lucene.internal.configuration.LuceneConfiguration;
+import com.liferay.portal.search.lucene.internal.dump.IndexCommitSerializationUtil;
 import com.liferay.portal.search.lucene.internal.highlight.QueryTermExtractor;
-import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.IOException;
@@ -61,8 +62,10 @@ import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.search.highlight.WeightedTerm;
 import org.apache.lucene.util.Version;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -74,20 +77,11 @@ import org.osgi.service.component.annotations.Reference;
  * @author Hugo Huijser
  * @author Andrea Di Giorgi
  */
-@Component(immediate = true, service = LuceneHelper.class)
+@Component(
+	configurationPid = "com.liferay.portal.sso.ntlm.configuration.NtlmConfiguration",
+	immediate = true, service = LuceneHelper.class
+)
 public class LuceneHelperImpl implements LuceneHelper {
-
-	public LuceneHelperImpl() {
-		if (PropsValues.INDEX_ON_STARTUP && PropsValues.INDEX_WITH_THREAD) {
-			_luceneIndexThreadPoolExecutor =
-				_portalExecutorManager.getPortalExecutor(
-					LuceneHelperImpl.class.getName());
-		}
-
-		BooleanQuery.setMaxClauseCount(_LUCENE_BOOLEAN_QUERY_CLAUSE_MAX_SIZE);
-
-		IndexAccessorImpl.luceneHelper = this;
-	}
 
 	@Override
 	public void addDate(Document document, String field, Date value) {
@@ -448,6 +442,24 @@ public class LuceneHelperImpl implements LuceneHelper {
 		indexAccessor.updateDocument(term, document);
 	}
 
+	@Activate
+	protected void activate(Map<String, Object> properties) {
+		_luceneConfiguration = Configurable.createConfigurable(
+			LuceneConfiguration.class, properties);
+
+		if (PropsValues.INDEX_ON_STARTUP && PropsValues.INDEX_WITH_THREAD) {
+			_luceneIndexThreadPoolExecutor =
+				_portalExecutorManager.getPortalExecutor(
+					LuceneHelperImpl.class.getName());
+		}
+
+		BooleanQuery.setMaxClauseCount(BooleanQuery.getMaxClauseCount());
+
+		IndexAccessorImpl.luceneConfiguration = _luceneConfiguration;
+		IndexAccessorImpl.luceneHelper = this;
+		IndexCommitSerializationUtil.luceneConfiguration = _luceneConfiguration;
+	}
+
 	@Deactivate
 	protected void deactivate() {
 		if (_luceneIndexThreadPoolExecutor != null) {
@@ -467,6 +479,15 @@ public class LuceneHelperImpl implements LuceneHelper {
 		}
 	}
 
+	@Modified
+	protected void modified(Map<String, Object> properties) {
+		_luceneConfiguration = Configurable.createConfigurable(
+			LuceneConfiguration.class, properties);
+
+		IndexAccessorImpl.luceneConfiguration = _luceneConfiguration;
+		IndexCommitSerializationUtil.luceneConfiguration = _luceneConfiguration;
+	}
+
 	@Reference(unbind = "-")
 	protected void setAnalyzer(Analyzer analyzer) {
 		_analyzer = analyzer;
@@ -484,15 +505,11 @@ public class LuceneHelperImpl implements LuceneHelper {
 		_version = version;
 	}
 
-	private static final int _LUCENE_BOOLEAN_QUERY_CLAUSE_MAX_SIZE =
-		GetterUtil.getInteger(
-			PropsUtil.get(PropsKeys.LUCENE_BOOLEAN_QUERY_CLAUSE_MAX_SIZE),
-			BooleanQuery.getMaxClauseCount());
-
 	private Analyzer _analyzer;
 	private final Map<Long, IndexAccessor> _indexAccessors =
 		new ConcurrentHashMap<>();
 	private final Log _log = LogFactoryUtil.getLog(LuceneHelperImpl.class);
+	private volatile LuceneConfiguration _luceneConfiguration;
 	private ThreadPoolExecutor _luceneIndexThreadPoolExecutor;
 	private PortalExecutorManager _portalExecutorManager;
 	private Version _version;

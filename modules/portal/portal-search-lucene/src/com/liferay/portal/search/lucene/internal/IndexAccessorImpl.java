@@ -25,11 +25,11 @@ import com.liferay.portal.kernel.resiliency.spi.SPIUtil;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.InstanceFactory;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.search.lucene.internal.configuration.LuceneConfiguration;
 import com.liferay.portal.search.lucene.internal.dump.DumpIndexDeletionPolicy;
 import com.liferay.portal.search.lucene.internal.dump.IndexCommitSerializationUtil;
-import com.liferay.portal.util.ClassLoaderUtil;
-import com.liferay.portal.util.PropsValues;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,7 +77,7 @@ public class IndexAccessorImpl implements IndexAccessor {
 	public IndexAccessorImpl(long companyId) {
 		_companyId = companyId;
 
-		_path = PropsValues.LUCENE_DIR + _companyId + StringPool.SLASH;
+		_path = luceneConfiguration.dir() + _companyId + StringPool.SLASH;
 
 		IndexSearcherManager indexSearcherManager = null;
 
@@ -216,24 +216,26 @@ public class IndexAccessorImpl implements IndexAccessor {
 		}
 
 		if (_log.isDebugEnabled()) {
-			_log.debug("Lucene store type " + PropsValues.LUCENE_STORE_TYPE);
+			_log.debug("Lucene store type " + luceneConfiguration.storeType());
 		}
 
-		if (PropsValues.LUCENE_STORE_TYPE.equals(_LUCENE_STORE_TYPE_FILE)) {
+		if (luceneConfiguration.storeType().equals(_LUCENE_STORE_TYPE_FILE)) {
 			_directory = _getLuceneDirFile();
 		}
-		else if (PropsValues.LUCENE_STORE_TYPE.equals(
+		else if (luceneConfiguration.storeType().equals(
 					_LUCENE_STORE_TYPE_JDBC)) {
 
 			throw new IllegalArgumentException(
 				"Store type JDBC is no longer supported in favor of SOLR");
 		}
-		else if (PropsValues.LUCENE_STORE_TYPE.equals(_LUCENE_STORE_TYPE_RAM)) {
+		else if (luceneConfiguration.storeType().equals(
+					_LUCENE_STORE_TYPE_RAM)) {
+
 			_directory = new RAMDirectory();
 		}
 		else {
 			throw new RuntimeException(
-				"Invalid store type " + PropsValues.LUCENE_STORE_TYPE);
+				"Invalid store type " + luceneConfiguration.storeType());
 		}
 
 		return _directory;
@@ -308,6 +310,7 @@ public class IndexAccessorImpl implements IndexAccessor {
 		_write(term, document);
 	}
 
+	protected static LuceneConfiguration luceneConfiguration;
 	protected static LuceneHelper luceneHelper;
 
 	private static void _invalidate(long companyId) {
@@ -347,8 +350,8 @@ public class IndexAccessorImpl implements IndexAccessor {
 	}
 
 	private void _commit() throws IOException {
-		if ((PropsValues.LUCENE_COMMIT_BATCH_SIZE == 0) ||
-			(PropsValues.LUCENE_COMMIT_BATCH_SIZE <= _batchCount)) {
+		if ((luceneConfiguration.commitBatchSize() == 0) ||
+			(luceneConfiguration.commitBatchSize() <= _batchCount)) {
 
 			_doCommit();
 		}
@@ -373,15 +376,15 @@ public class IndexAccessorImpl implements IndexAccessor {
 
 	private void _deleteDirectory() {
 		if (_log.isDebugEnabled()) {
-			_log.debug("Lucene store type " + PropsValues.LUCENE_STORE_TYPE);
+			_log.debug("Lucene store type " + luceneConfiguration.storeType());
 		}
 
-		if (PropsValues.LUCENE_STORE_TYPE.equals(_LUCENE_STORE_TYPE_FILE) ||
-			PropsValues.LUCENE_STORE_TYPE.equals(_LUCENE_STORE_TYPE_RAM)) {
+		if (luceneConfiguration.storeType().equals(_LUCENE_STORE_TYPE_FILE) ||
+			luceneConfiguration.storeType().equals(_LUCENE_STORE_TYPE_RAM)) {
 
 			_deleteAll();
 		}
-		else if (PropsValues.LUCENE_STORE_TYPE.equals(
+		else if (luceneConfiguration.storeType().equals(
 					_LUCENE_STORE_TYPE_JDBC)) {
 
 			throw new IllegalArgumentException(
@@ -389,7 +392,7 @@ public class IndexAccessorImpl implements IndexAccessor {
 		}
 		else {
 			throw new RuntimeException(
-				"Invalid store type " + PropsValues.LUCENE_STORE_TYPE);
+				"Invalid store type " + luceneConfiguration.storeType());
 		}
 	}
 
@@ -418,7 +421,7 @@ public class IndexAccessorImpl implements IndexAccessor {
 		Directory directory = null;
 
 		try {
-			if (PropsValues.LUCENE_STORE_TYPE_FILE_FORCE_MMAP) {
+			if (luceneConfiguration.storeTypeFileForceMMap()) {
 				directory = new MMapDirectory(new File(_path));
 			}
 			else {
@@ -439,42 +442,42 @@ public class IndexAccessorImpl implements IndexAccessor {
 	}
 
 	private MergePolicy _getMergePolicy() throws Exception {
-		if (PropsValues.LUCENE_MERGE_POLICY.equals(
+		if (luceneConfiguration.mergePolicy().equals(
 				NoMergePolicy.class.getName())) {
 
 			return NoMergePolicy.NO_COMPOUND_FILES;
 		}
 
-		ClassLoader classLoader = ClassLoaderUtil.getPortalClassLoader();
+		ClassLoader classLoader = PortalClassLoaderUtil.getClassLoader();
 
 		MergePolicy mergePolicy = (MergePolicy)InstanceFactory.newInstance(
-			classLoader, PropsValues.LUCENE_MERGE_POLICY);
+			classLoader, luceneConfiguration.mergePolicy());
 
 		if (mergePolicy instanceof LogMergePolicy) {
 			LogMergePolicy logMergePolicy = (LogMergePolicy)mergePolicy;
 
-			logMergePolicy.setMergeFactor(PropsValues.LUCENE_MERGE_FACTOR);
+			logMergePolicy.setMergeFactor(luceneConfiguration.mergeFactor());
 		}
 
 		return mergePolicy;
 	}
 
 	private MergeScheduler _getMergeScheduler() throws Exception {
-		if (PropsValues.LUCENE_MERGE_SCHEDULER.equals(
+		if (luceneConfiguration.mergeScheduler().equals(
 				NoMergeScheduler.class.getName())) {
 
 			return NoMergeScheduler.INSTANCE;
 		}
 
-		ClassLoader classLoader = ClassLoaderUtil.getPortalClassLoader();
+		ClassLoader classLoader = PortalClassLoaderUtil.getClassLoader();
 
 		return (MergeScheduler)InstanceFactory.newInstance(
-			classLoader, PropsValues.LUCENE_MERGE_SCHEDULER);
+			classLoader, luceneConfiguration.mergeScheduler());
 	}
 
 	private void _initCommitScheduler() {
-		if ((PropsValues.LUCENE_COMMIT_BATCH_SIZE <= 0) ||
-			(PropsValues.LUCENE_COMMIT_TIME_INTERVAL <= 0)) {
+		if ((luceneConfiguration.commitBatchSize() <= 0) ||
+			(luceneConfiguration.commitTimeInterval() <= 0)) {
 
 			return;
 		}
@@ -499,7 +502,7 @@ public class IndexAccessorImpl implements IndexAccessor {
 		};
 
 		_scheduledExecutorService.scheduleWithFixedDelay(
-			runnable, 0, PropsValues.LUCENE_COMMIT_TIME_INTERVAL,
+			runnable, 0, luceneConfiguration.commitTimeInterval(),
 			TimeUnit.MILLISECONDS);
 	}
 
@@ -507,7 +510,7 @@ public class IndexAccessorImpl implements IndexAccessor {
 		try {
 			Analyzer analyzer = new LimitTokenCountAnalyzer(
 				luceneHelper.getAnalyzer(),
-				PropsValues.LUCENE_ANALYZER_MAX_TOKENS);
+				luceneConfiguration.analyzerMaxTokens());
 
 			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
 				luceneHelper.getVersion(), analyzer);
@@ -516,7 +519,7 @@ public class IndexAccessorImpl implements IndexAccessor {
 			indexWriterConfig.setMergePolicy(_getMergePolicy());
 			indexWriterConfig.setMergeScheduler(_getMergeScheduler());
 			indexWriterConfig.setRAMBufferSizeMB(
-				PropsValues.LUCENE_BUFFER_SIZE);
+				luceneConfiguration.bufferSize());
 
 			_indexWriter = new IndexWriter(getLuceneDir(), indexWriterConfig);
 
