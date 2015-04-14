@@ -14,6 +14,8 @@
 
 package com.liferay.portal.search.lucene.internal.dump;
 
+import com.liferay.portal.search.MockLuceneConfiguration;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
@@ -56,6 +58,9 @@ public class DumpIndexDeletionPolicyTest {
 		indexWriterConfig.setIndexDeletionPolicy(_dumpIndexDeletionPolicy);
 
 		_indexWriter = new IndexWriter(_sourceDirectory, indexWriterConfig);
+
+		IndexCommitSerializationUtil.luceneConfiguration =
+			new MockLuceneConfiguration();
 	}
 
 	@Test
