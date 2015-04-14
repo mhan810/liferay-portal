@@ -14,12 +14,20 @@
 
 package com.liferay.portal.search.lucene.internal;
 
+import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.search.lucene.internal.analyzer.PerFieldAnalyzer;
+import com.liferay.portal.search.lucene.internal.configuration.LuceneConfiguration;
+import com.liferay.portal.search.lucene.internal.dump.IndexCommitSerializationUtil;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -28,12 +36,19 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.util.Version;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.mockito.Mockito;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.ComponentContext;
 
 /**
  * @author Shuyang Zhou
@@ -51,13 +66,102 @@ public class IndexAccessorImplTest {
 
 	@Before
 	public void setUp() throws Exception {
-		_documentsCount = PropsValues.LUCENE_COMMIT_BATCH_SIZE;
+		_documentsCount = 1;
 
-		if (_documentsCount == 0) {
-			_documentsCount = 1;
-		}
+		Dictionary<String, Object> properties = new HashMapDictionary<>();
+		properties.put("version", "LUCENE_35");
+
+		IndexAccessorImpl.luceneConfiguration = Mockito.mock(
+			LuceneConfiguration.class);
+
+		Mockito.when(
+			IndexAccessorImpl.luceneConfiguration.analyzerMaxTokens()).
+			thenReturn(1000);
+
+		Mockito.when(
+			IndexAccessorImpl.luceneConfiguration.bufferSize()).thenReturn(16);
+
+		Mockito.when(
+			IndexAccessorImpl.luceneConfiguration.commitBatchSize()).thenReturn(
+				0);
+
+		Mockito.when(
+			IndexAccessorImpl.luceneConfiguration.commitTimeInterval()).
+			thenReturn(0l);
+
+		Mockito.when(
+			IndexAccessorImpl.luceneConfiguration.dir()).thenReturn(
+				System.getProperty("java.io.tmpdir"));
+
+		Mockito.when(
+			IndexAccessorImpl.luceneConfiguration.
+				indexDumpCompressionEnabled()).thenReturn(true);
+
+		Mockito.when(
+			IndexAccessorImpl.luceneConfiguration.mergeFactor()).thenReturn(10);
+
+		Mockito.when(
+			IndexAccessorImpl.luceneConfiguration.mergePolicy()).thenReturn(
+				"org.apache.lucene.index.LogDocMergePolicy");
+
+		Mockito.when(
+			IndexAccessorImpl.luceneConfiguration.mergeScheduler()).thenReturn(
+				"org.apache.lucene.index.ConcurrentMergeScheduler");
+
+		Mockito.when(
+			IndexAccessorImpl.luceneConfiguration.storeType()).thenReturn(
+				"file");
+
+		Mockito.when(
+			IndexAccessorImpl.luceneConfiguration.storeTypeFileForceMMap()).
+			thenReturn(false);
+
+		IndexCommitSerializationUtil.luceneConfiguration =
+			IndexAccessorImpl.luceneConfiguration;
+
+		ComponentContext mockComponentContext = Mockito.mock(
+			ComponentContext.class);
+
+		Mockito.when(
+			mockComponentContext.getProperties()).thenReturn(properties);
+
+		BundleContext bundleContext = Mockito.mock(BundleContext.class);
+
+		Mockito.when(
+			bundleContext.registerService(
+				Version.class, Version.LUCENE_35,
+				new Hashtable<String, Object>())).thenReturn(
+			Mockito.mock(ServiceRegistration.class));
+
+		Mockito.when(
+			mockComponentContext.getBundleContext()).thenReturn(bundleContext);
+
+		Mockito.when(
+			mockComponentContext.getProperties()).thenReturn(properties);
+
+		PerFieldAnalyzer perFieldAnalyzer = new PerFieldAnalyzer();
+
+		perFieldAnalyzer.activate(mockComponentContext);
+
+		IndexAccessorImpl.luceneHelper = Mockito.mock(LuceneHelper.class);
+
+		Mockito.when(
+			IndexAccessorImpl.luceneHelper.getAnalyzer()).thenReturn(
+				perFieldAnalyzer);
+
+		Mockito.when(
+			IndexAccessorImpl.luceneHelper.getVersion()).thenReturn(
+				Version.LUCENE_35);
 
 		_indexAccessorImpl = new IndexAccessorImpl(_TEST_COMPANY_ID);
+
+		FileUtil fileUtil = new FileUtil();
+		fileUtil.setFile(new com.liferay.portal.util.FileImpl());
+
+		FastDateFormatFactoryUtil fastDateFormatFactoryUtil =
+			new FastDateFormatFactoryUtil();
+		fastDateFormatFactoryUtil.setFastDateFormatFactory(
+			new com.liferay.portal.util.FastDateFormatFactoryImpl());
 	}
 
 	@After
