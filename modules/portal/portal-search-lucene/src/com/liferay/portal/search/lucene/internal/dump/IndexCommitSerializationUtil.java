@@ -16,8 +16,8 @@ package com.liferay.portal.search.lucene.internal.dump;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.search.lucene.internal.configuration.LuceneConfiguration;
 import com.liferay.portal.search.lucene.internal.dump.IndexCommitMetaInfo.Segment;
-import com.liferay.portal.util.PropsValues;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,11 +40,13 @@ import org.apache.lucene.store.IndexOutput;
  */
 public class IndexCommitSerializationUtil {
 
+	public static LuceneConfiguration luceneConfiguration;
+
 	public static void deserializeIndex(
 			InputStream inputStream, Directory directory)
 		throws IOException {
 
-		if (PropsValues.INDEX_DUMP_COMPRESSION_ENABLED) {
+		if (luceneConfiguration.indexDumpCompressionEnabled()) {
 			inputStream = new GZIPInputStream(inputStream);
 		}
 
@@ -89,7 +91,7 @@ public class IndexCommitSerializationUtil {
 			IndexCommit indexCommit, OutputStream outputStream)
 		throws IOException {
 
-		if (PropsValues.INDEX_DUMP_COMPRESSION_ENABLED) {
+		if (luceneConfiguration.indexDumpCompressionEnabled()) {
 			outputStream = new GZIPOutputStream(outputStream);
 		}
 
@@ -121,7 +123,7 @@ public class IndexCommitSerializationUtil {
 
 		objectOputStream.flush();
 
-		if (PropsValues.INDEX_DUMP_COMPRESSION_ENABLED) {
+		if (luceneConfiguration.indexDumpCompressionEnabled()) {
 			GZIPOutputStream gZipOutputStream = (GZIPOutputStream)outputStream;
 
 			gZipOutputStream.finish();

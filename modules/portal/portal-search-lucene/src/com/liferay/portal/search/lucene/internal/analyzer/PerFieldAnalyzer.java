@@ -93,11 +93,26 @@ import org.osgi.service.component.annotations.Deactivate;
 public class PerFieldAnalyzer extends Analyzer
 	implements QueryPreProcessConfiguration, Tokenizer {
 
+	@Activate
+	public void activate(ComponentContext componentContext) {
+		Dictionary<String, Object> dictionary =
+			componentContext.getProperties();
+
+		_version = Version.valueOf(
+			GetterUtil.getString(dictionary.get("version"), "LUCENE_35"));
+
+		BundleContext bundleContext = componentContext.getBundleContext();
+
+		_serviceRegistration = bundleContext.registerService(
+			Version.class, _version, new Hashtable<String, Object>());
+
+		initializeAnalyzers();
+	}
+
 	public void addAnalyzer(String fieldName, Analyzer analyzer) {
 		_analyzers.put(
 			fieldName,
-			new ObjectValuePair<Pattern, Analyzer>(
-				Pattern.compile(fieldName), analyzer));
+			new ObjectValuePair<>(Pattern.compile(fieldName), analyzer));
 	}
 
 	public Analyzer getAnalyzer(String fieldName) {
@@ -210,22 +225,6 @@ public class PerFieldAnalyzer extends Analyzer
 		Analyzer analyzer = getAnalyzer(fieldName);
 
 		return analyzer.tokenStream(fieldName, reader);
-	}
-
-	@Activate
-	protected void activate(ComponentContext componentContext) {
-		Dictionary<String, Object> dictionary =
-			componentContext.getProperties();
-
-		_version = Version.valueOf(
-			GetterUtil.getString(dictionary.get("version"), "LUCENE_35"));
-
-		BundleContext bundleContext = componentContext.getBundleContext();
-
-		_serviceRegistration = bundleContext.registerService(
-			Version.class, _version, new Hashtable<String, Object>());
-
-		initializeAnalyzers();
 	}
 
 	@Deactivate
