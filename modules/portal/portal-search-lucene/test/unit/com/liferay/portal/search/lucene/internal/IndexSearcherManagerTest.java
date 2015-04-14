@@ -15,8 +15,6 @@
 package com.liferay.portal.search.lucene.internal;
 
 import com.liferay.portal.kernel.test.SyncThrowableThread;
-import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.rule.NewEnv;
 import com.liferay.portal.test.rule.AdviseWith;
 import com.liferay.portal.test.rule.AspectJNewEnvTestRule;
@@ -53,6 +51,7 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
 
 /**
  * @author Tina Tian
@@ -62,9 +61,8 @@ public class IndexSearcherManagerTest {
 
 	@ClassRule
 	@Rule
-	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			CodeCoverageAssertor.INSTANCE, AspectJNewEnvTestRule.INSTANCE);
+	public static final TestRule aggregateTestRule =
+		AspectJNewEnvTestRule.INSTANCE;
 
 	@Before
 	public void setUp() throws Exception {
