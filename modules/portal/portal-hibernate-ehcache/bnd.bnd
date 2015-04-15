@@ -1,0 +1,26 @@
+Bundle-Name: Liferay Portal Hibernate Ehcache
+Bundle-SymbolicName: com.liferay.portal.hibernate.ehcache
+Bundle-Version: 1.0.0
+Import-Package:\
+	!org.quartz.*,\
+	!org.terracotta.*,\
+	!org.hibernate.*,\
+	!javax.*,\
+	!org.xml.*,\
+	!antlr,\
+	!antlr.*,\
+	!javassist,\
+	!javassist.*,\
+	!net.sf.cglib.*,\
+	!org.apache.*,\
+	!org.dom4j,\
+	!org.dom4j.*,\
+	!org.objectweb.asm,\
+	!sun.misc,\
+	!org.w3c.dom,\
+	*
+Include-Resource:\
+	classes,\
+	@lib/ehcache.jar,\
+	@lib/hibernate-core.jar,\
+
