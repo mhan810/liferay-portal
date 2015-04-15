@@ -2,10 +2,13 @@ Bundle-Name: Liferay Document Library Repository CMIS Implementation
 Bundle-SymbolicName: com.liferay.document.library.repository.cmis.impl
 Bundle-Version: 1.0.0
 Import-Package:\
+	!com.kamikaze.docidset.*,\
 	!com.sun.istack,\
 	!com.sun.net.httpserver,\
 	!com.sun.org.apache.xml.internal.resolver.*,\
 	!com.sun.xml.*,\
+	!it.unimi.dsi.*,\
+	!org.apache.commons.cli.*,\
 	!org.json.simple.*,\
 	!org.jvnet.*,\
 	*
@@ -16,4 +19,7 @@ Include-Resource:\
 	@${app.server.lib.portal.dir}/chemistry-opencmis-commons-api.jar,\
 	@${app.server.lib.portal.dir}/chemistry-opencmis-commons-impl.jar,\
 	@${app.server.lib.portal.dir}/jaxws-rt.jar,\
-	classes
+	classes,\
+	@lib/lucene-core.jar,\
+	@lib/lucene-queries.jar,\
+	@lib/lucene-queryparser.jar
