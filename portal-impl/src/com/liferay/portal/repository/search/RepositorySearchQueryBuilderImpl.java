@@ -285,5 +285,4 @@ public class RepositorySearchQueryBuilderImpl
 		<RepositorySearchQueryTermBuilder, RepositorySearchQueryTermBuilder>
 			_serviceTracker;
 
-
 }
