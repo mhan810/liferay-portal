@@ -21,21 +21,35 @@ import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
+import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.util.Version;
 
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Michael C. Han
  */
+@Component(
+	immediate = true,
+	property = {
+		"version=LUCENE_35"
+	},
+	service = RepositorySearchQueryTermBuilder.class
+)
 public class LuceneRepositorySearchQueryTermBuilder
 	implements RepositorySearchQueryTermBuilder {
 
@@ -73,12 +87,15 @@ public class LuceneRepositorySearchQueryTermBuilder
 		}
 	}
 
-	public void setAnalyzer(Analyzer analyzer) {
-		_analyzer = analyzer;
-	}
+	@Activate
+	protected void activate(ComponentContext componentContext) {
+		Dictionary<String, Object> dictionary =
+			componentContext.getProperties();
 
-	public void setVersion(Version version) {
-		_version = version;
+		_version = Version.valueOf(
+			GetterUtil.getString(dictionary.get("version"), "LUCENE_35"));
+
+		_analyzer = new StandardAnalyzer(_version);
 	}
 
 	protected org.apache.lucene.search.BooleanClause.Occur
