@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.util;
+package com.liferay.document.library.repository.cmis.internal.search;
 
 import org.junit.Assert;
 import org.junit.Test;
