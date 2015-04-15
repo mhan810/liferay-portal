@@ -12,8 +12,9 @@
  * details.
  */
 
-package com.liferay.document.library.repository.cmis.internal.search;
+package com.liferay.document.library.repository.search.internal;
 
+import com.liferay.document.library.repository.search.KeywordsUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.search.RepositorySearchQueryTermBuilder;
