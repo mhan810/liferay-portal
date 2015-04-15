@@ -1,6 +1,12 @@
 Bundle-Name: Liferay Portal Search Lucene
 Bundle-SymbolicName: com.liferay.portal.search.lucene
 Bundle-Version: 1.0.0
+Export-Package: com.liferay.portal.search.util.*;version=${plugin.full.version}
+Import-Package:\
+	!com.kamikaze.docidset.*,\
+	!it.unimi.dsi.*,\
+	!org.apache.commons.cli.*,\
+	*
 Include-Resource:\
 	classes,\
 	@lib/bobo-browse.jar,\
