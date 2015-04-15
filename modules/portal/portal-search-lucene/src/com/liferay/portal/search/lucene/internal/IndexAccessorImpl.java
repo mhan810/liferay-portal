@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.resiliency.mpi.MPIHelperUtil;
 import com.liferay.portal.kernel.resiliency.spi.SPI;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.InstanceFactory;
-import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.search.lucene.internal.configuration.LuceneConfiguration;
 import com.liferay.portal.search.lucene.internal.dump.DumpIndexDeletionPolicy;
@@ -62,6 +61,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.util.Version;
 
 /**
  * @author Harry Mark
@@ -72,7 +72,11 @@ import org.apache.lucene.store.RAMDirectory;
  */
 public class IndexAccessorImpl implements IndexAccessor {
 
-	public IndexAccessorImpl(long companyId) {
+	public IndexAccessorImpl(
+		Analyzer analyzer, Version version, long companyId) {
+
+		_analyzer = analyzer;
+		_version = version;
 		_companyId = companyId;
 
 		_path = luceneConfiguration.dir() + _companyId + StringPool.SLASH;
@@ -401,10 +405,8 @@ public class IndexAccessorImpl implements IndexAccessor {
 			return NoMergePolicy.NO_COMPOUND_FILES;
 		}
 
-		ClassLoader classLoader = PortalClassLoaderUtil.getClassLoader();
-
 		MergePolicy mergePolicy = (MergePolicy)InstanceFactory.newInstance(
-			classLoader, luceneConfiguration.mergePolicy());
+			getClass().getClassLoader(), luceneConfiguration.mergePolicy());
 
 		if (mergePolicy instanceof LogMergePolicy) {
 			LogMergePolicy logMergePolicy = (LogMergePolicy)mergePolicy;
@@ -422,10 +424,8 @@ public class IndexAccessorImpl implements IndexAccessor {
 			return NoMergeScheduler.INSTANCE;
 		}
 
-		ClassLoader classLoader = PortalClassLoaderUtil.getClassLoader();
-
 		return (MergeScheduler)InstanceFactory.newInstance(
-			classLoader, luceneConfiguration.mergeScheduler());
+			getClass().getClassLoader(), luceneConfiguration.mergeScheduler());
 	}
 
 	private void _initCommitScheduler() {
@@ -462,11 +462,10 @@ public class IndexAccessorImpl implements IndexAccessor {
 	private void _initIndexWriter() {
 		try {
 			Analyzer analyzer = new LimitTokenCountAnalyzer(
-				luceneHelper.getAnalyzer(),
-				luceneConfiguration.analyzerMaxTokens());
+				_analyzer, luceneConfiguration.analyzerMaxTokens());
 
 			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
-				luceneHelper.getVersion(), analyzer);
+				_version, analyzer);
 
 			indexWriterConfig.setIndexDeletionPolicy(_dumpIndexDeletionPolicy);
 			indexWriterConfig.setMergePolicy(_getMergePolicy());
@@ -528,6 +527,8 @@ public class IndexAccessorImpl implements IndexAccessor {
 	private IndexWriter _indexWriter;
 	private final String _path;
 	private ScheduledExecutorService _scheduledExecutorService;
+	private Analyzer _analyzer;
+	private Version _version;
 
 	private static class InvalidateProcessCallable
 		implements ProcessCallable<Serializable> {

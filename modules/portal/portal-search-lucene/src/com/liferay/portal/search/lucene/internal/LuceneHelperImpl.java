@@ -67,6 +67,9 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Brian Wing Shun Chan
@@ -203,7 +206,8 @@ public class LuceneHelperImpl implements LuceneHelper {
 			indexAccessor = _indexAccessors.get(companyId);
 
 			if (indexAccessor == null) {
-				indexAccessor = new IndexAccessorImpl(companyId);
+				indexAccessor = new IndexAccessorImpl(
+					_analyzer, _version, companyId);
 
 				_indexAccessors.put(companyId, indexAccessor);
 			}
@@ -488,7 +492,11 @@ public class LuceneHelperImpl implements LuceneHelper {
 		IndexCommitSerializationUtil.luceneConfiguration = _luceneConfiguration;
 	}
 
-	@Reference(unbind = "-")
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
 	protected void setAnalyzer(Analyzer analyzer) {
 		_analyzer = analyzer;
 	}
@@ -500,9 +508,21 @@ public class LuceneHelperImpl implements LuceneHelper {
 		_portalExecutorManager = portalExecutorManager;
 	}
 
-	@Reference(unbind = "-")
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
 	protected void setVersion(Version version) {
 		_version = version;
+	}
+
+	protected void unsetAnalyzer(Analyzer analyzer) {
+		_analyzer = null;
+	}
+
+	protected void unsetVersion(Version version) {
+		_version = null;
 	}
 
 	private Analyzer _analyzer;

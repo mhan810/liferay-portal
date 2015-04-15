@@ -40,6 +40,9 @@ import org.apache.lucene.util.Version;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
@@ -117,7 +120,7 @@ public class LuceneQueryHelperImpl implements LuceneQueryHelper {
 		short endValue) {
 
 		addNumericRangeTerm(
-			booleanQuery, field, (long)startValue, (long)endValue);
+			booleanQuery, field, (long) startValue, (long) endValue);
 	}
 
 	@Override
@@ -290,7 +293,8 @@ public class LuceneQueryHelperImpl implements LuceneQueryHelper {
 			return;
 		}
 
-		if (_queryPreProcessConfiguration.isSubstringSearchAlways(field)) {
+		if ((_queryPreProcessConfiguration != null) &&
+			_queryPreProcessConfiguration.isSubstringSearchAlways(field)) {
 			like = true;
 		}
 
@@ -341,11 +345,21 @@ public class LuceneQueryHelperImpl implements LuceneQueryHelper {
 		_analyzer = analyzer;
 	}
 
-	@Reference
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
 	protected void setQueryPreProcessConfiguration(
 		QueryPreProcessConfiguration queryPreProcessConfiguration) {
 
 		_queryPreProcessConfiguration = queryPreProcessConfiguration;
+	}
+
+	protected void unsetQueryPreProcessConfiguration(
+			QueryPreProcessConfiguration queryPreProcessConfiguration) {
+
+		_queryPreProcessConfiguration = null;
 	}
 
 	@Reference
