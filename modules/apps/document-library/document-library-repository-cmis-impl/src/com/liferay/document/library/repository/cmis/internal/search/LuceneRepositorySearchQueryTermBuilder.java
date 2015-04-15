@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene.repository;
+package com.liferay.document.library.repository.cmis.internal.search;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.util.lucene.KeywordsUtil;
 
 import java.util.HashSet;
 import java.util.Set;
