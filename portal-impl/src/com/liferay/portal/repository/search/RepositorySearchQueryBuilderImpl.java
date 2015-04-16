@@ -34,6 +34,9 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
 
 /**
  * @author Mika Koivisto
@@ -41,6 +44,15 @@ import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 @DoPrivileged
 public class RepositorySearchQueryBuilderImpl
 	implements RepositorySearchQueryBuilder {
+
+	public RepositorySearchQueryBuilderImpl() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(
+			RepositorySearchQueryTermBuilder.class);
+
+		_serviceTracker.open();
+	}
 
 	@Override
 	public BooleanQuery getFullQuery(SearchContext searchContext)
@@ -264,7 +276,26 @@ public class RepositorySearchQueryBuilderImpl
 		return false;
 	}
 
+	protected RepositorySearchQueryTermBuilder
+		getRepositorySearchQueryTermBuilder() {
+
+		RepositorySearchQueryTermBuilder repositorySearchQueryTermBuilder =
+			_serviceTracker.getService();
+
+		if (repositorySearchQueryTermBuilder == null) {
+			repositorySearchQueryTermBuilder =
+				_repositorySearchQueryTermBuilder;
+		}
+
+		return repositorySearchQueryTermBuilder;
+
+	}
+
 	private RepositorySearchQueryTermBuilder _repositorySearchQueryTermBuilder =
 		new DefaultRepositorySearchQueryTermBuilder();
+
+	private final ServiceTracker
+		<RepositorySearchQueryTermBuilder, RepositorySearchQueryTermBuilder>
+			_serviceTracker;
 
 }

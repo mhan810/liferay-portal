@@ -36,11 +36,9 @@
 
 	<!-- Util -->
 
-	<bean id="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilder" class="com.liferay.portal.repository.search.RepositorySearchQueryBuilderImpl">
-		<property name="repositorySearchQueryTermBuilder">
-			<bean class="com.liferay.portal.search.lucene.repository.LuceneRepositorySearchQueryTermBuilder" />
-		</property>
-	</bean>
+	<bean id="com.liferay.portal.search.lucene.repository.LuceneRepositorySearchQueryTermBuilder" class="com.liferay.portal.search.lucene.repository.LuceneRepositorySearchQueryTermBuilder" />
+
+	<bean id="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilder" class="com.liferay.portal.repository.search.RepositorySearchQueryBuilderImpl" />
 	<bean id="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilderUtil" class="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilderUtil">
 		<property name="repositorySearchQueryBuilder" ref="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilder" />
 	</bean>
