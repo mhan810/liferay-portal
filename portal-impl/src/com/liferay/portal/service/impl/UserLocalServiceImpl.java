@@ -64,7 +64,6 @@ import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackRegistryUtil;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.Digester;
 import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -2489,7 +2488,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		params.put(
 			"socialMutualRelationType",
 			new Long[] {userId1, new Long(socialRelationType), userId2,
-			new Long(socialRelationType)});
+			new Long(socialRelationType)
+		});
 
 		return search(
 			user1.getCompanyId(), null, WorkflowConstants.STATUS_APPROVED,
@@ -2659,7 +2659,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		params.put(
 			"socialMutualRelationType",
 			new Long[] {userId1, new Long(socialRelationType), userId2,
-			new Long(socialRelationType)});
+			new Long(socialRelationType)
+		});
 
 		return searchCount(
 			user1.getCompanyId(), null, WorkflowConstants.STATUS_APPROVED,
@@ -6707,17 +6708,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 					throw new UserScreenNameException.MustNotBeUsedByGroup(
 						userId, screenName, group);
 				}
-			}
-		}
-
-		for (char c : screenName.toCharArray()) {
-			if (!Validator.isChar(c) && !Validator.isDigit(c) &&
-				(c != CharPool.DASH) && (c != CharPool.PERIOD) &&
-				(c != CharPool.UNDERLINE)) {
-
-				throw new UserScreenNameException.MustBeAlphaNumeric(
-					userId, screenName, CharPool.DASH, CharPool.PERIOD,
-					CharPool.UNDERLINE);
 			}
 		}
 

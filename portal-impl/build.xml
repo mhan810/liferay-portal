@@ -654,9 +654,13 @@ svn://svn.liferay.com/repos/public/alloy/trunk/sandbox/taglibs.
 	</target>
 
 	<target name="build-service">
+		<path id="service.classpath">
+			<fileset dir="${project.dir}/tools/sdk/dependencies/com.liferay.portal.tools.service.builder/lib" includes="*.jar" />
+		</path>
+
 		<java
-			classname="com.liferay.portal.tools.servicebuilder.ServiceBuilder"
-			classpathref="project.classpath"
+			classname="com.liferay.portal.tools.service.builder.ServiceBuilder"
+			classpathref="service.classpath"
 			fork="true"
 			newenvironment="true"
 			outputproperty="build-service.output"
