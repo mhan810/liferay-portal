@@ -93,13 +93,13 @@ public class VerifyUUIDTest extends BaseVerifyProcessTestCase {
 	public void testVerifyParallelUnknownModelWithUnknownPKColumnName()
 		throws Exception {
 
-		List<VerifiableUUIDModel> verifiableUUIDModels = new ArrayList<>(
-			PropsValues.VERIFY_PROCESS_CONCURRENCY_THRESHOLD);
+		int modelCount = PropsValues.VERIFY_PROCESS_CONCURRENCY_THRESHOLD;
 
-		while (verifiableUUIDModels.size() <
-					PropsValues.VERIFY_PROCESS_CONCURRENCY_THRESHOLD) {
+		VerifiableUUIDModel[] verifiableUUIDModels =
+			new VerifiableUUIDModel[modelCount];
 
-			verifiableUUIDModels.add(new VerifiableUUIDModel() {
+		for (int i = 0; i < modelCount; i++) {
+			verifiableUUIDModels[i] = new VerifiableUUIDModel() {
 
 				@Override
 				public String getPrimaryKeyColumnName() {
@@ -111,14 +111,10 @@ public class VerifyUUIDTest extends BaseVerifyProcessTestCase {
 					return _UNKNOWN;
 				}
 
-			});
+			};
 		}
 
-		VerifiableUUIDModel[] verifiableUUIDModelsArray =
-			verifiableUUIDModels.toArray(
-				new VerifiableUUIDModel[verifiableUUIDModels.size()]);
-
-		VerifyUUID.verify(verifiableUUIDModelsArray);
+		VerifyUUID.verify(verifiableUUIDModels);
 	}
 
 	@ExpectedLogs(
