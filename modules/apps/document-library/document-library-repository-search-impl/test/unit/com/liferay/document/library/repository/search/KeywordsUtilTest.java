@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.util.lucene;
+package com.liferay.document.library.repository.search;
 
 import org.junit.Assert;
 import org.junit.Test;
