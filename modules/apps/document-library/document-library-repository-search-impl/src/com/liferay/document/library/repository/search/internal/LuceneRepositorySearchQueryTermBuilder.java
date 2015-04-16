@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene.repository;
+package com.liferay.document.library.repository.search.internal;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
