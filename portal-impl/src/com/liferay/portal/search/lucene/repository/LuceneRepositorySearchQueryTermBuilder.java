@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.util.Version;
@@ -237,7 +238,7 @@ public class LuceneRepositorySearchQueryTermBuilder
 	private static final Log _log = LogFactoryUtil.getLog(
 		LuceneRepositorySearchQueryTermBuilder.class);
 
-	private Analyzer _analyzer;
-	private Version _version;
+	private Analyzer _analyzer = new KeywordAnalyzer();
+	private Version _version = Version.LUCENE_35;
 
 }
