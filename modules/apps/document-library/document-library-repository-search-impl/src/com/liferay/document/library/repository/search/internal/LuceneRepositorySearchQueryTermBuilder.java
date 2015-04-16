@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
@@ -96,7 +97,7 @@ public class LuceneRepositorySearchQueryTermBuilder
 		_version = Version.valueOf(
 			GetterUtil.getString(dictionary.get("version"), "LUCENE_35"));
 
-		_analyzer = new StandardAnalyzer(_version);
+		_analyzer = new KeywordAnalyzer();
 	}
 
 	protected org.apache.lucene.search.BooleanClause.Occur
