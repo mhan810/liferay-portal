@@ -16,6 +16,9 @@ package com.liferay.portal.dao.orm.hibernate.region;
 
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
 
 import java.util.Properties;
 
@@ -47,8 +50,17 @@ public class SingletonLiferayEhcacheRegionFactory implements RegionFactory {
 			CacheDataDescription cacheDataDescription)
 		throws CacheException {
 
-		return _liferayEhcacheRegionFactory.buildCollectionRegion(
-			regionName, properties, cacheDataDescription);
+		RegionFactory regionFactory;
+
+		try {
+			regionFactory = _serviceTracker.waitForService(0);
+
+			return regionFactory.buildCollectionRegion(
+				regionName, properties, cacheDataDescription);
+		}
+		catch (InterruptedException ex) {
+			throw new CacheException(ex);
+		}
 	}
 
 	@Override
@@ -57,8 +69,17 @@ public class SingletonLiferayEhcacheRegionFactory implements RegionFactory {
 			CacheDataDescription cacheDataDescription)
 		throws CacheException {
 
-		return _liferayEhcacheRegionFactory.buildEntityRegion(
-			regionName, properties, cacheDataDescription);
+		RegionFactory regionFactory;
+
+		try {
+			regionFactory = _serviceTracker.waitForService(0);
+
+			return regionFactory.buildEntityRegion(
+				regionName, properties, cacheDataDescription);
+		}
+		catch (InterruptedException ex) {
+			throw new CacheException(ex);
+		}
 	}
 
 	@Override
@@ -66,8 +87,17 @@ public class SingletonLiferayEhcacheRegionFactory implements RegionFactory {
 			String regionName, Properties properties)
 		throws CacheException {
 
-		return _liferayEhcacheRegionFactory.buildQueryResultsRegion(
-			regionName, properties);
+		RegionFactory regionFactory;
+
+		try {
+			regionFactory = _serviceTracker.waitForService(0);
+
+			return regionFactory.buildQueryResultsRegion(
+				regionName, properties);
+		}
+		catch (InterruptedException ex) {
+			throw new CacheException(ex);
+		}
 	}
 
 	@Override
@@ -75,36 +105,87 @@ public class SingletonLiferayEhcacheRegionFactory implements RegionFactory {
 			String regionName, Properties properties)
 		throws CacheException {
 
-		return _liferayEhcacheRegionFactory.buildTimestampsRegion(
-			regionName, properties);
+		RegionFactory regionFactory;
+
+		try {
+			regionFactory = _serviceTracker.waitForService(0);
+
+			return regionFactory.buildTimestampsRegion(regionName, properties);
+		}
+		catch (InterruptedException ex) {
+			throw new CacheException(ex);
+		}
 	}
 
 	@Override
 	public AccessType getDefaultAccessType() {
-		return _liferayEhcacheRegionFactory.getDefaultAccessType();
+		RegionFactory regionFactory;
+
+		try {
+			regionFactory = _serviceTracker.waitForService(0);
+
+			return regionFactory.getDefaultAccessType();
+		}
+		catch (InterruptedException ex) {
+			throw new CacheException(ex);
+		}
 	}
 
 	@Override
 	public boolean isMinimalPutsEnabledByDefault() {
-		return _liferayEhcacheRegionFactory.isMinimalPutsEnabledByDefault();
+		RegionFactory regionFactory;
+
+		try {
+			regionFactory = _serviceTracker.waitForService(0);
+
+			return regionFactory.isMinimalPutsEnabledByDefault();
+		}
+		catch (InterruptedException ex) {
+			throw new CacheException(ex);
+		}
 	}
 
 	@Override
 	public long nextTimestamp() {
-		return _liferayEhcacheRegionFactory.nextTimestamp();
+		RegionFactory regionFactory;
+
+		try {
+			regionFactory = _serviceTracker.waitForService(0);
+
+			return regionFactory.nextTimestamp();
+		}
+		catch (InterruptedException ex) {
+			throw new CacheException(ex);
+		}
 	}
 
 	@Override
 	public synchronized void start(Settings settings, Properties properties) {
 		if (_enabled && (_instanceCounter++ == 0)) {
-			_liferayEhcacheRegionFactory.start(settings, properties);
+			RegionFactory regionFactory;
+
+			try {
+				regionFactory = _serviceTracker.waitForService(0);
+
+				regionFactory.start(settings, properties);
+			}
+			catch (InterruptedException ex) {
+			}
 		}
 	}
 
 	@Override
 	public synchronized void stop() {
 		if (_enabled && (--_instanceCounter == 0)) {
-			_liferayEhcacheRegionFactory.stop();
+			RegionFactory regionFactory;
+
+			try {
+				regionFactory = _serviceTracker.waitForService(0);
+
+				regionFactory.stop();
+			}
+			catch (InterruptedException ex) {
+			}
 		}
 	}
 
@@ -118,14 +199,15 @@ public class SingletonLiferayEhcacheRegionFactory implements RegionFactory {
 			_enabled = true;
 		}
 
-		if (_liferayEhcacheRegionFactory == null) {
-			_liferayEhcacheRegionFactory = new LiferayEhcacheRegionFactory(
-				properties);
-		}
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(RegionFactory.class);
+
+		_serviceTracker.open();
 	}
 
 	private static boolean _enabled;
 	private static int _instanceCounter;
-	private static LiferayEhcacheRegionFactory _liferayEhcacheRegionFactory;
+	private static ServiceTracker<RegionFactory, RegionFactory> _serviceTracker;
 
 }
