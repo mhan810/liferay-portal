@@ -1,6 +1,7 @@
 Bundle-Name: Liferay Document Library Repository Search Implementation
 Bundle-SymbolicName: com.liferay.document.library.repository.search.impl
 Bundle-Version: 1.0.0
+Export-Package: com.liferay.document.library.repository.search.util
 Include-Resource:\
 	classes,\
 	@lib/lucene-core.jar,\
