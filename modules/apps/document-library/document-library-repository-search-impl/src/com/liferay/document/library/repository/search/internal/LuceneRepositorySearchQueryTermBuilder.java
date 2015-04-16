@@ -12,8 +12,9 @@
  * details.
  */
 
-package com.liferay.portal.search.lucene.repository;
+package com.liferay.document.library.repository.search.internal;
 
+import com.liferay.document.library.repository.search.util.KeywordsUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.search.RepositorySearchQueryTermBuilder;
@@ -21,22 +22,37 @@ import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.util.lucene.KeywordsUtil;
 
+import java.util.Dictionary;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.KeywordAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.util.Version;
 
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Michael C. Han
  */
+@Component(
+	immediate = true,
+	property = {
+		"version=LUCENE_35"
+	},
+	service = RepositorySearchQueryTermBuilder.class
+)
 public class LuceneRepositorySearchQueryTermBuilder
 	implements RepositorySearchQueryTermBuilder {
 
@@ -74,13 +90,13 @@ public class LuceneRepositorySearchQueryTermBuilder
 		}
 	}
 
-	public void setAnalyzer(Analyzer analyzer) {
-		_analyzer = analyzer;
-	}
+/*	@Activate
+	protected void activate(Map<String, Object> properties) {
+		_version = Version.valueOf(
+			GetterUtil.getString(properties.get("version"), "LUCENE_35"));
 
-	public void setVersion(Version version) {
-		_version = version;
-	}
+		_analyzer = new KeywordAnalyzer();
+	}*/
 
 	protected org.apache.lucene.search.BooleanClause.Occur
 		getBooleanClauseOccur(BooleanClauseOccur occur) {
@@ -237,7 +253,7 @@ public class LuceneRepositorySearchQueryTermBuilder
 	private static final Log _log = LogFactoryUtil.getLog(
 		LuceneRepositorySearchQueryTermBuilder.class);
 
-	private Analyzer _analyzer;
-	private Version _version;
+	private Analyzer _analyzer = new KeywordAnalyzer();
+	private Version _version = Version.LUCENE_35;
 
 }
