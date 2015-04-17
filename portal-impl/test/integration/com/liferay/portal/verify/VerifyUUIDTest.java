@@ -27,9 +27,6 @@ import com.liferay.portal.verify.model.LayoutVerifiableModel;
 import com.liferay.portal.verify.model.VerifiableUUIDModel;
 import com.liferay.portal.verify.test.BaseVerifyProcessTestCase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
