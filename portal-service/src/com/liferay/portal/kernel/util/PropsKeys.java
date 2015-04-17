@@ -1481,28 +1481,6 @@ public interface PropsKeys {
 
 	public static final String LOOK_AND_FEEL_MODIFIABLE = "look.and.feel.modifiable";
 
-	public static final String LUCENE_ANALYZER_MAX_TOKENS = "lucene.analyzer.max.tokens";
-
-	public static final String LUCENE_BOOLEAN_QUERY_CLAUSE_MAX_SIZE = "lucene.boolean.query.clause.max.size";
-
-	public static final String LUCENE_BUFFER_SIZE = "lucene.buffer.size";
-
-	public static final String LUCENE_COMMIT_BATCH_SIZE = "lucene.commit.batch.size";
-
-	public static final String LUCENE_COMMIT_TIME_INTERVAL = "lucene.commit.time.interval";
-
-	public static final String LUCENE_DIR = "lucene.dir";
-
-	public static final String LUCENE_MERGE_FACTOR = "lucene.merge.factor";
-
-	public static final String LUCENE_MERGE_POLICY = "lucene.merge.policy";
-
-	public static final String LUCENE_MERGE_SCHEDULER = "lucene.merge.scheduler";
-
-	public static final String LUCENE_STORE_TYPE = "lucene.store.type";
-
-	public static final String LUCENE_STORE_TYPE_FILE_FORCE_MMAP = "lucene.store.type.file.force.mmap";
-
 	public static final String MAIL_AUDIT_TRAIL = "mail.audit.trail";
 
 	public static final String MAIL_BATCH_SIZE = "mail.batch.size";
@@ -2481,7 +2459,7 @@ public interface PropsKeys {
 
 	public static final String SYSTEM_SITE_ROLES = "system.site.roles";
 
-	public static final String TABLE_MAPPER_CACHELESS_MAPPING_TABLE_NAMES = "table.mapper.cacheless.mapping.table.names";
+	public static final String TABLE_MAPPER_CACHE_MAPPING_TABLE_NAMES = "table.mapper.cache.mapping.table.names";
 
 	public static final String TERMS_OF_USE_JOURNAL_ARTICLE_GROUP_ID = "terms.of.use.journal.article.group.id";
 

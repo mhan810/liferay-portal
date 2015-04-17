@@ -722,6 +722,46 @@ public class VerifyProperties extends VerifyProcess {
 			"com.liferay.portal.ldap"
 		},
 
+		// Lucene Search Engine
+
+		new String[] {
+			"lucene.analyzer.max.tokens", "analyzer.max.tokens",
+			"com.liferay.portal.search.lucene"
+		},
+		new String[] {
+			"lucene.buffer.size", "buffer.size",
+			"com.liferay.portal.search.lucene"
+		},
+		new String[] {
+			"lucene.commit.batch.size", "commit.batch.size",
+			"com.liferay.portal.search.lucene"
+		},
+		new String[] {
+			"lucene.commit.time.interval", "commit.time.interval",
+			"com.liferay.portal.search.lucene"
+		},
+		new String[] {"lucene.dir", "dir", "com.liferay.portal.search.lucene"},
+		new String[] {
+			"lucene.merge.factor", "merge.factor",
+			"com.liferay.portal.search.lucene"
+		},
+		new String[] {
+			"lucene.merge.policy", "merge.policy",
+			"com.liferay.portal.search.lucene"
+		},
+		new String[] {
+			"lucene.merge.scheduler", "merge.scheduler",
+			"com.liferay.portal.search.lucene"
+		},
+		new String[] {
+			"lucene.store.type", "store.type",
+			"com.liferay.portal.search.lucene"
+		},
+		new String[] {
+			"lucene.store.type.file.force.mmap", "store.type.file.force.mmp",
+			"com.liferay.portal.search.lucene"
+		},
+
 		// Monitoring
 
 		new String[] {
@@ -1092,10 +1132,11 @@ public class VerifyProperties extends VerifyProcess {
 		"sites.form.add.miscellaneous", "sites.form.add.seo",
 		"sites.form.update.advanced", "sites.form.update.main",
 		"sites.form.update.miscellaneous", "sites.form.update.seo",
-		"staging.lock.enabled", "tck.url", "webdav.storage.class",
-		"webdav.storage.show.edit.url", "webdav.storage.show.view.url",
-		"webdav.storage.tokens", "wiki.email.page.added.signature",
-		"wiki.email.page.updated.signature", "xss.allow"
+		"staging.lock.enabled", "table.mapper.cacheless.mapping.table.names",
+		"tck.url", "webdav.storage.class", "webdav.storage.show.edit.url",
+		"webdav.storage.show.view.url", "webdav.storage.tokens",
+		"wiki.email.page.added.signature", "wiki.email.page.updated.signature",
+		"xss.allow"
 	};
 
 	private static final String[] _OBSOLETE_SYSTEM_KEYS = new String[] {
