@@ -44,7 +44,7 @@ public abstract class ThrowableAwareRunnable implements Runnable {
 			doRun();
 		}
 		catch (Exception e) {
-			_log.error("Unable to process runnable: " + e.getMessage(), e);
+			_log.error("Unable to process runnable: " + e.getMessage());
 
 			_throwable = e;
 		}
