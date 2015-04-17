@@ -21,13 +21,11 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.Set;
 
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.highlight.Formatter;
-import org.apache.lucene.util.Version;
 
 /**
  * @author Bruno Farache
@@ -57,8 +55,6 @@ public interface LuceneHelper {
 	public void dumpIndex(long companyId, OutputStream outputStream)
 		throws IOException;
 
-	public Analyzer getAnalyzer();
-
 	public IndexAccessor getIndexAccessor(long companyId);
 
 	public IndexSearcher getIndexSearcher(long companyId) throws IOException;
@@ -85,8 +81,6 @@ public interface LuceneHelper {
 			Query query, String field, String s, int maxNumFragments,
 			int fragmentLength, String fragmentSuffix, Formatter formatter)
 		throws IOException;
-
-	public Version getVersion();
 
 	public void loadIndex(long companyId, InputStream inputStream)
 		throws IOException;

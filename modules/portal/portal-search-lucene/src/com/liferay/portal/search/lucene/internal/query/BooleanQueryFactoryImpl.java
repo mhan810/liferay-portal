@@ -19,11 +19,14 @@ import com.liferay.portal.kernel.search.BooleanQueryFactory;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Brian Wing Shun Chan
  */
-@Component(immediate = true, service = BooleanQueryFactory.class)
+@Component(immediate = true, service = BooleanQueryFactoryImpl.class)
 public class BooleanQueryFactoryImpl implements BooleanQueryFactory {
 
 	@Override
@@ -31,14 +34,30 @@ public class BooleanQueryFactoryImpl implements BooleanQueryFactory {
 		return new BooleanQueryImpl(_luceneQueryHelper, _queryTranslator);
 	}
 
-	@Reference
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
 	protected void setLuceneQueryHelper(LuceneQueryHelper luceneQueryHelper) {
 		_luceneQueryHelper = luceneQueryHelper;
 	}
 
-	@Reference
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
 	protected void setQueryTranslator(QueryTranslator<?> queryTranslator) {
 		_queryTranslator = queryTranslator;
+	}
+
+	protected void unsetLuceneQueryHelper(LuceneQueryHelper luceneQueryHelper) {
+		_luceneQueryHelper = null;
+	}
+
+	protected void unsetQueryTranslator(QueryTranslator<?> queryTranslator) {
+		_queryTranslator = null;
 	}
 
 	private LuceneQueryHelper _luceneQueryHelper;
