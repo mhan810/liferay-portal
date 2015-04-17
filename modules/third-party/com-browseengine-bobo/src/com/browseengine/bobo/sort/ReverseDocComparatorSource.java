@@ -1,3 +1,4 @@
+/* @generated */
 package com.browseengine.bobo.sort;
 
 import java.io.IOException;
@@ -49,7 +50,16 @@ public class ReverseDocComparatorSource extends DocComparatorSource {
 			
 			public int compareTo(Object o) {
 				if (o instanceof ReverseComparable){
-					Comparable inner = ((ReverseComparable)o)._inner;
+					Comparable inner = ((ReverseComparable)o)._inner;						
+					if (_inner == null) {
+						if (inner == null) {
+							return 0;
+						}
+						return 1;
+					}
+					else if (inner == null) {
+						return -1;
+					}
 					return -_inner.compareTo(inner);
 				}
 				else{

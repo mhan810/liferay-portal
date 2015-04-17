@@ -1,3 +1,4 @@
+/* @generated */
 package com.browseengine.bobo.sort;
 
 import java.io.IOException;
@@ -166,7 +167,7 @@ public abstract class SortCollector extends Collector {
 	      return new DocComparatorSource.LongDocComparatorSource(fieldname);
 	
 	    case SortField.DOUBLE:
-	      return new DocComparatorSource.LongDocComparatorSource(fieldname);
+	      return new DocComparatorSource.DoubleDocComparatorSource(fieldname);
 	
 	    case SortField.BYTE:
 	      return new DocComparatorSource.ByteDocComparatorSource(fieldname);
