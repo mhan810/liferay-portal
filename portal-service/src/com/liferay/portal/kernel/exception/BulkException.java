@@ -36,9 +36,11 @@ public class BulkException extends Exception {
 
 	@Override
 	public String getMessage() {
-		StringBuilder sb = new StringBuilder(7 * _causes.size() + 2);
+		StringBuilder sb = new StringBuilder(7 * _causes.size() + 4);
 
-		sb.append("{BulkException.message = " + super.getMessage() + "\n");
+		sb.append("{BulkException.message = ");
+		sb.append(super.getMessage());
+		sb.append("\n");
 
 		for (Throwable cause : _causes) {
 			sb.append("{");
