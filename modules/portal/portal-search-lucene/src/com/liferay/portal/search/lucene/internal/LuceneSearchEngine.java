@@ -45,9 +45,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {
-		"search.engine.id=SYSTEM_ENGINE", "vendor=Lucene"
-	},
+	property = {"search.engine.id=SYSTEM_ENGINE", "vendor=Lucene"},
 	service = {LuceneSearchEngine.class, SearchEngine.class}
 )
 public class LuceneSearchEngine extends BaseSearchEngine {
