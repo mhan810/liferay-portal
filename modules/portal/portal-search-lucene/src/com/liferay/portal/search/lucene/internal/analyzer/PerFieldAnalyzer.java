@@ -83,9 +83,7 @@ import org.osgi.service.component.annotations.Deactivate;
  */
 @Component(
 	immediate = true,
-	property = {
-		"version=LUCENE_35"
-	},
+	property = {"version=LUCENE_35"},
 	service = {
 		Analyzer.class, QueryPreProcessConfiguration.class, Tokenizer.class
 	}
