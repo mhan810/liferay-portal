@@ -62,6 +62,10 @@ public abstract class BaseIntrabandPortalCacheManager
 	}
 
 	@Override
+	public void initialize() {
+	}
+
+	@Override
 	public void removeCache(String name) {
 		_portalCaches.remove(name);
 	}
