@@ -19,6 +19,8 @@ import com.liferay.portal.cache.SingleVMPoolImpl;
 import com.liferay.portal.cache.memory.MemoryPortalCacheManager;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
+import com.liferay.portal.kernel.cache.PortalCacheManager;
+import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.cache.SingleVMPoolUtil;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.microsofttranslator.MicrosoftTranslatorFactoryUtil;
@@ -54,8 +56,6 @@ import com.liferay.registry.BasicRegistryImpl;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 
-import java.io.Serializable;
-
 /**
  * @author Raymond Augé
  */
@@ -70,6 +70,16 @@ public class ToolDependencies {
 
 		registry.registerService(
 			FullNameGenerator.class, new DefaultFullNameGenerator());
+
+		registry.registerService(
+			PortalCacheManager.class,
+			MemoryPortalCacheManager.createMemoryPortalCacheManager(
+				PortalCacheManagerNames.SINGLE_VM));
+
+		registry.registerService(
+			PortalCacheManager.class,
+			MemoryPortalCacheManager.createMemoryPortalCacheManager(
+				PortalCacheManagerNames.MULTI_VM));
 
 		DigesterUtil digesterUtil = new DigesterUtil();
 
@@ -132,13 +142,7 @@ public class ToolDependencies {
 		secureXMLFactoryProviderUtil.setSecureXMLFactoryProvider(
 			new SecureXMLFactoryProviderImpl());
 
-		SingleVMPoolImpl singleVMPoolImpl = new SingleVMPoolImpl();
-
-		singleVMPoolImpl.setPortalCacheManager(
-			MemoryPortalCacheManager.createMemoryPortalCacheManager(
-				ToolDependencies.class.getName()));
-
-		singleVMPoolUtil.setSingleVMPool(singleVMPoolImpl);
+		singleVMPoolUtil.setSingleVMPool(new SingleVMPoolImpl());
 
 		// DefaultModelHintsImpl requires SecureXMLFactoryProviderUtil
 
@@ -157,14 +161,7 @@ public class ToolDependencies {
 
 		MultiVMPoolUtil multiVMPoolUtil = new MultiVMPoolUtil();
 
-		MultiVMPoolImpl multiVMPoolImpl = new MultiVMPoolImpl();
-
-		multiVMPoolImpl.setPortalCacheManager(
-			MemoryPortalCacheManager.
-				<Serializable, Serializable>createMemoryPortalCacheManager(
-					ToolDependencies.class.getName()));
-
-		multiVMPoolUtil.setMultiVMPool(multiVMPoolImpl);
+		multiVMPoolUtil.setMultiVMPool(new MultiVMPoolImpl());
 
 		PortalUtil portalUtil = new PortalUtil();
 
