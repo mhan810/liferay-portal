@@ -29,6 +29,7 @@ import java.io.Serializable;
 import java.util.Properties;
 
 import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.hibernate.EhCacheRegionFactory;
@@ -236,7 +237,9 @@ public class LiferayEhcacheRegionFactory extends EhCacheRegionFactory {
 
 			reconfigureCache(new Cache(cacheConfiguration));
 
-			return manager.getCache(portalCacheName);
+			CacheManager cacheManager = getEhcacheManager();
+
+			return cacheManager.getCache(portalCacheName);
 		}
 
 	}
