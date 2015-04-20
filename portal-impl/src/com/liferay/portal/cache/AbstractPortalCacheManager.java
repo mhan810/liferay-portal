@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.cache.CallbackFactory;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheException;
 import com.liferay.portal.kernel.cache.PortalCacheManager;
-import com.liferay.portal.kernel.cache.PortalCacheProvider;
 import com.liferay.portal.kernel.cache.configuration.CallbackConfiguration;
 import com.liferay.portal.kernel.cache.configuration.PortalCacheConfiguration;
 import com.liferay.portal.kernel.cache.configuration.PortalCacheManagerConfiguration;
@@ -77,8 +76,6 @@ public abstract class AbstractPortalCacheManager<K extends Serializable, V>
 				registerCacheManagerListener(cacheManagerListener);
 			}
 		}
-
-		PortalCacheProvider.registerPortalCacheManager(this);
 	}
 
 	@Override
@@ -88,8 +85,6 @@ public abstract class AbstractPortalCacheManager<K extends Serializable, V>
 
 	@Override
 	public void destroy() {
-		PortalCacheProvider.unregisterPortalCacheManager(getName());
-
 		portalCaches.clear();
 
 		doDestroy();
