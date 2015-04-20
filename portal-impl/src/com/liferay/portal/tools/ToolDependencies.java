@@ -16,9 +16,12 @@ package com.liferay.portal.tools;
 
 import com.liferay.portal.cache.MultiVMPoolImpl;
 import com.liferay.portal.cache.SingleVMPoolImpl;
-import com.liferay.portal.cache.memory.MemoryPortalCacheManager;
 import com.liferay.portal.json.JSONFactoryImpl;
+import com.liferay.portal.kernel.cache.CacheListener;
+import com.liferay.portal.kernel.cache.CacheListenerScope;
+import com.liferay.portal.kernel.cache.CacheManagerListener;
 import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
+import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.cache.SingleVMPoolUtil;
@@ -51,10 +54,21 @@ import com.liferay.portal.util.HttpImpl;
 import com.liferay.portal.util.InitUtil;
 import com.liferay.portal.util.PortalImpl;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.xml.SAXReaderImpl;
 import com.liferay.registry.BasicRegistryImpl;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
+
+import java.io.Serializable;
+
+import java.net.URL;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Raymond Augé
@@ -71,15 +85,29 @@ public class ToolDependencies {
 		registry.registerService(
 			FullNameGenerator.class, new DefaultFullNameGenerator());
 
-		registry.registerService(
-			PortalCacheManager.class,
-			MemoryPortalCacheManager.createMemoryPortalCacheManager(
-				PortalCacheManagerNames.SINGLE_VM));
+		Map<String, Object> properties = new HashMap<>();
+
+		properties.put(
+			"portal.cache.manager.name", PortalCacheManagerNames.SINGLE_VM);
+		properties.put(
+			"portal.cache.manager", PropsValues.PORTAL_CACHE_MANAGER_SINGLE_VM);
 
 		registry.registerService(
 			PortalCacheManager.class,
-			MemoryPortalCacheManager.createMemoryPortalCacheManager(
-				PortalCacheManagerNames.MULTI_VM));
+			new DummyPortalCacheManager<>(PortalCacheManagerNames.SINGLE_VM),
+			properties);
+
+		properties = new HashMap<>();
+
+		properties.put(
+			"portal.cache.manager.name", PortalCacheManagerNames.MULTI_VM);
+		properties.put(
+			"portal.cache.manager", PropsValues.PORTAL_CACHE_MANAGER_MULTI_VM);
+
+		registry.registerService(
+			PortalCacheManager.class,
+			new DummyPortalCacheManager(PortalCacheManagerNames.MULTI_VM),
+			properties);
 
 		DigesterUtil digesterUtil = new DigesterUtil();
 
@@ -142,7 +170,11 @@ public class ToolDependencies {
 		secureXMLFactoryProviderUtil.setSecureXMLFactoryProvider(
 			new SecureXMLFactoryProviderImpl());
 
-		singleVMPoolUtil.setSingleVMPool(new SingleVMPoolImpl());
+		try {
+			singleVMPoolUtil.setSingleVMPool(new SingleVMPoolImpl());
+		}
+		catch (InterruptedException ex) {
+		}
 
 		// DefaultModelHintsImpl requires SecureXMLFactoryProviderUtil
 
@@ -161,7 +193,11 @@ public class ToolDependencies {
 
 		MultiVMPoolUtil multiVMPoolUtil = new MultiVMPoolUtil();
 
-		multiVMPoolUtil.setMultiVMPool(new MultiVMPoolImpl());
+		try {
+			multiVMPoolUtil.setMultiVMPool(new MultiVMPoolImpl());
+		}
+		catch (Exception ex) {
+		}
 
 		PortalUtil portalUtil = new PortalUtil();
 
@@ -178,6 +214,149 @@ public class ToolDependencies {
 		resourceActionsImpl.afterPropertiesSet();
 
 		resourceActionsUtil.setResourceActions(resourceActionsImpl);
+	}
+
+	private static class DummyPortalCache<K extends Serializable, V>
+		implements PortalCache<K, V> {
+
+		@Override
+		public V get(K key) {
+			return null;
+		}
+
+		@Override
+		public List<K> getKeys() {
+			return Collections.emptyList();
+		}
+
+		@Override
+		public String getName() {
+			return _name;
+		}
+
+		@Override
+		public PortalCacheManager<K, V> getPortalCacheManager() {
+			return _portalCacheManager;
+		}
+
+		@Override
+		public void put(K key, V value) {
+		}
+
+		@Override
+		public void put(K key, V value, int timeToLive) {
+		}
+
+		@Override
+		public void registerCacheListener(CacheListener<K, V> cacheListener) {
+		}
+
+		@Override
+		public void registerCacheListener(
+			CacheListener<K, V> cacheListener,
+			CacheListenerScope cacheListenerScope) {
+		}
+
+		@Override
+		public void remove(K key) {
+		}
+
+		@Override
+		public void removeAll() {
+		}
+
+		@Override
+		public void unregisterCacheListener(CacheListener<K, V> cacheListener) {
+		}
+
+		@Override
+		public void unregisterCacheListeners() {
+		}
+
+		private DummyPortalCache(
+			String name, PortalCacheManager<K, V> portalCacheManager) {
+
+			_name = name;
+			_portalCacheManager = portalCacheManager;
+		}
+
+		private final String _name;
+		private final PortalCacheManager<K, V> _portalCacheManager;
+
+	}
+
+	private static class DummyPortalCacheManager<K extends Serializable, V>
+		implements PortalCacheManager<K, V> {
+
+		public DummyPortalCacheManager(String name) {
+			_name = name;
+		}
+
+		@Override
+		public void clearAll() {
+		}
+
+		@Override
+		public void destroy() {
+		}
+
+		@Override
+		public PortalCache<K, V> getCache(String name) {
+			return new DummyPortalCache<>(name, this);
+		}
+
+		@Override
+		public PortalCache<K, V> getCache(String name, boolean blocking) {
+			return new DummyPortalCache<>(name, this);
+		}
+
+		@Override
+		public Set<CacheManagerListener> getCacheManagerListeners() {
+			return Collections.emptySet();
+		}
+
+		@Override
+		public String getName() {
+			return _name;
+		}
+
+		@Override
+		public void initialize() {
+		}
+
+		@Override
+		public boolean isClusterAware() {
+			return false;
+		}
+
+		@Override
+		public void reconfigureCaches(URL configurationURL) {
+		}
+
+		@Override
+		public boolean registerCacheManagerListener(
+			CacheManagerListener cacheManagerListener) {
+
+			return false;
+		}
+
+		@Override
+		public void removeCache(String name) {
+		}
+
+		@Override
+		public boolean unregisterCacheManagerListener(
+			CacheManagerListener cacheManagerListener) {
+
+			return false;
+		}
+
+		@Override
+		public void unregisterCacheManagerListeners() {
+		}
+
+		private final String _name;
+
 	}
 
 }
