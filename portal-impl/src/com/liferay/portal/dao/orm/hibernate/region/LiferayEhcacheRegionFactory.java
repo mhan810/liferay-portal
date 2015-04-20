@@ -14,13 +14,10 @@
 
 package com.liferay.portal.dao.orm.hibernate.region;
 
-import com.liferay.portal.cache.ehcache.EhcachePortalCacheManager;
 import com.liferay.portal.cache.ehcache.EhcacheUnwrapUtil;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.SystemProperties;
 
@@ -28,10 +25,7 @@ import java.io.Serializable;
 
 import java.util.Properties;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.hibernate.EhCacheRegionFactory;
 import net.sf.ehcache.hibernate.regions.EhcacheCollectionRegion;
 import net.sf.ehcache.hibernate.regions.EhcacheEntityRegion;
@@ -178,73 +172,7 @@ public class LiferayEhcacheRegionFactory extends EhCacheRegionFactory {
 	private static final String _DEFAULT_CLUSTERED_EHCACHE_CONFIG_FILE =
 		"/ehcache/hibernate-clustered.xml";
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		LiferayEhcacheRegionFactory.class);
-
 	private volatile PortalCacheManager<Serializable, Serializable>
 		_hibernatePortalCacheManager;
-
-	private class HibernatePortalCacheManager
-		extends EhcachePortalCacheManager<Serializable, Serializable> {
-
-		@Override
-		protected Ehcache createEhcache(
-			String portalCacheName, CacheConfiguration cacheConfiguration) {
-
-			reconfigureCache(new Cache(cacheConfiguration));
-
-			CacheManager cacheManager = getEhcacheManager();
-
-			return cacheManager.getCache(portalCacheName);
-		}
-
-		protected void reconfigureCache(Ehcache replacementCache) {
-			CacheManager cacheManager = getEhcacheManager();
-
-			String cacheName = replacementCache.getName();
-
-			Ehcache ehcache = cacheManager.getEhcache(cacheName);
-
-			if ((ehcache != null) &&
-				(ehcache instanceof ModifiableEhcacheWrapper)) {
-
-				if (_log.isInfoEnabled()) {
-					_log.info("Reconfiguring Hibernate cache " + cacheName);
-				}
-
-				ModifiableEhcacheWrapper modifiableEhcacheWrapper =
-					(ModifiableEhcacheWrapper)ehcache;
-
-				cacheManager.replaceCacheWithDecoratedCache(
-					ehcache, modifiableEhcacheWrapper.getWrappedCache());
-
-				cacheManager.removeCache(cacheName);
-
-				cacheManager.addCache(replacementCache);
-
-				modifiableEhcacheWrapper.setWrappedCache(replacementCache);
-
-				cacheManager.replaceCacheWithDecoratedCache(
-					replacementCache, modifiableEhcacheWrapper);
-			}
-			else {
-				if (_log.isInfoEnabled()) {
-					_log.info("Configuring Hibernate cache " + cacheName);
-				}
-
-				if (ehcache != null) {
-					cacheManager.removeCache(cacheName);
-				}
-
-				ehcache = new ModifiableEhcacheWrapper(replacementCache);
-
-				cacheManager.addCache(replacementCache);
-
-				cacheManager.replaceCacheWithDecoratedCache(
-					replacementCache, ehcache);
-			}
-		}
-
-	}
 
 }
