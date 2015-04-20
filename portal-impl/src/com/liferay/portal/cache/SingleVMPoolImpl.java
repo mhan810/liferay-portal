@@ -16,8 +16,14 @@ package com.liferay.portal.cache;
 
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheManager;
+import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.cache.SingleVMPool;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
+import com.liferay.portal.util.PropsValues;
+import com.liferay.registry.Filter;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
 
 import java.io.Serializable;
 
@@ -27,6 +33,23 @@ import java.io.Serializable;
  */
 @DoPrivileged
 public class SingleVMPoolImpl implements SingleVMPool {
+
+	public SingleVMPoolImpl() throws InterruptedException {
+		Registry registry = RegistryUtil.getRegistry();
+
+		Filter filter = registry.getFilter(
+			"(&(portal.cache.manager.name=" +
+				PortalCacheManagerNames.SINGLE_VM + ")(portal.cache.manager=" +
+					PropsValues.PORTAL_CACHE_MANAGER_SINGLE_VM +
+						")(objectClass=" +
+							PortalCacheManager.class.getName()+"))");
+
+		_serviceTracker = registry.trackServices(filter);
+
+		_serviceTracker.open();
+
+		_portalCacheManager = _serviceTracker.waitForService(0);
+	}
 
 	@Override
 	public void clear() {
@@ -55,12 +78,11 @@ public class SingleVMPoolImpl implements SingleVMPool {
 		_portalCacheManager.removeCache(name);
 	}
 
-	public void setPortalCacheManager(
-		PortalCacheManager<? extends Serializable, ?> portalCacheManager) {
-
-		_portalCacheManager = portalCacheManager;
-	}
-
-	private PortalCacheManager<? extends Serializable, ?> _portalCacheManager;
+	private final PortalCacheManager<? extends Serializable, ?>
+		_portalCacheManager;
+	private final
+		ServiceTracker<PortalCacheManager<? extends Serializable, ?>,
+			PortalCacheManager<? extends Serializable, ?>>
+		_serviceTracker;
 
 }

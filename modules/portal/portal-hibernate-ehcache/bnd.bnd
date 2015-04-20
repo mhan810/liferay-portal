@@ -1,0 +1,11 @@
+Bundle-Name: Liferay Portal Hibernate Ehcache
+Bundle-SymbolicName: com.liferay.portal.hibernate.ehcache
+Bundle-Version: 1.0.0
+Import-Package:\
+	com.liferay.portal.dao.orm.hibernate.region.ModifiableEhcacheWrapper,\
+	com.liferay.portal.cache.ehcache.EhcacheUnwrapUtil,\
+	!com.liferay.portal.cache.ehcache,\
+	*
+Include-Resource:\
+	classes
+

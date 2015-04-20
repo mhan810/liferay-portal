@@ -1935,6 +1935,10 @@ public interface PropsKeys {
 
 	public static final String POP_SERVER_SUBDOMAIN = "pop.server.subdomain";
 
+	public static final String PORTAL_CACHE_MANAGER_MULTI_VM ="portal.cache.manager.multi.vm";
+
+	public static final String PORTAL_CACHE_MANAGER_SINGLE_VM ="portal.cache.manager.single.vm";
+
 	public static final String PORTAL_FABRIC_AGENT_SELECTOR_CLASS = "portal.fabric.agent.selector.class";
 
 	public static final String PORTAL_FABRIC_CLIENT_EVENT_LOOP_GROUP_THREAD_COUNT = "portal.fabric.client.event.loop.group.thread.count";
