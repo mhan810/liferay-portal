@@ -41,16 +41,20 @@ import org.hibernate.cache.CacheException;
 import org.hibernate.cache.CollectionRegion;
 import org.hibernate.cache.EntityRegion;
 import org.hibernate.cache.QueryResultsRegion;
+import org.hibernate.cache.RegionFactory;
 import org.hibernate.cache.TimestampsRegion;
 import org.hibernate.cfg.Settings;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Edward Han
  */
+@Component(immediate = true, service = RegionFactory.class)
 public class LiferayEhcacheRegionFactory extends EhCacheRegionFactory {
 
-	public LiferayEhcacheRegionFactory(Properties properties) {
-		super(properties);
+	public LiferayEhcacheRegionFactory() {
+		super(null);
 	}
 
 	@Override
