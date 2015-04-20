@@ -175,50 +175,6 @@ public class LiferayEhcacheRegionFactory extends EhCacheRegionFactory {
 		}
 	}
 
-	protected void reconfigureCache(Ehcache replacementCache) {
-		String cacheName = replacementCache.getName();
-
-		Ehcache ehcache = manager.getEhcache(cacheName);
-
-		if ((ehcache != null) &&
-			(ehcache instanceof ModifiableEhcacheWrapper)) {
-
-			if (_log.isInfoEnabled()) {
-				_log.info("Reconfiguring Hibernate cache " + cacheName);
-			}
-
-			ModifiableEhcacheWrapper modifiableEhcacheWrapper =
-				(ModifiableEhcacheWrapper)ehcache;
-
-			manager.replaceCacheWithDecoratedCache(
-				ehcache, modifiableEhcacheWrapper.getWrappedCache());
-
-			manager.removeCache(cacheName);
-
-			manager.addCache(replacementCache);
-
-			modifiableEhcacheWrapper.setWrappedCache(replacementCache);
-
-			manager.replaceCacheWithDecoratedCache(
-				replacementCache, modifiableEhcacheWrapper);
-		}
-		else {
-			if (_log.isInfoEnabled()) {
-				_log.info("Configuring Hibernate cache " + cacheName);
-			}
-
-			if (ehcache != null) {
-				manager.removeCache(cacheName);
-			}
-
-			ehcache = new ModifiableEhcacheWrapper(replacementCache);
-
-			manager.addCache(replacementCache);
-
-			manager.replaceCacheWithDecoratedCache(replacementCache, ehcache);
-		}
-	}
-
 	private static final String _DEFAULT_CLUSTERED_EHCACHE_CONFIG_FILE =
 		"/ehcache/hibernate-clustered.xml";
 
@@ -240,6 +196,53 @@ public class LiferayEhcacheRegionFactory extends EhCacheRegionFactory {
 			CacheManager cacheManager = getEhcacheManager();
 
 			return cacheManager.getCache(portalCacheName);
+		}
+
+		protected void reconfigureCache(Ehcache replacementCache) {
+			CacheManager cacheManager = getEhcacheManager();
+
+			String cacheName = replacementCache.getName();
+
+			Ehcache ehcache = cacheManager.getEhcache(cacheName);
+
+			if ((ehcache != null) &&
+				(ehcache instanceof ModifiableEhcacheWrapper)) {
+
+				if (_log.isInfoEnabled()) {
+					_log.info("Reconfiguring Hibernate cache " + cacheName);
+				}
+
+				ModifiableEhcacheWrapper modifiableEhcacheWrapper =
+					(ModifiableEhcacheWrapper)ehcache;
+
+				cacheManager.replaceCacheWithDecoratedCache(
+					ehcache, modifiableEhcacheWrapper.getWrappedCache());
+
+				cacheManager.removeCache(cacheName);
+
+				cacheManager.addCache(replacementCache);
+
+				modifiableEhcacheWrapper.setWrappedCache(replacementCache);
+
+				cacheManager.replaceCacheWithDecoratedCache(
+					replacementCache, modifiableEhcacheWrapper);
+			}
+			else {
+				if (_log.isInfoEnabled()) {
+					_log.info("Configuring Hibernate cache " + cacheName);
+				}
+
+				if (ehcache != null) {
+					cacheManager.removeCache(cacheName);
+				}
+
+				ehcache = new ModifiableEhcacheWrapper(replacementCache);
+
+				cacheManager.addCache(replacementCache);
+
+				cacheManager.replaceCacheWithDecoratedCache(
+					replacementCache, ehcache);
+			}
 		}
 
 	}
