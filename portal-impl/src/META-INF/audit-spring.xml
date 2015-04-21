@@ -56,8 +56,5 @@
 				<ref bean="destination.audit" />
 			</list>
 		</property>
-		<property name="messageBus">
-			<ref bean="com.liferay.portal.kernel.messaging.MessageBus" />
-		</property>
 	</bean>
 </beans>
