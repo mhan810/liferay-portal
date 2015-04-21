@@ -28,18 +28,9 @@
 		<constructor-arg name="schedulerEngine" ref="com.liferay.portal.scheduler.SchedulerEngineProxyBean" />
 	</bean>
 	<bean id="com.liferay.portal.scheduler.SchedulerEngineProxyBean" class="com.liferay.portal.scheduler.SchedulerEngineProxyBean">
-		<property name="singleDestinationSynchronousMessageSender">
-			<bean class="com.liferay.portal.kernel.messaging.sender.DefaultSingleDestinationSynchronousMessageSender">
-				<property name="destinationName" value="liferay/scheduler_engine" />
-				<property name="synchronousMessageSender" ref="com.liferay.portal.kernel.messaging.sender.DirectSynchronousMessageSender" />
-			</bean>
-		</property>
-		<property name="singleDestinationMessageSender">
-			<bean class="com.liferay.portal.kernel.messaging.sender.DefaultSingleDestinationMessageSender">
-				<property name="destinationName" value="liferay/scheduler_engine" />
-				<property name="messageBus" ref="com.liferay.portal.kernel.messaging.MessageBus" />
-			</bean>
-		</property>
+		<property name="destinationName" value="liferay/scheduler_engine" />
+		<property name="synchronousDestinationName" value="liferay/scheduler_engine" />
+		<property name="synchronousMessageSenderMode" value="DIRECT" />
 	</bean>
 
 	<!-- Util -->
