@@ -17,6 +17,8 @@ package com.liferay.portal.dao.orm.hibernate.region;
 import com.liferay.portal.cache.ehcache.EhcachePortalCacheManager;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.SystemProperties;
 
 import java.io.Serializable;
 
@@ -30,6 +32,18 @@ import net.sf.ehcache.config.CacheConfiguration;
  */
 public class HibernatePortalCacheManager
 	extends EhcachePortalCacheManager<Serializable, Serializable> {
+
+	@Override
+	public void initialize() {
+		boolean skipUpdateCheck = GetterUtil.getBoolean(
+			SystemProperties.get("net.sf.ehcache.skipUpdateCheck"));
+		boolean tcActive = GetterUtil.getBoolean(
+			SystemProperties.get("tc.active"));
+
+		setStopCacheManagerTimer(skipUpdateCheck && !tcActive);
+
+		super.initialize();
+	}
 
 	@Override
 	protected Ehcache createEhcache(
