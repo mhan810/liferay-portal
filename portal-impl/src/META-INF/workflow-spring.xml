@@ -160,9 +160,6 @@
 				<ref bean="destination.workflow_task" />
 			</list>
 		</property>
-		<property name="messageBus">
-			<ref bean="com.liferay.portal.kernel.messaging.MessageBus" />
-		</property>
 		<property name="messageListeners">
 			<map key-type="java.lang.String" value-type="java.util.List">
 				<entry key="liferay/workflow_status">
