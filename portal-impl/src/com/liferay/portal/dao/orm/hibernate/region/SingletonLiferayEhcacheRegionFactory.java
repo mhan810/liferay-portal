@@ -14,8 +14,13 @@
 
 package com.liferay.portal.dao.orm.hibernate.region;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
 
 import java.util.Properties;
 
@@ -118,14 +123,28 @@ public class SingletonLiferayEhcacheRegionFactory implements RegionFactory {
 			_enabled = true;
 		}
 
-		if (_liferayEhcacheRegionFactory == null) {
-			_liferayEhcacheRegionFactory = new LiferayEhcacheRegionFactory(
-				properties);
+		Registry registry = RegistryUtil.getRegistry();
+
+		ServiceTracker<RegionFactory, RegionFactory> serviceTracker =
+			registry.trackServices(RegionFactory.class);
+
+		serviceTracker.open();
+
+		try {
+			_liferayEhcacheRegionFactory = serviceTracker.waitForService(0);
+		}
+		catch (InterruptedException ie) {
+			if (_log.isErrorEnabled()) {
+				_log.error("Unable to get RegionFactory instance ", ie);
+			}
 		}
 	}
 
+	private static final Log _log = LogFactoryUtil.getLog(
+		SingletonLiferayEhcacheRegionFactory.class);
+
 	private static boolean _enabled;
 	private static int _instanceCounter;
-	private static LiferayEhcacheRegionFactory _liferayEhcacheRegionFactory;
+	private static RegionFactory _liferayEhcacheRegionFactory;
 
 }
