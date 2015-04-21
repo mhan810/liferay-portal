@@ -65,8 +65,5 @@
 				<ref bean="destination.message_bus_message_status" />
 			</list>
 		</property>
-		<property name="messageBus">
-			<ref bean="com.liferay.portal.kernel.messaging.MessageBus" />
-		</property>
 	</bean>
 </beans>
