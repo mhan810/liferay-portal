@@ -12,11 +12,16 @@
  * details.
  */
 
-package com.liferay.portal.kernel.messaging;
+package com.liferay.portal.messaging.internal;
 
 import com.liferay.portal.kernel.concurrent.ConcurrentHashSet;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.messaging.Destination;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBus;
+import com.liferay.portal.kernel.messaging.MessageBusEventListener;
+import com.liferay.portal.kernel.messaging.MessageListener;
 
 import java.util.Collection;
 import java.util.HashMap;
