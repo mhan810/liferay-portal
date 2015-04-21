@@ -46,8 +46,8 @@ import org.hibernate.cfg.Settings;
  */
 public class LiferayEhcacheRegionFactory extends EhCacheRegionFactory {
 
-	public LiferayEhcacheRegionFactory(Properties properties) {
-		super(properties);
+	public LiferayEhcacheRegionFactory() {
+		super(null);
 	}
 
 	@Override
