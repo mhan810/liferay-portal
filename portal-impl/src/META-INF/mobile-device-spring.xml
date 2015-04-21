@@ -86,8 +86,5 @@
 				<ref bean="destination.device_recognition_provider" />
 			</list>
 		</property>
-		<property name="messageBus">
-			<ref bean="com.liferay.portal.kernel.messaging.MessageBus" />
-		</property>
 	</bean>
 </beans>
