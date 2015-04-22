@@ -124,7 +124,6 @@
 		<property name="defaultSearchEngineId" value="SYSTEM_ENGINE" />
 		<property name="indexSearcher" ref="com.liferay.portal.kernel.search.IndexSearcherProxyBean" />
 		<property name="indexWriter" ref="com.liferay.portal.kernel.search.IndexWriterProxyBean" />
-		<property name="messageBus" ref="com.liferay.portal.kernel.messaging.MessageBus" />
 		<property name="searchEngines">
 			<util:map>
 				<entry key="GENERIC_ENGINE" value-ref="com.liferay.portal.search.generic.GenericSearchEngineImpl" />
