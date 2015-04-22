@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.resiliency.spi.SPIUtil;
 import com.liferay.portal.kernel.util.Converter;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PreloadClassLoader;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -147,11 +148,22 @@ public class PortalHibernateConfiguration extends LocalSessionFactoryBean {
 
 			if (SPIUtil.isSPI()) {
 				properties.put(
-					"hibernate.cache.use_query_cache",
+					PropsKeys.HIBERNATE_CACHE_USE_QUERY_CACHE,
 					Boolean.FALSE.toString());
 				properties.put(
-					"hibernate.cache.use_second_level_cache",
+					PropsKeys.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE,
 					Boolean.FALSE.toString());
+			}
+
+			boolean useQueryCache = GetterUtil.getBoolean(
+				properties.get(PropsKeys.HIBERNATE_CACHE_USE_QUERY_CACHE));
+			boolean useSecondLevelCache = GetterUtil.getBoolean(
+				properties.get(
+					PropsKeys.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE));
+
+			if (!useQueryCache && !useSecondLevelCache) {
+				properties.remove(
+					PropsKeys.HIBERNATE_CACHE_REGION_FACTORY_CLASS);
 			}
 
 			configuration.setProperties(properties);
