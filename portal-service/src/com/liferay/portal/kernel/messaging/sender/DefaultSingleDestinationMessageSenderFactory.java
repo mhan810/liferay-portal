@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.messaging.MessageBus;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Michael C. Han
@@ -31,12 +32,20 @@ public class DefaultSingleDestinationMessageSenderFactory
 
 		DefaultSingleDestinationMessageSender
 			defaultSingleDestinationMessageSender =
+				_singleDestinationMessageSenders.get(destinationName);
+
+		if (defaultSingleDestinationMessageSender == null) {
+			defaultSingleDestinationMessageSender =
 				new DefaultSingleDestinationMessageSender();
 
-		defaultSingleDestinationMessageSender.setDestinationName(
-			destinationName);
+			defaultSingleDestinationMessageSender.setDestinationName(
+				destinationName);
 
-		defaultSingleDestinationMessageSender.setMessageBus(_messageBus);
+			defaultSingleDestinationMessageSender.setMessageBus(_messageBus);
+
+			_singleDestinationMessageSenders.put(
+				destinationName, defaultSingleDestinationMessageSender);
+		}
 
 		return defaultSingleDestinationMessageSender;
 	}
@@ -46,23 +55,32 @@ public class DefaultSingleDestinationMessageSenderFactory
 		createSingleDestinationSynchronousMessageSender(
 			String destinationName, SynchronousMessageSender.Mode mode) {
 
-		SynchronousMessageSender synchronousMessageSender =
-			_synchronousMessageSenders.get(mode);
-
-		if (synchronousMessageSender == null) {
-			throw new IllegalStateException(
-				"No SynchronousMessageSender configured for: " + mode);
-		}
-
 		DefaultSingleDestinationSynchronousMessageSender
+			defaultSingleDestinationSynchronousMessageSender =
+				_singleDestinationSynchronousMessageSender.get(destinationName);
+
+		if (defaultSingleDestinationSynchronousMessageSender == null) {
+			SynchronousMessageSender synchronousMessageSender =
+				_synchronousMessageSenders.get(mode);
+
+			if (synchronousMessageSender == null) {
+				throw new IllegalStateException(
+					"No SynchronousMessageSender configured for: " + mode);
+			}
+
 			defaultSingleDestinationSynchronousMessageSender =
 				new DefaultSingleDestinationSynchronousMessageSender();
 
-		defaultSingleDestinationSynchronousMessageSender.setDestinationName(
-			destinationName);
+			defaultSingleDestinationSynchronousMessageSender.setDestinationName(
+				destinationName);
 
-		defaultSingleDestinationSynchronousMessageSender.
-			setSynchronousMessageSender(synchronousMessageSender);
+			defaultSingleDestinationSynchronousMessageSender.
+				setSynchronousMessageSender(synchronousMessageSender);
+
+			_singleDestinationSynchronousMessageSender.put(
+				destinationName,
+				defaultSingleDestinationSynchronousMessageSender);
+		}
 
 		return defaultSingleDestinationSynchronousMessageSender;
 	}
@@ -79,6 +97,10 @@ public class DefaultSingleDestinationMessageSenderFactory
 	}
 
 	private MessageBus _messageBus;
+	private final Map<String, DefaultSingleDestinationMessageSender>
+		_singleDestinationMessageSenders = new ConcurrentHashMap<>();
+	private final Map<String, DefaultSingleDestinationSynchronousMessageSender>
+		_singleDestinationSynchronousMessageSender = new ConcurrentHashMap<>();
 	private final Map<SynchronousMessageSender.Mode, SynchronousMessageSender>
 		_synchronousMessageSenders = new HashMap<>();
 
