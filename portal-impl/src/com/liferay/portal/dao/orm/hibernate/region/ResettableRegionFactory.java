@@ -36,9 +36,9 @@ import org.hibernate.cfg.Settings;
  * @author Edward Han
  * @author Shuyang Zhou
  */
-public class SingletonLiferayEhcacheRegionFactory implements RegionFactory {
+public class ResettableRegionFactory implements RegionFactory {
 
-	public SingletonLiferayEhcacheRegionFactory() {
+	public ResettableRegionFactory() {
 		synchronized (this) {
 			_init();
 		}
@@ -134,7 +134,7 @@ public class SingletonLiferayEhcacheRegionFactory implements RegionFactory {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		SingletonLiferayEhcacheRegionFactory.class);
+		ResettableRegionFactory.class);
 
 	private static int _instanceCounter;
 	private static RegionFactory _liferayEhcacheRegionFactory;
