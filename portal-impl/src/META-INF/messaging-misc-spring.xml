@@ -91,14 +91,14 @@
 	<bean id="messageListener.layouts_local_publisher" class="com.liferay.portal.kernel.scheduler.messaging.SchedulerEventMessageListenerWrapper">
 		<property name="messageListener">
 			<bean class="com.liferay.portal.lar.messaging.LayoutsLocalPublisherMessageListener">
-				<property name="statusSender" ref="messageSender.service_request_status" />
+				<property name="destinationName" value="liferay/message_bus/message_status" />
 			</bean>
 		</property>
 	</bean>
 	<bean id="messageListener.layouts_remote_publisher" class="com.liferay.portal.kernel.scheduler.messaging.SchedulerEventMessageListenerWrapper">
 		<property name="messageListener">
 			<bean class="com.liferay.portal.lar.messaging.LayoutsRemotePublisherMessageListener">
-				<property name="statusSender" ref="messageSender.service_request_status" />
+				<property name="destinationName" value="liferay/message_bus/message_status" />
 			</bean>
 		</property>
 	</bean>
