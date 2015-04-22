@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.SystemProperties;
+import com.liferay.portal.util.PropsValues;
 
 import java.io.Serializable;
 
@@ -117,12 +118,8 @@ public class LiferayEhcacheRegionFactory extends EhCacheRegionFactory {
 
 		hibernatePortalCacheManager.setClusterAware(true);
 
-		if (properties != null) {
-			hibernatePortalCacheManager.setConfigFile(
-				(String)properties.get(
-					NET_SF_EHCACHE_CONFIGURATION_RESOURCE_NAME));
-		}
-
+		hibernatePortalCacheManager.setConfigFile(
+			PropsValues.NET_SF_EHCACHE_CONFIGURATION_RESOURCE_NAME);
 		hibernatePortalCacheManager.setDefaultConfigFile(_DEFAULT_CONFIG_FILE);
 		hibernatePortalCacheManager.setMpiOnly(true);
 		hibernatePortalCacheManager.setName(PortalCacheManagerNames.HIBERNATE);
