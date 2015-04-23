@@ -41,7 +41,7 @@ public abstract class BaseProxyBean {
 		}
 
 		if ((_singleDestinationMessageSender == null) &&
-			Validator.isNotNull(_destinationName)){
+			Validator.isNotNull(_destinationName)) {
 
 			_singleDestinationMessageSender =
 				SingleDestinationMessageSenderFactoryUtil.
