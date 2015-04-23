@@ -12,6 +12,10 @@
 	<!-- Message bus -->
 
 	<bean id="com.liferay.portal.kernel.messaging.MessageBus" class="com.liferay.portal.kernel.messaging.DefaultMessageBus" />
+	<bean id="com.liferay.portal.kernel.messaging.MessageBusUtil" class="com.liferay.portal.kernel.messaging.MessageBusUtil">
+		<property name="messageBus" ref="com.liferay.portal.kernel.messaging.MessageBus" />
+		<property name="synchronousMessageSender" ref="com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender" />
+	</bean>
 	<bean id="com.liferay.portal.kernel.messaging.sender.DirectSynchronousMessageSender" class="com.liferay.portal.kernel.messaging.sender.DirectSynchronousMessageSender">
 		<property name="messageBus" ref="com.liferay.portal.kernel.messaging.MessageBus" />
 	</bean>
