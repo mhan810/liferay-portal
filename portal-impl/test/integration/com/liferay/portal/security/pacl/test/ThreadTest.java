@@ -472,9 +472,7 @@ public class ThreadTest {
 
 		PortalExecutorManagerUtil.getPortalExecutor("liferay/test_pacl", true);
 
-		MessageBus messageBus = MessageBusUtil.getMessageBus();
-
-		Destination destination = messageBus.getDestination(
+		Destination destination = MessageBusUtil.getDestination(
 			"liferay/test_pacl");
 
 		destination.open();
