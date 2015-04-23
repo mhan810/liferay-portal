@@ -28,9 +28,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = MessageBus.class)
 public class DefaultMessageBus implements MessageBus {
 
 	@Override
