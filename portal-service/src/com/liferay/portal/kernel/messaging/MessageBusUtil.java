@@ -166,8 +166,6 @@ public class MessageBusUtil {
 	}
 
 	private Destination _getDestination(String destinationName) {
-		PortalMessageBusPermission.checkListen(destinationName);
-
 		return _messageBus.getDestination(destinationName);
 	}
 
