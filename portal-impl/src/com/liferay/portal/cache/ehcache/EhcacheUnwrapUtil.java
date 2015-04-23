@@ -15,14 +15,30 @@
 package com.liferay.portal.cache.ehcache;
 
 import com.liferay.portal.kernel.cache.PortalCache;
+import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.cache.PortalCacheWrapper;
 
+import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 
 /**
  * @author Shuyang Zhou
  */
 public class EhcacheUnwrapUtil {
+
+	public static CacheManager getCacheManager(
+		PortalCacheManager<?, ?> portalCacheManager) {
+
+		if (!(portalCacheManager instanceof EhcachePortalCacheManager)) {
+			throw new IllegalArgumentException(
+				"Unable to locate cacheManager from " + portalCacheManager);
+		}
+
+		EhcachePortalCacheManager<?, ?> ehcachePortalCacheManager =
+			(EhcachePortalCacheManager<?, ?>)portalCacheManager;
+
+		return ehcachePortalCacheManager.getEhcacheManager();
+	}
 
 	public static Ehcache getEhcache(PortalCache<?, ?> portalCache) {
 		PortalCache<?, ?> currentPortalCache = portalCache;

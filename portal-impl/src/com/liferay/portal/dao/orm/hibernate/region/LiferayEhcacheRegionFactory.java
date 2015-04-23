@@ -18,8 +18,13 @@ import com.liferay.portal.cache.ehcache.EhcacheUnwrapUtil;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.SystemProperties;
+import com.liferay.portal.kernel.cache.PortalCacheManagerTypes;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.registry.Filter;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
 
 import java.io.Serializable;
 
@@ -45,8 +50,8 @@ import org.hibernate.cfg.Settings;
  */
 public class LiferayEhcacheRegionFactory extends EhCacheRegionFactory {
 
-	public LiferayEhcacheRegionFactory(Properties properties) {
-		super(properties);
+	public LiferayEhcacheRegionFactory() {
+		super(null);
 	}
 
 	@Override
@@ -112,36 +117,34 @@ public class LiferayEhcacheRegionFactory extends EhCacheRegionFactory {
 
 	@Override
 	public void start(Settings settings, Properties properties) {
-		HibernatePortalCacheManager hibernatePortalCacheManager =
-			new HibernatePortalCacheManager();
+		Registry registry = RegistryUtil.getRegistry();
 
-		hibernatePortalCacheManager.setClusterAware(true);
+		Filter filter = registry.getFilter(
+			"(&(portal.cache.manager.name=" +
+				PortalCacheManagerNames.HIBERNATE +
+					")(portal.cache.manager.type=" +
+						PortalCacheManagerTypes.EHCACHE + ")(objectClass=" +
+							PortalCacheManager.class.getName()+"))");
 
-		if (properties != null) {
-			hibernatePortalCacheManager.setConfigFile(
-				(String)properties.get(
-					NET_SF_EHCACHE_CONFIGURATION_RESOURCE_NAME));
+		ServiceTracker<PortalCacheManager<Serializable, Serializable>,
+			PortalCacheManager<Serializable, Serializable>>
+				serviceTracker = registry.trackServices(filter);
+
+		serviceTracker.open();
+
+		try {
+			_hibernatePortalCacheManager = serviceTracker.waitForService(0);
+
+			manager = EhcacheUnwrapUtil.getCacheManager(
+				_hibernatePortalCacheManager);
+
+			mbeanRegistrationHelper.registerMBean(manager, properties);
 		}
-
-		hibernatePortalCacheManager.setDefaultConfigFile(_DEFAULT_CONFIG_FILE);
-		hibernatePortalCacheManager.setMpiOnly(true);
-		hibernatePortalCacheManager.setName(PortalCacheManagerNames.HIBERNATE);
-
-		boolean skipUpdateCheck = GetterUtil.getBoolean(
-			SystemProperties.get("net.sf.ehcache.skipUpdateCheck"));
-		boolean tcActive = GetterUtil.getBoolean(
-			SystemProperties.get("tc.active"));
-
-		hibernatePortalCacheManager.setStopCacheManagerTimer(
-			skipUpdateCheck && !tcActive);
-
-		hibernatePortalCacheManager.afterPropertiesSet();
-
-		manager = hibernatePortalCacheManager.getEhcacheManager();
-
-		mbeanRegistrationHelper.registerMBean(manager, properties);
-
-		_hibernatePortalCacheManager = hibernatePortalCacheManager;
+		catch (InterruptedException ie) {
+			if (_log.isErrorEnabled()) {
+				_log.error("Unable to get Hibernate portal cache manager", ie);
+			}
+		}
 	}
 
 	@Override
@@ -168,8 +171,8 @@ public class LiferayEhcacheRegionFactory extends EhCacheRegionFactory {
 		}
 	}
 
-	private static final String _DEFAULT_CONFIG_FILE =
-		"/ehcache/hibernate-clustered.xml";
+	private static final Log _log = LogFactoryUtil.getLog(
+		LiferayEhcacheRegionFactory.class);
 
 	private volatile PortalCacheManager<Serializable, Serializable>
 		_hibernatePortalCacheManager;
