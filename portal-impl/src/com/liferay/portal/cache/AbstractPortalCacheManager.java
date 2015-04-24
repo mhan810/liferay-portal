@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.cache.CallbackFactory;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheException;
 import com.liferay.portal.kernel.cache.PortalCacheManager;
-import com.liferay.portal.kernel.cache.PortalCacheProvider;
 import com.liferay.portal.kernel.cache.configuration.CallbackConfiguration;
 import com.liferay.portal.kernel.cache.configuration.PortalCacheConfiguration;
 import com.liferay.portal.kernel.cache.configuration.PortalCacheManagerConfiguration;
@@ -33,9 +32,13 @@ import com.liferay.portal.kernel.resiliency.spi.SPIUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceRegistration;
 
 import java.io.Serializable;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,37 +51,7 @@ public abstract class AbstractPortalCacheManager<K extends Serializable, V>
 	implements PortalCacheManager<K, V> {
 
 	public void afterPropertiesSet() {
-		if ((_portalCacheManagerConfiguration != null) ||
-			(_mpiOnly && SPIUtil.isSPI())) {
-
-			return;
-		}
-
-		if (name == null) {
-			throw new NullPointerException("Name is null");
-		}
-
-		initPortalCacheManager();
-
-		_portalCacheManagerConfiguration = getPortalCacheManagerConfiguration();
-
-		for (CallbackConfiguration callbackConfiguration :
-				_portalCacheManagerConfiguration.
-					getCacheManagerListenerConfigurations()) {
-
-			CallbackFactory callbackFactory =
-				callbackConfiguration.getCallbackFactory();
-
-			CacheManagerListener cacheManagerListener =
-				callbackFactory.createCacheManagerListener(
-					callbackConfiguration.getProperties());
-
-			if (cacheManagerListener != null) {
-				registerCacheManagerListener(cacheManagerListener);
-			}
-		}
-
-		PortalCacheProvider.registerPortalCacheManager(this);
+		initialize();
 	}
 
 	@Override
@@ -88,7 +61,7 @@ public abstract class AbstractPortalCacheManager<K extends Serializable, V>
 
 	@Override
 	public void destroy() {
-		PortalCacheProvider.unregisterPortalCacheManager(getName());
+		_serviceRegistration.unregister();
 
 		portalCaches.clear();
 
@@ -174,6 +147,50 @@ public abstract class AbstractPortalCacheManager<K extends Serializable, V>
 	}
 
 	@Override
+	public void initialize() {
+		if ((_portalCacheManagerConfiguration != null) ||
+			(_mpiOnly && SPIUtil.isSPI())) {
+
+			return;
+		}
+
+		if (name == null) {
+			throw new NullPointerException("Name is null");
+		}
+
+		initPortalCacheManager();
+
+		_portalCacheManagerConfiguration = getPortalCacheManagerConfiguration();
+
+		for (CallbackConfiguration callbackConfiguration :
+				_portalCacheManagerConfiguration.
+					getCacheManagerListenerConfigurations()) {
+
+			CallbackFactory callbackFactory =
+				callbackConfiguration.getCallbackFactory();
+
+			CacheManagerListener cacheManagerListener =
+				callbackFactory.createCacheManagerListener(
+					callbackConfiguration.getProperties());
+
+			if (cacheManagerListener != null) {
+				registerCacheManagerListener(cacheManagerListener);
+			}
+		}
+
+		Registry registry = RegistryUtil.getRegistry();
+
+		Map<String, Object> properties = new HashMap<>();
+
+		properties.put("portal.cache.manager.name", name);
+		properties.put("portal.cache.manager.type", getType());
+
+		_serviceRegistration = registry.registerService(
+			(Class<PortalCacheManager<K, V>>)(Class<?>)PortalCacheManager.class,
+			this, properties);
+	}
+
+	@Override
 	public boolean isClusterAware() {
 		return clusterAware;
 	}
@@ -228,6 +245,8 @@ public abstract class AbstractPortalCacheManager<K extends Serializable, V>
 
 	protected abstract PortalCacheManagerConfiguration
 		getPortalCacheManagerConfiguration();
+
+	protected abstract String getType();
 
 	protected abstract void initPortalCacheManager();
 
@@ -306,5 +325,6 @@ public abstract class AbstractPortalCacheManager<K extends Serializable, V>
 
 	private boolean _mpiOnly;
 	private PortalCacheManagerConfiguration _portalCacheManagerConfiguration;
+	private ServiceRegistration<PortalCacheManager<K, V>> _serviceRegistration;
 
 }

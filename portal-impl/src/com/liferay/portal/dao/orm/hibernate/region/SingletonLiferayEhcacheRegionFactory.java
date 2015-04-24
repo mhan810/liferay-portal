@@ -14,8 +14,11 @@
 
 package com.liferay.portal.dao.orm.hibernate.region;
 
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
 
 import java.util.Properties;
 
@@ -35,9 +38,9 @@ import org.hibernate.cfg.Settings;
  */
 public class SingletonLiferayEhcacheRegionFactory implements RegionFactory {
 
-	public SingletonLiferayEhcacheRegionFactory(Properties properties) {
+	public SingletonLiferayEhcacheRegionFactory() {
 		synchronized (this) {
-			_init(properties);
+			_init();
 		}
 	}
 
@@ -96,36 +99,44 @@ public class SingletonLiferayEhcacheRegionFactory implements RegionFactory {
 
 	@Override
 	public synchronized void start(Settings settings, Properties properties) {
-		if (_enabled && (_instanceCounter++ == 0)) {
+		if (_instanceCounter++ == 0) {
 			_liferayEhcacheRegionFactory.start(settings, properties);
 		}
 	}
 
 	@Override
 	public synchronized void stop() {
-		if (_enabled && (--_instanceCounter == 0)) {
+		if (--_instanceCounter == 0) {
 			_liferayEhcacheRegionFactory.stop();
 		}
 	}
 
-	private static void _init(Properties properties) {
-		boolean useQueryCache = GetterUtil.getBoolean(
-			properties.get(PropsKeys.HIBERNATE_CACHE_USE_QUERY_CACHE));
-		boolean useSecondLevelCache = GetterUtil.getBoolean(
-			properties.get(PropsKeys.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE));
-
-		if (useQueryCache || useSecondLevelCache) {
-			_enabled = true;
+	private static void _init() {
+		if (_liferayEhcacheRegionFactory != null) {
+			return;
 		}
 
-		if (_liferayEhcacheRegionFactory == null) {
-			_liferayEhcacheRegionFactory = new LiferayEhcacheRegionFactory(
-				properties);
+		Registry registry = RegistryUtil.getRegistry();
+
+		ServiceTracker<RegionFactory, RegionFactory> serviceTracker =
+			registry.trackServices(RegionFactory.class);
+
+		serviceTracker.open();
+
+		try {
+			_liferayEhcacheRegionFactory = serviceTracker.waitForService(0);
+		}
+		catch (InterruptedException ie) {
+			if (_log.isErrorEnabled()) {
+				_log.error("Unable to get RegionFactory instance ", ie);
+			}
 		}
 	}
 
-	private static boolean _enabled;
+	private static final Log _log = LogFactoryUtil.getLog(
+		SingletonLiferayEhcacheRegionFactory.class);
+
 	private static int _instanceCounter;
-	private static LiferayEhcacheRegionFactory _liferayEhcacheRegionFactory;
+	private static RegionFactory _liferayEhcacheRegionFactory;
 
 }
