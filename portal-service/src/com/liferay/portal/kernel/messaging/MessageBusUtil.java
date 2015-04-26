@@ -168,6 +168,20 @@ public class MessageBusUtil {
 			new SynchronousMessageSenderServiceTrackerCustomizer());
 
 		_synchronousMessageSenderServiceTracker.open();
+
+		int count = 1000;
+
+		try {
+			while ((_synchronousMessageSenders.size() < 2) &&
+				   (--count > 0)) {
+
+				Thread.sleep(500);
+			}
+		}
+		catch (Exception e) {
+
+		}
+
 	}
 
 	public void setMode(SynchronousMessageSender.Mode mode) {
