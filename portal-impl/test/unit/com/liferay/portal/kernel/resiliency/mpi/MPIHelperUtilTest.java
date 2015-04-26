@@ -843,11 +843,6 @@ public class MPIHelperUtilTest {
 				}
 
 				@Override
-				protected MessageBus getMessageBus() {
-					return null;
-				}
-
-				@Override
 				protected ClassLoader getOperatingClassloader() {
 					return null;
 				}
