@@ -360,7 +360,8 @@ public abstract class BaseAsyncDestination extends BaseDestination {
 	private int _workersMaxSize = _WORKERS_MAX_SIZE;
 
 	private class PortalExecutorManagerServiceTrackerCustomizer
-		implements ServiceTrackerCustomizer<PortalExecutorManager, PortalExecutorManager> {
+		implements ServiceTrackerCustomizer
+			<PortalExecutorManager, PortalExecutorManager> {
 
 		@Override
 		public PortalExecutorManager addingService(

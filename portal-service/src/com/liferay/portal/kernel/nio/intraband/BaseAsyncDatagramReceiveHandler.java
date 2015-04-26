@@ -51,7 +51,7 @@ public abstract class BaseAsyncDatagramReceiveHandler
 
 		if (_executor == null) {
 			if (_log.isWarnEnabled()) {
-				_log.warn("" +
+				_log.warn(
 					"No executor to dispatch job: " + registrationReference +
 					" " + datagram);
 			}
@@ -99,7 +99,8 @@ public abstract class BaseAsyncDatagramReceiveHandler
 	}
 
 	private class PortalExecutorManagerServiceTrackerCustomizer
-		implements ServiceTrackerCustomizer<PortalExecutorManager, PortalExecutorManager> {
+		implements ServiceTrackerCustomizer
+			<PortalExecutorManager, PortalExecutorManager> {
 
 		@Override
 		public PortalExecutorManager addingService(
