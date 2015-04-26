@@ -30,6 +30,8 @@ import com.liferay.portal.kernel.messaging.SerialDestination;
 import com.liferay.portal.kernel.messaging.SynchronousDestination;
 import com.liferay.portal.test.rule.PortalExecutorManagerTestRule;
 import com.liferay.portal.uuid.PortalUUIDImpl;
+import com.liferay.registry.BasicRegistryImpl;
+import com.liferay.registry.RegistryUtil;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -66,6 +68,8 @@ public class DefaultSynchronousMessageSenderTest {
 		_defaultSynchronousMessageSender.setMessageBus(_messageBus);
 		_defaultSynchronousMessageSender.setPortalUUID(new PortalUUIDImpl());
 		_defaultSynchronousMessageSender.setTimeout(10000);
+
+		RegistryUtil.setRegistry(new BasicRegistryImpl());
 
 		EntityCacheUtil entityCacheUtil = new EntityCacheUtil();
 
