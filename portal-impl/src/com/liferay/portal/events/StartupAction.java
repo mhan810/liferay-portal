@@ -14,10 +14,7 @@
 
 package com.liferay.portal.events;
 
-import com.liferay.portal.cache.bootstrap.ClusterLinkBootstrapLoaderHelperUtil;
-import com.liferay.portal.fabric.server.FabricServerUtil;
-import com.liferay.portal.jericho.CachedLoggerProvider;
-import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
+import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
 import com.liferay.portal.kernel.cluster.ClusterMasterExecutorUtil;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.SimpleAction;
@@ -44,6 +41,11 @@ import com.liferay.portal.tools.DBUpgrader;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.messageboards.util.MBMessageIndexer;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
 import com.liferay.taglib.servlet.JspFactorySwapper;
 
 import javax.portlet.MimeResponse;
@@ -57,6 +59,18 @@ import org.apache.struts.taglib.tiles.ComponentConstants;
  * @author Raymond Augé
  */
 public class StartupAction extends SimpleAction {
+
+	public StartupAction() {
+		super();
+
+		Registry registry = RegistryUtil.getRegistry();
+
+		ServiceTracker serviceTracker = registry.trackServices(
+			ClusterMasterExecutor.class,
+			new ClusterMasterExecutorServiceTrackerCustomizer());
+
+		serviceTracker.open();
+	}
 
 	@Override
 	public void run(String[] ids) throws ActionException {
@@ -174,11 +188,6 @@ public class StartupAction extends SimpleAction {
 
 		DBUpgrader.verify();
 
-		// Background tasks
-
-		if (!ClusterMasterExecutorUtil.isEnabled()) {
-			BackgroundTaskLocalServiceUtil.cleanUpBackgroundTasks();
-		}
 
 		// Liferay JspFactory
 
@@ -187,6 +196,41 @@ public class StartupAction extends SimpleAction {
 		// Jericho
 
 		CachedLoggerProvider.install();
+	}
+
+
+	private class ClusterMasterExecutorServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer
+			<ClusterMasterExecutor, ClusterMasterExecutor> {
+
+		@Override
+		public ClusterMasterExecutor addingService(
+			ServiceReference<ClusterMasterExecutor> serviceReference) {
+
+			Registry registry = RegistryUtil.getRegistry();
+
+			ClusterMasterExecutor clusterMasterExecutor = registry.getService(
+				serviceReference);
+
+			if (!clusterMasterExecutor.isEnabled()) {
+				BackgroundTaskLocalServiceUtil.cleanUpBackgroundTasks();
+			}
+
+			return clusterMasterExecutor;
+
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<ClusterMasterExecutor> serviceReference,
+			ClusterMasterExecutor service) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<ClusterMasterExecutor> serviceReference,
+			ClusterMasterExecutor service) {
+		}
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(StartupAction.class);
