@@ -16,8 +16,9 @@ package com.liferay.portal.scheduler.quartz;
 
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.messaging.DefaultMessageBus;
+import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.SynchronousDestination;
@@ -51,6 +52,9 @@ import com.liferay.portal.test.rule.AdviseWith;
 import com.liferay.portal.test.rule.AspectJNewEnvTestRule;
 import com.liferay.portal.util.PropsImpl;
 import com.liferay.portal.uuid.PortalUUIDImpl;
+import com.liferay.registry.BasicRegistryImpl;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,6 +76,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import org.mockito.Matchers;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import org.quartz.Calendar;
 import org.quartz.JobBuilder;
@@ -115,10 +124,66 @@ public class QuartzSchedulerEngineTest {
 
 		PropsUtil.setProps(new PropsImpl());
 
-		MessageBusUtil messageBusUtil = new MessageBusUtil();
+		RegistryUtil.setRegistry(new BasicRegistryImpl());
 
-		messageBusUtil.setMessageBus(new DefaultMessageBus());
-		messageBusUtil.setSynchronousMessageSender(null);
+		Registry registry = RegistryUtil.getRegistry();
+
+		MessageBus messageBus = Mockito.mock(MessageBus.class);
+
+		registry.registerService(MessageBus.class, messageBus);
+
+		Mockito.when(
+			messageBus.getDestination(Matchers.anyString())).then(
+				new Answer<Destination>() {
+					@Override
+					public Destination answer(InvocationOnMock invocationOnMock)
+						throws Throwable {
+
+						String destinationName =
+							(String)invocationOnMock.getArguments()[0];
+
+						if (!_testDestination.getName().equals(
+								destinationName)) {
+
+							throw new IllegalArgumentException(
+								"Invalid destination: " + destinationName);
+						}
+
+						return _testDestination;
+					}
+				});
+
+		Mockito.when(
+			messageBus.registerMessageListener(
+				Matchers.anyString(),
+				Matchers.any(MessageListener.class))).then(
+			new Answer<Boolean>() {
+				@Override
+				public Boolean answer(InvocationOnMock invocationOnMock)
+					throws Throwable {
+
+					_testDestination.register(
+						(MessageListener)invocationOnMock.getArguments()[1]);
+
+					return true;
+				}
+			});
+
+		Mockito.when(
+			messageBus.unregisterMessageListener(
+				Matchers.anyString(),
+				Matchers.any(MessageListener.class))).then(
+			new Answer<Boolean>() {
+				@Override
+				public Boolean answer(InvocationOnMock invocationOnMock)
+					throws Throwable {
+
+					_testDestination.unregister(
+						(MessageListener)invocationOnMock.getArguments()[1]);
+
+					return true;
+				}
+			});
 
 		_testDestination = new SynchronousDestination();
 
