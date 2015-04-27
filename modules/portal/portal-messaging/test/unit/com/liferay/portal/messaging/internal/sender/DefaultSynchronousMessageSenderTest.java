@@ -12,15 +12,10 @@
  * details.
  */
 
-package com.liferay.portal.kernel.messaging.sender;
+package com.liferay.portal.messaging.internal.sender;
 
-import com.liferay.portal.dao.orm.common.EntityCacheImpl;
-import com.liferay.portal.dao.orm.common.FinderCacheImpl;
 import com.liferay.portal.kernel.concurrent.ThreadPoolExecutor;
-import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
-import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.executor.PortalExecutorManager;
-import com.liferay.portal.kernel.messaging.DefaultMessageBus;
 import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
@@ -30,17 +25,11 @@ import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.SerialDestination;
 import com.liferay.portal.kernel.messaging.SynchronousDestination;
-import com.liferay.portal.test.rule.PortalExecutorManagerTestRule;
-import com.liferay.portal.uuid.PortalUUIDImpl;
-import com.liferay.registry.BasicRegistryImpl;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
+import com.liferay.portal.messaging.internal.DefaultMessageBus;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
 
 import org.mockito.Mockito;
@@ -49,11 +38,6 @@ import org.mockito.Mockito;
  * @author Shuyang Zhou
  */
 public class DefaultSynchronousMessageSenderTest {
-
-	@ClassRule
-	@Rule
-	public static final PortalExecutorManagerTestRule aggregateTestRule =
-		PortalExecutorManagerTestRule.INSTANCE;
 
 	@Before
 	public void setUp() {
@@ -71,14 +55,6 @@ public class DefaultSynchronousMessageSenderTest {
 			new DefaultSynchronousMessageSender();
 
 		_defaultSynchronousMessageSender.setMessageBus(_messageBus);
-		_defaultSynchronousMessageSender.setPortalUUID(new PortalUUIDImpl());
-		_defaultSynchronousMessageSender.setTimeout(10000);
-
-		RegistryUtil.setRegistry(new BasicRegistryImpl());
-
-		Registry registry = RegistryUtil.getRegistry();
-
-		registry.registerService(MessageBus.class, _messageBus);
 
 		PortalExecutorManager portalExecutorManager = Mockito.mock(
 			PortalExecutorManager.class);
@@ -87,16 +63,6 @@ public class DefaultSynchronousMessageSenderTest {
 			portalExecutorManager.getPortalExecutor(Mockito.anyString())).
 			thenReturn(new ThreadPoolExecutor(1, 1));
 
-		registry.registerService(
-			PortalExecutorManager.class, portalExecutorManager);
-
-		EntityCacheUtil entityCacheUtil = new EntityCacheUtil();
-
-		entityCacheUtil.setEntityCache(new EntityCacheImpl());
-
-		FinderCacheUtil finderCacheUtil = new FinderCacheUtil();
-
-		finderCacheUtil.setFinderCache(new FinderCacheImpl());
 	}
 
 	@After
