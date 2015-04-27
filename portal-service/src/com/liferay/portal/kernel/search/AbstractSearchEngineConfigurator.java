@@ -389,7 +389,7 @@ public abstract class AbstractSearchEngineConfigurator
 	private static final Log _log = LogFactoryUtil.getLog(
 		AbstractSearchEngineConfigurator.class);
 
-	private MessageBus _messageBus;
+	private volatile MessageBus _messageBus;
 	private String _originalSearchEngineId;
 	private final List<SearchEngineRegistration> _searchEngineRegistrations =
 		new ArrayList<>();

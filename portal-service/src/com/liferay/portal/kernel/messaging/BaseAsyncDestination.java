@@ -346,7 +346,7 @@ public abstract class BaseAsyncDestination extends BaseDestination {
 		}
 	}
 
-	protected PortalExecutorManager portalExecutorManager;
+	protected volatile PortalExecutorManager portalExecutorManager;
 	protected ServiceTracker<PortalExecutorManager, PortalExecutorManager>
 		serviceTracker;
 
