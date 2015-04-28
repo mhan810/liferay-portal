@@ -15,6 +15,11 @@
 package com.liferay.portal.kernel.messaging.sender;
 
 import com.liferay.portal.kernel.messaging.MessageBus;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +30,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultSingleDestinationMessageSenderFactory
 	implements SingleDestinationMessageSenderFactory {
+
+	public void afterPropertiesSet() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(
+			MessageBus.class, new MessageBusServiceTrackerCustomizer());
+
+		_serviceTracker.open();
+	}
+
+	public void destroy() {
+		_serviceTracker.close();
+
+		_serviceTracker = null;
+	}
 
 	@Override
 	public SingleDestinationMessageSender createSingleDestinationMessageSender(
@@ -85,10 +105,6 @@ public class DefaultSingleDestinationMessageSenderFactory
 		return defaultSingleDestinationSynchronousMessageSender;
 	}
 
-	public void setMessageBus(MessageBus messageBus) {
-		_messageBus = messageBus;
-	}
-
 	public void setSynchronousMessageSenders(
 		Map<SynchronousMessageSender.Mode, SynchronousMessageSender>
 			synchronousMessageSenders) {
@@ -103,5 +119,33 @@ public class DefaultSingleDestinationMessageSenderFactory
 		_singleDestinationSynchronousMessageSenders = new ConcurrentHashMap<>();
 	private final Map<SynchronousMessageSender.Mode, SynchronousMessageSender>
 		_synchronousMessageSenders = new HashMap<>();
+
+	private ServiceTracker<MessageBus, MessageBus> _serviceTracker;
+
+	private class MessageBusServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer<MessageBus,MessageBus> {
+
+		@Override
+		public MessageBus addingService(
+			ServiceReference<MessageBus> serviceReference) {
+
+			Registry registry = RegistryUtil.getRegistry();
+			_messageBus = registry.getService(serviceReference);
+
+			return _messageBus;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<MessageBus> serviceReference, MessageBus service) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<MessageBus> serviceReference, MessageBus service) {
+
+			_messageBus = null;
+		}
+	}
 
 }

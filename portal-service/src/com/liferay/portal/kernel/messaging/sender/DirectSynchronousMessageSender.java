@@ -24,6 +24,11 @@ import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.MessageListenerException;
 import com.liferay.portal.kernel.messaging.SynchronousDestination;
 import com.liferay.portal.kernel.nio.intraband.messaging.IntrabandBridgeDestination;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
 
 import java.util.Set;
 
@@ -32,6 +37,21 @@ import java.util.Set;
  */
 public class DirectSynchronousMessageSender
 	implements SynchronousMessageSender {
+
+	public void afterPropertiesSet() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(
+			MessageBus.class, new MessageBusServiceTrackerCustomizer());
+
+		_serviceTracker.open();
+	}
+
+	public void destroy() {
+		_serviceTracker.close();
+
+		_serviceTracker = null;
+	}
 
 	@Override
 	public Object send(String destinationName, Message message)
@@ -83,13 +103,36 @@ public class DirectSynchronousMessageSender
 		return send(destinationName, message);
 	}
 
-	public void setMessageBus(MessageBus messageBus) {
-		_messageBus = messageBus;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		DirectSynchronousMessageSender.class);
 
 	private MessageBus _messageBus;
+	private ServiceTracker<MessageBus, MessageBus> _serviceTracker;
+
+	private class MessageBusServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer<MessageBus,MessageBus> {
+
+		@Override
+		public MessageBus addingService(
+			ServiceReference<MessageBus> serviceReference) {
+
+			Registry registry = RegistryUtil.getRegistry();
+			_messageBus = registry.getService(serviceReference);
+
+			return _messageBus;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<MessageBus> serviceReference, MessageBus service) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<MessageBus> serviceReference, MessageBus service) {
+
+			_messageBus = null;
+		}
+	}
 
 }

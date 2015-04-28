@@ -23,6 +23,11 @@ import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusException;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUID;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
 
 /**
  * @author Michael C. Han
@@ -30,19 +35,19 @@ import com.liferay.portal.kernel.uuid.PortalUUID;
 public class DefaultSynchronousMessageSender
 	implements SynchronousMessageSender {
 
-	public DefaultSynchronousMessageSender() {
+	public void afterPropertiesSet() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(
+			MessageBus.class, new MessageBusServiceTrackerCustomizer());
+
+		_serviceTracker.open();
 	}
 
-	/**
-	 * @deprecated As of 6.1.0
-	 */
-	@Deprecated
-	public DefaultSynchronousMessageSender(
-		MessageBus messageBus, PortalUUID portalUUID, long timeout) {
+	public void destroy() {
+		_serviceTracker.close();
 
-		_messageBus = messageBus;
-		_portalUUID = portalUUID;
-		_timeout = timeout;
+		_serviceTracker = null;
 	}
 
 	@Override
@@ -107,10 +112,6 @@ public class DefaultSynchronousMessageSender
 		return synchronousMessageListener.send();
 	}
 
-	public void setMessageBus(MessageBus messageBus) {
-		_messageBus = messageBus;
-	}
-
 	public void setPortalUUID(PortalUUID portalUUID) {
 		_portalUUID = portalUUID;
 	}
@@ -124,6 +125,33 @@ public class DefaultSynchronousMessageSender
 
 	private MessageBus _messageBus;
 	private PortalUUID _portalUUID;
+	private ServiceTracker<MessageBus, MessageBus> _serviceTracker;
 	private long _timeout;
+
+	private class MessageBusServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer<MessageBus,MessageBus> {
+
+		@Override
+		public MessageBus addingService(
+			ServiceReference<MessageBus> serviceReference) {
+
+			Registry registry = RegistryUtil.getRegistry();
+			_messageBus = registry.getService(serviceReference);
+
+			return _messageBus;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<MessageBus> serviceReference, MessageBus service) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<MessageBus> serviceReference, MessageBus service) {
+
+			_messageBus = null;
+		}
+	}
 
 }
