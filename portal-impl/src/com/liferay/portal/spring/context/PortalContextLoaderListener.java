@@ -30,8 +30,11 @@ import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.deploy.DeployManagerUtil;
 import com.liferay.portal.kernel.deploy.hot.HotDeployUtil;
 import com.liferay.portal.kernel.exception.LoggedExceptionInInitializerError;
+import com.liferay.portal.kernel.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.messaging.MessageBus;
+import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
 import com.liferay.portal.kernel.portlet.PortletBagPool;
 import com.liferay.portal.kernel.process.ClassPathUtil;
 import com.liferay.portal.kernel.servlet.DirectServletRegistryUtil;
@@ -66,6 +69,11 @@ import com.liferay.portal.util.InitUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebAppPool;
 import com.liferay.portlet.PortletContextBagPool;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
 
 import java.beans.PropertyDescriptor;
 
@@ -73,6 +81,7 @@ import java.io.File;
 
 import java.lang.reflect.Field;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -134,9 +143,7 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 			_log.error(e, e);
 		}
 
-		_indexerPostProcessorRegistry.close();
-		_schedulerEntryRegistry.close();
-		_serviceWrapperRegistry.close();
+		_frameworkDependencyVerifier.close();
 
 		try {
 			ModuleFrameworkUtilAdapter.stopRuntime();
@@ -252,6 +259,12 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 			throw new RuntimeException(e);
 		}
 
+		_frameworkDependencyVerifier = new FrameworkDependencyVerifier(
+			MessageBus.class,
+			PortalExecutorManager.class,
+			SingleDestinationMessageSenderFactory.class
+		);
+
 		PortalContextLoaderLifecycleThreadLocal.setInitializing(true);
 
 		try {
@@ -312,10 +325,6 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 
 		clearFilteredPropertyDescriptorsCache(autowireCapableBeanFactory);
 
-		_indexerPostProcessorRegistry = new IndexerPostProcessorRegistry();
-		_schedulerEntryRegistry = new SchedulerEntryRegistry();
-		_serviceWrapperRegistry = new ServiceWrapperRegistry();
-
 		try {
 			ModuleFrameworkUtilAdapter.registerContext(applicationContext);
 
@@ -375,8 +384,97 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 	}
 
 	private ArrayApplicationContext _arrayApplicationContext;
-	private IndexerPostProcessorRegistry _indexerPostProcessorRegistry;
-	private SchedulerEntryRegistry _schedulerEntryRegistry;
-	private ServiceWrapperRegistry _serviceWrapperRegistry;
+	private FrameworkDependencyVerifier _frameworkDependencyVerifier;
+
+	private class FrameworkDependencyServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer {
+
+		public FrameworkDependencyServiceTrackerCustomizer(
+			FrameworkDependencyVerifier frameworkDependencyVerifier) {
+
+			_frameworkDependencyVerifier = frameworkDependencyVerifier;
+		}
+
+		@Override
+		public Object addingService(ServiceReference serviceReference) {
+			Registry registry = RegistryUtil.getRegistry();
+
+			Object service = registry.getService(serviceReference);
+
+			_frameworkDependencyVerifier.dependencyReceived(service.getClass());
+
+			_frameworkDependencyVerifier.verifyDependencies();
+
+			return service;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference serviceReference, Object object) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference serviceReference, Object object) {
+		}
+
+		private final FrameworkDependencyVerifier _frameworkDependencyVerifier;
+
+	}
+
+	private class FrameworkDependencyVerifier {
+
+			public FrameworkDependencyVerifier(Class... serviceClasses) {
+			Registry registry = RegistryUtil.getRegistry();
+
+			for (Class serviceClass : serviceClasses) {
+				_serviceClasses.put(serviceClass, Boolean.FALSE);
+
+				_serviceTrackers.put(
+					serviceClass,
+					registry.trackServices(
+						serviceClass,
+						new FrameworkDependencyServiceTrackerCustomizer(this)));
+			}
+		}
+
+		public void close() {
+			_indexerPostProcessorRegistry.close();
+			_schedulerEntryRegistry.close();
+			_serviceWrapperRegistry.close();
+
+			_serviceClasses.clear();
+
+			for (ServiceTracker serviceTracker : _serviceTrackers.values()) {
+				serviceTracker.close();
+			}
+
+			_serviceTrackers.clear();
+		}
+
+		public void dependencyReceived(Class serviceClass) {
+			_serviceClasses.put(serviceClass, Boolean.TRUE);
+		}
+
+		public void verifyDependencies() {
+			for (Boolean fulfilled : _serviceClasses.values()) {
+				if (!fulfilled) {
+					return;
+				}
+			}
+
+			_indexerPostProcessorRegistry = new IndexerPostProcessorRegistry();
+			_schedulerEntryRegistry = new SchedulerEntryRegistry();
+			_serviceWrapperRegistry = new ServiceWrapperRegistry();
+		}
+
+		private IndexerPostProcessorRegistry _indexerPostProcessorRegistry;
+		private SchedulerEntryRegistry _schedulerEntryRegistry;
+		private final Map<Class, Boolean> _serviceClasses = new HashMap<>();
+		private final Map<Class, ServiceTracker> _serviceTrackers =
+			new HashMap<>();
+		private ServiceWrapperRegistry _serviceWrapperRegistry;
+
+	}
 
 }
