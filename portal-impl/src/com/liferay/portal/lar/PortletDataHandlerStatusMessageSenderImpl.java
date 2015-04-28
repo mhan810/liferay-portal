@@ -22,11 +22,17 @@ import com.liferay.portal.kernel.lar.StagedModelDataHandler;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender;
-import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactoryUtil;
+import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
 import com.liferay.portal.kernel.util.LongWrapper;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.service.PortletLocalServiceUtil;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,11 +44,18 @@ public class PortletDataHandlerStatusMessageSenderImpl
 	implements PortletDataHandlerStatusMessageSender {
 
 	public void afterPropertiesSet() {
-		if (_singleDestinationMessageSender == null) {
-			_singleDestinationMessageSender =
-				SingleDestinationMessageSenderFactoryUtil.
-					createSingleDestinationMessageSender(_destinationName);
-		}
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(
+			SingleDestinationMessageSenderFactory.class,
+			new SingleDestinationMessageSenderFactoryServiceTrackerCustomizer()
+		);
+
+		_serviceTracker.open();
+	}
+
+	public void destroy() {
+		_serviceTracker.close();
 	}
 
 	/**
@@ -174,7 +187,60 @@ public class PortletDataHandlerStatusMessageSenderImpl
 		return message;
 	}
 
+	protected void initializeSingleDestinationSender(
+		SingleDestinationMessageSenderFactory
+			singleDestinationMessageSenderFactory) {
+
+		if ((_singleDestinationMessageSender == null) &&
+			Validator.isNotNull(_destinationName)) {
+
+			_singleDestinationMessageSender =
+				singleDestinationMessageSenderFactory.
+					createSingleDestinationMessageSender(_destinationName);
+		}
+	}
+
 	private String _destinationName;
+	private ServiceTracker<SingleDestinationMessageSenderFactory,
+				SingleDestinationMessageSenderFactory> _serviceTracker;
 	private SingleDestinationMessageSender _singleDestinationMessageSender;
+
+	private class SingleDestinationMessageSenderFactoryServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer<SingleDestinationMessageSenderFactory, SingleDestinationMessageSenderFactory> {
+
+		@Override
+		public SingleDestinationMessageSenderFactory addingService(
+			ServiceReference<SingleDestinationMessageSenderFactory>
+				serviceReference) {
+
+			Registry registry = RegistryUtil.getRegistry();
+
+			SingleDestinationMessageSenderFactory
+				singleDestinationMessageSenderFactory = registry.getService(
+				serviceReference);
+
+			initializeSingleDestinationSender(
+				singleDestinationMessageSenderFactory);
+
+			return singleDestinationMessageSenderFactory;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<SingleDestinationMessageSenderFactory>
+				serviceReference,
+			SingleDestinationMessageSenderFactory
+				singleDestinationMessageSenderFactory) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<SingleDestinationMessageSenderFactory>
+				serviceReference,
+			SingleDestinationMessageSenderFactory
+				singleDestinationMessageSenderFactory) {
+		}
+
+	}
 
 }
