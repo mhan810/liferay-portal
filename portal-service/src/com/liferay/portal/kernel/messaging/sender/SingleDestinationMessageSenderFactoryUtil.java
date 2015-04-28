@@ -39,10 +39,34 @@ public class SingleDestinationMessageSenderFactoryUtil {
 				destinationName, mode);
 	}
 
+	public static int getModeCount() {
+		return _instance.getSingleDestinationMessageSenderFactory().
+			getModesCount();
+	}
+
+	public static SynchronousMessageSender getSynchronousMessageSender(
+		SynchronousMessageSender.Mode mode) {
+
+		return _instance.getSingleDestinationMessageSenderFactory().
+			getSynchronousMessageSender(mode);
+	}
+
 	protected SingleDestinationMessageSenderFactory
 		getSingleDestinationMessageSenderFactory() {
 
-		return _serviceTracker.getService();
+		try {
+			if (_serviceTracker.getService() == null) {
+				Thread.currentThread().sleep(500);
+			}
+
+			return _serviceTracker.getService();
+		}
+		catch (InterruptedException e) {
+			throw new IllegalStateException(
+				"Unable to initialize " +
+					"SingleDestinationMessageSenderFactoryUtil",
+				e);
+		}
 	}
 
 	private SingleDestinationMessageSenderFactoryUtil() {

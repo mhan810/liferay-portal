@@ -23,23 +23,13 @@ import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusException;
 import com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender;
 import com.liferay.portal.kernel.security.SecureRandomUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 
-import java.util.Map;
 import java.util.UUID;
-
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
  */
-@Component(
-	immediate = true, property = { "mode=DEFAULT", "timeout=10000" },
-	service = SynchronousMessageSender.class
-)
 public class DefaultSynchronousMessageSender
 	implements SynchronousMessageSender {
 
@@ -105,9 +95,12 @@ public class DefaultSynchronousMessageSender
 		return synchronousMessageListener.send();
 	}
 
-	@Activate
-	protected void activate(Map<String, Object> properties) {
-		_timeout = GetterUtil.getLong(properties.get("timeout"), 10000);
+	public void setMessageBus(MessageBus messageBus) {
+		_messageBus = messageBus;
+	}
+
+	public void setTimeout(long timeout) {
+		_timeout = timeout;
 	}
 
 	protected String generateUUUID() {
@@ -115,11 +108,6 @@ public class DefaultSynchronousMessageSender
 			SecureRandomUtil.nextLong(), SecureRandomUtil.nextLong());
 
 		return uuid.toString();
-	}
-
-	@Reference(unbind = "-")
-	protected void setMessageBus(MessageBus messageBus) {
-		_messageBus = messageBus;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
