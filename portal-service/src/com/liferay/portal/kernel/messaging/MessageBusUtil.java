@@ -14,17 +14,12 @@
 
 package com.liferay.portal.kernel.messaging;
 
+import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactoryUtil;
 import com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
-import com.liferay.registry.ServiceReference;
 import com.liferay.registry.ServiceTracker;
-import com.liferay.registry.ServiceTrackerCustomizer;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Michael C. Han
@@ -67,7 +62,8 @@ public class MessageBusUtil {
 	public static SynchronousMessageSender getSynchronousMessageSender(
 		SynchronousMessageSender.Mode mode) {
 
-		return _instance._synchronousMessageSenders.get(mode);
+		return SingleDestinationMessageSenderFactoryUtil.
+			getSynchronousMessageSender(mode);
 	}
 
 	public static boolean hasMessageListener(String destination) {
@@ -162,12 +158,6 @@ public class MessageBusUtil {
 		_messageBusServiceTracker = registry.trackServices(MessageBus.class);
 
 		_messageBusServiceTracker.open();
-
-		_synchronousMessageSenderServiceTracker = registry.trackServices(
-			SynchronousMessageSender.class,
-			new SynchronousMessageSenderServiceTrackerCustomizer());
-
-		_synchronousMessageSenderServiceTracker.open();
 	}
 
 	public void setMode(SynchronousMessageSender.Mode mode) {
@@ -183,7 +173,17 @@ public class MessageBusUtil {
 	}
 
 	private MessageBus _getMessageBus() {
-		return _messageBusServiceTracker.getService();
+		try {
+			while (_messageBusServiceTracker.getService() == null) {
+				Thread.currentThread().sleep(500);
+			}
+
+			return _messageBusServiceTracker.getService();
+		}
+		catch (InterruptedException e) {
+			throw new IllegalStateException(
+				"Unable to initialize MessageBusUtil", e);
+		}
 	}
 
 	private boolean _hasMessageListener(String destinationName) {
@@ -218,7 +218,7 @@ public class MessageBusUtil {
 		throws MessageBusException {
 
 		SynchronousMessageSender synchronousMessageSender =
-			_synchronousMessageSenders.get(_mode);
+			getSynchronousMessageSender(_mode);
 
 		if (synchronousMessageSender == null) {
 			throw new MessageBusException(
@@ -233,7 +233,7 @@ public class MessageBusUtil {
 		throws MessageBusException {
 
 		SynchronousMessageSender synchronousMessageSender =
-			_synchronousMessageSenders.get(_mode);
+			getSynchronousMessageSender(_mode);
 
 		if (synchronousMessageSender == null) {
 			throw new MessageBusException(
@@ -293,60 +293,5 @@ public class MessageBusUtil {
 	private final ServiceTracker<MessageBus, MessageBus>
 		_messageBusServiceTracker;
 	private SynchronousMessageSender.Mode _mode;
-	private final Map<SynchronousMessageSender.Mode, SynchronousMessageSender>
-		_synchronousMessageSenders = new HashMap<>();
-	private final ServiceTracker
-		<SynchronousMessageSender, SynchronousMessageSender>
-			_synchronousMessageSenderServiceTracker;
-
-	private class SynchronousMessageSenderServiceTrackerCustomizer
-		implements ServiceTrackerCustomizer
-			<SynchronousMessageSender, SynchronousMessageSender> {
-
-		@Override
-		public SynchronousMessageSender addingService(
-			ServiceReference<SynchronousMessageSender> serviceReference) {
-
-			Map<String, Object> properties = serviceReference.getProperties();
-
-			SynchronousMessageSender.Mode mode = getMode(properties);
-
-			Registry registry = RegistryUtil.getRegistry();
-
-			SynchronousMessageSender synchronousMessageSender =
-				registry.getService(serviceReference);
-
-			_synchronousMessageSenders.put(mode, synchronousMessageSender);
-
-			return synchronousMessageSender;
-		}
-
-		@Override
-		public void modifiedService(
-			ServiceReference<SynchronousMessageSender> serviceReference,
-			SynchronousMessageSender service) {
-		}
-
-		@Override
-		public void removedService(
-			ServiceReference<SynchronousMessageSender> serviceReference,
-			SynchronousMessageSender service) {
-
-			Map<String, Object> properties = serviceReference.getProperties();
-
-			SynchronousMessageSender.Mode mode = getMode(properties);
-
-			_synchronousMessageSenders.remove(mode);
-		}
-
-		protected SynchronousMessageSender.Mode getMode(
-			Map<String, Object> properties) {
-
-			String mode = GetterUtil.getString(properties.get("mode"));
-
-			return SynchronousMessageSender.Mode.valueOf(mode);
-		}
-
-	}
 
 }
