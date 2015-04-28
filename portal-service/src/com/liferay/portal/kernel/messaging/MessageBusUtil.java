@@ -67,7 +67,17 @@ public class MessageBusUtil {
 	public static SynchronousMessageSender getSynchronousMessageSender(
 		SynchronousMessageSender.Mode mode) {
 
-		return _instance._synchronousMessageSenders.get(mode);
+		try {
+			while (_instance._synchronousMessageSenders.isEmpty()) {
+				Thread.currentThread().sleep(500);
+			}
+
+			return _instance._synchronousMessageSenders.get(mode);
+		}
+		catch (InterruptedException e) {
+			throw new IllegalStateException(
+				"Unable to initialize MessageBusUtil", e);
+		}
 	}
 
 	public static boolean hasMessageListener(String destination) {
@@ -183,7 +193,17 @@ public class MessageBusUtil {
 	}
 
 	private MessageBus _getMessageBus() {
-		return _messageBusServiceTracker.getService();
+		try {
+			while (_messageBusServiceTracker.getService() == null) {
+				Thread.currentThread().sleep(500);
+			}
+
+			return _messageBusServiceTracker.getService();
+		}
+		catch (InterruptedException e) {
+			throw new IllegalStateException(
+				"Unable to initialize MessageBusUtil", e);
+		}
 	}
 
 	private boolean _hasMessageListener(String destinationName) {
