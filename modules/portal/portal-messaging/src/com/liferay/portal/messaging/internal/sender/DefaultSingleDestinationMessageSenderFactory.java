@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -35,7 +36,8 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  * @author Michael C. Han
  */
 @Component(
-	immediate = true, service = SingleDestinationMessageSenderFactory.class
+	immediate = true, property = { "timeout=10000" },
+	service = SingleDestinationMessageSenderFactory.class
 )
 public class DefaultSingleDestinationMessageSenderFactory
 	implements SingleDestinationMessageSenderFactory {
@@ -99,6 +101,33 @@ public class DefaultSingleDestinationMessageSenderFactory
 		return defaultSingleDestinationSynchronousMessageSender;
 	}
 
+	@Override
+	public int getModesCount() {
+		return _synchronousMessageSenders.size();
+	}
+
+	@Activate
+	protected void activate(Map<String, Object> properties) {
+		long timeout = GetterUtil.getLong(properties.get("timeout"), 10000);
+
+		DefaultSynchronousMessageSender defaultSynchronousMessageSender =
+			new DefaultSynchronousMessageSender();
+
+		defaultSynchronousMessageSender.setMessageBus(_messageBus);
+		defaultSynchronousMessageSender.setTimeout(timeout);
+
+		_synchronousMessageSenders.put(
+			SynchronousMessageSender.Mode.DEFAULT,
+			defaultSynchronousMessageSender);
+
+		DirectSynchronousMessageSender directSynchronousMessageSender =
+			new DirectSynchronousMessageSender();
+
+		_synchronousMessageSenders.put(
+			SynchronousMessageSender.Mode.DIRECT,
+			directSynchronousMessageSender);
+	}
+
 	protected SynchronousMessageSender.Mode getMode(
 		Map<String, Object> properties) {
 
@@ -113,7 +142,7 @@ public class DefaultSingleDestinationMessageSenderFactory
 	}
 
 	@Reference(
-		cardinality = ReferenceCardinality.MULTIPLE,
+		cardinality = ReferenceCardinality.OPTIONAL,
 		policy = ReferencePolicy.DYNAMIC,
 		policyOption = ReferencePolicyOption.GREEDY
 	)
