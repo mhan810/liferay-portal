@@ -43,7 +43,9 @@ public class SingleDestinationMessageSenderFactoryUtil {
 		getSingleDestinationMessageSenderFactory() {
 
 		try {
-			if (_serviceTracker.getService() == null) {
+			if ((_serviceTracker.getService() == null) ||
+				(_serviceTracker.getService().getModesCount() == 0)){
+
 				Thread.currentThread().sleep(500);
 			}
 
