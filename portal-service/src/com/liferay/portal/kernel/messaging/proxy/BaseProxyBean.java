@@ -16,10 +16,15 @@ package com.liferay.portal.kernel.messaging.proxy;
 
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender;
-import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactoryUtil;
+import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationSynchronousMessageSender;
 import com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
 
 /**
  * @author Micha Kiener
@@ -30,23 +35,18 @@ import com.liferay.portal.kernel.util.Validator;
 public abstract class BaseProxyBean {
 
 	public void afterPropertiesSet() {
-		if ((_singleDestinationSynchronousMessageSender == null) &&
-			Validator.isNotNull(_synchronousDestinationName)) {
+		Registry registry = RegistryUtil.getRegistry();
 
-			_singleDestinationSynchronousMessageSender =
-				SingleDestinationMessageSenderFactoryUtil.
-					createSingleDestinationSynchronousMessageSender(
-						_synchronousDestinationName,
-						_synchronousMessageSenderMode);
-		}
+		_serviceTracker = registry.trackServices(
+			SingleDestinationMessageSenderFactory.class,
+			new SingleDestinationMessageSenderFactoryServiceTrackerCustomizer()
+		);
 
-		if ((_singleDestinationMessageSender == null) &&
-			Validator.isNotNull(_destinationName)) {
+		_serviceTracker.open();
+	}
 
-			_singleDestinationMessageSender =
-				SingleDestinationMessageSenderFactoryUtil.
-					createSingleDestinationMessageSender(_destinationName);
-		}
+	public void destroy() {
+		_serviceTracker.close();
 	}
 
 	public void send(ProxyRequest proxyRequest) {
@@ -123,11 +123,76 @@ public abstract class BaseProxyBean {
 		return message;
 	}
 
+	protected void initializeSingleDestinationSenders(
+		SingleDestinationMessageSenderFactory
+			singleDestinationMessageSenderFactory) {
+
+		if ((_singleDestinationSynchronousMessageSender == null) &&
+			Validator.isNotNull(_synchronousDestinationName)) {
+
+			_singleDestinationSynchronousMessageSender =
+				singleDestinationMessageSenderFactory.
+					createSingleDestinationSynchronousMessageSender(
+						_synchronousDestinationName,
+						_synchronousMessageSenderMode);
+		}
+
+		if ((_singleDestinationMessageSender == null) &&
+			Validator.isNotNull(_destinationName)) {
+
+			_singleDestinationMessageSender =
+				singleDestinationMessageSenderFactory.
+					createSingleDestinationMessageSender(_destinationName);
+		}
+	}
+
 	private String _destinationName;
+	private ServiceTracker
+		<SingleDestinationMessageSenderFactory,
+			SingleDestinationMessageSenderFactory> _serviceTracker;
 	private SingleDestinationMessageSender _singleDestinationMessageSender;
 	private SingleDestinationSynchronousMessageSender
 		_singleDestinationSynchronousMessageSender;
 	private String _synchronousDestinationName;
 	private SynchronousMessageSender.Mode _synchronousMessageSenderMode;
+
+	private class SingleDestinationMessageSenderFactoryServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer
+		<SingleDestinationMessageSenderFactory, SingleDestinationMessageSenderFactory> {
+
+		@Override
+		public SingleDestinationMessageSenderFactory addingService(
+			ServiceReference<SingleDestinationMessageSenderFactory>
+				serviceReference) {
+
+			Registry registry = RegistryUtil.getRegistry();
+
+			SingleDestinationMessageSenderFactory
+				singleDestinationMessageSenderFactory = registry.getService(
+				serviceReference);
+
+			initializeSingleDestinationSenders(
+				singleDestinationMessageSenderFactory);
+
+			return singleDestinationMessageSenderFactory;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<SingleDestinationMessageSenderFactory>
+				serviceReference,
+			SingleDestinationMessageSenderFactory
+				singleDestinationMessageSenderFactory) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<SingleDestinationMessageSenderFactory>
+				serviceReference,
+			SingleDestinationMessageSenderFactory
+				singleDestinationMessageSenderFactory) {
+		}
+
+	}
 
 }
