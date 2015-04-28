@@ -34,8 +34,6 @@ import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.ServiceTracker;
 import com.liferay.registry.ServiceTrackerCustomizer;
 
-import java.util.HashMap;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -82,9 +80,7 @@ public class DefaultSynchronousMessageSenderTest {
 			new DefaultSynchronousMessageSender();
 
 		_defaultSynchronousMessageSender.setMessageBus(_messageBus);
-
-		_defaultSynchronousMessageSender.activate(
-			new HashMap<String, Object>());
+		_defaultSynchronousMessageSender.setTimeout(10000);
 
 		_portalExecutorManager = Mockito.mock(PortalExecutorManager.class);
 
