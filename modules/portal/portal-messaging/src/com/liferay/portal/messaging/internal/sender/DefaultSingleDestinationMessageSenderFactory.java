@@ -15,10 +15,6 @@
 package com.liferay.portal.messaging.internal.sender;
 
 import com.liferay.portal.kernel.messaging.MessageBus;
-import com.liferay.portal.kernel.messaging.sender.DefaultSingleDestinationMessageSender;
-import com.liferay.portal.kernel.messaging.sender.DefaultSingleDestinationSynchronousMessageSender;
-import com.liferay.portal.kernel.messaging.sender.DefaultSynchronousMessageSender;
-import com.liferay.portal.kernel.messaging.sender.DirectSynchronousMessageSender;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationSynchronousMessageSender;
