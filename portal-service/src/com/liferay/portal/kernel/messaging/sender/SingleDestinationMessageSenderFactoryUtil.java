@@ -55,7 +55,7 @@ public class SingleDestinationMessageSenderFactoryUtil {
 		getSingleDestinationMessageSenderFactory() {
 
 		try {
-			if (_serviceTracker.getService() == null) {
+			while (_serviceTracker.getService() == null) {
 				Thread.currentThread().sleep(500);
 			}
 
