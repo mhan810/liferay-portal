@@ -17,14 +17,16 @@ package com.liferay.portal.kernel.search;
 import com.liferay.portal.kernel.concurrent.CallerRunsPolicy;
 import com.liferay.portal.kernel.concurrent.RejectedExecutionHandler;
 import com.liferay.portal.kernel.concurrent.ThreadPoolExecutor;
+import com.liferay.portal.kernel.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Destination;
+import com.liferay.portal.kernel.messaging.DestinationConfig;
+import com.liferay.portal.kernel.messaging.DestinationFactory;
+import com.liferay.portal.kernel.messaging.DestinationFactoryUtil;
 import com.liferay.portal.kernel.messaging.InvokerMessageListener;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageListener;
-import com.liferay.portal.kernel.messaging.ParallelDestination;
-import com.liferay.portal.kernel.messaging.SynchronousDestination;
 import com.liferay.portal.kernel.search.messaging.BaseSearchEngineMessageListener;
 import com.liferay.portal.kernel.search.messaging.SearchReaderMessageListener;
 import com.liferay.portal.kernel.search.messaging.SearchWriterMessageListener;
@@ -33,11 +35,11 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.registry.Filter;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
-import com.liferay.registry.ServiceReference;
-import com.liferay.registry.ServiceTracker;
-import com.liferay.registry.ServiceTrackerCustomizer;
+import com.liferay.registry.dependency.ServiceDependencyListener;
+import com.liferay.registry.dependency.ServiceDependencyManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,12 +55,34 @@ public abstract class AbstractSearchEngineConfigurator
 
 	@Override
 	public void afterPropertiesSet() {
-		Registry registry = RegistryUtil.getRegistry();
+		final ServiceDependencyManager serviceDependencyManager =
+			new ServiceDependencyManager();
 
-		_serviceTracker = registry.trackServices(
-			MessageBus.class, new MessageBusServiceTrackerCustomizer());
+		serviceDependencyManager.addServiceDependencyListener(
 
-		_serviceTracker.open();
+			new ServiceDependencyListener() {
+
+				@Override
+				public void dependenciesFulfilled() {
+					Registry registry = RegistryUtil.getRegistry();
+
+					_messageBus = registry.getService(MessageBus.class);
+
+					initialize();
+
+					serviceDependencyManager.destroy();
+				}
+
+				@Override
+				public void destroy() {
+				}
+			}
+
+		);
+
+		serviceDependencyManager.registerDependencies(
+			DestinationFactory.class, MessageBus.class,
+			PortalExecutorManager.class);
 	}
 
 	@Override
@@ -76,8 +100,6 @@ public abstract class AbstractSearchEngineConfigurator
 
 			_originalSearchEngineId = null;
 		}
-
-		_serviceTracker.close();
 	}
 
 	@Override
@@ -102,23 +124,20 @@ public abstract class AbstractSearchEngineConfigurator
 	protected Destination createSearchReaderDestination(
 		String searchReaderDestinationName) {
 
-		SynchronousDestination synchronousDestination =
-			new SynchronousDestination();
+		DestinationConfig destinationConfig = new DestinationConfig(
+			"synchronous", searchReaderDestinationName);
 
-		synchronousDestination.setName(searchReaderDestinationName);
-
-		return synchronousDestination;
+		return DestinationFactoryUtil.createDestination(destinationConfig);
 	}
 
 	protected Destination createSearchWriterDestination(
 		String searchWriterDestinationName) {
 
-		ParallelDestination parallelDestination = new ParallelDestination();
-
-		parallelDestination.setName(searchWriterDestinationName);
+		DestinationConfig destinationConfig = new DestinationConfig(
+			"parallel", searchWriterDestinationName);
 
 		if (_INDEX_SEARCH_WRITER_MAX_QUEUE_SIZE > 0) {
-			parallelDestination.setMaximumQueueSize(
+			destinationConfig.setMaximumQueueSize(
 				_INDEX_SEARCH_WRITER_MAX_QUEUE_SIZE);
 
 			RejectedExecutionHandler rejectedExecutionHandler =
@@ -145,11 +164,11 @@ public abstract class AbstractSearchEngineConfigurator
 
 				};
 
-			parallelDestination.setRejectedExecutionHandler(
+			destinationConfig.setRejectedExecutionHandler(
 				rejectedExecutionHandler);
 		}
 
-		return parallelDestination;
+		return DestinationFactoryUtil.createDestination(destinationConfig);
 	}
 
 	protected void destroySearchEngine(
@@ -200,6 +219,14 @@ public abstract class AbstractSearchEngineConfigurator
 	}
 
 	protected abstract String getDefaultSearchEngineId();
+
+	protected Filter getDestinationPrototypeFilterType(
+		Registry registry, String type) {
+
+		return registry.getFilter(
+				"(&(type=" + type + ")(objectClass=" +
+					"com.liferay.portal.messaging.DestinationPrototype))");
+	}
 
 	protected abstract IndexSearcher getIndexSearcher();
 
@@ -394,39 +421,6 @@ public abstract class AbstractSearchEngineConfigurator
 	private final List<SearchEngineRegistration> _searchEngineRegistrations =
 		new ArrayList<>();
 	private Map<String, SearchEngine> _searchEngines;
-	private ServiceTracker<MessageBus, MessageBus> _serviceTracker;
-
-	private class MessageBusServiceTrackerCustomizer
-		implements ServiceTrackerCustomizer<MessageBus, MessageBus> {
-
-		@Override
-		public MessageBus addingService(
-			ServiceReference<MessageBus> serviceReference) {
-
-			Registry registry = RegistryUtil.getRegistry();
-
-			_messageBus = registry.getService(serviceReference);
-
-			initialize();
-
-			return _messageBus;
-		}
-
-		@Override
-		public void modifiedService(
-			ServiceReference<MessageBus> serviceReference,
-			MessageBus messageBus) {
-		}
-
-		@Override
-		public void removedService(
-			ServiceReference<MessageBus> serviceReference,
-			MessageBus messageBus) {
-
-			_messageBus = null;
-		}
-
-	}
 
 	private class SearchEngineRegistration {
 
