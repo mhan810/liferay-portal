@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.messaging.sender;
+package com.liferay.portal.messaging.internal.sender;
 
 import com.liferay.portal.dao.orm.common.EntityCacheImpl;
 import com.liferay.portal.dao.orm.common.FinderCacheImpl;
