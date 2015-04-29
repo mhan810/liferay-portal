@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.messaging;
 
+import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactoryUtil;
 import com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.registry.Registry;
@@ -159,10 +160,10 @@ public class MessageBusUtil {
 		_serviceTracker.open();
 	}
 
-	public void setSynchronousMessageSender(
-		SynchronousMessageSender synchronousMessageSender) {
+	public void setSynchronousMessageSenderMode(
+		SynchronousMessageSender.Mode synchronousMessageSenderMode) {
 
-		_synchronousMessageSender = synchronousMessageSender;
+		_synchronousMessageSenderMode = synchronousMessageSenderMode;
 	}
 
 	private void _addDestination(Destination destination) {
@@ -218,15 +219,22 @@ public class MessageBusUtil {
 			String destinationName, Message message)
 		throws MessageBusException {
 
-		return _synchronousMessageSender.send(destinationName, message);
+		SynchronousMessageSender synchronousMessageSender =
+			SingleDestinationMessageSenderFactoryUtil.
+				getSynchronousMessageSender(_synchronousMessageSenderMode);
+
+		return synchronousMessageSender.send(destinationName, message);
 	}
 
 	private Object _sendSynchronousMessage(
 			String destinationName, Message message, long timeout)
 		throws MessageBusException {
 
-		return _synchronousMessageSender.send(
-			destinationName, message, timeout);
+		SynchronousMessageSender synchronousMessageSender =
+			SingleDestinationMessageSenderFactoryUtil.
+				getSynchronousMessageSender(_synchronousMessageSenderMode);
+
+		return synchronousMessageSender.send(destinationName, message, timeout);
 	}
 
 	private Object _sendSynchronousMessage(
@@ -276,7 +284,7 @@ public class MessageBusUtil {
 
 	private static final MessageBusUtil _instance = new MessageBusUtil();
 
-	private static SynchronousMessageSender _synchronousMessageSender;
+	private static SynchronousMessageSender.Mode _synchronousMessageSenderMode;
 
 	private final ServiceTracker<MessageBus, MessageBus> _serviceTracker;
 
