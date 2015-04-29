@@ -15,6 +15,7 @@
 package com.liferay.portal.kernel.messaging.sender;
 
 import com.liferay.portal.kernel.messaging.MessageBus;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +26,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultSingleDestinationMessageSenderFactory
 	implements SingleDestinationMessageSenderFactory {
+
+	public void afterPropertiesSet() {
+		_messageBus = MessageBusUtil.getMessageBus();
+	}
 
 	@Override
 	public SingleDestinationMessageSender createSingleDestinationMessageSender(
@@ -83,10 +88,6 @@ public class DefaultSingleDestinationMessageSenderFactory
 		}
 
 		return defaultSingleDestinationSynchronousMessageSender;
-	}
-
-	public void setMessageBus(MessageBus messageBus) {
-		_messageBus = messageBus;
 	}
 
 	public void setSynchronousMessageSenders(
