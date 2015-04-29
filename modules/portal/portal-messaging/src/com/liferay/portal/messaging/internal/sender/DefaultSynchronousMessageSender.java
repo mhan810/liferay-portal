@@ -22,8 +22,10 @@ import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusException;
 import com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender;
+import com.liferay.portal.kernel.security.SecureRandomUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.uuid.PortalUUID;
+
+import java.util.UUID;
 
 /**
  * @author Michael C. Han
@@ -83,7 +85,7 @@ public class DefaultSynchronousMessageSender
 				DestinationNames.MESSAGE_BUS_DEFAULT_RESPONSE);
 		}
 
-		String responseId = _portalUUID.generate();
+		String responseId = generateUUID();
 
 		message.setResponseId(responseId);
 
@@ -97,19 +99,21 @@ public class DefaultSynchronousMessageSender
 		_messageBus = messageBus;
 	}
 
-	public void setPortalUUID(PortalUUID portalUUID) {
-		_portalUUID = portalUUID;
-	}
-
 	public void setTimeout(long timeout) {
 		_timeout = timeout;
+	}
+
+	protected String generateUUID() {
+		UUID uuid = new UUID(
+			SecureRandomUtil.nextLong(), SecureRandomUtil.nextLong());
+
+		return uuid.toString();
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultSynchronousMessageSender.class);
 
 	private MessageBus _messageBus;
-	private PortalUUID _portalUUID;
 	private long _timeout;
 
 }
