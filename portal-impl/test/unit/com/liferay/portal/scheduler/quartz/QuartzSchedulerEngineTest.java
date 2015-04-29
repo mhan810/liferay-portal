@@ -134,24 +134,24 @@ public class QuartzSchedulerEngineTest {
 
 		Mockito.when(
 			messageBus.getDestination(Matchers.anyString())).then(
-				new Answer<Destination>() {
-					@Override
-					public Destination answer(InvocationOnMock invocationOnMock)
-						throws Throwable {
+			new Answer<Destination>() {
+				@Override
+				public Destination answer(InvocationOnMock invocationOnMock)
+					throws Throwable {
 
-						String destinationName =
-							(String)invocationOnMock.getArguments()[0];
+					String destinationName =
+						(String) invocationOnMock.getArguments()[0];
 
-						if (!_testDestination.getName().equals(
-								destinationName)) {
+					if (!_testDestination.getName().equals(
+						destinationName)) {
 
-							throw new IllegalArgumentException(
-								"Invalid destination: " + destinationName);
-						}
-
-						return _testDestination;
+						throw new IllegalArgumentException(
+							"Invalid destination: " + destinationName);
 					}
-				});
+
+					return _testDestination;
+				}
+			});
 
 		Mockito.when(
 			messageBus.registerMessageListener(
@@ -163,7 +163,7 @@ public class QuartzSchedulerEngineTest {
 					throws Throwable {
 
 					_testDestination.register(
-						(MessageListener)invocationOnMock.getArguments()[1]);
+						(MessageListener) invocationOnMock.getArguments()[1]);
 
 					return true;
 				}
@@ -179,7 +179,7 @@ public class QuartzSchedulerEngineTest {
 					throws Throwable {
 
 					_testDestination.unregister(
-						(MessageListener)invocationOnMock.getArguments()[1]);
+						(MessageListener) invocationOnMock.getArguments()[1]);
 
 					return true;
 				}
