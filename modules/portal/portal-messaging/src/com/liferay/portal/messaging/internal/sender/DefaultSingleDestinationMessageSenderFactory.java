@@ -15,27 +15,36 @@
 package com.liferay.portal.messaging.internal.sender;
 
 import com.liferay.portal.kernel.messaging.MessageBus;
-import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.messaging.sender.DefaultSingleDestinationMessageSender;
 import com.liferay.portal.kernel.messaging.sender.DefaultSingleDestinationSynchronousMessageSender;
+import com.liferay.portal.kernel.messaging.sender.DefaultSynchronousMessageSender;
+import com.liferay.portal.kernel.messaging.sender.DirectSynchronousMessageSender;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationSynchronousMessageSender;
 import com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender;
+import com.liferay.portal.kernel.util.GetterUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
+
 /**
  * @author Michael C. Han
  */
+@Component(
+	immediate = true, property = { "timeout=10000" },
+	service = SingleDestinationMessageSenderFactory.class
+)
 public class DefaultSingleDestinationMessageSenderFactory
 	implements SingleDestinationMessageSenderFactory {
-
-	public void afterPropertiesSet() {
-		_messageBus = MessageBusUtil.getMessageBus();
-	}
 
 	@Override
 	public SingleDestinationMessageSender createSingleDestinationMessageSender(
@@ -96,11 +105,73 @@ public class DefaultSingleDestinationMessageSenderFactory
 		return defaultSingleDestinationSynchronousMessageSender;
 	}
 
-	public void setSynchronousMessageSenders(
-		Map<SynchronousMessageSender.Mode, SynchronousMessageSender>
-			synchronousMessageSenders) {
+	@Override
+	public int getModesCount() {
+		return _synchronousMessageSenders.size();
+	}
 
-		_synchronousMessageSenders.putAll(synchronousMessageSenders);
+	@Override
+	public SynchronousMessageSender getSynchronousMessageSender(
+		SynchronousMessageSender.Mode mode) {
+
+		return _synchronousMessageSenders.get(mode);
+	}
+
+	@Activate
+	protected void activate(Map<String, Object> properties) {
+		long timeout = GetterUtil.getLong(properties.get("timeout"), 10000);
+
+		DefaultSynchronousMessageSender defaultSynchronousMessageSender =
+			new DefaultSynchronousMessageSender();
+
+		defaultSynchronousMessageSender.setMessageBus(_messageBus);
+		defaultSynchronousMessageSender.setTimeout(timeout);
+
+		_synchronousMessageSenders.put(
+			SynchronousMessageSender.Mode.DEFAULT,
+			defaultSynchronousMessageSender);
+
+		DirectSynchronousMessageSender directSynchronousMessageSender =
+			new DirectSynchronousMessageSender();
+
+		directSynchronousMessageSender.setMessageBus(_messageBus);
+
+		_synchronousMessageSenders.put(
+			SynchronousMessageSender.Mode.DIRECT,
+			directSynchronousMessageSender);
+	}
+
+	protected SynchronousMessageSender.Mode getMode(
+		Map<String, Object> properties) {
+
+		String mode = GetterUtil.getString(properties.get("mode"));
+
+		return SynchronousMessageSender.Mode.valueOf(mode);
+	}
+
+	@Reference(unbind = "-")
+	protected void setMessageBus(MessageBus messageBus) {
+		_messageBus = messageBus;
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected void setSynchronousMessageSender(
+		SynchronousMessageSender synchronousMessageSender,
+		Map<String, Object> properties) {
+
+		_synchronousMessageSenders.put(
+			getMode(properties), synchronousMessageSender);
+	}
+
+	protected void unsetSynchronousMessageSender(
+		SynchronousMessageSender synchronousMessageSender,
+		Map<String, Object> properties) {
+
+		_synchronousMessageSenders.remove(getMode(properties));
 	}
 
 	private MessageBus _messageBus;
