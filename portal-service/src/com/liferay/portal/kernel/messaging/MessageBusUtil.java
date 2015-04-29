@@ -16,6 +16,7 @@ package com.liferay.portal.kernel.messaging;
 
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactoryUtil;
 import com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender;
+import com.liferay.portal.kernel.security.pacl.permission.PortalMessageBusPermission;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
@@ -148,6 +149,8 @@ public class MessageBusUtil {
 	public static boolean unregisterMessageListener(
 		String destinationName, MessageListener messageListener) {
 
+		PortalMessageBusPermission.checkListen(destinationName);
+
 		return getInstance()._unregisterMessageListener(
 			destinationName, messageListener);
 	}
@@ -195,6 +198,8 @@ public class MessageBusUtil {
 	private void _registerMessageListener(
 		String destinationName, MessageListener messageListener) {
 
+		PortalMessageBusPermission.checkListen(destinationName);
+
 		_getMessageBus().registerMessageListener(
 			destinationName, messageListener);
 	}
@@ -204,10 +209,14 @@ public class MessageBusUtil {
 	}
 
 	private void _sendMessage(String destinationName, Message message) {
+		PortalMessageBusPermission.checkSend(destinationName);
+
 		_getMessageBus().sendMessage(destinationName, message);
 	}
 
 	private void _sendMessage(String destinationName, Object payload) {
+		PortalMessageBusPermission.checkSend(destinationName);
+
 		Message message = new Message();
 
 		message.setPayload(payload);
@@ -219,6 +228,8 @@ public class MessageBusUtil {
 			String destinationName, Message message)
 		throws MessageBusException {
 
+		PortalMessageBusPermission.checkSend(destinationName);
+
 		SynchronousMessageSender synchronousMessageSender =
 			SingleDestinationMessageSenderFactoryUtil.
 				getSynchronousMessageSender(_synchronousMessageSenderMode);
@@ -229,6 +240,8 @@ public class MessageBusUtil {
 	private Object _sendSynchronousMessage(
 			String destinationName, Message message, long timeout)
 		throws MessageBusException {
+
+		PortalMessageBusPermission.checkSend(destinationName);
 
 		SynchronousMessageSender synchronousMessageSender =
 			SingleDestinationMessageSenderFactoryUtil.
@@ -242,6 +255,8 @@ public class MessageBusUtil {
 			String responseDestinationName)
 		throws MessageBusException {
 
+		PortalMessageBusPermission.checkSend(destinationName);
+
 		Message message = new Message();
 
 		message.setResponseDestinationName(responseDestinationName);
@@ -254,6 +269,8 @@ public class MessageBusUtil {
 			String destinationName, Object payload,
 			String responseDestinationName, long timeout)
 		throws MessageBusException {
+
+		PortalMessageBusPermission.checkSend(destinationName);
 
 		Message message = new Message();
 
