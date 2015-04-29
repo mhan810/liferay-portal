@@ -146,11 +146,6 @@ public class ServiceTestUtil {
 
 		MessageBusUtil messageBusUtil = new MessageBusUtil();
 
-		MessageBus messageBus = (MessageBus)PortalBeanLocatorUtil.locate(
-			MessageBus.class.getName());
-
-		messageBusUtil.setMessageBus(messageBus);
-
 		SynchronousMessageSender synchronousMessageSender =
 			(SynchronousMessageSender)PortalBeanLocatorUtil.locate(
 				SynchronousMessageSender.class.getName());
