@@ -134,7 +134,9 @@ public class QuartzSchedulerEngineTest {
 
 		Mockito.when(
 			messageBus.getDestination(Matchers.anyString())).then(
+
 				new Answer<Destination>() {
+
 					@Override
 					public Destination answer(InvocationOnMock invocationOnMock)
 						throws Throwable {
