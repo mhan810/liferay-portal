@@ -17,30 +17,8 @@
 
 	<!-- Destinations -->
 
-	<bean id="destination.global" class="com.liferay.portal.kernel.messaging.ParallelDestination">
-		<property name="name" value="liferay/global" />
-	</bean>
 	<bean id="destination.message_bus_default_response" class="com.liferay.portal.kernel.messaging.SynchronousDestination">
 		<property name="name" value="liferay/message_bus/default_response" />
-	</bean>
-	<bean id="destination.message_bus_message_status" class="com.liferay.portal.kernel.messaging.ParallelDestination">
-		<property name="name" value="liferay/message_bus/message_status" />
-	</bean>
-
-	<!-- Senders -->
-
-	<bean id="messageSender.service_request_status" class="com.liferay.portal.kernel.messaging.sender.DefaultSingleDestinationMessageSender">
-		<property name="destinationName" value="liferay/message_bus/message_status" />
-	</bean>
-
-	<!-- Listeners -->
-
-	<bean id="messageListener.global" class="com.liferay.portal.kernel.messaging.BridgingMessageListener">
-		<property name="singleDestinationMessageSender">
-			<bean class="com.liferay.portal.kernel.messaging.sender.DefaultSingleDestinationMessageSender">
-				<property name="destinationName" value="liferay/global" />
-			</bean>
-		</property>
 	</bean>
 
 	<!-- Configurator -->
@@ -48,9 +26,7 @@
 	<bean id="messagingConfigurator.core" class="com.liferay.portal.kernel.messaging.config.DefaultMessagingConfigurator">
 		<property name="destinations">
 			<list>
-				<!--<ref bean="destination.global" />-->
 				<ref bean="destination.message_bus_default_response" />
-				<ref bean="destination.message_bus_message_status" />
 			</list>
 		</property>
 	</bean>
