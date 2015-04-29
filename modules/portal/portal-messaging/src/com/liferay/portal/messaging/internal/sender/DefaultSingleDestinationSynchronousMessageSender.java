@@ -12,31 +12,18 @@
  * details.
  */
 
-package com.liferay.portal.kernel.messaging.sender;
+package com.liferay.portal.messaging.internal.sender;
 
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusException;
+import com.liferay.portal.kernel.messaging.sender.SingleDestinationSynchronousMessageSender;
+import com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender;
 
 /**
  * @author Michael C. Han
  */
 public class DefaultSingleDestinationSynchronousMessageSender
 	implements SingleDestinationSynchronousMessageSender {
-
-	public DefaultSingleDestinationSynchronousMessageSender() {
-	}
-
-	/**
-	 * @deprecated As of 6.1.0
-	 */
-	@Deprecated
-	public DefaultSingleDestinationSynchronousMessageSender(
-		String destinationName,
-		SynchronousMessageSender synchronousMessageSender) {
-
-		_destinationName = destinationName;
-		_synchronousMessageSender = synchronousMessageSender;
-	}
 
 	@Override
 	public Object send(Message message) throws MessageBusException {

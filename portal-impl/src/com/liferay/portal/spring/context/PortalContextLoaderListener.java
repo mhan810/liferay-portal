@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
 import com.liferay.portal.kernel.portlet.PortletBagPool;
 import com.liferay.portal.kernel.process.ClassPathUtil;
+import com.liferay.portal.kernel.scheduler.SchedulerEngineHelperUtil;
 import com.liferay.portal.kernel.servlet.DirectServletRegistryUtil;
 import com.liferay.portal.kernel.servlet.SerializableSessionAttributeListener;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
@@ -138,8 +139,6 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 		catch (Exception e) {
 			_log.error(e, e);
 		}
-
-		_serviceDependecyManager.destroy();
 
 		try {
 			ModuleFrameworkUtilAdapter.stopRuntime();
@@ -255,17 +254,26 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 			throw new RuntimeException(e);
 		}
 
-		_serviceDependecyManager = new ServiceDependencyManager();
+		ServiceDependencyManager serviceDependecyManager =
+			new ServiceDependencyManager();
 
-		_serviceDependecyManager.addServiceDependencyListener(
+		serviceDependecyManager.addServiceDependencyListener(
 
 			new ServiceDependencyListener() {
 
 				@Override
 				public void destroy() {
-					_indexerPostProcessorRegistry.close();
-					_schedulerEntryRegistry.close();
-					_serviceWrapperRegistry.close();
+					if (_indexerPostProcessorRegistry != null) {
+						_indexerPostProcessorRegistry.close();
+					}
+
+					if (_schedulerEntryRegistry != null) {
+						_schedulerEntryRegistry.close();
+					}
+
+					if (_serviceWrapperRegistry!= null) {
+						_serviceWrapperRegistry.close();
+					}
 				}
 
 				@Override
@@ -283,8 +291,9 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 
 			});
 
-		_serviceDependecyManager.registerDependencies(
+		serviceDependecyManager.registerDependencies(
 			MessageBus.class, PortalExecutorManager.class,
+			SchedulerEngineHelperUtil.class,
 			SingleDestinationMessageSenderFactory.class);
 
 		PortalContextLoaderLifecycleThreadLocal.setInitializing(true);
@@ -406,6 +415,5 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 	}
 
 	private ArrayApplicationContext _arrayApplicationContext;
-	private ServiceDependencyManager _serviceDependecyManager;
 
 }

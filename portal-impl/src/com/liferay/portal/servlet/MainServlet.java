@@ -30,6 +30,8 @@ import com.liferay.portal.kernel.plugin.PluginPackage;
 import com.liferay.portal.kernel.servlet.DynamicServletRequest;
 import com.liferay.portal.kernel.servlet.PortalSessionThreadLocal;
 import com.liferay.portal.kernel.servlet.ProtectedServletRequest;
+import com.liferay.portal.kernel.template.TemplateConstants;
+import com.liferay.portal.kernel.template.TemplateManager;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
@@ -94,9 +96,12 @@ import com.liferay.portlet.PortletFilterFactory;
 import com.liferay.portlet.PortletInstanceFactoryUtil;
 import com.liferay.portlet.PortletURLListenerFactory;
 import com.liferay.portlet.social.util.SocialConfigurationUtil;
+import com.liferay.registry.Filter;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.ServiceRegistration;
+import com.liferay.registry.dependency.ServiceDependencyListener;
+import com.liferay.registry.dependency.ServiceDependencyManager;
 import com.liferay.util.ContentUtil;
 import com.liferay.util.servlet.EncryptedServletRequest;
 
@@ -257,12 +262,25 @@ public class MainServlet extends ActionServlet {
 			_log.debug("Initialize layout templates");
 		}
 
-		try {
-			initLayoutTemplates(pluginPackage, portlets);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-		}
+		ServiceDependencyManager layoutTemplateServiceDependencyManager =
+			new ServiceDependencyManager();
+
+		layoutTemplateServiceDependencyManager.addServiceDependencyListener(
+			new LayoutTemplateServiceDependencyListener(
+				pluginPackage, portlets));
+
+		Registry registry = RegistryUtil.getRegistry();
+
+		Filter freeMarkerFilter = registry.getFilter(
+			"(&(language.type=" + TemplateConstants.LANG_TYPE_FTL +
+				")(objectClass=" + TemplateManager.class.getName() + "))");
+
+		Filter velocityFilter = registry.getFilter(
+			"(&(language.type=" + TemplateConstants.LANG_TYPE_VM +
+				")(objectClass=" + TemplateManager.class.getName() + "))");
+
+		layoutTemplateServiceDependencyManager.registerDependencies(
+			freeMarkerFilter, velocityFilter);
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Initialize social");
@@ -334,12 +352,34 @@ public class MainServlet extends ActionServlet {
 			_log.debug("Initialize companies");
 		}
 
-		try {
-			initCompanies();
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-		}
+		ServiceDependencyManager companiesInitServiceDependencyManager =
+			new ServiceDependencyManager();
+
+		companiesInitServiceDependencyManager.addServiceDependencyListener(
+
+			new ServiceDependencyListener() {
+
+				@Override
+				public void dependenciesFulfilled() {
+					try {
+						initCompanies();
+					}
+					catch (Exception e) {
+						_log.error(e, e);
+					}
+				}
+
+				@Override
+				public void destroy() {
+				}
+
+			});
+
+		Filter systemEngineFilter = registry.getFilter(
+			"(search.engine.id=SYSTEM_ENGINE)");
+
+		layoutTemplateServiceDependencyManager.registerDependencies(
+			systemEngineFilter);
 
 		if (StartupHelperUtil.isDBNew() &&
 			PropsValues.SETUP_WIZARD_ADD_SAMPLE_DATA) {
@@ -1357,5 +1397,34 @@ public class MainServlet extends ActionServlet {
 	private static final Log _log = LogFactoryUtil.getLog(MainServlet.class);
 
 	private ServiceRegistration<ServletContext> _servletContextRegistration;
+
+	private class LayoutTemplateServiceDependencyListener
+		implements ServiceDependencyListener {
+
+		public LayoutTemplateServiceDependencyListener(
+			PluginPackage pluginPackage, List<Portlet> portlets) {
+
+			_pluginPackage = pluginPackage;
+			_portlets = portlets;
+		}
+
+		@Override
+		public void dependenciesFulfilled() {
+			try {
+				initLayoutTemplates(_pluginPackage, _portlets);
+			}
+			catch (Exception e) {
+				_log.error(e, e);
+			}
+		}
+
+		@Override
+		public void destroy() {
+		}
+
+		private final PluginPackage _pluginPackage;
+		private final List<Portlet> _portlets;
+
+	}
 
 }

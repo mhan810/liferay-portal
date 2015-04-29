@@ -15,12 +15,14 @@
 package com.liferay.portal.kernel.messaging.config;
 
 import com.liferay.portal.kernel.messaging.Destination;
+import com.liferay.portal.kernel.messaging.DestinationConfig;
 import com.liferay.portal.kernel.messaging.DestinationEventListener;
 import com.liferay.portal.kernel.messaging.MessageBusEventListener;
 import com.liferay.portal.kernel.messaging.MessageListener;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Michael C. Han
@@ -33,9 +35,16 @@ public interface MessagingConfigurator {
 
 	public void disconnect();
 
+	public void setDestinationConfig(Set<DestinationConfig> destinationConfigs);
+
 	public void setDestinationEventListeners(
 		Map<String, List<DestinationEventListener>> destinationEventListeners);
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #setDestinationConfig(Set)}
+	 * @param destinations
+	 */
+	@Deprecated
 	public void setDestinations(List<Destination> destinations);
 
 	public void setMessageBusEventListeners(

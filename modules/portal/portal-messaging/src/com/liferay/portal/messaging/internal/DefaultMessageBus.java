@@ -12,24 +12,51 @@
  * details.
  */
 
-package com.liferay.portal.kernel.messaging;
+package com.liferay.portal.messaging.internal;
 
 import com.liferay.portal.kernel.concurrent.ConcurrentHashSet;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.messaging.Destination;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBus;
+import com.liferay.portal.kernel.messaging.MessageBusEventListener;
+import com.liferay.portal.kernel.messaging.MessageListener;
+import com.liferay.portal.kernel.util.MapUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
+
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = MessageBus.class)
 public class DefaultMessageBus implements MessageBus {
 
 	@Override
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
 	public synchronized void addDestination(Destination destination) {
+		if (_destinations.containsKey(destination.getName())) {
+			if (_log.isInfoEnabled()) {
+				_log.info(
+					"Overwriting existing destination: " +
+						destination.getName());
+			}
+		}
+
 		_destinations.put(destination.getName(), destination);
 
 		for (MessageBusEventListener messageBusEventListener :
@@ -175,6 +202,58 @@ public class DefaultMessageBus implements MessageBus {
 		}
 
 		return destination.unregister(messageListener);
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		shutdown(true);
+
+		_messageBusEventListeners.clear();
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected void registerMessageBusEventListener(
+		MessageBusEventListener messageBusEventListener) {
+
+		addMessageBusEventListener(messageBusEventListener);
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(destination.name=*)"
+	)
+	protected void registerMessageListener(
+		MessageListener messageListener, Map<String, Object> properties) {
+
+		String destinationName = MapUtil.getString(
+			properties, "destination.name");
+
+		registerMessageListener(destinationName, messageListener);
+	}
+
+	protected synchronized void removeDestination(Destination destination) {
+		removeDestination(destination.getName());
+	}
+
+	protected void unregisterMessageBusEventListener(
+		MessageBusEventListener messageBusEventListener) {
+
+		removeMessageBusEventListener(messageBusEventListener);
+	}
+
+	protected void unregisterMessageListener(
+		MessageListener messageListener, Map<String, Object> properties) {
+
+		String destinationName = MapUtil.getString(
+			properties, "destination.name");
+
+		unregisterMessageListener(destinationName, messageListener);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
