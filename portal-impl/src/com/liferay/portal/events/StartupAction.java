@@ -17,7 +17,6 @@ package com.liferay.portal.events;
 import com.liferay.portal.cache.bootstrap.ClusterLinkBootstrapLoaderHelperUtil;
 import com.liferay.portal.fabric.server.FabricServerUtil;
 import com.liferay.portal.jericho.CachedLoggerProvider;
-import com.liferay.portal.kernel.cluster.ClusterExecutor;
 import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.SimpleAction;
@@ -47,6 +46,9 @@ import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.messageboards.util.MBMessageIndexer;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
 import com.liferay.registry.dependency.ServiceDependencyListener;
 import com.liferay.registry.dependency.ServiceDependencyManager;
 import com.liferay.taglib.servlet.JspFactorySwapper;
@@ -154,33 +156,44 @@ public class StartupAction extends SimpleAction {
 
 		// Background tasks
 
-		ServiceDependencyManager backgroundTaskServiceDependencyManager =
-			new ServiceDependencyManager();
+		Registry registry = RegistryUtil.getRegistry();
+		ServiceTracker serviceTracker = registry.trackServices(
+			ClusterMasterExecutor.class,
 
-		backgroundTaskServiceDependencyManager.registerDependencies(
-			ClusterExecutor.class, ClusterMasterExecutor.class);
-
-		backgroundTaskServiceDependencyManager.addServiceDependencyListener(
-
-			new ServiceDependencyListener() {
+			new ServiceTrackerCustomizer
+				<ClusterMasterExecutor, ClusterMasterExecutor>() {
 
 				@Override
-				public void dependenciesFulfilled() {
+				public ClusterMasterExecutor addingService(
+					ServiceReference<ClusterMasterExecutor> serviceReference) {
+
 					Registry registry = RegistryUtil.getRegistry();
 
 					ClusterMasterExecutor clusterMasterExecutor =
-						registry.getService(ClusterMasterExecutor.class);
+						registry.getService(serviceReference);
 
 					if (!clusterMasterExecutor.isEnabled()) {
 						BackgroundTaskLocalServiceUtil.cleanUpBackgroundTasks();
 					}
+
+					return clusterMasterExecutor;
 				}
 
 				@Override
-				public void destroy() {
+				public void modifiedService(
+					ServiceReference<ClusterMasterExecutor> serviceReference,
+					ClusterMasterExecutor clusterMasterExecutor) {
+				}
+
+				@Override
+				public void removedService(
+					ServiceReference<ClusterMasterExecutor> serviceReference,
+					ClusterMasterExecutor clusterMasterExecutor) {
 				}
 
 			});
+
+		serviceTracker.open();
 
 		// Liferay JspFactory
 
