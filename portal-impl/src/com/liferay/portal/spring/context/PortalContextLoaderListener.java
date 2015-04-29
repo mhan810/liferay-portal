@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
 import com.liferay.portal.kernel.portlet.PortletBagPool;
 import com.liferay.portal.kernel.process.ClassPathUtil;
+import com.liferay.portal.kernel.scheduler.SchedulerEngineHelperUtil;
 import com.liferay.portal.kernel.servlet.DirectServletRegistryUtil;
 import com.liferay.portal.kernel.servlet.SerializableSessionAttributeListener;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
@@ -255,38 +256,6 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 			throw new RuntimeException(e);
 		}
 
-		_serviceDependecyManager = new ServiceDependencyManager();
-
-		_serviceDependecyManager.addServiceDependencyListener(
-
-			new ServiceDependencyListener() {
-
-				@Override
-				public void destroy() {
-					_indexerPostProcessorRegistry.close();
-					_schedulerEntryRegistry.close();
-					_serviceWrapperRegistry.close();
-				}
-
-				@Override
-				public void dependenciesFulfilled() {
-					_indexerPostProcessorRegistry =
-						new IndexerPostProcessorRegistry();
-					_schedulerEntryRegistry = new SchedulerEntryRegistry();
-					_serviceWrapperRegistry = new ServiceWrapperRegistry();
-				}
-
-				private IndexerPostProcessorRegistry
-					_indexerPostProcessorRegistry;
-				private SchedulerEntryRegistry _schedulerEntryRegistry;
-				private ServiceWrapperRegistry _serviceWrapperRegistry;
-
-			});
-
-		_serviceDependecyManager.registerDependencies(
-			MessageBus.class, PortalExecutorManager.class,
-			SingleDestinationMessageSenderFactory.class);
-
 		PortalContextLoaderLifecycleThreadLocal.setInitializing(true);
 
 		try {
@@ -347,6 +316,8 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 
 		clearFilteredPropertyDescriptorsCache(autowireCapableBeanFactory);
 
+		initServiceDependencyManager();
+
 		try {
 			ModuleFrameworkUtilAdapter.registerContext(applicationContext);
 
@@ -359,6 +330,41 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 		initListeners(servletContext);
 
 		RubyExecutor.initRubyGems(servletContext);
+	}
+
+	protected void initServiceDependencyManager() {
+		_serviceDependecyManager = new ServiceDependencyManager();
+
+		_serviceDependecyManager.addServiceDependencyListener(
+
+			new ServiceDependencyListener() {
+
+				@Override
+				public void destroy() {
+					_indexerPostProcessorRegistry.close();
+					_schedulerEntryRegistry.close();
+					_serviceWrapperRegistry.close();
+				}
+
+				@Override
+				public void dependenciesFulfilled() {
+					_indexerPostProcessorRegistry =
+						new IndexerPostProcessorRegistry();
+					_schedulerEntryRegistry = new SchedulerEntryRegistry();
+					_serviceWrapperRegistry = new ServiceWrapperRegistry();
+				}
+
+				private IndexerPostProcessorRegistry
+					_indexerPostProcessorRegistry;
+				private SchedulerEntryRegistry _schedulerEntryRegistry;
+				private ServiceWrapperRegistry _serviceWrapperRegistry;
+
+			});
+
+		_serviceDependecyManager.registerDependencies(
+			MessageBus.class, PortalExecutorManager.class,
+			SchedulerEngineHelperUtil.class,
+			SingleDestinationMessageSenderFactory.class);
 	}
 
 	protected void clearFilteredPropertyDescriptorsCache(
