@@ -55,7 +55,7 @@ public abstract class AbstractSearchEngineConfigurator
 
 	@Override
 	public void afterPropertiesSet() {
-		final ServiceDependencyManager serviceDependencyManager =
+		ServiceDependencyManager serviceDependencyManager =
 			new ServiceDependencyManager();
 
 		serviceDependencyManager.addServiceDependencyListener(
@@ -69,8 +69,6 @@ public abstract class AbstractSearchEngineConfigurator
 					_messageBus = registry.getService(MessageBus.class);
 
 					initialize();
-
-					serviceDependencyManager.destroy();
 				}
 
 				@Override
@@ -80,9 +78,27 @@ public abstract class AbstractSearchEngineConfigurator
 
 		);
 
+		Registry registry = RegistryUtil.getRegistry();
+
+		Filter parallelFilter = registry.getFilter(
+			"(&(objectClass=com.liferay.portal.messaging." +
+				"DestinationPrototype)(type=parallel))");
+
+		Filter serialType = registry.getFilter(
+			"(&(objectClass=com.liferay.portal.messaging." +
+				"DestinationPrototype)(type=serial))");
+
+		Filter synchronousType = registry.getFilter(
+			"(&(objectClass=com.liferay.portal.messaging." +
+				"DestinationPrototype)(type=synchronous))");
+
 		serviceDependencyManager.registerDependencies(
-			DestinationFactory.class, MessageBus.class,
-			PortalExecutorManager.class);
+			new Class[] {
+				DestinationFactory.class, MessageBus.class,
+				PortalExecutorManager.class
+			},
+			new Filter[] {parallelFilter, serialType, synchronousType}
+		);
 	}
 
 	@Override
