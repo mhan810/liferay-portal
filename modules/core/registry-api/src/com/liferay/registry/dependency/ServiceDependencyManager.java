@@ -21,6 +21,7 @@ import com.liferay.registry.ServiceReference;
 import com.liferay.registry.ServiceTracker;
 import com.liferay.registry.ServiceTrackerCustomizer;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,23 +55,23 @@ public class ServiceDependencyManager {
 	}
 
 	public void registerDependencies(Class<?>... serviceClasses) {
-		Registry registry = RegistryUtil.getRegistry();
+		synchronized (_serviceDependencies) {
+			doRegisterDependencies(serviceClasses);
+
+			for (ServiceDependency serviceDependency : _serviceDependencies) {
+				serviceDependency.open();
+			}
+		}
+	}
+
+	public void registerDependencies(
+		Collection<Class<?>> serviceClasses, Collection<Filter> filters) {
 
 		synchronized (_serviceDependencies) {
-			for (Class<?> serviceClass : serviceClasses) {
-				ServiceDependency serviceDependency = new ServiceDependency(
-					serviceClass);
+			doRegisterDependencies(
+				serviceClasses.toArray(new Class<?>[serviceClasses.size()]));
 
-				_serviceDependencies.add(serviceDependency);
-
-				ServiceTracker<Object, Object> serviceTracker =
-					registry.trackServices(
-						(Class<Object>)serviceClass,
-						new ServiceDependencyServiceTrackerCustomizer(
-							serviceDependency));
-
-				serviceDependency.setServiceTracker(serviceTracker);
-			}
+			doRegisterDependencies(filters.toArray(new Filter[filters.size()]));
 
 			for (ServiceDependency serviceDependency : _serviceDependencies) {
 				serviceDependency.open();
@@ -79,22 +80,11 @@ public class ServiceDependencyManager {
 	}
 
 	public void registerDependencies(Filter... filters) {
-		Registry registry = RegistryUtil.getRegistry();
-
 		synchronized (_serviceDependencies) {
-			for (Filter filter : filters) {
-				ServiceDependency serviceDependency = new ServiceDependency(
-					filter);
+			doRegisterDependencies(filters);
 
-				_serviceDependencies.add(serviceDependency);
-
-				ServiceTracker<Object, Object> serviceTracker =
-					registry.trackServices(
-						filter,
-						new ServiceDependencyServiceTrackerCustomizer(
-							serviceDependency));
-
-				serviceDependency.setServiceTracker(serviceTracker);
+			for (ServiceDependency serviceDependency : _serviceDependencies) {
+				serviceDependency.open();
 			}
 		}
 	}
@@ -118,6 +108,43 @@ public class ServiceDependencyManager {
 
 				serviceDependencyListener.dependenciesFulfilled();
 			}
+		}
+	}
+
+	protected void doRegisterDependencies(Class<?>[] serviceClasses) {
+		Registry registry = RegistryUtil.getRegistry();
+
+		for (Class<?> serviceClass : serviceClasses) {
+			ServiceDependency serviceDependency = new ServiceDependency(
+				serviceClass);
+
+			_serviceDependencies.add(serviceDependency);
+
+			ServiceTracker<Object, Object> serviceTracker =
+				registry.trackServices(
+					(Class<Object>)serviceClass,
+					new ServiceDependencyServiceTrackerCustomizer(
+						serviceDependency));
+
+			serviceDependency.setServiceTracker(serviceTracker);
+		}
+	}
+
+	protected void doRegisterDependencies(Filter[] filters) {
+		Registry registry = RegistryUtil.getRegistry();
+
+		for (Filter filter : filters) {
+			ServiceDependency serviceDependency = new ServiceDependency(filter);
+
+			_serviceDependencies.add(serviceDependency);
+
+			ServiceTracker<Object, Object> serviceTracker =
+				registry.trackServices(
+					filter,
+					new ServiceDependencyServiceTrackerCustomizer(
+						serviceDependency));
+
+			serviceDependency.setServiceTracker(serviceTracker);
 		}
 	}
 
