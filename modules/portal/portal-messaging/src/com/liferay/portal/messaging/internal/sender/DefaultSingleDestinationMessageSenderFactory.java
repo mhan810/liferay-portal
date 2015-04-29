@@ -12,10 +12,16 @@
  * details.
  */
 
-package com.liferay.portal.kernel.messaging.sender;
+package com.liferay.portal.messaging.internal.sender;
 
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.messaging.sender.DefaultSingleDestinationMessageSender;
+import com.liferay.portal.kernel.messaging.sender.DefaultSingleDestinationSynchronousMessageSender;
+import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender;
+import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
+import com.liferay.portal.kernel.messaging.sender.SingleDestinationSynchronousMessageSender;
+import com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender;
 
 import java.util.HashMap;
 import java.util.Map;
