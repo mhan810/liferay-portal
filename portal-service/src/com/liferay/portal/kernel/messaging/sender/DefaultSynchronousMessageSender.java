@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusException;
-import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUID;
 
@@ -30,10 +29,6 @@ import com.liferay.portal.kernel.uuid.PortalUUID;
  */
 public class DefaultSynchronousMessageSender
 	implements SynchronousMessageSender {
-
-	public void afterPropertiesSet() {
-		_messageBus = MessageBusUtil.getMessageBus();
-	}
 
 	@Override
 	public Object send(String destinationName, Message message)
@@ -95,6 +90,10 @@ public class DefaultSynchronousMessageSender
 			new SynchronousMessageListener(_messageBus, message, timeout);
 
 		return synchronousMessageListener.send();
+	}
+
+	public void setMessageBus(MessageBus messageBus) {
+		_messageBus = messageBus;
 	}
 
 	public void setPortalUUID(PortalUUID portalUUID) {

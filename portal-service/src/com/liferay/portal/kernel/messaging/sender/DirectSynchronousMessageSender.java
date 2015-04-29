@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusException;
-import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.MessageListenerException;
 import com.liferay.portal.kernel.messaging.SynchronousDestination;
@@ -33,10 +32,6 @@ import java.util.Set;
  */
 public class DirectSynchronousMessageSender
 	implements SynchronousMessageSender {
-
-	public void afterPropertiesSet() {
-		_messageBus = MessageBusUtil.getMessageBus();
-	}
 
 	@Override
 	public Object send(String destinationName, Message message)
@@ -86,6 +81,10 @@ public class DirectSynchronousMessageSender
 		}
 
 		return send(destinationName, message);
+	}
+
+	public void setMessageBus(MessageBus messageBus) {
+		_messageBus = messageBus;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
