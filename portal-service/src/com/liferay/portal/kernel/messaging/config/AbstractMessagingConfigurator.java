@@ -67,8 +67,6 @@ public abstract class AbstractMessagingConfigurator
 					_messageBus = registry.getService(MessageBus.class);
 
 					initialize();
-
-					serviceDependencyManager.destroy();
 				}
 
 				@Override
@@ -102,8 +100,7 @@ public abstract class AbstractMessagingConfigurator
 
 			serviceDependencyManager.addServiceDependencyListener(
 				new DestinationServiceDependencyListener(
-					destinationName, messageListeners.getValue(),
-					serviceDependencyManager));
+					destinationName, messageListeners.getValue()));
 		}
 	}
 
@@ -364,12 +361,10 @@ public abstract class AbstractMessagingConfigurator
 		implements ServiceDependencyListener {
 
 		public DestinationServiceDependencyListener(
-			String destinationName, List<MessageListener> messageListeners,
-			ServiceDependencyManager serviceDependencyManager) {
+			String destinationName, List<MessageListener> messageListeners) {
 
 			_destinationName = destinationName;
 			_messageListeners = messageListeners;
-			_serviceDependencyManager = serviceDependencyManager;
 		}
 
 		@Override
@@ -418,8 +413,6 @@ public abstract class AbstractMessagingConfigurator
 			finally {
 				currentThread.setContextClassLoader(contextClassLoader);
 			}
-
-			_serviceDependencyManager.destroy();
 		}
 
 		@Override
@@ -428,7 +421,6 @@ public abstract class AbstractMessagingConfigurator
 
 		private final String _destinationName;
 		private final List<MessageListener> _messageListeners;
-		private final ServiceDependencyManager _serviceDependencyManager;
 
 	}
 
