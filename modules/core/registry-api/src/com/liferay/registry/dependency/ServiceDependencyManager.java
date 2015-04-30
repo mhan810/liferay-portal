@@ -14,8 +14,6 @@
 
 package com.liferay.registry.dependency;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.registry.Filter;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
@@ -122,14 +120,7 @@ public class ServiceDependencyManager {
 			for (ServiceDependencyListener serviceDependencyListener :
 					_serviceDependencyListeners) {
 
-				try {
-					serviceDependencyListener.dependenciesFulfilled();
-				}
-				catch (Exception e) {
-					if (_log.isWarnEnabled()) {
-						_log.warn("Cannot notify dependencies fulfilled", e);
-					}
-				}
+				serviceDependencyListener.dependenciesFulfilled();
 			}
 
 			destroy();
@@ -172,9 +163,6 @@ public class ServiceDependencyManager {
 			serviceDependency.setServiceTracker(serviceTracker);
 		}
 	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		ServiceDependencyManager.class);
 
 	private final Set<ServiceDependency> _serviceDependencies = new HashSet<>();
 	private final Set<ServiceDependencyListener> _serviceDependencyListeners =
