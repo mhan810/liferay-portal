@@ -4,8 +4,9 @@
 	default-destroy-method="destroy"
 	default-init-method="afterPropertiesSet"
 	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
 >
 	<bean id="com.liferay.mail.service.CyrusService" class="com.liferay.mail.service.impl.CyrusServiceImpl" />
 	<bean id="com.liferay.mail.service.MailService" class="com.liferay.mail.service.impl.MailServiceImpl" />
@@ -14,15 +15,15 @@
 
 	<!-- Messaging -->
 
-	<bean id="destination.mail" class="com.liferay.portal.kernel.messaging.ParallelDestination">
-		<property name="name" value="liferay/mail" />
-	</bean>
 	<bean id="messageListener.mail" class="com.liferay.mail.messaging.MailMessageListener" />
 	<bean id="messagingConfigurator.mail" class="com.liferay.portal.kernel.messaging.config.DefaultMessagingConfigurator">
-		<property name="destinations">
-			<list>
-				<ref bean="destination.mail" />
-			</list>
+		<property name="destinationConfig">
+			<util:set>
+				<bean class="com.liferay.portal.kernel.messaging.DestinationConfig">
+					<constructor-arg index="0" type="java.lang.String" value="parallel" />
+					<constructor-arg index="1" type="java.lang.String" value="liferay/mail" />
+				</bean>
+			</util:set>
 		</property>
 		<property name="messageListeners">
 			<map key-type="java.lang.String" value-type="java.util.List">
