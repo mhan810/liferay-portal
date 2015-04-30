@@ -14,6 +14,7 @@
 
 package com.liferay.registry.dependency;
 
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.registry.Filter;
 import com.liferay.registry.ServiceReference;
 import com.liferay.registry.ServiceTracker;
@@ -77,6 +78,20 @@ public class ServiceDependency {
 		ServiceTracker<Object, Object> serviceTracker) {
 
 		_serviceTracker = serviceTracker;
+	}
+
+	@Override
+	public String toString() {
+		StringBundler sb = new StringBundler();
+
+		sb.append("ServiceDependency{");
+		sb.append("_fulfilled=");
+		sb.append(_fulfilled);
+		sb.append(", _serviceDependencyVerifier=");
+		sb.append(_serviceDependencyVerifier);
+		sb.append('}');
+
+		return sb.toString();
 	}
 
 	private boolean _fulfilled;

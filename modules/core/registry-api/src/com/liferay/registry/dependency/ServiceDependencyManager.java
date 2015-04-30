@@ -14,6 +14,7 @@
 
 package com.liferay.registry.dependency;
 
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.registry.Filter;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
@@ -29,6 +30,12 @@ import java.util.Set;
  * @author Michael C. Han
  */
 public class ServiceDependencyManager {
+
+	public ServiceDependencyManager() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		registry.registerServiceDependencyManager(this);
+	}
 
 	public void addServiceDependencyListener(
 		ServiceDependencyListener serviceDependencyListener) {
@@ -52,6 +59,10 @@ public class ServiceDependencyManager {
 		}
 
 		_serviceDependencies.clear();
+
+		Registry registry = RegistryUtil.getRegistry();
+
+		registry.unregisterServiceDependencyManager(this);
 	}
 
 	public void registerDependencies(Class<?>... serviceClasses) {
@@ -107,6 +118,18 @@ public class ServiceDependencyManager {
 		ServiceDependencyListener serviceDependencyListener) {
 
 		_serviceDependencyListeners.remove(serviceDependencyListener);
+	}
+
+	@Override
+	public String toString() {
+		StringBundler sb = new StringBundler(4);
+
+		sb.append("ServiceDependencyManager{");
+		sb.append("_serviceDependencies=");
+		sb.append(_serviceDependencies);
+		sb.append("}");
+
+		return sb.toString();
 	}
 
 	public void verifyDependencies() {
