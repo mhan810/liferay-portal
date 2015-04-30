@@ -15,7 +15,8 @@
 package com.liferay.portal.search.elasticsearch.internal;
 
 import com.liferay.portal.kernel.messaging.Destination;
-import com.liferay.portal.kernel.messaging.SynchronousDestination;
+import com.liferay.portal.kernel.messaging.DestinationConfig;
+import com.liferay.portal.kernel.messaging.DestinationFactory;
 import com.liferay.portal.kernel.search.AbstractSearchEngineConfigurator;
 import com.liferay.portal.kernel.search.IndexSearcher;
 import com.liferay.portal.kernel.search.IndexWriter;
@@ -75,23 +76,6 @@ public class ElasticsearchEngineConfigurator
 	}
 
 	@Override
-	protected Destination createSearchReaderDestination(
-		String searchReaderDestinationName) {
-
-		if (!PortalRunMode.isTestMode()) {
-			return super.createSearchReaderDestination(
-				searchReaderDestinationName);
-		}
-
-		SynchronousDestination synchronousDestination =
-			new SynchronousDestination();
-
-		synchronousDestination.setName(searchReaderDestinationName);
-
-		return synchronousDestination;
-	}
-
-	@Override
 	protected Destination createSearchWriterDestination(
 		String searchWriterDestinationName) {
 
@@ -100,12 +84,10 @@ public class ElasticsearchEngineConfigurator
 				searchWriterDestinationName);
 		}
 
-		SynchronousDestination synchronousDestination =
-			new SynchronousDestination();
+		DestinationConfig destinationConfig = new DestinationConfig(
+			"synchronous", searchWriterDestinationName);
 
-		synchronousDestination.setName(searchWriterDestinationName);
-
-		return synchronousDestination;
+		return _destinationFactory.createDestination(destinationConfig);
 	}
 
 	@Override
@@ -128,6 +110,13 @@ public class ElasticsearchEngineConfigurator
 		Class<?> clazz = getClass();
 
 		return clazz.getClassLoader();
+	}
+
+	@Reference(unbind = "-")
+	protected void setDestinationFactory(
+		DestinationFactory destinationFactory) {
+
+		_destinationFactory = destinationFactory;
 	}
 
 	@Reference(target = "(search.engine.id=SYSTEM_ENGINE)")
@@ -153,6 +142,7 @@ public class ElasticsearchEngineConfigurator
 		_searchEngines.remove(searchEngineId);
 	}
 
+	private DestinationFactory _destinationFactory;
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
 	private IndexSearcher _indexSearcher;
 	private IndexWriter _indexWriter;
