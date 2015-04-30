@@ -12,20 +12,21 @@
  * details.
  */
 
-package com.liferay.portal.kernel.messaging;
+package com.liferay.portal.messaging.internal.destination;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.messaging.DestinationStatistics;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageListener;
+import com.liferay.portal.kernel.messaging.MessageListenerException;
+import com.liferay.portal.messaging.BaseDestination;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Shuyang Zhou
- * @deprecated As of 7.0.0, replaced by
- *             {@link com.liferay.portal.messaging.internal.destination.
- *                  SynchronousDestination}
  */
-@Deprecated
 public class SynchronousDestination extends BaseDestination {
 
 	@Override

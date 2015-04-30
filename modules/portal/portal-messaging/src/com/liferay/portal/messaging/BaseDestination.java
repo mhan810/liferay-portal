@@ -12,13 +12,14 @@
  * details.
  */
 
-package com.liferay.portal.kernel.messaging;
+package com.liferay.portal.messaging;
 
 import com.liferay.portal.kernel.concurrent.ConcurrentHashSet;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.messaging.Destination;
+import com.liferay.portal.kernel.messaging.DestinationEventListener;
+import com.liferay.portal.kernel.messaging.InvokerMessageListener;
+import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Collections;
 import java.util.Set;
@@ -26,10 +27,7 @@ import java.util.Set;
 /**
  * @author Michael C. Han
  * @author Shuyang Zhou
- * @deprecated As of 7.0.0, replaced by
- *             {@link com.liferay.portal.messaging.BaseDestination}
  */
-@Deprecated
 public abstract class BaseDestination implements Destination {
 
 	@Override
@@ -37,18 +35,6 @@ public abstract class BaseDestination implements Destination {
 		DestinationEventListener destinationEventListener) {
 
 		return _destinationEventListeners.add(destinationEventListener);
-	}
-
-	public void afterPropertiesSet() {
-		if (_log.isWarnEnabled()) {
-			_log.warn(
-				"Destination " + getName() + " using deprecated Destination " +
-					"implementation.  Please review your configuration.");
-		}
-
-		if (Validator.isNull(name)) {
-			throw new IllegalArgumentException("Name is null");
-		}
 	}
 
 	@Override
@@ -215,9 +201,6 @@ public abstract class BaseDestination implements Destination {
 
 	protected Set<MessageListener> messageListeners = new ConcurrentHashSet<>();
 	protected String name = StringPool.BLANK;
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		BaseDestination.class);
 
 	private final Set<DestinationEventListener> _destinationEventListeners =
 		new ConcurrentHashSet<>();

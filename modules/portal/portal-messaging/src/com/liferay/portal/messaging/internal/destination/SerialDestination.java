@@ -12,14 +12,19 @@
  * details.
  */
 
-package com.liferay.portal.kernel.messaging;
+package com.liferay.portal.messaging.internal.destination;
 
 import com.liferay.portal.kernel.cache.Lifecycle;
 import com.liferay.portal.kernel.cache.ThreadLocalCacheManager;
 import com.liferay.portal.kernel.concurrent.ThreadPoolExecutor;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageListener;
+import com.liferay.portal.kernel.messaging.MessageListenerException;
+import com.liferay.portal.kernel.messaging.MessageRunnable;
 import com.liferay.portal.kernel.util.CentralizedThreadLocal;
+import com.liferay.portal.messaging.BaseAsyncDestination;
 
 import java.util.Set;
 
@@ -30,16 +35,15 @@ import java.util.Set;
  * </p>
  *
  * @author Michael C. Han
- * @deprecated As of 7.0.0, replaced by
- *             {@link com.liferay.portal.messaging.internal.destination.
- *                  SerialDestination}
  */
-@Deprecated
 public class SerialDestination extends BaseAsyncDestination {
 
-	public SerialDestination() {
+	@Override
+	public void activate() {
 		setWorkersCoreSize(_WORKERS_CORE_SIZE);
 		setWorkersMaxSize(_WORKERS_MAX_SIZE);
+
+		super.activate();
 	}
 
 	@Override
