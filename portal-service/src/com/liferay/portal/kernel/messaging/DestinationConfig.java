@@ -23,6 +23,24 @@ import java.io.Serializable;
  */
 public class DestinationConfig implements Serializable {
 
+	public static DestinationConfig createParallelDestinationConfig(
+		String destinationName) {
+
+		return new DestinationConfig("parallel", destinationName);
+	}
+
+	public static DestinationConfig createSerialDestinationConfig(
+		String destinationName) {
+
+		return new DestinationConfig("serial", destinationName);
+	}
+
+	public static DestinationConfig createSynchronousDestinationConfig(
+		String destinationName) {
+
+		return new DestinationConfig("synchronous", destinationName);
+	}
+
 	public DestinationConfig(String destinationType, String destinationName) {
 		_destinationType = destinationType;
 		_destinationName = destinationName;
