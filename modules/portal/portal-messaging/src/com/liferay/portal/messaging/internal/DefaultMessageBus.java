@@ -231,13 +231,27 @@ public class DefaultMessageBus implements MessageBus {
 		policyOption = ReferencePolicyOption.GREEDY,
 		target = "(destination.name=*)"
 	)
-	protected void registerMessageListener(
+	protected synchronized void registerMessageListener(
 		MessageListener messageListener, Map<String, Object> properties) {
 
 		String destinationName = MapUtil.getString(
 			properties, "destination.name");
 
-		registerMessageListener(destinationName, messageListener);
+		ClassLoader operatingClassLoader = (ClassLoader)properties.get(
+			"operatingClassLoader");
+
+		Thread currentThread = Thread.currentThread();
+
+		ClassLoader contextClassLoader = currentThread.getContextClassLoader();
+
+		try {
+			currentThread.setContextClassLoader(operatingClassLoader);
+
+			registerMessageListener(destinationName, messageListener);
+		}
+		finally {
+			currentThread.setContextClassLoader(contextClassLoader);
+		}
 	}
 
 	protected synchronized void removeDestination(Destination destination) {
