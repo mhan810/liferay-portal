@@ -31,14 +31,14 @@ import java.util.Map;
  * @author Andrew Betts
  */
 public class PortletDataHandlerStatusMessage
-	implements BackgroundTaskStatusMessage {
+	extends BackgroundTaskStatusMessage {
 
 	public PortletDataHandlerStatusMessage(
 		String messageType, String portletId, ManifestSummary manifestSummary) {
 
-		Message message = createMessage(messageType, manifestSummary);
+		init(messageType, manifestSummary);
 
-		message.put("portletId", portletId);
+		put("portletId", portletId);
 
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
 
@@ -53,76 +53,58 @@ public class PortletDataHandlerStatusMessage
 				portletModelAdditionCountersTotal = 0;
 			}
 
-			message.put(
+			put(
 				"portletModelAdditionCountersTotal",
 				portletModelAdditionCountersTotal);
 		}
-
-		_message = message;
 	}
 
 	public PortletDataHandlerStatusMessage(
 		String messageType, String[] portletIds,
 		ManifestSummary manifestSummary) {
 
-		Message message = createMessage(messageType, manifestSummary);
+		init(messageType, manifestSummary);
 
-		message.put("portletIds", portletIds);
-
-		_message = message;
-	}
-
-	@Override
-	public Message getStatusMessage() {
-		return _message;
+		put("portletIds", portletIds);
 	}
 
 	public <T extends StagedModel> PortletDataHandlerStatusMessage(
 		String messageType, T stagedModel, ManifestSummary manifestSummary) {
 
-		Message message = createMessage(messageType, manifestSummary);
+		init(messageType, manifestSummary);
 
 		StagedModelDataHandler<T> stagedModelDataHandler =
 			(StagedModelDataHandler<T>)
 				StagedModelDataHandlerRegistryUtil.getStagedModelDataHandler(
 					stagedModel.getModelClassName());
 
-		message.put(
+		put(
 			"stagedModelName",
 			stagedModelDataHandler.getDisplayName(stagedModel));
 
-		message.put(
+		put(
 			"stagedModelType",
 			String.valueOf(stagedModel.getStagedModelType()));
-		message.put("uuid", stagedModel.getUuid());
 
-		_message = message;
+		put("uuid", stagedModel.getUuid());
 	}
 
-	private Message createMessage(
-		String messageType, ManifestSummary manifestSummary) {
-
-		Message message = new Message();
-
-		message.put("messageType", messageType);
+	protected void init(String messageType, ManifestSummary manifestSummary) {
+		put("messageType", messageType);
 
 		Map<String, LongWrapper> modelAdditionCounters =
 			manifestSummary.getModelAdditionCounters();
 
-		message.put(
+		put(
 			"modelAdditionCounters",
 			new HashMap<String, LongWrapper>(modelAdditionCounters));
 
 		Map<String, LongWrapper> modelDeletionCounters =
 			manifestSummary.getModelDeletionCounters();
 
-		message.put(
+		put(
 			"modelDeletionCounters",
 			new HashMap<String, LongWrapper>(modelDeletionCounters));
-
-		return message;
 	}
-
-	private Message _message;
 
 }
