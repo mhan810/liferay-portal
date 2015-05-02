@@ -61,7 +61,6 @@ public class ShardPersistenceAdvice implements MethodInterceptor {
 			target instanceof CounterFinder ||
 			target instanceof CounterPersistence ||
 			target instanceof PortalPreferencesPersistence ||
-			target instanceof ReleasePersistence ||
 			target instanceof ResourceActionPersistence ||
 			target instanceof ServiceComponentPersistence ||
 			target instanceof ShardPersistence ||
