@@ -46,6 +46,16 @@ public class BackgroundTaskStatusMessageSenderImpl
 		_destinationName = destinationName;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #setDestinationName(String)})
+	 */
+	@Deprecated
+	public void setSingleDestinationMessageSender(
+		SingleDestinationMessageSender singleDestinationMessageSender) {
+
+		_singleDestinationMessageSender = singleDestinationMessageSender;
+	}
+
 	private String _destinationName;
 	private SingleDestinationMessageSender _singleDestinationMessageSender;
 
