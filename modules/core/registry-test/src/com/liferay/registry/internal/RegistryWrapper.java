@@ -20,6 +20,7 @@ import com.liferay.registry.ServiceReference;
 import com.liferay.registry.ServiceTracker;
 import com.liferay.registry.ServiceTrackerCustomizer;
 import com.liferay.registry.dependency.ServiceDependencyManager;
+import com.liferay.registry.ServiceRegistrar;
 
 import java.util.Collection;
 import java.util.Map;
@@ -118,6 +119,11 @@ public class RegistryWrapper implements Registry {
 		throws Exception {
 
 		return _registry.getServiceReferences(className, filterString);
+	}
+
+	@Override
+	public <T> ServiceRegistrar<T> getServiceRegistrar(Class<T> clazz) {
+		return _registry.getServiceRegistrar(clazz);
 	}
 
 	@Override
