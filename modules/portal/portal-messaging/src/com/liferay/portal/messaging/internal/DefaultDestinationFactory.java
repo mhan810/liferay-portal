@@ -97,6 +97,14 @@ public class DefaultDestinationFactory implements DestinationFactory {
 
 	@Deactivate
 	protected void deactivate() {
+		for (ServiceRegistration<Destination> destinationServiceRegistration :
+				_destinationServiceRegistrations.values()) {
+
+			destinationServiceRegistration.unregister();
+		}
+
+		_destinationServiceRegistrations.clear();
+
 		_serviceTracker.close();
 
 		_bundleContext = null;
