@@ -29,6 +29,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
@@ -37,8 +42,24 @@ import org.osgi.service.component.annotations.Component;
 public class DefaultMessageBus implements MessageBus {
 
 	@Override
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
 	public synchronized void addDestination(Destination destination) {
-		_destinations.put(destination.getName(), destination);
+		if (_destinations.containsKey(destination.getName())) {
+			if (_log.isInfoEnabled()) {
+				_log.info(
+					"Overwriting existing destination: " +
+						destination.getName());
+			}
+
+			replace(destination);
+		}
+		else {
+			_destinations.put(destination.getName(), destination);
+		}
 
 		for (MessageBusEventListener messageBusEventListener :
 				_messageBusEventListeners) {
@@ -183,6 +204,34 @@ public class DefaultMessageBus implements MessageBus {
 		}
 
 		return destination.unregister(messageListener);
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		shutdown(true);
+
+		_messageBusEventListeners.clear();
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected void registerMessageBusEventListener(
+		MessageBusEventListener messageBusEventListener) {
+
+		addMessageBusEventListener(messageBusEventListener);
+	}
+
+	protected synchronized void removeDestination(Destination destination) {
+		removeDestination(destination.getName());
+	}
+
+	protected void unregisterMessageBusEventListener(
+		MessageBusEventListener messageBusEventListener) {
+
+		removeMessageBusEventListener(messageBusEventListener);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
