@@ -201,6 +201,14 @@ public class DefaultMessageBus implements MessageBus {
 	protected void deactivate() {
 		shutdown(true);
 
+		for (Destination destination : _destinations.values()) {
+			destination.removeDestinationEventListeners();
+
+			destination.unregisterMessageListeners();
+		}
+
+		_destinations.clear();
+
 		_messageBusEventListeners.clear();
 	}
 
