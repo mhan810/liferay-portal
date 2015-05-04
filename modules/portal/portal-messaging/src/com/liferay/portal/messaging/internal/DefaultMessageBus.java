@@ -22,13 +22,13 @@ import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusEventListener;
 import com.liferay.portal.kernel.messaging.MessageListener;
+import com.liferay.portal.kernel.util.MapUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.liferay.portal.kernel.util.MapUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
@@ -238,15 +238,6 @@ public class DefaultMessageBus implements MessageBus {
 		registerMessageListener(destinationName, messageListener);
 	}
 
-	protected void unregisterMessageListener(
-		MessageListener messageListener, Map<String, Object> properties) {
-
-		String destinationName = MapUtil.getString(
-			properties, "destination.name");
-
-		unregisterMessageListener(destinationName, messageListener);
-	}
-
 	protected synchronized void removeDestination(Destination destination) {
 		removeDestination(destination.getName());
 	}
@@ -255,6 +246,15 @@ public class DefaultMessageBus implements MessageBus {
 		MessageBusEventListener messageBusEventListener) {
 
 		removeMessageBusEventListener(messageBusEventListener);
+	}
+
+	protected void unregisterMessageListener(
+		MessageListener messageListener, Map<String, Object> properties) {
+
+		String destinationName = MapUtil.getString(
+			properties, "destination.name");
+
+		unregisterMessageListener(destinationName, messageListener);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
