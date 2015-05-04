@@ -36,6 +36,7 @@ import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.dependency.ServiceDependencyListener;
 import com.liferay.registry.dependency.ServiceDependencyManager;
+import com.liferay.registry.ServiceRegistrar;
 
 import java.lang.reflect.Method;
 
@@ -65,8 +66,6 @@ public abstract class AbstractMessagingConfigurator
 					_messageBus = registry.getService(MessageBus.class);
 
 					initialize();
-
-					serviceDependencyManager.destroy();
 				}
 
 				@Override
@@ -127,6 +126,8 @@ public abstract class AbstractMessagingConfigurator
 			destination.close();
 		}
 
+		_destinationConfigServiceRegistrar.destroy();
+
 		for (Map.Entry<String, List<DestinationEventListener>>
 				destinationEventListeners :
 					_destinationEventListeners.entrySet()) {
@@ -146,11 +147,24 @@ public abstract class AbstractMessagingConfigurator
 			}
 		}
 
-		for (MessageBusEventListener messageBusEventListener :
-				_messageBusEventListeners) {
+		_messageListenerServiceRegistrar.destroy();
 
-			_messageBus.removeMessageBusEventListener(messageBusEventListener);
+		for (final Map.Entry<String, List<MessageListener>> messageListeners :
+				_messageListeners.entrySet()) {
+
+			String destinationName = messageListeners.getKey();
+
+			if (_destinations.containsKey(destinationName)) {
+				for (MessageListener messageListener :
+						messageListeners.getValue()) {
+
+					_messageBus.unregisterMessageListener(
+						destinationName, messageListener);
+				}
+			}
 		}
+
+		_messageBusEventListenerServiceRegistrar.destroy();
 
 		ClassLoader operatingClassLoader = getOperatingClassloader();
 
@@ -187,6 +201,9 @@ public abstract class AbstractMessagingConfigurator
 
 		Registry registry = RegistryUtil.getRegistry();
 
+		_destinationConfigServiceRegistrar = registry.getServiceRegistrar(
+			DestinationConfig.class);
+
 		for (DestinationConfig destinationConfig : destinationConfigs) {
 			try {
 				PortalMessageBusPermission.checkListen(
@@ -202,7 +219,7 @@ public abstract class AbstractMessagingConfigurator
 				continue;
 			}
 
-			registry.registerService(
+			_destinationConfigServiceRegistrar.registerService(
 				DestinationConfig.class, destinationConfig);
 		}
 	}
@@ -310,10 +327,16 @@ public abstract class AbstractMessagingConfigurator
 			_portalMessagingConfigurator = true;
 		}
 
+		Registry registry = RegistryUtil.getRegistry();
+
+		_messageBusEventListenerServiceRegistrar = registry.getServiceRegistrar(
+			MessageBusEventListener.class);
+
 		for (MessageBusEventListener messageBusEventListener :
 				_messageBusEventListeners) {
 
-			_messageBus.addMessageBusEventListener(messageBusEventListener);
+			_messageBusEventListenerServiceRegistrar.registerService(
+				MessageBusEventListener.class, messageBusEventListener);
 		}
 
 		for (Destination destination : _destinations.values()) {
@@ -359,14 +382,19 @@ public abstract class AbstractMessagingConfigurator
 	private static final Log _log = LogFactoryUtil.getLog(
 		AbstractMessagingConfigurator.class);
 
+	private ServiceRegistrar<DestinationConfig>
+		_destinationConfigServiceRegistrar;
 	private Map<String, List<DestinationEventListener>>
 		_destinationEventListeners = new HashMap<>();
 	private final Map<String, Destination> _destinations = new HashMap<>();
 	private volatile MessageBus _messageBus;
 	private List<MessageBusEventListener> _messageBusEventListeners =
 		new ArrayList<>();
+	private ServiceRegistrar<MessageBusEventListener>
+		_messageBusEventListenerServiceRegistrar;
 	private Map<String, List<MessageListener>> _messageListeners =
 		new HashMap<>();
+	private ServiceRegistrar<MessageListener> _messageListenerServiceRegistrar;
 	private boolean _portalMessagingConfigurator;
 	private List<Destination> _replacementDestinations = new ArrayList<>();
 
@@ -412,13 +440,16 @@ public abstract class AbstractMessagingConfigurator
 
 			Registry registry = RegistryUtil.getRegistry();
 
+			_messageListenerServiceRegistrar = registry.getServiceRegistrar(
+				MessageListener.class);
+
 			Map<String, Object> properties = new HashMap<>();
 
 			properties.put("destination.name", _destinationName);
 			properties.put("operatingClassLoader", operatingClassLoader);
 
 			for (MessageListener messageListener : _messageListeners) {
-				registry.registerService(
+				_messageListenerServiceRegistrar.registerService(
 					MessageListener.class, messageListener, properties);
 			}
 		}
