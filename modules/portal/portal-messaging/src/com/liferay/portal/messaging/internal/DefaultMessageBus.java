@@ -22,6 +22,9 @@ import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusEventListener;
 import com.liferay.portal.kernel.messaging.MessageListener;
+import com.liferay.portal.kernel.nio.intraband.messaging.IntrabandBridgeDestination;
+import com.liferay.portal.kernel.resiliency.spi.SPIUtil;
+import com.liferay.portal.kernel.util.MapUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -29,6 +32,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
@@ -38,6 +46,12 @@ public class DefaultMessageBus implements MessageBus {
 
 	@Override
 	public synchronized void addDestination(Destination destination) {
+		if (SPIUtil.isSPI() &&
+			!destination.getClass().equals(IntrabandBridgeDestination.class)) {
+
+			destination = new IntrabandBridgeDestination(destination);
+		}
+
 		_destinations.put(destination.getName(), destination);
 
 		for (MessageBusEventListener messageBusEventListener :
@@ -110,6 +124,8 @@ public class DefaultMessageBus implements MessageBus {
 		Destination destination = _destinations.remove(destinationName);
 
 		if (destination != null) {
+			destination.close(true);
+
 			destination.removeDestinationEventListeners();
 			destination.unregisterMessageListeners();
 
@@ -183,6 +199,103 @@ public class DefaultMessageBus implements MessageBus {
 		}
 
 		return destination.unregister(messageListener);
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(destination.name=*)"
+	)
+	protected synchronized void addDestination(
+		Destination destination, Map<String, Object> properties) {
+
+		if (SPIUtil.isSPI() &&
+			!destination.getClass().equals(IntrabandBridgeDestination.class)) {
+
+			destination = new IntrabandBridgeDestination(destination);
+		}
+
+		if (_destinations.containsKey(destination.getName())) {
+			replace(destination);
+		}
+		else {
+			_destinations.put(destination.getName(), destination);
+		}
+
+		for (MessageBusEventListener messageBusEventListener :
+				_messageBusEventListeners) {
+
+			messageBusEventListener.destinationAdded(destination);
+		}
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		shutdown(true);
+
+		_messageBusEventListeners.clear();
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected void registerMessageBusEventListener(
+		MessageBusEventListener messageBusEventListener) {
+
+		addMessageBusEventListener(messageBusEventListener);
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(destination.name=*)"
+	)
+	protected synchronized void registerMessageListener(
+		MessageListener messageListener, Map<String, Object> properties) {
+
+		String destinationName = MapUtil.getString(
+			properties, "destination.name");
+
+		ClassLoader operatingClassLoader = (ClassLoader)properties.get(
+			"operatingClassLoader");
+
+		Thread currentThread = Thread.currentThread();
+
+		ClassLoader contextClassLoader = currentThread.getContextClassLoader();
+
+		try {
+			currentThread.setContextClassLoader(operatingClassLoader);
+
+			registerMessageListener(destinationName, messageListener);
+		}
+		finally {
+			currentThread.setContextClassLoader(contextClassLoader);
+		}
+	}
+
+	protected synchronized void removeDestination(
+		Destination destination, Map<String, Object> properties) {
+
+		removeDestination(destination.getName());
+	}
+
+	protected void unregisterMessageBusEventListener(
+		MessageBusEventListener messageBusEventListener) {
+
+		removeMessageBusEventListener(messageBusEventListener);
+	}
+
+	protected void unregisterMessageListener(
+		MessageListener messageListener, Map<String, Object> properties) {
+
+		String destinationName = MapUtil.getString(
+			properties, "destination.name");
+
+		unregisterMessageListener(destinationName, messageListener);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
