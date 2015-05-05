@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.resiliency.spi.SPIUtil;
 import com.liferay.portal.kernel.security.pacl.permission.PortalMessageBusPermission;
 import com.liferay.portal.kernel.util.ClassLoaderPool;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.registry.Filter;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.ServiceFinalizer;
@@ -82,6 +83,11 @@ public abstract class AbstractMessagingConfigurator
 			return;
 		}
 
+		Registry registry = RegistryUtil.getRegistry();
+
+		_messageListenerServiceRegistrar = registry.getServiceRegistrar(
+			MessageListener.class);
+
 		Thread currentThread = Thread.currentThread();
 
 		ClassLoader contextClassLoader = currentThread.getContextClassLoader();
@@ -96,38 +102,19 @@ public abstract class AbstractMessagingConfigurator
 
 				String destinationName = messageListeners.getKey();
 
-				if (SPIUtil.isSPI()) {
-					SPI spi = SPIUtil.getSPI();
+				ServiceDependencyManager serviceDependencyManager =
+					new ServiceDependencyManager();
 
-					try {
-						RegistrationReference registrationReference =
-							spi.getRegistrationReference();
+				serviceDependencyManager.addServiceDependencyListener(
+					new DestinationServiceDependencyListener(
+						destinationName, messageListeners.getValue()));
 
-						IntrabandRPCUtil.execute(
-							registrationReference,
-							new DestinationConfigurationProcessCallable(
-								destinationName));
-					}
-					catch (Exception e) {
-						StringBundler sb = new StringBundler(4);
+				Filter destinationFilter = registry.getFilter(
+					"(&(destination.name=" + destinationName +
+						")(objectClass=" + Destination.class.getName() + "))");
 
-						sb.append("Unable to install ");
-						sb.append(
-							DestinationConfigurationProcessCallable.class.
-								getName());
-						sb.append(" on MPI for ");
-						sb.append(destinationName);
-
-						_log.error(sb.toString(), e);
-					}
-				}
-
-				for (MessageListener messageListener :
-						messageListeners.getValue()) {
-
-					_messageBus.registerMessageListener(
-						destinationName, messageListener);
-				}
+				serviceDependencyManager.registerDependencies(
+					destinationFilter);
 			}
 		}
 		finally {
@@ -138,6 +125,10 @@ public abstract class AbstractMessagingConfigurator
 	@Override
 	public void destroy() {
 		disconnect();
+
+		_messageListeners.clear();
+
+		_messageListenerServiceRegistrar.destroy();
 
 		_messageBusEventListenerServiceRegistrar.destroy();
 
@@ -388,6 +379,67 @@ public abstract class AbstractMessagingConfigurator
 		_messageBusEventListenerServiceRegistrar;
 	private Map<String, List<MessageListener>> _messageListeners =
 		new HashMap<>();
+	private ServiceRegistrar<MessageListener> _messageListenerServiceRegistrar;
 	private boolean _portalMessagingConfigurator;
+
+	private class DestinationServiceDependencyListener
+		implements ServiceDependencyListener {
+
+		public DestinationServiceDependencyListener(
+			String destinationName, List<MessageListener> messageListeners) {
+
+			_destinationName = destinationName;
+			_messageListeners = messageListeners;
+		}
+
+		@Override
+		public void dependenciesFulfilled() {
+			ClassLoader operatingClassLoader = getOperatingClassloader();
+
+			if (SPIUtil.isSPI()) {
+				SPI spi = SPIUtil.getSPI();
+
+				try {
+					RegistrationReference registrationReference =
+						spi.getRegistrationReference();
+
+					IntrabandRPCUtil.execute(
+						registrationReference,
+						new DestinationConfigurationProcessCallable(
+							_destinationName));
+				}
+				catch (Exception e) {
+					StringBundler sb = new StringBundler(4);
+
+					sb.append("Unable to install ");
+					sb.append(
+						DestinationConfigurationProcessCallable.class.
+							getName());
+					sb.append(" on MPI for ");
+					sb.append(_destinationName);
+
+					_log.error(sb.toString(), e);
+				}
+			}
+
+			Map<String, Object> properties = new HashMap<>();
+
+			properties.put("destination.name", _destinationName);
+			properties.put("operatingClassLoader", operatingClassLoader);
+
+			for (MessageListener messageListener : _messageListeners) {
+				_messageListenerServiceRegistrar.registerService(
+					MessageListener.class, messageListener, properties);
+			}
+		}
+
+		@Override
+		public void destroy() {
+		}
+
+		private final String _destinationName;
+		private final List<MessageListener> _messageListeners;
+
+	}
 
 }
