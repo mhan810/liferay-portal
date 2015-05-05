@@ -17,26 +17,30 @@ package com.liferay.portal.messaging.internal.jmx;
 import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.MessageBus;
 
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
+import javax.management.DynamicMBean;
+import javax.management.NotCompliantMBeanException;
+import javax.management.StandardMBean;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
  * @author Brian Wing Shun Chan
  */
-public class MessageBusManager implements MessageBusManagerMBean {
+@Component(
+	immediate = true,
+	property = {
+		"jmx.objectname=com.liferay.portal.messaging:classification=message_bus,name=MessageBusManager",
+		"jmx.objectname.cache.key=MessageBusManager"
+	},
+	service = DynamicMBean.class
+)
+public class MessageBusManager
+	extends StandardMBean implements MessageBusManagerMBean {
 
-	public static ObjectName createObjectName() {
-		try {
-			return new ObjectName(_OBJECT_NAME);
-		}
-		catch (MalformedObjectNameException mone) {
-			throw new IllegalStateException(mone);
-		}
-	}
-
-	public MessageBusManager(MessageBus messageBus) {
-		_messageBus = messageBus;
+	public MessageBusManager() throws NotCompliantMBeanException {
+		super(MessageBusManagerMBean.class);
 	}
 
 	@Override
@@ -55,9 +59,11 @@ public class MessageBusManager implements MessageBusManagerMBean {
 		return destination.getMessageListenerCount();
 	}
 
-	private static final String _OBJECT_NAME =
-		"Liferay:product=Portal,type=MessageBusManager,host=localhost";
+	@Reference
+	protected void setMessageBus(MessageBus messageBus) {
+		_messageBus = messageBus;
+	}
 
-	private final MessageBus _messageBus;
+	private MessageBus _messageBus;
 
 }
