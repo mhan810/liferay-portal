@@ -140,18 +140,14 @@ public abstract class AbstractMessagingConfigurator
 
 		_destinationEventListenerServiceRegistrar.destroy();
 
+		_messageBusEventListenerServiceRegistrar.destroy();
+
 		_destinationConfigServiceRegistrar.destroy();
 
 		for (Destination destination : _destinations) {
 			_messageBus.removeDestination(destination.getName());
 
 			destination.close();
-		}
-
-		for (MessageBusEventListener messageBusEventListener :
-				_messageBusEventListeners) {
-
-			_messageBus.removeMessageBusEventListener(messageBusEventListener);
 		}
 
 		ClassLoader operatingClassLoader = getOperatingClassloader();
@@ -260,7 +256,17 @@ public abstract class AbstractMessagingConfigurator
 	public void setMessageBusEventListeners(
 		List<MessageBusEventListener> messageBusEventListeners) {
 
-		_messageBusEventListeners = messageBusEventListeners;
+		Registry registry = RegistryUtil.getRegistry();
+
+		_messageBusEventListenerServiceRegistrar = registry.getServiceRegistrar(
+			MessageBusEventListener.class);
+
+		for (MessageBusEventListener messageBusEventListener :
+				messageBusEventListeners) {
+
+			_messageBusEventListenerServiceRegistrar.registerService(
+				MessageBusEventListener.class, messageBusEventListener);
+		}
 	}
 
 	@Override
@@ -323,12 +329,6 @@ public abstract class AbstractMessagingConfigurator
 			_portalMessagingConfigurator = true;
 		}
 
-		for (MessageBusEventListener messageBusEventListener :
-				_messageBusEventListeners) {
-
-			_messageBus.addMessageBusEventListener(messageBusEventListener);
-		}
-
 		for (Destination destination : _destinations) {
 			_messageBus.addDestination(destination);
 		}
@@ -355,8 +355,8 @@ public abstract class AbstractMessagingConfigurator
 		_destinationEventListenerServiceRegistrar;
 	private final List<Destination> _destinations = new ArrayList<>();
 	private volatile MessageBus _messageBus;
-	private List<MessageBusEventListener> _messageBusEventListeners =
-		new ArrayList<>();
+	private ServiceRegistrar<MessageBusEventListener>
+		_messageBusEventListenerServiceRegistrar;
 	private Map<String, List<MessageListener>> _messageListeners =
 		new HashMap<>();
 	private boolean _portalMessagingConfigurator;
