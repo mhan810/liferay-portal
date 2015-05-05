@@ -1,7 +1,3 @@
-<%@ page
-		import="com.liferay.portal.kernel.backgroundtask.BackgroundTaskDisplayFactoryUtil" %>
-<%@ page
-		import="com.liferay.portal.kernel.backgroundtask.BackgroundTaskDisplay" %>
 <%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
@@ -71,9 +67,9 @@ BackgroundTask lastCompletedInitialPublicationBackgroundTask = BackgroundTaskLoc
 	</div>
 
 	<%
-		BackgroundTaskDisplay backgroundTaskDisplay = BackgroundTaskDisplayFactoryUtil.getBackgroundTaskDisplay(lastCompletedInitialPublicationBackgroundTask.getBackgroundTaskId(), locale);
+	BackgroundTaskDisplay backgroundTaskDisplay = BackgroundTaskDisplayFactoryUtil.getBackgroundTaskDisplay(lastCompletedInitialPublicationBackgroundTask.getBackgroundTaskId(), locale);
 
-		request.setAttribute("backgroundTaskDisplay", backgroundTaskDisplay);
+	request.setAttribute("backgroundTaskDisplay", backgroundTaskDisplay);
 	%>
 
 	<liferay-util:include page="/html/portlet/background_task/background_task_details.jsp">
