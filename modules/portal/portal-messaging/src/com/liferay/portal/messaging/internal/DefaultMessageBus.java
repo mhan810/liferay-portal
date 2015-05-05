@@ -120,11 +120,20 @@ public class DefaultMessageBus implements MessageBus {
 	}
 
 	@Override
-	public synchronized Destination removeDestination(String destinationName) {
+	public Destination removeDestination(String destinationName) {
+		return removeDestination(destinationName, true);
+	}
+
+	@Override
+	public synchronized Destination removeDestination(
+		String destinationName, boolean closeOnRemove) {
+
 		Destination destination = _destinations.remove(destinationName);
 
 		if (destination != null) {
-			destination.close(true);
+			if (closeOnRemove) {
+				destination.close(true);
+			}
 
 			destination.removeDestinationEventListeners();
 			destination.unregisterMessageListeners();
@@ -148,14 +157,23 @@ public class DefaultMessageBus implements MessageBus {
 
 	@Override
 	public void replace(Destination destination) {
+		replace(destination, true);
+	}
+
+	@Override
+	public void replace(Destination destination, boolean closeOnRemove) {
 		Destination oldDestination = _destinations.get(destination.getName());
 
 		oldDestination.copyDestinationEventListeners(destination);
 		oldDestination.copyMessageListeners(destination);
 
-		removeDestination(oldDestination.getName());
+		removeDestination(oldDestination.getName(), closeOnRemove);
 
 		addDestination(destination);
+
+		if (closeOnRemove) {
+			destination.open();
+		}
 	}
 
 	@Override
