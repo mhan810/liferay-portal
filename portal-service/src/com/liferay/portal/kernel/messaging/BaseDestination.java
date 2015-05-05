@@ -74,6 +74,20 @@ public abstract class BaseDestination implements Destination {
 	}
 
 	@Override
+	public void destroy() {
+		close(true);
+
+		removeDestinationEventListeners();
+
+		unregisterMessageListeners();
+	}
+
+	@Override
+	public DestinationStatistics getDestinationStatistics() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public int getMessageListenerCount() {
 		return messageListeners.size();
 	}
@@ -130,6 +144,11 @@ public abstract class BaseDestination implements Destination {
 	@Override
 	public void removeDestinationEventListeners() {
 		_destinationEventListeners.clear();
+	}
+
+	@Override
+	public void send(Message message) {
+		throw new UnsupportedOperationException();
 	}
 
 	public void setName(String name) {
