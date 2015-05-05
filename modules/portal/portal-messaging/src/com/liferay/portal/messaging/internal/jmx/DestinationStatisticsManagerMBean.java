@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.messaging.jmx;
+package com.liferay.portal.messaging.internal.jmx;
 
 /**
  * @author Michael C. Han

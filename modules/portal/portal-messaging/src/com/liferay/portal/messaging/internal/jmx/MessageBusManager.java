@@ -12,9 +12,9 @@
  * details.
  */
 
-package com.liferay.portal.kernel.messaging.jmx;
+package com.liferay.portal.messaging.internal.jmx;
 
-import com.liferay.portal.kernel.messaging.Destination;
+import com.liferay.portal.kernel.messaging.MessageBus;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
@@ -23,29 +23,29 @@ import javax.management.ObjectName;
  * @author Michael C. Han
  * @author Brian Wing Shun Chan
  */
-public class DestinationManager implements DestinationManagerMBean {
+public class MessageBusManager implements MessageBusManagerMBean {
 
-	public static ObjectName createObjectName(String destinationName) {
+	public static ObjectName createObjectName() {
 		try {
-			return new ObjectName(_OBJECT_NAME_PREFIX + destinationName);
+			return new ObjectName(_OBJECT_NAME);
 		}
 		catch (MalformedObjectNameException mone) {
 			throw new IllegalStateException(mone);
 		}
 	}
 
-	public DestinationManager(Destination destination) {
-		_destination = destination;
+	public MessageBusManager(MessageBus messageBus) {
+		_messageBus = messageBus;
 	}
 
 	@Override
-	public int getListenerCount() {
-		return _destination.getMessageListenerCount();
+	public int getDestinationCount() {
+		return _messageBus.getDestinationCount();
 	}
 
-	private static final String _OBJECT_NAME_PREFIX =
-		"Liferay:product=Portal,type=MessagingDestination,name=";
+	private static final String _OBJECT_NAME =
+		"Liferay:product=Portal,type=MessageBusManager,host=localhost";
 
-	private final Destination _destination;
+	private final MessageBus _messageBus;
 
 }
