@@ -12,14 +12,14 @@
  * details.
  */
 
-package com.liferay.portal.kernel.messaging.jmx;
+package com.liferay.portal.messaging.internal.jmx;
 
 /**
  * @author Michael C. Han
  * @author Brian Wing Shun Chan
  */
-public interface DestinationManagerMBean {
+public interface MessageBusManagerMBean {
 
-	public int getListenerCount();
+	public int getDestinationCount();
 
 }
