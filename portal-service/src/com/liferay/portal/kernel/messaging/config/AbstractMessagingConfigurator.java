@@ -126,11 +126,15 @@ public abstract class AbstractMessagingConfigurator
 	public void destroy() {
 		disconnect();
 
+		_destinationEventListeners.clear();
+
 		_messageListeners.clear();
+
+		_messageBusEventListenerServiceRegistrar.destroy();
 
 		_messageListenerServiceRegistrar.destroy();
 
-		_messageBusEventListenerServiceRegistrar.destroy();
+		_destinationEventListenerServiceRegistrar.destroy();
 
 		_destinationConfigServiceRegistrar.destroy();
 
@@ -151,25 +155,6 @@ public abstract class AbstractMessagingConfigurator
 			}
 
 		});
-
-		for (Map.Entry<String, List<DestinationEventListener>>
-				destinationEventListeners :
-					_destinationEventListeners.entrySet()) {
-
-			String destinationName = destinationEventListeners.getKey();
-
-			for (DestinationEventListener destinationEventListener :
-					destinationEventListeners.getValue()) {
-
-				Destination destination = _messageBus.getDestination(
-					destinationName);
-
-				if (destination != null) {
-					destination.removeDestinationEventListener(
-						destinationEventListener);
-				}
-			}
-		}
 
 		ClassLoader operatingClassLoader = getOperatingClassloader();
 
@@ -334,6 +319,8 @@ public abstract class AbstractMessagingConfigurator
 			_portalMessagingConfigurator = true;
 		}
 
+		registerDestinationEventListeners();
+
 		connect();
 
 		String servletContextName = ClassLoaderPool.getContextName(
@@ -341,6 +328,55 @@ public abstract class AbstractMessagingConfigurator
 
 		MessagingConfiguratorRegistry.registerMessagingConfigurator(
 			servletContextName, this);
+	}
+
+	protected void registerDestinationEventListeners() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_destinationEventListenerServiceRegistrar =
+			registry.getServiceRegistrar(DestinationEventListener.class);
+
+		for (final Map.Entry<String, List<DestinationEventListener>>
+				destinationEventListeners :
+					_destinationEventListeners.entrySet()) {
+
+			final String destinationName = destinationEventListeners.getKey();
+
+			ServiceDependencyManager serviceDependencyManager =
+				new ServiceDependencyManager();
+
+			serviceDependencyManager.addServiceDependencyListener(
+
+				new ServiceDependencyListener() {
+
+					@Override
+					public void dependenciesFulfilled() {
+						Map<String, Object> properties = new HashMap<>();
+
+						properties.put("destination.name", destinationName);
+
+						for (DestinationEventListener destinationEventListener :
+								destinationEventListeners.getValue()) {
+
+							_destinationEventListenerServiceRegistrar.
+								registerService(
+									DestinationEventListener.class,
+									destinationEventListener, properties);
+						}
+					}
+
+					@Override
+					public void destroy() {
+					}
+
+				});
+
+			Filter destinationFilter = registry.getFilter(
+				"(&(destination.name=" + destinationName +
+					")(objectClass=" + Destination.class.getName() + "))");
+
+			serviceDependencyManager.registerDependencies(destinationFilter);
+		}
 	}
 
 	protected void registerDestinations(List<Destination> destinations) {
@@ -379,6 +415,8 @@ public abstract class AbstractMessagingConfigurator
 		_destinationConfigServiceRegistrar;
 	private Map<String, List<DestinationEventListener>>
 		_destinationEventListeners = new HashMap<>();
+	private ServiceRegistrar<DestinationEventListener>
+		_destinationEventListenerServiceRegistrar;
 	private ServiceRegistrar<Destination> _destinationServiceRegistrar;
 	private volatile MessageBus _messageBus;
 	private ServiceRegistrar<MessageBusEventListener>
