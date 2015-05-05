@@ -31,12 +31,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
+import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 /**
  * @author Michael C. Han
@@ -219,6 +224,17 @@ public class DefaultMessageBus implements MessageBus {
 		return destination.unregister(messageListener);
 	}
 
+	@Activate
+	protected void activate(BundleContext bundleContext) {
+		_bundleContext = bundleContext;
+
+		_serviceTracker = new ServiceTracker<>(
+			_bundleContext, Destination.class,
+			new DestinationServiceTrackerCustomizer());
+
+		_serviceTracker.open();
+	}
+
 	@Reference(
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC,
@@ -257,6 +273,12 @@ public class DefaultMessageBus implements MessageBus {
 		}
 
 		_messageBusEventListeners.clear();
+
+		_serviceTracker.close();
+
+		_serviceTracker = null;
+
+		_bundleContext = null;
 	}
 
 	@Reference(
@@ -323,8 +345,34 @@ public class DefaultMessageBus implements MessageBus {
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultMessageBus.class);
 
+	private BundleContext _bundleContext;
 	private final Map<String, Destination> _destinations = new HashMap<>();
 	private final Set<MessageBusEventListener> _messageBusEventListeners =
 		new ConcurrentHashSet<>();
+	private ServiceTracker<Destination, Destination> _serviceTracker;
+
+	private class DestinationServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer<Destination, Destination> {
+
+		@Override
+		public Destination addingService(
+			ServiceReference<Destination> reference) {
+
+			return _bundleContext.getService(reference);
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<Destination> reference, Destination destination) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<Destination> reference, Destination destination) {
+
+			destination.destroy();
+		}
+
+	}
 
 }
