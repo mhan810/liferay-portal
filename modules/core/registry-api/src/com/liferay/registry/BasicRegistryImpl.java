@@ -167,7 +167,7 @@ public class BasicRegistryImpl implements Registry {
 
 		List<T> services = new ArrayList<>();
 
-		if ((filterString == null) || (filterString.equals(""))) {
+		if ((filterString == null) || filterString.equals("")) {
 			filterString = "(objectClass=" + className + ")";
 		}
 
