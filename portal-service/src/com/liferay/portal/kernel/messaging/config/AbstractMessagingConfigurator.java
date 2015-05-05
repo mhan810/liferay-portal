@@ -17,6 +17,7 @@ package com.liferay.portal.kernel.messaging.config;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Destination;
+import com.liferay.portal.kernel.messaging.DestinationConfig;
 import com.liferay.portal.kernel.messaging.DestinationEventListener;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusEventListener;
@@ -31,6 +32,7 @@ import com.liferay.portal.kernel.util.ClassLoaderPool;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceRegistrar;
 import com.liferay.registry.dependency.ServiceDependencyListener;
 import com.liferay.registry.dependency.ServiceDependencyManager;
 
@@ -40,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Michael C. Han
@@ -135,6 +138,8 @@ public abstract class AbstractMessagingConfigurator
 	public void destroy() {
 		disconnect();
 
+		_destinationConfigServiceRegistrar.destroy();
+
 		for (Destination destination : _destinations) {
 			_messageBus.removeDestination(destination.getName());
 
@@ -192,6 +197,35 @@ public abstract class AbstractMessagingConfigurator
 				_messageBus.unregisterMessageListener(
 					destinationName, messageListener);
 			}
+		}
+	}
+
+	@Override
+	public void setDestinationConfigs(
+		Set<DestinationConfig> destinationConfigs) {
+
+		Registry registry = RegistryUtil.getRegistry();
+
+		_destinationConfigServiceRegistrar = registry.getServiceRegistrar(
+			DestinationConfig.class);
+
+		for (DestinationConfig destinationConfig : destinationConfigs) {
+			try {
+				PortalMessageBusPermission.checkListen(
+					destinationConfig.getDestinationName());
+			}
+			catch (SecurityException se) {
+				if (_log.isInfoEnabled()) {
+					_log.info(
+						"Rejecting destination " +
+							destinationConfig.getDestinationName());
+				}
+
+				continue;
+			}
+
+			_destinationConfigServiceRegistrar.registerService(
+				DestinationConfig.class, destinationConfig);
 		}
 	}
 
@@ -332,6 +366,8 @@ public abstract class AbstractMessagingConfigurator
 	private static final Log _log = LogFactoryUtil.getLog(
 		AbstractMessagingConfigurator.class);
 
+	private ServiceRegistrar<DestinationConfig>
+		_destinationConfigServiceRegistrar;
 	private Map<String, List<DestinationEventListener>>
 		_destinationEventListeners = new HashMap<>();
 	private final List<Destination> _destinations = new ArrayList<>();
