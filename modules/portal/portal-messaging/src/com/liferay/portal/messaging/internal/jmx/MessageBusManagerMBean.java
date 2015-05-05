@@ -22,4 +22,6 @@ public interface MessageBusManagerMBean {
 
 	public int getDestinationCount();
 
+	public int getMessageListenerCount(String destinationName);
+
 }

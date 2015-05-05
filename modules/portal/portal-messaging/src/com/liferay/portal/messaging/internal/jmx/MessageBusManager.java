@@ -14,6 +14,7 @@
 
 package com.liferay.portal.messaging.internal.jmx;
 
+import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.MessageBus;
 
 import javax.management.MalformedObjectNameException;
@@ -41,6 +42,17 @@ public class MessageBusManager implements MessageBusManagerMBean {
 	@Override
 	public int getDestinationCount() {
 		return _messageBus.getDestinationCount();
+	}
+
+	@Override
+	public int getMessageListenerCount(String destinationName) {
+		Destination destination = _messageBus.getDestination(destinationName);
+
+		if (destination == null) {
+			return 0;
+		}
+
+		return destination.getMessageListenerCount();
 	}
 
 	private static final String _OBJECT_NAME =
