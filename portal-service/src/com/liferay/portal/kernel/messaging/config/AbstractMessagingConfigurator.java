@@ -41,7 +41,6 @@ import com.liferay.registry.dependency.ServiceDependencyManager;
 import java.lang.reflect.Method;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -345,8 +344,6 @@ public abstract class AbstractMessagingConfigurator
 
 			properties.put("destination.name", destination.getName());
 
-			_destinationNames.add(destination.getName());
-
 			_destinationServiceRegistrar.registerService(
 				Destination.class, destination, properties);
 		}
@@ -407,7 +404,6 @@ public abstract class AbstractMessagingConfigurator
 		_destinationEventListeners;
 	private ServiceRegistrar<DestinationEventListener>
 		_destinationEventListenerServiceRegistrar;
-	private final Set<String> _destinationNames = new HashSet<>();
 	private ServiceRegistrar<Destination> _destinationServiceRegistrar;
 	private volatile MessageBus _messageBus;
 	private ServiceRegistrar<MessageBusEventListener>
