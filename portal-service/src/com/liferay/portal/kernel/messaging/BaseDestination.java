@@ -21,6 +21,9 @@ import com.liferay.portal.kernel.util.Validator;
 import java.util.Collections;
 import java.util.Set;
 
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Deactivate;
+
 /**
  * @author Michael C. Han
  * @author Shuyang Zhou
@@ -155,6 +158,16 @@ public abstract class BaseDestination implements Destination {
 		for (MessageListener messageListener : messageListeners) {
 			unregisterMessageListener((InvokerMessageListener)messageListener);
 		}
+	}
+
+	@Activate
+	protected void activate() {
+		afterPropertiesSet();
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		destroy();
 	}
 
 	protected void fireMessageListenerRegisteredEvent(
