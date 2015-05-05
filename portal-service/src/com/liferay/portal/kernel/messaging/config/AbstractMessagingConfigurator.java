@@ -32,14 +32,15 @@ import com.liferay.portal.kernel.util.ClassLoaderPool;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceFinalizer;
 import com.liferay.registry.ServiceRegistrar;
 import com.liferay.registry.dependency.ServiceDependencyListener;
 import com.liferay.registry.dependency.ServiceDependencyManager;
 
 import java.lang.reflect.Method;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -144,11 +145,20 @@ public abstract class AbstractMessagingConfigurator
 
 		_destinationConfigServiceRegistrar.destroy();
 
-		for (Destination destination : _destinations) {
-			_messageBus.removeDestination(destination.getName());
+		_destinationServiceRegistrar.destroy(
 
-			destination.close();
-		}
+			new ServiceFinalizer<Destination>() {
+
+			@Override
+			public void finalize(Destination destination) {
+				destination.close();
+
+				destination.removeDestinationEventListeners();
+
+				destination.unregisterMessageListeners();
+			}
+
+		});
 
 		ClassLoader operatingClassLoader = getOperatingClassloader();
 
@@ -236,20 +246,7 @@ public abstract class AbstractMessagingConfigurator
 
 	@Override
 	public void setDestinations(List<Destination> destinations) {
-		for (Destination destination : destinations) {
-			try {
-				PortalMessageBusPermission.checkListen(destination.getName());
-			}
-			catch (SecurityException se) {
-				if (_log.isInfoEnabled()) {
-					_log.info("Rejecting destination " + destination.getName());
-				}
-
-				continue;
-			}
-
-			_destinations.add(destination);
-		}
+		registerDestinations(destinations);
 	}
 
 	@Override
@@ -313,7 +310,7 @@ public abstract class AbstractMessagingConfigurator
 	public void setReplacementDestinations(
 		List<Destination> replacementDestinations) {
 
-		_replacementDestinations = replacementDestinations;
+		registerDestinations(replacementDestinations);
 	}
 
 	protected abstract ClassLoader getOperatingClassloader();
@@ -329,14 +326,6 @@ public abstract class AbstractMessagingConfigurator
 			_portalMessagingConfigurator = true;
 		}
 
-		for (Destination destination : _destinations) {
-			_messageBus.addDestination(destination);
-		}
-
-		for (Destination destination : _replacementDestinations) {
-			_messageBus.replace(destination);
-		}
-
 		connect();
 
 		String servletContextName = ClassLoaderPool.getContextName(
@@ -346,6 +335,37 @@ public abstract class AbstractMessagingConfigurator
 			servletContextName, this);
 	}
 
+	protected void registerDestinations(List<Destination> destinations) {
+		Registry registry = RegistryUtil.getRegistry();
+
+		if (_destinationServiceRegistrar == null) {
+			_destinationServiceRegistrar = registry.getServiceRegistrar(
+				Destination.class);
+		}
+
+		for (Destination destination : destinations) {
+			try {
+				PortalMessageBusPermission.checkListen(destination.getName());
+			}
+			catch (SecurityException se) {
+				if (_log.isInfoEnabled()) {
+					_log.info("Rejecting destination " + destination.getName());
+				}
+
+				continue;
+			}
+
+			Map<String, Object> properties = new HashMap<>();
+
+			properties.put("destination.name", destination.getName());
+
+			_destinationNames.add(destination.getName());
+
+			_destinationServiceRegistrar.registerService(
+				Destination.class, destination, properties);
+		}
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		AbstractMessagingConfigurator.class);
 
@@ -353,13 +373,13 @@ public abstract class AbstractMessagingConfigurator
 		_destinationConfigServiceRegistrar;
 	private ServiceRegistrar<DestinationEventListener>
 		_destinationEventListenerServiceRegistrar;
-	private final List<Destination> _destinations = new ArrayList<>();
+	private final Set<String> _destinationNames = new HashSet<>();
+	private ServiceRegistrar<Destination> _destinationServiceRegistrar;
 	private volatile MessageBus _messageBus;
 	private ServiceRegistrar<MessageBusEventListener>
 		_messageBusEventListenerServiceRegistrar;
 	private Map<String, List<MessageListener>> _messageListeners =
 		new HashMap<>();
 	private boolean _portalMessagingConfigurator;
-	private List<Destination> _replacementDestinations = new ArrayList<>();
 
 }
