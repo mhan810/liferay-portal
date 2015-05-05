@@ -104,11 +104,6 @@ public class DefaultDestinationFactory implements DestinationFactory {
 					destinationServiceRegistration :
 						_destinationServiceRegistrations.values()) {
 
-				Destination destination = _bundleContext.getService(
-					destinationServiceRegistration.getReference());
-
-				destination.destroy();
-
 				destinationServiceRegistration.unregister();
 			}
 		}
