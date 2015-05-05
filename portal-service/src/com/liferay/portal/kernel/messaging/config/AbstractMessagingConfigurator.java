@@ -245,6 +245,11 @@ public abstract class AbstractMessagingConfigurator
 		_destinationEventListeners = destinationEventListeners;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #setDestinationConfigs(Set)}
+	 * @param destinations
+	 */
+	@Deprecated
 	@Override
 	public void setDestinations(List<Destination> destinations) {
 		registerDestinations(destinations);
@@ -307,6 +312,11 @@ public abstract class AbstractMessagingConfigurator
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #setDestinationConfigs(Set)}
+	 * @param replacementDestinations
+	 */
+	@Deprecated
 	@Override
 	public void setReplacementDestinations(
 		List<Destination> replacementDestinations) {
