@@ -138,31 +138,14 @@ public abstract class AbstractMessagingConfigurator
 	public void destroy() {
 		disconnect();
 
+		_destinationEventListenerServiceRegistrar.destroy();
+
 		_destinationConfigServiceRegistrar.destroy();
 
 		for (Destination destination : _destinations) {
 			_messageBus.removeDestination(destination.getName());
 
 			destination.close();
-		}
-
-		for (Map.Entry<String, List<DestinationEventListener>>
-				destinationEventListeners :
-					_destinationEventListeners.entrySet()) {
-
-			String destinationName = destinationEventListeners.getKey();
-
-			for (DestinationEventListener destinationEventListener :
-					destinationEventListeners.getValue()) {
-
-				Destination destination = _messageBus.getDestination(
-					destinationName);
-
-				if (destination != null) {
-					destination.removeDestinationEventListener(
-						destinationEventListener);
-				}
-			}
 		}
 
 		for (MessageBusEventListener messageBusEventListener :
@@ -233,7 +216,26 @@ public abstract class AbstractMessagingConfigurator
 	public void setDestinationEventListeners(
 		Map<String, List<DestinationEventListener>> destinationEventListeners) {
 
-		_destinationEventListeners = destinationEventListeners;
+		Registry registry = RegistryUtil.getRegistry();
+
+		_destinationEventListenerServiceRegistrar =
+			registry.getServiceRegistrar(DestinationEventListener.class);
+
+		for (Map.Entry<String, List<DestinationEventListener>> listeners :
+				destinationEventListeners.entrySet()) {
+
+			Map<String, Object> properties = new HashMap<>();
+
+			properties.put("destination.name", listeners.getKey());
+
+			for (DestinationEventListener destinationEventListener :
+					listeners.getValue()) {
+
+				_destinationEventListenerServiceRegistrar.registerService(
+					DestinationEventListener.class, destinationEventListener,
+					properties);
+			}
+		}
 	}
 
 	@Override
@@ -331,25 +333,6 @@ public abstract class AbstractMessagingConfigurator
 			_messageBus.addDestination(destination);
 		}
 
-		for (Map.Entry<String, List<DestinationEventListener>>
-				destinationEventListeners :
-					_destinationEventListeners.entrySet()) {
-
-			String destinationName = destinationEventListeners.getKey();
-
-			for (DestinationEventListener destinationEventListener :
-					destinationEventListeners.getValue()) {
-
-				Destination destination = _messageBus.getDestination(
-					destinationName);
-
-				if (destination != null) {
-					destination.addDestinationEventListener(
-						destinationEventListener);
-				}
-			}
-		}
-
 		for (Destination destination : _replacementDestinations) {
 			_messageBus.replace(destination);
 		}
@@ -368,8 +351,8 @@ public abstract class AbstractMessagingConfigurator
 
 	private ServiceRegistrar<DestinationConfig>
 		_destinationConfigServiceRegistrar;
-	private Map<String, List<DestinationEventListener>>
-		_destinationEventListeners = new HashMap<>();
+	private ServiceRegistrar<DestinationEventListener>
+		_destinationEventListenerServiceRegistrar;
 	private final List<Destination> _destinations = new ArrayList<>();
 	private volatile MessageBus _messageBus;
 	private List<MessageBusEventListener> _messageBusEventListeners =
