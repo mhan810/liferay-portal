@@ -70,8 +70,17 @@ public class DefaultDestinationFactory implements DestinationFactory {
 	}
 
 	@Activate
-	protected void activate(BundleContext bundleContext) {
+	protected synchronized void activate(BundleContext bundleContext) {
 		_bundleContext = bundleContext;
+
+		for (DestinationConfiguration destinationConfiguration :
+				_destinationConfigurations.values()) {
+
+			if (!_serviceRegistrations.containsKey(
+					destinationConfiguration.getDestinationName())) {
+				addDestination(destinationConfiguration);
+			}
+		}
 	}
 
 	@Reference(
@@ -86,6 +95,17 @@ public class DefaultDestinationFactory implements DestinationFactory {
 		_destinationConfigurations.put(
 			destinationConfiguration.getDestinationName(),
 			destinationConfiguration);
+
+		if (_destinationPrototypes.containsKey(
+				destinationConfiguration.getDestinationType()) &&
+			(_bundleContext != null)) {
+
+			addDestination(destinationConfiguration);
+		}
+	}
+
+	protected void addDestination(
+		DestinationConfiguration destinationConfiguration) {
 
 		Destination destination = createDestination(
 			destinationConfiguration);
