@@ -283,6 +283,12 @@ public abstract class AbstractMessagingConfigurator
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #setDestinations(List)}
+	 *
+	 * @param replacementDestinations
+	 */
+	@Deprecated
 	@Override
 	public void setReplacementDestinations(
 		List<Destination> replacementDestinations) {
