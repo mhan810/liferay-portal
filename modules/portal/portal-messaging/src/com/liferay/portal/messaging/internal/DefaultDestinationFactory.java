@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -40,8 +39,6 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
-import org.osgi.util.tracker.ServiceTracker;
-import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 /**
  * @author Michael C. Han
@@ -75,12 +72,35 @@ public class DefaultDestinationFactory implements DestinationFactory {
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_bundleContext = bundleContext;
+	}
 
-		_serviceTracker = new ServiceTracker<>(
-			_bundleContext, DestinationConfiguration.class,
-			new DestinationConfigurationServiceTrackerCustomizer());
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected synchronized void addDestinationConfiguration(
+		DestinationConfiguration destinationConfiguration,
+		Map<String, Object> properties) {
 
-		_serviceTracker.open();
+		_destinationConfigurations.put(
+			destinationConfiguration.getDestinationName(),
+			destinationConfiguration);
+
+		Destination destination = createDestination(
+			destinationConfiguration);
+
+		Dictionary<String, Object> dictionary =
+			new HashMapDictionary<>();
+
+		dictionary.put("destination.name", destination.getName());
+
+		ServiceRegistration<Destination> serviceRegistration =
+			_bundleContext.registerService(
+				Destination.class, destination, dictionary);
+
+		_serviceRegistrations.put(
+			destination.getName(), serviceRegistration);
 	}
 
 	@Reference(
@@ -100,18 +120,16 @@ public class DefaultDestinationFactory implements DestinationFactory {
 
 	@Deactivate
 	protected void deactivate() {
-		_serviceTracker.close();
+		for (ServiceRegistration<Destination>
+				destinationServiceRegistration :
+					_serviceRegistrations.values()) {
 
-		synchronized (_serviceRegistrations) {
-			for (ServiceRegistration<Destination>
-					destinationServiceRegistration :
-						_serviceRegistrations.values()) {
-
-				destinationServiceRegistration.unregister();
-			}
+			destinationServiceRegistration.unregister();
 		}
 
 		_serviceRegistrations.clear();
+
+		_destinationConfigurations.clear();
 
 		_bundleContext = null;
 	}
@@ -126,6 +144,25 @@ public class DefaultDestinationFactory implements DestinationFactory {
 		_destinationPrototypes.remove(destinationType);
 	}
 
+
+	protected synchronized void removeDestinationConfiguration(
+		DestinationConfiguration destinationConfiguration,
+		Map<String, Object> properties) {
+
+		_destinationConfigurations.remove(
+			destinationConfiguration.getDestinationName());
+
+		if (_serviceRegistrations.containsKey(
+				destinationConfiguration.getDestinationName())) {
+
+			ServiceRegistration<Destination> serviceRegistration =
+				_serviceRegistrations.get(
+					destinationConfiguration.getDestinationName());
+
+			serviceRegistration.unregister();
+		}
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultDestinationFactory.class);
 
@@ -134,94 +171,7 @@ public class DefaultDestinationFactory implements DestinationFactory {
 		new ConcurrentHashMap<>();
 	private final Map<String, ServiceRegistration<Destination>>
 		_serviceRegistrations = new HashMap<>();
-	private ServiceTracker<DestinationConfiguration, DestinationConfiguration>
-		_serviceTracker;
-
-	private class DestinationConfigurationServiceTrackerCustomizer
-		implements ServiceTrackerCustomizer
-			<DestinationConfiguration, DestinationConfiguration> {
-
-		@Override
-		public DestinationConfiguration addingService(
-			ServiceReference<DestinationConfiguration> serviceReference) {
-
-			DestinationConfiguration destinationConfiguration =
-				_bundleContext.getService(serviceReference);
-
-			try {
-				synchronized (_serviceRegistrations) {
-					unregister(destinationConfiguration);
-
-					Destination destination = createDestination(
-						destinationConfiguration);
-
-					Dictionary<String, Object> dictionary =
-						new HashMapDictionary<>();
-
-					dictionary.put("destination.name", destination.getName());
-
-					ServiceRegistration<Destination> serviceRegistration =
-						_bundleContext.registerService(
-							Destination.class, destination, dictionary);
-
-					_serviceRegistrations.put(
-						destination.getName(), serviceRegistration);
-				}
-			}
-			catch (Exception e) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(
-						"Unable to instantiate destination " +
-							destinationConfiguration,
-						e);
-				}
-			}
-
-			return destinationConfiguration;
-		}
-
-		@Override
-		public void modifiedService(
-			ServiceReference<DestinationConfiguration> serviceReference,
-			DestinationConfiguration destinationConfiguration) {
-
-			unregister(destinationConfiguration);
-
-			Destination destination = createDestination(
-				destinationConfiguration);
-
-			Dictionary<String, Object> dictionary = new HashMapDictionary<>();
-
-			dictionary.put("destination.name", destination.getName());
-
-			_bundleContext.registerService(
-				Destination.class, destination, dictionary);
-		}
-
-		@Override
-		public void removedService(
-			ServiceReference<DestinationConfiguration> serviceReference,
-			DestinationConfiguration destinationConfiguration) {
-
-			unregister(destinationConfiguration);
-		}
-
-		protected void unregister(
-			DestinationConfiguration destinationConfiguration) {
-
-			synchronized (_serviceRegistrations) {
-				if (_serviceRegistrations.containsKey(
-						destinationConfiguration.getDestinationName())) {
-
-					ServiceRegistration<Destination> serviceRegistration =
-						_serviceRegistrations.get(
-							destinationConfiguration.getDestinationName());
-
-					serviceRegistration.unregister();
-				}
-			}
-		}
-
-	}
+	private Map<String, DestinationConfiguration> _destinationConfigurations =
+		new HashMap<>();
 
 }
