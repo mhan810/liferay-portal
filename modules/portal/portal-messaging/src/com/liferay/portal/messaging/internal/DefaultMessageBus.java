@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.messaging.MessageBusEventListener;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.nio.intraband.messaging.IntrabandBridgeDestination;
 import com.liferay.portal.kernel.resiliency.spi.SPIUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 
 import java.util.Collection;
@@ -47,21 +48,12 @@ public class DefaultMessageBus implements MessageBus {
 
 	@Override
 	public synchronized void addDestination(Destination destination) {
-		Class<?> clazz = destination.getClass();
+		Map<String, Object> properties = new HashMap<>();
 
-		if (SPIUtil.isSPI() &&
-			!clazz.equals(IntrabandBridgeDestination.class)) {
+		properties.put("destination.name", destination.getName());
+		properties.put("destination.replace", false);
 
-			destination = new IntrabandBridgeDestination(destination);
-		}
-
-		_destinations.put(destination.getName(), destination);
-
-		for (MessageBusEventListener messageBusEventListener :
-				_messageBusEventListeners) {
-
-			messageBusEventListener.destinationAdded(destination);
-		}
+		addDestination(destination, properties);
 	}
 
 	@Override
@@ -131,23 +123,14 @@ public class DefaultMessageBus implements MessageBus {
 	public synchronized Destination removeDestination(
 		String destinationName, boolean closeOnRemove) {
 
-		Destination destination = _destinations.remove(destinationName);
+		Destination destination = _destinations.get(destinationName);
 
-		if (destination != null) {
-			if (closeOnRemove) {
-				destination.close(true);
-			}
+		Map<String, Object> properties = new HashMap<>();
 
-			destination.removeDestinationEventListeners();
+		properties.put("destination.name", destination.getName());
+		properties.put("destination.close.on.remove", closeOnRemove);
 
-			destination.unregisterMessageListeners();
-
-			for (MessageBusEventListener messageBusEventListener :
-					_messageBusEventListeners) {
-
-				messageBusEventListener.destinationRemoved(destination);
-			}
-		}
+		removeDestination(destination, properties);
 
 		return destination;
 	}
@@ -240,8 +223,13 @@ public class DefaultMessageBus implements MessageBus {
 			destination = new IntrabandBridgeDestination(destination);
 		}
 
+		boolean replace = GetterUtil.getBoolean(
+			properties.get("destination.replace"), true);
+
 		if (_destinations.containsKey(destination.getName())) {
-			replace(destination);
+			if (replace) {
+				replace(destination);
+			}
 		}
 		else {
 			_destinations.put(destination.getName(), destination);
@@ -336,9 +324,24 @@ public class DefaultMessageBus implements MessageBus {
 	protected synchronized void removeDestination(
 		Destination destination, Map<String, Object> properties) {
 
-		removeDestination(destination.getName());
+		destination.removeDestinationEventListeners();
 
-		destination.destroy();
+		destination.unregisterMessageListeners();
+
+		for (MessageBusEventListener messageBusEventListener :
+				_messageBusEventListeners) {
+
+			messageBusEventListener.destinationRemoved(destination);
+		}
+
+		boolean closeOnRemove = GetterUtil.getBoolean(
+			properties.get("destination.close.on.remove"), true);
+
+		if (closeOnRemove) {
+			destination.close(true);
+
+			destination.destroy();
+		}
 	}
 
 	protected synchronized void removeDestinationEventListener(
