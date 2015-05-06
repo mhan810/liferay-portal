@@ -18,6 +18,7 @@ import com.liferay.portal.jcr.JCRFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.BaseDestination;
+import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
@@ -49,6 +50,11 @@ import com.liferay.portal.util.PortalInstances;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.registry.Filter;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.dependency.ServiceDependencyListener;
+import com.liferay.registry.dependency.ServiceDependencyManager;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -319,14 +325,40 @@ public class ServiceTestUtil {
 			PropsUtil.get(PropsKeys.JCR_JACKRABBIT_REPOSITORY_ROOT));
 	}
 
-	private static void _replaceWithSynchronousDestination(String name) {
-		BaseDestination baseDestination = new SynchronousDestination();
+	private static void _replaceWithSynchronousDestination(final String name) {
+		ServiceDependencyManager serviceDependencyManager =
+			new ServiceDependencyManager();
 
-		baseDestination.setName(name);
+		serviceDependencyManager.addServiceDependencyListener(
 
-		MessageBus messageBus = MessageBusUtil.getMessageBus();
+			new ServiceDependencyListener() {
 
-		messageBus.replace(baseDestination);
+				@Override
+				public void dependenciesFulfilled() {
+
+					BaseDestination baseDestination =
+						new SynchronousDestination();
+
+					baseDestination.setName(name);
+
+					MessageBus messageBus = MessageBusUtil.getMessageBus();
+
+					messageBus.replace(baseDestination);
+				}
+
+				@Override
+				public void destroy() {
+				}
+
+			});
+
+		Registry registry = RegistryUtil.getRegistry();
+
+		Filter destinationFilter = registry.getFilter(
+			"(&(destination.name=" + name +
+				")(objectClass=" + Destination.class.getName() + "))");
+
+		serviceDependencyManager.registerDependencies(destinationFilter);
 	}
 
 	private static void _setThreadLocals() {
