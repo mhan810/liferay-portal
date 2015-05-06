@@ -788,6 +788,14 @@
 		</property>
 	</bean>
 	<bean id="com.liferay.portal.struts.DoIncludeJSPDynamicInclude" class="com.liferay.portal.struts.DoIncludeJSPDynamicInclude" />
+	<bean id="com.liferay.portal.tools.DBUpgrader" class="com.liferay.portal.tools.DBUpgrader">
+		<property name="releaseUpgrader">
+			<bean class="com.liferay.portal.tools.releasecheck.ReleaseUpgrader" />
+		</property>
+		<property name="releaseVerifier">
+			<bean class="com.liferay.portal.tools.releasecheck.ReleaseVerifier" />
+		</property>
+	</bean>
 	<bean id="com.liferay.portal.util.CustomJspRegistryUtil" class="com.liferay.portal.util.CustomJspRegistryUtil">
 		<property name="customJspRegistry">
 			<bean class="com.liferay.portal.util.CustomJspRegistryImpl" />
