@@ -41,13 +41,6 @@ public interface MessagingConfigurator {
 	public void setDestinationEventListeners(
 		Map<String, List<DestinationEventListener>> destinationEventListeners);
 
-	/**
-	 * @deprecated As of 7.0.0, replaced by
-	 *             {@link #setDestinationConfigurations(Set)}
-	 *
-	 * @param destinations
-	 */
-	@Deprecated
 	public void setDestinations(List<Destination> destinations);
 
 	public void setMessageBusEventListeners(
@@ -56,6 +49,12 @@ public interface MessagingConfigurator {
 	public void setMessageListeners(
 		Map<String, List<MessageListener>> messageListeners);
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #setDestinations(List)}
+	 *
+	 * @param replacementDestinations
+	 */
+	@Deprecated
 	public void setReplacementDestinations(
 		List<Destination> replacementDestinations);
 
