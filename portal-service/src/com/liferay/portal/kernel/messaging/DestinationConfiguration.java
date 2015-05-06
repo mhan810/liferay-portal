@@ -56,6 +56,23 @@ public class DestinationConfiguration implements Serializable {
 		_destinationName = destinationName;
 	}
 
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+
+		if ((object == null) || (getClass() != object.getClass())) {
+			return false;
+		}
+
+		DestinationConfiguration destinationConfiguration =
+			(DestinationConfiguration)object;
+
+		return destinationConfiguration.getDestinationName().equals(
+			getDestinationName());
+	}
+
 	public String getDestinationName() {
 		return _destinationName;
 	}
@@ -78,6 +95,11 @@ public class DestinationConfiguration implements Serializable {
 
 	public int getWorkersMaxSize() {
 		return _workersMaxSize;
+	}
+
+	@Override
+	public int hashCode() {
+		return _destinationName.hashCode();
 	}
 
 	public void setDestinationType(String destinationType) {
