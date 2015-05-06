@@ -27,7 +27,10 @@ import org.osgi.service.component.annotations.Reference;
  * @author Michael C. Han
  */
 @Component(
-	immediate = true, property = {"type=parallel"},
+	immediate = true,
+	property = {
+		"destination.type=" + DestinationConfiguration.DESTINATION_TYPE_PARALLEL
+	},
 	service = DestinationPrototype.class
 )
 public class ParallelDestinationPrototype implements DestinationPrototype {

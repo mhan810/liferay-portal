@@ -25,7 +25,11 @@ import org.osgi.service.component.annotations.Component;
  * @author Michael C. Han
  */
 @Component(
-	immediate = true, property = {"type=synchronous"},
+	immediate = true,
+	property = {
+		"destination.type=" +
+			DestinationConfiguration.DESTINATION_TYPE_SYNCHRONOUS
+	},
 	service = DestinationPrototype.class
 )
 public class SynchronousDestinationPrototype implements DestinationPrototype {

@@ -27,7 +27,10 @@ import org.osgi.service.component.annotations.Reference;
  * @author Michael C. Han
  */
 @Component(
-	immediate = true, property = {"type=serial"},
+	immediate = true,
+	property = {
+		"destination.type=" + DestinationConfiguration.DESTINATION_TYPE_SERIAL
+	},
 	service = DestinationPrototype.class
 )
 public class SerialDestinationPrototype implements DestinationPrototype {
