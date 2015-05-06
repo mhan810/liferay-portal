@@ -469,7 +469,9 @@ public abstract class AbstractMessagingConfigurator
 			Map<String, Object> properties = new HashMap<>();
 
 			properties.put("destination.name", _destinationName);
-			properties.put("operatingClassLoader", operatingClassLoader);
+			properties.put(
+				"message.listener.operating.class.loader",
+				operatingClassLoader);
 
 			for (MessageListener messageListener : _messageListeners) {
 				_messageListenerServiceRegistrar.registerService(
