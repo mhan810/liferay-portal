@@ -14,8 +14,7 @@
 
 package com.liferay.portal.messaging.internal;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.DestinationConfiguration;
 import com.liferay.portal.kernel.messaging.DestinationFactory;
@@ -70,17 +69,20 @@ public class DefaultDestinationFactory implements DestinationFactory {
 	}
 
 	@Activate
-	protected synchronized void activate(BundleContext bundleContext) {
+	protected void activate(BundleContext bundleContext) {
 		_bundleContext = bundleContext;
 
-		for (DestinationConfiguration destinationConfiguration :
-				_destinationConfigurations.values()) {
+		addDestinationPrototype(
+			DestinationConfiguration.DESTINATION_TYPE_PARALLEL,
+			new ParallelDestinationPrototype());
 
-			if (!_serviceRegistrations.containsKey(
-					destinationConfiguration.getDestinationName())) {
-				addDestination(destinationConfiguration);
-			}
-		}
+		addDestinationPrototype(
+			DestinationConfiguration.DESTINATION_TYPE_SERIAL,
+			new SerialDestinationPrototype());
+
+		addDestinationPrototype(
+			DestinationConfiguration.DESTINATION_TYPE_SYNCHRONOUS,
+			new SynchronousDestinationPrototype());
 	}
 
 	@Reference(
@@ -95,17 +97,6 @@ public class DefaultDestinationFactory implements DestinationFactory {
 		_destinationConfigurations.put(
 			destinationConfiguration.getDestinationName(),
 			destinationConfiguration);
-
-		if (_destinationPrototypes.containsKey(
-				destinationConfiguration.getDestinationType()) &&
-			(_bundleContext != null)) {
-
-			addDestination(destinationConfiguration);
-		}
-	}
-
-	protected void addDestination(
-		DestinationConfiguration destinationConfiguration) {
 
 		Destination destination = createDestination(
 			destinationConfiguration);
@@ -136,6 +127,16 @@ public class DefaultDestinationFactory implements DestinationFactory {
 			properties, "destination.type");
 
 		_destinationPrototypes.put(destinationType, destinationPrototype);
+	}
+
+	protected void addDestinationPrototype(
+		String destinationType, DestinationPrototype destinationPrototype) {
+
+		Map<String, Object> properties = new HashMap<>();
+
+		properties.put("destination.type", destinationType);
+
+		addDestinationPrototype(destinationPrototype, properties);
 	}
 
 	@Deactivate
@@ -183,8 +184,10 @@ public class DefaultDestinationFactory implements DestinationFactory {
 		}
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		DefaultDestinationFactory.class);
+	@Reference(unbind = "-")
+	protected void setPortalExecutorManager(
+		PortalExecutorManager portalExecutorManager) {
+	}
 
 	private BundleContext _bundleContext;
 	private final Map<String, DestinationPrototype> _destinationPrototypes =

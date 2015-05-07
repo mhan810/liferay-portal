@@ -14,25 +14,14 @@
 
 package com.liferay.portal.messaging.internal;
 
-import com.liferay.portal.kernel.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.DestinationConfiguration;
 import com.liferay.portal.kernel.messaging.SerialDestination;
 import com.liferay.portal.messaging.DestinationPrototype;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Michael C. Han
  */
-@Component(
-	immediate = true,
-	property = {
-		"destination.type=" + DestinationConfiguration.DESTINATION_TYPE_SERIAL
-	},
-	service = DestinationPrototype.class
-)
 public class SerialDestinationPrototype implements DestinationPrototype {
 
 	@Override
@@ -53,11 +42,6 @@ public class SerialDestinationPrototype implements DestinationPrototype {
 		serialDestination.afterPropertiesSet();
 
 		return serialDestination;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortalExecutorManager(
-		PortalExecutorManager portalExecutorManager) {
 	}
 
 	private static final int _WORKERS_CORE_SIZE = 1;
