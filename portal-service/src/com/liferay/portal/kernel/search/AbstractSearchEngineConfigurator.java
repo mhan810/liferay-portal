@@ -35,9 +35,8 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
-import com.liferay.registry.ServiceReference;
-import com.liferay.registry.ServiceTracker;
-import com.liferay.registry.ServiceTrackerCustomizer;
+import com.liferay.registry.dependency.ServiceDependencyListener;
+import com.liferay.registry.dependency.ServiceDependencyManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,12 +52,26 @@ public abstract class AbstractSearchEngineConfigurator
 
 	@Override
 	public void afterPropertiesSet() {
-		Registry registry = RegistryUtil.getRegistry();
+		final ServiceDependencyManager serviceDependencyManager =
+			new ServiceDependencyManager();
 
-		_serviceTracker = registry.trackServices(
-			MessageBus.class, new MessageBusServiceTrackerCustomizer());
+		serviceDependencyManager.addServiceDependencyListener(
 
-		_serviceTracker.open();
+			new ServiceDependencyListener() {
+				@Override
+				public void dependenciesFulfilled() {
+					Registry registry = RegistryUtil.getRegistry();
+
+					_messageBus = registry.getService(MessageBus.class);
+
+					initialize();
+				}
+
+				@Override
+				public void destroy() {
+				}
+			}
+		);
 	}
 
 	@Override
@@ -76,8 +89,6 @@ public abstract class AbstractSearchEngineConfigurator
 
 			_originalSearchEngineId = null;
 		}
-
-		_serviceTracker.close();
 	}
 
 	@Override
@@ -394,39 +405,6 @@ public abstract class AbstractSearchEngineConfigurator
 	private final List<SearchEngineRegistration> _searchEngineRegistrations =
 		new ArrayList<>();
 	private Map<String, SearchEngine> _searchEngines;
-	private ServiceTracker<MessageBus, MessageBus> _serviceTracker;
-
-	private class MessageBusServiceTrackerCustomizer
-		implements ServiceTrackerCustomizer<MessageBus, MessageBus> {
-
-		@Override
-		public MessageBus addingService(
-			ServiceReference<MessageBus> serviceReference) {
-
-			Registry registry = RegistryUtil.getRegistry();
-
-			_messageBus = registry.getService(serviceReference);
-
-			initialize();
-
-			return _messageBus;
-		}
-
-		@Override
-		public void modifiedService(
-			ServiceReference<MessageBus> serviceReference,
-			MessageBus messageBus) {
-		}
-
-		@Override
-		public void removedService(
-			ServiceReference<MessageBus> serviceReference,
-			MessageBus messageBus) {
-
-			_messageBus = null;
-		}
-
-	}
 
 	private class SearchEngineRegistration {
 
