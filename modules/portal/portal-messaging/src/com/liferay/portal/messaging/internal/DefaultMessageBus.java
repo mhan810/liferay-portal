@@ -154,13 +154,16 @@ public class DefaultMessageBus implements MessageBus {
 		oldDestination.copyDestinationEventListeners(destination);
 		oldDestination.copyMessageListeners(destination);
 
-		removeDestination(oldDestination.getName(), closeOnRemove);
+		if (closeOnRemove) {
+			removeDestination(oldDestination.getName(), closeOnRemove);
+		}
+		else {
+			_destinations.remove(destination.getName());
+		}
 
 		addDestination(destination);
 
-		if (closeOnRemove) {
-			destination.open();
-		}
+		destination.open();
 	}
 
 	@Override
@@ -333,6 +336,8 @@ public class DefaultMessageBus implements MessageBus {
 
 			messageBusEventListener.destinationRemoved(destination);
 		}
+
+		_destinations.remove(destination.getName());
 
 		boolean closeOnRemove = GetterUtil.getBoolean(
 			properties.get("destination.close.on.remove"), true);
