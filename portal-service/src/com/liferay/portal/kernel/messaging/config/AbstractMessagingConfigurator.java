@@ -33,8 +33,6 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.registry.Filter;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
-import com.liferay.registry.ServiceFinalizer;
-import com.liferay.registry.ServiceReference;
 import com.liferay.registry.ServiceRegistrar;
 import com.liferay.registry.dependency.ServiceDependencyListener;
 import com.liferay.registry.dependency.ServiceDependencyManager;
@@ -143,23 +141,7 @@ public abstract class AbstractMessagingConfigurator
 		_destinations.clear();
 
 		if (_destinationServiceRegistrar != null) {
-			_destinationServiceRegistrar.destroy(
-
-				new ServiceFinalizer<Destination>() {
-
-					@Override
-					public void finalize(
-						ServiceReference<Destination> serviceReference,
-						Destination destination) {
-
-						destination.close();
-
-						destination.removeDestinationEventListeners();
-
-						destination.unregisterMessageListeners();
-					}
-
-				});
+			_destinationServiceRegistrar.destroy();
 		}
 
 		_messageListeners.clear();
