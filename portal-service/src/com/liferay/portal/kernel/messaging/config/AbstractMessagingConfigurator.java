@@ -373,8 +373,15 @@ public abstract class AbstractMessagingConfigurator
 				continue;
 			}
 
+			Map<String, Object> properties = new HashMap<>();
+
+			properties.put(
+				"destination.name",
+				destinationConfiguration.getDestinationName());
+
 			_destinationConfigServiceRegistrar.registerService(
-				DestinationConfiguration.class, destinationConfiguration);
+				DestinationConfiguration.class, destinationConfiguration,
+				properties);
 		}
 	}
 
