@@ -14,11 +14,13 @@
 
 package com.liferay.portal.kernel.messaging.config;
 
+import com.liferay.portal.kernel.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.DestinationConfiguration;
 import com.liferay.portal.kernel.messaging.DestinationEventListener;
+import com.liferay.portal.kernel.messaging.DestinationFactory;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusEventListener;
 import com.liferay.portal.kernel.messaging.MessageListener;
@@ -29,6 +31,7 @@ import com.liferay.portal.kernel.resiliency.spi.SPI;
 import com.liferay.portal.kernel.resiliency.spi.SPIUtil;
 import com.liferay.portal.kernel.security.pacl.permission.PortalMessageBusPermission;
 import com.liferay.portal.kernel.util.ClassLoaderPool;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.registry.Filter;
 import com.liferay.registry.Registry;
@@ -74,7 +77,9 @@ public abstract class AbstractMessagingConfigurator
 			}
 		);
 
-		serviceDependencyManager.registerDependencies(MessageBus.class);
+		serviceDependencyManager.registerDependencies(
+			DestinationFactory.class, MessageBus.class,
+			PortalExecutorManager.class);
 	}
 
 	@Override
@@ -189,13 +194,23 @@ public abstract class AbstractMessagingConfigurator
 	public void setDestinationConfigurations(
 		Set<DestinationConfiguration> destinationConfigurations) {
 
+		_destinationConfigurations = destinationConfigurations;
+	}
+
+	protected void registerDestinationConfigurations() {
+		if ((_destinationConfigurations == null) ||
+			_destinationConfigurations.isEmpty()) {
+
+			return;
+		}
+
 		Registry registry = RegistryUtil.getRegistry();
 
 		_destinationConfigServiceRegistrar = registry.getServiceRegistrar(
 			DestinationConfiguration.class);
 
 		for (DestinationConfiguration destinationConfiguration :
-				destinationConfigurations) {
+				_destinationConfigurations) {
 
 			try {
 				PortalMessageBusPermission.checkListen(
@@ -227,17 +242,25 @@ public abstract class AbstractMessagingConfigurator
 	public void setDestinationEventListeners(
 		Map<String, List<DestinationEventListener>> destinationEventListeners) {
 
-		_destinationEventListeners = destinationEventListeners;
+		_destinationEventListeners.putAll(destinationEventListeners);
 	}
 
 	@Override
 	public void setDestinations(List<Destination> destinations) {
-		registerDestinations(destinations);
+		_destinations = destinations;
 	}
 
 	@Override
 	public void setMessageBusEventListeners(
 		List<MessageBusEventListener> messageBusEventListeners) {
+
+		_messageBusEventListeners = messageBusEventListeners;
+	}
+
+	protected void registerMessageBusEventListeners() {
+		if (ListUtil.isEmpty(_messageBusEventListeners)) {
+			return;
+		}
 
 		Registry registry = RegistryUtil.getRegistry();
 
@@ -245,7 +268,7 @@ public abstract class AbstractMessagingConfigurator
 			MessageBusEventListener.class);
 
 		for (MessageBusEventListener messageBusEventListener :
-				messageBusEventListeners) {
+				_messageBusEventListeners) {
 
 			_messageBusEventListenerServiceRegistrar.registerService(
 				MessageBusEventListener.class, messageBusEventListener);
@@ -302,6 +325,7 @@ public abstract class AbstractMessagingConfigurator
 	public void setReplacementDestinations(
 		List<Destination> replacementDestinations) {
 
+		_replacementDestinations = replacementDestinations;
 		registerDestinations(replacementDestinations);
 	}
 
@@ -317,6 +341,13 @@ public abstract class AbstractMessagingConfigurator
 		if (contextClassLoader == operatingClassLoader) {
 			_portalMessagingConfigurator = true;
 		}
+
+		registerMessageBusEventListeners();
+
+		registerDestinationConfigurations();
+
+		registerDestinations(_destinations);
+		registerDestinations(_replacementDestinations);
 
 		registerDestinationEventListeners();
 
@@ -379,6 +410,10 @@ public abstract class AbstractMessagingConfigurator
 	}
 
 	protected void registerDestinations(List<Destination> destinations) {
+		if (ListUtil.isEmpty(destinations)) {
+			return;
+		}
+
 		Registry registry = RegistryUtil.getRegistry();
 
 		if (_destinationServiceRegistrar == null) {
@@ -410,6 +445,8 @@ public abstract class AbstractMessagingConfigurator
 	private static final Log _log = LogFactoryUtil.getLog(
 		AbstractMessagingConfigurator.class);
 
+	private List<Destination> _destinations;
+	private Set<DestinationConfiguration> _destinationConfigurations;
 	private ServiceRegistrar<DestinationConfiguration>
 		_destinationConfigServiceRegistrar;
 	private Map<String, List<DestinationEventListener>>
@@ -418,12 +455,14 @@ public abstract class AbstractMessagingConfigurator
 		_destinationEventListenerServiceRegistrar;
 	private ServiceRegistrar<Destination> _destinationServiceRegistrar;
 	private volatile MessageBus _messageBus;
+	private List<MessageBusEventListener> _messageBusEventListeners;
 	private ServiceRegistrar<MessageBusEventListener>
 		_messageBusEventListenerServiceRegistrar;
 	private Map<String, List<MessageListener>> _messageListeners =
 		new HashMap<>();
 	private ServiceRegistrar<MessageListener> _messageListenerServiceRegistrar;
 	private boolean _portalMessagingConfigurator;
+	private List<Destination> _replacementDestinations;
 
 	private class DestinationServiceDependencyListener
 		implements ServiceDependencyListener {
