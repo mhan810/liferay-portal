@@ -139,6 +139,10 @@ public abstract class AbstractMessagingConfigurator
 	public void destroy() {
 		disconnect();
 
+		_messageBusEventListeners.clear();
+
+		_messageBusEventListenerServiceRegistrar.destroy();
+
 		_destinationConfigurations.clear();
 
 		_destinationConfigServiceRegistrar.destroy();
@@ -166,12 +170,6 @@ public abstract class AbstractMessagingConfigurator
 						destinationEventListener);
 				}
 			}
-		}
-
-		for (MessageBusEventListener messageBusEventListener :
-				_messageBusEventListeners) {
-
-			_messageBus.removeMessageBusEventListener(messageBusEventListener);
 		}
 
 		ClassLoader operatingClassLoader = getOperatingClassloader();
@@ -239,7 +237,7 @@ public abstract class AbstractMessagingConfigurator
 	public void setMessageBusEventListeners(
 		List<MessageBusEventListener> messageBusEventListeners) {
 
-		_messageBusEventListeners = messageBusEventListeners;
+		_messageBusEventListeners.addAll(messageBusEventListeners);
 	}
 
 	@Override
@@ -302,11 +300,7 @@ public abstract class AbstractMessagingConfigurator
 			_portalMessagingConfigurator = true;
 		}
 
-		for (MessageBusEventListener messageBusEventListener :
-				_messageBusEventListeners) {
-
-			_messageBus.addMessageBusEventListener(messageBusEventListener);
-		}
+		registerMessageBusEventListeners();
 
 		registerDestinationConfigurations();
 
@@ -385,6 +379,24 @@ public abstract class AbstractMessagingConfigurator
 		}
 	}
 
+	protected void registerMessageBusEventListeners() {
+		if (_messageBusEventListeners.isEmpty()) {
+			return;
+		}
+
+		Registry registry = RegistryUtil.getRegistry();
+
+		_messageBusEventListenerServiceRegistrar = registry.getServiceRegistrar(
+			MessageBusEventListener.class);
+
+		for (MessageBusEventListener messageBusEventListener :
+				_messageBusEventListeners) {
+
+			_messageBusEventListenerServiceRegistrar.registerService(
+				MessageBusEventListener.class, messageBusEventListener);
+		}
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		AbstractMessagingConfigurator.class);
 
@@ -396,8 +408,10 @@ public abstract class AbstractMessagingConfigurator
 		_destinationEventListeners = new HashMap<>();
 	private final List<Destination> _destinations = new ArrayList<>();
 	private volatile MessageBus _messageBus;
-	private List<MessageBusEventListener> _messageBusEventListeners =
+	private final List<MessageBusEventListener> _messageBusEventListeners =
 		new ArrayList<>();
+	private ServiceRegistrar<MessageBusEventListener>
+		_messageBusEventListenerServiceRegistrar;
 	private Map<String, List<MessageListener>> _messageListeners =
 		new HashMap<>();
 	private boolean _portalMessagingConfigurator;
