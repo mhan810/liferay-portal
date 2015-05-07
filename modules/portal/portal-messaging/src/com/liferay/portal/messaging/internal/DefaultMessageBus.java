@@ -312,7 +312,7 @@ public class DefaultMessageBus implements MessageBus {
 
 		try {
 			ClassLoader operatingClassLoader = (ClassLoader)properties.get(
-				"operatingClassLoader");
+				"message.listener.operating.class.loader");
 
 			currentThread.setContextClassLoader(operatingClassLoader);
 
