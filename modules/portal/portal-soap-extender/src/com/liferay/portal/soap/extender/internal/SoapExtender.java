@@ -25,7 +25,6 @@ import java.util.Map;
 import javax.xml.ws.handler.Handler;
 
 import org.apache.cxf.Bus;
-import org.apache.felix.dm.DependencyManager;
 import org.apache.felix.dm.ServiceDependency;
 
 import org.osgi.framework.BundleContext;
@@ -46,14 +45,6 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 	configurationPolicy = ConfigurationPolicy.REQUIRE
 )
 public class SoapExtender {
-
-	public org.apache.felix.dm.Component getComponent() {
-		return _component;
-	}
-
-	public DependencyManager getDependencyManager() {
-		return _dependencyManager;
-	}
 
 	public SoapExtenderConfiguration getSoapExtenderConfiguration() {
 		return _soapExtenderConfiguration;
