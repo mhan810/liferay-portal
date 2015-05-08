@@ -24,22 +24,31 @@ import java.io.Serializable;
  */
 public class DestinationConfiguration implements Serializable {
 
+	public static final String DESTINATION_TYPE_PARALLEL = "parallel";
+
+	public static final String DESTINATION_TYPE_SERIAL = "serial";
+
+	public static final String DESTINATION_TYPE_SYNCHRONOUS = "synchronous";
+
 	public static DestinationConfiguration
 		createParallelDestinationConfiguration(String destinationName) {
 
-		return new DestinationConfiguration("parallel", destinationName);
+		return new DestinationConfiguration(
+			DESTINATION_TYPE_PARALLEL, destinationName);
 	}
 
 	public static DestinationConfiguration createSerialDestinationConfiguration(
 		String destinationName) {
 
-		return new DestinationConfiguration("serial", destinationName);
+		return new DestinationConfiguration(
+			DESTINATION_TYPE_SERIAL, destinationName);
 	}
 
 	public static DestinationConfiguration
 		createSynchronousDestinationConfiguration(String destinationName) {
 
-		return new DestinationConfiguration("synchronous", destinationName);
+		return new DestinationConfiguration(
+			DESTINATION_TYPE_SYNCHRONOUS, destinationName);
 	}
 
 	public DestinationConfiguration(
@@ -47,6 +56,23 @@ public class DestinationConfiguration implements Serializable {
 
 		_destinationType = destinationType;
 		_destinationName = destinationName;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (object == this) {
+			return true;
+		}
+
+		if (!object.getClass().equals(getClass())) {
+			return false;
+		}
+
+		DestinationConfiguration destinationConfiguration =
+			(DestinationConfiguration)object;
+
+		return destinationConfiguration.getDestinationName().equals(
+			_destinationName);
 	}
 
 	public String getDestinationName() {
@@ -71,6 +97,11 @@ public class DestinationConfiguration implements Serializable {
 
 	public int getWorkersMaxSize() {
 		return _workersMaxSize;
+	}
+
+	@Override
+	public int hashCode() {
+		return _destinationName.hashCode();
 	}
 
 	public void setDestinationType(String destinationType) {
