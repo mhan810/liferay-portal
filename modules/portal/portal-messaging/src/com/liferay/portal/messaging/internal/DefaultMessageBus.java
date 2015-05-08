@@ -267,13 +267,26 @@ public class DefaultMessageBus implements MessageBus {
 		}
 	}
 
+	@Deactivate
+	protected void deactivate() {
+		shutdown(true);
+
+		for (Destination destination : _destinations.values()) {
+			destination.destroy();
+		}
+
+		_messageBusEventListeners.clear();
+
+		_destinations.clear();
+	}
+
 	@Reference(
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC,
 		policyOption = ReferencePolicyOption.GREEDY,
 		target = "(destination.name=*)"
 	)
-	protected synchronized void addDestinationEventListener(
+	protected synchronized void registerDestinationEventListener(
 		DestinationEventListener destinationEventListener,
 		Map<String, Object> properties) {
 
@@ -293,19 +306,6 @@ public class DefaultMessageBus implements MessageBus {
 		}
 
 		destination.addDestinationEventListener(destinationEventListener);
-	}
-
-	@Deactivate
-	protected void deactivate() {
-		shutdown(true);
-
-		for (Destination destination : _destinations.values()) {
-			destination.destroy();
-		}
-
-		_messageBusEventListeners.clear();
-
-		_destinations.clear();
 	}
 
 	@Reference(
@@ -356,7 +356,7 @@ public class DefaultMessageBus implements MessageBus {
 		destination.destroy();
 	}
 
-	protected void removeDestinationEventListener(
+	protected void unregisterDestinationEventListener(
 		DestinationEventListener destinationEventListener,
 		Map<String, Object> properties) {
 
