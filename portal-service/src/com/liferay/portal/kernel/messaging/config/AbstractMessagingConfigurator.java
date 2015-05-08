@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.DestinationConfiguration;
 import com.liferay.portal.kernel.messaging.DestinationEventListener;
+import com.liferay.portal.kernel.messaging.DestinationFactory;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusEventListener;
 import com.liferay.portal.kernel.messaging.MessageListener;
@@ -74,7 +75,8 @@ public abstract class AbstractMessagingConfigurator
 			}
 		);
 
-		serviceDependencyManager.registerDependencies(MessageBus.class);
+		serviceDependencyManager.registerDependencies(
+			DestinationFactory.class, MessageBus.class);
 	}
 
 	@Override
