@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.MessageBus;
 
 import javax.management.DynamicMBean;
+import javax.management.MBeanServer;
 import javax.management.NotCompliantMBeanException;
 import javax.management.StandardMBean;
 
@@ -59,9 +60,13 @@ public class MessageBusManager
 		return destination.getMessageListenerCount();
 	}
 
-	@Reference
+	@Reference(unbind = "-")
 	protected void setMessageBus(MessageBus messageBus) {
 		_messageBus = messageBus;
+	}
+
+	@Reference(unbind = "-")
+	protected void setMBeanServer(MBeanServer mBeanServer){
 	}
 
 	private MessageBus _messageBus;
