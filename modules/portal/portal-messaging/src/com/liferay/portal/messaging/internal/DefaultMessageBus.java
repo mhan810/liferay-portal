@@ -240,6 +240,11 @@ public class DefaultMessageBus implements MessageBus {
 	}
 
 	protected void doAddDestination(Destination destination) {
+		if (_destinations.containsKey(destination.getName())) {
+			throw new IllegalArgumentException(
+				"Duplicate destination: " + destination.getName());
+		}
+
 		Class<?> clazz = destination.getClass();
 
 		if (SPIUtil.isSPI() &&
