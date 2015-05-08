@@ -18,9 +18,11 @@ import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.PortalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import org.junit.Assert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +56,13 @@ public class TestPACLMessageListener extends BaseMessageListener {
 				TestPropsValues.getUserId());
 
 			results.put("UserLocalServiceUtil#getUser", user);
+
+			ClassLoader classLoader =
+				Thread.currentThread().getContextClassLoader();
+
+			Assert.assertNotEquals(
+				"Should not be using the portal classloader",
+				PortalClassLoaderUtil.getClassLoader(), classLoader);
 		}
 		catch (SecurityException se) {
 		}
