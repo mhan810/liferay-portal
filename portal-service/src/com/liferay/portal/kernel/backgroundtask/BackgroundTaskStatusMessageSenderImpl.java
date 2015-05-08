@@ -24,11 +24,9 @@ public class BackgroundTaskStatusMessageSenderImpl
 	implements BackgroundTaskStatusMessageSender {
 
 	public void afterPropertiesSet() {
-		if (_singleDestinationMessageSender == null) {
-			_singleDestinationMessageSender =
-				SingleDestinationMessageSenderFactoryUtil.
-					createSingleDestinationMessageSender(_destinationName);
-		}
+		_singleDestinationMessageSender =
+			SingleDestinationMessageSenderFactoryUtil.
+				createSingleDestinationMessageSender(_destinationName);
 	}
 
 	@Override
@@ -44,16 +42,6 @@ public class BackgroundTaskStatusMessageSenderImpl
 
 	public void setDestinationName(String destinationName) {
 		_destinationName = destinationName;
-	}
-
-	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #setDestinationName(String)})
-	 */
-	@Deprecated
-	public void setSingleDestinationMessageSender(
-		SingleDestinationMessageSender singleDestinationMessageSender) {
-
-		_singleDestinationMessageSender = singleDestinationMessageSender;
 	}
 
 	private String _destinationName;
