@@ -125,6 +125,8 @@ public class DefaultMessageBus implements MessageBus {
 
 		if (closeOnRemove) {
 			destination.close(true);
+
+			destination.destroy();
 		}
 
 		destination.removeDestinationEventListeners();
@@ -153,7 +155,9 @@ public class DefaultMessageBus implements MessageBus {
 	}
 
 	@Override
-	public void replace(Destination destination, boolean closeOnRemove) {
+	public synchronized void replace(
+		Destination destination, boolean closeOnRemove) {
+
 		Destination oldDestination = _destinations.get(destination.getName());
 
 		oldDestination.copyDestinationEventListeners(destination);
@@ -239,10 +243,12 @@ public class DefaultMessageBus implements MessageBus {
 		_destinations.clear();
 	}
 
-	protected void doAddDestination(Destination destination) {
+	protected synchronized void doAddDestination(Destination destination) {
 		if (_destinations.containsKey(destination.getName())) {
-			throw new IllegalArgumentException(
-				"Duplicate destination: " + destination.getName());
+			Destination oldDestination = removeDestination(
+				destination.getName());
+
+			oldDestination.destroy();
 		}
 
 		Class<?> clazz = destination.getClass();
