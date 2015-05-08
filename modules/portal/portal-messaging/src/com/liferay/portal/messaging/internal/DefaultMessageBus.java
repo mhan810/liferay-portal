@@ -47,21 +47,7 @@ public class DefaultMessageBus implements MessageBus {
 
 	@Override
 	public synchronized void addDestination(Destination destination) {
-		Class<?> clazz = destination.getClass();
-
-		if (SPIUtil.isSPI() &&
-			!clazz.equals(IntrabandBridgeDestination.class)) {
-
-			destination = new IntrabandBridgeDestination(destination);
-		}
-
-		_destinations.put(destination.getName(), destination);
-
-		for (MessageBusEventListener messageBusEventListener :
-				_messageBusEventListeners) {
-
-			messageBusEventListener.destinationAdded(destination);
-		}
+		doAddDestination(destination);
 	}
 
 	@Override
@@ -175,11 +161,9 @@ public class DefaultMessageBus implements MessageBus {
 
 		removeDestination(oldDestination.getName(), closeOnRemove);
 
-		addDestination(destination);
+		doAddDestination(destination);
 
-		if (closeOnRemove) {
-			destination.open();
-		}
+		destination.open();
 	}
 
 	@Override
@@ -234,25 +218,11 @@ public class DefaultMessageBus implements MessageBus {
 	protected synchronized void addDestination(
 		Destination destination, Map<String, Object> properties) {
 
-		Class<?> clazz = destination.getClass();
-
-		if (SPIUtil.isSPI() &&
-			!clazz.equals(IntrabandBridgeDestination.class)) {
-
-			destination = new IntrabandBridgeDestination(destination);
-		}
-
 		if (_destinations.containsKey(destination.getName())) {
 			replace(destination);
 		}
 		else {
-			_destinations.put(destination.getName(), destination);
-		}
-
-		for (MessageBusEventListener messageBusEventListener :
-				_messageBusEventListeners) {
-
-			messageBusEventListener.destinationAdded(destination);
+			doAddDestination(destination);
 		}
 	}
 
@@ -267,6 +237,24 @@ public class DefaultMessageBus implements MessageBus {
 		_messageBusEventListeners.clear();
 
 		_destinations.clear();
+	}
+
+	protected void doAddDestination(Destination destination) {
+		Class<?> clazz = destination.getClass();
+
+		if (SPIUtil.isSPI() &&
+			!clazz.equals(IntrabandBridgeDestination.class)) {
+
+			destination = new IntrabandBridgeDestination(destination);
+		}
+
+		_destinations.put(destination.getName(), destination);
+
+		for (MessageBusEventListener messageBusEventListener :
+				_messageBusEventListeners) {
+
+			messageBusEventListener.destinationAdded(destination);
+		}
 	}
 
 	@Reference(
