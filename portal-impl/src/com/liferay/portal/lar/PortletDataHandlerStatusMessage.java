@@ -95,16 +95,12 @@ public class PortletDataHandlerStatusMessage
 		Map<String, LongWrapper> modelAdditionCounters =
 			manifestSummary.getModelAdditionCounters();
 
-		put(
-			"modelAdditionCounters",
-			new HashMap<String, LongWrapper>(modelAdditionCounters));
+		put("modelAdditionCounters", new HashMap<>(modelAdditionCounters));
 
 		Map<String, LongWrapper> modelDeletionCounters =
 			manifestSummary.getModelDeletionCounters();
 
-		put(
-			"modelDeletionCounters",
-			new HashMap<String, LongWrapper>(modelDeletionCounters));
+		put("modelDeletionCounters", new HashMap<>(modelDeletionCounters));
 	}
 
 }
