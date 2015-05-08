@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.lar.StagedModelDataHandler;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LongWrapper;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.StagedModel;
@@ -78,6 +80,14 @@ public class PortletDataHandlerStatusMessage
 				StagedModelDataHandlerRegistryUtil.getStagedModelDataHandler(
 					stagedModel.getModelClassName());
 
+		if (stagedModelDataHandler == null) {
+			if (_log.isErrorEnabled()) {
+				_log.error(
+					"Staged model data handler for: " +
+						stagedModel.getModelClassName());
+			}
+		}
+
 		put(
 			"stagedModelName",
 			stagedModelDataHandler.getDisplayName(stagedModel));
@@ -102,5 +112,8 @@ public class PortletDataHandlerStatusMessage
 
 		put("modelDeletionCounters", new HashMap<>(modelDeletionCounters));
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		PortletDataHandlerStatusMessage.class);
 
 }
