@@ -14,7 +14,7 @@
 
 package com.liferay.portal.lar;
 
-import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatusMessageSenderImpl;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatusMessageSender;
 import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataHandlerStatusMessageSender;
 import com.liferay.portal.model.StagedModel;
@@ -23,7 +23,6 @@ import com.liferay.portal.model.StagedModel;
  * @author Michael C. Han
  */
 public class PortletDataHandlerStatusMessageSenderImpl
-	extends BackgroundTaskStatusMessageSenderImpl
 	implements PortletDataHandlerStatusMessageSender {
 
 	/**
@@ -46,7 +45,8 @@ public class PortletDataHandlerStatusMessageSenderImpl
 			new PortletDataHandlerStatusMessage(
 				messageType, portletId, manifestSummary);
 
-		sendStatusMessage(portletDataHandlerStatusMessage);
+		_backgroundTaskStatusMessageSender.sendStatusMessage(
+			portletDataHandlerStatusMessage);
 	}
 
 	@Override
@@ -58,7 +58,8 @@ public class PortletDataHandlerStatusMessageSenderImpl
 			new PortletDataHandlerStatusMessage(
 				messageType, portletIds, manifestSummary);
 
-		sendStatusMessage(portletDataHandlerStatusMessage);
+		_backgroundTaskStatusMessageSender.sendStatusMessage(
+			portletDataHandlerStatusMessage);
 	}
 
 	@Override
@@ -69,7 +70,17 @@ public class PortletDataHandlerStatusMessageSenderImpl
 			new PortletDataHandlerStatusMessage(
 				messageType, stagedModel, manifestSummary);
 
-		sendStatusMessage(portletDataHandlerStatusMessage);
+		_backgroundTaskStatusMessageSender.sendStatusMessage(
+			portletDataHandlerStatusMessage);
 	}
+
+	public void setBackgroundTaskStatusMessageSender(
+		BackgroundTaskStatusMessageSender backgroundTaskStatusMessageSender) {
+
+		_backgroundTaskStatusMessageSender = backgroundTaskStatusMessageSender;
+	}
+
+	private BackgroundTaskStatusMessageSender
+		_backgroundTaskStatusMessageSender;
 
 }
