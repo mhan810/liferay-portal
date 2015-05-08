@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.concurrent.ConcurrentHashSet;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Destination;
+import com.liferay.portal.kernel.messaging.DestinationEventListener;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusEventListener;
@@ -269,6 +270,34 @@ public class DefaultMessageBus implements MessageBus {
 		}
 	}
 
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(destination.name=*)"
+	)
+	protected void addDestinationEventListener(
+		DestinationEventListener destinationEventListener,
+		Map<String, Object> properties) {
+
+		String destinationName = MapUtil.getString(
+			properties, "destination.name");
+
+		Destination destination = _destinations.get(destinationName);
+
+		if (destination == null) {
+			if (_log.isInfoEnabled()) {
+				_log.info(
+					"Cannot remove DestinationEventListener for : " +
+						destinationName + ". No destination found.");
+			}
+
+			return;
+		}
+
+		destination.addDestinationEventListener(destinationEventListener);
+	}
+
 	@Deactivate
 	protected void deactivate() {
 		shutdown(true);
@@ -330,6 +359,28 @@ public class DefaultMessageBus implements MessageBus {
 		Destination destination, Map<String, Object> properties) {
 
 		removeDestination(destination.getName());
+	}
+
+	protected void removeDestinationEventListener(
+		DestinationEventListener destinationEventListener,
+		Map<String, Object> properties) {
+
+		String destinationName = MapUtil.getString(
+			properties, "destination.name");
+
+		Destination destination = _destinations.get(destinationName);
+
+		if (destination == null) {
+			if (_log.isInfoEnabled()) {
+				_log.info(
+					"Cannot remove DestinationEventListener for : " +
+						destinationName + ". No destination found.");
+			}
+
+			return;
+		}
+
+		destination.removeDestinationEventListener(destinationEventListener);
 	}
 
 	protected void unregisterMessageBusEventListener(
