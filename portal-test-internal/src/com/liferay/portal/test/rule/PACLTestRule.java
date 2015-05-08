@@ -21,6 +21,8 @@ import com.liferay.portal.deploy.hot.ServiceWrapperRegistry;
 import com.liferay.portal.kernel.deploy.hot.DependencyManagementThreadLocal;
 import com.liferay.portal.kernel.deploy.hot.HotDeployEvent;
 import com.liferay.portal.kernel.deploy.hot.HotDeployUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletClassLoaderUtil;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
 import com.liferay.portal.kernel.servlet.filters.invoker.InvokerFilterHelper;
@@ -36,6 +38,7 @@ import com.liferay.portal.util.InitUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import java.net.MalformedURLException;
@@ -214,7 +217,16 @@ public class PACLTestRule implements TestRule {
 
 		Method method = _testClass.getMethod(description.getMethodName());
 
-		method.invoke(_instance);
+		try {
+			method.invoke(_instance);
+		}
+		catch (InvocationTargetException ite) {
+			if (_log.isErrorEnabled()) {
+				_log.error("Error running test", ite.getCause());
+			}
+
+			throw ite.getCause();
+		}
 	}
 
 	private static Class<?> _loadTestClass(Class<?> clazz)
@@ -232,6 +244,8 @@ public class PACLTestRule implements TestRule {
 
 	private static final String _PACKAGE_PATH =
 		"com.liferay.portal.security.pacl.test.";
+
+	private static final Log _log = LogFactoryUtil.getLog(PACLTestRule.class);
 
 	static {
 		URL resource = PACLTestRule.class.getResource("pacl-test.properties");
