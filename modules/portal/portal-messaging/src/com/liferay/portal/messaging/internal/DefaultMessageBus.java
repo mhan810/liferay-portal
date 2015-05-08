@@ -47,21 +47,12 @@ public class DefaultMessageBus implements MessageBus {
 
 	@Override
 	public synchronized void addDestination(Destination destination) {
-		Class<?> clazz = destination.getClass();
+		Map<String, Object> properties = new HashMap<>();
 
-		if (SPIUtil.isSPI() &&
-			!clazz.equals(IntrabandBridgeDestination.class)) {
+		properties.put("destination.name", destination.getName());
+		properties.put("destination.replace", false);
 
-			destination = new IntrabandBridgeDestination(destination);
-		}
-
-		_destinations.put(destination.getName(), destination);
-
-		for (MessageBusEventListener messageBusEventListener :
-				_messageBusEventListeners) {
-
-			messageBusEventListener.destinationAdded(destination);
-		}
+		addDestination(destination, properties);
 	}
 
 	@Override
@@ -167,7 +158,9 @@ public class DefaultMessageBus implements MessageBus {
 	}
 
 	@Override
-	public void replace(Destination destination, boolean closeOnRemove) {
+	public synchronized void replace(
+		Destination destination, boolean closeOnRemove) {
+
 		Destination oldDestination = _destinations.get(destination.getName());
 
 		oldDestination.copyDestinationEventListeners(destination);
@@ -175,11 +168,16 @@ public class DefaultMessageBus implements MessageBus {
 
 		removeDestination(oldDestination.getName(), closeOnRemove);
 
-		addDestination(destination);
-
 		if (closeOnRemove) {
 			destination.open();
 		}
+
+		Map<String, Object> properties = new HashMap<>();
+
+		properties.put("destination.name", destination.getName());
+		properties.put("destination.replace", true);
+
+		addDestination(destination, properties);
 	}
 
 	@Override
@@ -234,6 +232,24 @@ public class DefaultMessageBus implements MessageBus {
 	protected synchronized void addDestination(
 		Destination destination, Map<String, Object> properties) {
 
+		if (_destinations.containsKey(destination.getName())) {
+			boolean replace = MapUtil.getBoolean(
+				properties, "destination.replace", true);
+
+			if (replace) {
+				replace(destination);
+			}
+			else {
+				if (_log.isInfoEnabled()) {
+					_log.info(
+						"Retaining existing destination: " +
+							destination.getName());
+				}
+			}
+
+			return;
+		}
+
 		Class<?> clazz = destination.getClass();
 
 		if (SPIUtil.isSPI() &&
@@ -242,12 +258,7 @@ public class DefaultMessageBus implements MessageBus {
 			destination = new IntrabandBridgeDestination(destination);
 		}
 
-		if (_destinations.containsKey(destination.getName())) {
-			replace(destination);
-		}
-		else {
-			_destinations.put(destination.getName(), destination);
-		}
+		_destinations.put(destination.getName(), destination);
 
 		for (MessageBusEventListener messageBusEventListener :
 				_messageBusEventListeners) {
@@ -262,7 +273,7 @@ public class DefaultMessageBus implements MessageBus {
 		policyOption = ReferencePolicyOption.GREEDY,
 		target = "(destination.name=*)"
 	)
-	protected void addDestinationEventListener(
+	protected synchronized void addDestinationEventListener(
 		DestinationEventListener destinationEventListener,
 		Map<String, Object> properties) {
 
