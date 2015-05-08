@@ -15,7 +15,10 @@
 package com.liferay.portal.kernel.backgroundtask;
 
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender;
+import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactoryUtil;
+import com.liferay.registry.dependency.ServiceDependencyListener;
+import com.liferay.registry.dependency.ServiceDependencyManager;
 
 /**
  * @author Andrew Betts
@@ -24,9 +27,30 @@ public class BackgroundTaskStatusMessageSenderImpl
 	implements BackgroundTaskStatusMessageSender {
 
 	public void afterPropertiesSet() {
-		_singleDestinationMessageSender =
-			SingleDestinationMessageSenderFactoryUtil.
-				createSingleDestinationMessageSender(_destinationName);
+		ServiceDependencyManager serviceDependencyManager =
+			new ServiceDependencyManager();
+
+		serviceDependencyManager.addServiceDependencyListener(
+
+			new ServiceDependencyListener() {
+
+				@Override
+				public void dependenciesFulfilled() {
+					_singleDestinationMessageSender =
+						SingleDestinationMessageSenderFactoryUtil.
+							createSingleDestinationMessageSender(
+								_destinationName);
+				}
+
+				@Override
+				public void destroy() {
+				}
+			}
+
+		);
+
+		serviceDependencyManager.registerDependencies(
+			SingleDestinationMessageSenderFactory.class);
 	}
 
 	@Override
