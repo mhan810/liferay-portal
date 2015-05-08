@@ -16,13 +16,19 @@ package com.liferay.portal.security.pacl.test;
 
 import com.liferay.portal.kernel.concurrent.ThreadPoolExecutor;
 import com.liferay.portal.kernel.executor.PortalExecutorManagerUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Destination;
+import com.liferay.portal.kernel.messaging.InvokerMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.messaging.MessageListener;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.test.rule.PACLTestRule;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
@@ -111,6 +117,28 @@ public class ThreadTest {
 			(Map<String, Object>)MessageBusUtil.sendSynchronousMessage(
 				"liferay/test_pacl", message, Time.SECOND * 60 * 5);
 
+		Destination destination = MessageBusUtil.getMessageBus().getDestination(
+			"liferay/test_pacl");
+
+		Set<MessageListener> messageListenerSet =
+			destination.getMessageListeners();
+
+		for (MessageListener messageListener : messageListenerSet) {
+			if (messageListener instanceof InvokerMessageListener) {
+				InvokerMessageListener invokerMessageListener =
+					(InvokerMessageListener)messageListener;
+
+				if (invokerMessageListener.getClassLoader().equals(
+						PortalClassLoaderUtil.getClassLoader())) {
+
+					if (_log.isErrorEnabled()) {
+						_log.error(
+							"MCH-------------------------------------------" +
+								"--------Classloader is portal classloader");
+					}
+				}
+			}
+		}
 		Assert.assertNull(results.get("UserLocalServiceUtil#getUser"));
 	}
 
@@ -476,5 +504,7 @@ public class ThreadTest {
 
 		destination.open();
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(ThreadTest.class);
 
 }
