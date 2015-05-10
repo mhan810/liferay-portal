@@ -25,22 +25,13 @@ import com.liferay.portal.kernel.messaging.MessageBusEventListener;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.nio.intraband.messaging.IntrabandBridgeDestination;
 import com.liferay.portal.kernel.resiliency.spi.SPIUtil;
-import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.messaging.internal.jmx.DestinationStatisticsManager;
 
 import java.util.Collection;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.management.DynamicMBean;
-import javax.management.NotCompliantMBeanException;
-
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
@@ -220,11 +211,6 @@ public class DefaultMessageBus implements MessageBus {
 		return destination.unregister(messageListener);
 	}
 
-	@Activate
-	protected void activate(BundleContext bundleContext) {
-		_bundleContext = bundleContext;
-	}
-
 	@Reference(
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC,
@@ -253,14 +239,6 @@ public class DefaultMessageBus implements MessageBus {
 		_messageBusEventListeners.clear();
 
 		_destinations.clear();
-
-		for (ServiceRegistration<DynamicMBean> serviceRegistration :
-				_mbeanServiceRegistrations.values()) {
-
-			serviceRegistration.unregister();
-		}
-
-		_mbeanServiceRegistrations.clear();
 	}
 
 	protected void doAddDestination(Destination destination) {
@@ -273,8 +251,6 @@ public class DefaultMessageBus implements MessageBus {
 		}
 
 		_destinations.put(destination.getName(), destination);
-
-		registerDestinationMBean(destination);
 
 		for (MessageBusEventListener messageBusEventListener :
 				_messageBusEventListeners) {
@@ -309,44 +285,6 @@ public class DefaultMessageBus implements MessageBus {
 		}
 
 		destination.addDestinationEventListener(destinationEventListener);
-	}
-
-	protected void registerDestinationMBean(Destination destination) {
-		synchronized (_mbeanServiceRegistrations) {
-			ServiceRegistration<DynamicMBean> serviceRegistration =
-				_mbeanServiceRegistrations.remove(destination.getName());
-
-			if (serviceRegistration != null) {
-				serviceRegistration.unregister();
-			}
-
-			try {
-				DestinationStatisticsManager destinationStatisticsManager =
-					new DestinationStatisticsManager(destination);
-
-				Dictionary<String, Object> mbeanProperties =
-					new HashMapDictionary<>();
-
-				mbeanProperties.put(
-					"jmx.objectname",
-					destinationStatisticsManager.getObjectName());
-				mbeanProperties.put(
-					"jmx.objectname.cache.key",
-					destinationStatisticsManager.getObjectNameCacheKey());
-
-				serviceRegistration = _bundleContext.registerService(
-					DynamicMBean.class, destinationStatisticsManager,
-					mbeanProperties);
-
-				_mbeanServiceRegistrations.put(
-					destination.getName(), serviceRegistration);
-			}
-			catch (NotCompliantMBeanException e) {
-				if (_log.isInfoEnabled()) {
-					_log.info("Unable to register destination mbean", e);
-				}
-			}
-		}
 	}
 
 	@Reference(
@@ -395,13 +333,6 @@ public class DefaultMessageBus implements MessageBus {
 		removeDestination(destination.getName());
 
 		destination.destroy();
-
-		ServiceRegistration<DynamicMBean> mbeanServiceRegistration =
-			_mbeanServiceRegistrations.get(destination.getName());
-
-		if (mbeanServiceRegistration != null) {
-			mbeanServiceRegistration.unregister();
-		}
 	}
 
 	protected synchronized void unregisterDestinationEventListener(
@@ -444,10 +375,7 @@ public class DefaultMessageBus implements MessageBus {
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultMessageBus.class);
 
-	private BundleContext _bundleContext;
 	private final Map<String, Destination> _destinations = new HashMap<>();
-	private final Map<String, ServiceRegistration<DynamicMBean>>
-		_mbeanServiceRegistrations = new HashMap<>();
 	private final Set<MessageBusEventListener> _messageBusEventListeners =
 		new ConcurrentHashSet<>();
 
