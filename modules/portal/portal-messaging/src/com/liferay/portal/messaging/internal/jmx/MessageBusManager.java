@@ -61,12 +61,12 @@ public class MessageBusManager
 	}
 
 	@Reference(unbind = "-")
-	protected void setMessageBus(MessageBus messageBus) {
-		_messageBus = messageBus;
+	protected void setMBeanServer(MBeanServer mBeanServer) {
 	}
 
 	@Reference(unbind = "-")
-	protected void setMBeanServer(MBeanServer mBeanServer){
+	protected void setMessageBus(MessageBus messageBus) {
+		_messageBus = messageBus;
 	}
 
 	private MessageBus _messageBus;

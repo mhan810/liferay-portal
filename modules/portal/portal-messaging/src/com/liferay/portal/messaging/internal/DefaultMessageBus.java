@@ -256,6 +256,7 @@ public class DefaultMessageBus implements MessageBus {
 
 		for (ServiceRegistration<DynamicMBean> serviceRegistration :
 				_mbeanServiceRegistrations.values()) {
+
 			serviceRegistration.unregister();
 		}
 
