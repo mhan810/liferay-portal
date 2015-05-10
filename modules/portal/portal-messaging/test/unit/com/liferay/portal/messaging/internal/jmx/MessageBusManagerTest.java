@@ -12,9 +12,9 @@
  * details.
  */
 
-package com.liferay.portal.kernel.messaging.jmx;
+package com.liferay.portal.messaging.internal.jmx;
 
-import com.liferay.portal.kernel.messaging.Destination;
+import com.liferay.portal.kernel.messaging.MessageBus;
 
 import java.lang.management.ManagementFactory;
 
@@ -32,10 +32,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  * @author Michael C. Han
+ * @author Miguel Pastor
  */
 @PowerMockIgnore("javax.management.*")
 @RunWith(PowerMockRunner.class)
-public class DestinationStatisticsManagerTest {
+public class MessageBusManagerTest {
 
 	@Before
 	public void setUp() throws Exception {
@@ -45,17 +46,16 @@ public class DestinationStatisticsManagerTest {
 	@Test
 	public void testRegisterMBean() throws Exception {
 		_mBeanServer.registerMBean(
-			new DestinationStatisticsManager(_destination),
-			DestinationStatisticsManager.createObjectName("test"));
+			new MessageBusManager(_messageBus),
+			MessageBusManager.createObjectName());
 
 		Assert.assertTrue(
-			_mBeanServer.isRegistered(
-				DestinationStatisticsManager.createObjectName("test")));
+			_mBeanServer.isRegistered(MessageBusManager.createObjectName()));
 	}
 
-	@Mock
-	private Destination _destination;
-
 	private MBeanServer _mBeanServer;
+
+	@Mock
+	private MessageBus _messageBus;
 
 }
