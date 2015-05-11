@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.scripting.groovy;
+package com.liferay.portal.scripting.groovy.internal;
 
 import com.liferay.portal.kernel.concurrent.ConcurrentReferenceKeyHashMap;
 import com.liferay.portal.kernel.memory.FinalizeManager;

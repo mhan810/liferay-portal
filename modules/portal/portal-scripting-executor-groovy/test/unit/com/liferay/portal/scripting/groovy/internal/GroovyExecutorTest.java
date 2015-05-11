@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.scripting.groovy;
+package com.liferay.portal.scripting.groovy.internal;
 
 import com.liferay.portal.kernel.scripting.ScriptingExecutor;
 import com.liferay.portal.scripting.ScriptingExecutorTestCase;
@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import com.liferay.portal.scripting.groovy.internal.GroovyExecutor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
