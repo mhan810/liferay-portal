@@ -81,42 +81,6 @@ public class RubyExecutor extends BaseScriptingExecutor {
 
 	public static final String LANGUAGE = "ruby";
 
-	public static void initRubyGems(ServletContext servletContext) {
-		File rubyGemsJarFile = new File(
-			servletContext.getRealPath("/WEB-INF/lib/ruby-gems.jar"));
-
-		if (!rubyGemsJarFile.exists()) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(rubyGemsJarFile + " does not exist");
-			}
-
-			return;
-		}
-
-		String tmpDir = SystemProperties.get(SystemProperties.TMP_DIR);
-
-		File rubyDir = new File(tmpDir + "/liferay/ruby");
-
-		if (!rubyDir.exists() ||
-			(rubyDir.lastModified() < rubyGemsJarFile.lastModified())) {
-
-			FileUtil.deltree(rubyDir);
-
-			try {
-				FileUtil.mkdirs(rubyDir);
-
-				ZipUtil.unzip(rubyGemsJarFile, rubyDir);
-
-				rubyDir.setLastModified(rubyGemsJarFile.lastModified());
-			}
-			catch (IOException ioe) {
-				_log.error(
-					"Unable to unzip " + rubyGemsJarFile + " to " + rubyDir,
-					ioe);
-			}
-		}
-	}
-
 	@Deactivate
 	public void deactivate() {
 		_scriptingContainer.terminate();
@@ -317,6 +281,43 @@ public class RubyExecutor extends BaseScriptingExecutor {
 	@Reference(unbind = "-")
 	protected void setProps(Props props) {
 		_basePath = props.get(PropsKeys.LIFERAY_LIB_PORTAL_DIR);
+	}
+
+	@Reference(target = "(original.bean=*)", unbind = "-")
+	protected void setServletContext(ServletContext servletContext) {
+		File rubyGemsJarFile = new File(
+			servletContext.getRealPath("/WEB-INF/lib/ruby-gems.jar"));
+
+		if (!rubyGemsJarFile.exists()) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(rubyGemsJarFile + " does not exist");
+			}
+
+			return;
+		}
+
+		String tmpDir = SystemProperties.get(SystemProperties.TMP_DIR);
+
+		File rubyDir = new File(tmpDir + "/liferay/ruby");
+
+		if (!rubyDir.exists() ||
+			(rubyDir.lastModified() < rubyGemsJarFile.lastModified())) {
+
+			FileUtil.deltree(rubyDir);
+
+			try {
+				FileUtil.mkdirs(rubyDir);
+
+				ZipUtil.unzip(rubyGemsJarFile, rubyDir);
+
+				rubyDir.setLastModified(rubyGemsJarFile.lastModified());
+			}
+			catch (IOException ioe) {
+				_log.error(
+					"Unable to unzip " + rubyGemsJarFile + " to " + rubyDir,
+					ioe);
+			}
+		}
 	}
 
 	private static final String _COMPILE_MODE_FORCE = "force";
