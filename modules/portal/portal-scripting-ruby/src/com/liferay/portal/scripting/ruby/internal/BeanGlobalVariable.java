@@ -11,8 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-
-package com.liferay.portal.scripting.ruby;
+package com.liferay.portal.scripting.ruby.internal;
 
 import org.jruby.Ruby;
 import org.jruby.javasupport.Java;
