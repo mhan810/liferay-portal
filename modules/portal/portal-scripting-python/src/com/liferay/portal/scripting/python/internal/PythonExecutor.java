@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.scripting.python;
+package com.liferay.portal.scripting.python.internal;
 
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.SingleVMPoolUtil;
