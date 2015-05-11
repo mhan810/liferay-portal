@@ -15,14 +15,18 @@
 package com.liferay.portal.scripting.python.internal;
 
 import com.liferay.portal.kernel.cache.PortalCache;
-import com.liferay.portal.kernel.cache.SingleVMPoolUtil;
+import com.liferay.portal.kernel.cache.SingleVMPool;
 import com.liferay.portal.kernel.scripting.BaseScriptingExecutor;
 import com.liferay.portal.kernel.scripting.ExecutionException;
 import com.liferay.portal.kernel.scripting.ScriptingException;
+import com.liferay.portal.kernel.scripting.ScriptingExecutor;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import org.python.core.CompileMode;
 import org.python.core.Py;
@@ -34,7 +38,14 @@ import org.python.util.InteractiveInterpreter;
 /**
  * @author Alberto Montero
  */
+@Component(
+	immediate = true,
+	property = {"scripting.language=" + PythonExecutor.LANGUAGE},
+	service = ScriptingExecutor.class
+)
 public class PythonExecutor extends BaseScriptingExecutor {
+
+	public static final String LANGUAGE = "python";
 
 	@Override
 	public void clearCache() {
@@ -83,7 +94,7 @@ public class PythonExecutor extends BaseScriptingExecutor {
 
 	@Override
 	public String getLanguage() {
-		return _LANGUAGE;
+		return LANGUAGE;
 	}
 
 	protected PyCode getCompiledScript(String script) {
@@ -111,12 +122,15 @@ public class PythonExecutor extends BaseScriptingExecutor {
 		return compiledScript;
 	}
 
+	@Reference(unbind = "-")
+	protected void setSingleVMPool(SingleVMPool singleVMPool) {
+		_portalCache = (PortalCache<String, PyCode>)singleVMPool.getCache(
+			_CACHE_NAME);
+	}
+
 	private static final String _CACHE_NAME = PythonExecutor.class.getName();
 
-	private static final String _LANGUAGE = "python";
-
 	private volatile boolean _initialized;
-	private final PortalCache<String, PyCode> _portalCache =
-		SingleVMPoolUtil.getCache(_CACHE_NAME);
+	private PortalCache<String, PyCode> _portalCache;
 
 }
