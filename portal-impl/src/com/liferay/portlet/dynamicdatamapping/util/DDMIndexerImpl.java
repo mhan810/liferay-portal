@@ -136,7 +136,7 @@ public class DDMIndexerImpl implements DDMIndexer {
 							(Object[])value);
 
 						if (indexType.equals("keyword")) {
-							document.addKeyword(name, valuesString);
+							document.addKeywordSortable(name, valuesString);
 						}
 						else {
 							document.addTextSortable(name, valuesString);
@@ -169,7 +169,7 @@ public class DDMIndexerImpl implements DDMIndexer {
 							}
 
 							if (indexType.equals("keyword")) {
-								document.addKeyword(name, valueString);
+								document.addKeywordSortable(name, valueString);
 							}
 							else {
 								document.addTextSortable(name, valueString);
