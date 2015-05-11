@@ -452,10 +452,6 @@
 		<priority value="ERROR" />
 	</category>
 
-	<category name="com.liferay.portal.scripting.ruby.RubyExecutor">
-		<priority value="ERROR" />
-	</category>
-
 	<category name="com.liferay.portal.search.IndexerRegistryImpl">
 		<priority value="WARN" />
 	</category>
