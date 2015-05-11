@@ -21,7 +21,7 @@ import com.liferay.portal.kernel.scripting.ExecutionException;
 import com.liferay.portal.kernel.scripting.ScriptingException;
 import com.liferay.portal.kernel.util.AggregateClassLoader;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.util.ClassLoaderUtil;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
@@ -92,7 +92,7 @@ public class GroovyExecutor extends BaseScriptingExecutor {
 
 		ClassLoader aggregateClassLoader =
 			AggregateClassLoader.getAggregateClassLoader(
-				ClassLoaderUtil.getPortalClassLoader(), classLoaders);
+				PortalClassLoaderUtil.getClassLoader(), classLoaders);
 
 		GroovyShell groovyShell = _groovyShells.get(aggregateClassLoader);
 
