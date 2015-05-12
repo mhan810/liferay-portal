@@ -485,7 +485,6 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 		}
 		catch (ClassNotFoundException cnfe) {
 			if (!ServerDetector.isJetty() && !ServerDetector.isTomcat()) {
-
 				throw cnfe;
 			}
 
@@ -522,7 +521,6 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 		}
 		catch (ClassNotFoundException cnfe) {
 			if (!ServerDetector.isJetty() && !ServerDetector.isTomcat()) {
-
 				throw cnfe;
 			}
 
