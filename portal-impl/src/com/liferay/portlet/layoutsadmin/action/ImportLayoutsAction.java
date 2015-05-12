@@ -28,12 +28,12 @@ import com.liferay.portal.kernel.lar.ExportImportHelper;
 import com.liferay.portal.kernel.lar.ExportImportHelperUtil;
 import com.liferay.portal.kernel.lar.MissingReference;
 import com.liferay.portal.kernel.lar.MissingReferences;
+import com.liferay.portal.kernel.lar.StagingBackgroundTaskDisplayHelperUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
-import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.upload.UploadException;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.Constants;
@@ -319,8 +319,10 @@ public class ImportLayoutsAction extends PortletAction {
 
 		deleteTempFileEntry(themeDisplay.getScopeGroupId(), folderName);
 
-		JSONObject jsonObject = StagingUtil.getExceptionMessagesJSONObject(
-			themeDisplay.getLocale(), e, null);
+		JSONObject jsonObject =
+			StagingBackgroundTaskDisplayHelperUtil.
+				getExceptionMessagesJSONObject(
+					themeDisplay.getLocale(), e, null);
 
 		writeJSON(actionRequest, actionResponse, jsonObject);
 
@@ -408,8 +410,10 @@ public class ImportLayoutsAction extends PortletAction {
 
 				jsonObject.put(
 					"warningMessages",
-					StagingUtil.getWarningMessagesJSONArray(
-						themeDisplay.getLocale(), weakMissingReferences, null));
+					StagingBackgroundTaskDisplayHelperUtil.
+						getWarningMessagesJSONArray(
+							themeDisplay.getLocale(), weakMissingReferences,
+							null));
 			}
 
 			writeJSON(actionRequest, actionResponse, jsonObject);

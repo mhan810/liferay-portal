@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,13 +11,30 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portlet/init.jsp" %>
+package com.liferay.portal.kernel.backgroundtask;
 
-<%@ page import="com.liferay.portal.NoSuchBackgroundTaskException" %><%@
-page import="com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants" %><%@
-page import="com.liferay.portal.kernel.backgroundtask.BackgroundTaskDisplay" %><%@
-page import="com.liferay.portal.kernel.backgroundtask.BackgroundTaskDisplayFactoryUtil" %>
+import com.liferay.portal.kernel.json.JSONObject;
 
-<%@ include file="/html/portlet/background_task/init-ext.jsp" %>
+import java.io.Serializable;
+
+/**
+ * @author Andrew Betts
+ */
+public interface BackgroundTaskDisplay extends Serializable {
+
+	public JSONObject getDetails();
+
+	public String getMessage();
+
+	public int getPercentage();
+
+	public boolean hasBackgroundTaskStatus();
+
+	public boolean hasDetails();
+
+	public boolean hasMessage();
+
+	public boolean hasPercentage();
+
+}
