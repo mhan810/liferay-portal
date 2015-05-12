@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:osgi="http://www.springframework.org/schema/osgi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd">
+	<bean id="com.liferay.portal.scheduler.quartz.service.QuartzLocalService" class="com.liferay.portal.scheduler.quartz.service.impl.QuartzLocalServiceImpl" />
+	<osgi:service interface="com.liferay.portal.scheduler.quartz.service.QuartzLocalService" ref="com.liferay.portal.scheduler.quartz.service.QuartzLocalService">
+		<osgi:service-properties>
+			<entry key="json.web.service.context.name" value="quartz" />
+			<entry key="json.web.service.context.path" value="Quartz" />
+		</osgi:service-properties>
+	</osgi:service>
+</beans>
