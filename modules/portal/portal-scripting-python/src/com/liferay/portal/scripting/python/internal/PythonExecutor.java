@@ -16,6 +16,7 @@ package com.liferay.portal.scripting.python.internal;
 
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.SingleVMPool;
+import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.scripting.BaseScriptingExecutor;
 import com.liferay.portal.kernel.scripting.ExecutionException;
 import com.liferay.portal.kernel.scripting.ScriptingException;
@@ -31,7 +32,9 @@ import org.osgi.service.component.annotations.Reference;
 import org.python.core.CompileMode;
 import org.python.core.Py;
 import org.python.core.PyCode;
+import org.python.core.PyFile;
 import org.python.core.PyObject;
+import org.python.core.PySyntaxError;
 import org.python.core.PySystemState;
 import org.python.util.InteractiveInterpreter;
 
@@ -63,33 +66,49 @@ public class PythonExecutor extends BaseScriptingExecutor {
 				"Constrained execution not supported for Python");
 		}
 
-		PyCode compiledScript = getCompiledScript(script);
+		try {
+			PyCode compiledScript = getCompiledScript(script);
 
-		InteractiveInterpreter interactiveInterpreter =
-			new InteractiveInterpreter();
+			InteractiveInterpreter interactiveInterpreter =
+				new InteractiveInterpreter();
 
-		for (Map.Entry<String, Object> entry : inputObjects.entrySet()) {
-			String key = entry.getKey();
-			Object value = entry.getValue();
+			for (Map.Entry<String, Object> entry : inputObjects.entrySet()) {
+				String key = entry.getKey();
+				Object value = entry.getValue();
 
-			interactiveInterpreter.set(key, value);
+				interactiveInterpreter.set(key, value);
+			}
+
+			interactiveInterpreter.exec(compiledScript);
+
+			if (outputNames == null) {
+				return null;
+			}
+
+			Map<String, Object> outputObjects = new HashMap<>();
+
+			for (String outputName : outputNames) {
+				PyObject pyObject = interactiveInterpreter.get(outputName);
+
+				outputObjects.put(
+					outputName, pyObject.__tojava__(Object.class));
+			}
+
+			return outputObjects;
 		}
+		catch (PySyntaxError pySyntaxError) {
+			UnsyncByteArrayOutputStream unsyncByteArrayOutputStream =
+				new UnsyncByteArrayOutputStream();
 
-		interactiveInterpreter.exec(compiledScript);
+			Py.displayException(
+				pySyntaxError.type, pySyntaxError.value,
+				pySyntaxError.traceback,
+				new PyFile(unsyncByteArrayOutputStream));
 
-		if (outputNames == null) {
-			return null;
+			String message = unsyncByteArrayOutputStream.toString();
+
+			throw new ScriptingException(message, pySyntaxError);
 		}
-
-		Map<String, Object> outputObjects = new HashMap<>();
-
-		for (String outputName : outputNames) {
-			PyObject pyObject = interactiveInterpreter.get(outputName);
-
-			outputObjects.put(outputName, pyObject.__tojava__(Object.class));
-		}
-
-		return outputObjects;
 	}
 
 	@Override
