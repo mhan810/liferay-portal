@@ -17,8 +17,9 @@
 	</publications>
 
 	<dependencies defaultconf="default">
-		<dependency name="quartz" org="org.quartz-scheduler" rev="2.1.7" />
-		<dependency name="org.osgi.compendium" org="org.osgi" rev="5.0.0" />
-		<dependency name="org.osgi.core" org="org.osgi" rev="5.0.0" />
+        <dependency name="geronimo-ejb_2.1_spec" org="org.apache.geronimo.specs" rev="1.1" />
+        <dependency name="quartz" org="org.quartz-scheduler" rev="2.1.7" />
+        <dependency name="org.osgi.compendium" org="org.osgi" rev="5.0.0" />
+        <dependency name="org.osgi.core" org="org.osgi" rev="5.0.0" />
 	</dependencies>
 </ivy-module>
