@@ -60,6 +60,7 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 import org.quartz.CronScheduleBuilder;
@@ -92,24 +93,6 @@ import org.quartz.impl.matchers.GroupMatcher;
 	immediate = true, service = SchedulerEngine.class
 )
 public class QuartzSchedulerEngine implements SchedulerEngine {
-
-	public void afterPropertiesSet() {
-		if (!isEnabled()) {
-			return;
-		}
-
-		try {
-			quartzLocalService.checkQuartzTables();
-
-			_persistedScheduler = initializeScheduler(
-				"persisted.scheduler.", true);
-
-			_memoryScheduler = initializeScheduler("memory.scheduler.", false);
-		}
-		catch (Exception e) {
-			_log.error("Unable to initialize engine", e);
-		}
-	}
 
 	@Override
 	public void delete(String groupName, StorageType storageType)
@@ -601,6 +584,26 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 		}
 	}
 
+    @Activate
+    protected void activate(Map<String, Object> properties) {
+        if (!isEnabled()) {
+            return;
+        }
+
+        try {
+            //  Temporarily commented due to service resolution and startup
+            //  quartzLocalService.checkQuartzTables();
+
+            _persistedScheduler = initializeScheduler(
+                    "persisted.scheduler.", true);
+
+            _memoryScheduler = initializeScheduler("memory.scheduler.", false);
+        }
+        catch (Exception e) {
+            _log.error("Unable to initialize engine", e);
+        }
+    }
+
 	protected String fixMaxLength(
 		String argument, int maxLength, StorageType storageType) {
 
@@ -948,7 +951,7 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 
 	protected boolean isEnabled() {
 		return GetterUtil.getBoolean(
-			PropsUtil.get(PropsKeys.CLUSTER_LINK_ENABLED));
+			PropsUtil.get(PropsKeys.SCHEDULER_ENABLED));
 	}
 
 	protected boolean isEnabled(StorageType storageType)
