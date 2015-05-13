@@ -133,6 +133,11 @@ public class JavaScriptExecutor extends BaseScriptingExecutor {
 		return LANGUAGE;
 	}
 
+	@Override
+	public ScriptingExecutor newInstance(boolean executeInSeparateThread) {
+		return new JavaScriptExecutor();
+	}
+
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
@@ -145,11 +150,6 @@ public class JavaScriptExecutor extends BaseScriptingExecutor {
 			StringPool.COMMA);
 
 		_forbiddenClasses = new HashSet<>(Arrays.asList(forbiddenClasses));
-	}
-
-	@Override
-	public ScriptingExecutor newInstance(boolean executeInSeparateThread) {
-		return new JavaScriptExecutor();
 	}
 
 	protected Script getCompiledScript(
