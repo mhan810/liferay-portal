@@ -11,23 +11,28 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+package com.liferay.portal.scripting.ruby.internal;
 
-package com.liferay.portal.scripting.ruby;
+import aQute.bnd.annotation.metatype.Configurable;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.scripting.BaseScriptingExecutor;
 import com.liferay.portal.kernel.scripting.ExecutionException;
 import com.liferay.portal.kernel.scripting.ScriptingException;
+import com.liferay.portal.kernel.scripting.ScriptingExecutor;
 import com.liferay.portal.kernel.util.AggregateClassLoader;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.NamedThreadFactory;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
+import com.liferay.portal.kernel.util.Props;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SystemProperties;
-import com.liferay.portal.util.ClassLoaderUtil;
-import com.liferay.portal.util.PropsValues;
+import com.liferay.portal.scripting.ruby.configuration.JRubyScriptingConfiguration;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,6 +42,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,91 +63,29 @@ import org.jruby.embed.ScriptingContainer;
 import org.jruby.embed.internal.LocalContextProvider;
 import org.jruby.exceptions.RaiseException;
 
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Alberto Montero
  * @author Raymond Augé
  */
+@Component(
+	immediate = true,
+	property = {"scripting.language=" + RubyExecutor.LANGUAGE},
+	service = ScriptingExecutor.class
+)
 public class RubyExecutor extends BaseScriptingExecutor {
 
 	public static final String LANGUAGE = "ruby";
 
-	public static void initRubyGems(ServletContext servletContext) {
-		File rubyGemsJarFile = new File(
-			servletContext.getRealPath("/WEB-INF/lib/ruby-gems.jar"));
-
-		if (!rubyGemsJarFile.exists()) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(rubyGemsJarFile + " does not exist");
-			}
-
-			return;
-		}
-
-		String tmpDir = SystemProperties.get(SystemProperties.TMP_DIR);
-
-		File rubyDir = new File(tmpDir + "/liferay/ruby");
-
-		if (!rubyDir.exists() ||
-			(rubyDir.lastModified() < rubyGemsJarFile.lastModified())) {
-
-			FileUtil.deltree(rubyDir);
-
-			try {
-				FileUtil.mkdirs(rubyDir);
-
-				ZipUtil.unzip(rubyGemsJarFile, rubyDir);
-
-				rubyDir.setLastModified(rubyGemsJarFile.lastModified());
-			}
-			catch (IOException ioe) {
-				_log.error(
-					"Unable to unzip " + rubyGemsJarFile + " to " + rubyDir,
-					ioe);
-			}
-		}
-	}
-
-	public RubyExecutor() {
-		_scriptingContainer = new ScriptingContainer(
-			LocalContextScope.THREADSAFE);
-
-		LocalContextProvider localContextProvider =
-			_scriptingContainer.getProvider();
-
-		RubyInstanceConfig rubyInstanceConfig =
-			localContextProvider.getRubyInstanceConfig();
-
-		if (PropsValues.SCRIPTING_JRUBY_COMPILE_MODE.equals(
-				_COMPILE_MODE_FORCE)) {
-
-			rubyInstanceConfig.setCompileMode(CompileMode.FORCE);
-		}
-		else if (PropsValues.SCRIPTING_JRUBY_COMPILE_MODE.equals(
-					_COMPILE_MODE_JIT)) {
-
-			rubyInstanceConfig.setCompileMode(CompileMode.JIT);
-		}
-
-		rubyInstanceConfig.setJitThreshold(
-			PropsValues.SCRIPTING_JRUBY_COMPILE_THRESHOLD);
-		rubyInstanceConfig.setLoader(ClassLoaderUtil.getPortalClassLoader());
-
-		_basePath = PropsValues.LIFERAY_LIB_PORTAL_DIR;
-
-		_loadPaths = new ArrayList<>(
-			PropsValues.SCRIPTING_JRUBY_LOAD_PATHS.length);
-
-		for (String gemLibPath : PropsValues.SCRIPTING_JRUBY_LOAD_PATHS) {
-			_loadPaths.add(gemLibPath);
-		}
-
-		rubyInstanceConfig.setLoadPaths(_loadPaths);
-
-		_scriptingContainer.setCurrentDirectory(_basePath);
-	}
-
-	public void destroy() {
+	@Deactivate
+	public void deactivate() {
 		_scriptingContainer.terminate();
+
+		_jRubyScriptingConfiguration = null;
 	}
 
 	@Override
@@ -180,6 +124,45 @@ public class RubyExecutor extends BaseScriptingExecutor {
 		_executeInSeparateThread = executeInSeparateThread;
 	}
 
+	@Activate
+	protected void activate(Map<String, Object> properties) {
+		_jRubyScriptingConfiguration = Configurable.createConfigurable(
+			JRubyScriptingConfiguration.class, properties);
+
+		_scriptingContainer = new ScriptingContainer(
+			LocalContextScope.THREADSAFE);
+
+		LocalContextProvider localContextProvider =
+			_scriptingContainer.getProvider();
+
+		RubyInstanceConfig rubyInstanceConfig =
+			localContextProvider.getRubyInstanceConfig();
+
+		if (_jRubyScriptingConfiguration.compileMode().equals(
+				_COMPILE_MODE_FORCE)) {
+
+			rubyInstanceConfig.setCompileMode(CompileMode.FORCE);
+		}
+		else if (_jRubyScriptingConfiguration.compileMode().equals(
+					_COMPILE_MODE_JIT)) {
+
+			rubyInstanceConfig.setCompileMode(CompileMode.JIT);
+		}
+
+		rubyInstanceConfig.setJitThreshold(
+			_jRubyScriptingConfiguration.compileThreshold());
+		rubyInstanceConfig.setLoader(PortalClassLoaderUtil.getClassLoader());
+
+		String[] loadPaths = StringUtil.split(
+			_jRubyScriptingConfiguration.loadPaths(), StringPool.COMMA);
+
+		_loadPaths = new ArrayList<>(Arrays.asList(loadPaths));
+
+		rubyInstanceConfig.setLoadPaths(_loadPaths);
+
+		_scriptingContainer.setCurrentDirectory(_basePath);
+	}
+
 	protected Map<String, Object> doEval(
 			Set<String> allowedClasses, Map<String, Object> inputObjects,
 			Set<String> outputNames, File scriptFile, String script,
@@ -203,7 +186,7 @@ public class RubyExecutor extends BaseScriptingExecutor {
 			if (ArrayUtil.isNotEmpty(classLoaders)) {
 				ClassLoader aggregateClassLoader =
 					AggregateClassLoader.getAggregateClassLoader(
-						ClassLoaderUtil.getPortalClassLoader(), classLoaders);
+						PortalClassLoaderUtil.getClassLoader(), classLoaders);
 
 				rubyInstanceConfig.setLoader(aggregateClassLoader);
 			}
@@ -295,6 +278,48 @@ public class RubyExecutor extends BaseScriptingExecutor {
 		}
 	}
 
+	@Reference(unbind = "-")
+	protected void setProps(Props props) {
+		_basePath = props.get(PropsKeys.LIFERAY_LIB_PORTAL_DIR);
+	}
+
+	@Reference(target = "(original.bean=*)", unbind = "-")
+	protected void setServletContext(ServletContext servletContext) {
+		File rubyGemsJarFile = new File(
+			servletContext.getRealPath("/WEB-INF/lib/ruby-gems.jar"));
+
+		if (!rubyGemsJarFile.exists()) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(rubyGemsJarFile + " does not exist");
+			}
+
+			return;
+		}
+
+		String tmpDir = SystemProperties.get(SystemProperties.TMP_DIR);
+
+		File rubyDir = new File(tmpDir + "/liferay/ruby");
+
+		if (!rubyDir.exists() ||
+			(rubyDir.lastModified() < rubyGemsJarFile.lastModified())) {
+
+			FileUtil.deltree(rubyDir);
+
+			try {
+				FileUtil.mkdirs(rubyDir);
+
+				ZipUtil.unzip(rubyGemsJarFile, rubyDir);
+
+				rubyDir.setLastModified(rubyGemsJarFile.lastModified());
+			}
+			catch (IOException ioe) {
+				_log.error(
+					"Unable to unzip " + rubyGemsJarFile + " to " + rubyDir,
+					ioe);
+			}
+		}
+	}
+
 	private static final String _COMPILE_MODE_FORCE = "force";
 
 	private static final String _COMPILE_MODE_JIT = "jit";
@@ -316,10 +341,11 @@ public class RubyExecutor extends BaseScriptingExecutor {
 		}
 	}
 
-	private final String _basePath;
+	private String _basePath;
 	private boolean _executeInSeparateThread = true;
-	private final List<String> _loadPaths;
-	private final ScriptingContainer _scriptingContainer;
+	private volatile JRubyScriptingConfiguration _jRubyScriptingConfiguration;
+	private List<String> _loadPaths;
+	private ScriptingContainer _scriptingContainer;
 
 	private class EvalCallable implements Callable<Map<String, Object>> {
 

@@ -169,6 +169,9 @@ Export-Package:\
 	org.dom4j.*;version='1.6.1',\
 	org.jaxen.*;version='1.1.1',\
 	org.jdom.*;version='1.0',\
+	org.jruby.*;version='1.6.5',\
+	org.jruby.embed.*;version='1.6.5',\
+	org.jruby.exceptions.*;version='1.6.5',\
 	org.json.*;version='2012.6.16.c7d2d9161321e9',\
 	org.hibernate.*;version='3.6.10',\
 	org.objectweb.asm;version='5.0.1',\
