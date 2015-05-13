@@ -28,7 +28,9 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.scripting.javascript.configuration.JavaScriptExecutorConfiguration;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -91,7 +93,8 @@ public class JavaScriptExecutor extends BaseScriptingExecutor {
 
 			if (allowedClasses != null) {
 				context.setClassShutter(
-					new JavaScriptClassVisibilityChecker(allowedClasses));
+					new JavaScriptClassVisibilityChecker(
+						allowedClasses, _forbiddenClasses));
 			}
 
 			compiledScript.exec(context, scriptable);
@@ -137,9 +140,11 @@ public class JavaScriptExecutor extends BaseScriptingExecutor {
 			Configurable.createConfigurable(
 				JavaScriptExecutorConfiguration.class, properties);
 
-		_forbiddenClasses = StringUtil.split(
+		String[] forbiddenClasses = StringUtil.split(
 			javaScriptExecutorConfiguration.forbiddenClasses(),
 			StringPool.COMMA);
+
+		_forbiddenClasses = new HashSet<>(Arrays.asList(forbiddenClasses));
 	}
 
 	@Override
@@ -193,7 +198,7 @@ public class JavaScriptExecutor extends BaseScriptingExecutor {
 	private static final String _CACHE_NAME =
 		JavaScriptExecutor.class.getName();
 
-	private volatile String[] _forbiddenClasses;
+	private volatile Set<String> _forbiddenClasses;
 	private PortalCache<String, Script> _portalCache;
 
 }
