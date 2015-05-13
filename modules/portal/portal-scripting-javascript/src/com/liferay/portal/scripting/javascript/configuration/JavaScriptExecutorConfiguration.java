@@ -20,7 +20,8 @@ import aQute.bnd.annotation.metatype.Meta;
  * @author Michael C. Han
  */
 @Meta.OCD(
-	id = "com.liferay.portal.scripting.javascript.configuration.JavaScriptExecutorConfiguration"
+	id = "com.liferay.portal.scripting.javascript.configuration.JavaScriptExecutorConfiguration",
+	localization = "content/Language"
 )
 public interface JavaScriptExecutorConfiguration {
 
