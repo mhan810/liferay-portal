@@ -26,8 +26,10 @@ import org.mozilla.javascript.ClassShutter;
 public class JavaScriptClassVisibilityChecker
 	extends ClassVisibilityChecker implements ClassShutter {
 
-	public JavaScriptClassVisibilityChecker(Set<String> allowedClasses) {
-		super(allowedClasses);
+	public JavaScriptClassVisibilityChecker(
+		Set<String> allowedClasses, Set<String> forbiddenClasses) {
+
+		super(allowedClasses, forbiddenClasses);
 	}
 
 	@Override
