@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.scripting;
+package com.liferay.portal.scripting.internal;
 
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.log.Log;
