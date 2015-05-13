@@ -42,4 +42,6 @@ public interface ScriptingExecutor {
 
 	public ScriptingContainer getScriptingContainer();
 
+	public ScriptingExecutor newInstance(boolean executeInSeparateThread);
+
 }
