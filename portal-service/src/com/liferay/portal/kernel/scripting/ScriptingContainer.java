@@ -14,32 +14,22 @@
 
 package com.liferay.portal.kernel.scripting;
 
-import java.io.File;
-
-import java.util.Map;
-import java.util.Set;
-
 /**
- * @author Alberto Montero
- * @author Brian Wing Shun Chan
+ * @author Michael C. Han
  */
-public interface ScriptingExecutor {
+public interface ScriptingContainer<S> {
 
-	public void clearCache();
-
-	public Map<String, Object> eval(
-			Set<String> allowedClasses, Map<String, Object> inputObjects,
-			Set<String> outputNames, File scriptFile,
-			ClassLoader... classloaders)
+	public <T> T callMethod(
+			Object scriptObject, String methodName, Object[] arguments,
+			Class<T> returnType)
 		throws ScriptingException;
 
-	public Map<String, Object> eval(
-			Set<String> allowedClasses, Map<String, Object> inputObjects,
-			Set<String> outputNames, String script, ClassLoader... classloaders)
-		throws ScriptingException;
+	public void destroy();
 
-	public String getLanguage();
+	public S getRealScriptingContainer();
 
-	public ScriptingContainer getScriptingContainer();
+	public Object runScriptlet(String scriptlet);
+
+	public void setCurrentDirectory(String directory);
 
 }
