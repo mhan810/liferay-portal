@@ -462,17 +462,7 @@ public class LoginUtil {
 				protectedAttributeName, protectedAttributeValue);
 		}
 
-		try {
-			session.invalidate();
-		}
-		catch (IllegalStateException ise) {
-
-			// This only happens in Geronimo
-
-			if (_log.isWarnEnabled()) {
-				_log.warn(ise.getMessage());
-			}
-		}
+		session.invalidate();
 
 		session = request.getSession(true);
 
