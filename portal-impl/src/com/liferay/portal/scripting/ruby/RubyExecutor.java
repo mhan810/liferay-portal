@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.scripting.BaseScriptingExecutor;
 import com.liferay.portal.kernel.scripting.ExecutionException;
 import com.liferay.portal.kernel.scripting.ScriptingContainer;
 import com.liferay.portal.kernel.scripting.ScriptingException;
+import com.liferay.portal.kernel.scripting.ScriptingExecutor;
 import com.liferay.portal.kernel.util.AggregateClassLoader;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -177,6 +178,15 @@ public class RubyExecutor extends BaseScriptingExecutor {
 
 	public ScriptingContainer getScriptingContainer() {
 		return _scriptingContainer;
+	}
+
+	@Override
+	public ScriptingExecutor newInstance(boolean executeInSeparateThread) {
+		RubyExecutor rubyExecutor = new RubyExecutor();
+
+		rubyExecutor.setExecuteInSeparateThread(executeInSeparateThread);
+
+		return rubyExecutor;
 	}
 
 	public void setExecuteInSeparateThread(boolean executeInSeparateThread) {
