@@ -40,17 +40,20 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.sass.compiler.SassCompiler;
 import com.liferay.sass.compiler.jni.internal.JniSassCompiler;
 import com.liferay.sass.compiler.ruby.internal.RubySassCompiler;
-import org.apache.commons.lang.time.StopWatch;
+
+import java.io.File;
+
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLDecoder;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import java.io.File;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLDecoder;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.apache.commons.lang.time.StopWatch;
 
 /**
  * @author Raymond Augé
@@ -562,10 +565,10 @@ public class DynamicCSSUtil {
 	private static final Log _log = LogFactoryUtil.getLog(DynamicCSSUtil.class);
 
 	private static boolean _initialized;
-	private static SassCompiler _sassCompiler;
 	private static final Pattern _pluginThemePattern = Pattern.compile(
 		"\\/([^\\/]+)-theme\\/", Pattern.CASE_INSENSITIVE);
 	private static final Pattern _portalThemePattern = Pattern.compile(
 		"themes\\/([^\\/]+)\\/css", Pattern.CASE_INSENSITIVE);
+	private static SassCompiler _sassCompiler;
 
 }

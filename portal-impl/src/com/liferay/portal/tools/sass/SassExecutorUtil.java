@@ -22,6 +22,7 @@ import com.liferay.sass.compiler.jni.internal.JniSassCompiler;
 import com.liferay.sass.compiler.ruby.internal.RubySassCompiler;
 
 import java.io.File;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
@@ -98,8 +99,7 @@ public class SassExecutorUtil {
 		try {
 			return _sassCompiler.compileString(
 				content,
-				_portalCommonDirName + File.pathSeparator + cssThemePath,
-				"");
+				_portalCommonDirName + File.pathSeparator + cssThemePath, "");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -147,9 +147,9 @@ public class SassExecutorUtil {
 	private static String _docrootDirName;
 	private static Exception _exception;
 	private static ExecutorService _executorService;
-	private static SassCompiler _sassCompiler;
 	private static Thread _mainThread;
 	private static String _portalCommonDirName;
+	private static SassCompiler _sassCompiler;
 	private static final ConcurrentMap<String, SassFile> _sassFileCache =
 		new ConcurrentHashMap<>();
 
