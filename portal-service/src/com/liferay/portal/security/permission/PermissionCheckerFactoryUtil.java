@@ -14,8 +14,13 @@
 
 package com.liferay.portal.security.permission;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.model.User;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
 
 /**
  * @author Charles May
@@ -41,17 +46,40 @@ public class PermissionCheckerFactoryUtil {
 		PortalRuntimePermission.checkGetBeanProperty(
 			PermissionCheckerFactoryUtil.class);
 
-		return _permissionCheckerFactory;
+		return _instance._serviceTracker.getService();
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	public void setPermissionCheckerFactory(
 		PermissionCheckerFactory permissionCheckerFactory) {
 
 		PortalRuntimePermission.checkSetBeanProperty(getClass());
 
-		_permissionCheckerFactory = permissionCheckerFactory;
+		if (_log.isWarnEnabled()) {
+			_log.warn(
+				"This method has been deprecated, " +
+					"please register the factory using OSGi.");
+		}
 	}
 
-	private static PermissionCheckerFactory _permissionCheckerFactory;
+	private PermissionCheckerFactoryUtil() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(
+			PermissionCheckerFactory.class);
+
+		_serviceTracker.open();
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		PermissionCheckerFactoryUtil.class);
+
+	private static final PermissionCheckerFactoryUtil _instance =
+		new PermissionCheckerFactoryUtil();
+
+	private final ServiceTracker<?, PermissionCheckerFactory> _serviceTracker;
 
 }
