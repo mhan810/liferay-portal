@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.scripting.javascript;
+package com.liferay.portal.scripting.javascript.internal;
 
 import com.liferay.portal.kernel.scripting.ScriptingException;
 import com.liferay.portal.kernel.scripting.ScriptingExecutor;
