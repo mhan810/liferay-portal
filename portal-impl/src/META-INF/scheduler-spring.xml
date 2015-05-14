@@ -36,16 +36,20 @@
 
 	<!-- Util -->
 
+	<bean id="com.liferay.portal.kernel.scheduler.SchedulerEngineHelper" class="com.liferay.portal.scheduler.SchedulerEngineHelperImpl">
+		<property name="schedulerEngine" ref="com.liferay.portal.scheduler.ClusterSchedulerEngineService" />
+	</bean>
 	<bean class="com.liferay.portal.kernel.scheduler.SchedulerEngineHelperUtil">
-		<property name="schedulerEngineHelper">
-			<bean class="com.liferay.portal.scheduler.SchedulerEngineHelperImpl">
-				<property name="schedulerEngine" ref="com.liferay.portal.scheduler.ClusterSchedulerEngineService" />
-			</bean>
-		</property>
+		<property name="schedulerEngineHelper" ref="com.liferay.portal.kernel.scheduler.SchedulerEngineHelper" />
 	</bean>
 
 	<!-- Messaging -->
 
+	<bean id="messageListener.scheduler_engine" class="com.liferay.portal.kernel.messaging.proxy.ProxyMessageListener">
+		<property name="manager">
+			<bean class="com.liferay.portal.scheduler.quartz.QuartzSchedulerEngine" />
+		</property>
+	</bean>
 	<bean id="messageListener.scheduler_scripting" class="com.liferay.portal.kernel.scheduler.messaging.SchedulerEventMessageListenerWrapper">
 		<property name="messageListener">
 			<bean class="com.liferay.portal.scheduler.messaging.ScriptingMessageListener" />
@@ -76,6 +80,11 @@
 		</property>
 		<property name="messageListeners">
 			<map key-type="java.lang.String" value-type="java.util.List">
+				<entry key="liferay/scheduler_engine">
+					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
+						<ref bean="messageListener.scheduler_engine" />
+					</list>
+				</entry>
 				<entry key="liferay/scheduler_scripting">
 					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
 						<ref bean="messageListener.scheduler_scripting" />
