@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.service;
+package com.liferay.portal.scheduler.quartz.service;
 
 import aQute.bnd.annotation.ProviderType;
 
@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.service.BaseLocalService;
 
 /**
  * Provides the local service interface for Quartz. Methods of this
@@ -29,8 +30,8 @@ import com.liferay.portal.kernel.transaction.Transactional;
  *
  * @author Brian Wing Shun Chan
  * @see QuartzLocalServiceUtil
- * @see com.liferay.portal.service.base.QuartzLocalServiceBaseImpl
- * @see com.liferay.portal.service.impl.QuartzLocalServiceImpl
+ * @see com.liferay.portal.scheduler.quartz.service.base.QuartzLocalServiceBaseImpl
+ * @see com.liferay.portal.scheduler.quartz.service.impl.QuartzLocalServiceImpl
  * @generated
  */
 @ProviderType
@@ -40,7 +41,7 @@ public interface QuartzLocalService extends BaseLocalService {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this interface directly. Always use {@link QuartzLocalServiceUtil} to access the quartz local service. Add custom service methods to {@link com.liferay.portal.service.impl.QuartzLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
+	 * Never modify or reference this interface directly. Always use {@link QuartzLocalServiceUtil} to access the quartz local service. Add custom service methods to {@link com.liferay.portal.scheduler.quartz.service.impl.QuartzLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
 	public void checkQuartzTables();
 

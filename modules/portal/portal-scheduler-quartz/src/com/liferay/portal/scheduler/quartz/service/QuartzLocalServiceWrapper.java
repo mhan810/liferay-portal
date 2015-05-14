@@ -12,9 +12,11 @@
  * details.
  */
 
-package com.liferay.portal.service;
+package com.liferay.portal.scheduler.quartz.service;
 
 import aQute.bnd.annotation.ProviderType;
+
+import com.liferay.portal.service.ServiceWrapper;
 
 /**
  * Provides a wrapper for {@link QuartzLocalService}.

@@ -12,16 +12,18 @@
  * details.
  */
 
-package com.liferay.portal.service;
+package com.liferay.portal.scheduler.quartz.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
-import com.liferay.portal.kernel.util.ReferenceRegistry;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
+
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * Provides the local service utility for Quartz. This utility wraps
- * {@link com.liferay.portal.service.impl.QuartzLocalServiceImpl} and is the
+ * {@link com.liferay.portal.scheduler.quartz.service.impl.QuartzLocalServiceImpl} and is the
  * primary access point for service operations in application layer code running
  * on the local server. Methods of this service will not have security checks
  * based on the propagated JAAS credentials because this service can only be
@@ -29,8 +31,8 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  *
  * @author Brian Wing Shun Chan
  * @see QuartzLocalService
- * @see com.liferay.portal.service.base.QuartzLocalServiceBaseImpl
- * @see com.liferay.portal.service.impl.QuartzLocalServiceImpl
+ * @see com.liferay.portal.scheduler.quartz.service.base.QuartzLocalServiceBaseImpl
+ * @see com.liferay.portal.scheduler.quartz.service.impl.QuartzLocalServiceImpl
  * @generated
  */
 @ProviderType
@@ -38,7 +40,7 @@ public class QuartzLocalServiceUtil {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify this class directly. Add custom service methods to {@link com.liferay.portal.service.impl.QuartzLocalServiceImpl} and rerun ServiceBuilder to regenerate this class.
+	 * Never modify this class directly. Add custom service methods to {@link com.liferay.portal.scheduler.quartz.service.impl.QuartzLocalServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static void checkQuartzTables() {
 		getService().checkQuartzTables();
@@ -63,14 +65,7 @@ public class QuartzLocalServiceUtil {
 	}
 
 	public static QuartzLocalService getService() {
-		if (_service == null) {
-			_service = (QuartzLocalService)PortalBeanLocatorUtil.locate(QuartzLocalService.class.getName());
-
-			ReferenceRegistry.registerReference(QuartzLocalServiceUtil.class,
-				"_service");
-		}
-
-		return _service;
+		return _serviceTracker.getService();
 	}
 
 	/**
@@ -80,5 +75,14 @@ public class QuartzLocalServiceUtil {
 	public void setService(QuartzLocalService service) {
 	}
 
-	private static QuartzLocalService _service;
+	private static ServiceTracker<QuartzLocalService, QuartzLocalService> _serviceTracker;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(QuartzLocalServiceUtil.class);
+
+		_serviceTracker = new ServiceTracker<QuartzLocalService, QuartzLocalService>(bundle.getBundleContext(),
+				QuartzLocalService.class, null);
+
+		_serviceTracker.open();
+	}
 }
