@@ -17,19 +17,19 @@ package com.liferay.portal.scheduler.quartz.internal;
 import com.liferay.portal.kernel.bean.ClassLoaderBeanHandler;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.InvokerMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
-import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.scheduler.IntervalTrigger;
 import com.liferay.portal.kernel.scheduler.JobState;
 import com.liferay.portal.kernel.scheduler.JobStateSerializeUtil;
 import com.liferay.portal.kernel.scheduler.SchedulerEngine;
-import com.liferay.portal.kernel.scheduler.SchedulerEngineHelperUtil;
+import com.liferay.portal.kernel.scheduler.SchedulerEngineHelper;
 import com.liferay.portal.kernel.scheduler.SchedulerException;
 import com.liferay.portal.kernel.scheduler.StorageType;
 import com.liferay.portal.kernel.scheduler.TriggerState;
@@ -39,14 +39,14 @@ import com.liferay.portal.kernel.scheduler.messaging.SchedulerResponse;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
+import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletApp;
 import com.liferay.portal.scheduler.quartz.internal.job.MessageSenderJob;
-import com.liferay.portal.service.PortletLocalServiceUtil;
+import com.liferay.portal.service.PortletLocalService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,6 +60,11 @@ import javax.servlet.ServletContext;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
@@ -149,17 +154,6 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 				"Unable to delete job {jobName=" + jobName + ", groupName=" +
 					groupName + "}",
 				e);
-		}
-	}
-
-	public void destroy() {
-		try {
-			shutdown();
-		}
-		catch (SchedulerException se) {
-			if (_log.isWarnEnabled()) {
-				_log.warn("Unable to shutdown", se);
-			}
 		}
 	}
 
@@ -426,7 +420,7 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 
 			schedule(
 				scheduler, storageType, quartzTrigger, description, destination,
-					message);
+				message);
 		}
 		catch (RuntimeException re) {
 
@@ -583,7 +577,7 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 	}
 
 	@Activate
-	protected void activate(Map<String, Object> properties) {
+	protected void activate() {
 		if (!isEnabled()) {
 			return;
 		}
@@ -596,6 +590,18 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 		}
 		catch (Exception e) {
 			_log.error("Unable to initialize engine", e);
+		}
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		try {
+			shutdown();
+		}
+		catch (SchedulerException se) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to shutdown", se);
+			}
 		}
 	}
 
@@ -623,7 +629,11 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 	protected Message getMessage(JobDataMap jobDataMap) {
 		String messageJSON = (String)jobDataMap.get(SchedulerEngine.MESSAGE);
 
-		return (Message)JSONFactoryUtil.deserialize(messageJSON);
+		if (_jsonFactory == null) {
+			throw new IllegalStateException("JSON Factory not initialized");
+		}
+
+		return (Message)_jsonFactory.deserialize(messageJSON);
 	}
 
 	protected MessageListener getMessageListener(
@@ -875,7 +885,7 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 
 		StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
 
-		Properties properties = PropsUtil.getProperties(propertiesPrefix, true);
+		Properties properties = _props.getProperties(propertiesPrefix, true);
 
 		if (useQuartzCluster) {
 			DB db = DBFactoryUtil.getDB();
@@ -894,7 +904,7 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 			}
 
 			if (GetterUtil.getBoolean(
-					PropsUtil.get(PropsKeys.CLUSTER_LINK_ENABLED))) {
+					_props.get(PropsKeys.CLUSTER_LINK_ENABLED))) {
 
 				if (dbType.equals(DB.TYPE_HYPERSONIC)) {
 					_log.error("Unable to cluster scheduler on Hypersonic");
@@ -936,8 +946,10 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 				message.put(SchedulerEngine.JOB_NAME, jobKey.getName());
 				message.put(SchedulerEngine.GROUP_NAME, jobKey.getGroup());
 
-				SchedulerEngineHelperUtil.auditSchedulerJobs(
-					message, TriggerState.EXPIRED);
+				if (_schedulerEngineHelper != null) {
+					_schedulerEngineHelper.auditSchedulerJobs(
+						message, TriggerState.EXPIRED);
+				}
 
 				_persistedScheduler.deleteJob(jobKey);
 			}
@@ -945,8 +957,7 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 	}
 
 	protected boolean isEnabled() {
-		return GetterUtil.getBoolean(
-			PropsUtil.get(PropsKeys.SCHEDULER_ENABLED));
+		return GetterUtil.getBoolean(_props.get(PropsKeys.SCHEDULER_ENABLED));
 	}
 
 	protected boolean isEnabled(StorageType storageType)
@@ -974,6 +985,11 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 			String destinationName, Message message)
 		throws SchedulerException {
 
+		if (_portletLocalService == null) {
+			throw new IllegalStateException(
+				"PortletLocalService not properly initialiezd");
+		}
+
 		String messageListenerClassName = message.getString(
 			SchedulerEngine.MESSAGE_LISTENER_CLASS_NAME);
 
@@ -989,7 +1005,7 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 			classLoader = PortalClassLoaderUtil.getClassLoader();
 		}
 		else {
-			Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+			Portlet portlet = _portletLocalService.getPortletById(portletId);
 
 			PortletApp portletApp = portlet.getPortletApp();
 
@@ -1014,7 +1030,7 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 
 		schedulerEventListenerWrapper.afterPropertiesSet();
 
-		MessageBusUtil.registerMessageListener(
+		_messageBus.registerMessageListener(
 			destinationName, schedulerEventListenerWrapper);
 
 		message.put(
@@ -1026,6 +1042,10 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 			Scheduler scheduler, StorageType storageType, Trigger trigger,
 			String description, String destinationName, Message message)
 		throws Exception {
+
+		if (_jsonFactory == null) {
+			throw new IllegalStateException("JSON Factory not initialized");
+		}
 
 		try {
 			JobBuilder jobBuilder = JobBuilder.newJob(MessageSenderJob.class);
@@ -1041,7 +1061,7 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 			jobDataMap.put(SchedulerEngine.DESCRIPTION, description);
 			jobDataMap.put(SchedulerEngine.DESTINATION_NAME, destinationName);
 			jobDataMap.put(
-				SchedulerEngine.MESSAGE, JSONFactoryUtil.serialize(message));
+				SchedulerEngine.MESSAGE, _jsonFactory.serialize(message));
 			jobDataMap.put(
 				SchedulerEngine.STORAGE_TYPE, storageType.toString());
 
@@ -1065,6 +1085,47 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 				_log.info("Message is already scheduled");
 			}
 		}
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected void setJsonFactory(JSONFactory jsonFactory) {
+		_jsonFactory = jsonFactory;
+	}
+
+	@Reference(unbind = "-")
+	protected void setMessageBus(MessageBus messageBus) {
+		_messageBus = messageBus;
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected void setPortletLocalService(
+		PortletLocalService portletLocalService) {
+
+		_portletLocalService = portletLocalService;
+	}
+
+	@Reference(unbind = "-")
+	protected void setProps(Props props) {
+		_props = props;
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected void setSchedulerEngineHelper(
+		SchedulerEngineHelper schedulerEngineHelper) {
+
+		_schedulerEngineHelper = schedulerEngineHelper;
 	}
 
 	protected void unregisterMessageListener(Scheduler scheduler, JobKey jobKey)
@@ -1094,8 +1155,7 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 		String destinationName = jobDataMap.getString(
 			SchedulerEngine.DESTINATION_NAME);
 
-		Destination destination = MessageBusUtil.getDestination(
-			destinationName);
+		Destination destination = _messageBus.getDestination(destinationName);
 
 		if (destination == null) {
 			return;
@@ -1126,7 +1186,7 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 			if (messageListenerUUID.equals(
 					schedulerMessageListener.getMessageListenerUUID())) {
 
-				MessageBusUtil.unregisterMessageListener(
+				_messageBus.unregisterMessageListener(
 					destinationName, schedulerMessageListener);
 
 				return;
@@ -1178,6 +1238,22 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 		scheduler.unscheduleJob(triggerKey);
 
 		scheduler.addJob(jobDetail, true);
+	}
+
+	protected void unsetJsonFactory(JSONFactory jsonFactory) {
+		_jsonFactory = null;
+	}
+
+	protected void unsetPortletLocalService(
+		PortletLocalService portletLocalService) {
+
+		_portletLocalService = null;
+	}
+
+	protected void unsetSchedulerEngineHelper(
+		SchedulerEngineHelper schedulerEngineHelper) {
+
+		_schedulerEngineHelper = null;
 	}
 
 	protected void update(
@@ -1248,7 +1324,12 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 	private static final Log _log = LogFactoryUtil.getLog(
 		QuartzSchedulerEngine.class);
 
+	private volatile JSONFactory _jsonFactory;
 	private Scheduler _memoryScheduler;
+	private MessageBus _messageBus;
 	private Scheduler _persistedScheduler;
+	private volatile PortletLocalService _portletLocalService;
+	private Props _props;
+	private volatile SchedulerEngineHelper _schedulerEngineHelper;
 
 }
