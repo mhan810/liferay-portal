@@ -47,7 +47,7 @@
 
 	<bean id="messageListener.scheduler_engine" class="com.liferay.portal.kernel.messaging.proxy.ProxyMessageListener">
 		<property name="manager">
-			<bean class="com.liferay.portal.scheduler.quartz.QuartzSchedulerEngine" />
+			<bean class="com.liferay.portal.scheduler.quartz.internal.QuartzSchedulerEngine" />
 		</property>
 	</bean>
 	<bean id="messageListener.scheduler_scripting" class="com.liferay.portal.kernel.scheduler.messaging.SchedulerEventMessageListenerWrapper">
