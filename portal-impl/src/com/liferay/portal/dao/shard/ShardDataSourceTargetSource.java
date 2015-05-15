@@ -99,7 +99,7 @@ public class ShardDataSourceTargetSource
 	private static final Log _log = LogFactoryUtil.getLog(
 		ShardDataSourceTargetSource.class);
 
-	private static final String[] _availableShardNames;
+	private static String[] _availableShardNames;
 
 	private static final ThreadLocal<DataSource> _dataSource =
 		new CentralizedThreadLocal<DataSource>(false) {
@@ -111,6 +111,6 @@ public class ShardDataSourceTargetSource
 
 	};
 
-	private static final Map<String, DataSource> _dataSources;
+	private static Map<String, DataSource> _dataSources;
 
 }
