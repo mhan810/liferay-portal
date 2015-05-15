@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.scheduler.quartz;
+package com.liferay.portal.scheduler.quartz.internal;
 
 import com.liferay.portal.kernel.bean.ClassLoaderBeanHandler;
 import com.liferay.portal.kernel.dao.db.DB;
@@ -45,7 +45,7 @@ import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletApp;
-import com.liferay.portal.scheduler.quartz.job.MessageSenderJob;
+import com.liferay.portal.scheduler.quartz.internal.job.MessageSenderJob;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 
 import java.util.ArrayList;
@@ -582,22 +582,22 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 		}
 	}
 
-    @Activate
-    protected void activate(Map<String, Object> properties) {
-        if (!isEnabled()) {
-            return;
-        }
+	@Activate
+	protected void activate(Map<String, Object> properties) {
+		if (!isEnabled()) {
+			return;
+		}
 
-        try {
-            _persistedScheduler = initializeScheduler(
-                    "persisted.scheduler.", true);
+		try {
+			_persistedScheduler = initializeScheduler(
+				"persisted.scheduler.", true);
 
-            _memoryScheduler = initializeScheduler("memory.scheduler.", false);
-        }
-        catch (Exception e) {
-            _log.error("Unable to initialize engine", e);
-        }
-    }
+			_memoryScheduler = initializeScheduler("memory.scheduler.", false);
+		}
+		catch (Exception e) {
+			_log.error("Unable to initialize engine", e);
+		}
+	}
 
 	protected String fixMaxLength(
 		String argument, int maxLength, StorageType storageType) {
