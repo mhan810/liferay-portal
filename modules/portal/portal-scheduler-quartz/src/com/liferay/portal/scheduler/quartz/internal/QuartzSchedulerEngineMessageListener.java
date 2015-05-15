@@ -14,8 +14,6 @@
 
 package com.liferay.portal.scheduler.quartz.internal;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.proxy.ProxyMessageListener;
 import com.liferay.portal.kernel.scheduler.SchedulerEngine;
@@ -32,26 +30,9 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class QuartzSchedulerEngineMessageListener extends ProxyMessageListener {
 
-	@Override
-	public void setManager(Object manager) {
-		if (manager instanceof SchedulerEngine) {
-			setSchedulerEngine((SchedulerEngine)manager);
-		}
-		else {
-			if (_log.isErrorEnabled()) {
-				_log.error(
-					"Manager type " + manager.getClass().getName() +
-					" must implement " + SchedulerEngine.class.getName());
-			}
-		}
-	}
-
-	@Reference
+	@Reference(service = QuartzSchedulerEngine.class, unbind = "-")
 	public void setSchedulerEngine(SchedulerEngine schedulerEngine) {
-		super.setManager(schedulerEngine);
+		setManager(schedulerEngine);
 	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		QuartzSchedulerEngineMessageListener.class);
 
 }
