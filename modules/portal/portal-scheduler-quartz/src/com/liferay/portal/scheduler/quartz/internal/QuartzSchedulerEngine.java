@@ -39,9 +39,11 @@ import com.liferay.portal.kernel.scheduler.messaging.SchedulerResponse;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
+import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.ProxyUtil;
+import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletApp;
@@ -430,10 +432,26 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 				message);
 		}
 		catch (RuntimeException re) {
+			if (PortalRunMode.isTestMode()) {
+				StackTraceElement[] stackTraceElements = re.getStackTrace();
 
-			// ServerDetector will throw an exception when JobSchedulerImpl is
-			// initialized in a test environment
+				for (StackTraceElement stackTraceElement : stackTraceElements) {
+					if (stackTraceElement.getClassName().contains(
+							ServerDetector.class.getName())) {
 
+						if (_log.isInfoEnabled()) {
+							_log.info(re, re);
+						}
+
+						return;
+					}
+
+					throw new SchedulerException("Unable to schedule job", re);
+				}
+			}
+			else {
+				throw new SchedulerException("Unable to schedule job", re);
+			}
 		}
 		catch (Exception e) {
 			throw new SchedulerException("Unable to schedule job", e);
