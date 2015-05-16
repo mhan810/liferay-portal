@@ -38,6 +38,7 @@ import com.liferay.portal.service.LockLocalService;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
@@ -119,28 +120,6 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 	}
 
 	@Override
-	public void initialize() {
-		if (!_clusterExecutor.isEnabled() || SPIUtil.isSPI()) {
-			return;
-		}
-
-		_clusterEventListener = new ClusterMasterTokenClusterEventListener();
-
-		_clusterExecutor.addClusterEventListener(_clusterEventListener);
-
-		ClusterNode localClusterNode = _clusterExecutor.getLocalClusterNode();
-
-		_localClusterNodeId = localClusterNode.getClusterNodeId();
-
-		_enabled = true;
-
-		String masterClusterNodeId = getMasterClusterNodeId();
-
-		notifyMasterTokenTransitionListeners(
-			_localClusterNodeId.equals(masterClusterNodeId));
-	}
-
-	@Override
 	public boolean isEnabled() {
 		return _enabled;
 	}
@@ -161,6 +140,28 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 
 		_clusterMasterTokenTransitionListeners.remove(
 			clusterMasterTokenTransitionListener);
+	}
+
+	@Activate
+	protected void activate() {
+		if (!_clusterExecutor.isEnabled() || SPIUtil.isSPI()) {
+			return;
+		}
+
+		_clusterEventListener = new ClusterMasterTokenClusterEventListener();
+
+		_clusterExecutor.addClusterEventListener(_clusterEventListener);
+
+		ClusterNode localClusterNode = _clusterExecutor.getLocalClusterNode();
+
+		_localClusterNodeId = localClusterNode.getClusterNodeId();
+
+		_enabled = true;
+
+		String masterClusterNodeId = getMasterClusterNodeId();
+
+		notifyMasterTokenTransitionListeners(
+			_localClusterNodeId.equals(masterClusterNodeId));
 	}
 
 	@Deactivate
