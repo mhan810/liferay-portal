@@ -14,7 +14,6 @@
 
 package com.liferay.portal.kernel.scheduler;
 
-import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.BasePortalLifecycle;
@@ -48,13 +47,6 @@ public class SchedulerLifecycle extends BasePortalLifecycle {
 					SchedulerEngineHelper schedulerEngineHelper =
 						registry.getService(SchedulerEngineHelper.class);
 
-					if (schedulerEngineHelper.isClusteredSchedulerEngine()) {
-						ClusterMasterExecutor clusterMasterExecutor =
-							registry.getService(ClusterMasterExecutor.class);
-
-						clusterMasterExecutor.initialize();
-					}
-
 					try {
 						schedulerEngineHelper.start();
 					}
@@ -76,10 +68,7 @@ public class SchedulerLifecycle extends BasePortalLifecycle {
 				"QuartzSchemaManager)");
 
 		serviceDependencyManager.registerDependencies(
-			new Class[] {
-				ClusterMasterExecutor.class, SchedulerEngineHelper.class
-			},
-			new Filter[] {filter});
+			new Class[] {SchedulerEngineHelper.class}, new Filter[] {filter});
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
