@@ -236,10 +236,6 @@ public class SchedulerEngineHelperUtil {
 			jobName, groupName, storageType);
 	}
 
-	public static void initialize() throws SchedulerException {
-		getSchedulerEngineHelper().initialize();
-	}
-
 	public static boolean isClusteredSchedulerEngine() {
 		return getSchedulerEngineHelper().isClusteredSchedulerEngine();
 	}
