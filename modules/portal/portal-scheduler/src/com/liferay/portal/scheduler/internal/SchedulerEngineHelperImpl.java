@@ -12,15 +12,19 @@
  * details.
  */
 
-package com.liferay.portal.scheduler;
+package com.liferay.portal.scheduler.internal;
 
 import com.liferay.portal.kernel.audit.AuditMessage;
-import com.liferay.portal.kernel.audit.AuditRouterUtil;
+import com.liferay.portal.kernel.audit.AuditRouter;
 import com.liferay.portal.kernel.cal.DayAndPosition;
 import com.liferay.portal.kernel.cal.Duration;
 import com.liferay.portal.kernel.cal.Recurrence;
 import com.liferay.portal.kernel.cal.RecurrenceSerializer;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.cluster.ClusterLink;
+import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
+import com.liferay.portal.kernel.json.JSONFactory;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.scheduler.JobState;
@@ -28,21 +32,20 @@ import com.liferay.portal.kernel.scheduler.SchedulerEngine;
 import com.liferay.portal.kernel.scheduler.SchedulerEngineHelper;
 import com.liferay.portal.kernel.scheduler.SchedulerEntry;
 import com.liferay.portal.kernel.scheduler.SchedulerException;
-import com.liferay.portal.kernel.scheduler.SchedulerLifecycle;
 import com.liferay.portal.kernel.scheduler.StorageType;
 import com.liferay.portal.kernel.scheduler.Trigger;
 import com.liferay.portal.kernel.scheduler.TriggerState;
 import com.liferay.portal.kernel.scheduler.messaging.SchedulerResponse;
-import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.InetAddressUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalLifecycle;
+import com.liferay.portal.kernel.util.Props;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.PropsValues;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,10 +54,18 @@ import java.util.List;
 
 import javax.portlet.PortletRequest;
 
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
+
 /**
  * @author Michael C. Han
  */
-@DoPrivileged
+@Component(immediate = true, service = SchedulerEngineHelper.class)
 public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 
 	@Override
@@ -116,7 +127,7 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 	public void auditSchedulerJobs(Message message, TriggerState triggerState)
 		throws SchedulerException {
 
-		if (!PropsValues.AUDIT_MESSAGE_SCHEDULER_JOB) {
+		if (!_auditMessageSchedulerJob || (_auditRouter == null)) {
 			return;
 		}
 
@@ -125,13 +136,12 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 				SchedulerEngine.SCHEDULER, CompanyConstants.SYSTEM, 0,
 				StringPool.BLANK, SchedulerEngine.class.getName(), "0",
 				triggerState.toString(), new Date(),
-				JSONFactoryUtil.createJSONObject(
-					JSONFactoryUtil.serialize(message)));
+				_jsonFactory.createJSONObject(_jsonFactory.serialize(message)));
 
 			auditMessage.setServerName(InetAddressUtil.getLocalHostName());
 			auditMessage.setServerPort(PortalUtil.getPortalLocalPort(false));
 
-			AuditRouterUtil.route(auditMessage);
+			_auditRouter.route(auditMessage);
 		}
 		catch (Exception e) {
 			throw new SchedulerException(e);
@@ -555,13 +565,6 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 	}
 
 	@Override
-	public void initialize() {
-		SchedulerLifecycle schedulerLifecycle = new SchedulerLifecycle();
-
-		schedulerLifecycle.registerPortalLifecycle(PortalLifecycle.METHOD_INIT);
-	}
-
-	@Override
 	public boolean isClusteredSchedulerEngine() {
 		if (_schedulerEngine instanceof ClusterSchedulerEngine) {
 			return true;
@@ -649,10 +652,6 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 			exceptionsMaxSize);
 	}
 
-	public void setSchedulerEngine(SchedulerEngine schedulerEngine) {
-		_schedulerEngine = schedulerEngine;
-	}
-
 	@Override
 	public void shutdown() throws SchedulerException {
 		_schedulerEngine.shutdown();
@@ -734,6 +733,33 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 		_schedulerEngine.update(trigger, storageType);
 	}
 
+	@Activate
+	protected void activate() {
+		_auditMessageSchedulerJob = GetterUtil.getBoolean(
+			_props.get(PropsKeys.AUDIT_MESSAGE_SCHEDULER_JOB));
+
+		if (_clusterLink.isEnabled() &&
+			GetterUtil.getBoolean(_props.get(PropsKeys.SCHEDULER_ENABLED))) {
+
+			ClusterSchedulerEngine clusterSchedulerEngine =
+				new ClusterSchedulerEngine(_schedulerEngine);
+
+			clusterSchedulerEngine.setClusterMasterExecutor(
+				_clusterMasterExecutor);
+			clusterSchedulerEngine.setProps(_props);
+			clusterSchedulerEngine.setSchedulerEngineHelper(this);
+
+			_schedulerEngine = clusterSchedulerEngine;
+		}
+
+		try {
+			start();
+		}
+		catch (SchedulerException e) {
+			throw new IllegalStateException("Unable to start scheduler", e);
+		}
+	}
+
 	protected void addWeeklyDayPos(
 		PortletRequest portletRequest, List<DayAndPosition> list, int day) {
 
@@ -742,6 +768,76 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 		}
 	}
 
+	@Deactivate
+	protected void deactivate() {
+		try {
+			shutdown();
+		}
+		catch (SchedulerException e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to shutdown scheduler", e);
+			}
+		}
+	}
+
+	protected SchedulerEngine getSchedulerEngine() {
+		return _schedulerEngine;
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected void setAuditRouter(AuditRouter auditRouter) {
+		_auditRouter = auditRouter;
+	}
+
+	@Reference(unbind = "-")
+	protected void setClusterLink(ClusterLink clusterLink) {
+		_clusterLink = clusterLink;
+	}
+
+	@Reference(unbind = "-")
+	protected void setClusterMasterExecutor(
+		ClusterMasterExecutor clusterMasterExecutor) {
+
+		_clusterMasterExecutor = clusterMasterExecutor;
+	}
+
+	@Reference(unbind = "-")
+	protected void setJsonFactory(JSONFactory jsonFactory) {
+		_jsonFactory = jsonFactory;
+	}
+
+	@Reference(unbind = "-")
+	protected void setProps(Props props) {
+		_props = props;
+	}
+
+	@Reference(
+		target =
+			"(bean.id=" +
+				"com.liferay.portal.kernel.scheduler.SchedulerEngineProxyBean)",
+		unbind = "-"
+	)
+	protected void setSchedulerEngine(SchedulerEngine schedulerEngine) {
+		_schedulerEngine = schedulerEngine;
+	}
+
+	protected void unsetAuditRouter(AuditRouter auditRouter) {
+		_auditRouter = null;
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		SchedulerEngineHelperImpl.class);
+
+	private boolean _auditMessageSchedulerJob;
+	private volatile AuditRouter _auditRouter;
+	private ClusterLink _clusterLink;
+	private ClusterMasterExecutor _clusterMasterExecutor;
+	private JSONFactory _jsonFactory;
+	private Props _props;
 	private SchedulerEngine _schedulerEngine;
 
 }
