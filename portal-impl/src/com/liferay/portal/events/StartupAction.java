@@ -157,9 +157,6 @@ public class StartupAction extends SimpleAction {
 		ServiceDependencyManager backgroundTaskServiceDependencyManager =
 			new ServiceDependencyManager();
 
-		backgroundTaskServiceDependencyManager.registerDependencies(
-			ClusterExecutor.class, ClusterMasterExecutor.class);
-
 		backgroundTaskServiceDependencyManager.addServiceDependencyListener(
 			new ServiceDependencyListener() {
 
@@ -180,6 +177,9 @@ public class StartupAction extends SimpleAction {
 				}
 
 			});
+
+		backgroundTaskServiceDependencyManager.registerDependencies(
+			ClusterExecutor.class, ClusterMasterExecutor.class);
 
 		// Liferay JspFactory
 
