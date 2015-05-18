@@ -30,7 +30,6 @@ import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.scheduler.JobState;
 import com.liferay.portal.kernel.scheduler.SchedulerEngine;
 import com.liferay.portal.kernel.scheduler.SchedulerEngineHelper;
-import com.liferay.portal.kernel.scheduler.SchedulerEngineProxyBean;
 import com.liferay.portal.kernel.scheduler.SchedulerEntry;
 import com.liferay.portal.kernel.scheduler.SchedulerException;
 import com.liferay.portal.kernel.scheduler.SchedulerLifecycle;
@@ -825,7 +824,12 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 		_props = props;
 	}
 
-	@Reference(service = SchedulerEngineProxyBean.class, unbind = "-")
+	@Reference(
+		target =
+			"(bean.id=" +
+				"com.liferay.portal.kernel.scheduler.SchedulerEngineProxyBean)",
+		unbind = "-"
+	)
 	protected void setSchedulerEngine(SchedulerEngine schedulerEngine) {
 		_schedulerEngine = schedulerEngine;
 	}
