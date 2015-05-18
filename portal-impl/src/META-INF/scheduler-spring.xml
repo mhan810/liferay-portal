@@ -25,7 +25,7 @@
 
 	<!-- Proxy -->
 
-	<bean id="com.liferay.portal.scheduler.SchedulerEngineProxyBean" class="com.liferay.portal.kernel.scheduler.SchedulerEngineProxyBean">
+	<bean id="com.liferay.portal.kernel.scheduler.SchedulerEngineProxyBean" class="com.liferay.portal.kernel.scheduler.SchedulerEngineProxyBean">
 		<property name="destinationName" value="liferay/scheduler_engine" />
 		<property name="synchronousDestinationName" value="liferay/scheduler_engine" />
 		<property name="synchronousMessageSenderMode" value="DIRECT" />
