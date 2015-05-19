@@ -14,10 +14,10 @@
 
 package com.liferay.portal.scheduler;
 
-import com.liferay.portal.cluster.ClusterableContextThreadLocal;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.IdentifiableBean;
 import com.liferay.portal.kernel.cluster.BaseClusterMasterTokenTransitionListener;
+import com.liferay.portal.kernel.cluster.ClusterableContextThreadLocal;
 import com.liferay.portal.kernel.cluster.ClusterMasterExecutorUtil;
 import com.liferay.portal.kernel.cluster.ClusterMasterTokenTransitionListener;
 import com.liferay.portal.kernel.cluster.Clusterable;
