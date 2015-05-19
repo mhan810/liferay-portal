@@ -52,6 +52,9 @@ import com.liferay.portal.test.rule.AspectJNewEnvTestRule;
 import com.liferay.portal.util.PortalImpl;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.uuid.PortalUUIDImpl;
+import com.liferay.registry.BasicRegistryImpl;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
 
 import java.io.Serializable;
 
@@ -66,9 +69,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import com.liferay.registry.BasicRegistryImpl;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -2059,10 +2059,6 @@ public class ClusterSchedulerEngineTest {
 		}
 
 		@Override
-		public void initialize() {
-		}
-
-		@Override
 		public boolean isEnabled() {
 			return true;
 		}
@@ -2070,6 +2066,10 @@ public class ClusterSchedulerEngineTest {
 		@Override
 		public boolean isMaster() {
 			return _master;
+		}
+
+		@Override
+		public void notifyMasterTokenTransitionListeners() {
 		}
 
 		@Override
