@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.scheduler.JobState;
 import com.liferay.portal.kernel.scheduler.SchedulerEngine;
+import com.liferay.portal.kernel.scheduler.SchedulerEngineHelper;
 import com.liferay.portal.kernel.scheduler.SchedulerEngineHelperUtil;
 import com.liferay.portal.kernel.scheduler.SchedulerException;
 import com.liferay.portal.kernel.scheduler.StorageType;
@@ -65,6 +66,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import com.liferay.registry.BasicRegistryImpl;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -89,6 +93,10 @@ public class ClusterSchedulerEngineTest {
 
 	@Before
 	public void setUp() throws Exception {
+		RegistryUtil.setRegistry(new BasicRegistryImpl());
+
+		Registry registry = RegistryUtil.getRegistry();
+
 		PortalUtil portalUtil = new PortalUtil();
 
 		portalUtil.setPortal(new PortalImpl());
@@ -110,13 +118,10 @@ public class ClusterSchedulerEngineTest {
 		SchedulerEngineHelperImpl schedulerEngineHelperImpl =
 			new SchedulerEngineHelperImpl();
 
+		registry.registerService(
+			SchedulerEngineHelper.class, schedulerEngineHelperImpl);
+
 		schedulerEngineHelperImpl.setSchedulerEngine(_clusterSchedulerEngine);
-
-		SchedulerEngineHelperUtil schedulerEngineHelperUtil =
-			new SchedulerEngineHelperUtil();
-
-		schedulerEngineHelperUtil.setSchedulerEngineHelper(
-			schedulerEngineHelperImpl);
 
 		Class<? extends ClusterInvokeAcceptor> clusterInvokeAcceptorClass =
 			(Class<? extends ClusterInvokeAcceptor>)Class.forName(
@@ -1822,7 +1827,7 @@ public class ClusterSchedulerEngineTest {
 		}
 
 		@Around(
-			"execution(void com.liferay.portal.cluster." +
+			"execution(void com.liferay.portal.kernel.cluster." +
 				"ClusterableContextThreadLocal.putThreadLocalContext(" +
 					"java.lang.String, java.io.Serializable)) && " +
 						"args(key, value)"
