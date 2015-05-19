@@ -751,13 +751,6 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 
 			_schedulerEngine = clusterSchedulerEngine;
 		}
-
-		try {
-			start();
-		}
-		catch (SchedulerException e) {
-			throw new IllegalStateException("Unable to start scheduler", e);
-		}
 	}
 
 	protected void addWeeklyDayPos(
