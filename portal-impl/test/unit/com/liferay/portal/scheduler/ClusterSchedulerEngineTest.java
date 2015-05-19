@@ -2059,10 +2059,6 @@ public class ClusterSchedulerEngineTest {
 		}
 
 		@Override
-		public void initialize() {
-		}
-
-		@Override
 		public boolean isEnabled() {
 			return true;
 		}
@@ -2070,6 +2066,10 @@ public class ClusterSchedulerEngineTest {
 		@Override
 		public boolean isMaster() {
 			return _master;
+		}
+
+		@Override
+		public void notifyMasterTokenTransitionListeners() {
 		}
 
 		@Override
