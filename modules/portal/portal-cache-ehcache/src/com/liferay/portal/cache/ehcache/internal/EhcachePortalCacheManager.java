@@ -188,9 +188,21 @@ public class EhcachePortalCacheManager<K extends Serializable, V>
 
 		_usingDefault = _configFile.equals(_defaultConfigFile);
 
-		_configurationPair = EhcacheConfigurationHelperUtil.getConfiguration(
-			EhcacheConfigurationHelperUtil.class.getResource(_configFile),
-			isClusterAware(), _usingDefault, props);
+		if (_usingDefault) {
+			_configurationPair =
+				EhcacheConfigurationHelperUtil.getConfiguration(
+					EhcacheConfigurationHelperUtil.class.getResource(
+						_configFile),
+					isClusterAware(), true, props);
+		}
+		else {
+			ClassLoader classLoader = PortalClassLoaderUtil.getClassLoader();
+
+			_configurationPair =
+				EhcacheConfigurationHelperUtil.getConfiguration(
+					classLoader.getResource(_configFile), isClusterAware(),
+					false, props);
+		}
 
 		_cacheManager = new CacheManager(_configurationPair.getKey());
 
