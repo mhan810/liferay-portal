@@ -58,7 +58,7 @@ public class MultiVMEhcachePortalCacheManager
 	protected void activate(Map<String, Object> properties) {
 		setClusterAware(true);
 		setConfigFile(props.get(PropsKeys.EHCACHE_MULTI_VM_CONFIG_LOCATION));
-		setDefaultConfigFile("/ehcache/liferay-multi-vm-clustered.xml");
+		setDefaultConfigFile(_DEFAULT_CONFIG_FILE_NAME);
 		setMpiOnly(true);
 		setName(PortalCacheManagerNames.MULTI_VM);
 
@@ -110,5 +110,8 @@ public class MultiVMEhcachePortalCacheManager
 	protected void unsetPortalCacheConfiguratorSettings(
 		PortalCacheConfiguratorSettings portalCacheConfiguratorSettings) {
 	}
+
+	private static final String _DEFAULT_CONFIG_FILE_NAME =
+		"/ehcache/liferay-multi-vm-clustered.xml";
 
 }

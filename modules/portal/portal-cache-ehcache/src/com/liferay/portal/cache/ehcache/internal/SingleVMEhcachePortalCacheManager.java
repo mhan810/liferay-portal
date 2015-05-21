@@ -54,7 +54,7 @@ public class SingleVMEhcachePortalCacheManager<K extends Serializable, V>
 	@Modified
 	protected void activate(Map<String, Object> properties) {
 		setConfigFile(props.get(PropsKeys.EHCACHE_SINGLE_VM_CONFIG_LOCATION));
-		setDefaultConfigFile("/ehcache/liferay-single-vm.xml");
+		setDefaultConfigFile(_DEFAULT_CONFIG_FILE_NAME);
 		setName(PortalCacheManagerNames.SINGLE_VM);
 
 		initialize();
@@ -90,5 +90,8 @@ public class SingleVMEhcachePortalCacheManager<K extends Serializable, V>
 	protected void unsetPortalCacheConfiguratorSettings(
 		PortalCacheConfiguratorSettings portalCacheConfiguratorSettings) {
 	}
+
+	private static final String _DEFAULT_CONFIG_FILE_NAME =
+		"/ehcache/liferay-single-vm.xml";
 
 }
