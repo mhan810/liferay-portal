@@ -44,8 +44,8 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 @Component(
 	immediate = true,
 	property = {
-		"portal.cache.manager.name=" + PortalCacheManagerNames.MULTI_VM,
-		"portal.cache.manager.type=" + PortalCacheManagerTypes.EHCACHE
+		PortalCacheManager.PORTAL_CACHE_MANAGER_NAME + "=" + PortalCacheManagerNames.MULTI_VM,
+		PortalCacheManager.PORTAL_CACHE_MANAGER_TYPE + "=" + PortalCacheManagerTypes.EHCACHE
 	},
 	service = PortalCacheManager.class
 )
@@ -94,7 +94,7 @@ public class MultiVMEhcachePortalCacheManager
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC,
 		policyOption = ReferencePolicyOption.GREEDY,
-		target = "(portal.cache.manager.name=" + PortalCacheManagerNames.MULTI_VM + ")"
+		target = "(" + PortalCacheManager.PORTAL_CACHE_MANAGER_NAME + "=" + PortalCacheManagerNames.MULTI_VM + ")"
 	)
 	protected void setPortalCacheConfiguratorSettings(
 		PortalCacheConfiguratorSettings portalCacheConfiguratorSettings) {
