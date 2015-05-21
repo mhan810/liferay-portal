@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.cache.PortalCacheManagerTypes;
 import com.liferay.portal.kernel.cache.configurator.PortalCacheConfiguratorSettings;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 
@@ -58,6 +60,12 @@ public class SingleVMEhcachePortalCacheManager<K extends Serializable, V>
 		setName(PortalCacheManagerNames.SINGLE_VM);
 
 		initialize();
+
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				"Activated " + PortalCacheManagerNames.SINGLE_VM + " " +
+					PortalCacheManagerTypes.EHCACHE);
+		}
 	}
 
 	@Deactivate
@@ -93,5 +101,8 @@ public class SingleVMEhcachePortalCacheManager<K extends Serializable, V>
 
 	private static final String _DEFAULT_CONFIG_FILE_NAME =
 		"/ehcache/liferay-single-vm.xml";
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		SingleVMEhcachePortalCacheManager.class);
 
 }

@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.cache.PortalCacheManagerTypes;
 import com.liferay.portal.kernel.cache.configurator.PortalCacheConfiguratorSettings;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.AggregateClassLoader;
 import com.liferay.portal.kernel.util.ClassLoaderUtil;
 import com.liferay.portal.kernel.util.Props;
@@ -78,6 +80,12 @@ public class MultiVMEhcachePortalCacheManager
 		finally {
 			ClassLoaderUtil.setContextClassLoader(contextClassLoader);
 		}
+
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				"Activated " + PortalCacheManagerNames.MULTI_VM + " " +
+					PortalCacheManagerTypes.EHCACHE);
+		}
 	}
 
 	@Deactivate
@@ -113,5 +121,8 @@ public class MultiVMEhcachePortalCacheManager
 
 	private static final String _DEFAULT_CONFIG_FILE_NAME =
 		"/ehcache/liferay-multi-vm-clustered.xml";
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		MultiVMEhcachePortalCacheManager.class);
 
 }
