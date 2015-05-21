@@ -14,10 +14,10 @@
 
 package com.liferay.portlet.messageboards.comment;
 
-import com.liferay.portal.kernel.comment.Comment;
 import com.liferay.portal.kernel.comment.CommentConstants;
 import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.comment.Discussion;
+import com.liferay.portal.kernel.comment.DiscussionComment;
 import com.liferay.portal.kernel.comment.DiscussionPermission;
 import com.liferay.portal.kernel.comment.DuplicateCommentException;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -28,6 +28,7 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.messageboards.model.MBDiscussion;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
 import com.liferay.portlet.messageboards.model.MBThread;
@@ -200,12 +201,12 @@ public class MBCommentManagerImpl implements CommentManager {
 
 		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
 
-		Comment rootComment = new MBCommentImpl(
+		DiscussionComment rootDiscussionComment = new MBDiscussionCommentImpl(
 			treeWalker.getRoot(), treeWalker, ratingsEntries, ratingsStats,
 			themeDisplay.getPathThemeImages());
 
 		return new MBDiscussionImpl(
-			rootComment, messageDisplay.isDiscussionMaxComments());
+			rootDiscussionComment, messageDisplay.isDiscussionMaxComments());
 	}
 
 	@Override
@@ -213,6 +214,18 @@ public class MBCommentManagerImpl implements CommentManager {
 		PermissionChecker permissionChecker) {
 
 		return new MBDiscussionPermissionImpl(permissionChecker);
+	}
+
+	@Override
+	public boolean hasDiscussion(String className, long classPK) {
+		MBDiscussion discussion = _mbDiscussionLocalService.fetchDiscussion(
+			className, classPK);
+
+		if (discussion == null) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public void setMBDiscussionLocalService(
