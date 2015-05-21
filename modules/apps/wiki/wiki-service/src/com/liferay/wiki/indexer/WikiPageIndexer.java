@@ -14,6 +14,7 @@
 
 package com.liferay.wiki.indexer;
 
+import com.liferay.portal.kernel.comment.Comment;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
@@ -37,7 +38,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
-import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.model.WikiPage;
 import com.liferay.wiki.service.WikiNodeLocalServiceUtil;
@@ -79,15 +79,15 @@ public class WikiPageIndexer extends BaseIndexer {
 
 		long classPK = 0;
 
-		if (obj instanceof DLFileEntry) {
+		if (obj instanceof Comment) {
+			Comment comment = (Comment)obj;
+
+			classPK = comment.getClassPK();
+		}
+		else if (obj instanceof DLFileEntry) {
 			DLFileEntry dlFileEntry = (DLFileEntry)obj;
 
 			classPK = dlFileEntry.getClassPK();
-		}
-		else if (obj instanceof MBMessage) {
-			MBMessage message = (MBMessage)obj;
-
-			classPK = message.getClassPK();
 		}
 
 		WikiPage page = null;
