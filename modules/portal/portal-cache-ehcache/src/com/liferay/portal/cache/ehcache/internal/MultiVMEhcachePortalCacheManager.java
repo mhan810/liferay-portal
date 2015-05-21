@@ -91,7 +91,7 @@ public class MultiVMEhcachePortalCacheManager
 	}
 
 	@Reference(
-		cardinality = ReferenceCardinality.OPTIONAL,
+		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC,
 		policyOption = ReferencePolicyOption.GREEDY,
 		target = "(portal.cache.manager.name=" + PortalCacheManagerNames.MULTI_VM + ")"
