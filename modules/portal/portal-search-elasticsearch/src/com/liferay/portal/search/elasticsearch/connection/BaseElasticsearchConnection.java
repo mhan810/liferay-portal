@@ -19,7 +19,9 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch.index.IndexFactory;
+import com.liferay.portal.search.elasticsearch.settings.SettingsContributor;
 
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequestBuilder;
@@ -38,13 +40,12 @@ public abstract class BaseElasticsearchConnection
 
 	@Override
 	public void close() {
-		if (_client != null) {
-			_client.close();
-		}
+		closeClient();
 	}
 
 	@Override
 	public Client getClient() {
+		openClient();
 		return _client;
 	}
 
@@ -52,7 +53,9 @@ public abstract class BaseElasticsearchConnection
 	public ClusterHealthResponse getClusterHealthResponse(
 		long timeout, int nodesCount) {
 
-		AdminClient adminClient = _client.admin();
+		Client client = getClient();
+
+		AdminClient adminClient = client.admin();
 
 		ClusterAdminClient clusterAdminClient = adminClient.cluster();
 
@@ -77,29 +80,27 @@ public abstract class BaseElasticsearchConnection
 	}
 
 	@Override
-	public synchronized void initialize() {
-		if (_client != null) {
-			return;
-		}
-
-		ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder();
-
-		loadOptionalDefaultConfigurations(builder);
-
-		if (Validator.isNotNull(
-				elasticsearchConfiguration.additionalConfigurations())) {
-
-			builder.loadFromSource(
-				elasticsearchConfiguration.additionalConfigurations());
-		}
-
-		loadRequiredDefaultConfigurations(builder);
-
-		_client = createClient(builder);
+	public void initialize() {
 	}
 
 	public void setIndexFactory(IndexFactory indexFactory) {
 		_indexFactory = indexFactory;
+	}
+
+	protected void addSettingsContributor(
+		SettingsContributor settingsContributor) {
+
+		_settingsContributors.addIfAbsent(settingsContributor);
+	}
+
+	protected synchronized void closeClient() {
+		if (_client == null) {
+			return;
+		}
+
+		_client.close();
+
+		_client = null;
 	}
 
 	protected abstract Client createClient(ImmutableSettings.Builder builder);
@@ -129,8 +130,39 @@ public abstract class BaseElasticsearchConnection
 	protected abstract void loadRequiredDefaultConfigurations(
 		ImmutableSettings.Builder builder);
 
-	protected void setClient(Client client) {
-		_client = client;
+	protected void loadSettingsContributors(ImmutableSettings.Builder builder) {
+		for (SettingsContributor settingsContributor : _settingsContributors) {
+			settingsContributor.populate(builder);
+		}
+	}
+
+	protected synchronized void openClient() {
+		if (_client != null) {
+			return;
+		}
+
+		ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder();
+
+		loadOptionalDefaultConfigurations(builder);
+
+		if (Validator.isNotNull(
+				elasticsearchConfiguration.additionalConfigurations())) {
+
+			builder.loadFromSource(
+				elasticsearchConfiguration.additionalConfigurations());
+		}
+
+		loadRequiredDefaultConfigurations(builder);
+
+		loadSettingsContributors(builder);
+
+		_client = createClient(builder);
+	}
+
+	protected void removeSettingsContributor(
+		SettingsContributor settingsContributor) {
+
+		_settingsContributors.remove(settingsContributor);
 	}
 
 	protected volatile ElasticsearchConfiguration elasticsearchConfiguration;
@@ -140,5 +172,7 @@ public abstract class BaseElasticsearchConnection
 
 	private Client _client;
 	private IndexFactory _indexFactory;
+	private final CopyOnWriteArrayList<SettingsContributor>
+		_settingsContributors = new CopyOnWriteArrayList<>();
 
 }
