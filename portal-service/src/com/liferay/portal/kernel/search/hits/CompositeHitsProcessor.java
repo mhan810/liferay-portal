@@ -12,43 +12,48 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search;
+package com.liferay.portal.kernel.search.hits;
 
-import com.liferay.portal.kernel.search.suggest.SuggestionConstants;
+import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.QueryConfig;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.util.Validator;
 
-import java.util.Locale;
+import java.util.List;
 
 /**
  * @author Michael C. Han
- * @author Josef Sustacek
  */
-public class QueryIndexingHitsProcessor implements HitsProcessor {
+public class CompositeHitsProcessor implements HitsProcessor {
 
 	@Override
 	public boolean process(SearchContext searchContext, Hits hits)
 		throws SearchException {
 
-		QueryConfig queryConfig = searchContext.getQueryConfig();
-
-		if (!queryConfig.isQueryIndexingEnabled()) {
-			return true;
+		if (Validator.isNull(searchContext.getKeywords())) {
+			return false;
 		}
 
-		if (hits.getLength() >= queryConfig.getQueryIndexingThreshold()) {
-			addDocument(
-				searchContext.getCompanyId(), searchContext.getKeywords(),
-				searchContext.getLocale());
+		QueryConfig queryConfig = searchContext.getQueryConfig();
+
+		if (!queryConfig.isHitsProcessingEnabled()) {
+			return false;
+		}
+
+		for (HitsProcessor hitsProcessor : _hitsProcessors) {
+			if (!hitsProcessor.process(searchContext, hits)) {
+				break;
+			}
 		}
 
 		return true;
 	}
 
-	protected void addDocument(long companyId, String keywords, Locale locale)
-		throws SearchException {
-
-		SearchEngineUtil.indexKeyword(
-			companyId, keywords, 0, SuggestionConstants.TYPE_QUERY_SUGGESTION,
-			locale);
+	public void setHitsProcessors(List<HitsProcessor> hitsProcessors) {
+		_hitsProcessors = hitsProcessors;
 	}
+
+	private List<HitsProcessor> _hitsProcessors;
 
 }
