@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.security.permission.PermissionChecker;
 
-import java.util.List;
 import java.util.Locale;
 
 import javax.portlet.PortletRequest;
