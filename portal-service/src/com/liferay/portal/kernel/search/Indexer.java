@@ -30,9 +30,6 @@ public interface Indexer {
 
 	public static final int DEFAULT_INTERVAL = 10000;
 
-	public void addRelatedEntryFields(Document document, Object obj)
-		throws Exception;
-
 	public void delete(long companyId, String uid) throws SearchException;
 
 	public void delete(Object obj) throws SearchException;
@@ -129,7 +126,5 @@ public interface Indexer {
 
 	public void unregisterIndexerPostProcessor(
 		IndexerPostProcessor indexerPostProcessor);
-
-	public void updateFullQuery(SearchContext searchContext);
 
 }
