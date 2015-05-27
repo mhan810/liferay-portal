@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search;
+package com.liferay.portal.kernel.search.suggest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
