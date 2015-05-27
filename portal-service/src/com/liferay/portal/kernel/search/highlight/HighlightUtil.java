@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search.util;
+package com.liferay.portal.kernel.search.highlight;
 
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 /**
  * @author Tibor Lipusz
  */
-public class SearchUtil {
+public class HighlightUtil {
 
 	public static final String HIGHLIGHT_TAG_CLOSE = "</liferay-hl>";
 
