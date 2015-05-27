@@ -766,20 +766,6 @@ public abstract class BaseIndexer implements Indexer {
 		queryConfig.setSelectedFieldNames(selectedFieldNames);
 	}
 
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link
-	 *             #addSearchLocalizedTerm(BooleanQuery, SearchContext, String,
-	 *             boolean)}
-	 */
-	@Deprecated
-	protected void addLocalizedSearchTerm(
-			BooleanQuery searchQuery, SearchContext searchContext, String field,
-			boolean like)
-		throws Exception {
-
-		addSearchLocalizedTerm(searchQuery, searchContext, field, like);
-	}
-
 	protected void addRelatedClassNames(
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
@@ -1687,14 +1673,6 @@ public abstract class BaseIndexer implements Indexer {
 		}
 
 		return countryNames;
-	}
-
-	/**
-	 * @deprecated As of 6.2.0 renamed to {@link #getSiteGroupId(long)}
-	 */
-	@Deprecated
-	protected long getParentGroupId(long groupId) {
-		return getSiteGroupId(groupId);
 	}
 
 	/**
