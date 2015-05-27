@@ -733,111 +733,6 @@ public abstract class BaseIndexer implements Indexer {
 		queryConfig.setSelectedFieldNames(selectedFieldNames);
 	}
 
-	protected void addSearchArrayQuery(
-			BooleanQuery searchQuery, SearchContext searchContext, String field)
-		throws Exception {
-
-		if (Validator.isNull(field)) {
-			return;
-		}
-
-		Object fieldValues = searchContext.getAttribute(field);
-
-		if (fieldValues == null) {
-			return;
-		}
-
-		BooleanQuery fieldQuery = null;
-
-		if (fieldValues instanceof int[]) {
-			int[] fieldValuesArray = (int[])fieldValues;
-
-			if (fieldValuesArray.length == 0) {
-				return;
-			}
-
-			fieldQuery = BooleanQueryFactoryUtil.create(searchContext);
-
-			for (int fieldValue : fieldValuesArray) {
-				fieldQuery.addTerm(field, fieldValue);
-			}
-		}
-		else if (fieldValues instanceof Integer[]) {
-			Integer[] fieldValuesArray = (Integer[])fieldValues;
-
-			if (fieldValuesArray.length == 0) {
-				return;
-			}
-
-			fieldQuery = BooleanQueryFactoryUtil.create(searchContext);
-
-			for (Integer fieldValue : fieldValuesArray) {
-				fieldQuery.addTerm(field, fieldValue);
-			}
-		}
-		else if (fieldValues instanceof long[]) {
-			long[] fieldValuesArray = (long[])fieldValues;
-
-			if (fieldValuesArray.length == 0) {
-				return;
-			}
-
-			fieldQuery = BooleanQueryFactoryUtil.create(searchContext);
-
-			for (long fieldValue : fieldValuesArray) {
-				fieldQuery.addTerm(field, fieldValue);
-			}
-		}
-		else if (fieldValues instanceof Long[]) {
-			Long[] fieldValuesArray = (Long[])fieldValues;
-
-			if (fieldValuesArray.length == 0) {
-				return;
-			}
-
-			fieldQuery = BooleanQueryFactoryUtil.create(searchContext);
-
-			for (Long fieldValue : fieldValuesArray) {
-				fieldQuery.addTerm(field, fieldValue);
-			}
-		}
-		else if (fieldValues instanceof short[]) {
-			short[] fieldValuesArray = (short[])fieldValues;
-
-			if (fieldValuesArray.length == 0) {
-				return;
-			}
-
-			fieldQuery = BooleanQueryFactoryUtil.create(searchContext);
-
-			for (short fieldValue : fieldValuesArray) {
-				fieldQuery.addTerm(field, fieldValue);
-			}
-		}
-		else if (fieldValues instanceof Short[]) {
-			Short[] fieldValuesArray = (Short[])fieldValues;
-
-			if (fieldValuesArray.length == 0) {
-				return;
-			}
-
-			fieldQuery = BooleanQueryFactoryUtil.create(searchContext);
-
-			for (Short fieldValue : fieldValuesArray) {
-				fieldQuery.addTerm(field, fieldValue);
-			}
-		}
-
-		if (fieldQuery != null) {
-			if (searchContext.isAndSearch()) {
-				searchQuery.add(fieldQuery, BooleanClauseOccur.MUST);
-			}
-			else {
-				searchQuery.add(fieldQuery, BooleanClauseOccur.SHOULD);
-			}
-		}
-	}
-
 	protected void addSearchAssetCategoryIds(
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
@@ -1209,6 +1104,12 @@ public abstract class BaseIndexer implements Indexer {
 						Field.REMOVED_BY_USER_NAME, user.getFullName(), true);
 				}
 				catch (PortalException pe) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(
+							"Unable to locate user: " +
+								serviceContext.getUserId(),
+							pe);
+					}
 				}
 			}
 		}
@@ -1306,23 +1207,6 @@ public abstract class BaseIndexer implements Indexer {
 		}
 
 		return fullQuery;
-	}
-
-	protected Summary createLocalizedSummary(
-		Document document, Locale locale, String titleField,
-		String contentField) {
-
-		Locale snippetLocale = getSnippetLocale(document, locale);
-
-		String prefix = Field.SNIPPET + StringPool.UNDERLINE;
-
-		String title = document.get(
-			snippetLocale, prefix + titleField, titleField);
-
-		String content = document.get(
-			snippetLocale, prefix + contentField, contentField);
-
-		return new Summary(snippetLocale, title, content);
 	}
 
 	protected Summary createSummary(Document document) {
