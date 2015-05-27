@@ -782,7 +782,7 @@ public abstract class BaseIndexer implements Indexer {
 			Locale locale = entry.getKey();
 			List<String> titles = entry.getValue();
 
-			String[] titlesArray = titles.toArray(new String[0]);
+			String[] titlesArray = titles.toArray(new String[titles.size()]);
 
 			if (locale.equals(defaultLocale)) {
 				document.addText(field, titlesArray);
