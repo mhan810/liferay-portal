@@ -12,7 +12,9 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search;
+package com.liferay.portal.kernel.search.analysis;
+
+import com.liferay.portal.kernel.search.SearchException;
 
 import java.util.List;
 
