@@ -16,7 +16,6 @@ package com.liferay.portal.kernel.search;
 
 import com.liferay.portal.security.permission.PermissionChecker;
 
-import java.util.List;
 import java.util.Locale;
 
 import javax.portlet.PortletRequest;
@@ -121,9 +120,6 @@ public interface Indexer {
 	public void reindex(String className, long classPK) throws SearchException;
 
 	public void reindex(String[] ids) throws SearchException;
-
-	public void reindexDDMStructures(List<Long> ddmStructureIds)
-		throws SearchException;
 
 	public Hits search(SearchContext searchContext) throws SearchException;
 

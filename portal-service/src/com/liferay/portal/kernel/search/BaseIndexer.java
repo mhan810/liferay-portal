@@ -529,25 +529,6 @@ public abstract class BaseIndexer implements Indexer {
 	}
 
 	@Override
-	public void reindexDDMStructures(List<Long> ddmStructureIds)
-		throws SearchException {
-
-		try {
-			if (SearchEngineUtil.isIndexReadOnly() || !isIndexerEnabled()) {
-				return;
-			}
-
-			doReindexDDMStructures(ddmStructureIds);
-		}
-		catch (SearchException se) {
-			throw se;
-		}
-		catch (Exception e) {
-			throw new SearchException(e);
-		}
-	}
-
-	@Override
 	public Hits search(SearchContext searchContext) throws SearchException {
 		try {
 			Hits hits = null;
@@ -1464,10 +1445,6 @@ public abstract class BaseIndexer implements Indexer {
 		throws Exception;
 
 	protected abstract void doReindex(String[] ids) throws Exception;
-
-	protected void doReindexDDMStructures(List<Long> structureIds)
-		throws Exception {
-	}
 
 	protected Hits doSearch(SearchContext searchContext)
 		throws SearchException {
