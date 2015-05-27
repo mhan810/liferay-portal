@@ -70,8 +70,6 @@ import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
-import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
-import com.liferay.portlet.dynamicdatamapping.util.DDMIndexerUtil;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
@@ -1006,35 +1004,6 @@ public abstract class BaseIndexer implements Indexer {
 		contextQuery.add(classTypeIdsQuery, BooleanClauseOccur.MUST);
 	}
 
-	protected void addSearchDDMStruture(
-			BooleanQuery searchQuery, SearchContext searchContext,
-			DDMStructure ddmStructure)
-		throws Exception {
-
-		Set<String> fieldNames = ddmStructure.getFieldNames();
-
-		for (String fieldName : fieldNames) {
-			String indexType = ddmStructure.getFieldProperty(
-				fieldName, "indexType");
-
-			if (Validator.isNull(indexType)) {
-				continue;
-			}
-
-			String name = DDMIndexerUtil.encodeName(
-				ddmStructure.getStructureId(), fieldName,
-				searchContext.getLocale());
-
-			boolean like = false;
-
-			if (indexType.equals("text")) {
-				like = true;
-			}
-
-			addSearchTerm(searchQuery, searchContext, name, like);
-		}
-	}
-
 	protected void addSearchEntryClassNames(
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
@@ -1411,11 +1380,6 @@ public abstract class BaseIndexer implements Indexer {
 		return fullQuery;
 	}
 
-	protected Summary createLocalizedSummary(Document document, Locale locale) {
-		return createLocalizedSummary(
-			document, locale, Field.TITLE, Field.CONTENT);
-	}
-
 	protected Summary createLocalizedSummary(
 		Document document, Locale locale, String titleField,
 		String contentField) {
@@ -1694,6 +1658,9 @@ public abstract class BaseIndexer implements Indexer {
 			}
 		}
 		catch (Exception e) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Unable to retrieve site group", e);
+			}
 		}
 
 		return siteGroupId;
@@ -1867,10 +1834,6 @@ public abstract class BaseIndexer implements Indexer {
 
 	protected void setPermissionAware(boolean permissionAware) {
 		_permissionAware = permissionAware;
-	}
-
-	protected void setSortableTextFields(String[] sortableTextFields) {
-		_document.setSortableTextFields(sortableTextFields);
 	}
 
 	protected void setStagingAware(boolean stagingAware) {
