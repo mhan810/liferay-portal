@@ -12,8 +12,9 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search;
+package com.liferay.portal.kernel.search.query;
 
+import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 
 /**

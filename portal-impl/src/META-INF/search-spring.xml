@@ -88,9 +88,9 @@
 	<bean id="com.liferay.portal.kernel.search.SortFactoryUtil" class="com.liferay.portal.kernel.search.SortFactoryUtil">
 		<property name="sortFactory" ref="com.liferay.portal.kernel.search.SortFactory" />
 	</bean>
-	<bean id="com.liferay.portal.kernel.search.StringQueryFactory" class="com.liferay.portal.kernel.search.StringQueryFactoryImpl" />
-	<bean id="com.liferay.portal.kernel.search.StringQueryFactoryUtil" class="com.liferay.portal.kernel.search.StringQueryFactoryUtil">
-		<property name="stringQueryFactory" ref="com.liferay.portal.kernel.search.StringQueryFactory" />
+	<bean id="com.liferay.portal.kernel.search.query.StringQueryFactory" class="com.liferay.portal.kernel.search.query.StringQueryFactoryImpl" />
+	<bean id="com.liferay.portal.kernel.search.query.StringQueryFactoryUtil" class="com.liferay.portal.kernel.search.query.StringQueryFactoryUtil">
+		<property name="stringQueryFactory" ref="com.liferay.portal.kernel.search.query.StringQueryFactory" />
 	</bean>
 	<bean id="com.liferay.portal.kernel.search.facet.AssetEntriesFacetFactory" class="com.liferay.portal.kernel.search.facet.AssetEntriesFacetFactory" />
 	<bean id="com.liferay.portal.kernel.search.facet.ModifiedFacetFactory" class="com.liferay.portal.kernel.search.facet.ModifiedFacetFactory" />
