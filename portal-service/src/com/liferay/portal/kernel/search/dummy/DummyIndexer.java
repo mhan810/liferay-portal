@@ -36,10 +36,6 @@ import javax.portlet.PortletResponse;
 public class DummyIndexer implements Indexer {
 
 	@Override
-	public void addRelatedEntryFields(Document document, Object obj) {
-	}
-
-	@Override
 	public void delete(long companyId, String uid) {
 	}
 
@@ -219,10 +215,6 @@ public class DummyIndexer implements Indexer {
 	@Override
 	public void unregisterIndexerPostProcessor(
 		IndexerPostProcessor indexerPostProcessor) {
-	}
-
-	@Override
-	public void updateFullQuery(SearchContext searchContext) {
 	}
 
 }
