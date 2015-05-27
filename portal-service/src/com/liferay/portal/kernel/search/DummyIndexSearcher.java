@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.search;
 
+import com.liferay.portal.kernel.search.query.StringQueryImpl;
 import com.liferay.portal.kernel.util.StringPool;
 
 import java.util.Collections;

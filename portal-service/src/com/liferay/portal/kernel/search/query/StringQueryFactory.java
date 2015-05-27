@@ -12,7 +12,9 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search;
+package com.liferay.portal.kernel.search.query;
+
+import com.liferay.portal.kernel.search.Query;
 
 /**
  * @author Raymond Augé

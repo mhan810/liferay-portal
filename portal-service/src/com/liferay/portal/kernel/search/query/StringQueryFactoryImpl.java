@@ -12,27 +12,19 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search;
+package com.liferay.portal.kernel.search.query;
+
+import com.liferay.portal.kernel.search.Query;
 
 /**
- * @author Bruno Farache
+ * @author Raymond Augé
+ * @author Brian Wing Shun Chan
  */
-public class StringQueryImpl extends BaseQueryImpl implements Query {
-
-	public StringQueryImpl(String query) {
-		_query = query;
-	}
+public class StringQueryFactoryImpl implements StringQueryFactory {
 
 	@Override
-	public Object getWrappedQuery() {
-		return this;
+	public Query create(String query) {
+		return new StringQueryImpl(query);
 	}
-
-	@Override
-	public String toString() {
-		return _query;
-	}
-
-	private final String _query;
 
 }
