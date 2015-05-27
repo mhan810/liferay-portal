@@ -51,6 +51,13 @@ public class BaseRelatedEntryIndexer implements RelatedEntryIndexer {
 
 			indexer.postProcessContextQuery(relatedQuery, searchContext);
 
+			for (IndexerPostProcessor indexerPostProcessor :
+					indexer.getIndexerPostProcessors()) {
+
+				indexerPostProcessor.postProcessContextQuery(
+					relatedQuery, searchContext);
+			}
+
 			relatedQuery.addRequiredTerm(
 				Field.CLASS_NAME_ID,
 				PortalUtil.getClassNameId(relatedEntryClassName));
