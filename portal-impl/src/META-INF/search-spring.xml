@@ -43,14 +43,14 @@
 			<bean class="com.liferay.portal.search.DefaultCollatorImpl" />
 		</property>
 	</bean>
-	<bean id="com.liferay.portal.kernel.search.HitsProcessorRegistryUtil" class="com.liferay.portal.kernel.search.HitsProcessorRegistryUtil">
+	<bean id="com.liferay.portal.kernel.search.hits.HitsProcessorRegistryUtil" class="com.liferay.portal.kernel.search.hits.HitsProcessorRegistryUtil">
 		<property name="defaultHitsProcessor">
-			<bean class="com.liferay.portal.kernel.search.CompositeHitsProcessor">
+			<bean class="com.liferay.portal.kernel.search.hits.CompositeHitsProcessor">
 				<property name="hitsProcessors">
 					<util:list>
-						<bean class="com.liferay.portal.kernel.search.CollatedSpellCheckHitsProcessor" />
-						<bean class="com.liferay.portal.kernel.search.QueryIndexingHitsProcessor" />
-						<bean class="com.liferay.portal.kernel.search.QuerySuggestionHitsProcessor" />
+						<bean class="com.liferay.portal.kernel.search.hits.CollatedSpellCheckHitsProcessor" />
+						<bean class="com.liferay.portal.kernel.search.hits.QueryIndexingHitsProcessor" />
+						<bean class="com.liferay.portal.kernel.search.hits.QuerySuggestionHitsProcessor" />
 					</util:list>
 				</property>
 			</bean>

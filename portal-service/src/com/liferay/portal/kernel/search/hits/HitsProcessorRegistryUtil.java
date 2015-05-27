@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search;
+package com.liferay.portal.kernel.search.hits;
 
 import java.util.HashMap;
 import java.util.Map;
