@@ -59,9 +59,6 @@ public interface Indexer {
 	@Deprecated
 	public String getPortletId();
 
-	public String getQueryString(SearchContext searchContext, Query query)
-		throws SearchException;
-
 	public String[] getSearchClassNames();
 
 	public String getSearchEngineId();

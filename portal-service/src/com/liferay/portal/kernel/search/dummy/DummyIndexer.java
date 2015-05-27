@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerPostProcessor;
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.util.StringPool;
@@ -85,11 +84,6 @@ public class DummyIndexer implements Indexer {
 	@Deprecated
 	@Override
 	public String getPortletId() {
-		return StringPool.BLANK;
-	}
-
-	@Override
-	public String getQueryString(SearchContext searchContext, Query query) {
 		return StringPool.BLANK;
 	}
 
