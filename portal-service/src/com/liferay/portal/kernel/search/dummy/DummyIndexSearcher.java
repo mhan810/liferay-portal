@@ -21,7 +21,7 @@ import com.liferay.portal.kernel.search.IndexSearcher;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Sort;
-import com.liferay.portal.kernel.search.StringQueryImpl;
+import com.liferay.portal.kernel.search.generic.StringQueryImpl;
 import com.liferay.portal.kernel.util.StringPool;
 
 import java.util.Collections;
