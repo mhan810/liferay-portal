@@ -103,11 +103,6 @@ import javax.portlet.PortletResponse;
 public abstract class BaseIndexer implements Indexer {
 
 	@Override
-	public void addRelatedEntryFields(Document document, Object obj)
-		throws Exception {
-	}
-
-	@Override
 	public void delete(long companyId, String uid) throws SearchException {
 		try {
 			SearchEngineUtil.deleteDocument(
@@ -604,10 +599,6 @@ public abstract class BaseIndexer implements Indexer {
 			new IndexerPostProcessor[indexerPostProcessorsList.size()]);
 	}
 
-	@Override
-	public void updateFullQuery(SearchContext searchContext) {
-	}
-
 	protected void addAssetFields(
 		Document document, String className, long classPK) {
 
@@ -740,47 +731,6 @@ public abstract class BaseIndexer implements Indexer {
 			new String[selectedFieldNameSet.size()]);
 
 		queryConfig.setSelectedFieldNames(selectedFieldNames);
-	}
-
-	protected void addRelatedClassNames(
-			BooleanQuery contextQuery, SearchContext searchContext)
-		throws Exception {
-
-		searchContext.setAttribute("relatedClassName", Boolean.TRUE);
-
-		String[] relatedEntryClassNames = (String[])searchContext.getAttribute(
-			"relatedEntryClassNames");
-
-		if (ArrayUtil.isEmpty(relatedEntryClassNames)) {
-			return;
-		}
-
-		BooleanQuery relatedQueries = BooleanQueryFactoryUtil.create(
-			searchContext);
-
-		for (String relatedEntryClassName : relatedEntryClassNames) {
-			Indexer indexer = IndexerRegistryUtil.getIndexer(
-				relatedEntryClassName);
-
-			if (indexer == null) {
-				continue;
-			}
-
-			BooleanQuery relatedQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
-
-			indexer.postProcessContextQuery(relatedQuery, searchContext);
-
-			relatedQuery.addRequiredTerm(
-				Field.CLASS_NAME_ID,
-				PortalUtil.getClassNameId(relatedEntryClassName));
-
-			relatedQueries.add(relatedQuery, BooleanClauseOccur.SHOULD);
-		}
-
-		contextQuery.add(relatedQueries, BooleanClauseOccur.MUST);
-
-		searchContext.setAttribute("relatedClassName", Boolean.FALSE);
 	}
 
 	protected void addSearchArrayQuery(
@@ -1782,7 +1732,12 @@ public abstract class BaseIndexer implements Indexer {
 		searchContext.clearFullQueryEntryClassNames();
 
 		for (Indexer indexer : IndexerRegistryUtil.getIndexers()) {
-			indexer.updateFullQuery(searchContext);
+			if (indexer instanceof RelatedEntryIndexer) {
+				RelatedEntryIndexer relatedEntryIndexer =
+					(RelatedEntryIndexer)indexer;
+
+				relatedEntryIndexer.updateFullQuery(searchContext);
+			}
 		}
 	}
 
