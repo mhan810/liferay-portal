@@ -12,31 +12,28 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search;
-
-import java.util.List;
-import java.util.Map;
+package com.liferay.portal.kernel.search.suggest;
 
 /**
  * @author Michael C. Han
  */
-public class CollatorUtil {
+public class NullNGramHolderBuilder implements NGramHolderBuilder {
 
-	public static String collate(
-			Map<String, List<String>> suggestions, List<String> keywords)
-		throws SearchException {
-
-		return _getCollator().collate(suggestions, keywords);
+	@Override
+	public NGramHolder buildNGramHolder(String input) {
+		return new NGramHolder();
 	}
 
-	public void setCollator(Collator collator) {
-		_collator = collator;
+	@Override
+	public NGramHolder buildNGramHolder(String input, int nGramMaxLength) {
+		return new NGramHolder();
 	}
 
-	private static Collator _getCollator() {
-		return _collator;
-	}
+	@Override
+	public NGramHolder buildNGramHolder(
+		String input, int nGramMinLength, int nGramMaxLength) {
 
-	private static Collator _collator;
+		return new NGramHolder();
+	}
 
 }

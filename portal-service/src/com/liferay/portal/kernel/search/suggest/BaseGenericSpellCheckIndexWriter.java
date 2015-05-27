@@ -12,10 +12,17 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search;
+package com.liferay.portal.kernel.search.suggest;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.DictionaryEntry;
+import com.liferay.portal.kernel.search.DictionaryReader;
+import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.DocumentImpl;
+import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.util.StringPool;
 
 import java.io.InputStream;
