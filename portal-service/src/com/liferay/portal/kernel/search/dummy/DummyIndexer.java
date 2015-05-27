@@ -206,10 +206,6 @@ public class DummyIndexer implements Indexer {
 	}
 
 	@Override
-	public void reindexDDMStructures(List<Long> ddmStructureIds) {
-	}
-
-	@Override
 	public Hits search(SearchContext searchContext) {
 		return null;
 	}

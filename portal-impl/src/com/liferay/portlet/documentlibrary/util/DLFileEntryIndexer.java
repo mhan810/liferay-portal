@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
+import com.liferay.portal.kernel.search.DDMStructureIndexer;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentHelper;
 import com.liferay.portal.kernel.search.DocumentImpl;
@@ -96,7 +97,8 @@ import javax.portlet.PortletResponse;
  * @author Alexander Chow
  */
 @OSGiBeanProperties
-public class DLFileEntryIndexer extends BaseIndexer {
+public class DLFileEntryIndexer
+	extends BaseIndexer implements DDMStructureIndexer {
 
 	public static final String CLASS_NAME = DLFileEntry.class.getName();
 
@@ -272,6 +274,28 @@ public class DLFileEntryIndexer extends BaseIndexer {
 			if (Validator.isNotNull(expandoAttributes)) {
 				addSearchExpando(searchQuery, searchContext, expandoAttributes);
 			}
+		}
+	}
+
+	@Override
+	public void reindexDDMStructures(List<Long> ddmStructureIds)
+		throws SearchException {
+
+		if (SearchEngineUtil.isIndexReadOnly() || !isIndexerEnabled()) {
+			return;
+		}
+
+		try {
+			List<DLFileEntry> dlFileEntries =
+				DLFileEntryLocalServiceUtil.getDDMStructureFileEntries(
+					ArrayUtil.toLongArray(ddmStructureIds));
+
+			for (DLFileEntry dlFileEntry : dlFileEntries) {
+				doReindex(dlFileEntry);
+			}
+		}
+		catch (Exception e) {
+			throw new SearchException(e);
 		}
 	}
 
@@ -507,19 +531,6 @@ public class DLFileEntryIndexer extends BaseIndexer {
 			long dataRepositoryId = GetterUtil.getLong(ids[3]);
 
 			reindexFileEntries(companyId, groupId, dataRepositoryId);
-		}
-	}
-
-	@Override
-	protected void doReindexDDMStructures(List<Long> ddmStructureIds)
-		throws Exception {
-
-		List<DLFileEntry> dlFileEntries =
-			DLFileEntryLocalServiceUtil.getDDMStructureFileEntries(
-				ArrayUtil.toLongArray(ddmStructureIds));
-
-		for (DLFileEntry dlFileEntry : dlFileEntries) {
-			doReindex(dlFileEntry);
 		}
 	}
 
