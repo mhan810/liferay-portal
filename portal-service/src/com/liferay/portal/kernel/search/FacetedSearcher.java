@@ -15,6 +15,8 @@
 package com.liferay.portal.kernel.search;
 
 import com.liferay.portal.kernel.search.facet.Facet;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -70,7 +72,7 @@ public class FacetedSearcher extends BaseSearcher {
 
 	@Override
 	protected BooleanQuery createFullQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+			BooleanFilter queryFilter, SearchContext searchContext)
 		throws Exception {
 
 		BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(
@@ -127,10 +129,10 @@ public class FacetedSearcher extends BaseSearcher {
 		Map<String, Facet> facets = searchContext.getFacets();
 
 		for (Facet facet : facets.values()) {
-			BooleanClause<Query> facetClause = facet.getFacetClause();
+			BooleanClause<Filter> facetClause = facet.getFacetClause();
 
 			if (facetClause != null) {
-				contextQuery.add(
+				queryFilter.add(
 					facetClause.getClause(),
 					facetClause.getBooleanClauseOccur());
 			}
@@ -138,7 +140,7 @@ public class FacetedSearcher extends BaseSearcher {
 
 		BooleanQuery fullQuery = BooleanQueryFactoryUtil.create(searchContext);
 
-		fullQuery.add(contextQuery, BooleanClauseOccur.MUST);
+		fullQuery.setPreFilter(queryFilter);
 
 		if (searchQuery.hasClauses()) {
 			fullQuery.add(searchQuery, BooleanClauseOccur.MUST);
@@ -186,14 +188,13 @@ public class FacetedSearcher extends BaseSearcher {
 		try {
 			searchContext.setSearchEngineId(getSearchEngineId());
 
-			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter queryFilter = new BooleanFilter();
 
-			contextQuery.addRequiredTerm(
+			queryFilter.addRequiredTerm(
 				Field.COMPANY_ID, searchContext.getCompanyId());
 
 			BooleanQuery fullQuery = createFullQuery(
-				contextQuery, searchContext);
+				queryFilter, searchContext);
 
 			QueryConfig queryConfig = searchContext.getQueryConfig();
 

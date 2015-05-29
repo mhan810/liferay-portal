@@ -17,13 +17,13 @@ package com.liferay.portlet.trash.util;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
@@ -65,39 +65,37 @@ public class TrashIndexer extends BaseIndexer {
 		throws SearchException {
 
 		try {
-			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter queryFilter = new BooleanFilter();
 
-			contextQuery.addRequiredTerm(
+			queryFilter.addRequiredTerm(
 				Field.COMPANY_ID, searchContext.getCompanyId());
 
 			List<TrashHandler> trashHandlers =
 				TrashHandlerRegistryUtil.getTrashHandlers();
 
 			for (TrashHandler trashHandler : trashHandlers) {
-				Query query = trashHandler.getExcludeQuery(searchContext);
+				Filter filter = trashHandler.getExcludeFilter(searchContext);
 
-				if (query != null) {
-					contextQuery.add(query, BooleanClauseOccur.MUST_NOT);
+				if (filter != null) {
+					queryFilter.add(filter, BooleanClauseOccur.MUST_NOT);
 				}
 			}
 
-			BooleanQuery groupQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter groupFilter = new BooleanFilter();
 
 			for (long groupId : searchContext.getGroupIds()) {
-				groupQuery.addTerm(
-					Field.GROUP_ID, String.valueOf(groupId), false,
+				groupFilter.addTerm(
+					Field.GROUP_ID, String.valueOf(groupId),
 					BooleanClauseOccur.SHOULD);
 			}
 
-			contextQuery.add(groupQuery, BooleanClauseOccur.MUST);
+			queryFilter.add(groupFilter, BooleanClauseOccur.MUST);
 
-			contextQuery.addRequiredTerm(
+			queryFilter.addRequiredTerm(
 				Field.STATUS, WorkflowConstants.STATUS_IN_TRASH);
 
 			BooleanQuery fullQuery = createFullQuery(
-				contextQuery, searchContext);
+				queryFilter, searchContext);
 
 			return fullQuery;
 		}

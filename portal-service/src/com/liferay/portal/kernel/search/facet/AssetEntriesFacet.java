@@ -22,16 +22,15 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.search.BooleanClauseFactoryUtil;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
-import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerPostProcessor;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -57,12 +56,12 @@ public class AssetEntriesFacet extends MultiValueFacet {
 	}
 
 	@Override
-	protected BooleanClause<Query> doGetFacetClause() {
+	protected BooleanClause<Filter> doGetFacetClause() {
 		SearchContext searchContext = getSearchContext();
 
 		String[] entryClassNames = searchContext.getEntryClassNames();
 
-		BooleanQuery facetQuery = BooleanQueryFactoryUtil.create(searchContext);
+		BooleanFilter facetFilter = new BooleanFilter();
 
 		for (String entryClassName : entryClassNames) {
 			Indexer indexer = IndexerRegistryUtil.getIndexer(entryClassName);
@@ -78,44 +77,44 @@ public class AssetEntriesFacet extends MultiValueFacet {
 			}
 
 			try {
-				BooleanQuery indexerBooleanQuery = indexer.getFacetQuery(
+				BooleanFilter indexerBooleanFilter = indexer.getFacetFilter(
 					entryClassName, searchContext);
 
-				if ((indexerBooleanQuery == null) ||
-					!indexerBooleanQuery.hasClauses()) {
+				if ((indexerBooleanFilter == null) ||
+					!indexerBooleanFilter.hasClauses()) {
 
 					continue;
 				}
 
-				BooleanQuery entityQuery = BooleanQueryFactoryUtil.create(
-					searchContext);
+				BooleanFilter entityFilter = new BooleanFilter();
 
-				entityQuery.add(indexerBooleanQuery, BooleanClauseOccur.MUST);
+				entityFilter.add(indexerBooleanFilter, BooleanClauseOccur.MUST);
 
-				indexer.postProcessContextQuery(entityQuery, searchContext);
+				indexer.postProcessContextFilter(entityFilter, searchContext);
 
 				for (IndexerPostProcessor indexerPostProcessor :
 						indexer.getIndexerPostProcessors()) {
 
-					indexerPostProcessor.postProcessContextQuery(
-						entityQuery, searchContext);
+					indexerPostProcessor.postProcessContextFilter(
+						entityFilter, searchContext);
 				}
 
 				if (indexer.isStagingAware()) {
 					if (!searchContext.isIncludeLiveGroups() &&
 						searchContext.isIncludeStagingGroups()) {
 
-						entityQuery.addRequiredTerm(Field.STAGING_GROUP, true);
+						entityFilter.addRequiredTerm(Field.STAGING_GROUP, true);
 					}
 					else if (searchContext.isIncludeLiveGroups() &&
 							 !searchContext.isIncludeStagingGroups()) {
 
-						entityQuery.addRequiredTerm(Field.STAGING_GROUP, false);
+						entityFilter.addRequiredTerm(
+							Field.STAGING_GROUP, false);
 					}
 				}
 
-				if (entityQuery.hasClauses()) {
-					facetQuery.add(entityQuery, BooleanClauseOccur.SHOULD);
+				if (entityFilter.hasClauses()) {
+					facetFilter.add(entityFilter, BooleanClauseOccur.SHOULD);
 				}
 			}
 			catch (Exception e) {
@@ -123,12 +122,12 @@ public class AssetEntriesFacet extends MultiValueFacet {
 			}
 		}
 
-		if (!facetQuery.hasClauses()) {
+		if (!facetFilter.hasClauses()) {
 			return null;
 		}
 
-		return BooleanClauseFactoryUtil.create(
-			searchContext, facetQuery, BooleanClauseOccur.MUST.getName());
+		return BooleanClauseFactoryUtil.createFilter(
+			searchContext, facetFilter, BooleanClauseOccur.MUST);
 	}
 
 	protected void initFacetClause() {

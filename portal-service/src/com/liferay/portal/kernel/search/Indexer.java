@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.search;
 
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.security.permission.PermissionChecker;
 
 import java.util.Locale;
@@ -44,7 +45,7 @@ public interface Indexer {
 
 	public Document getDocument(Object obj) throws SearchException;
 
-	public BooleanQuery getFacetQuery(
+	public BooleanFilter getFacetFilter(
 			String className, SearchContext searchContext)
 		throws Exception;
 
@@ -98,8 +99,8 @@ public interface Indexer {
 	public boolean isVisibleRelatedEntry(long classPK, int status)
 		throws Exception;
 
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+	public void postProcessContextFilter(
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception;
 
 	public void postProcessSearchQuery(
