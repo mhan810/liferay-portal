@@ -33,11 +33,64 @@ public class BooleanFilter extends BaseFilter {
 		return filterVisitor.visit(this);
 	}
 
+	public Filter add(Filter filter) {
+		return add(filter, BooleanClauseOccur.SHOULD);
+	}
+
 	public Filter add(Filter filter, BooleanClauseOccur booleanClauseOccur) {
 		_booleanClauses.add(
 			new BooleanClauseImpl<>(filter, booleanClauseOccur));
 
 		return filter;
+	}
+
+	public Filter addRangeTerm(String field, int startValue, int endValue) {
+		RangeTermFilter rangeTermFilter = new RangeTermFilter(
+			field, String.valueOf(startValue), String.valueOf(endValue), true,
+			true);
+
+		return add(rangeTermFilter, BooleanClauseOccur.SHOULD);
+	}
+
+	public Filter addRangeTerm(
+		String field, Integer startValue, Integer endValue) {
+
+		return addRangeTerm(field, startValue.intValue(), endValue.intValue());
+	}
+
+	public Filter addRangeTerm(String field, long startValue, long endValue) {
+		RangeTermFilter rangeTermFilter = new RangeTermFilter(
+			field, String.valueOf(startValue), String.valueOf(endValue), true,
+			true);
+
+		return add(rangeTermFilter, BooleanClauseOccur.SHOULD);
+	}
+
+	public Filter addRangeTerm(String field, Long startValue, Long endValue) {
+		return addRangeTerm(
+			field, startValue.longValue(), endValue.longValue());
+	}
+
+	public Filter addRangeTerm(String field, short startValue, short endValue) {
+		RangeTermFilter rangeTermFilter = new RangeTermFilter(
+			field, String.valueOf(startValue), String.valueOf(endValue), true,
+			true);
+
+		return add(rangeTermFilter, BooleanClauseOccur.SHOULD);
+	}
+
+	public Filter addRangeTerm(String field, Short startValue, Short endValue) {
+		return addRangeTerm(
+			field, startValue.shortValue(), endValue.shortValue());
+	}
+
+	public Filter addRangeTerm(
+		String field, String startValue, String endValue) {
+
+		RangeTermFilter rangeTermFilter = new RangeTermFilter(
+			field, startValue, endValue, true, true);
+
+		return add(rangeTermFilter, BooleanClauseOccur.SHOULD);
 	}
 
 	public Filter addRequiredTerm(String field, boolean value) {

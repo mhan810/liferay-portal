@@ -43,6 +43,8 @@ public interface FilterVisitor<T> {
 
 	public T visit(OrFilter orFilter);
 
+	public T visit(QueryFilter queryFilter);
+
 	public T visit(RangeTermFilter rangeTermFilter);
 
 	public T visit(TermFilter termFilter);
