@@ -14,6 +14,9 @@
 
 package com.liferay.portal.kernel.search.filter;
 
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
+
 /**
  * @author Michael C. Han
  */
@@ -84,10 +87,45 @@ public class RangeTermFilter extends BaseFilter {
 		_upperBoundOperator = upperBoundOperator;
 	}
 
+	@Override
+	public String toString() {
+		StringBundler sb = new StringBundler(9);
+
+		sb.append("{(");
+		sb.append(_lowerBound);
+		sb.append(_lowerBoundOperator);
+		sb.append(_fieldName);
+		sb.append(_upperBoundOperator);
+		sb.append(_lowerBound);
+		sb.append("), ");
+		sb.append(super.toString());
+		sb.append("}");
+
+		return sb.toString();
+	}
+
+
 	public enum Operator {
 
-		GT, GTE, LT, LTE
+		GT, GTE, LT, LTE;
 
+		@Override
+		public String toString() {
+			if (name().equals(GT.name())) {
+				return StringPool.GREATER_THAN;
+			}
+			if (name().equals(GTE.name())) {
+				return StringPool.GREATER_THAN_OR_EQUAL;
+			}
+			if (name().equals(LT.name())) {
+				return StringPool.LESS_THAN;
+			}
+			if (name().equals(LTE.name())) {
+				return StringPool.GREATER_THAN_OR_EQUAL;
+			}
+
+			return StringPool.BLANK;
+		}
 	}
 
 	private final String _fieldName;

@@ -14,11 +14,11 @@
 
 package com.liferay.portal.kernel.search.filter;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.generic.BooleanClauseImpl;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -195,7 +195,24 @@ public class BooleanFilter extends BaseFilter {
 		return !_booleanClauses.isEmpty();
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(BooleanFilter.class);
+	@Override
+	public String toString() {
+		StringBundler sb = new StringBundler(2 * _booleanClauses.size() + 3);
+
+		sb.append("{");
+
+		for (BooleanClause<Filter> booleanClause : _booleanClauses) {
+			sb.append(booleanClause);
+
+			sb.append(StringPool.COMMA_AND_SPACE);
+		}
+
+		sb.append(super.toString());
+
+		sb.append("}");
+
+		return sb.toString();
+	}
 
 	private final List<BooleanClause<Filter>> _booleanClauses =
 		new ArrayList<>();

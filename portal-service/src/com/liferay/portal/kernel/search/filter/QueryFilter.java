@@ -15,6 +15,7 @@
 package com.liferay.portal.kernel.search.filter;
 
 import com.liferay.portal.kernel.search.Query;
+import com.liferay.portal.kernel.util.StringBundler;
 
 /**
  * @author Michael C. Han
@@ -32,6 +33,19 @@ public class QueryFilter extends BaseFilter {
 
 	public Query getQuery() {
 		return _query;
+	}
+
+	@Override
+	public String toString() {
+		StringBundler sb = new StringBundler(4);
+
+		sb.append("{(query=");
+		sb.append(_query);
+		sb.append("), ");
+		sb.append(super.toString());
+		sb.append("}");
+
+		return sb.toString();
 	}
 
 	private final Query _query;

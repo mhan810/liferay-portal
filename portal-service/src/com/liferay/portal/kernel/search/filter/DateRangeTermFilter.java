@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.search.filter;
 
+import com.liferay.portal.kernel.util.StringBundler;
+
 import java.util.TimeZone;
 
 /**
@@ -42,6 +44,21 @@ public class DateRangeTermFilter extends RangeTermFilter {
 
 	public void setTimeZone(TimeZone timeZone) {
 		_timeZone = timeZone;
+	}
+
+	@Override
+	public String toString() {
+		StringBundler sb = new StringBundler(8);
+
+		sb.append("{(");
+		sb.append(super.toString());
+		sb.append("), ");
+		sb.append(_dateFormat);
+		sb.append(", ");
+		sb.append(_timeZone);
+		sb.append(")}");
+
+		return sb.toString();
 	}
 
 	private String _dateFormat;
