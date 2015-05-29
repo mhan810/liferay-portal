@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.search;
 
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.search.query.QueryVisitor;
 
@@ -33,7 +34,7 @@ public abstract class BaseQueryImpl implements Query {
 	}
 
 	@Override
-	public Filter getPreFilter() {
+	public BooleanFilter getPreFilter() {
 		return _preFilter;
 	}
 
@@ -64,7 +65,7 @@ public abstract class BaseQueryImpl implements Query {
 	}
 
 	@Override
-	public void setPreFilter(Filter preFilter) {
+	public void setPreFilter(BooleanFilter preFilter) {
 		_preFilter = preFilter;
 	}
 
@@ -74,7 +75,7 @@ public abstract class BaseQueryImpl implements Query {
 	}
 
 	private float _boost = BOOST_DEFAULT;
-	private Filter _preFilter;
+	private BooleanFilter _preFilter;
 	private QueryConfig _queryConfig;
 
 }
