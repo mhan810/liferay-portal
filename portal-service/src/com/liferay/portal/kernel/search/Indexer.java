@@ -100,16 +100,7 @@ public interface Indexer {
 		throws Exception;
 
 	public void postProcessContextFilter(
-			BooleanFilter booleanFilter, SearchContext searchContext)
-		throws Exception;
-
-	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #postProcessContextFilter(
-	 *             BooleanFilter, SearchContext)}
-	 */
-	@Deprecated
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception;
 
 	public void postProcessSearchQuery(

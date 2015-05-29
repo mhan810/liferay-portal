@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BaseRelatedEntryIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.DDMStructureIndexer;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentHelper;
@@ -41,6 +40,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
@@ -115,10 +115,10 @@ public class DLFileEntryIndexer
 
 	@Override
 	public void addRelatedClassNames(
-			BooleanQuery contextQuery, SearchContext searchContext)
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception {
 
-		_relatedEntryIndexer.addRelatedClassNames(contextQuery, searchContext);
+		_relatedEntryIndexer.addRelatedClassNames(contextFilter, searchContext);
 	}
 
 	@Override
@@ -193,20 +193,20 @@ public class DLFileEntryIndexer
 	}
 
 	@Override
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+	public void postProcessContextFilter(
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception {
 
-		addStatus(contextQuery, searchContext);
+		addStatus(contextFilter, searchContext);
 
 		if (searchContext.isIncludeAttachments()) {
-			addRelatedClassNames(contextQuery, searchContext);
+			addRelatedClassNames(contextFilter, searchContext);
 		}
 
-		contextQuery.addRequiredTerm(
+		contextFilter.addRequiredTerm(
 			Field.HIDDEN, searchContext.isIncludeAttachments());
 
-		addSearchClassTypeIds(contextQuery, searchContext);
+		addSearchClassTypeIds(contextFilter, searchContext);
 
 		String ddmStructureFieldName = (String)searchContext.getAttribute(
 			"ddmStructureFieldName");
@@ -233,9 +233,12 @@ public class DLFileEntryIndexer
 					ddmStructureFieldValue, structure.getFieldType(fieldName));
 			}
 			catch (StructureFieldException sfe) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(sfe, sfe);
+				}
 			}
 
-			contextQuery.addRequiredTerm(
+			contextFilter.addRequiredTerm(
 				ddmStructureFieldName,
 				StringPool.QUOTE + ddmStructureFieldValue + StringPool.QUOTE);
 		}
@@ -243,17 +246,16 @@ public class DLFileEntryIndexer
 		String[] mimeTypes = (String[])searchContext.getAttribute("mimeTypes");
 
 		if (ArrayUtil.isNotEmpty(mimeTypes)) {
-			BooleanQuery mimeTypesQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter mimeTypesFilter = new BooleanFilter();
 
 			for (String mimeType : mimeTypes) {
-				mimeTypesQuery.addTerm(
+				mimeTypesFilter.addTerm(
 					"mimeType",
 					StringUtil.replace(
 						mimeType, CharPool.FORWARD_SLASH, CharPool.UNDERLINE));
 			}
 
-			contextQuery.add(mimeTypesQuery, BooleanClauseOccur.MUST);
+			contextFilter.add(mimeTypesFilter, BooleanClauseOccur.MUST);
 		}
 	}
 

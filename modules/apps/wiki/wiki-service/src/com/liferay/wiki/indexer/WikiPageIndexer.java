@@ -27,8 +27,6 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BaseRelatedEntryIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
-import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
@@ -37,6 +35,7 @@ import com.liferay.portal.kernel.search.RelatedEntryIndexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -82,10 +81,10 @@ public class WikiPageIndexer
 
 	@Override
 	public void addRelatedClassNames(
-			BooleanQuery contextQuery, SearchContext searchContext)
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception {
 
-		_relatedEntryIndexer.addRelatedClassNames(contextQuery, searchContext);
+		_relatedEntryIndexer.addRelatedClassNames(contextFilter, searchContext);
 	}
 
 	@Override
@@ -148,17 +147,16 @@ public class WikiPageIndexer
 	}
 
 	@Override
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+	public void postProcessContextFilter(
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception {
 
-		addStatus(contextQuery, searchContext);
+		addStatus(contextFilter, searchContext);
 
 		long[] nodeIds = searchContext.getNodeIds();
 
 		if (ArrayUtil.isNotEmpty(nodeIds)) {
-			BooleanQuery nodeIdsQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter nodesIdFilter = new BooleanFilter();
 
 			for (long nodeId : nodeIds) {
 				try {
@@ -168,10 +166,10 @@ public class WikiPageIndexer
 					continue;
 				}
 
-				nodeIdsQuery.addTerm(Field.NODE_ID, nodeId);
+				nodesIdFilter.addTerm(Field.NODE_ID, nodeId);
 			}
 
-			contextQuery.add(nodeIdsQuery, BooleanClauseOccur.MUST);
+			contextFilter.add(nodesIdFilter, BooleanClauseOccur.MUST);
 		}
 	}
 
