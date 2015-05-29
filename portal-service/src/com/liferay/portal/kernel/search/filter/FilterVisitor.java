@@ -19,11 +19,7 @@ package com.liferay.portal.kernel.search.filter;
  */
 public interface FilterVisitor<T> {
 
-	public T visit(AndFilter andFilter);
-
 	public T visit(BooleanFilter booleanFilter);
-
-	public T visit(ExistsFilter existsFilter);
 
 	public T visit(GeoBoundingBoxFilter geoBoundingBoxFilter);
 
@@ -34,14 +30,6 @@ public interface FilterVisitor<T> {
 	public T visit(GeoPolygonFilter geoPolygonFilter);
 
 	public T visit(GeoShapeFilter geoShapeFilter);
-
-	public T visit(InFilter inFilter);
-
-	public T visit(MissingFilter missingFilter);
-
-	public <S extends Filter> T visit(NotFilter<S> notFilter);
-
-	public T visit(OrFilter orFilter);
 
 	public T visit(QueryFilter queryFilter);
 
