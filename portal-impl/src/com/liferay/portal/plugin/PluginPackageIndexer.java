@@ -19,15 +19,13 @@ import com.liferay.portal.kernel.plugin.PluginPackage;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
-import com.liferay.portal.kernel.search.TermQueryFactoryUtil;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -225,52 +223,47 @@ public class PluginPackageIndexer extends BaseIndexer {
 			BooleanQuery fullQuery, SearchContext searchContext)
 		throws Exception {
 
+		BooleanFilter queryFilter = fullQuery.getPreFilter();
+
 		String type = (String)searchContext.getAttribute("type");
 
 		if (Validator.isNotNull(type)) {
-			BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter searchFilter = new BooleanFilter();
 
-			searchQuery.addRequiredTerm("type", type);
+			searchFilter.addRequiredTerm("type", type);
 
-			fullQuery.add(searchQuery, BooleanClauseOccur.MUST);
+			queryFilter.add(searchFilter, BooleanClauseOccur.MUST);
 		}
 
 		String tag = (String)searchContext.getAttribute("tag");
 
 		if (Validator.isNotNull(tag)) {
-			BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter searchFilter = new BooleanFilter();
 
-			searchQuery.addExactTerm("tag", tag);
+			searchFilter.addTerm("tag", tag);
 
-			fullQuery.add(searchQuery, BooleanClauseOccur.MUST);
+			queryFilter.add(searchFilter, BooleanClauseOccur.MUST);
 		}
 
 		String repositoryURL = (String)searchContext.getAttribute(
 			"repositoryURL");
 
 		if (Validator.isNotNull(repositoryURL)) {
-			BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter searchFilter = new BooleanFilter();
 
-			Query query = TermQueryFactoryUtil.create(
-				searchContext, "repositoryURL", repositoryURL);
+			searchFilter.addTerm("repositoryURL", repositoryURL);
 
-			searchQuery.add(query, BooleanClauseOccur.SHOULD);
-
-			fullQuery.add(searchQuery, BooleanClauseOccur.MUST);
+			queryFilter.add(searchFilter, BooleanClauseOccur.MUST);
 		}
 
 		String license = (String)searchContext.getAttribute("license");
 
 		if (Validator.isNotNull(license)) {
-			BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter searchFilter = new BooleanFilter();
 
-			searchQuery.addExactTerm("license", license);
+			searchFilter.addTerm("license", license);
 
-			fullQuery.add(searchQuery, BooleanClauseOccur.MUST);
+			queryFilter.add(searchFilter, BooleanClauseOccur.MUST);
 		}
 
 		String status = (String)searchContext.getAttribute(Field.STATUS);
@@ -279,23 +272,22 @@ public class PluginPackageIndexer extends BaseIndexer {
 			return;
 		}
 
-		BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(
-			searchContext);
+		BooleanFilter searchFilter = new BooleanFilter();
 
 		if (status.equals(
 				PluginPackageImpl.
 					STATUS_NOT_INSTALLED_OR_OLDER_VERSION_INSTALLED)) {
 
-			searchQuery.addExactTerm(
+			searchFilter.addTerm(
 				Field.STATUS, PluginPackageImpl.STATUS_NOT_INSTALLED);
-			searchQuery.addExactTerm(
+			searchFilter.addTerm(
 				Field.STATUS, PluginPackageImpl.STATUS_OLDER_VERSION_INSTALLED);
 		}
 		else {
-			searchQuery.addExactTerm(Field.STATUS, status);
+			searchFilter.addTerm(Field.STATUS, status);
 		}
 
-		fullQuery.add(searchQuery, BooleanClauseOccur.MUST);
+		queryFilter.add(searchFilter, BooleanClauseOccur.MUST);
 	}
 
 }

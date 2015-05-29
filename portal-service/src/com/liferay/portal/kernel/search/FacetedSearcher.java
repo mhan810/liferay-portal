@@ -72,7 +72,7 @@ public class FacetedSearcher extends BaseSearcher {
 
 	@Override
 	protected BooleanQuery createFullQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+			BooleanFilter queryFilter, SearchContext searchContext)
 		throws Exception {
 
 		BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(
@@ -128,13 +128,11 @@ public class FacetedSearcher extends BaseSearcher {
 
 		Map<String, Facet> facets = searchContext.getFacets();
 
-		BooleanFilter fullFilter = new BooleanFilter();
-
 		for (Facet facet : facets.values()) {
 			BooleanClause<Filter> facetClause = facet.getFacetClause();
 
 			if (facetClause != null) {
-				fullFilter.add(
+				queryFilter.add(
 					facetClause.getClause(),
 					facetClause.getBooleanClauseOccur());
 			}
@@ -142,11 +140,7 @@ public class FacetedSearcher extends BaseSearcher {
 
 		BooleanQuery fullQuery = BooleanQueryFactoryUtil.create(searchContext);
 
-		fullQuery.setPreFilter(fullFilter);
-
-		if (contextQuery.hasClauses()) {
-			fullQuery.add(contextQuery, BooleanClauseOccur.MUST);
-		}
+		fullQuery.setPreFilter(queryFilter);
 
 		if (searchQuery.hasClauses()) {
 			fullQuery.add(searchQuery, BooleanClauseOccur.MUST);
@@ -194,14 +188,13 @@ public class FacetedSearcher extends BaseSearcher {
 		try {
 			searchContext.setSearchEngineId(getSearchEngineId());
 
-			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter queryFilter = new BooleanFilter();
 
-			contextQuery.addRequiredTerm(
+			queryFilter.addRequiredTerm(
 				Field.COMPANY_ID, searchContext.getCompanyId());
 
 			BooleanQuery fullQuery = createFullQuery(
-				contextQuery, searchContext);
+				queryFilter, searchContext);
 
 			QueryConfig queryConfig = searchContext.getQueryConfig();
 

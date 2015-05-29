@@ -448,7 +448,9 @@ public class AssetSearcher extends BaseSearcher {
 			BooleanQuery fullQuery, SearchContext searchContext)
 		throws Exception {
 
-		fullQuery.addRequiredTerm("visible", true);
+		BooleanFilter queryFilter = fullQuery.getPreFilter();
+
+		queryFilter.addRequiredTerm("visible", true);
 	}
 
 	private AssetEntryQuery _assetEntryQuery;
