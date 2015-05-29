@@ -27,10 +27,10 @@ public class DateRangeTermFilter extends RangeTermFilter {
 	public static final String DATE_FORMAT_DEFAULT = "yyyyMMddHHmmss";
 
 	public DateRangeTermFilter(
-		String fieldName, String startDate, String endDate,
-		boolean includesLower, boolean includesUpper) {
+		String fieldName, boolean includesLower, boolean includesUpper,
+		String startDate, String endDate) {
 
-		super(fieldName, startDate, endDate, includesLower, includesUpper);
+		super(fieldName, includesLower, includesUpper, startDate, endDate);
 	}
 
 	public String getDateFormat() {

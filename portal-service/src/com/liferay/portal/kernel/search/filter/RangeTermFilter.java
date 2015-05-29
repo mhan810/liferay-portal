@@ -83,6 +83,14 @@ public class RangeTermFilter extends BaseFilter {
 		return _includesUpper;
 	}
 
+	public void setLowerBound(String lowerBound) {
+		_lowerBound = lowerBound;
+	}
+
+	public void setUpperBound(String upperBound) {
+		_upperBound = upperBound;
+	}
+
 	@Override
 	public String toString() {
 		StringBundler sb = new StringBundler(9);
@@ -146,9 +154,9 @@ public class RangeTermFilter extends BaseFilter {
 	private final String _fieldName;
 	private final boolean _includesLower;
 	private final boolean _includesUpper;
-	private final String _lowerBound;
+	private String _lowerBound;
 	private Operator _lowerBoundOperator;
-	private final String _upperBound;
+	private String _upperBound;
 	private Operator _upperBoundOperator;
 
 }
