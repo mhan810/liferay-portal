@@ -15,12 +15,12 @@
 package com.liferay.portal.kernel.search.facet;
 
 import com.liferay.portal.kernel.search.BooleanClause;
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.collector.FacetCollector;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
 import com.liferay.portal.kernel.search.facet.util.BaseFacetValueValidator;
 import com.liferay.portal.kernel.search.facet.util.FacetValueValidator;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -34,7 +34,7 @@ public abstract class BaseFacet implements Facet {
 	}
 
 	@Override
-	public BooleanClause<Query> getFacetClause() {
+	public BooleanClause<Filter> getFacetClause() {
 		return doGetFacetClause();
 	}
 
@@ -105,7 +105,7 @@ public abstract class BaseFacet implements Facet {
 		_facetConfiguration.setStatic(isStatic);
 	}
 
-	protected abstract BooleanClause<Query> doGetFacetClause();
+	protected abstract BooleanClause<Filter> doGetFacetClause();
 
 	private FacetCollector _facetCollector;
 	private FacetConfiguration _facetConfiguration = new FacetConfiguration();

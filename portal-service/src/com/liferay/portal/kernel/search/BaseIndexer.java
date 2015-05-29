@@ -17,7 +17,6 @@ package com.liferay.portal.kernel.search;
 import com.liferay.portal.NoSuchCountryException;
 import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchRegionException;
-import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -26,6 +25,8 @@ import com.liferay.portal.kernel.search.facet.AssetEntriesFacet;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.MultiValueFacet;
 import com.liferay.portal.kernel.search.facet.ScopeFacet;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.search.hits.HitsProcessor;
 import com.liferay.portal.kernel.search.hits.HitsProcessorRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashHandler;
@@ -175,13 +176,13 @@ public abstract class BaseIndexer implements Indexer {
 	}
 
 	@Override
-	public BooleanQuery getFacetQuery(
+	public BooleanFilter getFacetFilter(
 			String className, SearchContext searchContext)
 		throws Exception {
 
-		BooleanQuery facetQuery = BooleanQueryFactoryUtil.create(searchContext);
+		BooleanFilter facetFilter = new BooleanFilter();
 
-		facetQuery.addExactTerm(Field.ENTRY_CLASS_NAME, className);
+		facetFilter.addTerm(Field.ENTRY_CLASS_NAME, className);
 
 		if (searchContext.getUserId() > 0) {
 			SearchPermissionChecker searchPermissionChecker =
@@ -196,14 +197,13 @@ public abstract class BaseIndexer implements Indexer {
 				groupIds = new long[] {groupId};
 			}
 
-			facetQuery =
-				(BooleanQuery)searchPermissionChecker.getPermissionQuery(
+			facetFilter =
+				(BooleanFilter)searchPermissionChecker.getPermissionFilter(
 					searchContext.getCompanyId(), groupIds,
-					searchContext.getUserId(), className, facetQuery,
-					searchContext);
+					searchContext.getUserId(), className, facetFilter);
 		}
 
-		return facetQuery;
+		return facetFilter;
 	}
 
 	@Override
@@ -283,7 +283,9 @@ public abstract class BaseIndexer implements Indexer {
 
 		String searchEngineId = GetterUtil.getString(
 			PropsUtil.get(
-				PropsKeys.INDEX_SEARCH_ENGINE_ID, new Filter(clazz.getName())));
+				PropsKeys.INDEX_SEARCH_ENGINE_ID,
+				new com.liferay.portal.kernel.configuration.Filter(
+					clazz.getName())));
 
 		if (Validator.isNotNull(searchEngineId)) {
 			SearchEngine searchEngine = SearchEngineUtil.getSearchEngine(
@@ -419,6 +421,17 @@ public abstract class BaseIndexer implements Indexer {
 		return true;
 	}
 
+	@Override
+	public void postProcessContextFilter(
+			BooleanFilter booleanFilter, SearchContext searchContext)
+		throws Exception {
+	}
+
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #postProcessContextFilter(
+	 *             BooleanFilter, SearchContext)}
+	 */
+	@Deprecated
 	@Override
 	public void postProcessContextQuery(
 			BooleanQuery contextQuery, SearchContext searchContext)
@@ -1190,11 +1203,13 @@ public abstract class BaseIndexer implements Indexer {
 
 		Map<String, Facet> facets = searchContext.getFacets();
 
+		BooleanFilter fullFilter = new BooleanFilter();
+
 		for (Facet facet : facets.values()) {
-			BooleanClause<Query> facetClause = facet.getFacetClause();
+			BooleanClause<Filter> facetClause = facet.getFacetClause();
 
 			if (facetClause != null) {
-				contextQuery.add(
+				fullFilter.add(
 					facetClause.getClause(),
 					facetClause.getBooleanClauseOccur());
 			}
@@ -1202,7 +1217,11 @@ public abstract class BaseIndexer implements Indexer {
 
 		BooleanQuery fullQuery = BooleanQueryFactoryUtil.create(searchContext);
 
-		fullQuery.add(contextQuery, BooleanClauseOccur.MUST);
+		fullQuery.setPreFilter(fullFilter);
+
+		if (contextQuery.hasClauses()) {
+			fullQuery.add(contextQuery, BooleanClauseOccur.MUST);
+		}
 
 		if (searchQuery.hasClauses()) {
 			fullQuery.add(searchQuery, BooleanClauseOccur.MUST);
