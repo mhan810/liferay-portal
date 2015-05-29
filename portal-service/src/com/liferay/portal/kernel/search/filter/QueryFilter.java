@@ -36,6 +36,11 @@ public class QueryFilter extends BaseFilter {
 	}
 
 	@Override
+	public int getSortOrder() {
+		return 30;
+	}
+
+	@Override
 	public String toString() {
 		StringBundler sb = new StringBundler(4);
 

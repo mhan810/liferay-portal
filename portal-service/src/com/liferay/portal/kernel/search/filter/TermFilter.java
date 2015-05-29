@@ -14,9 +14,7 @@
 
 package com.liferay.portal.kernel.search.filter;
 
-import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 
 /**
  * @author Michael C. Han
@@ -35,6 +33,11 @@ public class TermFilter extends BaseFilter {
 
 	public String getFieldName() {
 		return _fieldName;
+	}
+
+	@Override
+	public int getSortOrder() {
+		return 1;
 	}
 
 	public String getValue() {

@@ -14,14 +14,44 @@
 
 package com.liferay.portal.kernel.search.filter;
 
+import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author Michael C. Han
  */
 public class GeoPolygonFilter extends BaseFilter {
 
+	public GeoPolygonFilter(String fieldName) {
+		_fieldName = fieldName;
+	}
+
 	@Override
 	public <T> T accept(FilterVisitor<T> filterVisitor) {
 		return filterVisitor.visit(this);
 	}
+
+	public void addGeoLocationPoint(GeoLocationPoint geoLocationPoint) {
+		_geoLocationPoints.add(geoLocationPoint);
+	}
+
+	public String getFieldName() {
+		return _fieldName;
+	}
+
+	public Set<GeoLocationPoint> getGeoLocationPoints() {
+		return Collections.unmodifiableSet(_geoLocationPoints);
+	}
+
+	@Override
+	public int getSortOrder() {
+		return 140;
+	}
+
+	private final String _fieldName;
+	private final Set<GeoLocationPoint> _geoLocationPoints = new HashSet<>();
 
 }

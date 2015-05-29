@@ -12,27 +12,36 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search.filter;
+package com.liferay.portal.kernel.search.geolocation;
 
 /**
  * @author Michael C. Han
  */
-public class GeoLocationPoint {
+public class GeoDistance {
 
-	public GeoLocationPoint(float latitude, float longitude) {
-		_latitude = latitude;
-		_longitude = longitude;
+	public GeoDistance(double distance) {
+		this(distance, DistanceUnit.METERS);
 	}
 
-	public float getLatitude() {
-		return _latitude;
+	public GeoDistance(double distance, DistanceUnit distanceUnit) {
+		_distance = distance;
+		_distanceUnit = distanceUnit;
 	}
 
-	public float getLongitude() {
-		return _longitude;
+	public double getDistance() {
+		return _distance;
 	}
 
-	private final float _latitude;
-	private final float _longitude;
+	public DistanceUnit getDistanceUnit() {
+		return _distanceUnit;
+	}
+
+	@Override
+	public String toString() {
+		return _distance + _distanceUnit.toString();
+	}
+
+	private final double _distance;
+	private final DistanceUnit _distanceUnit;
 
 }

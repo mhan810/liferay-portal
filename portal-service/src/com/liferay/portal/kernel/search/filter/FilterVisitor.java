@@ -21,6 +21,8 @@ public interface FilterVisitor<T> {
 
 	public T visit(BooleanFilter booleanFilter);
 
+	public T visit(DateRangeTermFilter dateRangeTermFilter);
+
 	public T visit(GeoBoundingBoxFilter geoBoundingBoxFilter);
 
 	public T visit(GeoDistanceFilter geoDistanceFilter);
@@ -28,8 +30,6 @@ public interface FilterVisitor<T> {
 	public T visit(GeoDistanceRangeFilter geoDistanceRangeFilter);
 
 	public T visit(GeoPolygonFilter geoPolygonFilter);
-
-	public T visit(GeoShapeFilter geoShapeFilter);
 
 	public T visit(QueryFilter queryFilter);
 

@@ -17,10 +17,11 @@ package com.liferay.portal.kernel.search.filter;
 import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.generic.BooleanClauseImpl;
+import com.liferay.portal.kernel.util.SortedArrayList;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -38,16 +39,26 @@ public class BooleanFilter extends BaseFilter {
 	}
 
 	public Filter add(Filter filter, BooleanClauseOccur booleanClauseOccur) {
-		_booleanClauses.add(
-			new BooleanClauseImpl<>(filter, booleanClauseOccur));
+		BooleanClause<Filter> booleanClause = new BooleanClauseImpl<>(
+			filter, booleanClauseOccur);
+
+		if (booleanClauseOccur.equals(BooleanClauseOccur.MUST)) {
+			_mustBooleanClauses.add(booleanClause);
+		}
+		else if (booleanClauseOccur.equals(BooleanClauseOccur.MUST_NOT)) {
+			_mustNotBooleanClauses.add(booleanClause);
+		}
+		else {
+			_shouldBooleanClauses.add(booleanClause);
+		}
 
 		return filter;
 	}
 
 	public Filter addRangeTerm(String field, int startValue, int endValue) {
 		RangeTermFilter rangeTermFilter = new RangeTermFilter(
-			field, String.valueOf(startValue), String.valueOf(endValue), true,
-			true);
+			field, true, true, String.valueOf(startValue),
+			String.valueOf(endValue));
 
 		return add(rangeTermFilter, BooleanClauseOccur.SHOULD);
 	}
@@ -60,8 +71,8 @@ public class BooleanFilter extends BaseFilter {
 
 	public Filter addRangeTerm(String field, long startValue, long endValue) {
 		RangeTermFilter rangeTermFilter = new RangeTermFilter(
-			field, String.valueOf(startValue), String.valueOf(endValue), true,
-			true);
+			field, true, true, String.valueOf(startValue),
+			String.valueOf(endValue));
 
 		return add(rangeTermFilter, BooleanClauseOccur.SHOULD);
 	}
@@ -73,8 +84,8 @@ public class BooleanFilter extends BaseFilter {
 
 	public Filter addRangeTerm(String field, short startValue, short endValue) {
 		RangeTermFilter rangeTermFilter = new RangeTermFilter(
-			field, String.valueOf(startValue), String.valueOf(endValue), true,
-			true);
+			field, true, true, String.valueOf(startValue),
+			String.valueOf(endValue));
 
 		return add(rangeTermFilter, BooleanClauseOccur.SHOULD);
 	}
@@ -88,7 +99,7 @@ public class BooleanFilter extends BaseFilter {
 		String field, String startValue, String endValue) {
 
 		RangeTermFilter rangeTermFilter = new RangeTermFilter(
-			field, startValue, endValue, true, true);
+			field, true, true, startValue, endValue);
 
 		return add(rangeTermFilter, BooleanClauseOccur.SHOULD);
 	}
@@ -191,30 +202,90 @@ public class BooleanFilter extends BaseFilter {
 		return add(termFilter, booleanClauseOccur);
 	}
 
+	public List<BooleanClause<Filter>> getMustBooleanClauses() {
+		return _mustBooleanClauses;
+	}
+
+	public List<BooleanClause<Filter>> getMustNotBooleanClauses() {
+		return _mustNotBooleanClauses;
+	}
+
+	public List<BooleanClause<Filter>> getShouldBooleanClauses() {
+		return _shouldBooleanClauses;
+	}
+
+	@Override
+	public int getSortOrder() {
+		return 10;
+	}
+
 	public boolean hasClauses() {
-		return !_booleanClauses.isEmpty();
+		return (!_mustBooleanClauses.isEmpty() ||
+			!_mustNotBooleanClauses.isEmpty() ||
+			!_shouldBooleanClauses.isEmpty());
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(2 * _booleanClauses.size() + 3);
+		StringBundler sb = new StringBundler(9);
 
-		sb.append("{");
-
-		for (BooleanClause<Filter> booleanClause : _booleanClauses) {
-			sb.append(booleanClause);
-
-			sb.append(StringPool.COMMA_AND_SPACE);
-		}
+		sb.append("{MUST(");
+		sb.append(getBooleanClauseString(_mustBooleanClauses));
+		sb.append("), MUST_NOT(");
+		sb.append(getBooleanClauseString(_mustNotBooleanClauses));
+		sb.append("), SHOULD(");
+		sb.append(getBooleanClauseString(_shouldBooleanClauses));
+		sb.append("), ");
 
 		sb.append(super.toString());
-
 		sb.append("}");
 
 		return sb.toString();
 	}
 
-	private final List<BooleanClause<Filter>> _booleanClauses =
-		new ArrayList<>();
+	protected String getBooleanClauseString(
+		List<BooleanClause<Filter>> booleanClauses) {
+
+		StringBundler sb = new StringBundler(2 * booleanClauses.size());
+
+		for (BooleanClause<Filter> booleanClause : _mustBooleanClauses) {
+			sb.append(booleanClause);
+
+			sb.append(StringPool.COMMA_AND_SPACE);
+		}
+
+		return sb.toString();
+	}
+
+	private final List<BooleanClause<Filter>> _mustBooleanClauses =
+		new SortedArrayList<>(new BooleanClauseComparator());
+	private final List<BooleanClause<Filter>> _mustNotBooleanClauses =
+		new SortedArrayList<>(new BooleanClauseComparator());
+	private final List<BooleanClause<Filter>> _shouldBooleanClauses =
+		new SortedArrayList<>(new BooleanClauseComparator());
+
+	private class BooleanClauseComparator
+		implements Comparator<BooleanClause<Filter>> {
+
+		@Override
+		public int compare(
+			BooleanClause<Filter> booleanClause1,
+			BooleanClause<Filter> booleanClause2) {
+
+			Filter filter1 = booleanClause1.getClause();
+			Filter filter2 = booleanClause2.getClause();
+
+			if (filter1.getSortOrder() < filter2.getSortOrder()) {
+				return -1;
+			}
+
+			if (filter1.getSortOrder() > filter2.getSortOrder()) {
+				return 1;
+			}
+
+			return 0;
+		}
+
+	}
 
 }

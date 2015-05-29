@@ -15,6 +15,7 @@
 package com.liferay.portal.kernel.search.filter;
 
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.TimeZoneUtil;
 
 import java.util.TimeZone;
 
@@ -22,6 +23,8 @@ import java.util.TimeZone;
  * @author Michael C. Han
  */
 public class DateRangeTermFilter extends RangeTermFilter {
+
+	public static final String DATE_FORMAT_DEFAULT = "yyyyMMddHHmmss";
 
 	public DateRangeTermFilter(
 		String fieldName, String startDate, String endDate,
@@ -32,6 +35,11 @@ public class DateRangeTermFilter extends RangeTermFilter {
 
 	public String getDateFormat() {
 		return _dateFormat;
+	}
+
+	@Override
+	public int getSortOrder() {
+		return 25;
 	}
 
 	public TimeZone getTimeZone() {
@@ -61,7 +69,7 @@ public class DateRangeTermFilter extends RangeTermFilter {
 		return sb.toString();
 	}
 
-	private String _dateFormat;
-	private TimeZone _timeZone;
+	private String _dateFormat = DATE_FORMAT_DEFAULT;
+	private TimeZone _timeZone = TimeZoneUtil.getDefault();
 
 }

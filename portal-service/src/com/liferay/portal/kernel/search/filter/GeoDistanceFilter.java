@@ -14,14 +14,21 @@
 
 package com.liferay.portal.kernel.search.filter;
 
+import com.liferay.portal.kernel.search.geolocation.GeoDistance;
+import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
+
 /**
  * @author Michael C. Han
  */
 public class GeoDistanceFilter extends BaseFilter {
 
-	public GeoDistanceFilter(GeoLocationPoint pinLocation, String distance) {
+	public GeoDistanceFilter(
+		String fieldName, GeoLocationPoint pinLocation,
+		GeoDistance geoDistance) {
+
+		_fieldName = fieldName;
 		_pinLocation = pinLocation;
-		_distance = distance;
+		_geoDistance = geoDistance;
 	}
 
 	@Override
@@ -29,15 +36,25 @@ public class GeoDistanceFilter extends BaseFilter {
 		return filterVisitor.visit(this);
 	}
 
-	public String getDistance() {
-		return _distance;
+	public String getFieldName() {
+		return _fieldName;
+	}
+
+	public GeoDistance getGeoDistance() {
+		return _geoDistance;
 	}
 
 	public GeoLocationPoint getPinLocation() {
 		return _pinLocation;
 	}
 
-	private final String _distance;
+	@Override
+	public int getSortOrder() {
+		return 100;
+	}
+
+	private final String _fieldName;
+	private final GeoDistance _geoDistance;
 	private final GeoLocationPoint _pinLocation;
 
 }

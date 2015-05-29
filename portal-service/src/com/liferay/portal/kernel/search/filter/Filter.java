@@ -23,6 +23,8 @@ public interface Filter {
 
 	public String getExecutionOption();
 
+	public int getSortOrder();
+
 	public boolean isCached();
 
 	public void setCached(boolean cached);

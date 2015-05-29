@@ -14,18 +14,24 @@
 
 package com.liferay.portal.kernel.search.filter;
 
+import com.liferay.portal.kernel.search.geolocation.GeoDistance;
+import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
+
 /**
  * @author Michael C. Han
  */
-public class GeoDistanceRangeFilter extends BaseFilter {
+public class GeoDistanceRangeFilter extends RangeTermFilter {
 
 	public GeoDistanceRangeFilter(
-		String endDistance, GeoLocationPoint pinLocation,
-		String startDistance) {
+		String fieldName, boolean includesLower, boolean includesUpper,
+		GeoDistance lowerBoundGeoDistance, GeoLocationPoint pinLocation,
+		GeoDistance upperBoundGeoDistance) {
 
-		_endDistance = endDistance;
+		super(fieldName, includesLower, includesUpper);
+
+		_lowerBoundGeoDistance = lowerBoundGeoDistance;
 		_pinLocation = pinLocation;
-		_startDistance = startDistance;
+		_upperBoundGeoDistance = upperBoundGeoDistance;
 	}
 
 	@Override
@@ -33,20 +39,25 @@ public class GeoDistanceRangeFilter extends BaseFilter {
 		return filterVisitor.visit(this);
 	}
 
-	public String getEndDistance() {
-		return _endDistance;
+	public GeoDistance getLowerBoundGeoDistance() {
+		return _lowerBoundGeoDistance;
 	}
 
 	public GeoLocationPoint getPinLocation() {
 		return _pinLocation;
 	}
 
-	public String getStartDistance() {
-		return _startDistance;
+	@Override
+	public int getSortOrder() {
+		return 110;
 	}
 
-	private final String _endDistance;
+	public GeoDistance getUpperBoundGeoDistance() {
+		return _upperBoundGeoDistance;
+	}
+
+	private final GeoDistance _lowerBoundGeoDistance;
 	private final GeoLocationPoint _pinLocation;
-	private final String _startDistance;
+	private final GeoDistance _upperBoundGeoDistance;
 
 }

@@ -12,16 +12,29 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search.filter;
+package com.liferay.portal.kernel.search.geolocation;
 
 /**
  * @author Michael C. Han
  */
-public class GeoShapeFilter extends BaseFilter {
+public enum DistanceUnit {
+
+	CENTIMETERS("cm"), FEET("ft"), INCHES("in"), KILOMETERS("km"), METERS("m"),
+	MILES("mi"), MILLIMETERS("mm"), YARDS("yd");
+
+	public String getUnit() {
+		return _unit;
+	}
 
 	@Override
-	public <T> T accept(FilterVisitor<T> filterVisitor) {
-		return filterVisitor.visit(this);
+	public String toString() {
+		return _unit;
 	}
+
+	private DistanceUnit(String unit) {
+		_unit = unit;
+	}
+
+	private final String _unit;
 
 }

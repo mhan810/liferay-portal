@@ -23,27 +23,26 @@ import com.liferay.portal.kernel.util.StringPool;
 public class RangeTermFilter extends BaseFilter {
 
 	public RangeTermFilter(
-		String fieldName, String lowerBound, String upperBound,
-		boolean includesLower, boolean includesUpper) {
+		String fieldName, boolean includesLower, boolean includesUpper) {
 
 		_fieldName = fieldName;
+		_includesLower = includesLower;
+		_includesUpper = includesUpper;
+
+		setOperators(includesLower, includesUpper);
+	}
+
+	public RangeTermFilter(
+		String fieldName, boolean includesLower, boolean includesUpper,
+		String lowerBound, String upperBound) {
+
+		_fieldName = fieldName;
+		_includesLower = includesLower;
+		_includesUpper = includesUpper;
 		_lowerBound = lowerBound;
-
-		if (includesLower) {
-			_lowerBoundOperator = Operator.GTE;
-		}
-		else {
-			_lowerBoundOperator = Operator.GT;
-		}
-
 		_upperBound = upperBound;
 
-		if (includesUpper) {
-			_upperBoundOperator = Operator.LTE;
-		}
-		else {
-			_upperBoundOperator = Operator.LT;
-		}
+		setOperators(includesLower, includesUpper);
 	}
 
 	@Override
@@ -63,6 +62,11 @@ public class RangeTermFilter extends BaseFilter {
 		return _lowerBoundOperator;
 	}
 
+	@Override
+	public int getSortOrder() {
+		return 20;
+	}
+
 	public String getUpperBound() {
 		return _upperBound;
 	}
@@ -71,20 +75,12 @@ public class RangeTermFilter extends BaseFilter {
 		return _upperBoundOperator;
 	}
 
-	public void setLowerBound(String lowerBound) {
-		_lowerBound = lowerBound;
+	public boolean isIncludesLower() {
+		return _includesLower;
 	}
 
-	public void setLowerBoundOperator(Operator lowerBoundOperator) {
-		_lowerBoundOperator = lowerBoundOperator;
-	}
-
-	public void setUpperBound(String upperBound) {
-		_upperBound = upperBound;
-	}
-
-	public void setUpperBoundOperator(Operator upperBoundOperator) {
-		_upperBoundOperator = upperBoundOperator;
+	public boolean isIncludesUpper() {
+		return _includesUpper;
 	}
 
 	@Override
@@ -104,7 +100,6 @@ public class RangeTermFilter extends BaseFilter {
 		return sb.toString();
 	}
 
-
 	public enum Operator {
 
 		GT, GTE, LT, LTE;
@@ -114,24 +109,46 @@ public class RangeTermFilter extends BaseFilter {
 			if (name().equals(GT.name())) {
 				return StringPool.GREATER_THAN;
 			}
+
 			if (name().equals(GTE.name())) {
 				return StringPool.GREATER_THAN_OR_EQUAL;
 			}
+
 			if (name().equals(LT.name())) {
 				return StringPool.LESS_THAN;
 			}
+
 			if (name().equals(LTE.name())) {
 				return StringPool.GREATER_THAN_OR_EQUAL;
 			}
 
 			return StringPool.BLANK;
 		}
+
+	}
+
+	protected void setOperators(boolean includesLower, boolean includesUpper) {
+		if (includesLower) {
+			_lowerBoundOperator = Operator.GTE;
+		}
+		else {
+			_lowerBoundOperator = Operator.GT;
+		}
+
+		if (includesUpper) {
+			_upperBoundOperator = Operator.LTE;
+		}
+		else {
+			_upperBoundOperator = Operator.LT;
+		}
 	}
 
 	private final String _fieldName;
-	private String _lowerBound;
+	private final boolean _includesLower;
+	private final boolean _includesUpper;
+	private final String _lowerBound;
 	private Operator _lowerBoundOperator;
-	private String _upperBound;
+	private final String _upperBound;
 	private Operator _upperBoundOperator;
 
 }

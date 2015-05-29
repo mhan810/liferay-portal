@@ -14,14 +14,18 @@
 
 package com.liferay.portal.kernel.search.filter;
 
+import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
+
 /**
  * @author Michael C. Han
  */
 public class GeoBoundingBoxFilter extends BaseFilter {
 
 	public GeoBoundingBoxFilter(
-		GeoLocationPoint topLeft, GeoLocationPoint bottomRight) {
+		String fieldName, GeoLocationPoint topLeft,
+		GeoLocationPoint bottomRight) {
 
+		_fieldName = fieldName;
 		_topLeft = topLeft;
 		_bottomRight = bottomRight;
 	}
@@ -35,11 +39,21 @@ public class GeoBoundingBoxFilter extends BaseFilter {
 		return _bottomRight;
 	}
 
+	public String getFieldName() {
+		return _fieldName;
+	}
+
+	@Override
+	public int getSortOrder() {
+		return 120;
+	}
+
 	public GeoLocationPoint getTopLeft() {
 		return _topLeft;
 	}
 
 	private final GeoLocationPoint _bottomRight;
+	private final String _fieldName;
 	private final GeoLocationPoint _topLeft;
 
 }
