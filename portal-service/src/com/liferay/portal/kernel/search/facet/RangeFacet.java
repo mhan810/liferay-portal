@@ -95,7 +95,7 @@ public class RangeFacet extends BaseFacet {
 		}
 
 		RangeTermFilter rangeTermFilter = new RangeTermFilter(
-			getFieldName(), startString, endString, true, true);
+			getFieldName(), true, true, startString, endString);
 
 		return BooleanClauseFactoryUtil.createFilter(
 			searchContext, rangeTermFilter, BooleanClauseOccur.MUST);
