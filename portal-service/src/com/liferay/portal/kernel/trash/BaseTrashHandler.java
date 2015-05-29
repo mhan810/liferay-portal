@@ -22,8 +22,8 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.SystemEvent;
@@ -179,7 +179,7 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	}
 
 	@Override
-	public Query getExcludeQuery(SearchContext searchContext) {
+	public Filter getExcludeFilter(SearchContext searchContext) {
 		return null;
 	}
 
