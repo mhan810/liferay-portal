@@ -15,12 +15,12 @@
 package com.liferay.portal.kernel.search.facet.util.bundle.facetfactoryutil;
 
 import com.liferay.portal.kernel.search.BooleanClause;
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.collector.FacetCollector;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
 import com.liferay.portal.kernel.search.facet.util.FacetValueValidator;
+import com.liferay.portal.kernel.search.filter.Filter;
 
 /**
  * @author Peter Fellwock
@@ -30,7 +30,7 @@ public class TestFacet implements Facet {
 	public static final String FIELD_NAME = "FIELD_NAME";
 
 	@Override
-	public BooleanClause<Query> getFacetClause() {
+	public BooleanClause<Filter> getFacetClause() {
 		return null;
 	}
 
