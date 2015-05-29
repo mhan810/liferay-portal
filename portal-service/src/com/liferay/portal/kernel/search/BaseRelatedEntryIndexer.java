@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.search;
 
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.util.PortalUtil;
 
@@ -24,7 +25,7 @@ public class BaseRelatedEntryIndexer implements RelatedEntryIndexer {
 
 	@Override
 	public void addRelatedClassNames(
-			BooleanQuery contextQuery, SearchContext searchContext)
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception {
 
 		searchContext.setAttribute("relatedClassName", Boolean.TRUE);
@@ -36,8 +37,7 @@ public class BaseRelatedEntryIndexer implements RelatedEntryIndexer {
 			return;
 		}
 
-		BooleanQuery relatedQueries = BooleanQueryFactoryUtil.create(
-			searchContext);
+		BooleanFilter relatedFilters = new BooleanFilter();
 
 		for (String relatedEntryClassName : relatedEntryClassNames) {
 			Indexer indexer = IndexerRegistryUtil.getIndexer(
@@ -47,26 +47,25 @@ public class BaseRelatedEntryIndexer implements RelatedEntryIndexer {
 				continue;
 			}
 
-			BooleanQuery relatedQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter relatedFilter = new BooleanFilter();
 
-			indexer.postProcessContextQuery(relatedQuery, searchContext);
+			indexer.postProcessContextFilter(relatedFilter, searchContext);
 
 			for (IndexerPostProcessor indexerPostProcessor :
 					indexer.getIndexerPostProcessors()) {
 
-				indexerPostProcessor.postProcessContextQuery(
-					relatedQuery, searchContext);
+				indexerPostProcessor.postProcessContextFilter(
+					relatedFilter, searchContext);
 			}
 
-			relatedQuery.addRequiredTerm(
+			relatedFilter.addRequiredTerm(
 				Field.CLASS_NAME_ID,
 				PortalUtil.getClassNameId(relatedEntryClassName));
 
-			relatedQueries.add(relatedQuery, BooleanClauseOccur.SHOULD);
+			relatedFilters.add(relatedFilter, BooleanClauseOccur.SHOULD);
 		}
 
-		contextQuery.add(relatedQueries, BooleanClauseOccur.MUST);
+		contextFilter.add(relatedFilters, BooleanClauseOccur.MUST);
 
 		searchContext.setAttribute("relatedClassName", Boolean.FALSE);
 	}

@@ -174,16 +174,6 @@ public class DummyIndexer implements Indexer {
 		throws Exception {
 	}
 
-	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #postProcessContextFilter(
-	 *             BooleanFilter, SearchContext)}
-	 */
-	@Deprecated
-	@Override
-	public void postProcessContextQuery(
-		BooleanQuery contextQuery, SearchContext searchContext) {
-	}
-
 	@Override
 	public void postProcessSearchQuery(
 		BooleanQuery searchQuery, SearchContext searchContext) {
