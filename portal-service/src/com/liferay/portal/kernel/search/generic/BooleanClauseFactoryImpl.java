@@ -73,7 +73,7 @@ public class BooleanClauseFactoryImpl implements BooleanClauseFactory {
 
 		TermFilter termFilter = new TermFilter(field, value);
 
-		return new BooleanClauseImpl<>(termFilter, booleanClauseOccur);
+		return new BooleanClauseImpl<Filter>(termFilter, booleanClauseOccur);
 	}
 
 }
