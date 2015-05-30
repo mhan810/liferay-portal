@@ -14,8 +14,8 @@
 
 package com.liferay.portal.kernel.trash.bundle.trashhandlerregistryutil;
 
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.model.ContainerModel;
@@ -141,7 +141,7 @@ public class TestTrashHandler implements TrashHandler {
 	}
 
 	@Override
-	public Query getExcludeQuery(SearchContext searchContext) {
+	public Filter getExcludeFilter(SearchContext searchContext) {
 		return null;
 	}
 
