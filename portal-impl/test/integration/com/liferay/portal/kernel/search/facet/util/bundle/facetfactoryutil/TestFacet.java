@@ -30,17 +30,17 @@ public class TestFacet implements Facet {
 	public static final String FIELD_NAME = "FIELD_NAME";
 
 	@Override
-	public BooleanClause<Filter> getFacetClause() {
-		return null;
-	}
-
-	@Override
 	public FacetCollector getFacetCollector() {
 		return null;
 	}
 
 	@Override
 	public FacetConfiguration getFacetConfiguration() {
+		return null;
+	}
+
+	@Override
+	public BooleanClause<Filter> getFacetFilterClause() {
 		return null;
 	}
 
