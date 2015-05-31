@@ -467,6 +467,14 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 			permissionQuery.add(rolesQuery, BooleanClauseOccur.SHOULD);
 		}
 
+		if (query instanceof BooleanQuery) {
+			BooleanQuery booleanQuery = (BooleanQuery)query;
+
+			if (!booleanQuery.hasClauses()) {
+				return permissionQuery;
+			}
+		}
+
 		BooleanQuery fullQuery = BooleanQueryFactoryUtil.create(searchContext);
 
 		fullQuery.add(query, BooleanClauseOccur.MUST);
