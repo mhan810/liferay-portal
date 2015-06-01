@@ -219,22 +219,6 @@ public interface Repository extends DocumentRepository {
 	public List<Long> getSubfolderIds(long folderId, boolean recurse)
 		throws PortalException;
 
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #checkOutFileEntry(long,
-	 *             ServiceContext)}
-	 */
-	@Deprecated
-	public Lock lockFileEntry(long fileEntryId) throws PortalException;
-
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #checkOutFileEntry(long,
-	 *             String, long, ServiceContext)}
-	 */
-	@Deprecated
-	public Lock lockFileEntry(
-			long fileEntryId, String owner, long expirationTime)
-		throws PortalException;
-
 	public Lock lockFolder(long folderId) throws PortalException;
 
 	public Lock lockFolder(

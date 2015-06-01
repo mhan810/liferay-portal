@@ -601,21 +601,6 @@ public class RepositoryWrapper implements Repository {
 		return _repository.isCapabilityProvided(capabilityClass);
 	}
 
-	@Deprecated
-	@Override
-	public Lock lockFileEntry(long fileEntryId) throws PortalException {
-		return _repository.lockFileEntry(fileEntryId);
-	}
-
-	@Deprecated
-	@Override
-	public Lock lockFileEntry(
-			long fileEntryId, String owner, long expirationTime)
-		throws PortalException {
-
-		return _repository.lockFileEntry(fileEntryId, owner, expirationTime);
-	}
-
 	@Override
 	public Lock lockFolder(long folderId) throws PortalException {
 		return _repository.lockFolder(folderId);

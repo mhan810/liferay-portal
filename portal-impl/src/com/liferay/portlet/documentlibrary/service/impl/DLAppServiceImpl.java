@@ -2111,36 +2111,6 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	}
 
 	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #checkOutFileEntry(long,
-	 *             ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public Lock lockFileEntry(long fileEntryId) throws PortalException {
-		checkOutFileEntry(fileEntryId, new ServiceContext());
-
-		FileEntry fileEntry = getFileEntry(fileEntryId);
-
-		return fileEntry.getLock();
-	}
-
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #checkOutFileEntry(long,
-	 *             String, long, ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public Lock lockFileEntry(
-			long fileEntryId, String owner, long expirationTime)
-		throws PortalException {
-
-		FileEntry fileEntry = checkOutFileEntry(
-			fileEntryId, owner, expirationTime, new ServiceContext());
-
-		return fileEntry.getLock();
-	}
-
-	/**
 	 * Locks the folder. This method is primarily used by WebDAV.
 	 *
 	 * @param  repositoryId the primary key of the repository

@@ -770,35 +770,6 @@ public class LiferayRepository
 			getGroupId(), toFolderId(folderId), recurse);
 	}
 
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #checkOutFileEntry(long,
-	 *             ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public Lock lockFileEntry(long fileEntryId) throws PortalException {
-		FileEntry fileEntry = checkOutFileEntry(
-			fileEntryId, new ServiceContext());
-
-		return fileEntry.getLock();
-	}
-
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #checkOutFileEntry(long,
-	 *             String, long, ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public Lock lockFileEntry(
-			long fileEntryId, String owner, long expirationTime)
-		throws PortalException {
-
-		FileEntry fileEntry = checkOutFileEntry(
-			fileEntryId, owner, expirationTime, new ServiceContext());
-
-		return fileEntry.getLock();
-	}
-
 	@Override
 	public Lock lockFolder(long folderId) throws PortalException {
 		return dlFolderService.lockFolder(toFolderId(folderId));
