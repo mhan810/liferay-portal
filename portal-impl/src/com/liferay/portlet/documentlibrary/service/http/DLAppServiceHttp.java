@@ -2471,7 +2471,7 @@ public class DLAppServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.model.Lock lockFolder(
+	public static com.liferay.portal.kernel.lock.Lock lockFolder(
 		HttpPrincipal httpPrincipal, long repositoryId, long folderId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -2494,7 +2494,7 @@ public class DLAppServiceHttp {
 				throw new com.liferay.portal.kernel.exception.SystemException(e);
 			}
 
-			return (com.liferay.portal.model.Lock)returnObj;
+			return (com.liferay.portal.kernel.lock.Lock)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException se) {
 			_log.error(se, se);
@@ -2503,7 +2503,7 @@ public class DLAppServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.model.Lock lockFolder(
+	public static com.liferay.portal.kernel.lock.Lock lockFolder(
 		HttpPrincipal httpPrincipal, long repositoryId, long folderId,
 		java.lang.String owner, boolean inheritable, long expirationTime)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -2527,7 +2527,7 @@ public class DLAppServiceHttp {
 				throw new com.liferay.portal.kernel.exception.SystemException(e);
 			}
 
-			return (com.liferay.portal.model.Lock)returnObj;
+			return (com.liferay.portal.kernel.lock.Lock)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException se) {
 			_log.error(se, se);
@@ -2800,7 +2800,7 @@ public class DLAppServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.model.Lock refreshFileEntryLock(
+	public static com.liferay.portal.kernel.lock.Lock refreshFileEntryLock(
 		HttpPrincipal httpPrincipal, java.lang.String lockUuid, long companyId,
 		long expirationTime)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -2825,7 +2825,7 @@ public class DLAppServiceHttp {
 				throw new com.liferay.portal.kernel.exception.SystemException(e);
 			}
 
-			return (com.liferay.portal.model.Lock)returnObj;
+			return (com.liferay.portal.kernel.lock.Lock)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException se) {
 			_log.error(se, se);
@@ -2834,7 +2834,7 @@ public class DLAppServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.model.Lock refreshFolderLock(
+	public static com.liferay.portal.kernel.lock.Lock refreshFolderLock(
 		HttpPrincipal httpPrincipal, java.lang.String lockUuid, long companyId,
 		long expirationTime)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -2858,7 +2858,7 @@ public class DLAppServiceHttp {
 				throw new com.liferay.portal.kernel.exception.SystemException(e);
 			}
 
-			return (com.liferay.portal.model.Lock)returnObj;
+			return (com.liferay.portal.kernel.lock.Lock)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException se) {
 			_log.error(se, se);
