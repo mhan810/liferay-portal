@@ -467,7 +467,7 @@ public abstract class BaseIndexer implements Indexer {
 
 	@Override
 	public void postProcessContextFilter(
-			BooleanFilter booleanFilter, SearchContext searchContext)
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception {
 	}
 
@@ -860,8 +860,8 @@ public abstract class BaseIndexer implements Indexer {
 		searchContext.addFacet(multiValueFacet);
 	}
 
-	protected Query addSearchClassTypeIds(
-			BooleanQuery contextQuery, SearchContext searchContext)
+	protected Filter addSearchClassTypeIds(
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception {
 
 		long[] classTypeIds = searchContext.getClassTypeIds();
@@ -870,14 +870,13 @@ public abstract class BaseIndexer implements Indexer {
 			return null;
 		}
 
-		BooleanQuery classTypeIdsQuery = BooleanQueryFactoryUtil.create(
-			searchContext);
+		BooleanFilter classTypeIdsFilter = new BooleanFilter();
 
 		for (long classTypeId : classTypeIds) {
-			classTypeIdsQuery.addTerm(Field.CLASS_TYPE_ID, classTypeId);
+			classTypeIdsFilter.addTerm(Field.CLASS_TYPE_ID, classTypeId);
 		}
 
-		return contextQuery.add(classTypeIdsQuery, BooleanClauseOccur.MUST);
+		return contextFilter.add(classTypeIdsFilter, BooleanClauseOccur.MUST);
 	}
 
 	protected void addSearchEntryClassNames(
@@ -1131,7 +1130,7 @@ public abstract class BaseIndexer implements Indexer {
 	}
 
 	protected void addStatus(
-			BooleanQuery contextQuery, SearchContext searchContext)
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception {
 
 		int status = GetterUtil.getInteger(
@@ -1139,16 +1138,12 @@ public abstract class BaseIndexer implements Indexer {
 			WorkflowConstants.STATUS_APPROVED);
 
 		if (status != WorkflowConstants.STATUS_ANY) {
-			contextQuery.addRequiredTerm(Field.STATUS, status);
+			contextFilter.addRequiredTerm(Field.STATUS, status);
 		}
 		else {
-			BooleanQuery statusQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
-
-			statusQuery.addTerm(
-				Field.STATUS, WorkflowConstants.STATUS_IN_TRASH);
-
-			contextQuery.add(statusQuery, BooleanClauseOccur.MUST_NOT);
+			contextFilter.addTerm(
+				Field.STATUS, String.valueOf(WorkflowConstants.STATUS_IN_TRASH),
+				BooleanClauseOccur.MUST_NOT);
 		}
 	}
 
