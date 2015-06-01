@@ -1651,27 +1651,6 @@ public class DLAppServiceUtil {
 	}
 
 	/**
-	* @deprecated As of 6.2.0, replaced by {@link #checkOutFileEntry(long,
-	ServiceContext)}
-	*/
-	@Deprecated
-	public static com.liferay.portal.model.Lock lockFileEntry(long fileEntryId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().lockFileEntry(fileEntryId);
-	}
-
-	/**
-	* @deprecated As of 6.2.0, replaced by {@link #checkOutFileEntry(long,
-	String, long, ServiceContext)}
-	*/
-	@Deprecated
-	public static com.liferay.portal.model.Lock lockFileEntry(
-		long fileEntryId, java.lang.String owner, long expirationTime)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().lockFileEntry(fileEntryId, owner, expirationTime);
-	}
-
-	/**
 	* Locks the folder. This method is primarily used by WebDAV.
 	*
 	* @param repositoryId the primary key of the repository
