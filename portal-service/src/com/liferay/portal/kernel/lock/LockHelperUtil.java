@@ -118,6 +118,8 @@ public class LockHelperUtil {
 	private LockHelperUtil() {
 		Registry registry = RegistryUtil.getRegistry();
 
+		registry.registerService(LockHelper.class, new LockHelperImpl());
+
 		ServiceTracker<LockHelper, LockHelper> serviceTracker =
 			registry.trackServices(LockHelper.class);
 
