@@ -108,7 +108,7 @@ public interface Indexer {
 		throws Exception;
 
 	public void postProcessContextFilter(
-			BooleanFilter booleanFilter, SearchContext searchContext)
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception;
 
 	/**
