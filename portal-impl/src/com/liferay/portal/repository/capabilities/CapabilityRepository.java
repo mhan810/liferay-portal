@@ -737,22 +737,6 @@ public class CapabilityRepository
 		return getRepository().getSubfolderIds(folderId, recurse);
 	}
 
-	@Deprecated
-	@Override
-	public Lock lockFileEntry(long fileEntryId) throws PortalException {
-		return getRepository().lockFileEntry(fileEntryId);
-	}
-
-	@Deprecated
-	@Override
-	public Lock lockFileEntry(
-			long fileEntryId, String owner, long expirationTime)
-		throws PortalException {
-
-		return getRepository().lockFileEntry(
-			fileEntryId, owner, expirationTime);
-	}
-
 	@Override
 	public Lock lockFolder(long folderId) throws PortalException {
 		return getRepository().lockFolder(folderId);
