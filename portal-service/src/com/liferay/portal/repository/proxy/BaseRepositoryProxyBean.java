@@ -703,34 +703,6 @@ public class BaseRepositoryProxyBean
 		return _baseRepository.isCapabilityProvided(capabilityClass);
 	}
 
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #checkOutFileEntry(long,
-	 *             ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public Lock lockFileEntry(long fileEntryId) throws PortalException {
-		Lock lock = _baseRepository.lockFileEntry(fileEntryId);
-
-		return (Lock)newProxyInstance(lock, Lock.class);
-	}
-
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #checkOutFileEntry(long,
-	 *             String, long, ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public Lock lockFileEntry(
-			long fileEntryId, String owner, long expirationTime)
-		throws PortalException {
-
-		Lock lock = _baseRepository.lockFileEntry(
-			fileEntryId, owner, expirationTime);
-
-		return (Lock)newProxyInstance(lock, Lock.class);
-	}
-
 	@Override
 	public Lock lockFolder(long folderId) throws PortalException {
 		Lock lock = _baseRepository.lockFolder(folderId);
