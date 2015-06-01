@@ -141,7 +141,9 @@ public class DLFileEntryImpl extends DLFileEntryBaseImpl {
 			return dlFileVersion.getExpandoBridge();
 		}
 		catch (Exception e) {
-			_log.error(e, e);
+			if (_log.isWarnEnabled()) {
+				_log.warn(e, e);
+			}
 		}
 
 		return null;
@@ -242,6 +244,9 @@ public class DLFileEntryImpl extends DLFileEntryBaseImpl {
 				DLFileEntry.class.getName(), getFileEntryId());
 		}
 		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(e, e);
+			}
 		}
 
 		return null;
@@ -299,7 +304,9 @@ public class DLFileEntryImpl extends DLFileEntryBaseImpl {
 			versionUserId = dlFileVersion.getUserId();
 		}
 		catch (Exception e) {
-			_log.error(e, e);
+			if (_log.isWarnEnabled()) {
+				_log.warn(e, e);
+			}
 		}
 
 		return versionUserId;
@@ -319,7 +326,9 @@ public class DLFileEntryImpl extends DLFileEntryBaseImpl {
 			versionUserName = dlFileVersion.getUserName();
 		}
 		catch (Exception e) {
-			_log.error(e, e);
+			if (_log.isWarnEnabled()) {
+				_log.warn(e, e);
+			}
 		}
 
 		return versionUserName;
@@ -351,6 +360,9 @@ public class DLFileEntryImpl extends DLFileEntryBaseImpl {
 			return DLFileEntryServiceUtil.hasFileEntryLock(getFileEntryId());
 		}
 		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(e, e);
+			}
 		}
 
 		return false;
@@ -363,6 +375,9 @@ public class DLFileEntryImpl extends DLFileEntryBaseImpl {
 				getFileEntryId());
 		}
 		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(e, e);
+			}
 		}
 
 		return false;
@@ -383,6 +398,9 @@ public class DLFileEntryImpl extends DLFileEntryBaseImpl {
 			return dlFolder.isHidden();
 		}
 		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(e, e);
+			}
 		}
 
 		return false;
