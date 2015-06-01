@@ -24,6 +24,8 @@ import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import com.liferay.portal.kernel.search.filter.QueryFilter;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
@@ -65,10 +67,9 @@ public class TrashIndexer extends BaseIndexer {
 		throws SearchException {
 
 		try {
-			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter queryFilter = new BooleanFilter();
 
-			contextQuery.addRequiredTerm(
+			queryFilter.addRequiredTerm(
 				Field.COMPANY_ID, searchContext.getCompanyId());
 
 			List<TrashHandler> trashHandlers =
@@ -78,26 +79,28 @@ public class TrashIndexer extends BaseIndexer {
 				Query query = trashHandler.getExcludeQuery(searchContext);
 
 				if (query != null) {
-					contextQuery.add(query, BooleanClauseOccur.MUST_NOT);
+					queryFilter.add(
+						new QueryFilter(query), BooleanClauseOccur.MUST_NOT);
 				}
 			}
 
-			BooleanQuery groupQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter groupFilter = new BooleanFilter();
 
 			for (long groupId : searchContext.getGroupIds()) {
-				groupQuery.addTerm(
-					Field.GROUP_ID, String.valueOf(groupId), false,
+				groupFilter.addTerm(
+					Field.GROUP_ID, String.valueOf(groupId),
 					BooleanClauseOccur.SHOULD);
 			}
 
-			contextQuery.add(groupQuery, BooleanClauseOccur.MUST);
+			if (groupFilter.hasClauses()) {
+				queryFilter.add(groupFilter, BooleanClauseOccur.MUST);
+			}
 
-			contextQuery.addRequiredTerm(
+			queryFilter.addRequiredTerm(
 				Field.STATUS, WorkflowConstants.STATUS_IN_TRASH);
 
 			BooleanQuery fullQuery = createFullQuery(
-				contextQuery, searchContext);
+				queryFilter, searchContext);
 
 			return fullQuery;
 		}
