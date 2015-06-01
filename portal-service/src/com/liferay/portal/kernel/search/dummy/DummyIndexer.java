@@ -198,7 +198,8 @@ public class DummyIndexer implements Indexer {
 
 	@Override
 	public void postProcessSearchQuery(
-		BooleanQuery searchQuery, SearchContext searchContext) {
+		BooleanQuery searchQuery, BooleanFilter queryFilter,
+		SearchContext searchContext) {
 	}
 
 	@Override
