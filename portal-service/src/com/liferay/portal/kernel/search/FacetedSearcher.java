@@ -17,7 +17,6 @@ package com.liferay.portal.kernel.search;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.Filter;
-import com.liferay.portal.kernel.search.filter.QueryFilter;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -73,7 +72,7 @@ public class FacetedSearcher extends BaseSearcher {
 
 	@Override
 	protected BooleanQuery createFullQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+			BooleanFilter queryFilter, SearchContext searchContext)
 		throws Exception {
 
 		BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(
@@ -143,19 +142,15 @@ public class FacetedSearcher extends BaseSearcher {
 
 		doAddFacetClause(searchContext, facetFilter, facets.values());
 
-		BooleanFilter fullQueryFilter = new BooleanFilter();
-
-		fullQueryFilter.add(facetFilter, BooleanClauseOccur.MUST);
+		if (facetFilter.hasClauses()) {
+			queryFilter.add(facetFilter, BooleanClauseOccur.MUST);
+		}
 
 		BooleanQuery fullQuery = BooleanQueryFactoryUtil.create(searchContext);
 
-		if (contextQuery.hasClauses()) {
-			QueryFilter queryFilter = new QueryFilter(contextQuery);
-
-			fullQueryFilter.add(queryFilter, BooleanClauseOccur.MUST);
+		if (queryFilter.hasClauses()) {
+			fullQuery.setPreBooleanFilter(queryFilter);
 		}
-
-		fullQuery.setPreBooleanFilter(fullQueryFilter);
 
 		if (searchQuery.hasClauses()) {
 			fullQuery.add(searchQuery, BooleanClauseOccur.MUST);
@@ -203,14 +198,13 @@ public class FacetedSearcher extends BaseSearcher {
 		try {
 			searchContext.setSearchEngineId(getSearchEngineId());
 
-			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter queryFilter = new BooleanFilter();
 
-			contextQuery.addRequiredTerm(
+			queryFilter.addRequiredTerm(
 				Field.COMPANY_ID, searchContext.getCompanyId());
 
 			BooleanQuery fullQuery = createFullQuery(
-				contextQuery, searchContext);
+				queryFilter, searchContext);
 
 			QueryConfig queryConfig = searchContext.getQueryConfig();
 
