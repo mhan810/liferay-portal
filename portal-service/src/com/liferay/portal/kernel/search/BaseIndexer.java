@@ -199,55 +199,13 @@ public abstract class BaseIndexer implements Indexer {
 				groupIds = new long[] {groupId};
 			}
 
-			BooleanQuery permissionQuery =
-				(BooleanQuery)searchPermissionChecker.getPermissionQuery(
-					searchContext.getCompanyId(), groupIds,
-					searchContext.getUserId(), className, null, searchContext);
-
-			if ((permissionQuery != null) && permissionQuery.hasClauses()) {
-				QueryFilter queryFilter = new QueryFilter(permissionQuery);
-
-				facetFilter.add(queryFilter, BooleanClauseOccur.MUST);
-			}
+			facetFilter = searchPermissionChecker.getPermissionFilter(
+				searchContext.getCompanyId(), groupIds,
+				searchContext.getUserId(), className, facetFilter,
+				searchContext);
 		}
 
 		return facetFilter;
-	}
-
-	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #getFacetFilter}
-	 */
-	@Deprecated
-	@Override
-	public BooleanQuery getFacetQuery(
-			String className, SearchContext searchContext)
-		throws Exception {
-
-		BooleanQuery facetQuery = BooleanQueryFactoryUtil.create(searchContext);
-
-		facetQuery.addExactTerm(Field.ENTRY_CLASS_NAME, className);
-
-		if (searchContext.getUserId() > 0) {
-			SearchPermissionChecker searchPermissionChecker =
-				SearchEngineUtil.getSearchPermissionChecker();
-
-			long[] groupIds = searchContext.getGroupIds();
-
-			long groupId = GetterUtil.getLong(
-				searchContext.getAttribute("groupId"));
-
-			if (groupId > 0) {
-				groupIds = new long[] {groupId};
-			}
-
-			facetQuery =
-				(BooleanQuery)searchPermissionChecker.getPermissionQuery(
-					searchContext.getCompanyId(), groupIds,
-					searchContext.getUserId(), className, facetQuery,
-					searchContext);
-		}
-
-		return facetQuery;
 	}
 
 	@Override
