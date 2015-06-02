@@ -17,7 +17,6 @@ package com.liferay.portal.kernel.search;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.Filter;
-import com.liferay.portal.kernel.search.filter.QueryFilter;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -73,7 +72,7 @@ public class FacetedSearcher extends BaseSearcher {
 
 	@Override
 	protected BooleanQuery createFullQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(
@@ -144,19 +143,15 @@ public class FacetedSearcher extends BaseSearcher {
 
 		addFacetClause(searchContext, facetBooleanFilter, facets.values());
 
-		BooleanFilter fullQueryBooleanFilter = new BooleanFilter();
-
-		fullQueryBooleanFilter.add(facetBooleanFilter, BooleanClauseOccur.MUST);
+		if (facetBooleanFilter.hasClauses()) {
+			queryBooleanFilter.add(facetBooleanFilter, BooleanClauseOccur.MUST);
+		}
 
 		BooleanQuery fullQuery = BooleanQueryFactoryUtil.create(searchContext);
 
-		if (contextQuery.hasClauses()) {
-			QueryFilter queryFilter = new QueryFilter(contextQuery);
-
-			fullQueryBooleanFilter.add(queryFilter, BooleanClauseOccur.MUST);
+		if (queryBooleanFilter.hasClauses()) {
+			fullQuery.setPreBooleanFilter(queryBooleanFilter);
 		}
-
-		fullQuery.setPreBooleanFilter(fullQueryBooleanFilter);
 
 		if (searchQuery.hasClauses()) {
 			fullQuery.add(searchQuery, BooleanClauseOccur.MUST);
@@ -204,14 +199,13 @@ public class FacetedSearcher extends BaseSearcher {
 		try {
 			searchContext.setSearchEngineId(getSearchEngineId());
 
-			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter queryBooleanFilter = new BooleanFilter();
 
-			contextQuery.addRequiredTerm(
+			queryBooleanFilter.addRequiredTerm(
 				Field.COMPANY_ID, searchContext.getCompanyId());
 
 			BooleanQuery fullQuery = createFullQuery(
-				contextQuery, searchContext);
+				queryBooleanFilter, searchContext);
 
 			QueryConfig queryConfig = searchContext.getQueryConfig();
 
