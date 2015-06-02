@@ -23,6 +23,23 @@
 		</constructor-arg>
 	</bean>
 
+	<!-- Filter -->
+	<bean id="com.liferay.portal.kernel.search.filter.FilterCacheSettings" class="com.liferay.portal.kernel.search.filter.FilterCacheSettingsImpl">
+		<property name="cachedFields">
+			<util:set>
+				<util:constant static-field="com.liferay.portal.kernel.search.Field.CLASS_NAME_ID" />
+				<util:constant static-field="com.liferay.portal.kernel.search.Field.COMPANY_ID" />
+				<util:constant static-field="com.liferay.portal.kernel.search.Field.ENTRY_CLASS_NAME" />
+				<util:constant static-field="com.liferay.portal.kernel.search.Field.GROUP_ID" />
+				<util:constant static-field="com.liferay.portal.kernel.search.Field.HIDDEN" />
+				<util:constant static-field="com.liferay.portal.kernel.search.Field.STATUS" />
+			</util:set>
+		</property>
+	</bean>
+	<bean id="com.liferay.portal.kernel.search.filter.FilterCacheSettingsUtil" class="com.liferay.portal.kernel.search.filter.FilterCacheSettingsUtil">
+		<property name="filterCacheSettings" ref="com.liferay.portal.kernel.search.filter.FilterCacheSettings" />
+	</bean>
+
 	<!-- Proxy -->
 
 	<bean id="com.liferay.portal.kernel.search.IndexSearcherProxyBean" class="com.liferay.portal.kernel.search.IndexSearcherProxyBean">
