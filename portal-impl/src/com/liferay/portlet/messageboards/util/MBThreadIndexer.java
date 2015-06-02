@@ -20,13 +20,13 @@ import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.search.BaseIndexer;
-import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -77,16 +77,16 @@ public class MBThreadIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+	public void postProcessContextBooleanFilter(
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception {
 
-		addStatus(contextQuery, searchContext);
+		addStatus(contextFilter, searchContext);
 
 		boolean discussion = GetterUtil.getBoolean(
 			searchContext.getAttribute("discussion"), false);
 
-		contextQuery.addRequiredTerm("discussion", discussion);
+		contextFilter.addRequiredTerm("discussion", discussion);
 
 		long endDate = GetterUtil.getLong(
 			searchContext.getAttribute("endDate"));
@@ -94,14 +94,14 @@ public class MBThreadIndexer extends BaseIndexer {
 			searchContext.getAttribute("startDate"));
 
 		if ((endDate > 0) && (startDate > 0)) {
-			contextQuery.addRangeTerm("lastPostDate", startDate, endDate);
+			contextFilter.addRangeTerm("lastPostDate", startDate, endDate);
 		}
 
 		long participantUserId = GetterUtil.getLong(
 			searchContext.getAttribute("participantUserId"));
 
 		if (participantUserId > 0) {
-			contextQuery.addRequiredTerm(
+			contextFilter.addRequiredTerm(
 				"participantUserIds", participantUserId);
 		}
 	}

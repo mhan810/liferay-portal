@@ -27,8 +27,6 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BaseRelatedEntryIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
-import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Indexer;
@@ -37,6 +35,7 @@ import com.liferay.portal.kernel.search.RelatedEntryIndexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -86,10 +85,10 @@ public class MBMessageIndexer
 
 	@Override
 	public void addRelatedClassNames(
-			BooleanQuery contextQuery, SearchContext searchContext)
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception {
 
-		_relatedEntryIndexer.addRelatedClassNames(contextQuery, searchContext);
+		_relatedEntryIndexer.addRelatedClassNames(contextFilter, searchContext);
 	}
 
 	@Override
@@ -161,26 +160,26 @@ public class MBMessageIndexer
 	}
 
 	@Override
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+	public void postProcessContextBooleanFilter(
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception {
 
-		addStatus(contextQuery, searchContext);
+		addStatus(contextFilter, searchContext);
 
 		boolean discussion = GetterUtil.getBoolean(
 			searchContext.getAttribute("discussion"), false);
 
-		contextQuery.addRequiredTerm("discussion", discussion);
+		contextFilter.addRequiredTerm("discussion", discussion);
 
 		if (searchContext.isIncludeDiscussions()) {
-			addRelatedClassNames(contextQuery, searchContext);
+			addRelatedClassNames(contextFilter, searchContext);
 		}
 
 		long threadId = GetterUtil.getLong(
 			(String)searchContext.getAttribute("threadId"));
 
 		if (threadId > 0) {
-			contextQuery.addRequiredTerm("threadId", threadId);
+			contextFilter.addRequiredTerm("threadId", threadId);
 		}
 
 		long[] categoryIds = searchContext.getCategoryIds();
@@ -189,21 +188,27 @@ public class MBMessageIndexer
 			(categoryIds[0] !=
 				MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID)) {
 
-			BooleanQuery categoriesQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter categoriesFilter = new BooleanFilter();
 
 			for (long categoryId : categoryIds) {
 				try {
 					MBCategoryServiceUtil.getCategory(categoryId);
 				}
 				catch (Exception e) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(
+							"Error retrieving category: " + categoryId, e);
+					}
+
 					continue;
 				}
 
-				categoriesQuery.addTerm(Field.CATEGORY_ID, categoryId);
+				categoriesFilter.addTerm(Field.CATEGORY_ID, categoryId);
 			}
 
-			contextQuery.add(categoriesQuery, BooleanClauseOccur.MUST);
+			if (categoriesFilter.hasClauses()) {
+				contextFilter.add(categoriesFilter, BooleanClauseOccur.MUST);
+			}
 		}
 	}
 

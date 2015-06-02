@@ -32,6 +32,8 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import com.liferay.portal.kernel.search.filter.QueryFilter;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.Constants;
@@ -135,21 +137,21 @@ public class JournalArticleIndexer
 	}
 
 	@Override
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+	public void postProcessContextBooleanFilter(
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception {
 
 		Long classNameId = (Long)searchContext.getAttribute(
 			Field.CLASS_NAME_ID);
 
-		if ((classNameId != null) && (classNameId.longValue() != 0)) {
-			contextQuery.addRequiredTerm(
+		if ((classNameId != null) && (classNameId != 0)) {
+			contextFilter.addRequiredTerm(
 				Field.CLASS_NAME_ID, classNameId.toString());
 		}
 
-		addStatus(contextQuery, searchContext);
+		addStatus(contextFilter, searchContext);
 
-		addSearchClassTypeIds(contextQuery, searchContext);
+		addSearchClassTypeIds(contextFilter, searchContext);
 
 		String ddmStructureFieldName = (String)searchContext.getAttribute(
 			"ddmStructureFieldName");
@@ -176,29 +178,34 @@ public class JournalArticleIndexer
 					ddmStructureFieldValue, structure.getFieldType(fieldName));
 			}
 
-			contextQuery.addRequiredTerm(
+			BooleanQuery booleanQuery = BooleanQueryFactoryUtil.create(
+				searchContext);
+
+			booleanQuery.addRequiredTerm(
 				ddmStructureFieldName,
 				StringPool.QUOTE + ddmStructureFieldValue + StringPool.QUOTE);
+
+			contextFilter.add(new QueryFilter(booleanQuery));
 		}
 
 		String articleType = (String)searchContext.getAttribute("articleType");
 
 		if (Validator.isNotNull(articleType)) {
-			contextQuery.addRequiredTerm(Field.TYPE, articleType);
+			contextFilter.addRequiredTerm(Field.TYPE, articleType);
 		}
 
 		String ddmStructureKey = (String)searchContext.getAttribute(
 			"ddmStructureKey");
 
 		if (Validator.isNotNull(ddmStructureKey)) {
-			contextQuery.addRequiredTerm("ddmStructureKey", ddmStructureKey);
+			contextFilter.addRequiredTerm("ddmStructureKey", ddmStructureKey);
 		}
 
 		String ddmTemplateKey = (String)searchContext.getAttribute(
 			"ddmTemplateKey");
 
 		if (Validator.isNotNull(ddmTemplateKey)) {
-			contextQuery.addRequiredTerm("ddmTemplateKey", ddmTemplateKey);
+			contextFilter.addRequiredTerm("ddmTemplateKey", ddmTemplateKey);
 		}
 
 		boolean head = GetterUtil.getBoolean(
@@ -207,7 +214,7 @@ public class JournalArticleIndexer
 			searchContext.getAttribute("relatedClassName"));
 
 		if (head && !relatedClassName) {
-			contextQuery.addRequiredTerm("head", Boolean.TRUE);
+			contextFilter.addRequiredTerm("head", Boolean.TRUE);
 		}
 	}
 

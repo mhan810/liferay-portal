@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -62,22 +63,22 @@ public class ExportImportConfigurationIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+	public void postProcessContextBooleanFilter(
+			BooleanFilter contextFilter, SearchContext searchContext)
 		throws Exception {
 
-		addStatus(contextQuery, searchContext);
+		addStatus(contextFilter, searchContext);
 
-		contextQuery.addRequiredTerm(
+		contextFilter.addRequiredTerm(
 			Field.COMPANY_ID, searchContext.getCompanyId());
-		contextQuery.addRequiredTerm(
+		contextFilter.addRequiredTerm(
 			Field.GROUP_ID,
 			GetterUtil.getLong(searchContext.getAttribute(Field.GROUP_ID)));
 
 		Serializable type = searchContext.getAttribute(Field.TYPE);
 
 		if (type != null) {
-			contextQuery.addRequiredTerm(
+			contextFilter.addRequiredTerm(
 				Field.TYPE, GetterUtil.getInteger(type));
 		}
 	}

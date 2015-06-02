@@ -760,8 +760,7 @@ public class ResourceActionsImpl implements ResourceActions {
 		}
 
 		synchronized(_modelResourceActionsBags) {
-			modelResourceActionsBag = _modelResourceActionsBags.get(
-				modelName);
+			modelResourceActionsBag = _modelResourceActionsBags.get(modelName);
 
 			if (modelResourceActionsBag != null) {
 				return modelResourceActionsBag;
@@ -1198,7 +1197,6 @@ public class ResourceActionsImpl implements ResourceActions {
 	private Map<String, ModelResourceActionsBag> _modelResourceActionsBags;
 	private Set<String> _organizationModelResources;
 	private Set<String> _portalModelResources;
-	private Map<String, PortletResourceActionsBag>
-		_portletResourceActionsBags;
+	private Map<String, PortletResourceActionsBag> _portletResourceActionsBags;
 
 }

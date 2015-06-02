@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -81,39 +82,37 @@ public class AssetCategoryIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+	public void postProcessContextBooleanFilter(
+			BooleanFilter booleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		long[] parentCategoryIds = (long[])searchContext.getAttribute(
 			Field.ASSET_PARENT_CATEGORY_IDS);
 
 		if (!ArrayUtil.isEmpty(parentCategoryIds)) {
-			BooleanQuery parentCategoryQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter parentCategoryFilter = new BooleanFilter();
 
 			for (long parentCategoryId : parentCategoryIds) {
-				parentCategoryQuery.addTerm(
+				parentCategoryFilter.addTerm(
 					Field.ASSET_PARENT_CATEGORY_ID,
 					String.valueOf(parentCategoryId));
 			}
 
-			contextQuery.add(parentCategoryQuery, BooleanClauseOccur.MUST);
+			booleanFilter.add(parentCategoryFilter, BooleanClauseOccur.MUST);
 		}
 
 		long[] vocabularyIds = (long[])searchContext.getAttribute(
 			Field.ASSET_VOCABULARY_IDS);
 
 		if (!ArrayUtil.isEmpty(vocabularyIds)) {
-			BooleanQuery vocabularyQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
+			BooleanFilter vocabularyFilter = new BooleanFilter();
 
 			for (long vocabularyId : vocabularyIds) {
-				vocabularyQuery.addTerm(
+				vocabularyFilter.addTerm(
 					Field.ASSET_VOCABULARY_ID, String.valueOf(vocabularyId));
 			}
 
-			contextQuery.add(vocabularyQuery, BooleanClauseOccur.MUST);
+			booleanFilter.add(vocabularyFilter, BooleanClauseOccur.MUST);
 		}
 	}
 
