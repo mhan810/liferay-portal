@@ -12,22 +12,25 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search;
+package com.liferay.portal.kernel.search.filter;
 
-import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Michael C. Han
  */
-public interface RelatedEntryIndexer {
+public class FilterCacheSettingsImpl implements FilterCacheSettings {
 
-	public void addRelatedClassNames(
-			BooleanFilter contextFilter, SearchContext searchContext)
-		throws Exception;
+	@Override
+	public boolean isCached(String field) {
+		return _cachedFields.contains(field);
+	}
 
-	public void addRelatedEntryFields(Document document, Object obj)
-		throws Exception;
+	public void setCachedFields(Set<String> fields) {
+		_cachedFields.addAll(fields);
+	}
 
-	public void updateFullQuery(SearchContext searchContext);
+	private final Set<String> _cachedFields = new HashSet<>();
 
 }

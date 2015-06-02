@@ -12,22 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search;
-
-import com.liferay.portal.kernel.search.filter.BooleanFilter;
+package com.liferay.portal.kernel.search.filter;
 
 /**
  * @author Michael C. Han
  */
-public interface RelatedEntryIndexer {
+public interface FilterCacheSettings {
 
-	public void addRelatedClassNames(
-			BooleanFilter contextFilter, SearchContext searchContext)
-		throws Exception;
-
-	public void addRelatedEntryFields(Document document, Object obj)
-		throws Exception;
-
-	public void updateFullQuery(SearchContext searchContext);
+	public boolean isCached(String field);
 
 }
