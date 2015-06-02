@@ -90,9 +90,8 @@ public class FacetedSearcher extends BaseSearcher {
 				searchContext.getAttribute(Field.GROUP_ID));
 
 			if (groupId == 0) {
-				searchQuery.addTerm(
-					Field.STAGING_GROUP, "true", false,
-					BooleanClauseOccur.MUST_NOT);
+				queryBooleanFilter.addTerm(
+					Field.STAGING_GROUP, "true", BooleanClauseOccur.MUST_NOT);
 			}
 
 			searchQuery.addTerms(Field.KEYWORDS, keywords);
