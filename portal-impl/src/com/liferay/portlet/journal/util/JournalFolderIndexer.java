@@ -81,10 +81,6 @@ public class JournalFolderIndexer extends BaseIndexer implements FolderIndexer {
 			permissionChecker, folder, ActionKeys.VIEW);
 	}
 
-	/**
-	 * @deprecated As of 7.0.0
-	 */
-	@Deprecated
 	@Override
 	public void postProcessContextQuery(
 			BooleanQuery contextQuery, SearchContext searchContext)
