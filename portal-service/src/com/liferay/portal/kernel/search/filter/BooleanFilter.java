@@ -60,6 +60,10 @@ public class BooleanFilter extends BaseFilter {
 			field, true, true, String.valueOf(startValue),
 			String.valueOf(endValue));
 
+		boolean cached = FilterCacheSettingsUtil.isCached(field);
+
+		rangeTermFilter.setCached(cached);
+
 		return add(rangeTermFilter, BooleanClauseOccur.SHOULD);
 	}
 
@@ -74,6 +78,10 @@ public class BooleanFilter extends BaseFilter {
 			field, true, true, String.valueOf(startValue),
 			String.valueOf(endValue));
 
+		boolean cached = FilterCacheSettingsUtil.isCached(field);
+
+		rangeTermFilter.setCached(cached);
+
 		return add(rangeTermFilter, BooleanClauseOccur.SHOULD);
 	}
 
@@ -86,6 +94,10 @@ public class BooleanFilter extends BaseFilter {
 		RangeTermFilter rangeTermFilter = new RangeTermFilter(
 			field, true, true, String.valueOf(startValue),
 			String.valueOf(endValue));
+
+		boolean cached = FilterCacheSettingsUtil.isCached(field);
+
+		rangeTermFilter.setCached(cached);
 
 		return add(rangeTermFilter, BooleanClauseOccur.SHOULD);
 	}
@@ -100,6 +112,10 @@ public class BooleanFilter extends BaseFilter {
 
 		RangeTermFilter rangeTermFilter = new RangeTermFilter(
 			field, true, true, startValue, endValue);
+
+		boolean cached = FilterCacheSettingsUtil.isCached(field);
+
+		rangeTermFilter.setCached(cached);
 
 		return add(rangeTermFilter, BooleanClauseOccur.SHOULD);
 	}
@@ -146,6 +162,10 @@ public class BooleanFilter extends BaseFilter {
 
 	public Filter addRequiredTerm(String field, String value) {
 		TermFilter termFilter = new TermFilter(field, value);
+
+		boolean cached = FilterCacheSettingsUtil.isCached(field);
+
+		termFilter.setCached(cached);
 
 		return add(termFilter, BooleanClauseOccur.MUST);
 	}
@@ -198,6 +218,10 @@ public class BooleanFilter extends BaseFilter {
 		String field, String value, BooleanClauseOccur booleanClauseOccur) {
 
 		TermFilter termFilter = new TermFilter(field, value);
+
+		boolean cached = FilterCacheSettingsUtil.isCached(field);
+
+		termFilter.setCached(cached);
 
 		return add(termFilter, booleanClauseOccur);
 	}
