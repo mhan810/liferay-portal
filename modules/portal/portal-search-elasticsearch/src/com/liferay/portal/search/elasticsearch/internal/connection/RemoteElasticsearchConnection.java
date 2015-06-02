@@ -64,7 +64,7 @@ public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 
 	@Override
 	public OperationMode getOperationMode() {
-		return OperationMode.EMBEDDED;
+		return OperationMode.REMOTE;
 	}
 
 	@Override
