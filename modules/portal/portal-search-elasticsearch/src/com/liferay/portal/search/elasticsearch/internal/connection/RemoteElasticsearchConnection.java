@@ -29,12 +29,11 @@ import com.liferay.portal.search.elasticsearch.connection.BaseElasticsearchConne
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnection;
 import com.liferay.portal.search.elasticsearch.connection.OperationMode;
 import com.liferay.portal.search.elasticsearch.index.IndexFactory;
-import com.liferay.registry.util.StringPlus;
 
 import java.net.InetAddress;
 
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -82,10 +81,10 @@ public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 		elasticsearchConfiguration = Configurable.createConfigurable(
 			ElasticsearchConfiguration.class, properties);
 
-		List<String> transportAddresses = StringPlus.asList(
-			properties.get("transportAddresses"));
+		String[] transportAddresses = StringUtil.split(
+			elasticsearchConfiguration.transportAddresses());
 
-		setTransportAddresses(new HashSet<>(transportAddresses));
+		setTransportAddresses(new HashSet<>(Arrays.asList(transportAddresses)));
 	}
 
 	@Override
