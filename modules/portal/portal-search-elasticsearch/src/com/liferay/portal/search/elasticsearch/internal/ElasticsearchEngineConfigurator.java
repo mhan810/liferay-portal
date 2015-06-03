@@ -49,23 +49,6 @@ public class ElasticsearchEngineConfigurator
 		super.destroy();
 	}
 
-	@Reference
-	public void setElasticsearchConnectionManager(
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
-
-		_elasticsearchConnectionManager = elasticsearchConnectionManager;
-	}
-
-	@Reference
-	public void setIndexSearcher(IndexSearcher indexSearcher) {
-		_indexSearcher = indexSearcher;
-	}
-
-	@Reference
-	public void setIndexWriter(IndexWriter indexWriter) {
-		_indexWriter = indexWriter;
-	}
-
 	@Activate
 	protected void activate() {
 		setSearchEngines(_searchEngines);
@@ -91,6 +74,23 @@ public class ElasticsearchEngineConfigurator
 		Class<?> clazz = getClass();
 
 		return clazz.getClassLoader();
+	}
+
+	@Reference(unbind = "-")
+	protected void setElasticsearchConnectionManager(
+		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+
+		_elasticsearchConnectionManager = elasticsearchConnectionManager;
+	}
+
+	@Reference(unbind = "-")
+	protected void setIndexSearcher(IndexSearcher indexSearcher) {
+		_indexSearcher = indexSearcher;
+	}
+
+	@Reference(unbind = "-")
+	protected void setIndexWriter(IndexWriter indexWriter) {
+		_indexWriter = indexWriter;
 	}
 
 	@Reference(target = "(search.engine.id=SYSTEM_ENGINE)")

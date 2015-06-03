@@ -164,21 +164,6 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		}
 	}
 
-	@Reference
-	public void setElasticsearchConnectionManager(
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
-
-		_elasticsearchConnectionManager = elasticsearchConnectionManager;
-	}
-
-	@Reference
-	public void setElasticsearchUpdateDocumentCommand(
-		ElasticsearchUpdateDocumentCommand elasticsearchUpdateDocumentCommand) {
-
-		_elasticsearchUpdateDocumentCommand =
-			elasticsearchUpdateDocumentCommand;
-	}
-
 	@Override
 	@Reference(service = ElasticsearchSpellCheckIndexWriter.class)
 	public void setSpellCheckIndexWriter(
@@ -202,6 +187,21 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 
 		_elasticsearchUpdateDocumentCommand.updateDocuments(
 			DocumentTypes.LIFERAY, searchContext, documents, true);
+	}
+
+	@Reference(unbind = "-")
+	protected void setElasticsearchConnectionManager(
+		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+
+		_elasticsearchConnectionManager = elasticsearchConnectionManager;
+	}
+
+	@Reference(unbind = "-")
+	protected void setElasticsearchUpdateDocumentCommand(
+		ElasticsearchUpdateDocumentCommand elasticsearchUpdateDocumentCommand) {
+
+		_elasticsearchUpdateDocumentCommand =
+			elasticsearchUpdateDocumentCommand;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

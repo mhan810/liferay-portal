@@ -52,13 +52,6 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true, service = ElasticsearchQuerySuggester.class)
 public class ElasticsearchQuerySuggester extends BaseQuerySuggester {
 
-	@Reference
-	public void setElasticsearchConnectionManager(
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
-
-		_elasticsearchConnectionManager = elasticsearchConnectionManager;
-	}
-
 	@Override
 	public Map<String, List<String>> spellCheckKeywords(
 		SearchContext searchContext, int max) {
@@ -190,6 +183,13 @@ public class ElasticsearchQuerySuggester extends BaseQuerySuggester {
 		Suggest suggest = searchResponse.getSuggest();
 
 		return suggest.getSuggestion(requestType);
+	}
+
+	@Reference(unbind = "-")
+	protected void setElasticsearchConnectionManager(
+		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+
+		_elasticsearchConnectionManager = elasticsearchConnectionManager;
 	}
 
 	private static final String _REQUEST_TYPE_KEYWORD_QUERY =

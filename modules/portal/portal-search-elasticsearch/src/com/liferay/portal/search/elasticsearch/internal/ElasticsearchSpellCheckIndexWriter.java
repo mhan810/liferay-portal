@@ -70,21 +70,6 @@ public class ElasticsearchSpellCheckIndexWriter
 		}
 	}
 
-	@Reference
-	public void setElasticsearchConnectionManager(
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
-
-		_elasticsearchConnectionManager = elasticsearchConnectionManager;
-	}
-
-	@Reference
-	public void setElasticsearchUpdateDocumentCommand(
-		ElasticsearchUpdateDocumentCommand elasticsearchUpdateDocumentCommand) {
-
-		_elasticsearchUpdateDocumentCommand =
-			elasticsearchUpdateDocumentCommand;
-	}
-
 	@Override
 	protected void addDocument(
 			String documentType, SearchContext searchContext, Document document)
@@ -146,6 +131,21 @@ public class ElasticsearchSpellCheckIndexWriter
 			deleteByQueryRequestFuture.get();
 
 		LogUtil.logActionResponse(_log, deleteByQueryResponse);
+	}
+
+	@Reference(unbind = "-")
+	protected void setElasticsearchConnectionManager(
+		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+
+		_elasticsearchConnectionManager = elasticsearchConnectionManager;
+	}
+
+	@Reference(unbind = "-")
+	protected void setElasticsearchUpdateDocumentCommand(
+		ElasticsearchUpdateDocumentCommand elasticsearchUpdateDocumentCommand) {
+
+		_elasticsearchUpdateDocumentCommand =
+			elasticsearchUpdateDocumentCommand;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

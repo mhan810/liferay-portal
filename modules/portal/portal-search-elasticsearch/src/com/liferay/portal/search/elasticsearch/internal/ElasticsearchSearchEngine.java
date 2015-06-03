@@ -252,26 +252,14 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 		}
 	}
 
-	@Reference
-	public void setElasticsearchConnectionManager(
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
-
-		_elasticsearchConnectionManager = elasticsearchConnectionManager;
-	}
-
-	@Reference
-	public void setIndexFactory(IndexFactory indexFactory) {
-		_indexFactory = indexFactory;
-	}
-
 	@Override
-	@Reference(service = ElasticsearchIndexSearcher.class)
+	@Reference(service = ElasticsearchIndexSearcher.class, unbind = "-")
 	public void setIndexSearcher(IndexSearcher indexSearcher) {
 		super.setIndexSearcher(indexSearcher);
 	}
 
 	@Override
-	@Reference(service = ElasticsearchIndexWriter.class)
+	@Reference(service = ElasticsearchIndexWriter.class, unbind = "-")
 	public void setIndexWriter(IndexWriter indexWriter) {
 		super.setIndexWriter(indexWriter);
 	}
@@ -350,6 +338,18 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 				throw ee;
 			}
 		}
+	}
+
+	@Reference(unbind = "-")
+	protected void setElasticsearchConnectionManager(
+		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+
+		_elasticsearchConnectionManager = elasticsearchConnectionManager;
+	}
+
+	@Reference(unbind = "-")
+	protected void setIndexFactory(IndexFactory indexFactory) {
+		_indexFactory = indexFactory;
 	}
 
 	protected void validateBackupName(String backupName)
