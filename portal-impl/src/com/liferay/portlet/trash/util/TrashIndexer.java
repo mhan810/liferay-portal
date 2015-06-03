@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.search.filter.QueryFilter;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.trash.TrashHandler;
@@ -75,12 +76,14 @@ public class TrashIndexer extends BaseIndexer {
 				TrashHandlerRegistryUtil.getTrashHandlers();
 
 			for (TrashHandler trashHandler : trashHandlers) {
-				Query query = trashHandler.getExcludeQuery(searchContext);
+				Filter filter = trashHandler.getExcludeFilter(searchContext);
 
-				if (query != null) {
-					queryBooleanFilter.add(
-						new QueryFilter(query), BooleanClauseOccur.MUST_NOT);
+				if (filter != null) {
+					queryBooleanFilter.add(filter, BooleanClauseOccur.MUST_NOT);
 				}
+
+				processTrashHandlerExcludeQuery(
+					searchContext, queryBooleanFilter, trashHandler);
 			}
 
 			BooleanFilter groupBooleanFilter = new BooleanFilter();
@@ -183,6 +186,24 @@ public class TrashIndexer extends BaseIndexer {
 
 	@Override
 	protected void doReindex(String[] ids) {
+	}
+
+	/**
+	 * @deprecated As of 7.0.0, added strictly to support backwards
+	 *             compatibility of {@link TrashHandler#getExcludeQuery(
+	 *             SearchContext)}
+	 */
+	@Deprecated
+	protected void processTrashHandlerExcludeQuery(
+		SearchContext searchContext, BooleanFilter queryBooleanFilter,
+		TrashHandler trashHandler) {
+
+		Query query = trashHandler.getExcludeQuery(searchContext);
+
+		if (query != null) {
+			queryBooleanFilter.add(
+				new QueryFilter(query), BooleanClauseOccur.MUST_NOT);
+		}
 	}
 
 }
