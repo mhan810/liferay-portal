@@ -83,10 +83,10 @@ public class JournalFolderIndexer extends BaseIndexer implements FolderIndexer {
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter contextFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
-		addStatus(contextFilter, searchContext);
+		addStatus(contextBooleanFilter, searchContext);
 	}
 
 	@Override

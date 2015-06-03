@@ -72,7 +72,7 @@ public class FacetedSearcher extends BaseSearcher {
 
 	@Override
 	protected BooleanQuery createFullQuery(
-			BooleanFilter queryBooleanFilter, SearchContext searchContext)
+			BooleanFilter fullQueryBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(
@@ -90,7 +90,7 @@ public class FacetedSearcher extends BaseSearcher {
 				searchContext.getAttribute(Field.GROUP_ID));
 
 			if (groupId == 0) {
-				queryBooleanFilter.addTerm(
+				fullQueryBooleanFilter.addTerm(
 					Field.STAGING_GROUP, "true", BooleanClauseOccur.MUST_NOT);
 			}
 
@@ -116,13 +116,13 @@ public class FacetedSearcher extends BaseSearcher {
 			}
 
 			indexer.postProcessSearchQuery(
-				searchQuery, queryBooleanFilter, searchContext);
+				searchQuery, fullQueryBooleanFilter, searchContext);
 
 			for (IndexerPostProcessor indexerPostProcessor :
 					indexer.getIndexerPostProcessors()) {
 
 				indexerPostProcessor.postProcessSearchQuery(
-					searchQuery, queryBooleanFilter, searchContext);
+					searchQuery, fullQueryBooleanFilter, searchContext);
 			}
 
 			doPostProcessSearchQuery(indexer, searchQuery, searchContext);
@@ -146,13 +146,14 @@ public class FacetedSearcher extends BaseSearcher {
 		addFacetClause(searchContext, facetBooleanFilter, facets.values());
 
 		if (facetBooleanFilter.hasClauses()) {
-			queryBooleanFilter.add(facetBooleanFilter, BooleanClauseOccur.MUST);
+			fullQueryBooleanFilter.add(
+				facetBooleanFilter, BooleanClauseOccur.MUST);
 		}
 
 		BooleanQuery fullQuery = BooleanQueryFactoryUtil.create(searchContext);
 
-		if (queryBooleanFilter.hasClauses()) {
-			fullQuery.setPreBooleanFilter(queryBooleanFilter);
+		if (fullQueryBooleanFilter.hasClauses()) {
+			fullQuery.setPreBooleanFilter(fullQueryBooleanFilter);
 		}
 
 		if (searchQuery.hasClauses()) {

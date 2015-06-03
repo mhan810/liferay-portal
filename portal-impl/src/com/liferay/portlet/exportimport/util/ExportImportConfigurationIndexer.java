@@ -64,28 +64,28 @@ public class ExportImportConfigurationIndexer extends BaseIndexer {
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter contextFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
-		addStatus(contextFilter, searchContext);
+		addStatus(contextBooleanFilter, searchContext);
 
-		contextFilter.addRequiredTerm(
+		contextBooleanFilter.addRequiredTerm(
 			Field.COMPANY_ID, searchContext.getCompanyId());
-		contextFilter.addRequiredTerm(
+		contextBooleanFilter.addRequiredTerm(
 			Field.GROUP_ID,
 			GetterUtil.getLong(searchContext.getAttribute(Field.GROUP_ID)));
 
 		Serializable type = searchContext.getAttribute(Field.TYPE);
 
 		if (type != null) {
-			contextFilter.addRequiredTerm(
+			contextBooleanFilter.addRequiredTerm(
 				Field.TYPE, GetterUtil.getInteger(type));
 		}
 	}
 
 	@Override
 	public void postProcessSearchQuery(
-			BooleanQuery searchQuery, BooleanFilter queryBooleanFilter,
+			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
 			SearchContext searchContext)
 		throws Exception {
 

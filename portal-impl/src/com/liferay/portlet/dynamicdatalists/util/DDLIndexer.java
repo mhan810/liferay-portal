@@ -74,7 +74,7 @@ public class DDLIndexer extends BaseIndexer {
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter contextFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		int status = GetterUtil.getInteger(
@@ -82,22 +82,22 @@ public class DDLIndexer extends BaseIndexer {
 			WorkflowConstants.STATUS_APPROVED);
 
 		if (status != WorkflowConstants.STATUS_ANY) {
-			contextFilter.addRequiredTerm(Field.STATUS, status);
+			contextBooleanFilter.addRequiredTerm(Field.STATUS, status);
 		}
 
 		long recordSetId = GetterUtil.getLong(
 			searchContext.getAttribute("recordSetId"));
 
 		if (recordSetId > 0) {
-			contextFilter.addRequiredTerm("recordSetId", recordSetId);
+			contextBooleanFilter.addRequiredTerm("recordSetId", recordSetId);
 		}
 
-		addSearchClassTypeIds(contextFilter, searchContext);
+		addSearchClassTypeIds(contextBooleanFilter, searchContext);
 	}
 
 	@Override
 	public void postProcessSearchQuery(
-			BooleanQuery searchQuery, BooleanFilter queryBooleanFilter,
+			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
 			SearchContext searchContext)
 		throws Exception {
 

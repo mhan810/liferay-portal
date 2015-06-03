@@ -85,12 +85,12 @@ public class DLFolderIndexer extends BaseIndexer implements FolderIndexer {
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter contextFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
-		addStatus(contextFilter, searchContext);
+		addStatus(contextBooleanFilter, searchContext);
 
-		contextFilter.addRequiredTerm(Field.HIDDEN, false);
+		contextBooleanFilter.addRequiredTerm(Field.HIDDEN, false);
 	}
 
 	@Override

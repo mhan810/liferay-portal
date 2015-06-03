@@ -144,10 +144,10 @@ public class WikiPageIndexer
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter contextFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
-		addStatus(contextFilter, searchContext);
+		addStatus(contextBooleanFilter, searchContext);
 
 		long[] nodeIds = searchContext.getNodeIds();
 
@@ -170,7 +170,8 @@ public class WikiPageIndexer
 			}
 
 			if (nodesIdFilter.hasClauses()) {
-				contextFilter.add(nodesIdFilter, BooleanClauseOccur.MUST);
+				contextBooleanFilter.add(
+					nodesIdFilter, BooleanClauseOccur.MUST);
 			}
 		}
 	}

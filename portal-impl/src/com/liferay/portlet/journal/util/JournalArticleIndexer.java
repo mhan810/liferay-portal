@@ -138,20 +138,20 @@ public class JournalArticleIndexer
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter contextFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		Long classNameId = (Long)searchContext.getAttribute(
 			Field.CLASS_NAME_ID);
 
 		if ((classNameId != null) && (classNameId != 0)) {
-			contextFilter.addRequiredTerm(
+			contextBooleanFilter.addRequiredTerm(
 				Field.CLASS_NAME_ID, classNameId.toString());
 		}
 
-		addStatus(contextFilter, searchContext);
+		addStatus(contextBooleanFilter, searchContext);
 
-		addSearchClassTypeIds(contextFilter, searchContext);
+		addSearchClassTypeIds(contextBooleanFilter, searchContext);
 
 		String ddmStructureFieldName = (String)searchContext.getAttribute(
 			"ddmStructureFieldName");
@@ -185,27 +185,29 @@ public class JournalArticleIndexer
 				ddmStructureFieldName,
 				StringPool.QUOTE + ddmStructureFieldValue + StringPool.QUOTE);
 
-			contextFilter.add(new QueryFilter(booleanQuery));
+			contextBooleanFilter.add(new QueryFilter(booleanQuery));
 		}
 
 		String articleType = (String)searchContext.getAttribute("articleType");
 
 		if (Validator.isNotNull(articleType)) {
-			contextFilter.addRequiredTerm(Field.TYPE, articleType);
+			contextBooleanFilter.addRequiredTerm(Field.TYPE, articleType);
 		}
 
 		String ddmStructureKey = (String)searchContext.getAttribute(
 			"ddmStructureKey");
 
 		if (Validator.isNotNull(ddmStructureKey)) {
-			contextFilter.addRequiredTerm("ddmStructureKey", ddmStructureKey);
+			contextBooleanFilter.addRequiredTerm(
+				"ddmStructureKey", ddmStructureKey);
 		}
 
 		String ddmTemplateKey = (String)searchContext.getAttribute(
 			"ddmTemplateKey");
 
 		if (Validator.isNotNull(ddmTemplateKey)) {
-			contextFilter.addRequiredTerm("ddmTemplateKey", ddmTemplateKey);
+			contextBooleanFilter.addRequiredTerm(
+				"ddmTemplateKey", ddmTemplateKey);
 		}
 
 		boolean head = GetterUtil.getBoolean(
@@ -214,13 +216,13 @@ public class JournalArticleIndexer
 			searchContext.getAttribute("relatedClassName"));
 
 		if (head && !relatedClassName) {
-			contextFilter.addRequiredTerm("head", Boolean.TRUE);
+			contextBooleanFilter.addRequiredTerm("head", Boolean.TRUE);
 		}
 	}
 
 	@Override
 	public void postProcessSearchQuery(
-			BooleanQuery searchQuery, BooleanFilter queryBooleanFilter,
+			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
 			SearchContext searchContext)
 		throws Exception {
 

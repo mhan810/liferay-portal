@@ -78,15 +78,15 @@ public class MBThreadIndexer extends BaseIndexer {
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter contextFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
-		addStatus(contextFilter, searchContext);
+		addStatus(contextBooleanFilter, searchContext);
 
 		boolean discussion = GetterUtil.getBoolean(
 			searchContext.getAttribute("discussion"), false);
 
-		contextFilter.addRequiredTerm("discussion", discussion);
+		contextBooleanFilter.addRequiredTerm("discussion", discussion);
 
 		long endDate = GetterUtil.getLong(
 			searchContext.getAttribute("endDate"));
@@ -94,14 +94,15 @@ public class MBThreadIndexer extends BaseIndexer {
 			searchContext.getAttribute("startDate"));
 
 		if ((endDate > 0) && (startDate > 0)) {
-			contextFilter.addRangeTerm("lastPostDate", startDate, endDate);
+			contextBooleanFilter.addRangeTerm(
+				"lastPostDate", startDate, endDate);
 		}
 
 		long participantUserId = GetterUtil.getLong(
 			searchContext.getAttribute("participantUserId"));
 
 		if (participantUserId > 0) {
-			contextFilter.addRequiredTerm(
+			contextBooleanFilter.addRequiredTerm(
 				"participantUserIds", participantUserId);
 		}
 	}

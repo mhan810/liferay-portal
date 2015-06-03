@@ -74,7 +74,7 @@ public class OrganizationIndexer extends BaseIndexer {
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter contextFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		LinkedHashMap<String, Object> params =
@@ -95,7 +95,8 @@ public class OrganizationIndexer extends BaseIndexer {
 					"organizationId", String.valueOf(excludedOrganizationId));
 			}
 
-			contextFilter.add(booleanFilter, BooleanClauseOccur.MUST_NOT);
+			contextBooleanFilter.add(
+				booleanFilter, BooleanClauseOccur.MUST_NOT);
 		}
 
 		List<Organization> organizationsTree = (List<Organization>)params.get(
@@ -113,7 +114,7 @@ public class OrganizationIndexer extends BaseIndexer {
 				booleanFilter.add(new QueryFilter(wildcardQuery));
 			}
 
-			contextFilter.add(booleanFilter, BooleanClauseOccur.MUST);
+			contextBooleanFilter.add(booleanFilter, BooleanClauseOccur.MUST);
 		}
 		else {
 			long parentOrganizationId = GetterUtil.getLong(
@@ -122,7 +123,7 @@ public class OrganizationIndexer extends BaseIndexer {
 			if (parentOrganizationId !=
 					OrganizationConstants.ANY_PARENT_ORGANIZATION_ID) {
 
-				contextFilter.addRequiredTerm(
+				contextBooleanFilter.addRequiredTerm(
 					"parentOrganizationId", parentOrganizationId);
 			}
 		}
@@ -130,7 +131,7 @@ public class OrganizationIndexer extends BaseIndexer {
 
 	@Override
 	public void postProcessSearchQuery(
-			BooleanQuery searchQuery, BooleanFilter queryBooleanFilter,
+			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
 			SearchContext searchContext)
 		throws Exception {
 

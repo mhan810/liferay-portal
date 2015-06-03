@@ -275,18 +275,18 @@ public abstract class BaseIndexer implements Indexer {
 
 			searchContext.setEntryClassNames(entryClassNames);
 
-			BooleanFilter queryFilter = new BooleanFilter();
+			BooleanFilter fullQueryFilter = new BooleanFilter();
 
-			addSearchAssetCategoryIds(queryFilter, searchContext);
-			addSearchAssetTagNames(queryFilter, searchContext);
-			addSearchEntryClassNames(queryFilter, searchContext);
-			addSearchFolderId(queryFilter, searchContext);
-			addSearchGroupId(queryFilter, searchContext);
-			addSearchLayout(queryFilter, searchContext);
-			addSearchUserId(queryFilter, searchContext);
+			addSearchAssetCategoryIds(fullQueryFilter, searchContext);
+			addSearchAssetTagNames(fullQueryFilter, searchContext);
+			addSearchEntryClassNames(fullQueryFilter, searchContext);
+			addSearchFolderId(fullQueryFilter, searchContext);
+			addSearchGroupId(fullQueryFilter, searchContext);
+			addSearchLayout(fullQueryFilter, searchContext);
+			addSearchUserId(fullQueryFilter, searchContext);
 
 			BooleanQuery fullQuery = createFullQuery(
-				queryFilter, searchContext);
+				fullQueryFilter, searchContext);
 
 			fullQuery.setQueryConfig(searchContext.getQueryConfig());
 
@@ -469,7 +469,7 @@ public abstract class BaseIndexer implements Indexer {
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter booleanFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 	}
 
@@ -486,7 +486,7 @@ public abstract class BaseIndexer implements Indexer {
 
 	@Override
 	public void postProcessSearchQuery(
-			BooleanQuery searchQuery, BooleanFilter queryBooleanFilter,
+			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
 			SearchContext searchContext)
 		throws Exception {
 
@@ -1269,20 +1269,21 @@ public abstract class BaseIndexer implements Indexer {
 	}
 
 	protected BooleanQuery createFullQuery(
-			BooleanFilter queryBooleanFilter, SearchContext searchContext)
+			BooleanFilter fullQueryBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(
 			searchContext);
 
 		addSearchKeywords(searchQuery, searchContext);
-		postProcessSearchQuery(searchQuery, queryBooleanFilter, searchContext);
+		postProcessSearchQuery(
+			searchQuery, fullQueryBooleanFilter, searchContext);
 
 		for (IndexerPostProcessor indexerPostProcessor :
 				_indexerPostProcessors) {
 
 			indexerPostProcessor.postProcessSearchQuery(
-				searchQuery, queryBooleanFilter, searchContext);
+				searchQuery, fullQueryBooleanFilter, searchContext);
 		}
 
 		doPostProcessSearchQuery(this, searchQuery, searchContext);
@@ -1305,14 +1306,15 @@ public abstract class BaseIndexer implements Indexer {
 		addFacetClause(searchContext, facetBooleanFilter, facets.values());
 
 		if (facetBooleanFilter.hasClauses()) {
-			queryBooleanFilter.add(facetBooleanFilter, BooleanClauseOccur.MUST);
+			fullQueryBooleanFilter.add(
+				facetBooleanFilter, BooleanClauseOccur.MUST);
 		}
 
 		BooleanQuery fullBooleanQuery = BooleanQueryFactoryUtil.create(
 			searchContext);
 
-		if (queryBooleanFilter.hasClauses()) {
-			fullBooleanQuery.setPreBooleanFilter(queryBooleanFilter);
+		if (fullQueryBooleanFilter.hasClauses()) {
+			fullBooleanQuery.setPreBooleanFilter(fullQueryBooleanFilter);
 		}
 
 		if (searchQuery.hasClauses()) {

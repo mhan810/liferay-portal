@@ -196,19 +196,19 @@ public class DLFileEntryIndexer
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter contextFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
-		addStatus(contextFilter, searchContext);
+		addStatus(contextBooleanFilter, searchContext);
 
 		if (searchContext.isIncludeAttachments()) {
-			addRelatedClassNames(contextFilter, searchContext);
+			addRelatedClassNames(contextBooleanFilter, searchContext);
 		}
 
-		contextFilter.addRequiredTerm(
+		contextBooleanFilter.addRequiredTerm(
 			Field.HIDDEN, searchContext.isIncludeAttachments());
 
-		addSearchClassTypeIds(contextFilter, searchContext);
+		addSearchClassTypeIds(contextBooleanFilter, searchContext);
 
 		String ddmStructureFieldName = (String)searchContext.getAttribute(
 			"ddmStructureFieldName");
@@ -247,7 +247,7 @@ public class DLFileEntryIndexer
 				ddmStructureFieldName,
 				StringPool.QUOTE + ddmStructureFieldValue + StringPool.QUOTE);
 
-			contextFilter.add(new QueryFilter(booleanQuery));
+			contextBooleanFilter.add(new QueryFilter(booleanQuery));
 		}
 
 		String[] mimeTypes = (String[])searchContext.getAttribute("mimeTypes");
@@ -262,13 +262,13 @@ public class DLFileEntryIndexer
 						mimeType, CharPool.FORWARD_SLASH, CharPool.UNDERLINE));
 			}
 
-			contextFilter.add(mimeTypesFilter, BooleanClauseOccur.MUST);
+			contextBooleanFilter.add(mimeTypesFilter, BooleanClauseOccur.MUST);
 		}
 	}
 
 	@Override
 	public void postProcessSearchQuery(
-			BooleanQuery searchQuery, BooleanFilter queryBooleanFilter,
+			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
 			SearchContext searchContext)
 		throws Exception {
 

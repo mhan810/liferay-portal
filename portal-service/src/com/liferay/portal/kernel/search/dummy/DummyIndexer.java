@@ -182,7 +182,7 @@ public class DummyIndexer implements Indexer {
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter booleanFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 	}
 
@@ -198,7 +198,7 @@ public class DummyIndexer implements Indexer {
 
 	@Override
 	public void postProcessSearchQuery(
-		BooleanQuery searchQuery, BooleanFilter queryBooleanFilter,
+		BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
 		SearchContext searchContext) {
 	}
 

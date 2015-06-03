@@ -83,7 +83,7 @@ public class AssetCategoryIndexer extends BaseIndexer {
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter booleanFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		long[] parentCategoryIds = (long[])searchContext.getAttribute(
@@ -98,7 +98,8 @@ public class AssetCategoryIndexer extends BaseIndexer {
 					String.valueOf(parentCategoryId));
 			}
 
-			booleanFilter.add(parentCategoryFilter, BooleanClauseOccur.MUST);
+			contextBooleanFilter.add(
+				parentCategoryFilter, BooleanClauseOccur.MUST);
 		}
 
 		long[] vocabularyIds = (long[])searchContext.getAttribute(
@@ -112,13 +113,13 @@ public class AssetCategoryIndexer extends BaseIndexer {
 					Field.ASSET_VOCABULARY_ID, String.valueOf(vocabularyId));
 			}
 
-			booleanFilter.add(vocabularyFilter, BooleanClauseOccur.MUST);
+			contextBooleanFilter.add(vocabularyFilter, BooleanClauseOccur.MUST);
 		}
 	}
 
 	@Override
 	public void postProcessSearchQuery(
-			BooleanQuery searchQuery, BooleanFilter queryBooleanFilter,
+			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
 			SearchContext searchContext)
 		throws Exception {
 

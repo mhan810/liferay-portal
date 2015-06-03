@@ -161,25 +161,25 @@ public class MBMessageIndexer
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter contextFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
-		addStatus(contextFilter, searchContext);
+		addStatus(contextBooleanFilter, searchContext);
 
 		boolean discussion = GetterUtil.getBoolean(
 			searchContext.getAttribute("discussion"), false);
 
-		contextFilter.addRequiredTerm("discussion", discussion);
+		contextBooleanFilter.addRequiredTerm("discussion", discussion);
 
 		if (searchContext.isIncludeDiscussions()) {
-			addRelatedClassNames(contextFilter, searchContext);
+			addRelatedClassNames(contextBooleanFilter, searchContext);
 		}
 
 		long threadId = GetterUtil.getLong(
 			(String)searchContext.getAttribute("threadId"));
 
 		if (threadId > 0) {
-			contextFilter.addRequiredTerm("threadId", threadId);
+			contextBooleanFilter.addRequiredTerm("threadId", threadId);
 		}
 
 		long[] categoryIds = searchContext.getCategoryIds();
@@ -207,7 +207,8 @@ public class MBMessageIndexer
 			}
 
 			if (categoriesFilter.hasClauses()) {
-				contextFilter.add(categoriesFilter, BooleanClauseOccur.MUST);
+				contextBooleanFilter.add(
+					categoriesFilter, BooleanClauseOccur.MUST);
 			}
 		}
 	}

@@ -89,7 +89,7 @@ public class UserIndexer extends BaseIndexer {
 
 	@Override
 	public void postProcessContextBooleanFilter(
-			BooleanFilter contextFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		int status = GetterUtil.getInteger(
@@ -97,7 +97,7 @@ public class UserIndexer extends BaseIndexer {
 			WorkflowConstants.STATUS_APPROVED);
 
 		if (status != WorkflowConstants.STATUS_ANY) {
-			contextFilter.addRequiredTerm(Field.STATUS, status);
+			contextBooleanFilter.addRequiredTerm(Field.STATUS, status);
 		}
 
 		LinkedHashMap<String, Object> params =
@@ -125,13 +125,14 @@ public class UserIndexer extends BaseIndexer {
 				}
 			}
 
-			addContextQueryParams(contextFilter, searchContext, key, value);
+			addContextQueryParams(
+				contextBooleanFilter, searchContext, key, value);
 		}
 	}
 
 	@Override
 	public void postProcessSearchQuery(
-			BooleanQuery searchQuery, BooleanFilter queryBooleanFilter,
+			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
 			SearchContext searchContext)
 		throws Exception {
 

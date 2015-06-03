@@ -58,7 +58,7 @@ public class FolderSearcher extends BaseSearcher {
 
 	@Override
 	protected BooleanQuery createFullQuery(
-			BooleanFilter queryBooleanFilter, SearchContext searchContext)
+			BooleanFilter fullQueryBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		long[] folderIds = searchContext.getFolderIds();
@@ -69,9 +69,9 @@ public class FolderSearcher extends BaseSearcher {
 			entryClassPKFilter.addTerm(Field.ENTRY_CLASS_PK, folderId);
 		}
 
-		queryBooleanFilter.add(entryClassPKFilter, BooleanClauseOccur.MUST);
+		fullQueryBooleanFilter.add(entryClassPKFilter, BooleanClauseOccur.MUST);
 
-		return super.createFullQuery(queryBooleanFilter, searchContext);
+		return super.createFullQuery(fullQueryBooleanFilter, searchContext);
 	}
 
 	private final String[] _classNames;

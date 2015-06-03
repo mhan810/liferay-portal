@@ -41,7 +41,7 @@ public abstract class BaseSearcher extends BaseIndexer {
 
 	@Override
 	public void postProcessSearchQuery(
-			BooleanQuery searchQuery, BooleanFilter queryBooleanFilter,
+			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
 			SearchContext searchContext)
 		throws Exception {
 
@@ -59,7 +59,7 @@ public abstract class BaseSearcher extends BaseIndexer {
 			}
 
 			indexer.postProcessSearchQuery(
-				searchQuery, queryBooleanFilter, searchContext);
+				searchQuery, fullQueryBooleanFilter, searchContext);
 		}
 	}
 
