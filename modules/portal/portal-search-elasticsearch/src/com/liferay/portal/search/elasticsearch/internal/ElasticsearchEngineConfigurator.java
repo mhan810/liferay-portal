@@ -35,7 +35,10 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Michael C. Han
  */
-@Component(immediate = true, service = SearchEngineConfigurator.class)
+@Component(
+	immediate = true, property = {"search.engine.impl=Elasticsearch"},
+	service = SearchEngineConfigurator.class
+)
 public class ElasticsearchEngineConfigurator
 	extends AbstractSearchEngineConfigurator {
 
@@ -94,7 +97,7 @@ public class ElasticsearchEngineConfigurator
 	}
 
 	@Reference(
-		target = "(&(search.engine.id=SYSTEM_ENGINE)(vendor=Elasticsearch))"
+		target = "(&(search.engine.id=SYSTEM_ENGINE)(search.engine.impl=Elasticsearch))"
 	)
 	protected void setSearchEngine(
 		SearchEngine searchEngine, Map<String, Object> properties) {

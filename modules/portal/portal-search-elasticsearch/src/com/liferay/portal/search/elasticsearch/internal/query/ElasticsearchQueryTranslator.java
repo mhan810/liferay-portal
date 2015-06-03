@@ -37,7 +37,10 @@ import org.osgi.service.component.annotations.Reference;
  * @author André de Oliveira
  * @author Miguel Angelo Caldas Gallindo
  */
-@Component(immediate = true, service = QueryTranslator.class)
+@Component(
+	immediate = true, property = {"search.engine.impl=Elasticsearch"},
+	service = QueryTranslator.class
+)
 public class ElasticsearchQueryTranslator
 	implements QueryTranslator<QueryBuilder>, QueryVisitor<QueryBuilder> {
 
