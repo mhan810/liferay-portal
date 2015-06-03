@@ -35,7 +35,10 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Michael C. Han
  */
-@Component(immediate = true, service = SearchEngineConfigurator.class)
+@Component(
+	immediate = true, property = {"search.engine.impl=Elasticsearch"},
+	service = SearchEngineConfigurator.class
+)
 public class ElasticsearchEngineConfigurator
 	extends AbstractSearchEngineConfigurator {
 
@@ -83,18 +86,18 @@ public class ElasticsearchEngineConfigurator
 		_elasticsearchConnectionManager = elasticsearchConnectionManager;
 	}
 
-	@Reference(unbind = "-")
+	@Reference(target = "(!(search.engine.impl=*))", unbind = "-")
 	protected void setIndexSearcher(IndexSearcher indexSearcher) {
 		_indexSearcher = indexSearcher;
 	}
 
-	@Reference(unbind = "-")
+	@Reference(target = "(!(search.engine.impl=*))", unbind = "-")
 	protected void setIndexWriter(IndexWriter indexWriter) {
 		_indexWriter = indexWriter;
 	}
 
 	@Reference(
-		target = "(&(search.engine.id=SYSTEM_ENGINE)(vendor=Elasticsearch))"
+		target = "(&(search.engine.id=SYSTEM_ENGINE)(search.engine.impl=Elasticsearch))"
 	)
 	protected void setSearchEngine(
 		SearchEngine searchEngine, Map<String, Object> properties) {

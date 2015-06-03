@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseIndexWriter;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.IndexWriter;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.suggest.SpellCheckIndexWriter;
@@ -48,7 +49,10 @@ import org.osgi.service.component.annotations.Reference;
  * @author Michael C. Han
  * @author Milen Dyankov
  */
-@Component(immediate = true, service = ElasticsearchIndexWriter.class)
+@Component(
+	immediate = true, property = {"search.engine.impl=Elasticsearch"},
+	service = IndexWriter.class
+)
 public class ElasticsearchIndexWriter extends BaseIndexWriter {
 
 	@Override
@@ -165,7 +169,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 	}
 
 	@Override
-	@Reference(service = ElasticsearchSpellCheckIndexWriter.class)
+	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
 	public void setSpellCheckIndexWriter(
 		SpellCheckIndexWriter spellCheckIndexWriter) {
 

@@ -68,7 +68,9 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"search.engine.id=SYSTEM_ENGINE", "vendor=Elasticsearch"},
+	property = {
+		"search.engine.id=SYSTEM_ENGINE", "search.engine.impl=Elasticsearch"
+	},
 	service = {ElasticsearchSearchEngine.class, SearchEngine.class}
 )
 public class ElasticsearchSearchEngine extends BaseSearchEngine {
@@ -253,13 +255,13 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 	}
 
 	@Override
-	@Reference(service = ElasticsearchIndexSearcher.class, unbind = "-")
+	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
 	public void setIndexSearcher(IndexSearcher indexSearcher) {
 		super.setIndexSearcher(indexSearcher);
 	}
 
 	@Override
-	@Reference(service = ElasticsearchIndexWriter.class, unbind = "-")
+	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
 	public void setIndexWriter(IndexWriter indexWriter) {
 		super.setIndexWriter(indexWriter);
 	}
@@ -276,7 +278,7 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 
 	@Activate
 	protected void activate(Map<String, Object> properties) {
-		setVendor(MapUtil.getString(properties, "vendor"));
+		setVendor(MapUtil.getString(properties, "search.engine.impl"));
 	}
 
 	protected void createBackupRepository(ClusterAdminClient clusterAdminClient)
