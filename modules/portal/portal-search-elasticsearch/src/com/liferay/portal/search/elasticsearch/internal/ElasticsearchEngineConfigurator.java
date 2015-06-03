@@ -93,7 +93,9 @@ public class ElasticsearchEngineConfigurator
 		_indexWriter = indexWriter;
 	}
 
-	@Reference(target = "(search.engine.id=SYSTEM_ENGINE)")
+	@Reference(
+		target = "(&(search.engine.id=SYSTEM_ENGINE)(vendor=Elasticsearch))"
+	)
 	protected void setSearchEngine(
 		SearchEngine searchEngine, Map<String, Object> properties) {
 
