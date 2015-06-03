@@ -127,7 +127,8 @@ public class TrashIndexer extends BaseIndexer {
 
 	@Override
 	public void postProcessSearchQuery(
-			BooleanQuery searchQuery, SearchContext searchContext)
+			BooleanQuery searchQuery, BooleanFilter queryBooleanFilter,
+			SearchContext searchContext)
 		throws Exception {
 
 		if (searchContext.getAttributes() == null) {

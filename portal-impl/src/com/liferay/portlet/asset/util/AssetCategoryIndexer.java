@@ -118,7 +118,8 @@ public class AssetCategoryIndexer extends BaseIndexer {
 
 	@Override
 	public void postProcessSearchQuery(
-			BooleanQuery searchQuery, SearchContext searchContext)
+			BooleanQuery searchQuery, BooleanFilter queryBooleanFilter,
+			SearchContext searchContext)
 		throws Exception {
 
 		String title = (String)searchContext.getAttribute(Field.TITLE);
