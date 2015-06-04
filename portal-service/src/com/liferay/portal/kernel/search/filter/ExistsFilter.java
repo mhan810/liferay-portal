@@ -19,11 +19,10 @@ import com.liferay.portal.kernel.util.StringBundler;
 /**
  * @author Michael C. Han
  */
-public class TermFilter extends BaseFilter {
+public class ExistsFilter extends BaseFilter {
 
-	public TermFilter(String field, String value) {
+	public ExistsFilter(String field) {
 		_field = field;
-		_value = value;
 	}
 
 	@Override
@@ -37,21 +36,15 @@ public class TermFilter extends BaseFilter {
 
 	@Override
 	public int getSortOrder() {
-		return 3;
-	}
-
-	public String getValue() {
-		return _value;
+		return 1;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(7);
+		StringBundler sb = new StringBundler(5);
 
 		sb.append("{(");
 		sb.append(_field);
-		sb.append("=");
-		sb.append(_value);
 		sb.append("), ");
 		sb.append(super.toString());
 		sb.append("}");
@@ -60,6 +53,5 @@ public class TermFilter extends BaseFilter {
 	}
 
 	private final String _field;
-	private final String _value;
 
 }

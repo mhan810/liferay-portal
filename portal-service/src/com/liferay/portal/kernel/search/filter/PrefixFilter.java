@@ -19,11 +19,11 @@ import com.liferay.portal.kernel.util.StringBundler;
 /**
  * @author Michael C. Han
  */
-public class TermFilter extends BaseFilter {
+public class PrefixFilter extends BaseFilter {
 
-	public TermFilter(String field, String value) {
+	public PrefixFilter(String field, String prefix) {
 		_field = field;
-		_value = value;
+		_prefix = prefix;
 	}
 
 	@Override
@@ -35,13 +35,13 @@ public class TermFilter extends BaseFilter {
 		return _field;
 	}
 
-	@Override
-	public int getSortOrder() {
-		return 3;
+	public String getPrefix() {
+		return _prefix;
 	}
 
-	public String getValue() {
-		return _value;
+	@Override
+	public int getSortOrder() {
+		return 5;
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class TermFilter extends BaseFilter {
 		sb.append("{(");
 		sb.append(_field);
 		sb.append("=");
-		sb.append(_value);
+		sb.append(_prefix);
 		sb.append("), ");
 		sb.append(super.toString());
 		sb.append("}");
@@ -60,6 +60,6 @@ public class TermFilter extends BaseFilter {
 	}
 
 	private final String _field;
-	private final String _value;
+	private final String _prefix;
 
 }
