@@ -25,9 +25,9 @@ public interface Filter {
 
 	public int getSortOrder();
 
-	public boolean isCached();
+	public Boolean isCached();
 
-	public void setCached(boolean cached);
+	public void setCached(Boolean cached);
 
 	public void setExecutionOption(String executionOption);
 
