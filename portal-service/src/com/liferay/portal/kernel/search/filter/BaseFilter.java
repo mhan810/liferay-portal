@@ -27,12 +27,12 @@ public abstract class BaseFilter implements Filter {
 	}
 
 	@Override
-	public boolean isCached() {
-		return _cached;
+	public Boolean isCached() {
+		return true;
 	}
 
 	@Override
-	public void setCached(boolean cached) {
+	public void setCached(Boolean cached) {
 		_cached = cached;
 	}
 
@@ -54,7 +54,7 @@ public abstract class BaseFilter implements Filter {
 		return sb.toString();
 	}
 
-	private boolean _cached;
+	private Boolean _cached;
 	private String _executionOption;
 
 }

@@ -37,7 +37,7 @@ public class TermFilter extends BaseFilter {
 
 	@Override
 	public int getSortOrder() {
-		return 1;
+		return 3;
 	}
 
 	public String getValue() {
