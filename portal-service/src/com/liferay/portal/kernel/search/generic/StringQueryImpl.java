@@ -27,11 +27,6 @@ public class StringQueryImpl extends BaseQueryImpl implements Query {
 	}
 
 	@Override
-	public Object getWrappedQuery() {
-		return this;
-	}
-
-	@Override
 	public String toString() {
 		return _query;
 	}
