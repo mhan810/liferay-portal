@@ -16,25 +16,32 @@ package com.liferay.portal.kernel.search.generic;
 
 import com.liferay.portal.kernel.search.BaseQueryImpl;
 import com.liferay.portal.kernel.search.Query;
+import com.liferay.portal.kernel.search.query.QueryVisitor;
 
 /**
- * @author Bruno Farache
+ * @author Michael C. Han
  */
-public class StringQuery extends BaseQueryImpl implements Query {
+public class NestedQuery extends BaseQueryImpl {
 
-	public StringQuery(String query) {
+	public NestedQuery(String path, Query query) {
+		_path = path;
 		_query = query;
 	}
 
-	public String getQuery() {
-		return _query;
-	}
-
 	@Override
-	public String toString() {
+	public <T> T accept(QueryVisitor<T> queryVisitor) {
+		return queryVisitor.visitQuery(this);
+	}
+
+	public String getPath() {
+		return _path;
+	}
+
+	public Query getQuery() {
 		return _query;
 	}
 
-	private final String _query;
+	private final String _path;
+	private final Query _query;
 
 }
