@@ -20,9 +20,9 @@ import com.liferay.portal.kernel.search.Query;
 /**
  * @author Bruno Farache
  */
-public class StringQueryImpl extends BaseQueryImpl implements Query {
+public class StringQuery extends BaseQueryImpl implements Query {
 
-	public StringQueryImpl(String query) {
+	public StringQuery(String query) {
 		_query = query;
 	}
 
