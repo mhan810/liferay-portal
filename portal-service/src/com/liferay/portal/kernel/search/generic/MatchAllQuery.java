@@ -15,26 +15,16 @@
 package com.liferay.portal.kernel.search.generic;
 
 import com.liferay.portal.kernel.search.BaseQueryImpl;
-import com.liferay.portal.kernel.search.Query;
+import com.liferay.portal.kernel.search.query.QueryVisitor;
 
 /**
- * @author Bruno Farache
+ * @author Michael C. Han
  */
-public class StringQuery extends BaseQueryImpl implements Query {
-
-	public StringQuery(String query) {
-		_query = query;
-	}
-
-	public String getQuery() {
-		return _query;
-	}
+public class MatchAllQuery extends BaseQueryImpl {
 
 	@Override
-	public String toString() {
-		return _query;
+	public <T> T accept(QueryVisitor<T> queryVisitor) {
+		return queryVisitor.visitQuery(this);
 	}
-
-	private final String _query;
 
 }
