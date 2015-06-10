@@ -12,30 +12,17 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search.generic;
+package com.liferay.portal.search.elasticsearch.query;
 
-import com.liferay.portal.kernel.search.BaseQueryImpl;
-import com.liferay.portal.kernel.search.Query;
+import com.liferay.portal.kernel.search.generic.MoreLikeThisQuery;
+
+import org.elasticsearch.index.query.QueryBuilder;
 
 /**
- * @author Bruno Farache
+ * @author Michael C. Han
  */
-public class StringQueryImpl extends BaseQueryImpl implements Query {
+public interface MoreLikeThisQueryTranslator {
 
-	public StringQueryImpl(String query) {
-		_query = query;
-	}
-
-	@Override
-	public Object getWrappedQuery() {
-		return this;
-	}
-
-	@Override
-	public String toString() {
-		return _query;
-	}
-
-	private final String _query;
+	public QueryBuilder translate(MoreLikeThisQuery moreLikeThisQuery);
 
 }

@@ -15,33 +15,49 @@
 package com.liferay.portal.kernel.search.generic;
 
 import com.liferay.portal.kernel.search.BaseQueryImpl;
-import com.liferay.portal.kernel.search.QueryTerm;
-import com.liferay.portal.kernel.search.WildcardQuery;
+import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.query.QueryVisitor;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Michael C. Han
  */
-public class WildcardQueryImpl extends BaseQueryImpl implements WildcardQuery {
-
-	public WildcardQueryImpl(QueryTerm queryTerm) {
-		_queryTerm = queryTerm;
-	}
-
-	public WildcardQueryImpl(String field, String value) {
-		this(new QueryTermImpl(field, value));
-	}
+public class DisMaxQuery extends BaseQueryImpl {
 
 	@Override
 	public <T> T accept(QueryVisitor<T> queryVisitor) {
 		return queryVisitor.visitQuery(this);
 	}
 
-	@Override
-	public QueryTerm getQueryTerm() {
-		return _queryTerm;
+	public void addQuery(Query query) {
+		_queries.add(query);
 	}
 
-	private final QueryTerm _queryTerm;
+	public Set<Query> getQueries() {
+		return Collections.unmodifiableSet(_queries);
+	}
+
+	public Float getTieBreaker() {
+		return _tieBreaker;
+	}
+
+	@Override
+	public boolean hasChildren() {
+		return !isEmpty();
+	}
+
+	public boolean isEmpty() {
+		return _queries.isEmpty();
+	}
+
+	public void setTieBreaker(Float tieBreaker) {
+		_tieBreaker = tieBreaker;
+	}
+
+	private final Set<Query> _queries = new HashSet<>();
+	private Float _tieBreaker;
 
 }

@@ -46,8 +46,19 @@ public abstract class BaseQueryImpl implements Query {
 		return _queryConfig;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	@Override
-	public abstract Object getWrappedQuery();
+	public Object getWrappedQuery() {
+		return this;
+	}
+
+	@Override
+	public boolean hasChildren() {
+		return false;
+	}
 
 	@Override
 	public boolean isDefaultBoost() {

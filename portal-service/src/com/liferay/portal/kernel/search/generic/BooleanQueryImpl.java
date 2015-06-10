@@ -418,8 +418,8 @@ public class BooleanQueryImpl extends BaseBooleanQueryImpl {
 	}
 
 	@Override
-	public Object getWrappedQuery() {
-		return this;
+	public boolean hasChildren() {
+		return hasClauses();
 	}
 
 	@Override
