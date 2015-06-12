@@ -59,6 +59,9 @@ import java.util.Set;
 import org.apache.commons.lang.time.StopWatch;
 
 import org.elasticsearch.action.ActionFuture;
+import org.elasticsearch.action.count.CountRequest;
+import org.elasticsearch.action.count.CountRequestBuilder;
+import org.elasticsearch.action.count.CountResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -81,6 +84,7 @@ import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -89,7 +93,8 @@ import org.osgi.service.component.annotations.Reference;
  * @author Milen Dyankov
  */
 @Component(
-	immediate = true, property = {"search.engine.impl=Elasticsearch"},
+	immediate = true,
+	property = {"search.engine.impl=Elasticsearch", "swallow.exception=true"},
 	service = IndexSearcher.class
 )
 public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
@@ -127,7 +132,10 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			start = startAndEnd[0];
 			end = startAndEnd[1];
 
-			Hits hits = doSearchHits(searchContext, query, start, end);
+			SearchResponse searchResponse = doSearch(
+				searchContext, query, start, end);
+
+			Hits hits = processResponse(searchResponse, searchContext, query);
 
 			hits.setStart(stopWatch.getStartTime());
 
@@ -193,8 +201,10 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		super.setQuerySuggester(querySuggester);
 	}
 
-	public void setSwallowException(boolean swallowException) {
-		_swallowException = swallowException;
+	@Activate
+	protected void activate(Map<String, Object> properties) {
+		_swallowException = MapUtil.getBoolean(
+			properties, "swallow.exception", false);
 	}
 
 	protected void addFacets(
@@ -396,8 +406,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 	}
 
 	protected SearchResponse doSearch(
-			SearchContext searchContext, Query query, int start, int end,
-			boolean count)
+			SearchContext searchContext, Query query, int start, int end)
 		throws Exception {
 
 		Client client = _elasticsearchConnectionManager.getClient();
@@ -409,29 +418,15 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 
 		searchRequestBuilder.setTypes(getSelectedTypes(queryConfig));
 
-		if (!count) {
-			addFacets(searchRequestBuilder, searchContext);
-			addHighlights(searchRequestBuilder, queryConfig);
-			addPagination(searchRequestBuilder, start, end);
-			addSelectedFields(searchRequestBuilder, queryConfig);
-			addSort(searchRequestBuilder, searchContext.getSorts());
+		addFacets(searchRequestBuilder, searchContext);
+		addHighlights(searchRequestBuilder, queryConfig);
+		addPagination(searchRequestBuilder, start, end);
+		addSelectedFields(searchRequestBuilder, queryConfig);
+		addSort(searchRequestBuilder, searchContext.getSorts());
 
-			searchRequestBuilder.setTrackScores(queryConfig.isScoreEnabled());
-		}
-		else {
-			searchRequestBuilder.setSize(0);
-		}
+		searchRequestBuilder.setTrackScores(queryConfig.isScoreEnabled());
 
-		QueryBuilder queryBuilder = _queryTranslator.translate(
-			query, searchContext);
-
-		if (query.getPreBooleanFilter() != null) {
-			FilterBuilder filterBuilder = _filterTranslator.translate(
-				query.getPreBooleanFilter(), searchContext);
-
-			queryBuilder = QueryBuilders.filteredQuery(
-				queryBuilder, filterBuilder);
-		}
+		QueryBuilder queryBuilder = getQueryBuilder(searchContext, query);
 
 		searchRequestBuilder.setQuery(queryBuilder);
 
@@ -450,23 +445,22 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 	protected long doSearchCount(SearchContext searchContext, Query query)
 		throws Exception {
 
-		SearchResponse searchResponse = doSearch(
-			searchContext, query, searchContext.getStart(),
-			searchContext.getEnd(), true);
+		Client client = _elasticsearchConnectionManager.getClient();
 
-		SearchHits searchHits = searchResponse.getHits();
+		QueryConfig queryConfig = query.getQueryConfig();
 
-		return searchHits.getTotalHits();
-	}
+		CountRequestBuilder countRequestBuilder = client.prepareCount(
+			getSelectedIndexNames(queryConfig, searchContext));
 
-	protected Hits doSearchHits(
-			SearchContext searchContext, Query query, int start, int end)
-		throws Exception {
+		countRequestBuilder.setQuery(getQueryBuilder(searchContext, query));
 
-		SearchResponse searchResponse = doSearch(
-			searchContext, query, start, end, false);
+		CountRequest countRequest = countRequestBuilder.request();
 
-		return processResponse(searchResponse, searchContext, query);
+		ActionFuture<CountResponse> future = client.count(countRequest);
+
+		CountResponse countResponse = future.actionGet();
+
+		return countResponse.getCount();
 	}
 
 	protected SearchResponse executeSearchRequest(
@@ -477,6 +471,23 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		ActionFuture<SearchResponse> future = client.search(searchRequest);
 
 		return future.actionGet();
+	}
+
+	protected QueryBuilder getQueryBuilder(
+		SearchContext searchContext, Query query) {
+
+		QueryBuilder queryBuilder = _queryTranslator.translate(
+			query, searchContext);
+
+		if (query.getPreBooleanFilter() != null) {
+			FilterBuilder filterBuilder = _filterTranslator.translate(
+				query.getPreBooleanFilter(), searchContext);
+
+			queryBuilder = QueryBuilders.filteredQuery(
+				queryBuilder, filterBuilder);
+		}
+
+		return queryBuilder;
 	}
 
 	protected String[] getSelectedIndexNames(
