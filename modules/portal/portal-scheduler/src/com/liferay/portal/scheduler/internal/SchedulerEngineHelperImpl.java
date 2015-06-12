@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.scheduler.JobState;
 import com.liferay.portal.kernel.scheduler.SchedulerEngine;
 import com.liferay.portal.kernel.scheduler.SchedulerEngineHelper;
 import com.liferay.portal.kernel.scheduler.SchedulerEntry;
-import com.liferay.portal.kernel.scheduler.SchedulerEntryImpl;
 import com.liferay.portal.kernel.scheduler.SchedulerException;
 import com.liferay.portal.kernel.scheduler.StorageType;
 import com.liferay.portal.kernel.scheduler.Trigger;
@@ -42,15 +41,10 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.InetAddressUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CompanyConstants;
-import com.liferay.portal.model.Portlet;
-import com.liferay.portal.model.PortletApp;
-import com.liferay.portal.service.PortletLocalService;
 import com.liferay.portal.util.PortalUtil;
 
 import java.util.ArrayList;
@@ -59,8 +53,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.portlet.PortletRequest;
-
-import javax.servlet.ServletContext;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -88,34 +80,9 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 			message = new Message();
 		}
 
-		ClassLoader classLoader = null;
-
-		if (Validator.isNull(portletId)) {
-			classLoader = PortalClassLoaderUtil.getClassLoader();
-		}
-		else {
-			Portlet portlet = _portletLocalService.getPortletById(portletId);
-
-			PortletApp portletApp = portlet.getPortletApp();
-
-			ServletContext servletContext = portletApp.getServletContext();
-
-			classLoader = servletContext.getClassLoader();
-		}
-
-		if (classLoader == null) {
-			throw new SchedulerException(
-				"Unable to find class loader for portlet " + portletId);
-		}
-
-		SchedulerEntry schedulerEntry = new SchedulerEntryImpl();
-
-		schedulerEntry.setClassLoader(classLoader);
-		schedulerEntry.setEventListenerClass(messageListenerClassName);
-
 		message.put(
-			SchedulerEngine.MESSAGE_LISTENER,
-			schedulerEntry.getEventMessageListener());
+			SchedulerEngine.MESSAGE_LISTENER_CLASS_NAME,
+			messageListenerClassName);
 		message.put(SchedulerEngine.PORTLET_ID, portletId);
 
 		schedule(
@@ -644,8 +611,8 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 		Message message = new Message();
 
 		message.put(
-			SchedulerEngine.MESSAGE_LISTENER,
-			schedulerEntry.getEventMessageListener());
+			SchedulerEngine.MESSAGE_LISTENER_CLASS_NAME,
+			schedulerEntry.getEventListenerClass());
 		message.put(SchedulerEngine.PORTLET_ID, portletId);
 
 		schedule(
@@ -836,17 +803,6 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 		_jsonFactory = jsonFactory;
 	}
 
-	@Reference(
-		cardinality = ReferenceCardinality.OPTIONAL,
-		policy = ReferencePolicy.DYNAMIC,
-		policyOption = ReferencePolicyOption.GREEDY
-	)
-	protected void setPortletLocalService(
-		PortletLocalService portletLocalService) {
-
-		_portletLocalService = portletLocalService;
-	}
-
 	@Reference(unbind = "-")
 	protected void setProps(Props props) {
 		_props = props;
@@ -861,12 +817,6 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 		_auditRouter = null;
 	}
 
-	protected void unsetPortletLocalService(
-		PortletLocalService portletLocalService) {
-
-		_portletLocalService = null;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		SchedulerEngineHelperImpl.class);
 
@@ -875,7 +825,6 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 	private ClusterLink _clusterLink;
 	private ClusterMasterExecutor _clusterMasterExecutor;
 	private JSONFactory _jsonFactory;
-	private volatile PortletLocalService _portletLocalService;
 	private Props _props;
 	private SchedulerEngine _schedulerEngine;
 
