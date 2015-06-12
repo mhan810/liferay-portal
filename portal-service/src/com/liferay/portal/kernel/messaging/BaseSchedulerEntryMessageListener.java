@@ -30,7 +30,7 @@ public abstract class BaseSchedulerEntryMessageListener
 	public BaseSchedulerEntryMessageListener() {
 		Class<?> clazz = getClass();
 
-		schedulerEntry.setClassLoader(clazz.getClassLoader());
+		schedulerEntry.setClassLoader(getClass().getClassLoader());
 		schedulerEntry.setEventListenerClass(clazz.getName());
 	}
 
