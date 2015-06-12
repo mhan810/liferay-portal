@@ -975,28 +975,27 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 				"Portlet local service not initialized");
 		}
 
-		MessageListener schedulerEngineMessageListener =
-			(MessageListener)message.get(SchedulerEngine.MESSAGE_LISTENER);
+		MessageListener schedulerEventListener = (MessageListener)message.get(
+			SchedulerEngine.MESSAGE_LISTENER);
 
-		if (schedulerEngineMessageListener == null) {
+		if (schedulerEventListener == null) {
 			return;
 		}
 
-		SchedulerEventMessageListenerWrapper
-			schedulerEventMessageListenerWrapper =
-				new SchedulerEventMessageListenerWrapper();
+		SchedulerEventMessageListenerWrapper schedulerEventListenerWrapper =
+			new SchedulerEventMessageListenerWrapper();
 
-		schedulerEventMessageListenerWrapper.setMessageListener(
-			schedulerEngineMessageListener);
+		schedulerEventListenerWrapper.setMessageListener(
+			schedulerEventListener);
 
-		schedulerEventMessageListenerWrapper.afterPropertiesSet();
+		schedulerEventListenerWrapper.afterPropertiesSet();
 
 		_messageBus.registerMessageListener(
-			destinationName, schedulerEventMessageListenerWrapper);
+			destinationName, schedulerEventListenerWrapper);
 
 		message.put(
 			SchedulerEngine.MESSAGE_LISTENER_UUID,
-			schedulerEventMessageListenerWrapper.getMessageListenerUUID());
+			schedulerEventListenerWrapper.getMessageListenerUUID());
 	}
 
 	protected void schedule(

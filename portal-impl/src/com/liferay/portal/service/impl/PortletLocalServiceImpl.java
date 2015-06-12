@@ -723,13 +723,13 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 			}
 
 			Set<String> liferayPortletIds = _readLiferayPortletXML(
-				StringPool.BLANK, servletContext.getClassLoader(), xmls[2],
-				portletsMap);
+				StringPool.BLANK, xmls[2], portletsMap,
+				servletContext.getClassLoader());
 
 			liferayPortletIds.addAll(
 				_readLiferayPortletXML(
-					StringPool.BLANK, servletContext.getClassLoader(), xmls[3],
-					portletsMap));
+					StringPool.BLANK, xmls[3], portletsMap,
+					servletContext.getClassLoader()));
 
 			// Check for missing entries in liferay-portlet.xml
 
@@ -804,8 +804,8 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 					servletURLPatterns, pluginPackage));
 
 			Set<String> liferayPortletIds = _readLiferayPortletXML(
-				servletContextName, servletContext.getClassLoader(), xmls[2],
-				portletsMap);
+				servletContextName, xmls[2], portletsMap,
+				servletContext.getClassLoader());
 
 			// Check for missing entries in liferay-portlet.xml
 
@@ -1836,6 +1836,59 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 
 		portletModel.getRoleMappers().putAll(roleMappers);
 		portletModel.linkRoles();
+	}
+
+	private Set<String> _readLiferayPortletXML(
+			String servletContextName, String xml,
+			Map<String, Portlet> portletsMap, ClassLoader classLoader)
+		throws Exception {
+
+		Set<String> liferayPortletIds = new HashSet<>();
+
+		if (xml == null) {
+			return liferayPortletIds;
+		}
+
+		Document document = UnsecureSAXReaderUtil.read(xml, true);
+
+		Element rootElement = document.getRootElement();
+
+		PortletApp portletApp = getPortletApp(servletContextName);
+
+		Map<String, String> roleMappers = new HashMap<>();
+
+		for (Element roleMapperElement : rootElement.elements("role-mapper")) {
+			String roleName = roleMapperElement.elementText("role-name");
+			String roleLink = roleMapperElement.elementText("role-link");
+
+			roleMappers.put(roleName, roleLink);
+		}
+
+		Map<String, String> customUserAttributes =
+			portletApp.getCustomUserAttributes();
+
+		for (Element customUserAttributeElement :
+				rootElement.elements("custom-user-attribute")) {
+
+			String customClass = customUserAttributeElement.elementText(
+				"custom-class");
+
+			for (Element nameElement :
+					customUserAttributeElement.elements("name")) {
+
+				String name = nameElement.getText();
+
+				customUserAttributes.put(name, customClass);
+			}
+		}
+
+		for (Element portletElement : rootElement.elements("portlet")) {
+			_readLiferayPortletXML(
+				servletContextName, liferayPortletIds, roleMappers,
+				portletElement, portletsMap, classLoader);
+		}
+
+		return liferayPortletIds;
 	}
 
 	private void _readPortletXML(

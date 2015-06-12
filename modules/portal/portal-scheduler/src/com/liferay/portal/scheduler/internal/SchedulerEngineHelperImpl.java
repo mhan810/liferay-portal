@@ -116,7 +116,6 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 		message.put(
 			SchedulerEngine.MESSAGE_LISTENER,
 			schedulerEntry.getEventMessageListener());
-
 		message.put(SchedulerEngine.PORTLET_ID, portletId);
 
 		schedule(
