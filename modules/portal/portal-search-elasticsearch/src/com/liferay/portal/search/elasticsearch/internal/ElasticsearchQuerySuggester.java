@@ -16,6 +16,7 @@ package com.liferay.portal.search.elasticsearch.internal;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.suggest.BaseQuerySuggester;
@@ -60,9 +61,11 @@ public class ElasticsearchQuerySuggester extends BaseQuerySuggester {
 	public Map<String, List<String>> spellCheckKeywords(
 		SearchContext searchContext, int max) {
 
+		String field = DocumentImpl.getLocalizedName(
+			searchContext.getLocale(), Field.SPELL_CHECK_WORD);
+
 		TermSuggester termSuggester = new TermSuggester(
-			_REQUEST_TYPE_SPELL_CHECK, Field.SPELL_CHECK_WORD,
-			searchContext.getKeywords());
+			_REQUEST_TYPE_SPELL_CHECK, field, searchContext.getKeywords());
 
 		termSuggester.setSize(max);
 
@@ -147,9 +150,11 @@ public class ElasticsearchQuerySuggester extends BaseQuerySuggester {
 	public String[] suggestKeywordQueries(
 		SearchContext searchContext, int max) {
 
+		String field = DocumentImpl.getLocalizedName(
+			searchContext.getLocale(), Field.KEYWORD_SEARCH);
+
 		PhraseSuggester phraseSuggester = new PhraseSuggester(
-			_REQUEST_TYPE_KEYWORD_QUERY, Field.KEYWORD_SEARCH,
-			searchContext.getKeywords());
+			_REQUEST_TYPE_KEYWORD_QUERY, field, searchContext.getKeywords());
 
 		phraseSuggester.setSize(max);
 
