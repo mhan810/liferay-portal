@@ -101,7 +101,7 @@ public abstract class BaseIndexSearcher
 			return new SuggesterResults();
 		}
 
-		_querySuggester.suggest(searchContext, suggester);
+		return _querySuggester.suggest(searchContext, suggester);
 	}
 
 	@Override
