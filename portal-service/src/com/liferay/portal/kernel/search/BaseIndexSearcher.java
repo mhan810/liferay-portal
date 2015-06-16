@@ -17,6 +17,8 @@ package com.liferay.portal.kernel.search;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.suggest.QuerySuggester;
+import com.liferay.portal.kernel.search.suggest.Suggester;
+import com.liferay.portal.kernel.search.suggest.SuggesterResults;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -85,6 +87,21 @@ public abstract class BaseIndexSearcher
 		}
 
 		return _querySuggester.spellCheckKeywords(searchContext, max);
+	}
+
+	@Override
+	public SuggesterResults suggest(
+		SearchContext searchContext, Suggester suggester) {
+
+		if (_querySuggester == null) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("No query suggester configured");
+			}
+
+			return new SuggesterResults();
+		}
+
+		_querySuggester.suggest(searchContext, suggester);
 	}
 
 	@Override
