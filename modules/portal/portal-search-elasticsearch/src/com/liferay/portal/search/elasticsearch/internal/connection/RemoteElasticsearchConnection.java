@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration;
+import com.liferay.portal.search.elasticsearch.configuration.RemoteElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch.connection.BaseElasticsearchConnection;
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnection;
 import com.liferay.portal.search.elasticsearch.connection.OperationMode;
@@ -52,7 +53,10 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  * @author Michael C. Han
  */
 @Component(
-	configurationPid = "com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration",
+	configurationPid = {
+		"com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration",
+		"com.liferay.portal.search.elasticsearch.configuration.RemoteElasticsearchConfiguration"
+	},
 	immediate = true, property = {"operation.mode=REMOTE"},
 	service = ElasticsearchConnection.class
 )
@@ -83,8 +87,11 @@ public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 		elasticsearchConfiguration = Configurable.createConfigurable(
 			ElasticsearchConfiguration.class, properties);
 
+		_remoteElasticsearchConfiguration = Configurable.createConfigurable(
+			RemoteElasticsearchConfiguration.class, properties);
+
 		String[] transportAddresses =
-			elasticsearchConfiguration.transportAddresses();
+			_remoteElasticsearchConfiguration.transportAddresses();
 
 		setTransportAddresses(new HashSet<>(Arrays.asList(transportAddresses)));
 	}
@@ -161,6 +168,8 @@ public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 	private static final Log _log = LogFactoryUtil.getLog(
 		RemoteElasticsearchConnection.class);
 
+	private volatile RemoteElasticsearchConfiguration
+		_remoteElasticsearchConfiguration;
 	private Set<String> _transportAddresses = new HashSet<>();
 
 }
