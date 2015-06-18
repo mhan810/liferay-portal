@@ -55,18 +55,18 @@ public class UnicastSettingsContributor extends BaseSettingsContributor {
 		builder.put("node.local", false);
 	}
 
-	@Reference(unbind = "-")
-	public void setClusterSettingsContext(
-		ClusterSettingsContext clusterSettingsContext) {
-
-		_clusterSettingsContext = clusterSettingsContext;
-	}
-
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
 		elasticsearchConfiguration = Configurable.createConfigurable(
 			ElasticsearchConfiguration.class, properties);
+	}
+
+	@Reference(unbind = "-")
+	protected void setClusterSettingsContext(
+		ClusterSettingsContext clusterSettingsContext) {
+
+		_clusterSettingsContext = clusterSettingsContext;
 	}
 
 	protected volatile ElasticsearchConfiguration elasticsearchConfiguration;
