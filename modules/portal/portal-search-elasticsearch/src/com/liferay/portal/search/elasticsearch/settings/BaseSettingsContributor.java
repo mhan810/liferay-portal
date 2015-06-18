@@ -14,15 +14,32 @@
 
 package com.liferay.portal.search.elasticsearch.settings;
 
-import org.elasticsearch.common.settings.ImmutableSettings;
-
 /**
- * @author André de Oliveira
+ * @author Michael C. Han
  */
-public interface SettingsContributor extends Comparable<SettingsContributor> {
+public abstract class BaseSettingsContributor implements SettingsContributor {
 
-	public int getPriority();
+	public BaseSettingsContributor(int priority) {
+		_priority = priority;
+	}
 
-	public void populate(ImmutableSettings.Builder builder);
+	@Override
+	public int compareTo(SettingsContributor settingsContributor) {
+		if (_priority > settingsContributor.getPriority()) {
+			return 1;
+		}
+		else if (_priority == settingsContributor.getPriority()) {
+			return 0;
+		}
+
+		return -1;
+	}
+
+	@Override
+	public int getPriority() {
+		return _priority;
+	}
+
+	protected int _priority;
 
 }
