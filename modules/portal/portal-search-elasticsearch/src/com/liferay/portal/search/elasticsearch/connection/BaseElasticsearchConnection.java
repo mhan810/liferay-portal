@@ -23,6 +23,7 @@ import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfig
 import com.liferay.portal.search.elasticsearch.index.IndexFactory;
 import com.liferay.portal.search.elasticsearch.settings.SettingsContributor;
 
+import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 
@@ -123,6 +124,8 @@ public abstract class BaseElasticsearchConnection
 		SettingsContributor settingsContributor) {
 
 		_settingsContributors.addIfAbsent(settingsContributor);
+
+		Collections.sort(_settingsContributors);
 	}
 
 	protected abstract Client createClient(ImmutableSettings.Builder builder);
