@@ -16,12 +16,13 @@ package com.liferay.portal.search.elasticsearch.internal.cluster;
 
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.search.elasticsearch.internal.connection.ElasticsearchFixture;
-import org.mockito.Mockito;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 
 import java.util.HashMap;
+
+import org.mockito.Mockito;
 
 /**
  * @author André de Oliveira
