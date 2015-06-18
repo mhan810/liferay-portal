@@ -15,6 +15,7 @@
 package com.liferay.portal.search.elasticsearch.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
+import com.liferay.portal.search.elasticsearch.connection.OperationMode;
 
 /**
  * @author Michael C. Han
@@ -37,12 +38,8 @@ public interface ElasticsearchConfiguration {
 	)
 	public boolean logExceptionsOnly();
 
-	@Meta.AD(
-		deflt = "EMBEDDED", optionLabels = {"Embedded", "Remote"},
-		optionValues = {"EMBEDDED", "REMOTE"},
-		required = false
-	)
-	public String operationMode();
+	@Meta.AD(deflt = "EMBEDDED", required = false)
+	public OperationMode operationMode();
 
 	@Meta.AD(deflt = "5", required = false)
 	public int retryOnConflict();
