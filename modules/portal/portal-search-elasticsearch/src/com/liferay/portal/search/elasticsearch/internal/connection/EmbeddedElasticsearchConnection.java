@@ -91,7 +91,8 @@ public class EmbeddedElasticsearchConnection
 	@Reference(
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC,
-		policyOption = ReferencePolicyOption.GREEDY
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(operation.mode=EMBEDDED)"
 	)
 	protected void addSettingsContributor(
 		SettingsContributor settingsContributor) {
