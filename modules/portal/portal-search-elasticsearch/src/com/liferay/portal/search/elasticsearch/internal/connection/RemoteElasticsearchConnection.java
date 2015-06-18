@@ -19,11 +19,8 @@ import aQute.bnd.annotation.metatype.Configurable;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.Props;
-import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch.connection.BaseElasticsearchConnection;
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnection;
@@ -148,22 +145,10 @@ public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 	protected void loadRequiredDefaultConfigurations(
 		ImmutableSettings.Builder builder) {
 
-		builder.put(
-			"client.transport.ignore_cluster_name",
-			elasticsearchConfiguration.clientTransportIgnoreClusterName());
-		builder.put(
-			"client.transport.nodes_sampler_interval",
-			elasticsearchConfiguration.clientTransportNodesSamplerInterval());
-		builder.put(
-			"client.transport.sniff",
-			elasticsearchConfiguration.clientTransportSniff());
 		builder.put("cluster.name", elasticsearchConfiguration.clusterName());
 		builder.put("http.enabled", false);
 		builder.put("node.client", true);
 		builder.put("node.data", false);
-		builder.put("path.logs", _props.get(PropsKeys.LIFERAY_HOME) + "/logs");
-		builder.put(
-			"path.work", SystemProperties.get(SystemProperties.TMP_DIR));
 	}
 
 	@Override
@@ -173,15 +158,9 @@ public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 		super.removeSettingsContributor(settingsContributor);
 	}
 
-	@Reference(unbind = "-")
-	protected void setProps(Props props) {
-		_props = props;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		RemoteElasticsearchConnection.class);
 
-	private Props _props;
 	private Set<String> _transportAddresses = new HashSet<>();
 
 }
