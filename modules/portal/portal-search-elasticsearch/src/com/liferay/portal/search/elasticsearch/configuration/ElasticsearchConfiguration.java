@@ -63,6 +63,15 @@ public interface ElasticsearchConfiguration {
 	)
 	public boolean logExceptionsOnly();
 
+	@Meta.AD(deflt = "", required = false)
+	public String networkBindHost();
+
+	@Meta.AD(deflt = "", required = false)
+	public String networkHost();
+
+	@Meta.AD(deflt = "", required = false)
+	public String networkPublishHost();
+
 	@Meta.AD(deflt = "EMBEDDED", required = false)
 	public OperationMode operationMode();
 

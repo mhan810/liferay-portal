@@ -159,10 +159,10 @@ public class ElasticsearchConnectionManager {
 		}
 	}
 
+	private String _clusterName;
 	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
 	private final Map<OperationMode, ElasticsearchConnection>
 		_elasticsearchConnections = new HashMap<>();
 	private OperationMode _operationMode;
-	private String _clusterName;
 
 }
