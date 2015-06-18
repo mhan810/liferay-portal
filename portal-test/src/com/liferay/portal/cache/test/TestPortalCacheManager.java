@@ -33,8 +33,17 @@ import java.util.concurrent.ConcurrentMap;
 public class TestPortalCacheManager<K extends Serializable, V>
 	extends AbstractPortalCacheManager<K, V> {
 
-	public TestPortalCacheManager(String portalCacheManagerName) {
-		setName(portalCacheManagerName);
+	public static <K extends Serializable, V> TestPortalCacheManager<K, V>
+		createTestPortalCacheManager(String portalCacheManagerName) {
+
+		TestPortalCacheManager<K, V> testPortalCacheManager =
+			new TestPortalCacheManager<>();
+
+		testPortalCacheManager.setName(portalCacheManagerName);
+
+		testPortalCacheManager.initialize();
+
+		return testPortalCacheManager;
 	}
 
 	@Override
