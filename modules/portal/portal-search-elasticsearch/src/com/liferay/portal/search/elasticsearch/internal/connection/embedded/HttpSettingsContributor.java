@@ -19,7 +19,7 @@ import aQute.bnd.annotation.metatype.Configurable;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration;
+import com.liferay.portal.search.elasticsearch.configuration.EmbeddedElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch.settings.BaseSettingsContributor;
 import com.liferay.portal.search.elasticsearch.settings.SettingsContributor;
 
@@ -35,7 +35,7 @@ import org.osgi.service.component.annotations.Modified;
  * @author Michael C. Han
  */
 @Component(
-	configurationPid = "com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration",
+	configurationPid = "com.liferay.portal.search.elasticsearch.configuration.EmbeddedElasticsearchConfiguration",
 	immediate = true, property = {"operation.mode=EMBEDDED"},
 	service = SettingsContributor.class
 )
@@ -52,21 +52,23 @@ public class HttpSettingsContributor extends BaseSettingsContributor {
 
 	@Override
 	public void populate(ImmutableSettings.Builder builder) {
-		builder.put("http.enabled", _elasticsearchConfiguration.httpEnabled());
+		builder.put(
+			"http.enabled", _embeddedElasticsearchConfiguration.httpEnabled());
 
-		if (!_elasticsearchConfiguration.httpEnabled()) {
+		if (!_embeddedElasticsearchConfiguration.httpEnabled()) {
 			return;
 		}
 
 		builder.put(
-			"http.cors.enabled", _elasticsearchConfiguration.httpCORSEnabled());
+			"http.cors.enabled",
+			_embeddedElasticsearchConfiguration.httpCORSEnabled());
 
-		if (!_elasticsearchConfiguration.httpCORSEnabled()) {
+		if (!_embeddedElasticsearchConfiguration.httpCORSEnabled()) {
 			return;
 		}
 
 		String[] httpCORSConfigurations =
-			_elasticsearchConfiguration.httpCORSConfigurations();
+			_embeddedElasticsearchConfiguration.httpCORSConfigurations();
 
 		if (ArrayUtil.isEmpty(httpCORSConfigurations)) {
 			return;
@@ -88,10 +90,11 @@ public class HttpSettingsContributor extends BaseSettingsContributor {
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
-		_elasticsearchConfiguration = Configurable.createConfigurable(
-			ElasticsearchConfiguration.class, properties);
+		_embeddedElasticsearchConfiguration = Configurable.createConfigurable(
+			EmbeddedElasticsearchConfiguration.class, properties);
 	}
 
-	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
+	private volatile EmbeddedElasticsearchConfiguration
+		_embeddedElasticsearchConfiguration;
 
 }

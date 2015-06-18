@@ -17,7 +17,7 @@ package com.liferay.portal.search.elasticsearch.internal.connection.embedded;
 import aQute.bnd.annotation.metatype.Configurable;
 
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration;
+import com.liferay.portal.search.elasticsearch.configuration.EmbeddedElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch.internal.cluster.ClusterSettingsContext;
 import com.liferay.portal.search.elasticsearch.settings.BaseSettingsContributor;
 import com.liferay.portal.search.elasticsearch.settings.SettingsContributor;
@@ -37,7 +37,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Michael C. Han
  */
 @Component(
-	configurationPid = "com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration",
+	configurationPid = "com.liferay.portal.search.elasticsearch.configuration.EmbeddedElasticsearchConfiguration",
 	immediate = true, property = {"operation.mode=EMBEDDED"},
 	service = SettingsContributor.class
 )
@@ -49,20 +49,21 @@ public class NetworkSettingsContributor extends BaseSettingsContributor {
 
 	@Override
 	public void populate(ImmutableSettings.Builder builder) {
-		String networkBindHost = _elasticsearchConfiguration.networkBindHost();
+		String networkBindHost =
+			_embeddedElasticsearchConfiguration.networkBindHost();
 
 		if (Validator.isNotNull(networkBindHost)) {
 			builder.put("network.bind.host", networkBindHost);
 		}
 
 		String networkPublishHost =
-			_elasticsearchConfiguration.networkPublishHost();
+			_embeddedElasticsearchConfiguration.networkPublishHost();
 
 		if (Validator.isNotNull(networkPublishHost)) {
 			builder.put("network.publish.host", networkPublishHost);
 		}
 
-		String networkHost = _elasticsearchConfiguration.networkHost();
+		String networkHost = _embeddedElasticsearchConfiguration.networkHost();
 
 		if (Validator.isNull(networkBindHost) &&
 			Validator.isNull(networkHost) &&
@@ -79,7 +80,7 @@ public class NetworkSettingsContributor extends BaseSettingsContributor {
 		}
 
 		String transportTcpPort =
-			_elasticsearchConfiguration.transportTcpPort();
+			_embeddedElasticsearchConfiguration.transportTcpPort();
 
 		if (Validator.isNotNull(transportTcpPort)) {
 			builder.put("transport.tcp.port", transportTcpPort);
@@ -89,8 +90,8 @@ public class NetworkSettingsContributor extends BaseSettingsContributor {
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
-		_elasticsearchConfiguration = Configurable.createConfigurable(
-			ElasticsearchConfiguration.class, properties);
+		_embeddedElasticsearchConfiguration = Configurable.createConfigurable(
+			EmbeddedElasticsearchConfiguration.class, properties);
 	}
 
 	@Reference(unbind = "-")
@@ -101,6 +102,7 @@ public class NetworkSettingsContributor extends BaseSettingsContributor {
 	}
 
 	private ClusterSettingsContext _clusterSettingsContext;
-	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
+	private volatile EmbeddedElasticsearchConfiguration
+		_embeddedElasticsearchConfiguration;
 
 }

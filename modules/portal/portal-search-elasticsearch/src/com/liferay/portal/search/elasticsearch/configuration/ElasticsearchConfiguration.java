@@ -27,23 +27,8 @@ public interface ElasticsearchConfiguration {
 	@Meta.AD(deflt = "", required = false)
 	public String[] additionalConfigurations();
 
-	@Meta.AD(deflt = "false", required = false)
-	public boolean bootstrapMlockAll();
-
 	@Meta.AD(deflt = "LiferayElasticSearch", required = false)
 	public String clusterName();
-
-	@Meta.AD(deflt = "9300-9400", required = false)
-	public String discoveryZenPingUnicastHostsPort();
-
-	@Meta.AD(deflt = "", required = false)
-	public String[] httpCORSConfigurations();
-
-	@Meta.AD(deflt = "true", required = false)
-	public boolean httpCORSEnabled();
-
-	@Meta.AD(deflt = "true", required = false)
-	public boolean httpEnabled();
 
 	@Meta.AD(
 		deflt = "true",
@@ -51,15 +36,6 @@ public interface ElasticsearchConfiguration {
 		required = false
 	)
 	public boolean logExceptionsOnly();
-
-	@Meta.AD(deflt = "", required = false)
-	public String networkBindHost();
-
-	@Meta.AD(deflt = "", required = false)
-	public String networkHost();
-
-	@Meta.AD(deflt = "", required = false)
-	public String networkPublishHost();
 
 	@Meta.AD(
 		deflt = "EMBEDDED", optionLabels = {"Embedded", "Remote"},
@@ -70,8 +46,5 @@ public interface ElasticsearchConfiguration {
 
 	@Meta.AD(deflt = "5", required = false)
 	public int retryOnConflict();
-
-	@Meta.AD(deflt = "", required = false)
-	public String transportTcpPort();
 
 }

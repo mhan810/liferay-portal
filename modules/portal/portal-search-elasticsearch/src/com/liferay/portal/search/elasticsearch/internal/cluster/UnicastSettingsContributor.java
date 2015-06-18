@@ -17,7 +17,7 @@ package com.liferay.portal.search.elasticsearch.internal.cluster;
 import aQute.bnd.annotation.metatype.Configurable;
 
 import com.liferay.portal.kernel.util.CharPool;
-import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration;
+import com.liferay.portal.search.elasticsearch.configuration.EmbeddedElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch.settings.BaseSettingsContributor;
 import com.liferay.portal.search.elasticsearch.settings.SettingsContributor;
 
@@ -65,17 +65,16 @@ public class UnicastSettingsContributor extends BaseSettingsContributor {
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
-		elasticsearchConfiguration = Configurable.createConfigurable(
-			ElasticsearchConfiguration.class, properties);
+		_embeddedElasticsearchConfiguration = Configurable.createConfigurable(
+			EmbeddedElasticsearchConfiguration.class, properties);
 	}
-
-	protected volatile ElasticsearchConfiguration elasticsearchConfiguration;
 
 	private String[] _getHosts() {
 		String[] hosts = _clusterSettingsContext.getHosts();
 
 		String port =
-			elasticsearchConfiguration.discoveryZenPingUnicastHostsPort();
+			_embeddedElasticsearchConfiguration.
+				discoveryZenPingUnicastHostsPort();
 
 		int pos = port.indexOf(CharPool.MINUS);
 
@@ -94,5 +93,7 @@ public class UnicastSettingsContributor extends BaseSettingsContributor {
 	}
 
 	private ClusterSettingsContext _clusterSettingsContext;
+	private volatile EmbeddedElasticsearchConfiguration
+		_embeddedElasticsearchConfiguration;
 
 }

@@ -19,6 +19,7 @@ import aQute.bnd.annotation.metatype.Configurable;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration;
+import com.liferay.portal.search.elasticsearch.configuration.EmbeddedElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch.connection.BaseElasticsearchConnection;
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnection;
 import com.liferay.portal.search.elasticsearch.connection.OperationMode;
@@ -46,7 +47,10 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  * @author Michael C. Han
  */
 @Component(
-	configurationPid = "com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration",
+	configurationPid = {
+		"com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration",
+		"com.liferay.portal.search.elasticsearch.configuration.EmbeddedElasticsearchConfiguration"
+	},
 	immediate = true, property = {"operation.mode=EMBEDDED"},
 	service = ElasticsearchConnection.class
 )
@@ -77,6 +81,9 @@ public class EmbeddedElasticsearchConnection
 	protected void activate(Map<String, Object> properties) {
 		elasticsearchConfiguration = Configurable.createConfigurable(
 			ElasticsearchConfiguration.class, properties);
+
+		_embeddedElasticsearchConfiguration = Configurable.createConfigurable(
+			EmbeddedElasticsearchConfiguration.class, properties);
 	}
 
 	@Override
@@ -137,7 +144,7 @@ public class EmbeddedElasticsearchConnection
 
 		builder.put(
 			"bootstrap.mlockall",
-			elasticsearchConfiguration.bootstrapMlockAll());
+			_embeddedElasticsearchConfiguration.bootstrapMlockAll());
 		configureClustering(builder);
 
 		builder.put("index.number_of_replicas", 0);
@@ -163,6 +170,8 @@ public class EmbeddedElasticsearchConnection
 	private static final Log _log = LogFactoryUtil.getLog(
 		EmbeddedElasticsearchConnection.class);
 
+	private volatile EmbeddedElasticsearchConfiguration
+		_embeddedElasticsearchConfiguration;
 	private Node _node;
 
 }
