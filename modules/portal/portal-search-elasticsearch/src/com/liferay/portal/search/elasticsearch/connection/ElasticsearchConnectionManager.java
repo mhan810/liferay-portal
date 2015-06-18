@@ -140,6 +140,7 @@ public class ElasticsearchConnectionManager {
 		_operationMode = newOperationMode;
 	}
 
+	private String _clusterName;
 	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
 	private final Map<OperationMode, ElasticsearchConnection>
 		_elasticsearchConnections = new HashMap<>();
