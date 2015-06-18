@@ -16,6 +16,10 @@ package com.liferay.portal.search.elasticsearch.internal.cluster;
 
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.search.elasticsearch.internal.connection.ElasticsearchFixture;
+import org.mockito.Mockito;
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 
 import java.util.HashMap;
 
@@ -111,6 +115,16 @@ public class TestCluster {
 		@Override
 		public String[] getHosts() {
 			return new String[] {"127.0.0.1"};
+		}
+
+		@Override
+		public InetAddress getLocalBindInetAddress() {
+			return InetAddress.getLoopbackAddress();
+		}
+
+		@Override
+		public NetworkInterface getLocalBindNetworkInterface() {
+			return Mockito.mock(NetworkInterface.class);
 		}
 
 		@Override
