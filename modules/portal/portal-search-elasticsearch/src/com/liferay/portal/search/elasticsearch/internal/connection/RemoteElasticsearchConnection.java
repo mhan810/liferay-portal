@@ -63,11 +63,6 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 
 	@Override
-	public void close() {
-		super.close();
-	}
-
-	@Override
 	public OperationMode getOperationMode() {
 		return OperationMode.REMOTE;
 	}
