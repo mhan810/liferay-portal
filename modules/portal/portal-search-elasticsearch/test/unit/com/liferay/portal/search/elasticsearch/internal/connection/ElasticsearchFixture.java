@@ -21,10 +21,17 @@ import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfig
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnection;
 import com.liferay.portal.search.elasticsearch.internal.cluster.ClusterSettingsContext;
 import com.liferay.portal.search.elasticsearch.internal.cluster.UnicastSettingsContributor;
+import com.liferay.portal.search.elasticsearch.internal.connection.embedded.HttpSettingsContributor;
+import com.liferay.portal.search.elasticsearch.internal.connection.embedded.NetworkSettingsContributor;
+import com.liferay.portal.search.elasticsearch.internal.connection.embedded.PathsSettingsContributor;
+import com.liferay.portal.search.elasticsearch.internal.connection.embedded.TestModeSettingsContributor;
 
 import java.io.File;
 
+import java.lang.reflect.Method;
+
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 
@@ -149,31 +156,35 @@ public class ElasticsearchFixture {
 
 	}
 
-	protected void addUnicast(
+	protected void addNetworkSettingsContributor(
 		EmbeddedElasticsearchConnection embeddedElasticsearchConnection) {
 
 		if (_clusterSettingsContext == null) {
 			return;
 		}
 
-		UnicastSettingsContributor unicastSettingsContributor =
-			new UnicastSettingsContributor();
+		NetworkSettingsContributor networkSettingsContributor =
+			new NetworkSettingsContributor();
 
-		unicastSettingsContributor.setClusterSettingsContext(
-			_clusterSettingsContext);
+		execute(
+			NetworkSettingsContributor.class, "setClusterSettingsContext",
+			new Class<?>[] {ClusterSettingsContext.class},
+			networkSettingsContributor, new Object[] {_clusterSettingsContext});
 
-		unicastSettingsContributor.activate(
-			_elasticsearchConfigurationProperties);
+		execute(
+			NetworkSettingsContributor.class, "activate",
+			new Class<?>[] {Map.class}, networkSettingsContributor,
+			new Object[] {_elasticsearchConfigurationProperties});
 
 		embeddedElasticsearchConnection.addSettingsContributor(
-			unicastSettingsContributor);
+			networkSettingsContributor);
 	}
 
-	protected ElasticsearchConnection createElasticsearchConnection() {
-		EmbeddedElasticsearchConnection embeddedElasticsearchConnection =
-			new EmbeddedElasticsearchConnection();
+	protected void addPathSettingsContributor(
+		EmbeddedElasticsearchConnection embeddedElasticsearchConnection) {
 
-		addUnicast(embeddedElasticsearchConnection);
+		PathsSettingsContributor pathsSettingsContributor =
+			new PathsSettingsContributor();
 
 		Props props = Mockito.mock(Props.class);
 
@@ -183,7 +194,63 @@ public class ElasticsearchFixture {
 			_tmpDirName
 		);
 
-		embeddedElasticsearchConnection.setProps(props);
+		execute(
+			PathsSettingsContributor.class, "setProps",
+			new Class<?>[] {Props.class},
+			pathsSettingsContributor, new Object[] {props});
+
+		embeddedElasticsearchConnection.addSettingsContributor(
+			pathsSettingsContributor);
+	}
+
+	protected void addUnicastSettingsContributor(
+		EmbeddedElasticsearchConnection embeddedElasticsearchConnection) {
+
+		if (_clusterSettingsContext == null) {
+			return;
+		}
+
+		UnicastSettingsContributor unicastSettingsContributor =
+			new UnicastSettingsContributor();
+
+		execute(
+			UnicastSettingsContributor.class, "setClusterSettingsContext",
+			new Class<?>[] {ClusterSettingsContext.class},
+			unicastSettingsContributor, new Object[] {_clusterSettingsContext});
+
+		execute(
+			UnicastSettingsContributor.class, "activate",
+			new Class<?>[] {Map.class}, unicastSettingsContributor,
+			new Object[] {_elasticsearchConfigurationProperties});
+
+		embeddedElasticsearchConnection.addSettingsContributor(
+			unicastSettingsContributor);
+	}
+
+	protected ElasticsearchConnection createElasticsearchConnection() {
+		EmbeddedElasticsearchConnection embeddedElasticsearchConnection =
+			new EmbeddedElasticsearchConnection();
+
+		addNetworkSettingsContributor(embeddedElasticsearchConnection);
+		addPathSettingsContributor(embeddedElasticsearchConnection);
+		addUnicastSettingsContributor(embeddedElasticsearchConnection);
+
+		HttpSettingsContributor httpSettingsContributor =
+			new HttpSettingsContributor();
+
+		execute(
+			HttpSettingsContributor.class, "activate",
+			new Class<?>[] {Map.class}, httpSettingsContributor,
+			new Object[] {_elasticsearchConfigurationProperties});
+
+		embeddedElasticsearchConnection.addSettingsContributor(
+			httpSettingsContributor);
+
+		TestModeSettingsContributor testModeSettingsContributor =
+			new TestModeSettingsContributor();
+
+		embeddedElasticsearchConnection.addSettingsContributor(
+			testModeSettingsContributor);
 
 		embeddedElasticsearchConnection.activate(
 			_elasticsearchConfigurationProperties);
@@ -195,8 +262,25 @@ public class ElasticsearchFixture {
 		FileUtils.deleteDirectory(new File(_tmpDirName));
 	}
 
+	protected void execute(
+		Class<?> clazz, String methodName, Class<?>[] parameterTypes,
+		Object instance, Object[] parameters) {
+
+		try {
+			Method activateMethod = clazz.getDeclaredMethod(
+				methodName, parameterTypes);
+
+			activateMethod.setAccessible(true);
+
+			activateMethod.invoke(instance, parameters);
+		}
+		catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
 	private ClusterSettingsContext _clusterSettingsContext;
-	private final HashMap<String, Object> _elasticsearchConfigurationProperties;
+	private final Map<String, Object> _elasticsearchConfigurationProperties;
 	private ElasticsearchConnection _elasticsearchConnection;
 	private final String _tmpDirName;
 
