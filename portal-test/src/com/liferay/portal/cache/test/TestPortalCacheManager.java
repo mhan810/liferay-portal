@@ -30,10 +30,10 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * @author Tina Tian
  */
-public class MockPortalCacheManager<K extends Serializable, V>
+public class TestPortalCacheManager<K extends Serializable, V>
 	extends AbstractPortalCacheManager<K, V> {
 
-	public MockPortalCacheManager(String portalCacheManagerName) {
+	public TestPortalCacheManager(String portalCacheManagerName) {
 		setName(portalCacheManagerName);
 	}
 
