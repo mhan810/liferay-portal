@@ -56,9 +56,10 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 
 			luceneQuery = toCaseInsensitiveSubstringQuery(field, value);
 		}
-
-		luceneQuery = new org.apache.lucene.search.TermQuery(
-			new Term(field, value));
+		else {
+			luceneQuery = new org.apache.lucene.search.TermQuery(
+				new Term(field, value));
+		}
 
 		if (!termQuery.isDefaultBoost()) {
 			luceneQuery.setBoost(termQuery.getBoost());
