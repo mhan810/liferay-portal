@@ -191,7 +191,7 @@ public class EmbeddedElasticsearchConnection
 			_log.debug(
 				"Finished starting " +
 					elasticsearchConfiguration.clusterName() + " in " +
-						stopWatch.getTime() + " ms");
+					stopWatch.getTime() + " ms");
 		}
 
 		return client;
@@ -273,7 +273,9 @@ public class EmbeddedElasticsearchConnection
 			InetAddress localBindInetAddress =
 				_clusterSettingsContext.getLocalBindInetAddress();
 
-			networkHost = localBindInetAddress.getHostAddress();
+			if (localBindInetAddress != null) {
+				networkHost = localBindInetAddress.getHostAddress();
+			}
 		}
 
 		if (Validator.isNotNull(networkHost)) {
