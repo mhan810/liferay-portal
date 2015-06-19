@@ -190,7 +190,12 @@ public class ElasticsearchFixture {
 			_tmpDirName
 		);
 
+		embeddedElasticsearchConnection.setClusterSettingsContext(
+			_clusterSettingsContext);
 		embeddedElasticsearchConnection.setProps(props);
+
+		embeddedElasticsearchConnection.activate(
+			_elasticsearchConfigurationProperties);
 
 		return embeddedElasticsearchConnection;
 	}
