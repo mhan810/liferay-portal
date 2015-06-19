@@ -21,11 +21,15 @@ import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.proxy.TargetLocator;
 import com.liferay.portal.kernel.resiliency.spi.SPI;
 import com.liferay.portal.kernel.resiliency.spi.SPIUtil;
+import com.liferay.portal.kernel.resiliency.spi.cache.SPIPortalCacheManagerConfigurator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.nio.intraband.cache.BaseIntrabandPortalCacheManager;
 import com.liferay.portal.nio.intraband.proxy.IntrabandProxyInstallationUtil;
 import com.liferay.portal.nio.intraband.proxy.IntrabandProxyUtil;
 import com.liferay.portal.nio.intraband.proxy.WarnLogExceptionHandler;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceRegistration;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -36,11 +40,22 @@ import java.util.concurrent.Future;
 /**
  * @author Shuyang Zhou
  */
-public class SPIPortalCacheManagerConfigurator {
+public class SPIPortalCacheManagerConfiguratorImpl
+	implements SPIPortalCacheManagerConfigurator {
 
-	public static <K extends Serializable, V extends Serializable>
-		PortalCacheManager<K, V> createSPIPortalCacheManager(
-			PortalCacheManager<K, V> portalCacheManager)
+	public void afterPropertiesSet() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceRegistration = registry.registerService(
+			SPIPortalCacheManagerConfigurator.class, this);
+	}
+
+	@Override
+	public PortalCacheManager<? extends Serializable, ? extends Serializable>
+		createSPIPortalCacheManager(
+			PortalCacheManager
+				<? extends Serializable, ? extends Serializable>
+					portalCacheManager)
 		throws Exception {
 
 		if (!SPIUtil.isSPI()) {
@@ -74,11 +89,14 @@ public class SPIPortalCacheManagerConfigurator {
 
 		skeletonProxyMethodSignatures = future.get();
 
-		Class<? extends PortalCacheManager<K, V>> stubClass =
-			(Class<? extends PortalCacheManager<K, V>>)
-				IntrabandProxyUtil.getStubClass(
-					BaseIntrabandPortalCacheManager.class,
-					PortalCacheManager.class.getName());
+		Class<? extends PortalCacheManager
+			<? extends Serializable, ? extends Serializable>>
+				stubClass =
+					(Class<? extends PortalCacheManager
+						<? extends Serializable, ? extends Serializable>>)
+					IntrabandProxyUtil.getStubClass(
+						BaseIntrabandPortalCacheManager.class,
+						PortalCacheManager.class.getName());
 
 		stubProxyMethodSignatures = IntrabandProxyUtil.getProxyMethodSignatures(
 			stubClass);
@@ -86,12 +104,19 @@ public class SPIPortalCacheManagerConfigurator {
 		IntrabandProxyInstallationUtil.checkProxyMethodSignatures(
 			skeletonProxyMethodSignatures, stubProxyMethodSignatures);
 
-		portalCacheManager = IntrabandProxyUtil.newStubInstance(
+		return IntrabandProxyUtil.newStubInstance(
 			stubClass, StringPool.BLANK, registrationReference,
 			WarnLogExceptionHandler.INSTANCE);
-
-		return portalCacheManager;
 	}
+
+	public void destroy() {
+		if (_serviceRegistration != null) {
+			_serviceRegistration.unregister();
+		}
+	}
+
+	private ServiceRegistration<SPIPortalCacheManagerConfigurator>
+		_serviceRegistration;
 
 	private static class IntrabandPortalCacheTargetLocator
 		implements TargetLocator {

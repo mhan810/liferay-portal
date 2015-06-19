@@ -14,7 +14,7 @@
 
 package com.liferay.portal.webserver;
 
-import com.liferay.portal.kernel.cache.MultiVMPool;
+import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
@@ -27,8 +27,7 @@ import com.liferay.portal.servlet.filters.cache.CacheUtil;
 public class WebServerServletTokenImpl implements WebServerServletToken {
 
 	public void afterPropertiesSet() {
-		_portalCache = (PortalCache<Long, String>)_multiVMPool.getCache(
-			_CACHE_NAME);
+		_portalCache = MultiVMPoolUtil.getCache(_CACHE_NAME);
 	}
 
 	@Override
@@ -55,10 +54,6 @@ public class WebServerServletTokenImpl implements WebServerServletToken {
 		CacheUtil.clearCache();
 	}
 
-	public void setMultiVMPool(MultiVMPool multiVMPool) {
-		_multiVMPool = multiVMPool;
-	}
-
 	private String _createToken() {
 		return String.valueOf(System.currentTimeMillis());
 	}
@@ -66,7 +61,6 @@ public class WebServerServletTokenImpl implements WebServerServletToken {
 	private static final String _CACHE_NAME =
 		WebServerServletToken.class.getName();
 
-	private MultiVMPool _multiVMPool;
 	private PortalCache<Long, String> _portalCache;
 
 }
