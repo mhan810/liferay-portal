@@ -41,6 +41,10 @@
 			<bean class="com.liferay.portal.bean.ConstantsBeanFactoryImpl" />
 		</property>
 	</bean>
+	<bean id="com.liferay.portal.kernel.resiliency.spi.cache.SPIPortalCacheManagerConfigurator" class="com.liferay.portal.resiliency.spi.cache.SPIPortalCacheManagerConfiguratorImpl" />
+	<bean id="com.liferay.portal.kernel.resiliency.spi.cache.SPIPortalCacheManagerConfiguratorUtil" class="com.liferay.portal.kernel.resiliency.spi.cache.SPIPortalCacheManagerConfiguratorUtil">
+		<property name="sPIPortalCacheManagerConfigurator" ref="com.liferay.portal.kernel.resiliency.spi.cache.SPIPortalCacheManagerConfigurator" />
+	</bean>
 	<bean id="com.liferay.portal.kernel.cache.MultiVMPool" class="com.liferay.portal.cache.MultiVMPoolImpl" />
 	<bean id="com.liferay.portal.kernel.cache.MultiVMPoolUtil" class="com.liferay.portal.kernel.cache.MultiVMPoolUtil">
 		<property name="multiVMPool" ref="com.liferay.portal.kernel.cache.MultiVMPool" />

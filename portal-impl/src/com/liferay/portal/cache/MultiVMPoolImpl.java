@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
+import com.liferay.portal.kernel.resiliency.spi.cache.SPIPortalCacheManagerConfiguratorUtil;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.resiliency.spi.cache.SPIPortalCacheManagerConfigurator;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.registry.Filter;
 import com.liferay.registry.Registry;
@@ -64,8 +64,9 @@ public class MultiVMPoolImpl implements MultiVMPool {
 
 		try {
 			_portalCacheManager =
-				SPIPortalCacheManagerConfigurator.createSPIPortalCacheManager(
-					serviceTracker.waitForService(0));
+				SPIPortalCacheManagerConfiguratorUtil.
+					createSPIPortalCacheManager(
+						serviceTracker.waitForService(0));
 		}
 		catch (Exception e) {
 			throw new IllegalStateException(
