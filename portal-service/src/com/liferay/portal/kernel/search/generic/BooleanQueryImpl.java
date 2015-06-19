@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.QueryTerm;
 import com.liferay.portal.kernel.search.TermRangeQuery;
+import com.liferay.portal.kernel.search.query.PerFieldQueryFactory;
 import com.liferay.portal.kernel.search.query.QueryVisitor;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -114,10 +115,9 @@ public class BooleanQueryImpl extends BaseBooleanQueryImpl {
 
 	@Override
 	public Query addExactTerm(String field, String value) {
-		TermQueryImpl termQuery = new TermQueryImpl(
-			new QueryTermImpl(field, String.valueOf(value)));
+		Query query = _perFieldQueryFactory.getQuery(field, value);
 
-		return add(termQuery, BooleanClauseOccur.SHOULD);
+		return add(query, BooleanClauseOccur.SHOULD);
 	}
 
 	@Override
@@ -334,7 +334,7 @@ public class BooleanQueryImpl extends BaseBooleanQueryImpl {
 				query = new WildcardQueryImpl(queryTerm);
 			}
 			else {
-				query = new TermQueryImpl(queryTerm);
+				query = _perFieldQueryFactory.getQuery(field, value);
 			}
 
 			try {
@@ -405,8 +405,7 @@ public class BooleanQueryImpl extends BaseBooleanQueryImpl {
 				new QueryTermImpl(field, String.valueOf(value)));
 		}
 		else {
-			query = new TermQueryImpl(
-				new QueryTermImpl(field, String.valueOf(value)));
+			query = _perFieldQueryFactory.getQuery(field, value);
 		}
 
 		return add(query, booleanClauseOccur);
@@ -427,8 +426,17 @@ public class BooleanQueryImpl extends BaseBooleanQueryImpl {
 		return !_booleanClauses.isEmpty();
 	}
 
+	public void setPerFieldQueryFactory(
+		PerFieldQueryFactory perFieldQueryFactory) {
+
+		_perFieldQueryFactory = perFieldQueryFactory;
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		BooleanQueryImpl.class);
+
+	private static PerFieldQueryFactory _perFieldQueryFactory =
+		new PerFieldQueryFactoryImpl();
 
 	private final List<BooleanClause<Query>> _booleanClauses =
 		new ArrayList<>();

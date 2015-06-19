@@ -38,7 +38,7 @@
 	<bean id="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilderUtil" class="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilderUtil">
 		<property name="repositorySearchQueryBuilder" ref="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilder" />
 	</bean>
-	<bean id="com.liferay.portal.kernel.search.QueryPreProcessConfiguration" class="com.liferay.portal.search.QueryPreProcessConfigurationImpl">
+	<bean id="com.liferay.portal.kernel.search.PerFieldQueryFactory" class="com.liferay.portal.kernel.search.generic.PerFieldQueryFactoryImpl">
 		<property name="fieldNames">
 			<util:set>
 				<value>assetCategoryTitles?(_.+)?</value>
@@ -55,6 +55,9 @@
 				<value>userName</value>
 			</util:set>
 		</property>
+	</bean>
+	<bean id="com.liferay.portal.kernel.search.generic.BooleanQueryImpl" class="com.liferay.portal.kernel.search.generic.BooleanQueryImpl">
+		<property name="perFieldQueryFactory" ref="com.liferay.portal.kernel.search.PerFieldQueryFactory" />
 	</bean>
 	<bean id="com.liferay.portal.kernel.search.SearchEngineUtil" class="com.liferay.portal.kernel.search.SearchEngineUtil">
 		<property name="excludedEntryClassNames">

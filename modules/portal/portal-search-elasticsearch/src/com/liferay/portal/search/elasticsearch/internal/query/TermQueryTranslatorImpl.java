@@ -14,24 +14,16 @@
 
 package com.liferay.portal.search.elasticsearch.internal.query;
 
-import com.liferay.portal.kernel.search.QueryPreProcessConfiguration;
 import com.liferay.portal.kernel.search.QueryTerm;
 import com.liferay.portal.kernel.search.TermQuery;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch.query.TermQueryTranslator;
 
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.WildcardQueryBuilder;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
-import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author André de Oliveira
@@ -47,19 +39,6 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 		String field = queryTerm.getField();
 		String value = queryTerm.getValue();
 
-		if ((_queryPreProcessConfiguration != null) &&
-			_queryPreProcessConfiguration.isSubstringSearchAlways(field)) {
-
-			WildcardQueryBuilder wildcardQueryBuilder =
-				toCaseInsensitiveSubstringQuery(field, value);
-
-			if (!termQuery.isDefaultBoost()) {
-				wildcardQueryBuilder.boost(termQuery.getBoost());
-			}
-
-			return wildcardQueryBuilder;
-		}
-
 		MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(
 			field, value);
 
@@ -73,34 +52,5 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 
 		return matchQueryBuilder;
 	}
-
-	@Reference(
-		cardinality = ReferenceCardinality.OPTIONAL,
-		policy = ReferencePolicy.DYNAMIC,
-		policyOption = ReferencePolicyOption.GREEDY
-	)
-	protected void setQueryPreProcessConfiguration(
-		QueryPreProcessConfiguration queryPreProcessConfiguration) {
-
-		_queryPreProcessConfiguration = queryPreProcessConfiguration;
-	}
-
-	protected WildcardQueryBuilder toCaseInsensitiveSubstringQuery(
-		String field, String value) {
-
-		value = StringUtil.replace(value, StringPool.PERCENT, StringPool.BLANK);
-		value = StringUtil.toLowerCase(value);
-		value = StringPool.STAR + value + StringPool.STAR;
-
-		return QueryBuilders.wildcardQuery(field, value);
-	}
-
-	protected void unsetQueryPreProcessConfiguration(
-		QueryPreProcessConfiguration queryPreProcessConfiguration) {
-
-		_queryPreProcessConfiguration = null;
-	}
-
-	private QueryPreProcessConfiguration _queryPreProcessConfiguration;
 
 }
