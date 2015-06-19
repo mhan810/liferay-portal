@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.cache;
+package com.liferay.portal.cache.internal;
 
 import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
@@ -41,8 +41,8 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Tina Tian
  */
-@Component(immediate = true, service = SingleVMPortalCacheManagerBridge.class)
-public class SingleVMPortalCacheManagerBridge {
+@Component(immediate = true, service = MultiVMPortalCacheManagerBridge.class)
+public class MultiVMPortalCacheManagerBridge {
 
 	@Activate
 	@Modified
@@ -56,17 +56,17 @@ public class SingleVMPortalCacheManagerBridge {
 		sb.append(")(");
 		sb.append(PortalCacheManager.PORTAL_CACHE_MANAGER_NAME);
 		sb.append("=");
-		sb.append(PortalCacheManagerNames.SINGLE_VM);
+		sb.append(PortalCacheManagerNames.MULTI_VM);
 		sb.append(")(");
 		sb.append(PortalCacheManager.PORTAL_CACHE_MANAGER_TYPE);
 		sb.append("=");
-		sb.append(_props.get(PropsKeys.PORTAL_CACHE_MANAGER_TYPE_SINGLE_VM));
+		sb.append(_props.get(PropsKeys.PORTAL_CACHE_MANAGER_TYPE_MULTI_VM));
 		sb.append("))");
 
 		Filter filter = registry.getFilter(sb.toString());
 
 		_serviceTracker = registry.trackServices(
-			filter, new SingleVMPortalCacheManagerServiceTrackerCustomizer());
+			filter, new MultiVMPortalCacheManagerServiceTrackerCustomizer());
 
 		_serviceTracker.open();
 	}
@@ -84,35 +84,39 @@ public class SingleVMPortalCacheManagerBridge {
 	}
 
 	private Props _props;
-	private volatile ServiceTracker
-		<PortalCacheManager<? extends Serializable, ?>,
-		PortalCacheManager<? extends Serializable, ?>> _serviceTracker;
+	private volatile ServiceTracker<PortalCacheManager
+		<? extends Serializable, ? extends Serializable>, PortalCacheManager
+			<? extends Serializable, ? extends Serializable>> _serviceTracker;
 
-	private class SingleVMPortalCacheManagerServiceTrackerCustomizer
+	private class MultiVMPortalCacheManagerServiceTrackerCustomizer
 		implements ServiceTrackerCustomizer
-			<PortalCacheManager<? extends Serializable, ?>,
-			PortalCacheManager<? extends Serializable, ?>> {
+			<PortalCacheManager<? extends Serializable, ? extends Serializable>,
+			PortalCacheManager
+				<? extends Serializable, ? extends Serializable>> {
 
 		@Override
-		public PortalCacheManager<? extends Serializable, ?> addingService(
-			ServiceReference
-				<PortalCacheManager<? extends Serializable, ?>>
-					serviceReference) {
+		public PortalCacheManager
+				<? extends Serializable, ? extends Serializable> addingService(
+					ServiceReference
+						<PortalCacheManager
+							<? extends Serializable, ? extends Serializable>>
+								serviceReference) {
 
 			Registry registry = RegistryUtil.getRegistry();
 
-			PortalCacheManager<? extends Serializable, ?>
+			PortalCacheManager<? extends Serializable, ? extends Serializable>
 				portalCacheManager = registry.getService(serviceReference);
 
 			Map<String, Object> properties = new HashMap<>();
 
 			properties.put(
 				"portal.cache.manager.bridge",
-				SingleVMPortalCacheManagerBridge.class.getName());
+				MultiVMPortalCacheManagerBridge.class.getName());
 
 			_serviceRegistration = registry.registerService(
-				(Class<PortalCacheManager<? extends Serializable, ?>>)
-					(Class<?>)PortalCacheManager.class,
+				(Class<PortalCacheManager
+					<? extends Serializable, ? extends Serializable>>)
+						(Class<?>)PortalCacheManager.class,
 				portalCacheManager, properties);
 
 			return portalCacheManager;
@@ -120,16 +124,22 @@ public class SingleVMPortalCacheManagerBridge {
 
 		@Override
 		public void modifiedService(
-			ServiceReference<PortalCacheManager<? extends Serializable, ?>>
-				serviceReference,
-			PortalCacheManager<? extends Serializable, ?> service) {
+			ServiceReference
+				<PortalCacheManager
+					<? extends Serializable, ? extends Serializable>>
+						serviceReference,
+			PortalCacheManager<? extends Serializable, ? extends Serializable>
+				service) {
 		}
 
 		@Override
 		public void removedService(
-			ServiceReference<PortalCacheManager<? extends Serializable, ?>>
-				serviceReference,
-			PortalCacheManager<? extends Serializable, ?> service) {
+			ServiceReference
+				<PortalCacheManager
+					<? extends Serializable, ? extends Serializable>>
+						serviceReference,
+			PortalCacheManager<? extends Serializable, ? extends Serializable>
+				service) {
 
 			if (_serviceRegistration != null) {
 				_serviceRegistration.unregister();
@@ -137,7 +147,7 @@ public class SingleVMPortalCacheManagerBridge {
 		}
 
 		private ServiceRegistration
-			<PortalCacheManager<? extends Serializable, ?>>
+			<PortalCacheManager<? extends Serializable, ? extends Serializable>>
 				_serviceRegistration;
 
 	}

@@ -12,14 +12,11 @@
  * details.
  */
 
-package com.liferay.portal.cache;
+package com.liferay.portal.cache.internal;
 
-import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheManager;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.resiliency.spi.cache.SPIPortalCacheManagerConfigurator;
+import com.liferay.portal.kernel.cache.SingleVMPool;
 
 import java.io.Serializable;
 
@@ -35,8 +32,8 @@ import org.osgi.service.component.annotations.Reference;
  * @author Brian Wing Shun Chan
  * @author Michael Young
  */
-@Component(immediate = true, service = MultiVMPool.class)
-public class MultiVMPoolImpl implements MultiVMPool {
+@Component(immediate = true, service = SingleVMPool.class)
+public class SingleVMPoolImpl implements SingleVMPool {
 
 	@Override
 	public void clear() {
@@ -44,23 +41,21 @@ public class MultiVMPoolImpl implements MultiVMPool {
 	}
 
 	@Override
-	public PortalCache<? extends Serializable, ? extends Serializable> getCache(
+	public PortalCache<? extends Serializable, ?> getCache(
 		String portalCacheName) {
 
 		return _portalCacheManager.getCache(portalCacheName);
 	}
 
 	@Override
-	public PortalCache<? extends Serializable, ? extends Serializable> getCache(
+	public PortalCache<? extends Serializable, ?> getCache(
 		String portalCacheName, boolean blocking) {
 
 		return _portalCacheManager.getCache(portalCacheName, blocking);
 	}
 
 	@Override
-	public PortalCacheManager<? extends Serializable, ? extends Serializable>
-		getCacheManager() {
-
+	public PortalCacheManager<? extends Serializable, ?> getCacheManager() {
 		return _portalCacheManager;
 	}
 
@@ -72,17 +67,6 @@ public class MultiVMPoolImpl implements MultiVMPool {
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
-		try {
-			_portalCacheManager =
-				_spiPortalCacheManagerConfigurator.createSPIPortalCacheManager(
-					_portalCacheManager);
-		}
-		catch (Exception e) {
-			if (_log.isErrorEnabled()) {
-				_log.error("Unable to create SPI portal cache manager ", e);
-			}
-		}
-
 		_portalCacheManager.clearAll();
 	}
 
@@ -93,8 +77,8 @@ public class MultiVMPoolImpl implements MultiVMPool {
 
 	@Reference(
 		target =
-			"portal.cache.manager.bridge=" +
-				"com.liferay.portal.cache.MultiVMPortalCacheManagerBridge",
+			"(portal.cache.manager.bridge=" +
+				"com.liferay.portal.cache.internal.SingleVMPortalCacheManagerBridge)",
 		unbind = "-"
 	)
 	protected void setPortalCacheManager(
@@ -104,19 +88,6 @@ public class MultiVMPoolImpl implements MultiVMPool {
 		_portalCacheManager = portalCacheManager;
 	}
 
-	@Reference(unbind = "-")
-	protected void setSPIPortalCacheManagerConfigurator(
-		SPIPortalCacheManagerConfigurator spiPortalCacheManagerConfigurator) {
-
-		_spiPortalCacheManagerConfigurator = spiPortalCacheManagerConfigurator;
-	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		MultiVMPoolImpl.class);
-
-	private PortalCacheManager<? extends Serializable, ? extends Serializable>
-		_portalCacheManager;
-	private SPIPortalCacheManagerConfigurator
-		_spiPortalCacheManagerConfigurator;
+	private PortalCacheManager<? extends Serializable, ?> _portalCacheManager;
 
 }
