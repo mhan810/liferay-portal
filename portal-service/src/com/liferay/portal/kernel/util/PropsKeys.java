@@ -2153,12 +2153,6 @@ public interface PropsKeys {
 
 	public static final String SCHEMA_RUN_ENABLED = "schema.run.enabled";
 
-	public static final String SCRIPTING_JRUBY_COMPILE_MODE = "scripting.jruby.compile.mode";
-
-	public static final String SCRIPTING_JRUBY_COMPILE_THRESHOLD = "scripting.jruby.compile.threshold";
-
-	public static final String SCRIPTING_JRUBY_LOAD_PATHS = "scripting.jruby.load.paths";
-
 	public static final String SEARCH_CONTAINER_PAGE_DEFAULT_DELTA = "search.container.page.default.delta";
 
 	public static final String SEARCH_CONTAINER_PAGE_DELTA_VALUES = "search.container.page.delta.values";
