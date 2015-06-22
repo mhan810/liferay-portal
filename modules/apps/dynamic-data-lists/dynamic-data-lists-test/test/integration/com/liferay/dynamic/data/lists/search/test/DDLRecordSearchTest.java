@@ -105,6 +105,27 @@ public class DDLRecordSearchTest {
 	}
 
 	@Test
+	public void testExactPhraseMixedWithWords() throws Exception {
+		Assume.assumeTrue(isExactPhraseQueryImplementedForSearchEngine());
+
+		addRecord("One Two Three Four Five Six", RandomTestUtil.randomString());
+		addRecord(RandomTestUtil.randomString(), RandomTestUtil.randomString());
+
+		assertSearch("\"Two Three\" Five", 1);
+		assertSearch("\"Two Three\" Nine", 1);
+		assertSearch("\"Two  Four\" Five", 1);
+		assertSearch("\"Two  Four\" Nine", 0);
+		assertSearch("Three \"Five Six\"", 1);
+		assertSearch("Zero  \"Five Six\"", 1);
+		assertSearch("Three \"Four Six\"", 1);
+		assertSearch("Zero  \"Four Six\"", 0);
+		assertSearch("One  \"Three Four\" Six ", 1);
+		assertSearch("Zero \"Three Four\" Nine", 1);
+		assertSearch("One  \"Three Five\" Six ", 1);
+		assertSearch("Zero \"Three Five\" Nine", 0);
+	}
+
+	@Test
 	public void testPunctuationInExactPhrase() throws Exception {
 		Assume.assumeTrue(isExactPhraseQueryImplementedForSearchEngine());
 
