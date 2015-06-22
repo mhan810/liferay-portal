@@ -281,6 +281,17 @@ public class UserIndexerTest {
 		Assert.assertEquals("open4life", user.getScreenName());
 	}
 
+	@Test
+	public void testScreenNameTwoWords() throws Exception {
+		Assume.assumeFalse(isTestSkippedOnSolrBrokenByLPS56971());
+
+		addUserScreenName("Open4Life");
+
+		User user = assertSearchOneUser("screenName", "open lite");
+
+		Assert.assertEquals("open4life", user.getScreenName());
+	}
+
 	protected User addUser() throws Exception {
 		User user = UserTestUtil.addUser();
 
