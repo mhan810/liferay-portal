@@ -400,7 +400,7 @@ public class UserIndexerTest {
 	}
 
 	protected boolean isAPIWithoutQueryParserImplementedForSearchEngine() {
-		return !isSearchEngineVendor("Solr");
+		return !isSearchEngineVendor("Elasticsearch", "Solr");
 	}
 
 	protected boolean isEmptyQueryImplementedForSearchEngine() {
