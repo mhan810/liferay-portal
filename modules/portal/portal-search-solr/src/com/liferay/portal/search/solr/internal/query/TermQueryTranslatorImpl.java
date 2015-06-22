@@ -120,9 +120,22 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 
 		String value = term.text();
 
-		value = StringUtil.replace(value, StringPool.PERCENT, StringPool.BLANK);
-		value = StringUtil.toLowerCase(value);
-		value = StringPool.STAR + value + StringPool.STAR;
+		value = getWildcardText(value);
+
+		return new org.apache.lucene.search.WildcardQuery(
+			new Term(term.field(), value));
+	}
+
+	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
+		org.apache.lucene.search.PhraseQuery phraseQuery) {
+
+		Term[] terms = phraseQuery.getTerms();
+
+		Term term = terms[0];
+
+		String value = term.text();
+
+		value = getWildcardText(value);
 
 		return new org.apache.lucene.search.WildcardQuery(
 			new Term(term.field(), value));
@@ -143,8 +156,21 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 				(org.apache.lucene.search.TermQuery)query);
 		}
 
+		if (query instanceof org.apache.lucene.search.PhraseQuery) {
+			return toCaseInsensitiveSubstringQuery(
+				(org.apache.lucene.search.PhraseQuery)query);
+		}
+
 		throw new IllegalArgumentException(
 			"Invalid parsed query: " + query.toString());
+	}
+
+	private String getWildcardText(String value) {
+		value = StringUtil.replace(value, StringPool.PERCENT, StringPool.BLANK);
+		value = StringUtil.toLowerCase(value);
+		value = StringPool.STAR + value + StringPool.STAR;
+
+		return value;
 	}
 
 	protected void unsetQueryPreProcessConfiguration(
