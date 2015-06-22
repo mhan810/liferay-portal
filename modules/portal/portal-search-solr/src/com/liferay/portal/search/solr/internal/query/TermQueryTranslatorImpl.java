@@ -68,6 +68,19 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 		return luceneQuery;
 	}
 
+	protected org.apache.lucene.search.Query parseLuceneQuery(
+		String field, String value) {
+
+		QueryParser queryParser = new QueryParser(field, new KeywordAnalyzer());
+
+		try {
+			return queryParser.parse(value);
+		}
+		catch (ParseException pe) {
+			throw new IllegalArgumentException(pe);
+		}
+	}
+
 	@Reference(
 		cardinality = ReferenceCardinality.OPTIONAL,
 		policy = ReferencePolicy.DYNAMIC,
@@ -77,6 +90,27 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 		QueryPreProcessConfiguration queryPreProcessConfiguration) {
 
 		_queryPreProcessConfiguration = queryPreProcessConfiguration;
+	}
+
+	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
+		org.apache.lucene.search.BooleanQuery booleanQuery) {
+
+		org.apache.lucene.search.BooleanQuery newBooleanQuery =
+			new org.apache.lucene.search.BooleanQuery();
+
+		List<BooleanClause> clauses = booleanQuery.clauses();
+
+		for (BooleanClause booleanClause : clauses) {
+			org.apache.lucene.search.TermQuery termQuery =
+				(org.apache.lucene.search.TermQuery)booleanClause.getQuery();
+
+			org.apache.lucene.search.Query query =
+				toCaseInsensitiveSubstringQuery(termQuery);
+
+			newBooleanQuery.add(query, booleanClause.getOccur());
+		}
+
+		return newBooleanQuery;
 	}
 
 	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
@@ -97,7 +131,7 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
 		String field, String value) {
 
-		org.apache.lucene.search.Query query = _parseLuceneQuery(field, value);
+		org.apache.lucene.search.Query query = parseLuceneQuery(field, value);
 
 		if (query instanceof org.apache.lucene.search.BooleanQuery) {
 			return toCaseInsensitiveSubstringQuery(
@@ -109,47 +143,14 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 				(org.apache.lucene.search.TermQuery)query);
 		}
 
-		throw new IllegalArgumentException();
+		throw new IllegalArgumentException(
+			"Invalid parsed query: " + query.toString());
 	}
 
 	protected void unsetQueryPreProcessConfiguration(
 		QueryPreProcessConfiguration queryPreProcessConfiguration) {
 
 		_queryPreProcessConfiguration = null;
-	}
-
-	private org.apache.lucene.search.Query _parseLuceneQuery(
-		String field, String value) {
-
-		QueryParser queryParser = new QueryParser(field, new KeywordAnalyzer());
-
-		try {
-			return queryParser.parse(value);
-		}
-		catch (ParseException pe) {
-			throw new IllegalArgumentException(pe);
-		}
-	}
-
-	private org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
-		org.apache.lucene.search.BooleanQuery booleanQuery) {
-
-		org.apache.lucene.search.BooleanQuery newBooleanQuery =
-			new org.apache.lucene.search.BooleanQuery();
-
-		List<BooleanClause> clauses = booleanQuery.clauses();
-
-		for (BooleanClause booleanClause : clauses) {
-			org.apache.lucene.search.TermQuery termQuery =
-				(org.apache.lucene.search.TermQuery)booleanClause.getQuery();
-
-			org.apache.lucene.search.Query query =
-				toCaseInsensitiveSubstringQuery(termQuery);
-
-			newBooleanQuery.add(query, booleanClause.getOccur());
-		}
-
-		return newBooleanQuery;
 	}
 
 	private QueryPreProcessConfiguration _queryPreProcessConfiguration;
