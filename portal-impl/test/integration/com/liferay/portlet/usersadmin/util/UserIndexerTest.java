@@ -247,6 +247,15 @@ public class UserIndexerTest {
 		Assert.assertEquals("open4life", user.getScreenName());
 	}
 
+	@Test
+	public void testScreenNameTwoWords() throws Exception {
+		addUserScreenName("Open4Life");
+
+		User user = assertSearchOneUser("screenName", "open lite");
+
+		Assert.assertEquals("open4life", user.getScreenName());
+	}
+
 	protected User addUser() throws Exception {
 		User user = UserTestUtil.addUser();
 
