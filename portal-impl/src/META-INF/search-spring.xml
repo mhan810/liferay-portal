@@ -34,6 +34,7 @@
 
 	<!-- Util -->
 
+	<bean id="com.liferay.portal.kernel.search.IndexerRegistryUtil" class="com.liferay.portal.search.IndexerRegistryImpl" />
 	<bean id="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilder" class="com.liferay.portal.repository.search.RepositorySearchQueryBuilderImpl" />
 	<bean id="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilderUtil" class="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilderUtil">
 		<property name="repositorySearchQueryBuilder" ref="com.liferay.portal.kernel.repository.search.RepositorySearchQueryBuilder" />
