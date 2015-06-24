@@ -681,7 +681,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// Indexer
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+		Indexer<WikiPage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			WikiPage.class);
 
 		indexer.delete(page);
@@ -1733,12 +1733,10 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			extraDataJSONObject.toString(), 0);
 
 		if (!pageVersions.isEmpty()) {
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			Indexer<WikiPage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 				WikiPage.class);
 
-			for (WikiPage pageVersion : pageVersions) {
-				indexer.reindex(pageVersion);
-			}
+			indexer.reindex(pageVersions);
 		}
 
 		// Workflow
@@ -2181,7 +2179,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// Indexer
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+		Indexer<WikiPage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			WikiPage.class);
 
 		indexer.reindex(page);
@@ -2220,15 +2218,15 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			nodeId, title);
 
 		for (WikiPage childPage : childPages) {
-			childPage = doChangeNode(
+			doChangeNode(
 				userId, nodeId, childPage.getTitle(), newNodeId,
 				serviceContext);
-
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-				WikiPage.class);
-
-			indexer.reindex(childPage);
 		}
+
+		Indexer<WikiPage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			WikiPage.class);
+
+		indexer.reindex(childPages);
 	}
 
 	protected void changeRedirectorPagesNode(
@@ -2239,15 +2237,15 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		List<WikiPage> redirectorPages = getRedirectorPages(nodeId, title);
 
 		for (WikiPage redirectorPage : redirectorPages) {
-			redirectorPage = doChangeNode(
+			doChangeNode(
 				userId, nodeId, redirectorPage.getTitle(), newNodeId,
 				serviceContext);
-
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-				WikiPage.class);
-
-			indexer.reindex(redirectorPage);
 		}
+
+		Indexer<WikiPage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			WikiPage.class);
+
+		indexer.reindex(redirectorPages);
 	}
 
 	protected void checkDuplicationOnNodeChange(
@@ -2739,7 +2737,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// Index
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+		Indexer<WikiPage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			WikiPage.class);
 
 		indexer.reindex(page);
@@ -2882,7 +2880,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// Indexer
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+		Indexer<WikiPage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			WikiPage.class);
 
 		indexer.reindex(page);
@@ -3021,12 +3019,10 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			extraDataJSONObject.toString(), 0);
 
 		if (!pageVersions.isEmpty()) {
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			Indexer<WikiPage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 				WikiPage.class);
 
-			for (WikiPage pageVersion : pageVersions) {
-				indexer.reindex(pageVersion);
-			}
+			indexer.reindex(pageVersions);
 		}
 	}
 
