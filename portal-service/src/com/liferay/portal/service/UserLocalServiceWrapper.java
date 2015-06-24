@@ -2874,10 +2874,12 @@ public class UserLocalServiceWrapper implements UserLocalService,
 	* @throws PortalException if a portal exception occurred
 	*/
 	@Override
-	public void updateGroups(long userId, long[] newGroupIds,
+	public com.liferay.portal.model.User updateGroups(long userId,
+		long[] newGroupIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		_userLocalService.updateGroups(userId, newGroupIds, serviceContext);
+		return _userLocalService.updateGroups(userId, newGroupIds,
+			serviceContext);
 	}
 
 	/**
@@ -3077,11 +3079,12 @@ public class UserLocalServiceWrapper implements UserLocalService,
 	* @throws PortalException if a user with the primary key could not be found
 	*/
 	@Override
-	public void updateOrganizations(long userId, long[] newOrganizationIds,
+	public com.liferay.portal.model.User updateOrganizations(long userId,
+		long[] newOrganizationIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		_userLocalService.updateOrganizations(userId, newOrganizationIds,
-			serviceContext);
+		return _userLocalService.updateOrganizations(userId,
+			newOrganizationIds, serviceContext);
 	}
 
 	/**

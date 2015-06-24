@@ -171,6 +171,7 @@ public interface OrganizationLocalService extends BaseLocalService,
 	primary key could not be found or if the organization's
 	information was invalid
 	*/
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.portal.model.Organization addOrganization(long userId,
 		long parentOrganizationId, java.lang.String name,
 		java.lang.String type, long regionId, long countryId, long statusId,
