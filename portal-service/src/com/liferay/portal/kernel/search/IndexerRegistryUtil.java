@@ -21,27 +21,27 @@ import java.util.List;
  */
 public class IndexerRegistryUtil {
 
-	public static Indexer getIndexer(Class<?> clazz) {
+	public static <T> Indexer<T> getIndexer(Class<T> clazz) {
 		return _indexerRegistry.getIndexer(clazz);
 	}
 
-	public static Indexer getIndexer(String className) {
+	public static <T> Indexer<T> getIndexer(String className) {
 		return _indexerRegistry.getIndexer(className);
 	}
 
-	public static List<Indexer> getIndexers() {
+	public static List<Indexer<?>> getIndexers() {
 		return _indexerRegistry.getIndexers();
 	}
 
-	public static Indexer nullSafeGetIndexer(Class<?> clazz) {
+	public static <T> Indexer<T> nullSafeGetIndexer(Class<T> clazz) {
 		return _indexerRegistry.nullSafeGetIndexer(clazz);
 	}
 
-	public static Indexer nullSafeGetIndexer(String className) {
+	public static <T> Indexer<T> nullSafeGetIndexer(String className) {
 		return _indexerRegistry.nullSafeGetIndexer(className);
 	}
 
-	public static void register(Indexer indexer) {
+	public static void register(Indexer<?> indexer) {
 		_indexerRegistry.register(indexer);
 	}
 
