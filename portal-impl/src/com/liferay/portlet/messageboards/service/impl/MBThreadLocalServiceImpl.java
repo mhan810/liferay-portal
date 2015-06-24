@@ -144,8 +144,8 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 		// Indexer
 
-		Indexer messageIndexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			MBMessage.class);
+		Indexer<MBMessage> messageIndexer =
+			IndexerRegistryUtil.nullSafeGetIndexer(MBMessage.class);
 
 		// Attachments
 
@@ -261,8 +261,8 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 		// Indexer
 
-		Indexer threadIndexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			MBThread.class);
+		Indexer<MBThread> threadIndexer =
+			IndexerRegistryUtil.nullSafeGetIndexer(MBThread.class);
 
 		threadIndexer.delete(thread);
 
@@ -662,6 +662,8 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 		List<MBMessage> messages = mbMessageLocalService.getThreadMessages(
 			threadId, WorkflowConstants.STATUS_ANY);
 
+		List<MBMessage> messagesToIndex = new ArrayList<>();
+
 		for (MBMessage message : messages) {
 
 			// Message
@@ -699,12 +701,7 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 					MBMessage.class.getName(), message.getMessageId(), false);
 			}
 
-			// Indexer
-
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-				MBMessage.class);
-
-			indexer.reindex(message);
+			messagesToIndex.add(message);
 
 			// Workflow
 
@@ -714,6 +711,13 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 					MBMessage.class.getName(), message.getMessageId());
 			}
 		}
+
+		// Indexer
+
+		Indexer<MBMessage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			MBMessage.class);
+
+		indexer.reindex(messagesToIndex);
 
 		// Statistics
 
@@ -754,20 +758,24 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 		List<MBMessage> messages = mbMessagePersistence.findByG_C_T(
 			groupId, oldCategoryId, thread.getThreadId());
 
+		List<MBMessage> messagesToIndex = new ArrayList<>();
+
 		for (MBMessage message : messages) {
 			message.setCategoryId(categoryId);
 
 			mbMessagePersistence.update(message);
 
-			// Indexer
-
 			if (!message.isDiscussion()) {
-				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					MBMessage.class);
-
-				indexer.reindex(message);
+				messagesToIndex.add(message);
 			}
 		}
+
+		// Indexer
+
+		Indexer<MBMessage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			MBMessage.class);
+
+		indexer.reindex(messagesToIndex);
 
 		// Category
 
@@ -783,10 +791,10 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 		// Indexer
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			MBThread.class);
+		Indexer<MBThread> mbThreadIndexer =
+			IndexerRegistryUtil.nullSafeGetIndexer(MBThread.class);
 
-		indexer.reindex(thread);
+		mbThreadIndexer.reindex(thread);
 
 		return thread;
 	}
@@ -912,6 +920,8 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 		List<MBMessage> messages = mbMessageLocalService.getThreadMessages(
 			threadId, WorkflowConstants.STATUS_ANY);
 
+		List<MBMessage> messagesToIndex = new ArrayList<>();
+
 		for (MBMessage message : messages) {
 
 			// Message
@@ -948,13 +958,15 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 					MBMessage.class.getName(), message.getMessageId(), true);
 			}
 
-			// Indexer
-
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-				MBMessage.class);
-
-			indexer.reindex(message);
+			messagesToIndex.add(message);
 		}
+
+		// Indexer
+
+		Indexer<MBMessage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			MBMessage.class);
+
+		indexer.reindex(messagesToIndex);
 
 		// Statistics
 
@@ -1143,7 +1155,7 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 		// Indexer
 
 		if (!message.isDiscussion()) {
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			Indexer<MBMessage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 				MBMessage.class);
 
 			indexer.reindex(message);
@@ -1176,11 +1188,10 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 		// Indexer
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+		Indexer<MBThread> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			MBThread.class);
 
-		indexer.reindex(oldThread);
-		indexer.reindex(message.getThread());
+		indexer.reindex(oldThread, message.getThread());
 
 		return thread;
 	}
@@ -1242,7 +1253,7 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 		// Indexer
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+		Indexer<MBThread> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			MBThread.class);
 
 		indexer.reindex(thread);
@@ -1275,6 +1286,8 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 		List<MBMessage> messages = mbMessagePersistence.findByT_P(
 			oldThreadId, parentMessage.getMessageId());
 
+		List<MBMessage> messagesToIndex = new ArrayList<>();
+
 		for (MBMessage message : messages) {
 			message.setCategoryId(parentMessage.getCategoryId());
 			message.setThreadId(parentMessage.getThreadId());
@@ -1283,14 +1296,16 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 			mbMessagePersistence.update(message);
 
 			if (!message.isDiscussion()) {
-				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					MBMessage.class);
-
-				indexer.reindex(message);
+				messagesToIndex.add(message);
 			}
 
 			moveChildrenMessages(message, category, oldThreadId);
 		}
+
+		Indexer<MBMessage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			MBMessage.class);
+
+		indexer.reindex(messagesToIndex);
 	}
 
 }

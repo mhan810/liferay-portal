@@ -872,14 +872,14 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 				message.setCategoryId(toCategoryId);
 
 				mbMessagePersistence.update(message);
-
-				// Indexer
-
-				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					MBMessage.class);
-
-				indexer.reindex(message);
 			}
+
+			// Indexer
+
+			Indexer<MBMessage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+				MBMessage.class);
+
+			indexer.reindex(messages);
 		}
 
 		MBCategory toCategory = mbCategoryPersistence.findByPrimaryKey(
@@ -898,6 +898,8 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 	protected void moveDependentsToTrash(
 			User user, List<Object> categoriesAndThreads, long trashEntryId)
 		throws PortalException {
+
+		List<MBThread> mbThreads = new ArrayList<>();
 
 		for (Object object : categoriesAndThreads) {
 			if (object instanceof MBThread) {
@@ -929,12 +931,7 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 				mbThreadLocalService.moveDependentsToTrash(
 					user.getUserId(), thread.getThreadId(), trashEntryId);
 
-				// Indexer
-
-				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					MBThread.class);
-
-				indexer.reindex(thread);
+				mbThreads.add(thread);
 			}
 			else if (object instanceof MBCategory) {
 
@@ -969,11 +966,22 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 					trashEntryId);
 			}
 		}
+
+		// Indexer
+
+		if (!mbThreads.isEmpty()) {
+			Indexer<MBThread> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+				MBThread.class);
+
+			indexer.reindex(mbThreads);
+		}
 	}
 
 	protected void restoreDependentsFromTrash(
 			User user, List<Object> categoriesAndThreads)
 		throws PortalException {
+
+		List<MBThread> mbThreads = new ArrayList<>();
 
 		for (Object object : categoriesAndThreads) {
 			if (object instanceof MBThread) {
@@ -1011,12 +1019,7 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 					trashVersionLocalService.deleteTrashVersion(trashVersion);
 				}
 
-				// Indexer
-
-				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					MBThread.class);
-
-				indexer.reindex(thread);
+				mbThreads.add(thread);
 			}
 			else if (object instanceof MBCategory) {
 
@@ -1055,6 +1058,15 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 					trashVersionLocalService.deleteTrashVersion(trashVersion);
 				}
 			}
+		}
+
+		// Indexer
+
+		if (!mbThreads.isEmpty()) {
+			Indexer<MBThread> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+				MBThread.class);
+
+			indexer.reindex(mbThreads);
 		}
 	}
 
