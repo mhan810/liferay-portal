@@ -25,6 +25,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
 import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.QueryConfig;
@@ -224,6 +226,7 @@ public class OrganizationLocalServiceImpl
 	 *         primary key could not be found or if the organization's
 	 *         information was invalid
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public Organization addOrganization(
 			long userId, long parentOrganizationId, String name, String type,
@@ -310,15 +313,6 @@ public class OrganizationLocalServiceImpl
 			updateAsset(
 				userId, organization, serviceContext.getAssetCategoryIds(),
 				serviceContext.getAssetTagNames());
-		}
-
-		// Indexer
-
-		if ((serviceContext == null) || serviceContext.isIndexingEnabled()) {
-			Indexer<Organization> indexer =
-				IndexerRegistryUtil.nullSafeGetIndexer(Organization.class);
-
-			indexer.reindex(organization);
 		}
 
 		return organization;

@@ -15,6 +15,8 @@
 package com.liferay.portal.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -210,6 +212,7 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 	 *         invalid, or if the user did not have permission to add the
 	 *         organization
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public Organization addOrganization(
 			long parentOrganizationId, String name, String type, long regionId,
@@ -219,52 +222,30 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 			List<Website> websites, ServiceContext serviceContext)
 		throws PortalException {
 
-		boolean indexingEnabled = true;
+		Organization organization = addOrganization(
+			parentOrganizationId, name, type, regionId, countryId, statusId,
+			comments, site, serviceContext);
 
-		if (serviceContext != null) {
-			indexingEnabled = serviceContext.isIndexingEnabled();
+		UsersAdminUtil.updateAddresses(
+			Organization.class.getName(), organization.getOrganizationId(),
+			addresses);
 
-			serviceContext.setIndexingEnabled(false);
-		}
+		UsersAdminUtil.updateEmailAddresses(
+			Organization.class.getName(), organization.getOrganizationId(),
+			emailAddresses);
 
-		try {
-			Organization organization = addOrganization(
-				parentOrganizationId, name, type, regionId, countryId, statusId,
-				comments, site, serviceContext);
+		UsersAdminUtil.updateOrgLabors(
+			organization.getOrganizationId(), orgLabors);
 
-			UsersAdminUtil.updateAddresses(
-				Organization.class.getName(), organization.getOrganizationId(),
-				addresses);
+		UsersAdminUtil.updatePhones(
+			Organization.class.getName(), organization.getOrganizationId(),
+			phones);
 
-			UsersAdminUtil.updateEmailAddresses(
-				Organization.class.getName(), organization.getOrganizationId(),
-				emailAddresses);
+		UsersAdminUtil.updateWebsites(
+			Organization.class.getName(), organization.getOrganizationId(),
+			websites);
 
-			UsersAdminUtil.updateOrgLabors(
-				organization.getOrganizationId(), orgLabors);
-
-			UsersAdminUtil.updatePhones(
-				Organization.class.getName(), organization.getOrganizationId(),
-				phones);
-
-			UsersAdminUtil.updateWebsites(
-				Organization.class.getName(), organization.getOrganizationId(),
-				websites);
-
-			if (indexingEnabled) {
-				Indexer<Organization> indexer =
-					IndexerRegistryUtil.nullSafeGetIndexer(Organization.class);
-
-				indexer.reindex(organization);
-			}
-
-			return organization;
-		}
-		finally {
-			if (serviceContext != null) {
-				serviceContext.setIndexingEnabled(indexingEnabled);
-			}
-		}
+		return organization;
 	}
 
 	/**
