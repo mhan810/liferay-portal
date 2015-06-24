@@ -275,14 +275,16 @@ public class BookmarksFolderServiceImpl extends BookmarksFolderServiceBaseImpl {
 	}
 
 	@Override
-	public void restoreFolderFromTrash(long folderId) throws PortalException {
+	public BookmarksFolder restoreFolderFromTrash(long folderId)
+		throws PortalException {
+
 		BookmarksFolder folder = bookmarksFolderLocalService.getFolder(
 			folderId);
 
 		BookmarksFolderPermissionChecker.check(
 			getPermissionChecker(), folder, ActionKeys.UPDATE);
 
-		bookmarksFolderLocalService.restoreFolderFromTrash(
+		return bookmarksFolderLocalService.restoreFolderFromTrash(
 			getUserId(), folderId);
 	}
 
