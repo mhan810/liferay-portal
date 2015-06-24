@@ -322,13 +322,16 @@ public class JournalFolderServiceImpl extends JournalFolderServiceBaseImpl {
 	}
 
 	@Override
-	public void restoreFolderFromTrash(long folderId) throws PortalException {
+	public JournalFolder restoreFolderFromTrash(long folderId)
+		throws PortalException {
+
 		JournalFolder folder = journalFolderLocalService.getFolder(folderId);
 
 		JournalFolderPermission.check(
 			getPermissionChecker(), folder, ActionKeys.UPDATE);
 
-		journalFolderLocalService.restoreFolderFromTrash(getUserId(), folderId);
+		return journalFolderLocalService.restoreFolderFromTrash(
+			getUserId(), folderId);
 	}
 
 	@Override

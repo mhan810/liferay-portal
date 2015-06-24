@@ -585,6 +585,7 @@ public class JournalFolderLocalServiceImpl
 			folderId, parentFolderId, serviceContext);
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalFolder moveFolderToTrash(long userId, long folderId)
 		throws PortalException {
@@ -686,6 +687,7 @@ public class JournalFolderLocalServiceImpl
 
 					for (TreeModel treeModel : treeModels) {
 						JournalFolder journalFolder = (JournalFolder)treeModel;
+
 						indexer.reindex(journalFolder);
 					}
 				}
@@ -694,8 +696,9 @@ public class JournalFolderLocalServiceImpl
 		);
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public void restoreFolderFromTrash(long userId, long folderId)
+	public JournalFolder restoreFolderFromTrash(long userId, long folderId)
 		throws PortalException {
 
 		// Folder
@@ -710,7 +713,7 @@ public class JournalFolderLocalServiceImpl
 		TrashEntry trashEntry = trashEntryLocalService.getEntry(
 			JournalFolder.class.getName(), folderId);
 
-		updateStatus(userId, folder, trashEntry.getStatus());
+		folder = updateStatus(userId, folder, trashEntry.getStatus());
 
 		// Folders and articles
 
@@ -735,6 +738,8 @@ public class JournalFolderLocalServiceImpl
 		SocialActivityManagerUtil.addActivity(
 			userId, folder, SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
 			extraDataJSONObject.toString(), 0);
+
+		return folder;
 	}
 
 	@Override
@@ -917,6 +922,7 @@ public class JournalFolderLocalServiceImpl
 		}
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalFolder updateStatus(
 			long userId, JournalFolder folder, int status)
@@ -943,13 +949,6 @@ public class JournalFolderLocalServiceImpl
 			assetEntryLocalService.updateVisible(
 				JournalFolder.class.getName(), folder.getFolderId(), false);
 		}
-
-		// Index
-
-		Indexer<JournalFolder> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			JournalFolder.class);
-
-		indexer.reindex(folder);
 
 		return folder;
 	}
@@ -1130,12 +1129,12 @@ public class JournalFolderLocalServiceImpl
 			article.setTreePath(article.buildTreePath());
 
 			journalArticlePersistence.update(article);
-
-			Indexer<JournalArticle> indexer =
-				IndexerRegistryUtil.nullSafeGetIndexer(JournalArticle.class);
-
-			indexer.reindex(article);
 		}
+
+		Indexer<JournalArticle> indexer =
+			IndexerRegistryUtil.nullSafeGetIndexer(JournalArticle.class);
+
+		indexer.reindex(articles);
 
 		journalFolderLocalService.deleteFolder(fromFolder);
 	}
@@ -1169,7 +1168,7 @@ public class JournalFolderLocalServiceImpl
 
 					curArticle.setStatus(WorkflowConstants.STATUS_IN_TRASH);
 
-					journalArticlePersistence.update(curArticle);
+					journalArticleLocalService.updateJournalArticle(curArticle);
 
 					// Trash
 
@@ -1208,14 +1207,6 @@ public class JournalFolderLocalServiceImpl
 				assetEntryLocalService.updateVisible(
 					JournalArticle.class.getName(),
 					article.getResourcePrimKey(), false);
-
-				// Indexer
-
-				Indexer<JournalArticle> indexer =
-					IndexerRegistryUtil.nullSafeGetIndexer(
-						JournalArticle.class);
-
-				indexer.reindex(article);
 			}
 			else if (object instanceof JournalFolder) {
 
@@ -1231,7 +1222,7 @@ public class JournalFolderLocalServiceImpl
 
 				folder.setStatus(WorkflowConstants.STATUS_IN_TRASH);
 
-				journalFolderPersistence.update(folder);
+				journalFolderLocalService.updateJournalFolder(folder);
 
 				// Trash
 
@@ -1252,13 +1243,6 @@ public class JournalFolderLocalServiceImpl
 
 				assetEntryLocalService.updateVisible(
 					JournalFolder.class.getName(), folder.getFolderId(), false);
-
-				// Index
-
-				Indexer<JournalFolder> indexer =
-					IndexerRegistryUtil.nullSafeGetIndexer(JournalFolder.class);
-
-				indexer.reindex(folder);
 			}
 		}
 	}
@@ -1308,7 +1292,7 @@ public class JournalFolderLocalServiceImpl
 
 					curArticle.setStatus(curArticleOldStatus);
 
-					journalArticlePersistence.update(curArticle);
+					journalArticleLocalService.updateJournalArticle(curArticle);
 
 					// Trash
 
@@ -1325,14 +1309,6 @@ public class JournalFolderLocalServiceImpl
 						JournalArticle.class.getName(),
 						article.getResourcePrimKey(), true);
 				}
-
-				// Indexer
-
-				Indexer<JournalArticle> indexer =
-					IndexerRegistryUtil.nullSafeGetIndexer(
-						JournalArticle.class);
-
-				indexer.reindex(article);
 			}
 			else if (object instanceof JournalFolder) {
 
@@ -1356,7 +1332,7 @@ public class JournalFolderLocalServiceImpl
 
 				folder.setStatus(oldStatus);
 
-				journalFolderPersistence.update(folder);
+				journalFolderLocalService.updateJournalFolder(folder);
 
 				// Folders and articles
 
@@ -1376,13 +1352,6 @@ public class JournalFolderLocalServiceImpl
 
 				assetEntryLocalService.updateVisible(
 					JournalFolder.class.getName(), folder.getFolderId(), true);
-
-				// Index
-
-				Indexer<JournalFolder> indexer =
-					IndexerRegistryUtil.nullSafeGetIndexer(JournalFolder.class);
-
-				indexer.reindex(folder);
 			}
 		}
 	}
