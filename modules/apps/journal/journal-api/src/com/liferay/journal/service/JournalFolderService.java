@@ -159,7 +159,8 @@ public interface JournalFolderService extends BaseService {
 	public com.liferay.journal.model.JournalFolder moveFolderToTrash(
 		long folderId) throws PortalException;
 
-	public void restoreFolderFromTrash(long folderId) throws PortalException;
+	public com.liferay.journal.model.JournalFolder restoreFolderFromTrash(
+		long folderId) throws PortalException;
 
 	/**
 	* Sets the Spring bean ID for this bean.

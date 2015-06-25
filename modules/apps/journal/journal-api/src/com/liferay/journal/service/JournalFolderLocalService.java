@@ -398,6 +398,7 @@ public interface JournalFolderLocalService extends BaseLocalService,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws PortalException;
 
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.journal.model.JournalFolder moveFolderToTrash(
 		long userId, long folderId) throws PortalException;
 
@@ -407,8 +408,9 @@ public interface JournalFolderLocalService extends BaseLocalService,
 		java.lang.String parentTreePath, boolean reindex)
 		throws PortalException;
 
-	public void restoreFolderFromTrash(long userId, long folderId)
-		throws PortalException;
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
+	public com.liferay.journal.model.JournalFolder restoreFolderFromTrash(
+		long userId, long folderId) throws PortalException;
 
 	/**
 	* Sets the Spring bean ID for this bean.
@@ -459,6 +461,7 @@ public interface JournalFolderLocalService extends BaseLocalService,
 	public com.liferay.journal.model.JournalFolder updateJournalFolder(
 		com.liferay.journal.model.JournalFolder journalFolder);
 
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.journal.model.JournalFolder updateStatus(long userId,
 		com.liferay.journal.model.JournalFolder folder, int status)
 		throws PortalException;
