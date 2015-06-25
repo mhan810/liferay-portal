@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
@@ -459,6 +461,7 @@ public class WikiNodeLocalServiceImpl extends WikiNodeLocalServiceBaseImpl {
 		return node;
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public WikiNode updateStatus(
 			long userId, WikiNode node, int status,
@@ -475,13 +478,6 @@ public class WikiNodeLocalServiceImpl extends WikiNodeLocalServiceBaseImpl {
 		node.setStatusDate(new Date());
 
 		wikiNodePersistence.update(node);
-
-		// Indexer
-
-		Indexer<WikiNode> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			WikiNode.class);
-
-		indexer.reindex(node);
 
 		return node;
 	}

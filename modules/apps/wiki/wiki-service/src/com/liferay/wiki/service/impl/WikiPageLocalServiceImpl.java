@@ -27,6 +27,8 @@ import com.liferay.portal.kernel.notifications.UserNotificationDefinition;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.sanitizer.SanitizerUtil;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.settings.GroupServiceSettingsLocator;
@@ -1999,6 +2001,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			new HashMap<String, Serializable>());
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public WikiPage updateStatus(
 			long userId, WikiPage page, int status,
@@ -2168,13 +2171,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 				}
 			}
 		}
-
-		// Indexer
-
-		Indexer<WikiPage> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			WikiPage.class);
-
-		indexer.reindex(page);
 
 		return wikiPagePersistence.update(page);
 	}
