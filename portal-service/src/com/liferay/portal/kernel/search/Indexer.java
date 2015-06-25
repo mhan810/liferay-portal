@@ -34,6 +34,7 @@ public interface Indexer<T> {
 
 	public void delete(long companyId, String uid) throws SearchException;
 
+	@Bufferable
 	public void delete(T object) throws SearchException;
 
 	public String getClassName();
@@ -130,14 +131,17 @@ public interface Indexer<T> {
 	public void registerIndexerPostProcessor(
 		IndexerPostProcessor indexerPostProcessor);
 
+	@Bufferable
 	public void reindex(Collection<T> objects) throws SearchException;
 
 	public void reindex(String className, long classPK) throws SearchException;
 
 	public void reindex(String[] ids) throws SearchException;
 
+	@Bufferable
 	public void reindex(T object) throws SearchException;
 
+	@Bufferable
 	public void reindex(T... objects) throws SearchException;
 
 	public Hits search(SearchContext searchContext) throws SearchException;
