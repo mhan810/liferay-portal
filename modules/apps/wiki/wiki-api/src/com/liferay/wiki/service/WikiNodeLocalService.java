@@ -381,6 +381,7 @@ public interface WikiNodeLocalService extends BaseLocalService,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws PortalException;
 
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.wiki.model.WikiNode updateStatus(long userId,
 		com.liferay.wiki.model.WikiNode node, int status,
 		com.liferay.portal.service.ServiceContext serviceContext)

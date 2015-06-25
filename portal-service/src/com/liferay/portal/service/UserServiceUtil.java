@@ -1050,10 +1050,12 @@ public class UserServiceUtil {
 	* @throws PortalException if a user with the primary key could not be found
 	or if the current user did not have permission to update the user
 	*/
-	public static void updateOrganizations(long userId, long[] organizationIds,
+	public static com.liferay.portal.model.User updateOrganizations(
+		long userId, long[] organizationIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		getService().updateOrganizations(userId, organizationIds, serviceContext);
+		return getService()
+				   .updateOrganizations(userId, organizationIds, serviceContext);
 	}
 
 	/**

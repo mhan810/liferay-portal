@@ -47,6 +47,7 @@ public interface SCProductVersionLocalService extends BaseLocalService,
 	 *
 	 * Never modify or reference this interface directly. Always use {@link SCProductVersionLocalServiceUtil} to access the s c product version local service. Add custom service methods to {@link com.liferay.portlet.softwarecatalog.service.impl.SCProductVersionLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.portlet.softwarecatalog.model.SCProductVersion addProductVersion(
 		long userId, long productEntryId, java.lang.String version,
 		java.lang.String changeLog, java.lang.String downloadPageURL,
@@ -318,6 +319,7 @@ public interface SCProductVersionLocalService extends BaseLocalService,
 	public void setSCFrameworkVersionSCProductVersions(
 		long frameworkVersionId, long[] productVersionIds);
 
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.portlet.softwarecatalog.model.SCProductVersion updateProductVersion(
 		long productVersionId, java.lang.String version,
 		java.lang.String changeLog, java.lang.String downloadPageURL,
