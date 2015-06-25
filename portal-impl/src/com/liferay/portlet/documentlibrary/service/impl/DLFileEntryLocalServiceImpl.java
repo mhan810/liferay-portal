@@ -1795,7 +1795,7 @@ public class DLFileEntryLocalServiceImpl
 
 			});
 
-		final Indexer indexer = IndexerRegistryUtil.getIndexer(
+		final Indexer<DLFileEntry> indexer = IndexerRegistryUtil.getIndexer(
 			DLFileEntry.class.getName());
 
 		actionableDynamicQuery.setPerformActionMethod(
@@ -2005,8 +2005,8 @@ public class DLFileEntryLocalServiceImpl
 					dlFileVersion.getVersion(),
 					DLFileEntryConstants.VERSION_DEFAULT)) {
 
-				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					DLFileEntry.class);
+				Indexer<DLFileEntry> indexer =
+					IndexerRegistryUtil.nullSafeGetIndexer(DLFileEntry.class);
 
 				indexer.delete(dlFileEntry);
 			}
@@ -2565,7 +2565,7 @@ public class DLFileEntryLocalServiceImpl
 	}
 
 	protected void reindex(DLFileEntry dlFileEntry) throws SearchException {
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+		Indexer<DLFileEntry> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			DLFileEntry.class);
 
 		indexer.reindex(dlFileEntry);
