@@ -22,6 +22,8 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
@@ -134,6 +136,7 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 		mbThreadLocalService.deleteThread(thread);
 	}
 
+	@Indexable(type = IndexableType.DELETE)
 	@Override
 	@SystemEvent(
 		action = SystemEventConstants.ACTION_SKIP,
@@ -258,13 +261,6 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 			trashVersionLocalService.deleteTrashVersion(
 				MBThread.class.getName(), thread.getThreadId());
 		}
-
-		// Indexer
-
-		Indexer<MBThread> threadIndexer =
-			IndexerRegistryUtil.nullSafeGetIndexer(MBThread.class);
-
-		threadIndexer.delete(thread);
 
 		// Thread
 
@@ -812,7 +808,7 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 				status = trashVersion.getStatus();
 			}
 
-			updateStatus(userId, threadId, status);
+			mbThreadLocalService.updateStatus(userId, threadId, status);
 
 			// Trash
 
@@ -868,7 +864,7 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 			mbThreadPersistence.update(thread);
 		}
 
-		thread = updateStatus(
+		thread = mbThreadLocalService.updateStatus(
 			userId, thread.getThreadId(), WorkflowConstants.STATUS_IN_TRASH);
 
 		// Trash
@@ -990,7 +986,8 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 		TrashEntry trashEntry = trashEntryLocalService.getEntry(
 			MBThread.class.getName(), threadId);
 
-		updateStatus(userId, threadId, trashEntry.getStatus());
+		mbThreadLocalService.updateStatus(
+			userId, threadId, trashEntry.getStatus());
 
 		// Messages
 
@@ -1216,6 +1213,7 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 		}
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public MBThread updateStatus(long userId, long threadId, int status)
 		throws PortalException {
@@ -1247,13 +1245,6 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 				MBUtil.updateCategoryStatistics(category.getCategoryId());
 			}
 		}
-
-		// Indexer
-
-		Indexer<MBThread> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			MBThread.class);
-
-		indexer.reindex(thread);
 
 		return thread;
 	}

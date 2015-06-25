@@ -15,8 +15,8 @@
 package com.liferay.portlet.softwarecatalog.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 public class SCProductVersionLocalServiceImpl
 	extends SCProductVersionLocalServiceBaseImpl {
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public SCProductVersion addProductVersion(
 			long userId, long productEntryId, String version, String changeLog,
@@ -91,13 +92,6 @@ public class SCProductVersionLocalServiceImpl
 		productEntry.setModifiedDate(new Date());
 
 		scProductEntryPersistence.update(productEntry);
-
-		// Indexer
-
-		Indexer<SCProductEntry> indexer =
-			IndexerRegistryUtil.nullSafeGetIndexer(SCProductEntry.class);
-
-		indexer.reindex(productEntry);
 
 		return productVersion;
 	}
@@ -157,6 +151,7 @@ public class SCProductVersionLocalServiceImpl
 			productEntryId);
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public SCProductVersion updateProductVersion(
 			long productVersionId, String version, String changeLog,
@@ -198,13 +193,6 @@ public class SCProductVersionLocalServiceImpl
 		productEntry.setModifiedDate(new Date());
 
 		scProductEntryPersistence.update(productEntry);
-
-		// Indexer
-
-		Indexer<SCProductEntry> indexer =
-			IndexerRegistryUtil.nullSafeGetIndexer(SCProductEntry.class);
-
-		indexer.reindex(productEntry);
 
 		return productVersion;
 	}
