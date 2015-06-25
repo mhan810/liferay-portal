@@ -92,6 +92,7 @@
 				<util:constant static-field="com.liferay.portal.spring.hibernate.LastSessionRecorderUtil.TRANSACTION_LIFECYCLE_LISTENER" />
 				<util:constant static-field="com.liferay.portal.kernel.cache.transactional.TransactionalPortalCacheHelper.TRANSACTION_LIFECYCLE_LISTENER" />
 				<util:constant static-field="com.liferay.portal.spring.transaction.TransactionCommitCallbackUtil.TRANSACTION_LIFECYCLE_LISTENER" />
+				<util:constant static-field="com.liferay.portal.search.IndexerRequestBuffer.TRANSACTION_LIFECYCLE_LISTENER" />
 			</list>
 		</property>
 	</bean>
