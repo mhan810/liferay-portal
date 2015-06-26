@@ -14,6 +14,12 @@
 
 package com.liferay.portal.kernel.transaction;
 
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -78,7 +84,58 @@ public class TransactionLifecycleManager {
 			transactionLifecycleListener);
 	}
 
+	public TransactionLifecycleManager() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(
+			TransactionLifecycleListener.class,
+			new TransactionLifecycleListenerServiceTrackerCustomizer());
+
+		_serviceTracker.open();
+	}
+
+	private static final TransactionLifecycleManager _instance =
+		new TransactionLifecycleManager();
+
 	private static final Set<TransactionLifecycleListener>
 		_transactionLifecycleListeners = new CopyOnWriteArraySet<>();
+
+	private final ServiceTracker
+		<TransactionLifecycleListener, TransactionLifecycleListener>
+			_serviceTracker;
+
+	private static class TransactionLifecycleListenerServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer
+			<TransactionLifecycleListener, TransactionLifecycleListener> {
+
+		@Override
+		public TransactionLifecycleListener addingService(
+			ServiceReference<TransactionLifecycleListener> serviceReference) {
+
+			Registry registry = RegistryUtil.getRegistry();
+
+			TransactionLifecycleListener transactionLifecycleListener =
+				registry.getService(serviceReference);
+
+			_transactionLifecycleListeners.add(transactionLifecycleListener);
+
+			return transactionLifecycleListener;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<TransactionLifecycleListener> serviceReference,
+			TransactionLifecycleListener transactionLifecycleListener) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<TransactionLifecycleListener> serviceReference,
+			TransactionLifecycleListener transactionLifecycleListener) {
+
+			_transactionLifecycleListeners.remove(transactionLifecycleListener);
+		}
+
+	}
 
 }
