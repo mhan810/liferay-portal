@@ -23,52 +23,31 @@ import com.liferay.portal.kernel.util.InitialThreadLocal;
 
 import java.util.LinkedHashMap;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Michael C. Han
  */
-public class IndexerRequestBuffer {
+@Component(immediate = true, service = TransactionLifecycleListener.class)
+public class IndexerRequestBuffer implements TransactionLifecycleListener {
 
-	public static final TransactionLifecycleListener
-		TRANSACTION_LIFECYCLE_LISTENER = new TransactionLifecycleListener() {
-
-			@Override
-			public void created(
-				TransactionAttribute transactionAttribute,
-				TransactionStatus transactionStatus) {
-
-				begin();
-			}
-
-			@Override
-			public void committed(
-				TransactionAttribute transactionAttribute,
-				TransactionStatus transactionStatus) {
-
-				commit();
-			}
-
-			@Override
-			public void rollbacked(
-				TransactionAttribute transactionAttribute,
-				TransactionStatus transactionStatus, Throwable throwable) {
-
-				rollback();
-			}
-
-		};
-
-	public static void begin() {
-		IndexerRequestBuffer indexerRequestBuffer =
-			_indexerRequestBufferThreadLocal.get();
-
-		if (indexerRequestBuffer == null) {
-			indexerRequestBuffer = new IndexerRequestBuffer();
-
-			_indexerRequestBufferThreadLocal.set(indexerRequestBuffer);
-		}
+	public static IndexerRequestBuffer get() {
+		return _indexerRequestBufferThreadLocal.get();
 	}
 
-	public static void commit() {
+	public void add(IndexerRequest indexerRequest) {
+		_indexerRequests.put(indexerRequest, indexerRequest);
+	}
+
+	public void clear() {
+		_indexerRequests.clear();
+	}
+
+	@Override
+	public void committed(
+		TransactionAttribute transactionAttribute,
+		TransactionStatus transactionStatus) {
+
 		IndexerRequestBuffer indexerRequestBuffer =
 			_indexerRequestBufferThreadLocal.get();
 
@@ -79,27 +58,19 @@ public class IndexerRequestBuffer {
 		}
 	}
 
-	public static IndexerRequestBuffer get() {
-		return _indexerRequestBufferThreadLocal.get();
-	}
+	@Override
+	public void created(
+		TransactionAttribute transactionAttribute,
+		TransactionStatus transactionStatus) {
 
-	public static void rollback() {
 		IndexerRequestBuffer indexerRequestBuffer =
 			_indexerRequestBufferThreadLocal.get();
 
-		_indexerRequestBufferThreadLocal.remove();
+		if (indexerRequestBuffer == null) {
+			indexerRequestBuffer = new IndexerRequestBuffer();
 
-		if (indexerRequestBuffer != null) {
-			indexerRequestBuffer.clear();
+			_indexerRequestBufferThreadLocal.set(indexerRequestBuffer);
 		}
-	}
-
-	public void add(IndexerRequest indexerRequest) {
-		_indexerRequests.put(indexerRequest, indexerRequest);
-	}
-
-	public void clear() {
-		_indexerRequests.clear();
 	}
 
 	public void execute() {
@@ -116,6 +87,21 @@ public class IndexerRequestBuffer {
 		}
 
 		_indexerRequests.clear();
+	}
+
+	@Override
+	public void rollbacked(
+		TransactionAttribute transactionAttribute,
+		TransactionStatus transactionStatus, Throwable throwable) {
+
+		IndexerRequestBuffer indexerRequestBuffer =
+			_indexerRequestBufferThreadLocal.get();
+
+		_indexerRequestBufferThreadLocal.remove();
+
+		if (indexerRequestBuffer != null) {
+			indexerRequestBuffer.clear();
+		}
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
