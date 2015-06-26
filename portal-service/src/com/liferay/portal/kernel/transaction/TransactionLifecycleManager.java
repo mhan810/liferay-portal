@@ -94,11 +94,11 @@ public class TransactionLifecycleManager {
 		_serviceTracker.open();
 	}
 
-	private static final Set<TransactionLifecycleListener>
-		_transactionLifecycleListeners = new CopyOnWriteArraySet<>();
-
 	private static final TransactionLifecycleManager _instance =
 		new TransactionLifecycleManager();
+
+	private static final Set<TransactionLifecycleListener>
+		_transactionLifecycleListeners = new CopyOnWriteArraySet<>();
 
 	private final ServiceTracker
 		<TransactionLifecycleListener, TransactionLifecycleListener>
@@ -135,6 +135,7 @@ public class TransactionLifecycleManager {
 
 			_transactionLifecycleListeners.remove(transactionLifecycleListener);
 		}
+
 	}
 
 }
