@@ -195,9 +195,10 @@ public class BookmarksFolderServiceWrapper implements BookmarksFolderService,
 	}
 
 	@Override
-	public void restoreFolderFromTrash(long folderId)
+	public com.liferay.bookmarks.model.BookmarksFolder restoreFolderFromTrash(
+		long folderId)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		_bookmarksFolderService.restoreFolderFromTrash(folderId);
+		return _bookmarksFolderService.restoreFolderFromTrash(folderId);
 	}
 
 	/**

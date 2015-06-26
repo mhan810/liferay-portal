@@ -51,6 +51,8 @@ import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
 import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.QueryConfig;
@@ -468,9 +470,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		groupPersistence.addUsers(groupId, userIds);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(userIds);
+		reindex(userIds);
 
 		PermissionCacheUtil.clearCache(userIds);
 
@@ -491,9 +491,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		organizationPersistence.addUsers(organizationId, userIds);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(userIds);
+		reindex(userIds);
 
 		PermissionCacheUtil.clearCache(userIds);
 	}
@@ -525,9 +523,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		rolePersistence.addUsers(roleId, userIds);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(userIds);
+		reindex(userIds);
 
 		PermissionCacheUtil.clearCache(userIds);
 	}
@@ -546,9 +542,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		teamPersistence.addUsers(teamId, userIds);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(userIds);
+		reindex(userIds);
 
 		PermissionCacheUtil.clearCache(userIds);
 	}
@@ -661,9 +655,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		userGroupPersistence.addUsers(userGroupId, userIds);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(userIds);
+		reindex(userIds);
 
 		PermissionCacheUtil.clearCache(userIds);
 	}
@@ -715,6 +707,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @return the new user
 	 * @throws PortalException if the user's information was invalid
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	@SuppressWarnings("deprecation")
 	public User addUserWithWorkflow(
@@ -937,7 +930,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		// Organizations
 
-		updateOrganizations(userId, organizationIds, false);
+		doUpdateOrganizations(userId, organizationIds);
 
 		// Roles
 
@@ -976,12 +969,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			updateAsset(
 				creatorUserId, user, serviceContext.getAssetCategoryIds(),
 				serviceContext.getAssetTagNames());
-		}
-
-		// Indexer
-
-		if ((serviceContext == null) || serviceContext.isIndexingEnabled()) {
-			reindex(user);
 		}
 
 		// Workflow
@@ -1772,9 +1759,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		rolePersistence.removeUser(roleId, userId);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(userId);
+		reindex(userId);
 
 		PermissionCacheUtil.clearCache(userId);
 	}
@@ -1945,9 +1930,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		userGroupPersistence.removeUser(userGroupId, userId);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(userId);
+		reindex(userId);
 
 		PermissionCacheUtil.clearCache(userId);
 	}
@@ -3904,9 +3887,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		rolePersistence.setUsers(roleId, userIds);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(updateUserIds);
+		reindex(updateUserIds);
 
 		PermissionCacheUtil.clearCache(updateUserIds);
 	}
@@ -3938,9 +3919,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		userGroupPersistence.setUsers(userGroupId, userIds);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(updateUserIds);
+		reindex(updateUserIds);
 
 		PermissionCacheUtil.clearCache(updateUserIds);
 	}
@@ -3987,9 +3966,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		groupPersistence.removeUsers(groupId, userIds);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(userIds);
+		reindex(userIds);
 
 		PermissionCacheUtil.clearCache(userIds);
 
@@ -4035,9 +4012,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		organizationPersistence.removeUsers(organizationId, userIds);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(userIds);
+		reindex(userIds);
 
 		PermissionCacheUtil.clearCache(userIds);
 
@@ -4099,7 +4074,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		rolePersistence.removeUsers(roleId, users);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
+		Indexer<User> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			User.class);
 
 		indexer.reindex(users);
 
@@ -4138,9 +4114,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		rolePersistence.removeUsers(roleId, userIds);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(userIds);
+		reindex(userIds);
 
 		PermissionCacheUtil.clearCache(userIds);
 	}
@@ -4158,9 +4132,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		teamPersistence.removeUsers(teamId, userIds);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(userIds);
+		reindex(userIds);
 
 		PermissionCacheUtil.clearCache(userIds);
 	}
@@ -4178,9 +4150,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		userGroupPersistence.removeUsers(userGroupId, userIds);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
-
-		indexer.reindex(userIds);
+		reindex(userIds);
 
 		PermissionCacheUtil.clearCache(userIds);
 	}
@@ -4402,18 +4372,15 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 *         <code>null</code>)
 	 * @throws PortalException if a portal exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public void updateGroups(
+	public User updateGroups(
 			long userId, long[] newGroupIds, ServiceContext serviceContext)
 		throws PortalException {
 
-		boolean indexingEnabled = true;
+		doUpdateGroups(userId, newGroupIds, serviceContext);
 
-		if (serviceContext != null) {
-			indexingEnabled = serviceContext.isIndexingEnabled();
-		}
-
-		updateGroups(userId, newGroupIds, serviceContext, indexingEnabled);
+		return fetchUser(userId);
 	}
 
 	/**
@@ -4578,7 +4545,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 			// Indexer
 
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			Indexer<User> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 				User.class);
 
 			indexer.reindex(user);
@@ -4822,14 +4789,16 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 *         whether user indexing is enabled.
 	 * @throws PortalException if a user with the primary key could not be found
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public void updateOrganizations(
+	public User updateOrganizations(
 			long userId, long[] newOrganizationIds,
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		updateOrganizations(
-			userId, newOrganizationIds, serviceContext.isIndexingEnabled());
+		doUpdateOrganizations(userId, newOrganizationIds);
+
+		return fetchUser(userId);
 	}
 
 	/**
@@ -5118,6 +5087,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @return the user
 	 * @throws PortalException if a user with the primary key could not be found
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public User updateStatus(
 			long userId, int status, ServiceContext serviceContext)
@@ -5141,8 +5111,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		user.setStatus(status);
 
 		userPersistence.update(user);
-
-		reindex(user);
 
 		return user;
 	}
@@ -5204,6 +5172,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @throws PortalException if a user with the primary key could not be found
 	 *         or if the new information was invalid
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	@SuppressWarnings("deprecation")
 	public User updateUser(
@@ -5407,8 +5376,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		List<UserGroupRole> previousUserGroupRoles =
 			userGroupRolePersistence.findByUserId(userId);
 
-		updateGroups(userId, groupIds, serviceContext, false);
-		updateOrganizations(userId, organizationIds, false);
+		doUpdateGroups(userId, groupIds, serviceContext);
+		doUpdateOrganizations(userId, organizationIds);
 
 		// Roles
 
@@ -5454,15 +5423,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			!oldFullName.equals(user.getFullName())) {
 
 			mbMessageLocalService.updateUserName(userId, user.getFullName());
-		}
-
-		// Indexer
-
-		if ((serviceContext == null) || serviceContext.isIndexingEnabled()) {
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-				User.class);
-
-			indexer.reindex(user);
 		}
 
 		// Email address verification
@@ -5961,6 +5921,56 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		return searchContext;
 	}
 
+	protected void doUpdateGroups(
+			long userId, long[] newGroupIds, ServiceContext serviceContext)
+		throws PortalException {
+
+		if (newGroupIds == null) {
+			return;
+		}
+
+		long[] oldGroupIds = getGroupPrimaryKeys(userId);
+
+		for (long oldGroupId : oldGroupIds) {
+			if (!ArrayUtil.contains(newGroupIds, oldGroupId)) {
+				unsetGroupUsers(
+					oldGroupId, new long[] {userId}, serviceContext);
+			}
+		}
+
+		for (long newGroupId : newGroupIds) {
+			if (!ArrayUtil.contains(oldGroupIds, newGroupId)) {
+				addGroupUsers(newGroupId, new long[] {userId});
+			}
+		}
+
+		PermissionCacheUtil.clearCache(userId);
+	}
+
+	protected void doUpdateOrganizations(long userId, long[] newOrganizationIds)
+		throws PortalException {
+
+		if (newOrganizationIds == null) {
+			return;
+		}
+
+		long[] oldOrganizationIds = getOrganizationPrimaryKeys(userId);
+
+		for (long oldOrganizationId : oldOrganizationIds) {
+			if (!ArrayUtil.contains(newOrganizationIds, oldOrganizationId)) {
+				unsetOrganizationUsers(oldOrganizationId, new long[] {userId});
+			}
+		}
+
+		for (long newOrganizationId : newOrganizationIds) {
+			if (!ArrayUtil.contains(oldOrganizationIds, newOrganizationId)) {
+				addOrganizationUsers(newOrganizationId, new long[] {userId});
+			}
+		}
+
+		PermissionCacheUtil.clearCache(userId);
+	}
+
 	protected Date getBirthday(
 			int birthdayMonth, int birthdayDay, int birthdayYear)
 		throws PortalException {
@@ -6181,8 +6191,10 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		subscriptionSender.flushNotificationsAsync();
 	}
 
-	protected void reindex(final User user) {
-		final Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+	protected void reindex(long userId) throws SearchException {
+		final User user = userLocalService.fetchUser(userId);
+
+		final Indexer<User> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			User.class);
 
 		Callable<Void> callable = new ShardCallable<Void>(
@@ -6198,6 +6210,21 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		};
 
 		TransactionCommitCallbackRegistryUtil.registerCallback(callable);
+	}
+
+	protected void reindex(long[] userIds) throws SearchException {
+		Indexer<User> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			User.class);
+
+		List<User> users = new ArrayList<>(userIds.length);
+
+		for (Long userId : userIds) {
+			User user = userLocalService.fetchUser(userId);
+
+			users.add(user);
+		}
+
+		indexer.reindex(users);
 	}
 
 	protected void resetFailedLoginAttempts(User user) {
@@ -6338,72 +6365,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		user.setEmailAddress(emailAddress);
 		user.setDigest(StringPool.BLANK);
-	}
-
-	protected void updateGroups(
-			long userId, long[] newGroupIds, ServiceContext serviceContext,
-			boolean indexingEnabled)
-		throws PortalException {
-
-		if (newGroupIds == null) {
-			return;
-		}
-
-		long[] oldGroupIds = getGroupPrimaryKeys(userId);
-
-		for (long oldGroupId : oldGroupIds) {
-			if (!ArrayUtil.contains(newGroupIds, oldGroupId)) {
-				unsetGroupUsers(
-					oldGroupId, new long[] {userId}, serviceContext);
-			}
-		}
-
-		for (long newGroupId : newGroupIds) {
-			if (!ArrayUtil.contains(oldGroupIds, newGroupId)) {
-				addGroupUsers(newGroupId, new long[] {userId});
-			}
-		}
-
-		if (indexingEnabled) {
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-				User.class);
-
-			indexer.reindex(new long[] {userId});
-		}
-
-		PermissionCacheUtil.clearCache(userId);
-	}
-
-	protected void updateOrganizations(
-			long userId, long[] newOrganizationIds, boolean indexingEnabled)
-		throws PortalException {
-
-		if (newOrganizationIds == null) {
-			return;
-		}
-
-		long[] oldOrganizationIds = getOrganizationPrimaryKeys(userId);
-
-		for (long oldOrganizationId : oldOrganizationIds) {
-			if (!ArrayUtil.contains(newOrganizationIds, oldOrganizationId)) {
-				unsetOrganizationUsers(oldOrganizationId, new long[] {userId});
-			}
-		}
-
-		for (long newOrganizationId : newOrganizationIds) {
-			if (!ArrayUtil.contains(oldOrganizationIds, newOrganizationId)) {
-				addOrganizationUsers(newOrganizationId, new long[] {userId});
-			}
-		}
-
-		if (indexingEnabled) {
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-				User.class);
-
-			indexer.reindex(new long[] {userId});
-		}
-
-		PermissionCacheUtil.clearCache(userId);
 	}
 
 	protected void updateUserGroupRoles(

@@ -23,6 +23,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
 import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.QueryConfig;
@@ -154,6 +156,7 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 	 * @return the user group
 	 * @throws PortalException if the user group's information was invalid
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public UserGroup addUserGroup(
 			long userId, long companyId, String name, String description,
@@ -202,13 +205,6 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 		resourceLocalService.addResources(
 			companyId, 0, userId, UserGroup.class.getName(),
 			userGroup.getUserGroupId(), false, false, false);
-
-		// Indexer
-
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			UserGroup.class);
-
-		indexer.reindex(userGroup);
 
 		return userGroup;
 	}
@@ -848,9 +844,14 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 
 		userPersistence.setUserGroups(userId, userGroupIds);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
+		Indexer<User> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			User.class);
 
-		indexer.reindex(userId);
+		User user = userLocalService.fetchUser(userId);
+
+		if (user != null) {
+			indexer.reindex(user);
+		}
 
 		PermissionCacheUtil.clearCache(userId);
 	}
@@ -926,6 +927,7 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 	 * @throws PortalException if a user group with the primary key could not be
 	 *         found or if the new information was invalid
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public UserGroup updateUserGroup(
 			long companyId, long userGroupId, String name, String description,
@@ -944,13 +946,6 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 		userGroup.setExpandoBridgeAttributes(serviceContext);
 
 		userGroupPersistence.update(userGroup);
-
-		// Indexer
-
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			UserGroup.class);
-
-		indexer.reindex(userGroup);
 
 		return userGroup;
 	}

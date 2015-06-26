@@ -372,7 +372,7 @@ public class BookmarksFolderLocalServiceImpl
 				status = trashVersion.getStatus();
 			}
 
-			updateStatus(userId, folder, status);
+			folder = updateStatus(userId, folder, status);
 
 			// Trash
 
@@ -482,11 +482,15 @@ public class BookmarksFolderLocalServiceImpl
 						return;
 					}
 
-					Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-						BookmarksFolder.class);
+					Indexer<BookmarksFolder> indexer =
+						IndexerRegistryUtil.nullSafeGetIndexer(
+							BookmarksFolder.class);
 
 					for (TreeModel treeModel : treeModels) {
-						indexer.reindex(treeModel);
+						BookmarksFolder bookmarkFolder =
+							(BookmarksFolder)treeModel;
+
+						indexer.reindex(bookmarkFolder);
 					}
 				}
 
@@ -496,7 +500,7 @@ public class BookmarksFolderLocalServiceImpl
 
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public void restoreFolderFromTrash(long userId, long folderId)
+	public BookmarksFolder restoreFolderFromTrash(long userId, long folderId)
 		throws PortalException {
 
 		// Folder
@@ -507,7 +511,7 @@ public class BookmarksFolderLocalServiceImpl
 		TrashEntry trashEntry = trashEntryLocalService.getEntry(
 			BookmarksFolder.class.getName(), folderId);
 
-		updateStatus(userId, folder, trashEntry.getStatus());
+		folder = updateStatus(userId, folder, trashEntry.getStatus());
 
 		// Folders and entries
 
@@ -533,6 +537,8 @@ public class BookmarksFolderLocalServiceImpl
 			folder.getFolderId(),
 			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
 			extraDataJSONObject.toString(), 0);
+
+		return folder;
 	}
 
 	@Override
@@ -631,6 +637,7 @@ public class BookmarksFolderLocalServiceImpl
 		return folder;
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public BookmarksFolder updateStatus(
 			long userId, BookmarksFolder folder, int status)
@@ -657,13 +664,6 @@ public class BookmarksFolderLocalServiceImpl
 			assetEntryLocalService.updateVisible(
 				BookmarksFolder.class.getName(), folder.getFolderId(), false);
 		}
-
-		// Index
-
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			BookmarksFolder.class);
-
-		indexer.reindex(folder);
 
 		return folder;
 	}
@@ -737,12 +737,7 @@ public class BookmarksFolderLocalServiceImpl
 			entry.setFolderId(toFolderId);
 			entry.setTreePath(entry.buildTreePath());
 
-			bookmarksEntryPersistence.update(entry);
-
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-				BookmarksEntry.class);
-
-			indexer.reindex(entry);
+			bookmarksEntryLocalService.updateBookmarksEntry(entry);
 		}
 
 		bookmarksFolderLocalService.deleteFolder(fromFolder);
@@ -767,7 +762,7 @@ public class BookmarksFolderLocalServiceImpl
 
 				entry.setStatus(WorkflowConstants.STATUS_IN_TRASH);
 
-				bookmarksEntryPersistence.update(entry);
+				bookmarksEntryLocalService.updateBookmarksEntry(entry);
 
 				// Trash
 
@@ -787,13 +782,6 @@ public class BookmarksFolderLocalServiceImpl
 
 				assetEntryLocalService.updateVisible(
 					BookmarksEntry.class.getName(), entry.getEntryId(), false);
-
-				// Indexer
-
-				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					BookmarksEntry.class);
-
-				indexer.reindex(entry);
 			}
 			else if (object instanceof BookmarksFolder) {
 
@@ -834,8 +822,9 @@ public class BookmarksFolderLocalServiceImpl
 
 				// Index
 
-				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					BookmarksFolder.class);
+				Indexer<BookmarksFolder> indexer =
+					IndexerRegistryUtil.nullSafeGetIndexer(
+						BookmarksFolder.class);
 
 				indexer.reindex(folder);
 			}
@@ -868,7 +857,7 @@ public class BookmarksFolderLocalServiceImpl
 
 				entry.setStatus(oldStatus);
 
-				bookmarksEntryPersistence.update(entry);
+				bookmarksEntryLocalService.updateBookmarksEntry(entry);
 
 				// Trash
 
@@ -883,13 +872,6 @@ public class BookmarksFolderLocalServiceImpl
 						BookmarksEntry.class.getName(), entry.getEntryId(),
 						true);
 				}
-
-				// Indexer
-
-				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					BookmarksEntry.class);
-
-				indexer.reindex(entry);
 			}
 			else if (object instanceof BookmarksFolder) {
 
@@ -913,7 +895,7 @@ public class BookmarksFolderLocalServiceImpl
 
 				folder.setStatus(oldStatus);
 
-				bookmarksFolderPersistence.update(folder);
+				bookmarksFolderLocalService.updateBookmarksFolder(folder);
 
 				// Folders and entries
 
@@ -934,13 +916,6 @@ public class BookmarksFolderLocalServiceImpl
 				assetEntryLocalService.updateVisible(
 					BookmarksFolder.class.getName(), folder.getFolderId(),
 					true);
-
-				// Index
-
-				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					BookmarksFolder.class);
-
-				indexer.reindex(folder);
 			}
 		}
 	}

@@ -710,6 +710,7 @@ public interface WikiPageLocalService extends BaseLocalService,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws PortalException;
 
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.wiki.model.WikiPage updateStatus(long userId,
 		com.liferay.wiki.model.WikiPage page, int status,
 		com.liferay.portal.service.ServiceContext serviceContext,

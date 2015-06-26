@@ -17,6 +17,7 @@ package com.liferay.portal.search.test;
 import com.liferay.portal.kernel.comment.Comment;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.RelatedSearchResult;
 import com.liferay.portal.kernel.search.SearchResult;
@@ -37,6 +38,7 @@ import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalService;
 import com.liferay.portlet.messageboards.service.MBMessageLocalService;
 import com.liferay.registry.BasicRegistryImpl;
+import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.collections.ServiceReferenceMapper;
 import com.liferay.registry.collections.ServiceTrackerCollections;
@@ -67,6 +69,7 @@ public abstract class BaseSearchResultUtilTestCase extends PowerMockito {
 		setUpPortalUtil();
 		setUpPropsUtil();
 		setUpRegistryUtil();
+		setUpIndexerRegistry();
 		setUpServiceTrackerMap();
 		setUpSearchResultManagerUtil();
 	}
@@ -125,6 +128,13 @@ public abstract class BaseSearchResultUtilTestCase extends PowerMockito {
 
 		fastDateFormatFactoryUtil.setFastDateFormatFactory(
 			mock(FastDateFormatFactory.class));
+	}
+
+	protected void setUpIndexerRegistry() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		registry.registerService(
+			IndexerRegistry.class, new TestIndexerRegistry());
 	}
 
 	protected void setUpPortalUtil() {
