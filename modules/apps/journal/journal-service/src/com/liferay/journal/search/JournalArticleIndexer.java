@@ -776,7 +776,7 @@ public class JournalArticleIndexer
 					catch (PortalException pe) {
 						if (_log.isWarnEnabled()) {
 							_log.warn(
-								"Unable to index journal journalArticle " +
+								"Unable to index journal article " +
 									article.getId(),
 								pe);
 						}
