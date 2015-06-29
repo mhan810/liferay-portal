@@ -1710,7 +1710,7 @@ public class DLFileEntryLocalServiceImpl
 			String[] mimeTypes, int status, int start, int end)
 		throws PortalException {
 
-		Indexer indexer = IndexerRegistryUtil.getIndexer(
+		Indexer<DLFileEntry> indexer = IndexerRegistryUtil.getIndexer(
 			DLFileEntryConstants.getClassName());
 
 		SearchContext searchContext = new SearchContext();
