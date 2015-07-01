@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.cache;
+package com.liferay.portal.cache.internal;
 
 import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
