@@ -27,6 +27,9 @@ import com.liferay.portal.nio.intraband.cache.BaseIntrabandPortalCacheManager;
 import com.liferay.portal.nio.intraband.proxy.IntrabandProxyInstallationUtil;
 import com.liferay.portal.nio.intraband.proxy.IntrabandProxyUtil;
 import com.liferay.portal.nio.intraband.proxy.WarnLogExceptionHandler;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceRegistration;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -39,6 +42,13 @@ import java.util.concurrent.Future;
  */
 public class SPIPortalCacheManagerConfiguratorImpl
 	implements SPIPortalCacheManagerConfigurator {
+
+	public void afterPropertiesSet() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceRegistration = registry.registerService(
+			SPIPortalCacheManagerConfigurator.class, this);
+	}
 
 	@Override
 	public PortalCacheManager<? extends Serializable, ? extends Serializable>
@@ -98,6 +108,15 @@ public class SPIPortalCacheManagerConfiguratorImpl
 			stubClass, StringPool.BLANK, registrationReference,
 			WarnLogExceptionHandler.INSTANCE);
 	}
+
+	public void destroy() {
+		if (_serviceRegistration != null) {
+			_serviceRegistration.unregister();
+		}
+	}
+
+	private ServiceRegistration<SPIPortalCacheManagerConfigurator>
+		_serviceRegistration;
 
 	private static class IntrabandPortalCacheTargetLocator
 		implements TargetLocator {
