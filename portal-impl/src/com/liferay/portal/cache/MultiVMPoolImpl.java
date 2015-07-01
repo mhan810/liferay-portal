@@ -18,61 +18,26 @@ import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
-import com.liferay.portal.kernel.resiliency.spi.cache.SPIPortalCacheManagerConfiguratorUtil;
-import com.liferay.portal.kernel.security.pacl.DoPrivileged;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.util.PropsValues;
-import com.liferay.registry.Filter;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
-import com.liferay.registry.ServiceTracker;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.resiliency.spi.cache.SPIPortalCacheManagerConfigurator;
 
 import java.io.Serializable;
+
+import java.util.Map;
+
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Brian Wing Shun Chan
  * @author Michael Young
  */
-@DoPrivileged
+@Component(immediate = true, service = MultiVMPool.class)
 public class MultiVMPoolImpl implements MultiVMPool {
-
-	public MultiVMPoolImpl() {
-		Registry registry = RegistryUtil.getRegistry();
-
-		StringBundler sb = new StringBundler(11);
-
-		sb.append("(&(objectClass=");
-		sb.append(PortalCacheManager.class.getName());
-		sb.append(")(");
-		sb.append(PortalCacheManager.PORTAL_CACHE_MANAGER_NAME);
-		sb.append("=");
-		sb.append(PortalCacheManagerNames.MULTI_VM);
-		sb.append(")(");
-		sb.append(PortalCacheManager.PORTAL_CACHE_MANAGER_TYPE);
-		sb.append("=");
-		sb.append(PropsValues.PORTAL_CACHE_MANAGER_TYPE_MULTI_VM);
-		sb.append("))");
-
-		Filter filter = registry.getFilter(sb.toString());
-
-		ServiceTracker<PortalCacheManager
-			<? extends Serializable, ? extends Serializable>, PortalCacheManager
-				<? extends Serializable, ? extends Serializable>>
-					serviceTracker = registry.trackServices(filter);
-
-		serviceTracker.open();
-
-		try {
-			_portalCacheManager =
-				SPIPortalCacheManagerConfiguratorUtil.
-					createSPIPortalCacheManager(
-						serviceTracker.waitForService(0));
-		}
-		catch (Exception e) {
-			throw new IllegalStateException(
-				"Unable to initialize multi VM pool", e);
-		}
-	}
 
 	@Override
 	public void clear() {
@@ -105,8 +70,52 @@ public class MultiVMPoolImpl implements MultiVMPool {
 		_portalCacheManager.removeCache(portalCacheName);
 	}
 
-	private final
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		try {
+			_portalCacheManager =
+				_spiPortalCacheManagerConfigurator.createSPIPortalCacheManager(
+					_portalCacheManager);
+		}
+		catch (Exception e) {
+			if (_log.isErrorEnabled()) {
+				_log.error("Unable to create SPI portal cache manager ", e);
+			}
+		}
+
+		_portalCacheManager.clearAll();
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_portalCacheManager.clearAll();
+	}
+
+	@Reference(
+		target = "(portal.cache.manager.name=" + PortalCacheManagerNames.MULTI_VM + ")",
+		unbind = "-"
+	)
+	protected void setPortalCacheManager(
 		PortalCacheManager<? extends Serializable, ? extends Serializable>
-			_portalCacheManager;
+			portalCacheManager) {
+
+		_portalCacheManager = portalCacheManager;
+	}
+
+	@Reference(unbind = "-")
+	protected void setSPIPortalCacheManagerConfigurator(
+		SPIPortalCacheManagerConfigurator spiPortalCacheManagerConfigurator) {
+
+		_spiPortalCacheManagerConfigurator = spiPortalCacheManagerConfigurator;
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		MultiVMPoolImpl.class);
+
+	private PortalCacheManager<? extends Serializable, ? extends Serializable>
+		_portalCacheManager;
+	private SPIPortalCacheManagerConfigurator
+		_spiPortalCacheManagerConfigurator;
 
 }
