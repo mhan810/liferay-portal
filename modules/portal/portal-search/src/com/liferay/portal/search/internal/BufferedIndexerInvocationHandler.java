@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
+import com.liferay.portal.search.configuration.IndexerRegistryConfiguration;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -32,8 +33,12 @@ import java.util.Collection;
  */
 public class BufferedIndexerInvocationHandler implements InvocationHandler {
 
-	public BufferedIndexerInvocationHandler(Indexer indexer) {
+	public BufferedIndexerInvocationHandler(
+		Indexer indexer,
+		IndexerRegistryConfiguration indexerRegistryConfiguration) {
+
 		_indexer = indexer;
+		_indexerRegistryConfiguration = indexerRegistryConfiguration;
 	}
 
 	@Override
@@ -86,6 +91,12 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 		return null;
 	}
 
+	public void setIndexerRegistryConfiguration(
+		IndexerRegistryConfiguration indexerRegistryConfiguration) {
+
+		_indexerRegistryConfiguration = indexerRegistryConfiguration;
+	}
+
 	protected void bufferRequest(
 			MethodKey methodKey, Object object,
 			IndexerRequestBuffer indexerRequestBuffer)
@@ -99,8 +110,17 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 			methodKey.getMethod(), classModel, _indexer);
 
 		indexerRequestBuffer.add(indexerRequest);
+
+		int numRequests =
+			indexerRequestBuffer.size() -
+				_indexerRegistryConfiguration.maxBufferSize();
+
+		if (numRequests > 0) {
+			indexerRequestBuffer.execute(numRequests);
+		}
 	}
 
 	private final Indexer _indexer;
+	private volatile IndexerRegistryConfiguration _indexerRegistryConfiguration;
 
 }
