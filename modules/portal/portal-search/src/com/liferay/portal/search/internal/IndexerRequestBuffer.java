@@ -16,13 +16,17 @@ package com.liferay.portal.search.internal;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.transaction.TransactionLifecycleListener;
 import com.liferay.portal.kernel.util.InitialThreadLocal;
 
 import java.util.LinkedHashMap;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = TransactionLifecycleListener.class)
 public class IndexerRequestBuffer {
 
 	public static IndexerRequestBuffer get() {
