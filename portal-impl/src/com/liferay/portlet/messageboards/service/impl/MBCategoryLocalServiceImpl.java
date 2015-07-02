@@ -761,6 +761,49 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 	}
 
 	@Override
+	public MBCategory updateMessageCount(long categoryId)
+		throws PortalException {
+
+		MBCategory mbCategory = mbCategoryPersistence.fetchByPrimaryKey(
+			categoryId);
+
+		if (mbCategory == null) {
+			return null;
+		}
+
+		int messageCount = mbMessageLocalService.getCategoryMessagesCount(
+			mbCategory.getGroupId(), mbCategory.getCategoryId(),
+			WorkflowConstants.STATUS_APPROVED);
+
+		mbCategory.setMessageCount(messageCount);
+
+		return mbCategoryPersistence.update(mbCategory);
+	}
+
+	@Override
+	public MBCategory updateStatistics(long categoryId) throws PortalException {
+		MBCategory mbCategory = mbCategoryPersistence.fetchByPrimaryKey(
+			categoryId);
+
+		if (mbCategory == null) {
+			return null;
+		}
+
+		int messageCount = mbMessageLocalService.getCategoryMessagesCount(
+			mbCategory.getGroupId(), mbCategory.getCategoryId(),
+			WorkflowConstants.STATUS_APPROVED);
+
+		int threadCount = mbThreadLocalService.getCategoryThreadsCount(
+			mbCategory.getGroupId(), mbCategory.getCategoryId(),
+			WorkflowConstants.STATUS_APPROVED);
+
+		mbCategory.setMessageCount(messageCount);
+		mbCategory.setThreadCount(threadCount);
+
+		return mbCategoryPersistence.update(mbCategory);
+	}
+
+	@Override
 	public MBCategory updateStatus(long userId, long categoryId, int status)
 		throws PortalException {
 
@@ -779,6 +822,26 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 		mbCategoryPersistence.update(category);
 
 		return category;
+	}
+
+	@Override
+	public MBCategory updateThreadCount(long categoryId)
+		throws PortalException {
+
+		MBCategory mbCategory = mbCategoryPersistence.fetchByPrimaryKey(
+			categoryId);
+
+		if (mbCategory == null) {
+			return null;
+		}
+
+		int threadCount = mbThreadLocalService.getCategoryThreadsCount(
+			mbCategory.getGroupId(), mbCategory.getCategoryId(),
+			WorkflowConstants.STATUS_APPROVED);
+
+		mbCategory.setThreadCount(threadCount);
+
+		return mbCategoryPersistence.update(mbCategory);
 	}
 
 	protected long getParentCategoryId(long groupId, long parentCategoryId) {
@@ -875,8 +938,8 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 
 				// Indexer
 
-				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					MBMessage.class);
+				Indexer<MBMessage> indexer =
+					IndexerRegistryUtil.nullSafeGetIndexer(MBMessage.class);
 
 				indexer.reindex(message);
 			}
@@ -931,8 +994,8 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 
 				// Indexer
 
-				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					MBThread.class);
+				Indexer<MBThread> indexer =
+					IndexerRegistryUtil.nullSafeGetIndexer(MBThread.class);
 
 				indexer.reindex(thread);
 			}
@@ -1013,8 +1076,8 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 
 				// Indexer
 
-				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					MBThread.class);
+				Indexer<MBThread> indexer =
+					IndexerRegistryUtil.nullSafeGetIndexer(MBThread.class);
 
 				indexer.reindex(thread);
 			}
