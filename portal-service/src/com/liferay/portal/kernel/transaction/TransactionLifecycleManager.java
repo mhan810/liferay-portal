@@ -34,7 +34,7 @@ public class TransactionLifecycleManager {
 		TransactionStatus transactionStatus) {
 
 		for (TransactionLifecycleListener transactionLifecycleListener :
-			_instance._transactionLifecycleListeners) {
+				_instance._transactionLifecycleListeners) {
 
 			transactionLifecycleListener.committed(
 				transactionAttribute, transactionStatus);
@@ -46,7 +46,7 @@ public class TransactionLifecycleManager {
 		TransactionStatus transactionStatus) {
 
 		for (TransactionLifecycleListener transactionLifecycleListener :
-			_instance._transactionLifecycleListeners) {
+				_instance._transactionLifecycleListeners) {
 
 			transactionLifecycleListener.created(
 				transactionAttribute, transactionStatus);
@@ -58,7 +58,7 @@ public class TransactionLifecycleManager {
 		TransactionStatus transactionStatus, Throwable throwable) {
 
 		for (TransactionLifecycleListener transactionLifecycleListener :
-			_instance._transactionLifecycleListeners) {
+				_instance._transactionLifecycleListeners) {
 
 			transactionLifecycleListener.rollbacked(
 				transactionAttribute, transactionStatus, throwable);
@@ -98,12 +98,11 @@ public class TransactionLifecycleManager {
 	private static final TransactionLifecycleManager _instance =
 		new TransactionLifecycleManager();
 
-	private final Set<TransactionLifecycleListener>
-		_transactionLifecycleListeners = new CopyOnWriteArraySet<>();
-
 	private final ServiceTracker
 		<TransactionLifecycleListener, TransactionLifecycleListener>
 			_serviceTracker;
+	private final Set<TransactionLifecycleListener>
+		_transactionLifecycleListeners = new CopyOnWriteArraySet<>();
 
 	private class TransactionLifecycleListenerServiceTrackerCustomizer
 		implements ServiceTrackerCustomizer
