@@ -14,19 +14,16 @@
 
 package com.liferay.portal.search.internal;
 
+import aQute.bnd.annotation.metatype.Configurable;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.dummy.DummyIndexer;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
-import com.liferay.registry.ServiceReference;
-import com.liferay.registry.ServiceRegistration;
-import com.liferay.registry.ServiceTracker;
-import com.liferay.registry.ServiceTrackerCustomizer;
-import com.liferay.registry.collections.StringServiceRegistrationMap;
+import com.liferay.portal.search.configuration.IndexerRegistryConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,28 +33,22 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.ClassUtils;
 
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
+
 /**
  * @author Michael C. Han
  */
+@Component(
+	configurationPid = "com.liferay.portal.search.configuration.IndexerRegistryConfiguration",
+	immediate = true, service = IndexerRegistry.class
+)
 public class IndexerRegistryImpl implements IndexerRegistry {
-
-	public IndexerRegistryImpl() {
-		Registry registry = RegistryUtil.getRegistry();
-
-		_serviceTracker = registry.trackServices(
-			(Class<Indexer<?>>)(Class<?>)Indexer.class,
-			new IndexerServiceTrackerCustomizer());
-
-		_serviceTracker.open();
-	}
-
-	public void destroy() {
-		if (_serviceTracker != null) {
-			_serviceTracker.close();
-		}
-
-		_serviceTracker = null;
-	}
 
 	@Override
 	public <T> Indexer<T> getIndexer(Class<T> clazz) {
@@ -99,33 +90,37 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 	}
 
 	@Override
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY, unbind = "unregister"
+	)
 	public void register(Indexer<?> indexer) {
-		Registry registry = RegistryUtil.getRegistry();
+		Class<?> clazz = indexer.getClass();
 
-		ServiceRegistration<Indexer<?>> serviceRegistration =
-			registry.registerService(
-				(Class<Indexer<?>>)(Class<?>)Indexer.class, indexer);
+		_indexers.put(clazz.getName(), indexer);
 
-		_serviceRegistrations.put(indexer.getClassName(), serviceRegistration);
-	}
-
-	public void setBuffered(boolean buffered) {
-		_buffered = buffered;
+		_indexers.put(indexer.getClassName(), indexer);
 	}
 
 	@Override
 	public void unregister(Indexer<?> indexer) {
+		Class<?> clazz = indexer.getClass();
+
+		unregister(clazz.getName());
 		unregister(indexer.getClassName());
 	}
 
 	@Override
 	public void unregister(String className) {
-		ServiceRegistration<Indexer<?>> serviceRegistration =
-			_serviceRegistrations.remove(className);
+		_indexers.remove(className);
+	}
 
-		if (serviceRegistration != null) {
-			serviceRegistration.unregister();
-		}
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		_indexerRegistryConfiguration = Configurable.createConfigurable(
+			IndexerRegistryConfiguration.class, properties);
 	}
 
 	protected <T> Indexer<T> proxyIndexer(Indexer<T> indexer) {
@@ -135,7 +130,9 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 		IndexerRequestBuffer indexerRequestBuffer = IndexerRequestBuffer.get();
 
-		if ((indexerRequestBuffer == null) || !_buffered) {
+		if ((indexerRequestBuffer == null) ||
+			!_indexerRegistryConfiguration.buffered()) {
+
 			return indexer;
 		}
 
@@ -146,7 +143,7 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 			List interfaces = ClassUtils.getAllInterfaces(indexer.getClass());
 
 			proxiedIndexer = (Indexer)ProxyUtil.newProxyInstance(
-				getClass().getClassLoader(),
+				PortalClassLoaderUtil.getClassLoader(),
 				(Class[])interfaces.toArray(new Class[interfaces.size()]),
 				new BufferedIndexerInvocationHandler(indexer));
 
@@ -159,56 +156,11 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 	private static final Log _log = LogFactoryUtil.getLog(
 		IndexerRegistryImpl.class);
 
-	private boolean _buffered = true;
 	private final Indexer<?> _dummyIndexer = new DummyIndexer();
+	private volatile IndexerRegistryConfiguration _indexerRegistryConfiguration;
 	private final Map<String, Indexer<? extends Object>> _indexers =
 		new ConcurrentHashMap<>();
 	private final Map<String, Indexer<? extends Object>> _proxiedIndexers =
 		new ConcurrentHashMap<>();
-	private final StringServiceRegistrationMap<Indexer<?>>
-		_serviceRegistrations = new StringServiceRegistrationMap<>();
-	private ServiceTracker<Indexer<?>, Indexer<?>> _serviceTracker;
-
-	private class IndexerServiceTrackerCustomizer
-		implements ServiceTrackerCustomizer<Indexer<?>, Indexer<?>> {
-
-		@Override
-		public Indexer<?> addingService(
-			ServiceReference<Indexer<?>> serviceReference) {
-
-			Registry registry = RegistryUtil.getRegistry();
-
-			Indexer<?> indexer = registry.getService(serviceReference);
-
-			Class<?> clazz = indexer.getClass();
-
-			_indexers.put(clazz.getName(), indexer);
-
-			_indexers.put(indexer.getClassName(), indexer);
-
-			return indexer;
-		}
-
-		@Override
-		public void modifiedService(
-			ServiceReference<Indexer<?>> serviceReference, Indexer<?> indexer) {
-		}
-
-		@Override
-		public void removedService(
-			ServiceReference<Indexer<?>> serviceReference, Indexer<?> indexer) {
-
-			Registry registry = RegistryUtil.getRegistry();
-
-			registry.ungetService(serviceReference);
-
-			Class<?> clazz = indexer.getClass();
-
-			_indexers.remove(clazz.getName());
-
-			_indexers.remove(indexer.getClassName());
-		}
-
-	}
 
 }
