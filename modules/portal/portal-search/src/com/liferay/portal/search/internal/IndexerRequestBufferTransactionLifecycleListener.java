@@ -18,9 +18,12 @@ import com.liferay.portal.kernel.transaction.TransactionAttribute;
 import com.liferay.portal.kernel.transaction.TransactionLifecycleListener;
 import com.liferay.portal.kernel.transaction.TransactionStatus;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = TransactionLifecycleListener.class)
 public class IndexerRequestBufferTransactionLifecycleListener
 	implements TransactionLifecycleListener {
 
