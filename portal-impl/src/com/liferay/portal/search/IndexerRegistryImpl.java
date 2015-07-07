@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.dummy.DummyIndexer;
+import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.ServiceReference;
@@ -32,6 +33,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.commons.lang.ClassUtils;
 
 /**
  * @author Michael C. Han
@@ -63,7 +66,9 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 	@Override
 	public <T> Indexer<T> getIndexer(String className) {
-		return (Indexer<T>)_indexers.get(className);
+		Indexer<T> indexer = (Indexer<T>)_indexers.get(className);
+
+		return proxyIndexer(indexer);
 	}
 
 	@Override
@@ -104,6 +109,10 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 		_serviceRegistrations.put(indexer.getClassName(), serviceRegistration);
 	}
 
+	public void setBuffered(boolean buffered) {
+		_buffered = buffered;
+	}
+
 	@Override
 	public void unregister(Indexer<?> indexer) {
 		unregister(indexer.getClassName());
@@ -119,11 +128,42 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 		}
 	}
 
+	protected <T> Indexer<T> proxyIndexer(Indexer<T> indexer) {
+		if (indexer == null) {
+			return null;
+		}
+
+		IndexerRequestBuffer indexerRequestBuffer = IndexerRequestBuffer.get();
+
+		if ((indexerRequestBuffer == null) || !_buffered) {
+			return indexer;
+		}
+
+		Indexer<?> proxiedIndexer = _proxiedIndexers.get(
+			indexer.getClassName());
+
+		if (proxiedIndexer == null) {
+			List interfaces = ClassUtils.getAllInterfaces(indexer.getClass());
+
+			proxiedIndexer = (Indexer)ProxyUtil.newProxyInstance(
+				getClass().getClassLoader(),
+				(Class[])interfaces.toArray(new Class[interfaces.size()]),
+				new BufferedIndexerInvocationHandler(indexer));
+
+			_proxiedIndexers.put(indexer.getClassName(), proxiedIndexer);
+		}
+
+		return (Indexer<T>)proxiedIndexer;
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		IndexerRegistryImpl.class);
 
+	private boolean _buffered = true;
 	private final Indexer<?> _dummyIndexer = new DummyIndexer();
 	private final Map<String, Indexer<? extends Object>> _indexers =
+		new ConcurrentHashMap<>();
+	private final Map<String, Indexer<? extends Object>> _proxiedIndexers =
 		new ConcurrentHashMap<>();
 	private final StringServiceRegistrationMap<Indexer<?>>
 		_serviceRegistrations = new StringServiceRegistrationMap<>();
