@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.ServiceTracker;
-import com.liferay.registry.dependency.ServiceDependencyManager;
 
 import java.io.Serializable;
 
@@ -81,11 +80,6 @@ public class MultiVMPoolUtil {
 		_serviceTracker = registry.trackServices(MultiVMPool.class);
 
 		_serviceTracker.open();
-
-		ServiceDependencyManager serviceDependencyManager =
-			new ServiceDependencyManager();
-
-		serviceDependencyManager.registerDependencies(MultiVMPool.class);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
