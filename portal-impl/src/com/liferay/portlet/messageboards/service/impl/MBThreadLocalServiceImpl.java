@@ -1181,6 +1181,22 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 	}
 
 	@Override
+	public MBThread updateMessageCount(long threadId) throws PortalException {
+		MBThread mbThread = mbThreadPersistence.fetchByPrimaryKey(threadId);
+
+		if (mbThread == null) {
+			return null;
+		}
+
+		int messageCount = mbMessageLocalService.getThreadMessagesCount(
+			threadId, WorkflowConstants.STATUS_APPROVED);
+
+		mbThread.setMessageCount(messageCount);
+
+		return mbThreadPersistence.update(mbThread);
+	}
+
+	@Override
 	public void updateQuestion(long threadId, boolean question)
 		throws PortalException {
 
