@@ -14,10 +14,14 @@
 
 package com.liferay.portal.webserver;
 
-import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
+import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.dependency.ServiceDependencyListener;
+import com.liferay.registry.dependency.ServiceDependencyManager;
 
 /**
  * @author Brian Wing Shun Chan
@@ -27,7 +31,30 @@ import com.liferay.portal.servlet.filters.cache.CacheUtil;
 public class WebServerServletTokenImpl implements WebServerServletToken {
 
 	public void afterPropertiesSet() {
-		_portalCache = MultiVMPoolUtil.getCache(_CACHE_NAME);
+		ServiceDependencyManager serviceDependencyManager =
+			new ServiceDependencyManager();
+
+		serviceDependencyManager.addServiceDependencyListener(
+			new ServiceDependencyListener() {
+				@Override
+				public void dependenciesFulfilled() {
+					Registry registry = RegistryUtil.getRegistry();
+
+					MultiVMPool multiVMPool = registry.getService(
+						MultiVMPool.class);
+
+					_portalCache =
+						(PortalCache<Long, String>)multiVMPool.getCache(
+							_CACHE_NAME);
+				}
+
+				@Override
+				public void destroy() {
+				}
+			}
+		);
+
+		serviceDependencyManager.registerDependencies(MultiVMPool.class);
 	}
 
 	@Override
