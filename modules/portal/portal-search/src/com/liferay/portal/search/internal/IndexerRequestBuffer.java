@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.InitialThreadLocal;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 
 /**
@@ -72,6 +74,36 @@ public class IndexerRequestBuffer {
 		}
 
 		_indexerRequests.clear();
+	}
+
+	public void execute(int numRequests) {
+		Collection<IndexerRequest> completedIndexerRequests = new ArrayList<>();
+
+		for (IndexerRequest indexerRequest : _indexerRequests.values()) {
+			try {
+				indexerRequest.execute();
+			}
+			catch (Exception e) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Unable to execute index request: " + indexerRequest);
+				}
+			}
+
+			completedIndexerRequests.add(indexerRequest);
+
+			if (completedIndexerRequests.size() == numRequests) {
+				break;
+			}
+		}
+
+		for (IndexerRequest indexerRequest : completedIndexerRequests) {
+			_indexerRequests.remove(indexerRequest);
+		}
+	}
+
+	public int size() {
+		return _indexerRequests.size();
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

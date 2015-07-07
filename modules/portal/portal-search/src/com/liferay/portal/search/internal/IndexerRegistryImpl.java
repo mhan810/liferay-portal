@@ -113,7 +113,9 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 	@Override
 	public void unregister(String className) {
+		_bufferedInvocationHandlers.remove(className);
 		_indexers.remove(className);
+		_proxiedIndexers.remove(className);
 	}
 
 	@Activate
@@ -121,6 +123,13 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 	protected void activate(Map<String, Object> properties) {
 		_indexerRegistryConfiguration = Configurable.createConfigurable(
 			IndexerRegistryConfiguration.class, properties);
+
+		for (BufferedIndexerInvocationHandler bufferedIndexerInvocationHandler :
+				_bufferedInvocationHandlers.values()) {
+
+			bufferedIndexerInvocationHandler.setIndexerRegistryConfiguration(
+				_indexerRegistryConfiguration);
+		}
 	}
 
 	protected <T> Indexer<T> proxyIndexer(Indexer<T> indexer) {
@@ -142,10 +151,17 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 		if (proxiedIndexer == null) {
 			List interfaces = ClassUtils.getAllInterfaces(indexer.getClass());
 
+			BufferedIndexerInvocationHandler bufferedIndexerInvocationHandler =
+				new BufferedIndexerInvocationHandler(
+					indexer, _indexerRegistryConfiguration);
+
+			_bufferedInvocationHandlers.put(
+				indexer.getClassName(), bufferedIndexerInvocationHandler);
+
 			proxiedIndexer = (Indexer)ProxyUtil.newProxyInstance(
 				PortalClassLoaderUtil.getClassLoader(),
 				(Class[])interfaces.toArray(new Class[interfaces.size()]),
-				new BufferedIndexerInvocationHandler(indexer));
+				bufferedIndexerInvocationHandler);
 
 			_proxiedIndexers.put(indexer.getClassName(), proxiedIndexer);
 		}
@@ -156,6 +172,8 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 	private static final Log _log = LogFactoryUtil.getLog(
 		IndexerRegistryImpl.class);
 
+	private final Map<String, BufferedIndexerInvocationHandler>
+		_bufferedInvocationHandlers = new ConcurrentHashMap<>();
 	private final Indexer<?> _dummyIndexer = new DummyIndexer();
 	private volatile IndexerRegistryConfiguration _indexerRegistryConfiguration;
 	private final Map<String, Indexer<? extends Object>> _indexers =
