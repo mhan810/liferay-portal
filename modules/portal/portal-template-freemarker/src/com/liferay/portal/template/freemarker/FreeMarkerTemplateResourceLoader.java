@@ -84,20 +84,26 @@ public class FreeMarkerTemplateResourceLoader
 		_defaultTemplateResourceLoader = new DefaultTemplateResourceLoader(
 			TemplateConstants.LANG_TYPE_FTL,
 			_freemarkerEngineConfiguration.templateParsers(),
-			_freemarkerEngineConfiguration.resourceModificationCheck());
+			_freemarkerEngineConfiguration.resourceModificationCheck(),
+			_multiVMPool, _singleVMPool);
 	}
 
 	@Reference(unbind = "-")
 	protected void setMultiVMPool(MultiVMPool multiVMPool) {
+		_multiVMPool = multiVMPool;
 	}
 
 	@Reference(unbind = "-")
 	protected void setSingleVMPool(SingleVMPool singleVMPool) {
+		_singleVMPool = singleVMPool;
 	}
 
 	private static volatile DefaultTemplateResourceLoader
 		_defaultTemplateResourceLoader;
 	private static volatile FreeMarkerEngineConfiguration
 		_freemarkerEngineConfiguration;
+
+	private MultiVMPool _multiVMPool;
+	private SingleVMPool _singleVMPool;
 
 }
