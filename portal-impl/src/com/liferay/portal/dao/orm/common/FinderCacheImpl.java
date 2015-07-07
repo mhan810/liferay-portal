@@ -17,7 +17,7 @@ package com.liferay.portal.dao.orm.common;
 import com.liferay.portal.kernel.cache.CacheManagerListener;
 import com.liferay.portal.kernel.cache.CacheRegistryItem;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
-import com.liferay.portal.kernel.cache.MultiVMPool;
+import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheHelperUtil;
 import com.liferay.portal.kernel.cache.PortalCacheManager;
@@ -56,6 +56,11 @@ public class FinderCacheImpl
 
 	public void afterPropertiesSet() {
 		CacheRegistryUtil.register(this);
+
+		PortalCacheManager<? extends Serializable, ? extends Serializable>
+			portalCacheManager = MultiVMPoolUtil.getCacheManager();
+
+		portalCacheManager.registerCacheManagerListener(this);
 	}
 
 	@Override
@@ -208,7 +213,7 @@ public class FinderCacheImpl
 
 		String groupKey = _GROUP_KEY_PREFIX.concat(className);
 
-		_multiVMPool.removeCache(groupKey);
+		MultiVMPoolUtil.removeCache(groupKey);
 	}
 
 	@Override
@@ -236,15 +241,6 @@ public class FinderCacheImpl
 		portalCache.remove(cacheKey);
 	}
 
-	public void setMultiVMPool(MultiVMPool multiVMPool) {
-		_multiVMPool = multiVMPool;
-
-		PortalCacheManager<? extends Serializable, ? extends Serializable>
-			portalCacheManager = _multiVMPool.getCacheManager();
-
-		portalCacheManager.registerCacheManagerListener(this);
-	}
-
 	private PortalCache<Serializable, Serializable> _getPortalCache(
 		String className, boolean createIfAbsent) {
 
@@ -254,9 +250,8 @@ public class FinderCacheImpl
 		if ((portalCache == null) && createIfAbsent) {
 			String groupKey = _GROUP_KEY_PREFIX.concat(className);
 
-			portalCache =
-				(PortalCache<Serializable, Serializable>)_multiVMPool.getCache(
-					groupKey, PropsValues.VALUE_OBJECT_FINDER_BLOCKING_CACHE);
+			portalCache = MultiVMPoolUtil.getCache(
+				groupKey, PropsValues.VALUE_OBJECT_FINDER_BLOCKING_CACHE);
 
 			PortalCache<Serializable, Serializable> previousPortalCache =
 				_portalCaches.putIfAbsent(className, portalCache);
@@ -360,7 +355,6 @@ public class FinderCacheImpl
 		}
 	}
 
-	private MultiVMPool _multiVMPool;
 	private final ConcurrentMap<String, PortalCache<Serializable, Serializable>>
 		_portalCaches = new ConcurrentHashMap<>();
 

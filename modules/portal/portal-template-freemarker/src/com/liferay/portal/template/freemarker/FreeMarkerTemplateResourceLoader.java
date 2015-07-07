@@ -16,8 +16,8 @@ package com.liferay.portal.template.freemarker;
 
 import aQute.bnd.annotation.metatype.Configurable;
 
-import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
-import com.liferay.portal.kernel.cache.SingleVMPoolUtil;
+import com.liferay.portal.kernel.cache.MultiVMPool;
+import com.liferay.portal.kernel.cache.SingleVMPool;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateResource;
 import com.liferay.portal.kernel.template.TemplateResourceLoader;
@@ -88,11 +88,11 @@ public class FreeMarkerTemplateResourceLoader
 	}
 
 	@Reference(unbind = "-")
-	protected void setMultiVMPoolUtil(MultiVMPoolUtil multiVMPoolUtil) {
+	protected void setMultiVMPool(MultiVMPool multiVMPool) {
 	}
 
 	@Reference(unbind = "-")
-	protected void setSingleVMPoolUtil(SingleVMPoolUtil singleVMPoolUtil) {
+	protected void setSingleVMPool(SingleVMPool singleVMPool) {
 	}
 
 	private static volatile DefaultTemplateResourceLoader

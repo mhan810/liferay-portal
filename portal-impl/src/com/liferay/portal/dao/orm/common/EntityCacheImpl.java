@@ -18,7 +18,7 @@ import com.liferay.portal.cache.mvcc.MVCCPortalCacheFactory;
 import com.liferay.portal.kernel.cache.CacheManagerListener;
 import com.liferay.portal.kernel.cache.CacheRegistryItem;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
-import com.liferay.portal.kernel.cache.MultiVMPool;
+import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheHelperUtil;
 import com.liferay.portal.kernel.cache.PortalCacheManager;
@@ -61,6 +61,11 @@ public class EntityCacheImpl
 
 	public void afterPropertiesSet() {
 		CacheRegistryUtil.register(this);
+
+		PortalCacheManager<? extends Serializable, ? extends Serializable>
+			portalCacheManager = MultiVMPoolUtil.getCacheManager();
+
+		portalCacheManager.registerCacheManagerListener(this);
 	}
 
 	@Override
@@ -304,7 +309,7 @@ public class EntityCacheImpl
 
 		String groupKey = _GROUP_KEY_PREFIX.concat(className);
 
-		_multiVMPool.removeCache(groupKey);
+		MultiVMPoolUtil.removeCache(groupKey);
 	}
 
 	@Override
@@ -332,15 +337,6 @@ public class EntityCacheImpl
 		Serializable cacheKey = _encodeCacheKey(primaryKey);
 
 		portalCache.remove(cacheKey);
-	}
-
-	public void setMultiVMPool(MultiVMPool multiVMPool) {
-		_multiVMPool = multiVMPool;
-
-		PortalCacheManager<? extends Serializable, ? extends Serializable>
-			portalCacheManager = _multiVMPool.getCacheManager();
-
-		portalCacheManager.registerCacheManagerListener(this);
 	}
 
 	private Serializable _encodeCacheKey(Serializable primaryKey) {
@@ -373,9 +369,8 @@ public class EntityCacheImpl
 		if ((portalCache == null) && createIfAbsent) {
 			String groupKey = _GROUP_KEY_PREFIX.concat(className);
 
-			portalCache =
-				(PortalCache<Serializable, Serializable>)_multiVMPool.getCache(
-					groupKey, PropsValues.VALUE_OBJECT_ENTITY_BLOCKING_CACHE);
+			portalCache = MultiVMPoolUtil.getCache(
+				groupKey, PropsValues.VALUE_OBJECT_ENTITY_BLOCKING_CACHE);
 
 			if (PropsValues.VALUE_OBJECT_MVCC_ENTITY_CACHE_ENABLED &&
 				MVCCModel.class.isAssignableFrom(clazz)) {
@@ -438,7 +433,6 @@ public class EntityCacheImpl
 		}
 	}
 
-	private MultiVMPool _multiVMPool;
 	private final ConcurrentMap<String, PortalCache<Serializable, Serializable>>
 		_portalCaches = new ConcurrentHashMap<>();
 
