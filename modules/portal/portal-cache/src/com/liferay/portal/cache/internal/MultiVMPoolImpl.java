@@ -24,13 +24,18 @@ import com.liferay.portal.kernel.resiliency.spi.cache.SPIPortalCacheManagerConfi
 
 import java.io.Serializable;
 
-import java.util.Map;
-
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
+import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 /**
  * @author Brian Wing Shun Chan
@@ -72,24 +77,23 @@ public class MultiVMPoolImpl implements MultiVMPool {
 
 	@Activate
 	@Modified
-	protected void activate(Map<String, Object> properties) {
-		try {
-			_portalCacheManager =
-				_spiPortalCacheManagerConfigurator.createSPIPortalCacheManager(
-					_portalCacheManager);
-		}
-		catch (Exception e) {
-			if (_log.isErrorEnabled()) {
-				_log.error("Unable to create SPI portal cache manager ", e);
-			}
-		}
+	protected void activate(BundleContext bundleContext) {
+		_bundleContext = bundleContext;
 
-		_portalCacheManager.clearAll();
+		_serviceTracker = new ServiceTracker<>(
+			bundleContext, SPIPortalCacheManagerConfigurator.class,
+			new SPIPortalCacheManagerConfiguratorServiceTrackerCustomizer());
+
+		_serviceTracker.open();
 	}
 
 	@Deactivate
 	protected void deactivate() {
 		_portalCacheManager.clearAll();
+
+		_serviceTracker.close();
+
+		_serviceTracker = null;
 	}
 
 	@Reference(
@@ -103,8 +107,18 @@ public class MultiVMPoolImpl implements MultiVMPool {
 		_portalCacheManager = portalCacheManager;
 	}
 
-	@Reference(unbind = "-")
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
 	protected void setSPIPortalCacheManagerConfigurator(
+		SPIPortalCacheManagerConfigurator spiPortalCacheManagerConfigurator) {
+
+		_spiPortalCacheManagerConfigurator = spiPortalCacheManagerConfigurator;
+	}
+
+	protected void unsetSPIPortalCacheManagerConfigurator(
 		SPIPortalCacheManagerConfigurator spiPortalCacheManagerConfigurator) {
 
 		_spiPortalCacheManagerConfigurator = spiPortalCacheManagerConfigurator;
@@ -113,9 +127,61 @@ public class MultiVMPoolImpl implements MultiVMPool {
 	private static final Log _log = LogFactoryUtil.getLog(
 		MultiVMPoolImpl.class);
 
+	private BundleContext _bundleContext;
+	private PortalCacheManager<? extends Serializable, ? extends Serializable>
+		_originalPortalCacheManager;
 	private PortalCacheManager<? extends Serializable, ? extends Serializable>
 		_portalCacheManager;
+	private ServiceTracker
+		<SPIPortalCacheManagerConfigurator, SPIPortalCacheManagerConfigurator>
+			_serviceTracker;
 	private SPIPortalCacheManagerConfigurator
 		_spiPortalCacheManagerConfigurator;
+
+	private class SPIPortalCacheManagerConfiguratorServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer
+		<SPIPortalCacheManagerConfigurator, SPIPortalCacheManagerConfigurator> {
+
+		@Override
+		public SPIPortalCacheManagerConfigurator addingService(
+			ServiceReference<SPIPortalCacheManagerConfigurator>
+				serviceReference) {
+
+			_originalPortalCacheManager = _portalCacheManager;
+
+			_spiPortalCacheManagerConfigurator = _bundleContext.getService(
+				serviceReference);
+
+			try {
+				_portalCacheManager =
+					_spiPortalCacheManagerConfigurator.
+						createSPIPortalCacheManager(_portalCacheManager);
+			}
+			catch (Exception e) {
+				if (_log.isErrorEnabled()) {
+					_log.error("Unable to create SPI portal cache manager ", e);
+				}
+			}
+
+			_portalCacheManager.clearAll();
+
+			return _spiPortalCacheManagerConfigurator;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<SPIPortalCacheManagerConfigurator> reference,
+			SPIPortalCacheManagerConfigurator service) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<SPIPortalCacheManagerConfigurator> reference,
+			SPIPortalCacheManagerConfigurator service) {
+
+			_portalCacheManager = _originalPortalCacheManager;
+		}
+
+	}
 
 }
