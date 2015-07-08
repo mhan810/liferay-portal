@@ -45,7 +45,7 @@ public class IndexerRequestBufferTransactionLifecycleListener
 		TransactionAttribute transactionAttribute,
 		TransactionStatus transactionStatus) {
 
-		IndexerRequestBuffer.getOrCreate();
+		IndexerRequestBuffer.create();
 	}
 
 	@Override
