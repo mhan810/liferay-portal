@@ -44,27 +44,52 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 
 	@Override
 	public org.apache.lucene.search.Query translate(TermQuery termQuery) {
-		org.apache.lucene.search.Query luceneQuery = null;
+		org.apache.lucene.search.Query luceneQuery =
+			toCaseInsensitiveSubstringQuery(termQuery);
 
-		QueryTerm queryTerm = termQuery.getQueryTerm();
-
-		String field = queryTerm.getField();
-		String value = queryTerm.getValue();
-
-		if ((_queryPreProcessConfiguration != null) &&
-			_queryPreProcessConfiguration.isSubstringSearchAlways(field)) {
-
-			luceneQuery = toCaseInsensitiveSubstringQuery(field, value);
+		if (luceneQuery == null) {
+			luceneQuery = toRegularQuery(termQuery);
 		}
 
-		luceneQuery = new org.apache.lucene.search.TermQuery(
-			new Term(field, value));
+		applyBoost(termQuery, luceneQuery);
+
+		return luceneQuery;
+	}
+
+	protected void addBooleanClause(
+		org.apache.lucene.search.BooleanQuery newBooleanQuery,
+		org.apache.lucene.search.Query query, BooleanClause booleanClause) {
+
+		newBooleanQuery.add(query, booleanClause.getOccur());
+	}
+
+	protected void applyBoost(
+		TermQuery termQuery, org.apache.lucene.search.Query luceneQuery) {
 
 		if (!termQuery.isDefaultBoost()) {
 			luceneQuery.setBoost(termQuery.getBoost());
 		}
+	}
 
-		return luceneQuery;
+	protected String getWildcardText(String value) {
+		value = StringUtil.replace(value, StringPool.PERCENT, StringPool.BLANK);
+		value = StringUtil.toLowerCase(value);
+		value = StringPool.STAR + value + StringPool.STAR;
+
+		return value;
+	}
+
+	protected org.apache.lucene.search.Query parseLuceneQuery(
+		String field, String value) {
+
+		QueryParser queryParser = new QueryParser(field, new KeywordAnalyzer());
+
+		try {
+			return queryParser.parse(value);
+		}
+		catch (ParseException pe) {
+			throw new IllegalArgumentException(pe);
+		}
 	}
 
 	@Reference(
@@ -79,58 +104,6 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 	}
 
 	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
-		org.apache.lucene.search.TermQuery termQuery) {
-
-		Term term = termQuery.getTerm();
-
-		String value = term.text();
-
-		value = StringUtil.replace(value, StringPool.PERCENT, StringPool.BLANK);
-		value = StringUtil.toLowerCase(value);
-		value = StringPool.STAR + value + StringPool.STAR;
-
-		return new org.apache.lucene.search.WildcardQuery(
-			new Term(term.field(), value));
-	}
-
-	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
-		String field, String value) {
-
-		org.apache.lucene.search.Query query = _parseLuceneQuery(field, value);
-
-		if (query instanceof org.apache.lucene.search.BooleanQuery) {
-			return toCaseInsensitiveSubstringQuery(
-				(org.apache.lucene.search.BooleanQuery)query);
-		}
-
-		if (query instanceof org.apache.lucene.search.TermQuery) {
-			return toCaseInsensitiveSubstringQuery(
-				(org.apache.lucene.search.TermQuery)query);
-		}
-
-		throw new IllegalArgumentException();
-	}
-
-	protected void unsetQueryPreProcessConfiguration(
-		QueryPreProcessConfiguration queryPreProcessConfiguration) {
-
-		_queryPreProcessConfiguration = null;
-	}
-
-	private org.apache.lucene.search.Query _parseLuceneQuery(
-		String field, String value) {
-
-		QueryParser queryParser = new QueryParser(field, new KeywordAnalyzer());
-
-		try {
-			return queryParser.parse(value);
-		}
-		catch (ParseException pe) {
-			throw new IllegalArgumentException(pe);
-		}
-	}
-
-	private org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
 		org.apache.lucene.search.BooleanQuery booleanQuery) {
 
 		org.apache.lucene.search.BooleanQuery newBooleanQuery =
@@ -145,10 +118,89 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 			org.apache.lucene.search.Query query =
 				toCaseInsensitiveSubstringQuery(termQuery);
 
-			newBooleanQuery.add(query, booleanClause.getOccur());
+			addBooleanClause(newBooleanQuery, query, booleanClause);
 		}
 
 		return newBooleanQuery;
+	}
+
+	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
+		org.apache.lucene.search.PhraseQuery phraseQuery) {
+
+		Term[] terms = phraseQuery.getTerms();
+
+		Term term = terms[0];
+
+		String value = term.text();
+
+		value = getWildcardText(value);
+
+		return new org.apache.lucene.search.WildcardQuery(
+			new Term(term.field(), value));
+	}
+
+	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
+		org.apache.lucene.search.TermQuery termQuery) {
+
+		Term term = termQuery.getTerm();
+
+		String value = term.text();
+
+		value = getWildcardText(value);
+
+		return new org.apache.lucene.search.WildcardQuery(
+			new Term(term.field(), value));
+	}
+
+	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
+		TermQuery termQuery) {
+
+		QueryTerm queryTerm = termQuery.getQueryTerm();
+
+		String field = queryTerm.getField();
+
+		if ((_queryPreProcessConfiguration == null) ||
+			!_queryPreProcessConfiguration.isSubstringSearchAlways(field)) {
+
+			return null;
+		}
+
+		String value = queryTerm.getValue();
+
+		org.apache.lucene.search.Query query = parseLuceneQuery(field, value);
+
+		if (query instanceof org.apache.lucene.search.BooleanQuery) {
+			return toCaseInsensitiveSubstringQuery(
+				(org.apache.lucene.search.BooleanQuery)query);
+		}
+
+		if (query instanceof org.apache.lucene.search.TermQuery) {
+			return toCaseInsensitiveSubstringQuery(
+				(org.apache.lucene.search.TermQuery)query);
+		}
+
+		if (query instanceof org.apache.lucene.search.PhraseQuery) {
+			return toCaseInsensitiveSubstringQuery(
+				(org.apache.lucene.search.PhraseQuery)query);
+		}
+
+		throw new IllegalArgumentException(
+			"Invalid parsed query: " + query.toString());
+	}
+
+	protected org.apache.lucene.search.Query toRegularQuery(
+		TermQuery termQuery) {
+
+		QueryTerm queryTerm = termQuery.getQueryTerm();
+
+		return new org.apache.lucene.search.TermQuery(
+			new Term(queryTerm.getField(), queryTerm.getValue()));
+	}
+
+	protected void unsetQueryPreProcessConfiguration(
+		QueryPreProcessConfiguration queryPreProcessConfiguration) {
+
+		_queryPreProcessConfiguration = null;
 	}
 
 	private QueryPreProcessConfiguration _queryPreProcessConfiguration;

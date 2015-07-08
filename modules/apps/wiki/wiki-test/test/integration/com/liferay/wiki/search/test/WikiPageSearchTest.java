@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.BaseModel;
@@ -288,17 +289,15 @@ public class WikiPageSearchTest extends BaseSearchTestCase {
 					getBaseModelClass(), group.getGroupId(), searchContext));
 		}
 
-		protected boolean isSearchSpecificFieldsImplementedForSearchEngine() {
+		protected boolean isSearchEngineVendor(String... vendors) {
 			SearchEngine searchEngine = SearchEngineUtil.getSearchEngine(
 				SearchEngineUtil.getDefaultSearchEngineId());
 
-			String vendor = searchEngine.getVendor();
+			return ArrayUtil.contains(vendors, searchEngine.getVendor(), true);
+		}
 
-			if (vendor.equals("Lucene")) {
-				return true;
-			}
-
-			return false;
+		protected boolean isSearchSpecificFieldsImplementedForSearchEngine() {
+			return !isSearchEngineVendor("Elasticsearch", "Solr");
 		}
 
 		private final BaseModel<?> _parentBaseModel;

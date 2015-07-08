@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
@@ -101,6 +102,27 @@ public class DDLRecordSearchTest {
 
 		assertSearch("\"Joe Bloggs\"", 1);
 		assertSearch("Bloggs", 2);
+	}
+
+	@Test
+	public void testExactPhraseMixedWithWords() throws Exception {
+		Assume.assumeTrue(isExactPhraseQueryImplementedForSearchEngine());
+
+		addRecord("One Two Three Four Five Six", RandomTestUtil.randomString());
+		addRecord(RandomTestUtil.randomString(), RandomTestUtil.randomString());
+
+		assertSearch("\"Two Three\" Five", 1);
+		assertSearch("\"Two Three\" Nine", 1);
+		assertSearch("\"Two  Four\" Five", 1);
+		assertSearch("\"Two  Four\" Nine", 0);
+		assertSearch("Three \"Five Six\"", 1);
+		assertSearch("Zero  \"Five Six\"", 1);
+		assertSearch("Three \"Four Six\"", 1);
+		assertSearch("Zero  \"Four Six\"", 0);
+		assertSearch("One  \"Three Four\" Six ", 1);
+		assertSearch("Zero \"Three Four\" Nine", 1);
+		assertSearch("One  \"Three Five\" Six ", 1);
+		assertSearch("Zero \"Three Five\" Nine", 0);
 	}
 
 	@Test
@@ -303,16 +325,14 @@ public class DDLRecordSearchTest {
 	}
 
 	protected boolean isExactPhraseQueryImplementedForSearchEngine() {
+		return isSearchEngineVendor("Solr");
+	}
+
+	protected boolean isSearchEngineVendor(String... vendors) {
 		SearchEngine searchEngine = SearchEngineUtil.getSearchEngine(
 			SearchEngineUtil.getDefaultSearchEngineId());
 
-		String vendor = searchEngine.getVendor();
-
-		if (vendor.equals("Lucene") || vendor.equals("SOLR")) {
-			return true;
-		}
-
-		return false;
+		return ArrayUtil.contains(vendors, searchEngine.getVendor(), true);
 	}
 
 	@DeleteAfterTestRun
