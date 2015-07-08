@@ -24,7 +24,6 @@ long backgroundTaskId = ParamUtil.getLong(request, "backgroundTaskId");
 BackgroundTask backgroundTask = BackgroundTaskLocalServiceUtil.fetchBackgroundTask(backgroundTaskId);
 
 int backgroundTaskStatus = backgroundTask.getStatus();
-
 String backgroundTaskStatusMessage = backgroundTask.getStatusMessage();
 %>
 
@@ -40,6 +39,8 @@ String backgroundTaskStatusMessage = backgroundTask.getStatusMessage();
 		JSONObject detailsJSONObject = backgroundTaskDisplay.getDetailsJSONObject(locale);
 
 		String detailsHeader = detailsJSONObject.getString("detailsHeader");
+
+		JSONArray detailsItemsJSONArray = detailsJSONObject.getJSONArray("detailsItems");
 		%>
 
 		<div class="alert alert-danger publish-error">
@@ -47,46 +48,54 @@ String backgroundTaskStatusMessage = backgroundTask.getStatusMessage();
 				<liferay-ui:message key="<%= detailsHeader %>" localizeKey="<%= false %>" />
 			</h4>
 
-			<%
-			JSONArray detailsItemsJSONArray = detailsJSONObject.getJSONArray("detailsItems");
-
-			for (int i = 0; i < detailsItemsJSONArray.length(); i++) {
-				JSONObject detailsItemJSONObject = detailsItemsJSONArray.getJSONObject(i);
-			%>
-
-			<span class="error-message">
-				<%= HtmlUtil.escape(detailsItemJSONObject.getString("message")) %>
-			</span>
-
-			<ul class="error-list-items">
+			<c:if test="<%= detailsItemsJSONArray != null %>">
 
 				<%
-				JSONArray itemsListJSONArray = detailsItemJSONObject.getJSONArray("itemsList");
-
-				for (int j = 0; j < itemsListJSONArray.length(); j++) {
-					JSONObject itemsListJSONObject = itemsListJSONArray.getJSONObject(j);
-
-					String info = itemsListJSONObject.getString("info");
+				for (int i = 0; i < detailsItemsJSONArray.length(); i++) {
+					JSONObject detailsItemJSONObject = detailsItemsJSONArray.getJSONObject(i);
 				%>
 
-					<li>
-						<%= itemsListJSONObject.getString("errorMessage") %>:
+				<span class="error-message">
+					<%= HtmlUtil.escape(detailsItemJSONObject.getString("message")) %>
+				</span>
 
-						<strong><%= HtmlUtil.escape(itemsListJSONObject.getString("errorStrongMessage")) %></strong>
+				<ul class="error-list-items">
 
-						<c:if test="<%= Validator.isNotNull(info) %>">
-							<span class="error-info">(<%= HtmlUtil.escape(info) %>)</span>
-						</c:if>
-					</li>
+					<%
+					JSONArray itemsListJSONArray = detailsItemJSONObject.getJSONArray("itemsList");
+					%>
+
+					<c:if test="<%= itemsListJSONArray != null %>">
+
+						<%
+						for (int j = 0; j < itemsListJSONArray.length(); j++) {
+							JSONObject itemsListJSONObject = itemsListJSONArray.getJSONObject(j);
+
+							String info = itemsListJSONObject.getString("info");
+						%>
+
+							<li>
+								<%= itemsListJSONObject.getString("errorMessage") %>:
+
+								<strong><%= HtmlUtil.escape(itemsListJSONObject.getString("errorStrongMessage")) %></strong>
+
+								<c:if test="<%= Validator.isNotNull(info) %>">
+									<span class="error-info">(<%= HtmlUtil.escape(info) %>)</span>
+								</c:if>
+							</li>
+
+						<%
+						}
+						%>
+
+					</c:if>
+				</ul>
 
 				<%
 				}
 				%>
 
-			</ul>
-
-			<%
-			}
-			%>
+			</c:if>
+		</div>
 	</c:otherwise>
 </c:choose>
