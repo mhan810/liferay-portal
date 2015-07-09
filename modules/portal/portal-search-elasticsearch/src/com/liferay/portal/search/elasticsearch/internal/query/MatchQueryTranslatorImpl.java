@@ -15,6 +15,7 @@
 package com.liferay.portal.search.elasticsearch.internal.query;
 
 import com.liferay.portal.kernel.search.generic.MatchQuery;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch.query.MatchQueryTranslator;
 
@@ -92,6 +93,23 @@ public class MatchQueryTranslatorImpl
 				matchQuery.getType());
 
 			matchQueryBuilder.type(matchQueryBuilderType);
+		}
+		else {
+			String value = matchQuery.getValue();
+
+			if (value.startsWith(StringPool.QUOTE) &&
+				value.endsWith(StringPool.QUOTE)) {
+
+				value = value.substring(0, value.length() - 2);
+
+				if (value.endsWith(StringPool.STAR)) {
+					matchQueryBuilder.type(
+						MatchQueryBuilder.Type.PHRASE_PREFIX);
+				}
+				else {
+					matchQueryBuilder.type(MatchQueryBuilder.Type.PHRASE);
+				}
+			}
 		}
 
 		if (matchQuery.getZeroTermsQuery() != null) {
