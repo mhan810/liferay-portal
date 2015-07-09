@@ -16,18 +16,21 @@ package com.liferay.portal.search.internal.query;
 
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.Query;
-import com.liferay.portal.kernel.search.QueryPreProcessConfiguration;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
-import com.liferay.portal.kernel.search.query.FieldQueryFactory;
 import com.liferay.portal.kernel.search.generic.MatchQuery;
 import com.liferay.portal.kernel.search.generic.QueryTermImpl;
 import com.liferay.portal.kernel.search.generic.WildcardQueryImpl;
+import com.liferay.portal.kernel.search.query.FieldQueryFactory;
+import com.liferay.portal.kernel.search.query.QueryPreProcessConfiguration;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
@@ -104,11 +107,21 @@ public class FieldQueryFactoryImpl implements FieldQueryFactory {
 		return query;
 	}
 
-	@Reference(unbind = "-")
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
 	protected void setQueryPreProcessConfiguration(
 		QueryPreProcessConfiguration queryPreProcessConfiguration) {
 
 		_queryPreProcessConfiguration = queryPreProcessConfiguration;
+	}
+
+	protected void unsetQueryPreProcessConfiguration(
+		QueryPreProcessConfiguration queryPreProcessConfiguration) {
+
+		_queryPreProcessConfiguration = null;
 	}
 
 	private QueryPreProcessConfiguration _queryPreProcessConfiguration;
