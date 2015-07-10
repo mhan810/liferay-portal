@@ -112,17 +112,26 @@ public class UserIndexerTest {
 
 	@Test
 	public void testEmptyQuery() throws Exception {
-		Assume.assumeTrue(isEmptyQueryImplementedForSearchEngine());
-
 		addUser();
 
 		assertHits("", 1);
 	}
 
 	@Test
-	public void testLikeCharacter() throws Exception {
-		Assume.assumeTrue(isEmptyQueryImplementedForSearchEngine());
+	public void testFirstNameExactPhrase() throws Exception {
+		String firstName = "Mary Jane";
+		String middleName = "Watson";
+		String lastName = "Parker";
 
+		addUserNameFields(firstName, lastName, middleName);
+
+		User user = assertSearchOneUser("firstName", "\"Mary Jane\"");
+
+		Assert.assertEquals(firstName, user.getFirstName());
+	}
+
+	@Test
+	public void testLikeCharacter() throws Exception {
 		addUser();
 
 		assertHits("%", 1);
@@ -131,8 +140,6 @@ public class UserIndexerTest {
 
 	@Test
 	public void testLuceneQueryParserUnfriendlyCharacters() throws Exception {
-		Assume.assumeTrue(isAPIWithoutQueryParserImplementedForSearchEngine());
-
 		User user1 = addUser();
 		User user2 = assertSearchOneUser("@");
 
@@ -145,9 +152,6 @@ public class UserIndexerTest {
 
 	@Test
 	public void testNameFieldsNotTokenized() throws Exception {
-		Assume.assumeTrue(
-			isCaseInsensitiveNameFieldsImplementedForSearchEngine());
-
 		String firstName = "Liferay7";
 		String lastName = "dell'Apostrophe";
 		String middleName = "ALLOY_4";
@@ -166,9 +170,6 @@ public class UserIndexerTest {
 
 	@Test
 	public void testNamesPrefix() throws Exception {
-		Assume.assumeTrue(
-			isCaseInsensitiveNameFieldsImplementedForSearchEngine());
-
 		String firstName = "First";
 		String lastName = "Last";
 		String middleName = "Middle";
@@ -190,8 +191,6 @@ public class UserIndexerTest {
 
 	@Test
 	public void testNamesSubstring() throws Exception {
-		Assume.assumeTrue(
-			isCaseInsensitiveNameFieldsImplementedForSearchEngine());
 		Assume.assumeTrue(
 			isTwoEndedSubstringSearchImplementedForSearchEngine());
 
@@ -381,18 +380,6 @@ public class UserIndexerTest {
 		long userId = UserIndexer.getUserId(hits.doc(0));
 
 		return UserLocalServiceUtil.getUser(userId);
-	}
-
-	protected boolean isAPIWithoutQueryParserImplementedForSearchEngine() {
-		return !isSearchEngineVendor("Lucene", "Solr");
-	}
-
-	protected boolean isCaseInsensitiveNameFieldsImplementedForSearchEngine() {
-		return !isSearchEngineVendor("Lucene");
-	}
-
-	protected boolean isEmptyQueryImplementedForSearchEngine() {
-		return !isSearchEngineVendor("Solr");
 	}
 
 	protected boolean isSearchEngineVendor(String... vendors) {
