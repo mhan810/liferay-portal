@@ -21,7 +21,11 @@ import com.liferay.portal.kernel.repository.search.RepositorySearchQueryTermBuil
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.TermQuery;
+import com.liferay.portal.kernel.search.WildcardQuery;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
+import com.liferay.portal.kernel.search.generic.TermQueryImpl;
+import com.liferay.portal.kernel.search.generic.WildcardQueryImpl;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -136,9 +140,10 @@ public class LuceneRepositorySearchQueryTermBuilder
 			for (Term term : terms) {
 				String termValue = term.text();
 
-				booleanQuery.addTerm(
-					term.field(), termValue, false,
-					getBooleanClauseOccur(occur));
+				TermQuery termQuery = new TermQueryImpl(
+					term.field(), termValue);
+
+				booleanQuery.add(termQuery, getBooleanClauseOccur(occur));
 			}
 		}
 		else if (query instanceof org.apache.lucene.search.BooleanQuery) {
@@ -185,8 +190,10 @@ public class LuceneRepositorySearchQueryTermBuilder
 
 			String termValue = term.text().concat(StringPool.STAR);
 
-			booleanQuery.addTerm(
-				term.field(), termValue, true, booleanClauseOccur);
+			WildcardQuery wildcardQuery = new WildcardQueryImpl(
+				term.field(), termValue);
+
+			booleanQuery.add(wildcardQuery, booleanClauseOccur);
 		}
 		else if (query instanceof org.apache.lucene.search.PhraseQuery) {
 			org.apache.lucene.search.PhraseQuery phraseQuery =
@@ -201,9 +208,10 @@ public class LuceneRepositorySearchQueryTermBuilder
 				sb.append(StringPool.SPACE);
 			}
 
-			booleanQuery.addTerm(
-				terms[0].field(), sb.toString().trim(), false,
-				booleanClauseOccur);
+			TermQuery termQuery = new TermQueryImpl(
+				terms[0].field(), sb.toString().trim());
+
+			booleanQuery.add(termQuery, booleanClauseOccur);
 		}
 		else if (query instanceof org.apache.lucene.search.PrefixQuery) {
 			org.apache.lucene.search.PrefixQuery prefixQuery =
@@ -213,8 +221,10 @@ public class LuceneRepositorySearchQueryTermBuilder
 
 			String termValue = prefixTerm.text().concat(StringPool.STAR);
 
-			booleanQuery.addTerm(
-				prefixTerm.field(), termValue, true, booleanClauseOccur);
+			WildcardQuery wildcardQuery = new WildcardQueryImpl(
+				prefixTerm.field(), termValue);
+
+			booleanQuery.add(wildcardQuery, booleanClauseOccur);
 		}
 		else if (query instanceof org.apache.lucene.search.TermRangeQuery) {
 			org.apache.lucene.search.TermRangeQuery termRangeQuery =
@@ -225,14 +235,15 @@ public class LuceneRepositorySearchQueryTermBuilder
 				termRangeQuery.getUpperTerm());
 		}
 		else if (query instanceof org.apache.lucene.search.WildcardQuery) {
-			org.apache.lucene.search.WildcardQuery wildcardQuery =
+			org.apache.lucene.search.WildcardQuery luceneWildcardQuery =
 				(org.apache.lucene.search.WildcardQuery)query;
 
-			Term wildcardTerm = wildcardQuery.getTerm();
+			Term wildcardTerm = luceneWildcardQuery.getTerm();
 
-			booleanQuery.addTerm(
-				wildcardTerm.field(), wildcardTerm.text(), true,
-				booleanClauseOccur);
+			WildcardQuery wildcardQuery = new WildcardQueryImpl(
+				wildcardTerm.field(), wildcardTerm.text());
+
+			booleanQuery.add(wildcardQuery, booleanClauseOccur);
 		}
 		else {
 			if (_log.isWarnEnabled()) {
