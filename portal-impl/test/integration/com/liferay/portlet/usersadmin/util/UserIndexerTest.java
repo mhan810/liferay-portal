@@ -120,6 +120,19 @@ public class UserIndexerTest {
 	}
 
 	@Test
+	public void testFirstNameExactPhrase() throws Exception {
+		String firstName = "Mary Jane";
+		String middleName = "Watson";
+		String lastName = "Parker";
+
+		addUserNameFields(firstName, lastName, middleName);
+
+		User user = assertSearchOneUser("firstName", "\"Mary Jane\"");
+
+		Assert.assertEquals(firstName, user.getFirstName());
+	}
+
+	@Test
 	public void testLikeCharacter() throws Exception {
 		Assume.assumeTrue(isEmptyQueryImplementedForSearchEngine());
 
@@ -145,9 +158,6 @@ public class UserIndexerTest {
 
 	@Test
 	public void testNameFieldsNotTokenized() throws Exception {
-		Assume.assumeTrue(
-			isCaseInsensitiveNameFieldsImplementedForSearchEngine());
-
 		String firstName = "Liferay7";
 		String lastName = "dell'Apostrophe";
 		String middleName = "ALLOY_4";
@@ -166,9 +176,6 @@ public class UserIndexerTest {
 
 	@Test
 	public void testNamesPrefix() throws Exception {
-		Assume.assumeTrue(
-			isCaseInsensitiveNameFieldsImplementedForSearchEngine());
-
 		String firstName = "First";
 		String lastName = "Last";
 		String middleName = "Middle";
@@ -190,8 +197,6 @@ public class UserIndexerTest {
 
 	@Test
 	public void testNamesSubstring() throws Exception {
-		Assume.assumeTrue(
-			isCaseInsensitiveNameFieldsImplementedForSearchEngine());
 		Assume.assumeTrue(
 			isTwoEndedSubstringSearchImplementedForSearchEngine());
 
@@ -384,11 +389,7 @@ public class UserIndexerTest {
 	}
 
 	protected boolean isAPIWithoutQueryParserImplementedForSearchEngine() {
-		return !isSearchEngineVendor("Lucene", "Solr");
-	}
-
-	protected boolean isCaseInsensitiveNameFieldsImplementedForSearchEngine() {
-		return !isSearchEngineVendor("Lucene");
+		return !isSearchEngineVendor("Elasticsearch", "Solr");
 	}
 
 	protected boolean isEmptyQueryImplementedForSearchEngine() {

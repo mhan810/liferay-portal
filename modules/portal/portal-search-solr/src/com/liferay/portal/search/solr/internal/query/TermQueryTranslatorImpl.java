@@ -56,15 +56,29 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 
 			luceneQuery = toCaseInsensitiveSubstringQuery(field, value);
 		}
-
-		luceneQuery = new org.apache.lucene.search.TermQuery(
-			new Term(field, value));
+		else {
+			luceneQuery = new org.apache.lucene.search.TermQuery(
+				new Term(field, value));
+		}
 
 		if (!termQuery.isDefaultBoost()) {
 			luceneQuery.setBoost(termQuery.getBoost());
 		}
 
 		return luceneQuery;
+	}
+
+	protected org.apache.lucene.search.Query parseLuceneQuery(
+		String field, String value) {
+
+		QueryParser queryParser = new QueryParser(field, new KeywordAnalyzer());
+
+		try {
+			return queryParser.parse(value);
+		}
+		catch (ParseException pe) {
+			throw new IllegalArgumentException(pe);
+		}
 	}
 
 	@Reference(
@@ -79,58 +93,6 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 	}
 
 	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
-		org.apache.lucene.search.TermQuery termQuery) {
-
-		Term term = termQuery.getTerm();
-
-		String value = term.text();
-
-		value = StringUtil.replace(value, StringPool.PERCENT, StringPool.BLANK);
-		value = StringUtil.toLowerCase(value);
-		value = StringPool.STAR + value + StringPool.STAR;
-
-		return new org.apache.lucene.search.WildcardQuery(
-			new Term(term.field(), value));
-	}
-
-	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
-		String field, String value) {
-
-		org.apache.lucene.search.Query query = _parseLuceneQuery(field, value);
-
-		if (query instanceof org.apache.lucene.search.BooleanQuery) {
-			return toCaseInsensitiveSubstringQuery(
-				(org.apache.lucene.search.BooleanQuery)query);
-		}
-
-		if (query instanceof org.apache.lucene.search.TermQuery) {
-			return toCaseInsensitiveSubstringQuery(
-				(org.apache.lucene.search.TermQuery)query);
-		}
-
-		throw new IllegalArgumentException();
-	}
-
-	protected void unsetQueryPreProcessConfiguration(
-		QueryPreProcessConfiguration queryPreProcessConfiguration) {
-
-		_queryPreProcessConfiguration = null;
-	}
-
-	private org.apache.lucene.search.Query _parseLuceneQuery(
-		String field, String value) {
-
-		QueryParser queryParser = new QueryParser(field, new KeywordAnalyzer());
-
-		try {
-			return queryParser.parse(value);
-		}
-		catch (ParseException pe) {
-			throw new IllegalArgumentException(pe);
-		}
-	}
-
-	private org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
 		org.apache.lucene.search.BooleanQuery booleanQuery) {
 
 		org.apache.lucene.search.BooleanQuery newBooleanQuery =
@@ -149,6 +111,72 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 		}
 
 		return newBooleanQuery;
+	}
+
+	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
+		org.apache.lucene.search.TermQuery termQuery) {
+
+		Term term = termQuery.getTerm();
+
+		String value = term.text();
+
+		value = getWildcardText(value);
+
+		return new org.apache.lucene.search.WildcardQuery(
+			new Term(term.field(), value));
+	}
+
+	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
+		org.apache.lucene.search.PhraseQuery phraseQuery) {
+
+		Term[] terms = phraseQuery.getTerms();
+
+		Term term = terms[0];
+
+		String value = term.text();
+
+		value = getWildcardText(value);
+
+		return new org.apache.lucene.search.WildcardQuery(
+			new Term(term.field(), value));
+	}
+
+	protected org.apache.lucene.search.Query toCaseInsensitiveSubstringQuery(
+		String field, String value) {
+
+		org.apache.lucene.search.Query query = parseLuceneQuery(field, value);
+
+		if (query instanceof org.apache.lucene.search.BooleanQuery) {
+			return toCaseInsensitiveSubstringQuery(
+				(org.apache.lucene.search.BooleanQuery)query);
+		}
+
+		if (query instanceof org.apache.lucene.search.TermQuery) {
+			return toCaseInsensitiveSubstringQuery(
+				(org.apache.lucene.search.TermQuery)query);
+		}
+
+		if (query instanceof org.apache.lucene.search.PhraseQuery) {
+			return toCaseInsensitiveSubstringQuery(
+				(org.apache.lucene.search.PhraseQuery)query);
+		}
+
+		throw new IllegalArgumentException(
+			"Invalid parsed query: " + query.toString());
+	}
+
+	private String getWildcardText(String value) {
+		value = StringUtil.replace(value, StringPool.PERCENT, StringPool.BLANK);
+		value = StringUtil.toLowerCase(value);
+		value = StringPool.STAR + value + StringPool.STAR;
+
+		return value;
+	}
+
+	protected void unsetQueryPreProcessConfiguration(
+		QueryPreProcessConfiguration queryPreProcessConfiguration) {
+
+		_queryPreProcessConfiguration = null;
 	}
 
 	private QueryPreProcessConfiguration _queryPreProcessConfiguration;
