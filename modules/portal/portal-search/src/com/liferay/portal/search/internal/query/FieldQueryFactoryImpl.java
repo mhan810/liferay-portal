@@ -97,11 +97,7 @@ public class FieldQueryFactoryImpl implements FieldQueryFactory {
 			query = new WildcardQueryImpl(new QueryTermImpl(field, value));
 		}
 		else {
-			MatchQuery matchQuery = new MatchQuery(field, value);
-
-			if (value.contains(StringPool.SPACE)) {
-				matchQuery.setType(MatchQuery.Type.PHRASE);
-			}
+			query = new MatchQuery(field, value);
 		}
 
 		return query;
