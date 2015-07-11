@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
+import com.liferay.portal.kernel.search.facet.collector.DefaultFacetCollector;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
@@ -53,6 +54,11 @@ public class FacetFactoryUtil {
 		Facet facet = facetFactory.newInstance(searchContext);
 
 		facet.setFacetConfiguration(facetConfiguration);
+
+		if (facet.getFacetCollector() == null) {
+			facet.setFacetCollector(
+				new DefaultFacetCollector(facet.getFieldName()));
+		}
 
 		return facet;
 	}
