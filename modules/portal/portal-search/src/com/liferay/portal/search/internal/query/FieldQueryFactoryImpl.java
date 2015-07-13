@@ -96,7 +96,23 @@ public class FieldQueryFactoryImpl implements FieldQueryFactory {
 			query = new WildcardQueryImpl(new QueryTermImpl(field, value));
 		}
 		else {
-			query = new MatchQuery(field, value);
+			MatchQuery matchQuery = new MatchQuery(field, value);
+
+			if (value.startsWith(StringPool.QUOTE) &&
+				value.endsWith(StringPool.QUOTE)) {
+
+				value = value.substring(0, value.length() - 2);
+
+				if (value.endsWith(StringPool.STAR)) {
+					matchQuery.setType(
+						MatchQuery.Type.PHRASE_PREFIX);
+				}
+				else {
+					matchQuery.setType(MatchQuery.Type.PHRASE);
+				}
+			}
+
+			query = matchQuery;
 		}
 
 		return query;

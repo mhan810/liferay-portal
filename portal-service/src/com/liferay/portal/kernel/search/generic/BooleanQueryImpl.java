@@ -43,6 +43,10 @@ public class BooleanQueryImpl extends BaseBooleanQueryImpl {
 
 	@Override
 	public Query add(Query query, BooleanClauseOccur booleanClauseOccur) {
+		if (query == null) {
+			throw new IllegalArgumentException("Query cannot be null");
+		}
+
 		_booleanClauses.add(new BooleanClauseImpl<>(query, booleanClauseOccur));
 
 		return query;

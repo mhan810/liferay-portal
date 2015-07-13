@@ -94,23 +94,6 @@ public class MatchQueryTranslatorImpl
 
 			matchQueryBuilder.type(matchQueryBuilderType);
 		}
-		else {
-			String value = matchQuery.getValue();
-
-			if (value.startsWith(StringPool.QUOTE) &&
-				value.endsWith(StringPool.QUOTE)) {
-
-				value = value.substring(0, value.length() - 2);
-
-				if (value.endsWith(StringPool.STAR)) {
-					matchQueryBuilder.type(
-						MatchQueryBuilder.Type.PHRASE_PREFIX);
-				}
-				else {
-					matchQueryBuilder.type(MatchQueryBuilder.Type.PHRASE);
-				}
-			}
-		}
 
 		if (matchQuery.getZeroTermsQuery() != null) {
 			MatchQueryBuilder.ZeroTermsQuery matchQueryBuilderZeroTermsQuery =
