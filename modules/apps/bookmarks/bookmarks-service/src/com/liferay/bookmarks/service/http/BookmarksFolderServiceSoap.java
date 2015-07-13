@@ -351,10 +351,12 @@ public class BookmarksFolderServiceSoap {
 		}
 	}
 
-	public static void restoreFolderFromTrash(long folderId)
-		throws RemoteException {
+	public static com.liferay.bookmarks.model.BookmarksFolderSoap restoreFolderFromTrash(
+		long folderId) throws RemoteException {
 		try {
-			BookmarksFolderServiceUtil.restoreFolderFromTrash(folderId);
+			com.liferay.bookmarks.model.BookmarksFolder returnValue = BookmarksFolderServiceUtil.restoreFolderFromTrash(folderId);
+
+			return com.liferay.bookmarks.model.BookmarksFolderSoap.toSoapModel(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

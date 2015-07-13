@@ -1082,10 +1082,12 @@ public class UserServiceWrapper implements UserService,
 	or if the current user did not have permission to update the user
 	*/
 	@Override
-	public void updateOrganizations(long userId, long[] organizationIds,
+	public com.liferay.portal.model.User updateOrganizations(long userId,
+		long[] organizationIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		_userService.updateOrganizations(userId, organizationIds, serviceContext);
+		return _userService.updateOrganizations(userId, organizationIds,
+			serviceContext);
 	}
 
 	/**

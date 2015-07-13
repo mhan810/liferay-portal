@@ -139,7 +139,8 @@ public interface BookmarksFolderService extends BaseService {
 	public com.liferay.bookmarks.model.BookmarksFolder moveFolderToTrash(
 		long folderId) throws PortalException;
 
-	public void restoreFolderFromTrash(long folderId) throws PortalException;
+	public com.liferay.bookmarks.model.BookmarksFolder restoreFolderFromTrash(
+		long folderId) throws PortalException;
 
 	/**
 	* Sets the Spring bean ID for this bean.

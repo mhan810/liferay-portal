@@ -202,9 +202,10 @@ public class JournalFolderServiceUtil {
 		return getService().moveFolderToTrash(folderId);
 	}
 
-	public static void restoreFolderFromTrash(long folderId)
+	public static com.liferay.journal.model.JournalFolder restoreFolderFromTrash(
+		long folderId)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		getService().restoreFolderFromTrash(folderId);
+		return getService().restoreFolderFromTrash(folderId);
 	}
 
 	/**

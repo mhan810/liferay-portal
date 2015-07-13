@@ -103,6 +103,7 @@ public interface MBThreadLocalService extends BaseLocalService,
 		com.liferay.portal.model.PersistedModel persistedModel)
 		throws PortalException;
 
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.DELETE)
 	@com.liferay.portal.kernel.systemevent.SystemEvent(action = SystemEventConstants.ACTION_SKIP, type = SystemEventConstants.TYPE_DELETE)
 	public void deleteThread(
 		com.liferay.portlet.messageboards.model.MBThread thread)
@@ -506,6 +507,7 @@ public interface MBThreadLocalService extends BaseLocalService,
 	public void updateQuestion(long threadId, boolean question)
 		throws PortalException;
 
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.portlet.messageboards.model.MBThread updateStatus(
 		long userId, long threadId, int status) throws PortalException;
 

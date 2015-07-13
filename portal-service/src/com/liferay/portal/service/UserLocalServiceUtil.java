@@ -2710,10 +2710,11 @@ public class UserLocalServiceUtil {
 	<code>null</code>)
 	* @throws PortalException if a portal exception occurred
 	*/
-	public static void updateGroups(long userId, long[] newGroupIds,
+	public static com.liferay.portal.model.User updateGroups(long userId,
+		long[] newGroupIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		getService().updateGroups(userId, newGroupIds, serviceContext);
+		return getService().updateGroups(userId, newGroupIds, serviceContext);
 	}
 
 	/**
@@ -2904,12 +2905,13 @@ public class UserLocalServiceUtil {
 	whether user indexing is enabled.
 	* @throws PortalException if a user with the primary key could not be found
 	*/
-	public static void updateOrganizations(long userId,
-		long[] newOrganizationIds,
+	public static com.liferay.portal.model.User updateOrganizations(
+		long userId, long[] newOrganizationIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		getService()
-			.updateOrganizations(userId, newOrganizationIds, serviceContext);
+		return getService()
+				   .updateOrganizations(userId, newOrganizationIds,
+			serviceContext);
 	}
 
 	/**

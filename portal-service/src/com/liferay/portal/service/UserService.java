@@ -19,6 +19,7 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
@@ -316,6 +317,7 @@ public interface UserService extends BaseService {
 	creator did not have permission to add users, if the email
 	address was reserved, or if some other portal exception occurred
 	*/
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.portal.model.User addUserWithWorkflow(long companyId,
 		boolean autoPassword, java.lang.String password1,
 		java.lang.String password2, boolean autoScreenName,
@@ -921,7 +923,8 @@ public interface UserService extends BaseService {
 	* @throws PortalException if a user with the primary key could not be found
 	or if the current user did not have permission to update the user
 	*/
-	public void updateOrganizations(long userId, long[] organizationIds,
+	public com.liferay.portal.model.User updateOrganizations(long userId,
+		long[] organizationIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws PortalException;
 

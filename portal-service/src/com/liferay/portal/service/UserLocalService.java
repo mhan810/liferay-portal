@@ -311,6 +311,7 @@ public interface UserLocalService extends BaseLocalService,
 	* @return the new user
 	* @throws PortalException if the user's information was invalid
 	*/
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.portal.model.User addUserWithWorkflow(
 		long creatorUserId, long companyId, boolean autoPassword,
 		java.lang.String password1, java.lang.String password2,
@@ -2279,7 +2280,9 @@ public interface UserLocalService extends BaseLocalService,
 	<code>null</code>)
 	* @throws PortalException if a portal exception occurred
 	*/
-	public void updateGroups(long userId, long[] newGroupIds,
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
+	public com.liferay.portal.model.User updateGroups(long userId,
+		long[] newGroupIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws PortalException;
 
@@ -2440,7 +2443,9 @@ public interface UserLocalService extends BaseLocalService,
 	whether user indexing is enabled.
 	* @throws PortalException if a user with the primary key could not be found
 	*/
-	public void updateOrganizations(long userId, long[] newOrganizationIds,
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
+	public com.liferay.portal.model.User updateOrganizations(long userId,
+		long[] newOrganizationIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws PortalException;
 
@@ -2572,6 +2577,7 @@ public interface UserLocalService extends BaseLocalService,
 	* @return the user
 	* @throws PortalException if a user with the primary key could not be found
 	*/
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.portal.model.User updateStatus(long userId, int status,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws PortalException;
@@ -2729,6 +2735,7 @@ public interface UserLocalService extends BaseLocalService,
 	* @throws PortalException if a user with the primary key could not be found
 	or if the new information was invalid
 	*/
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.portal.model.User updateUser(long userId,
 		java.lang.String oldPassword, java.lang.String newPassword1,
 		java.lang.String newPassword2, boolean passwordReset,

@@ -556,9 +556,11 @@ public class JournalFolderLocalServiceWrapper
 	}
 
 	@Override
-	public void restoreFolderFromTrash(long userId, long folderId)
+	public com.liferay.journal.model.JournalFolder restoreFolderFromTrash(
+		long userId, long folderId)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		_journalFolderLocalService.restoreFolderFromTrash(userId, folderId);
+		return _journalFolderLocalService.restoreFolderFromTrash(userId,
+			folderId);
 	}
 
 	/**

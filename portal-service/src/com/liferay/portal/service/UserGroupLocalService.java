@@ -120,6 +120,7 @@ public interface UserGroupLocalService extends BaseLocalService,
 	* @return the user group
 	* @throws PortalException if the user group's information was invalid
 	*/
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.portal.model.UserGroup addUserGroup(long userId,
 		long companyId, java.lang.String name, java.lang.String description,
 		com.liferay.portal.service.ServiceContext serviceContext)
@@ -792,6 +793,7 @@ public interface UserGroupLocalService extends BaseLocalService,
 	* @throws PortalException if a user group with the primary key could not be
 	found or if the new information was invalid
 	*/
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.portal.model.UserGroup updateUserGroup(long companyId,
 		long userGroupId, java.lang.String name, java.lang.String description,
 		com.liferay.portal.service.ServiceContext serviceContext)

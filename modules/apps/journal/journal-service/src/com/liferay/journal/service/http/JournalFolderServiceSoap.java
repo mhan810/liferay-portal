@@ -414,10 +414,12 @@ public class JournalFolderServiceSoap {
 		}
 	}
 
-	public static void restoreFolderFromTrash(long folderId)
-		throws RemoteException {
+	public static com.liferay.journal.model.JournalFolderSoap restoreFolderFromTrash(
+		long folderId) throws RemoteException {
 		try {
-			JournalFolderServiceUtil.restoreFolderFromTrash(folderId);
+			com.liferay.journal.model.JournalFolder returnValue = JournalFolderServiceUtil.restoreFolderFromTrash(folderId);
+
+			return com.liferay.journal.model.JournalFolderSoap.toSoapModel(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

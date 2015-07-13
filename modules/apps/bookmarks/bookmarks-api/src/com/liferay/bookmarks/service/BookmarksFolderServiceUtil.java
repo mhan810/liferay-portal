@@ -176,9 +176,10 @@ public class BookmarksFolderServiceUtil {
 		return getService().moveFolderToTrash(folderId);
 	}
 
-	public static void restoreFolderFromTrash(long folderId)
+	public static com.liferay.bookmarks.model.BookmarksFolder restoreFolderFromTrash(
+		long folderId)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		getService().restoreFolderFromTrash(folderId);
+		return getService().restoreFolderFromTrash(folderId);
 	}
 
 	/**

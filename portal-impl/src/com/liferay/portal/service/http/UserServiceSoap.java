@@ -1457,12 +1457,15 @@ public class UserServiceSoap {
 	* @throws PortalException if a user with the primary key could not be found
 	or if the current user did not have permission to update the user
 	*/
-	public static void updateOrganizations(long userId, long[] organizationIds,
+	public static com.liferay.portal.model.UserSoap updateOrganizations(
+		long userId, long[] organizationIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
-			UserServiceUtil.updateOrganizations(userId, organizationIds,
-				serviceContext);
+			com.liferay.portal.model.User returnValue = UserServiceUtil.updateOrganizations(userId,
+					organizationIds, serviceContext);
+
+			return com.liferay.portal.model.UserSoap.toSoapModel(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
