@@ -20,8 +20,8 @@ import com.liferay.portal.UserFieldException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -599,6 +599,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 	 *         creator did not have permission to add users, if the email
 	 *         address was reserved, or if some other portal exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public User addUserWithWorkflow(
 			long companyId, boolean autoPassword, String password1,
@@ -614,51 +615,28 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			boolean sendEmail, ServiceContext serviceContext)
 		throws PortalException {
 
-		boolean indexingEnabled = true;
+		User user = addUserWithWorkflow(
+			companyId, autoPassword, password1, password2, autoScreenName,
+			screenName, emailAddress, facebookId, openId, locale, firstName,
+			middleName, lastName, prefixId, suffixId, male, birthdayMonth,
+			birthdayDay, birthdayYear, jobTitle, groupIds, organizationIds,
+			roleIds, userGroupIds, sendEmail, serviceContext);
 
-		if (serviceContext != null) {
-			indexingEnabled = serviceContext.isIndexingEnabled();
+		UsersAdminUtil.updateAddresses(
+			Contact.class.getName(), user.getContactId(), addresses);
 
-			serviceContext.setIndexingEnabled(false);
-		}
+		UsersAdminUtil.updateEmailAddresses(
+			Contact.class.getName(), user.getContactId(), emailAddresses);
 
-		try {
-			User user = addUserWithWorkflow(
-				companyId, autoPassword, password1, password2, autoScreenName,
-				screenName, emailAddress, facebookId, openId, locale, firstName,
-				middleName, lastName, prefixId, suffixId, male, birthdayMonth,
-				birthdayDay, birthdayYear, jobTitle, groupIds, organizationIds,
-				roleIds, userGroupIds, sendEmail, serviceContext);
+		UsersAdminUtil.updatePhones(
+			Contact.class.getName(), user.getContactId(), phones);
 
-			UsersAdminUtil.updateAddresses(
-				Contact.class.getName(), user.getContactId(), addresses);
+		UsersAdminUtil.updateWebsites(
+			Contact.class.getName(), user.getContactId(), websites);
 
-			UsersAdminUtil.updateEmailAddresses(
-				Contact.class.getName(), user.getContactId(), emailAddresses);
+		updateAnnouncementsDeliveries(user.getUserId(), announcementsDelivers);
 
-			UsersAdminUtil.updatePhones(
-				Contact.class.getName(), user.getContactId(), phones);
-
-			UsersAdminUtil.updateWebsites(
-				Contact.class.getName(), user.getContactId(), websites);
-
-			updateAnnouncementsDeliveries(
-				user.getUserId(), announcementsDelivers);
-
-			if (indexingEnabled) {
-				Indexer<User> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					User.class);
-
-				indexer.reindex(user);
-			}
-
-			return user;
-		}
-		finally {
-			if (serviceContext != null) {
-				serviceContext.setIndexingEnabled(indexingEnabled);
-			}
-		}
+		return user;
 	}
 
 	/**
@@ -1590,7 +1568,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 	 *         or if the current user did not have permission to update the user
 	 */
 	@Override
-	public void updateOrganizations(
+	public User updateOrganizations(
 			long userId, long[] organizationIds, ServiceContext serviceContext)
 		throws PortalException {
 
@@ -1599,7 +1577,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 
 		checkOrganizations(userId, organizationIds);
 
-		userLocalService.updateOrganizations(
+		return userLocalService.updateOrganizations(
 			userId, organizationIds, serviceContext);
 	}
 
