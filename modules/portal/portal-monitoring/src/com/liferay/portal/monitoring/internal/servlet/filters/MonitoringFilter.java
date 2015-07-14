@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.User;
@@ -225,6 +226,8 @@ public class MonitoringFilter extends BaseFilter
 		if (group == null) {
 			return 0;
 		}
+
+		request.setAttribute(WebKeys.FRIENDLY_URL_GROUP, group);
 
 		return group.getGroupId();
 	}

@@ -224,8 +224,12 @@ public class FriendlyURLServlet extends HttpServlet {
 
 		long companyId = PortalInstances.getCompanyId(request);
 
-		Group group = GroupLocalServiceUtil.fetchFriendlyURLGroup(
-			companyId, friendlyURL);
+		Group group = (Group) request.getAttribute(WebKeys.FRIENDLY_URL_GROUP);
+
+		if (group == null) {
+			group = GroupLocalServiceUtil.fetchFriendlyURLGroup(
+				companyId, friendlyURL);
+		}
 
 		if (group == null) {
 			String screenName = friendlyURL.substring(1);

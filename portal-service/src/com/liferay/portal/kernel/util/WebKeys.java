@@ -76,6 +76,8 @@ public interface WebKeys {
 
 	public static final String FORGOT_PASSWORD_REMINDER_USER_EMAIL_ADDRESS = "FORGOT_PASSWORD_REMINDER_USER_EMAIL_ADDRESS";
 
+	public static final String FRIENDLY_URL_GROUP = "FRIENDLY_URL_GROUP";
+
 	public static final String GROUP = "GROUP";
 
 	public static final String INVOKER_FILTER_URI = "INVOKER_FILTER_URI";
