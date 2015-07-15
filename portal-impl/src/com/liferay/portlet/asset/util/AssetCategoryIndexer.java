@@ -65,6 +65,11 @@ public class AssetCategoryIndexer extends BaseIndexer<AssetCategory> {
 	}
 
 	@Override
+	public AssetCategory fetchObject(long classPK) {
+		return AssetCategoryLocalServiceUtil.fetchAssetCategory(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

@@ -65,6 +65,11 @@ public class MBThreadIndexer extends BaseIndexer<MBThread> {
 	}
 
 	@Override
+	public MBThread fetchObject(long classPK) {
+		return MBThreadLocalServiceUtil.fetchMBThread(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

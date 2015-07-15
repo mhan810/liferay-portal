@@ -60,6 +60,12 @@ public class ExportImportConfigurationIndexer
 		ExportImportConfiguration.class.getName();
 
 	@Override
+	public ExportImportConfiguration fetchObject(long classPK) {
+		return ExportImportConfigurationLocalServiceUtil.
+			fetchExportImportConfiguration(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

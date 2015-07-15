@@ -60,6 +60,11 @@ public class BookmarksFolderIndexer extends BaseIndexer<BookmarksFolder> {
 	}
 
 	@Override
+	public BookmarksFolder fetchObject(long classPK) {
+		return BookmarksFolderLocalServiceUtil.fetchBookmarksFolder(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

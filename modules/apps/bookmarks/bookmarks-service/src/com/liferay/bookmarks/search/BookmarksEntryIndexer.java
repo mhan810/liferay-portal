@@ -71,6 +71,11 @@ public class BookmarksEntryIndexer extends BaseIndexer<BookmarksEntry> {
 	}
 
 	@Override
+	public BookmarksEntry fetchObject(long classPK) {
+		return BookmarksEntryLocalServiceUtil.fetchBookmarksEntry(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

@@ -63,6 +63,11 @@ public class JournalFolderIndexer
 	}
 
 	@Override
+	public JournalFolder fetchObject(long classPK) {
+		return _journalFolderLocalService.fetchFolder(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
