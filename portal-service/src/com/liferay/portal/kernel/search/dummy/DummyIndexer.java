@@ -45,6 +45,11 @@ public class DummyIndexer implements Indexer<Object> {
 	}
 
 	@Override
+	public Object fetchObject(long classPK) {
+		return null;
+	}
+
+	@Override
 	public String getClassName() {
 		return StringPool.BLANK;
 	}

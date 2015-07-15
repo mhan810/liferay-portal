@@ -14,6 +14,8 @@
 
 package com.liferay.portal.search.internal;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Bufferable;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.util.MethodKey;
@@ -49,7 +51,7 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 
 		IndexerRequestBuffer indexerRequestBuffer = IndexerRequestBuffer.get();
 
-		if ((annotation == null) || (args.length != 1) ||
+		if ((annotation == null) || (args.length == 0) || (args.length > 2) ||
 			(indexerRequestBuffer == null)) {
 
 			return method.invoke(_indexer, args);
@@ -59,7 +61,9 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 
 		if (!(args[0] instanceof BaseModel) &&
 			!(args[0] instanceof ClassedModel) &&
-			!(args0Class.isArray() || args0Class.equals(Collection.class))) {
+			!(args0Class.isArray() || args0Class.equals(Collection.class)) &&
+			!((args.length == 2) && args[0] instanceof String &&
+			 args[1].getClass().equals(Long.TYPE))) {
 
 			return method.invoke(_indexer, args);
 		}
@@ -70,14 +74,30 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 		if (args[0] instanceof ClassedModel) {
 			bufferRequest(methodKey, args[0], indexerRequestBuffer);
 		}
+		else if (args.length == 2) {
+			ClassedModel classedModel = (ClassedModel)_indexer.fetchObject(
+				(Long)args[1]);
+
+			if (classedModel == null) {
+				if (_log.isInfoEnabled()) {
+					_log.info(
+						"Unable to fetch ClassedModel: " + args[0] + "=" +
+							args[1]);
+				}
+
+				return method.invoke(_indexer, args);
+			}
+
+			doBufferRequest(methodKey, classedModel, indexerRequestBuffer);
+		}
 		else {
-			Collection<Object> objects = null;
+			Collection<?> objects = null;
 
 			if (args0Class.isArray()) {
 				objects = Arrays.asList((Object[])args[0]);
 			}
 			else {
-				objects = (Collection<Object>)args[0];
+				objects = (Collection<?>)args[0];
 			}
 
 			for (Object object : objects) {
@@ -105,10 +125,18 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 
 		BaseModel<?> baseModel = (BaseModel<?>)object;
 
-		ClassedModel classModel = (ClassedModel)baseModel.clone();
+		ClassedModel classedModel = (ClassedModel)baseModel.clone();
+
+		doBufferRequest(methodKey, classedModel, indexerRequestBuffer);
+	}
+
+	protected void doBufferRequest(
+			MethodKey methodKey, ClassedModel classedModel,
+			IndexerRequestBuffer indexerRequestBuffer)
+		throws Exception {
 
 		IndexerRequest indexerRequest = new IndexerRequest(
-			methodKey.getMethod(), classModel, _indexer);
+			methodKey.getMethod(), classedModel, _indexer);
 
 		indexerRequestBuffer.add(indexerRequest);
 
@@ -120,6 +148,9 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 			indexerRequestBuffer.execute(numRequests);
 		}
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		BufferedIndexerInvocationHandler.class);
 
 	private final Indexer<?> _indexer;
 	private volatile IndexerRegistryConfiguration _indexerRegistryConfiguration;
