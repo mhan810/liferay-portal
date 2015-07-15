@@ -14,7 +14,8 @@
 
 package com.liferay.portal.search.internal.analysis;
 
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.analysis.KeywordTokenizer;
 
 import java.util.ArrayList;
@@ -30,11 +31,11 @@ public class SimpleKeywordTokenizer implements KeywordTokenizer {
 
 	@Override
 	public boolean requiresTokenization(String keyword) {
-		int start = keyword.indexOf(StringPool.QUOTE);
-		int end = keyword.indexOf(StringPool.QUOTE, start + 1);
+		int start = keyword.indexOf(CharPool.QUOTE);
+		int end = keyword.indexOf(CharPool.QUOTE, start + 1);
 
-		if (!(keyword.startsWith(StringPool.QUOTE) &&
-			keyword.endsWith(StringPool.QUOTE))) {
+		if (!(keyword.indexOf(CharPool.QUOTE) == 0) &&
+			(keyword.lastIndexOf(CharPool.QUOTE) == (keyword.length() -1))) {
 
 			if ((start > -1) && (end > start)) {
 				return true;
@@ -47,8 +48,8 @@ public class SimpleKeywordTokenizer implements KeywordTokenizer {
 	public List<String> tokenize(String keyword) {
 		List<String> tokens = new ArrayList<>();
 
-		int start = keyword.indexOf(StringPool.QUOTE);
-		int end = keyword.indexOf(StringPool.QUOTE, start + 1);
+		int start = keyword.indexOf(CharPool.QUOTE);
+		int end = keyword.indexOf(CharPool.QUOTE, start + 1);
 
 		tokenize(keyword, tokens, start, end);
 
@@ -62,19 +63,23 @@ public class SimpleKeywordTokenizer implements KeywordTokenizer {
 			keyword = keyword.trim();
 
 			if (!keyword.isEmpty()) {
-				tokens.add(keyword);
+				tokenizeBySpace(keyword, tokens);
 			}
 
 			return;
 		}
 
-		String token = keyword.substring(0, start).trim();
+		String token = keyword.substring(0, start);
+
+		token = token.trim();
 
 		if (!token.isEmpty()) {
-			tokens.add(token);
+			tokenizeBySpace(token, tokens);
 		}
 
-		token = keyword.substring(start, end + 1).trim();
+		token = keyword.substring(start, end + 1);
+
+		token = token.trim();
 
 		if (!token.isEmpty()) {
 			tokens.add(token);
@@ -84,16 +89,30 @@ public class SimpleKeywordTokenizer implements KeywordTokenizer {
 			return;
 		}
 
-		keyword = keyword.substring(end + 1, keyword.length()).trim();
+		keyword = keyword.substring(end + 1, keyword.length());
+
+		keyword = keyword.trim();
 
 		if (keyword.isEmpty()) {
 			return;
 		}
 
-		start = keyword.indexOf(StringPool.QUOTE, end + 1);
-		end = keyword.indexOf(StringPool.QUOTE, start + 1);
+		start = keyword.indexOf(CharPool.QUOTE, end + 1);
+		end = keyword.indexOf(CharPool.QUOTE, start + 1);
 
 		tokenize(keyword, tokens, start, end);
+	}
+
+	protected void tokenizeBySpace(String keyword, List<String> tokens) {
+		String[] keywordTokens = StringUtil.split(keyword, CharPool.SPACE);
+
+		for (String keywordToken : keywordTokens) {
+			keyword = keywordToken.trim();
+
+			if (!keyword.isEmpty()) {
+				tokens.add(keyword);
+			}
+		}
 	}
 
 }
