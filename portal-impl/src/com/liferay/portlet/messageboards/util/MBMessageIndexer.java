@@ -112,6 +112,11 @@ public class MBMessageIndexer
 	}
 
 	@Override
+	public MBMessage fetchObject(long classPK) {
+		return MBMessageLocalServiceUtil.fetchMBMessage(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -307,6 +312,16 @@ public class MBMessageIndexer
 		SearchEngineUtil.updateDocument(
 			getSearchEngineId(), mbMessage.getCompanyId(), document,
 			isCommitImmediately());
+
+		if (mbMessage.isRoot()) {
+			List<MBMessage> messages =
+				MBMessageLocalServiceUtil.getThreadMessages(
+					mbMessage.getThreadId(), WorkflowConstants.STATUS_APPROVED);
+
+			for (MBMessage curMessage : messages) {
+				reindex(curMessage);
+			}
+		}
 	}
 
 	@Override
@@ -314,19 +329,6 @@ public class MBMessageIndexer
 		MBMessage message = MBMessageLocalServiceUtil.getMessage(classPK);
 
 		doReindex(message);
-
-		if (message.isRoot()) {
-			List<MBMessage> messages =
-				MBMessageLocalServiceUtil.getThreadMessages(
-					message.getThreadId(), WorkflowConstants.STATUS_APPROVED);
-
-			for (MBMessage curMessage : messages) {
-				reindex(curMessage);
-			}
-		}
-		else {
-			reindex(message);
-		}
 	}
 
 	@Override

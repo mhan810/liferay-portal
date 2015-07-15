@@ -67,6 +67,11 @@ public class BlogsEntryIndexer extends BaseIndexer<BlogsEntry> {
 	}
 
 	@Override
+	public BlogsEntry fetchObject(long classPK) {
+		return BlogsEntryLocalServiceUtil.fetchBlogsEntry(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

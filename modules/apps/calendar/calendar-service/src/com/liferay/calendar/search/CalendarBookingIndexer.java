@@ -62,6 +62,11 @@ public class CalendarBookingIndexer extends BaseIndexer<CalendarBooking> {
 	}
 
 	@Override
+	public CalendarBooking fetchObject(long classPK) {
+		return CalendarBookingLocalServiceUtil.fetchCalendarBooking(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

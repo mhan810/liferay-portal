@@ -63,6 +63,11 @@ public class DLFolderIndexer
 	}
 
 	@Override
+	public DLFolder fetchObject(long classPK) {
+		return DLFolderLocalServiceUtil.fetchFolder(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

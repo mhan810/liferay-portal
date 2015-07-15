@@ -120,6 +120,16 @@ public class WikiPageIndexer
 	}
 
 	@Override
+	public WikiPage fetchObject(long classPK) {
+		try {
+			return WikiPageLocalServiceUtil.getPage(classPK, (Boolean)null);
+		}
+		catch (PortalException e) {
+			return null;
+		}
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
