@@ -142,6 +142,10 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		}
 	}
 
+	public T fetchObject(long classPK) {
+		return null;
+	}
+
 	/**
 	 * @deprecated As of 7.0.0, replaced by {@link #getSearchClassNames}
 	 */
