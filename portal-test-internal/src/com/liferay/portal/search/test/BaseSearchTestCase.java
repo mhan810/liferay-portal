@@ -146,11 +146,6 @@ public abstract class BaseSearchTestCase {
 	}
 
 	@Test
-	public void testSearchMixedPhraseKeywords() throws Exception {
-		searchByMixedPhraseKeywords();
-	}
-
-	@Test
 	public void testSearchByKeywordsInsideParentBaseModel() throws Exception {
 		searchByKeywordsInsideParentBaseModel();
 	}
@@ -168,6 +163,11 @@ public abstract class BaseSearchTestCase {
 	@Test
 	public void testSearchExpireLatestVersion() throws Exception {
 		searchExpireVersions(true);
+	}
+
+	@Test
+	public void testSearchMixedPhraseKeywords() throws Exception {
+		searchByMixedPhraseKeywords();
 	}
 
 	@Test
@@ -324,7 +324,7 @@ public abstract class BaseSearchTestCase {
 	}
 
 	protected void deleteBaseModel(BaseModel<?> baseModel) throws Exception {
-		deleteBaseModel((Long) baseModel.getPrimaryKeyObj());
+		deleteBaseModel((Long)baseModel.getPrimaryKeyObj());
 	}
 
 	protected void deleteBaseModel(long primaryKey) throws Exception {
@@ -605,6 +605,41 @@ public abstract class BaseSearchTestCase {
 		assertBaseModelsCount(initialBaseModelsSearchCount + 1, searchContext);
 	}
 
+	protected void searchByKeywordsInsideParentBaseModel() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(group.getGroupId());
+
+		SearchContext searchContext = SearchContextTestUtil.getSearchContext(
+			group.getGroupId());
+
+		baseModel = addBaseModel(
+			null, true, getSearchKeywords(), serviceContext);
+
+		BaseModel<?> parentBaseModel1 = getParentBaseModel(
+			group, serviceContext);
+
+		searchContext.setFolderIds(
+			new long[] {(Long)parentBaseModel1.getPrimaryKeyObj()});
+		searchContext.setKeywords(getSearchKeywords());
+
+		int initialBaseModelsSearchCount = 0;
+
+		assertBaseModelsCount(initialBaseModelsSearchCount, searchContext);
+
+		baseModel = addBaseModel(
+			parentBaseModel1, true, getSearchKeywords(), serviceContext);
+
+		assertBaseModelsCount(initialBaseModelsSearchCount + 1, searchContext);
+
+		BaseModel<?> parentBaseModel2 = getParentBaseModel(
+			parentBaseModel1, serviceContext);
+
+		baseModel = addBaseModel(
+			parentBaseModel2, true, getSearchKeywords(), serviceContext);
+
+		assertBaseModelsCount(initialBaseModelsSearchCount + 2, searchContext);
+	}
+
 	protected void searchByMixedPhraseKeywords() throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(group.getGroupId());
@@ -617,10 +652,11 @@ public abstract class BaseSearchTestCase {
 		String keyword6 = getSearchKeywords() + 6;
 		String keyword7 = getSearchKeywords() + 7;
 
-		String combinedKeywords = keyword1 + StringPool.SPACE + keyword2 +
-			StringPool.SPACE + keyword3 + StringPool.SPACE + keyword4 +
-			StringPool.SPACE + keyword5 + StringPool.SPACE + keyword6 +
-			StringPool.SPACE + keyword7;
+		String combinedKeywords =
+			keyword1 + StringPool.SPACE + keyword2 + StringPool.SPACE +
+				keyword3 + StringPool.SPACE + keyword4 + StringPool.SPACE +
+				keyword5 + StringPool.SPACE + keyword6 + StringPool.SPACE +
+				keyword7;
 
 		SearchContext searchContext = SearchContextTestUtil.getSearchContext(
 			group.getGroupId());
@@ -692,41 +728,6 @@ public abstract class BaseSearchTestCase {
 				RandomTestUtil.randomString());
 
 		assertBaseModelsCount(initialBaseModelsSearchCount, searchContext);
-	}
-
-	protected void searchByKeywordsInsideParentBaseModel() throws Exception {
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext(group.getGroupId());
-
-		SearchContext searchContext = SearchContextTestUtil.getSearchContext(
-			group.getGroupId());
-
-		baseModel = addBaseModel(
-			null, true, getSearchKeywords(), serviceContext);
-
-		BaseModel<?> parentBaseModel1 = getParentBaseModel(
-			group, serviceContext);
-
-		searchContext.setFolderIds(
-			new long[] {(Long)parentBaseModel1.getPrimaryKeyObj()});
-		searchContext.setKeywords(getSearchKeywords());
-
-		int initialBaseModelsSearchCount = 0;
-
-		assertBaseModelsCount(initialBaseModelsSearchCount, searchContext);
-
-		baseModel = addBaseModel(
-			parentBaseModel1, true, getSearchKeywords(), serviceContext);
-
-		assertBaseModelsCount(initialBaseModelsSearchCount + 1, searchContext);
-
-		BaseModel<?> parentBaseModel2 = getParentBaseModel(
-			parentBaseModel1, serviceContext);
-
-		baseModel = addBaseModel(
-			parentBaseModel2, true, getSearchKeywords(), serviceContext);
-
-		assertBaseModelsCount(initialBaseModelsSearchCount + 2, searchContext);
 	}
 
 	protected void searchComments() throws Exception {
