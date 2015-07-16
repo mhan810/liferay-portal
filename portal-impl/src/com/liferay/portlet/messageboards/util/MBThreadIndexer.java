@@ -170,13 +170,6 @@ public class MBThreadIndexer extends BaseIndexer<MBThread> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		MBThread thread = MBThreadLocalServiceUtil.getThread(classPK);
-
-		doReindex(thread);
-	}
-
-	@Override
 	protected void doReindex(String[] ids) throws Exception {
 		long companyId = GetterUtil.getLong(ids[0]);
 

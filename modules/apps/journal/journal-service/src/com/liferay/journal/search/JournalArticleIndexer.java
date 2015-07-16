@@ -636,20 +636,6 @@ public class JournalArticleIndexer
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		JournalArticle article =
-			_journalArticleLocalService.fetchJournalArticle(classPK);
-
-		if (article == null) {
-			article = _journalArticleLocalService.fetchLatestArticle(classPK);
-		}
-
-		if (article != null) {
-			doReindex(article);
-		}
-	}
-
-	@Override
 	protected void doReindex(String[] ids) throws Exception {
 		long companyId = GetterUtil.getLong(ids[0]);
 

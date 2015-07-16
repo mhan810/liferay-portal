@@ -318,8 +318,6 @@ public class MBMessageIndexer
 	protected void doReindex(String className, long classPK) throws Exception {
 		MBMessage message = MBMessageLocalServiceUtil.getMessage(classPK);
 
-		doReindex(message);
-
 		if (message.isRoot()) {
 			List<MBMessage> messages =
 				MBMessageLocalServiceUtil.getThreadMessages(

@@ -192,13 +192,6 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		DDLRecord record = DDLRecordLocalServiceUtil.getRecord(classPK);
-
-		doReindex(record);
-	}
-
-	@Override
 	protected void doReindex(String[] ids) throws Exception {
 		long companyId = GetterUtil.getLong(ids[0]);
 

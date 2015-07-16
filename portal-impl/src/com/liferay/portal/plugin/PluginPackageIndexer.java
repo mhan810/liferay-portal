@@ -190,10 +190,6 @@ public class PluginPackageIndexer extends BaseIndexer<PluginPackage> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-	}
-
-	@Override
 	protected void doReindex(String[] ids) throws Exception {
 		SearchEngineUtil.deleteEntityDocuments(
 			getSearchEngineId(), CompanyConstants.SYSTEM, CLASS_NAME,

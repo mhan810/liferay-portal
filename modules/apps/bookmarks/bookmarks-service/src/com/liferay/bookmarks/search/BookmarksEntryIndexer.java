@@ -141,13 +141,6 @@ public class BookmarksEntryIndexer extends BaseIndexer<BookmarksEntry> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		BookmarksEntry entry = BookmarksEntryLocalServiceUtil.getEntry(classPK);
-
-		doReindex(entry);
-	}
-
-	@Override
 	protected void doReindex(String[] ids) throws Exception {
 		long companyId = GetterUtil.getLong(ids[0]);
 

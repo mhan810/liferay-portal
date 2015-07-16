@@ -252,11 +252,6 @@ public class BaseIndexerGetSiteGroupIdTest extends PowerMockito {
 		}
 
 		@Override
-		protected void doReindex(String className, long classPK)
-			throws Exception {
-		}
-
-		@Override
 		protected void doReindex(String[] ids) throws Exception {
 		}
 

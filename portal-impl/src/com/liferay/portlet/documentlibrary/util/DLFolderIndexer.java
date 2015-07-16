@@ -164,13 +164,6 @@ public class DLFolderIndexer
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		DLFolder dlFolder = DLFolderLocalServiceUtil.getFolder(classPK);
-
-		doReindex(dlFolder);
-	}
-
-	@Override
 	protected void doReindex(String[] ids) throws Exception {
 		long companyId = GetterUtil.getLong(ids[0]);
 

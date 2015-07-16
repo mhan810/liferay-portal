@@ -333,13 +333,6 @@ public class UserIndexer extends BaseIndexer<User> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		User user = UserLocalServiceUtil.getUserById(classPK);
-
-		doReindex(user);
-	}
-
-	@Override
 	protected void doReindex(String[] ids) throws Exception {
 		long companyId = GetterUtil.getLong(ids[0]);
 

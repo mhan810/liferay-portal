@@ -226,14 +226,6 @@ public class WikiPageIndexer
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		WikiPage page = WikiPageLocalServiceUtil.getPage(
-			classPK, (Boolean)null);
-
-		doReindex(page);
-	}
-
-	@Override
 	protected void doReindex(String[] ids) throws Exception {
 		long companyId = GetterUtil.getLong(ids[0]);
 
