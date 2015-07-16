@@ -50,7 +50,7 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 
 		IndexerRequestBuffer indexerRequestBuffer = IndexerRequestBuffer.get();
 
-		if ((annotation == null) || (args.length != 1) ||
+		if ((annotation == null) || (args.length == 0) || (args.length > 2) ||
 			(indexerRequestBuffer == null)) {
 
 			return method.invoke(_indexer, args);
@@ -60,18 +60,32 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 
 		if (!(args[0] instanceof BaseModel) &&
 			!(args[0] instanceof ClassedModel) &&
-			!(args0Class.isArray() || args0Class.equals(Collection.class))) {
+			!(args0Class.isArray() || args0Class.equals(Collection.class)) &&
+			!((args.length == 2) && args[0] instanceof String &&
+				args[1].getClass().equals(Long.TYPE))) {
 
 			return method.invoke(_indexer, args);
 		}
 
-		MethodKey methodKey = new MethodKey(
-			Indexer.class, method.getName(), Object.class);
-
 		if (args[0] instanceof ClassedModel) {
+			MethodKey methodKey = new MethodKey(
+				Indexer.class, method.getName(), Object.class);
+
 			bufferRequest(methodKey, args[0], indexerRequestBuffer);
 		}
+		else if (args.length == 2) {
+			MethodKey methodKey = new MethodKey(
+				Indexer.class, method.getName(), String.class, Long.TYPE);
+
+			String className = (String)args[0];
+			Long classPK = (Long)args[1];
+
+			bufferRequest(methodKey, className, classPK, indexerRequestBuffer);
+		}
 		else {
+			MethodKey methodKey = new MethodKey(
+				Indexer.class, method.getName(), Object.class);
+
 			Collection<Object> objects = null;
 
 			if (args0Class.isArray()) {
@@ -114,10 +128,29 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 
 		BaseModel<?> baseModel = (BaseModel<?>)object;
 
-		ClassedModel classModel = (ClassedModel)baseModel.clone();
+		ClassedModel classedModel = (ClassedModel)baseModel.clone();
 
 		IndexerRequest indexerRequest = new IndexerRequest(
-			methodKey.getMethod(), classModel, _indexer);
+			methodKey.getMethod(), classedModel, _indexer);
+
+		doBufferRequest(indexerRequest, indexerRequestBuffer);
+	}
+
+	protected void bufferRequest(
+			MethodKey methodKey, String className, Long classPK,
+			IndexerRequestBuffer indexerRequestBuffer)
+		throws Exception {
+
+		IndexerRequest indexerRequest = new IndexerRequest(
+			methodKey.getMethod(), _indexer, className, classPK);
+
+		doBufferRequest(indexerRequest, indexerRequestBuffer);
+	}
+
+	protected void doBufferRequest(
+			IndexerRequest indexerRequest,
+			IndexerRequestBuffer indexerRequestBuffer)
+		throws Exception {
 
 		indexerRequestBuffer.add(indexerRequest);
 
