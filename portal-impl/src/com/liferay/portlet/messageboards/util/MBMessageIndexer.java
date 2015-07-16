@@ -312,23 +312,15 @@ public class MBMessageIndexer
 		SearchEngineUtil.updateDocument(
 			getSearchEngineId(), mbMessage.getCompanyId(), document,
 			isCommitImmediately());
-	}
 
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		MBMessage message = MBMessageLocalServiceUtil.getMessage(classPK);
-
-		if (message.isRoot()) {
+		if (mbMessage.isRoot()) {
 			List<MBMessage> messages =
 				MBMessageLocalServiceUtil.getThreadMessages(
-					message.getThreadId(), WorkflowConstants.STATUS_APPROVED);
+					mbMessage.getThreadId(), WorkflowConstants.STATUS_APPROVED);
 
 			for (MBMessage curMessage : messages) {
 				reindex(curMessage);
 			}
-		}
-		else {
-			reindex(message);
 		}
 	}
 
