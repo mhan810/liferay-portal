@@ -1434,8 +1434,13 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		}
 	}
 
-	protected abstract void doReindex(String className, long classPK)
-		throws Exception;
+	protected void doReindex(String className, long classPK)
+		throws Exception {
+
+		T object = fetchObject(classPK);
+
+		reindex(object);
+	}
 
 	protected abstract void doReindex(String[] ids) throws Exception;
 
