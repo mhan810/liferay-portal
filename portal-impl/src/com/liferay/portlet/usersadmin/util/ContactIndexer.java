@@ -56,6 +56,11 @@ public class ContactIndexer extends BaseIndexer<Contact> {
 	}
 
 	@Override
+	public Contact fetchObject(long classPK) {
+		return ContactLocalServiceUtil.fetchContact(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -161,13 +166,6 @@ public class ContactIndexer extends BaseIndexer<Contact> {
 				getSearchEngineId(), contact.getCompanyId(), document,
 				isCommitImmediately());
 		}
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		Contact contact = ContactLocalServiceUtil.getContact(classPK);
-
-		doReindex(contact);
 	}
 
 	@Override

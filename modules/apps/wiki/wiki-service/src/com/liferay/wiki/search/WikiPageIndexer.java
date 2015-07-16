@@ -120,6 +120,16 @@ public class WikiPageIndexer
 	}
 
 	@Override
+	public WikiPage fetchObject(long classPK) {
+		try {
+			return WikiPageLocalServiceUtil.getPage(classPK, (Boolean)null);
+		}
+		catch (PortalException e) {
+			return null;
+		}
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -213,14 +223,6 @@ public class WikiPageIndexer
 		summary.setMaxContentLength(200);
 
 		return summary;
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		WikiPage page = WikiPageLocalServiceUtil.getPage(
-			classPK, (Boolean)null);
-
-		doReindex(page);
 	}
 
 	@Override

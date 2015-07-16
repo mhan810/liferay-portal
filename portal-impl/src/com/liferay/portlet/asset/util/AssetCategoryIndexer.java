@@ -65,6 +65,11 @@ public class AssetCategoryIndexer extends BaseIndexer<AssetCategory> {
 	}
 
 	@Override
+	public AssetCategory fetchObject(long classPK) {
+		return AssetCategoryLocalServiceUtil.fetchAssetCategory(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -204,14 +209,6 @@ public class AssetCategoryIndexer extends BaseIndexer<AssetCategory> {
 				getSearchEngineId(), assetCategory.getCompanyId(), document,
 				isCommitImmediately());
 		}
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		AssetCategory category = AssetCategoryLocalServiceUtil.getCategory(
-			classPK);
-
-		doReindex(category);
 	}
 
 	@Override

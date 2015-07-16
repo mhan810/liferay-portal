@@ -57,6 +57,11 @@ public class UserGroupIndexer extends BaseIndexer<UserGroup> {
 	}
 
 	@Override
+	public UserGroup fetchObject(long classPK) {
+		return UserGroupLocalServiceUtil.fetchUserGroup(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -122,13 +127,6 @@ public class UserGroupIndexer extends BaseIndexer<UserGroup> {
 		String content = null;
 
 		return new Summary(title, content);
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		UserGroup userGroup = UserGroupLocalServiceUtil.getUserGroup(classPK);
-
-		doReindex(userGroup);
 	}
 
 	@Override

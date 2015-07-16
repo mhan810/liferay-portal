@@ -61,6 +61,11 @@ public class AssetVocabularyIndexer extends BaseIndexer<AssetVocabulary> {
 	}
 
 	@Override
+	public AssetVocabulary fetchObject(long classPK) {
+		return AssetVocabularyLocalServiceUtil.fetchAssetVocabulary(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -148,14 +153,6 @@ public class AssetVocabularyIndexer extends BaseIndexer<AssetVocabulary> {
 				getSearchEngineId(), assetVocabulary.getCompanyId(), document,
 				isCommitImmediately());
 		}
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		AssetVocabulary vocabulary =
-			AssetVocabularyLocalServiceUtil.getVocabulary(classPK);
-
-		doReindex(vocabulary);
 	}
 
 	@Override

@@ -71,6 +71,11 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 	}
 
 	@Override
+	public DDLRecord fetchObject(long classPK) {
+		return DDLRecordLocalServiceUtil.fetchDDLRecord(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -184,13 +189,6 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 				getSearchEngineId(), ddlRecord.getCompanyId(), document,
 				isCommitImmediately());
 		}
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		DDLRecord record = DDLRecordLocalServiceUtil.getRecord(classPK);
-
-		doReindex(record);
 	}
 
 	@Override

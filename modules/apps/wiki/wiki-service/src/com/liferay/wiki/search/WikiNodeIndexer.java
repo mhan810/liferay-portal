@@ -60,6 +60,11 @@ public class WikiNodeIndexer extends BaseIndexer<WikiNode> {
 	}
 
 	@Override
+	public WikiNode fetchObject(long classPK) {
+		return WikiNodeLocalServiceUtil.fetchWikiNode(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -106,13 +111,6 @@ public class WikiNodeIndexer extends BaseIndexer<WikiNode> {
 		throws Exception {
 
 		return null;
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		WikiNode node = WikiNodeLocalServiceUtil.getNode(classPK);
-
-		doReindex(node);
 	}
 
 	@Override

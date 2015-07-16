@@ -63,6 +63,11 @@ public class JournalFolderIndexer
 	}
 
 	@Override
+	public JournalFolder fetchObject(long classPK) {
+		return _journalFolderLocalService.fetchFolder(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -148,13 +153,6 @@ public class JournalFolderIndexer
 		SearchEngineUtil.updateDocument(
 			getSearchEngineId(), journalFolder.getCompanyId(), document,
 			isCommitImmediately());
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		JournalFolder folder = _journalFolderLocalService.getFolder(classPK);
-
-		doReindex(folder);
 	}
 
 	@Override

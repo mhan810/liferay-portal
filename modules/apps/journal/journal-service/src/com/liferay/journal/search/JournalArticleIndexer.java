@@ -115,6 +115,19 @@ public class JournalArticleIndexer
 	}
 
 	@Override
+	public JournalArticle fetchObject(long classPK) {
+		JournalArticle journalArticle =
+			_journalArticleLocalService.fetchJournalArticle(classPK);
+
+		if (journalArticle == null) {
+			journalArticle = _journalArticleLocalService.fetchLatestArticle(
+				classPK);
+		}
+
+		return journalArticle;
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -619,20 +632,6 @@ public class JournalArticleIndexer
 			SearchEngineUtil.updateDocument(
 				getSearchEngineId(), article.getCompanyId(),
 				getDocument(article), isCommitImmediately());
-		}
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		JournalArticle article =
-			_journalArticleLocalService.fetchJournalArticle(classPK);
-
-		if (article == null) {
-			article = _journalArticleLocalService.fetchLatestArticle(classPK);
-		}
-
-		if (article != null) {
-			doReindex(article);
 		}
 	}
 

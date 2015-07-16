@@ -65,6 +65,11 @@ public class MBThreadIndexer extends BaseIndexer<MBThread> {
 	}
 
 	@Override
+	public MBThread fetchObject(long classPK) {
+		return MBThreadLocalServiceUtil.fetchMBThread(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -162,13 +167,6 @@ public class MBThreadIndexer extends BaseIndexer<MBThread> {
 		SearchEngineUtil.updateDocument(
 			getSearchEngineId(), mbThread.getCompanyId(), document,
 			isCommitImmediately());
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		MBThread thread = MBThreadLocalServiceUtil.getThread(classPK);
-
-		doReindex(thread);
 	}
 
 	@Override

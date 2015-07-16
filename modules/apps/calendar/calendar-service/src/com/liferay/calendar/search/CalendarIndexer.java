@@ -62,6 +62,11 @@ public class CalendarIndexer extends BaseIndexer<Calendar> {
 	}
 
 	@Override
+	public Calendar fetchObject(long classPK) {
+		return CalendarLocalServiceUtil.fetchCalendar(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

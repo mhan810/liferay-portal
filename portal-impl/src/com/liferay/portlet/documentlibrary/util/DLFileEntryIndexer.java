@@ -153,6 +153,11 @@ public class DLFileEntryIndexer
 	}
 
 	@Override
+	public DLFileEntry fetchObject(long classPK) {
+		return DLFileEntryLocalServiceUtil.fetchDLFileEntry(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -537,14 +542,6 @@ public class DLFileEntryIndexer
 				getSearchEngineId(), dlFileEntry.getCompanyId(), document,
 				isCommitImmediately());
 		}
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.getFileEntry(
-			classPK);
-
-		doReindex(dlFileEntry);
 	}
 
 	@Override

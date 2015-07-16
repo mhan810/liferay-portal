@@ -63,6 +63,11 @@ public class DLFolderIndexer
 	}
 
 	@Override
+	public DLFolder fetchObject(long classPK) {
+		return DLFolderLocalServiceUtil.fetchFolder(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -156,13 +161,6 @@ public class DLFolderIndexer
 				getSearchEngineId(), dlFolder.getCompanyId(), document,
 				isCommitImmediately());
 		}
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		DLFolder dlFolder = DLFolderLocalServiceUtil.getFolder(classPK);
-
-		doReindex(dlFolder);
 	}
 
 	@Override

@@ -85,10 +85,6 @@ public class AssetEntryIndexer extends BaseIndexer<AssetEntry> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) {
-	}
-
-	@Override
 	protected void doReindex(String[] ids) {
 	}
 

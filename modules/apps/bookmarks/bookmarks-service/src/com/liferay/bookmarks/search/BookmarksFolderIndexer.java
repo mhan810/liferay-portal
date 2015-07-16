@@ -60,6 +60,11 @@ public class BookmarksFolderIndexer extends BaseIndexer<BookmarksFolder> {
 	}
 
 	@Override
+	public BookmarksFolder fetchObject(long classPK) {
+		return BookmarksFolderLocalServiceUtil.fetchBookmarksFolder(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -153,14 +158,6 @@ public class BookmarksFolderIndexer extends BaseIndexer<BookmarksFolder> {
 		SearchEngineUtil.updateDocument(
 			getSearchEngineId(), bookmarksFolder.getCompanyId(), document,
 			isCommitImmediately());
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		BookmarksFolder folder = BookmarksFolderLocalServiceUtil.getFolder(
-			classPK);
-
-		doReindex(folder);
 	}
 
 	@Override

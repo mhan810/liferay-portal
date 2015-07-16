@@ -68,6 +68,11 @@ public class OrganizationIndexer extends BaseIndexer<Organization> {
 	}
 
 	@Override
+	public Organization fetchObject(long classPK) {
+		return OrganizationLocalServiceUtil.fetchOrganization(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -215,14 +220,6 @@ public class OrganizationIndexer extends BaseIndexer<Organization> {
 		SearchEngineUtil.updateDocument(
 			getSearchEngineId(), organization.getCompanyId(), document,
 			isCommitImmediately());
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		Organization organization =
-			OrganizationLocalServiceUtil.getOrganization(classPK);
-
-		doReindex(organization);
 	}
 
 	@Override

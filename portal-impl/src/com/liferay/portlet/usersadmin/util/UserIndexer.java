@@ -81,6 +81,11 @@ public class UserIndexer extends BaseIndexer<User> {
 	}
 
 	@Override
+	public User fetchObject(long classPK) {
+		return UserLocalServiceUtil.fetchUser(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -325,13 +330,6 @@ public class UserIndexer extends BaseIndexer<User> {
 		String content = null;
 
 		return new Summary(title, content);
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		User user = UserLocalServiceUtil.getUserById(classPK);
-
-		doReindex(user);
 	}
 
 	@Override

@@ -71,6 +71,11 @@ public class BookmarksEntryIndexer extends BaseIndexer<BookmarksEntry> {
 	}
 
 	@Override
+	public BookmarksEntry fetchObject(long classPK) {
+		return BookmarksEntryLocalServiceUtil.fetchBookmarksEntry(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
@@ -133,13 +138,6 @@ public class BookmarksEntryIndexer extends BaseIndexer<BookmarksEntry> {
 		SearchEngineUtil.updateDocument(
 			getSearchEngineId(), bookmarksEntry.getCompanyId(), document,
 			isCommitImmediately());
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		BookmarksEntry entry = BookmarksEntryLocalServiceUtil.getEntry(classPK);
-
-		doReindex(entry);
 	}
 
 	@Override
