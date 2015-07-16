@@ -112,6 +112,11 @@ public class MBMessageIndexer
 	}
 
 	@Override
+	public MBMessage fetchObject(long classPK) {
+		return MBMessageLocalServiceUtil.fetchMBMessage(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

@@ -56,6 +56,11 @@ public class ContactIndexer extends BaseIndexer<Contact> {
 	}
 
 	@Override
+	public Contact fetchObject(long classPK) {
+		return ContactLocalServiceUtil.fetchContact(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

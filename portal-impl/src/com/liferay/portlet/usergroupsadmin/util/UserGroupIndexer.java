@@ -57,6 +57,11 @@ public class UserGroupIndexer extends BaseIndexer<UserGroup> {
 	}
 
 	@Override
+	public UserGroup fetchObject(long classPK) {
+		return UserGroupLocalServiceUtil.fetchUserGroup(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

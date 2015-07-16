@@ -61,6 +61,11 @@ public class AssetVocabularyIndexer extends BaseIndexer<AssetVocabulary> {
 	}
 
 	@Override
+	public AssetVocabulary fetchObject(long classPK) {
+		return AssetVocabularyLocalServiceUtil.fetchAssetVocabulary(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

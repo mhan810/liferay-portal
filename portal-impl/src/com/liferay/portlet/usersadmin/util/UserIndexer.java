@@ -81,6 +81,11 @@ public class UserIndexer extends BaseIndexer<User> {
 	}
 
 	@Override
+	public User fetchObject(long classPK) {
+		return UserLocalServiceUtil.fetchUser(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

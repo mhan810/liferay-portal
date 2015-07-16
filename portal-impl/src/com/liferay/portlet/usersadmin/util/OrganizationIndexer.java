@@ -68,6 +68,11 @@ public class OrganizationIndexer extends BaseIndexer<Organization> {
 	}
 
 	@Override
+	public Organization fetchObject(long classPK) {
+		return OrganizationLocalServiceUtil.fetchOrganization(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

@@ -115,6 +115,19 @@ public class JournalArticleIndexer
 	}
 
 	@Override
+	public JournalArticle fetchObject(long classPK) {
+		JournalArticle journalArticle =
+			_journalArticleLocalService.fetchJournalArticle(classPK);
+
+		if (journalArticle == null) {
+			journalArticle = _journalArticleLocalService.fetchLatestArticle(
+				classPK);
+		}
+
+		return journalArticle;
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

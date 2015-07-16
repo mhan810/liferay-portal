@@ -62,6 +62,11 @@ public class SCIndexer extends BaseIndexer<SCProductEntry> {
 	}
 
 	@Override
+	public SCProductEntry fetchObject(long classPK) {
+		return SCProductEntryLocalServiceUtil.fetchSCProductEntry(classPK);
+	}
+
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
