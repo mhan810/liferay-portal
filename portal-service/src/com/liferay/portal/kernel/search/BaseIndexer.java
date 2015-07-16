@@ -530,7 +530,11 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 				return;
 			}
 
-			reindex(doGetObject(className, classPK));
+			Indexer<T> indexer = IndexerRegistryUtil.getIndexer(className);
+
+			if (indexer != null) {
+				indexer.reindex(doGetObject(className, classPK));
+			}
 		}
 		catch (NoSuchModelException nsme) {
 			if (_log.isWarnEnabled()) {
