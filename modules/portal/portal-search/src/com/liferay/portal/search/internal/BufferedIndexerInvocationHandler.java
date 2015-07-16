@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
+import com.liferay.portal.search.IndexerRequestBufferOverflowHandler;
 import com.liferay.portal.search.configuration.IndexerRegistryConfiguration;
 
 import java.lang.annotation.Annotation;
@@ -98,6 +99,14 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 		_indexerRegistryConfiguration = indexerRegistryConfiguration;
 	}
 
+	public void setIndexerRequestBufferOverflowHandler(
+		IndexerRequestBufferOverflowHandler
+			indexerRequestBufferOverflowHandler) {
+
+		_indexerRequestBufferOverflowHandler =
+			indexerRequestBufferOverflowHandler;
+	}
+
 	protected void bufferRequest(
 			MethodKey methodKey, Object object,
 			IndexerRequestBuffer indexerRequestBuffer)
@@ -112,16 +121,18 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 
 		indexerRequestBuffer.add(indexerRequest);
 
-		int numRequests =
-			indexerRequestBuffer.size() -
-				_indexerRegistryConfiguration.maxBufferSize();
+		if (indexerRequestBuffer.size() >
+				_indexerRegistryConfiguration.maxBufferSize()) {
 
-		if (numRequests > 0) {
-			indexerRequestBuffer.execute(numRequests);
+			_indexerRequestBufferOverflowHandler.bufferOverflowed(
+				indexerRequestBuffer,
+				_indexerRegistryConfiguration.maxBufferSize());
 		}
 	}
 
 	private final Indexer<?> _indexer;
 	private volatile IndexerRegistryConfiguration _indexerRegistryConfiguration;
+	private volatile IndexerRequestBufferOverflowHandler
+		_indexerRequestBufferOverflowHandler;
 
 }
