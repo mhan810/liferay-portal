@@ -301,11 +301,9 @@ public class MBMessageIndexer
 		if (mbMessage.isRoot()) {
 			messages = MBMessageLocalServiceUtil.getThreadMessages(
 				mbMessage.getThreadId(), WorkflowConstants.STATUS_APPROVED);
+		}
 
-		}
-		else {
-			messages.add(mbMessage);
-		}
+		messages.add(mbMessage);
 
 		Collection<Document> documents = new ArrayList<>();
 
