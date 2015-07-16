@@ -207,11 +207,10 @@ public class AssetCategoryIndexer extends BaseIndexer<AssetCategory> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		AssetCategory category = AssetCategoryLocalServiceUtil.getCategory(
-			classPK);
+	protected AssetCategory doGetObject(String className, long classPK)
+		throws Exception {
 
-		doReindex(category);
+		return AssetCategoryLocalServiceUtil.getCategory(classPK);
 	}
 
 	@Override

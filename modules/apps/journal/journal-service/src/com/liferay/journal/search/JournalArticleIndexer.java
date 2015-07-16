@@ -623,7 +623,9 @@ public class JournalArticleIndexer
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
+	protected JournalArticle doGetObject(String className, long classPK)
+		throws Exception {
+
 		JournalArticle article =
 			_journalArticleLocalService.fetchJournalArticle(classPK);
 
@@ -631,9 +633,7 @@ public class JournalArticleIndexer
 			article = _journalArticleLocalService.fetchLatestArticle(classPK);
 		}
 
-		if (article != null) {
-			doReindex(article);
-		}
+		return article;
 	}
 
 	@Override

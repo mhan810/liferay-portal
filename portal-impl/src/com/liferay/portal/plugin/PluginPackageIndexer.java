@@ -190,7 +190,10 @@ public class PluginPackageIndexer extends BaseIndexer<PluginPackage> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
+	protected PluginPackage doGetObject(String className, long classPK)
+		throws Exception {
+
+		return null;
 	}
 
 	@Override

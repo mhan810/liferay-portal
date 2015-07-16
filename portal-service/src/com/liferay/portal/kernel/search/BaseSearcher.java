@@ -108,7 +108,9 @@ public abstract class BaseSearcher extends BaseIndexer<Object> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
+	protected Object doGetObject(String className, long classPK)
+		throws Exception {
+
 		throw new UnsupportedOperationException();
 	}
 

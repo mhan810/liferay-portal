@@ -138,10 +138,8 @@ public class BlogsEntryIndexer extends BaseIndexer<BlogsEntry> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		BlogsEntry entry = BlogsEntryLocalServiceUtil.getEntry(classPK);
-
-		doReindex(entry);
+	protected BlogsEntry doGetObject(String className, long classPK) throws Exception {
+		return BlogsEntryLocalServiceUtil.getEntry(classPK);
 	}
 
 	@Override
