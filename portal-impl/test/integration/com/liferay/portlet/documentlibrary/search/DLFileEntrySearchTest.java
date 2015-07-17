@@ -202,6 +202,14 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 		super.testSearchStatus();
 	}
 
+	@Override
+	@Test
+	public void testSearchMixedPhraseKeywords() throws Exception {
+		Assume.assumeFalse(isTestSkippedOnSolrBrokenByLPS56971());
+
+		super.testSearchMixedPhraseKeywords();
+	}
+
 	@Test
 	public void testSearchTikaRawMetadata() throws Exception {
 		ServiceContext serviceContext =
@@ -402,6 +410,10 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 	}
 
 	protected boolean isTestSkippedOnSolrBrokenByLPS56530() {
+		return isSearchEngineVendor("Solr");
+	}
+
+	protected boolean isTestSkippedOnSolrBrokenByLPS56971() {
 		return isSearchEngineVendor("Solr");
 	}
 
