@@ -85,7 +85,8 @@ public class AssetEntryIndexer extends BaseIndexer<AssetEntry> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) {
+	protected AssetEntry doGetObject(String className, long classPK) {
+		return null;
 	}
 
 	@Override

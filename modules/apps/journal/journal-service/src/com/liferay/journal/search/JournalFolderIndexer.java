@@ -151,10 +151,10 @@ public class JournalFolderIndexer
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		JournalFolder folder = _journalFolderLocalService.getFolder(classPK);
+	protected JournalFolder doGetObject(String className, long classPK)
+		throws Exception {
 
-		doReindex(folder);
+		return _journalFolderLocalService.getFolder(classPK);
 	}
 
 	@Override

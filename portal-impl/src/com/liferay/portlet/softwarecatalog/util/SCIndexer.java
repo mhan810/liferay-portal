@@ -157,11 +157,10 @@ public class SCIndexer extends BaseIndexer<SCProductEntry> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		SCProductEntry productEntry =
-			SCProductEntryLocalServiceUtil.getProductEntry(classPK);
+	protected SCProductEntry doGetObject(String className, long classPK)
+		throws Exception {
 
-		doReindex(productEntry);
+		return SCProductEntryLocalServiceUtil.getProductEntry(classPK);
 	}
 
 	@Override

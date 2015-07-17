@@ -151,11 +151,10 @@ public class AssetVocabularyIndexer extends BaseIndexer<AssetVocabulary> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		AssetVocabulary vocabulary =
-			AssetVocabularyLocalServiceUtil.getVocabulary(classPK);
+	protected AssetVocabulary doGetObject(String className, long classPK)
+		throws Exception {
 
-		doReindex(vocabulary);
+		return AssetVocabularyLocalServiceUtil.getVocabulary(classPK);
 	}
 
 	@Override

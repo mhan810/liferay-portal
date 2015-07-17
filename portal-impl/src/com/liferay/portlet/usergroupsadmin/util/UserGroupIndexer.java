@@ -125,10 +125,10 @@ public class UserGroupIndexer extends BaseIndexer<UserGroup> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		UserGroup userGroup = UserGroupLocalServiceUtil.getUserGroup(classPK);
+	protected UserGroup doGetObject(String className, long classPK)
+		throws Exception {
 
-		doReindex(userGroup);
+		return UserGroupLocalServiceUtil.getUserGroup(classPK);
 	}
 
 	@Override

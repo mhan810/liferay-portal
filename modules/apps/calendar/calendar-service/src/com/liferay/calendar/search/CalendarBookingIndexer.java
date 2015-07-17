@@ -174,11 +174,10 @@ public class CalendarBookingIndexer extends BaseIndexer<CalendarBooking> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		CalendarBooking calendarBooking =
-			CalendarBookingLocalServiceUtil.getCalendarBooking(classPK);
+	protected CalendarBooking doGetObject(String className, long classPK)
+		throws Exception {
 
-		doReindex(calendarBooking);
+		return CalendarBookingLocalServiceUtil.getCalendarBooking(classPK);
 	}
 
 	@Override

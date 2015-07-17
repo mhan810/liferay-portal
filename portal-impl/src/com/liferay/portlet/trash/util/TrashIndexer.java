@@ -178,7 +178,8 @@ public class TrashIndexer extends BaseIndexer<TrashEntry> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) {
+	protected TrashEntry doGetObject(String className, long classPK) {
+		return null;
 	}
 
 	@Override

@@ -187,10 +187,10 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		DDLRecord record = DDLRecordLocalServiceUtil.getRecord(classPK);
+	protected DDLRecord doGetObject(String className, long classPK)
+		throws Exception {
 
-		doReindex(record);
+		return DDLRecordLocalServiceUtil.getRecord(classPK);
 	}
 
 	@Override
