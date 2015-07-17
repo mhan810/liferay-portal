@@ -112,6 +112,8 @@ public class UserIndexerTest {
 
 	@Test
 	public void testEmptyQuery() throws Exception {
+		Assume.assumeFalse(isTestSkippedOnSolrBrokenByLPS56971());
+
 		addUser();
 
 		assertHits("", 1);
@@ -119,6 +121,8 @@ public class UserIndexerTest {
 
 	@Test
 	public void testFirstNameExactPhrase() throws Exception {
+		Assume.assumeFalse(isTestSkippedOnSolrBrokenByLPS56971());
+
 		String firstName = "Mary Jane";
 		String middleName = "Watson";
 		String lastName = "Parker";
@@ -132,6 +136,8 @@ public class UserIndexerTest {
 
 	@Test
 	public void testFirstNameMixedExactPhrase() throws Exception {
+		Assume.assumeFalse(isTestSkippedOnSolrBrokenByLPS56971());
+
 		String firstName = "Mary Jane Watson";
 		String middleName = "Joanne";
 		String lastName = "Parker";
@@ -151,6 +157,8 @@ public class UserIndexerTest {
 
 	@Test
 	public void testLikeCharacter() throws Exception {
+		Assume.assumeFalse(isTestSkippedOnSolrBrokenByLPS56971());
+
 		addUser();
 
 		assertHits("%", 1);
@@ -159,6 +167,8 @@ public class UserIndexerTest {
 
 	@Test
 	public void testLuceneQueryParserUnfriendlyCharacters() throws Exception {
+		Assume.assumeFalse(isTestSkippedOnSolrBrokenByLPS56971());
+
 		User user1 = addUser();
 		User user2 = assertSearchOneUser("@");
 
@@ -406,6 +416,10 @@ public class UserIndexerTest {
 			SearchEngineUtil.getDefaultSearchEngineId());
 
 		return ArrayUtil.contains(vendors, searchEngine.getVendor(), true);
+	}
+
+	protected boolean isTestSkippedOnSolrBrokenByLPS56971() {
+		return isSearchEngineVendor("Solr");
 	}
 
 	protected boolean isTwoEndedSubstringSearchImplementedForSearchEngine() {
