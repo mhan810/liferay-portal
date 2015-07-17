@@ -1,0 +1,25 @@
+Bundle-ClassPath: \
+	.,\
+	lib/httpclient.jar,\
+	lib/commons-exec.jar,\
+	lib/snakeyaml.jar,\
+	lib/httpcore.jar
+Bundle-Name: Liferay Kibana
+Bundle-SymbolicName: com.liferay.elasticsearch.kibana
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.elasticsearch.process
+Import-Package:\
+	com.liferay.portal.search.elasticsearch.configuration,\
+	!org.apache.http.*,\
+	!org.apache.commons.exec.*,\
+	!org.yaml.snakeyaml.*,\
+	*
+Include-Resource:\
+	classes,\
+	lib/httpclient.jar=lib/httpclient.jar,\
+	lib/httpcore.jar=lib/httpcore.jar,\
+	lib/commons-exec.jar=lib/commons-exec.jar,\
+	lib/snakeyaml.jar=lib/snakeyaml.jar,\
+	META-INF/resources=src/META-INF/resources
+Web-ContextPath: /kibana-web
