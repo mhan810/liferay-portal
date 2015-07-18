@@ -22,10 +22,13 @@ import com.liferay.portal.kernel.util.StringUtil;
 import java.util.List;
 import java.util.Map;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Daniela Zapata
  * @author David Gonzalez
  */
+@Component(immediate = true, service = Collator.class)
 public class DefaultCollatorImpl implements Collator {
 
 	@Override
