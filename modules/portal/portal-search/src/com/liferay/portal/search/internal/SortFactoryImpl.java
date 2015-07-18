@@ -12,8 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.kernel.search;
+package com.liferay.portal.search.internal;
 
+import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.search.SortFactory;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
