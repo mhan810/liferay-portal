@@ -93,11 +93,6 @@
 			</util:set>
 		</property>
 	</bean>
-	<bean id="com.liferay.portal.kernel.search.suggest.CollatorUtil" class="com.liferay.portal.kernel.search.suggest.CollatorUtil">
-		<property name="collator">
-			<bean class="com.liferay.portal.search.DefaultCollatorImpl" />
-		</property>
-	</bean>
 
 	<!-- Generic search engine -->
 
