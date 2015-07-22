@@ -32,9 +32,9 @@ import com.liferay.portal.search.elasticsearch.index.IndexFactory;
 import com.liferay.portal.search.elasticsearch.internal.util.LogUtil;
 
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthStatus;
 import org.elasticsearch.action.admin.cluster.repositories.get.GetRepositoriesRequestBuilder;
@@ -314,11 +314,8 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 			clusterAdminClient.prepareGetRepositories(_BACKUP_REPOSITORY_NAME);
 
 		try {
-			Future<GetRepositoriesResponse> getRepositoriesResponseFuture =
-				getRepositoriesRequestBuilder.execute();
-
 			GetRepositoriesResponse getRepositoriesResponse =
-				getRepositoriesResponseFuture.get();
+				getRepositoriesRequestBuilder.get();
 
 			ImmutableList<RepositoryMetaData> repositoryMetaDatas =
 				getRepositoriesResponse.repositories();
@@ -329,8 +326,8 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 
 			return true;
 		}
-		catch (ExecutionException ee) {
-			if (ee.getCause() instanceof RepositoryMissingException) {
+		catch (ElasticsearchException ee) {
+			if (ee instanceof RepositoryMissingException) {
 				return false;
 			}
 			else {
