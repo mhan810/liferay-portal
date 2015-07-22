@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchEngine;
+import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
@@ -26,6 +28,7 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -64,6 +67,7 @@ import com.liferay.portlet.dynamicdatamapping.util.test.DDMStructureTestUtil;
 import java.io.File;
 import java.io.InputStream;
 
+import org.junit.Assume;
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -180,6 +184,30 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 	@Override
 	@Test
 	public void testSearchAttachments() throws Exception {
+	}
+
+	@Override
+	@Test
+	public void testSearchByDDMStructureField() throws Exception {
+		Assume.assumeFalse(isTestSkippedOnSolrBrokenByLPS56530());
+
+		super.testSearchByDDMStructureField();
+	}
+
+	@Override
+	@Test
+	public void testSearchStatus() throws Exception {
+		Assume.assumeFalse(isTestSkippedOnSolrBrokenByLPS56530());
+
+		super.testSearchStatus();
+	}
+
+	@Override
+	@Test
+	public void testSearchMixedPhraseKeywords() throws Exception {
+		Assume.assumeFalse(isTestSkippedOnSolrBrokenByLPS56971());
+
+		super.testSearchMixedPhraseKeywords();
 	}
 
 	@Test
@@ -381,9 +409,24 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 		return "Title";
 	}
 
+	protected boolean isTestSkippedOnSolrBrokenByLPS56530() {
+		return isSearchEngineVendor("Solr");
+	}
+
+	protected boolean isTestSkippedOnSolrBrokenByLPS56971() {
+		return isSearchEngineVendor("Solr");
+	}
+
 	@Override
 	protected boolean isExpirableAllVersions() {
 		return true;
+	}
+
+	protected boolean isSearchEngineVendor(String... vendors) {
+		SearchEngine searchEngine = SearchEngineUtil.getSearchEngine(
+			SearchEngineUtil.getDefaultSearchEngineId());
+
+		return ArrayUtil.contains(vendors, searchEngine.getVendor(), true);
 	}
 
 	@Override
