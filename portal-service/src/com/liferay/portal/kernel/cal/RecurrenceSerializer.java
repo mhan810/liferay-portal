@@ -91,7 +91,7 @@ public class RecurrenceSerializer {
 		}
 		else if (frequency == Recurrence.MONTHLY) {
 			dayOfMonth = StringPool.QUESTION;
-			month += StringPool.FORWARD_SLASH + interval;
+			month = 1 + StringPool.FORWARD_SLASH + interval;
 			dayOfWeek = StringPool.QUESTION;
 			year = StringPool.STAR;
 
