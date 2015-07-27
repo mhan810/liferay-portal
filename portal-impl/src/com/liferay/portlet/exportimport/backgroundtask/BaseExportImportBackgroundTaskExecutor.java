@@ -24,7 +24,7 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.model.BackgroundTask;
 import com.liferay.portlet.exportimport.model.ExportImportConfiguration;
 import com.liferay.portlet.exportimport.service.ExportImportConfigurationLocalServiceUtil;
-import com.liferay.portlet.exportimport.staging.StagingUtil;
+import com.liferay.portlet.exportimport.staging.StagingBackgroundTaskDisplayHelperUtil;
 
 import java.io.Serializable;
 
@@ -48,9 +48,11 @@ public abstract class BaseExportImportBackgroundTaskExecutor
 
 	@Override
 	public String handleException(BackgroundTask backgroundTask, Exception e) {
-		JSONObject jsonObject = StagingUtil.getExceptionMessagesJSONObject(
-			getLocale(backgroundTask), e,
-			getExportImportConfiguration(backgroundTask));
+		JSONObject jsonObject =
+			StagingBackgroundTaskDisplayHelperUtil.
+				getExceptionMessagesJSONObject(
+					getLocale(backgroundTask), e,
+					getExportImportConfiguration(backgroundTask));
 
 		return jsonObject.toString();
 	}
