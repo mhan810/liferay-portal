@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.exportimport.backgroundtask;
 
+import com.liferay.exportimport.backgroundtask.StagingBackgroundTaskDisplay;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskDisplay;
 import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -27,7 +28,6 @@ import com.liferay.portlet.exportimport.staging.StagingUtil;
 
 import java.io.Serializable;
 
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -42,10 +42,8 @@ public abstract class BaseExportImportBackgroundTaskExecutor
 	}
 
 	@Override
-	public BackgroundTaskDisplay getBackgroundTaskDisplay(
-		BackgroundTask backgroundTask, Locale locale) {
-
-		return new StagingBackgroundTaskDisplay(backgroundTask, locale);
+	public Class<? extends BackgroundTaskDisplay> getBackgroundTaskDisplay() {
+		return StagingBackgroundTaskDisplay.class;
 	}
 
 	@Override
