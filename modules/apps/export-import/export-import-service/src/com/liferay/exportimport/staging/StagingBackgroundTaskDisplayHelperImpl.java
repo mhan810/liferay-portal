@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.lar.backgroundtask;
+package com.liferay.exportimport.staging;
 
 import com.liferay.portal.LayoutPrototypeException;
 import com.liferay.portal.LocaleException;

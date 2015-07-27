@@ -117,7 +117,7 @@ public class StagingBackgroundTaskDisplay extends BaseBackgroundTaskDisplay {
 	public boolean hasPercentage() {
 		if ((_allProgressBarCountersTotal > 0) &&
 			(!Validator.equals(_cmd, Constants.PUBLISH_TO_REMOTE) ||
-				(getPercentage() < 100))) {
+			 (getPercentage() < _MAX_PERCENTAGE))) {
 
 			return true;
 		}
@@ -129,18 +129,18 @@ public class StagingBackgroundTaskDisplay extends BaseBackgroundTaskDisplay {
 		long currentModelAdditionCountersTotal,
 		long currentPortletAdditionCounter, String phase) {
 
-		int percentage = 100;
+		int percentage = _MAX_PERCENTAGE;
 
 		long currentProgressBarCountersTotal =
 			currentModelAdditionCountersTotal + currentPortletAdditionCounter;
 
 		if (_allProgressBarCountersTotal > 0) {
-			int base = 100;
+			int base = _MAX_PERCENTAGE;
 
 			if (phase.equals(Constants.EXPORT) &&
 				!Validator.equals(_cmd, Constants.PUBLISH_TO_REMOTE)) {
 
-				base = 50;
+				base = _EXPORT_PHASE_MAX_PERCENTAGE;
 			}
 
 			percentage = Math.round(
@@ -230,7 +230,7 @@ public class StagingBackgroundTaskDisplay extends BaseBackgroundTaskDisplay {
 
 	protected boolean hasRemoteMessage() {
 		if (Validator.equals(_cmd, Constants.PUBLISH_TO_REMOTE) &&
-			(getPercentage() == 100)) {
+			(getPercentage() == _MAX_PERCENTAGE)) {
 
 			return true;
 		}
@@ -249,14 +249,13 @@ public class StagingBackgroundTaskDisplay extends BaseBackgroundTaskDisplay {
 	}
 
 	protected String processMessage(Locale locale) {
-
 		String messageKey = "exporting";
 
 		if (Validator.equals(_cmd, Constants.IMPORT)) {
 			messageKey = "importing";
 		}
 		else if (Validator.equals(_cmd, Constants.PUBLISH_TO_LIVE) ||
-			Validator.equals(_cmd, Constants.PUBLISH_TO_REMOTE)) {
+				 Validator.equals(_cmd, Constants.PUBLISH_TO_REMOTE)) {
 
 			messageKey = "publishing";
 		}
@@ -287,6 +286,10 @@ public class StagingBackgroundTaskDisplay extends BaseBackgroundTaskDisplay {
 
 		return message;
 	}
+
+	private static final int _EXPORT_PHASE_MAX_PERCENTAGE = 50;
+
+	private static final int _MAX_PERCENTAGE = 100;
 
 	private final long _allProgressBarCountersTotal;
 	private final String _cmd;
