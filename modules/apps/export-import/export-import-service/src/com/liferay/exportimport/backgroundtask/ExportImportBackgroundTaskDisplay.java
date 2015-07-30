@@ -67,32 +67,32 @@ public class ExportImportBackgroundTaskDisplay
 
 		long allModelAdditionCountersTotal =
 			getBackgroundTaskStatusAttributeLong(
-				StagingBackgroundTaskConstants.
+				ExportImportBackgroundTaskConstants.
 					ALL_MODEL_ADDITION_COUNTERS_TOTAL);
 		long allPortletAdditionCounter = getBackgroundTaskStatusAttributeLong(
-			StagingBackgroundTaskConstants.ALL_PORTLET_ADDITION_COUNTER);
+			ExportImportBackgroundTaskConstants.ALL_PORTLET_ADDITION_COUNTER);
 
 		_allProgressBarCountersTotal =
 			allModelAdditionCountersTotal + allPortletAdditionCounter;
 
 		long currentModelAdditionCountersTotal =
 			getBackgroundTaskStatusAttributeLong(
-				StagingBackgroundTaskConstants.
+				ExportImportBackgroundTaskConstants.
 					CURRENT_MODEL_ADDITION_COUNTERS_TOTAL);
 		long currentPortletAdditionCounter =
 			getBackgroundTaskStatusAttributeLong(
-				StagingBackgroundTaskConstants.
+				ExportImportBackgroundTaskConstants.
 					CURRENT_PORTLET_ADDITION_COUNTER);
 
 		_currentProgressBarCountersTotal =
 			currentModelAdditionCountersTotal + currentPortletAdditionCounter;
 
 		_phase = getBackgroundTaskStatusAttributeString(
-			StagingBackgroundTaskConstants.PHASE);
+			ExportImportBackgroundTaskConstants.PHASE);
 		_stagedModelName = getBackgroundTaskStatusAttributeString(
-			StagingBackgroundTaskConstants.STAGED_MODEL_NAME);
+			ExportImportBackgroundTaskConstants.STAGED_MODEL_NAME);
 		_stagedModelType = getBackgroundTaskStatusAttributeString(
-			StagingBackgroundTaskConstants.STAGED_MODEL_TYPE);
+			ExportImportBackgroundTaskConstants.STAGED_MODEL_TYPE);
 	}
 
 	@Override

@@ -16,7 +16,7 @@ package com.liferay.portlet.exportimport.lar;
 
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatusMessage;
 import com.liferay.portal.kernel.util.LongWrapper;
-import com.liferay.exportimport.backgroundtask.StagingBackgroundTaskConstants;
+import com.liferay.exportimport.backgroundtask.ExportImportBackgroundTaskConstants;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.service.PortletLocalServiceUtil;
@@ -51,7 +51,7 @@ public class PortletDataHandlerBackgroundTaskStatusMessage
 			}
 
 			put(
-				StagingBackgroundTaskConstants.
+				ExportImportBackgroundTaskConstants.
 					PORTLET_MODEL_ADDITION_COUNTERS_TOTAL,
 				portletModelAdditionCountersTotal);
 		}
@@ -77,11 +77,11 @@ public class PortletDataHandlerBackgroundTaskStatusMessage
 					stagedModel.getModelClassName());
 
 		put(
-			StagingBackgroundTaskConstants.STAGED_MODEL_NAME,
+			ExportImportBackgroundTaskConstants.STAGED_MODEL_NAME,
 			stagedModelDataHandler.getDisplayName(stagedModel));
 
 		put(
-			StagingBackgroundTaskConstants.STAGED_MODEL_TYPE,
+			ExportImportBackgroundTaskConstants.STAGED_MODEL_TYPE,
 			String.valueOf(stagedModel.getStagedModelType()));
 
 		put("uuid", stagedModel.getUuid());
@@ -94,14 +94,14 @@ public class PortletDataHandlerBackgroundTaskStatusMessage
 			manifestSummary.getModelAdditionCounters();
 
 		put(
-			StagingBackgroundTaskConstants.MODEL_ADDITION_COUNTERS,
+			ExportImportBackgroundTaskConstants.MODEL_ADDITION_COUNTERS,
 			new HashMap<>(modelAdditionCounters));
 
 		Map<String, LongWrapper> modelDeletionCounters =
 			manifestSummary.getModelDeletionCounters();
 
 		put(
-			StagingBackgroundTaskConstants.MODEL_DELETION_COUNTERS,
+			ExportImportBackgroundTaskConstants.MODEL_DELETION_COUNTERS,
 			new HashMap<>(modelDeletionCounters));
 	}
 
