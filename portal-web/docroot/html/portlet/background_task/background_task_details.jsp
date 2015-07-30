@@ -38,21 +38,21 @@ String backgroundTaskStatusMessage = backgroundTask.getStatusMessage();
 		<%
 		JSONObject detailsJSONObject = backgroundTaskDisplay.getDetailsJSONObject(locale);
 
-		String detailsHeader = detailsJSONObject.getString("detailsHeader");
+		String header = detailsJSONObject.getString("header");
 
-		JSONArray detailsItemsJSONArray = detailsJSONObject.getJSONArray("detailsItems");
+		JSONArray sectionsJSONArray = detailsJSONObject.getJSONArray("sections");
 		%>
 
 		<div class="alert alert-danger publish-error">
 			<h4 class="upload-error-message">
-				<liferay-ui:message key="<%= detailsHeader %>" localizeKey="<%= false %>" />
+				<liferay-ui:message key="<%= header %>" localizeKey="<%= false %>" />
 			</h4>
 
-			<c:if test="<%= detailsItemsJSONArray != null %>">
+			<c:if test="<%= sectionsJSONArray != null %>">
 
 				<%
-				for (int i = 0; i < detailsItemsJSONArray.length(); i++) {
-					JSONObject detailsItemJSONObject = detailsItemsJSONArray.getJSONObject(i);
+				for (int i = 0; i < sectionsJSONArray.length(); i++) {
+					JSONObject detailsItemJSONObject = sectionsJSONArray.getJSONObject(i);
 				%>
 
 				<span class="error-message">

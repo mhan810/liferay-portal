@@ -14,7 +14,8 @@
 
 package com.liferay.exportimport.backgroundtask;
 
-import com.liferay.portal.kernel.backgroundtask.BackgroundTaskDisplayJSONTransformer;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskDisplayDetails;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskDisplayDetailsSection;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatus;
 import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskDisplay;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -34,6 +35,8 @@ import com.liferay.portal.security.permission.ResourceActionsUtil;
 
 import java.io.Serializable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -150,15 +153,18 @@ public class ExportImportBackgroundTaskDisplay
 		return false;
 	}
 
-	protected JSONObject createMessageDetails(BackgroundTask backgroundTask) {
+	@Override
+	protected BackgroundTaskDisplayDetails createDetails(
+		BackgroundTask backgroundTask) {
+
 		if (_details != null) {
 			return _details;
 		}
 
-		JSONObject backgroundTaskJSON = null;
+		JSONObject backgroundTaskJSONObject = null;
 
 		try {
-			backgroundTaskJSON = JSONFactoryUtil.createJSONObject(
+			backgroundTaskJSONObject = JSONFactoryUtil.createJSONObject(
 				backgroundTask.getStatusMessage());
 		}
 		catch (Exception e) {
@@ -174,31 +180,34 @@ public class ExportImportBackgroundTaskDisplay
 		boolean validated = MapUtil.getBoolean(
 			backgroundTask.getTaskContextMap(), "validated");
 
-		String detailHeader =
+		String header =
 			"an-unexpected-error-occurred-with-the-publication-process." +
 				"-please-check-your-portal-and-publishing-configuration";
 
 		if (exported && !validated) {
-			detailHeader =
+			header =
 				"an-unexpected-error-occurred-with-the-publication-" +
 					"process.-please-check-your-portal-and-publishing-" +
 						"configuration";
 		}
 
-		JSONArray detailItems = JSONFactoryUtil.createJSONArray();
+		List<BackgroundTaskDisplayDetailsSection> sections = new ArrayList<>();
 
-		JSONArray errorMessagesJSONArray = backgroundTaskJSON.getJSONArray(
-			"messageListItems");
+		JSONArray errorMessagesJSONArray =
+			backgroundTaskJSONObject.getJSONArray("messageListItems");
 
 		if (errorMessagesJSONArray != null) {
-			String message = backgroundTaskJSON.getString("message");
+			String message = backgroundTaskJSONObject.getString("message");
 
-			BackgroundTaskDisplayJSONTransformer.addDetailsItem(
-				detailItems, message, errorMessagesJSONArray);
+			BackgroundTaskDisplayDetailsSection section =
+				new BackgroundTaskDisplayDetailsSection(
+					message, errorMessagesJSONArray);
+
+			sections.add(section);
 		}
 
-		JSONArray warningMessagesJSONArray = backgroundTaskJSON.getJSONArray(
-			"warningMessages");
+		JSONArray warningMessagesJSONArray =
+			backgroundTaskJSONObject.getJSONArray("warningMessages");
 
 		if (warningMessagesJSONArray != null) {
 			String message = "the-following-data-has-not-been-published";
@@ -211,14 +220,16 @@ public class ExportImportBackgroundTaskDisplay
 						"published-either";
 			}
 
-			BackgroundTaskDisplayJSONTransformer.addDetailsItem(
-				detailItems, message, warningMessagesJSONArray);
+			BackgroundTaskDisplayDetailsSection section =
+				new BackgroundTaskDisplayDetailsSection(
+					message, warningMessagesJSONArray);
+
+			sections.add(section);
 		}
 
-		int status = backgroundTaskJSON.getInt("status");
+		int status = backgroundTaskJSONObject.getInt("status");
 
-		_details = BackgroundTaskDisplayJSONTransformer.createDetailsJSONObject(
-			detailHeader, detailItems, status);
+		_details = new BackgroundTaskDisplayDetails(header, status, sections);
 
 		return _details;
 	}
@@ -295,7 +306,7 @@ public class ExportImportBackgroundTaskDisplay
 	private final long _allProgressBarCountersTotal;
 	private final String _cmd;
 	private final long _currentProgressBarCountersTotal;
-	private JSONObject _details;
+	private BackgroundTaskDisplayDetails _details;
 	private String _messageKey;
 	private int _percentage;
 	private final String _phase;

@@ -16,9 +16,8 @@ package com.liferay.portal.kernel.backgroundtask;
 
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.language.LanguageUtil;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -26,98 +25,35 @@ import java.util.Locale;
  */
 public class BackgroundTaskDisplayJSONTransformer {
 
-	public static void addDetailsItem(
-		JSONArray detailsItems, String message, JSONArray detailsItemsList) {
+	public static JSONArray toJSONArray(
+		List<? extends BackgroundTaskDisplayJSONObject>
+			backgroundTaskDisplayJSONObjects) {
 
-		JSONObject detailItem = JSONFactoryUtil.createJSONObject();
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
-		detailItem.put("message", message);
-		detailItem.put("itemsList", detailsItemsList);
+		for (BackgroundTaskDisplayJSONObject backgroundTaskDisplayJSONObject :
+				backgroundTaskDisplayJSONObjects) {
 
-		detailsItems.put(detailItem);
-	}
-
-	public static void addListItem(
-		JSONArray itemsList, String info, String errorMessage,
-		String errorStrongMessage) {
-
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-		jsonObject.put("info", info);
-		jsonObject.put("errorMessage", errorMessage);
-		jsonObject.put("errorStrongMessage", errorStrongMessage);
-
-		itemsList.put(jsonObject);
-	}
-
-	public static JSONObject createDetailsJSONObject(
-		String detailsHeader, JSONArray detailsItems, int status) {
-
-		JSONObject detailsJSON = JSONFactoryUtil.createJSONObject();
-
-		detailsJSON.put("detailsHeader", detailsHeader);
-		detailsJSON.put("detailsItems", detailsItems);
-		detailsJSON.put("status", status);
-
-		return detailsJSON;
-	}
-
-	public static JSONObject translateDetailsJSON(
-		Locale locale, JSONObject detailsJSONObject) {
-
-		if (detailsJSONObject == null) {
-			return null;
+			jsonArray.put(backgroundTaskDisplayJSONObject.toJSONObject());
 		}
 
-		JSONArray detailsItems = detailsJSONObject.getJSONArray("detailsItems");
+		return jsonArray;
+	}
 
-		if (detailsItems == null) {
-			return detailsJSONObject;
+	public static JSONArray toJSONArray(
+		List<? extends BackgroundTaskDisplayJSONObject>
+			backgroundTaskDisplayJSONObjects,
+		Locale locale) {
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		for (BackgroundTaskDisplayJSONObject backgroundTaskDisplayJSONObject :
+				backgroundTaskDisplayJSONObjects) {
+
+			jsonArray.put(backgroundTaskDisplayJSONObject.toJSONObject(locale));
 		}
 
-		for (int i = 0; i < detailsItems.length(); i++) {
-			JSONObject detailsItem = detailsItems.getJSONObject(i);
-
-			String message = detailsItem.getString("message");
-
-			detailsItem.put("message", LanguageUtil.get(locale, message));
-
-			JSONArray itemsListJSONArray = detailsItem.getJSONArray(
-				"itemsList");
-
-			if (itemsListJSONArray == null) {
-				continue;
-			}
-
-			for (int j = 0; j < itemsListJSONArray.length(); j++) {
-				JSONObject listItemJSONObject =
-					itemsListJSONArray.getJSONObject(j);
-
-				String errorMessage = listItemJSONObject.getString(
-					"errorMessage");
-				String errorStrongMessage = listItemJSONObject.getString(
-					"errorStrongMessage");
-				String info = listItemJSONObject.getString("info");
-
-				listItemJSONObject.put(
-					"errorMessage",
-					LanguageUtil.get(locale, errorMessage));
-				listItemJSONObject.put(
-					"errorStrongMessage",
-					LanguageUtil.get(locale, errorStrongMessage));
-				listItemJSONObject.put("info", LanguageUtil.get(locale, info));
-			}
-
-			detailsItem.put("itemsList", itemsListJSONArray);
-		}
-
-		String detailsHeader = detailsJSONObject.getString("detailsHeader");
-
-		detailsJSONObject.put(
-			"detailsHeader", LanguageUtil.get(locale, detailsHeader));
-		detailsJSONObject.put("detailsItems", detailsItems);
-
-		return detailsJSONObject;
+		return jsonArray;
 	}
 
 }
