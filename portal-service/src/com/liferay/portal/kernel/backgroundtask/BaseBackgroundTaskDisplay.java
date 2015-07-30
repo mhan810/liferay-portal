@@ -123,9 +123,9 @@ public abstract class BaseBackgroundTaskDisplay
 			_backgroundTaskStatus.getAttribute(attributeKey));
 	}
 
-	protected static final int _MAX_PERCENTAGE = 100;
+	protected static final int MAX_PERCENTAGE = 100;
 
-	protected static final int _NO_PERCENTAGE = -1;
+	protected static final int NO_PERCENTAGE = -1;
 
 	private final BackgroundTask _backgroundTask;
 	private final BackgroundTaskStatus _backgroundTaskStatus;
