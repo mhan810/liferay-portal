@@ -42,6 +42,7 @@ public class BackgroundTaskDisplayFactoryImpl
 		return backgroundTaskExecutor.getBackgroundTaskDisplay(backgroundTask);
 	}
 
+	@Override
 	public BackgroundTaskDisplay getBackgroundTaskDisplay(
 		long backgroundTaskId) {
 
