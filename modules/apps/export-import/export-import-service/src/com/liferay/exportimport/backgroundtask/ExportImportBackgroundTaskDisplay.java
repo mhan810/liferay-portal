@@ -53,7 +53,7 @@ public class ExportImportBackgroundTaskDisplay
 
 		BackgroundTaskStatus backgroundTaskStatus = getBackgroundTaskStatus();
 
-		_percentage = NO_PERCENTAGE;
+		_percentage = PERCENTAGE_NONE;
 
 		if (backgroundTaskStatus == null) {
 			_allProgressBarCountersTotal = 0;
@@ -106,14 +106,14 @@ public class ExportImportBackgroundTaskDisplay
 
 	@Override
 	public int getPercentage() {
-		if (_percentage > NO_PERCENTAGE) {
+		if (_percentage > PERCENTAGE_NONE) {
 			return _percentage;
 		}
 
-		_percentage = MAX_PERCENTAGE;
+		_percentage = PERCENTAGE_MAX;
 
 		if (_allProgressBarCountersTotal > 0) {
-			int base = MAX_PERCENTAGE;
+			int base = PERCENTAGE_MAX;
 
 			if (_phase.equals(Constants.EXPORT) &&
 				!Validator.equals(_cmd, Constants.PUBLISH_TO_REMOTE)) {
@@ -142,7 +142,7 @@ public class ExportImportBackgroundTaskDisplay
 	public boolean hasPercentage() {
 		if ((_allProgressBarCountersTotal > 0) &&
 			(!Validator.equals(_cmd, Constants.PUBLISH_TO_REMOTE) ||
-			 (getPercentage() < MAX_PERCENTAGE))) {
+			 (getPercentage() < PERCENTAGE_MAX))) {
 
 			return true;
 		}
@@ -253,7 +253,7 @@ public class ExportImportBackgroundTaskDisplay
 
 	protected boolean hasRemoteMessage() {
 		if (Validator.equals(_cmd, Constants.PUBLISH_TO_REMOTE) &&
-			(getPercentage() == MAX_PERCENTAGE)) {
+			(getPercentage() == PERCENTAGE_MAX)) {
 
 			return true;
 		}
