@@ -136,7 +136,7 @@ public class StagingBackgroundTaskDisplayHelperImpl
 						false);
 			}
 
-			BackgroundTaskDisplayJSONTransformer.addItemsListJSONObject(
+			BackgroundTaskDisplayJSONTransformer.addListItem(
 				errorMessagesJSONArray, info, errorMessage,
 				missingReferenceDisplayName);
 		}
@@ -263,7 +263,7 @@ public class StagingBackgroundTaskDisplayHelperImpl
 				String modelResource = ResourceActionsUtil.getModelResource(
 					locale, layoutPrototypeClassName);
 
-				BackgroundTaskDisplayJSONTransformer.addItemsListJSONObject(
+				BackgroundTaskDisplayJSONTransformer.addListItem(
 					errorMessagesJSONArray, layoutPrototypeUuid, modelResource,
 					layoutPrototypeName);
 			}
@@ -449,7 +449,7 @@ public class StagingBackgroundTaskDisplayHelperImpl
 			String errorMessage = ResourceActionsUtil.getModelResource(
 				locale, missingReferenceReferrerClassName);
 
-			BackgroundTaskDisplayJSONTransformer.addItemsListJSONObject(
+			BackgroundTaskDisplayJSONTransformer.addListItem(
 				warningMessagesJSONArray, info, errorMessage,
 				String.valueOf(referrers.size()));
 		}
