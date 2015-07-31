@@ -17,8 +17,95 @@
 <%@ include file="/portlet/init.jsp" %>
 
 <%
+PanelAppRegistry panelAppRegistry = (PanelAppRegistry)request.getAttribute(ApplicationListWebKeys.PANEL_APP_REGISTRY);
 PanelCategoryRegistry panelCategoryRegistry = (PanelCategoryRegistry)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_REGISTRY);
-PanelCategory panelCategory = panelCategoryRegistry.getPanelCategory(PanelCategoryKeys.MY_SPACE);
+
+PanelCategory firstChildPanelCategory = panelCategoryRegistry.getFirstChildPanelCategory(PanelCategoryKeys.ROOT);
+
+String rootPanelCategoryKey = firstChildPanelCategory.getKey();
+
+if (Validator.isNotNull(themeDisplay.getPpid())) {
+	PanelCategoryHelper panelCategoryHelper = new PanelCategoryHelper(panelAppRegistry, panelCategoryRegistry);
+
+	for (PanelCategory panelCategory : panelCategoryRegistry.getChildPanelCategories(PanelCategoryKeys.ROOT)) {
+		if (panelCategoryHelper.containsPortlet(themeDisplay.getPpid(), panelCategory)) {
+			rootPanelCategoryKey = panelCategory.getKey();
+
+			break;
+		}
+	}
+}
 %>
 
-<liferay-application-list:panel-category-content panelCategory="<%= panelCategory %>" />
+<h4 class="sidebar-header">
+	<span class="company-details">
+		<img alt="" class="company-logo" src="<%= themeDisplay.getCompanyLogo() %>" />
+		<span class="company-name"><%= company.getName() %></span>
+	</span>
+
+	<aui:icon cssClass="sidenav-close" image="remove" url="javascript:;" />
+</h4>
+
+<ul class="nav nav-tabs product-menu-tabs">
+
+	<%
+	for (PanelCategory childPanelCategory : panelCategoryRegistry.getChildPanelCategories(PanelCategoryKeys.ROOT)) {
+	%>
+
+		<li class="col-xs-4 <%= rootPanelCategoryKey.equals(childPanelCategory.getKey()) ? "active" : StringPool.BLANK %>">
+			<a aria-expanded="true" data-toggle="tab" href="#<%= childPanelCategory.getKey() %>">
+				<div class="product-menu-tab-icon">
+					<span class="<%= childPanelCategory.getIconCssClass() %> icon-monospaced"></span>
+				</div>
+
+				<div class="product-menu-tab-text">
+					<%= childPanelCategory.getLabel(locale) %>
+				</div>
+			</a>
+		</li>
+
+	<%
+	}
+	%>
+
+</ul>
+
+<div class="sidebar-body">
+	<div class="tab-content">
+
+		<%
+		for (PanelCategory childPanelCategory : panelCategoryRegistry.getChildPanelCategories(PanelCategoryKeys.ROOT)) {
+		%>
+
+			<div class="fade in tab-pane <%= rootPanelCategoryKey.equals(childPanelCategory.getKey()) ? "active" : StringPool.BLANK %>" id="<%= childPanelCategory.getKey() %>">
+				<liferay-application-list:panel-content panelCategory="<%= childPanelCategory %>" />
+			</div>
+
+		<%
+		}
+		%>
+
+	</div>
+</div>
+
+<div class="sidebar-footer">
+	<div class="nameplate">
+		<div class="nameplate-field">
+			<div class="user-icon user-icon-lg">
+				<img alt="<%= HtmlUtil.escapeAttribute(user.getFullName()) %>" src="<%= HtmlUtil.escape(user.getPortraitURL(themeDisplay)) %>" />
+			</div>
+		</div>
+
+		<div class="nameplate-content">
+			<h4 class="user-heading">
+				<%= HtmlUtil.escape(user.getFullName()) %>
+			</h4>
+		</div>
+
+		<c:if test="<%= themeDisplay.isShowSignOutIcon() %>">
+			<div class="nameplate-field">
+				<a class="icon-monospaced icon-off user-signout" href="<%= themeDisplay.getURLSignOut() %>"></a>
+			</div>
+		</c:if>
+	</div>
+</div>
