@@ -12,14 +12,14 @@
  * details.
  */
 
-package com.liferay.exportimport.backgroundtask;
+package com.liferay.portlet.exportimport.staging;
 
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants;
 
 /**
  * @author Jonathan McCann
  */
-public class ExportImportBackgroundTaskConstants
+public class StagingBackgroundTaskConstants
 	extends BackgroundTaskConstants {
 
 	public static final String ALL_MODEL_ADDITION_COUNTERS_TOTAL =

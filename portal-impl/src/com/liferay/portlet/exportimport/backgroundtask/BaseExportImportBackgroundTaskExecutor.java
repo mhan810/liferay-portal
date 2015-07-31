@@ -14,7 +14,7 @@
 
 package com.liferay.portlet.exportimport.backgroundtask;
 
-import com.liferay.exportimport.backgroundtask.ExportImportBackgroundTaskDisplay;
+import com.liferay.portlet.exportimport.staging.ExportImportBackgroundTaskDisplay;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskDisplay;
 import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
 import com.liferay.portal.kernel.json.JSONObject;

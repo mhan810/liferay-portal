@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.exportimport.backgroundtask;
+package com.liferay.portlet.exportimport.staging;
 
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskDisplayDetails;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskDisplayDetailsSection;
@@ -70,32 +70,32 @@ public class ExportImportBackgroundTaskDisplay
 
 		long allModelAdditionCountersTotal =
 			getBackgroundTaskStatusAttributeLong(
-				ExportImportBackgroundTaskConstants.
+				StagingBackgroundTaskConstants.
 					ALL_MODEL_ADDITION_COUNTERS_TOTAL);
 		long allPortletAdditionCounter = getBackgroundTaskStatusAttributeLong(
-			ExportImportBackgroundTaskConstants.ALL_PORTLET_ADDITION_COUNTER);
+			StagingBackgroundTaskConstants.ALL_PORTLET_ADDITION_COUNTER);
 
 		_allProgressBarCountersTotal =
 			allModelAdditionCountersTotal + allPortletAdditionCounter;
 
 		long currentModelAdditionCountersTotal =
 			getBackgroundTaskStatusAttributeLong(
-				ExportImportBackgroundTaskConstants.
+				StagingBackgroundTaskConstants.
 					CURRENT_MODEL_ADDITION_COUNTERS_TOTAL);
 		long currentPortletAdditionCounter =
 			getBackgroundTaskStatusAttributeLong(
-				ExportImportBackgroundTaskConstants.
+				StagingBackgroundTaskConstants.
 					CURRENT_PORTLET_ADDITION_COUNTER);
 
 		_currentProgressBarCountersTotal =
 			currentModelAdditionCountersTotal + currentPortletAdditionCounter;
 
 		_phase = getBackgroundTaskStatusAttributeString(
-			ExportImportBackgroundTaskConstants.PHASE);
+			StagingBackgroundTaskConstants.PHASE);
 		_stagedModelName = getBackgroundTaskStatusAttributeString(
-			ExportImportBackgroundTaskConstants.STAGED_MODEL_NAME);
+			StagingBackgroundTaskConstants.STAGED_MODEL_NAME);
 		_stagedModelType = getBackgroundTaskStatusAttributeString(
-			ExportImportBackgroundTaskConstants.STAGED_MODEL_TYPE);
+			StagingBackgroundTaskConstants.STAGED_MODEL_TYPE);
 	}
 
 	@Override
