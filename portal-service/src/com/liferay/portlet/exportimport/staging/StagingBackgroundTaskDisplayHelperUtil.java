@@ -20,8 +20,6 @@ import com.liferay.portal.kernel.util.ProxyFactory;
 import com.liferay.portlet.exportimport.lar.MissingReference;
 import com.liferay.portlet.exportimport.model.ExportImportConfiguration;
 
-import java.io.Serializable;
-
 import java.util.Locale;
 import java.util.Map;
 
@@ -52,7 +50,8 @@ public class StagingBackgroundTaskDisplayHelperUtil {
 			locale, missingReferences);
 	}
 
-	private static StagingBackgroundTaskDisplayHelper
+	private static final StagingBackgroundTaskDisplayHelper
 		_stagingBackgroundTaskHelper = ProxyFactory.newServiceTrackedInstance(
 			StagingBackgroundTaskDisplayHelper.class);
+
 }

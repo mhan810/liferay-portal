@@ -14,10 +14,10 @@
 
 package com.liferay.portlet.exportimport.backgroundtask;
 
-import com.liferay.portlet.exportimport.staging.StagingBackgroundTaskConstants;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatus;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portlet.exportimport.staging.StagingBackgroundTaskConstants;
 
 /**
  * @author Daniel Kocsis

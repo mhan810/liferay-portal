@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portlet.exportimport.staging.StagingBackgroundTaskDisplayHelperUtil;
 import com.liferay.portal.kernel.lock.DuplicateLockException;
 import com.liferay.portal.kernel.lock.Lock;
 import com.liferay.portal.kernel.lock.LockManagerUtil;
@@ -98,6 +97,7 @@ import com.liferay.portlet.exportimport.service.ExportImportConfigurationLocalSe
 import com.liferay.portlet.exportimport.service.StagingLocalServiceUtil;
 import com.liferay.portlet.exportimport.staging.LayoutStagingUtil;
 import com.liferay.portlet.exportimport.staging.Staging;
+import com.liferay.portlet.exportimport.staging.StagingBackgroundTaskDisplayHelperUtil;
 import com.liferay.portlet.exportimport.staging.StagingConstants;
 
 import java.io.Serializable;
@@ -456,7 +456,7 @@ public class StagingImpl implements Staging {
 			Group scopeGroup, Group liveGroup, ServiceContext serviceContext)
 		throws Exception {
 
-		disableStaging((PortletRequest) null, liveGroup, serviceContext);
+		disableStaging((PortletRequest)null, liveGroup, serviceContext);
 	}
 
 	/**
@@ -469,7 +469,7 @@ public class StagingImpl implements Staging {
 	public void disableStaging(Group liveGroup, ServiceContext serviceContext)
 		throws Exception {
 
-		disableStaging((PortletRequest) null, liveGroup, serviceContext);
+		disableStaging((PortletRequest)null, liveGroup, serviceContext);
 	}
 
 	/**
@@ -761,8 +761,7 @@ public class StagingImpl implements Staging {
 		Locale locale, Map<String, MissingReference> missingReferences) {
 
 		return StagingBackgroundTaskDisplayHelperUtil.
-				getWarningMessagesJSONArray(
-					locale, missingReferences);
+			getWarningMessagesJSONArray(locale, missingReferences);
 	}
 
 	/**

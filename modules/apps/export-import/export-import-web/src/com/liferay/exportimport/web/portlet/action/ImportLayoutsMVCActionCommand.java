@@ -276,7 +276,7 @@ public class ImportLayoutsMVCActionCommand extends BaseMVCActionCommand {
 			StagingBackgroundTaskDisplayHelperUtil.
 				getExceptionMessagesJSONObject(
 					themeDisplay.getLocale(), e,
-					(ExportImportConfiguration) null);
+					(ExportImportConfiguration)null);
 
 		JSONPortletResponseUtil.writeJSON(
 			actionRequest, actionResponse, jsonObject);

@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.exportimport.backgroundtask;
 
-import com.liferay.portlet.exportimport.staging.ExportImportBackgroundTaskDisplay;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskDisplay;
 import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -24,6 +23,7 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.model.BackgroundTask;
 import com.liferay.portlet.exportimport.model.ExportImportConfiguration;
 import com.liferay.portlet.exportimport.service.ExportImportConfigurationLocalServiceUtil;
+import com.liferay.portlet.exportimport.staging.ExportImportBackgroundTaskDisplay;
 import com.liferay.portlet.exportimport.staging.StagingBackgroundTaskDisplayHelperUtil;
 
 import java.io.Serializable;

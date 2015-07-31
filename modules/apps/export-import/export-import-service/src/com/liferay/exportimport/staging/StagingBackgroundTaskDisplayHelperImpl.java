@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
-import com.liferay.portlet.exportimport.staging.StagingBackgroundTaskDisplayHelper;
 import com.liferay.portal.kernel.servlet.ServletResponseConstants;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -57,7 +56,7 @@ import com.liferay.portlet.exportimport.lar.PortletDataException;
 import com.liferay.portlet.exportimport.lar.StagedModelDataHandlerUtil;
 import com.liferay.portlet.exportimport.lar.StagedModelType;
 import com.liferay.portlet.exportimport.model.ExportImportConfiguration;
-import org.osgi.service.component.annotations.Component;
+import com.liferay.portlet.exportimport.staging.StagingBackgroundTaskDisplayHelper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -65,6 +64,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Andrew Betts
@@ -180,7 +181,7 @@ public class StagingBackgroundTaskDisplayHelperImpl
 			errorType = ServletResponseConstants.SC_FILE_NAME_EXCEPTION;
 		}
 		else if (e instanceof FileSizeException ||
-			e instanceof LARFileSizeException) {
+				 e instanceof LARFileSizeException) {
 
 			long fileMaxSize = PropsValues.DL_FILE_MAX_SIZE;
 

@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.exportimport.backgroundtask;
 
-import com.liferay.portlet.exportimport.staging.StagingBackgroundTaskConstants;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatus;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatusMessageTranslator;
 import com.liferay.portal.kernel.messaging.Message;
@@ -23,6 +22,7 @@ import com.liferay.portal.kernel.util.LongWrapper;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portlet.exportimport.staging.StagingBackgroundTaskConstants;
 
 import java.util.HashMap;
 import java.util.Map;

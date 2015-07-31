@@ -19,8 +19,7 @@ import com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants;
 /**
  * @author Jonathan McCann
  */
-public class StagingBackgroundTaskConstants
-	extends BackgroundTaskConstants {
+public class StagingBackgroundTaskConstants extends BackgroundTaskConstants {
 
 	public static final String ALL_MODEL_ADDITION_COUNTERS_TOTAL =
 		"allModelAdditionCountersTotal";

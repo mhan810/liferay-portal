@@ -14,13 +14,13 @@
 
 package com.liferay.portlet.exportimport.backgroundtask;
 
-import com.liferay.portlet.exportimport.staging.StagingBackgroundTaskConstants;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatus;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LongWrapper;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portlet.exportimport.staging.StagingBackgroundTaskConstants;
 
 import java.util.HashMap;
 

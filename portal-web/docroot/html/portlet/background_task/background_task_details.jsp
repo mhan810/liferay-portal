@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/init.jsp" %>
+<%@ include file="/html/portlet/background_task/init.jsp" %>
 
 <%
 BackgroundTaskDisplay backgroundTaskDisplay = (BackgroundTaskDisplay)request.getAttribute(WebKeys.BACKGROUND_TASK_DISPLAY);
