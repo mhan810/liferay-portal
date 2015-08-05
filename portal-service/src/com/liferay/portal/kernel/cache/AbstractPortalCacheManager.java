@@ -103,14 +103,14 @@ public abstract class AbstractPortalCacheManager<K extends Serializable, V>
 		else if (isPortalCacheBootstrapLoaderEnabled() &&
 				 (portalCacheConfiguration != null)) {
 
-			Properties portalCacheBootstrapLoaderConfiguration =
+			Properties portalCacheBootstrapLoaderProperties =
 				portalCacheConfiguration.
-					getPortalCacheBootstrapLoaderConfiguration();
+					getPortalCacheBootstrapLoaderProperties();
 
-			if (portalCacheBootstrapLoaderConfiguration != null) {
+			if (portalCacheBootstrapLoaderProperties != null) {
 				PortalCacheBootstrapLoader portalCacheBootstrapLoader =
 					CallbackFactoryUtil.createPortalCacheBootstrapLoader(
-						portalCacheBootstrapLoaderConfiguration);
+						portalCacheBootstrapLoaderProperties);
 
 				if (portalCacheBootstrapLoader != null) {
 					portalCacheBootstrapLoader.loadPortalCache(
@@ -252,13 +252,13 @@ public abstract class AbstractPortalCacheManager<K extends Serializable, V>
 			_portalCacheManagerConfiguration.
 				getDefaultPortalCacheConfiguration();
 
-		for (Properties portalCacheManagerListenerConfiguration :
+		for (Properties portalCacheManagerListenerProperties :
 				_portalCacheManagerConfiguration.
-					getPortalCacheManagerListenerConfigurations()) {
+					getPortalCacheManagerListenerPropertiesSet()) {
 
 			PortalCacheManagerListener portalCacheManagerListener =
 				CallbackFactoryUtil.createPortalCacheManagerListener(
-					this, portalCacheManagerListenerConfiguration);
+					this, portalCacheManagerListenerProperties);
 
 			if (portalCacheManagerListener != null) {
 				registerPortalCacheManagerListener(portalCacheManagerListener);
@@ -321,11 +321,11 @@ public abstract class AbstractPortalCacheManager<K extends Serializable, V>
 		}
 
 		Map<Properties, PortalCacheListenerScope>
-			cacheListenerConfigurations =
-				portalCacheConfiguration.getPortalCacheListenerConfigurations();
+			portalCacheListenerPropertiesMap =
+				portalCacheConfiguration.getPortalCacheListenerPropertiesMap();
 
 		for (Map.Entry<Properties, PortalCacheListenerScope> entry :
-				cacheListenerConfigurations.entrySet()) {
+				portalCacheListenerPropertiesMap.entrySet()) {
 
 			PortalCacheListener<K, V> portalCacheListener =
 				CallbackFactoryUtil.createPortalCacheListener(entry.getKey());

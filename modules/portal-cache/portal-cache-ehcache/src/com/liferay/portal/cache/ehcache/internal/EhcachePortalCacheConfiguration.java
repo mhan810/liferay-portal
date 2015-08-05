@@ -28,12 +28,13 @@ public class EhcachePortalCacheConfiguration extends PortalCacheConfiguration {
 	public EhcachePortalCacheConfiguration(
 		String portalCacheName,
 		Map<Properties, PortalCacheListenerScope>
-			portalCacheListenerConfigurations,
-		Properties bootstrapLoaderConfiguration, boolean requireSerialization) {
+			portalCacheListenerPropertiesMap,
+		Properties portalCacheBootstrapLoaderProperties,
+		boolean requireSerialization) {
 
 		super(
-			portalCacheName, portalCacheListenerConfigurations,
-			bootstrapLoaderConfiguration);
+			portalCacheName, portalCacheListenerPropertiesMap,
+			portalCacheBootstrapLoaderProperties);
 
 		_requireSerialization = requireSerialization;
 	}
@@ -47,9 +48,8 @@ public class EhcachePortalCacheConfiguration extends PortalCacheConfiguration {
 		String portalCacheName) {
 
 		return new EhcachePortalCacheConfiguration(
-			portalCacheName, getPortalCacheListenerConfigurations(),
-			getPortalCacheBootstrapLoaderConfiguration(),
-			_requireSerialization);
+			portalCacheName, getPortalCacheListenerPropertiesMap(),
+			getPortalCacheBootstrapLoaderProperties(), _requireSerialization);
 	}
 
 	private final boolean _requireSerialization;
