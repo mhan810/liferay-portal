@@ -16,6 +16,8 @@ package com.liferay.portlet.sites.util;
 
 import com.liferay.portal.RequiredLayoutException;
 import com.liferay.portal.events.EventsProcessorUtil;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManagerUtil;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskThreadLocal;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -38,7 +40,7 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.model.BackgroundTask;
+import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Layout;
@@ -62,7 +64,6 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.security.permission.ResourceActionsUtil;
-import com.liferay.portal.service.BackgroundTaskLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.GroupServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
@@ -597,8 +598,8 @@ public class SitesImpl implements Sites {
 		User user = UserLocalServiceUtil.fetchUser(serviceContext.getUserId());
 
 		if (user == null) {
-			BackgroundTask backgroundTask =
-				BackgroundTaskLocalServiceUtil.fetchBackgroundTask(
+			BackgroundTask<? extends BaseModel> backgroundTask =
+				BackgroundTaskManagerUtil.fetchBackgroundTask(
 					BackgroundTaskThreadLocal.getBackgroundTaskId());
 
 			if (backgroundTask != null) {
@@ -870,8 +871,8 @@ public class SitesImpl implements Sites {
 		User user = UserLocalServiceUtil.fetchUser(serviceContext.getUserId());
 
 		if (user == null) {
-			BackgroundTask backgroundTask =
-				BackgroundTaskLocalServiceUtil.fetchBackgroundTask(
+			BackgroundTask<? extends BaseModel> backgroundTask =
+				BackgroundTaskManagerUtil.fetchBackgroundTask(
 					BackgroundTaskThreadLocal.getBackgroundTaskId());
 
 			if (backgroundTask != null) {
