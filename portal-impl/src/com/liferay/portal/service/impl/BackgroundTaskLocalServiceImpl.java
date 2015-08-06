@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.impl;
 
+import com.liferay.portal.backgroundtask.internal.BackgroundTaskImpl;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskLockHelperUtil;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatus;
@@ -228,7 +229,8 @@ public class BackgroundTaskLocalServiceImpl
 			backgroundTaskId);
 
 		try {
-			BackgroundTaskLockHelperUtil.unlockBackgroundTask(backgroundTask);
+			BackgroundTaskLockHelperUtil.unlockBackgroundTask(
+				new BackgroundTaskImpl(backgroundTask));
 		}
 		catch (Exception e) {
 		}
