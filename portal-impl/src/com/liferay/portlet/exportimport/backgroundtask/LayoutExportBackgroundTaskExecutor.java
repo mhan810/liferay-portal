@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.exportimport.backgroundtask;
 
+import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskResult;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -21,7 +22,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
-import com.liferay.portal.model.BackgroundTask;
+import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.service.BackgroundTaskLocalServiceUtil;
 import com.liferay.portlet.exportimport.model.ExportImportConfiguration;
 import com.liferay.portlet.exportimport.service.ExportImportLocalServiceUtil;
@@ -44,7 +45,8 @@ public class LayoutExportBackgroundTaskExecutor
 	}
 
 	@Override
-	public BackgroundTaskResult execute(BackgroundTask backgroundTask)
+	public BackgroundTaskResult execute(
+			BackgroundTask<? extends BaseModel> backgroundTask)
 		throws PortalException {
 
 		ExportImportConfiguration exportImportConfiguration =

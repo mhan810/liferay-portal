@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.backgroundtask;
 
-import com.liferay.portal.model.BackgroundTask;
+import com.liferay.portal.model.BaseModel;
 
 /**
  * @author Michael C. Han
@@ -32,7 +32,8 @@ public class ClassLoaderAwareBackgroundTaskExecutor
 	}
 
 	@Override
-	public BackgroundTaskResult execute(BackgroundTask backgroundTask)
+	public BackgroundTaskResult execute(
+			BackgroundTask<? extends BaseModel> backgroundTask)
 		throws Exception {
 
 		Thread currentThread = Thread.currentThread();

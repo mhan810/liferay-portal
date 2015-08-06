@@ -18,7 +18,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.model.BackgroundTask;
+import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
@@ -46,7 +46,9 @@ public abstract class BaseBackgroundTaskExecutor
 	}
 
 	@Override
-	public String handleException(BackgroundTask backgroundTask, Exception e) {
+	public String handleException(
+		BackgroundTask<? extends BaseModel> backgroundTask, Exception e) {
+
 		return "Unable to execute background task: " + e.getMessage();
 	}
 
@@ -61,7 +63,9 @@ public abstract class BaseBackgroundTaskExecutor
 		return true;
 	}
 
-	protected Locale getLocale(BackgroundTask backgroundTask) {
+	protected Locale getLocale(
+		BackgroundTask<? extends BaseModel> backgroundTask) {
+
 		Map<String, Serializable> taskContextMap =
 			backgroundTask.getTaskContextMap();
 

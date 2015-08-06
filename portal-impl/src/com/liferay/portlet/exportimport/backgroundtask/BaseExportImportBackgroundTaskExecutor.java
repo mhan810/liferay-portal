@@ -14,12 +14,13 @@
 
 package com.liferay.portlet.exportimport.backgroundtask;
 
+import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
 import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionAttribute;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.model.BackgroundTask;
+import com.liferay.portal.model.BaseModel;
 import com.liferay.portlet.exportimport.model.ExportImportConfiguration;
 import com.liferay.portlet.exportimport.service.ExportImportConfigurationLocalServiceUtil;
 import com.liferay.portlet.exportimport.staging.StagingUtil;
@@ -40,7 +41,9 @@ public abstract class BaseExportImportBackgroundTaskExecutor
 	}
 
 	@Override
-	public String handleException(BackgroundTask backgroundTask, Exception e) {
+	public String handleException(
+		BackgroundTask<? extends BaseModel> backgroundTask, Exception e) {
+
 		JSONObject jsonObject = StagingUtil.getExceptionMessagesJSONObject(
 			getLocale(backgroundTask), e,
 			getExportImportConfiguration(backgroundTask));
@@ -49,7 +52,7 @@ public abstract class BaseExportImportBackgroundTaskExecutor
 	}
 
 	protected ExportImportConfiguration getExportImportConfiguration(
-		BackgroundTask backgroundTask) {
+		BackgroundTask<? extends BaseModel> backgroundTask) {
 
 		Map<String, Serializable> taskContextMap =
 			backgroundTask.getTaskContextMap();
