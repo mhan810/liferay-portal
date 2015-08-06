@@ -154,7 +154,7 @@ public class BackgroundTaskManagerUtil {
 			groupId, taskExecutorClassName, status);
 	}
 
-	public static List<BackgroundTask? extends BaseModel> getBackgroundTasks(
+	public static List<BackgroundTask<? extends BaseModel>> getBackgroundTasks(
 		long groupId, String taskExecutorClassName, int start, int end,
 		OrderByComparator<BackgroundTask> orderByComparator) {
 
