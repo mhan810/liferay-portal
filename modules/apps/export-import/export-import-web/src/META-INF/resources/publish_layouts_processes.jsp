@@ -82,7 +82,7 @@ String taskExecutorClassName = localPublishing ? LayoutStagingBackgroundTaskExec
 	</liferay-ui:search-container-results>
 
 	<liferay-ui:search-container-row
-		className="com.liferay.portal.model.BackgroundTask"
+		className="com.liferay.portal.kernel.backgroundtask.BackgroundTask"
 		keyProperty="backgroundTaskId"
 		modelVar="backgroundTask"
 	>
@@ -178,10 +178,10 @@ String taskExecutorClassName = localPublishing ? LayoutStagingBackgroundTaskExec
 </liferay-ui:search-container>
 
 <%
-int incompleteBackgroundTaskCount = BackgroundTaskLocalServiceUtil.getBackgroundTasksCount(groupId, taskExecutorClassName, false);
+int incompleteBackgroundTaskCount = BackgroundTaskManagerUtil.getBackgroundTasksCount(groupId, taskExecutorClassName, false);
 
 if (localPublishing) {
-	incompleteBackgroundTaskCount += BackgroundTaskLocalServiceUtil.getBackgroundTasksCount(liveGroupId, taskExecutorClassName, false);
+	incompleteBackgroundTaskCount += BackgroundTaskManagerUtil.getBackgroundTasksCount(liveGroupId, taskExecutorClassName, false);
 }
 %>
 
