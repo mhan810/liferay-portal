@@ -130,6 +130,11 @@ public class BackgroundTaskImpl
 	}
 
 	@Override
+	public String getServletContextNames() {
+		return _backgroundTask.getServletContextNames();
+	}
+
+	@Override
 	public int getStatus() {
 		return _backgroundTask.getStatus();
 	}

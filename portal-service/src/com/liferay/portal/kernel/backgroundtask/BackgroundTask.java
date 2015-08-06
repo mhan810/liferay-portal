@@ -64,6 +64,8 @@ public interface BackgroundTask<T extends BaseModel> {
 
 	public String getName();
 
+	public String getServletContextNames();
+
 	public int getStatus();
 
 	public String getStatusLabel();
