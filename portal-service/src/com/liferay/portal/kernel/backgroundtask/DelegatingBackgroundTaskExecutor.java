@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.backgroundtask;
 
-import com.liferay.portal.model.BackgroundTask;
+import com.liferay.portal.model.BaseModel;
 
 /**
  * @author Michael C. Han
@@ -29,7 +29,8 @@ public class DelegatingBackgroundTaskExecutor
 	}
 
 	@Override
-	public BackgroundTaskResult execute(BackgroundTask backgroundTask)
+	public BackgroundTaskResult execute(
+			BackgroundTask<? extends BaseModel> backgroundTask)
 		throws Exception {
 
 		return _backgroundTaskExecutor.execute(backgroundTask);
@@ -49,7 +50,9 @@ public class DelegatingBackgroundTaskExecutor
 	}
 
 	@Override
-	public String handleException(BackgroundTask backgroundTask, Exception e) {
+	public String handleException(
+		BackgroundTask<? extends BaseModel> backgroundTask, Exception e) {
+
 		return _backgroundTaskExecutor.handleException(backgroundTask, e);
 	}
 
