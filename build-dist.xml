@@ -877,16 +877,15 @@
 		<antcall target="build-dist-plugins" />
 
 		<antcall target="build-dist-glassfish" />
-		<antcall target="build-dist-jboss" />
 		<antcall target="build-dist-jetty" />
 		<antcall target="build-dist-jonas" />
 		<antcall target="build-dist-resin" />
 		<antcall target="build-dist-tcat" />
 		<antcall target="build-dist-tomcat" />
+		<antcall target="build-dist-wildlfy" />
 
 		<antcall target="zip-api" />
 		<antcall target="zip-glassfish" />
-		<antcall target="zip-jboss" />
 		<antcall target="zip-jetty" />
 		<antcall target="zip-jonas" />
 		<antcall target="zip-patching-tool" />
@@ -897,6 +896,7 @@
 		<antcall target="zip-src" />
 		<antcall target="zip-tcat" />
 		<antcall target="zip-tomcat" />
+		<antcall target="zip-wildfly" />
 
 		<ant antfile="build-maven.xml" target="zip-maven" inheritAll="false" />
 
