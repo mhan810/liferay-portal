@@ -39,7 +39,6 @@ import com.liferay.portal.kernel.util.InstanceFactory;
 import com.liferay.portal.kernel.util.StackTraceUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.service.BackgroundTaskLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 
 /**
@@ -155,7 +154,7 @@ public class BackgroundTaskMessageListener extends BaseMessageListener {
 			_log.error("Unable to execute background task", e);
 		}
 		finally {
-			BackgroundTaskLocalServiceUtil.amendBackgroundTask(
+			BackgroundTaskManagerUtil.amendBackgroundTask(
 				backgroundTaskId, null, status, statusMessage, serviceContext);
 
 			BackgroundTaskStatusRegistryUtil.unregisterBackgroundTaskStatus(
