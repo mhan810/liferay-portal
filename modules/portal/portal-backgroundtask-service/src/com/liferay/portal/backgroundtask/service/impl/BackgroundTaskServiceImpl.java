@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.service.impl;
+package com.liferay.portal.backgroundtask.service.impl;
 
 import com.liferay.portal.service.base.BackgroundTaskServiceBaseImpl;
 
