@@ -14,15 +14,12 @@
 
 package com.liferay.portal.kernel.backgroundtask;
 
-import com.liferay.portal.model.BaseModel;
-
 /**
  * @author Michael C. Han
  */
 public interface BackgroundTaskExecutor {
 
-	public BackgroundTaskResult execute(
-			BackgroundTask<? extends BaseModel> backgroundTask)
+	public BackgroundTaskResult execute(BackgroundTask backgroundTask)
 		throws Exception;
 
 	public BackgroundTaskStatusMessageTranslator
@@ -30,8 +27,7 @@ public interface BackgroundTaskExecutor {
 
 	public int getIsolationLevel();
 
-	public String handleException(
-		BackgroundTask<? extends BaseModel> backgroundTask, Exception e);
+	public String handleException(BackgroundTask backgroundTask, Exception e);
 
 	public boolean isSerial();
 
