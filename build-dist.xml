@@ -632,11 +632,13 @@
 	</target>
 
 	<target name="build-dist-wildfly">
-		<antcall target="unzip-wildfly" />
-
 		<app-server-properties-update>
 			app.server.type=wildfly
 		</app-server-properties-update>
+
+		<antcall target="update-sdk-properties" inheritAll="false" />
+
+		<antcall target="unzip-wildfly" />
 
 		<delete dir="${project.dir}/portal-web/classes" />
 
