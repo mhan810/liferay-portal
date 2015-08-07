@@ -14,7 +14,7 @@
 
 package com.liferay.portal.backgroundtask.service.impl;
 
-import com.liferay.portal.service.base.BackgroundTaskServiceBaseImpl;
+import com.liferay.portal.backgroundtask.service.base.BackgroundTaskServiceBaseImpl;
 
 /**
  * @author Michael C. Han
