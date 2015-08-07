@@ -14,6 +14,7 @@
 
 package com.liferay.exportimport.staging;
 
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManagerUtil;
 import com.liferay.portal.LayoutPrototypeException;
 import com.liferay.portal.LocaleException;
 import com.liferay.portal.NoSuchGroupException;
@@ -73,7 +74,6 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.security.permission.ResourceActionsUtil;
-import com.liferay.portal.service.BackgroundTaskLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutBranchLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
@@ -1307,7 +1307,7 @@ public class StagingImpl implements Staging {
 			"exportImportConfigurationId",
 			exportImportConfiguration.getExportImportConfigurationId());
 
-		BackgroundTaskLocalServiceUtil.addBackgroundTask(
+		BackgroundTaskManagerUtil.addBackgroundTask(
 			userId, exportImportConfiguration.getGroupId(), StringPool.BLANK,
 			null, LayoutStagingBackgroundTaskExecutor.class, taskContextMap,
 			new ServiceContext());
@@ -1431,7 +1431,7 @@ public class StagingImpl implements Staging {
 			"exportImportConfigurationId",
 			exportImportConfiguration.getExportImportConfigurationId());
 
-		BackgroundTaskLocalServiceUtil.addBackgroundTask(
+		BackgroundTaskManagerUtil.addBackgroundTask(
 			userId, exportImportConfiguration.getGroupId(),
 			exportImportConfiguration.getName(), null,
 			PortletStagingBackgroundTaskExecutor.class, taskContextMap,
@@ -2035,7 +2035,7 @@ public class StagingImpl implements Staging {
 
 		taskContextMap.put("httpPrincipal", httpPrincipal);
 
-		BackgroundTaskLocalServiceUtil.addBackgroundTask(
+		BackgroundTaskManagerUtil.addBackgroundTask(
 			user.getUserId(), exportImportConfiguration.getGroupId(),
 			StringPool.BLANK, null,
 			LayoutRemoteStagingBackgroundTaskExecutor.class, taskContextMap,
