@@ -94,6 +94,10 @@ public interface BackgroundTaskManager {
 		OrderByComparator<BackgroundTask> orderByComparator);
 
 	public List<BackgroundTask> getBackgroundTasks(
+		long groupId, String name, String taskExecutorClassName, int start,
+		int end, OrderByComparator<BackgroundTask> orderByComparator);
+
+	public List<BackgroundTask> getBackgroundTasks(
 		long groupId, String[] taskExecutorClassNames);
 
 	public List<BackgroundTask> getBackgroundTasks(

@@ -70,6 +70,8 @@ public interface BackgroundTask {
 
 	public String getStatusLabel();
 
+	public String getStatusMessage();
+
 	public Map<String, Serializable> getTaskContextMap();
 
 	public String getTaskExecutorClassName();

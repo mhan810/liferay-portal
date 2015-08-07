@@ -143,6 +143,11 @@ public class BackgroundTaskImpl implements BackgroundTask {
 	}
 
 	@Override
+	public String getStatusMessage() {
+		return _backgroundTask.getStatusMessage();
+	}
+
+	@Override
 	public Map<String, Serializable> getTaskContextMap() {
 		return _backgroundTask.getTaskContextMap();
 	}
