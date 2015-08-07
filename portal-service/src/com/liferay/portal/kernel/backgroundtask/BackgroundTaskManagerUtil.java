@@ -134,81 +134,75 @@ public class BackgroundTaskManagerUtil {
 		return _backgroundTaskManager.getBackgroundTasks(groupId, status);
 	}
 
-	public static List<BackgroundTask>
-		getBackgroundTasks(long groupId, String taskExecutorClassName) {
+	public static List<BackgroundTask> getBackgroundTasks(
+		long groupId, String taskExecutorClassName) {
 
 		return _backgroundTaskManager.getBackgroundTasks(
 			groupId, taskExecutorClassName);
 	}
 
-	public static List<BackgroundTask>
-		getBackgroundTasks(
-			long groupId, String taskExecutorClassName, int status) {
+	public static List<BackgroundTask> getBackgroundTasks(
+		long groupId, String taskExecutorClassName, int status) {
 
 		return _backgroundTaskManager.getBackgroundTasks(
 			groupId, taskExecutorClassName, status);
 	}
 
-	public static List<BackgroundTask>
-		getBackgroundTasks(
-			long groupId, String taskExecutorClassName, int start, int end,
-			OrderByComparator<BackgroundTask> orderByComparator) {
+	public static List<BackgroundTask> getBackgroundTasks(
+		long groupId, String taskExecutorClassName, int start, int end,
+		OrderByComparator<BackgroundTask> orderByComparator) {
 
 		return _backgroundTaskManager.getBackgroundTasks(
 			groupId, taskExecutorClassName, start, end, orderByComparator);
 	}
 
-	public static List<BackgroundTask>
-		getBackgroundTasks(long groupId, String[] taskExecutorClassNames) {
+	public static List<BackgroundTask> getBackgroundTasks(
+		long groupId, String[] taskExecutorClassNames) {
 
 		return _backgroundTaskManager.getBackgroundTasks(
 			groupId, taskExecutorClassNames);
 	}
 
-	public static List<BackgroundTask>
-		getBackgroundTasks(
-			long groupId, String[] taskExecutorClassNames, int status) {
+	public static List<BackgroundTask> getBackgroundTasks(
+		long groupId, String[] taskExecutorClassNames, int status) {
 
 		return _backgroundTaskManager.getBackgroundTasks(
 			groupId, taskExecutorClassNames, status);
 	}
 
-	public static List<BackgroundTask>
-		getBackgroundTasks(
-			long groupId, String[] taskExecutorClassNames, int start, int end,
-			OrderByComparator<BackgroundTask> orderByComparator) {
+	public static List<BackgroundTask> getBackgroundTasks(
+		long groupId, String[] taskExecutorClassNames, int start, int end,
+		OrderByComparator<BackgroundTask> orderByComparator) {
 
 		return _backgroundTaskManager.getBackgroundTasks(
 			groupId, taskExecutorClassNames, start, end, orderByComparator);
 	}
 
-	public static List<BackgroundTask>
-		getBackgroundTasks(String taskExecutorClassName, int status) {
+	public static List<BackgroundTask> getBackgroundTasks(
+		String taskExecutorClassName, int status) {
 
 		return _backgroundTaskManager.getBackgroundTasks(
 			taskExecutorClassName, status);
 	}
 
-	public static List<BackgroundTask>
-		getBackgroundTasks(
-			String taskExecutorClassName, int status, int start, int end,
-			OrderByComparator<BackgroundTask> orderByComparator) {
+	public static List<BackgroundTask> getBackgroundTasks(
+		String taskExecutorClassName, int status, int start, int end,
+		OrderByComparator<BackgroundTask> orderByComparator) {
 
 		return _backgroundTaskManager.getBackgroundTasks(
 			taskExecutorClassName, status, start, end, orderByComparator);
 	}
 
-	public static List<BackgroundTask>
-		getBackgroundTasks(String[] taskExecutorClassNames, int status) {
+	public static List<BackgroundTask> getBackgroundTasks(
+		String[] taskExecutorClassNames, int status) {
 
 		return _backgroundTaskManager.getBackgroundTasks(
 			taskExecutorClassNames, status);
 	}
 
-	public static List<BackgroundTask>
-		getBackgroundTasks(
-			String[] taskExecutorClassNames, int status, int start, int end,
-			OrderByComparator<BackgroundTask> orderByComparator) {
+	public static List<BackgroundTask> getBackgroundTasks(
+		String[] taskExecutorClassNames, int status, int start, int end,
+		OrderByComparator<BackgroundTask> orderByComparator) {
 
 		return _backgroundTaskManager.getBackgroundTasks(
 			taskExecutorClassNames, status, start, end, orderByComparator);
