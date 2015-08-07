@@ -12,11 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.model;
+package com.liferay.portal.backgroundtask.model.impl;
 
 import com.liferay.portal.ModelListenerException;
+import com.liferay.portal.backgroundtask.model.BackgroundTask;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.BaseModelListener;
 import com.liferay.portlet.exportimport.model.ExportImportConfiguration;
 import com.liferay.portlet.exportimport.service.ExportImportConfigurationLocalServiceUtil;
 
