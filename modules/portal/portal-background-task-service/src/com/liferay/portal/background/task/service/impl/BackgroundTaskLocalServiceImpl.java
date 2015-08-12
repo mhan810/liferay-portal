@@ -561,11 +561,22 @@ public class BackgroundTaskLocalServiceImpl
 		MessageBusUtil.sendMessage(DestinationNames.BACKGROUND_TASK, message);
 	}
 
+	protected void setBackgroundTaskStatusRegistry(
+		BackgroundTaskStatusRegistry backgroundTaskStatusRegistry) {
+
+		_backgroundTaskStatusRegistry = backgroundTaskStatusRegistry;
+	}
+
+	protected void setBackgroundTaskThreadLocalManager(
+		BackgroundTaskThreadLocalManager backgroundTaskThreadLocalManager) {
+
+		_backgroundTaskThreadLocalManager = backgroundTaskThreadLocalManager;
+	}
+
 	@ServiceReference(type = BackgroundTaskStatusRegistry.class)
-	private final BackgroundTaskStatusRegistry _backgroundTaskStatusRegistry;
+	private BackgroundTaskStatusRegistry _backgroundTaskStatusRegistry;
 
 	@ServiceReference(type = BackgroundTaskThreadLocalManager.class)
-	private final BackgroundTaskThreadLocalManager
-		_backgroundTaskThreadLocalManager;
+	private BackgroundTaskThreadLocalManager _backgroundTaskThreadLocalManager;
 
 }
