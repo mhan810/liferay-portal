@@ -85,7 +85,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 			{ "completed", Types.BOOLEAN },
 			{ "completionDate", Types.TIMESTAMP },
 			{ "status", Types.INTEGER },
-			{ "statusMessage", Types.VARCHAR }
+			{ "statusMessage", Types.CLOB }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -105,10 +105,10 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		TABLE_COLUMNS_MAP.put("completed", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("completionDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("status", Types.INTEGER);
-		TABLE_COLUMNS_MAP.put("statusMessage", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("statusMessage", Types.CLOB);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table BackgroundTask (mvccVersion LONG default 0,backgroundTaskId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name VARCHAR(75) null,servletContextNames VARCHAR(75) null,taskExecutorClassName VARCHAR(75) null,taskContextMap TEXT null,completed BOOLEAN,completionDate DATE null,status INTEGER,statusMessage VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table BackgroundTask (mvccVersion LONG default 0,backgroundTaskId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name VARCHAR(255) null,servletContextNames VARCHAR(255) null,taskExecutorClassName VARCHAR(200) null,taskContextMap TEXT null,completed BOOLEAN,completionDate DATE null,status INTEGER,statusMessage TEXT null)";
 	public static final String TABLE_SQL_DROP = "drop table BackgroundTask";
 	public static final String ORDER_BY_JPQL = " ORDER BY backgroundTask.createDate ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY BackgroundTask.createDate ASC";

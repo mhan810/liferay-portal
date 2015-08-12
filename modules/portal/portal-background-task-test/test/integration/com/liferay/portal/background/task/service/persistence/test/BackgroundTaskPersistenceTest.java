@@ -345,7 +345,7 @@ public class BackgroundTaskPersistenceTest {
 			"companyId", true, "userId", true, "userName", true, "createDate",
 			true, "modifiedDate", true, "name", true, "servletContextNames",
 			true, "taskExecutorClassName", true, "completed", true,
-			"completionDate", true, "status", true, "statusMessage", true);
+			"completionDate", true, "status", true);
 	}
 
 	@Test
