@@ -49,6 +49,7 @@ import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectio
 import com.liferay.portal.search.elasticsearch.facet.FacetProcessor;
 import com.liferay.portal.search.elasticsearch.internal.facet.CompositeFacetProcessor;
 import com.liferay.portal.search.elasticsearch.internal.facet.ElasticsearchFacetFieldCollector;
+import com.liferay.portal.search.elasticsearch.internal.facet.hits.AggregatedHitsImpl;
 import com.liferay.portal.search.elasticsearch.internal.util.DocumentTypes;
 
 import java.util.ArrayList;
@@ -77,6 +78,7 @@ import org.elasticsearch.search.SearchHitField;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.range.date.InternalDateRange;
 import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
@@ -513,7 +515,22 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		return new String[] {DocumentTypes.LIFERAY};
 	}
 
-	protected Hits processResponse(
+	protected Hits processAggregationBuckets(
+		SearchResponse searchResponse, SearchContext searchContext,
+		Query query) {
+
+		AggregatedHitsImpl hits = new AggregatedHitsImpl();
+
+		Aggregations aggregations = searchResponse.getAggregations();
+
+		for (Aggregation aggregation : aggregations) {
+			hits.addAggregation((InternalDateRange)aggregation);
+		}
+
+		return hits;
+	}
+
+	protected Hits processHits(
 		SearchResponse searchResponse, SearchContext searchContext,
 		Query query) {
 
@@ -548,6 +565,25 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		hits.setQuery(query);
 		hits.setQueryTerms(queryTerms.toArray(new String[queryTerms.size()]));
 		hits.setScores(ArrayUtil.toFloatArray(scores));
+		return hits;
+	}
+
+	protected Hits processResponse(
+		SearchResponse searchResponse, SearchContext searchContext,
+		Query query) {
+
+		Hits hits = null;
+
+		if (true ==
+				(Boolean)searchContext.getAttribute(
+					"INCLUDE_ONLY_AGGREGATION_BUCKETS")) {
+
+			hits = processAggregationBuckets(
+				searchResponse, searchContext, query);
+		}
+		else {
+			hits = processHits(searchResponse, searchContext, query);
+		}
 
 		TimeValue timeValue = searchResponse.getTook();
 
