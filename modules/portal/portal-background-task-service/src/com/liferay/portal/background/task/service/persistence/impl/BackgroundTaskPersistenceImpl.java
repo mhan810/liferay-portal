@@ -7247,7 +7247,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 				backgroundTask.setNew(false);
 			}
 			else {
-				session.merge(backgroundTask);
+				backgroundTask = (BackgroundTask)session.merge(backgroundTask);
 			}
 		}
 		catch (Exception e) {
