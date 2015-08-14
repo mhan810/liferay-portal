@@ -15,10 +15,10 @@
 package com.liferay.portal.cache.ehcache.internal;
 
 import com.liferay.portal.kernel.cache.PortalCacheListenerScope;
-import com.liferay.portal.kernel.cache.configuration.CallbackConfiguration;
 import com.liferay.portal.kernel.cache.configuration.PortalCacheConfiguration;
 
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author Tina Tian
@@ -27,14 +27,14 @@ public class EhcachePortalCacheConfiguration extends PortalCacheConfiguration {
 
 	public EhcachePortalCacheConfiguration(
 		String portalCacheName,
-		Map<CallbackConfiguration, PortalCacheListenerScope>
-			portalCacheListenerConfigurations,
-		CallbackConfiguration bootstrapLoaderConfiguration,
+		Map<Properties, PortalCacheListenerScope>
+			portalCacheListenerPropertiesMap,
+		Properties portalCacheBootstrapLoaderProperties,
 		boolean requireSerialization) {
 
 		super(
-			portalCacheName, portalCacheListenerConfigurations,
-			bootstrapLoaderConfiguration);
+			portalCacheName, portalCacheListenerPropertiesMap,
+			portalCacheBootstrapLoaderProperties);
 
 		_requireSerialization = requireSerialization;
 	}
@@ -48,9 +48,8 @@ public class EhcachePortalCacheConfiguration extends PortalCacheConfiguration {
 		String portalCacheName) {
 
 		return new EhcachePortalCacheConfiguration(
-			portalCacheName, getPortalCacheListenerConfigurations(),
-			getPortalCacheBootstrapLoaderConfiguration(),
-			_requireSerialization);
+			portalCacheName, getPortalCacheListenerPropertiesMap(),
+			getPortalCacheBootstrapLoaderProperties(), _requireSerialization);
 	}
 
 	private final boolean _requireSerialization;

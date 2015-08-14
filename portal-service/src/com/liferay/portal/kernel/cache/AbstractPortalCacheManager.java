@@ -14,7 +14,6 @@
 
 package com.liferay.portal.kernel.cache;
 
-import com.liferay.portal.kernel.cache.configuration.CallbackConfiguration;
 import com.liferay.portal.kernel.cache.configuration.PortalCacheConfiguration;
 import com.liferay.portal.kernel.cache.configuration.PortalCacheManagerConfiguration;
 import com.liferay.portal.kernel.cache.transactional.TransactionalPortalCache;
@@ -27,6 +26,7 @@ import com.liferay.portal.kernel.util.Validator;
 import java.io.Serializable;
 
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -103,19 +103,14 @@ public abstract class AbstractPortalCacheManager<K extends Serializable, V>
 		else if (isPortalCacheBootstrapLoaderEnabled() &&
 				 (portalCacheConfiguration != null)) {
 
-			CallbackConfiguration portalCacheBootstrapLoaderConfiguration =
+			Properties portalCacheBootstrapLoaderProperties =
 				portalCacheConfiguration.
-					getPortalCacheBootstrapLoaderConfiguration();
+					getPortalCacheBootstrapLoaderProperties();
 
-			if (portalCacheBootstrapLoaderConfiguration != null) {
-				CallbackFactory<?> callbackFactory =
-					portalCacheBootstrapLoaderConfiguration.
-						getCallbackFactory();
-
+			if (portalCacheBootstrapLoaderProperties != null) {
 				PortalCacheBootstrapLoader portalCacheBootstrapLoader =
-					callbackFactory.createPortalCacheBootstrapLoader(
-						portalCacheBootstrapLoaderConfiguration.
-							getProperties());
+					CallbackFactoryUtil.createPortalCacheBootstrapLoader(
+						portalCacheBootstrapLoaderProperties);
 
 				if (portalCacheBootstrapLoader != null) {
 					portalCacheBootstrapLoader.loadPortalCache(
@@ -257,17 +252,13 @@ public abstract class AbstractPortalCacheManager<K extends Serializable, V>
 			_portalCacheManagerConfiguration.
 				getDefaultPortalCacheConfiguration();
 
-		for (CallbackConfiguration callbackConfiguration :
+		for (Properties portalCacheManagerListenerProperties :
 				_portalCacheManagerConfiguration.
-					getPortalCacheManagerListenerConfigurations()) {
-
-			CallbackFactory<PortalCacheManager<?, ?>> callbackFactory =
-				(CallbackFactory<PortalCacheManager<?, ?>>)
-					callbackConfiguration.getCallbackFactory();
+					getPortalCacheManagerListenerPropertiesSet()) {
 
 			PortalCacheManagerListener portalCacheManagerListener =
-				callbackFactory.createPortalCacheManagerListener(
-					this, callbackConfiguration.getProperties());
+				CallbackFactoryUtil.createPortalCacheManagerListener(
+					this, portalCacheManagerListenerProperties);
 
 			if (portalCacheManagerListener != null) {
 				registerPortalCacheManagerListener(portalCacheManagerListener);
@@ -329,21 +320,15 @@ public abstract class AbstractPortalCacheManager<K extends Serializable, V>
 			return;
 		}
 
-		Map<CallbackConfiguration, PortalCacheListenerScope>
-			cacheListenerConfigurations =
-				portalCacheConfiguration.getPortalCacheListenerConfigurations();
+		Map<Properties, PortalCacheListenerScope>
+			portalCacheListenerPropertiesMap =
+				portalCacheConfiguration.getPortalCacheListenerPropertiesMap();
 
-		for (Map.Entry<CallbackConfiguration, PortalCacheListenerScope> entry :
-				cacheListenerConfigurations.entrySet()) {
-
-			CallbackConfiguration callbackConfiguration = entry.getKey();
-
-			CallbackFactory<?> callbackFactory =
-				callbackConfiguration.getCallbackFactory();
+		for (Map.Entry<Properties, PortalCacheListenerScope> entry :
+				portalCacheListenerPropertiesMap.entrySet()) {
 
 			PortalCacheListener<K, V> portalCacheListener =
-				callbackFactory.createPortalCacheListener(
-					callbackConfiguration.getProperties());
+				CallbackFactoryUtil.createPortalCacheListener(entry.getKey());
 
 			portalCache.registerPortalCacheListener(
 				portalCacheListener, entry.getValue());

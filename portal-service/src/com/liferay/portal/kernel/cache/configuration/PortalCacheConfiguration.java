@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.cache.PortalCacheListenerScope;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author Tina Tian
@@ -30,9 +31,9 @@ public class PortalCacheConfiguration {
 
 	public PortalCacheConfiguration(
 		String portalCacheName,
-		Map<CallbackConfiguration, PortalCacheListenerScope>
-			portalCacheListenerConfigurations,
-		CallbackConfiguration portalCacheBootstrapLoaderConfiguration) {
+		Map<Properties, PortalCacheListenerScope>
+			portalCacheListenerPropertiesMap,
+		Properties portalCacheBootstrapLoaderProperties) {
 
 		if (portalCacheName == null) {
 			throw new NullPointerException("Portal cache name is null");
@@ -40,28 +41,26 @@ public class PortalCacheConfiguration {
 
 		_portalCacheName = portalCacheName;
 
-		if (portalCacheListenerConfigurations == null) {
-			_portalCacheListenerConfigurations = Collections.emptyMap();
+		if (portalCacheListenerPropertiesMap == null) {
+			_portalCacheListenerPropertiesMap = Collections.emptyMap();
 		}
 		else {
-			_portalCacheListenerConfigurations = new HashMap<>(
-				portalCacheListenerConfigurations);
+			_portalCacheListenerPropertiesMap = new HashMap<>(
+				portalCacheListenerPropertiesMap);
 		}
 
-		_portalCacheBootstrapLoaderConfiguration =
-			portalCacheBootstrapLoaderConfiguration;
+		_portalCacheBootstrapLoaderProperties =
+			portalCacheBootstrapLoaderProperties;
 	}
 
-	public CallbackConfiguration
-		getPortalCacheBootstrapLoaderConfiguration() {
-
-		return _portalCacheBootstrapLoaderConfiguration;
+	public Properties getPortalCacheBootstrapLoaderProperties() {
+		return _portalCacheBootstrapLoaderProperties;
 	}
 
-	public Map<CallbackConfiguration, PortalCacheListenerScope>
-		getPortalCacheListenerConfigurations() {
+	public Map<Properties, PortalCacheListenerScope>
+		getPortalCacheListenerPropertiesMap() {
 
-		return Collections.unmodifiableMap(_portalCacheListenerConfigurations);
+		return Collections.unmodifiableMap(_portalCacheListenerPropertiesMap);
 	}
 
 	public String getPortalCacheName() {
@@ -72,14 +71,13 @@ public class PortalCacheConfiguration {
 		String portalCacheName) {
 
 		return new PortalCacheConfiguration(
-			portalCacheName, _portalCacheListenerConfigurations,
-			_portalCacheBootstrapLoaderConfiguration);
+			portalCacheName, _portalCacheListenerPropertiesMap,
+			_portalCacheBootstrapLoaderProperties);
 	}
 
-	private final CallbackConfiguration
-		_portalCacheBootstrapLoaderConfiguration;
-	private final Map<CallbackConfiguration, PortalCacheListenerScope>
-		_portalCacheListenerConfigurations;
+	private final Properties _portalCacheBootstrapLoaderProperties;
+	private final Map<Properties, PortalCacheListenerScope>
+		_portalCacheListenerPropertiesMap;
 	private final String _portalCacheName;
 
 }

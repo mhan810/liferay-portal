@@ -19,7 +19,9 @@ import com.liferay.portal.kernel.cache.PortalCacheBootstrapLoader;
 import com.liferay.portal.kernel.cache.PortalCacheListener;
 import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.cache.PortalCacheManagerListener;
+import com.liferay.portal.kernel.cache.PortalCacheReplicator;
 import com.liferay.portal.kernel.cache.bootstrap.ClusterLinkPortalCacheBootstrapLoader;
+import com.liferay.portal.kernel.util.GetterUtil;
 
 import java.io.Serializable;
 
@@ -31,8 +33,11 @@ import java.util.Properties;
 public class ClusterLinkCallbackFactory
 	implements CallbackFactory<PortalCacheManager<?, ?>> {
 
-	public static final CallbackFactory<PortalCacheManager<?, ?>> INSTANCE =
-		new ClusterLinkCallbackFactory();
+	public ClusterLinkCallbackFactory(
+		CallbackFactory<PortalCacheManager<?, ?>> callbackFactory) {
+
+		_callbackFactory = callbackFactory;
+	}
 
 	@Override
 	public PortalCacheBootstrapLoader createPortalCacheBootstrapLoader(
@@ -45,18 +50,26 @@ public class ClusterLinkCallbackFactory
 	public <K extends Serializable, V> PortalCacheListener<K, V>
 		createPortalCacheListener(Properties properties) {
 
-		return (PortalCacheListener<K, V>)
-			new ClusterLinkPortalCacheReplicator<K, Serializable>(properties);
+		boolean replicator = GetterUtil.getBoolean(
+			properties.get(PortalCacheReplicator.REPLICATOR));
+
+		if (replicator) {
+			return (PortalCacheListener<K, V>)
+				new ClusterLinkPortalCacheReplicator<K, Serializable>(
+					properties);
+		}
+
+		return _callbackFactory.createPortalCacheListener(properties);
 	}
 
 	@Override
 	public PortalCacheManagerListener createPortalCacheManagerListener(
 		PortalCacheManager<?, ?> portalCacheManager, Properties properties) {
 
-		throw new UnsupportedOperationException();
+		return _callbackFactory.createPortalCacheManagerListener(
+			portalCacheManager, properties);
 	}
 
-	private ClusterLinkCallbackFactory() {
-	}
+	private final CallbackFactory<PortalCacheManager<?, ?>> _callbackFactory;
 
 }

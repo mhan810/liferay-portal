@@ -37,14 +37,14 @@ import net.sf.ehcache.event.CacheEventListener;
 import net.sf.ehcache.event.CacheEventListenerFactory;
 import net.sf.ehcache.event.CacheManagerEventListenerFactory;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Tina Tian
  */
+@Component(immediate = true, service = CallbackFactory.class)
 public class EhcacheCallbackFactory
 	implements CallbackFactory<EhcachePortalCacheManager<?, ?>> {
-
-	public static final CallbackFactory<EhcachePortalCacheManager<?, ?>>
-		INSTANCE = new EhcacheCallbackFactory();
 
 	@Override
 	public PortalCacheBootstrapLoader createPortalCacheBootstrapLoader(
@@ -150,9 +150,6 @@ public class EhcacheCallbackFactory
 		Class<?> clazz = getClass();
 
 		return clazz.getClassLoader();
-	}
-
-	private EhcacheCallbackFactory() {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
