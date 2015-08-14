@@ -92,6 +92,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Michael C. Han
  * @author Milen Dyankov
+ * @author Miguel Angelo Caldas Gallindo
  */
 @Component(
 	configurationPid = "com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration",
@@ -513,33 +514,33 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		return new String[] {DocumentTypes.LIFERAY};
 	}
 
-	protected Hits processResponse(
+	protected Hits processHits(
 		SearchResponse searchResponse, SearchContext searchContext,
 		Query query) {
 
-		SearchHits searchHits = searchResponse.getHits();
-
-		updateFacetCollectors(searchContext, searchResponse);
-
 		Hits hits = new HitsImpl();
-
+		updateFacetCollectors(searchContext, searchResponse);
+		SearchHits searchHits = searchResponse.getHits();
 		List<Document> documents = new ArrayList<>();
 		Set<String> queryTerms = new HashSet<>();
 		List<Float> scores = new ArrayList<>();
 
-		if (searchHits.totalHits() > 0) {
-			SearchHit[] searchHitsArray = searchHits.getHits();
+		if (!searchContext.isAggregationsOnly()) {
+			if (searchHits.totalHits() > 0) {
+				SearchHit[] searchHitsArray = searchHits.getHits();
 
-			for (SearchHit searchHit : searchHitsArray) {
-				Document document = processSearchHit(
-					searchHit, query.getQueryConfig());
+				for (SearchHit searchHit : searchHitsArray) {
+					Document document = processSearchHit(
+						searchHit, query.getQueryConfig());
 
-				documents.add(document);
+					documents.add(document);
 
-				scores.add(searchHit.getScore());
+					scores.add(searchHit.getScore());
 
-				addSnippets(
-					searchHit, document, query.getQueryConfig(), queryTerms);
+					addSnippets(
+						searchHit, document, query.getQueryConfig(),
+						queryTerms);
+				}
 			}
 		}
 
@@ -548,6 +549,15 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		hits.setQuery(query);
 		hits.setQueryTerms(queryTerms.toArray(new String[queryTerms.size()]));
 		hits.setScores(ArrayUtil.toFloatArray(scores));
+
+		return hits;
+	}
+
+	protected Hits processResponse(
+		SearchResponse searchResponse, SearchContext searchContext,
+		Query query) {
+
+		Hits hits = processHits(searchResponse, searchContext, query);
 
 		TimeValue timeValue = searchResponse.getTook();
 
