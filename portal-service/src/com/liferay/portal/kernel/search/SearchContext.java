@@ -203,6 +203,10 @@ public class SearchContext implements Serializable {
 		return Validator.isNull(_originalKeywords);
 	}
 
+	public boolean isAggregationsOnly() {
+		return _aggregationsOnly;
+	}
+
 	public boolean isAndSearch() {
 		return _andSearch;
 	}
@@ -243,6 +247,10 @@ public class SearchContext implements Serializable {
 		_originalKeywords = _keywords;
 
 		_keywords = keywords;
+	}
+
+	public void setAggregationsOnly(boolean aggregationsOnly) {
+		this._aggregationsOnly = aggregationsOnly;
 	}
 
 	public void setAndSearch(boolean andSearch) {
@@ -400,6 +408,7 @@ public class SearchContext implements Serializable {
 		_userId = userId;
 	}
 
+	private boolean _aggregationsOnly;
 	private boolean _andSearch;
 	private long[] _assetCategoryIds;
 	private String[] _assetTagNames;

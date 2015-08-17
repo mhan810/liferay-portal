@@ -22,6 +22,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch.index.IndexFactory;
 import com.liferay.portal.search.elasticsearch.internal.util.LogUtil;
 
+import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -74,16 +76,19 @@ public class CompanyIndexFactory implements IndexFactory {
 
 			builder.classLoader(clazz.getClassLoader());
 
-			builder.loadFromClasspath(_indexConfigFileName);
+			String indexSettingsContent = loadFileContent(
+				clazz.getClassLoader(), _indexConfigFileName);
+			builder.loadFromSource(indexSettingsContent);
 
 			createIndexRequestBuilder.setSettings(builder);
 		}
 
-		for (Map.Entry<String, String> entry : _typeMappings.entrySet()) {
-			Class<?> clazz = getClass();
+		Class<?> clazz = getClass();
+		ClassLoader classLoader = clazz.getClassLoader();
 
-			String typeMapping = StringUtil.read(
-				clazz.getClassLoader(), entry.getValue());
+		for (Map.Entry<String, String> entry : _typeMappings.entrySet()) {
+			String relativePath = entry.getValue();
+			String typeMapping = loadFileContent(classLoader, relativePath);
 
 			createIndexRequestBuilder.addMapping(entry.getKey(), typeMapping);
 		}
@@ -156,6 +161,15 @@ public class CompanyIndexFactory implements IndexFactory {
 		IndicesExistsResponse indicesExistsResponse = future.get();
 
 		return indicesExistsResponse.isExists();
+	}
+
+	protected String loadFileContent(
+			ClassLoader classLoader, String relativePath)
+		throws IOException {
+
+		String typeMapping = StringUtil.read(classLoader, relativePath);
+
+		return typeMapping;
 	}
 
 	private static final String _PREFIX = "typeMappings.";
