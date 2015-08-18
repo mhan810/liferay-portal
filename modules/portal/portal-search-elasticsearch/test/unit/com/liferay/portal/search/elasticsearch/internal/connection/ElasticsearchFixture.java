@@ -29,6 +29,7 @@ import java.lang.reflect.Method;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 
@@ -43,6 +44,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.ClusterAdminClient;
 import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.common.settings.ImmutableSettings.Builder;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.indices.IndexMissingException;
 
 import org.mockito.Mockito;
@@ -99,7 +101,9 @@ public class ElasticsearchFixture {
 		deleteTmpDir();
 	}
 
-	public ClusterHealthResponse getClusterHealthResponse() {
+	public ClusterHealthResponse getClusterHealthResponse(
+		HealthExpectations healthExpectations) {
+
 		Client client = _elasticsearchConnection.getClient();
 
 		AdminClient adminClient = client.admin();
@@ -111,6 +115,14 @@ public class ElasticsearchFixture {
 
 		ClusterHealthRequest clusterHealthRequest =
 			clusterHealthRequestBuilder.request();
+
+		clusterHealthRequest.timeout(new TimeValue(10, TimeUnit.MINUTES));
+		clusterHealthRequest.waitForActiveShards(
+			healthExpectations.activeShards);
+		clusterHealthRequest.waitForNodes(
+			String.valueOf(healthExpectations.numberOfNodes));
+		clusterHealthRequest.waitForRelocatingShards(0);
+		clusterHealthRequest.waitForStatus(healthExpectations.status);
 
 		ActionFuture<ClusterHealthResponse> health = clusterAdminClient.health(
 			clusterHealthRequest);

@@ -147,13 +147,14 @@ public class ClusterAssert {
 		throws Exception {
 
 		IdempotentRetryAssert.retryAssert(
-			3, TimeUnit.SECONDS,
+			10, TimeUnit.MINUTES,
 			new Callable<Void>() {
 
 				@Override
 				public Void call() throws Exception {
 					ClusterHealthResponse clusterHealthResponse =
-						elasticsearchFixture.getClusterHealthResponse();
+						elasticsearchFixture.getClusterHealthResponse(
+							healthExpectations);
 
 					_assertHealth(clusterHealthResponse, healthExpectations);
 
