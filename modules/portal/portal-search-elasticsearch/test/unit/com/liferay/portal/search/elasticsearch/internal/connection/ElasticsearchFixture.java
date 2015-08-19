@@ -21,6 +21,7 @@ import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfig
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnection;
 import com.liferay.portal.search.elasticsearch.internal.cluster.ClusterSettingsContext;
 import com.liferay.portal.search.elasticsearch.internal.cluster.UnicastSettingsContributor;
+import com.liferay.portal.search.elasticsearch.settings.BaseSettingsContributor;
 
 import java.io.File;
 
@@ -41,6 +42,7 @@ import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.ClusterAdminClient;
 import org.elasticsearch.client.IndicesAdminClient;
+import org.elasticsearch.common.settings.ImmutableSettings.Builder;
 import org.elasticsearch.indices.IndexMissingException;
 
 import org.mockito.Mockito;
@@ -182,6 +184,8 @@ public class ElasticsearchFixture {
 
 		addUnicastSettingsContributor(embeddedElasticsearchConnection);
 
+		preventUnassignedReplicasWithLowSpace(embeddedElasticsearchConnection);
+
 		Props props = Mockito.mock(Props.class);
 
 		Mockito.when(
@@ -220,6 +224,22 @@ public class ElasticsearchFixture {
 		catch (Exception e) {
 			throw new IllegalStateException(e);
 		}
+	}
+
+	protected void preventUnassignedReplicasWithLowSpace(
+		EmbeddedElasticsearchConnection embeddedElasticsearchConnection) {
+
+		embeddedElasticsearchConnection.addSettingsContributor(
+			new BaseSettingsContributor(0) {
+
+				@Override
+				public void populate(Builder builder) {
+					builder.put(
+						"cluster.routing.allocation.disk.threshold_enabled",
+						"false");
+				}
+
+			});
 	}
 
 	private ClusterSettingsContext _clusterSettingsContext;
