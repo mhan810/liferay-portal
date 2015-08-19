@@ -32,7 +32,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"(destination.name=liferay/background_task_status)"},
+	property = {"destination.name=liferay/background_task_status"},
 	service = MessageListener.class
 )
 public class BackgroundTaskQueuingMessageListener extends BaseMessageListener {
