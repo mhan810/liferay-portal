@@ -14,16 +14,25 @@
 
 package com.liferay.exportimport.lifecycle;
 
+import com.liferay.portal.kernel.messaging.DestinationConfiguration;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBus;
+import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portlet.exportimport.lifecycle.ExportImportLifecycleEvent;
 import com.liferay.portlet.exportimport.lifecycle.ExportImportLifecycleEventFactory;
 import com.liferay.portlet.exportimport.lifecycle.ExportImportLifecycleManager;
 
 import java.io.Serializable;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -53,6 +62,45 @@ public class ExportImportLifecycleManagerImpl
 			message.clone());
 	}
 
+	@Activate
+	protected void activate(BundleContext bundleContext) {
+		registerDestinationConfig(
+			bundleContext, DestinationConfiguration.DESTINATION_TYPE_SERIAL,
+			DestinationNames.EXPORT_IMPORT_LIFECYCLE_EVENT_ASYNC);
+
+		registerDestinationConfig(
+			bundleContext,
+			DestinationConfiguration.DESTINATION_TYPE_SYNCHRONOUS,
+			DestinationNames.EXPORT_IMPORT_LIFECYCLE_EVENT_SYNC);
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		for (ServiceRegistration<DestinationConfiguration> serviceRegistration :
+				_serviceRegistrations) {
+
+			serviceRegistration.unregister();
+		}
+	}
+
+	protected ServiceRegistration<DestinationConfiguration>
+		registerDestinationConfig(
+			BundleContext bundleContext, String destinationType,
+			String destinationName) {
+
+		DestinationConfiguration destinationConfiguration =
+			new DestinationConfiguration(destinationType, destinationName);
+
+		ServiceRegistration<DestinationConfiguration> serviceRegistration =
+			bundleContext.registerService(
+				DestinationConfiguration.class, destinationConfiguration,
+				new HashMapDictionary<String, Object>());
+
+		_serviceRegistrations.add(serviceRegistration);
+
+		return serviceRegistration;
+	}
+
 	@Reference(unbind = "-")
 	protected void setExportImportLifecycleEventFactory(
 		ExportImportLifecycleEventFactory exportImportLifecycleEventFactory) {
@@ -68,5 +116,7 @@ public class ExportImportLifecycleManagerImpl
 	private ExportImportLifecycleEventFactory
 		_exportImportLifecycleEventFactory;
 	private MessageBus _messageBus;
+	private final Set<ServiceRegistration<DestinationConfiguration>>
+		_serviceRegistrations = new HashSet<>();
 
 }
