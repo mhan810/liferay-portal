@@ -43,12 +43,16 @@ import java.util.Map;
 public abstract class BasePublisherMessageListener
 	extends BaseMessageStatusMessageListener {
 
-	public BasePublisherMessageListener(String destinationName) {
+	public void afterPropertiesSet() {
 		SingleDestinationMessageSender singleDestinationMessageSender =
 			SingleDestinationMessageSenderFactoryUtil.
-				createSingleDestinationMessageSender(destinationName);
+				createSingleDestinationMessageSender(_destinationName);
 
 		setStatusSender(singleDestinationMessageSender);
+	}
+
+	public void setDestinationName(String destinationName) {
+		_destinationName = destinationName;
 	}
 
 	protected void initThreadLocals(
@@ -106,5 +110,7 @@ public abstract class BasePublisherMessageListener
 		PrincipalThreadLocal.setName(null);
 		ServiceContextThreadLocal.popServiceContext();
 	}
+
+	private String _destinationName;
 
 }
