@@ -47,10 +47,6 @@ import org.osgi.service.component.annotations.Reference;
 public class LayoutsRemotePublisherMessageListener
 	extends BasePublisherMessageListener {
 
-	public LayoutsRemotePublisherMessageListener() {
-		super("liferay/message_bus/message_status");
-	}
-
 	@Override
 	protected void doReceive(Message message, MessageStatus messageStatus)
 		throws PortalException {
