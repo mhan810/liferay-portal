@@ -48,6 +48,7 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchEngine;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
@@ -173,10 +174,10 @@ public class JournalArticleIndexer
 				ddmStructureFieldName, DDMIndexer.DDM_FIELD_SEPARATOR);
 
 			DDMStructure structure = _ddmStructureLocalService.getStructure(
-				GetterUtil.getLong(ddmStructureFieldNameParts[1]));
+				GetterUtil.getLong(ddmStructureFieldNameParts[2]));
 
 			String fieldName = StringUtil.replaceLast(
-				ddmStructureFieldNameParts[2],
+				ddmStructureFieldNameParts[3],
 				StringPool.UNDERLINE.concat(
 					LocaleUtil.toLanguageId(searchContext.getLocale())),
 				StringPool.BLANK);
@@ -186,14 +187,25 @@ public class JournalArticleIndexer
 					ddmStructureFieldValue, structure.getFieldType(fieldName));
 			}
 
+			String booleanQueryDDMStructureFieldValue =
+				ddmStructureFieldValue.toString();
+
+			SearchEngine searchEngine = SearchEngineUtil.getSearchEngine(
+				SearchEngineUtil.SYSTEM_ENGINE_ID);
+
+			if (!"Elasticsearch".equals(searchEngine.getVendor())) {
+				booleanQueryDDMStructureFieldValue =
+					StringPool.QUOTE + ddmStructureFieldValue + StringPool.QUOTE;
+			}
+
 			BooleanQuery booleanQuery = new BooleanQueryImpl();
 
 			booleanQuery.addRequiredTerm(
-				ddmStructureFieldName,
-				StringPool.QUOTE + ddmStructureFieldValue + StringPool.QUOTE);
+				ddmStructureFieldName, booleanQueryDDMStructureFieldValue
+			);
 
-			contextBooleanFilter.add(
-				new QueryFilter(booleanQuery), BooleanClauseOccur.MUST);
+			contextBooleanFilter.addRequiredTerm(
+				ddmStructureFieldName, booleanQueryDDMStructureFieldValue);
 		}
 
 		String articleType = (String)searchContext.getAttribute("articleType");
