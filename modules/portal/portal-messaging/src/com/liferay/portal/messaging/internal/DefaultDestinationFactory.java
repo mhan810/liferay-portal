@@ -15,6 +15,8 @@
 package com.liferay.portal.messaging.internal;
 
 import com.liferay.portal.kernel.executor.PortalExecutorManager;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.DestinationConfiguration;
 import com.liferay.portal.kernel.messaging.DestinationFactory;
@@ -147,11 +149,17 @@ public class DefaultDestinationFactory implements DestinationFactory {
 
 	@Deactivate
 	protected void deactivate() {
-		for (ServiceRegistration<Destination>
-				destinationServiceRegistration :
-					_serviceRegistrations.values()) {
+		for (Map.Entry<String, ServiceRegistration<Destination>> entry :
+				_serviceRegistrations.entrySet()) {
 
-			destinationServiceRegistration.unregister();
+			try {
+				entry.getValue().unregister();
+			}
+			catch (IllegalStateException e) {
+				if (_log.isErrorEnabled()) {
+					_log.error("Destination name: " + entry.getKey());
+				}
+			}
 		}
 
 		_serviceRegistrations.clear();
@@ -193,6 +201,9 @@ public class DefaultDestinationFactory implements DestinationFactory {
 	protected void setPortalExecutorManager(
 		PortalExecutorManager portalExecutorManager) {
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		DefaultDestinationFactory.class);
 
 	private BundleContext _bundleContext;
 	private final Map<String, DestinationPrototype> _destinationPrototypes =
