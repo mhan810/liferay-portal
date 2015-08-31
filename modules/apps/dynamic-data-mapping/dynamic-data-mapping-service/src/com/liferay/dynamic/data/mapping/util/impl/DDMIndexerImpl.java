@@ -16,6 +16,7 @@ package com.liferay.dynamic.data.mapping.util.impl;
 
 import com.liferay.dynamic.data.mapping.model.DDMFormFieldType;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.storage.Field;
 import com.liferay.dynamic.data.mapping.storage.Fields;
@@ -41,11 +42,8 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
-
 import java.math.BigDecimal;
-
 import java.text.Format;
-
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
@@ -78,7 +76,8 @@ public class DDMIndexerImpl implements DDMIndexer {
 
 				for (Locale locale : locales) {
 					String name = encodeName(
-						ddmStructure.getStructureId(), field.getName(), locale);
+						ddmStructure.getStructureId(), field.getName(), locale,
+						indexType);
 
 					Serializable value = field.getValue(locale);
 
@@ -171,12 +170,7 @@ public class DDMIndexerImpl implements DDMIndexer {
 							String[] stringArray = ArrayUtil.toStringArray(
 								jsonArray);
 
-							if (indexType.equals("keyword")) {
-								document.addKeywordSortable(name, stringArray);
-							}
-							else {
-								document.addTextSortable(name, stringArray);
-							}
+							document.addKeywordSortable(name, stringArray);
 						}
 						else {
 							if (type.equals(DDMImpl.TYPE_DDM_TEXT_HTML)) {
@@ -210,9 +204,41 @@ public class DDMIndexerImpl implements DDMIndexer {
 	public String encodeName(
 		long ddmStructureId, String fieldName, Locale locale) {
 
-		StringBundler sb = new StringBundler(7);
+		String indexType = StringPool.BLANK;
+
+		if (Validator.isNotNull(ddmStructureId)) {
+			DDMStructure ddmStructure =
+				DDMStructureLocalServiceUtil.fetchDDMStructure(ddmStructureId);
+
+			if (Validator.isNotNull(ddmStructure)) {
+				try {
+					indexType = ddmStructure.getFieldProperty(
+						fieldName, "indexType");
+				}
+				catch (PortalException e) {
+					if (_log.isWarnEnabled()) {
+						_log.warn(e, e);
+					}
+				}
+			}
+		}
+
+		return encodeName(ddmStructureId, fieldName, locale, indexType);
+	}
+	
+	protected String encodeName(
+		long ddmStructureId, String fieldName, Locale locale,
+		String indexType) {
+
+		StringBundler sb = new StringBundler(8);
 
 		sb.append(DDM_FIELD_PREFIX);
+
+		if (Validator.isNotNull(indexType)) {
+			sb.append(indexType);
+			sb.append(DDM_FIELD_SEPARATOR);
+		}
+
 		sb.append(ddmStructureId);
 		sb.append(DDM_FIELD_SEPARATOR);
 		sb.append(fieldName);
