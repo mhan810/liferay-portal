@@ -42,8 +42,11 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
+
 import java.math.BigDecimal;
+
 import java.text.Format;
+
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
@@ -225,31 +228,6 @@ public class DDMIndexerImpl implements DDMIndexer {
 
 		return encodeName(ddmStructureId, fieldName, locale, indexType);
 	}
-	
-	protected String encodeName(
-		long ddmStructureId, String fieldName, Locale locale,
-		String indexType) {
-
-		StringBundler sb = new StringBundler(8);
-
-		sb.append(DDM_FIELD_PREFIX);
-
-		if (Validator.isNotNull(indexType)) {
-			sb.append(indexType);
-			sb.append(DDM_FIELD_SEPARATOR);
-		}
-
-		sb.append(ddmStructureId);
-		sb.append(DDM_FIELD_SEPARATOR);
-		sb.append(fieldName);
-
-		if (locale != null) {
-			sb.append(StringPool.UNDERLINE);
-			sb.append(LocaleUtil.toLanguageId(locale));
-		}
-
-		return sb.toString();
-	}
 
 	@Override
 	public String extractIndexableAttributes(
@@ -329,6 +307,31 @@ public class DDMIndexerImpl implements DDMIndexer {
 					_log.warn(e, e);
 				}
 			}
+		}
+
+		return sb.toString();
+	}
+
+	protected String encodeName(
+		long ddmStructureId, String fieldName, Locale locale,
+		String indexType) {
+
+		StringBundler sb = new StringBundler(8);
+
+		sb.append(DDM_FIELD_PREFIX);
+
+		if (Validator.isNotNull(indexType)) {
+			sb.append(indexType);
+			sb.append(DDM_FIELD_SEPARATOR);
+		}
+
+		sb.append(ddmStructureId);
+		sb.append(DDM_FIELD_SEPARATOR);
+		sb.append(fieldName);
+
+		if (locale != null) {
+			sb.append(StringPool.UNDERLINE);
+			sb.append(LocaleUtil.toLanguageId(locale));
 		}
 
 		return sb.toString();
