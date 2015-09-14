@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.RelatedEntryIndexer;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchEngine;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
@@ -223,11 +224,14 @@ public class DLFileEntryIndexer
 				ddmStructureFieldName,
 				DDMStructureManager.STRUCTURE_INDEXER_FIELD_SEPARATOR);
 
+			String indexType = GetterUtil.getString(
+				ddmStructureFieldNameParts[1], "keyword");
+
 			DDMStructure ddmStructure = DDMStructureManagerUtil.getStructure(
-				GetterUtil.getLong(ddmStructureFieldNameParts[1]));
+				GetterUtil.getLong(ddmStructureFieldNameParts[2]));
 
 			String fieldName = StringUtil.replaceLast(
-				ddmStructureFieldNameParts[2],
+				ddmStructureFieldNameParts[3],
 				StringPool.UNDERLINE.concat(
 					LocaleUtil.toLanguageId(searchContext.getLocale())),
 				StringPool.BLANK);
@@ -244,14 +248,33 @@ public class DLFileEntryIndexer
 				}
 			}
 
-			BooleanQuery booleanQuery = new BooleanQueryImpl();
+			String booleanQueryDDMStructureFieldValue =
+				ddmStructureFieldValue.toString();
 
-			booleanQuery.addRequiredTerm(
-				ddmStructureFieldName,
-				StringPool.QUOTE + ddmStructureFieldValue + StringPool.QUOTE);
+			SearchEngine searchEngine = SearchEngineUtil.getSearchEngine(
+				SearchEngineUtil.SYSTEM_ENGINE_ID);
 
-			contextBooleanFilter.add(
-				new QueryFilter(booleanQuery), BooleanClauseOccur.MUST);
+			if (!"Elasticsearch".equals(searchEngine.getVendor())) {
+				booleanQueryDDMStructureFieldValue =
+					StringPool.QUOTE +
+					ddmStructureFieldValue +
+					StringPool.QUOTE;
+			}
+
+			if ("keyword".equals(indexType)) {
+				contextBooleanFilter.addRequiredTerm(
+					ddmStructureFieldName, booleanQueryDDMStructureFieldValue);
+			}
+			else {
+				BooleanQuery booleanQuery = new BooleanQueryImpl();
+
+				booleanQuery.addRequiredTerm(
+					ddmStructureFieldName, booleanQueryDDMStructureFieldValue
+				);
+
+				contextBooleanFilter.add(
+					new QueryFilter(booleanQuery), BooleanClauseOccur.MUST);
+			}
 		}
 
 		String[] mimeTypes = (String[])searchContext.getAttribute("mimeTypes");
