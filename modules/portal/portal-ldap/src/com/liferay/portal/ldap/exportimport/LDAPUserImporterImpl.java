@@ -37,7 +37,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.ldap.configuration.LDAPConfiguration;
-import com.liferay.portal.ldap.configuration.LDAPConfigurationUtil;
+import com.liferay.portal.ldap.settings.LDAPConfigurationSettingsUtil;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.model.Contact;
@@ -369,7 +369,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			}
 
 			LDAPConfiguration ldapCompanyServiceSettings =
-				LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+				LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 			_lockManager.lock(
 				defaultUserId, UserImporterUtil.class.getName(), companyId,
@@ -420,7 +420,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		_lastImportTime = System.currentTimeMillis();
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		try {
 			Properties userMappings = LDAPSettingsUtil.getUserMappings(
@@ -485,7 +485,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	@Modified
 	protected void activate(Map<String, Object> properties) {
 		LDAPConfiguration ldapConfiguration =
-			LDAPConfigurationUtil.getLDAPConfiguration(CompanyConstants.SYSTEM);
+			LDAPConfigurationSettingsUtil.getLDAPConfiguration(CompanyConstants.SYSTEM);
 
 		_ldapUserIgnoreAttributes = SetUtil.fromArray(
 			ldapConfiguration.userIgnoreAttributes());
@@ -496,7 +496,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		throws Exception {
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		if (!ldapCompanyServiceSettings.importCreateRolePerGroup()) {
 			return;
@@ -543,7 +543,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		boolean autoPassword = ldapUser.isAutoPassword();
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		if (!ldapCompanyServiceSettings.importUserPasswordEnabled()) {
 			autoPassword =
@@ -797,7 +797,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		Long userGroupId = null;
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		if (ldapCompanyServiceSettings.importGroupCacheEnabled()) {
 			StringBundler sb = new StringBundler(5);
@@ -870,7 +870,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		Set<Long> newUserGroupIds = new LinkedHashSet<>();
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		if (Validator.isNotNull(groupMappingsUser) &&
 			ldapCompanyServiceSettings.importGroupSearchFilterEnabled()) {
@@ -1267,7 +1267,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		boolean passwordReset = ldapUser.isPasswordReset();
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		if (ldapCompanyServiceSettings.exportEnabled()) {
 			passwordReset = user.isPasswordReset();

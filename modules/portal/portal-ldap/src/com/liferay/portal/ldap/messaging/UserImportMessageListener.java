@@ -19,7 +19,7 @@ import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.ldap.configuration.LDAPConfiguration;
-import com.liferay.portal.ldap.configuration.LDAPConfigurationUtil;
+import com.liferay.portal.ldap.settings.LDAPConfigurationSettingsUtil;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.security.exportimport.UserImporterUtil;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
@@ -54,7 +54,7 @@ public class UserImportMessageListener extends BaseMessageListener {
 			long companyId = company.getCompanyId();
 
 			LDAPConfiguration ldapCompanyServiceSettings =
-				LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+				LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 			if (time >= ldapCompanyServiceSettings.importInterval()) {
 				UserImporterUtil.importUsers(companyId);
