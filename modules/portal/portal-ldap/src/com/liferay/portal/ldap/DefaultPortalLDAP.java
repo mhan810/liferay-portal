@@ -14,8 +14,6 @@
 
 package com.liferay.portal.ldap;
 
-import aQute.bnd.annotation.metatype.Configurable;
-
 import com.liferay.portal.kernel.ldap.LDAPUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -32,6 +30,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.ldap.configuration.LDAPConfiguration;
+import com.liferay.portal.ldap.configuration.LDAPConfigurationUtil;
 import com.liferay.portal.ldap.exportimport.UserImportTransactionThreadLocal;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.security.ldap.LDAPSettingsUtil;
@@ -40,7 +39,6 @@ import com.liferay.portal.util.PropsValues;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.naming.Binding;
@@ -60,9 +58,7 @@ import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.PagedResultsControl;
 import javax.naming.ldap.PagedResultsResponseControl;
 
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Modified;
 
 /**
  * @author Michael Young
@@ -105,13 +101,16 @@ public class DefaultPortalLDAP implements PortalLDAP {
 			String credentials)
 		throws Exception {
 
+		LDAPConfiguration ldapCompanyServiceSettings =
+			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+
 		Properties environmentProperties = new Properties();
 
 		environmentProperties.put(
 			Context.INITIAL_CONTEXT_FACTORY,
 			PrefsPropsUtil.getString(
 				companyId, PropsKeys.LDAP_FACTORY_INITIAL,
-				_ldapConfiguration.factoryInitial()));
+				ldapCompanyServiceSettings.factoryInitial()));
 		environmentProperties.put(Context.PROVIDER_URL, providerURL);
 		environmentProperties.put(Context.SECURITY_PRINCIPAL, principal);
 		environmentProperties.put(Context.SECURITY_CREDENTIALS, credentials);
@@ -119,7 +118,7 @@ public class DefaultPortalLDAP implements PortalLDAP {
 			Context.REFERRAL,
 			PrefsPropsUtil.getString(
 				companyId, PropsKeys.LDAP_REFERRAL,
-				_ldapConfiguration.referral()));
+				ldapCompanyServiceSettings.referral()));
 
 		Properties ldapConnectionProperties = PropsUtil.getProperties(
 			PropsKeys.LDAP_CONNECTION_PROPERTY_PREFIX, true);
@@ -396,7 +395,12 @@ public class DefaultPortalLDAP implements PortalLDAP {
 			return attribute;
 		}
 
-		String[] attributeIds = {_getNextRange(attribute.getID())};
+		LDAPConfiguration ldapCompanyServiceSettings =
+			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+
+		String[] attributeIds = {
+			_getNextRange(ldapCompanyServiceSettings, attribute.getID())
+		};
 
 		while (true) {
 			List<SearchResult> searchResults = new ArrayList<>();
@@ -435,7 +439,7 @@ public class DefaultPortalLDAP implements PortalLDAP {
 				if (StringUtil.endsWith(
 						curAttribute.getID(), StringPool.STAR) ||
 					(curAttribute.size() <
-						_ldapConfiguration.rangeSize())) {
+						ldapCompanyServiceSettings.rangeSize())) {
 
 					break;
 				}
@@ -446,7 +450,8 @@ public class DefaultPortalLDAP implements PortalLDAP {
 				}
 			}
 
-			attributeIds[0] = _getNextRange(attributeIds[0]);
+			attributeIds[0] = _getNextRange(
+				ldapCompanyServiceSettings, attributeIds[0]);
 		}
 
 		return attribute;
@@ -849,18 +854,22 @@ public class DefaultPortalLDAP implements PortalLDAP {
 
 		try {
 			if (cookie != null) {
+				LDAPConfiguration ldapCompanyServiceSettings =
+					LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+
 				if (cookie.length == 0) {
 					ldapContext.setRequestControls(
 						new Control[] {
 							new PagedResultsControl(
-								_ldapConfiguration.pageSize(), Control.CRITICAL)
+								ldapCompanyServiceSettings.pageSize(),
+								Control.CRITICAL)
 						});
 				}
 				else {
 					ldapContext.setRequestControls(
 						new Control[] {
 							new PagedResultsControl(
-								_ldapConfiguration.pageSize(), cookie,
+								ldapCompanyServiceSettings.pageSize(), cookie,
 								Control.CRITICAL)
 						});
 				}
@@ -896,13 +905,6 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		}
 
 		return null;
-	}
-
-	@Activate
-	@Modified
-	protected void activate(Map<String, Object> properties) {
-		_ldapConfiguration = Configurable.createConfigurable(
-			LDAPConfiguration.class, properties);
 	}
 
 	private Attributes _getAttributes(
@@ -980,7 +982,9 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		return null;
 	}
 
-	private String _getNextRange(String attributeId) {
+	private String _getNextRange(
+		LDAPConfiguration ldapCompanyServiceSettings, String attributeId) {
+
 		String originalAttributeId = null;
 		int start = 0;
 		int end = 0;
@@ -989,7 +993,7 @@ public class DefaultPortalLDAP implements PortalLDAP {
 
 		if (x < 0) {
 			originalAttributeId = attributeId;
-			end = _ldapConfiguration.rangeSize() - 1;
+			end = ldapCompanyServiceSettings.rangeSize() - 1;
 		}
 		else {
 			int y = attributeId.indexOf(CharPool.EQUAL, x);
@@ -999,8 +1003,8 @@ public class DefaultPortalLDAP implements PortalLDAP {
 			start = GetterUtil.getInteger(attributeId.substring(y + 1, z));
 			end = GetterUtil.getInteger(attributeId.substring(z + 1));
 
-			start += _ldapConfiguration.rangeSize();
-			end += _ldapConfiguration.rangeSize();
+			start += ldapCompanyServiceSettings.rangeSize();
+			end += ldapCompanyServiceSettings.rangeSize();
 		}
 
 		StringBundler sb = new StringBundler(6);
@@ -1017,7 +1021,5 @@ public class DefaultPortalLDAP implements PortalLDAP {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultPortalLDAP.class);
-
-	private volatile LDAPConfiguration _ldapConfiguration;
 
 }
