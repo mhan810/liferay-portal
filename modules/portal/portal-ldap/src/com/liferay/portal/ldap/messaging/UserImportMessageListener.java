@@ -15,13 +15,30 @@
 package com.liferay.portal.ldap.messaging;
 
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
+import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageListener;
+import com.liferay.portal.ldap.configuration.LDAPConfiguration;
+import com.liferay.portal.ldap.configuration.LDAPConfigurationUtil;
+import com.liferay.portal.model.Company;
 import com.liferay.portal.security.exportimport.UserImporterUtil;
-import com.liferay.portal.util.PropsValues;
+import com.liferay.portal.service.CompanyLocalServiceUtil;
+
+import java.util.List;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Shuyang Zhou
  */
+@Component(
+	immediate = true,
+	property = {
+		"destination.name=" + DestinationNames.SCHEDULED_USER_LDAP_IMPORT
+	},
+	service = MessageListener.class
+)
 public class UserImportMessageListener extends BaseMessageListener {
 
 	@Override
@@ -31,9 +48,25 @@ public class UserImportMessageListener extends BaseMessageListener {
 
 		time = Math.round(time / 60000.0);
 
-		if (time >= PropsValues.LDAP_IMPORT_INTERVAL) {
-			UserImporterUtil.importUsers();
+		List<Company> companies = CompanyLocalServiceUtil.getCompanies(false);
+
+		for (Company company : companies) {
+			long companyId = company.getCompanyId();
+
+			LDAPConfiguration ldapCompanyServiceSettings =
+				LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+
+			if (time >= ldapCompanyServiceSettings.importInterval()) {
+				UserImporterUtil.importUsers(companyId);
+			}
 		}
+	}
+
+	@Reference(
+		target = "(destination.name=" + DestinationNames.SCHEDULED_USER_LDAP_IMPORT + ")",
+		unbind = "-"
+	)
+	protected void setDestination(Destination destination) {
 	}
 
 }
