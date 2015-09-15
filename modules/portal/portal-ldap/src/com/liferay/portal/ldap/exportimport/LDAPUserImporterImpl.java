@@ -616,8 +616,11 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	}
 
 	protected User getUser(long companyId, LDAPUser ldapUser) throws Exception {
+		LDAPConfiguration ldapCompanyServiceSettings =
+			_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+
 		if (Validator.equals(
-				PropsValues.LDAP_IMPORT_USER_SYNC_STRATEGY,
+				ldapCompanyServiceSettings.importUserSyncStrategy(),
 				_USER_SYNC_STRATEGY_UUID)) {
 
 			ServiceContext serviceContext = ldapUser.getServiceContext();
