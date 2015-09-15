@@ -108,17 +108,12 @@ public class DefaultPortalLDAP implements PortalLDAP {
 
 		environmentProperties.put(
 			Context.INITIAL_CONTEXT_FACTORY,
-			PrefsPropsUtil.getString(
-				companyId, PropsKeys.LDAP_FACTORY_INITIAL,
-				ldapCompanyServiceSettings.factoryInitial()));
+			ldapCompanyServiceSettings.factoryInitial());
 		environmentProperties.put(Context.PROVIDER_URL, providerURL);
 		environmentProperties.put(Context.SECURITY_PRINCIPAL, principal);
 		environmentProperties.put(Context.SECURITY_CREDENTIALS, credentials);
 		environmentProperties.put(
-			Context.REFERRAL,
-			PrefsPropsUtil.getString(
-				companyId, PropsKeys.LDAP_REFERRAL,
-				ldapCompanyServiceSettings.referral()));
+			Context.REFERRAL, ldapCompanyServiceSettings.referral());
 
 		Properties ldapConnectionProperties = PropsUtil.getProperties(
 			PropsKeys.LDAP_CONNECTION_PROPERTY_PREFIX, true);

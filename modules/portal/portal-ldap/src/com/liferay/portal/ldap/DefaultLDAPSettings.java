@@ -189,18 +189,7 @@ public class DefaultLDAPSettings implements LDAPSettings {
 			return false;
 		}
 
-		boolean defaultLDAPExportEnabled =
-			ldapCompanyServiceSettings.exportEnabled();
-
-		if (PrefsPropsUtil.getBoolean(
-				companyId, PropsKeys.LDAP_EXPORT_ENABLED,
-				defaultLDAPExportEnabled)) {
-
-			return true;
-		}
-		else {
-			return false;
-		}
+		return ldapCompanyServiceSettings.exportEnabled();
 	}
 
 	@Override
@@ -208,18 +197,7 @@ public class DefaultLDAPSettings implements LDAPSettings {
 		LDAPConfiguration ldapCompanyServiceSettings =
 			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
 
-		boolean defaultLDAPExportGroupEnabled =
-			ldapCompanyServiceSettings.exportGroupEnabled();
-
-		if (PrefsPropsUtil.getBoolean(
-				companyId, PropsKeys.LDAP_EXPORT_GROUP_ENABLED,
-				defaultLDAPExportGroupEnabled)) {
-
-			return true;
-		}
-		else {
-			return false;
-		}
+		return ldapCompanyServiceSettings.exportGroupEnabled();
 	}
 
 	@Override
@@ -227,18 +205,7 @@ public class DefaultLDAPSettings implements LDAPSettings {
 		LDAPConfiguration ldapCompanyServiceSettings =
 			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
 
-		boolean defaultLDAPImportEnabled =
-			ldapCompanyServiceSettings.importEnabled();
-
-		if (PrefsPropsUtil.getBoolean(
-				companyId, PropsKeys.LDAP_IMPORT_ENABLED,
-				defaultLDAPImportEnabled)) {
-
-			return true;
-		}
-		else {
-			return false;
-		}
+		return ldapCompanyServiceSettings.importEnabled();
 	}
 
 	@Override
@@ -246,15 +213,7 @@ public class DefaultLDAPSettings implements LDAPSettings {
 		LDAPConfiguration ldapCompanyServiceSettings =
 			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
 
-		if (PrefsPropsUtil.getBoolean(
-				companyId, PropsKeys.LDAP_IMPORT_ON_STARTUP,
-				ldapCompanyServiceSettings.importOnStartup())) {
-
-			return true;
-		}
-		else {
-			return false;
-		}
+		return ldapCompanyServiceSettings.importOnStartup();
 	}
 
 	@Override
@@ -262,18 +221,7 @@ public class DefaultLDAPSettings implements LDAPSettings {
 		LDAPConfiguration ldapCompanyServiceSettings =
 			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
 
-		boolean defaultLDAPPasswordPolicyEnabled =
-			ldapCompanyServiceSettings.passwordPolicyEnabled();
-
-		if (PrefsPropsUtil.getBoolean(
-				companyId, PropsKeys.LDAP_PASSWORD_POLICY_ENABLED,
-				defaultLDAPPasswordPolicyEnabled)) {
-
-			return true;
-		}
-		else {
-			return false;
-		}
+		return ldapCompanyServiceSettings.passwordPolicyEnabled();
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
