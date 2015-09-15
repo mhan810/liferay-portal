@@ -14,8 +14,6 @@
 
 package com.liferay.portal.ldap.exportimport;
 
-import aQute.bnd.annotation.metatype.Configurable;
-
 import com.liferay.portal.NoSuchRoleException;
 import com.liferay.portal.NoSuchUserGroupException;
 import com.liferay.portal.kernel.bean.BeanPropertiesUtil;
@@ -438,9 +436,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			Properties groupMappings = LDAPSettingsUtil.getGroupMappings(
 				ldapServerId, companyId);
 
-			String importMethod = PrefsPropsUtil.getString(
-				companyId, PropsKeys.LDAP_IMPORT_METHOD,
-				ldapCompanyServiceSettings.importMethod());
+			String importMethod = ldapCompanyServiceSettings.importMethod();
 
 			if (importMethod.equals(_IMPORT_BY_GROUP)) {
 				importFromLDAPByGroup(
@@ -488,8 +484,8 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
-		LDAPConfiguration ldapConfiguration = Configurable.createConfigurable(
-			LDAPConfiguration.class, properties);
+		LDAPConfiguration ldapConfiguration =
+			LDAPConfigurationUtil.getLDAPConfiguration(CompanyConstants.SYSTEM);
 
 		_ldapUserIgnoreAttributes = SetUtil.fromArray(
 			ldapConfiguration.userIgnoreAttributes());
@@ -877,9 +873,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
 
 		if (Validator.isNotNull(groupMappingsUser) &&
-			PrefsPropsUtil.getBoolean(
-				companyId, PropsKeys.LDAP_IMPORT_GROUP_SEARCH_FILTER_ENABLED,
-				ldapCompanyServiceSettings.importGroupSearchFilterEnabled())) {
+			ldapCompanyServiceSettings.importGroupSearchFilterEnabled()) {
 
 			String postfix = LDAPSettingsUtil.getPropertyPostfix(ldapServerId);
 
@@ -1275,10 +1269,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		LDAPConfiguration ldapCompanyServiceSettings =
 			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
 
-		if (PrefsPropsUtil.getBoolean(
-				companyId, PropsKeys.LDAP_EXPORT_ENABLED,
-				ldapCompanyServiceSettings.exportEnabled())) {
-
+		if (ldapCompanyServiceSettings.exportEnabled()) {
 			passwordReset = user.isPasswordReset();
 		}
 
