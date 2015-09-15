@@ -30,7 +30,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.ldap.configuration.LDAPConfiguration;
-import com.liferay.portal.ldap.configuration.LDAPConfigurationUtil;
+import com.liferay.portal.ldap.settings.LDAPConfigurationSettingsUtil;
 import com.liferay.portal.ldap.exportimport.UserImportTransactionThreadLocal;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.security.ldap.LDAPSettingsUtil;
@@ -102,7 +102,7 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		throws Exception {
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		Properties environmentProperties = new Properties();
 
@@ -391,7 +391,7 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		}
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		String[] attributeIds = {
 			_getNextRange(ldapCompanyServiceSettings, attribute.getID())
@@ -850,7 +850,7 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		try {
 			if (cookie != null) {
 				LDAPConfiguration ldapCompanyServiceSettings =
-					LDAPConfigurationUtil.getLDAPConfiguration(companyId);
+					LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 				if (cookie.length == 0) {
 					ldapContext.setRequestControls(

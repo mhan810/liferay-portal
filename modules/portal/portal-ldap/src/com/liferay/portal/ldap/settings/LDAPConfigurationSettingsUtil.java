@@ -12,12 +12,12 @@
  * details.
  */
 
-package com.liferay.portal.ldap.configuration;
+package com.liferay.portal.ldap.settings;
 
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.module.configuration.ConfigurationFactory;
 import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;
-import com.liferay.portal.ldap.settings.SettingsConstants;
+import com.liferay.portal.ldap.configuration.LDAPConfiguration;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -26,7 +26,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Michael C. Han
  */
 @Component(immediate = true)
-public class LDAPConfigurationUtil {
+public class LDAPConfigurationSettingsUtil {
 
 	public static LDAPConfiguration getLDAPConfiguration(long companyId) {
 		try {
