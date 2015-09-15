@@ -30,8 +30,8 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.ldap.configuration.LDAPConfiguration;
-import com.liferay.portal.ldap.settings.LDAPConfigurationSettingsUtil;
 import com.liferay.portal.ldap.exportimport.UserImportTransactionThreadLocal;
+import com.liferay.portal.ldap.settings.LDAPConfigurationSettingsUtil;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.security.ldap.LDAPSettingsUtil;
 import com.liferay.portal.security.ldap.PortalLDAP;
@@ -59,6 +59,7 @@ import javax.naming.ldap.PagedResultsControl;
 import javax.naming.ldap.PagedResultsResponseControl;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael Young
@@ -102,7 +103,7 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		throws Exception {
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+			_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		Properties environmentProperties = new Properties();
 
@@ -391,7 +392,7 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		}
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+			_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		String[] attributeIds = {
 			_getNextRange(ldapCompanyServiceSettings, attribute.getID())
@@ -850,7 +851,8 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		try {
 			if (cookie != null) {
 				LDAPConfiguration ldapCompanyServiceSettings =
-					LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+					_ldapConfigurationSettingsUtil.getLDAPConfiguration(
+						companyId);
 
 				if (cookie.length == 0) {
 					ldapContext.setRequestControls(
@@ -900,6 +902,13 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		}
 
 		return null;
+	}
+
+	@Reference(unbind = "-")
+	protected void setLdapConfigurationSettingsUtil(
+		LDAPConfigurationSettingsUtil ldapConfigurationSettingsUtil) {
+
+		_ldapConfigurationSettingsUtil = ldapConfigurationSettingsUtil;
 	}
 
 	private Attributes _getAttributes(
@@ -1016,5 +1025,7 @@ public class DefaultPortalLDAP implements PortalLDAP {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultPortalLDAP.class);
+
+	private LDAPConfigurationSettingsUtil _ldapConfigurationSettingsUtil;
 
 }

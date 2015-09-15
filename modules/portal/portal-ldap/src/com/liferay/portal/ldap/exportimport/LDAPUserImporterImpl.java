@@ -369,7 +369,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			}
 
 			LDAPConfiguration ldapCompanyServiceSettings =
-				LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+				_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 			_lockManager.lock(
 				defaultUserId, UserImporterUtil.class.getName(), companyId,
@@ -420,7 +420,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		_lastImportTime = System.currentTimeMillis();
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+			_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		try {
 			Properties userMappings = LDAPSettingsUtil.getUserMappings(
@@ -485,7 +485,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	@Modified
 	protected void activate(Map<String, Object> properties) {
 		LDAPConfiguration ldapConfiguration =
-			LDAPConfigurationSettingsUtil.getLDAPConfiguration(CompanyConstants.SYSTEM);
+			_ldapConfigurationSettingsUtil.getLDAPConfiguration();
 
 		_ldapUserIgnoreAttributes = SetUtil.fromArray(
 			ldapConfiguration.userIgnoreAttributes());
@@ -496,7 +496,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		throws Exception {
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+			_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		if (!ldapCompanyServiceSettings.importCreateRolePerGroup()) {
 			return;
@@ -543,7 +543,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		boolean autoPassword = ldapUser.isAutoPassword();
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+			_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		if (!ldapCompanyServiceSettings.importUserPasswordEnabled()) {
 			autoPassword =
@@ -797,7 +797,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		Long userGroupId = null;
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+			_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		if (ldapCompanyServiceSettings.importGroupCacheEnabled()) {
 			StringBundler sb = new StringBundler(5);
@@ -870,7 +870,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		Set<Long> newUserGroupIds = new LinkedHashSet<>();
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+			_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		if (Validator.isNotNull(groupMappingsUser) &&
 			ldapCompanyServiceSettings.importGroupSearchFilterEnabled()) {
@@ -1200,6 +1200,13 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	}
 
 	@Reference(unbind = "-")
+	protected void setLdapConfigurationSettingsUtil(
+		LDAPConfigurationSettingsUtil ldapConfigurationSettingsUtil) {
+
+		_ldapConfigurationSettingsUtil = ldapConfigurationSettingsUtil;
+	}
+
+	@Reference(unbind = "-")
 	protected void setLockManager(LockManager lockManager) {
 		_lockManager = lockManager;
 	}
@@ -1267,7 +1274,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		boolean passwordReset = ldapUser.isPasswordReset();
 
 		LDAPConfiguration ldapCompanyServiceSettings =
-			LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+			_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 		if (ldapCompanyServiceSettings.exportEnabled()) {
 			passwordReset = user.isPasswordReset();
@@ -1411,6 +1418,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 
 	private AttributesTransformer _attributesTransformer;
 	private long _lastImportTime;
+	private LDAPConfigurationSettingsUtil _ldapConfigurationSettingsUtil;
 	private LDAPToPortalConverter _ldapToPortalConverter;
 	private Set<String> _ldapUserIgnoreAttributes;
 	private LockManager _lockManager;
