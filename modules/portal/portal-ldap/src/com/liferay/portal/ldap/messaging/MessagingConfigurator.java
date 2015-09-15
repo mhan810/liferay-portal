@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.scheduler.Trigger;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.ldap.configuration.LDAPConfiguration;
 import com.liferay.portal.ldap.settings.LDAPConfigurationSettingsUtil;
-import com.liferay.portal.model.CompanyConstants;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -62,7 +61,7 @@ public class MessagingConfigurator {
 			new HashMapDictionary<String, Object>());
 
 		LDAPConfiguration ldapConfiguration =
-			LDAPConfigurationSettingsUtil.getLDAPConfiguration(CompanyConstants.SYSTEM);
+			_ldapConfigurationSettingsUtil.getLDAPConfiguration();
 
 		try {
 			_schedulerEngineHelper.unschedule(
@@ -117,6 +116,13 @@ public class MessagingConfigurator {
 	}
 
 	@Reference(unbind = "-")
+	protected void setLdapConfigurationSettingsUtil(
+		LDAPConfigurationSettingsUtil ldapConfigurationSettingsUtil) {
+
+		_ldapConfigurationSettingsUtil = ldapConfigurationSettingsUtil;
+	}
+
+	@Reference(unbind = "-")
 	protected void setSchedulerEngineHelper(
 		SchedulerEngineHelper schedulerEngineHelper) {
 
@@ -126,6 +132,7 @@ public class MessagingConfigurator {
 	private static final Log _log = LogFactoryUtil.getLog(
 		MessagingConfigurator.class);
 
+	private LDAPConfigurationSettingsUtil _ldapConfigurationSettingsUtil;
 	private SchedulerEngineHelper _schedulerEngineHelper;
 	private ServiceRegistration<DestinationConfiguration> _serviceRegistration;
 

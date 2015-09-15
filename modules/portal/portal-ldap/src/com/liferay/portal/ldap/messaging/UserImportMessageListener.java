@@ -54,7 +54,7 @@ public class UserImportMessageListener extends BaseMessageListener {
 			long companyId = company.getCompanyId();
 
 			LDAPConfiguration ldapCompanyServiceSettings =
-				LDAPConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+				_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 			if (time >= ldapCompanyServiceSettings.importInterval()) {
 				UserImporterUtil.importUsers(companyId);
@@ -68,5 +68,14 @@ public class UserImportMessageListener extends BaseMessageListener {
 	)
 	protected void setDestination(Destination destination) {
 	}
+
+	@Reference(unbind = "-")
+	protected void setLdapConfigurationSettingsUtil(
+		LDAPConfigurationSettingsUtil ldapConfigurationSettingsUtil) {
+
+		_ldapConfigurationSettingsUtil = ldapConfigurationSettingsUtil;
+	}
+
+	private LDAPConfigurationSettingsUtil _ldapConfigurationSettingsUtil;
 
 }
