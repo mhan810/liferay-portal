@@ -1128,7 +1128,9 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			userGroupId);
 
 		for (User user : userGroupUsers) {
-			if (!newUserIds.contains(user.getUserId())) {
+			if (!newUserIds.contains(user.getUserId()) &&
+				(ldapServerId == user.getLdapServerId())) {
+
 				UserLocalServiceUtil.deleteUserGroupUser(
 					userGroupId, user.getUserId());
 			}
