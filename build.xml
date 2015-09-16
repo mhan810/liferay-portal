@@ -337,6 +337,7 @@
 		<gradle-execute dir="${project.dir}/modules" task="deploy">
 			<arg value="--parallel" />
 			<arg value="-Dportal.build=true" />
+			<env key="WAS_HOME" value="${app.server.websphere.dir}" />
 		</gradle-execute>
 
 		<stopwatch action="elapsed" name="modules.stopwatch" />
