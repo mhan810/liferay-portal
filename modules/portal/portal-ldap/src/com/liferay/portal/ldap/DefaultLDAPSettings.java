@@ -27,7 +27,7 @@ import com.liferay.portal.ldap.configuration.LDAPConfiguration;
 import com.liferay.portal.ldap.settings.LDAPConfigurationSettingsUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.ldap.LDAPSettings;
-import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.service.UserLocalService;
 
 import java.util.Properties;
 
@@ -129,7 +129,7 @@ public class DefaultLDAPSettings implements LDAPSettings {
 
 	@Override
 	public long getPreferredLDAPServerId(long companyId, String screenName) {
-		User user = UserLocalServiceUtil.fetchUserByScreenName(
+		User user = _userLocalService.fetchUserByScreenName(
 			companyId, screenName);
 
 		if (user == null) {
@@ -232,9 +232,15 @@ public class DefaultLDAPSettings implements LDAPSettings {
 		_ldapConfigurationSettingsUtil = ldapConfigurationSettingsUtil;
 	}
 
+	@Reference(unbind = "-")
+	protected void setUserLocalService(UserLocalService userLocalService) {
+		_userLocalService = userLocalService;
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultLDAPSettings.class);
 
 	private LDAPConfigurationSettingsUtil _ldapConfigurationSettingsUtil;
+	private UserLocalService _userLocalService;
 
 }
