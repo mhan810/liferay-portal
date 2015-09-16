@@ -2231,35 +2231,25 @@ and put it in ${app.server.parent.dir}. Then rerun this task.
 			</elseif>
 		</if>
 
-		<if>
-			<or>
-				<not>
-					<available file="${app.server.parent.dir}/${app.server.websphere.fix.pack.jdk.name}" />
-				</not>
-				<not>
-					<available file="${app.server.parent.dir}/${app.server.websphere.fix.pack.was.name}" />
-				</not>
-				<not>
-					<available file="${app.server.parent.dir}/${app.server.websphere.update.installer.zip.name}" />
-				</not>
-				<not>
-					<available file="${app.server.parent.dir}/${app.server.websphere.zip.name}" />
-				</not>
-			</or>
-			<then>
-				<mkdir dir="${app.server.parent.dir}" />
+		<for list="${app.server.websphere.repo.zip.names}" param="app.server.websphere.repo.zip.name">
+			<sequential>
+				<if>
+					<not>
+						<available file="${app.server.parent.dir}/@{app.server.websphere.repo.zip.name}" />
+					</not>
+					<then>
+						<mkdir dir="${app.server.parent.dir}" />
 
-				<fail>
+						<fail>
 .
 
-Please download ${app.server.websphere.fix.pack.jdk.name},
-${app.server.websphere.fix.pack.was.name},
-${app.server.websphere.update.installer.zip.name}, and
-${app.server.websphere.zip.name} from ${app.server.websphere.zip.url} and put
-them in ${app.server.parent.dir}. Then rerun this task.
-				</fail>
-			</then>
-		</if>
+Please download @{app.server.websphere.repo.zip.name} from ${app.server.websphere.zip.url}
+and put it in ${app.server.parent.dir}. Then rerun this task.
+						</fail>
+					</then>
+				</if>
+			</sequential>
+		</for>
 
 		<delete dir="${app.server.websphere.dir}" />
 
@@ -2311,10 +2301,14 @@ them in ${app.server.parent.dir}. Then rerun this task.
 			<format property="tstamp.value" pattern="yyyyMMddkkmmssSSS" />
 		</tstamp>
 
-		<unzip
-			dest="${tstamp.value}/was"
-			src="${app.server.parent.dir}/${app.server.websphere.zip.name}"
-		/>
+		<for list="${app.server.websphere.repo.zip.names}" param="app.server.websphere.repo.zip.name">
+			<sequential>
+				<unzip
+					dest="${tstamp.value}/was"
+					src="${app.server.parent.dir}/@{app.server.websphere.repo.zip.name}"
+				/>
+			</sequential>
+		</for>
 
 		<echo file="${tstamp.value}/was/WAS/liferay-responsefile.txt">
 			-OPT disableOSPrereqChecking="true"
