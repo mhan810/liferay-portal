@@ -21,8 +21,8 @@ import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.ldap.configuration.LDAPConfiguration;
 import com.liferay.portal.ldap.settings.LDAPConfigurationSettingsUtil;
 import com.liferay.portal.model.Company;
-import com.liferay.portal.security.exportimport.UserImporterUtil;
-import com.liferay.portal.service.CompanyLocalServiceUtil;
+import com.liferay.portal.security.ldap.LDAPUserImporter;
+import com.liferay.portal.service.CompanyLocalService;
 
 import java.util.List;
 
@@ -44,11 +44,11 @@ public class UserImportMessageListener extends BaseMessageListener {
 	@Override
 	protected void doReceive(Message message) throws Exception {
 		long time =
-			System.currentTimeMillis() - UserImporterUtil.getLastImportTime();
+			System.currentTimeMillis() - _ldapUserImporter.getLastImportTime();
 
 		time = Math.round(time / 60000.0);
 
-		List<Company> companies = CompanyLocalServiceUtil.getCompanies(false);
+		List<Company> companies = _companyLocalService.getCompanies(false);
 
 		for (Company company : companies) {
 			long companyId = company.getCompanyId();
@@ -57,9 +57,16 @@ public class UserImportMessageListener extends BaseMessageListener {
 				_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
 
 			if (time >= ldapCompanyServiceSettings.importInterval()) {
-				UserImporterUtil.importUsers(companyId);
+				_ldapUserImporter.importUsers(companyId);
 			}
 		}
+	}
+
+	@Reference(unbind = "-")
+	protected void setCompanyLocalService(
+		CompanyLocalService companyLocalService) {
+
+		_companyLocalService = companyLocalService;
 	}
 
 	@Reference(
@@ -76,6 +83,13 @@ public class UserImportMessageListener extends BaseMessageListener {
 		_ldapConfigurationSettingsUtil = ldapConfigurationSettingsUtil;
 	}
 
+	@Reference(unbind = "-")
+	protected void setLdapUserImporter(LDAPUserImporter ldapUserImporter) {
+		_ldapUserImporter = ldapUserImporter;
+	}
+
+	private CompanyLocalService _companyLocalService;
 	private LDAPConfigurationSettingsUtil _ldapConfigurationSettingsUtil;
+	private LDAPUserImporter _ldapUserImporter;
 
 }
