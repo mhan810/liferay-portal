@@ -2346,45 +2346,6 @@ and put it in ${app.server.parent.dir}. Then rerun this task.
 			<replacevalue><![CDATA[disableJIT="false" maximumHeapSize="1024">]]></replacevalue>
 		</replace>
 
-		<unzip
-			dest="${tstamp.value}/updi"
-			src="${app.server.parent.dir}/${app.server.websphere.update.installer.zip.name}"
-		/>
-
-		<echo file="${tstamp.value}/updi/UpdateInstaller/liferay-responsefile.txt">
-			-OPT installLocation="${app.server.websphere.dir}/UpdateInstaller"
-			-OPT silentInstallLicenseAcceptance="true"
-			-OPT skipStartMenu=true
-		</echo>
-
-		<echo>Installing update installer.</echo>
-
-		<exec dir="${tstamp.value}/updi/UpdateInstaller" executable="cmd.exe">
-			<arg line="/c install.exe -options liferay-responsefile.txt -silent" />
-		</exec>
-
-		<echo file="${app.server.websphere.dir}/UpdateInstaller/liferay-responsefile.txt">
-			-W maintenance.package="${app.server.parent.dir}/${app.server.websphere.fix.pack.jdk.name};${app.server.parent.dir}/${app.server.websphere.fix.pack.was.name}"
-			-W product.location="${app.server.websphere.dir}"
-			-W update.type="install"
-		</echo>
-
-		<echo>Installing fix pack.</echo>
-
-		<if>
-			<available file="${app.server.websphere.dir}/UpdateInstaller/update.exe" />
-			<then>
-				<property name="update.executable" value="update.exe" />
-			</then>
-			<else>
-				<property name="update.executable" value="update.bat" />
-			</else>
-		</if>
-
-		<exec dir="${app.server.websphere.dir}/UpdateInstaller" executable="cmd.exe">
-			<arg line="/c ${update.executable} -options liferay-responsefile.txt -silent" />
-		</exec>
-
 		<delete dir="${tstamp.value}" />
 	</target>
 
