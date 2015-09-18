@@ -2184,37 +2184,38 @@ closeTemplate()
 	<target name="unzip-websphere-custom">
 		<remake-dir dir="${app.server.websphere.dir}" />
 
-		<!--<unzip
+		<unzip
 			dest="${app.server.websphere.dir}"
 			src="${app.server.parent.dir}/${app.server.websphere.custom.zip.name}"
-		/>-->
-
-		<exec executable="cmd">
-			<arg line="/c 7z x ${app.server.parent.dir}/${app.server.websphere.custom.zip.name} -o${app.server.websphere.dir.windows} -y > nul" />
-		</exec>
-
-		<propertyregex
-			input="${app.server.websphere.dir.windows}"
-			property="app.server.websphere.dir.windows.double.slash"
-			regexp="\\"
-			replace="\\\\\\\\"
 		/>
 
-		<propertyregex
-			input="${app.server.websphere.dir.windows.double.slash}"
-			property="app.server.websphere.dir.windows.escaped"
-			regexp=":"
-			replace="\\\\:"
-		/>
+		<if>
+			<os family="windows" />
+			<then>
+				<propertyregex
+					input="${app.server.websphere.dir.windows}"
+					property="app.server.websphere.dir.windows.double.slash"
+					regexp="\\"
+					replace="\\\\\\\\"
+				/>
 
-		<replace
-			dir="${app.server.websphere.dir}"
-			includes="**/*.bat,**/*.js,**/*.metadata,**/*.properties,**/*.props,**/*.txt,**/*.xml"
-		>
-			<replacefilter token="@app.server.websphere.dir@" value="${app.server.websphere.dir}" />
-			<replacefilter token="@app.server.websphere.dir.windows@" value="${app.server.websphere.dir.windows}" />
-			<replacefilter token="@app.server.websphere.dir.windows.escaped@" value="${app.server.websphere.dir.windows.escaped}" />
-		</replace>
+				<propertyregex
+					input="${app.server.websphere.dir.windows.double.slash}"
+					property="app.server.websphere.dir.windows.escaped"
+					regexp=":"
+					replace="\\\\:"
+				/>
+
+				<replace
+					dir="${app.server.websphere.dir}"
+					includes="**/*.bat,**/*.js,**/*.metadata,**/*.properties,**/*.props,**/*.txt,**/*.xml"
+				>
+					<replacefilter token="@app.server.websphere.dir@" value="${app.server.websphere.dir}" />
+					<replacefilter token="@app.server.websphere.dir.windows@" value="${app.server.websphere.dir.windows}" />
+					<replacefilter token="@app.server.websphere.dir.windows.escaped@" value="${app.server.websphere.dir.windows.escaped}" />
+				</replace>
+			</then>
+		</if>
 	</target>
 
 	<target name="unzip-websphere-original">
@@ -3368,28 +3369,33 @@ plugins.includes=</echo>
 			<fileset dir="${app.server.websphere.dir}" includes="logs/**" />
 		</delete>
 
-		<propertyregex
-			input="${app.server.websphere.dir.windows}"
-			property="app.server.websphere.dir.windows.double.slash"
-			regexp="\\"
-			replace="\\\\\\\\"
-		/>
+		<if>
+			<os family="windows" />
+			<then>
+				<propertyregex
+					input="${app.server.websphere.dir.windows}"
+					property="app.server.websphere.dir.windows.double.slash"
+					regexp="\\"
+					replace="\\\\\\\\"
+				/>
 
-		<propertyregex
-			input="${app.server.websphere.dir.windows.double.slash}"
-			property="app.server.websphere.dir.windows.escaped"
-			regexp=":"
-			replace="\\\\:"
-		/>
+				<propertyregex
+					input="${app.server.websphere.dir.windows.double.slash}"
+					property="app.server.websphere.dir.windows.escaped"
+					regexp=":"
+					replace="\\\\:"
+				/>
 
-		<replace
-			dir="${app.server.websphere.dir}"
-			includes="**/*.bat,**/*.js,**/*.metadata,**/*.properties,**/*.props,**/*.txt,**/*.xml"
-		>
-			<replacefilter token="${app.server.websphere.dir}" value="@app.server.websphere.dir@" />
-			<replacefilter token="${app.server.websphere.dir.windows}" value="@app.server.websphere.dir.windows@" />
-			<replacefilter token="${app.server.websphere.dir.windows.escaped}" value="@app.server.websphere.dir.windows.escaped@" />
-		</replace>
+				<replace
+					dir="${app.server.websphere.dir}"
+					includes="**/*.bat,**/*.js,**/*.metadata,**/*.properties,**/*.props,**/*.txt,**/*.xml"
+				>
+					<replacefilter token="${app.server.websphere.dir}" value="@app.server.websphere.dir@" />
+					<replacefilter token="${app.server.websphere.dir.windows}" value="@app.server.websphere.dir.windows@" />
+					<replacefilter token="${app.server.websphere.dir.windows.escaped}" value="@app.server.websphere.dir.windows.escaped@" />
+				</replace>
+			</then>
+		</if>
 
 		<zip
 			destfile="${app.server.parent.dir}/${app.server.websphere.custom.zip.name}"
