@@ -2251,13 +2251,53 @@ and put it in ${app.server.parent.dir}. Then rerun this task.
 			</sequential>
 		</for>
 
+		<for list="${app.server.websphere.fix.pack.jdk.zip.names}" param="app.server.websphere.fix.pack.jdk.zip.name">
+			<sequential>
+				<if>
+					<not>
+						<available file="${app.server.parent.dir}/@{app.server.websphere.fix.pack.jdk.zip.name}" />
+					</not>
+					<then>
+						<mkdir dir="${app.server.parent.dir}" />
+
+						<fail>
+.
+
+Please download @{app.server.websphere.fix.pack.jdk.zip.name} from ${app.server.websphere.fix.pack.zip.url}
+and put it in ${app.server.parent.dir}. Then rerun this task.
+						</fail>
+					</then>
+				</if>
+			</sequential>
+		</for>
+
+		<for list="${app.server.websphere.fix.pack.was.zip.names}" param="app.server.websphere.fix.pack.was.zip.name">
+			<sequential>
+				<if>
+					<not>
+						<available file="${app.server.parent.dir}/@{app.server.websphere.fix.pack.was.zip.name}" />
+					</not>
+					<then>
+						<mkdir dir="${app.server.parent.dir}" />
+
+						<fail>
+.
+
+Please download @{app.server.websphere.fix.pack.was.zip.name} from ${app.server.websphere.fix.pack.zip.url}
+and put it in ${app.server.parent.dir}. Then rerun this task.
+						</fail>
+					</then>
+				</if>
+			</sequential>
+		</for>
+
 		<delete dir="${app.server.websphere.dir}" />
+
+		<echo>Installing installation manager. This may take a few minutes.</echo>
 
 		<tstamp>
 			<format property="tstamp.value" pattern="yyyyMMddkkmmssSSS" />
 		</tstamp>
-
-		<echo>Installing installation manager. This may take a few minutes.</echo>
 
 		<if>
 			<os family="unix" />
@@ -2297,6 +2337,8 @@ and put it in ${app.server.parent.dir}. Then rerun this task.
 
 		<delete dir="${tstamp.value}" />
 
+		<echo>Installing application server. This may take a few minutes.</echo>
+
 		<tstamp>
 			<format property="tstamp.value" pattern="yyyyMMddkkmmssSSS" />
 		</tstamp>
@@ -2331,8 +2373,6 @@ and put it in ${app.server.parent.dir}. Then rerun this task.
 
 			</agent-input>
 		</echoxml>
-
-		<echo>Installing application server. This may take a few minutes.</echo>
 
 		<if>
 			<os family="unix" />
@@ -2407,6 +2447,93 @@ and put it in ${app.server.parent.dir}. Then rerun this task.
 			<replacetoken><![CDATA[disableJIT="false">]]></replacetoken>
 			<replacevalue><![CDATA[disableJIT="false" maximumHeapSize="1024">]]></replacevalue>
 		</replace>
+
+		<echo>Installing fix pack. This may take a few minutes</echo>
+
+		<tstamp>
+			<format property="tstamp.value" pattern="yyyyMMddkkmmssSSS" />
+		</tstamp>
+
+		<for list="${app.server.websphere.fix.pack.was.zip.names}" param="app.server.websphere.fix.pack.was.zip.name">
+			<sequential>
+				<unzip
+					dest="${tstamp.value}/was_fixpack"
+					src="${app.server.parent.dir}/@{app.server.websphere.fix.pack.was.zip.name}"
+				/>
+			</sequential>
+		</for>
+
+		<for list="${app.server.websphere.fix.pack.jdk.zip.names}" param="app.server.websphere.fix.pack.jdk.zip.name">
+			<sequential>
+				<unzip
+					dest="${tstamp.value}/was_fixpack_jdk"
+					src="${app.server.parent.dir}/@{app.server.websphere.fix.pack.jdk.zip.name}"
+				/>
+			</sequential>
+		</for>
+
+		<echoxml file="${tstamp.value}/was_fixpack/liferay-responseFile.xml">
+			<agent-input clean='true' temporary='false'>
+
+			<install modify="false">
+			 	<offering
+			  		id='com.ibm.websphere.DEVELOPERSILAN.v85'
+			  		profile='IBM Websphere 8.5.5.0'>
+			  	</offering>
+
+			 	<offering
+			  		id='com.ibm.websphere.IBMJAVA.v71'
+			  		profile='IBM Websphere 8.5.5.0'>
+			  	</offering>
+			</install>
+
+			<profile
+				id='IBM Websphere 8.5.5.0'
+				installLocation='${app.server.websphere.dir}'>
+			</profile>
+
+			<server>
+				<repository location='${project.dir}/${tstamp.value}/was_fixpack/repository.config' />
+				<repository location='${project.dir}/${tstamp.value}/was_fixpack_jdk/repository.config' />
+			</server>
+
+			</agent-input>
+		</echoxml>
+
+		<if>
+			<os family="unix" />
+			<then>
+				<chmod file="/opt/IBM/InstallationManager/eclipse/tools/imcl" perm="a+x" />
+
+				<exec dir="/opt/IBM/InstallationManager/eclipse/tools" executable="sh">
+					<arg value="-c" />
+					<arg value="./imcl input ${project.dir}/${tstamp.value}/was_fixpack/liferay-responseFile.xml -acceptLicense" />
+				</exec>
+
+				<chmod file="${app.server.websphere.dir}/bin/managesdk.sh" perm="a+x" />
+
+				<exec dir="${app.server.websphere.dir}/bin" executable="sh">
+					<arg value="-c" />
+					<arg value="./managesdk.sh -enableProfileAll -sdkName 1.7.1_64 -enableServers" />
+				</exec>
+			</then>
+			<elseif>
+				<os family="windows" />
+				<then>
+					<exec dir="C:/Program Files/IBM/Installation Manager/eclipse/tools" executable="cmd.exe">
+						<arg value="/c" />
+						<arg value="imcl input ${project.dir}/${tstamp.value}/was_fixpack/liferay-responseFile.xml -acceptLicense" />
+					</exec>
+
+					<exec dir="${app.server.websphere.dir}/bin" executable="cmd.exe">
+						<arg value="/c" />
+						<arg value="managesdk.bat -enableProfileAll -sdkName 1.7.1_64 -enableServers" />
+					</exec>
+				</then>
+			</elseif>
+		</if>
+
+		<delete dir="${tstamp.value}" />
 	</target>
 
 	<target name="unzip-wildfly">
