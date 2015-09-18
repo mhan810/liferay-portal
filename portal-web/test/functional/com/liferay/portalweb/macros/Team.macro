@@ -18,9 +18,12 @@
 
 		<execute function="Type" locator1="TextInput#SEARCH" value1="${teamName}" />
 		<execute function="Click" locator1="Icon#BASIC_SEARCH" />
+
+		<execute function="Click" locator1="Icon#DISPLAY_STYLE_LIST" />
+
 		<execute function="AssertTextEquals" locator1="SiteTeams#TEAM_TABLE_NAME" value1="${teamName}" />
-		<execute function="Click" locator1="SiteTeams#TEAM_TABLE_ACTIONS" />
-		<execute function="AssertClick" locator1="MenuItem#ASSIGN_MEMBERS" value1="Assign Members" />
+
+		<execute function="AssertClick" locator1="SiteTeams#TEAM_TABLE_NAME" value1="${teamName}" />
 
 		<execute function="AssertClick" locator1="SiteTeamsAssignMembers#AVAILABLE" value1="Available" />
 		<execute function="Type" locator1="TextInput#KEYWORDS" value1="${userScreenName}" />
@@ -47,9 +50,12 @@
 
 		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="${teamName}" />
 		<execute function="AssertClick" locator1="NavBar#BASIC_SEARCH_BUTTON" value1="Search" />
+
+		<execute function="Click" locator1="Icon#DISPLAY_STYLE_LIST" />
+
 		<execute function="AssertTextEquals" locator1="SiteTeams#TEAM_TABLE_NAME" value1="${teamName}" />
-		<execute function="Click" locator1="SiteTeams#TEAM_TABLE_ACTIONS" />
-		<execute function="AssertClick" locator1="MenuItem#ASSIGN_MEMBERS" value1="Assign Members" />
+
+		<execute function="AssertClick" locator1="SiteTeams#TEAM_TABLE_NAME" value1="${teamName}" />
 
 		<execute function="AssertClick" locator1="SiteTeamsAssignMembers#USER_GROUPS" value1="User Groups" />
 		<execute function="AssertClick" locator1="SiteTeamsAssignMembers#AVAILABLE" value1="Available" />
@@ -93,6 +99,8 @@
 	<command name="editCP">
 		<var name="key_teamName" value="${teamName}" />
 
+		<execute function="Click" locator1="Icon#DISPLAY_STYLE_LIST" />
+
 		<execute function="AssertTextEquals" locator1="SiteTeams#TEAM_TABLE_NAME" value1="${teamName}" />
 		<execute function="Click" locator1="SiteTeams#TEAM_TABLE_ACTIONS" />
 		<execute function="AssertClick" locator1="MenuItem#EDIT" value1="Edit" />
@@ -128,6 +136,8 @@
 
 	<command name="viewCP">
 		<var name="key_teamName" value="${teamName}" />
+
+		<execute function="Click" locator1="Icon#DISPLAY_STYLE_LIST" />
 
 		<execute function="AssertTextEquals" locator1="SiteTeams#TEAM_TABLE_NAME" value1="${teamName}" />
 		<execute function="AssertTextEquals" locator1="SiteTeams#TEAM_TABLE_DESCRIPTION" value1="${teamDescription}" />
