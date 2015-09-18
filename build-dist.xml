@@ -607,6 +607,30 @@
 		<build-dist-tomcat-bare />
 	</target>
 
+	<target name="build-dist-websphere">
+		<app-server-properties-update>
+			app.server.type=websphere
+		</app-server-properties-update>
+
+		<antcall target="update-sdk-properties" inheritAll="false" />
+
+		<antcall target="unzip-websphere" inheritAll="false" />
+
+		<delete dir="${project.dir}/portal-web/classes" />
+
+		<ant target="deploy" inheritAll="false" />
+
+		<antcall target="resolve-dynamic-jars" inheritAll="false" />
+
+		<app-server-properties-reset />
+
+		<antcall target="deploy-plugins">
+			<param name="deployer.dest.dir" value="${app.server.websphere.deploy.dir}" />
+			<param name="deployer.app.server.type" value="websphere" />
+			<param name="deployer.app.server.lib.portal.dir" value="${app.server.websphere.portal.dir}/WEB-INF/lib" />
+		</antcall>
+	</target>
+
 	<target name="build-dist-wildfly">
 		<app-server-properties-update>
 			app.server.type=wildfly
