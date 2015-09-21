@@ -40,6 +40,9 @@ public abstract class BaseBackgroundTaskExecutor
 	}
 
 	@Override
+	public abstract BackgroundTaskExecutor clone();
+
+	@Override
 	public int getIsolationLevel() {
 		return _isolationLevel;
 	}
