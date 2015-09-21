@@ -87,11 +87,6 @@ public class BackgroundTaskImpl implements BackgroundTask {
 	}
 
 	@Override
-	public BackgroundTaskExecutor getBackgroundTaskExecutor() {
-		return _backgroundTask.getBackgroundTaskExecutor();
-	}
-
-	@Override
 	public long getBackgroundTaskId() {
 		return _backgroundTask.getBackgroundTaskId();
 	}
