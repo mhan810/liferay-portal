@@ -16,6 +16,7 @@ package com.liferay.portlet.exportimport.backgroundtask;
 
 import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutor;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskResult;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -46,6 +47,22 @@ public class PortletImportBackgroundTaskExecutor
 		// Isolation level guarantees this will be serial in a group
 
 		setIsolationLevel(BackgroundTaskConstants.ISOLATION_LEVEL_GROUP);
+	}
+
+	@Override
+	public BackgroundTaskExecutor clone() {
+		PortletImportBackgroundTaskExecutor
+			portletImportBackgroundTaskExecutor =
+				new PortletImportBackgroundTaskExecutor();
+
+		portletImportBackgroundTaskExecutor.
+			setBackgroundTaskStatusMessageTranslator(
+				getBackgroundTaskStatusMessageTranslator());
+
+		portletImportBackgroundTaskExecutor.setIsolationLevel(
+			getIsolationLevel());
+
+		return portletImportBackgroundTaskExecutor;
 	}
 
 	@Override
