@@ -1309,7 +1309,7 @@ public class StagingImpl implements Staging {
 
 		BackgroundTaskManagerUtil.addBackgroundTask(
 			userId, exportImportConfiguration.getGroupId(), StringPool.BLANK,
-			null, LayoutStagingBackgroundTaskExecutor.class, taskContextMap,
+			LayoutStagingBackgroundTaskExecutor.class.getName(), taskContextMap,
 			new ServiceContext());
 	}
 
@@ -1433,9 +1433,9 @@ public class StagingImpl implements Staging {
 
 		BackgroundTaskManagerUtil.addBackgroundTask(
 			userId, exportImportConfiguration.getGroupId(),
-			exportImportConfiguration.getName(), null,
-			PortletStagingBackgroundTaskExecutor.class, taskContextMap,
-			new ServiceContext());
+			exportImportConfiguration.getName(),
+			PortletStagingBackgroundTaskExecutor.class.getName(),
+			taskContextMap, new ServiceContext());
 	}
 
 	@Override
@@ -2038,8 +2038,8 @@ public class StagingImpl implements Staging {
 		BackgroundTaskManagerUtil.addBackgroundTask(
 			user.getUserId(), exportImportConfiguration.getGroupId(),
 			StringPool.BLANK, null,
-			LayoutRemoteStagingBackgroundTaskExecutor.class, taskContextMap,
-			new ServiceContext());
+			LayoutRemoteStagingBackgroundTaskExecutor.class.getName(),
+			taskContextMap, new ServiceContext());
 	}
 
 	protected boolean getBoolean(
