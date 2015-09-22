@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.exportimport.backgroundtask;
+package com.liferay.exportimport.background.task;
 
 import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants;
@@ -37,12 +37,12 @@ import java.util.concurrent.Callable;
  * @author Daniel Kocsis
  * @author Akos Thurzo
  */
-public class PortletImportBackgroundTaskExecutor
+public class LayoutImportBackgroundTaskExecutor
 	extends BaseExportImportBackgroundTaskExecutor {
 
-	public PortletImportBackgroundTaskExecutor() {
+	public LayoutImportBackgroundTaskExecutor() {
 		setBackgroundTaskStatusMessageTranslator(
-			new PortletExportImportBackgroundTaskStatusMessageTranslator());
+			new LayoutExportImportBackgroundTaskStatusMessageTranslator());
 
 		// Isolation level guarantees this will be serial in a group
 
@@ -51,18 +51,17 @@ public class PortletImportBackgroundTaskExecutor
 
 	@Override
 	public BackgroundTaskExecutor clone() {
-		PortletImportBackgroundTaskExecutor
-			portletImportBackgroundTaskExecutor =
-				new PortletImportBackgroundTaskExecutor();
+		LayoutImportBackgroundTaskExecutor layoutImportBackgroundTaskExecutor =
+			new LayoutImportBackgroundTaskExecutor();
 
-		portletImportBackgroundTaskExecutor.
+		layoutImportBackgroundTaskExecutor.
 			setBackgroundTaskStatusMessageTranslator(
 				getBackgroundTaskStatusMessageTranslator());
 
-		portletImportBackgroundTaskExecutor.setIsolationLevel(
+		layoutImportBackgroundTaskExecutor.setIsolationLevel(
 			getIsolationLevel());
 
-		return portletImportBackgroundTaskExecutor;
+		return layoutImportBackgroundTaskExecutor;
 	}
 
 	@Override
@@ -85,14 +84,14 @@ public class PortletImportBackgroundTaskExecutor
 
 				TransactionInvokerUtil.invoke(
 					transactionAttribute,
-					new PortletImportCallable(exportImportConfiguration, file));
+					new LayoutImportCallable(exportImportConfiguration, file));
 			}
 			catch (Throwable t) {
 				if (_log.isDebugEnabled()) {
 					_log.debug(t, t);
 				}
 				else if (_log.isWarnEnabled()) {
-					_log.warn("Unable to import portlet: " + t.getMessage());
+					_log.warn("Unable to import layouts: " + t.getMessage());
 				}
 
 				throw new SystemException(t);
@@ -106,11 +105,11 @@ public class PortletImportBackgroundTaskExecutor
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		PortletImportBackgroundTaskExecutor.class);
+		LayoutImportBackgroundTaskExecutor.class);
 
-	private class PortletImportCallable implements Callable<Void> {
+	private class LayoutImportCallable implements Callable<Void> {
 
-		public PortletImportCallable(
+		public LayoutImportCallable(
 			ExportImportConfiguration exportImportConfiguration, File file) {
 
 			_exportImportConfiguration = exportImportConfiguration;
@@ -119,10 +118,10 @@ public class PortletImportBackgroundTaskExecutor
 
 		@Override
 		public Void call() throws PortalException {
-			ExportImportLocalServiceUtil.importPortletDataDeletions(
+			ExportImportLocalServiceUtil.importLayoutsDataDeletions(
 				_exportImportConfiguration, _file);
 
-			ExportImportLocalServiceUtil.importPortletInfo(
+			ExportImportLocalServiceUtil.importLayouts(
 				_exportImportConfiguration, _file);
 
 			return null;
