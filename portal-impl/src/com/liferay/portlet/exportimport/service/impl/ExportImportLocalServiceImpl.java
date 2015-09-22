@@ -90,9 +90,9 @@ public class ExportImportLocalServiceImpl
 		BackgroundTask backgroundTask =
 			BackgroundTaskManagerUtil.addBackgroundTask(
 				userId, exportImportConfiguration.getGroupId(),
-				exportImportConfiguration.getName(), null,
-				LayoutExportBackgroundTaskExecutor.class, taskContextMap,
-				new ServiceContext());
+				exportImportConfiguration.getName(),
+				LayoutExportBackgroundTaskExecutor.class.getName(),
+				taskContextMap, new ServiceContext());
 
 		return backgroundTask.getBackgroundTaskId();
 	}
@@ -153,9 +153,9 @@ public class ExportImportLocalServiceImpl
 		BackgroundTask backgroundTask =
 			BackgroundTaskManagerUtil.addBackgroundTask(
 				userId, exportImportConfiguration.getGroupId(),
-				exportImportConfiguration.getName(), null,
-				PortletExportBackgroundTaskExecutor.class, taskContextMap,
-				new ServiceContext());
+				exportImportConfiguration.getName(),
+				PortletExportBackgroundTaskExecutor.class.getName(),
+				taskContextMap, new ServiceContext());
 
 		return backgroundTask.getBackgroundTaskId();
 	}
@@ -270,9 +270,9 @@ public class ExportImportLocalServiceImpl
 		BackgroundTask backgroundTask =
 			BackgroundTaskManagerUtil.addBackgroundTask(
 				userId, exportImportConfiguration.getGroupId(),
-				exportImportConfiguration.getName(), null,
-				LayoutImportBackgroundTaskExecutor.class, taskContextMap,
-				new ServiceContext());
+				exportImportConfiguration.getName(),
+				LayoutImportBackgroundTaskExecutor.class.getName(),
+				taskContextMap, new ServiceContext());
 
 		backgroundTask.addAttachment(userId, file.getName(), file);
 
@@ -440,9 +440,9 @@ public class ExportImportLocalServiceImpl
 		BackgroundTask backgroundTask =
 			BackgroundTaskManagerUtil.addBackgroundTask(
 				userId, exportImportConfiguration.getGroupId(),
-				exportImportConfiguration.getName(), null,
-				PortletImportBackgroundTaskExecutor.class, taskContextMap,
-				new ServiceContext());
+				exportImportConfiguration.getName(),
+				PortletImportBackgroundTaskExecutor.class.getName(),
+				taskContextMap, new ServiceContext());
 
 		backgroundTask.addAttachment(userId, file.getName(), file);
 
