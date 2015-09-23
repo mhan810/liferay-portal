@@ -32,7 +32,7 @@ request.setAttribute("phones.classPK", company.getAccountId());
 request.setAttribute("websites.classPK", company.getAccountId());
 %>
 
-<portlet:actionURL name="/portal_settings/edit_company" var="editCompanyURL" />
+<portlet:actionURL name="/portal_settings/edit_company,/portal_settings/edit_company_cas_configuration" var="editCompanyURL" />
 
 <aui:form action="<%= editCompanyURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveCompany();" %>'>
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
