@@ -67,7 +67,6 @@ public class LayoutStagingBackgroundTaskExecutor
 		layoutStagingBackgroundTaskExecutor.
 			setBackgroundTaskStatusMessageTranslator(
 				getBackgroundTaskStatusMessageTranslator());
-
 		layoutStagingBackgroundTaskExecutor.setIsolationLevel(
 			getIsolationLevel());
 

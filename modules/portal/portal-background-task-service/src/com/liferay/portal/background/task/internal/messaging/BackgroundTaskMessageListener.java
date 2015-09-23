@@ -185,9 +185,9 @@ public class BackgroundTaskMessageListener extends BaseMessageListener {
 	protected BackgroundTaskExecutor getBackgroundTaskExecutor(
 		BackgroundTask backgroundTask) {
 
-		String servletContextNames = backgroundTask.getServletContextNames();
-
 		BackgroundTaskExecutor backgroundTaskExecutor = null;
+
+		String servletContextNames = backgroundTask.getServletContextNames();
 
 		if (Validator.isNull(servletContextNames)) {
 			backgroundTaskExecutor =
@@ -212,7 +212,7 @@ public class BackgroundTaskMessageListener extends BaseMessageListener {
 			catch (Exception e) {
 				if (_log.isDebugEnabled()) {
 					_log.debug(
-						"Unable to create new BackgroundTaskExecutor", e);
+						"Unable to create new background task executor", e);
 				}
 			}
 		}

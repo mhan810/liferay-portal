@@ -52,7 +52,6 @@ public class LayoutExportBackgroundTaskExecutor
 		layoutExportBackgroundTaskExecutor.
 			setBackgroundTaskStatusMessageTranslator(
 				getBackgroundTaskStatusMessageTranslator());
-
 		layoutExportBackgroundTaskExecutor.setIsolationLevel(
 			getIsolationLevel());
 

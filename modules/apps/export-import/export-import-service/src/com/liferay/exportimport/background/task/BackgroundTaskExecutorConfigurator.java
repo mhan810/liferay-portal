@@ -93,8 +93,9 @@ public class BackgroundTaskExecutorConfigurator {
 
 		Dictionary<String, Object> properties = new HashMapDictionary<>();
 
-		properties.put(
-			"class.name", backgroundTaskExecutor.getClass().getName());
+		Class<?> clazz = backgroundTaskExecutor.getClass();
+
+		properties.put("class.name", clazz.getName());
 
 		ServiceRegistration<BackgroundTaskExecutor> serviceRegistration =
 			bundleContext.registerService(

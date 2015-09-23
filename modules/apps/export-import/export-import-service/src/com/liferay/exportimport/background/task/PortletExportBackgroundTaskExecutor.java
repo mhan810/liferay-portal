@@ -49,7 +49,6 @@ public class PortletExportBackgroundTaskExecutor
 		portletExportBackgroundTaskExecutor.
 			setBackgroundTaskStatusMessageTranslator(
 				getBackgroundTaskStatusMessageTranslator());
-
 		portletExportBackgroundTaskExecutor.setIsolationLevel(
 			getIsolationLevel());
 

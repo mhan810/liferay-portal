@@ -52,6 +52,7 @@ public class BackgroundTaskExecutorRegistryImpl
 		String className, BackgroundTaskExecutor backgroundTaskExecutor) {
 
 		Dictionary<String, Object> properties = new HashMapDictionary<>();
+
 		properties.put("class.name", className);
 
 		ServiceRegistration<BackgroundTaskExecutor> serviceRegistration =
@@ -96,7 +97,7 @@ public class BackgroundTaskExecutorRegistryImpl
 
 		if (Validator.isNull(className)) {
 			throw new IllegalArgumentException(
-				"No class.name property specified for : " +
+				"Property \"class.name\" is not set for " +
 					backgroundTaskExecutor);
 		}
 
