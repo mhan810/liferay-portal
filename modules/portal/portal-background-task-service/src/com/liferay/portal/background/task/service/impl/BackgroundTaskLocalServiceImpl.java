@@ -100,7 +100,7 @@ public class BackgroundTaskLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		return doAddBackgroundTask(
+		return addBackgroundTask(
 			userId, groupId, name, null, taskExecutorClassName, taskContextMap,
 			serviceContext);
 	}
@@ -113,7 +113,7 @@ public class BackgroundTaskLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		return doAddBackgroundTask(
+		return addBackgroundTask(
 			userId, groupId, name, servletContextNames,
 			taskExecutorClass.getName(), taskContextMap, serviceContext);
 	}
@@ -536,7 +536,7 @@ public class BackgroundTaskLocalServiceImpl
 		MessageBusUtil.sendMessage(DestinationNames.BACKGROUND_TASK, message);
 	}
 
-	protected BackgroundTask doAddBackgroundTask(
+	protected BackgroundTask addBackgroundTask(
 			long userId, long groupId, String name,
 			String[] servletContextNames, String taskExecutorClassName,
 			Map<String, Serializable> taskContextMap,
