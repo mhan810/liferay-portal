@@ -154,7 +154,9 @@ public class BackgroundTaskImpl extends BackgroundTaskBaseImpl {
 		catch (Exception e) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
-					"No portlet repository for : " + getBackgroundTaskId(), e);
+					"No portlet repository for background task " +
+						getBackgroundTaskId(),
+					e);
 			}
 		}
 
