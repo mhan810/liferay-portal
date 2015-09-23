@@ -98,7 +98,7 @@ public class CASAutoLogin extends BaseAutoLogin {
 				new CompanyServiceSettingsLocator(
 					companyId, CASConstants.SERVICE_NAME));
 
-		if (!casConfiguration.enabled()) {
+		if (!casConfiguration.casEnabled()) {
 			return null;
 		}
 
@@ -116,7 +116,7 @@ public class CASAutoLogin extends BaseAutoLogin {
 
 			session.setAttribute(CASWebKeys.CAS_FORCE_LOGOUT, Boolean.TRUE);
 
-			String redirect = casConfiguration.noSuchUserRedirectURL();
+			String redirect = casConfiguration.casNoSuchUserRedirectURL();
 
 			request.setAttribute(AutoLogin.AUTO_LOGIN_REDIRECT, redirect);
 
@@ -129,7 +129,7 @@ public class CASAutoLogin extends BaseAutoLogin {
 			companyId, PropsKeys.COMPANY_SECURITY_AUTH_TYPE,
 			PropsValues.COMPANY_SECURITY_AUTH_TYPE);
 
-		if (casConfiguration.importFromLDAP()) {
+		if (casConfiguration.casImportFromLDAP()) {
 			try {
 				if (authType.equals(CompanyConstants.AUTH_TYPE_SN)) {
 					user = UserImporterUtil.importUser(

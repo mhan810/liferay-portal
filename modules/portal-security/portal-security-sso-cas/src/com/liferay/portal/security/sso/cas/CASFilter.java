@@ -82,7 +82,7 @@ public class CASFilter extends BaseFilter {
 					new CompanyServiceSettingsLocator(
 						companyId, CASConstants.SERVICE_NAME));
 
-			if (casConfiguration.enabled()) {
+			if (casConfiguration.casEnabled()) {
 				return true;
 			}
 		}
@@ -113,9 +113,9 @@ public class CASFilter extends BaseFilter {
 				new CompanyServiceSettingsLocator(
 					companyId, CASConstants.SERVICE_NAME));
 
-		String serverName = casConfiguration.serverName();
-		String serverUrl = casConfiguration.serverURL();
-		String loginUrl = casConfiguration.loginURL();
+		String serverName = casConfiguration.casServerName();
+		String serverUrl = casConfiguration.casServerURL();
+		String loginUrl = casConfiguration.casLoginURL();
 
 		Cas20ProxyTicketValidator cas20ProxyTicketValidator =
 			new Cas20ProxyTicketValidator(serverUrl);
@@ -157,7 +157,7 @@ public class CASFilter extends BaseFilter {
 		if (forceLogout != null) {
 			session.removeAttribute(CASWebKeys.CAS_FORCE_LOGOUT);
 
-			String logoutUrl = casConfiguration.logoutURL();
+			String logoutUrl = casConfiguration.casLogoutURL();
 
 			response.sendRedirect(logoutUrl);
 
@@ -169,7 +169,7 @@ public class CASFilter extends BaseFilter {
 
 			session.invalidate();
 
-			String logoutUrl = casConfiguration.logoutURL();
+			String logoutUrl = casConfiguration.casLogoutURL();
 
 			response.sendRedirect(logoutUrl);
 
@@ -184,9 +184,9 @@ public class CASFilter extends BaseFilter {
 				return;
 			}
 
-			String serverName = casConfiguration.serverName();
+			String serverName = casConfiguration.casServerName();
 
-			String serviceUrl = casConfiguration.serviceURL();
+			String serviceUrl = casConfiguration.casServiceURL();
 
 			if (Validator.isNull(serviceUrl)) {
 				serviceUrl = CommonUtils.constructServiceUrl(
@@ -196,7 +196,7 @@ public class CASFilter extends BaseFilter {
 			String ticket = ParamUtil.getString(request, "ticket");
 
 			if (Validator.isNull(ticket)) {
-				String loginUrl = casConfiguration.loginURL();
+				String loginUrl = casConfiguration.casLoginURL();
 
 				loginUrl = HttpUtil.addParameter(
 					loginUrl, "service", serviceUrl);

@@ -30,42 +30,42 @@ public interface CASConfiguration {
 		description = "Set this to true to enable CAS single sign on.",
 		required = false
 	)
-	public boolean enabled();
+	public boolean casEnabled();
 
 	@Meta.AD(
 		deflt = "false",
 		description = "A user may be authenticated from CAS and not yet exist in the portal. Set this to true to automatically import users from LDAP if they do not exist in the portal.",
 		required = false
 	)
-	public boolean importFromLDAP();
+	public boolean casImportFromLDAP();
 
 	@Meta.AD(deflt = "https://localhost:8443/cas-web/login", required = false)
-	public String loginURL();
+	public String casLoginURL();
 
 	@Meta.AD(
 		deflt = "http://localhost:8080",
 		description = "Set this to true to log out the user from CAS when the portal session expires.",
 		required = false
 	)
-	public boolean logoutOnSessionExpiration();
+	public boolean casLogoutOnSessionExpiration();
 
 	@Meta.AD(deflt = "https://localhost:8443/cas-web/logout", required = false)
-	public String logoutURL();
+	public String casLogoutURL();
 
 	@Meta.AD(deflt = "http://localhost:8080", required = false)
-	public String noSuchUserRedirectURL();
+	public String casNoSuchUserRedirectURL();
 
 	@Meta.AD(
 		deflt = "https://localhost:8080",
 		description = "Setting server name allows deep linking. See LEP-4423.",
 		required = false
 	)
-	public String serverName();
+	public String casServerName();
 
 	@Meta.AD(deflt = "https://localhost:8443/cas-web", required = false)
-	public String serverURL();
+	public String casServerURL();
 
 	@Meta.AD(deflt = "http://localhost:8080", required = false)
-	public String serviceURL();
+	public String casServiceURL();
 
 }
