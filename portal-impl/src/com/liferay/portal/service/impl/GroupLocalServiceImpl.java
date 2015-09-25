@@ -3922,6 +3922,14 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			}
 		}
 
+		// Join by Groups_Roles
+
+		Long roleId = (Long)params.remove("groupsRoles");
+
+		if (roleId != null) {
+			groups.retainAll(rolePersistence.getGroups(roleId));
+		}
+
 		if (userId == null) {
 			return groups;
 		}
@@ -3968,14 +3976,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		if (_log.isDebugEnabled() && !params.isEmpty()) {
 			_log.debug("Unprocessed parameters " + MapUtil.toString(params));
-		}
-
-		// Join by Groups_Roles
-
-		Long roleId = (Long)params.remove("groupsRoles");
-
-		if (roleId != null) {
-			joinedGroups.retainAll(rolePersistence.getGroups(roleId));
 		}
 
 		if (joinedGroups.size() > groups.size()) {
