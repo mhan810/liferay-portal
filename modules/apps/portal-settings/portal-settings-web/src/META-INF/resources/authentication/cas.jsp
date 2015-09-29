@@ -14,13 +14,6 @@
  */
 --%>
 
-<%@page import="com.liferay.portal.security.sso.cas.constants.CASPropsKeys"%>
-<%@page import="com.liferay.portal.kernel.settings.ParameterMapSettingsLocator"%>
-<%@page import="com.liferay.portal.security.sso.cas.constants.CASConstants"%>
-<%@page import="com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator"%>
-<%@ page import="com.liferay.portal.kernel.module.configuration.ConfigurationFactoryUtil" %>
-<%@ page import="com.liferay.portal.security.sso.cas.module.configuration.CASConfiguration" %>
-
 <%@ include file="/init.jsp" %>
 
 <%
