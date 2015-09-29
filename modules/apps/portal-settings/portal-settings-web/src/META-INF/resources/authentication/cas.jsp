@@ -20,15 +20,15 @@
 CASConfiguration casConfiguration = ConfigurationFactoryUtil.getConfiguration(CASConfiguration.class,
 		new ParameterMapSettingsLocator(liferayPortletRequest.getParameterMap(), new CompanyServiceSettingsLocator(company.getCompanyId(), CASConstants.SERVICE_NAME)));
 
-boolean casAuthEnabled = casConfiguration.casEnabled();
-boolean casImportFromLdap = casConfiguration.casImportFromLDAP();
-String casLoginURL = casConfiguration.casLoginURL();
-boolean casLogoutOnSessionExpiration = casConfiguration.casLogoutOnSessionExpiration();
-String casLogoutURL = casConfiguration.casLogoutURL();
-String casServerName = casConfiguration.casServerName();
-String casServerURL = casConfiguration.casServerURL();
-String casServiceURL = casConfiguration.casServiceURL();
-String casNoSuchUserRedirectURL = casConfiguration.casNoSuchUserRedirectURL();
+boolean casAuthEnabled = casConfiguration.enabled();
+boolean casImportFromLdap = casConfiguration.importFromLDAP();
+String casLoginURL = casConfiguration.loginURL();
+boolean casLogoutOnSessionExpiration = casConfiguration.logoutOnSessionExpiration();
+String casLogoutURL = casConfiguration.logoutURL();
+String casServerName = casConfiguration.serverName();
+String casServerURL = casConfiguration.serverURL();
+String casServiceURL = casConfiguration.serviceURL();
+String casNoSuchUserRedirectURL = casConfiguration.noSuchUserRedirectURL();
 %>
 
 <aui:fieldset>
@@ -39,23 +39,23 @@ String casNoSuchUserRedirectURL = casConfiguration.casNoSuchUserRedirectURL();
 	<liferay-ui:error key="casLogoutURLInvalid" message="the-cas-logout-url-is-invalid" />
 	<liferay-ui:error key="casNoSuchUserURLInvalid" message="the-cas-no-such-user-url-is-invalid" />
 
-	<aui:input label="enabled" name='<%= CASConstants.CAS_AUTH_ENABLED%>' type="checkbox" value="<%= casAuthEnabled %>" />
+	<aui:input label="enabled" name='<%= "cas--" + CASConstants.CAS_AUTH_ENABLED + "--" %>' type="checkbox" value="<%= casAuthEnabled %>" />
 
-	<aui:input helpMessage="import-cas-users-from-ldap-help" label="import-cas-users-from-ldap" name='<%= CASConstants.CAS_IMPORT_FROM_LDAP %>' type="checkbox" value="<%= casImportFromLdap %>" />
+	<aui:input helpMessage="import-cas-users-from-ldap-help" label="import-cas-users-from-ldap" name='<%= "cas--" + CASConstants.CAS_IMPORT_FROM_LDAP + "--" %>' type="checkbox" value="<%= casImportFromLdap %>" />
 
-	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-login-url-help" label="login-url" name='<%= CASConstants.CAS_LOGIN_URL %>' type="text" value="<%= casLoginURL %>" />
+	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-login-url-help" label="login-url" name='<%= "cas--" + CASConstants.CAS_LOGIN_URL + "--" %>' type="text" value="<%= casLoginURL %>" />
 
-	<aui:input helpMessage="cas-logout-on-session-expiration-help" label="cas-logout-on-session-expiration" name='<%= CASConstants.CAS_LOGOUT_ON_SESSION_EXPIRATION %>' type="checkbox" value="<%= casLogoutOnSessionExpiration %>" />
+	<aui:input helpMessage="cas-logout-on-session-expiration-help" label="cas-logout-on-session-expiration" name='<%= "cas--" + CASConstants.CAS_LOGOUT_ON_SESSION_EXPIRATION + "--" %>' type="checkbox" value="<%= casLogoutOnSessionExpiration %>" />
 
-	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-logout-url-help" label="logout-url" name='<%= CASConstants.CAS_LOGOUT_URL %>' type="text" value="<%= casLogoutURL %>" />
+	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-logout-url-help" label="logout-url" name='<%= "cas--" + CASConstants.CAS_LOGOUT_URL + "--" %>' type="text" value="<%= casLogoutURL %>" />
 
-	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-server-name-help" label="server-name" name='<%= CASConstants.CAS_SERVER_NAME %>' type="text" value="<%= casServerName %>" />
+	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-server-name-help" label="server-name" name='<%= "cas--" + CASConstants.CAS_SERVER_NAME + "--" %>' type="text" value="<%= casServerName %>" />
 
-	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-server-url-help" label="server-url" name='<%= CASConstants.CAS_SERVER_URL %>' type="text" value="<%= casServerURL %>" />
+	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-server-url-help" label="server-url" name='<%= "cas--" + CASConstants.CAS_SERVER_URL + "--" %>' type="text" value="<%= casServerURL %>" />
 
-	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-service-url-help" label="service-url" name='<%= CASConstants.CAS_SERVICE_URL %>' type="text" value="<%= casServiceURL %>" />
+	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-service-url-help" label="service-url" name='<%= "cas--" + CASConstants.CAS_SERVICE_URL + "--" %>' type="text" value="<%= casServiceURL %>" />
 
-	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-no-such-user-redirect-url-help" label="no-such-user-redirect-url" name='<%= CASConstants.CAS_NO_SUCH_USER_REDIRECT_URL %>' type="text" value="<%= casNoSuchUserRedirectURL %>" />
+	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-no-such-user-redirect-url-help" label="no-such-user-redirect-url" name='<%= "cas--" + CASConstants.CAS_NO_SUCH_USER_REDIRECT_URL + "--" %>' type="text" value="<%= casNoSuchUserRedirectURL %>" />
 
 	<aui:button-row>
 
@@ -76,10 +76,10 @@ String casNoSuchUserRedirectURL = casConfiguration.casNoSuchUserRedirectURL();
 
 			var data = {};
 
-			data.<portlet:namespace />casLoginURL = document.<portlet:namespace />fm['<portlet:namespace /><%= CASConstants.CAS_LOGIN_URL %>'].value;
-			data.<portlet:namespace />casLogoutURL = document.<portlet:namespace />fm['<portlet:namespace /><%= CASConstants.CAS_LOGOUT_URL %>'].value;
-			data.<portlet:namespace />casServerURL = document.<portlet:namespace />fm['<portlet:namespace /><%= CASConstants.CAS_SERVER_URL %>'].value;
-			data.<portlet:namespace />casServiceURL = document.<portlet:namespace />fm['<portlet:namespace /><%= CASConstants.CAS_SERVICE_URL %>'].value;
+			data.<portlet:namespace />casLoginURL = document.<portlet:namespace />fm['<portlet:namespace /><%= "cas--" + CASConstants.CAS_LOGIN_URL + "--" %>'].value;
+			data.<portlet:namespace />casLogoutURL = document.<portlet:namespace />fm['<portlet:namespace /><%= "cas--" + CASConstants.CAS_LOGOUT_URL + "--" %>'].value;
+			data.<portlet:namespace />casServerURL = document.<portlet:namespace />fm['<portlet:namespace /><%= "cas--" + CASConstants.CAS_SERVER_URL + "--" %>'].value;
+			data.<portlet:namespace />casServiceURL = document.<portlet:namespace />fm['<portlet:namespace /><%= "cas--" + CASConstants.CAS_SERVICE_URL + "--" %>'].value;
 
 			var url = '<portlet:renderURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="mvcRenderCommandName" value="/portal_settings/test_cas_configuration" /></portlet:renderURL>';
 

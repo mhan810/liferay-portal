@@ -19,27 +19,27 @@ package com.liferay.portal.security.sso.cas.constants;
  */
 public class CASConstants {
 
-	public static final String SERVICE_NAME =
-		"com.liferay.portal.security.sso.cas";
+	public static final String CAS_AUTH_ENABLED = "enabled";
 
-	public static final String CAS_AUTH_ENABLED = "casEnabled";
+	public static final String CAS_IMPORT_FROM_LDAP = "importFromLDAP";
 
-	public static final String CAS_IMPORT_FROM_LDAP = "casImportFromLDAP";
-
-	public static final String CAS_LOGIN_URL = "casLoginURL";
+	public static final String CAS_LOGIN_URL = "loginURL";
 
 	public static final String CAS_LOGOUT_ON_SESSION_EXPIRATION =
-		"casLogoutOnSessionExpiration";
+		"logoutOnSessionExpiration";
 
-	public static final String CAS_LOGOUT_URL = "casLogoutURL";
+	public static final String CAS_LOGOUT_URL = "logoutURL";
 
 	public static final String CAS_NO_SUCH_USER_REDIRECT_URL =
-		"casNoSuchUserRedirectURL";
+		"noSuchUserRedirectURL";
 
-	public static final String CAS_SERVER_NAME = "casServerName";
+	public static final String CAS_SERVER_NAME = "serverName";
 
-	public static final String CAS_SERVER_URL = "casServerURL";
+	public static final String CAS_SERVER_URL = "serverURL";
 
-	public static final String CAS_SERVICE_URL = "casServiceURL";
+	public static final String CAS_SERVICE_URL = "serviceURL";
+
+	public static final String SERVICE_NAME =
+		"com.liferay.portal.security.sso.cas";
 
 }
