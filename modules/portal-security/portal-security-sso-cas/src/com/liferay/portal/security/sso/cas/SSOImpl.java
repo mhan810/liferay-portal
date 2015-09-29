@@ -39,8 +39,8 @@ public class SSOImpl implements SSO {
 	public String getSessionExpirationRedirectUrl(long companyId) {
 		CASConfiguration casConfiguration = getCASConfiguration(companyId);
 
-		if (casConfiguration.casLogoutOnSessionExpiration()) {
-			return casConfiguration.casLogoutURL();
+		if (casConfiguration.logoutOnSessionExpiration()) {
+			return casConfiguration.logoutURL();
 		}
 
 		return null;
@@ -50,11 +50,11 @@ public class SSOImpl implements SSO {
 	public String getSignInURL(long companyId, String defaultSigninURL) {
 		CASConfiguration casConfiguration = getCASConfiguration(companyId);
 
-		if (!casConfiguration.casEnabled()) {
+		if (!casConfiguration.enabled()) {
 			return null;
 		}
 
-		return casConfiguration.casLoginURL();
+		return casConfiguration.loginURL();
 	}
 
 	@Override
@@ -71,13 +71,13 @@ public class SSOImpl implements SSO {
 	public boolean isSessionRedirectOnExpire(long companyId) {
 		CASConfiguration casConfiguration = getCASConfiguration(companyId);
 
-		return casConfiguration.casLogoutOnSessionExpiration();
+		return casConfiguration.logoutOnSessionExpiration();
 	}
 
 	protected boolean isCASAuthEnabled(long companyId) {
 		CASConfiguration casConfiguration = getCASConfiguration(companyId);
 
-		return casConfiguration.casEnabled();
+		return casConfiguration.enabled();
 	}
 
 	@Reference(unbind = "-")

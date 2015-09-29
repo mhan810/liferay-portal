@@ -57,7 +57,7 @@ public class EditCASConfigurationMVCActionCommand extends BaseMVCActionCommand i
 
 		for (String name : settingsDescriptor.getAllKeys()) {
 			
-			String value = actionRequest.getParameter(name);
+			String value = actionRequest.getParameter("cas--" + name + "--");
 			String oldValue = settings.getValue(name, null);
 
 			if (!StringUtil.equalsIgnoreBreakLine(value, oldValue)) {
@@ -81,19 +81,20 @@ public class EditCASConfigurationMVCActionCommand extends BaseMVCActionCommand i
 	
 	protected void validateCAS(ActionRequest actionRequest) {
 		
-		boolean casEnabled = ParamUtil.getBoolean(actionRequest, CASConstants.CAS_AUTH_ENABLED);
+		boolean casEnabled = ParamUtil.getBoolean(
+			actionRequest, "cas--" + CASConstants.CAS_AUTH_ENABLED + "--");
 
 		if (!casEnabled) {
 			return;
 		}
 		
-		boolean importFromLDAP = ParamUtil.getBoolean(actionRequest, CASConstants.CAS_IMPORT_FROM_LDAP);		
-		String casLoginURL = ParamUtil.getString(actionRequest, CASConstants.CAS_LOGIN_URL);
-		String casLogoutURL = ParamUtil.getString(actionRequest, CASConstants.CAS_LOGOUT_URL);
-		String casServerName = ParamUtil.getString(actionRequest, CASConstants.CAS_SERVER_NAME);
-		String casServerURL = ParamUtil.getString(actionRequest, CASConstants.CAS_SERVER_URL);
-		String casServiceURL = ParamUtil.getString(actionRequest, CASConstants.CAS_SERVICE_URL);
-		String casNoSuchUserRedirectURL = ParamUtil.getString(actionRequest, CASConstants.CAS_NO_SUCH_USER_REDIRECT_URL);
+		boolean importFromLDAP = ParamUtil.getBoolean(actionRequest, "cas--" + CASConstants.CAS_IMPORT_FROM_LDAP + "--");
+		String casLoginURL = ParamUtil.getString(actionRequest, "cas--" + CASConstants.CAS_LOGIN_URL + "--");
+		String casLogoutURL = ParamUtil.getString(actionRequest, "cas--" + CASConstants.CAS_LOGOUT_URL + "--");
+		String casServerName = ParamUtil.getString(actionRequest, "cas--" + CASConstants.CAS_SERVER_NAME + "--");
+		String casServerURL = ParamUtil.getString(actionRequest, "cas--" + CASConstants.CAS_SERVER_URL + "--");
+		String casServiceURL = ParamUtil.getString(actionRequest, "cas--" + CASConstants.CAS_SERVICE_URL + "--");
+		String casNoSuchUserRedirectURL = ParamUtil.getString(actionRequest, "cas--" + CASConstants.CAS_NO_SUCH_USER_REDIRECT_URL + "--");
 
 		if (!Validator.isUrl(casLoginURL)) {
 			SessionErrors.add(actionRequest, "casLoginURLInvalid");
