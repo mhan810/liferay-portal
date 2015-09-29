@@ -32,6 +32,11 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;
+import com.liferay.portal.kernel.settings.ModifiableSettings;
+import com.liferay.portal.kernel.settings.Settings;
+import com.liferay.portal.kernel.settings.SettingsDescriptor;
+import com.liferay.portal.kernel.settings.SettingsFactoryUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -39,13 +44,16 @@ import com.liferay.portal.kernel.util.PropertiesParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Address;
 import com.liferay.portal.model.EmailAddress;
 import com.liferay.portal.model.Phone;
 import com.liferay.portal.model.Website;
 import com.liferay.portal.security.auth.PrincipalException;
+import com.liferay.portal.security.sso.cas.constants.CASConstants;
 import com.liferay.portal.service.CompanyServiceUtil;
 import com.liferay.portal.settings.web.constants.PortalSettingsPortletKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
@@ -81,6 +89,7 @@ public class EditCompanyMVCActionCommand extends BaseMVCActionCommand {
 
 		try {
 			if (cmd.equals(Constants.ADD) || cmd.equals(Constants.UPDATE)) {
+				validateCAS(actionRequest);
 				validateLDAP(actionRequest);
 				validateSocialInteractions(actionRequest);
 
@@ -88,6 +97,7 @@ public class EditCompanyMVCActionCommand extends BaseMVCActionCommand {
 					actionRequest, "redirect");
 
 				if (SessionErrors.isEmpty(actionRequest)) {
+					updateCASSettings(actionRequest);
 					updateCompany(actionRequest);
 				}
 
@@ -134,6 +144,33 @@ public class EditCompanyMVCActionCommand extends BaseMVCActionCommand {
 
 			actionResponse.setRenderParameter("mvcPath", mvcPath);
 		}
+	}
+
+	protected void updateCASSettings(ActionRequest actionRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Settings settings = SettingsFactoryUtil.getSettings(
+			new CompanyServiceSettingsLocator(
+				themeDisplay.getCompanyId(), _CAS_SETTINGS_ID));
+
+		ModifiableSettings modifiableSettings =
+			settings.getModifiableSettings();
+
+		SettingsDescriptor settingsDescriptor =
+			SettingsFactoryUtil.getSettingsDescriptor(_CAS_SETTINGS_ID);
+
+		for (String name : settingsDescriptor.getAllKeys()) {
+			String oldValue = settings.getValue(name, null);
+			String value = ParamUtil.get(
+				actionRequest, "cas--" + name + "--", oldValue);
+
+			modifiableSettings.setValue(name, value);
+		}
+
+		modifiableSettings.store();
 	}
 
 	protected void updateCompany(ActionRequest actionRequest) throws Exception {
@@ -183,6 +220,57 @@ public class EditCompanyMVCActionCommand extends BaseMVCActionCommand {
 			emailAddresses, phones, websites, properties);
 
 		PortalUtil.resetCDNHosts();
+	}
+
+	protected void validateCAS(ActionRequest actionRequest) {
+		boolean casEnabled = ParamUtil.getBoolean(
+			actionRequest, "cas--" + CASConstants.CAS_AUTH_ENABLED + "--");
+
+		if (!casEnabled) {
+			return;
+		}
+
+		String casLoginURL = ParamUtil.getString(
+			actionRequest, "cas--" + CASConstants.CAS_LOGIN_URL + "--");
+		String casLogoutURL = ParamUtil.getString(
+			actionRequest, "cas--" + CASConstants.CAS_LOGOUT_URL + "--");
+		String casServerName = ParamUtil.getString(
+			actionRequest, "cas--" + CASConstants.CAS_SERVER_NAME + "--");
+		String casServerURL = ParamUtil.getString(
+			actionRequest, "cas--" + CASConstants.CAS_SERVER_URL + "--");
+		String casServiceURL = ParamUtil.getString(
+			actionRequest, "cas--" + CASConstants.CAS_SERVICE_URL + "--");
+		String casNoSuchUserRedirectURL = ParamUtil.getString(
+			actionRequest,
+			"cas--" + CASConstants.CAS_NO_SUCH_USER_REDIRECT_URL + "--");
+
+		if (!Validator.isUrl(casLoginURL)) {
+			SessionErrors.add(actionRequest, "casLoginURLInvalid");
+		}
+
+		if (!Validator.isUrl(casLogoutURL)) {
+			SessionErrors.add(actionRequest, "casLogoutURLInvalid");
+		}
+
+		if (Validator.isNull(casServerName)) {
+			SessionErrors.add(actionRequest, "casServerNameInvalid");
+		}
+
+		if (!Validator.isUrl(casServerURL)) {
+			SessionErrors.add(actionRequest, "casServerURLInvalid");
+		}
+
+		if (Validator.isNotNull(casServiceURL) &&
+			!Validator.isUrl(casServiceURL)) {
+
+			SessionErrors.add(actionRequest, "casServiceURLInvalid");
+		}
+
+		if (Validator.isNotNull(casNoSuchUserRedirectURL) &&
+			!Validator.isUrl(casNoSuchUserRedirectURL)) {
+
+			SessionErrors.add(actionRequest, "casNoSuchUserURLInvalid");
+		}
 	}
 
 	protected void validateLDAP(ActionRequest actionRequest) {
@@ -239,5 +327,7 @@ public class EditCompanyMVCActionCommand extends BaseMVCActionCommand {
 			SessionErrors.add(actionRequest, "socialInteractionsInvalid");
 		}
 	}
+
+	private static final String _CAS_SETTINGS_ID = CASConstants.SERVICE_NAME;
 
 }
