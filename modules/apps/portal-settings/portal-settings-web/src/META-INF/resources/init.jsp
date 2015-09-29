@@ -73,7 +73,6 @@ page import="com.liferay.portal.security.ldap.PortalLDAPUtil" %><%@
 page import="com.liferay.portal.security.permission.ResourceActionsUtil" %><%@
 page import="com.liferay.portal.security.sso.OpenSSOUtil" %><%@
 page import="com.liferay.portal.security.sso.cas.constants.CASConstants" %><%@
-page import="com.liferay.portal.security.sso.cas.constants.CASPropsKeys" %><%@
 page import="com.liferay.portal.security.sso.cas.module.configuration.CASConfiguration" %><%@
 page import="com.liferay.portal.service.*" %><%@
 page import="com.liferay.portal.util.Portal" %><%@
