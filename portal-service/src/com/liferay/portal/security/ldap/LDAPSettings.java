@@ -38,8 +38,6 @@ public interface LDAPSettings {
 
 	public long getPreferredLDAPServerId(long companyId, String screenName);
 
-	public String getPropertyPostfix(long ldapServerId);
-
 	public Properties getUserExpandoMappings(long ldapServerId, long companyId)
 		throws Exception;
 

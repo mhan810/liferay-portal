@@ -1,0 +1,4 @@
+Bundle-Name: Liferay Portal Export Import LDAP
+Bundle-SymbolicName: com.liferay.portal.export.import.ldap
+Bundle-Version: 1.0.0
+Include-Resource: classes

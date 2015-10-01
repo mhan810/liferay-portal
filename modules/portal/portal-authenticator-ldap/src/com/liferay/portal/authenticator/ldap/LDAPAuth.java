@@ -32,6 +32,8 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.ldap.configuration.LDAPServerConfiguration;
+import com.liferay.portal.ldap.configuration.LDAPServerConfigurationProvider;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.AuthException;
 import com.liferay.portal.security.auth.Authenticator;
@@ -256,7 +258,9 @@ public class LDAPAuth implements Authenticator {
 			String screenName, long userId, String password)
 		throws Exception {
 
-		String postfix = LDAPSettingsUtil.getPropertyPostfix(ldapServerId);
+		LDAPServerConfiguration ldapServerConfiguration =
+			_ldapServerConfigurationProvider.getLDAPServerConfiguration(
+				ldapServerId);
 
 		LdapContext ldapContext = PortalLDAPUtil.getContext(
 			ldapServerId, companyId);
@@ -268,8 +272,7 @@ public class LDAPAuth implements Authenticator {
 		NamingEnumeration<SearchResult> enu = null;
 
 		try {
-			String baseDN = PrefsPropsUtil.getString(
-				companyId, PropsKeys.LDAP_BASE_DN + postfix);
+			String baseDN = ldapServerConfiguration.baseDn();
 
 			//  Process LDAP auth search filter
 
@@ -437,11 +440,12 @@ public class LDAPAuth implements Authenticator {
 			}
 		}
 
-		for (int ldapServerId = 0;; ldapServerId++) {
-			String postfix = LDAPSettingsUtil.getPropertyPostfix(ldapServerId);
+		for (long ldapServerId = 0;; ldapServerId++) {
+			LDAPServerConfiguration ldapServerConfiguration =
+				_ldapServerConfigurationProvider.getLDAPServerConfiguration(
+					ldapServerId);
 
-			String providerUrl = PrefsPropsUtil.getString(
-				companyId, PropsKeys.LDAP_BASE_PROVIDER_URL + postfix);
+			String providerUrl = ldapServerConfiguration.baseProviderUrl();
 
 			if (Validator.isNull(providerUrl)) {
 				break;
@@ -510,10 +514,11 @@ public class LDAPAuth implements Authenticator {
 			return result;
 		}
 
-		String postfix = LDAPSettingsUtil.getPropertyPostfix(ldapServerId);
+		LDAPServerConfiguration ldapServerConfiguration =
+			_ldapServerConfigurationProvider.getLDAPServerConfiguration(
+				ldapServerId);
 
-		String providerUrl = PrefsPropsUtil.getString(
-			user.getCompanyId(), PropsKeys.LDAP_BASE_PROVIDER_URL + postfix);
+		String providerUrl = ldapServerConfiguration.baseProviderUrl();
 
 		if (Validator.isNull(providerUrl)) {
 			return result;
@@ -634,6 +639,13 @@ public class LDAPAuth implements Authenticator {
 	}
 
 	@Reference
+	protected void setLDAPServerConfigurationProvider(
+		LDAPServerConfigurationProvider ldapServerConfigurationProvider) {
+
+		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
+	}
+
+	@Reference
 	protected void setOmniadmin(Omniadmin omniadmin) {
 		_omniadmin = omniadmin;
 	}
@@ -646,6 +658,7 @@ public class LDAPAuth implements Authenticator {
 				LDAPAuth.class + "._failedLDAPAuthResultCache",
 				new HashMap<String, LDAPAuthResult>());
 	private volatile LDAPAuthConfiguration _ldapAuthConfiguration;
+	private LDAPServerConfigurationProvider _ldapServerConfigurationProvider;
 	private Omniadmin _omniadmin;
 
 }

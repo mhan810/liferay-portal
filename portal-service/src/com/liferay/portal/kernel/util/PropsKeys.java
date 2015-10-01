@@ -1155,17 +1155,7 @@ public interface PropsKeys {
 
 	public static final String LDAP_AUTH_REQUIRED = "ldap.auth.required";
 
-	public static final String LDAP_AUTH_SEARCH_FILTER = "ldap.auth.search.filter";
-
-	public static final String LDAP_BASE_DN = "ldap.base.dn";
-
-	public static final String LDAP_BASE_PROVIDER_URL = "ldap.base.provider.url";
-
 	public static final String LDAP_CONNECTION_PROPERTY_PREFIX = "ldap.connection.";
-
-	public static final String LDAP_CONTACT_CUSTOM_MAPPINGS = "ldap.contact.custom.mappings";
-
-	public static final String LDAP_CONTACT_MAPPINGS = "ldap.contact.mappings";
 
 	public static final String LDAP_ERROR_PASSWORD_AGE = "ldap.error.password.age";
 
@@ -1187,19 +1177,11 @@ public interface PropsKeys {
 
 	public static final String LDAP_FACTORY_INITIAL = "ldap.factory.initial";
 
-	public static final String LDAP_GROUP_DEFAULT_OBJECT_CLASSES = "ldap.group.default.object.classes";
-
-	public static final String LDAP_GROUP_MAPPINGS = "ldap.group.mappings";
-
-	public static final String LDAP_GROUPS_DN = "ldap.groups.dn";
-
 	public static final String LDAP_IMPORT_CREATE_ROLE_PER_GROUP = "ldap.import.create.role.per.group";
 
 	public static final String LDAP_IMPORT_ENABLED = "ldap.import.enabled";
 
 	public static final String LDAP_IMPORT_GROUP_CACHE_ENABLED = "ldap.import.group.cache.enabled";
-
-	public static final String LDAP_IMPORT_GROUP_SEARCH_FILTER = "ldap.import.group.search.filter";
 
 	public static final String LDAP_IMPORT_GROUP_SEARCH_FILTER_ENABLED = "ldap.import.group.search.filter.enabled";
 
@@ -1217,8 +1199,6 @@ public interface PropsKeys {
 
 	public static final String LDAP_IMPORT_USER_PASSWORD_ENABLED = "ldap.import.user.password.enabled";
 
-	public static final String LDAP_IMPORT_USER_SEARCH_FILTER = "ldap.import.user.search.filter";
-
 	public static final String LDAP_IMPORT_USER_SYNC_STRATEGY = "ldap.import.user.sync.strategy";
 
 	public static final String LDAP_PAGE_SIZE = "ldap.page.size";
@@ -1229,23 +1209,9 @@ public interface PropsKeys {
 
 	public static final String LDAP_REFERRAL = "ldap.referral";
 
-	public static final String LDAP_SECURITY_CREDENTIALS = "ldap.security.credentials";
-
-	public static final String LDAP_SECURITY_PRINCIPAL = "ldap.security.principal";
-
-	public static final String LDAP_SERVER_NAME = "ldap.server.name";
-
-	public static final String LDAP_USER_CUSTOM_MAPPINGS = "ldap.user.custom.mappings";
-
-	public static final String LDAP_USER_DEFAULT_OBJECT_CLASSES = "ldap.user.default.object.classes";
-
 	public static final String LDAP_USER_IGNORE_ATTRIBUTES = "ldap.user.ignore.attributes";
 
 	public static final String LDAP_USER_IMPL = "ldap.user.impl";
-
-	public static final String LDAP_USER_MAPPINGS = "ldap.user.mappings";
-
-	public static final String LDAP_USERS_DN = "ldap.users.dn";
 
 	public static final String LIBRARY_DOWNLOAD_URL = "library.download.url.";
 

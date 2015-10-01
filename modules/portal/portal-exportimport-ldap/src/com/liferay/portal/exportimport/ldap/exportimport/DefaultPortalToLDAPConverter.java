@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap.exportimport;
+package com.liferay.portal.exportimport.ldap.exportimport;
 
 import aQute.bnd.annotation.metatype.Configurable;
 
@@ -29,6 +29,8 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.ldap.GroupConverterKeys;
 import com.liferay.portal.ldap.UserConverterKeys;
+import com.liferay.portal.ldap.configuration.LDAPServerConfiguration;
+import com.liferay.portal.ldap.configuration.LDAPServerConfigurationProvider;
 import com.liferay.portal.model.Contact;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.model.User;
@@ -144,12 +146,12 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 
 		Attribute objectClassAttribute = new BasicAttribute(_OBJECT_CLASS);
 
-		String postfix = _ldapSettings.getPropertyPostfix(ldapServerId);
+		LDAPServerConfiguration ldapServerConfiguration =
+			_ldapServerConfigurationProvider.getLDAPServerConfiguration(
+				ldapServerId);
 
-		String[] defaultObjectClassNames = PrefsPropsUtil.getStringArray(
-			userGroup.getCompanyId(),
-			PropsKeys.LDAP_GROUP_DEFAULT_OBJECT_CLASSES + postfix,
-			StringPool.COMMA);
+		String[] defaultObjectClassNames =
+			ldapServerConfiguration.groupDefaultObjectClasses();
 
 		for (String defaultObjectClassName : defaultObjectClassNames) {
 			objectClassAttribute.add(defaultObjectClassName);
@@ -210,12 +212,12 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 
 		Attribute objectClassAttribute = new BasicAttribute(_OBJECT_CLASS);
 
-		String postfix = _ldapSettings.getPropertyPostfix(ldapServerId);
+		LDAPServerConfiguration ldapServerConfiguration =
+			_ldapServerConfigurationProvider.getLDAPServerConfiguration(
+				ldapServerId);
 
-		String[] defaultObjectClassNames = PrefsPropsUtil.getStringArray(
-			user.getCompanyId(),
-			PropsKeys.LDAP_USER_DEFAULT_OBJECT_CLASSES + postfix,
-			StringPool.COMMA);
+		String[] defaultObjectClassNames =
+			ldapServerConfiguration.userDefaultObjectClasses();
 
 		for (String defaultObjectClassName : defaultObjectClassNames) {
 			objectClassAttribute.add(defaultObjectClassName);
@@ -368,6 +370,13 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 			_reservedContactFieldNames.put(
 				reservedContactFieldName, reservedContactFieldName);
 		}
+	}
+
+	@Reference
+	public void setLDAPServerConfigurationProvider(
+		LDAPServerConfigurationProvider ldapServerConfigurationProvider) {
+
+		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
 	}
 
 	public void setUserDNFieldName(String userDNFieldName) {
@@ -603,6 +612,7 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 
 	private ImageLocalService _imageLocalService;
 	private volatile LDAPAuthConfiguration _ldapAuthConfiguration;
+	private LDAPServerConfigurationProvider _ldapServerConfigurationProvider;
 	private LDAPSettings _ldapSettings;
 	private PasswordEncryptor _passwordEncryptor;
 	private PortalLDAP _portalLDAP;

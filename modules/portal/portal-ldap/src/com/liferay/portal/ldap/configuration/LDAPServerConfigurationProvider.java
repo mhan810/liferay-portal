@@ -12,28 +12,14 @@
  * details.
  */
 
-package com.liferay.portal.ldap;
-
-import com.liferay.portal.security.ldap.AttributesTransformer;
-
-import javax.naming.directory.Attributes;
-
-import org.osgi.service.component.annotations.Component;
+package com.liferay.portal.ldap.configuration;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Iván Zaera
  */
-@Component(immediate = true, service = AttributesTransformer.class)
-public class DefaultAttributesTransformer implements AttributesTransformer {
+public interface LDAPServerConfigurationProvider {
 
-	@Override
-	public Attributes transformGroup(Attributes attributes) {
-		return attributes;
-	}
-
-	@Override
-	public Attributes transformUser(Attributes attributes) {
-		return attributes;
-	}
+	public LDAPServerConfiguration getLDAPServerConfiguration(
+		long ldapServerId);
 
 }

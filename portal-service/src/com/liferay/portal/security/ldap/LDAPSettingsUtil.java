@@ -61,10 +61,6 @@ public class LDAPSettingsUtil {
 		return _getInstance().getPreferredLDAPServerId(companyId, screenName);
 	}
 
-	public static String getPropertyPostfix(long ldapServerId) {
-		return _getInstance().getPropertyPostfix(ldapServerId);
-	}
-
 	public static Properties getUserExpandoMappings(
 			long ldapServerId, long companyId)
 		throws Exception {

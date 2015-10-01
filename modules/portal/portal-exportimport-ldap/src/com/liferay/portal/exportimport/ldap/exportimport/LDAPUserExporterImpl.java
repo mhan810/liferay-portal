@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap.exportimport;
+package com.liferay.portal.exportimport.ldap.exportimport;
 
 import aQute.bnd.annotation.metatype.Configurable;
 

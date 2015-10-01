@@ -295,13 +295,22 @@ public class LDAPUtil {
 		}
 	}
 
-	public static void validateFilter(String filter, String filterPropertyName)
+	public static void validateFilter(String filter, long ldapServerId)
 		throws PortalException {
 
 		if (!isValidFilter(filter)) {
 			throw new LDAPFilterException(
-				"Invalid filter " + filter + " defined by " +
-					filterPropertyName);
+				"Invalid filter " + filter + " defined by LDAP server " +
+					ldapServerId);
+		}
+	}
+
+	public static void validateFilter(String filter, String propertyName)
+		throws PortalException {
+
+		if (!isValidFilter(filter)) {
+			throw new LDAPFilterException(
+				"Invalid filter " + filter + " defined by " + propertyName);
 		}
 	}
 

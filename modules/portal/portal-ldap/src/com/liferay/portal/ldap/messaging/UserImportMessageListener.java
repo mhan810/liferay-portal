@@ -18,8 +18,8 @@ import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageListener;
-import com.liferay.portal.ldap.configuration.LDAPConfiguration;
-import com.liferay.portal.ldap.settings.LDAPConfigurationSettingsUtil;
+import com.liferay.portal.ldap.configuration.LDAPCompanyConfiguration;
+import com.liferay.portal.ldap.configuration.LDAPCompanyConfigurationProvider;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.security.ldap.LDAPUserImporter;
 import com.liferay.portal.service.CompanyLocalService;
@@ -53,10 +53,11 @@ public class UserImportMessageListener extends BaseMessageListener {
 		for (Company company : companies) {
 			long companyId = company.getCompanyId();
 
-			LDAPConfiguration ldapConfiguration =
-				_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+			LDAPCompanyConfiguration ldapCompanyConfiguration =
+				_ldapCompanyConfigurationProvider.getLDAPCompanyConfiguration(
+					companyId);
 
-			if (time >= ldapConfiguration.importInterval()) {
+			if (time >= ldapCompanyConfiguration.importInterval()) {
 				_ldapUserImporter.importUsers(companyId);
 			}
 		}
@@ -76,11 +77,11 @@ public class UserImportMessageListener extends BaseMessageListener {
 	protected void setDestination(Destination destination) {
 	}
 
-	@Reference(unbind = "-")
-	protected void setLdapConfigurationSettingsUtil(
-		LDAPConfigurationSettingsUtil ldapConfigurationSettingsUtil) {
+	@Reference
+	protected void setLDAPCompanyConfigurationProvider(
+		LDAPCompanyConfigurationProvider ldapCompanyConfigurationProvider) {
 
-		_ldapConfigurationSettingsUtil = ldapConfigurationSettingsUtil;
+		_ldapCompanyConfigurationProvider = ldapCompanyConfigurationProvider;
 	}
 
 	@Reference(unbind = "-")
@@ -89,7 +90,7 @@ public class UserImportMessageListener extends BaseMessageListener {
 	}
 
 	private CompanyLocalService _companyLocalService;
-	private LDAPConfigurationSettingsUtil _ldapConfigurationSettingsUtil;
+	private LDAPCompanyConfigurationProvider _ldapCompanyConfigurationProvider;
 	private LDAPUserImporter _ldapUserImporter;
 
 }
