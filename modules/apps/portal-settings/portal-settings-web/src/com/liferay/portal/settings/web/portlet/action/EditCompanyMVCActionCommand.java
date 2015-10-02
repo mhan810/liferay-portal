@@ -50,8 +50,8 @@ import com.liferay.portal.model.EmailAddress;
 import com.liferay.portal.model.Phone;
 import com.liferay.portal.model.Website;
 import com.liferay.portal.security.auth.PrincipalException;
-import com.liferay.portal.service.CompanyService;
 import com.liferay.portal.security.sso.cas.constants.CASConstants;
+import com.liferay.portal.service.CompanyService;
 import com.liferay.portal.settings.web.constants.PortalSettingsPortletKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -165,13 +165,14 @@ public class EditCompanyMVCActionCommand extends BaseMVCActionCommand {
 
 		Settings settings = SettingsFactoryUtil.getSettings(
 			new CompanyServiceSettingsLocator(
-				themeDisplay.getCompanyId(), _CAS_SETTINGS_ID));
+				themeDisplay.getCompanyId(), CASConstants.SERVICE_NAME));
 
 		ModifiableSettings modifiableSettings =
 			settings.getModifiableSettings();
 
 		SettingsDescriptor settingsDescriptor =
-			SettingsFactoryUtil.getSettingsDescriptor(_CAS_SETTINGS_ID);
+			SettingsFactoryUtil.getSettingsDescriptor(
+				CASConstants.SERVICE_NAME);
 
 		for (String name : settingsDescriptor.getAllKeys()) {
 			String oldValue = settings.getValue(name, null);
@@ -234,25 +235,25 @@ public class EditCompanyMVCActionCommand extends BaseMVCActionCommand {
 
 	protected void validateCAS(ActionRequest actionRequest) {
 		boolean casEnabled = ParamUtil.getBoolean(
-			actionRequest, "cas--" + CASConstants.CAS_AUTH_ENABLED + "--");
+			actionRequest, "cas--" + CASConstants.ENABLED + "--");
 
 		if (!casEnabled) {
 			return;
 		}
 
 		String casLoginURL = ParamUtil.getString(
-			actionRequest, "cas--" + CASConstants.CAS_LOGIN_URL + "--");
+			actionRequest, "cas--" + CASConstants.LOGIN_URL + "--");
 		String casLogoutURL = ParamUtil.getString(
-			actionRequest, "cas--" + CASConstants.CAS_LOGOUT_URL + "--");
+			actionRequest, "cas--" + CASConstants.LOGOUT_URL + "--");
 		String casServerName = ParamUtil.getString(
-			actionRequest, "cas--" + CASConstants.CAS_SERVER_NAME + "--");
+			actionRequest, "cas--" + CASConstants.SERVER_NAME + "--");
 		String casServerURL = ParamUtil.getString(
-			actionRequest, "cas--" + CASConstants.CAS_SERVER_URL + "--");
+			actionRequest, "cas--" + CASConstants.SERVER_URL + "--");
 		String casServiceURL = ParamUtil.getString(
-			actionRequest, "cas--" + CASConstants.CAS_SERVICE_URL + "--");
+			actionRequest, "cas--" + CASConstants.SERVICE_URL + "--");
 		String casNoSuchUserRedirectURL = ParamUtil.getString(
 			actionRequest,
-			"cas--" + CASConstants.CAS_NO_SUCH_USER_REDIRECT_URL + "--");
+			"cas--" + CASConstants.NO_SUCH_USER_REDIRECT_URL + "--");
 
 		if (!Validator.isUrl(casLoginURL)) {
 			SessionErrors.add(actionRequest, "casLoginURLInvalid");
@@ -337,8 +338,6 @@ public class EditCompanyMVCActionCommand extends BaseMVCActionCommand {
 			SessionErrors.add(actionRequest, "socialInteractionsInvalid");
 		}
 	}
-
-	private static final String _CAS_SETTINGS_ID = CASConstants.SERVICE_NAME;
 
 	private CompanyService _companyService;
 	private DLAppLocalService _dlAppLocalService;
