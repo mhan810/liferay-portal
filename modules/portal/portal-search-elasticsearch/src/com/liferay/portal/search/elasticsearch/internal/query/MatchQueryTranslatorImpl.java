@@ -15,6 +15,7 @@
 package com.liferay.portal.search.elasticsearch.internal.query;
 
 import com.liferay.portal.kernel.search.generic.MatchQuery;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch.query.MatchQueryTranslator;
 
@@ -34,8 +35,16 @@ public class MatchQueryTranslatorImpl
 
 	@Override
 	public QueryBuilder translate(MatchQuery matchQuery) {
+		String value = matchQuery.getValue();
+
+		if (value.startsWith(StringPool.QUOTE) &&
+			value.endsWith(StringPool.QUOTE)) {
+
+			value = value.substring(1, value.length() - 1);
+		}
+
 		MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(
-			matchQuery.getField(), matchQuery.getValue());
+			matchQuery.getField(), value);
 
 		if (Validator.isNotNull(matchQuery.getAnalyzer())) {
 			matchQueryBuilder.analyzer(matchQuery.getAnalyzer());
