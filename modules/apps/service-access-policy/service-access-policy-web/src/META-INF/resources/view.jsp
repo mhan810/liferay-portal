@@ -60,6 +60,10 @@ PortletURL portletURL = renderResponse.createRenderURL();
 			</c:if>
 		</liferay-ui:search-container-column-text>
 
+		<liferay-ui:search-container-column-text name="default">
+			<liferay-ui:icon cssClass='<%= sapEntry.isDefaultSAPEntry() ? "icon-check" : "icon-check-empty" %>' />
+		</liferay-ui:search-container-column-text>
+
 		<liferay-ui:search-container-column-jsp
 			align="right"
 			cssClass="entry-action"
