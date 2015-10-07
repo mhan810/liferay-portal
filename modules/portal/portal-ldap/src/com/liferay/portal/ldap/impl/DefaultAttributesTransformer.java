@@ -12,13 +12,28 @@
  * details.
  */
 
-package com.liferay.portal.ldap.constants;
+package com.liferay.portal.ldap.impl;
+
+import com.liferay.portal.security.ldap.AttributesTransformer;
+
+import javax.naming.directory.Attributes;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
- * @author Michael C. Han
+ * @author Brian Wing Shun Chan
  */
-public class LDAPConstants {
+@Component(immediate = true, service = AttributesTransformer.class)
+public class DefaultAttributesTransformer implements AttributesTransformer {
 
-	public static final String SERVICE_NAME = "com.liferay.portal.ldap";
+	@Override
+	public Attributes transformGroup(Attributes attributes) {
+		return attributes;
+	}
+
+	@Override
+	public Attributes transformUser(Attributes attributes) {
+		return attributes;
+	}
 
 }

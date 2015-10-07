@@ -25,13 +25,11 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropertiesParamUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.auth.PrincipalException;
-import com.liferay.portal.security.ldap.LDAPSettingsUtil;
 import com.liferay.portal.service.CompanyService;
 import com.liferay.portal.settings.web.constants.PortalSettingsPortletKeys;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -108,7 +106,7 @@ public class EditLDAPServerMVCActionCommand extends BaseMVCActionCommand {
 			long companyId, UnicodeProperties properties)
 		throws Exception {
 
-		String defaultPostfix = LDAPSettingsUtil.getPropertyPostfix(0);
+		String defaultPostfix = StringPool.PERIOD + "0";
 
 		Set<String> defaultKeys = new HashSet<>(_KEYS.length);
 
@@ -118,7 +116,7 @@ public class EditLDAPServerMVCActionCommand extends BaseMVCActionCommand {
 
 		long ldapServerId = _counterLocalService.increment();
 
-		String postfix = LDAPSettingsUtil.getPropertyPostfix(ldapServerId);
+		String postfix = StringPool.PERIOD + ldapServerId;
 
 		Set<String> keysSet = properties.keySet();
 
@@ -128,12 +126,11 @@ public class EditLDAPServerMVCActionCommand extends BaseMVCActionCommand {
 			if (defaultKeys.contains(key)) {
 				String value = properties.remove(key);
 
-				if (key.equals(
-						PropsKeys.LDAP_SECURITY_CREDENTIALS + defaultPostfix) &&
+				if (key.equals("ldap.security.credentials" + defaultPostfix) &&
 					value.equals(Portal.TEMP_OBFUSCATION_VALUE)) {
 
 					value = PrefsPropsUtil.getString(
-						PropsKeys.LDAP_SECURITY_CREDENTIALS);
+						"ldap.security.credentials");
 				}
 
 				properties.setProperty(
@@ -165,7 +162,7 @@ public class EditLDAPServerMVCActionCommand extends BaseMVCActionCommand {
 
 		// Remove portletPreferences
 
-		String postfix = LDAPSettingsUtil.getPropertyPostfix(ldapServerId);
+		String postfix = StringPool.PERIOD + ldapServerId;
 
 		String[] keys = new String[_KEYS.length];
 
@@ -273,17 +270,14 @@ public class EditLDAPServerMVCActionCommand extends BaseMVCActionCommand {
 	}
 
 	private static final String[] _KEYS = {
-		PropsKeys.LDAP_AUTH_SEARCH_FILTER, PropsKeys.LDAP_BASE_DN,
-		PropsKeys.LDAP_BASE_PROVIDER_URL,
-		PropsKeys.LDAP_CONTACT_CUSTOM_MAPPINGS, PropsKeys.LDAP_CONTACT_MAPPINGS,
-		PropsKeys.LDAP_GROUP_DEFAULT_OBJECT_CLASSES,
-		PropsKeys.LDAP_GROUP_MAPPINGS, PropsKeys.LDAP_GROUPS_DN,
-		PropsKeys.LDAP_IMPORT_GROUP_SEARCH_FILTER,
-		PropsKeys.LDAP_IMPORT_USER_SEARCH_FILTER,
-		PropsKeys.LDAP_SECURITY_CREDENTIALS, PropsKeys.LDAP_SECURITY_PRINCIPAL,
-		PropsKeys.LDAP_SERVER_NAME, PropsKeys.LDAP_USER_CUSTOM_MAPPINGS,
-		PropsKeys.LDAP_USER_DEFAULT_OBJECT_CLASSES,
-		PropsKeys.LDAP_USER_MAPPINGS, PropsKeys.LDAP_USERS_DN
+		"ldap.auth.search.filter", "ldap.base.dn", "ldap.base.provider.url",
+		"ldap.contact.custom.mappings", "ldap.contact.mappings",
+		"ldap.group.default.object.classes", "ldap.group.mappings",
+		"ldap.groups.dn", "ldap.import.group.search.filter",
+		"ldap.import.user.search.filter", "ldap.security.credentials",
+		"ldap.security.principal", "ldap.server.name",
+		"ldap.user.custom.mappings", "ldap.user.default.object.classes",
+		"ldap.user.mappings", "ldap.users.dn"
 	};
 
 	private CompanyService _companyService;

@@ -12,23 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.ldap.settings.definition;
-
-import com.liferay.portal.kernel.settings.definition.ConfigurationBeanDeclaration;
-import com.liferay.portal.ldap.configuration.LDAPConfiguration;
-
-import org.osgi.service.component.annotations.Component;
+package com.liferay.portal.ldap.configuration;
 
 /**
- * @author Michael C. Han
+ * @author Iván Zaera
  */
-@Component(immediate = true, service = ConfigurationBeanDeclaration.class)
-public class LDAPCompanyServiceConfigurationBeanDeclaration
-	implements ConfigurationBeanDeclaration {
+public interface LDAPCompanyConfigurationProvider {
 
-	@Override
-	public Class<?> getConfigurationBeanClass() {
-		return LDAPConfiguration.class;
-	}
+	public LDAPCompanyConfiguration getLDAPCompanyConfiguration(long companyId);
 
 }

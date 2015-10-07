@@ -27,8 +27,8 @@ import com.liferay.portal.kernel.scheduler.Trigger;
 import com.liferay.portal.kernel.scheduler.TriggerFactory;
 import com.liferay.portal.kernel.scheduler.TriggerFactoryUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
-import com.liferay.portal.ldap.configuration.LDAPConfiguration;
-import com.liferay.portal.ldap.settings.LDAPConfigurationSettingsUtil;
+import com.liferay.portal.ldap.configuration.LDAPCompanyConfiguration;
+import com.liferay.portal.ldap.configuration.LDAPCompanyConfigurationProvider;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -61,8 +61,10 @@ public class MessagingConfigurator {
 			DestinationConfiguration.class, destinationConfiguration,
 			new HashMapDictionary<String, Object>());
 
-		LDAPConfiguration ldapConfiguration =
-			_ldapConfigurationSettingsUtil.getLDAPConfiguration();
+		// ????????? why companyId == 0?
+
+		LDAPCompanyConfiguration ldapCompanyConfiguration =
+			_ldapCompanyConfigurationProvider.getLDAPCompanyConfiguration(0L);
 
 		try {
 			_schedulerEngineHelper.unschedule(
@@ -79,7 +81,7 @@ public class MessagingConfigurator {
 			}
 		}
 
-		int interval = ldapConfiguration.importInterval();
+		int interval = ldapCompanyConfiguration.importInterval();
 
 		Trigger trigger = TriggerFactoryUtil.createTrigger(
 			UserImportMessageListener.class.getName(),
@@ -116,11 +118,11 @@ public class MessagingConfigurator {
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setLdapConfigurationSettingsUtil(
-		LDAPConfigurationSettingsUtil ldapConfigurationSettingsUtil) {
+	@Reference
+	protected void setLDAPCompanyConfigurationProvider(
+		LDAPCompanyConfigurationProvider ldapCompanyConfigurationProvider) {
 
-		_ldapConfigurationSettingsUtil = ldapConfigurationSettingsUtil;
+		_ldapCompanyConfigurationProvider = ldapCompanyConfigurationProvider;
 	}
 
 	@Reference(unbind = "-")
@@ -137,7 +139,7 @@ public class MessagingConfigurator {
 	private static final Log _log = LogFactoryUtil.getLog(
 		MessagingConfigurator.class);
 
-	private LDAPConfigurationSettingsUtil _ldapConfigurationSettingsUtil;
+	private LDAPCompanyConfigurationProvider _ldapCompanyConfigurationProvider;
 	private SchedulerEngineHelper _schedulerEngineHelper;
 	private ServiceRegistration<DestinationConfiguration> _serviceRegistration;
 
