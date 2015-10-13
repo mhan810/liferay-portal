@@ -336,6 +336,22 @@ public class MVCPortlet extends LiferayPortlet {
 					actionName);
 
 			if (!mvcActionCommands.isEmpty()) {
+				boolean validated = true;
+
+				for (MVCActionCommand mvcActionCommand : mvcActionCommands) {
+					if (mvcActionCommand instanceof FormMVCActionCommand) {
+						FormMVCActionCommand formMVCActionCommand =
+							(FormMVCActionCommand)mvcActionCommand;
+
+						validated &= formMVCActionCommand.validateForm(
+							actionRequest, actionResponse);
+					}
+				}
+
+				if (!validated) {
+					return false;
+				}
+
 				for (MVCActionCommand mvcActionCommand : mvcActionCommands) {
 					if (!mvcActionCommand.processAction(
 							actionRequest, actionResponse)) {
