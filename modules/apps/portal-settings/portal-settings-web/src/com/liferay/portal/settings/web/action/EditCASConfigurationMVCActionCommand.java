@@ -14,7 +14,6 @@
 
 package com.liferay.portal.settings.web.action;
 
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseFormMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -26,6 +25,9 @@ import com.liferay.portal.kernel.settings.SettingsFactoryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.security.auth.PrincipalException;
+import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.security.sso.cas.constants.CASConstants;
 import com.liferay.portal.settings.web.constants.PortalSettingsPortletKeys;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -49,7 +51,24 @@ public class EditCASConfigurationMVCActionCommand
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		Settings settings = getSettings(actionRequest);
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PermissionChecker permissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		if (!permissionChecker.isCompanyAdmin(themeDisplay.getCompanyId())) {
+			SessionErrors.add(actionRequest, PrincipalException.class);
+
+			actionResponse.setRenderParameter("mvcPath", "/error.jsp");
+
+			return;
+		}
+
+		Settings settings = SettingsFactoryUtil.getSettings(
+			new CompanyServiceSettingsLocator(
+				themeDisplay.getCompanyId(), CASConstants.SERVICE_NAME));
+
 		ModifiableSettings modifiableSettings =
 			settings.getModifiableSettings();
 
@@ -120,17 +139,6 @@ public class EditCASConfigurationMVCActionCommand
 
 			SessionErrors.add(actionRequest, "casNoSuchUserURLInvalid");
 		}
-	}
-
-	protected Settings getSettings(ActionRequest actionRequest)
-		throws PortalException {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		return SettingsFactoryUtil.getSettings(
-			new CompanyServiceSettingsLocator(
-				themeDisplay.getCompanyId(), CASConstants.SERVICE_NAME));
 	}
 
 }
