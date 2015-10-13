@@ -15,7 +15,7 @@
 package com.liferay.portal.settings.web.action;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
+import com.liferay.portal.kernel.portlet.bridges.mvc.BaseFormMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;
@@ -41,32 +41,38 @@ import org.osgi.service.component.annotations.Component;
 		},
 		service = MVCActionCommand.class
 	)
-public class EditCASConfigurationMVCActionCommand extends BaseMVCActionCommand {
+public class EditCASConfigurationMVCActionCommand
+	extends BaseFormMVCActionCommand {
 
 	@Override
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		validateCAS(actionRequest);
+		Settings settings = getSettings(actionRequest);
+		ModifiableSettings modifiableSettings =
+			settings.getModifiableSettings();
 
-		if (SessionErrors.isEmpty(actionRequest)) {
-			updateCASSettings(actionRequest);
+		SettingsDescriptor settingsDescriptor =
+			SettingsFactoryUtil.getSettingsDescriptor(
+				CASConstants.SERVICE_NAME);
+
+		for (String name : settingsDescriptor.getAllKeys()) {
+			String value = ParamUtil.getString(actionRequest, "cas--" + name);
+			String oldValue = settings.getValue(name, null);
+
+			if (!value.equals(oldValue)) {
+				modifiableSettings.setValue(name, value);
+			}
 		}
+
+		modifiableSettings.store();
 	}
 
-	protected Settings getSettings(ActionRequest actionRequest)
-		throws PortalException {
+	@Override
+	protected void doValidateForm(
+		ActionRequest actionRequest, ActionResponse actionResponse) {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		return SettingsFactoryUtil.getSettings(
-			new CompanyServiceSettingsLocator(
-				themeDisplay.getCompanyId(), CASConstants.SERVICE_NAME));
-	}
-
-	protected void validateCAS(ActionRequest actionRequest) {
 		boolean casEnabled = ParamUtil.getBoolean(
 			actionRequest, "cas--enabled");
 
@@ -116,27 +122,15 @@ public class EditCASConfigurationMVCActionCommand extends BaseMVCActionCommand {
 		}
 	}
 
-	private void updateCASSettings(ActionRequest actionRequest)
-		throws Exception {
+	protected Settings getSettings(ActionRequest actionRequest)
+		throws PortalException {
 
-		Settings settings = getSettings(actionRequest);
-		ModifiableSettings modifiableSettings =
-			settings.getModifiableSettings();
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
-		SettingsDescriptor settingsDescriptor =
-			SettingsFactoryUtil.getSettingsDescriptor(
-				CASConstants.SERVICE_NAME);
-
-		for (String name : settingsDescriptor.getAllKeys()) {
-			String value = ParamUtil.getString(actionRequest, "cas--" + name);
-			String oldValue = settings.getValue(name, null);
-
-			if (!value.equals(oldValue)) {
-				modifiableSettings.setValue(name, value);
-			}
-		}
-
-		modifiableSettings.store();
+		return SettingsFactoryUtil.getSettings(
+			new CompanyServiceSettingsLocator(
+				themeDisplay.getCompanyId(), CASConstants.SERVICE_NAME));
 	}
 
 }
