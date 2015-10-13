@@ -1,3 +1,17 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 package com.liferay.portal.settings.web.action;
 
 import javax.portlet.ActionRequest;
@@ -34,11 +48,12 @@ import com.liferay.portal.theme.ThemeDisplay;
 		},
 		service = MVCActionCommand.class
 	)
-public class EditCASConfigurationMVCActionCommand extends BaseMVCActionCommand implements MVCActionCommand {
+public class EditCASConfigurationMVCActionCommand extends BaseMVCActionCommand {
 
 	@Override
-	protected void doProcessAction(ActionRequest actionRequest,
-			ActionResponse actionResponse) throws Exception {
+	protected void doProcessAction(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
 		
 		validateCAS(actionRequest);
 		
@@ -47,20 +62,22 @@ public class EditCASConfigurationMVCActionCommand extends BaseMVCActionCommand i
 		}
 	}
 	
-	private void updateCASSettings(ActionRequest actionRequest) throws Exception {
-		
+	private void updateCASSettings(ActionRequest actionRequest)
+		throws Exception {
+
 		Settings settings = getSettings(actionRequest);		
-		ModifiableSettings modifiableSettings = settings.getModifiableSettings();
+		ModifiableSettings modifiableSettings =
+			settings.getModifiableSettings();
 		
 		SettingsDescriptor settingsDescriptor =
-				SettingsFactoryUtil.getSettingsDescriptor(_settingsId);
+			SettingsFactoryUtil.getSettingsDescriptor(
+				CASConstants.SERVICE_NAME);
 
 		for (String name : settingsDescriptor.getAllKeys()) {
-			
-			String value = actionRequest.getParameter("cas--" + name);
+			String value = ParamUtil.getString(actionRequest, "cas--" + name);
 			String oldValue = settings.getValue(name, null);
 
-			if (!StringUtil.equalsIgnoreBreakLine(value, oldValue)) {
+			if (!value.equals(oldValue)) {
 				modifiableSettings.setValue(name, value);
 			}
 		}
@@ -68,30 +85,38 @@ public class EditCASConfigurationMVCActionCommand extends BaseMVCActionCommand i
 		modifiableSettings.store();		
 	}
 	
-	protected Settings getSettings(ActionRequest actionRequest) throws PortalException {
+	protected Settings getSettings(ActionRequest actionRequest)
+		throws PortalException {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		return SettingsFactoryUtil.getSettings(
 			new CompanyServiceSettingsLocator(
-				themeDisplay.getCompanyId(), _settingsId));
+				themeDisplay.getCompanyId(), CASConstants.SERVICE_NAME));
 	}
 	
 	
 	protected void validateCAS(ActionRequest actionRequest) {
-		boolean casEnabled = ParamUtil.getBoolean(actionRequest, "cas--enabled");
+		boolean casEnabled = ParamUtil.getBoolean(
+			actionRequest, "cas--enabled");
 
 		if (!casEnabled) {
 			return;
 		}
 
-		String casLoginURL = ParamUtil.getString(actionRequest, "cas--loginURL");
-		String casLogoutURL = ParamUtil.getString(actionRequest, "cas--logoutURL");
-		String casServerName = ParamUtil.getString(actionRequest, "cas--serverName");
-		String casServerURL = ParamUtil.getString(actionRequest, "cas--serverURL");
-		String casServiceURL = ParamUtil.getString(actionRequest, "cas--serviceURL");
-		String casNoSuchUserRedirectURL = ParamUtil.getString(actionRequest, "cas--noSuchUserRedirectURL");
+		String casLoginURL = ParamUtil.getString(
+			actionRequest, "cas--loginURL");
+		String casLogoutURL = ParamUtil.getString(
+			actionRequest, "cas--logoutURL");
+		String casServerName = ParamUtil.getString(
+			actionRequest, "cas--serverName");
+		String casServerURL = ParamUtil.getString(
+			actionRequest, "cas--serverURL");
+		String casServiceURL = ParamUtil.getString(
+			actionRequest, "cas--serviceURL");
+		String casNoSuchUserRedirectURL = ParamUtil.getString(
+			actionRequest, "cas--noSuchUserRedirectURL");
 
 		if (!Validator.isUrl(casLoginURL)) {
 			SessionErrors.add(actionRequest, "casLoginURLInvalid");
@@ -120,12 +145,6 @@ public class EditCASConfigurationMVCActionCommand extends BaseMVCActionCommand i
 
 			SessionErrors.add(actionRequest, "casNoSuchUserURLInvalid");
 		}
-	}	
-	
-	
-	public String getParameter(PortletRequest portletRequest, String name) {
-		return ParamUtil.getString(portletRequest, name);
 	}
 
-	private static final String _settingsId = CASConstants.SERVICE_NAME;
 }
