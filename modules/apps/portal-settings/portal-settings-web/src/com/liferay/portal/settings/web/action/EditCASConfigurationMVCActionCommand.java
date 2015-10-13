@@ -14,12 +14,6 @@
 
 package com.liferay.portal.settings.web.action;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletRequest;
-
-import org.osgi.service.component.annotations.Component;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
@@ -30,17 +24,16 @@ import com.liferay.portal.kernel.settings.Settings;
 import com.liferay.portal.kernel.settings.SettingsDescriptor;
 import com.liferay.portal.kernel.settings.SettingsFactoryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PropertiesParamUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.sso.cas.constants.CASConstants;
 import com.liferay.portal.settings.web.constants.PortalSettingsPortletKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+
+import org.osgi.service.component.annotations.Component;
 @Component(
 		property = {
 			"javax.portlet.name=" + PortalSettingsPortletKeys.PORTAL_SETTINGS,
@@ -54,37 +47,14 @@ public class EditCASConfigurationMVCActionCommand extends BaseMVCActionCommand {
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
-		
+
 		validateCAS(actionRequest);
-		
+
 		if (SessionErrors.isEmpty(actionRequest)) {
 			updateCASSettings(actionRequest);
 		}
 	}
-	
-	private void updateCASSettings(ActionRequest actionRequest)
-		throws Exception {
 
-		Settings settings = getSettings(actionRequest);		
-		ModifiableSettings modifiableSettings =
-			settings.getModifiableSettings();
-		
-		SettingsDescriptor settingsDescriptor =
-			SettingsFactoryUtil.getSettingsDescriptor(
-				CASConstants.SERVICE_NAME);
-
-		for (String name : settingsDescriptor.getAllKeys()) {
-			String value = ParamUtil.getString(actionRequest, "cas--" + name);
-			String oldValue = settings.getValue(name, null);
-
-			if (!value.equals(oldValue)) {
-				modifiableSettings.setValue(name, value);
-			}
-		}
-		
-		modifiableSettings.store();		
-	}
-	
 	protected Settings getSettings(ActionRequest actionRequest)
 		throws PortalException {
 
@@ -95,8 +65,7 @@ public class EditCASConfigurationMVCActionCommand extends BaseMVCActionCommand {
 			new CompanyServiceSettingsLocator(
 				themeDisplay.getCompanyId(), CASConstants.SERVICE_NAME));
 	}
-	
-	
+
 	protected void validateCAS(ActionRequest actionRequest) {
 		boolean casEnabled = ParamUtil.getBoolean(
 			actionRequest, "cas--enabled");
@@ -145,6 +114,29 @@ public class EditCASConfigurationMVCActionCommand extends BaseMVCActionCommand {
 
 			SessionErrors.add(actionRequest, "casNoSuchUserURLInvalid");
 		}
+	}
+
+	private void updateCASSettings(ActionRequest actionRequest)
+		throws Exception {
+
+		Settings settings = getSettings(actionRequest);
+		ModifiableSettings modifiableSettings =
+			settings.getModifiableSettings();
+
+		SettingsDescriptor settingsDescriptor =
+			SettingsFactoryUtil.getSettingsDescriptor(
+				CASConstants.SERVICE_NAME);
+
+		for (String name : settingsDescriptor.getAllKeys()) {
+			String value = ParamUtil.getString(actionRequest, "cas--" + name);
+			String oldValue = settings.getValue(name, null);
+
+			if (!value.equals(oldValue)) {
+				modifiableSettings.setValue(name, value);
+			}
+		}
+
+		modifiableSettings.store();
 	}
 
 }
