@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap.authenticator.internal.configuration;
+package com.liferay.portal.ldap.internal.authenticator.configuration;
 
 import aQute.configurable.Configurable;
 

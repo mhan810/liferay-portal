@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap.messaging;
+package com.liferay.portal.ldap.internal.messaging;
 
 import aQute.bnd.annotation.component.Activate;
 

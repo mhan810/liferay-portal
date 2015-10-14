@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap.authenticator.internal;
+package com.liferay.portal.ldap.internal.authenticator;
 
 import com.liferay.portal.NoSuchUserException;
 import com.liferay.portal.PasswordExpiredException;

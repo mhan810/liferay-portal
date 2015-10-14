@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap.authenticator.internal;
+package com.liferay.portal.ldap.internal.authenticator;
 
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.StringPool;
