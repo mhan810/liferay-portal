@@ -25,6 +25,9 @@ import aQute.bnd.annotation.metatype.Meta;
 )
 public interface LDAPAuthConfiguration {
 
+	@Meta.AD(deflt = "0", required = false)
+	public long companyId();
+
 	@Meta.AD(deflt = "false", required = false)
 	public boolean enabled();
 
@@ -45,6 +48,12 @@ public interface LDAPAuthConfiguration {
 	public String passwordEncryptionAlgorithm();
 
 	@Meta.AD(deflt = "false", required = false)
+	public boolean passwordPolicyEnabled();
+
+	@Meta.AD(deflt = "false", required = false)
 	public boolean required();
+
+	@Meta.AD(deflt = "(mail=@email_address@)", required = false)
+	public String searchFilter();
 
 }
