@@ -155,10 +155,10 @@ public class LDAPAuth implements Authenticator {
 		// by binding to the LDAP server. If using LDAP password policies, bind
 		// auth method must be used in order to get the result control codes.
 
-		LDAPAuthConfiguration LDAPAuthConfiguration =
-			_LDAPAuthConfigurationProvider.getConfiguration(companyId);
+		LDAPAuthConfiguration ldapAuthConfiguration =
+			_ldapAuthConfiguration.getConfiguration(companyId);
 
-		String authMethod = LDAPAuthConfiguration.method();
+		String authMethod = ldapAuthConfiguration.method();
 
 		SystemLDAPConfiguration systemLDAPConfiguration =
 			_systemLDAPConfigurationProvider.getConfiguration(companyId);
@@ -226,7 +226,7 @@ public class LDAPAuth implements Authenticator {
 				String encryptedPassword = password;
 
 				String algorithm =
-					LDAPAuthConfiguration.passwordEncryptionAlgorithm();
+					ldapAuthConfiguration.passwordEncryptionAlgorithm();
 
 				if (Validator.isNotNull(algorithm)) {
 					encryptedPassword = PasswordEncryptorUtil.encrypt(
@@ -393,10 +393,10 @@ public class LDAPAuth implements Authenticator {
 			String password)
 		throws Exception {
 
-		LDAPAuthConfiguration LDAPAuthConfiguration =
-			_LDAPAuthConfigurationProvider.getConfiguration(companyId);
+		LDAPAuthConfiguration ldapAuthConfiguration =
+			_ldapAuthConfiguration.getConfiguration(companyId);
 
-		if (LDAPAuthConfiguration.enabled()) {
+		if (ldapAuthConfiguration.enabled()) {
 			if (_log.isDebugEnabled()) {
 				_log.debug("Authenticator is not enabled");
 			}
@@ -565,10 +565,10 @@ public class LDAPAuth implements Authenticator {
 			return SUCCESS;
 		}
 
-		LDAPAuthConfiguration LDAPAuthConfiguration =
-			_LDAPAuthConfigurationProvider.getConfiguration(companyId);
+		LDAPAuthConfiguration ldapAuthConfiguration =
+			_ldapAuthConfiguration.getConfiguration(companyId);
 
-		if (LDAPAuthConfiguration.required()) {
+		if (ldapAuthConfiguration.required()) {
 			return failureCode;
 		}
 		else {
@@ -603,9 +603,9 @@ public class LDAPAuth implements Authenticator {
 	)
 	protected void setConfigurationProvider(
 		ConfigurationProvider<LDAPAuthConfiguration>
-			LDAPAuthConfigurationProvider) {
+			ldapAuthConfiguration) {
 
-		_LDAPAuthConfigurationProvider = LDAPAuthConfigurationProvider;
+		_ldapAuthConfiguration = ldapAuthConfiguration;
 	}
 
 	protected void setFailedLDAPAuthResult(
@@ -675,7 +675,7 @@ public class LDAPAuth implements Authenticator {
 				LDAPAuth.class + "._failedLDAPAuthResultCache",
 				new HashMap<String, LDAPAuthResult>());
 	private ConfigurationProvider<LDAPAuthConfiguration>
-		_LDAPAuthConfigurationProvider;
+		_ldapAuthConfiguration;
 	private ConfigurationProvider<LDAPImportConfiguration>
 		_ldapImportConfigurationProvider;
 	private ConfigurationProvider<LDAPServerConfiguration>
