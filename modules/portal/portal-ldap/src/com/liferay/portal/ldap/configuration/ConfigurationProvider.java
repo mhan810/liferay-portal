@@ -14,7 +14,7 @@
 
 package com.liferay.portal.ldap.configuration;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.osgi.service.cm.Configuration;
 
@@ -27,7 +27,7 @@ public interface ConfigurationProvider<T> {
 
 	public T getConfiguration(long companyId, long index);
 
-	public Collection<T> getConfigurations(long companyId);
+	public List<T> getConfigurations(long companyId);
 
 	public Class<T> getMetatype();
 

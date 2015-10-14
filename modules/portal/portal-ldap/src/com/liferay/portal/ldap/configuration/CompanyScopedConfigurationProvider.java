@@ -17,7 +17,6 @@ package com.liferay.portal.ldap.configuration;
 import aQute.configurable.Configurable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +54,7 @@ public abstract class CompanyScopedConfigurationProvider
 	}
 
 	@Override
-	public Collection<T> getConfigurations(long companyId) {
+	public List<T> getConfigurations(long companyId) {
 		List<T> configurations = new ArrayList<>();
 
 		T t = getConfiguration(companyId);
