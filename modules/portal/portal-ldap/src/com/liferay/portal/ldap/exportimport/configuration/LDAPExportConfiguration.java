@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap.authenticator.configuration;
+package com.liferay.portal.ldap.exportimport.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
 
@@ -22,37 +22,20 @@ import com.liferay.portal.ldap.configuration.CompanyScopedConfiguration;
  * @author Michael C. Han
  */
 @Meta.OCD(
-	id = "com.liferay.portal.ldap.authenticator.configuration.LDAPAuthConfiguration",
+	factory = true,
+	id = "com.liferay.portal.ldap.exportimport.configuration.LDAPExportConfiguration",
 	localization = "content/Language"
 )
-public interface LDAPAuthConfiguration extends CompanyScopedConfiguration {
+public interface LDAPExportConfiguration extends CompanyScopedConfiguration {
 
 	@Meta.AD(deflt = "0", required = false)
+	@Override
 	public long companyId();
 
 	@Meta.AD(deflt = "false", required = false)
-	public boolean enabled();
+	public boolean exportEnabled();
 
-	@Meta.AD(
-		deflt = "bind", optionValues = {"bind", "password-compare"},
-		required = false
-	)
-	public String method();
-
-	@Meta.AD(
-		deflt = "NONE",
-		optionValues = {
-			"BCRYPT", "MD2", "MD5", "NONE", "SHA", "SHA-256", "SHA-384", "SSHA",
-			"UFC-CRYPT"
-		},
-		required = false
-	)
-	public String passwordEncryptionAlgorithm();
-
-	@Meta.AD(deflt = "false", required = false)
-	public boolean passwordPolicyEnabled();
-
-	@Meta.AD(deflt = "false", required = false)
-	public boolean required();
+	@Meta.AD(deflt = "true", required = false)
+	public boolean exportGroupEnabled();
 
 }
