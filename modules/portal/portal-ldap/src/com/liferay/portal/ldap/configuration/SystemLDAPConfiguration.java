@@ -26,6 +26,9 @@ import aQute.bnd.annotation.metatype.Meta;
 )
 public interface SystemLDAPConfiguration extends CompanyScopedConfiguration {
 
+	@Meta.AD(deflt = "0", required = false)
+	public long companyId();
+
 	@Meta.AD(
 		deflt =
 			"com.sun.jndi.ldap.connect.pool=true|com.sun.jndi.ldap.connect.timeout=500|com.sun.jndi.ldap.read.timeout=15000",
