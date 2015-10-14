@@ -20,10 +20,11 @@ import aQute.bnd.annotation.metatype.Meta;
  * @author Michael C. Han
  */
 @Meta.OCD(
+	factory = true,
 	id = "com.liferay.portal.ldap.configuration.SystemLDAPConfiguration",
 	localization = "content/Language"
 )
-public interface SystemLDAPConfiguration {
+public interface SystemLDAPConfiguration extends CompanyScopedConfiguration {
 
 	@Meta.AD(
 		deflt =
@@ -31,6 +32,27 @@ public interface SystemLDAPConfiguration {
 		required = false
 	)
 	public String[] connectionProperties();
+
+	@Meta.AD(deflt = "age", required = false)
+	public String errorPasswordAge();
+
+	@Meta.AD(deflt = "expired", required = false)
+	public String errorPasswordExpired();
+
+	@Meta.AD(deflt = "history", required = false)
+	public String errorPasswordHistory();
+
+	@Meta.AD(deflt = "not allowed to change", required = false)
+	public String errorPasswordNotChangeable();
+
+	@Meta.AD(deflt = "syntax", required = false)
+	public String errorPasswordSyntax();
+
+	@Meta.AD(deflt = "trivial", required = false)
+	public String errorPasswordTrivial();
+
+	@Meta.AD(deflt = "retry limit", required = false)
+	public String errorUserLockout();
 
 	@Meta.AD(deflt = "com.sun.jndi.ldap.LdapCtxFactory", required = false)
 	public String factoryInitial();

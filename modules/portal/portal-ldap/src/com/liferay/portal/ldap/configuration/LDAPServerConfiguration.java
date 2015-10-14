@@ -26,6 +26,9 @@ import aQute.bnd.annotation.metatype.Meta;
 )
 public interface LDAPServerConfiguration {
 
+	@Meta.AD(deflt = "(mail=@email_address@)", required = false)
+	public String authSearchFilter();
+
 	@Meta.AD(deflt = "dc=example,dc=com", required = true)
 	public String baseDN();
 
@@ -35,11 +38,35 @@ public interface LDAPServerConfiguration {
 	@Meta.AD(deflt = "0", required = false)
 	public long companyId();
 
+	@Meta.AD(deflt = "", required = false)
+	public String[] contactCustomMappings();
+
+	@Meta.AD(
+		deflt = "aimSn=|birthday=|facebookSn=|icqSn=|jabberSn=|jobTitle=|msnSn=|mySpaceSn=|skypeSn=|smsSn=|twitterSn=|ymSn=",
+		required = false
+	)
+	public String[] contactMappings();
+
+	@Meta.AD(deflt = "top|groupOfUniqueNames", required = false)
+	public String[] groupDefaultObjectClasses();
+
+	@Meta.AD(
+		deflt = "description=description|groupName=cn|user=uniqueMember",
+		required = false
+	)
+	public String[] groupMappings();
+
 	@Meta.AD(deflt = "ou=groups,dc=example,dc=com", required = false)
 	public String groupsDN();
 
 	@Meta.AD(deflt = "(objectClass=groupOfUniqueNames)", required = false)
 	public String groupSearchFilter();
+
+	@Meta.AD(deflt = "(objectClass=groupOfUniqueNames)", required = false)
+	public String importGroupSearchFilter();
+
+	@Meta.AD(deflt = "(objectClass=inetOrgPerson)", required = false)
+	public String importUserSearchFilter();
 
 	@Meta.AD(deflt = "0", required = false)
 	public long ldapServerId();
@@ -52,6 +79,24 @@ public interface LDAPServerConfiguration {
 
 	@Meta.AD(deflt = "", required = false)
 	public String serverName();
+
+	@Meta.AD(deflt = "", required = false)
+	public String[] userCustomMappings();
+
+	@Meta.AD(
+		deflt = "top|person|inetOrgPerson|organizationalPerson",
+		required = false
+	)
+	public String[] userDefaultObjectClasses();
+
+	@Meta.AD(deflt = "", required = false)
+	public String[] userIgnoreAttributes();
+
+	@Meta.AD(
+		deflt = "emailAddress=mail|firstName=givenName|group=groupMembership|jobTitle=title|lastName=sn|password=userPassword|screenName=cn|uuid=uuid",
+		required = false
+	)
+	public String[] userMappings();
 
 	@Meta.AD(deflt = "users,dc=example,dc=com", required = false)
 	public String usersDN();
