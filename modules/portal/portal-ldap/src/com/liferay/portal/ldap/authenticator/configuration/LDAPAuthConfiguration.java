@@ -16,16 +16,20 @@ package com.liferay.portal.ldap.authenticator.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
 
+import com.liferay.portal.ldap.configuration.CompanyScopedConfiguration;
+
 /**
  * @author Michael C. Han
  */
 @Meta.OCD(
+	factory = true,
 	id = "com.liferay.portal.ldap.authenticator.configuration.LDAPAuthConfiguration",
 	localization = "content/Language"
 )
-public interface LDAPAuthConfiguration {
+public interface LDAPAuthConfiguration extends CompanyScopedConfiguration {
 
 	@Meta.AD(deflt = "0", required = false)
+	@Override
 	public long companyId();
 
 	@Meta.AD(deflt = "false", required = false)
