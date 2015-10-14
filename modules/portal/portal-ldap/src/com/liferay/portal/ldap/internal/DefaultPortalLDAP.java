@@ -371,12 +371,17 @@ public class DefaultPortalLDAP implements PortalLDAP {
 			return preferredLDAPServerId;
 		}
 
-		long[] ldapServerIds = StringUtil.split(
-			PrefsPropsUtil.getString(companyId, "ldap.server.ids"), 0L);
+		List<LDAPServerConfiguration> ldapServerConfigurations =
+			_ldapServerConfigurationProvider.getConfigurations(companyId);
 
-		for (long ldapServerId : ldapServerIds) {
-			if (hasUser(ldapServerId, companyId, screenName, emailAddress)) {
-				return ldapServerId;
+		for (LDAPServerConfiguration ldapServerConfiguration :
+				ldapServerConfigurations) {
+
+			if (hasUser(
+					ldapServerConfiguration.ldapServerId(), companyId,
+					screenName, emailAddress)) {
+
+				return ldapServerConfiguration.ldapServerId();
 			}
 		}
 
@@ -400,11 +405,14 @@ public class DefaultPortalLDAP implements PortalLDAP {
 			}
 		}
 
-		if (hasProperties || (ldapServerIds.length <= 0)) {
+		if (hasProperties || ldapServerConfigurations.isEmpty()) {
 			return 0;
 		}
 
-		return ldapServerIds[0];
+		LDAPServerConfiguration ldapServerConfiguration =
+			ldapServerConfigurations.get(0);
+
+		return ldapServerConfiguration.ldapServerId();
 	}
 
 	@Override
