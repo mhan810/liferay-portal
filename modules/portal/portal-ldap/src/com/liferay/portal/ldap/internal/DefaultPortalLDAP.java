@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropertiesUtil;
+import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -37,7 +38,6 @@ import com.liferay.portal.ldap.configuration.SystemLDAPConfiguration;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.security.ldap.LDAPSettings;
 import com.liferay.portal.security.ldap.PortalLDAP;
-import com.liferay.portal.util.PropsValues;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -563,7 +563,7 @@ public class DefaultPortalLDAP implements PortalLDAP {
 
 			String authType = PrefsPropsUtil.getString(
 				companyId, PropsKeys.COMPANY_SECURITY_AUTH_TYPE,
-				PropsValues.COMPANY_SECURITY_AUTH_TYPE);
+				_companySecurityAuthType);
 
 			if (authType.equals(CompanyConstants.AUTH_TYPE_SN) &&
 				!PrefsPropsUtil.getBoolean(
@@ -954,6 +954,12 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		_ldapSettings = ldapSettings;
 	}
 
+	@Reference(unbind = "-")
+	protected void setProps(Props props) {
+		_companySecurityAuthType = GetterUtil.getString(
+			props.get(PropsKeys.COMPANY_SECURITY_AUTH_TYPE));
+	}
+
 	private Attributes _getAttributes(
 			LdapContext ldapContext, String fullDistinguishedName,
 			String[] attributeIds)
@@ -1067,6 +1073,7 @@ public class DefaultPortalLDAP implements PortalLDAP {
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultPortalLDAP.class);
 
+	private String _companySecurityAuthType;
 	private ConfigurationProvider<LDAPServerConfiguration>
 		_ldapServerConfigurationProvider;
 	private LDAPSettings _ldapSettings;
