@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.authenticator.ldap.configuration;
+package com.liferay.portal.ldap.authenticator.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
 
@@ -20,7 +20,7 @@ import aQute.bnd.annotation.metatype.Meta;
  * @author Michael C. Han
  */
 @Meta.OCD(
-	id = "com.liferay.portal.authenticator.ldap.configuration.LDAPAuthConfiguration",
+	id = "com.liferay.portal.ldap.authenticator.configuration.LDAPAuthConfiguration",
 	localization = "content/Language"
 )
 public interface LDAPAuthConfiguration {

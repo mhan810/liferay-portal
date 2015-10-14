@@ -12,14 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.authenticator.ldap;
+package com.liferay.portal.ldap.authenticator.internal;
 
 import aQute.bnd.annotation.metatype.Configurable;
 
 import com.liferay.portal.NoSuchUserException;
 import com.liferay.portal.PasswordExpiredException;
 import com.liferay.portal.UserLockoutException;
-import com.liferay.portal.authenticator.ldap.configuration.LDAPAuthConfiguration;
 import com.liferay.portal.kernel.ldap.LDAPFilterException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -32,6 +31,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.ldap.authenticator.configuration.LDAPAuthConfiguration;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.AuthException;
 import com.liferay.portal.security.auth.Authenticator;
@@ -69,7 +69,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Josef Sustacek
  */
 @Component(
-	configurationPid = "com.liferay.portal.authenticator.ldap.configuration.LDAPAuthConfiguration",
+	configurationPid = "com.liferay.portal.ldap.authenticator.configuration.LDAPAuthConfiguration",
 	immediate = true, property = {"key=auth.pipeline.pre"},
 	service = Authenticator.class
 )
