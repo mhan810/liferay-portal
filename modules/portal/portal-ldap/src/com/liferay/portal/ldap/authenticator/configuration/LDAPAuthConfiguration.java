@@ -16,6 +16,8 @@ package com.liferay.portal.ldap.authenticator.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
 
+import com.liferay.portal.ldap.configuration.CompanyScopedConfiguration;
+
 /**
  * @author Michael C. Han
  */
@@ -23,7 +25,10 @@ import aQute.bnd.annotation.metatype.Meta;
 	id = "com.liferay.portal.ldap.authenticator.configuration.LDAPAuthConfiguration",
 	localization = "content/Language"
 )
-public interface LDAPAuthConfiguration {
+public interface LDAPAuthConfiguration extends CompanyScopedConfiguration {
+
+	@Meta.AD(deflt = "0", required = false)
+	public long companyId();
 
 	@Meta.AD(deflt = "false", required = false)
 	public boolean enabled();
@@ -45,6 +50,12 @@ public interface LDAPAuthConfiguration {
 	public String passwordEncryptionAlgorithm();
 
 	@Meta.AD(deflt = "false", required = false)
+	public boolean passwordPolicyEnabled();
+
+	@Meta.AD(deflt = "false", required = false)
 	public boolean required();
+
+	@Meta.AD(deflt = "(mail=@email_address@)", required = false)
+	public String searchFilter();
 
 }
