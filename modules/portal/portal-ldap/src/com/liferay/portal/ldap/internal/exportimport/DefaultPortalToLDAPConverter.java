@@ -14,21 +14,19 @@
 
 package com.liferay.portal.ldap.internal.exportimport;
 
-import aQute.bnd.annotation.metatype.Configurable;
-
-import com.liferay.portal.authenticator.ldap.configuration.LDAPAuthConfiguration;
 import com.liferay.portal.kernel.bean.BeanPropertiesUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.ldap.GroupConverterKeys;
 import com.liferay.portal.ldap.UserConverterKeys;
+import com.liferay.portal.ldap.authenticator.configuration.LDAPAuthConfiguration;
+import com.liferay.portal.ldap.configuration.ConfigurationProvider;
+import com.liferay.portal.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.model.Contact;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.model.User;
@@ -58,9 +56,7 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -144,12 +140,12 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 
 		Attribute objectClassAttribute = new BasicAttribute(_OBJECT_CLASS);
 
-		String postfix = _ldapSettings.getPropertyPostfix(ldapServerId);
+		LDAPServerConfiguration ldapServerConfiguration =
+			_ldapServerConfigurationProvider.getConfiguration(
+				userGroup.getCompanyId(), ldapServerId);
 
-		String[] defaultObjectClassNames = PrefsPropsUtil.getStringArray(
-			userGroup.getCompanyId(),
-			PropsKeys.LDAP_GROUP_DEFAULT_OBJECT_CLASSES + postfix,
-			StringPool.COMMA);
+		String[] defaultObjectClassNames =
+			ldapServerConfiguration.groupDefaultObjectClasses();
 
 		for (String defaultObjectClassName : defaultObjectClassNames) {
 			objectClassAttribute.add(defaultObjectClassName);
@@ -210,12 +206,12 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 
 		Attribute objectClassAttribute = new BasicAttribute(_OBJECT_CLASS);
 
-		String postfix = _ldapSettings.getPropertyPostfix(ldapServerId);
+		LDAPServerConfiguration ldapServerConfiguration =
+			_ldapServerConfigurationProvider.getConfiguration(
+				user.getCompanyId(), ldapServerId);
 
-		String[] defaultObjectClassNames = PrefsPropsUtil.getStringArray(
-			user.getCompanyId(),
-			PropsKeys.LDAP_USER_DEFAULT_OBJECT_CLASSES + postfix,
-			StringPool.COMMA);
+		String[] defaultObjectClassNames =
+			ldapServerConfiguration.userDefaultObjectClasses();
 
 		for (String defaultObjectClassName : defaultObjectClassNames) {
 			objectClassAttribute.add(defaultObjectClassName);
@@ -381,13 +377,6 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 		}
 	}
 
-	@Activate
-	@Modified
-	protected void activate(Map<String, Object> properties) {
-		_ldapAuthConfiguration = Configurable.createConfigurable(
-			LDAPAuthConfiguration.class, properties);
-	}
-
 	protected void addAttributeMapping(
 		String attributeName, Object attributeValue, Attributes attributes) {
 
@@ -432,10 +421,11 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 			return password;
 		}
 
-		String algorithm = PrefsPropsUtil.getString(
-			user.getCompanyId(),
-			PropsKeys.LDAP_AUTH_PASSWORD_ENCRYPTION_ALGORITHM,
-			_ldapAuthConfiguration.passwordEncryptionAlgorithm());
+		LDAPAuthConfiguration ldapAuthConfiguration =
+			_ldapAuthConfigurationProvider.getConfiguration(
+				user.getCompanyId());
+
+		String algorithm = ldapAuthConfiguration.passwordEncryptionAlgorithm();
 
 		if (Validator.isNull(algorithm)) {
 			return password;
@@ -579,6 +569,28 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 		_imageLocalService = imageLocalService;
 	}
 
+	@Reference(
+		target = "(factoryPid=com.liferay.portal.ldap.authenticator.configuration.LDAPAuthConfiguration)",
+		unbind = "-"
+	)
+	protected void setLDAPAuthConfigurationProvider(
+		ConfigurationProvider<LDAPAuthConfiguration>
+			LDAPAuthConfigurationProvider) {
+
+		_ldapAuthConfigurationProvider = LDAPAuthConfigurationProvider;
+	}
+
+	@Reference(
+		target = "(factoryPid=com.liferay.portal.ldap.configuration.LDAPServerConfiguration)",
+		unbind = "-"
+	)
+	protected void setLDAPServerConfigurationProvider(
+		ConfigurationProvider<LDAPServerConfiguration>
+			ldapServerConfigurationProvider) {
+
+		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
+	}
+
 	@Reference(unbind = "-")
 	protected void setLdapSettings(LDAPSettings ldapSettings) {
 		_ldapSettings = ldapSettings;
@@ -602,7 +614,10 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 		DefaultPortalToLDAPConverter.class);
 
 	private ImageLocalService _imageLocalService;
-	private volatile LDAPAuthConfiguration _ldapAuthConfiguration;
+	private ConfigurationProvider<LDAPAuthConfiguration>
+		_ldapAuthConfigurationProvider;
+	private ConfigurationProvider<LDAPServerConfiguration>
+		_ldapServerConfigurationProvider;
 	private LDAPSettings _ldapSettings;
 	private PasswordEncryptor _passwordEncryptor;
 	private PortalLDAP _portalLDAP;

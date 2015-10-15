@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.AutoResetThreadLocal;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -32,6 +31,9 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.ldap.authenticator.configuration.LDAPAuthConfiguration;
 import com.liferay.portal.ldap.configuration.ConfigurationProvider;
+import com.liferay.portal.ldap.configuration.LDAPServerConfiguration;
+import com.liferay.portal.ldap.configuration.SystemLDAPConfiguration;
+import com.liferay.portal.ldap.exportimport.configuration.LDAPImportConfiguration;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.AuthException;
 import com.liferay.portal.security.auth.Authenticator;
@@ -44,6 +46,7 @@ import com.liferay.portlet.admin.util.Omniadmin;
 
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -157,15 +160,16 @@ public class LDAPAuth implements Authenticator {
 
 		String authMethod = ldapAuthConfiguration.method();
 
+		SystemLDAPConfiguration systemLDAPConfiguration =
+			_systemLDAPConfigurationProvider.getConfiguration(companyId);
+
 		if (authMethod.equals(AUTH_METHOD_BIND)) {
 			Hashtable<String, Object> env =
 				(Hashtable<String, Object>)ctx.getEnvironment();
 
 			env.put(Context.SECURITY_PRINCIPAL, userDN);
 			env.put(Context.SECURITY_CREDENTIALS, password);
-			env.put(
-				Context.REFERRAL,
-				PrefsPropsUtil.getString(companyId, PropsKeys.LDAP_REFERRAL));
+			env.put(Context.REFERRAL, systemLDAPConfiguration.referral());
 
 			// Do not use pooling because principal changes
 
@@ -251,8 +255,6 @@ public class LDAPAuth implements Authenticator {
 			String screenName, long userId, String password)
 		throws Exception {
 
-		String postfix = LDAPSettingsUtil.getPropertyPostfix(ldapServerId);
-
 		LdapContext ldapContext = PortalLDAPUtil.getContext(
 			ldapServerId, companyId);
 
@@ -263,8 +265,11 @@ public class LDAPAuth implements Authenticator {
 		NamingEnumeration<SearchResult> enu = null;
 
 		try {
-			String baseDN = PrefsPropsUtil.getString(
-				companyId, PropsKeys.LDAP_BASE_DN + postfix);
+			LDAPServerConfiguration ldapServerConfiguration =
+				_ldapServerConfigurationProvider.getConfiguration(
+					companyId, ldapServerId);
+
+			String baseDN = ldapServerConfiguration.baseDN();
 
 			//  Process LDAP auth search filter
 
@@ -315,9 +320,12 @@ public class LDAPAuth implements Authenticator {
 				String errorMessage = ldapAuthResult.getErrorMessage();
 
 				if (errorMessage != null) {
+					SystemLDAPConfiguration systemLDAPConfiguration =
+						_systemLDAPConfigurationProvider.getConfiguration(
+							companyId);
+
 					int pos = errorMessage.indexOf(
-						PrefsPropsUtil.getString(
-							companyId, PropsKeys.LDAP_ERROR_USER_LOCKOUT));
+						systemLDAPConfiguration.errorUserLockout());
 
 					if (pos != -1) {
 						throw new UserLockoutException.LDAPLockout(
@@ -325,8 +333,7 @@ public class LDAPAuth implements Authenticator {
 					}
 
 					pos = errorMessage.indexOf(
-						PrefsPropsUtil.getString(
-							companyId, PropsKeys.LDAP_ERROR_PASSWORD_EXPIRED));
+						systemLDAPConfiguration.errorPasswordExpired());
 
 					if (pos != -1) {
 						throw new PasswordExpiredException();
@@ -402,55 +409,29 @@ public class LDAPAuth implements Authenticator {
 		int preferredLDAPServerResult = authenticateAgainstPreferredLDAPServer(
 			companyId, emailAddress, screenName, userId, password);
 
-		if (preferredLDAPServerResult == SUCCESS) {
-			if (PrefsPropsUtil.getBoolean(
-					companyId, PropsKeys.LDAP_IMPORT_USER_PASSWORD_ENABLED)) {
+		LDAPImportConfiguration ldapImportConfiguration =
+			_ldapImportConfigurationProvider.getConfiguration(companyId);
 
+		if (preferredLDAPServerResult == SUCCESS) {
+			if (ldapImportConfiguration.importUserPasswordEnabled()) {
 				return preferredLDAPServerResult;
 			}
 
 			return Authenticator.SKIP_LIFERAY_CHECK;
 		}
 
-		long[] ldapServerIds = StringUtil.split(
-			PrefsPropsUtil.getString(companyId, "ldap.server.ids"), 0L);
+		List<LDAPServerConfiguration> ldapServerConfigurations =
+			_ldapServerConfigurationProvider.getConfigurations(companyId);
 
-		for (long ldapServerId : ldapServerIds) {
-			int result = authenticate(
-				ldapServerId, companyId, emailAddress, screenName, userId,
-				password);
-
-			if (result == SUCCESS) {
-				if (PrefsPropsUtil.getBoolean(
-						companyId,
-						PropsKeys.LDAP_IMPORT_USER_PASSWORD_ENABLED)) {
-
-					return result;
-				}
-
-				return Authenticator.SKIP_LIFERAY_CHECK;
-			}
-		}
-
-		for (int ldapServerId = 0;; ldapServerId++) {
-			String postfix = LDAPSettingsUtil.getPropertyPostfix(ldapServerId);
-
-			String providerUrl = PrefsPropsUtil.getString(
-				companyId, PropsKeys.LDAP_BASE_PROVIDER_URL + postfix);
-
-			if (Validator.isNull(providerUrl)) {
-				break;
-			}
+		for (LDAPServerConfiguration ldapServerConfiguration :
+				ldapServerConfigurations) {
 
 			int result = authenticate(
-				ldapServerId, companyId, emailAddress, screenName, userId,
-				password);
+				ldapServerConfiguration.ldapServerId(), companyId, emailAddress,
+				screenName, userId, password);
 
 			if (result == SUCCESS) {
-				if (PrefsPropsUtil.getBoolean(
-						companyId,
-						PropsKeys.LDAP_IMPORT_USER_PASSWORD_ENABLED)) {
-
+				if (ldapImportConfiguration.importUserPasswordEnabled()) {
 					return result;
 				}
 
@@ -505,10 +486,11 @@ public class LDAPAuth implements Authenticator {
 			return result;
 		}
 
-		String postfix = LDAPSettingsUtil.getPropertyPostfix(ldapServerId);
+		LDAPServerConfiguration ldapServerConfiguration =
+			_ldapServerConfigurationProvider.getConfiguration(
+				companyId, ldapServerId);
 
-		String providerUrl = PrefsPropsUtil.getString(
-			user.getCompanyId(), PropsKeys.LDAP_BASE_PROVIDER_URL + postfix);
+		String providerUrl = ldapServerConfiguration.baseProviderURL();
 
 		if (Validator.isNull(providerUrl)) {
 			return result;
@@ -639,6 +621,28 @@ public class LDAPAuth implements Authenticator {
 		failedLDAPAuthResults.put(cacheKey, ldapAuthResult);
 	}
 
+	@Reference(
+		target = "(factoryPid=com.liferay.portal.ldap.exportimport.configuration.LDAPImportConfiguration)",
+		unbind = "-"
+	)
+	protected void setLDAPImportConfigurationProvider(
+		ConfigurationProvider<LDAPImportConfiguration>
+			ldapImportConfigurationProvider) {
+
+		_ldapImportConfigurationProvider = ldapImportConfigurationProvider;
+	}
+
+	@Reference(
+		target = "(factoryPid=com.liferay.portal.ldap.configuration.LDAPServerConfiguration)",
+		unbind = "-"
+	)
+	protected void setLDAPServerConfigurationProvider(
+		ConfigurationProvider<LDAPServerConfiguration>
+			ldapServerConfigurationProvider) {
+
+		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
+	}
+
 	@Reference
 	protected void setOmniadmin(Omniadmin omniadmin) {
 		_omniadmin = omniadmin;
@@ -647,6 +651,17 @@ public class LDAPAuth implements Authenticator {
 	@Reference
 	protected void setProps(Props props) {
 		_props = props;
+	}
+
+	@Reference(
+		target = "(factoryPid=com.liferay.portal.ldap.configuration.SystemLDAPConfiguration)",
+		unbind = "-"
+	)
+	protected void setSystemLDAPConfigurationProvider(
+		ConfigurationProvider<SystemLDAPConfiguration>
+			systemLDAPConfigurationProvider) {
+
+		_systemLDAPConfigurationProvider = systemLDAPConfigurationProvider;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(LDAPAuth.class);
@@ -659,7 +674,13 @@ public class LDAPAuth implements Authenticator {
 				new HashMap<String, LDAPAuthResult>());
 	private ConfigurationProvider<LDAPAuthConfiguration>
 		_ldapAuthConfigurationProvider;
+	private ConfigurationProvider<LDAPImportConfiguration>
+		_ldapImportConfigurationProvider;
+	private ConfigurationProvider<LDAPServerConfiguration>
+		_ldapServerConfigurationProvider;
 	private Omniadmin _omniadmin;
 	private Props _props;
+	private ConfigurationProvider<SystemLDAPConfiguration>
+		_systemLDAPConfigurationProvider;
 
 }
