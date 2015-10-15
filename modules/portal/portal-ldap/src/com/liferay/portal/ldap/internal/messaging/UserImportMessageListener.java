@@ -18,8 +18,8 @@ import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageListener;
-import com.liferay.portal.ldap.configuration.LDAPConfiguration;
-import com.liferay.portal.ldap.settings.LDAPConfigurationSettingsUtil;
+import com.liferay.portal.ldap.configuration.ConfigurationProvider;
+import com.liferay.portal.ldap.exportimport.configuration.LDAPImportConfiguration;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.security.ldap.LDAPUserImporter;
 import com.liferay.portal.service.CompanyLocalService;
@@ -53,10 +53,10 @@ public class UserImportMessageListener extends BaseMessageListener {
 		for (Company company : companies) {
 			long companyId = company.getCompanyId();
 
-			LDAPConfiguration ldapConfiguration =
-				_ldapConfigurationSettingsUtil.getLDAPConfiguration(companyId);
+			LDAPImportConfiguration ldapImportConfiguration =
+				_ldapImportConfigurationProvider.getConfiguration(companyId);
 
-			if (time >= ldapConfiguration.importInterval()) {
+			if (time >= ldapImportConfiguration.importInterval()) {
 				_ldapUserImporter.importUsers(companyId);
 			}
 		}
@@ -76,11 +76,15 @@ public class UserImportMessageListener extends BaseMessageListener {
 	protected void setDestination(Destination destination) {
 	}
 
-	@Reference(unbind = "-")
-	protected void setLdapConfigurationSettingsUtil(
-		LDAPConfigurationSettingsUtil ldapConfigurationSettingsUtil) {
+	@Reference(
+		target = "(factoryPid=com.liferay.portal.ldap.exportimport.configuration.LDAPImportConfiguration)",
+		unbind = "-"
+	)
+	protected void setLDAPImportConfigurationProvider(
+		ConfigurationProvider<LDAPImportConfiguration>
+			ldapImportConfigurationProvider) {
 
-		_ldapConfigurationSettingsUtil = ldapConfigurationSettingsUtil;
+		_ldapImportConfigurationProvider = ldapImportConfigurationProvider;
 	}
 
 	@Reference(unbind = "-")
@@ -89,7 +93,8 @@ public class UserImportMessageListener extends BaseMessageListener {
 	}
 
 	private CompanyLocalService _companyLocalService;
-	private LDAPConfigurationSettingsUtil _ldapConfigurationSettingsUtil;
+	private ConfigurationProvider<LDAPImportConfiguration>
+		_ldapImportConfigurationProvider;
 	private LDAPUserImporter _ldapUserImporter;
 
 }

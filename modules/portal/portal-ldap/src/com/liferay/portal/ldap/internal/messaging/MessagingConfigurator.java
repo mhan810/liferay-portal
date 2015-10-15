@@ -27,8 +27,8 @@ import com.liferay.portal.kernel.scheduler.Trigger;
 import com.liferay.portal.kernel.scheduler.TriggerFactory;
 import com.liferay.portal.kernel.scheduler.TriggerFactoryUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
-import com.liferay.portal.ldap.configuration.LDAPConfiguration;
-import com.liferay.portal.ldap.settings.LDAPConfigurationSettingsUtil;
+import com.liferay.portal.ldap.configuration.ConfigurationProvider;
+import com.liferay.portal.ldap.exportimport.configuration.LDAPImportConfiguration;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -40,10 +40,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Michael C. Han
  */
-@Component(
-	configurationPid = "com.liferay.portal.ldap.configuration.LDAPConfiguration",
-	immediate = true
-)
+@Component(immediate = true)
 public class MessagingConfigurator {
 
 	@Activate
@@ -61,9 +58,6 @@ public class MessagingConfigurator {
 			DestinationConfiguration.class, destinationConfiguration,
 			new HashMapDictionary<String, Object>());
 
-		LDAPConfiguration ldapConfiguration =
-			_ldapConfigurationSettingsUtil.getLDAPConfiguration();
-
 		try {
 			_schedulerEngineHelper.unschedule(
 				UserImportMessageListener.class.getName(),
@@ -79,7 +73,10 @@ public class MessagingConfigurator {
 			}
 		}
 
-		int interval = ldapConfiguration.importInterval();
+		LDAPImportConfiguration ldapImportConfiguration =
+			_ldapImportConfigurationProvider.getConfiguration(0L);
+
+		int interval = ldapImportConfiguration.importInterval();
 
 		Trigger trigger = TriggerFactoryUtil.createTrigger(
 			UserImportMessageListener.class.getName(),
@@ -116,11 +113,15 @@ public class MessagingConfigurator {
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setLdapConfigurationSettingsUtil(
-		LDAPConfigurationSettingsUtil ldapConfigurationSettingsUtil) {
+	@Reference(
+		target = "(factoryPid=com.liferay.portal.ldap.exportimport.configuration.LDAPImportConfiguration)",
+		unbind = "-"
+	)
+	protected void setLDAPImportConfigurationProvider(
+		ConfigurationProvider<LDAPImportConfiguration>
+			ldapImportConfigurationProvider) {
 
-		_ldapConfigurationSettingsUtil = ldapConfigurationSettingsUtil;
+		_ldapImportConfigurationProvider = ldapImportConfigurationProvider;
 	}
 
 	@Reference(unbind = "-")
@@ -137,7 +138,8 @@ public class MessagingConfigurator {
 	private static final Log _log = LogFactoryUtil.getLog(
 		MessagingConfigurator.class);
 
-	private LDAPConfigurationSettingsUtil _ldapConfigurationSettingsUtil;
+	private ConfigurationProvider<LDAPImportConfiguration>
+		_ldapImportConfigurationProvider;
 	private SchedulerEngineHelper _schedulerEngineHelper;
 	private ServiceRegistration<DestinationConfiguration> _serviceRegistration;
 
