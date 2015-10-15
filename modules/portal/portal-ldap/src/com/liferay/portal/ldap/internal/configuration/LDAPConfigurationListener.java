@@ -15,6 +15,8 @@
 package com.liferay.portal.ldap.internal.configuration;
 
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.ldap.configuration.ConfigurationProvider;
@@ -24,14 +26,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.cm.ConfigurationEvent;
 import org.osgi.service.cm.ConfigurationListener;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
@@ -58,14 +56,8 @@ public class LDAPConfigurationListener implements ConfigurationListener {
 		ConfigurationProvider<?> configurationProvider =
 			_configurationProviders.get(factoryPid);
 
-		ServiceReference<ConfigurationAdmin> serviceReference =
-			configurationEvent.getReference();
-
-		ConfigurationAdmin configurationAdmin = _bundleContext.getService(
-			serviceReference);
-
 		try {
-			Configuration configuration = configurationAdmin.getConfiguration(
+			Configuration configuration = _configurationAdmin.getConfiguration(
 				configurationEvent.getPid());
 
 			if (configurationEvent.getType() == ConfigurationEvent.CM_DELETED) {
@@ -82,16 +74,16 @@ public class LDAPConfigurationListener implements ConfigurationListener {
 		}
 	}
 
-	@Activate
-	protected void activate(ComponentContext componentContext) {
-		_bundleContext = componentContext.getBundleContext();
-	}
-
 	@Deactivate
 	protected void deactivate() {
-		_bundleContext = null;
-
 		_configurationProviders.clear();
+	}
+
+	@Reference
+	protected void setConfigurationAdmin(
+		ConfigurationAdmin configurationAdmin) {
+
+		_configurationAdmin = configurationAdmin;
 	}
 
 	@Reference(
@@ -112,6 +104,21 @@ public class LDAPConfigurationListener implements ConfigurationListener {
 		}
 
 		_configurationProviders.put(factoryPid, configurationProvider);
+
+		try {
+			Configuration[] configurations =
+				_configurationAdmin.listConfigurations(
+					"(service.factoryPid=" + factoryPid + ")");
+
+			for (Configuration configuration : configurations) {
+				configurationProvider.registerConfiguration(configuration);
+			}
+		}
+		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to retrieve configurations", e);
+			}
+		}
 	}
 
 	protected synchronized void unsetConfigurationProvider(
@@ -123,7 +130,10 @@ public class LDAPConfigurationListener implements ConfigurationListener {
 		_configurationProviders.remove(factoryPid);
 	}
 
-	private BundleContext _bundleContext;
+	private static final Log _log = LogFactoryUtil.getLog(
+		LDAPConfigurationListener.class);
+
+	private ConfigurationAdmin _configurationAdmin;
 	private final Map<String, ConfigurationProvider<?>>
 		_configurationProviders = new HashMap<>();
 
