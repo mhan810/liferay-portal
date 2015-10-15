@@ -20,10 +20,10 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.ldap.configuration.LDAPServerConfiguration;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,18 +46,15 @@ public class LDAPServerConfigurationProviderImpl
 
 	@Override
 	public LDAPServerConfiguration getConfiguration(long companyId) {
-		Collection<LDAPServerConfiguration> ldapServerConfigurations =
+		List<LDAPServerConfiguration> ldapServerConfigurations =
 			getConfigurations(companyId);
 
-		Iterator<LDAPServerConfiguration> iterator =
-			ldapServerConfigurations.iterator();
-
-		if (iterator.hasNext()) {
-			return iterator.next();
+		if (ldapServerConfigurations.isEmpty()) {
+			throw new IllegalArgumentException(
+				"No LDAPServerConfiguration found for companyId " + companyId);
 		}
 
-		throw new IllegalArgumentException(
-			"No LDAPServerConfiguration found for companyId " + companyId);
+		return ldapServerConfigurations.get(0);
 	}
 
 	@Override
@@ -89,9 +86,7 @@ public class LDAPServerConfigurationProviderImpl
 	}
 
 	@Override
-	public Collection<LDAPServerConfiguration> getConfigurations(
-		long companyId) {
-
+	public List<LDAPServerConfiguration> getConfigurations(long companyId) {
 		Map<Long, LDAPServerConfiguration> ldapServerConfigurations =
 			_ldapServerConfigurations.get(companyId);
 
@@ -103,7 +98,7 @@ public class LDAPServerConfigurationProviderImpl
 			return Collections.emptyList();
 		}
 
-		return ldapServerConfigurations.values();
+		return new ArrayList<>(ldapServerConfigurations.values());
 	}
 
 	@Override
