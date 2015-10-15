@@ -759,7 +759,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 
 			cookie = _portalLDAP.getUsers(
 				ldapServerId, companyId, ldapContext, cookie, 0,
-				new String[]{userMappingsScreenName}, searchResults);
+				new String[] {userMappingsScreenName}, searchResults);
 
 			for (SearchResult searchResult : searchResults) {
 				try {
