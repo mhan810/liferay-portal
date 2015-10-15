@@ -663,14 +663,12 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 
 		sb.append("(&");
 
-		String importGroupSearchFilter =
-			ldapServerConfiguration.importGroupSearchFilter();
+		String groupSearchFilter = ldapServerConfiguration.groupSearchFilter();
 
 		LDAPUtil.validateFilter(
-			importGroupSearchFilter,
-			"LDAPServerConfiguration.importGroupSearchFilter");
+			groupSearchFilter, "LDAPServerConfiguration.groupSearchFilter");
 
-		sb.append(importGroupSearchFilter);
+		sb.append(groupSearchFilter);
 
 		sb.append(StringPool.OPEN_PARENTHESIS);
 		sb.append(groupMappings.getProperty("groupName"));
@@ -761,7 +759,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 
 			cookie = _portalLDAP.getUsers(
 				ldapServerId, companyId, ldapContext, cookie, 0,
-				new String[] {userMappingsScreenName}, searchResults);
+				new String[]{userMappingsScreenName}, searchResults);
 
 			for (SearchResult searchResult : searchResults) {
 				try {
@@ -887,14 +885,13 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			sb.append(StringPool.OPEN_PARENTHESIS);
 			sb.append(StringPool.AMPERSAND);
 
-			String importGroupSearchFilter =
-				ldapServerConfiguration.importGroupSearchFilter();
+			String groupSearchFilter =
+				ldapServerConfiguration.groupSearchFilter();
 
 			LDAPUtil.validateFilter(
-				importGroupSearchFilter,
-				"LDAPServerConfiguration.importGroupSearchFilter");
+				groupSearchFilter, "LDAPServerConfiguration.groupSearchFilter");
 
-			sb.append(importGroupSearchFilter);
+			sb.append(groupSearchFilter);
 
 			sb.append(StringPool.OPEN_PARENTHESIS);
 			sb.append(groupMappingsUser);
