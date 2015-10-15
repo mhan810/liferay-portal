@@ -255,8 +255,6 @@ public class LDAPAuth implements Authenticator {
 			String screenName, long userId, String password)
 		throws Exception {
 
-		String postfix = LDAPSettingsUtil.getPropertyPostfix(ldapServerId);
-
 		LdapContext ldapContext = PortalLDAPUtil.getContext(
 			ldapServerId, companyId);
 
