@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap.authenticator.internal.configuration;
+package com.liferay.portal.ldap.internal.authenticator.configuration;
 
 import com.liferay.portal.ldap.authenticator.configuration.LDAPAuthConfiguration;
 import com.liferay.portal.ldap.configuration.CompanyScopedConfigurationProvider;

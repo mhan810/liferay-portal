@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap.exportimport;
+package com.liferay.portal.ldap.internal.exportimport;
 
 import aQute.bnd.annotation.metatype.Configurable;
 
@@ -25,7 +25,7 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.ldap.GroupConverterKeys;
-import com.liferay.portal.ldap.PortalLDAPContext;
+import com.liferay.portal.ldap.internal.PortalLDAPContext;
 import com.liferay.portal.model.Contact;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;

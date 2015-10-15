@@ -12,28 +12,14 @@
  * details.
  */
 
-package com.liferay.portal.ldap;
-
-import com.liferay.portal.security.ldap.AttributesTransformer;
-
-import javax.naming.directory.Attributes;
-
-import org.osgi.service.component.annotations.Component;
+package com.liferay.portal.ldap.internal.messaging;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Michael C. Han
  */
-@Component(immediate = true, service = AttributesTransformer.class)
-public class DefaultAttributesTransformer implements AttributesTransformer {
+public class DestinationNames {
 
-	@Override
-	public Attributes transformGroup(Attributes attributes) {
-		return attributes;
-	}
-
-	@Override
-	public Attributes transformUser(Attributes attributes) {
-		return attributes;
-	}
+	public static final String SCHEDULED_USER_LDAP_IMPORT =
+		"liferay/scheduled_user_ldap_import";
 
 }

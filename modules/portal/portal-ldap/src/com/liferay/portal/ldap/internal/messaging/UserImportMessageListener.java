@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap.messaging;
+package com.liferay.portal.ldap.internal.messaging;
 
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.Destination;

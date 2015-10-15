@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap.exportimport;
+package com.liferay.portal.ldap.internal;
 
 import com.liferay.portal.kernel.util.AutoResetThreadLocal;
 import com.liferay.portal.kernel.util.InitialThreadLocal;

@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap;
+package com.liferay.portal.ldap.internal;
 
 import com.liferay.portal.kernel.ldap.DummyDirContext;
 import com.liferay.portal.kernel.util.Validator;
