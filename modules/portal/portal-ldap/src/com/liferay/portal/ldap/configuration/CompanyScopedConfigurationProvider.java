@@ -14,7 +14,7 @@
 
 package com.liferay.portal.ldap.configuration;
 
-import aQute.configurable.Configurable;
+import aQute.bnd.annotation.metatype.Configurable;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
