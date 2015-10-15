@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap.exportimport;
+package com.liferay.portal.ldap.internal.exportimport;
 
 import com.liferay.portal.NoSuchRoleException;
 import com.liferay.portal.NoSuchUserGroupException;
@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.ldap.ContactConverterKeys;
 import com.liferay.portal.ldap.UserConverterKeys;
 import com.liferay.portal.ldap.configuration.LDAPConfiguration;
+import com.liferay.portal.ldap.internal.UserImportTransactionThreadLocal;
 import com.liferay.portal.ldap.settings.LDAPConfigurationSettingsUtil;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.CompanyConstants;
