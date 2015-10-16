@@ -22,6 +22,7 @@ import com.liferay.portal.ldap.configuration.CompanyScopedConfiguration;
  * @author Michael C. Han
  */
 @Meta.OCD(
+	factory = true,
 	id = "com.liferay.portal.ldap.authenticator.configuration.LDAPAuthConfiguration",
 	localization = "content/Language"
 )

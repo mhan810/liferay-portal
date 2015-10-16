@@ -37,11 +37,11 @@ import com.liferay.portal.ldap.exportimport.configuration.LDAPImportConfiguratio
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.AuthException;
 import com.liferay.portal.security.auth.Authenticator;
-import com.liferay.portal.security.ldap.LDAPSettingsUtil;
-import com.liferay.portal.security.ldap.LDAPUserImporterUtil;
-import com.liferay.portal.security.ldap.PortalLDAPUtil;
-import com.liferay.portal.security.pwd.PasswordEncryptorUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.security.ldap.LDAPSettings;
+import com.liferay.portal.security.ldap.LDAPUserImporter;
+import com.liferay.portal.security.ldap.PortalLDAP;
+import com.liferay.portal.security.pwd.PasswordEncryptor;
+import com.liferay.portal.service.UserLocalService;
 import com.liferay.portlet.admin.util.Omniadmin;
 
 import java.util.HashMap;
@@ -229,7 +229,7 @@ public class LDAPAuth implements Authenticator {
 					ldapAuthConfiguration.passwordEncryptionAlgorithm();
 
 				if (Validator.isNotNull(algorithm)) {
-					encryptedPassword = PasswordEncryptorUtil.encrypt(
+					encryptedPassword = _passwordEncryptor.encrypt(
 						algorithm, password, ldapPassword);
 				}
 
@@ -255,7 +255,7 @@ public class LDAPAuth implements Authenticator {
 			String screenName, long userId, String password)
 		throws Exception {
 
-		LdapContext ldapContext = PortalLDAPUtil.getContext(
+		LdapContext ldapContext = _portalLDAP.getContext(
 			ldapServerId, companyId);
 
 		if (ldapContext == null) {
@@ -273,11 +273,11 @@ public class LDAPAuth implements Authenticator {
 
 			//  Process LDAP auth search filter
 
-			String filter = LDAPSettingsUtil.getAuthSearchFilter(
+			String filter = _ldapSettings.getAuthSearchFilter(
 				ldapServerId, companyId, emailAddress, screenName,
 				String.valueOf(userId));
 
-			Properties userMappings = LDAPSettingsUtil.getUserMappings(
+			Properties userMappings = _ldapSettings.getUserMappings(
 				ldapServerId, companyId);
 
 			String userMappingsScreenName = GetterUtil.getString(
@@ -299,15 +299,15 @@ public class LDAPAuth implements Authenticator {
 
 				SearchResult result = enu.nextElement();
 
-				String fullUserDN = PortalLDAPUtil.getNameInNamespace(
+				String fullUserDN = _portalLDAP.getNameInNamespace(
 					ldapServerId, companyId, result);
 
-				Attributes attributes = PortalLDAPUtil.getUserAttributes(
+				Attributes attributes = _portalLDAP.getUserAttributes(
 					ldapServerId, companyId, ldapContext, fullUserDN);
 
 				// Get user or create from LDAP
 
-				User user = LDAPUserImporterUtil.importUser(
+				User user = _ldapUserImporter.importUser(
 					ldapServerId, companyId, ldapContext, attributes, password);
 
 				// Authenticate
@@ -349,7 +349,7 @@ public class LDAPAuth implements Authenticator {
 				String resultCode = ldapAuthResult.getResponseControl();
 
 				if (resultCode.equals(LDAPAuth.RESULT_PASSWORD_RESET)) {
-					UserLocalServiceUtil.updatePasswordReset(
+					_userLocalService.updatePasswordReset(
 						user.getUserId(), true);
 				}
 			}
@@ -454,14 +454,14 @@ public class LDAPAuth implements Authenticator {
 
 		try {
 			if (userId > 0) {
-				user = UserLocalServiceUtil.getUserById(companyId, userId);
+				user = _userLocalService.getUserById(companyId, userId);
 			}
 			else if (Validator.isNotNull(emailAddress)) {
-				user = UserLocalServiceUtil.getUserByEmailAddress(
+				user = _userLocalService.getUserByEmailAddress(
 					companyId, emailAddress);
 			}
 			else if (Validator.isNotNull(screenName)) {
-				user = UserLocalServiceUtil.getUserByScreenName(
+				user = _userLocalService.getUserByScreenName(
 					companyId, screenName);
 			}
 			else {
@@ -525,7 +525,7 @@ public class LDAPAuth implements Authenticator {
 			}
 		}
 		else if (Validator.isNotNull(emailAddress)) {
-			User user = UserLocalServiceUtil.fetchUserByEmailAddress(
+			User user = _userLocalService.fetchUserByEmailAddress(
 				companyId, emailAddress);
 
 			if (user != null) {
@@ -535,7 +535,7 @@ public class LDAPAuth implements Authenticator {
 			}
 		}
 		else if (Validator.isNotNull(screenName)) {
-			User user = UserLocalServiceUtil.fetchUserByScreenName(
+			User user = _userLocalService.fetchUserByScreenName(
 				companyId, screenName);
 
 			if (user != null) {
@@ -643,12 +643,32 @@ public class LDAPAuth implements Authenticator {
 		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
 	}
 
-	@Reference
+	@Reference(unbind = "-")
+	protected void setLdapSettings(LDAPSettings ldapSettings) {
+		_ldapSettings = ldapSettings;
+	}
+
+	@Reference(unbind = "-")
+	protected void setLdapUserImporter(LDAPUserImporter ldapUserImporter) {
+		_ldapUserImporter = ldapUserImporter;
+	}
+
+	@Reference(unbind = "-")
 	protected void setOmniadmin(Omniadmin omniadmin) {
 		_omniadmin = omniadmin;
 	}
 
-	@Reference
+	@Reference(unbind = "-")
+	protected void setPasswordEncryptor(PasswordEncryptor passwordEncryptor) {
+		_passwordEncryptor = passwordEncryptor;
+	}
+
+	@Reference(unbind = "-")
+	protected void setPortalLDAP(PortalLDAP portalLDAP) {
+		_portalLDAP = portalLDAP;
+	}
+
+	@Reference(unbind = "-")
 	protected void setProps(Props props) {
 		_props = props;
 	}
@@ -662,6 +682,11 @@ public class LDAPAuth implements Authenticator {
 			systemLDAPConfigurationProvider) {
 
 		_systemLDAPConfigurationProvider = systemLDAPConfigurationProvider;
+	}
+
+	@Reference(unbind = "-")
+	protected void setUserLocalService(UserLocalService userLocalService) {
+		_userLocalService = userLocalService;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(LDAPAuth.class);
@@ -678,9 +703,14 @@ public class LDAPAuth implements Authenticator {
 		_ldapImportConfigurationProvider;
 	private ConfigurationProvider<LDAPServerConfiguration>
 		_ldapServerConfigurationProvider;
+	private LDAPSettings _ldapSettings;
+	private LDAPUserImporter _ldapUserImporter;
 	private Omniadmin _omniadmin;
+	private PasswordEncryptor _passwordEncryptor;
+	private PortalLDAP _portalLDAP;
 	private Props _props;
 	private ConfigurationProvider<SystemLDAPConfiguration>
 		_systemLDAPConfigurationProvider;
+	private UserLocalService _userLocalService;
 
 }

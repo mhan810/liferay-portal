@@ -52,7 +52,6 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.security.exportimport.UserGroupImportTransactionThreadLocal;
 import com.liferay.portal.security.exportimport.UserImporter;
-import com.liferay.portal.security.exportimport.UserImporterUtil;
 import com.liferay.portal.security.ldap.AttributesTransformer;
 import com.liferay.portal.security.ldap.LDAPGroup;
 import com.liferay.portal.security.ldap.LDAPSettings;
@@ -371,8 +370,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			long defaultUserId = _userLocalService.getDefaultUserId(companyId);
 
 			if (_lockManager.hasLock(
-					defaultUserId, UserImporterUtil.class.getName(),
-					companyId)) {
+					defaultUserId, UserImporter.class.getName(), companyId)) {
 
 				if (_log.isDebugEnabled()) {
 					_log.debug(
@@ -387,7 +385,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 				_ldapImportConfigurationProvider.getConfiguration(companyId);
 
 			_lockManager.lock(
-				defaultUserId, UserImporterUtil.class.getName(), companyId,
+				defaultUserId, UserImporter.class.getName(), companyId,
 				LDAPUserImporterImpl.class.getName(), false,
 				ldapImportConfiguration.importLockExpirationTime());
 
@@ -401,7 +399,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			}
 		}
 		finally {
-			_lockManager.unlock(UserImporterUtil.class.getName(), companyId);
+			_lockManager.unlock(UserImporter.class.getName(), companyId);
 		}
 	}
 
