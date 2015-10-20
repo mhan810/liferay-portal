@@ -35,11 +35,10 @@ public class UpgradeProcess_3_0_5 extends UpgradeProcess {
 			SyncFileService.getSyncFilePersistence();
 
 		syncFilePersistence.executeRaw(
+			"ALTER TABLE `SyncFile` ADD COLUMN userId LONG BEFORE userName;");
+		syncFilePersistence.executeRaw(
 			"ALTER TABLE `SyncFile` ADD COLUMN userName VARCHAR(16777216) " +
 				"BEFORE state;");
-
-		syncFilePersistence.executeRaw(
-			"ALTER TABLE `SyncFile` ADD COLUMN userId LONG BEFORE userName;");
 	}
 
 }
