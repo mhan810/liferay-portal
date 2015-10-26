@@ -73,6 +73,26 @@ public class AggregateResourceBundleTest {
 			aggregateResourceBundle.keySet());
 	}
 
+	@Test
+	public void testOverridenKeys() {
+		ResourceBundle resourceBundleA = _createResourceBundle(
+			"keyA", "valueA");
+		ResourceBundle resourceBundleB = _createResourceBundle(
+			"keyA", "valueB");
+
+		AggregateResourceBundle aggregateResourceBundle =
+			new AggregateResourceBundle(resourceBundleA, resourceBundleB);
+
+		Assert.assertEquals(
+			"valueA", aggregateResourceBundle.getString("keyA"));
+
+		aggregateResourceBundle = new AggregateResourceBundle(
+			resourceBundleB, resourceBundleA);
+
+		Assert.assertEquals(
+			"valueB", aggregateResourceBundle.getString("keyA"));
+	}
+
 	private ResourceBundle _createResourceBundle(
 		final String... keysAndValues) {
 
