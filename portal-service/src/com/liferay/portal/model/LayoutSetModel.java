@@ -40,7 +40,7 @@ import java.util.Date;
  */
 @ProviderType
 public interface LayoutSetModel extends BaseModel<LayoutSet>, MVCCModel,
-	PartitionedModel {
+	ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

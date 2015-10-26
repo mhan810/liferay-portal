@@ -38,7 +38,7 @@ import java.io.Serializable;
  */
 @ProviderType
 public interface VirtualHostModel extends BaseModel<VirtualHost>, MVCCModel,
-	PartitionedModel {
+	ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

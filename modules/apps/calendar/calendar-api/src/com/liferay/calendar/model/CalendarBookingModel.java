@@ -23,7 +23,7 @@ import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.LocalizedModel;
-import com.liferay.portal.model.PartitionedModel;
+import com.liferay.portal.model.ShardedModel;
 import com.liferay.portal.model.StagedGroupedModel;
 import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.model.WorkflowedModel;
@@ -53,7 +53,7 @@ import java.util.Map;
  */
 @ProviderType
 public interface CalendarBookingModel extends BaseModel<CalendarBooking>,
-	LocalizedModel, PartitionedModel, StagedGroupedModel, TrashedModel,
+	LocalizedModel, ShardedModel, StagedGroupedModel, TrashedModel,
 	WorkflowedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

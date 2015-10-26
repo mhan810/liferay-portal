@@ -1784,16 +1784,15 @@ ${tomcat-gc-log}
 						directoryScanner.setExcludes(
 							new String[] {
 								"modules/apps/social/social-networking-test/test/integration/**/*Test.java",
-								"modules/portal/portal-json-web-service-extender/test/integration/**/*Test.java",
-								"modules/portal/portal-template-freemarker/test/integration/**/*Test.java",
-								"modules/util/osgi-util/test/integration/**/*Test.java",
+								"modules/portal/portal-json-web-service-extender/src/testIntegration/java/**/*Test.java",
+								"modules/util/osgi-util/src/testIntegration/java/**/*Test.java",
 								"portal-service/test/unit/com/liferay/portal/log/assertor/PortalLogAssertorTest.java",
 								"*/pacl/test/[\\w]+Test.class",
 								"**/*ServiceHttpTest.java",
 								"**/*ServiceJsonTest.java",
 								"**/*ServiceSoapTest.java"
 							});
-						directoryScanner.setIncludes(new String[] {"**/test/integration/**/*Test.java", "**/test/unit/**/*Test.java"});
+						directoryScanner.setIncludes(new String[] {"**/src/test/**/*Test.java", "**/src/testIntegration/**/*Test.java", "**/test/integration/**/*Test.java", "**/test/unit/**/*Test.java"});
 
 						directoryScanner.scan();
 
@@ -5017,10 +5016,10 @@ module.framework.properties.osgi.console=11312</echo>
 		</if>
 
 		<if>
-			<equals arg1="${test.skip.tear.down}" arg2="true" />
+			<isset property="test.skip.tear.down" />
 			<then>
 				<echo append="true" file="${test.ext.properties.file}">
-					test.skip.tear.down=true
+					test.skip.tear.down=${test.skip.tear.down}
 				</echo>
 			</then>
 		</if>

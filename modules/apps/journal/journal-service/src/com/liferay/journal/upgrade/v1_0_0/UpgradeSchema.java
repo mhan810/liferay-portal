@@ -18,7 +18,7 @@ import com.liferay.journal.upgrade.v1_0_0.util.JournalArticleTable;
 import com.liferay.journal.upgrade.v1_0_0.util.JournalFeedTable;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.upgrade.UpgradeMVCC;
+import com.liferay.portal.upgrade.UpgradeMVCCVersion;
 
 import java.sql.SQLException;
 
@@ -34,7 +34,7 @@ public class UpgradeSchema extends UpgradeProcess {
 
 		runSQLTemplateString(template, false, false);
 
-		upgrade(UpgradeMVCC.class);
+		upgrade(UpgradeMVCCVersion.class);
 
 		try {
 			runSQL(

@@ -40,7 +40,7 @@ import java.util.Date;
  */
 @ProviderType
 public interface WebDAVPropsModel extends AttachedModel, BaseModel<WebDAVProps>,
-	MVCCModel, PartitionedModel {
+	MVCCModel, ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

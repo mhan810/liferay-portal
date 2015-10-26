@@ -40,7 +40,7 @@ import java.util.Date;
  */
 @ProviderType
 public interface TicketModel extends AttachedModel, BaseModel<Ticket>, MVCCModel,
-	PartitionedModel {
+	ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

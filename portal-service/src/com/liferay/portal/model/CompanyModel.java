@@ -37,8 +37,7 @@ import java.io.Serializable;
  * @generated
  */
 @ProviderType
-public interface CompanyModel extends BaseModel<Company>, MVCCModel,
-	PartitionedModel {
+public interface CompanyModel extends BaseModel<Company>, MVCCModel, ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

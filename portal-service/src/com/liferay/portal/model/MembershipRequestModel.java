@@ -40,7 +40,7 @@ import java.util.Date;
  */
 @ProviderType
 public interface MembershipRequestModel extends BaseModel<MembershipRequest>,
-	MVCCModel, PartitionedModel {
+	MVCCModel, ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

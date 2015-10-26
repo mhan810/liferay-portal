@@ -26,6 +26,15 @@ long recordId = BeanParamUtil.getLong(record, request, "recordId");
 long groupId = BeanParamUtil.getLong(record, request, "groupId", scopeGroupId);
 long recordSetId = BeanParamUtil.getLong(record, request, "recordSetId");
 
+if (Validator.isNull(redirect)) {
+	PortletURL redirectURL = renderResponse.createRenderURL();
+
+	redirectURL.setParameter("mvcPath", "/view_record_set.jsp");
+	redirectURL.setParameter("recordSetId", String.valueOf(recordSetId));
+
+	redirect = redirectURL.toString();
+}
+
 long formDDMTemplateId = ParamUtil.getLong(request, "formDDMTemplateId");
 
 DDLRecordVersion recordVersion = null;
@@ -92,7 +101,7 @@ else {
 </portlet:actionURL>
 
 <aui:form action="<%= (record == null) ? addRecordURL : updateRecordURL %>" cssClass="container-fluid-1280" enctype="multipart/form-data" method="post" name="fm">
-	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
+	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 	<aui:input name="recordId" type="hidden" value="<%= recordId %>" />
 	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
 	<aui:input name="recordSetId" type="hidden" value="<%= recordSetId %>" />

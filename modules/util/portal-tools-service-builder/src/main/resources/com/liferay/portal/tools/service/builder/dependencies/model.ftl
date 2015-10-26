@@ -18,8 +18,8 @@ import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.GroupedModel;
 import com.liferay.portal.model.LocalizedModel;
 import com.liferay.portal.model.MVCCModel;
-import com.liferay.portal.model.PartitionedModel;
 import com.liferay.portal.model.ResourcedModel;
+import com.liferay.portal.model.ShardedModel;
 import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.model.TypedModel;
 import com.liferay.portal.model.StagedAuditedModel;
@@ -98,16 +98,16 @@ public interface ${entity.name}Model extends
 		<#assign overrideColumnNames = overrideColumnNames + ["mvccVersion"]>
 	</#if>
 
-	<#if entity.isPartitionedModel()>
-		, PartitionedModel
-
-		<#assign overrideColumnNames = overrideColumnNames + ["companyId"]>
-	</#if>
-
 	<#if entity.isResourcedModel()>
 		, ResourcedModel
 
 		<#assign overrideColumnNames = overrideColumnNames + ["resourcePrimKey"]>
+	</#if>
+
+	<#if entity.isShardedModel()>
+		, ShardedModel
+
+		<#assign overrideColumnNames = overrideColumnNames + ["companyId"]>
 	</#if>
 
 	<#if entity.isStagedGroupedModel()>

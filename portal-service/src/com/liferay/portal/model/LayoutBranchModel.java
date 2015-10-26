@@ -38,7 +38,7 @@ import java.io.Serializable;
  */
 @ProviderType
 public interface LayoutBranchModel extends BaseModel<LayoutBranch>, MVCCModel,
-	PartitionedModel {
+	ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

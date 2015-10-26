@@ -40,7 +40,7 @@ import java.util.Date;
  */
 @ProviderType
 public interface PortletItemModel extends BaseModel<PortletItem>, GroupedModel,
-	MVCCModel, PartitionedModel, TypedModel {
+	MVCCModel, ShardedModel, TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

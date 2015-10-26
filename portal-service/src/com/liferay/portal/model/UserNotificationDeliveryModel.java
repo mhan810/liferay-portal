@@ -38,7 +38,7 @@ import java.io.Serializable;
  */
 @ProviderType
 public interface UserNotificationDeliveryModel extends BaseModel<UserNotificationDelivery>,
-	MVCCModel, PartitionedModel, TypedModel {
+	MVCCModel, ShardedModel, TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

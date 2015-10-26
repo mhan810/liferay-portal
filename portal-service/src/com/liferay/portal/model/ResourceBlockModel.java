@@ -38,7 +38,7 @@ import java.io.Serializable;
  */
 @ProviderType
 public interface ResourceBlockModel extends BaseModel<ResourceBlock>, MVCCModel,
-	PartitionedModel {
+	ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

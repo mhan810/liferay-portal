@@ -3196,6 +3196,7 @@
 		<exception>PasswordPolicyName</exception>
 		<exception>PendingBackgroundTask</exception>
 		<exception>PhoneNumber</exception>
+		<exception>PhoneNumberExtension</exception>
 		<exception>PortletActive</exception>
 		<exception>PortletDefaultPreferences</exception>
 		<exception>PortletId</exception>

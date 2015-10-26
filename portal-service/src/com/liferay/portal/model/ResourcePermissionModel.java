@@ -38,7 +38,7 @@ import java.io.Serializable;
  */
 @ProviderType
 public interface ResourcePermissionModel extends BaseModel<ResourcePermission>,
-	MVCCModel, PartitionedModel {
+	MVCCModel, ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

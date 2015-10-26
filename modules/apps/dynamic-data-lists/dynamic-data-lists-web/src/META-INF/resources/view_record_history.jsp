@@ -27,6 +27,16 @@ DDMStructure ddmStructure = recordSet.getDDMStructure();
 
 long formDDMTemplateId = ParamUtil.getLong(request, "formDDMTemplateId");
 
+if (Validator.isNull(redirect)) {
+	PortletURL redirectURL = renderResponse.createRenderURL();
+
+	redirectURL.setParameter("mvcPath", "/edit_record.jsp");
+	redirectURL.setParameter("recordSetId", String.valueOf(recordSet.getRecordSetId()));
+	redirectURL.setParameter("formDDMTemplateId", String.valueOf(formDDMTemplateId));
+
+	redirect = redirectURL.toString();
+}
+
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("mvcPath", "/view_record_history.jsp");

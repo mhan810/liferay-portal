@@ -42,7 +42,7 @@ import java.util.Map;
  */
 @ProviderType
 public interface GroupModel extends AttachedModel, BaseModel<Group>,
-	LocalizedModel, MVCCModel, PartitionedModel {
+	LocalizedModel, MVCCModel, ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

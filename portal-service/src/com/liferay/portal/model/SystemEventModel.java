@@ -40,7 +40,7 @@ import java.util.Date;
  */
 @ProviderType
 public interface SystemEventModel extends AttachedModel, BaseModel<SystemEvent>,
-	MVCCModel, PartitionedModel {
+	MVCCModel, ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

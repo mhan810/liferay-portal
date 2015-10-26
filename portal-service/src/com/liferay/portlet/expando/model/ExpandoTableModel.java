@@ -19,7 +19,7 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
-import com.liferay.portal.model.PartitionedModel;
+import com.liferay.portal.model.ShardedModel;
 import com.liferay.portal.model.TypedModel;
 import com.liferay.portal.service.ServiceContext;
 
@@ -39,8 +39,8 @@ import java.io.Serializable;
  * @generated
  */
 @ProviderType
-public interface ExpandoTableModel extends BaseModel<ExpandoTable>,
-	PartitionedModel, TypedModel {
+public interface ExpandoTableModel extends BaseModel<ExpandoTable>, ShardedModel,
+	TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

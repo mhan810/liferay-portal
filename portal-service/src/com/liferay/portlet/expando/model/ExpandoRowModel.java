@@ -18,7 +18,7 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
-import com.liferay.portal.model.PartitionedModel;
+import com.liferay.portal.model.ShardedModel;
 import com.liferay.portal.service.ServiceContext;
 
 import java.io.Serializable;
@@ -39,7 +39,7 @@ import java.util.Date;
  * @generated
  */
 @ProviderType
-public interface ExpandoRowModel extends BaseModel<ExpandoRow>, PartitionedModel {
+public interface ExpandoRowModel extends BaseModel<ExpandoRow>, ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

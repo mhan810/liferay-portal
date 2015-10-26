@@ -37,8 +37,7 @@ import java.io.Serializable;
  * @generated
  */
 @ProviderType
-public interface PortletModel extends BaseModel<Portlet>, MVCCModel,
-	PartitionedModel {
+public interface PortletModel extends BaseModel<Portlet>, MVCCModel, ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

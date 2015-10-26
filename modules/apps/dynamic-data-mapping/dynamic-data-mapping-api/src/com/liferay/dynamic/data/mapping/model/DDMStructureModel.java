@@ -21,7 +21,7 @@ import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.LocalizedModel;
-import com.liferay.portal.model.PartitionedModel;
+import com.liferay.portal.model.ShardedModel;
 import com.liferay.portal.model.StagedGroupedModel;
 import com.liferay.portal.model.TypedModel;
 import com.liferay.portal.service.ServiceContext;
@@ -49,7 +49,7 @@ import java.util.Map;
  */
 @ProviderType
 public interface DDMStructureModel extends BaseModel<DDMStructure>,
-	LocalizedModel, PartitionedModel, StagedGroupedModel, TypedModel {
+	LocalizedModel, ShardedModel, StagedGroupedModel, TypedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

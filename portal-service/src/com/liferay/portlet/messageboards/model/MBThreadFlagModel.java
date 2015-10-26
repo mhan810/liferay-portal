@@ -19,7 +19,7 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
-import com.liferay.portal.model.PartitionedModel;
+import com.liferay.portal.model.ShardedModel;
 import com.liferay.portal.model.StagedGroupedModel;
 import com.liferay.portal.service.ServiceContext;
 
@@ -43,8 +43,8 @@ import java.util.Date;
  * @generated
  */
 @ProviderType
-public interface MBThreadFlagModel extends BaseModel<MBThreadFlag>,
-	PartitionedModel, StagedGroupedModel {
+public interface MBThreadFlagModel extends BaseModel<MBThreadFlag>, ShardedModel,
+	StagedGroupedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

@@ -38,7 +38,7 @@ import java.io.Serializable;
  */
 @ProviderType
 public interface PluginSettingModel extends BaseModel<PluginSetting>, MVCCModel,
-	PartitionedModel {
+	ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

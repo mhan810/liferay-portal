@@ -40,7 +40,7 @@ import java.util.Date;
  */
 @ProviderType
 public interface ContactModel extends AttachedModel, AuditedModel,
-	BaseModel<Contact>, MVCCModel, PartitionedModel {
+	BaseModel<Contact>, MVCCModel, ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

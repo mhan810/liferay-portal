@@ -38,7 +38,7 @@ import java.io.Serializable;
  */
 @ProviderType
 public interface UserNotificationEventModel extends BaseModel<UserNotificationEvent>,
-	MVCCModel, PartitionedModel {
+	MVCCModel, ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

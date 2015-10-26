@@ -40,7 +40,7 @@ import java.util.Date;
  */
 @ProviderType
 public interface AccountModel extends AuditedModel, BaseModel<Account>, MVCCModel,
-	PartitionedModel {
+	ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

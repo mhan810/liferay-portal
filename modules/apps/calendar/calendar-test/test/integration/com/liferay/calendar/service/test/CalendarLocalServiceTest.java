@@ -21,7 +21,6 @@ import com.liferay.calendar.service.CalendarLocalServiceUtil;
 import com.liferay.calendar.util.CalendarResourceUtil;
 import com.liferay.calendar.util.comparator.CalendarNameComparator;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
@@ -63,7 +62,7 @@ public class CalendarLocalServiceTest {
 	}
 
 	@Test
-	public void testSearchByKeywords() throws PortalException {
+	public void testSearch() throws Exception {
 		ServiceContext serviceContext = new ServiceContext();
 
 		CalendarResource calendarResource =

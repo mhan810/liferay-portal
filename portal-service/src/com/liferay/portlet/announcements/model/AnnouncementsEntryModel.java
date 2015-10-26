@@ -20,7 +20,7 @@ import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.model.AttachedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
-import com.liferay.portal.model.PartitionedModel;
+import com.liferay.portal.model.ShardedModel;
 import com.liferay.portal.model.StagedAuditedModel;
 import com.liferay.portal.service.ServiceContext;
 
@@ -45,7 +45,7 @@ import java.util.Date;
  */
 @ProviderType
 public interface AnnouncementsEntryModel extends AttachedModel,
-	BaseModel<AnnouncementsEntry>, PartitionedModel, StagedAuditedModel {
+	BaseModel<AnnouncementsEntry>, ShardedModel, StagedAuditedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

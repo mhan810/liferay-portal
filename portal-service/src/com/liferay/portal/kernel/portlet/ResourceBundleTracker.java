@@ -14,9 +14,12 @@
 
 package com.liferay.portal.kernel.portlet;
 
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.AggregateResourceBundle;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Portlet;
 import com.liferay.registry.Filter;
 import com.liferay.registry.Registry;
@@ -31,6 +34,7 @@ import com.liferay.registry.collections.StringServiceRegistrationMapImpl;
 import java.io.Closeable;
 
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
@@ -39,6 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Raymond Augé
+ * @author Tomas Polesovsky
  */
 public class ResourceBundleTracker implements Closeable {
 
@@ -97,14 +102,99 @@ public class ResourceBundleTracker implements Closeable {
 			return resourceBundle;
 		}
 
-		return ResourceBundleUtil.getBundle(
+		AggregateResourceBundle aggregateResourceBundle =
+			createAggregateResourceBundle(languageId);
+
+		ResourceBundle staticResourceBundle = ResourceBundleUtil.getBundle(
 			_portlet.getResourceBundle(), LocaleUtil.fromLanguageId(languageId),
 			_classLoader);
+
+		aggregateResourceBundle.add(staticResourceBundle);
+
+		return aggregateResourceBundle;
+	}
+
+	protected AggregateResourceBundle createAggregateResourceBundle(
+		String languageId) {
+
+		synchronized (_resourceBundles) {
+			AggregateResourceBundle result = _resourceBundles.get(languageId);
+
+			if (result != null) {
+				return result;
+			}
+
+			result = new AggregateResourceBundle(languageId);
+			_resourceBundles.put(languageId, result);
+
+			AggregateResourceBundle aggregateResourceBundle = result;
+			Locale locale = LocaleUtil.fromLanguageId(languageId, false);
+
+			if (Validator.isNotNull(locale.getVariant())) {
+				Locale parentLocale = new Locale(
+					locale.getLanguage(), locale.getCountry());
+				String parentLanguageId = LanguageUtil.getLanguageId(
+					parentLocale);
+				AggregateResourceBundle parent = _resourceBundles.get(
+					parentLanguageId);
+
+				if (parent != null) {
+					aggregateResourceBundle.add(parent);
+					return result;
+				}
+
+				parent = new AggregateResourceBundle(parentLanguageId);
+				_resourceBundles.put(parentLanguageId, parent);
+				aggregateResourceBundle.add(parent);
+
+				aggregateResourceBundle = parent;
+				locale = parentLocale;
+			}
+
+			if (Validator.isNotNull(locale.getCountry())) {
+				Locale parentLocale = new Locale(locale.getLanguage());
+				String parentLanguageId = LanguageUtil.getLanguageId(
+					parentLocale);
+				AggregateResourceBundle parent = _resourceBundles.get(
+					parentLanguageId);
+
+				if (parent != null) {
+					aggregateResourceBundle.add(parent);
+					return result;
+				}
+
+				parent = new AggregateResourceBundle(parentLanguageId);
+				_resourceBundles.put(parentLanguageId, parent);
+				aggregateResourceBundle.add(parent);
+
+				aggregateResourceBundle = parent;
+				locale = parentLocale;
+			}
+
+			if (Validator.isNotNull(locale.getLanguage())) {
+				Locale parentLocale = new Locale(StringPool.BLANK);
+				String parentLanguageId = LanguageUtil.getLanguageId(
+					parentLocale);
+				AggregateResourceBundle parent = _resourceBundles.get(
+					parentLanguageId);
+
+				if (parent != null) {
+					aggregateResourceBundle.add(parent);
+					return result;
+				}
+
+				parent = new AggregateResourceBundle(parentLanguageId);
+				_resourceBundles.put(parentLanguageId, parent);
+				aggregateResourceBundle.add(parent);
+			}
+
+			return result;
+		}
 	}
 
 	private final ClassLoader _classLoader;
 	private final Portlet _portlet;
-	private final Map<String, ResourceBundle> _resourceBundles =
+	private final Map<String, AggregateResourceBundle> _resourceBundles =
 		new ConcurrentHashMap<>();
 	private final StringServiceRegistrationMap<ResourceBundle>
 		_serviceRegistrations = new StringServiceRegistrationMapImpl<>();
@@ -123,9 +213,18 @@ public class ResourceBundleTracker implements Closeable {
 			ResourceBundle resourceBundle = registry.getService(
 				serviceReference);
 
-			_resourceBundles.put(
-				(String)serviceReference.getProperty("language.id"),
-				resourceBundle);
+			String languageId = (String)serviceReference.getProperty(
+				"language.id");
+
+			AggregateResourceBundle aggregateResourceBundle =
+				_resourceBundles.get(languageId);
+
+			if (aggregateResourceBundle == null) {
+				aggregateResourceBundle = createAggregateResourceBundle(
+					languageId);
+			}
+
+			aggregateResourceBundle.add(resourceBundle);
 
 			return resourceBundle;
 		}
@@ -134,6 +233,10 @@ public class ResourceBundleTracker implements Closeable {
 		public void modifiedService(
 			ServiceReference<ResourceBundle> serviceReference,
 			ResourceBundle resourceBundle) {
+
+			removedService(serviceReference, resourceBundle);
+
+			addingService(serviceReference);
 		}
 
 		@Override
@@ -145,8 +248,13 @@ public class ResourceBundleTracker implements Closeable {
 
 			registry.ungetService(serviceReference);
 
-			_resourceBundles.remove(
-				serviceReference.getProperty("language.id"));
+			String languageId = (String)serviceReference.getProperty(
+				"language.id");
+
+			AggregateResourceBundle aggregateResourceBundle =
+				_resourceBundles.get(languageId);
+
+			aggregateResourceBundle.remove(resourceBundle);
 		}
 
 	}

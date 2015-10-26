@@ -40,7 +40,7 @@ import java.util.Date;
  */
 @ProviderType
 public interface UserTrackerModel extends BaseModel<UserTracker>, MVCCModel,
-	PartitionedModel {
+	ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
