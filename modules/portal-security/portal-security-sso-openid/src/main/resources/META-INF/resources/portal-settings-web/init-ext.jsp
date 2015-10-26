@@ -13,14 +13,3 @@
  * details.
  */
 --%>
-
-<%@ include file="/portal-settings-web/init.jsp" %>
-
-<%
-OpenIdConfiguration openIdConfiguration = ConfigurationFactoryUtil.getConfiguration(OpenIdConfiguration.class, new ParameterMapSettingsLocator(request.getParameterMap(), "openid--", new CompanyServiceSettingsLocator(company.getCompanyId(), OpenIdConstants.SERVICE_NAME)));
-boolean enabled = openIdConfiguration.enabled();
-%>
-
-<aui:fieldset>
-	<aui:input label="enabled" name="openid--enabled" type="checkbox" value="<%= enabled %>" />
-</aui:fieldset>
