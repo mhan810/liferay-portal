@@ -21,6 +21,8 @@ OpenIdConfiguration openIdConfiguration = ConfigurationFactoryUtil.getConfigurat
 boolean enabled = openIdConfiguration.enabled();
 %>
 
+<aui:input name="<%= ActionRequest.ACTION_NAME %>" type="hidden" value="/portal_settings/edit_company_openid_configuration" />
+
 <aui:fieldset>
 	<aui:input label="enabled" name="openid--enabled" type="checkbox" value="<%= enabled %>" />
 </aui:fieldset>
