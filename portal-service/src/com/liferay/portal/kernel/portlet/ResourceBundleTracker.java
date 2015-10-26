@@ -124,11 +124,11 @@ public class ResourceBundleTracker implements Closeable {
 				return result;
 			}
 
-			result = new AggregateResourceBundle();
+			result = new AggregateResourceBundle(languageId);
 			_resourceBundles.put(languageId, result);
 
 			AggregateResourceBundle aggregateResourceBundle = result;
-			Locale locale = LocaleUtil.fromLanguageId(languageId);
+			Locale locale = LocaleUtil.fromLanguageId(languageId, false);
 
 			if (Validator.isNotNull(locale.getVariant())) {
 				Locale parentLocale = new Locale(
@@ -143,7 +143,7 @@ public class ResourceBundleTracker implements Closeable {
 					return result;
 				}
 
-				parent = new AggregateResourceBundle();
+				parent = new AggregateResourceBundle(parentLanguageId);
 				_resourceBundles.put(parentLanguageId, parent);
 				aggregateResourceBundle.add(parent);
 
@@ -163,7 +163,7 @@ public class ResourceBundleTracker implements Closeable {
 					return result;
 				}
 
-				parent = new AggregateResourceBundle();
+				parent = new AggregateResourceBundle(parentLanguageId);
 				_resourceBundles.put(parentLanguageId, parent);
 				aggregateResourceBundle.add(parent);
 
@@ -183,7 +183,7 @@ public class ResourceBundleTracker implements Closeable {
 					return result;
 				}
 
-				parent = new AggregateResourceBundle();
+				parent = new AggregateResourceBundle(parentLanguageId);
 				_resourceBundles.put(parentLanguageId, parent);
 				aggregateResourceBundle.add(parent);
 			}

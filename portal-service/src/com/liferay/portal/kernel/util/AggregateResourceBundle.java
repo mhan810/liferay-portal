@@ -14,13 +14,13 @@
 
 package com.liferay.portal.kernel.util;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author Tomas Polesovsky
@@ -28,13 +28,15 @@ import java.util.Set;
  */
 public class AggregateResourceBundle extends ResourceBundle {
 
-	public AggregateResourceBundle() {
-	}
-
 	public AggregateResourceBundle(ResourceBundle... resourceBundles) {
 		for (int i = resourceBundles.length - 1; i >= 0; i--) {
 			add(resourceBundles[i]);
 		}
+		_languageId = null;
+	}
+
+	public AggregateResourceBundle(String languageId) {
+		_languageId = languageId;
 	}
 
 	public void add(ResourceBundle resourceBundle) {
@@ -47,11 +49,19 @@ public class AggregateResourceBundle extends ResourceBundle {
 	}
 
 	public List<ResourceBundle> getResourceBundles() {
-		return _resourceBundles;
+		return Collections.unmodifiableList(_resourceBundles);
 	}
 
 	public void remove(ResourceBundle resourceBundle) {
 		_resourceBundles.remove(resourceBundle);
+	}
+
+	@Override
+	public String toString() {
+		return "AggregateResourceBundle{" +
+			"_resourceBundles=" + _resourceBundles.size() +
+			", _languageId='" + _languageId + '\'' +
+			'}';
 	}
 
 	@Override
@@ -77,9 +87,11 @@ public class AggregateResourceBundle extends ResourceBundle {
 			keySet.addAll(resourceBundle.keySet());
 		}
 
-		return keySet;
+		return Collections.unmodifiableSet(keySet);
 	}
 
-	private final List<ResourceBundle> _resourceBundles = new ArrayList<>();
+	private final String _languageId;
+	private final List<ResourceBundle> _resourceBundles =
+		new CopyOnWriteArrayList<>();
 
 }

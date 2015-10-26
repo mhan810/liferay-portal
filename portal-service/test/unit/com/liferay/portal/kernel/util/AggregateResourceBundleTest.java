@@ -72,7 +72,7 @@ public class AggregateResourceBundleTest {
 	}
 
 	@Test
-	public void testOverridenKeys() {
+	public void testOverriddenKeys() {
 		ResourceBundle resourceBundleA = _createResourceBundle(
 			"keyA", "valueA");
 		ResourceBundle resourceBundleB = _createResourceBundle(
@@ -107,7 +107,7 @@ public class AggregateResourceBundleTest {
 
 				for (int i = 0; i < contents.length; i++) {
 					contents[i] = new Object[] {
-						keysAndValues[i / 2], keysAndValues[(i / 2) + 1]
+						keysAndValues[i * 2], keysAndValues[i * 2 + 1]
 					};
 				}
 

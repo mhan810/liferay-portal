@@ -24,9 +24,13 @@ import com.liferay.portal.test.rule.SyntheticBundleRule;
 import com.liferay.registry.Filter;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceRegistration;
 import com.liferay.registry.ServiceTracker;
 
+import java.util.HashMap;
+import java.util.ListResourceBundle;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.portlet.GenericPortlet;
@@ -41,6 +45,7 @@ import org.junit.Test;
 
 /**
  * @author Manuel de la Peña
+ * @author Tomas Polesovsky
  */
 public class ResourceBundleTrackerTest {
 
@@ -94,6 +99,165 @@ public class ResourceBundleTrackerTest {
 			"clave de extensión del paquete de recursos",
 			ResourceBundleUtil.getString(
 				resourceBundle, "resourcebundle-extension-key"));
+	}
+
+	@Test
+	public void testResourceBundlesHierarchy() {
+		ResourceBundle resourceBundleA = _createResourceBundle(
+			"common-key", "th_TH_TH", "th_TH_TH", "th_TH_TH");
+		ResourceBundle resourceBundleB = _createResourceBundle(
+			"common-key", "th_TH", "th_TH", "th_TH");
+		ResourceBundle resourceBundleC = _createResourceBundle(
+			"common-key", "th", "th", "th");
+		ResourceBundle resourceBundleD = _createResourceBundle(
+			"common-key", "root-bundle", "root-bundle", "root-bundle");
+
+		PortletConfig portletConfig = _genericPortlet.getPortletConfig();
+		ResourceBundle portletResourceBundleA = portletConfig.getResourceBundle(
+			new Locale("th", "TH", "TH"));
+		ResourceBundle portletResourceBundleB = portletConfig.getResourceBundle(
+			new Locale("th", "TH"));
+		ResourceBundle portletResourceBundleC = portletConfig.getResourceBundle(
+			new Locale("th"));
+		ResourceBundle portletResourceBundleD = portletConfig.getResourceBundle(
+			new Locale(""));
+
+		ServiceRegistration serviceRegistrationA = registerResourceBundle(
+			resourceBundleA, "th_TH_TH");
+		ServiceRegistration serviceRegistrationB = registerResourceBundle(
+			resourceBundleB, "th_TH");
+		ServiceRegistration serviceRegistrationC = registerResourceBundle(
+			resourceBundleC, "th");
+		ServiceRegistration serviceRegistrationD = registerResourceBundle(
+			resourceBundleD, "");
+
+		Assert.assertEquals(
+			"th_TH_TH",
+			ResourceBundleUtil.getString(portletResourceBundleA, "th_TH_TH"));
+		Assert.assertEquals(
+			"th_TH",
+			ResourceBundleUtil.getString(portletResourceBundleA, "th_TH"));
+		Assert.assertEquals(
+			"th",
+			ResourceBundleUtil.getString(portletResourceBundleA, "th"));
+		Assert.assertEquals(
+			"root-bundle",
+			ResourceBundleUtil.getString(
+				portletResourceBundleA, "root-bundle"));
+		Assert.assertEquals(
+			"th_TH_TH",
+			ResourceBundleUtil.getString(portletResourceBundleA, "common-key"));
+
+		Assert.assertEquals(
+			"th_TH",
+			ResourceBundleUtil.getString(portletResourceBundleB, "common-key"));
+		Assert.assertTrue(!portletResourceBundleB.containsKey("th_TH_TH"));
+
+		Assert.assertEquals(
+			"th",
+			ResourceBundleUtil.getString(portletResourceBundleC, "common-key"));
+		Assert.assertTrue(!portletResourceBundleC.containsKey("th_TH"));
+
+		Assert.assertEquals(
+			"root-bundle",
+			ResourceBundleUtil.getString(portletResourceBundleD, "common-key"));
+		Assert.assertTrue(!portletResourceBundleD.containsKey("th"));
+
+		serviceRegistrationA.unregister();
+
+		Assert.assertTrue(!portletResourceBundleA.containsKey("th_TH_TH"));
+		Assert.assertEquals(
+			"th_TH",
+			ResourceBundleUtil.getString(portletResourceBundleA, "common-key"));
+
+		serviceRegistrationB.unregister();
+
+		Assert.assertTrue(!portletResourceBundleA.containsKey("th_TH"));
+		Assert.assertEquals(
+			"th",
+			ResourceBundleUtil.getString(portletResourceBundleA, "common-key"));
+
+		serviceRegistrationC.unregister();
+
+		Assert.assertTrue(!portletResourceBundleA.containsKey("th"));
+		Assert.assertEquals(
+			"root-bundle",
+			ResourceBundleUtil.getString(portletResourceBundleA, "common-key"));
+
+		serviceRegistrationD.unregister();
+
+		Assert.assertTrue(!portletResourceBundleA.containsKey("root-bundle"));
+		Assert.assertTrue(!portletResourceBundleA.containsKey("common-key"));
+	}
+
+	@Test
+	public void testResourceBundlesOverride() {
+		ResourceBundle resourceBundleA = _createResourceBundle(
+			"key", "value", "this", "esto2");
+
+		Map<String, Object> properties = new HashMap<>();
+		properties.put("javax.portlet.name", TestPortlet.PORTLET_NAME);
+		properties.put("language.id", "es_ES");
+
+		Registry registry = RegistryUtil.getRegistry();
+		ServiceRegistration serviceRegistration = registry.registerService(
+			ResourceBundle.class, resourceBundleA, properties);
+
+		try {
+			PortletConfig portletConfig = _genericPortlet.getPortletConfig();
+
+			Locale locale = LocaleUtil.fromLanguageId("es_ES");
+
+			ResourceBundle resourceBundle = portletConfig.getResourceBundle(
+				locale);
+
+			Assert.assertEquals(
+				"value", ResourceBundleUtil.getString(resourceBundle, "key"));
+
+			Assert.assertEquals(
+				"esto2", ResourceBundleUtil.getString(resourceBundle, "this"));
+		}
+		finally {
+			serviceRegistration.unregister();
+		}
+	}
+
+	private ResourceBundle _createResourceBundle(
+		final String... keysAndValues) {
+
+		if ((keysAndValues.length % 2) != 0) {
+			throw new RuntimeException(
+				"Keys and values length is not an even number");
+		}
+
+		return new ListResourceBundle() {
+
+			@Override
+			protected Object[][] getContents() {
+				Object[][] contents = new Object[keysAndValues.length / 2][];
+
+				for (int i = 0; i < contents.length; i++) {
+					contents[i] = new Object[] {
+						keysAndValues[i * 2], keysAndValues[i * 2 + 1]
+					};
+				}
+
+				return contents;
+			}
+
+		};
+	}
+
+	private ServiceRegistration registerResourceBundle(
+		ResourceBundle resourceBundle, String languageId) {
+
+		Map<String, Object> properties = new HashMap<>();
+		properties.put("javax.portlet.name", TestPortlet.PORTLET_NAME);
+		properties.put("language.id", languageId);
+
+		Registry registry = RegistryUtil.getRegistry();
+		return registry.registerService(
+			ResourceBundle.class, resourceBundle, properties);
 	}
 
 	private static GenericPortlet _genericPortlet;
