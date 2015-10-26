@@ -14,10 +14,12 @@
 
 package com.liferay.portal.kernel.portlet;
 
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.AggregateResourceBundle;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Portlet;
 import com.liferay.registry.Filter;
 import com.liferay.registry.Registry;
@@ -32,7 +34,7 @@ import com.liferay.registry.collections.StringServiceRegistrationMapImpl;
 import java.io.Closeable;
 
 import java.util.Iterator;
-import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
@@ -100,9 +102,94 @@ public class ResourceBundleTracker implements Closeable {
 			return resourceBundle;
 		}
 
-		return ResourceBundleUtil.getBundle(
+		AggregateResourceBundle aggregateResourceBundle =
+			createAggregateResourceBundle(languageId);
+
+		ResourceBundle staticResourceBundle = ResourceBundleUtil.getBundle(
 			_portlet.getResourceBundle(), LocaleUtil.fromLanguageId(languageId),
 			_classLoader);
+
+		aggregateResourceBundle.add(staticResourceBundle);
+
+		return aggregateResourceBundle;
+	}
+
+	protected AggregateResourceBundle createAggregateResourceBundle(
+		String languageId) {
+
+		synchronized (_resourceBundles) {
+			AggregateResourceBundle result = _resourceBundles.get(languageId);
+
+			if (result != null) {
+				return result;
+			}
+
+			result = new AggregateResourceBundle();
+			_resourceBundles.put(languageId, result);
+
+			AggregateResourceBundle aggregateResourceBundle = result;
+			Locale locale = LocaleUtil.fromLanguageId(languageId);
+
+			if (Validator.isNotNull(locale.getVariant())) {
+				Locale parentLocale = new Locale(
+					locale.getLanguage(), locale.getCountry());
+				String parentLanguageId = LanguageUtil.getLanguageId(
+					parentLocale);
+				AggregateResourceBundle parent = _resourceBundles.get(
+					parentLanguageId);
+
+				if (parent != null) {
+					aggregateResourceBundle.add(parent);
+					return result;
+				}
+
+				parent = new AggregateResourceBundle();
+				_resourceBundles.put(parentLanguageId, parent);
+				aggregateResourceBundle.add(parent);
+
+				aggregateResourceBundle = parent;
+				locale = parentLocale;
+			}
+
+			if (Validator.isNotNull(locale.getCountry())) {
+				Locale parentLocale = new Locale(locale.getLanguage());
+				String parentLanguageId = LanguageUtil.getLanguageId(
+					parentLocale);
+				AggregateResourceBundle parent = _resourceBundles.get(
+					parentLanguageId);
+
+				if (parent != null) {
+					aggregateResourceBundle.add(parent);
+					return result;
+				}
+
+				parent = new AggregateResourceBundle();
+				_resourceBundles.put(parentLanguageId, parent);
+				aggregateResourceBundle.add(parent);
+
+				aggregateResourceBundle = parent;
+				locale = parentLocale;
+			}
+
+			if (Validator.isNotNull(locale.getLanguage())) {
+				Locale parentLocale = new Locale(StringPool.BLANK);
+				String parentLanguageId = LanguageUtil.getLanguageId(
+					parentLocale);
+				AggregateResourceBundle parent = _resourceBundles.get(
+					parentLanguageId);
+
+				if (parent != null) {
+					aggregateResourceBundle.add(parent);
+					return result;
+				}
+
+				parent = new AggregateResourceBundle();
+				_resourceBundles.put(parentLanguageId, parent);
+				aggregateResourceBundle.add(parent);
+			}
+
+			return result;
+		}
 	}
 
 	private final ClassLoader _classLoader;
@@ -133,15 +220,11 @@ public class ResourceBundleTracker implements Closeable {
 				_resourceBundles.get(languageId);
 
 			if (aggregateResourceBundle == null) {
-				aggregateResourceBundle = new AggregateResourceBundle();
-
-				_resourceBundles.put(languageId, aggregateResourceBundle);
+				aggregateResourceBundle = createAggregateResourceBundle(
+					languageId);
 			}
 
-			List<ResourceBundle> resourceBundles =
-				aggregateResourceBundle.getResourceBundles();
-
-			resourceBundles.add(resourceBundle);
+			aggregateResourceBundle.add(resourceBundle);
 
 			return resourceBundle;
 		}
@@ -171,10 +254,7 @@ public class ResourceBundleTracker implements Closeable {
 			AggregateResourceBundle aggregateResourceBundle =
 				_resourceBundles.get(languageId);
 
-			List<ResourceBundle> resourceBundles =
-				aggregateResourceBundle.getResourceBundles();
-
-			resourceBundles.remove(resourceBundle);
+			aggregateResourceBundle.remove(resourceBundle);
 		}
 
 	}

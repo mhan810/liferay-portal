@@ -33,8 +33,12 @@ public class AggregateResourceBundle extends ResourceBundle {
 
 	public AggregateResourceBundle(ResourceBundle... resourceBundles) {
 		for (int i = resourceBundles.length - 1; i >= 0; i--) {
-			_resourceBundles.add(resourceBundles[i]);
+			add(resourceBundles[i]);
 		}
+	}
+
+	public void add(ResourceBundle resourceBundle) {
+		_resourceBundles.add(resourceBundle);
 	}
 
 	@Override
@@ -44,6 +48,10 @@ public class AggregateResourceBundle extends ResourceBundle {
 
 	public List<ResourceBundle> getResourceBundles() {
 		return _resourceBundles;
+	}
+
+	public void remove(ResourceBundle resourceBundle) {
+		_resourceBundles.remove(resourceBundle);
 	}
 
 	@Override
