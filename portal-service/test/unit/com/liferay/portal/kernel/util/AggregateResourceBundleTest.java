@@ -12,9 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.language;
-
-import com.liferay.portal.kernel.util.SetUtil;
+package com.liferay.portal.kernel.util;
 
 import java.util.ListResourceBundle;
 import java.util.ResourceBundle;

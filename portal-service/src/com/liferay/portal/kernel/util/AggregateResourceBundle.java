@@ -28,6 +28,15 @@ import java.util.Set;
  */
 public class AggregateResourceBundle extends ResourceBundle {
 
+	public AggregateResourceBundle() {
+	}
+
+	public AggregateResourceBundle(ResourceBundle... resourceBundles) {
+		for (int i = resourceBundles.length - 1; i >= 0; i--) {
+			_resourceBundles.add(resourceBundles[i]);
+		}
+	}
+
 	@Override
 	public Enumeration<String> getKeys() {
 		return Collections.enumeration(handleKeySet());
