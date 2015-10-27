@@ -887,6 +887,10 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 
 			StorageType storageType = StorageType.MEMORY_CLUSTERED;
 
+			if (schedulerEntry == null) {
+				return null;
+			}
+
 			if (schedulerEntry instanceof StorageTypeAware) {
 				StorageTypeAware storageTypeAware =
 					(StorageTypeAware)schedulerEntry;
@@ -956,6 +960,10 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 
 			SchedulerEntry schedulerEntry =
 				schedulerEntryMessageListener.getSchedulerEntry();
+
+			if (schedulerEntry == null) {
+				return;
+			}
 
 			if (schedulerEntry instanceof StorageTypeAware) {
 				StorageTypeAware storageTypeAware =
