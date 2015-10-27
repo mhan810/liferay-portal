@@ -12,29 +12,29 @@
  * details.
  */
 
-package com.liferay.portal.security.auto.login.request.parameter.module.configuration.definition;
+package com.liferay.portal.security.auto.login.request.header.module.configuration.definition;
 
 import com.liferay.portal.kernel.settings.definition.ConfigurationPidMapping;
-import com.liferay.portal.security.auto.login.request.parameter.constants.RequestParameterAutoLoginConstants;
-import com.liferay.portal.security.auto.login.request.parameter.module.configuration.RequestParameterAutoLoginConfiguration;
+import com.liferay.portal.security.auto.login.request.header.constants.RequestHeaderAutoLoginConstants;
+import com.liferay.portal.security.auto.login.request.header.module.configuration.RequestHeaderAutoLoginConfiguration;
 
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author Tomas Polesovsky
+ * @author Mika Koivisto
  */
 @Component
-public class RequestParameterAutoLoginCompanyServiceConfigurationPidMapping
+public class RequestHeaderAutoLoginCompanyServiceCPM
 	implements ConfigurationPidMapping {
 
 	@Override
 	public Class<?> getConfigurationBeanClass() {
-		return RequestParameterAutoLoginConfiguration.class;
+		return RequestHeaderAutoLoginConfiguration.class;
 	}
 
 	@Override
 	public String getConfigurationPid() {
-		return RequestParameterAutoLoginConstants.SERVICE_NAME;
+		return RequestHeaderAutoLoginConstants.SERVICE_NAME;
 	}
 
 }
