@@ -29,9 +29,11 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.pop.MessageListenerWrapper;
+import com.liferay.portal.pop.notifications.MessageListenerWrapper;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.util.mail.MailEngine;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.mail.Address;
 import javax.mail.Flags;
