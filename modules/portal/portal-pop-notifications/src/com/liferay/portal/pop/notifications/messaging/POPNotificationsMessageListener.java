@@ -90,7 +90,9 @@ public class POPNotificationsMessageListener
 
 	@Deactivate
 	protected void deactivate() {
-		_schedulerEngineHelper.unregister(this);
+		if (PropsValues.POP_SERVER_NOTIFICATIONS_ENABLED) {
+			_schedulerEngineHelper.unregister(this);
+		}
 	}
 
 	@Override
