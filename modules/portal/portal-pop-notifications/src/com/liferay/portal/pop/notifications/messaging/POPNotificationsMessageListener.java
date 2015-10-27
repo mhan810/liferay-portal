@@ -29,9 +29,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.model.Portlet;
 import com.liferay.portal.pop.MessageListenerWrapper;
-import com.liferay.portal.pop.notifications.portlet.POPNotificationPortlet;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.util.mail.MailEngine;
 
@@ -234,13 +232,6 @@ public class POPNotificationsMessageListener
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
 	protected void setModuleServiceLifecycle(
 		ModuleServiceLifecycle moduleServiceLifecycle) {
-	}
-
-	@Reference(
-		target =
-			"(javax.portlet.name=" + POPNotificationPortlet.PORTLET_ID + ")"
-	)
-	protected void setPortlet(Portlet portlet) {
 	}
 
 	@Reference(unbind = "-")
