@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Destination;
+import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.InvokerMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBus;
@@ -393,7 +394,8 @@ public class QuartzSchedulerEngine implements SchedulerEngine {
 			return;
 		}
 
-		if (Validator.isNull(
+		if (destination.equals(DestinationNames.SCHEDULER_DISPATCH) &&
+			Validator.isNull(
 				message.get(SchedulerEngine.MESSAGE_LISTENER_UUID))) {
 
 			throw new IllegalArgumentException(
