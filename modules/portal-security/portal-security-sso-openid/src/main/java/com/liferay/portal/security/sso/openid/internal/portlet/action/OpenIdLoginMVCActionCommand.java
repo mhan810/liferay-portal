@@ -369,8 +369,13 @@ public class OpenIdLoginMVCActionCommand extends BaseMVCActionCommand {
 			String createAccountURL = PortalUtil.getCreateAccountURL(
 				request, themeDisplay);
 
+			String portletId = HttpUtil.getParameter(
+				createAccountURL, "p_p_id", false);
+
+			String portletNamespace = PortalUtil.getPortletNamespace(portletId);
+
 			createAccountURL = HttpUtil.setParameter(
-				createAccountURL, "openId", openId);
+				createAccountURL, portletNamespace + "openId", openId);
 
 			session.setAttribute(WebKeys.OPEN_ID_LOGIN_PENDING, Boolean.TRUE);
 
@@ -434,6 +439,7 @@ public class OpenIdLoginMVCActionCommand extends BaseMVCActionCommand {
 
 		portletURL.setParameter("saveLastPath", Boolean.FALSE.toString());
 		portletURL.setParameter(Constants.CMD, Constants.READ);
+		portletURL.setParameter("mvcRenderCommandName", "/login/open_id");
 		portletURL.setParameter(ActionRequest.ACTION_NAME, "/login/open_id");
 
 		List<DiscoveryInformation> discoveryInformationList =
