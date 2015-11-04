@@ -19,10 +19,10 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.openid.OpenId;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
+import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
-import com.liferay.portal.kernel.struts.BaseStrutsPortletAction;
-import com.liferay.portal.kernel.struts.StrutsPortletAction;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -43,6 +43,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalService;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PortletKeys;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -52,10 +53,7 @@ import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletConfig;
 import javax.portlet.PortletURL;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -92,22 +90,18 @@ import org.osgi.service.component.annotations.Reference;
 	configurationPid = "com.liferay.portal.security.sso.openid.module.configuration.OpenIdConfiguration",
 	immediate = true,
 	property = {
-		"path=/login/open_id", "portlet.login.login=portlet.login.login",
-		"portlet.login.open_id=portlet.login.open_id"
+		"javax.portlet.name=" + PortletKeys.FAST_LOGIN,
+		"javax.portlet.name=" + PortletKeys.LOGIN,
+		"mvc.command.name=/login/open_id"
 	},
-	service = StrutsPortletAction.class
+	service = MVCActionCommand.class
+
 )
-public class OpenIdAction extends BaseStrutsPortletAction {
+public class OpenIdLoginMVCActionCommand extends BaseMVCActionCommand {
 
 	@Override
-	public boolean isCheckMethodOnProcessAction() {
-		return false;
-	}
-
-	@Override
-	public void processAction(
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
+	public void doProcessAction(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
@@ -164,24 +158,6 @@ public class OpenIdAction extends BaseStrutsPortletAction {
 				PortalUtil.sendError(e, actionRequest, actionResponse);
 			}
 		}
-	}
-
-	@Override
-	public String render(
-			PortletConfig portletConfig, RenderRequest renderRequest,
-			RenderResponse renderResponse)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		if (!_openId.isEnabled(themeDisplay.getCompanyId())) {
-			return _forwards.get("portlet.login.login");
-		}
-
-		renderResponse.setTitle(themeDisplay.translate("open-id"));
-
-		return _forwards.get("portlet.login.open_id");
 	}
 
 	@Reference
@@ -458,7 +434,7 @@ public class OpenIdAction extends BaseStrutsPortletAction {
 
 		portletURL.setParameter("saveLastPath", Boolean.FALSE.toString());
 		portletURL.setParameter(Constants.CMD, Constants.READ);
-		portletURL.setParameter("struts_action", "/login/open_id");
+		portletURL.setParameter(ActionRequest.ACTION_NAME, "/login/open_id");
 
 		List<DiscoveryInformation> discoveryInformationList =
 			_consumerManager.discover(openId);
@@ -559,7 +535,8 @@ public class OpenIdAction extends BaseStrutsPortletAction {
 
 	private static final String _OPEN_ID_SREG_ATTR_FULLNAME = "fullname";
 
-	private static final Log _log = LogFactoryUtil.getLog(OpenIdAction.class);
+	private static final Log _log = LogFactoryUtil.getLog(
+		OpenIdLoginMVCActionCommand.class);
 
 	private ConsumerManager _consumerManager;
 	private final Map<String, String> _forwards = new HashMap<>();
