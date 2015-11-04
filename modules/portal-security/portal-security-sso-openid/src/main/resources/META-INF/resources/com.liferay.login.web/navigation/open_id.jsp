@@ -17,7 +17,7 @@
 <%@ include file="/com.liferay.login.web/navigation/init.jsp" %>
 
 <portlet:renderURL var="openIdURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
-	<portlet:param name="struts_action" value="/login/open_id" />
+	<portlet:param name="mvcRenderCommandName" value="/login/open_id" />
 </portlet:renderURL>
 
 <liferay-ui:icon
