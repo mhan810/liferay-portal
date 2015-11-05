@@ -12,22 +12,23 @@
  * details.
  */
 
-package com.liferay.portal.security.sso.openid.internal.servlet.taglib;
+package com.liferay.portal.security.sso.openid.internal.portlet.action;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.openid.OpenId;
-import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
-import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
-import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PortletKeys;
 
-import java.io.IOException;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,50 +37,56 @@ import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
+ * @author Stian Sigvartsen
  */
-@Component(immediate = true, service = DynamicInclude.class)
-public class OpenIdNavigationPreDynamicInclude extends BaseDynamicInclude {
+@Component(
+	immediate = true,
+	property = {
+		"javax.portlet.name=" + PortletKeys.FAST_LOGIN,
+		"javax.portlet.name=" + PortletKeys.LOGIN,
+		"mvc.command.name=/login/open_id"
+	},
+	service = MVCRenderCommand.class
+)
+public class OpenIdLoginMVCRenderCommand implements MVCRenderCommand {
 
 	@Override
-	public void include(
-			HttpServletRequest request, HttpServletResponse response,
-			String key)
-		throws IOException {
+	public String render(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws PortletException {
 
-		String mvcRenderCommandName = ParamUtil.getString(
-			request, "mvcRenderCommandName");
+		HttpServletRequest httpServletRequest =
+			PortalUtil.getHttpServletRequest(renderRequest);
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		HttpServletResponse httpServletResponse =
+			PortalUtil.getHttpServletResponse(renderResponse);
 
-		if (mvcRenderCommandName.equals("/login/open_id") ||
-			!_openId.isEnabled(themeDisplay.getCompanyId())) {
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
 
-			return;
+		if (!_openId.isEnabled(themeDisplay.getCompanyId()) ||
+			themeDisplay.isSignedIn()) {
+
+			return "/login.jsp";
 		}
 
 		RequestDispatcher requestDispatcher =
 			_servletContext.getRequestDispatcher(_JSP_PATH);
 
 		try {
-			requestDispatcher.include(request, response);
+			requestDispatcher.include(httpServletRequest, httpServletResponse);
 		}
-		catch (ServletException se) {
-			_log.error("Unable to include JSP " + _JSP_PATH, se);
+		catch (Exception e) {
+			_log.error("Unable to include JSP " + _JSP_PATH, e);
 
-			throw new IOException("Unable to include JSP " + _JSP_PATH, se);
+			throw new PortletException("Unable to include JSP " + _JSP_PATH, e);
 		}
+
+		return "/navigation.jsp";
 	}
 
-	@Override
-	public void register(
-		DynamicInclude.DynamicIncludeRegistry dynamicIncludeRegistry) {
-
-		dynamicIncludeRegistry.register(
-			"com.liferay.login.web:/navigation.jsp#pre");
-	}
-
-	@Reference
+	@Reference(unbind = "-")
 	protected void setOpenId(OpenId openId) {
 		_openId = openId;
 	}
@@ -92,10 +99,10 @@ public class OpenIdNavigationPreDynamicInclude extends BaseDynamicInclude {
 	}
 
 	private static final String _JSP_PATH =
-		"/com.liferay.login.web/navigation/open_id.jsp";
+		"/com.liferay.login.web/open_id.jsp";
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		OpenIdNavigationPreDynamicInclude.class);
+		OpenIdLoginMVCRenderCommand.class);
 
 	private OpenId _openId;
 	private ServletContext _servletContext;

@@ -14,14 +14,14 @@
  */
 --%>
 
-<%@ include file="/html/portlet/login/init.jsp" %>
+<%@ include file="/com.liferay.login.web/init.jsp" %>
 
 <%
 String openId = ParamUtil.getString(request, "openId");
 %>
 
 <portlet:actionURL var="openIdURL">
-	<portlet:param name="struts_action" value="/login/open_id" />
+	<portlet:param name="<%= ActionRequest.ACTION_NAME %>" value="/login/open_id" />
 </portlet:actionURL>
 
 <aui:form action="<%= openIdURL %>" method="post" name="fm">

@@ -31,10 +31,15 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Michael C. Han
+ * @author Stian Sigvartsen
  */
-@Component(immediate = true, service = DynamicInclude.class)
-public class OpenIdLoginDynamicInclude extends BaseDynamicInclude {
+@Component(
+	immediate = true,
+	property = {"portal.settings.authentication.tabs.name=open-id"},
+	service = DynamicInclude.class
+)
+public class PortalSettingsOpenIdAuthenticationDynamicInclude
+	extends BaseDynamicInclude {
 
 	@Override
 	public void include(
@@ -51,15 +56,13 @@ public class OpenIdLoginDynamicInclude extends BaseDynamicInclude {
 		catch (ServletException se) {
 			_log.error("Unable to include JSP " + _JSP_PATH, se);
 
-			throw new IOException("Unable to include " + _JSP_PATH, se);
+			throw new IOException("Unable to include JSP " + _JSP_PATH, se);
 		}
 	}
 
 	@Override
 	public void register(
 		DynamicInclude.DynamicIncludeRegistry dynamicIncludeRegistry) {
-
-		dynamicIncludeRegistry.register("/html/portlet/login/open_id.jsp#pre");
 	}
 
 	@Reference(
@@ -69,10 +72,10 @@ public class OpenIdLoginDynamicInclude extends BaseDynamicInclude {
 		_servletContext = servletContext;
 	}
 
-	private static final String _JSP_PATH = "/html/portlet/login/open_id.jsp";
+	private static final String _JSP_PATH = "/portal-settings-web/open_id.jsp";
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		OpenIdLoginDynamicInclude.class);
+		PortalSettingsOpenIdAuthenticationDynamicInclude.class);
 
 	private ServletContext _servletContext;
 
