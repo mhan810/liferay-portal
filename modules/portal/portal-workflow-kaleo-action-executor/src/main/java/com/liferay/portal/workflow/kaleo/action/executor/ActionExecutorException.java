@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.action;
+package com.liferay.portal.workflow.kaleo.action.executor;
 
 import com.liferay.portal.kernel.workflow.WorkflowException;
 
