@@ -77,7 +77,7 @@ public class VersionTest {
 	public void testQualifier() {
 		Version version = Version.getInstance("1-SNAPSHOT");
 
-		Assert.assertNotEquals("1", version.toString());
+		Assert.assertEquals("1-SNAPSHOT", version.toString());
 
 		version = Version.getInstance("1.1-SNAPSHOT");
 
