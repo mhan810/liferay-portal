@@ -19,6 +19,8 @@
 <%
 String cmd = ParamUtil.getString(request, Constants.CMD, Constants.EDIT);
 
+boolean commitImmediately = ParamUtil.getBoolean(request, "commitImmediately");
+
 String redirect = ParamUtil.getString(request, "redirect");
 
 String uploadProgressId = "dlFileEntryUploadProgress";
@@ -177,6 +179,7 @@ if (portletTitleBasedNavigation) {
 
 	<aui:form action="<%= editFileEntryURL %>" cssClass="lfr-dynamic-form" enctype="multipart/form-data" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveFileEntry(" + saveAsDraft + ");" %>'>
 		<aui:input name="<%= Constants.CMD %>" type="hidden" />
+		<aui:input name="commitImmediately" type="hidden" value="<%= commitImmediately %>" />
 		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 		<aui:input name="uploadProgressId" type="hidden" value="<%= uploadProgressId %>" />
 		<aui:input name="repositoryId" type="hidden" value="<%= repositoryId %>" />

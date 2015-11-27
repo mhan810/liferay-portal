@@ -17,6 +17,8 @@
 <%@ include file="/blogs/init.jsp" %>
 
 <%
+boolean commitImmediately = ParamUtil.getBoolean(request, "commitImmediately");
+
 String redirect = ParamUtil.getString(request, "redirect");
 String backURL = ParamUtil.getString(request, "backURL");
 
@@ -55,6 +57,7 @@ renderResponse.setTitle((entry != null) ? entry.getTitle() : LanguageUtil.get(re
 <div class="container-fluid-1280">
 	<aui:form action="<%= editEntryURL %>" cssClass="edit-entry" enctype="multipart/form-data" method="post" name="fm" onSubmit="event.preventDefault();">
 		<aui:input name="<%= Constants.CMD %>" type="hidden" />
+		<aui:input name="commitImmediately" type="hidden" value="<%= commitImmediately %>" />
 		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 		<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 		<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
