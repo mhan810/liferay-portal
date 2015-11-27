@@ -17,6 +17,7 @@ package com.liferay.portal.kernel.portlet.bridges.mvc;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortlet;
+import com.liferay.portal.kernel.search.CommitImmediatelyThreadLocal;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -244,6 +245,8 @@ public class MVCPortlet extends LiferayPortlet {
 	public void processAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws IOException, PortletException {
+
+		setCommitImmediately(actionRequest);
 
 		super.processAction(actionRequest, actionResponse);
 
@@ -584,6 +587,13 @@ public class MVCPortlet extends LiferayPortlet {
 		if (hideDefaultSuccessMessage) {
 			hideDefaultSuccessMessage(portletRequest);
 		}
+	}
+
+	protected void setCommitImmediately(PortletRequest portletRequest) {
+		boolean commitImmediately = ParamUtil.getBoolean(
+			portletRequest, "commitImmediately");
+
+		CommitImmediatelyThreadLocal.setCommitImmediately(commitImmediately);
 	}
 
 	protected String aboutTemplate;
