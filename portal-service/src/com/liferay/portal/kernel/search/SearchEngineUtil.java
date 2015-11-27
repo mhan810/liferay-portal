@@ -982,7 +982,8 @@ public class SearchEngineUtil {
 		SearchContext searchContext, boolean commitImmediately) {
 
 		if (!commitImmediately) {
-			searchContext.setCommitImmediately(_INDEX_COMMIT_IMMEDIATELY);
+			searchContext.setCommitImmediately(
+				CommitImmediatelyThreadLocal.isCommitImmediately());
 		}
 		else {
 			searchContext.setCommitImmediately(true);
@@ -998,10 +999,6 @@ public class SearchEngineUtil {
 
 		_serviceTracker.open();
 	}
-
-	private static final boolean _INDEX_COMMIT_IMMEDIATELY =
-		GetterUtil.getBoolean(
-			PropsUtil.get(PropsKeys.INDEX_COMMIT_IMMEDIATELY));
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		SearchEngineUtil.class);
