@@ -17,6 +17,8 @@
 <%@ include file="/bookmarks/init.jsp" %>
 
 <%
+boolean commitImmediately = ParamUtil.getBoolean(request, "commitImmediately");
+
 String redirect = ParamUtil.getString(request, "redirect");
 String backURL = ParamUtil.getString(request, "backURL");
 
@@ -57,6 +59,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 
 	<aui:form action="<%= editEntryURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveEntry();" %>'>
 		<aui:input name="<%= Constants.CMD %>" type="hidden" />
+		<aui:input name="commitImmediately" type="hidden" value="<%= commitImmediately %>" />
 		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 		<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 		<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />

@@ -40,6 +40,7 @@ AssetRendererFactory<?> assetRendererFactory = AssetRendererFactoryRegistryUtil.
 		<c:if test="<%= addPortletURL != null %>">
 
 			<%
+			addPortletURL.setParameter("commitImmediately", Boolean.TRUE.toString());
 			addPortletURL.setParameter("groupId", String.valueOf(groupId));
 
 			String addPortletURLString = addPortletURL.toString();
@@ -59,6 +60,7 @@ AssetRendererFactory<?> assetRendererFactory = AssetRendererFactoryRegistryUtil.
 		<c:if test="<%= addPortletURL != null %>">
 
 			<%
+			addPortletURL.setParameter("commitImmediately", Boolean.TRUE.toString());
 			addPortletURL.setParameter("groupId", String.valueOf(groupId));
 
 			String addPortletURLString = addPortletURL.toString();

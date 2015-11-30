@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+boolean commitImmediately = ParamUtil.getBoolean(request, "commitImmediately");
+
 String redirect = ParamUtil.getString(request, "redirect");
 
 String portletResource = ParamUtil.getString(request, "portletResource");
@@ -133,6 +135,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 
 	<aui:form action="<%= editArticleActionURL %>" cssClass="lfr-dynamic-form" enctype="multipart/form-data" method="post" name="fm1" onSubmit="event.preventDefault();">
 		<aui:input name="<%= ActionRequest.ACTION_NAME %>" type="hidden" />
+		<aui:input name="commitImmediately" type="hidden" value="<%= commitImmediately %>" />
 		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 		<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
 		<aui:input name="referringPlid" type="hidden" value="<%= referringPlid %>" />
