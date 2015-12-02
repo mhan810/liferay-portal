@@ -32,8 +32,6 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Account;
@@ -415,14 +413,6 @@ public class CompanyLocalServiceTest {
 		throws Exception {
 
 		Company company = addCompany();
-
-		PortletPreferences portletPreferences = PrefsPropsUtil.getPreferences(
-			company.getCompanyId(), true);
-
-		portletPreferences.setValue(
-			PropsKeys.LDAP_PASSWORD_POLICY_ENABLED, "true");
-
-		portletPreferences.store();
 
 		CompanyLocalServiceUtil.deleteCompany(company);
 	}
