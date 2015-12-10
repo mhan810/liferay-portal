@@ -12,18 +12,20 @@
  * details.
  */
 
-package com.liferay.portal.security.sso.cas.portal.settings.web.servlet.taglib;
+package com.liferay.portal.security.sso.cas.portal.settings.web.portlet.action;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
-import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
+import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
+import com.liferay.portal.settings.web.constants.PortalSettingsPortletKeys;
+import com.liferay.portal.util.PortalUtil;
 
-import java.io.IOException;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,37 +33,41 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Tomas Polesovsky
+ * @author Philip Jones
  */
 @Component(
-	immediate = true, property = {"portal.settings.authentication.tabs.name=cas"},
-	service = DynamicInclude.class
+	property = {
+		"javax.portlet.name=" + PortalSettingsPortletKeys.PORTAL_SETTINGS,
+		"mvc.command.name=/portal_settings/test_cas"
+	}
 )
-public class PortalSettingsCASAuthenticationDynamicInclude
-	extends BaseDynamicInclude {
+public class PortalSettingsTestCASMVCRenderCommand implements MVCRenderCommand {
 
 	@Override
-	public void include(
-			HttpServletRequest request, HttpServletResponse response,
-			String key)
-		throws IOException {
+	public String render(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws PortletException {
 
 		RequestDispatcher requestDispatcher =
 			_servletContext.getRequestDispatcher(_JSP_PATH);
 
 		try {
+			HttpServletRequest request = PortalUtil.getHttpServletRequest(
+				renderRequest);
+
+			HttpServletResponse response = PortalUtil.getHttpServletResponse(
+				renderResponse);
+
 			requestDispatcher.include(request, response);
 		}
-		catch (ServletException se) {
+		catch (Exception se) {
 			_log.error("Unable to include JSP " + _JSP_PATH, se);
 
-			throw new IOException("Unable to include JSP " + _JSP_PATH, se);
+			throw new PortletException(
+				"Unable to include JSP " + _JSP_PATH, se);
 		}
-	}
 
-	@Override
-	public void register(
-		DynamicInclude.DynamicIncludeRegistry dynamicIncludeRegistry) {
+		return DONT_DISPATCH_PATH;
 	}
 
 	@Reference(
@@ -73,10 +79,10 @@ public class PortalSettingsCASAuthenticationDynamicInclude
 	}
 
 	private static final String _JSP_PATH =
-		"/com.liferay.portal.settings.web/cas.jsp";
+		"/com.liferay.portal.settings.web/test_cas.jsp";
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		PortalSettingsCASAuthenticationDynamicInclude.class);
+		PortalSettingsTestCASMVCRenderCommand.class);
 
 	private volatile ServletContext _servletContext;
 
