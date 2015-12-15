@@ -39,6 +39,10 @@ public class ThemeAutoDeployListener extends BaseAutoDeployListener {
 
 		File file = autoDeploymentContext.getFile();
 
+		if (isWABCompatible(file)) {
+			return AutoDeployer.CODE_NOT_APPLICABLE;
+		}
+
 		if (_log.isDebugEnabled()) {
 			_log.debug("Invoking deploy for " + file.getPath());
 		}

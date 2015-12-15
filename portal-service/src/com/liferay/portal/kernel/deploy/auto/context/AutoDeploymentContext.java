@@ -20,6 +20,7 @@ import java.io.File;
 
 /**
  * @author Miguel Pastor
+ * @author Gregory Amerson
  */
 public class AutoDeploymentContext {
 
@@ -41,6 +42,10 @@ public class AutoDeploymentContext {
 
 	public File getFile() {
 		return _file;
+	}
+
+	public boolean getUser() {
+		return _user;
 	}
 
 	public PluginPackage getPluginPackage() {
@@ -67,10 +72,15 @@ public class AutoDeploymentContext {
 		_pluginPackage = pluginPackage;
 	}
 
+	public void setUser(boolean user) {
+		_user = user;
+	}
+
 	private String _appServerType;
 	private String _context;
 	private String _destDir;
 	private File _file;
+	private boolean _user;
 	private PluginPackage _pluginPackage;
 
 }

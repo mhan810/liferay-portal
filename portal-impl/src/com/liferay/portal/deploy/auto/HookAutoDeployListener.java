@@ -36,6 +36,10 @@ public class HookAutoDeployListener extends BaseAutoDeployListener {
 	public int deploy(AutoDeploymentContext autoDeploymentContext)
 		throws AutoDeployException {
 
+		if (autoDeploymentContext.getUser()) {
+			return AutoDeployer.CODE_NOT_APPLICABLE;
+		}
+
 		File file = autoDeploymentContext.getFile();
 
 		if (_log.isDebugEnabled()) {
