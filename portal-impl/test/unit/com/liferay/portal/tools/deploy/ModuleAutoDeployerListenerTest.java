@@ -28,10 +28,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.text.MessageFormat;
+import java.util.zip.ZipOutputStream;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.Zip;
 import org.junit.Test;
+
+import jodd.io.ZipUtil;
 
 /**
  * @author Gregory Amerson
@@ -79,7 +80,7 @@ public class ModuleAutoDeployerListenerTest extends BaseDeployerTestCase {
 		File moduleFile =
 			new File(Files.createTempDirectory(null).toFile(), "module.jar");
 
-		zip(tempDir, moduleFile);
+		zip(new File(tempDir, "META-INF"), moduleFile);
 
 		deploy(moduleFile);
 
@@ -102,7 +103,7 @@ public class ModuleAutoDeployerListenerTest extends BaseDeployerTestCase {
 		File warFile =
 			new File(Files.createTempDirectory(null).toFile(), "war.war");
 
-		zip(tempDir, warFile);
+		zip(new File(tempDir, "WEB-INF"), warFile);
 
 		deploy(warFile);
 
@@ -164,13 +165,12 @@ public class ModuleAutoDeployerListenerTest extends BaseDeployerTestCase {
 		new ModuleAutoDeployListener().deploy(autoDeploymentContext);
 	}
 
-	private void zip(File baseDir, File destFile) {
-		Zip zip = new Zip();
-		zip.setBasedir(baseDir);
-		zip.setDestFile(destFile);
-		zip.setProject(new Project());
+	private void zip(File baseDir, File destFile) throws Exception {
+		ZipOutputStream zipOutputStream = ZipUtil.createZip(destFile);
 
-		zip.execute();
+		ZipUtil.addToZip(zipOutputStream, baseDir, null, null, true);
+
+		zipOutputStream.close();
 	}
 
 }
