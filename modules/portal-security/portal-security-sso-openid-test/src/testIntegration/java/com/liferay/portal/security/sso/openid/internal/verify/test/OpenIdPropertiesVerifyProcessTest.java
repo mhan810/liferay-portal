@@ -31,7 +31,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.security.sso.openid.constants.LegacyOpenIdPropsKeys;
 import com.liferay.portal.security.sso.openid.constants.OpenIdConstants;
-import com.liferay.portal.service.CompanyLocalServiceUtil;
+import com.liferay.portal.service.CompanyLocalService;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.verify.VerifyException;
 import com.liferay.portal.verify.VerifyProcess;
@@ -70,17 +70,6 @@ public class OpenIdPropertiesVerifyProcessTest
 
 	@BeforeClass
 	public static void setUpClass() throws PortalException {
-		UnicodeProperties properties = new UnicodeProperties();
-
-		properties.put(LegacyOpenIdPropsKeys.OPENID_AUTH_ENABLED, "false");
-
-		List<Company> companies = CompanyLocalServiceUtil.getCompanies(false);
-
-		for (Company company : companies) {
-			CompanyLocalServiceUtil.updatePreferences(
-				company.getCompanyId(), properties);
-		}
-
 		Bundle bundle = FrameworkUtil.getBundle(
 			OpenIdPropertiesVerifyProcessTest.class);
 
@@ -92,13 +81,31 @@ public class OpenIdPropertiesVerifyProcessTest
 
 		_settingsFactory = _bundleContext.getService(
 			configurationAdminServiceReference);
+
+		ServiceReference<CompanyLocalService>
+			companyLocalServiceReference = _bundleContext.getServiceReference(
+				CompanyLocalService.class);
+
+		_companyLocalService = _bundleContext.getService(
+			companyLocalServiceReference);
+
+		UnicodeProperties properties = new UnicodeProperties();
+
+		properties.put(LegacyOpenIdPropsKeys.OPENID_AUTH_ENABLED, "false");
+
+		List<Company> companies = _companyLocalService.getCompanies(false);
+
+		for (Company company : companies) {
+			_companyLocalService.updatePreferences(
+				company.getCompanyId(), properties);
+		}
 	}
 
 	@AfterClass
 	public static void tearDownClass()
 		throws InvalidSyntaxException, IOException {
 
-		List<Company> companies = CompanyLocalServiceUtil.getCompanies(false);
+		List<Company> companies = _companyLocalService.getCompanies(false);
 
 		for (Company company : companies) {
 			try {
@@ -126,7 +133,7 @@ public class OpenIdPropertiesVerifyProcessTest
 	protected void doVerify() throws VerifyException {
 		super.doVerify();
 
-		List<Company> companies = CompanyLocalServiceUtil.getCompanies(false);
+		List<Company> companies = _companyLocalService.getCompanies(false);
 
 		for (Company company : companies) {
 			PortletPreferences portletPreferences =
@@ -179,6 +186,7 @@ public class OpenIdPropertiesVerifyProcessTest
 		OpenIdPropertiesVerifyProcessTest.class);
 
 	private static BundleContext _bundleContext;
+	private static volatile CompanyLocalService _companyLocalService;
 	private static volatile SettingsFactory _settingsFactory;
 
 }
