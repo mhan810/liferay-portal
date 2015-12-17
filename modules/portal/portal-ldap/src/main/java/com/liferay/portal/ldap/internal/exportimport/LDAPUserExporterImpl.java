@@ -17,6 +17,7 @@ package com.liferay.portal.ldap.internal.exportimport;
 import com.liferay.portal.kernel.ldap.LDAPUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.ldap.GroupConverterKeys;
@@ -52,6 +53,8 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SchemaViolationException;
 import javax.naming.ldap.LdapContext;
 
+import org.apache.commons.lang.time.StopWatch;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -74,6 +77,16 @@ public class LDAPUserExporterImpl implements UserExporter {
 		throws Exception {
 
 		long companyId = contact.getCompanyId();
+
+		StopWatch stopWatch = new StopWatch();
+
+		if (_log.isTraceEnabled()) {
+			stopWatch.start();
+
+			_log.trace(
+				"exportUser(Contact, Map): contactId = " + contact.getUserId() +
+				".  companyId = " + companyId + ".");
+		}
 
 		LDAPAuthConfiguration ldapAuthConfiguration =
 			_ldapAuthConfigurationProvider.getConfiguration(companyId);
@@ -145,6 +158,12 @@ public class LDAPUserExporterImpl implements UserExporter {
 			if (ldapContext != null) {
 				ldapContext.close();
 			}
+
+			if (_log.isTraceEnabled()) {
+				_log.trace(
+					"Completed export in : " +
+					(stopWatch.getTime() / Time.SECOND) + " seconds.");
+			}
 		}
 	}
 
@@ -156,6 +175,16 @@ public class LDAPUserExporterImpl implements UserExporter {
 		User user = _userLocalService.getUser(userId);
 
 		long companyId = user.getCompanyId();
+
+		StopWatch stopWatch = new StopWatch();
+
+		if (_log.isTraceEnabled()) {
+			stopWatch.start();
+
+			_log.trace(
+				"exportUser(long, long, UserOperation): userId = " + userId +
+				".  companyId = " + companyId + ".");
+		}
 
 		LDAPAuthConfiguration ldapAuthConfiguration =
 			_ldapAuthConfigurationProvider.getConfiguration(companyId);
@@ -230,6 +259,12 @@ public class LDAPUserExporterImpl implements UserExporter {
 		finally {
 			if (ldapContext != null) {
 				ldapContext.close();
+			}
+
+			if (_log.isTraceEnabled()) {
+				_log.trace(
+					"Completed export in : " +
+					(stopWatch.getTime() / Time.SECOND) + " seconds.");
 			}
 		}
 	}
