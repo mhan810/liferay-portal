@@ -16,10 +16,12 @@ package com.liferay.portal.security.sso.openid.internal.verify.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;
 import com.liferay.portal.kernel.settings.Settings;
 import com.liferay.portal.kernel.settings.SettingsException;
-import com.liferay.portal.kernel.settings.SettingsFactoryUtil;
+import com.liferay.portal.kernel.settings.SettingsFactory;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
@@ -83,6 +85,13 @@ public class OpenIdPropertiesVerifyProcessTest
 			OpenIdPropertiesVerifyProcessTest.class);
 
 		_bundleContext = bundle.getBundleContext();
+
+		ServiceReference<SettingsFactory>
+			configurationAdminServiceReference =
+				_bundleContext.getServiceReference(SettingsFactory.class);
+
+		_settingsFactory = _bundleContext.getService(
+			configurationAdminServiceReference);
 	}
 
 	@AfterClass
@@ -107,7 +116,7 @@ public class OpenIdPropertiesVerifyProcessTest
 	protected static Settings getSettings(long companyId)
 		throws SettingsException {
 
-		Settings settings = SettingsFactoryUtil.getSettings(
+		Settings settings = _settingsFactory.getSettings(
 				new CompanyServiceSettingsLocator(
 					companyId, OpenIdConstants.SERVICE_NAME));
 
@@ -166,6 +175,10 @@ public class OpenIdPropertiesVerifyProcessTest
 		}
 	}
 
+	private static final Log _log = LogFactoryUtil.getLog(
+		OpenIdPropertiesVerifyProcessTest.class);
+
 	private static BundleContext _bundleContext;
+	private static volatile SettingsFactory _settingsFactory;
 
 }
