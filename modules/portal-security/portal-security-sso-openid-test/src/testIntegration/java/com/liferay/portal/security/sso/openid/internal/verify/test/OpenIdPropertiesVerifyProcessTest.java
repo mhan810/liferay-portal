@@ -24,7 +24,7 @@ import com.liferay.portal.kernel.settings.SettingsException;
 import com.liferay.portal.kernel.settings.SettingsFactory;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PrefsProps;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
@@ -89,6 +89,12 @@ public class OpenIdPropertiesVerifyProcessTest
 		_companyLocalService = _bundleContext.getService(
 			companyLocalServiceReference);
 
+		ServiceReference<PrefsProps>
+			prefsPropsServiceReference = _bundleContext.getServiceReference(
+				PrefsProps.class);
+
+		_prefsProps = _bundleContext.getService(prefsPropsServiceReference);
+
 		UnicodeProperties properties = new UnicodeProperties();
 
 		properties.put(LegacyOpenIdPropsKeys.OPENID_AUTH_ENABLED, "false");
@@ -136,8 +142,8 @@ public class OpenIdPropertiesVerifyProcessTest
 		List<Company> companies = _companyLocalService.getCompanies(false);
 
 		for (Company company : companies) {
-			PortletPreferences portletPreferences =
-				PrefsPropsUtil.getPreferences(company.getCompanyId(), true);
+			PortletPreferences portletPreferences = _prefsProps.getPreferences(
+				company.getCompanyId(), true);
 
 			Assert.assertTrue(
 					Validator.isNull(
@@ -187,6 +193,7 @@ public class OpenIdPropertiesVerifyProcessTest
 
 	private static BundleContext _bundleContext;
 	private static volatile CompanyLocalService _companyLocalService;
+	private static volatile PrefsProps _prefsProps;
 	private static volatile SettingsFactory _settingsFactory;
 
 }
