@@ -34,7 +34,6 @@ import com.liferay.portal.verify.VerifyProcess;
 
 import java.io.IOException;
 
-import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.List;
@@ -171,8 +170,6 @@ public class SiteMinderCompanySettingsVerifyProcess extends VerifyProcess {
 			storeSettings(companyId, getSettingsId(), dictionary);
 
 			Set<String> keys = new HashSet<>();
-
-			keys.addAll(Arrays.asList(LegacyTokenPropsKeys.TOKEN_LEGACY_KEYS));
 
 			if (_log.isDebugEnabled()) {
 				_log.debug(
