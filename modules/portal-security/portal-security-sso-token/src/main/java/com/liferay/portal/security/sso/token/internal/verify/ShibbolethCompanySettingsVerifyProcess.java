@@ -16,14 +16,12 @@ package com.liferay.portal.security.sso.token.internal.verify;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.module.configuration.ConfigurationFactory;
 import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;
 import com.liferay.portal.kernel.settings.ModifiableSettings;
 import com.liferay.portal.kernel.settings.Settings;
 import com.liferay.portal.kernel.settings.SettingsDescriptor;
 import com.liferay.portal.kernel.settings.SettingsException;
 import com.liferay.portal.kernel.settings.SettingsFactory;
-import com.liferay.portal.kernel.settings.SettingsFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.PrefsProps;
@@ -33,50 +31,53 @@ import com.liferay.portal.security.sso.token.constants.LegacyTokenPropsKeys;
 import com.liferay.portal.security.sso.token.constants.TokenConstants;
 import com.liferay.portal.service.CompanyLocalService;
 import com.liferay.portal.verify.VerifyProcess;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
+import javax.portlet.ValidatorException;
 import java.io.IOException;
-
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.portlet.ValidatorException;
-
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Brian Greenwald
  */
 @Component(
 	immediate = true,
-	property = {"verify.process.name=com.liferay.portal.security.sso.token.siteminder"},
+	property = {"verify.process.name=com.liferay.portal.security.sso.token.shibboleth"},
 	service = VerifyProcess.class
 )
-public class SiteMinderCompanySettingsVerifyProcess extends VerifyProcess {
+public class ShibbolethCompanySettingsVerifyProcess extends VerifyProcess {
 
-	protected void addSiteMinderTokenKeys(
+	protected void addShibbolethTokenKeys(
 		Dictionary<String, String> dictionary, long companyId) {
 
 		dictionary.put(
 			TokenConstants.AUTH_ENABLED,
 				_prefsProps.getString(
-					companyId, LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED,
+					companyId, LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED,
 					StringPool.FALSE));
 
 		dictionary.put(
 			TokenConstants.IMPORT_FROM_LDAP,
 				_prefsProps.getString(
-					companyId, LegacyTokenPropsKeys.SITEMINDER_IMPORT_FROM_LDAP,
+					companyId, LegacyTokenPropsKeys.SHIBBOLETH_IMPORT_FROM_LDAP,
 					StringPool.FALSE));
+
+		dictionary.put(
+			TokenConstants.LOGOUT_REDIRECT_URL,
+				_prefsProps.getString(
+					companyId, LegacyTokenPropsKeys.SHIBBOLETH_LOGOUT_URL,
+					"/Shibboleth.sso/Logout"));
 
 		dictionary.put(
 			TokenConstants.USER_HEADER,
 				_prefsProps.getString(
-					companyId, LegacyTokenPropsKeys.SITEMINDER_USER_HEADER,
-					"SM_USER"));
+					companyId, LegacyTokenPropsKeys.SHIBBOLETH_USER_HEADER,
+					"SHIBBOLETH_USER_EMAIL"));
 	}
 
 	@Override
@@ -146,17 +147,17 @@ public class SiteMinderCompanySettingsVerifyProcess extends VerifyProcess {
 
 		Dictionary<String, String> dictionary = new HashMapDictionary<>();
 
-		boolean siteMinderEnabled = _prefsProps.getBoolean(
-			companyId, LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED, false);
+		boolean shibbolethEnabled = _prefsProps.getBoolean(
+			companyId, LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED, false);
 
-		if (siteMinderEnabled) {
-			addSiteMinderTokenKeys(dictionary, companyId);
+		if (shibbolethEnabled) {
+			addShibbolethTokenKeys(dictionary, companyId);
 		}
 
 		if (_log.isDebugEnabled()) {
 			_log.debug(
-				"Adding SiteMinder Token configuration for company "
-					+ companyId + " with properties: " + dictionary);
+				"Adding Shibboleth Token configuration for company " +
+					companyId +	" with properties: " + dictionary);
 		}
 
 		return dictionary;
@@ -180,7 +181,7 @@ public class SiteMinderCompanySettingsVerifyProcess extends VerifyProcess {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
 					"Removing preference keys " + keys + " for company " +
-						companyId);
+					companyId);
 			}
 
 			getCompanyLocalService().removePreferences(
@@ -189,7 +190,7 @@ public class SiteMinderCompanySettingsVerifyProcess extends VerifyProcess {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		SiteMinderCompanySettingsVerifyProcess.class);
+		ShibbolethCompanySettingsVerifyProcess.class);
 
 	private volatile CompanyLocalService _companyLocalService;
 	private volatile PrefsProps _prefsProps;
