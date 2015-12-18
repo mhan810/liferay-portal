@@ -1,4 +1,4 @@
-Bundle-Name: Liferay Portal SSO Token
+Bundle-Name: Liferay Portal Security SSO Token
 Bundle-SymbolicName: com.liferay.portal.security.sso.token
 Bundle-Version: 1.0.0
 Export-Package:\
