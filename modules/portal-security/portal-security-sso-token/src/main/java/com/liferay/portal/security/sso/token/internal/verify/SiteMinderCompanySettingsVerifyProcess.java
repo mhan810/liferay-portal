@@ -172,7 +172,7 @@ public class SiteMinderCompanySettingsVerifyProcess extends VerifyProcess {
 
 			Set<String> keys = new HashSet<>();
 
-			keys.addAll(Arrays.asList(LegacyTokenPropsKeys.LEGACY_TOKEN_KEYS));
+			keys.addAll(Arrays.asList(LegacyTokenPropsKeys.TOKEN_LEGACY_KEYS));
 
 			if (_log.isDebugEnabled()) {
 				_log.debug(

@@ -19,12 +19,6 @@ package com.liferay.portal.security.sso.token.constants;
  */
 public class LegacyTokenPropsKeys {
 
-	public static final String[] LEGACY_TOKEN_KEYS = {
-		SHIBBOLETH_AUTH_ENABLED, SHIBBOLETH_IMPORT_FROM_LDAP,
-		SHIBBOLETH_LOGOUT_URL, SHIBBOLETH_USER_HEADER, SITEMINDER_AUTH_ENABLED,
-		SITEMINDER_IMPORT_FROM_LDAP, SITEMINDER_USER_HEADER
-	};
-
 	public static final String SHIBBOLETH_AUTH_ENABLED =
 		"shibboleth.auth.enabled";
 
@@ -44,5 +38,12 @@ public class LegacyTokenPropsKeys {
 
 	public static final String SITEMINDER_USER_HEADER =
 		"siteminder.user.header";
+
+	public static final String[] TOKEN_LEGACY_KEYS = {
+		SHIBBOLETH_AUTH_ENABLED, SHIBBOLETH_IMPORT_FROM_LDAP,
+		SHIBBOLETH_LOGOUT_URL, SHIBBOLETH_USER_HEADER, SITEMINDER_AUTH_ENABLED,
+		SITEMINDER_IMPORT_FROM_LDAP,
+		SITEMINDER_USER_HEADER
+	};
 
 }
