@@ -16,14 +16,12 @@ package com.liferay.portal.security.sso.token.internal.verify;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.module.configuration.ConfigurationFactory;
 import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;
 import com.liferay.portal.kernel.settings.ModifiableSettings;
 import com.liferay.portal.kernel.settings.Settings;
 import com.liferay.portal.kernel.settings.SettingsDescriptor;
 import com.liferay.portal.kernel.settings.SettingsException;
 import com.liferay.portal.kernel.settings.SettingsFactory;
-import com.liferay.portal.kernel.settings.SettingsFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.PrefsProps;
@@ -88,12 +86,33 @@ public class SiteMinderCompanySettingsVerifyProcess extends VerifyProcess {
 		return _companyLocalService;
 	}
 
-	protected String getSettingsId() {
-		return TokenConstants.SERVICE_NAME;
+	protected Dictionary<String, String> getPropertyValues(long companyId)
+		throws IOException, SettingsException, ValidatorException {
+
+		Dictionary<String, String> dictionary = new HashMapDictionary<>();
+
+		boolean siteMinderEnabled = _prefsProps.getBoolean(
+			companyId, LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED, false);
+
+		if (siteMinderEnabled) {
+			addSiteMinderTokenKeys(dictionary, companyId);
+		}
+
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				"Adding SiteMinder Token configuration for company " +
+					companyId + " with properties: " + dictionary);
+		}
+
+		return dictionary;
 	}
 
 	protected SettingsFactory getSettingsFactory() {
 		return _settingsFactory;
+	}
+
+	protected String getSettingsId() {
+		return TokenConstants.SERVICE_NAME;
 	}
 
 	@Reference(unbind = "-")
@@ -119,8 +138,7 @@ public class SiteMinderCompanySettingsVerifyProcess extends VerifyProcess {
 		throws IOException, SettingsException, ValidatorException {
 
 		Settings settings = _settingsFactory.getSettings(
-			new CompanyServiceSettingsLocator(
-				companyId, settingsId));
+			new CompanyServiceSettingsLocator(companyId, settingsId));
 
 		ModifiableSettings modifiableSettings =
 			settings.getModifiableSettings();
@@ -141,35 +159,14 @@ public class SiteMinderCompanySettingsVerifyProcess extends VerifyProcess {
 		modifiableSettings.store();
 	}
 
-	protected Dictionary<String, String> getPropertyValues(long companyId)
-		throws IOException, SettingsException, ValidatorException {
-
-		Dictionary<String, String> dictionary = new HashMapDictionary<>();
-
-		boolean siteMinderEnabled = _prefsProps.getBoolean(
-			companyId, LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED, false);
-
-		if (siteMinderEnabled) {
-			addSiteMinderTokenKeys(dictionary, companyId);
-		}
-
-		if (_log.isDebugEnabled()) {
-			_log.debug(
-				"Adding SiteMinder Token configuration for company "
-					+ companyId + " with properties: " + dictionary);
-		}
-
-		return dictionary;
-	}
-
 	protected void verifyTokenProperties() throws Exception {
 		List<Company> companies = getCompanyLocalService().getCompanies(false);
 
 		for (Company company : companies) {
 			long companyId = company.getCompanyId();
 
-			Dictionary<String, String> dictionary =
-				getPropertyValues(companyId);
+			Dictionary<String, String> dictionary = getPropertyValues(
+				companyId);
 
 			storeSettings(companyId, getSettingsId(), dictionary);
 

@@ -31,16 +31,19 @@ import com.liferay.portal.security.sso.token.constants.LegacyTokenPropsKeys;
 import com.liferay.portal.security.sso.token.constants.TokenConstants;
 import com.liferay.portal.service.CompanyLocalService;
 import com.liferay.portal.verify.VerifyProcess;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
-import javax.portlet.ValidatorException;
 import java.io.IOException;
+
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.portlet.ValidatorException;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Brian Greenwald
@@ -89,12 +92,33 @@ public class ShibbolethCompanySettingsVerifyProcess extends VerifyProcess {
 		return _companyLocalService;
 	}
 
-	protected String getSettingsId() {
-		return TokenConstants.SERVICE_NAME;
+	protected Dictionary<String, String> getPropertyValues(long companyId)
+		throws IOException, SettingsException, ValidatorException {
+
+		Dictionary<String, String> dictionary = new HashMapDictionary<>();
+
+		boolean shibbolethEnabled = _prefsProps.getBoolean(
+			companyId, LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED, false);
+
+		if (shibbolethEnabled) {
+			addShibbolethTokenKeys(dictionary, companyId);
+		}
+
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				"Adding Shibboleth Token configuration for company " +
+					companyId + " with properties: " + dictionary);
+		}
+
+		return dictionary;
 	}
 
 	protected SettingsFactory getSettingsFactory() {
 		return _settingsFactory;
+	}
+
+	protected String getSettingsId() {
+		return TokenConstants.SERVICE_NAME;
 	}
 
 	@Reference(unbind = "-")
@@ -120,8 +144,7 @@ public class ShibbolethCompanySettingsVerifyProcess extends VerifyProcess {
 		throws IOException, SettingsException, ValidatorException {
 
 		Settings settings = _settingsFactory.getSettings(
-			new CompanyServiceSettingsLocator(
-				companyId, settingsId));
+			new CompanyServiceSettingsLocator(companyId, settingsId));
 
 		ModifiableSettings modifiableSettings =
 			settings.getModifiableSettings();
@@ -142,35 +165,14 @@ public class ShibbolethCompanySettingsVerifyProcess extends VerifyProcess {
 		modifiableSettings.store();
 	}
 
-	protected Dictionary<String, String> getPropertyValues(long companyId)
-		throws IOException, SettingsException, ValidatorException {
-
-		Dictionary<String, String> dictionary = new HashMapDictionary<>();
-
-		boolean shibbolethEnabled = _prefsProps.getBoolean(
-			companyId, LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED, false);
-
-		if (shibbolethEnabled) {
-			addShibbolethTokenKeys(dictionary, companyId);
-		}
-
-		if (_log.isDebugEnabled()) {
-			_log.debug(
-				"Adding Shibboleth Token configuration for company " +
-					companyId +	" with properties: " + dictionary);
-		}
-
-		return dictionary;
-	}
-
 	protected void verifyTokenProperties() throws Exception {
 		List<Company> companies = getCompanyLocalService().getCompanies(false);
 
 		for (Company company : companies) {
 			long companyId = company.getCompanyId();
 
-			Dictionary<String, String> dictionary =
-				getPropertyValues(companyId);
+			Dictionary<String, String> dictionary = getPropertyValues(
+				companyId);
 
 			storeSettings(companyId, getSettingsId(), dictionary);
 

@@ -35,21 +35,25 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.verify.VerifyException;
 import com.liferay.portal.verify.VerifyProcess;
 import com.liferay.portal.verify.test.BaseVerifyProcessTestCase;
+
+import java.io.IOException;
+
+import java.util.List;
+
+import javax.portlet.PortletPreferences;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-
-import javax.portlet.PortletPreferences;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * @author Brian Greenwald
@@ -76,7 +80,7 @@ public class ShibbolethCompanySettingsVerifyProcessTest
 		_settingsFactory = _bundleContext.getService(settingsFactoryReference);
 
 		ServiceReference<CompanyLocalService> companyLocalServiceReference =
-				_bundleContext.getServiceReference(CompanyLocalService.class);
+			_bundleContext.getServiceReference(CompanyLocalService.class);
 
 		_companyLocalService = _bundleContext.getService(
 			companyLocalServiceReference);
@@ -89,18 +93,21 @@ public class ShibbolethCompanySettingsVerifyProcessTest
 		UnicodeProperties properties = new UnicodeProperties();
 
 		properties.put(LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED, "true");
-		properties.put(LegacyTokenPropsKeys.SHIBBOLETH_IMPORT_FROM_LDAP,
-			"true");
-		properties.put(LegacyTokenPropsKeys.SHIBBOLETH_LOGOUT_URL,
-			"/test/shibboleth/url");
-		properties.put(LegacyTokenPropsKeys.SHIBBOLETH_USER_HEADER,
-				"testShibboleth");
+
+		properties.put(
+			LegacyTokenPropsKeys.SHIBBOLETH_IMPORT_FROM_LDAP, "true");
+
+		properties.put(
+			LegacyTokenPropsKeys.SHIBBOLETH_LOGOUT_URL, "/test/shibboleth/url");
+
+		properties.put(
+			LegacyTokenPropsKeys.SHIBBOLETH_USER_HEADER, "testShibboleth");
 
 		List<Company> companies = _companyLocalService.getCompanies(false);
 
 		for (Company company : companies) {
 			_companyLocalService.updatePreferences(
-					company.getCompanyId(), properties);
+				company.getCompanyId(), properties);
 		}
 	}
 
@@ -138,12 +145,11 @@ public class ShibbolethCompanySettingsVerifyProcessTest
 
 		List<Company> companies = _companyLocalService.getCompanies(false);
 
-
 		for (Company company : companies) {
 			long companyId = company.getCompanyId();
 
-			PortletPreferences portletPreferences =
-				_prefsProps.getPreferences(companyId, true);
+			PortletPreferences portletPreferences = _prefsProps.getPreferences(
+				companyId, true);
 
 			Assert.assertTrue(
 				Validator.isNull(
@@ -209,8 +215,8 @@ public class ShibbolethCompanySettingsVerifyProcessTest
 				_bundleContext.getAllServiceReferences(
 					VerifyProcess.class.getName(),
 					"(&(objectClass=" + VerifyProcess.class.getName() +
-						")(verify.process.name=" +
-							"com.liferay.portal.security.sso.token.shibboleth))");
+						")(verify.process.name=" + "com.liferay.portal." +
+							"security.sso.token.shibboleth))");
 
 			if (ArrayUtil.isEmpty(serviceReferences)) {
 				throw new IllegalStateException("Unable to get verify process");
@@ -221,7 +227,6 @@ public class ShibbolethCompanySettingsVerifyProcessTest
 		}
 		catch (InvalidSyntaxException ise) {
 			throw new IllegalStateException("Unable to get verify process");
-
 		}
 	}
 

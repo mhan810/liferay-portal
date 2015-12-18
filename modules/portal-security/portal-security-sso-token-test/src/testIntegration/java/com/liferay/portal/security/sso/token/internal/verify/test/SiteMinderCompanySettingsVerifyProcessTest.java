@@ -40,6 +40,8 @@ import java.io.IOException;
 
 import java.util.List;
 
+import javax.portlet.PortletPreferences;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -52,10 +54,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.cm.Configuration;
-import org.osgi.service.cm.ConfigurationAdmin;
-
-import javax.portlet.PortletPreferences;
 
 /**
  * @author Brian Greenwald
@@ -82,7 +80,7 @@ public class SiteMinderCompanySettingsVerifyProcessTest
 		_settingsFactory = _bundleContext.getService(settingsFactoryReference);
 
 		ServiceReference<CompanyLocalService> companyLocalServiceReference =
-				_bundleContext.getServiceReference(CompanyLocalService.class);
+			_bundleContext.getServiceReference(CompanyLocalService.class);
 
 		_companyLocalService = _bundleContext.getService(
 			companyLocalServiceReference);
@@ -95,16 +93,18 @@ public class SiteMinderCompanySettingsVerifyProcessTest
 		UnicodeProperties properties = new UnicodeProperties();
 
 		properties.put(LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED, "true");
-		properties.put(LegacyTokenPropsKeys.SITEMINDER_IMPORT_FROM_LDAP,
-			"true");
-		properties.put(LegacyTokenPropsKeys.SITEMINDER_USER_HEADER,
-			"testSiteminder");
+
+		properties.put(
+			LegacyTokenPropsKeys.SITEMINDER_IMPORT_FROM_LDAP, "true");
+
+		properties.put(
+			LegacyTokenPropsKeys.SITEMINDER_USER_HEADER, "testSiteminder");
 
 		List<Company> companies = _companyLocalService.getCompanies(false);
 
 		for (Company company : companies) {
 			_companyLocalService.updatePreferences(
-					company.getCompanyId(), properties);
+				company.getCompanyId(), properties);
 		}
 	}
 
@@ -142,12 +142,11 @@ public class SiteMinderCompanySettingsVerifyProcessTest
 
 		List<Company> companies = _companyLocalService.getCompanies(false);
 
-
 		for (Company company : companies) {
 			long companyId = company.getCompanyId();
 
-			PortletPreferences portletPreferences =
-				_prefsProps.getPreferences(companyId, true);
+			PortletPreferences portletPreferences = _prefsProps.getPreferences(
+				companyId, true);
 
 			Assert.assertTrue(
 				Validator.isNull(
@@ -203,7 +202,8 @@ public class SiteMinderCompanySettingsVerifyProcessTest
 					VerifyProcess.class.getName(),
 					"(&(objectClass=" + VerifyProcess.class.getName() +
 						")(verify.process.name=" +
-							"com.liferay.portal.security.sso.token.siteminder))");
+							"com.liferay.portal.security.sso.token." +
+								"siteminder))");
 
 			if (ArrayUtil.isEmpty(serviceReferences)) {
 				throw new IllegalStateException("Unable to get verify process");
@@ -214,7 +214,6 @@ public class SiteMinderCompanySettingsVerifyProcessTest
 		}
 		catch (InvalidSyntaxException ise) {
 			throw new IllegalStateException("Unable to get verify process");
-
 		}
 	}
 
