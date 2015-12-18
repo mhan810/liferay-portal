@@ -61,7 +61,7 @@ import javax.portlet.PortletPreferences;
  * @author Brian Greenwald
  */
 @RunWith(Arquillian.class)
-public class SiteMinderTokenPropertiesVerifyProcessTest
+public class SiteMinderCompanySettingsVerifyProcessTest
 	extends BaseVerifyProcessTestCase {
 
 	@ClassRule
@@ -72,7 +72,7 @@ public class SiteMinderTokenPropertiesVerifyProcessTest
 	@BeforeClass
 	public static void setUpClass() throws PortalException {
 		Bundle bundle = FrameworkUtil.getBundle(
-			SiteMinderTokenPropertiesVerifyProcessTest.class);
+			SiteMinderCompanySettingsVerifyProcessTest.class);
 
 		_bundleContext = bundle.getBundleContext();
 
@@ -203,7 +203,7 @@ public class SiteMinderTokenPropertiesVerifyProcessTest
 					VerifyProcess.class.getName(),
 					"(&(objectClass=" + VerifyProcess.class.getName() +
 						")(verify.process.name=" +
-							"com.liferay.portal.security.sso.token))");
+							"com.liferay.portal.security.sso.token.siteminder))");
 
 			if (ArrayUtil.isEmpty(serviceReferences)) {
 				throw new IllegalStateException("Unable to get verify process");

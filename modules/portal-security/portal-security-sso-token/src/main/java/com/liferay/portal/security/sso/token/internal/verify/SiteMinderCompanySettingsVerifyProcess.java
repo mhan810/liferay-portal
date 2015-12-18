@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.settings.ModifiableSettings;
 import com.liferay.portal.kernel.settings.Settings;
 import com.liferay.portal.kernel.settings.SettingsDescriptor;
 import com.liferay.portal.kernel.settings.SettingsException;
+import com.liferay.portal.kernel.settings.SettingsFactory;
 import com.liferay.portal.kernel.settings.SettingsFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
@@ -51,10 +52,10 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"verify.process.name=com.liferay.portal.security.sso.token"},
+	property = {"verify.process.name=com.liferay.portal.security.sso.token.siteminder"},
 	service = VerifyProcess.class
 )
-public class TokenPropertiesVerifyProcess extends VerifyProcess {
+public class SiteMinderCompanySettingsVerifyProcess extends VerifyProcess {
 
 	protected void addShibbolethTokenKeys(
 		Dictionary<String, String> dictionary, long companyId) {
@@ -111,8 +112,16 @@ public class TokenPropertiesVerifyProcess extends VerifyProcess {
 		verifyTokenProperties();
 	}
 
+	protected CompanyLocalService getCompanyLocalService() {
+		return _companyLocalService;
+	}
+
 	protected String getSettingsId() {
 		return TokenConstants.SERVICE_NAME;
+	}
+
+	protected SettingsFactory getSettingsFactory() {
+		return _settingsFactory;
 	}
 
 	@Reference(unbind = "-")
@@ -123,15 +132,13 @@ public class TokenPropertiesVerifyProcess extends VerifyProcess {
 	}
 
 	@Reference(unbind = "-")
-	protected void setConfigurationFactory(
-		ConfigurationFactory configurationFactory) {
-
-		_configurationFactory = configurationFactory;
+	protected void setPrefsProps(PrefsProps prefsProps) {
+		_prefsProps = prefsProps;
 	}
 
 	@Reference(unbind = "-")
-	protected void setPrefsProps(PrefsProps prefsProps) {
-		_prefsProps = prefsProps;
+	protected void setSettingsFactory(SettingsFactory settingsFactory) {
+		_settingsFactory = settingsFactory;
 	}
 
 	protected void storeSettings(
@@ -139,7 +146,7 @@ public class TokenPropertiesVerifyProcess extends VerifyProcess {
 			Dictionary<String, String> dictionary)
 		throws IOException, SettingsException, ValidatorException {
 
-		Settings settings = SettingsFactoryUtil.getSettings(
+		Settings settings = _settingsFactory.getSettings(
 			new CompanyServiceSettingsLocator(
 				companyId, settingsId));
 
@@ -147,7 +154,7 @@ public class TokenPropertiesVerifyProcess extends VerifyProcess {
 			settings.getModifiableSettings();
 
 		SettingsDescriptor settingsDescriptor =
-			SettingsFactoryUtil.getSettingsDescriptor(getSettingsId());
+			_settingsFactory.getSettingsDescriptor(getSettingsId());
 
 		for (String name : settingsDescriptor.getAllKeys()) {
 			String value = GetterUtil.getString(dictionary.get(name));
@@ -170,14 +177,8 @@ public class TokenPropertiesVerifyProcess extends VerifyProcess {
 		boolean siteMinderEnabled = _prefsProps.getBoolean(
 			companyId, LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED, false);
 
-		boolean shibbolethEnabled = _prefsProps.getBoolean(
-			companyId, LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED, false);
-
 		if (siteMinderEnabled) {
 			addSiteMinderTokenKeys(dictionary, companyId);
-		}
-		else if (shibbolethEnabled) {
-			addShibbolethTokenKeys(dictionary, companyId);
 		}
 
 		if (_log.isDebugEnabled()) {
@@ -190,7 +191,7 @@ public class TokenPropertiesVerifyProcess extends VerifyProcess {
 	}
 
 	protected void verifyTokenProperties() throws Exception {
-		List<Company> companies = _companyLocalService.getCompanies(false);
+		List<Company> companies = getCompanyLocalService().getCompanies(false);
 
 		for (Company company : companies) {
 			long companyId = company.getCompanyId();
@@ -210,16 +211,16 @@ public class TokenPropertiesVerifyProcess extends VerifyProcess {
 					companyId);
 			}
 
-			_companyLocalService.removePreferences(
+			getCompanyLocalService().removePreferences(
 				companyId, keys.toArray(new String[keys.size()]));
 		}
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		TokenPropertiesVerifyProcess.class);
+		SiteMinderCompanySettingsVerifyProcess.class);
 
 	private volatile CompanyLocalService _companyLocalService;
-	private volatile ConfigurationFactory _configurationFactory;
 	private volatile PrefsProps _prefsProps;
+	private volatile SettingsFactory _settingsFactory;
 
 }
