@@ -2970,11 +2970,10 @@ public class UserLocalServiceWrapper implements UserLocalService,
 	* @return the user
 	*/
 	@Override
-	public com.liferay.portal.model.User updatePassword(long userId,
-		java.lang.String password1, java.lang.String password2,
-		boolean passwordReset)
+	public void updatePassword(long userId, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _userLocalService.updatePassword(userId, password1, password2,
+		_userLocalService.updatePassword(userId, password1, password2,
 			passwordReset);
 	}
 
@@ -2992,11 +2991,10 @@ public class UserLocalServiceWrapper implements UserLocalService,
 	* @return the user
 	*/
 	@Override
-	public com.liferay.portal.model.User updatePassword(long userId,
-		java.lang.String password1, java.lang.String password2,
-		boolean passwordReset, boolean silentUpdate)
+	public void updatePassword(long userId, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset, boolean silentUpdate)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _userLocalService.updatePassword(userId, password1, password2,
+		_userLocalService.updatePassword(userId, password1, password2,
 			passwordReset, silentUpdate);
 	}
 
@@ -3013,11 +3011,11 @@ public class UserLocalServiceWrapper implements UserLocalService,
 	* @return the user
 	*/
 	@Override
-	public com.liferay.portal.model.User updatePasswordManually(long userId,
-		java.lang.String password, boolean passwordEncrypted,
-		boolean passwordReset, java.util.Date passwordModifiedDate)
+	public void updatePasswordManually(long userId, java.lang.String password,
+		boolean passwordEncrypted, boolean passwordReset,
+		java.util.Date passwordModifiedDate)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _userLocalService.updatePasswordManually(userId, password,
+		_userLocalService.updatePasswordManually(userId, password,
 			passwordEncrypted, passwordReset, passwordModifiedDate);
 	}
 
@@ -3031,10 +3029,9 @@ public class UserLocalServiceWrapper implements UserLocalService,
 	* @return the user
 	*/
 	@Override
-	public com.liferay.portal.model.User updatePasswordReset(long userId,
-		boolean passwordReset)
+	public void updatePasswordReset(long userId, boolean passwordReset)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _userLocalService.updatePasswordReset(userId, passwordReset);
+		_userLocalService.updatePasswordReset(userId, passwordReset);
 	}
 
 	/**
