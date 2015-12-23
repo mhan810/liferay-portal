@@ -26,13 +26,16 @@ import com.liferay.portal.util.PropsUtil;
 
 import java.io.File;
 import java.io.FileWriter;
+
 import java.nio.file.Files;
+
 import java.text.MessageFormat;
+
 import java.util.zip.ZipOutputStream;
 
-import org.junit.Test;
-
 import jodd.io.ZipUtil;
+
+import org.junit.Test;
 
 /**
  * @author Gregory Amerson
@@ -62,8 +65,7 @@ public class ModuleAutoDeployerListenerTest extends BaseDeployerTestCase {
 	public void testDeployModuleFile() throws Exception {
 		File tempDir = Files.createTempDirectory(null).toFile();
 
-		File manifestFile =
-			new File(tempDir, "META-INF/MANIFEST.MF");
+		File manifestFile = new File(tempDir, "META-INF/MANIFEST.MF");
 
 		manifestFile.getParentFile().mkdirs();
 
@@ -77,8 +79,8 @@ public class ModuleAutoDeployerListenerTest extends BaseDeployerTestCase {
 
 		fileWriter.close();
 
-		File moduleFile =
-			new File(Files.createTempDirectory(null).toFile(), "module.jar");
+		File moduleFile = new File(
+			Files.createTempDirectory(null).toFile(), "module.jar");
 
 		zip(new File(tempDir, "META-INF"), moduleFile);
 
@@ -93,15 +95,15 @@ public class ModuleAutoDeployerListenerTest extends BaseDeployerTestCase {
 
 		tempDir.mkdirs();
 
-		File liferayPluginPackageProperties =
-			new File(tempDir, "WEB-INF/liferay-plugin-package.properties");
+		File liferayPluginPackageProperties = new File(
+			tempDir, "WEB-INF/liferay-plugin-package.properties");
 
 		liferayPluginPackageProperties.getParentFile().mkdirs();
 
 		liferayPluginPackageProperties.createNewFile();
 
-		File warFile =
-			new File(Files.createTempDirectory(null).toFile(), "war.war");
+		File warFile = new File(
+			Files.createTempDirectory(null).toFile(), "war.war");
 
 		zip(new File(tempDir, "WEB-INF"), warFile);
 
@@ -125,8 +127,8 @@ public class ModuleAutoDeployerListenerTest extends BaseDeployerTestCase {
 
 		tempDir.mkdirs();
 
-		File liferayPluginPackageProperties =
-			new File(tempDir, "WEB-INF/liferay-plugin-package.properties");
+		File liferayPluginPackageProperties = new File(
+			tempDir, "WEB-INF/liferay-plugin-package.properties");
 
 		liferayPluginPackageProperties.getParentFile().mkdirs();
 
@@ -138,8 +140,8 @@ public class ModuleAutoDeployerListenerTest extends BaseDeployerTestCase {
 
 		fileWriter.close();
 
-		File warFile =
-			new File(Files.createTempDirectory(null).toFile(), "notawab.war");
+		File warFile = new File(
+			Files.createTempDirectory(null).toFile(), "notawab.war");
 
 		zip(tempDir, warFile);
 

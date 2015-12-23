@@ -44,12 +44,12 @@ public class AutoDeploymentContext {
 		return _file;
 	}
 
-	public boolean getUser() {
-		return _user;
-	}
-
 	public PluginPackage getPluginPackage() {
 		return _pluginPackage;
+	}
+
+	public boolean getUser() {
+		return _user;
 	}
 
 	public void setAppServerType(String appServerType) {
@@ -80,7 +80,7 @@ public class AutoDeploymentContext {
 	private String _context;
 	private String _destDir;
 	private File _file;
-	private boolean _user;
 	private PluginPackage _pluginPackage;
+	private boolean _user;
 
 }

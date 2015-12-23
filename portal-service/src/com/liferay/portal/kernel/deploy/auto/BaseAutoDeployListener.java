@@ -16,11 +16,13 @@ package com.liferay.portal.kernel.deploy.auto;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -163,6 +165,37 @@ public abstract class BaseAutoDeployListener implements AutoDeployListener {
 		return false;
 	}
 
+	public boolean isWABCompatible(File file) throws AutoDeployException {
+		if (!isMatchingFileExtension(file, "war")) {
+			return false;
+		}
+
+		try (ZipFile zipFile = new ZipFile(file)) {
+			ZipEntry liferayPluginPackagePropertiesEntry = zipFile.getEntry(
+				"WEB-INF/liferay-plugin-package.properties");
+
+			if (liferayPluginPackagePropertiesEntry == null) {
+				return false;
+			}
+
+			try (InputStream entryInputStream =
+				zipFile.getInputStream(liferayPluginPackagePropertiesEntry)) {
+
+				Properties liferayPluginPackageProperties = new Properties();
+
+				liferayPluginPackageProperties.load(entryInputStream);
+
+				String wabProperty = liferayPluginPackageProperties.getProperty(
+					"wab");
+
+				return GetterUtil.get(wabProperty, true);
+			}
+		}
+		catch (IOException ioe) {
+			throw new AutoDeployException(ioe);
+		}
+	}
+
 	public boolean isWebPlugin(File file) throws AutoDeployException {
 		Matcher matcher = _webPluginPattern.matcher(file.getName());
 
@@ -178,40 +211,6 @@ public abstract class BaseAutoDeployListener implements AutoDeployListener {
 
 	protected boolean isJarFile(File file) {
 		return isMatchingFileExtension(file, ".jar");
-	}
-
-	public boolean isWABCompatible(File file) throws AutoDeployException {
-		if (!isMatchingFileExtension(file, "war")) {
-			return false;
-		}
-	
-		try (ZipFile zipFile = new ZipFile(file)) {
-			ZipEntry liferayPluginPackagePropertiesEntry =
-				zipFile.getEntry("WEB-INF/liferay-plugin-package.properties");
-	
-			if (liferayPluginPackagePropertiesEntry == null) {
-				return false;
-			}
-	
-			try (InputStream entryInputStream =
-				zipFile.getInputStream(liferayPluginPackagePropertiesEntry)) {
-	
-				Properties liferayPluginPackageProperties = new Properties();
-	
-				liferayPluginPackageProperties.load(entryInputStream);
-	
-				String wab = liferayPluginPackageProperties.getProperty("wab");
-	
-				if (wab != null && wab.trim().equals("false")) {
-					return false;
-				}
-	
-				return true;
-			}
-		}
-		catch (IOException ioe) {
-			throw new AutoDeployException(ioe);
-		}
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
