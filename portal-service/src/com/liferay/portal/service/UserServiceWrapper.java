@@ -976,7 +976,6 @@ public class UserServiceWrapper implements UserService,
 	* @param password2 the user's new password confirmation
 	* @param passwordReset whether the user should be asked to reset their
 	password the next time they log in
-	* @return the user
 	*/
 	@Override
 	public void updatePassword(long userId, java.lang.String password1,
