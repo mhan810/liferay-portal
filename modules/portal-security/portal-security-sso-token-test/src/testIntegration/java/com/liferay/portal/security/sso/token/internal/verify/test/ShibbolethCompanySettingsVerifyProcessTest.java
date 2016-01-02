@@ -12,16 +12,17 @@
  * details.
  */
 
-package com.liferay.portal.security.sso.openid.internal.verify.test;
+package com.liferay.portal.security.sso.token.internal.verify.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.settings.Settings;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.security.sso.openid.constants.LegacyOpenIdPropsKeys;
-import com.liferay.portal.security.sso.openid.constants.OpenIdConstants;
+import com.liferay.portal.security.sso.token.constants.LegacyTokenPropsKeys;
+import com.liferay.portal.security.sso.token.constants.TokenConstants;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.verify.test.BaseCompanySettingsVerifyProcessTestCase;
 
@@ -33,10 +34,10 @@ import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 /**
- * @author Stian Sigvartsen
+ * @author Brian Greenwald
  */
 @RunWith(Arquillian.class)
-public class OpenIdCompanySettingsVerifyProcessTest
+public class ShibbolethCompanySettingsVerifyProcessTest
 	extends BaseCompanySettingsVerifyProcessTestCase {
 
 	@ClassRule
@@ -51,27 +52,70 @@ public class OpenIdCompanySettingsVerifyProcessTest
 		Assert.assertTrue(
 			Validator.isNull(
 				portletPreferences.getValue(
-					LegacyOpenIdPropsKeys.OPENID_AUTH_ENABLED,
+					LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED,
 					StringPool.BLANK)));
 
+		Assert.assertTrue(
+			Validator.isNull(
+				portletPreferences.getValue(
+					LegacyTokenPropsKeys.SHIBBOLETH_IMPORT_FROM_LDAP,
+					StringPool.BLANK)));
+
+		Assert.assertTrue(
+			Validator.isNull(
+				portletPreferences.getValue(
+					LegacyTokenPropsKeys.SHIBBOLETH_LOGOUT_URL,
+					StringPool.BLANK)));
+
+		Assert.assertTrue(
+			Validator.isNull(
+				portletPreferences.getValue(
+						LegacyTokenPropsKeys.SHIBBOLETH_USER_HEADER,
+						StringPool.BLANK)));
+
+		Assert.assertTrue(
+			GetterUtil.getBoolean(
+				settings.getValue(
+					TokenConstants.AUTH_ENABLED, StringPool.FALSE)));
+
+		Assert.assertTrue(
+			GetterUtil.getBoolean(
+				settings.getValue(
+					TokenConstants.IMPORT_FROM_LDAP, StringPool.FALSE)));
+
 		Assert.assertEquals(
-			StringPool.TRUE,
-			settings.getValue(OpenIdConstants.AUTH_ENABLED, StringPool.FALSE));
+			"/test/shibboleth/url",
+				settings.getValue(
+					TokenConstants.LOGOUT_REDIRECT_URL, StringPool.BLANK));
+
+		Assert.assertEquals(
+			"testShibboleth",
+				settings.getValue(
+					TokenConstants.USER_HEADER, StringPool.BLANK));
 	}
 
 	@Override
 	protected String getSettingsId() {
-		return OpenIdConstants.SERVICE_NAME;
+		return TokenConstants.SERVICE_NAME;
 	}
 
 	@Override
 	protected String getVerifyProcessName() {
-		return "com.liferay.portal.security.sso.openid";
+		return "com.liferay.portal.security.sso.token.shibboleth";
 	}
 
 	@Override
 	protected void populateLegacyProperties(UnicodeProperties properties) {
-		properties.put(LegacyOpenIdPropsKeys.OPENID_AUTH_ENABLED, "true");
+		properties.put(LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED, "true");
+
+		properties.put(
+			LegacyTokenPropsKeys.SHIBBOLETH_IMPORT_FROM_LDAP, "true");
+
+		properties.put(
+			LegacyTokenPropsKeys.SHIBBOLETH_LOGOUT_URL, "/test/shibboleth/url");
+
+		properties.put(
+			LegacyTokenPropsKeys.SHIBBOLETH_USER_HEADER, "testShibboleth");
 	}
 
 }
