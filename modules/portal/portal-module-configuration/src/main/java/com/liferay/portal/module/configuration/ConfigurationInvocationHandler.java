@@ -107,6 +107,13 @@ public class ConfigurationInvocationHandler<S> implements InvocationHandler {
 		else if (returnType.equals(String[].class)) {
 			return _typedSettings.getValues(method.getName());
 		}
+		else if (returnType.isEnum()) {
+			Method valueOfMethod = returnType.getMethod(
+				"valueOf", Enum.class, String.class);
+
+			return valueOfMethod.invoke(
+				Enum.class, _typedSettings.getValue(method.getName()));
+		}
 
 		Constructor<?> constructor = returnType.getConstructor(String.class);
 
