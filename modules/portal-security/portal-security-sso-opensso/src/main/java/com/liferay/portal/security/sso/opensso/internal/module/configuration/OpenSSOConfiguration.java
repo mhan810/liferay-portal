@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.security.sso.opensso.module.configuration;
+package com.liferay.portal.security.sso.opensso.internal.module.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
 
@@ -31,7 +31,7 @@ import com.liferay.configuration.admin.ConfigurationAdmin;
  */
 @ConfigurationAdmin(category = "platform")
 @Meta.OCD(
-	id = "com.liferay.portal.security.sso.opensso.module.configuration.OpenSSOConfiguration",
+	id = "com.liferay.portal.security.sso.opensso.internal.module.configuration.OpenSSOConfiguration",
 	localization = "content/Language", name = "%open.sso.configuration.name"
 )
 public interface OpenSSOConfiguration {
