@@ -95,6 +95,13 @@ public class ConfigurationInvocationHandler<S> implements InvocationHandler {
 		else if (returnType.equals(int.class)) {
 			return _typedSettings.getIntegerValue(method.getName());
 		}
+		else if (returnType.equals(Enum.class)) {
+			Method valueOfMethod = returnType.getMethod(
+				"valueOf", Enum.class, String.class);
+
+			return valueOfMethod.invoke(
+				Enum.class, _typedSettings.getValue(method.getName()));
+		}
 		else if (returnType.equals(LocalizedValuesMap.class)) {
 			return _typedSettings.getLocalizedValuesMap(method.getName());
 		}
