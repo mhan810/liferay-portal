@@ -12,10 +12,10 @@
  * details.
  */
 
-package com.liferay.portal.security.sso.ntlm.module.configuration.definition;
+package com.liferay.portal.security.sso.ntlm.internal.module.configuration.definition;
 
 import com.liferay.portal.kernel.settings.definition.ConfigurationBeanDeclaration;
-import com.liferay.portal.security.sso.ntlm.module.configuration.NtlmConfiguration;
+import com.liferay.portal.security.sso.ntlm.internal.module.configuration.NtlmConfiguration;
 
 import org.osgi.service.component.annotations.Component;
 
