@@ -12,14 +12,23 @@
  * details.
  */
 
-package com.liferay.portal.security.sso.token.internal.constants;
+package com.liferay.portal.security.sso.cas.configuration.definition;
+
+import com.liferay.portal.kernel.settings.definition.ConfigurationBeanDeclaration;
+import com.liferay.portal.security.sso.cas.configuration.CASConfiguration;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Mika Koivisto
  */
-public class TokenConstants {
+@Component
+public class CASCompanyServiceConfigurationBeanDeclaration
+	implements ConfigurationBeanDeclaration {
 
-	public static final String SERVICE_NAME =
-		"com.liferay.portal.security.sso.token";
+	@Override
+	public Class<?> getConfigurationBeanClass() {
+		return CASConfiguration.class;
+	}
 
 }

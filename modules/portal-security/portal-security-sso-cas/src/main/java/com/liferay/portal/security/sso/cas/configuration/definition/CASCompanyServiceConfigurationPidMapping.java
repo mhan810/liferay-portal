@@ -12,10 +12,11 @@
  * details.
  */
 
-package com.liferay.portal.security.sso.cas.module.configuration.definition;
+package com.liferay.portal.security.sso.cas.configuration.definition;
 
-import com.liferay.portal.kernel.settings.definition.ConfigurationBeanDeclaration;
-import com.liferay.portal.security.sso.cas.module.configuration.CASConfiguration;
+import com.liferay.portal.kernel.settings.definition.ConfigurationPidMapping;
+import com.liferay.portal.security.sso.cas.configuration.CASConfiguration;
+import com.liferay.portal.security.sso.cas.constants.CASConstants;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -23,12 +24,17 @@ import org.osgi.service.component.annotations.Component;
  * @author Mika Koivisto
  */
 @Component
-public class CASCompanyServiceConfigurationBeanDeclaration
-	implements ConfigurationBeanDeclaration {
+public class CASCompanyServiceConfigurationPidMapping
+	implements ConfigurationPidMapping {
 
 	@Override
 	public Class<?> getConfigurationBeanClass() {
 		return CASConfiguration.class;
+	}
+
+	@Override
+	public String getConfigurationPid() {
+		return CASConstants.SERVICE_NAME;
 	}
 
 }
