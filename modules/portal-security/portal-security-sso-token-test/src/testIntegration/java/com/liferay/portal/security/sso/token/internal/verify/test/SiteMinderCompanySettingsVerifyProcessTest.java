@@ -72,10 +72,10 @@ public class SiteMinderCompanySettingsVerifyProcessTest
 				settings.getValue(
 					TokenConstants.AUTH_ENABLED, StringPool.FALSE)));
 
-		Assert.assertTrue(
+		Assert.assertFalse(
 			GetterUtil.getBoolean(
 				settings.getValue(
-					TokenConstants.IMPORT_FROM_LDAP, StringPool.FALSE)));
+					TokenConstants.IMPORT_FROM_LDAP, StringPool.TRUE)));
 
 		Assert.assertEquals(
 			"testSiteminder",
@@ -97,7 +97,7 @@ public class SiteMinderCompanySettingsVerifyProcessTest
 		properties.put(LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED, "true");
 
 		properties.put(
-			LegacyTokenPropsKeys.SITEMINDER_IMPORT_FROM_LDAP, "true");
+			LegacyTokenPropsKeys.SITEMINDER_IMPORT_FROM_LDAP, "false");
 
 		properties.put(
 			LegacyTokenPropsKeys.SITEMINDER_USER_HEADER, "testSiteminder");
