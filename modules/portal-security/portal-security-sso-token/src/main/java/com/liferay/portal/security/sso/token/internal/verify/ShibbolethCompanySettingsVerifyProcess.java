@@ -59,7 +59,7 @@ public class ShibbolethCompanySettingsVerifyProcess
 		Dictionary<String, String> dictionary = new HashMapDictionary<>();
 
 		boolean shibbolethEnabled = _prefsProps.getBoolean(
-			companyId, LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED, false);
+			companyId, LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED);
 
 		if (!shibbolethEnabled) {
 			return dictionary;

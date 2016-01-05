@@ -59,7 +59,7 @@ public class SiteMinderCompanySettingsVerifyProcess
 		Dictionary<String, String> dictionary = new HashMapDictionary<>();
 
 		boolean siteMinderEnabled = _prefsProps.getBoolean(
-			companyId, LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED, false);
+			companyId, LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED);
 
 		if (!siteMinderEnabled) {
 			return dictionary;
