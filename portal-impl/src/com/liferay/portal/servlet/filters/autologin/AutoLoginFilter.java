@@ -243,7 +243,7 @@ public class AutoLoginFilter extends BasePortalFilter {
 					}
 				}
 				catch (Exception e) {
-					StringBundler sb = new StringBundler(4);
+					StringBundler sb = new StringBundler(6);
 
 					sb.append("Current URL ");
 
