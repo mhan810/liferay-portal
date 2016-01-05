@@ -54,40 +54,33 @@ public class ShibbolethCompanySettingsVerifyProcessTest
 				portletPreferences.getValue(
 					LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED,
 					StringPool.BLANK)));
-
 		Assert.assertTrue(
 			Validator.isNull(
 				portletPreferences.getValue(
 					LegacyTokenPropsKeys.SHIBBOLETH_IMPORT_FROM_LDAP,
 					StringPool.BLANK)));
-
 		Assert.assertTrue(
 			Validator.isNull(
 				portletPreferences.getValue(
 					LegacyTokenPropsKeys.SHIBBOLETH_LOGOUT_URL,
 					StringPool.BLANK)));
-
 		Assert.assertTrue(
 			Validator.isNull(
 				portletPreferences.getValue(
-						LegacyTokenPropsKeys.SHIBBOLETH_USER_HEADER,
-						StringPool.BLANK)));
-
+					LegacyTokenPropsKeys.SHIBBOLETH_USER_HEADER,
+					StringPool.BLANK)));
 		Assert.assertTrue(
 			GetterUtil.getBoolean(
 				settings.getValue(
 					TokenConstants.AUTH_ENABLED, StringPool.FALSE)));
-
 		Assert.assertFalse(
 			GetterUtil.getBoolean(
 				settings.getValue(
 					TokenConstants.IMPORT_FROM_LDAP, StringPool.TRUE)));
-
 		Assert.assertEquals(
 			"/test/shibboleth/url",
 				settings.getValue(
 					TokenConstants.LOGOUT_REDIRECT_URL, StringPool.BLANK));
-
 		Assert.assertEquals(
 			"testShibboleth",
 				settings.getValue(
@@ -107,13 +100,10 @@ public class ShibbolethCompanySettingsVerifyProcessTest
 	@Override
 	protected void populateLegacyProperties(UnicodeProperties properties) {
 		properties.put(LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED, "true");
-
 		properties.put(
 			LegacyTokenPropsKeys.SHIBBOLETH_IMPORT_FROM_LDAP, "false");
-
 		properties.put(
 			LegacyTokenPropsKeys.SHIBBOLETH_LOGOUT_URL, "/test/shibboleth/url");
-
 		properties.put(
 			LegacyTokenPropsKeys.SHIBBOLETH_USER_HEADER, "testShibboleth");
 	}

@@ -54,29 +54,24 @@ public class SiteMinderCompanySettingsVerifyProcessTest
 				portletPreferences.getValue(
 					LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED,
 					StringPool.BLANK)));
-
 		Assert.assertTrue(
 			Validator.isNull(
 				portletPreferences.getValue(
 					LegacyTokenPropsKeys.SITEMINDER_IMPORT_FROM_LDAP,
 					StringPool.BLANK)));
-
 		Assert.assertTrue(
 			Validator.isNull(
 				portletPreferences.getValue(
 					LegacyTokenPropsKeys.SITEMINDER_USER_HEADER,
 					StringPool.BLANK)));
-
 		Assert.assertTrue(
 			GetterUtil.getBoolean(
 				settings.getValue(
 					TokenConstants.AUTH_ENABLED, StringPool.FALSE)));
-
 		Assert.assertFalse(
 			GetterUtil.getBoolean(
 				settings.getValue(
 					TokenConstants.IMPORT_FROM_LDAP, StringPool.TRUE)));
-
 		Assert.assertEquals(
 			"testSiteminder",
 			settings.getValue(TokenConstants.USER_HEADER, StringPool.BLANK));
@@ -95,10 +90,8 @@ public class SiteMinderCompanySettingsVerifyProcessTest
 	@Override
 	protected void populateLegacyProperties(UnicodeProperties properties) {
 		properties.put(LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED, "true");
-
 		properties.put(
 			LegacyTokenPropsKeys.SITEMINDER_IMPORT_FROM_LDAP, "false");
-
 		properties.put(
 			LegacyTokenPropsKeys.SITEMINDER_USER_HEADER, "testSiteminder");
 	}
