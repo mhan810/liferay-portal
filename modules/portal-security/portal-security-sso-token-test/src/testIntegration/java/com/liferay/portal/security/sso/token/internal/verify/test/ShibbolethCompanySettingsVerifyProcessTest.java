@@ -78,10 +78,10 @@ public class ShibbolethCompanySettingsVerifyProcessTest
 				settings.getValue(
 					TokenConstants.AUTH_ENABLED, StringPool.FALSE)));
 
-		Assert.assertTrue(
+		Assert.assertFalse(
 			GetterUtil.getBoolean(
 				settings.getValue(
-					TokenConstants.IMPORT_FROM_LDAP, StringPool.FALSE)));
+					TokenConstants.IMPORT_FROM_LDAP, StringPool.TRUE)));
 
 		Assert.assertEquals(
 			"/test/shibboleth/url",
@@ -109,7 +109,7 @@ public class ShibbolethCompanySettingsVerifyProcessTest
 		properties.put(LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED, "true");
 
 		properties.put(
-			LegacyTokenPropsKeys.SHIBBOLETH_IMPORT_FROM_LDAP, "true");
+			LegacyTokenPropsKeys.SHIBBOLETH_IMPORT_FROM_LDAP, "false");
 
 		properties.put(
 			LegacyTokenPropsKeys.SHIBBOLETH_LOGOUT_URL, "/test/shibboleth/url");
