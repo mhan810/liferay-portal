@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.exportimport.UserImporterUtil;
@@ -100,6 +101,14 @@ public class TokenAutoLogin extends BaseAutoLogin {
 		}
 
 		String login = tokenRetriever.getLoginToken(request, userTokenName);
+
+		if (Validator.isNull(login)) {
+			if (_log.isInfoEnabled()) {
+				_log.info("No login found on: " + tokenLocation);
+			}
+
+			return null;
+		}
 
 		User user = getUser(companyId, login, tokenCompanyServiceSettings);
 
