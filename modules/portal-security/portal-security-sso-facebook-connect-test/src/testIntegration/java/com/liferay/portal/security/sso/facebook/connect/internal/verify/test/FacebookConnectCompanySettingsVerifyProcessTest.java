@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.sso.facebook.connect.constants.FacebookConnectConstants;
 import com.liferay.portal.security.sso.facebook.connect.constants.LegacyFacebookConnectPropsKeys;
-import com.liferay.portal.security.sso.token.constants.LegacyTokenPropsKeys;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.verify.test.BaseCompanySettingsVerifyProcessTestCase;
 
@@ -105,8 +104,6 @@ public class FacebookConnectCompanySettingsVerifyProcessTest
 
 	@Override
 	protected void populateLegacyProperties(UnicodeProperties properties) {
-		properties.put(LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED, "true");
-
 		properties.put(LegacyFacebookConnectPropsKeys.AUTH_ENABLED, "true");
 		properties.put(LegacyFacebookConnectPropsKeys.APP_ID, "test_app_id");
 		properties.put(
