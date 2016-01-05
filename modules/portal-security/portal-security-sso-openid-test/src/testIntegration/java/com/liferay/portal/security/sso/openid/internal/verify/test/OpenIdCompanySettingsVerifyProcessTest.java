@@ -53,7 +53,6 @@ public class OpenIdCompanySettingsVerifyProcessTest
 				portletPreferences.getValue(
 					LegacyOpenIdPropsKeys.OPENID_AUTH_ENABLED,
 					StringPool.BLANK)));
-
 		Assert.assertEquals(
 			StringPool.TRUE,
 			settings.getValue(OpenIdConstants.AUTH_ENABLED, StringPool.FALSE));
