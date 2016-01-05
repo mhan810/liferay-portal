@@ -70,19 +70,16 @@ public class ShibbolethCompanySettingsVerifyProcess
 				_prefsProps.getString(
 					companyId, LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED,
 					StringPool.FALSE));
-
 		dictionary.put(
 			TokenConstants.IMPORT_FROM_LDAP,
 				_prefsProps.getString(
 					companyId, LegacyTokenPropsKeys.SHIBBOLETH_IMPORT_FROM_LDAP,
 					StringPool.FALSE));
-
 		dictionary.put(
 			TokenConstants.LOGOUT_REDIRECT_URL,
 				_prefsProps.getString(
 					companyId, LegacyTokenPropsKeys.SHIBBOLETH_LOGOUT_URL,
 					"/Shibboleth.sso/Logout"));
-
 		dictionary.put(
 			TokenConstants.USER_HEADER,
 				_prefsProps.getString(
@@ -91,7 +88,7 @@ public class ShibbolethCompanySettingsVerifyProcess
 
 		if (_log.isDebugEnabled()) {
 			_log.debug(
-				"Adding Shibboleth Token configuration for company " +
+				"Adding Shibboleth token configuration for company " +
 					companyId + " with properties: " + dictionary);
 		}
 

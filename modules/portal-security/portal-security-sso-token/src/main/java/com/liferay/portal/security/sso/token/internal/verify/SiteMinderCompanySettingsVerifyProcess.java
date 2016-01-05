@@ -70,13 +70,11 @@ public class SiteMinderCompanySettingsVerifyProcess
 				_prefsProps.getString(
 					companyId, LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED,
 					StringPool.FALSE));
-
 		dictionary.put(
 			TokenConstants.IMPORT_FROM_LDAP,
 				_prefsProps.getString(
 					companyId, LegacyTokenPropsKeys.SITEMINDER_IMPORT_FROM_LDAP,
 					StringPool.FALSE));
-
 		dictionary.put(
 			TokenConstants.USER_HEADER,
 				_prefsProps.getString(
@@ -85,7 +83,7 @@ public class SiteMinderCompanySettingsVerifyProcess
 
 		if (_log.isDebugEnabled()) {
 			_log.debug(
-				"Adding SiteMinder Token configuration for company " +
+				"Adding SiteMinder token configuration for company " +
 					companyId + " with properties: " + dictionary);
 		}
 
