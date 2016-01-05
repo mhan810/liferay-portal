@@ -104,7 +104,7 @@ public class TokenAutoLogin extends BaseAutoLogin {
 
 		if (Validator.isNull(login)) {
 			if (_log.isInfoEnabled()) {
-				_log.info("No login found on: " + tokenLocation);
+				_log.info("No login found for " + tokenLocation);
 			}
 
 			return null;
