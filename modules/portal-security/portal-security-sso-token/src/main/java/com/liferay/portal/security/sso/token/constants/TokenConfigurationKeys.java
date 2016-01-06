@@ -17,7 +17,7 @@ package com.liferay.portal.security.sso.token.constants;
 /**
  * @author Mika Koivisto
  */
-public class TokenConstants {
+public class TokenConfigurationKeys {
 
 	public static final String AUTH_ENABLED = "enabled";
 
