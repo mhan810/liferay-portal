@@ -53,38 +53,36 @@ public class FacebookConnectCompanySettingsVerifyProcessTest
 				portletPreferences.getValue(
 					LegacyFacebookConnectPropsKeys.AUTH_ENABLED,
 					StringPool.BLANK)));
-
 		Assert.assertEquals(
 			StringPool.TRUE,
 			settings.getValue(
 				FacebookConnectConstants.AUTH_ENABLED, StringPool.FALSE));
-
 		Assert.assertEquals(
 				"test_app_id",
-				settings.getValue(FacebookConnectConstants.APP_ID, ""));
-
+				settings.getValue(
+					FacebookConnectConstants.APP_ID, StringPool.BLANK));
 		Assert.assertEquals(
 				"test_app_secret",
-				settings.getValue(FacebookConnectConstants.APP_SECRET, ""));
-
+				settings.getValue(
+					FacebookConnectConstants.APP_SECRET, StringPool.BLANK));
 		Assert.assertEquals(
 				"test_graph_url",
-				settings.getValue(FacebookConnectConstants.GRAPH_URL, ""));
-
+				settings.getValue(
+					FacebookConnectConstants.GRAPH_URL, StringPool.BLANK));
 		Assert.assertEquals(
 				"test_oauth_auth_url",
-				settings.getValue(FacebookConnectConstants.OAUTH_AUTH_URL, ""));
-
+				settings.getValue(
+					FacebookConnectConstants.OAUTH_AUTH_URL, StringPool.BLANK));
 		Assert.assertEquals(
 				"test_oauth_redirect_url",
 				settings.getValue(
-					FacebookConnectConstants.OAUTH_REDIRECT_URL, ""));
-
+					FacebookConnectConstants.OAUTH_REDIRECT_URL,
+					StringPool.BLANK));
 		Assert.assertEquals(
 				"test_oauth_token_url",
 				settings.getValue(
-					FacebookConnectConstants.OAUTH_TOKEN_URL, ""));
-
+					FacebookConnectConstants.OAUTH_TOKEN_URL,
+					StringPool.BLANK));
 		Assert.assertEquals(
 				StringPool.TRUE,
 				settings.getValue(
