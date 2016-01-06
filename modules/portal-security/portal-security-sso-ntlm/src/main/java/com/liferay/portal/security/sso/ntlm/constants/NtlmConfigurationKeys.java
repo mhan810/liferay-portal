@@ -18,7 +18,7 @@ package com.liferay.portal.security.sso.ntlm.constants;
  * @author Mika Koivisto
  * @author Brian Greenwald
  */
-public class NtlmConstants {
+public class NtlmConfigurationKeys {
 
 	public static final String AUTH_DOMAIN = "domain";
 
