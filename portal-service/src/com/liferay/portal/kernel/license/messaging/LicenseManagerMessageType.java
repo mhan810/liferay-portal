@@ -31,13 +31,20 @@ public enum LicenseManagerMessageType {
 	public static String MESSAGE_BUS_DESTINATION_STATUS = "liferay/lcs_status";
 
 	public static JSONObject getMessagePayload(Message message) {
-		if (!(message.getPayload() instanceof String)) {
-			return null;
+		return getMessagePayload(message.getPayload());
+	}
+
+	public static JSONObject getMessagePayload(Object object) {
+		if (object instanceof String) {
+			return getMessagePayload((String)object);
 		}
 
+		return null;
+	}
+
+	public static JSONObject getMessagePayload(String json) {
 		try {
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
-				(String)message.getPayload());
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(json);
 
 			valueOf(jsonObject);
 
@@ -46,14 +53,6 @@ public enum LicenseManagerMessageType {
 		catch (Exception e) {
 			return null;
 		}
-	}
-
-	public static JSONObject getMessagePayload(Object object) {
-		if (!(object instanceof Message)) {
-			return null;
-		}
-
-		return getMessagePayload((Message)object);
 	}
 
 	public static LicenseManagerMessageType valueOf(JSONObject jsonObject) {
@@ -76,15 +75,15 @@ public enum LicenseManagerMessageType {
 		return message;
 	}
 
-	public Message createMessage(LCSPortletState state) {
+	public Message createMessage(LCSPortletState lcsPortletState) {
 		Message message = new Message();
 
 		message.setDestinationName(getDestinationName());
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
+		jsonObject.put("state", lcsPortletState.intValue());
 		jsonObject.put("type", name());
-		jsonObject.put("state", state.intValue());
 
 		message.setPayload(jsonObject.toString());
 

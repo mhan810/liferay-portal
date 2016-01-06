@@ -28,6 +28,7 @@ import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.Portal;
 
 import java.io.IOException;
 
@@ -105,6 +106,11 @@ public abstract class BasePortalSettingsFormMVCActionCommand
 
 		for (String name : settingsDescriptor.getAllKeys()) {
 			String value = getString(actionRequest, name);
+
+			if (value.equals(Portal.TEMP_OBFUSCATION_VALUE)) {
+				continue;
+			}
+
 			String oldValue = settings.getValue(name, null);
 
 			if (!value.equals(oldValue)) {
