@@ -17,7 +17,7 @@ package com.liferay.portal.security.sso.openid.constants;
 /**
  * @author Mika Koivisto
  */
-public class OpenIdConstants {
+public class OpenIdConfigurationKeys {
 
 	public static final String AUTH_ENABLED = "enabled";
 
