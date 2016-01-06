@@ -84,8 +84,8 @@ public class CASCompanySettingsVerifyProcessTest
 				StringPool.BLANK));
 		Assert.assertEquals(
 			"http://test.com/cas/server/name",
-			settings.getValue(CASConfigurationKeys.SERVER_NAME,
-				StringPool.BLANK));
+			settings.getValue(
+				CASConfigurationKeys.SERVER_NAME, StringPool.BLANK));
 		Assert.assertEquals(
 			"http://test.com/cas/server/url",
 			settings.getValue(
