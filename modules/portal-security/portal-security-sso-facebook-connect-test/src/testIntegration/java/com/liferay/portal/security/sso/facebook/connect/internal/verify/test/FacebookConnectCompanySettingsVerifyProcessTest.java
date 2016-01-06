@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.sso.facebook.connect.constants.FacebookConnectConstants;
+import com.liferay.portal.security.sso.facebook.connect.constants.FacebookConnectSettingsConstants;
 import com.liferay.portal.security.sso.facebook.connect.constants.LegacyFacebookConnectPropsKeys;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.verify.test.BaseCompanySettingsVerifyProcessTestCase;
@@ -93,7 +94,7 @@ public class FacebookConnectCompanySettingsVerifyProcessTest
 
 	@Override
 	protected String getSettingsId() {
-		return FacebookConnectConstants.SERVICE_NAME;
+		return FacebookConnectSettingsConstants.SERVICE_NAME;
 	}
 
 	@Override
