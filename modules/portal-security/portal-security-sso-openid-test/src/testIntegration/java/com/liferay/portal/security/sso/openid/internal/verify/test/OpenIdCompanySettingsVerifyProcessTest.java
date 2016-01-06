@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.sso.openid.constants.LegacyOpenIdPropsKeys;
 import com.liferay.portal.security.sso.openid.constants.OpenIdConstants;
+import com.liferay.portal.security.sso.openid.constants.OpenIdSettingsConstants;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.verify.test.BaseCompanySettingsVerifyProcessTestCase;
 
@@ -60,7 +61,7 @@ public class OpenIdCompanySettingsVerifyProcessTest
 
 	@Override
 	protected String getSettingsId() {
-		return OpenIdConstants.SERVICE_NAME;
+		return OpenIdSettingsConstants.SERVICE_NAME;
 	}
 
 	@Override

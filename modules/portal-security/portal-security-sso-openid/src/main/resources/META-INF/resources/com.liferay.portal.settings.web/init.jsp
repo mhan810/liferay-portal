@@ -23,7 +23,7 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 page import="com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator" %><%@
 page import="com.liferay.portal.kernel.settings.ParameterMapSettingsLocator" %><%@
 page import="com.liferay.portal.security.sso.openid.configuration.OpenIdConfiguration" %><%@
-page import="com.liferay.portal.security.sso.openid.constants.OpenIdConstants" %>
+page import="com.liferay.portal.security.sso.openid.constants.OpenIdSettingsConstants" %>
 
 <%@ page import="javax.portlet.ActionRequest" %>
 
