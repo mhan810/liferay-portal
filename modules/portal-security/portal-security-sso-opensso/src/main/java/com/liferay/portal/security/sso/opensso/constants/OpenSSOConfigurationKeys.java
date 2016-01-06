@@ -17,7 +17,7 @@ package com.liferay.portal.security.sso.opensso.constants;
 /**
  * @author Mika Koivisto
  */
-public class OpenSSOConstants {
+public class OpenSSOConfigurationKeys {
 
 	public static final String AUTH_ENABLED = "enabled";
 
