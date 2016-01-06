@@ -49,21 +49,12 @@ public class SiteMinderCompanySettingsVerifyProcessTest
 	protected void doVerify(
 		PortletPreferences portletPreferences, Settings settings) {
 
-		Assert.assertTrue(
-			Validator.isNull(
-				portletPreferences.getValue(
-					LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED,
-					StringPool.BLANK)));
-		Assert.assertTrue(
-			Validator.isNull(
-				portletPreferences.getValue(
-					LegacyTokenPropsKeys.SITEMINDER_IMPORT_FROM_LDAP,
-					StringPool.BLANK)));
-		Assert.assertTrue(
-			Validator.isNull(
-				portletPreferences.getValue(
-					LegacyTokenPropsKeys.SITEMINDER_USER_HEADER,
-					StringPool.BLANK)));
+		for (String key : LegacyTokenPropsKeys.SHIBBOLETH_KEYS) {
+			Assert.assertTrue(
+				Validator.isNull(
+					portletPreferences.getValue(key, StringPool.BLANK)));
+		}
+
 		Assert.assertTrue(
 			GetterUtil.getBoolean(
 				settings.getValue(
