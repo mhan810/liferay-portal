@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.security.sso.opensso.constants.LegacyOpenSSOPropsKeys;
 import com.liferay.portal.security.sso.opensso.constants.OpenSSOConstants;
+import com.liferay.portal.security.sso.opensso.constants.OpenSSOSettingsConstants;
 import com.liferay.portal.service.CompanyLocalService;
 import com.liferay.portal.verify.BaseCompanySettingsVerifyProcess;
 import com.liferay.portal.verify.VerifyProcess;
@@ -120,7 +121,7 @@ public class OpenSSOCompanySettingsVerifyProcess
 
 	@Override
 	protected String getSettingsId() {
-		return OpenSSOConstants.SERVICE_NAME;
+		return OpenSSOSettingsConstants.SERVICE_NAME;
 	}
 
 	@Reference(unbind = "-")

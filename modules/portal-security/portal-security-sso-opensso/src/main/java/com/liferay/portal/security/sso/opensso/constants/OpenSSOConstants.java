@@ -38,9 +38,6 @@ public class OpenSSOConstants {
 
 	public static final String SCREEN_NAME_ATTR = "screenNameAttr";
 
-	public static final String SERVICE_NAME =
-		"com.liferay.portal.security.sso.opensso";
-
 	public static final String SERVICE_URL = "serviceURL";
 
 }
