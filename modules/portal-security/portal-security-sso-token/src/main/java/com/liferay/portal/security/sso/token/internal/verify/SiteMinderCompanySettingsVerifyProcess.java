@@ -51,7 +51,7 @@ public class SiteMinderCompanySettingsVerifyProcess
 
 	@Override
 	protected Set<String> getLegacyPropertyKeys() {
-		return SetUtil.fromArray(LegacyTokenPropsKeys.TOKEN_KEYS_SITEMINDER);
+		return SetUtil.fromArray(LegacyTokenPropsKeys.SITEMINDER_KEYS);
 	}
 
 	@Override

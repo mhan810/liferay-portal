@@ -51,7 +51,7 @@ public class ShibbolethCompanySettingsVerifyProcess
 
 	@Override
 	protected Set<String> getLegacyPropertyKeys() {
-		return SetUtil.fromArray(LegacyTokenPropsKeys.TOKEN_KEYS_SHIBBOLETH);
+		return SetUtil.fromArray(LegacyTokenPropsKeys.SHIBBOLETH_KEYS);
 	}
 
 	@Override
