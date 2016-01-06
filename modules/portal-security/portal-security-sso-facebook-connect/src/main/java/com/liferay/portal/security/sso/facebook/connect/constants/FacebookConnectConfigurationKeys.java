@@ -17,7 +17,7 @@ package com.liferay.portal.security.sso.facebook.connect.constants;
 /**
  * @author Mika Koivisto
  */
-public class FacebookConnectConstants {
+public class FacebookConnectConfigurationKeys {
 
 	public static final String APP_ID = "appId";
 
