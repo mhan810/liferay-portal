@@ -17,7 +17,7 @@ package com.liferay.portal.security.sso.cas.constants;
 /**
  * @author Mika Koivisto
  */
-public class CASConstants {
+public class CASConfigurationKeys {
 
 	public static final String AUTH_ENABLED = "enabled";
 
