@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.security.sso.ntlm.constants.LegacyNtlmPropsKeys;
 import com.liferay.portal.security.sso.ntlm.constants.NtlmConstants;
+import com.liferay.portal.security.sso.ntlm.constants.NtlmSettingsConstants;
 import com.liferay.portal.service.CompanyLocalService;
 import com.liferay.portal.verify.BaseCompanySettingsVerifyProcess;
 import com.liferay.portal.verify.VerifyProcess;
@@ -101,7 +102,7 @@ public class NtlmCompanySettingsVerifyProcess
 
 	@Override
 	protected String getSettingsId() {
-		return NtlmConstants.SERVICE_NAME;
+		return NtlmSettingsConstants.SERVICE_NAME;
 	}
 
 	@Reference(unbind = "-")
