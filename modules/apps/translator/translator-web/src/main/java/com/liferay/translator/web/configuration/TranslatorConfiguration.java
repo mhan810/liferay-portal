@@ -1,12 +1,12 @@
 /**
- * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay| Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
+ * Software Foundation; either version 2.1 of the License| or (at your option)
  * any later version.
  *
- * This library is distributed in the hope that it will be useful, but WITHOUT
+ * This library is distributed in the hope that it will be useful| but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
@@ -33,10 +33,10 @@ public interface TranslatorConfiguration {
 		"TRANSLATOR_TRANSLATION";
 
 	@Meta.AD(
-		deflt = "ar,bg,ca,cs,da,de,el,en,es,et,fi,fr,hi_IN,ht,hu,in,it,iw,ja,ko,lt,lv,mww,nb,nl,pl,pt_PT,ro,ru,sk,sl,sv,th,tr,uk,vi,zh_CN,zh_TW",
+		deflt = "ar|bg|ca|cs|da|de|el|en|es|et|fi|fr|hi_IN|ht|hu|in|it|iw|ja|ko|lt|lv|mww|nb|nl|pl|pt_PT|ro|ru|sk|sl|sv|th|tr|uk|vi|zh_CN|zh_TW",
 		id = "language.ids", required = false
 	)
-	public String languageIds();
+	public String[] languageIds();
 
 	@Meta.AD(deflt = "en_es", id = "translation.id", required = false)
 	public String translationId();
