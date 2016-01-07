@@ -1,5 +1,9 @@
+apply plugin: "antlr"
+
 dependencies {
-	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "2.4.1"
+	antlr group: "org.antlr", name: "antlr", version: "3.0.1"
+
+	compile group: "biz.aQute.bnd", name: "biz.aQute.bnd", version: "2.4.1"
 	compile group: "com.liferay.portal", name: "portal-impl", version: liferay.portalVersion
 	compile group: "com.liferay.portal", name: "portal-service", version: liferay.portalVersion
 	compile group: "commons-lang", name: "commons-lang", version: "2.6"
