@@ -109,29 +109,22 @@ public class ActionRequestPortletContainerTest
 
 		registerService(Object.class, new Object(), properties);
 
-		try {
-			AuthTokenWhitelistUtil.resetOriginCSRFWhitelist();
+		setUpPortlet(
+			testPortlet, new HashMapDictionary<String, Object>(),
+			TEST_PORTLET_ID);
 
-			setUpPortlet(
-				testPortlet, new HashMapDictionary<String, Object>(),
-				TEST_PORTLET_ID);
+		HttpServletRequest httpServletRequest =
+			PortletContainerTestUtil.getHttpServletRequest(group, layout);
 
-			HttpServletRequest httpServletRequest =
-				PortletContainerTestUtil.getHttpServletRequest(group, layout);
+		PortletURL portletURL = new PortletURLImpl(
+			httpServletRequest, TEST_PORTLET_ID, layout.getPlid(),
+			PortletRequest.ACTION_PHASE);
 
-			PortletURL portletURL = new PortletURLImpl(
-				httpServletRequest, TEST_PORTLET_ID, layout.getPlid(),
-				PortletRequest.ACTION_PHASE);
+		Response response = PortletContainerTestUtil.request(
+			portletURL.toString());
 
-			Response response = PortletContainerTestUtil.request(
-				portletURL.toString());
-
-			Assert.assertEquals(200, response.getCode());
-			Assert.assertTrue(testPortlet.isCalledAction());
-		}
-		finally {
-			AuthTokenWhitelistUtil.resetOriginCSRFWhitelist();
-		}
+		Assert.assertEquals(200, response.getCode());
+		Assert.assertTrue(testPortlet.isCalledAction());
 	}
 
 	@Test
@@ -143,29 +136,22 @@ public class ActionRequestPortletContainerTest
 
 		registerService(Object.class, new Object(), properties);
 
-		try {
-			AuthTokenWhitelistUtil.resetPortletCSRFWhitelist();
+		setUpPortlet(
+			testPortlet, new HashMapDictionary<String, Object>(),
+			TEST_PORTLET_ID);
 
-			setUpPortlet(
-				testPortlet, new HashMapDictionary<String, Object>(),
-				TEST_PORTLET_ID);
+		HttpServletRequest httpServletRequest =
+			PortletContainerTestUtil.getHttpServletRequest(group, layout);
 
-			HttpServletRequest httpServletRequest =
-				PortletContainerTestUtil.getHttpServletRequest(group, layout);
+		PortletURL portletURL = new PortletURLImpl(
+			httpServletRequest, TEST_PORTLET_ID, layout.getPlid(),
+			PortletRequest.ACTION_PHASE);
 
-			PortletURL portletURL = new PortletURLImpl(
-				httpServletRequest, TEST_PORTLET_ID, layout.getPlid(),
-				PortletRequest.ACTION_PHASE);
+		Response response = PortletContainerTestUtil.request(
+			portletURL.toString());
 
-			Response response = PortletContainerTestUtil.request(
-				portletURL.toString());
-
-			Assert.assertEquals(200, response.getCode());
-			Assert.assertTrue(testPortlet.isCalledAction());
-		}
-		finally {
-			AuthTokenWhitelistUtil.resetPortletCSRFWhitelist();
-		}
+		Assert.assertEquals(200, response.getCode());
+		Assert.assertTrue(testPortlet.isCalledAction());
 	}
 
 	@Test
