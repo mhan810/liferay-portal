@@ -9,6 +9,9 @@ Export-Package:\
 	com.liferay.portal.ldap.exportimport.*
 Include-Resource:\
 	classes,\
+	@../../../lib/portal/antlr2.jar,\
+	@../../../lib/portal/antlr3.jar,\
+	@../../../lib/portal/stringtemplate.jar,\
 	content=src/main/resources/content
 	META-INF/resources=src/main/resources/META-INF/resources
 Liferay-Releng-Module-Group-Description:
