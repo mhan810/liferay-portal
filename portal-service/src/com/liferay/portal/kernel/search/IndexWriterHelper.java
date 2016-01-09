@@ -16,8 +16,11 @@ package com.liferay.portal.kernel.search;
 
 import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
 
+import java.io.Serializable;
+
 import java.util.Collection;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Michael C. Han
@@ -104,7 +107,14 @@ public interface IndexWriterHelper {
 			Collection<Document> documents, boolean commitImmediately)
 		throws SearchException;
 
-	public BackgroundTask reindex(long userId, long... companyIds)
+	public BackgroundTask reindex(
+			long userId, String jobName, long[] companyIds,
+			Map<String, Serializable> taskContextMap)
+		throws SearchException;
+
+	public BackgroundTask reindex(
+			long userId, String jobName, long[] companyIds, String className,
+			Map<String, Serializable> taskContextMap)
 		throws SearchException;
 
 	public void setIndexReadOnly(boolean indexReadOnly);

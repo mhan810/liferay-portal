@@ -30,8 +30,11 @@ import com.liferay.portal.kernel.search.SearchEngine;
 import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.SearchPermissionChecker;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.search.configuration.IndexWriterHelperConfiguration;
+import com.liferay.portal.search.internal.background.task.ReindexPortalBackgroundTaskExecutor;
+import com.liferay.portal.search.internal.background.task.ReindexSingleIndexerBackgroundTaskExecutor;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.ServiceContext;
 
@@ -439,17 +442,49 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 		indexWriter.partiallyUpdateDocuments(searchContext, documents);
 	}
 
-	public BackgroundTask reindex(long userId, long... companyIds)
+	public BackgroundTask reindex(
+			long userId, String jobName, long[] companyIds,
+			Map<String, Serializable> taskContextMap)
 		throws SearchException {
 
-		Map<String, Serializable> taskContextMap = new HashMap<>();
+		if (taskContextMap == null) {
+			taskContextMap = new HashMap<>();
+		}
 
 		taskContextMap.put("companyIds", companyIds);
 
 		try {
 			return BackgroundTaskManagerUtil.addBackgroundTask(
-				userId, CompanyConstants.SYSTEM, "reindex",
-				_CLASS_NAME_REINDEX_PORTAL_BACKGROUND_TASK_EXECUTOR,
+				userId, CompanyConstants.SYSTEM, jobName,
+				ReindexPortalBackgroundTaskExecutor.class.getName(),
+				taskContextMap, new ServiceContext());
+		}
+		catch (PortalException e) {
+			throw new SearchException("Unable to schedule portal reindex", e);
+		}
+	}
+
+	public BackgroundTask reindex(
+			long userId, String jobName, long[] companyIds, String className,
+			Map<String, Serializable> taskContextMap)
+		throws SearchException {
+
+		if (Validator.isNull(className)) {
+			return reindex(userId, jobName, companyIds, taskContextMap);
+		}
+
+		if (taskContextMap == null) {
+			taskContextMap = new HashMap<>();
+		}
+
+		taskContextMap.put("className", className);
+
+		taskContextMap.put("companyIds", companyIds);
+
+		try {
+			return BackgroundTaskManagerUtil.addBackgroundTask(
+				userId, CompanyConstants.SYSTEM, jobName,
+				ReindexSingleIndexerBackgroundTaskExecutor.class.getName(),
 				taskContextMap, new ServiceContext());
 		}
 		catch (PortalException e) {
