@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.search;
 
+import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
+
 import java.util.Collection;
 import java.util.Locale;
 
@@ -100,6 +102,9 @@ public interface IndexWriterHelper {
 	public void partiallyUpdateDocuments(
 			String searchEngineId, long companyId,
 			Collection<Document> documents, boolean commitImmediately)
+		throws SearchException;
+
+	public BackgroundTask reindex(long userId, long... companyIds)
 		throws SearchException;
 
 	public void setIndexReadOnly(boolean indexReadOnly);

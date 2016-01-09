@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.search;
 
+import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
 import com.liferay.portal.kernel.util.ProxyFactory;
 
 import java.util.Collection;
@@ -176,6 +177,12 @@ public class IndexWriterHelperUtil {
 
 		_indexWriterHelper.partiallyUpdateDocuments(
 			searchEngineId, companyId, documents, commitImmediately);
+	}
+
+	public static BackgroundTask reindex(long userId, long... companyIds)
+		throws SearchException {
+
+		return _indexWriterHelper.reindex(userId, companyIds);
 	}
 
 	public static void setIndexReadOnly(boolean indexReadOnly) {
