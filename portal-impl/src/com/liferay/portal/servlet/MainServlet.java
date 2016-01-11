@@ -29,6 +29,8 @@ import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.patcher.PatchInconsistencyException;
 import com.liferay.portal.kernel.patcher.PatcherUtil;
 import com.liferay.portal.kernel.plugin.PluginPackage;
+import com.liferay.portal.kernel.search.IndexWriterHelper;
+import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
 import com.liferay.portal.kernel.servlet.DynamicServletRequest;
 import com.liferay.portal.kernel.servlet.PortalSessionThreadLocal;
 import com.liferay.portal.kernel.template.TemplateConstants;
@@ -62,6 +64,7 @@ import com.liferay.portal.model.PortletFilter;
 import com.liferay.portal.model.PortletURLListener;
 import com.liferay.portal.model.Theme;
 import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserConstants;
 import com.liferay.portal.plugin.PluginPackageUtil;
 import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.security.auth.PrincipalException;
@@ -359,6 +362,8 @@ public class MainServlet extends ActionServlet {
 		catch (Exception e) {
 			_log.error(e, e);
 		}
+
+		indexOnStartup();
 
 		if (StartupHelperUtil.isDBNew() &&
 			PropsValues.SETUP_WIZARD_ADD_SAMPLE_DATA) {
@@ -776,6 +781,43 @@ public class MainServlet extends ActionServlet {
 		else {
 			return true;
 		}
+	}
+
+	protected void indexOnStartup() {
+		ServiceDependencyManager serviceDependencyManager =
+			new ServiceDependencyManager();
+
+		serviceDependencyManager.addServiceDependencyListener(
+			new ServiceDependencyListener() {
+
+				@Override
+				public void dependenciesFulfilled() {
+					if (!PropsValues.INDEX_ON_STARTUP) {
+						return;
+					}
+
+					try {
+						IndexWriterHelperUtil.reindex(
+							UserConstants.USER_ID_DEFAULT, "indexOnStartup",
+							PortalInstances.getCompanyIds(), null);
+					}
+					catch (Exception e) {
+						_log.error(e, e);
+					}
+				}
+
+				@Override
+				public void destroy() {
+				}
+
+			});
+
+		Registry registry = RegistryUtil.getRegistry();
+
+		Filter filter = registry.getFilter("(search.engine.id=SYSTEM_ENGINE)");
+
+		serviceDependencyManager.registerDependencies(
+			new Class[] {IndexWriterHelper.class}, new Filter[] {filter});
 	}
 
 	protected void initCompanies() throws Exception {
