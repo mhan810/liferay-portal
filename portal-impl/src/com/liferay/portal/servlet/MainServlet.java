@@ -819,13 +819,8 @@ public class MainServlet extends ActionServlet {
 
 			});
 
-		Registry registry = RegistryUtil.getRegistry();
-
-		Filter filter = registry.getFilter("(search.engine.id=SYSTEM_ENGINE)");
-
 		serviceDependencyManager.registerDependencies(
-			new Class[] {LDAPSettings.class, UserImporter.class},
-			new Filter[] {filter});
+			LDAPSettings.class, UserImporter.class);
 	}
 
 	protected void initExt() throws Exception {
