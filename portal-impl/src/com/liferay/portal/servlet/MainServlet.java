@@ -65,8 +65,6 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.plugin.PluginPackageUtil;
 import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.security.auth.PrincipalException;
-import com.liferay.portal.security.exportimport.UserImporter;
-import com.liferay.portal.security.ldap.LDAPSettings;
 import com.liferay.portal.security.permission.ResourceActionsUtil;
 import com.liferay.portal.server.capabilities.ServerCapabilitiesUtil;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
@@ -780,47 +778,24 @@ public class MainServlet extends ActionServlet {
 	}
 
 	protected void initCompanies() throws Exception {
-		ServiceDependencyManager serviceDependencyManager =
-			new ServiceDependencyManager();
+		if (_log.isDebugEnabled()) {
+			_log.debug("Initialize companies");
+		}
 
-		serviceDependencyManager.addServiceDependencyListener(
-			new ServiceDependencyListener() {
+		ServletContext servletContext = getServletContext();
 
-				@Override
-				public void dependenciesFulfilled() {
-					try {
-						if (_log.isDebugEnabled()) {
-							_log.debug("Initialize companies");
-						}
+		try {
+			String[] webIds = PortalInstances.getWebIds();
 
-						ServletContext servletContext = getServletContext();
-
-						try {
-							String[] webIds = PortalInstances.getWebIds();
-
-							for (String webId : webIds) {
-								PortalInstances.initCompany(
-									servletContext, webId);
-							}
-						}
-						finally {
-							CompanyThreadLocal.setCompanyId(
-								PortalInstances.getDefaultCompanyId());
-						}
-					}
-					catch (Exception e) {
-						_log.error(e, e);
-					}
-				}
-
-				@Override
-				public void destroy() {
-				}
-
-			});
-
-		serviceDependencyManager.registerDependencies(
-			LDAPSettings.class, UserImporter.class);
+			for (String webId : webIds) {
+				PortalInstances.initCompany(
+					servletContext, webId);
+			}
+		}
+		finally {
+			CompanyThreadLocal.setCompanyId(
+				PortalInstances.getDefaultCompanyId());
+		}
 	}
 
 	protected void initExt() throws Exception {
