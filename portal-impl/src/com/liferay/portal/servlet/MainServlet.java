@@ -788,8 +788,7 @@ public class MainServlet extends ActionServlet {
 			String[] webIds = PortalInstances.getWebIds();
 
 			for (String webId : webIds) {
-				PortalInstances.initCompany(
-					servletContext, webId);
+				PortalInstances.initCompany(servletContext, webId);
 			}
 		}
 		finally {
