@@ -17,7 +17,7 @@ package com.liferay.portal.search.internal;
 import aQute.bnd.annotation.metatype.Configurable;
 
 import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
-import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManagerUtil;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -454,7 +454,7 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 		taskContextMap.put("companyIds", companyIds);
 
 		try {
-			return BackgroundTaskManagerUtil.addBackgroundTask(
+			return _backgroundTaskManager.addBackgroundTask(
 				userId, CompanyConstants.SYSTEM, jobName,
 				ReindexPortalBackgroundTaskExecutor.class.getName(),
 				taskContextMap, new ServiceContext());
@@ -482,7 +482,7 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 		taskContextMap.put("companyIds", companyIds);
 
 		try {
-			return BackgroundTaskManagerUtil.addBackgroundTask(
+			return _backgroundTaskManager.addBackgroundTask(
 				userId, CompanyConstants.SYSTEM, jobName,
 				ReindexSingleIndexerBackgroundTaskExecutor.class.getName(),
 				taskContextMap, new ServiceContext());
@@ -589,6 +589,13 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 		_indexReadOnly = indexWriterHelperConfiguration.indexReadOnly();
 	}
 
+	@Reference(unbind = "-")
+	protected void setBackgroundTaskManager(
+		BackgroundTaskManager backgroundTaskManager) {
+
+		_backgroundTaskManager = backgroundTaskManager;
+	}
+
 	protected void setCommitImmediately(
 		SearchContext searchContext, boolean commitImmediately) {
 
@@ -617,6 +624,7 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 	private static final Log _log = LogFactoryUtil.getLog(
 		IndexWriterHelperImpl.class);
 
+	private volatile BackgroundTaskManager _backgroundTaskManager;
 	private volatile boolean _commitImmediately;
 	private volatile boolean _indexReadOnly;
 	private volatile SearchEngineHelper _searchEngineHelper;
