@@ -27,7 +27,6 @@ import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.test.rule.SyntheticBundleRule;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.util.MBMessageIndexer;
@@ -46,14 +45,12 @@ public class IndexerPostProcessorRegistryTest {
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			new SyntheticBundleRule("bundle.indexerpostprocessorregistry"));
+		new LiferayIntegrationTestRule();
 
 	@Test
 	public void testMultipleIndexerPostProcessors() throws Exception {
 		Indexer<MBMessage> mbMessageIndexer = IndexerRegistryUtil.getIndexer(
-			MBMessageIndexer.class.getName());
+			MBMessage.class.getName());
 
 		IndexerPostProcessor[] mbMessageIndexerPostProcessors =
 			mbMessageIndexer.getIndexerPostProcessors();
@@ -66,7 +63,7 @@ public class IndexerPostProcessorRegistryTest {
 		assertNotNull(mbMessageIndexerPostProcessor);
 
 		Indexer<MBThread> mbThreadIndexer = IndexerRegistryUtil.getIndexer(
-			"com.liferay.portlet.messageboards.util.MBThreadIndexer");
+			MBThread.class.getName());
 
 		IndexerPostProcessor[] mbThreadIndexerPostProcessors =
 			mbThreadIndexer.getIndexerPostProcessors();
