@@ -624,7 +624,7 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 	private static final Log _log = LogFactoryUtil.getLog(
 		IndexWriterHelperImpl.class);
 
-	private volatile BackgroundTaskManager _backgroundTaskManager;
+	private BackgroundTaskManager _backgroundTaskManager;
 	private volatile boolean _commitImmediately;
 	private volatile boolean _indexReadOnly;
 	private SearchEngineHelper _searchEngineHelper;
