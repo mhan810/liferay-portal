@@ -81,8 +81,8 @@ public class IndexOnStartupProcessor {
 		IndexOnStartupProcessor.class);
 
 	private BundleContext _bundleContext;
-	private volatile IndexWriterHelper _indexWriterHelper;
-	private volatile Props _props;
+	private IndexWriterHelper _indexWriterHelper;
+	private Props _props;
 	private ServiceTracker<Indexer, Indexer> _serviceTracker;
 
 	private class IndexerServiceTrackerCustomizer
