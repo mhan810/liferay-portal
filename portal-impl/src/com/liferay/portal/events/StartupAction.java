@@ -16,10 +16,6 @@ package com.liferay.portal.events;
 
 import com.liferay.portal.fabric.server.FabricServerUtil;
 import com.liferay.portal.jericho.CachedLoggerProvider;
-import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
-import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManagerUtil;
-import com.liferay.portal.kernel.cluster.ClusterExecutor;
-import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
@@ -40,12 +36,9 @@ import com.liferay.portal.kernel.resiliency.mpi.MPIHelperUtil;
 import com.liferay.portal.kernel.resiliency.spi.agent.annotation.Direction;
 import com.liferay.portal.kernel.resiliency.spi.agent.annotation.DistributedRegistry;
 import com.liferay.portal.kernel.resiliency.spi.agent.annotation.MatchType;
-import com.liferay.portal.kernel.scheduler.SchedulerEngineHelper;
-import com.liferay.portal.kernel.scheduler.SchedulerLifecycle;
 import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.PortalLifecycle;
 import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -55,7 +48,6 @@ import com.liferay.portal.plugin.PluginPackageIndexer;
 import com.liferay.portal.tools.DBUpgrader;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.messageboards.util.MBMessageIndexer;
-import com.liferay.registry.Filter;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.dependency.ServiceDependencyListener;
@@ -174,42 +166,6 @@ public class StartupAction extends SimpleAction {
 
 		DBUpgrader.upgrade();
 
-		// Scheduler
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("Initialize scheduler engine lifecycle");
-		}
-
-		ServiceDependencyManager schedulerServiceDependencyManager =
-			new ServiceDependencyManager();
-
-		schedulerServiceDependencyManager.addServiceDependencyListener(
-			new ServiceDependencyListener() {
-
-				@Override
-				public void dependenciesFulfilled() {
-					SchedulerLifecycle schedulerLifecycle =
-						new SchedulerLifecycle();
-
-					schedulerLifecycle.registerPortalLifecycle(
-						PortalLifecycle.METHOD_INIT);
-				}
-
-				@Override
-				public void destroy() {
-				}
-
-			});
-
-		final Registry registry = RegistryUtil.getRegistry();
-
-		Filter filter = registry.getFilter(
-			"(objectClass=com.liferay.portal.scheduler.quartz.internal." +
-				"QuartzSchemaManager)");
-
-		schedulerServiceDependencyManager.registerDependencies(
-			new Class[] {SchedulerEngineHelper.class}, new Filter[] {filter});
-
 		// Verify
 
 		if (_log.isDebugEnabled()) {
@@ -217,35 +173,6 @@ public class StartupAction extends SimpleAction {
 		}
 
 		DBUpgrader.verify();
-
-		// Cluster master token listener
-
-		ServiceDependencyManager clusterMasterExecutorServiceDependencyManager =
-			new ServiceDependencyManager();
-
-		clusterMasterExecutorServiceDependencyManager.
-			addServiceDependencyListener(
-				new ServiceDependencyListener() {
-
-					@Override
-					public void dependenciesFulfilled() {
-						ClusterMasterExecutor clusterMasterExecutor =
-							registry.getService(ClusterMasterExecutor.class);
-
-						if (!clusterMasterExecutor.isEnabled()) {
-							BackgroundTaskManagerUtil.cleanUpBackgroundTasks();
-						}
-					}
-
-					@Override
-					public void destroy() {
-					}
-
-				});
-
-		clusterMasterExecutorServiceDependencyManager.registerDependencies(
-			BackgroundTaskManager.class, ClusterExecutor.class,
-			ClusterMasterExecutor.class);
 
 		// Liferay JspFactory
 
