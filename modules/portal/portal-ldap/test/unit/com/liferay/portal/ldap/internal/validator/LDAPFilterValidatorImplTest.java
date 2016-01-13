@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.ldap.validator;
+package com.liferay.portal.ldap.internal.validator;
 
 import com.liferay.portal.security.ldap.LDAPFilterValidator;
 
@@ -23,7 +23,7 @@ import org.junit.Test;
  * @author James Lefeu
  * @author Vilmos Papp
  */
-public class LDAPUtilTest {
+public class LDAPFilterValidatorImplTest {
 
 	@Test
 	public void testIsValidFilterBalancedParentheses() {
