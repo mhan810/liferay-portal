@@ -17,12 +17,10 @@ package com.liferay.portal.kernel.ldap;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
+import com.liferay.portal.kernel.util.ProxyFactory;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.ldap.LDAPFilterValidator;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
-import com.liferay.registry.ServiceTracker;
 
 import java.text.DateFormat;
 
@@ -188,10 +186,7 @@ public class LDAPUtil {
 	}
 
 	public static boolean isValidFilter(String filter) {
-		final LDAPFilterValidator ldapFilterValidator =
-			_serviceTracker.getService();
-
-		return ldapFilterValidator.isValid(filter);
+		return _ldapFilterValidator.isValid(filter);
 	}
 
 	public static Date parseDate(String date) throws Exception {
@@ -226,35 +221,16 @@ public class LDAPUtil {
 	}
 
 	public static void validateFilter(String filter) throws PortalException {
-		if (!isValidFilter(filter)) {
-			throw new LDAPFilterException("Invalid filter " + filter);
-		}
+		_ldapFilterValidator.validate(filter);
 	}
 
 	public static void validateFilter(String filter, String filterPropertyName)
 		throws PortalException {
 
-		if (!isValidFilter(filter)) {
-			throw new LDAPFilterException(
-				"Invalid filter " + filter + " defined by " +
-					filterPropertyName);
-		}
+		_ldapFilterValidator.validate(filter, filterPropertyName);
 	}
 
-	public void destroy() {
-		_serviceTracker.close();
-	}
-
-	private static final
-		ServiceTracker<LDAPFilterValidator, LDAPFilterValidator>
-			_serviceTracker;
-
-	static {
-		Registry registry = RegistryUtil.getRegistry();
-
-		_serviceTracker = registry.trackServices(LDAPFilterValidator.class);
-
-		_serviceTracker.open();
-	}
+	private static final LDAPFilterValidator _ldapFilterValidator =
+		ProxyFactory.newServiceTrackedInstance(LDAPFilterValidator.class);
 
 }

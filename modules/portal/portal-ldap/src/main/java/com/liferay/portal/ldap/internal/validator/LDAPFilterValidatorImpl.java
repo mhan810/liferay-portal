@@ -14,6 +14,7 @@
 
 package com.liferay.portal.ldap.internal.validator;
 
+import com.liferay.portal.kernel.ldap.LDAPFilterException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -60,6 +61,22 @@ public class LDAPFilterValidatorImpl implements LDAPFilterValidator {
 		}
 
 		return true;
+	}
+
+	public void validate(String filter) throws LDAPFilterException {
+		if (!isValidFilter(filter)) {
+			throw new LDAPFilterException("Invalid filter " + filter);
+		}
+	}
+
+	public void validate(String filter, String filterPropertyName)
+		throws LDAPFilterException {
+
+		f (!isValidFilter(filter)) {
+			throw new LDAPFilterException(
+				"Invalid filter " + filter + " defined by " +
+					filterPropertyName);
+		}
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

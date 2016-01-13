@@ -14,11 +14,18 @@
 
 package com.liferay.portal.security.ldap;
 
+import com.liferay.portal.kernel.ldap.LDAPFilterException;
+
 /**
  * @author Vilmos Papp
  */
 public interface LDAPFilterValidator {
 
 	public boolean isValid(String filter);
+
+	public void validate(String filter) throws LDAPFilterException;
+
+	public void validate(String filter, String filterPropertyName)
+		throws LDAPFilterException;
 
 }
