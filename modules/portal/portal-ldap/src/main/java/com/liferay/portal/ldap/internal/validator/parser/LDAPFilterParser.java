@@ -1,6 +1,4 @@
-// $ANTLR 3.0.1 LDAPFilter.g 2015-01-28 13:02:44
-
-/**
+/*
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
@@ -14,7 +12,9 @@
  * details.
  */
 
-package com.liferay.portal.ldap.validator.parser;
+// $ANTLR 3.0.1 LDAPFilter.g 2015-01-28 13:02:44
+
+package com.liferay.portal.ldap.internal.validator.parser;
 
 
 import org.antlr.runtime.*;
