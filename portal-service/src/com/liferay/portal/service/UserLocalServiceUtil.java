@@ -2794,14 +2794,11 @@ public class UserLocalServiceUtil {
 	* @param password2 the user's new password confirmation
 	* @param passwordReset whether the user should be asked to reset their
 	password the next time they log in
-	* @return the user
 	*/
-	public static com.liferay.portal.model.User updatePassword(long userId,
-		java.lang.String password1, java.lang.String password2,
-		boolean passwordReset)
+	public static void updatePassword(long userId, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService()
-				   .updatePassword(userId, password1, password2, passwordReset);
+		getService().updatePassword(userId, password1, password2, passwordReset);
 	}
 
 	/**
@@ -2815,14 +2812,12 @@ public class UserLocalServiceUtil {
 	password the next time they login
 	* @param silentUpdate whether the password should be updated without being
 	tracked, or validated. Primarily used for password imports.
-	* @return the user
 	*/
-	public static com.liferay.portal.model.User updatePassword(long userId,
-		java.lang.String password1, java.lang.String password2,
-		boolean passwordReset, boolean silentUpdate)
+	public static void updatePassword(long userId, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset, boolean silentUpdate)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService()
-				   .updatePassword(userId, password1, password2, passwordReset,
+		getService()
+			.updatePassword(userId, password1, password2, passwordReset,
 			silentUpdate);
 	}
 
@@ -2836,14 +2831,13 @@ public class UserLocalServiceUtil {
 	* @param passwordReset whether the user should be asked to reset their
 	password the next time they login
 	* @param passwordModifiedDate the new password modified date
-	* @return the user
 	*/
-	public static com.liferay.portal.model.User updatePasswordManually(
-		long userId, java.lang.String password, boolean passwordEncrypted,
+	public static void updatePasswordManually(long userId,
+		java.lang.String password, boolean passwordEncrypted,
 		boolean passwordReset, java.util.Date passwordModifiedDate)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService()
-				   .updatePasswordManually(userId, password, passwordEncrypted,
+		getService()
+			.updatePasswordManually(userId, password, passwordEncrypted,
 			passwordReset, passwordModifiedDate);
 	}
 
@@ -2854,12 +2848,10 @@ public class UserLocalServiceUtil {
 	* @param userId the primary key of the user
 	* @param passwordReset whether the user should be asked to reset their
 	password the next time they login
-	* @return the user
 	*/
-	public static com.liferay.portal.model.User updatePasswordReset(
-		long userId, boolean passwordReset)
+	public static void updatePasswordReset(long userId, boolean passwordReset)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().updatePasswordReset(userId, passwordReset);
+		getService().updatePasswordReset(userId, passwordReset);
 	}
 
 	/**

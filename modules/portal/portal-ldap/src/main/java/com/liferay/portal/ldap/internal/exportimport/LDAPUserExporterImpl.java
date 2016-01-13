@@ -323,11 +323,13 @@ public class LDAPUserExporterImpl implements UserExporter {
 				if (Validator.isNotNull(modifyTimestamp)) {
 					Date modifiedDate = LDAPUtil.parseDate(modifyTimestamp);
 
-					if (modifiedDate.equals(user.getModifiedDate())) {
+					if (modifiedDate.equals(user.getModifiedDate()) &&
+						!user.getPasswordModified()) {
+
 						if (_log.isDebugEnabled()) {
 							_log.debug(
 								"Skipping user " + user.getEmailAddress() +
-									" because he is already synchronized");
+									" because (s)he is already synchronized");
 						}
 
 						return;

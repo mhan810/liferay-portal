@@ -4692,16 +4692,14 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @param  password2 the user's new password confirmation
 	 * @param  passwordReset whether the user should be asked to reset their
 	 *         password the next time they log in
-	 * @return the user
 	 */
 	@Override
-	public User updatePassword(
+	public void updatePassword(
 			long userId, String password1, String password2,
 			boolean passwordReset)
 		throws PortalException {
 
-		return updatePassword(
-			userId, password1, password2, passwordReset, false);
+		updatePassword(userId, password1, password2, passwordReset, false);
 	}
 
 	/**
@@ -4715,10 +4713,9 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 *         password the next time they login
 	 * @param  silentUpdate whether the password should be updated without being
 	 *         tracked, or validated. Primarily used for password imports.
-	 * @return the user
 	 */
 	@Override
-	public User updatePassword(
+	public void updatePassword(
 			long userId, String password1, String password2,
 			boolean passwordReset, boolean silentUpdate)
 		throws PortalException {
@@ -4779,8 +4776,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		}
 
 		if (!silentUpdate) {
-			user.setPasswordModified(false);
-
 			passwordTrackerLocalService.trackPassword(userId, oldEncPwd);
 		}
 
@@ -4789,8 +4784,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				user, user.getCompanyId(), password1, null, null, null, null,
 				null, ServiceContextThreadLocal.getServiceContext());
 		}
-
-		return user;
 	}
 
 	/**
@@ -4803,10 +4796,9 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @param  passwordReset whether the user should be asked to reset their
 	 *         password the next time they login
 	 * @param  passwordModifiedDate the new password modified date
-	 * @return the user
 	 */
 	@Override
-	public User updatePasswordManually(
+	public void updatePasswordManually(
 			long userId, String password, boolean passwordEncrypted,
 			boolean passwordReset, Date passwordModifiedDate)
 		throws PortalException {
@@ -4822,8 +4814,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		user.setDigest(StringPool.BLANK);
 
 		userPersistence.update(user);
-
-		return user;
 	}
 
 	/**
@@ -4833,10 +4823,9 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @param  userId the primary key of the user
 	 * @param  passwordReset whether the user should be asked to reset their
 	 *         password the next time they login
-	 * @return the user
 	 */
 	@Override
-	public User updatePasswordReset(long userId, boolean passwordReset)
+	public void updatePasswordReset(long userId, boolean passwordReset)
 		throws PortalException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
@@ -4844,8 +4833,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		user.setPasswordReset(passwordReset);
 
 		userPersistence.update(user);
-
-		return user;
 	}
 
 	/**
@@ -5105,11 +5092,14 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		if (Validator.isNotNull(newPassword1) ||
 			Validator.isNotNull(newPassword2)) {
 
-			user = updatePassword(
-				userId, newPassword1, newPassword2, passwordReset);
+			updatePassword(
+				userId, newPassword1, newPassword2, passwordReset, false);
+
+			user = userPersistence.findByPrimaryKey(userId);
 
 			password = newPassword1;
 
+			user.setPasswordModified(false);
 			user.setDigest(StringPool.BLANK);
 		}
 

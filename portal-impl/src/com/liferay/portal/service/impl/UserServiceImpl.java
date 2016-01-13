@@ -1502,10 +1502,9 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 	 * @param  password2 the user's new password confirmation
 	 * @param  passwordReset whether the user should be asked to reset their
 	 *         password the next time they log in
-	 * @return the user
 	 */
 	@Override
-	public User updatePassword(
+	public void updatePassword(
 			long userId, String password1, String password2,
 			boolean passwordReset)
 		throws PortalException {
@@ -1513,7 +1512,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 		UserPermissionUtil.check(
 			getPermissionChecker(), userId, ActionKeys.UPDATE);
 
-		return userLocalService.updatePassword(
+		userLocalService.updatePassword(
 			userId, password1, password2, passwordReset);
 	}
 

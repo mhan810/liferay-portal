@@ -976,15 +976,12 @@ public class UserServiceWrapper implements UserService,
 	* @param password2 the user's new password confirmation
 	* @param passwordReset whether the user should be asked to reset their
 	password the next time they log in
-	* @return the user
 	*/
 	@Override
-	public com.liferay.portal.model.User updatePassword(long userId,
-		java.lang.String password1, java.lang.String password2,
-		boolean passwordReset)
+	public void updatePassword(long userId, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _userService.updatePassword(userId, password1, password2,
-			passwordReset);
+		_userService.updatePassword(userId, password1, password2, passwordReset);
 	}
 
 	/**
