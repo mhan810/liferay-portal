@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.ldap.constants.LDAPConstants;
+import com.liferay.portal.model.CompanyConstants;
 
 import java.io.IOException;
 
@@ -82,10 +83,6 @@ public abstract class CompanyScopedConfigurationProvider
 		Dictionary<String, Object> properties = getConfigurationProperties(
 			companyId);
 
-		if (properties == null) {
-			return null;
-		}
-
 		T configurable = Configurable.createConfigurable(
 			getMetatype(), properties);
 
@@ -104,14 +101,17 @@ public abstract class CompanyScopedConfigurationProvider
 		Configuration configuration = _configurations.get(companyId);
 
 		if (configuration == null) {
-			configuration = _configurations.get(LDAPConstants.SYSTEM_DEFAULT);
-
-			if (configuration == null) {
-				return new HashMapDictionary<>();
-			}
+			configuration = _configurations.get(CompanyConstants.SYSTEM);
 		}
 
-		Dictionary<String, Object> properties = configuration.getProperties();
+		Dictionary<String, Object> properties = null;
+
+		if (configuration == null) {
+			properties = new HashMapDictionary<>();
+		}
+		else {
+			properties = configuration.getProperties();
+		}
 
 		return properties;
 	}
