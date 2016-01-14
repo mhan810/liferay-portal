@@ -67,13 +67,8 @@ public abstract class CompanyScopedConfigurationProvider
 
 	@Override
 	public T getConfiguration(long companyId) {
-		return getConfiguration(companyId, true);
-	}
-
-	@Override
-	public T getConfiguration(long companyId, boolean useDefault) {
 		Dictionary<String, Object> properties = getConfigurationProperties(
-			companyId, useDefault);
+			companyId);
 
 		if (properties == null) {
 			return null;
@@ -87,24 +82,12 @@ public abstract class CompanyScopedConfigurationProvider
 
 	@Override
 	public T getConfiguration(long companyId, long index) {
-		return getConfiguration(companyId, true);
-	}
-
-	@Override
-	public T getConfiguration(long companyId, long index, boolean useDefault) {
-		return getConfiguration(companyId, useDefault);
+		return getConfiguration(companyId);
 	}
 
 	@Override
 	public Dictionary<String, Object> getConfigurationProperties(
 		long companyId) {
-
-		return getConfigurationProperties(companyId, true);
-	}
-
-	@Override
-	public Dictionary<String, Object> getConfigurationProperties(
-		long companyId, boolean useDefault) {
 
 		Configuration configuration = _configurations.get(companyId);
 
@@ -125,23 +108,11 @@ public abstract class CompanyScopedConfigurationProvider
 	public Dictionary<String, Object> getConfigurationProperties(
 		long companyId, long index) {
 
-		return getConfigurationProperties(companyId, index, true);
-	}
-
-	@Override
-	public Dictionary<String, Object> getConfigurationProperties(
-		long companyId, long index, boolean useDefault) {
-
-		return getConfigurationProperties(companyId, useDefault);
+		return getConfigurationProperties(companyId);
 	}
 
 	@Override
 	public List<T> getConfigurations(long companyId) {
-		return getConfigurations(companyId, true);
-	}
-
-	@Override
-	public List<T> getConfigurations(long companyId, boolean useDefault) {
 		List<Dictionary<String, Object>> configurationsProperties =
 			getConfigurationsProperties(companyId);
 
