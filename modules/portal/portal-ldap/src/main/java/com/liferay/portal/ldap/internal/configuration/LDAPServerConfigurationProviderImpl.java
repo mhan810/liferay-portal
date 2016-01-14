@@ -106,22 +106,15 @@ public class LDAPServerConfigurationProviderImpl
 
 	@Override
 	public LDAPServerConfiguration getConfiguration(long companyId) {
-		return getConfiguration(companyId, true);
-	}
-
-	@Override
-	public LDAPServerConfiguration getConfiguration(
-		long companyId, boolean useDefault) {
-
 		List<LDAPServerConfiguration> ldapServerConfigurations =
-			getConfigurations(companyId, useDefault);
+			getConfigurations(companyId);
 
 		LDAPServerConfiguration ldapServerConfiguration = null;
 
 		if (!ldapServerConfigurations.isEmpty()) {
 			ldapServerConfiguration = ldapServerConfigurations.get(0);
 		}
-		else if (useDefault) {
+		else {
 			ldapServerConfiguration = Configurable.createConfigurable(
 				getMetatype(), new HashMapDictionary<>());
 		}
@@ -133,15 +126,8 @@ public class LDAPServerConfigurationProviderImpl
 	public LDAPServerConfiguration getConfiguration(
 		long companyId, long ldapServerId) {
 
-		return getConfiguration(companyId, ldapServerId, true);
-	}
-
-	@Override
-	public LDAPServerConfiguration getConfiguration(
-		long companyId, long ldapServerId, boolean useDefault) {
-
 		Dictionary<String, Object> properties = getConfigurationProperties(
-			companyId, ldapServerId, useDefault);
+			companyId, ldapServerId);
 
 		if (properties == null) {
 			return null;
@@ -157,19 +143,8 @@ public class LDAPServerConfigurationProviderImpl
 	public Dictionary<String, Object> getConfigurationProperties(
 		long companyId) {
 
-		return getConfigurationProperties(companyId, true);
-	}
-
-	@Override
-	public Dictionary<String, Object> getConfigurationProperties(
-		long companyId, boolean useDefault) {
-
 		List<Dictionary<String, Object>> configurationsProperties =
 			getConfigurationsProperties(companyId);
-
-		if (configurationsProperties.isEmpty() && !useDefault) {
-			return null;
-		}
 
 		if (configurationsProperties.isEmpty()) {
 			return new HashMapDictionary<>();
@@ -182,30 +157,23 @@ public class LDAPServerConfigurationProviderImpl
 	public Dictionary<String, Object> getConfigurationProperties(
 		long companyId, long ldapServerId) {
 
-		return getConfigurationProperties(companyId, ldapServerId, true);
-	}
+		Map<Long, Configuration> configurations;
 
-	@Override
-	public Dictionary<String, Object> getConfigurationProperties(
-		long companyId, long ldapServerId, boolean useDefault) {
-
-		Map<Long, Configuration> configurations = _configurations.get(
-			companyId);
-
-		if ((configurations == null) && useDefault) {
-			return new HashMapDictionary<>();
+		if (ldapServerId == LDAPConstants.SYSTEM_DEFAULT) {
+			configurations = _configurations.get(LDAPConstants.SYSTEM_DEFAULT);
 		}
-		else if ((configurations == null) && !useDefault) {
-			return null;
+		else {
+			configurations = _configurations.get(companyId);
+		}
+
+		if (configurations == null) {
+			return new HashMapDictionary<>();
 		}
 
 		Configuration configuration = configurations.get(ldapServerId);
 
-		if ((configuration == null) && useDefault) {
+		if (configuration == null) {
 			return new HashMapDictionary<>();
-		}
-		else if ((configuration == null) && !useDefault) {
-			return null;
 		}
 
 		return configuration.getProperties();
@@ -213,27 +181,20 @@ public class LDAPServerConfigurationProviderImpl
 
 	@Override
 	public List<LDAPServerConfiguration> getConfigurations(long companyId) {
-		return getConfigurations(companyId, true);
-	}
-
-	@Override
-	public List<LDAPServerConfiguration> getConfigurations(
-		long companyId, boolean useDefault) {
-
 		List<Dictionary<String, Object>> configurationsProperties =
 			getConfigurationsProperties(companyId);
 
 		List<LDAPServerConfiguration> ldapServerConfigurations =
 			new ArrayList<>(configurationsProperties.size());
 
-		if (ListUtil.isEmpty(configurationsProperties) && useDefault) {
+		if (ListUtil.isEmpty(configurationsProperties)) {
 			LDAPServerConfiguration ldapServerConfiguration =
 				Configurable.createConfigurable(
 					getMetatype(), new HashMapDictionary<>());
 
 			ldapServerConfigurations.add(ldapServerConfiguration);
 		}
-		else if (ListUtil.isNotEmpty(configurationsProperties)) {
+		else {
 			for (Dictionary<String, Object> configurationProperties :
 					configurationsProperties) {
 
@@ -329,6 +290,10 @@ public class LDAPServerConfigurationProviderImpl
 				long ldapServerId = (Long)tuple.getObject(1);
 
 				configurations.remove(ldapServerId);
+
+				if (configurations.isEmpty()) {
+					_configurations.remove(companyId);
+				}
 			}
 		}
 	}

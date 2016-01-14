@@ -79,13 +79,8 @@ public abstract class CompanyScopedConfigurationProvider
 
 	@Override
 	public T getConfiguration(long companyId) {
-		return getConfiguration(companyId, true);
-	}
-
-	@Override
-	public T getConfiguration(long companyId, boolean useDefault) {
 		Dictionary<String, Object> properties = getConfigurationProperties(
-			companyId, useDefault);
+			companyId);
 
 		if (properties == null) {
 			return null;
@@ -99,33 +94,21 @@ public abstract class CompanyScopedConfigurationProvider
 
 	@Override
 	public T getConfiguration(long companyId, long index) {
-		return getConfiguration(companyId, true);
-	}
-
-	@Override
-	public T getConfiguration(long companyId, long index, boolean useDefault) {
-		return getConfiguration(companyId, useDefault);
+		return getConfiguration(companyId);
 	}
 
 	@Override
 	public Dictionary<String, Object> getConfigurationProperties(
 		long companyId) {
 
-		return getConfigurationProperties(companyId, true);
-	}
-
-	@Override
-	public Dictionary<String, Object> getConfigurationProperties(
-		long companyId, boolean useDefault) {
-
 		Configuration configuration = _configurations.get(companyId);
 
-		if (useDefault && (configuration == null)) {
-			return new HashMapDictionary<>();
-		}
-
 		if (configuration == null) {
-			return null;
+			configuration = _configurations.get(LDAPConstants.SYSTEM_DEFAULT);
+
+			if (configuration == null) {
+				return new HashMapDictionary<>();
+			}
 		}
 
 		Dictionary<String, Object> properties = configuration.getProperties();
@@ -137,36 +120,24 @@ public abstract class CompanyScopedConfigurationProvider
 	public Dictionary<String, Object> getConfigurationProperties(
 		long companyId, long index) {
 
-		return getConfigurationProperties(companyId, index, true);
-	}
-
-	@Override
-	public Dictionary<String, Object> getConfigurationProperties(
-		long companyId, long index, boolean useDefault) {
-
-		return getConfigurationProperties(companyId, useDefault);
+		return getConfigurationProperties(companyId);
 	}
 
 	@Override
 	public List<T> getConfigurations(long companyId) {
-		return getConfigurations(companyId, true);
-	}
-
-	@Override
-	public List<T> getConfigurations(long companyId, boolean useDefault) {
 		List<Dictionary<String, Object>> configurationsProperties =
 			getConfigurationsProperties(companyId);
 
 		List<T> configurables = new ArrayList<>(
 			configurationsProperties.size());
 
-		if (ListUtil.isEmpty(configurationsProperties) && useDefault) {
+		if (ListUtil.isEmpty(configurationsProperties)) {
 			T configurable = Configurable.createConfigurable(
 				getMetatype(), new HashMapDictionary<>());
 
 			configurables.add(configurable);
 		}
-		else if (ListUtil.isNotEmpty(configurationsProperties)) {
+		else {
 			for (Dictionary<String, Object> configurationProperties :
 					configurationsProperties) {
 
