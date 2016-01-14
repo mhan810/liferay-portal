@@ -106,15 +106,8 @@ public class LDAPServerConfigurationProviderImpl
 
 	@Override
 	public LDAPServerConfiguration getConfiguration(long companyId) {
-		return getConfiguration(companyId, true);
-	}
-
-	@Override
-	public LDAPServerConfiguration getConfiguration(
-		long companyId, boolean useDefault) {
-
 		List<LDAPServerConfiguration> ldapServerConfigurations =
-			getConfigurations(companyId, useDefault);
+			getConfigurations(companyId);
 
 		LDAPServerConfiguration ldapServerConfiguration = null;
 
@@ -133,15 +126,8 @@ public class LDAPServerConfigurationProviderImpl
 	public LDAPServerConfiguration getConfiguration(
 		long companyId, long ldapServerId) {
 
-		return getConfiguration(companyId, ldapServerId, true);
-	}
-
-	@Override
-	public LDAPServerConfiguration getConfiguration(
-		long companyId, long ldapServerId, boolean useDefault) {
-
 		Dictionary<String, Object> properties = getConfigurationProperties(
-			companyId, ldapServerId, useDefault);
+			companyId, ldapServerId);
 
 		if (properties == null) {
 			return null;
@@ -157,13 +143,6 @@ public class LDAPServerConfigurationProviderImpl
 	public Dictionary<String, Object> getConfigurationProperties(
 		long companyId) {
 
-		return getConfigurationProperties(companyId, true);
-	}
-
-	@Override
-	public Dictionary<String, Object> getConfigurationProperties(
-		long companyId, boolean useDefault) {
-
 		List<Dictionary<String, Object>> configurationsProperties =
 			getConfigurationsProperties(companyId);
 
@@ -177,13 +156,6 @@ public class LDAPServerConfigurationProviderImpl
 	@Override
 	public Dictionary<String, Object> getConfigurationProperties(
 		long companyId, long ldapServerId) {
-
-		return getConfigurationProperties(companyId, ldapServerId, true);
-	}
-
-	@Override
-	public Dictionary<String, Object> getConfigurationProperties(
-		long companyId, long ldapServerId, boolean useDefault) {
 
 		Map<Long, Configuration> configurations;
 
@@ -209,13 +181,6 @@ public class LDAPServerConfigurationProviderImpl
 
 	@Override
 	public List<LDAPServerConfiguration> getConfigurations(long companyId) {
-		return getConfigurations(companyId, true);
-	}
-
-	@Override
-	public List<LDAPServerConfiguration> getConfigurations(
-		long companyId, boolean useDefault) {
-
 		List<Dictionary<String, Object>> configurationsProperties =
 			getConfigurationsProperties(companyId);
 
