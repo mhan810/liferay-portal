@@ -154,10 +154,6 @@ public class PortalSettingsLDAPFormMVCActionCommand
 		Dictionary<String, Object> properties =
 			configurationProvider.getConfigurationProperties(companyId);
 
-		if (properties == null) {
-			properties = new HashMapDictionary<>();
-		}
-
 		for (String propertyName : propertyNames) {
 			boolean value = ParamUtil.getBoolean(
 				actionRequest, "ldap--" + propertyName + "--");
