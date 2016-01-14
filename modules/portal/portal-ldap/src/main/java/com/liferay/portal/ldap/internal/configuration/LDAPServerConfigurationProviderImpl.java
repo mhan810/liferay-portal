@@ -27,6 +27,7 @@ import com.liferay.portal.ldap.configuration.BaseConfigurationProvider;
 import com.liferay.portal.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.ldap.constants.LDAPConstants;
+import com.liferay.portal.model.CompanyConstants;
 
 import java.io.IOException;
 
@@ -129,10 +130,6 @@ public class LDAPServerConfigurationProviderImpl
 		Dictionary<String, Object> properties = getConfigurationProperties(
 			companyId, ldapServerId);
 
-		if (properties == null) {
-			return null;
-		}
-
 		LDAPServerConfiguration ldapServerConfiguration =
 			Configurable.createConfigurable(getMetatype(), properties);
 
@@ -157,13 +154,11 @@ public class LDAPServerConfigurationProviderImpl
 	public Dictionary<String, Object> getConfigurationProperties(
 		long companyId, long ldapServerId) {
 
-		Map<Long, Configuration> configurations;
+		Map<Long, Configuration> configurations = _configurations.get(
+			companyId);
 
-		if (ldapServerId == LDAPConstants.SYSTEM_DEFAULT) {
-			configurations = _configurations.get(LDAPConstants.SYSTEM_DEFAULT);
-		}
-		else {
-			configurations = _configurations.get(companyId);
+		if (configurations == null) {
+			configurations = _configurations.get(CompanyConstants.SYSTEM);
 		}
 
 		if (configurations == null) {
@@ -171,6 +166,10 @@ public class LDAPServerConfigurationProviderImpl
 		}
 
 		Configuration configuration = configurations.get(ldapServerId);
+
+		if (configuration == null) {
+			configuration = configurations.get(LDAPConstants.SYSTEM_DEFAULT);
+		}
 
 		if (configuration == null) {
 			return new HashMapDictionary<>();
