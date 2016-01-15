@@ -818,9 +818,9 @@ public interface UserService extends BaseService {
 	password the next time they log in
 	* @return the user
 	*/
-	public com.liferay.portal.model.User updatePassword(long userId,
-		java.lang.String password1, java.lang.String password2,
-		boolean passwordReset) throws PortalException;
+	public void updatePassword(long userId, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset)
+		throws PortalException;
 
 	/**
 	* Updates the user's portrait image.

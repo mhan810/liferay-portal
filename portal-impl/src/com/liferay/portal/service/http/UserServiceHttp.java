@@ -1607,9 +1607,9 @@ public class UserServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.model.User updatePassword(
-		HttpPrincipal httpPrincipal, long userId, java.lang.String password1,
-		java.lang.String password2, boolean passwordReset)
+	public static void updatePassword(HttpPrincipal httpPrincipal, long userId,
+		java.lang.String password1, java.lang.String password2,
+		boolean passwordReset)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserServiceUtil.class,
@@ -1618,10 +1618,8 @@ public class UserServiceHttp {
 			MethodHandler methodHandler = new MethodHandler(methodKey, userId,
 					password1, password2, passwordReset);
 
-			Object returnObj = null;
-
 			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+				TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception e) {
 				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
@@ -1630,8 +1628,6 @@ public class UserServiceHttp {
 
 				throw new com.liferay.portal.kernel.exception.SystemException(e);
 			}
-
-			return (com.liferay.portal.model.User)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException se) {
 			_log.error(se, se);
