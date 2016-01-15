@@ -180,10 +180,12 @@ public class GoogleLoginAction extends BaseStrutsAction {
 		user = _userLocalService.updateLastLogin(
 			user.getUserId(), user.getLoginIP());
 
-		user = _userLocalService.updatePasswordReset(user.getUserId(), false);
+		_userLocalService.updatePasswordReset(user.getUserId(), false);
 
-		user = _userLocalService.updateEmailAddressVerified(
+		_userLocalService.updateEmailAddressVerified(
 			user.getUserId(), true);
+
+		user = _userLocalService.getUserById(user.getUserId());
 
 		session.setAttribute(
 			GoogleWebKeys.GOOGLE_USER_EMAIL_ADDRESS, emailAddress);
