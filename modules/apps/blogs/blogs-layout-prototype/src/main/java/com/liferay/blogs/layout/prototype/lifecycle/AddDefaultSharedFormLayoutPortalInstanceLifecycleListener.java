@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.blogs.layout.prototype.action;
+package com.liferay.blogs.layout.prototype.lifecycle;
 
 import com.liferay.asset.tags.navigation.web.constants.AssetTagsNavigationPortletKeys;
 import com.liferay.blogs.recent.bloggers.web.constants.RecentBloggersPortletKeys;
