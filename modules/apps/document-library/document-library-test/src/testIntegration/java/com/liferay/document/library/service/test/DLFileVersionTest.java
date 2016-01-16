@@ -15,7 +15,7 @@
 package com.liferay.document.library.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.document.library.events.AddDefaultDocumentLibraryStructuresAction;
+//import com.liferay.document.library.events.AddDefaultDocumentLibraryStructuresAction;
 import com.liferay.portal.kernel.events.SimpleAction;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -104,12 +104,14 @@ public class DLFileVersionTest {
 
 		Registry registry = RegistryUtil.getRegistry();
 
+/*
 		SimpleAction simpleAction = registry.getService(
 			AddDefaultDocumentLibraryStructuresAction.class);
 
 		String companyIdString = String.valueOf(TestPropsValues.getCompanyId());
 
 		simpleAction.run(new String[] {companyIdString});
+*/
 
 		List<DLFileEntryType> dlFileEntryTypes =
 			DLFileEntryTypeLocalServiceUtil.getFileEntryTypes(

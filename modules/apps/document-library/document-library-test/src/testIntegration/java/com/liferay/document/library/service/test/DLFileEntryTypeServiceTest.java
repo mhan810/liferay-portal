@@ -15,14 +15,14 @@
 package com.liferay.document.library.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.document.library.events.AddDefaultDocumentLibraryStructuresAction;
+//import com.liferay.document.library.events.AddDefaultDocumentLibraryStructuresAction;
 import com.liferay.dynamic.data.mapping.io.DDMFormXSDDeserializerUtil;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestUtil;
 import com.liferay.dynamic.data.mapping.util.DDMBeanTranslatorUtil;
-import com.liferay.portal.kernel.events.SimpleAction;
+//import com.liferay.portal.kernel.events.SimpleAction;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
@@ -90,6 +90,7 @@ public class DLFileEntryTypeServiceTest {
 		setUpPermissionThreadLocal();
 		setUpPrincipalThreadLocal();
 
+		/*
 		Registry registry = RegistryUtil.getRegistry();
 
 		SimpleAction simpleAction = registry.getService(
@@ -99,6 +100,7 @@ public class DLFileEntryTypeServiceTest {
 
 		simpleAction.run(new String[] {companyIdString});
 
+*/
 		_group = GroupTestUtil.addGroup();
 
 		_folder = DLAppLocalServiceUtil.addFolder(
