@@ -15,14 +15,15 @@
 package com.liferay.document.library.layout.set.prototype.lifecycle;
 
 import com.liferay.document.library.web.constants.DLPortletKeys;
+import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.Portlet;
-import com.liferay.portal.service.CompanyLocalService;
 import com.liferay.portal.service.LayoutSetPrototypeLocalService;
 import com.liferay.portal.service.UserLocalService;
 import com.liferay.portal.util.DefaultLayoutPrototypesUtil;
@@ -32,32 +33,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Sergio González
  */
-@Component(immediate = true, service = AddLayoutSetPrototypePortalInstanceLifecycleListener.class)
-public class AddLayoutSetPrototypePortalInstanceLifecycleListener {
+@Component(immediate = true, service = PortalInstanceLifecycleListener.class)
+public class AddLayoutSetPrototypePortalInstanceLifecycleListener
+	implements PortalInstanceLifecycleListener {
 
-	@Activate
-	protected void activate() throws Exception {
-		List<Company> companies = _companyLocalService.getCompanies();
+	@Override
+	public void portalInstanceAdded(Company company) throws PortalException {
+		long defaultUserId = _userLocalService.getDefaultUserId(
+			company.getCompanyId());
 
-		for (Company company : companies) {
-			long defaultUserId = _userLocalService.getDefaultUserId(
-				company.getCompanyId());
+		List<LayoutSetPrototype> layoutSetPrototypes =
+			_layoutSetPrototypeLocalService.search(
+				company.getCompanyId(), null, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS, null);
 
-			List<LayoutSetPrototype> layoutSetPrototypes =
-				_layoutSetPrototypeLocalService.search(
-					company.getCompanyId(), null, QueryUtil.ALL_POS,
-					QueryUtil.ALL_POS, null);
-
+		try {
 			addPrivateSite(
 				company.getCompanyId(), defaultUserId, layoutSetPrototypes);
 		}
+		catch (Exception e) {
+			throw new PortalException(e);
+		}
+	}
+
+	@Override
+	public void portalInstanceRemoved(Company company) throws PortalException {
 	}
 
 	protected void addPrivateSite(
@@ -70,8 +76,7 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener {
 				companyId, defaultUserId,
 				"layout-set-prototype-intranet-site-title",
 				"layout-set-prototype-intranet-site-description",
-				layoutSetPrototypes,
-				AddLayoutSetPrototypePortalInstanceLifecycleListener.class.getClassLoader());
+				layoutSetPrototypes, getClass().getClassLoader());
 
 		if (layoutSet == null) {
 			return;
@@ -99,13 +104,6 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener {
 	}
 
 	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
-
-		_companyLocalService = companyLocalService;
-	}
-
-	@Reference(unbind = "-")
 	protected void setLayoutSetPrototypeLocalService(
 		LayoutSetPrototypeLocalService layoutSetPrototypeLocalService) {
 
@@ -129,7 +127,6 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener {
 		_userLocalService = userLocalService;
 	}
 
-	private CompanyLocalService _companyLocalService;
 	private LayoutSetPrototypeLocalService _layoutSetPrototypeLocalService;
 	private UserLocalService _userLocalService;
 
