@@ -17,45 +17,51 @@ package com.liferay.blogs.layout.prototype.lifecycle;
 import com.liferay.asset.tags.navigation.web.constants.AssetTagsNavigationPortletKeys;
 import com.liferay.blogs.recent.bloggers.web.constants.RecentBloggersPortletKeys;
 import com.liferay.blogs.web.constants.BlogsPortletKeys;
+import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.Portlet;
-import com.liferay.portal.service.CompanyLocalService;
 import com.liferay.portal.service.LayoutPrototypeLocalService;
 import com.liferay.portal.service.UserLocalService;
 import com.liferay.portal.util.DefaultLayoutPrototypesUtil;
 
 import java.util.List;
 
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Sergio González
  */
-@Component(immediate = true, service = AddLayoutPrototypeAction.class)
-public class AddLayoutPrototypeAction {
+@Component(immediate = true, service = PortalInstanceLifecycleListener.class)
+public class AddLayoutPrototypePortalInstanceLifecycleListener
+	implements PortalInstanceLifecycleListener {
 
-	@Activate
-	protected void activate() throws Exception {
-		List<Company> companies = _companyLocalService.getCompanies();
+	@Override
+	public void portalInstanceAdded(Company company) throws PortalException {
+		long defaultUserId = _userLocalService.getDefaultUserId(
+			company.getCompanyId());
 
-		for (Company company : companies) {
-			long defaultUserId = _userLocalService.getDefaultUserId(
-				company.getCompanyId());
+		List<LayoutPrototype> layoutPrototypes =
+			_layoutPrototypeLocalService.search(
+				company.getCompanyId(), null, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS, null);
 
-			List<LayoutPrototype> layoutPrototypes =
-				_layoutPrototypeLocalService.search(
-					company.getCompanyId(), null, QueryUtil.ALL_POS,
-					QueryUtil.ALL_POS, null);
-
+		try {
 			addBlogPage(
 				company.getCompanyId(), defaultUserId, layoutPrototypes);
 		}
+		catch (Exception e) {
+			throw new PortalException(e);
+		}
+	}
+
+	@Override
+	public void portalInstanceRemoved(Company company) throws PortalException {
 	}
 
 	protected void addBlogPage(
@@ -66,7 +72,7 @@ public class AddLayoutPrototypeAction {
 		Layout layout = DefaultLayoutPrototypesUtil.addLayoutPrototype(
 			companyId, defaultUserId, "layout-prototype-blog-title",
 			"layout-prototype-blog-description", "2_columns_iii",
-			layoutPrototypes, AddLayoutPrototypeAction.class.getClassLoader());
+			layoutPrototypes, getClass().getClassLoader());
 
 		if (layout == null) {
 			return;
@@ -98,13 +104,6 @@ public class AddLayoutPrototypeAction {
 	}
 
 	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
-
-		_companyLocalService = companyLocalService;
-	}
-
-	@Reference(unbind = "-")
 	protected void setLayoutPrototypeLocalService(
 		LayoutPrototypeLocalService layoutPrototypeLocalService) {
 
@@ -128,7 +127,6 @@ public class AddLayoutPrototypeAction {
 		_userLocalService = userLocalService;
 	}
 
-	private CompanyLocalService _companyLocalService;
 	private LayoutPrototypeLocalService _layoutPrototypeLocalService;
 	private UserLocalService _userLocalService;
 
