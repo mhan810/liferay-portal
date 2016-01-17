@@ -20,11 +20,11 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.model.Company;
+import com.liferay.portal.security.auth.CompanyThreadLocal;
 
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import com.liferay.portal.security.auth.CompanyThreadLocal;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -114,19 +114,13 @@ public class PortalInstanceLifecycleListenerManager {
 		}
 	}
 
-	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
-	protected void setModuleServiceLifecycle(
-		ModuleServiceLifecycle moduleServiceLifecycle) {
-	}
-
 	protected void removeCompany(Company company) {
 		_companies.remove(company);
 
 		for (PortalInstanceLifecycleListener portalInstanceLifecycleListener :
 				_portalInstanceLifecycleListeners) {
 
-			portalInstanceRemoved(
-				portalInstanceLifecycleListener, company);
+			portalInstanceRemoved(portalInstanceLifecycleListener, company);
 		}
 	}
 
@@ -135,6 +129,11 @@ public class PortalInstanceLifecycleListenerManager {
 
 		_portalInstanceLifecycleListeners.remove(
 			portalInstanceLifecycleListener);
+	}
+
+	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
+	protected void setModuleServiceLifecycle(
+		ModuleServiceLifecycle moduleServiceLifecycle) {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
