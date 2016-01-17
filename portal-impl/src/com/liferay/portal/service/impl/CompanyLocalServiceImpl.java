@@ -409,13 +409,27 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 			portletLocalService.checkPortlets(companyId);
 
-			Registry registry = RegistryUtil.getRegistry();
+			final Company companyToPublish = company;
 
-			ServiceRegistration<Company> serviceRegistration =
-				registry.registerService(Company.class, company);
+			TransactionCommitCallbackUtil.registerCallback(
+				new Callable<Void>() {
 
-			_companyServiceRegistrations.put(
-				company.getCompanyId(), serviceRegistration);
+					@Override
+					public Void call() throws Exception {
+						Registry registry = RegistryUtil.getRegistry();
+
+						ServiceRegistration<Company> serviceRegistration =
+							registry.registerService(
+								Company.class, companyToPublish);
+
+						_companyServiceRegistrations.put(
+							companyToPublish.getCompanyId(),
+							serviceRegistration);
+
+						return null;
+					}
+
+				});
 		}
 		finally {
 			_companyProviderWrapper.setCompanyProvider(currentCompanyProvider);
@@ -1355,29 +1369,27 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 		// Portal instance
 
-		Callable<Void> callable = new Callable<Void>() {
+		TransactionCommitCallbackUtil.registerCallback(new Callable<Void>() {
 
 			@Override
 			public Void call() throws Exception {
 				PortalInstances.removeCompany(companyId);
 
+				// Search indices
+
+				SearchEngineHelperUtil.removeCompany(companyId);
+
+				ServiceRegistration<Company> serviceRegistration =
+					_companyServiceRegistrations.remove(companyId);
+
+				if (serviceRegistration != null) {
+					serviceRegistration.unregister();
+				}
+
 				return null;
 			}
 
-		};
-
-		TransactionCommitCallbackUtil.registerCallback(callable);
-
-		// Search indices
-
-		SearchEngineHelperUtil.removeCompany(companyId);
-
-		ServiceRegistration<Company> serviceRegistration =
-			_companyServiceRegistrations.remove(companyId);
-
-		if (serviceRegistration != null) {
-			serviceRegistration.unregister();
-		}
+		});
 
 		return company;
 	}
