@@ -22,10 +22,8 @@ import com.liferay.portal.model.Company;
  */
 public interface PortalInstanceLifecycleListener {
 
-	public void portalInstanceAdded(Company company)
-		throws PortalException;
+	public void portalInstanceAdded(Company company) throws PortalException;
 
-	public void portalInstanceRemoved(Company company)
-		throws PortalException;
+	public void portalInstanceRemoved(Company company) throws PortalException;
 
 }
