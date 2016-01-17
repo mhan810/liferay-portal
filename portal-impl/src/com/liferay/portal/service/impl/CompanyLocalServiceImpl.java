@@ -147,6 +147,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 		Company company = checkCompany(webId, mx);
 
+		company = companyPersistence.fetchByPrimaryKey(company.getCompanyId());
+
 		company.setMx(mx);
 		company.setSystem(system);
 		company.setMaxUsers(maxUsers);
@@ -409,13 +411,17 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 			portletLocalService.checkPortlets(companyId);
 
-			Registry registry = RegistryUtil.getRegistry();
+			synchronized (_companyServiceRegistrations) {
+				if (!_companyServiceRegistrations.containsKey(companyId)) {
+					Registry registry = RegistryUtil.getRegistry();
 
-			ServiceRegistration<Company> serviceRegistration =
-				registry.registerService(Company.class, company);
+					ServiceRegistration<Company> serviceRegistration =
+						registry.registerService(Company.class, company);
 
-			_companyServiceRegistrations.put(
-				company.getCompanyId(), serviceRegistration);
+					_companyServiceRegistrations.put(
+						company.getCompanyId(), serviceRegistration);
+				}
+			}
 		}
 		finally {
 			_companyProviderWrapper.setCompanyProvider(currentCompanyProvider);
@@ -1361,23 +1367,23 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 			public Void call() throws Exception {
 				PortalInstances.removeCompany(companyId);
 
+				SearchEngineHelperUtil.removeCompany(companyId);
+
+				synchronized (_companyServiceRegistrations) {
+					ServiceRegistration<Company> serviceRegistration =
+						_companyServiceRegistrations.remove(companyId);
+
+					if (serviceRegistration != null) {
+						serviceRegistration.unregister();
+					}
+				}
+
 				return null;
 			}
 
 		};
 
 		TransactionCommitCallbackUtil.registerCallback(callable);
-
-		// Search indices
-
-		SearchEngineHelperUtil.removeCompany(companyId);
-
-		ServiceRegistration<Company> serviceRegistration =
-			_companyServiceRegistrations.remove(companyId);
-
-		if (serviceRegistration != null) {
-			serviceRegistration.unregister();
-		}
 
 		return company;
 	}
