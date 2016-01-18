@@ -157,18 +157,24 @@ public class LDAPServerConfigurationProviderImpl
 		Map<Long, Configuration> configurations = _configurations.get(
 			companyId);
 
-		if (configurations == null) {
-			configurations = _configurations.get(CompanyConstants.SYSTEM);
+		Map<Long, Configuration> defaultCompanyConfigurations =
+			_configurations.get(CompanyConstants.SYSTEM);
+
+		if (MapUtil.isEmpty(configurations) &&
+			MapUtil.isEmpty(defaultCompanyConfigurations)) {
+
+			return new HashMapDictionary<>();
 		}
 
-		if (configurations == null) {
-			return new HashMapDictionary<>();
+		if (MapUtil.isEmpty(configurations)) {
+			configurations = defaultCompanyConfigurations;
 		}
 
 		Configuration configuration = configurations.get(ldapServerId);
 
 		if (configuration == null) {
-			configuration = configurations.get(LDAPConstants.SYSTEM_DEFAULT);
+			configuration = defaultCompanyConfigurations.get(
+				LDAPConstants.SYSTEM_DEFAULT);
 		}
 
 		if (configuration == null) {
@@ -180,20 +186,20 @@ public class LDAPServerConfigurationProviderImpl
 
 	@Override
 	public List<LDAPServerConfiguration> getConfigurations(long companyId) {
+		return getConfigurations(companyId, true);
+	}
+
+	@Override
+	public List<LDAPServerConfiguration> getConfigurations(
+		long companyId, boolean useDefault) {
+
 		List<Dictionary<String, Object>> configurationsProperties =
-			getConfigurationsProperties(companyId);
+			getConfigurationsProperties(companyId, useDefault);
 
 		List<LDAPServerConfiguration> ldapServerConfigurations =
 			new ArrayList<>(configurationsProperties.size());
 
-		if (ListUtil.isEmpty(configurationsProperties)) {
-			LDAPServerConfiguration ldapServerConfiguration =
-				Configurable.createConfigurable(
-					getMetatype(), new HashMapDictionary<>());
-
-			ldapServerConfigurations.add(ldapServerConfiguration);
-		}
-		else {
+		if (!ListUtil.isEmpty(configurationsProperties)) {
 			for (Dictionary<String, Object> configurationProperties :
 					configurationsProperties) {
 
@@ -212,8 +218,19 @@ public class LDAPServerConfigurationProviderImpl
 	public List<Dictionary<String, Object>> getConfigurationsProperties(
 		long companyId) {
 
+		return getConfigurationsProperties(companyId, true);
+	}
+
+	@Override
+	public List<Dictionary<String, Object>> getConfigurationsProperties(
+		long companyId, boolean useDefault) {
+
 		Map<Long, Configuration> configurations = _configurations.get(
 			companyId);
+
+		if (MapUtil.isEmpty(configurations) && useDefault) {
+			configurations = _configurations.get(CompanyConstants.SYSTEM);
+		}
 
 		if (MapUtil.isEmpty(configurations)) {
 			return Collections.emptyList();

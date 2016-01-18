@@ -125,6 +125,11 @@ public abstract class CompanyScopedConfigurationProvider
 
 	@Override
 	public List<T> getConfigurations(long companyId) {
+		return getConfigurations(companyId, true);
+	}
+
+	@Override
+	public List<T> getConfigurations(long companyId, boolean useDefault) {
 		List<Dictionary<String, Object>> configurationsProperties =
 			getConfigurationsProperties(companyId);
 
@@ -155,7 +160,18 @@ public abstract class CompanyScopedConfigurationProvider
 	public List<Dictionary<String, Object>> getConfigurationsProperties(
 		long companyId) {
 
+		return getConfigurationsProperties(companyId, true);
+	}
+
+	@Override
+	public List<Dictionary<String, Object>> getConfigurationsProperties(
+		long companyId, boolean useDefault) {
+
 		Configuration configuration = _configurations.get(companyId);
+
+		if ((configuration == null) && useDefault) {
+			configuration = _configurations.get(CompanyConstants.SYSTEM);
+		}
 
 		if (configuration == null) {
 			return Collections.emptyList();

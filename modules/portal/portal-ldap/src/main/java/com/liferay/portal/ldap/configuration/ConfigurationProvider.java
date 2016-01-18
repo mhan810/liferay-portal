@@ -40,8 +40,13 @@ public interface ConfigurationProvider<T> {
 
 	public List<T> getConfigurations(long companyId);
 
+	public List<T> getConfigurations(long companyId, boolean useDefault);
+
 	public List<Dictionary<String, Object>> getConfigurationsProperties(
 		long companyId);
+
+	public List<Dictionary<String, Object>> getConfigurationsProperties(
+		long companyId, boolean useDefault);
 
 	public Class<T> getMetatype();
 
