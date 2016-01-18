@@ -158,7 +158,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 		// Virtual host
 
-		updateVirtualHostname(company.getCompanyId(), virtualHostname);
+		company = updateVirtualHostname(
+			company.getCompanyId(), virtualHostname);
 
 		return company;
 	}
@@ -242,7 +243,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 			// Virtual host
 
 			if (webId.equals(PropsValues.COMPANY_DEFAULT_WEB_ID)) {
-				updateVirtualHostname(companyId, _DEFAULT_VIRTUAL_HOST);
+				company = updateVirtualHostname(
+					companyId, _DEFAULT_VIRTUAL_HOST);
 			}
 
 			// Demo settings
@@ -844,7 +846,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 		// Virtual host
 
-		updateVirtualHostname(companyId, virtualHostname);
+		company = updateVirtualHostname(companyId, virtualHostname);
 
 		return company;
 	}
@@ -915,7 +917,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 		// Virtual host
 
-		updateVirtualHostname(companyId, virtualHostname);
+		company = updateVirtualHostname(companyId, virtualHostname);
 
 		return company;
 	}
@@ -1423,7 +1425,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		accountPersistence.update(account);
 	}
 
-	protected void updateVirtualHostname(long companyId, String virtualHostname)
+	protected Company updateVirtualHostname(
+			long companyId, String virtualHostname)
 		throws CompanyVirtualHostException {
 
 		if (Validator.isNotNull(virtualHostname)) {
@@ -1450,6 +1453,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 				virtualHostPersistence.remove(virtualHost);
 			}
 		}
+
+		return companyPersistence.fetchByPrimaryKey(companyId);
 	}
 
 	protected void validateLanguageIds(String languageIds)
