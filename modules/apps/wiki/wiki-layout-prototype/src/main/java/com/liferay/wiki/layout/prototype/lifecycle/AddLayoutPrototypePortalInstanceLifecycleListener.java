@@ -49,8 +49,7 @@ public class AddLayoutPrototypePortalInstanceLifecycleListener
 				company.getCompanyId(), null, QueryUtil.ALL_POS,
 				QueryUtil.ALL_POS, null);
 
-		addWikiPage(
-			company.getCompanyId(), defaultUserId, layoutPrototypes);
+		addWikiPage(company.getCompanyId(), defaultUserId, layoutPrototypes);
 	}
 
 	protected void addWikiPage(

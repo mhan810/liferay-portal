@@ -94,8 +94,7 @@ public class AddDefaultDocumentLibraryStructuresPortalInstanceLifecycleListener
 				"/document-library-structures.xml",
 			serviceContext);
 
-		addDLFileEntryTypes(
-			defaultUserId, group.getGroupId(), serviceContext);
+		addDLFileEntryTypes(defaultUserId, group.getGroupId(), serviceContext);
 
 		addDLRawMetadataStructures(
 			defaultUserId, group.getGroupId(), serviceContext);
