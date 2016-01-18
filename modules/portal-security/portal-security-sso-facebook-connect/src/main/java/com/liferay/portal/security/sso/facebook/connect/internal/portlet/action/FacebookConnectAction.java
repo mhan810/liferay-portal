@@ -172,10 +172,11 @@ public class FacebookConnectAction extends BaseStrutsAction {
 		user = _userLocalService.updateLastLogin(
 			user.getUserId(), user.getLoginIP());
 
-		user = _userLocalService.updatePasswordReset(user.getUserId(), false);
+		_userLocalService.updatePasswordReset(user.getUserId(), false);
 
-		user = _userLocalService.updateEmailAddressVerified(
-			user.getUserId(), true);
+		_userLocalService.updateEmailAddressVerified(user.getUserId(), true);
+
+		user = _userLocalService.getUserById(companyId, user.getUserId());
 
 		session.setAttribute(WebKeys.FACEBOOK_USER_EMAIL_ADDRESS, emailAddress);
 

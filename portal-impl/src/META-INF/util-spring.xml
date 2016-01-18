@@ -361,6 +361,11 @@
 			<bean class="com.liferay.portal.webcache.WebCachePoolImpl" />
 		</property>
 	</bean>
+	<bean id="com.liferay.portal.kernel.webserver.WebServerServletTokenUtil" class="com.liferay.portal.kernel.webserver.WebServerServletTokenUtil">
+		<property name="webServerServletToken">
+			<bean class="com.liferay.portal.webserver.WebServerServletTokenImpl" />
+		</property>
+	</bean>
 	<bean id="com.liferay.portal.kernel.words.Words" class="com.liferay.portal.words.WordsImpl" />
 	<bean id="com.liferay.portal.kernel.words.WordsUtil" class="com.liferay.portal.kernel.words.WordsUtil">
 		<property name="words" ref="com.liferay.portal.kernel.words.Words" />
@@ -536,11 +541,6 @@
 	<bean class="com.liferay.portal.verify.model.UserGroupVerifiableModel" />
 	<bean class="com.liferay.portal.verify.model.UserVerifiableModel" />
 	<bean class="com.liferay.portal.verify.model.WebSiteVerifiableModel" />
-	<bean id="com.liferay.portal.webserver.WebServerServletTokenUtil" class="com.liferay.portal.webserver.WebServerServletTokenUtil">
-		<property name="webServerServletToken">
-			<bean class="com.liferay.portal.webserver.WebServerServletTokenImpl" />
-		</property>
-	</bean>
 	<bean id="com.liferay.portal.workflow.LayoutRevisionWorkflowHandler" class="com.liferay.portal.workflow.LayoutRevisionWorkflowHandler" />
 	<bean id="com.liferay.portal.workflow.UserWorkflowHandler" class="com.liferay.portal.workflow.UserWorkflowHandler" />
 	<bean id="com.liferay.portlet.DefaultControlPanelEntry" class="com.liferay.portlet.DefaultControlPanelEntry" />
@@ -581,14 +581,6 @@
 			<bean class="com.liferay.portlet.expando.util.ExpandoBridgeIndexerImpl" />
 		</property>
 	</bean>
-	<bean id="com.liferay.portlet.rolesadmin.util.RolesAdmin" class="com.liferay.portlet.rolesadmin.util.RolesAdminImpl" />
-	<bean id="com.liferay.portlet.rolesadmin.util.RolesAdminUtil" class="com.liferay.portlet.rolesadmin.util.RolesAdminUtil">
-		<property name="rolesAdmin" ref="com.liferay.portlet.rolesadmin.util.RolesAdmin" />
-	</bean>
-	<bean id="com.liferay.sites.kernel.util.Sites" class="com.liferay.portlet.sites.util.SitesImpl" />
-	<bean id="com.liferay.sites.kernel.util.SitesUtil" class="com.liferay.sites.kernel.util.SitesUtil">
-		<property name="sites" ref="com.liferay.sites.kernel.util.Sites" />
-	</bean>
 	<bean id="com.liferay.portlet.social.service.permission.SocialActivityPermissionUtil" class="com.liferay.portlet.social.service.permission.SocialActivityPermissionUtil">
 		<property name="socialActivityPermission">
 			<bean class="com.liferay.portlet.social.service.permission.SocialActivityPermissionImpl" />
@@ -616,6 +608,14 @@
 	<bean id="com.liferay.portlet.usersadmin.util.ContactIndexer" class="com.liferay.portlet.usersadmin.util.ContactIndexer" />
 	<bean id="com.liferay.portlet.usersadmin.util.OrganizationIndexer" class="com.liferay.portlet.usersadmin.util.OrganizationIndexer" />
 	<bean id="com.liferay.portlet.usersadmin.util.UserIndexer" class="com.liferay.portlet.usersadmin.util.UserIndexer" />
+	<bean id="com.liferay.roles.admin.kernel.util.RolesAdmin" class="com.liferay.portlet.rolesadmin.util.RolesAdminImpl" />
+	<bean id="com.liferay.roles.admin.kernel.util.RolesAdminUtil" class="com.liferay.roles.admin.kernel.util.RolesAdminUtil">
+		<property name="rolesAdmin" ref="com.liferay.roles.admin.kernel.util.RolesAdmin" />
+	</bean>
+	<bean id="com.liferay.sites.kernel.util.Sites" class="com.liferay.portlet.sites.util.SitesImpl" />
+	<bean id="com.liferay.sites.kernel.util.SitesUtil" class="com.liferay.sites.kernel.util.SitesUtil">
+		<property name="sites" ref="com.liferay.sites.kernel.util.Sites" />
+	</bean>
 	<bean id="com.liferay.users.admin.kernel.util.UsersAdmin" class="com.liferay.portlet.usersadmin.util.UsersAdminImpl" />
 	<bean id="com.liferay.users.admin.kernel.util.UsersAdminUtil" class="com.liferay.users.admin.kernel.util.UsersAdminUtil">
 		<property name="usersAdmin" ref="com.liferay.users.admin.kernel.util.UsersAdmin" />
