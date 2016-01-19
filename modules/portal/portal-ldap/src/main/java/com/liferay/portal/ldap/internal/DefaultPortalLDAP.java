@@ -33,6 +33,7 @@ import com.liferay.portal.ldap.UserConverterKeys;
 import com.liferay.portal.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.ldap.configuration.SystemLDAPConfiguration;
+import com.liferay.portal.ldap.constants.LDAPConstants;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.security.ldap.LDAPSettings;
 import com.liferay.portal.security.ldap.PortalLDAP;
@@ -384,34 +385,7 @@ public class DefaultPortalLDAP implements PortalLDAP {
 			}
 		}
 
-		boolean hasProperties = false;
-
-		for (int ldapServerId = 0;; ldapServerId++) {
-			LDAPServerConfiguration ldapServerConfiguration =
-				_ldapServerConfigurationProvider.getConfiguration(
-					companyId, ldapServerId);
-
-			String providerUrl = ldapServerConfiguration.baseProviderURL();
-
-			if (Validator.isNull(providerUrl)) {
-				break;
-			}
-
-			hasProperties = true;
-
-			if (hasUser(ldapServerId, companyId, screenName, emailAddress)) {
-				return ldapServerId;
-			}
-		}
-
-		if (hasProperties || ldapServerConfigurations.isEmpty()) {
-			return 0;
-		}
-
-		LDAPServerConfiguration ldapServerConfiguration =
-			ldapServerConfigurations.get(0);
-
-		return ldapServerConfiguration.ldapServerId();
+		return LDAPConstants.SYSTEM_DEFAULT;
 	}
 
 	@Override
