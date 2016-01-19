@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.log.LogUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropertiesUtil;
 import com.liferay.portal.kernel.util.Props;
@@ -383,6 +384,13 @@ public class DefaultPortalLDAP implements PortalLDAP {
 
 				return ldapServerConfiguration.ldapServerId();
 			}
+		}
+
+		if (!ListUtil.isEmpty(ldapServerConfigurations)) {
+			LDAPServerConfiguration ldapServerConfiguration =
+				ldapServerConfigurations.get(0);
+
+			return ldapServerConfiguration.ldapServerId();
 		}
 
 		return LDAPConstants.SYSTEM_DEFAULT;
