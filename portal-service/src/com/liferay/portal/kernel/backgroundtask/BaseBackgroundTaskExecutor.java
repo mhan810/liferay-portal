@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
@@ -34,6 +35,12 @@ public abstract class BaseBackgroundTaskExecutor
 
 	@Override
 	public abstract BackgroundTaskExecutor clone();
+
+	@Override
+	public String generateLockKey(BackgroundTask backgroundTask) {
+		return backgroundTask.getTaskExecutorClassName() + StringPool.POUND +
+			getIsolationLevel();
+	}
 
 	@Override
 	public BackgroundTaskStatusMessageTranslator
