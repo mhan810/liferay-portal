@@ -172,7 +172,9 @@ public class LDAPServerConfigurationProviderImpl
 
 		Configuration configuration = configurations.get(ldapServerId);
 
-		if (configuration == null) {
+		if ((configuration == null) &&
+			!MapUtil.isEmpty(defaultCompanyConfigurations)) {
+
 			configuration = defaultCompanyConfigurations.get(
 				LDAPConstants.SYSTEM_DEFAULT);
 		}
@@ -235,7 +237,7 @@ public class LDAPServerConfigurationProviderImpl
 		}
 
 		List<Dictionary<String, Object>> configurationsProperties =
-			new ArrayList<>(configurations.size());
+			new ArrayList<>();
 
 		if (MapUtil.isEmpty(configurations) && useDefault) {
 			configurationsProperties.add(
