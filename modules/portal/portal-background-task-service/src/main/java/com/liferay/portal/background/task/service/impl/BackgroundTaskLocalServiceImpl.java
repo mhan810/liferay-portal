@@ -24,6 +24,8 @@ import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatusRegistry;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskThreadLocalManager;
 import com.liferay.portal.kernel.cluster.Clusterable;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
@@ -559,7 +561,18 @@ public class BackgroundTaskLocalServiceImpl
 			(backgroundTask.getStatus() !=
 				BackgroundTaskConstants.STATUS_QUEUED)) {
 
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"No BackgroundTask found in STATUS_QUEUED with " +
+						"backgroundTaskId: " + backgroundTaskId);
+			}
+
 			return;
+		}
+
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				"Attempting to resume BackgroundTask: " + backgroundTaskId);
 		}
 
 		Message message = new Message();
@@ -573,6 +586,11 @@ public class BackgroundTaskLocalServiceImpl
 	@Clusterable(onMaster = true)
 	@Override
 	public void triggerBackgroundTask(long backgroundTaskId) {
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				"Attempting to trigger BackgroundTask: " + backgroundTaskId);
+		}
+
 		Message message = new Message();
 
 		message.put(
@@ -658,6 +676,9 @@ public class BackgroundTaskLocalServiceImpl
 
 		_backgroundTaskThreadLocalManager = backgroundTaskThreadLocalManager;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		BackgroundTaskLocalServiceImpl.class);
 
 	@ServiceReference(type = BackgroundTaskStatusRegistry.class)
 	private BackgroundTaskStatusRegistry _backgroundTaskStatusRegistry;
