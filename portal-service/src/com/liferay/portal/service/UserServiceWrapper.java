@@ -979,12 +979,10 @@ public class UserServiceWrapper implements UserService,
 	* @return the user
 	*/
 	@Override
-	public com.liferay.portal.model.User updatePassword(long userId,
-		java.lang.String password1, java.lang.String password2,
-		boolean passwordReset)
+	public void updatePassword(long userId, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _userService.updatePassword(userId, password1, password2,
-			passwordReset);
+		_userService.updatePassword(userId, password1, password2, passwordReset);
 	}
 
 	/**
