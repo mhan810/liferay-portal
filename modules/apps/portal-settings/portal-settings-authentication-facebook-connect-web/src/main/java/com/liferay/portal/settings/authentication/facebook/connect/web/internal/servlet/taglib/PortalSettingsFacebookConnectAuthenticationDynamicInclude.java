@@ -47,7 +47,7 @@ public class PortalSettingsFacebookConnectAuthenticationDynamicInclude
 
 	@Override
 	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.portal.security.sso.facebook.connect)",
+		target = "(osgi.web.symbolicname=com.liferay.portal.settings.authentication.facebook.connect.web)",
 		unbind = "-"
 	)
 	protected void setServletContext(ServletContext servletContext) {
