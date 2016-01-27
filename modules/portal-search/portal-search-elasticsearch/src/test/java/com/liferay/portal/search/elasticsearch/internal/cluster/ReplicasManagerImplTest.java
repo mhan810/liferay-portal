@@ -63,7 +63,8 @@ public class ReplicasManagerImplTest {
 
 		ClusterAssert.assert1PrimaryShardAnd2Nodes(elasticsearchFixture0);
 
-		elasticsearchFixture1.createIndex("liferay-" + String.valueOf(companyId));
+		elasticsearchFixture1.createIndex(
+			"liferay-" + String.valueOf(companyId));
 
 		ClusterAssert.assert2PrimaryShardsAnd2Nodes(elasticsearchFixture1);
 

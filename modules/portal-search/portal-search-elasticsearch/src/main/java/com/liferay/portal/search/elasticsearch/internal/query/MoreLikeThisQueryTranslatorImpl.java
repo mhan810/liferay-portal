@@ -56,8 +56,9 @@ public class MoreLikeThisQueryTranslatorImpl
 			for (String documentUID : moreLikeThisQuery.getDocumentUIDs()) {
 				MoreLikeThisQueryBuilder.Item moreLikeThisQueryBuilderItem =
 					new MoreLikeThisQueryBuilder.Item(
-						"liferay-" + String.valueOf(moreLikeThisQuery.getCompanyId()), type,
-						documentUID);
+						"liferay-" +
+							String.valueOf(moreLikeThisQuery.getCompanyId()),
+						type, documentUID);
 
 				moreLikeThisQueryBuilder.like(moreLikeThisQueryBuilderItem);
 			}
