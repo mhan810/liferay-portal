@@ -79,7 +79,7 @@ public class SearchResponseScroller {
 
 	public void prepare() throws Exception {
 		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch(
-			String.valueOf(_searchContext.getCompanyId()));
+			"liferay-" + String.valueOf(_searchContext.getCompanyId()));
 
 		searchRequestBuilder.addField(Field.UID);
 		searchRequestBuilder.setQuery(_queryBuilder);

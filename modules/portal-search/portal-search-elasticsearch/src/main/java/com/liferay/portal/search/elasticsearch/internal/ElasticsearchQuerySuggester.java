@@ -115,7 +115,7 @@ public class ElasticsearchQuerySuggester extends BaseQuerySuggester {
 			suggester, searchContext);
 
 		SuggestRequestBuilder suggestRequestBuilder = client.prepareSuggest(
-			String.valueOf(searchContext.getCompanyId()));
+			"liferay-"  + String.valueOf(searchContext.getCompanyId()));
 
 		for (SuggestBuilder.SuggestionBuilder<?> suggestionBuilder :
 				suggestBuilder.getSuggestion()) {

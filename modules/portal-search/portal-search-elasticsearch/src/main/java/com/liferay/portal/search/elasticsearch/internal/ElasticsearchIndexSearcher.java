@@ -533,7 +533,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			return selectedIndexNames;
 		}
 
-		return new String[] {String.valueOf(searchContext.getCompanyId())};
+		return new String[] {"liferay-" + String.valueOf(searchContext.getCompanyId())};
 	}
 
 	protected String[] getSelectedTypes(QueryConfig queryConfig) {
