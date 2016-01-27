@@ -105,7 +105,7 @@ public class FacebookConnectNavigationPreDynamicInclude
 	}
 
 	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.portal.security.sso.facebook.connect)",
+		target = "(osgi.web.symbolicname=com.liferay.login.authentication.facebook.connect.web)",
 		unbind = "-"
 	)
 	protected void setServletContext(ServletContext servletContext) {
