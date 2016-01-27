@@ -129,7 +129,7 @@ public class CompanyIndexFactoryTest {
 		createIndices();
 
 		GetIndexResponse getIndexResponse = _elasticsearchFixture.getIndex(
-			String.valueOf(_COMPANY_ID));
+			"liferay-" + String.valueOf(_COMPANY_ID));
 
 		ImmutableOpenMap<String, ImmutableOpenMap<String, MappingMetaData>>
 			mappings = getIndexResponse.mappings();
@@ -199,7 +199,7 @@ public class CompanyIndexFactoryTest {
 
 		FieldMappingAssert.assertAnalyzer(
 			analyzer, field, LiferayTypeMappingsConstants.LIFERAY_DOCUMENT_TYPE,
-			String.valueOf(_COMPANY_ID),
+			"liferay-" + String.valueOf(_COMPANY_ID),
 			_elasticsearchFixture.getIndicesAdminClient());
 	}
 
@@ -210,7 +210,7 @@ public class CompanyIndexFactoryTest {
 	}
 
 	protected Settings getIndexSettings() {
-		String name = String.valueOf(_COMPANY_ID);
+		String name = "liferay-" + String.valueOf(_COMPANY_ID);
 
 		GetIndexResponse getIndexResponse = _elasticsearchFixture.getIndex(
 			name);
@@ -225,7 +225,7 @@ public class CompanyIndexFactoryTest {
 		Client client = _elasticsearchFixture.getClient();
 
 		IndexRequestBuilder indexRequestBuilder = client.prepareIndex(
-			String.valueOf(_COMPANY_ID),
+			"liferay-" + String.valueOf(_COMPANY_ID),
 			LiferayTypeMappingsConstants.LIFERAY_DOCUMENT_TYPE);
 
 		String field = RandomTestUtil.randomString() + "_ja";

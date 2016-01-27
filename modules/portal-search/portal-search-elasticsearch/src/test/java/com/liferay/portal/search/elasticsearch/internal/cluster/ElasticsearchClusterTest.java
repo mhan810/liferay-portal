@@ -53,7 +53,7 @@ public class ElasticsearchClusterTest {
 		Arrays.sort(targetIndexNames);
 
 		Assert.assertEquals(
-			"[0, 142857, 42]", Arrays.toString(targetIndexNames));
+			"[liferay-0, liferay-142857, liferay-42]", Arrays.toString(targetIndexNames));
 	}
 
 	protected ReplicasClusterContext createReplicasClusterContext() {
