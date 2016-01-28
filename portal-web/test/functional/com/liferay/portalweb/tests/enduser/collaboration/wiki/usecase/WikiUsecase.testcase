@@ -152,7 +152,7 @@
 	<command name="AddPageWithCustomContentHeading" priority="4">
 		<execute macro="WikiNavigator#gotoAllPagesPG" />
 
-		<execute function="Click#makeVisibleClickAt" locator1="Portlet#ICON_PLUS_SIGN" />
+		<execute macro="WikiNavigator#gotoAddPageViaPG" />
 
 		<execute macro="WikiEntry#addPageTitle">
 			<var name="wikiPageTitle" value="Wiki Page Title" />

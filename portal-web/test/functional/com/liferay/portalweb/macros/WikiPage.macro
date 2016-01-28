@@ -303,7 +303,7 @@
 	</command>
 
 	<command name="addPageWithWorkflowPG">
-		<execute function="Click#makeVisibleClickAt" locator1="Portlet#ICON_PLUS_SIGN" />
+		<execute macro="WikiNavigator#gotoAddPageViaPG" />
 
 		<execute function="Type#typeAlloyEditor" locator1="AlloyEditor#TITLE_FIELD" value1="${wikiPageTitle}" />
 
@@ -315,7 +315,7 @@
 	</command>
 
 	<command name="addPageWithWorkflowPGViaWD">
-		<execute function="Click#makeVisibleClickAt" locator1="Portlet#ICON_PLUS_SIGN" />
+		<execute macro="WikiNavigator#gotoAddPageViaPG" />
 
 		<execute function="Type#typeAlloyEditor" locator1="AlloyEditor#TITLE_FIELD" value1="${wikiPageTitle}" />
 
@@ -353,9 +353,7 @@
 	</command>
 
 	<command name="addPG">
-		<execute function="Click#makeVisibleClickAt" locator1="Portlet#ICON_PLUS_SIGN" />
-
-		<execute function="Click" locator1="Wiki#ADD_PAGE" />
+		<execute macro="WikiNavigator#gotoAddPageViaPG" />
 
 		<execute function="AssertElementPresent" locator1="AlloyEditor#TITLE_FIELD" />
 
