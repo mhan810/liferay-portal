@@ -89,35 +89,32 @@ DLPortletInstanceSettingsHelper dlPortletInstanceSettingsHelper = new DLPortletI
 
 				<liferay-ui:search-container-column-text>
 					<div class="image-link preview" <%= (hasAudio || hasVideo) ? "data-options=\"height=" + playerHeight + "&thumbnailURL=" + HtmlUtil.escapeURL(DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, "&videoThumbnail=1")) + "&width=640" + dataOptions + "\"" : StringPool.BLANK %> href="<%= imageURL %>" thumbnailId="<%= thumbnailId %>" title="<%= HtmlUtil.escapeAttribute(fileEntry.getTitle()) %>">
-						<liferay-frontend:vertical-card
-							actionJsp='<%= dlPortletInstanceSettingsHelper.isShowActions() ? "/image_gallery_display/image_action.jsp" : StringPool.BLANK %>'
-							actionJspServletContext="<%= application %>"
-							cssClass="entry-display-style"
-							imageUrl="<%= imageURL %>"
-							resultRow="<%= row %>"
-							title="<%= fileEntry.getTitle() %>"
-						>
-
-							<%
-							List assetTags = AssetTagServiceUtil.getTags(DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId());
-							%>
-
-							<liferay-frontend:vertical-card-footer>
-								<div id="<portlet:namespace />categorizationContainer_<%= fileEntry.getFileEntryId() %>" style="display: none;">
-									<span <%= !assetTags.isEmpty() ? "class=\"has-tags\"" : "" %>>
-										<liferay-ui:asset-categories-summary
-											className="<%= DLFileEntryConstants.getClassName() %>"
-											classPK="<%= fileEntry.getFileEntryId() %>"
-										/>
-									</span>
-
-									<liferay-ui:asset-tags-summary
-										className="<%= DLFileEntryConstants.getClassName() %>"
-										classPK="<%= fileEntry.getFileEntryId() %>"
-									/>
-								</div>
-							</liferay-frontend:vertical-card-footer>
-						</liferay-frontend:vertical-card>
+						<c:choose>
+							<c:when test="<%= Validator.isNull(imageURL) %>">
+								<liferay-frontend:icon-vertical-card
+									actionJsp='<%= dlPortletInstanceSettingsHelper.isShowActions() ? "/image_gallery_display/image_action.jsp" : StringPool.BLANK %>'
+									actionJspServletContext="<%= application %>"
+									cssClass="entry-display-style"
+									icon="documents-and-media"
+									resultRow="<%= row %>"
+									title="<%= fileEntry.getTitle() %>"
+								>
+									<%@ include file="/image_gallery_display/file_entry_vertical_card.jspf" %>
+								</liferay-frontend:icon-vertical-card>
+							</c:when>
+							<c:otherwise>
+								<liferay-frontend:vertical-card
+									actionJsp='<%= dlPortletInstanceSettingsHelper.isShowActions() ? "/image_gallery_display/image_action.jsp" : StringPool.BLANK %>'
+									actionJspServletContext="<%= application %>"
+									cssClass="entry-display-style"
+									imageUrl="<%= imageURL %>"
+									resultRow="<%= row %>"
+									title="<%= fileEntry.getTitle() %>"
+								>
+									<%@ include file="/image_gallery_display/file_entry_vertical_card.jspf" %>
+								</liferay-frontend:vertical-card>
+							</c:otherwise>
+						</c:choose>
 					</div>
 				</liferay-ui:search-container-column-text>
 			</c:when>
@@ -167,7 +164,7 @@ embeddedPlayerURL.setWindowState(LiferayWindowState.POP_UP);
 	var maxHeight = (viewportRegion.height / 2);
 	var maxWidth = (viewportRegion.width / 2);
 
-	new A.ImageViewer(
+	var imageViewer = new A.ImageViewer(
 		{
 			after: {
 				<c:if test="<%= dlPortletInstanceSettingsHelper.isShowActions() %>">
@@ -223,4 +220,14 @@ embeddedPlayerURL.setWindowState(LiferayWindowState.POP_UP);
 			zIndex: ++Liferay.zIndex.WINDOW
 		}
 	).render();
+
+	var onClickLinksDefaultFn = imageViewer._onClickLinks;
+
+	imageViewer._onClickLinks = function(event) {
+		if (!event.target.ancestor('.dropdown')) {
+			onClickLinksDefaultFn.call(this, event);
+		}
+	};
+
+	imageViewer.set('links', '#<portlet:namespace />imageGalleryAssetInfo .image-link.preview');
 </aui:script>
