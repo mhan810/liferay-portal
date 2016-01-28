@@ -34,15 +34,10 @@
 			</then>
 		</if>
 
-		<for list="Application Display Template,Audience Targeting,Blogs,Bookmarks,Calendar,Documents and Media,Dynamic Data Lists,Message Boards,Mobile Device Families,Polls,Shopping,Web Content,Wiki" param="contentName">
+		<for list="Application Display Template,Blogs,Bookmarks,Calendar,Documents and Media,Dynamic Data Lists,Message Boards,Mobile Device Families,Polls,Shopping,Web Content,Wiki" param="contentName">
 			<var name="key_contentName" value="${contentName}" />
 
-			<if>
-				<condition function="IsElementPresent" locator1="Checkbox#STAGED_CONTENT" />
-				<then>
-					<execute function="Check#checkToggleSwitch" locator1="Checkbox#STAGED_CONTENT" />
-				</then>
-			</if>
+			<execute function="Check#checkToggleSwitch" locator1="Checkbox#STAGED_CONTENT" />
 		</for>
 
 		<if>
