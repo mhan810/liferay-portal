@@ -1508,7 +1508,7 @@
 		</execute>
 
 		<execute macro="WikiEntry#viewPageContentBody">
-			<var name="wikiPageContent" value="Edited Wiki Page Content" />
+			<var name="wikiPageContent" value="Wiki Page Content" />
 		</execute>
 	</command>
 </definition>
