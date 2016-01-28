@@ -1503,6 +1503,8 @@
 			<var name="wikiPageTitle" value="Wiki Page Title" />
 		</execute>
 
+		<execute macro="WikiNavigator#gotoAllPagesPG" />
+
 		<execute macro="WikiNavigator#gotoEntryViaPGTable">
 			<var name="wikiPageTitle" value="Wiki Page Title" />
 		</execute>
