@@ -192,7 +192,8 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 
 		CloseIndexRequestBuilder closeIndexRequestBuilder =
 			indicesAdminClient.prepareClose(
-				"liferay-" + String.valueOf(companyId));
+				_elasticsearchConnectionManager.getIndexNamePrefix() +
+					String.valueOf(companyId));
 
 		try {
 			CloseIndexResponse closeIndexResponse =
@@ -212,7 +213,8 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 				_BACKUP_REPOSITORY_NAME, backupName);
 
 		restoreSnapshotRequestBuilder.setIndices(
-			"liferay-" + String.valueOf(companyId));
+			_elasticsearchConnectionManager.getIndexNamePrefix() +
+				String.valueOf(companyId));
 		restoreSnapshotRequestBuilder.setWaitForCompletion(true);
 
 		try {

@@ -86,6 +86,10 @@ public class ElasticsearchConnectionManager {
 		return _elasticsearchConnections.get(_operationMode);
 	}
 
+	public String getIndexNamePrefix() {
+		return _indexNamePrefix;
+	}
+
 	public synchronized void registerCompanyId(long companyId) {
 		_companyIds.put(companyId, companyId);
 	}
@@ -135,6 +139,8 @@ public class ElasticsearchConnectionManager {
 			ElasticsearchConfiguration.class, properties);
 
 		activate(_elasticsearchConfiguration.operationMode());
+
+		_indexNamePrefix = _elasticsearchConfiguration.indexNamePrefix();
 	}
 
 	protected void activate(OperationMode operationMode) {
@@ -149,6 +155,8 @@ public class ElasticsearchConnectionManager {
 			ElasticsearchConfiguration.class, properties);
 
 		modify(_elasticsearchConfiguration.operationMode());
+
+		_indexNamePrefix = _elasticsearchConfiguration.indexNamePrefix();
 	}
 
 	protected synchronized void modify(OperationMode operationMode) {
@@ -213,6 +221,7 @@ public class ElasticsearchConnectionManager {
 	private final Map<OperationMode, ElasticsearchConnection>
 		_elasticsearchConnections = new HashMap<>();
 	private IndexFactory _indexFactory;
+	private String _indexNamePrefix;
 	private OperationMode _operationMode;
 
 }

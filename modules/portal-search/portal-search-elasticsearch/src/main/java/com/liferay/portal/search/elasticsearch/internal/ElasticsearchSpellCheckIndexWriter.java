@@ -128,11 +128,14 @@ public class ElasticsearchSpellCheckIndexWriter
 		try {
 			Client client = _elasticsearchConnectionManager.getClient();
 
+			String indexNamePrefix =
+				_elasticsearchConnectionManager.getIndexNamePrefix();
+
 			MatchAllQueryBuilder matchAllQueryBuilder =
 				QueryBuilders.matchAllQuery();
 
 			searchResponseScroller = new SearchResponseScroller(
-				client, searchContext, matchAllQueryBuilder,
+				client, indexNamePrefix, searchContext, matchAllQueryBuilder,
 				TimeValue.timeValueSeconds(30), indexType);
 
 			searchResponseScroller.prepare();

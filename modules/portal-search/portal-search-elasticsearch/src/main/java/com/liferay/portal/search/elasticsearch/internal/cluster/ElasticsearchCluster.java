@@ -119,11 +119,13 @@ public class ElasticsearchCluster {
 				Company company = companies.get(i);
 
 				targetIndexNames[i] =
-					"liferay-" + String.valueOf(company.getCompanyId());
+					_elasticsearchConnectionManager.getIndexNamePrefix() +
+						String.valueOf(company.getCompanyId());
 			}
 
 			targetIndexNames[targetIndexNames.length - 1] =
-				"liferay-" + CompanyConstants.SYSTEM_STRING;
+				_elasticsearchConnectionManager.getIndexNamePrefix() +
+					CompanyConstants.SYSTEM_STRING;
 
 			return targetIndexNames;
 		}
