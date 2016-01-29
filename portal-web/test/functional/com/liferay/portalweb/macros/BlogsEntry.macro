@@ -795,8 +795,9 @@
 	<command name="gotoScheduledEditPG">
 		<var name="key_entryTitle" value="${entryTitle}" />
 
-		<execute function="AssertTextEquals" locator1="PGBlogs#SCHEDULED_ENTRY_TITLE" value1="${entryTitle}" />
-		<execute function="AssertClick" locator1="PGBlogs#SCHEDULED_ENTRY_EDIT" value1="Edit" />
+		<execute function="Click" locator1="Blogs#SCHEDULED_ENTRY_VERTICAL_ELLIPSIS" />
+
+		<execute function="AssertClick" locator1="MenuItem#EDIT" value1="Edit" />
 	</command>
 
 	<command name="gotoScheduledPG">
@@ -1423,12 +1424,19 @@
 	</command>
 
 	<command name="viewEntryViaBlogsAggregatorPG">
-		<execute function="AssertTextEquals" locator1="PGBlogsAggregator#ENTRY_ABSTRACT_DESCRIPTION" value1="${entryAbstractDescription}" />
-		<execute function="AssertClick#assertPartialTextClickAt" locator1="PGBlogsAggregator#ENTRY_READ_MORE" value1="Read More" />
+		<execute function="AssertTextEquals" locator1="BlogsAggregator#ENTRY_ABSTRACT_DESCRIPTION" value1="${entryAbstractDescription}" />
+		
+		<execute function="AssertClick#assertPartialTextClickAt" locator1="BlogsAggregator#ENTRY_READ_MORE" value1="Read More" />
 
-		<execute function="AssertTextEquals" locator1="PGBlogs#PORTLET_TITLE" value1="Blogs" />
-		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_TITLE" value1="${entryTitle}" />
-		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_CONTENT" value1="${entryContent}" />
+		<execute function="AssertTextEquals" locator1="Portlet#H2_HEADER" value1="Blogs" />
+
+		<var name="key_entryTitle" value="${entryTitle}" />
+
+		<execute function="AssertTextEquals" locator1="BlogsEntry#TITLE" value1="${entryTitle}" />
+
+		<var name="key_entryContent" value="${entryContent}" />
+
+		<execute function="AssertTextEquals" locator1="BlogsEntry#CONTENT" value1="${entryContent}" />
 	</command>
 
 	<command name="viewEntryWithWorkflow">
@@ -1644,18 +1652,11 @@
 	</command>
 
 	<command name="viewScheduledCP">
+		<execute function="AssertTextEquals" locator1="Blogs#SCHEDULED_ENTRY_STATUS" value1="Scheduled" />
+
 		<var name="key_entryTitle" value="${entryTitle}" />
 
-		<execute function="AssertTextEquals" locator1="Blogs#ENTRY_TABLE_STATUS" value1="Scheduled" />
-		<execute function="AssertTextEquals" locator1="Blogs#ENTRY_TABLE_TITLE" value1="${entryTitle}" />
-	</command>
-
-	<command name="viewScheduledPG">
-		<var name="key_entryTitle" value="${entryTitle}" />
-
-		<execute function="AssertTextEquals" locator1="PGBlogs#SCHEDULED_ENTRY_STATUS" value1="Scheduled" />
-		<execute function="AssertTextEquals" locator1="PGBlogs#SCHEDULED_ENTRY_TITLE" value1="${entryTitle}" />
-		<execute function="AssertTextEquals" locator1="PGBlogs#SCHEDULED_ENTRY_CONTENT" value1="${entryContent}" />
+		<execute function="AssertTextEquals" locator1="Blogs#SCHEDULED_ENTRY_TITLE" value1="${entryTitle}" />
 	</command>
 
 	<command name="viewSubtitle">
