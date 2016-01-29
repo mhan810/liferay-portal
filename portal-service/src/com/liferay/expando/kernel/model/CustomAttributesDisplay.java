@@ -12,18 +12,29 @@
  * details.
  */
 
-package com.liferay.portlet.expando.util;
+package com.liferay.expando.kernel.model;
 
-import com.liferay.portal.kernel.search.Document;
-import com.liferay.portlet.expando.model.ExpandoBridge;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 
 /**
- * @author Raymond Augé
+ * @author Jorge Ferrer
  */
-public interface ExpandoBridgeIndexer {
+public interface CustomAttributesDisplay {
 
-	public void addAttributes(Document document, ExpandoBridge expandoBridge);
+	public String getClassName();
 
-	public String encodeFieldName(String columnName);
+	public String getIconCssClass();
+
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
+	public String getIconPath(ThemeDisplay themeDisplay);
+
+	public String getPortletId();
+
+	public void setClassNameId(long classNameId);
+
+	public void setPortletId(String portletId);
 
 }

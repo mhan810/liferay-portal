@@ -12,29 +12,13 @@
  * details.
  */
 
-package com.liferay.portlet.expando.model;
-
-import com.liferay.portal.kernel.theme.ThemeDisplay;
+package com.liferay.expando.kernel.model;
 
 /**
- * @author Jorge Ferrer
+ * @author Raymond Augé
  */
-public interface CustomAttributesDisplay {
+public class ExpandoTableConstants {
 
-	public String getClassName();
-
-	public String getIconCssClass();
-
-	/**
-	 * @deprecated As of 7.0.0, with no direct replacement
-	 */
-	@Deprecated
-	public String getIconPath(ThemeDisplay themeDisplay);
-
-	public String getPortletId();
-
-	public void setClassNameId(long classNameId);
-
-	public void setPortletId(String portletId);
+	public static final String DEFAULT_TABLE_NAME = "CUSTOM_FIELDS";
 
 }
