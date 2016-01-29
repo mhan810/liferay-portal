@@ -15,7 +15,7 @@ dependencies {
 	compile group: "org.springframework", name: "spring-context", version: "3.2.15.RELEASE"
 	compile project(":portal:portal-instance-lifecycle")
 	compile project(":portal:portal-upgrade")
-	compile project(":portal:portal-workflow-kaleo-api")
+	compile project(":portal-workflow:portal-workflow-kaleo-api")
 
 	provided group: "com.liferay.portal", name: "util-java", version: liferay.portalVersion
 	provided group: "org.jabsorb", name: "jabsorb", version: "1.3.1"
