@@ -12,24 +12,28 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script;
+package com.liferay.portal.workflow.kaleo.internal.runtime.notification.recipient.script;
 
+import com.liferay.portal.kernel.bi.rules.Fact;
+import com.liferay.portal.kernel.bi.rules.Query;
+import com.liferay.portal.kernel.bi.rules.RulesEngineUtil;
+import com.liferay.portal.kernel.bi.rules.RulesResourceRetriever;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.scripting.ScriptingUtil;
+import com.liferay.portal.kernel.resource.StringResourceRetriever;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoNotificationRecipient;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
-import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderUtil;
-import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
+import com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.NotificationRecipientEvaluator;
+import com.liferay.portal.workflow.kaleo.runtime.util.ClassLoaderUtil;
+import com.liferay.portal.workflow.kaleo.runtime.util.RulesContextBuilder;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Michael C. Han
  */
-public class ScriptingNotificationRecipientEvaluator
+public class DRLNotificationRecipientEvaluator
 	implements NotificationRecipientEvaluator {
 
 	@Override
@@ -38,27 +42,22 @@ public class ScriptingNotificationRecipientEvaluator
 			ExecutionContext executionContext)
 		throws PortalException {
 
+		RulesResourceRetriever rulesResourceRetriever =
+			new RulesResourceRetriever(
+				new StringResourceRetriever(
+					kaleoNotificationRecipient.getRecipientScript()));
+		List<Fact<?>> facts = RulesContextBuilder.buildRulesContext(
+			executionContext);
+		Query query = Query.createStandardQuery();
+
 		String[] recipientScriptRequiredContexts = StringUtil.split(
 			kaleoNotificationRecipient.getRecipientScriptContexts());
 
-		Map<String, Object> inputObjects =
-			ScriptingContextBuilderUtil.buildScriptingContext(executionContext);
-
-		return ScriptingUtil.eval(
-			null, inputObjects, _outputNames,
-			kaleoNotificationRecipient.getRecipientScriptLanguage(),
-			kaleoNotificationRecipient.getRecipientScript(),
+		ClassLoader[] classLoaders = ClassLoaderUtil.getClassLoaders(
 			recipientScriptRequiredContexts);
-	}
 
-	private static final Set<String> _outputNames = new HashSet<>();
-
-	static {
-		_outputNames.add(
-			ScriptingNotificationRecipientConstants.ROLES_RECIPIENT);
-		_outputNames.add(
-			ScriptingNotificationRecipientConstants.USER_RECIPIENT);
-		_outputNames.add(WorkflowContextUtil.WORKFLOW_CONTEXT_NAME);
+		return RulesEngineUtil.execute(
+			rulesResourceRetriever, facts, query, classLoaders);
 	}
 
 }

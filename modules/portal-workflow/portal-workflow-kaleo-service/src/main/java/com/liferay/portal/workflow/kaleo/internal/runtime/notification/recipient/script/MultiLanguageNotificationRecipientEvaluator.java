@@ -12,12 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script;
+package com.liferay.portal.workflow.kaleo.internal.runtime.notification.recipient.script;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.workflow.kaleo.definition.ScriptLanguage;
 import com.liferay.portal.workflow.kaleo.model.KaleoNotificationRecipient;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
+import com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.NotificationRecipientEvaluator;
 
 import java.util.HashMap;
 import java.util.Map;
