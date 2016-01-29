@@ -24,6 +24,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>ENTRY_CHECKBOX</td>
+	<td>//ul[contains(@id,'blogEntriesSearchContainer') and contains(.,'${key_entryTitle}')]//input[@type='checkbox']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>MY_PENDING_ENTRIES_PANEL_COLLAPSED</td>
 	<td>//div[contains(@class,'panel') and contains(@role,'tab')]//a[contains(@data-toggle,'collapse') and contains(.,'My Pending Entries')]</td>
 	<td></td>
@@ -34,8 +39,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>ENTRY_CHECKBOX</td>
-	<td>//ul[contains(@id,'blogEntriesSearchContainer') and contains(.,'${key_entryTitle}')]//input[@type='checkbox']</td>
+	<td>PERMISSIONS_ERROR_MESSAGE</td>
+	<td>//div[contains(@class,'alert') and contains(@class, 'alert-danger') and contains(.,'You do not have the required permissions')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -46,11 +51,6 @@
 <tr>
 	<td>UNSUBSCRIBE_LINK</td>
 	<td>//div[contains(@class,'subscribe')]/span/a/span[contains(.,'Unsubscribe')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>PERMISSIONS_ERROR_MESSAGE</td>
-	<td>//div[contains(@class,'alert') and contains(@class, 'alert-danger') and contains(.,'You do not have the required permissions')]</td>
 	<td></td>
 </tr>
 <tr>
