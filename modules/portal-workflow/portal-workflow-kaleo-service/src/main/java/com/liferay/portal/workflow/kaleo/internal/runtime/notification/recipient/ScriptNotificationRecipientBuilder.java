@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.notification.recipient;
+package com.liferay.portal.workflow.kaleo.internal.runtime.notification.recipient;
 
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
@@ -21,6 +21,7 @@ import com.liferay.portal.workflow.kaleo.model.KaleoNotificationRecipient;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignmentInstance;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.notification.NotificationRecipient;
+import com.liferay.portal.workflow.kaleo.runtime.notification.recipient.NotificationRecipientBuilder;
 import com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.NotificationRecipientEvaluator;
 import com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.ScriptingNotificationRecipientConstants;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
