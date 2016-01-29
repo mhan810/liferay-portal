@@ -10193,7 +10193,7 @@
 	</javadoc>
 	<javadoc>
 		<name>ScriptingContextBuilderImpl</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderImpl</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.util.ScriptingContextBuilderImpl</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>buildScriptingContext</name>

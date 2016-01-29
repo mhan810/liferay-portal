@@ -350,7 +350,7 @@
 	</bean>
 	<bean id="com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderUtil" class="com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderUtil">
 		<property name="scriptingContextBuilder">
-			<bean class="com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderImpl" />
+			<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.util.ScriptingContextBuilderImpl" />
 		</property>
 	</bean>
 
