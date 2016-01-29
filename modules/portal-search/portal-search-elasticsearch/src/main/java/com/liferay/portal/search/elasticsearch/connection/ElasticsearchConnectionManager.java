@@ -221,7 +221,7 @@ public class ElasticsearchConnectionManager {
 	private final Map<OperationMode, ElasticsearchConnection>
 		_elasticsearchConnections = new HashMap<>();
 	private IndexFactory _indexFactory;
-	private String _indexNamePrefix;
+	private String _indexNamePrefix = "liferay-";
 	private OperationMode _operationMode;
 
 }

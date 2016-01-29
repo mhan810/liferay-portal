@@ -290,7 +290,7 @@ public class CompanyIndexFactory implements IndexFactory {
 
 	private volatile String _additionalIndexConfigurations;
 	private String _additionalTypeMappings;
-	private String _indexNamePrefix;
+	private String _indexNamePrefix = "liferay-";
 	private final Set<IndexSettingsContributor> _indexSettingsContributors =
 		new ConcurrentSkipListSet<>();
 	private Map<String, String> _typeMappings = new HashMap<>();
