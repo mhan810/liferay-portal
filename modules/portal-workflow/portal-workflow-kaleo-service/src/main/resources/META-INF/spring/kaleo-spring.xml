@@ -253,24 +253,24 @@
 		<property name="notificationSenders">
 			<util:map>
 				<entry key="email">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.notification.EmailNotificationSender">
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.EmailNotificationSender">
 						<property name="fromAddress" value="no-reply@liferay.com" />
 						<property name="fromName" value="Liferay Portal Workflow Notifications" />
 						<property name="notificationRecipientBuilderRegistry" ref="com.liferay.portal.workflow.kaleo.runtime.notification.recipient.NotificationRecipientBuilderRegistry" />
 					</bean>
 				</entry>
 				<entry key="im">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.notification.IMNotificationSender">
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.IMNotificationSender">
 						<property name="notificationRecipientBuilderRegistry" ref="com.liferay.portal.workflow.kaleo.runtime.notification.recipient.NotificationRecipientBuilderRegistry" />
 					</bean>
 				</entry>
 				<entry key="private-message">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.notification.PrivateMessageNotificationSender">
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.PrivateMessageNotificationSender">
 						<property name="notificationRecipientBuilderRegistry" ref="com.liferay.portal.workflow.kaleo.runtime.notification.recipient.NotificationRecipientBuilderRegistry" />
 					</bean>
 				</entry>
 				<entry key="user-notification">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.notification.UserNotificationMessageSender">
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.UserNotificationMessageSender">
 						<property name="notificationRecipientBuilderRegistry" ref="com.liferay.portal.workflow.kaleo.runtime.notification.recipient.NotificationRecipientBuilderRegistry" />
 					</bean>
 				</entry>
@@ -282,13 +282,13 @@
 			<util:map>
 				<entry key="freemarker" value-ref="com.liferay.portal.workflow.kaleo.runtime.notification.TemplateNotificationMessageGenerator" />
 				<entry key="text">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.notification.TextNotificationMessageGenerator" />
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.TextNotificationMessageGenerator" />
 				</entry>
 				<entry key="velocity" value-ref="com.liferay.portal.workflow.kaleo.runtime.notification.TemplateNotificationMessageGenerator" />
 			</util:map>
 		</property>
 	</bean>
-	<bean id="com.liferay.portal.workflow.kaleo.runtime.notification.TemplateNotificationMessageGenerator" class="com.liferay.portal.workflow.kaleo.runtime.notification.TemplateNotificationMessageGenerator">
+	<bean id="com.liferay.portal.workflow.kaleo.runtime.notification.TemplateNotificationMessageGenerator" class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.TemplateNotificationMessageGenerator">
 		<property name="templateManagerNames">
 			<util:map>
 				<entry key="freemarker">

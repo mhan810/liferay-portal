@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.notification;
+package com.liferay.portal.workflow.kaleo.internal.runtime.notification;
 
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -24,6 +24,9 @@ import com.liferay.portal.workflow.kaleo.definition.NotificationReceptionType;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
+import com.liferay.portal.workflow.kaleo.runtime.notification.BaseNotificationSender;
+import com.liferay.portal.workflow.kaleo.runtime.notification.NotificationRecipient;
+import com.liferay.portal.workflow.kaleo.runtime.notification.NotificationSender;
 
 import java.io.Serializable;
 

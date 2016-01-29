@@ -12,10 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.notification;
+package com.liferay.portal.workflow.kaleo.internal.runtime.notification;
 
 import com.liferay.portal.workflow.kaleo.definition.NotificationReceptionType;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
+import com.liferay.portal.workflow.kaleo.runtime.notification.BaseNotificationSender;
+import com.liferay.portal.workflow.kaleo.runtime.notification.NotificationRecipient;
+import com.liferay.portal.workflow.kaleo.runtime.notification.NotificationSender;
 
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +26,7 @@ import java.util.Set;
 /**
  * @author Michael C. Han
  */
-public class PrivateMessageNotificationSender
+public class IMNotificationSender
 	extends BaseNotificationSender implements NotificationSender {
 
 	@Override
