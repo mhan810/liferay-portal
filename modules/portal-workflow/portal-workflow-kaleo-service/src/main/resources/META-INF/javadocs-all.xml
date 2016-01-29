@@ -9332,7 +9332,7 @@
 	</javadoc>
 	<javadoc>
 		<name>EmailNotificationSender</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.notification.EmailNotificationSender</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.notification.EmailNotificationSender</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>setFromAddress</name>
@@ -9408,7 +9408,7 @@
 	</javadoc>
 	<javadoc>
 		<name>IMNotificationSender</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.notification.IMNotificationSender</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.notification.IMNotificationSender</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>doSendNotification</name>
@@ -9808,7 +9808,7 @@
 	</javadoc>
 	<javadoc>
 		<name>PrivateMessageNotificationSender</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.notification.PrivateMessageNotificationSender</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.notification.PrivateMessageNotificationSender</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>doSendNotification</name>
@@ -9841,7 +9841,7 @@
 	</javadoc>
 	<javadoc>
 		<name>TemplateNotificationMessageGenerator</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.notification.TemplateNotificationMessageGenerator</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.notification.TemplateNotificationMessageGenerator</type>
 		<author><![CDATA[Marcellus Tavares]]></author>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
@@ -9917,7 +9917,7 @@
 	</javadoc>
 	<javadoc>
 		<name>TextNotificationMessageGenerator</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.notification.TextNotificationMessageGenerator</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.notification.TextNotificationMessageGenerator</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>generateMessage</name>
@@ -9958,7 +9958,7 @@
 	</javadoc>
 	<javadoc>
 		<name>UserNotificationMessageSender</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.notification.UserNotificationMessageSender</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.notification.UserNotificationMessageSender</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>doSendNotification</name>

@@ -12,27 +12,24 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.notification;
+package com.liferay.portal.workflow.kaleo.internal.runtime.notification;
 
-import com.liferay.portal.workflow.kaleo.definition.NotificationReceptionType;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
-
-import java.util.Map;
-import java.util.Set;
+import com.liferay.portal.workflow.kaleo.runtime.notification.NotificationMessageGenerator;
 
 /**
  * @author Michael C. Han
  */
-public class IMNotificationSender
-	extends BaseNotificationSender implements NotificationSender {
+public class TextNotificationMessageGenerator
+	implements NotificationMessageGenerator {
 
 	@Override
-	protected void doSendNotification(
-			Map<NotificationReceptionType, Set<NotificationRecipient>>
-				notificationRecipients,
-			String defaultSubject, String notificationMessage,
-			ExecutionContext executionContext)
-		throws Exception {
+	public String generateMessage(
+		String kaleoClassName, long kaleoClassPK, String notificationName,
+		String notificationTemplateLanguage, String notificationTemplate,
+		ExecutionContext executionContext) {
+
+		return notificationTemplate;
 	}
 
 }
