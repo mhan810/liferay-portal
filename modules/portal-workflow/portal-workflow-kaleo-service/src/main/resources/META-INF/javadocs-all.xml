@@ -8429,7 +8429,7 @@
 	</javadoc>
 	<javadoc>
 		<name>ConditionNodeExecutor</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.node.ConditionNodeExecutor</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.node.ConditionNodeExecutor</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>setConditionEvaluator</name>
@@ -8520,7 +8520,7 @@
 	</javadoc>
 	<javadoc>
 		<name>ForkNodeExecutor</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.node.ForkNodeExecutor</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.node.ForkNodeExecutor</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>doEnter</name>
@@ -8600,7 +8600,7 @@
 	</javadoc>
 	<javadoc>
 		<name>JoinNodeExecutor</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.node.JoinNodeExecutor</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.node.JoinNodeExecutor</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>doEnter</name>
@@ -8685,7 +8685,7 @@
 	</javadoc>
 	<javadoc>
 		<name>JoinXorNodeExecutor</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.node.JoinXorNodeExecutor</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.node.JoinXorNodeExecutor</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>doEnter</name>
@@ -8887,7 +8887,7 @@
 	</javadoc>
 	<javadoc>
 		<name>StateNodeExecutor</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.node.StateNodeExecutor</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.node.StateNodeExecutor</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>doEnter</name>
@@ -8967,7 +8967,7 @@
 	</javadoc>
 	<javadoc>
 		<name>TaskNodeExecutor</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.node.TaskNodeExecutor</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.node.TaskNodeExecutor</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>setDueDateCalculator</name>

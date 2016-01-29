@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.node;
+package com.liferay.portal.workflow.kaleo.internal.runtime.node;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
@@ -21,13 +21,14 @@ import com.liferay.portal.workflow.kaleo.model.KaleoTimer;
 import com.liferay.portal.workflow.kaleo.model.KaleoTransition;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.graph.PathElement;
+import com.liferay.portal.workflow.kaleo.runtime.node.BaseNodeExecutor;
 
 import java.util.List;
 
 /**
  * @author Michael C. Han
  */
-public class JoinXorNodeExecutor extends BaseNodeExecutor {
+public class JoinNodeExecutor extends BaseNodeExecutor {
 
 	@Override
 	protected boolean doEnter(
@@ -37,36 +38,8 @@ public class JoinXorNodeExecutor extends BaseNodeExecutor {
 		KaleoInstanceToken kaleoInstanceToken =
 			executionContext.getKaleoInstanceToken();
 
-		kaleoInstanceToken =
-			kaleoInstanceTokenLocalService.getKaleoInstanceToken(
-				kaleoInstanceToken.getKaleoInstanceTokenId());
-
-		if (kaleoInstanceToken.isCompleted()) {
-			return false;
-		}
-
-		kaleoInstanceToken =
-			kaleoInstanceTokenLocalService.completeKaleoInstanceToken(
-				kaleoInstanceToken.getKaleoInstanceTokenId());
-
-		KaleoInstanceToken parentKaleoInstanceToken =
-			kaleoInstanceToken.getParentKaleoInstanceToken();
-
-		if (!parentKaleoInstanceToken.
-				hasIncompleteChildrenKaleoInstanceToken()) {
-
-			return false;
-		}
-
-		List<KaleoInstanceToken> childrenKaleoInstanceTokens =
-			parentKaleoInstanceToken.getChildrenKaleoInstanceTokens();
-
-		for (KaleoInstanceToken childrenKaleoInstanceToken :
-				childrenKaleoInstanceTokens) {
-
-			kaleoInstanceTokenLocalService.completeKaleoInstanceToken(
-				childrenKaleoInstanceToken.getKaleoInstanceTokenId());
-		}
+		kaleoInstanceTokenLocalService.completeKaleoInstanceToken(
+			kaleoInstanceToken.getKaleoInstanceTokenId());
 
 		return true;
 	}
@@ -83,8 +56,8 @@ public class JoinXorNodeExecutor extends BaseNodeExecutor {
 		KaleoInstanceToken parentKaleoInstanceToken =
 			kaleoInstanceToken.getParentKaleoInstanceToken();
 
-		if (parentKaleoInstanceToken.getCurrentKaleoNodeId() ==
-				currentKaleoNode.getKaleoNodeId()) {
+		if (parentKaleoInstanceToken.
+				hasIncompleteChildrenKaleoInstanceToken()) {
 
 			return;
 		}
