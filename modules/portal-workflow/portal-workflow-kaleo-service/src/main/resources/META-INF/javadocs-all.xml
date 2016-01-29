@@ -7588,7 +7588,7 @@
 	</javadoc>
 	<javadoc>
 		<name>CompositeTaskAssignmentSelector</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.assignment.CompositeTaskAssignmentSelector</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.assignment.CompositeTaskAssignmentSelector</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>calculateTaskAssignments</name>
@@ -7630,7 +7630,7 @@
 	</javadoc>
 	<javadoc>
 		<name>DRLScriptingTaskAssignmentSelector</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.assignment.DRLScriptingTaskAssignmentSelector</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.assignment.DRLScriptingTaskAssignmentSelector</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>calculateTaskAssignments</name>
@@ -7661,7 +7661,7 @@
 	</javadoc>
 	<javadoc>
 		<name>DefaultTaskAssignmentSelector</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.assignment.DefaultTaskAssignmentSelector</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.assignment.DefaultTaskAssignmentSelector</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>calculateTaskAssignments</name>
@@ -7687,7 +7687,7 @@
 	</javadoc>
 	<javadoc>
 		<name>GroupAwareRoleTaskAssignmentSelector</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.assignment.GroupAwareRoleTaskAssignmentSelector</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.assignment.GroupAwareRoleTaskAssignmentSelector</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>calculateTaskAssignments</name>
@@ -7739,7 +7739,7 @@
 	</javadoc>
 	<javadoc>
 		<name>MultiLanguageTaskAssignmentSelector</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.assignment.MultiLanguageTaskAssignmentSelector</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.assignment.MultiLanguageTaskAssignmentSelector</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>calculateTaskAssignments</name>
@@ -7781,7 +7781,7 @@
 	</javadoc>
 	<javadoc>
 		<name>ResourceActionTaskAssignmentSelector</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.assignment.ResourceActionTaskAssignmentSelector</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.assignment.ResourceActionTaskAssignmentSelector</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<author><![CDATA[Eduardo Lundgren]]></author>
 		<method>
@@ -7808,7 +7808,7 @@
 	</javadoc>
 	<javadoc>
 		<name>ScriptingLanguagesTaskAssignmentSelector</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.assignment.ScriptingLanguagesTaskAssignmentSelector</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.assignment.ScriptingLanguagesTaskAssignmentSelector</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>calculateTaskAssignments</name>
@@ -7842,7 +7842,7 @@
 	</javadoc>
 	<javadoc>
 		<name>TaskAssignerUtil</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignerUtil</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.assignment.TaskAssignerUtil</type>
 		<author><![CDATA[Marcellus Tavares]]></author>
 		<method>
 			<name>reassignKaleoTask</name>

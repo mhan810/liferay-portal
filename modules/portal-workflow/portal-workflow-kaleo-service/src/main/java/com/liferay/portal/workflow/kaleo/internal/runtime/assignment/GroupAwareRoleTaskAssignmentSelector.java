@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.assignment;
+package com.liferay.portal.workflow.kaleo.internal.runtime.assignment;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -24,6 +24,7 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
+import com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignmentSelector;
 
 import java.util.ArrayList;
 import java.util.Collection;
