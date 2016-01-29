@@ -321,26 +321,26 @@
 	</bean>
 	<bean id="com.liferay.portal.workflow.kaleo.runtime.notification.recipient.ScriptNotificationRecipientBuilder" class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.recipient.ScriptNotificationRecipientBuilder">
 		<property name="notificationRecipientEvaluator">
-			<bean class="com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.MultiLanguageNotificationRecipientEvaluator">
+			<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.recipient.script.MultiLanguageNotificationRecipientEvaluator">
 				<property name="notificationRecipientEvaluators">
 					<util:map>
 						<entry key="beanshell">
-							<bean class="com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.ScriptingNotificationRecipientEvaluator" />
+							<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.recipient.script.ScriptingNotificationRecipientEvaluator" />
 						</entry>
 						<entry key="drl">
-							<bean class="com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.DRLNotificationRecipientEvaluator" />
+							<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.recipient.script.DRLNotificationRecipientEvaluator" />
 						</entry>
 						<entry key="groovy">
-							<bean class="com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.ScriptingNotificationRecipientEvaluator" />
+							<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.recipient.script.ScriptingNotificationRecipientEvaluator" />
 						</entry>
 						<entry key="javascript">
-							<bean class="com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.ScriptingNotificationRecipientEvaluator" />
+							<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.recipient.script.ScriptingNotificationRecipientEvaluator" />
 						</entry>
 						<entry key="python">
-							<bean class="com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.ScriptingNotificationRecipientEvaluator" />
+							<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.recipient.script.ScriptingNotificationRecipientEvaluator" />
 						</entry>
 						<entry key="ruby">
-							<bean class="com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.ScriptingNotificationRecipientEvaluator" />
+							<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.notification.recipient.script.ScriptingNotificationRecipientEvaluator" />
 						</entry>
 					</util:map>
 				</property>
