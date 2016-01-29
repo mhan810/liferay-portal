@@ -1417,7 +1417,7 @@
 
 	<command name="viewEntryViaBlogsAggregatorPG">
 		<execute function="AssertTextEquals" locator1="BlogsAggregator#ENTRY_ABSTRACT_DESCRIPTION" value1="${entryAbstractDescription}" />
-		
+
 		<execute function="AssertClick#assertPartialTextClickAt" locator1="BlogsAggregator#ENTRY_READ_MORE" value1="Read More" />
 
 		<execute function="AssertTextEquals" locator1="Portlet#H2_HEADER" value1="Blogs" />
