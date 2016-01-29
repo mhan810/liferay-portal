@@ -193,26 +193,26 @@
 	<bean id="com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignerUtil" class="com.liferay.portal.workflow.kaleo.internal.runtime.assignment.TaskAssignerUtil">
 		<property name="taskAssignmentSelector" ref="com.liferay.portal.workflow.kaleo.runtime.assignment.CompositeTaskAssignmentSelector" />
 	</bean>
-	<bean id="com.liferay.portal.workflow.kaleo.runtime.condition.ConditionEvaluator" class="com.liferay.portal.workflow.kaleo.runtime.condition.MultiLanguageConditionEvaluator">
+	<bean id="com.liferay.portal.workflow.kaleo.runtime.condition.ConditionEvaluator" class="com.liferay.portal.workflow.kaleo.internal.runtime.condition.MultiLanguageConditionEvaluator">
 		<property name="conditionEvaluators">
 			<util:map>
 				<entry key="beanshell">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.condition.ScriptingConditionEvaluator" />
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.condition.ScriptingConditionEvaluator" />
 				</entry>
 				<entry key="drl">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.condition.DRLConditionEvaluator" />
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.condition.DRLConditionEvaluator" />
 				</entry>
 				<entry key="groovy">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.condition.ScriptingConditionEvaluator" />
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.condition.ScriptingConditionEvaluator" />
 				</entry>
 				<entry key="javascript">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.condition.ScriptingConditionEvaluator" />
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.condition.ScriptingConditionEvaluator" />
 				</entry>
 				<entry key="python">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.condition.ScriptingConditionEvaluator" />
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.condition.ScriptingConditionEvaluator" />
 				</entry>
 				<entry key="ruby">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.condition.ScriptingConditionEvaluator" />
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.condition.ScriptingConditionEvaluator" />
 				</entry>
 			</util:map>
 		</property>
