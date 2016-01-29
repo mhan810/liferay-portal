@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.timer.messaging;
+package com.liferay.portal.workflow.kaleo.internal.runtime.timer.messaging;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;

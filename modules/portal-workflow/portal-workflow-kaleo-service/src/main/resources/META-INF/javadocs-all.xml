@@ -10007,7 +10007,7 @@
 	</javadoc>
 	<javadoc>
 		<name>TimerMessageListener</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.timer.messaging.TimerMessageListener</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.timer.messaging.TimerMessageListener</type>
 		<author><![CDATA[Marcellus Tavares]]></author>
 		<method>
 			<name>setWorkflowEngine</name>
