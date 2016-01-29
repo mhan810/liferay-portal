@@ -51,7 +51,7 @@
 		<property name="groupName" value="WORKFLOW_TIMER" />
 		<property name="jobName" value="KALEO" />
 		<property name="messageListener">
-			<bean class="com.liferay.portal.workflow.kaleo.runtime.timer.messaging.TimerMessageListener">
+			<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.timer.messaging.TimerMessageListener">
 				<property name="workflowEngine" ref="com.liferay.portal.workflow.kaleo.runtime.WorkflowEngine" />
 			</bean>
 		</property>
