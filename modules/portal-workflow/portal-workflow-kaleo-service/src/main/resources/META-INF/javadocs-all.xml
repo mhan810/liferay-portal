@@ -8093,7 +8093,7 @@
 	</javadoc>
 	<javadoc>
 		<name>DefaultGraphWalker</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.graph.DefaultGraphWalker</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.graph.DefaultGraphWalker</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>follow</name>
@@ -8209,7 +8209,7 @@
 	</javadoc>
 	<javadoc>
 		<name>PathElementMessageListener</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.graph.messaging.PathElementMessageListener</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.graph.messaging.PathElementMessageListener</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>setDestinationName</name>

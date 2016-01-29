@@ -217,7 +217,7 @@
 			</util:map>
 		</property>
 	</bean>
-	<bean id="com.liferay.portal.workflow.kaleo.runtime.graph.GraphWalker" class="com.liferay.portal.workflow.kaleo.runtime.graph.DefaultGraphWalker" />
+	<bean id="com.liferay.portal.workflow.kaleo.runtime.graph.GraphWalker" class="com.liferay.portal.workflow.kaleo.internal.runtime.graph.DefaultGraphWalker" />
 	<bean id="com.liferay.portal.workflow.kaleo.runtime.node.NodeExecutorFactory" class="com.liferay.portal.workflow.kaleo.runtime.node.NodeExecutorFactory">
 		<property name="nodeExectors">
 			<util:map>
