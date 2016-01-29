@@ -64,20 +64,20 @@ import java.util.concurrent.Callable;
 	rollbackFor = {Exception.class}
 )
 public class DefaultWorkflowEngineImpl
-	extends BaseKaleoBean implements WorkflowEngine {
+			extends BaseKaleoBean implements WorkflowEngine {
 
-	@Override
-	public void deleteWorkflowDefinition(
-			String name, int version, ServiceContext serviceContext)
-		throws WorkflowException {
+			@Override
+			public void deleteWorkflowDefinition(
+					String name, int version, ServiceContext serviceContext)
+				throws WorkflowException {
 
-		try {
-			kaleoDefinitionLocalService.deleteKaleoDefinition(
-				name, version, serviceContext);
-		}
-		catch (Exception e) {
-			throw new WorkflowException(e);
-		}
+				try {
+					kaleoDefinitionLocalService.deleteKaleoDefinition(
+						name, version, serviceContext);
+				}
+				catch (Exception e) {
+					throw new WorkflowException(e);
+				}
 	}
 
 	@Override
