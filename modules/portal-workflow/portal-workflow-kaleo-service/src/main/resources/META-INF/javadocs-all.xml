@@ -7980,7 +7980,7 @@
 	</javadoc>
 	<javadoc>
 		<name>DRLConditionEvaluator</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.condition.DRLConditionEvaluator</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.condition.DRLConditionEvaluator</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>evaluate</name>
@@ -8014,7 +8014,7 @@
 	</javadoc>
 	<javadoc>
 		<name>MultiLanguageConditionEvaluator</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.condition.MultiLanguageConditionEvaluator</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.condition.MultiLanguageConditionEvaluator</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>evaluate</name>
@@ -8056,7 +8056,7 @@
 	</javadoc>
 	<javadoc>
 		<name>ScriptingConditionEvaluator</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.condition.ScriptingConditionEvaluator</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.condition.ScriptingConditionEvaluator</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>evaluate</name>

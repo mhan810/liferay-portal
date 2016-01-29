@@ -12,48 +12,40 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.condition;
+package com.liferay.portal.workflow.kaleo.internal.runtime.condition;
 
-import com.liferay.portal.kernel.bi.rules.Fact;
-import com.liferay.portal.kernel.bi.rules.Query;
-import com.liferay.portal.kernel.bi.rules.RulesEngineUtil;
-import com.liferay.portal.kernel.bi.rules.RulesResourceRetriever;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.resource.StringResourceRetriever;
+import com.liferay.portal.kernel.scripting.ScriptingUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoCondition;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
-import com.liferay.portal.workflow.kaleo.runtime.util.RulesContextBuilder;
+import com.liferay.portal.workflow.kaleo.runtime.condition.ConditionEvaluator;
+import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderUtil;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 
 import java.io.Serializable;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Michael C. Han
  */
-public class DRLConditionEvaluator implements ConditionEvaluator {
+public class ScriptingConditionEvaluator implements ConditionEvaluator {
 
 	@Override
 	public String evaluate(
 			KaleoCondition kaleoCondition, ExecutionContext executionContext,
-			ClassLoader... classloaders)
+			ClassLoader... classLoaders)
 		throws PortalException {
 
-		List<Fact<?>> facts = RulesContextBuilder.buildRulesContext(
-			executionContext);
+		Map<String, Object> inputObjects =
+			ScriptingContextBuilderUtil.buildScriptingContext(executionContext);
 
-		RulesResourceRetriever rulesResourceRetriever =
-			new RulesResourceRetriever(
-				new StringResourceRetriever(kaleoCondition.getScript()));
-
-		Query query = Query.createStandardQuery();
-
-		Map<String, ?> results = RulesEngineUtil.execute(
-			rulesResourceRetriever, facts, query, classloaders);
-
-		String returnValue = (String)results.get(_RETURN_VALUE);
+		Map<String, Object> results = ScriptingUtil.eval(
+			null, inputObjects, _outputNames,
+			kaleoCondition.getScriptLanguage(), kaleoCondition.getScript(),
+			classLoaders);
 
 		Map<String, Serializable> resultsWorkflowContext =
 			(Map<String, Serializable>)results.get(
@@ -61,6 +53,8 @@ public class DRLConditionEvaluator implements ConditionEvaluator {
 
 		WorkflowContextUtil.mergeWorkflowContexts(
 			executionContext, resultsWorkflowContext);
+
+		String returnValue = (String)results.get(_RETURN_VALUE);
 
 		if (returnValue != null) {
 			return returnValue;
@@ -72,5 +66,12 @@ public class DRLConditionEvaluator implements ConditionEvaluator {
 	}
 
 	private static final String _RETURN_VALUE = "returnValue";
+
+	private static final Set<String> _outputNames = new HashSet<>();
+
+	static {
+		_outputNames.add(_RETURN_VALUE);
+		_outputNames.add(WorkflowContextUtil.WORKFLOW_CONTEXT_NAME);
+	}
 
 }

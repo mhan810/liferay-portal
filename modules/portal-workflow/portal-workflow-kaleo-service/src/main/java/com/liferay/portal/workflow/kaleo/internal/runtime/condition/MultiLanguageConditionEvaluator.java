@@ -12,12 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.condition;
+package com.liferay.portal.workflow.kaleo.internal.runtime.condition;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.workflow.kaleo.definition.ScriptLanguage;
 import com.liferay.portal.workflow.kaleo.model.KaleoCondition;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
+import com.liferay.portal.workflow.kaleo.runtime.condition.ConditionEvaluator;
 
 import java.util.HashMap;
 import java.util.Map;
