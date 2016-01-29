@@ -12,30 +12,25 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.node;
+package com.liferay.portal.workflow.kaleo.internal.runtime.node;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.workflow.kaleo.model.KaleoCondition;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoNode;
 import com.liferay.portal.workflow.kaleo.model.KaleoTimer;
 import com.liferay.portal.workflow.kaleo.model.KaleoTransition;
+import com.liferay.portal.workflow.kaleo.model.impl.KaleoInstanceTokenImpl;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
-import com.liferay.portal.workflow.kaleo.runtime.condition.ConditionEvaluator;
 import com.liferay.portal.workflow.kaleo.runtime.graph.PathElement;
-import com.liferay.portal.workflow.kaleo.runtime.util.ClassLoaderUtil;
+import com.liferay.portal.workflow.kaleo.runtime.node.BaseNodeExecutor;
 
 import java.util.List;
 
 /**
  * @author Michael C. Han
  */
-public class ConditionNodeExecutor extends BaseNodeExecutor {
-
-	public void setConditionEvaluator(ConditionEvaluator conditionEvaluator) {
-		_conditionEvaluator = conditionEvaluator;
-	}
+public class StateNodeExecutor extends BaseNodeExecutor {
 
 	@Override
 	protected boolean doEnter(
@@ -53,26 +48,33 @@ public class ConditionNodeExecutor extends BaseNodeExecutor {
 		KaleoInstanceToken kaleoInstanceToken =
 			executionContext.getKaleoInstanceToken();
 
-		KaleoCondition kaleoCondition =
-			kaleoConditionLocalService.getKaleoNodeKaleoCondition(
-				currentKaleoNode.getKaleoNodeId());
+		String transitionName = executionContext.getTransitionName();
 
-		String[] scriptRequiredContexts = StringUtil.split(
-			kaleoCondition.getScriptRequiredContexts());
+		if (!currentKaleoNode.hasKaleoTransition()) {
+			kaleoInstanceToken =
+				kaleoInstanceTokenLocalService.completeKaleoInstanceToken(
+					kaleoInstanceToken.getKaleoInstanceTokenId());
 
-		ClassLoader[] classloaders = ClassLoaderUtil.getClassLoaders(
-			scriptRequiredContexts);
+			if (kaleoInstanceToken.getParentKaleoInstanceTokenId() ==
+					KaleoInstanceTokenImpl.
+						DEFAULT_PARENT_KALEO_INSTANCE_TOKEN_ID) {
 
-		String transitionName = _conditionEvaluator.evaluate(
-			kaleoCondition, executionContext, classloaders);
+				kaleoInstanceLocalService.completeKaleoInstance(
+					kaleoInstanceToken.getKaleoInstanceId());
+			}
 
-		kaleoInstanceLocalService.updateKaleoInstance(
-			kaleoInstanceToken.getKaleoInstanceId(),
-			executionContext.getWorkflowContext(),
-			executionContext.getServiceContext());
+			return;
+		}
 
-		KaleoTransition kaleoTransition = currentKaleoNode.getKaleoTransition(
-			transitionName);
+		KaleoTransition kaleoTransition = null;
+
+		if (Validator.isNull(transitionName)) {
+			kaleoTransition = currentKaleoNode.getDefaultKaleoTransition();
+		}
+		else {
+			kaleoTransition = currentKaleoNode.getKaleoTransition(
+				transitionName);
+		}
 
 		ExecutionContext newExecutionContext = new ExecutionContext(
 			kaleoInstanceToken, executionContext.getWorkflowContext(),
@@ -96,7 +98,5 @@ public class ConditionNodeExecutor extends BaseNodeExecutor {
 		KaleoNode currentKaleoNode, ExecutionContext executionContext,
 		List<PathElement> remainingPathElements) {
 	}
-
-	private ConditionEvaluator _conditionEvaluator;
 
 }

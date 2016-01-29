@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.node;
+package com.liferay.portal.workflow.kaleo.internal.runtime.node;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -40,6 +40,7 @@ import com.liferay.portal.workflow.kaleo.internal.runtime.assignment.TaskAssigne
 import com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignmentSelector;
 import com.liferay.portal.workflow.kaleo.runtime.calendar.DueDateCalculator;
 import com.liferay.portal.workflow.kaleo.runtime.graph.PathElement;
+import com.liferay.portal.workflow.kaleo.runtime.node.BaseNodeExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.notification.NotificationUtil;
 import com.liferay.portal.workflow.kaleo.runtime.util.ClassLoaderUtil;
 

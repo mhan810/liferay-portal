@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.node;
+package com.liferay.portal.workflow.kaleo.internal.runtime.node;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
@@ -21,6 +21,7 @@ import com.liferay.portal.workflow.kaleo.model.KaleoTimer;
 import com.liferay.portal.workflow.kaleo.model.KaleoTransition;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.graph.PathElement;
+import com.liferay.portal.workflow.kaleo.runtime.node.BaseNodeExecutor;
 
 import java.util.HashMap;
 import java.util.List;

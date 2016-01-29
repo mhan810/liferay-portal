@@ -222,24 +222,24 @@
 		<property name="nodeExectors">
 			<util:map>
 				<entry key="CONDITION">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.node.ConditionNodeExecutor">
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.node.ConditionNodeExecutor">
 						<property name="conditionEvaluator" ref="com.liferay.portal.workflow.kaleo.runtime.condition.ConditionEvaluator" />
 					</bean>
 				</entry>
 				<entry key="FORK">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.node.ForkNodeExecutor" />
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.node.ForkNodeExecutor" />
 				</entry>
 				<entry key="JOIN">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.node.JoinNodeExecutor" />
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.node.JoinNodeExecutor" />
 				</entry>
 				<entry key="JOIN_XOR">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.node.JoinXorNodeExecutor" />
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.node.JoinXorNodeExecutor" />
 				</entry>
 				<entry key="STATE">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.node.StateNodeExecutor" />
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.node.StateNodeExecutor" />
 				</entry>
 				<entry key="TASK">
-					<bean class="com.liferay.portal.workflow.kaleo.runtime.node.TaskNodeExecutor">
+					<bean class="com.liferay.portal.workflow.kaleo.internal.runtime.node.TaskNodeExecutor">
 						<property name="dueDateCalculator">
 							<bean class="com.liferay.portal.workflow.kaleo.runtime.calendar.DefaultDueDateCalculator" />
 						</property>
