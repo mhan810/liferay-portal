@@ -139,11 +139,11 @@
 
 	<!-- Runtime -->
 
-	<bean id="com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler" class="com.liferay.portal.workflow.kaleo.runtime.DefaultKaleoSignaler">
+	<bean id="com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler" class="com.liferay.portal.workflow.kaleo.internal.runtime.DefaultKaleoSignaler">
 		<property name="destinationName" value="liferay/kaleo_graph_walker" />
 	</bean>
-	<bean id="com.liferay.portal.workflow.kaleo.runtime.TaskManager" class="com.liferay.portal.workflow.kaleo.runtime.DefaultTaskManagerImpl" />
-	<bean id="com.liferay.portal.workflow.kaleo.runtime.WorkflowEngine" class="com.liferay.portal.workflow.kaleo.runtime.DefaultWorkflowEngineImpl">
+	<bean id="com.liferay.portal.workflow.kaleo.runtime.TaskManager" class="com.liferay.portal.workflow.kaleo.internal.runtime.DefaultTaskManagerImpl" />
+	<bean id="com.liferay.portal.workflow.kaleo.runtime.WorkflowEngine" class="com.liferay.portal.workflow.kaleo.internal.runtime.DefaultWorkflowEngineImpl">
 		<property name="kaleoSignaler" ref="com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler" />
 		<property name="workflowDeployer" ref="com.liferay.portal.workflow.kaleo.deployment.WorkflowDeployer" />
 		<property name="workflowModelParser" ref="com.liferay.portal.workflow.kaleo.parser.WorkflowModelParser" />

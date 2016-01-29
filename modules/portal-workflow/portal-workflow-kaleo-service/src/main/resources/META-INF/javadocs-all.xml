@@ -5519,7 +5519,7 @@
 	</javadoc>
 	<javadoc>
 		<name>DefaultKaleoSignaler</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.DefaultKaleoSignaler</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.DefaultKaleoSignaler</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>setDestinationName</name>
@@ -5589,7 +5589,7 @@
 	</javadoc>
 	<javadoc>
 		<name>DefaultTaskManagerImpl</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.DefaultTaskManagerImpl</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.DefaultTaskManagerImpl</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>assignWorkflowTaskToRole</name>
@@ -5846,7 +5846,7 @@
 	</javadoc>
 	<javadoc>
 		<name>DefaultWorkflowEngineImpl</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.DefaultWorkflowEngineImpl</type>
+		<type>com.liferay.portal.workflow.kaleo.internal.runtime.DefaultWorkflowEngineImpl</type>
 		<author><![CDATA[Michael C. Han]]></author>
 		<method>
 			<name>deleteWorkflowDefinition</name>
