@@ -12,12 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.assignment;
+package com.liferay.portal.workflow.kaleo.internal.runtime.assignment;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.scripting.ScriptingUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
+import com.liferay.portal.workflow.kaleo.runtime.assignment.BaseTaskAssignmentSelector;
 import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderUtil;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 

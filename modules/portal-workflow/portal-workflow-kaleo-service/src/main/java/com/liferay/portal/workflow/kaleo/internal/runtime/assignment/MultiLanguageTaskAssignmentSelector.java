@@ -12,11 +12,16 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.assignment;
+package com.liferay.portal.workflow.kaleo.internal.runtime.assignment;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.model.ResourceAction;
+import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
+import com.liferay.portal.workflow.kaleo.runtime.assignment.BaseTaskAssignmentSelector;
+import com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignmentSelector;
+import com.liferay.portal.workflow.kaleo.service.KaleoInstanceLocalServiceUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,7 +30,8 @@ import java.util.Map;
 /**
  * @author Michael C. Han
  */
-public class CompositeTaskAssignmentSelector implements TaskAssignmentSelector {
+public class MultiLanguageTaskAssignmentSelector
+	extends BaseTaskAssignmentSelector {
 
 	@Override
 	public Collection<KaleoTaskAssignment> calculateTaskAssignments(
@@ -35,17 +41,39 @@ public class CompositeTaskAssignmentSelector implements TaskAssignmentSelector {
 
 		String assigneeClassName = kaleoTaskAssignment.getAssigneeClassName();
 
-		TaskAssignmentSelector taskAssignmentSelector =
-			_taskAssignmentSelectors.get(assigneeClassName);
+		TaskAssignmentSelector taskAssignmentSelector = null;
+
+		if (assigneeClassName.equals(ResourceAction.class.getName())) {
+			taskAssignmentSelector = _taskAssignmentSelectors.get(
+				assigneeClassName);
+		}
+		else {
+			String assigneeScriptLanguage =
+				kaleoTaskAssignment.getAssigneeScriptLanguage();
+
+			taskAssignmentSelector = _taskAssignmentSelectors.get(
+				assigneeScriptLanguage);
+		}
 
 		if (taskAssignmentSelector == null) {
 			throw new IllegalArgumentException(
-				"No task assignment selector found for class name " +
-					assigneeClassName);
+				"No task assignment selector found for " +
+					kaleoTaskAssignment.toXmlString());
 		}
 
-		return taskAssignmentSelector.calculateTaskAssignments(
-			kaleoTaskAssignment, executionContext, classLoaders);
+		Collection<KaleoTaskAssignment> taskAssignments =
+			taskAssignmentSelector.calculateTaskAssignments(
+				kaleoTaskAssignment, executionContext, classLoaders);
+
+		KaleoInstanceToken kaleoInstanceToken =
+			executionContext.getKaleoInstanceToken();
+
+		KaleoInstanceLocalServiceUtil.updateKaleoInstance(
+			kaleoInstanceToken.getKaleoInstanceId(),
+			executionContext.getWorkflowContext(),
+			executionContext.getServiceContext());
+
+		return taskAssignments;
 	}
 
 	public void setTaskAssignmentSelectors(
