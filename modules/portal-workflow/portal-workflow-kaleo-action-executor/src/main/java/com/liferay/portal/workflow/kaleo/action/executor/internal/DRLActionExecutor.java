@@ -22,10 +22,10 @@ import com.liferay.portal.kernel.resource.StringResourceRetriever;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.workflow.kaleo.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.action.executor.ActionExecutorException;
+import com.liferay.portal.workflow.kaleo.internal.runtime.util.RulesContextBuilder;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.util.ClassLoaderUtil;
-import com.liferay.portal.workflow.kaleo.internal.runtime.util.RulesContextBuilder;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 
 import java.io.Serializable;

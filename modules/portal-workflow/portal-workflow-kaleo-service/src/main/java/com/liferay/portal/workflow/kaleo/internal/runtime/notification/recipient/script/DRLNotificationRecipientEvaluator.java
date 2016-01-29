@@ -21,11 +21,11 @@ import com.liferay.portal.kernel.bi.rules.RulesResourceRetriever;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.resource.StringResourceRetriever;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.workflow.kaleo.internal.runtime.util.RulesContextBuilder;
 import com.liferay.portal.workflow.kaleo.model.KaleoNotificationRecipient;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.NotificationRecipientEvaluator;
 import com.liferay.portal.workflow.kaleo.runtime.util.ClassLoaderUtil;
-import com.liferay.portal.workflow.kaleo.internal.runtime.util.RulesContextBuilder;
 
 import java.util.List;
 import java.util.Map;
