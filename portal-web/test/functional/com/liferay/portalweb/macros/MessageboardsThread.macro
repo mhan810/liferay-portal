@@ -404,7 +404,9 @@
 	</command>
 
 	<command name="gotoPG">
+		<var name="key_postsNumber" value="${postCount}" />
 		<var name="key_threadSubject" value="${threadSubject}" />
+		<var name="key_userName" value="${startedByUserName}" />
 
 		<if>
 			<isset var="messageBoardsThreadURL" />
@@ -1130,6 +1132,7 @@
 	</command>
 
 	<command name="viewReplyPG">
+		<var name="key_postsNumber" value="${postCount}" />
 		<var name="key_threadBody" value="${threadBody}" />
 		<var name="key_threadSubject" value="${threadSubject}" />
 		<var name="key_userName" value="${userName}" />
