@@ -421,7 +421,7 @@
 			<else>
 				<execute function="AssertTextEquals" locator1="MessageBoards#THREAD_LIST_THREAD" value1="${threadSubject}" />
 				<execute function="AssertTextEquals#assertPartialText" locator1="MessageBoards#THREAD_LIST_STARTED_BY" value1="${startedByUserName}" />
-				<execute function="AssertTextEquals#assertPartialText" locator1="MessageBoards#THREAD_LIST_POSTS" value1="${postCount}" />
+				<execute function="AssertTextEquals#assertPartialText" locator1="MessageBoards#THREAD_LIST_POSTS" value1="${postCount} Post" />
 				<execute function="AssertTextEquals#assertPartialText" locator1="MessageBoards#THREAD_TABLE_LAST_POST" value1="${lastPostUserName}" />
 				<execute function="Click" locator1="MessageBoards#THREAD_LIST_THREAD" value1="${threadSubject}" />
 			</else>
@@ -1139,7 +1139,7 @@
 
 		<execute function="AssertTextEquals" locator1="MessageBoards#THREAD_LIST_THREAD" value1="${threadSubject}" />
 		<execute function="AssertTextEquals#assertPartialText" locator1="MessageBoards#THREAD_LIST_STARTED_BY" value1="${userName}" />
-		<execute function="AssertTextEquals#assertPartialText" locator1="MessageBoards#THREAD_LIST_POSTS" value1="${postCount}" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="MessageBoards#THREAD_LIST_POSTS" value1="${postCount} Post" />
 
 		<if>
 			<equals arg1="${guestReply}" arg2="true" />
