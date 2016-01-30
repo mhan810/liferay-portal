@@ -15,17 +15,27 @@ Export-Package:\
 	javax.ws.rs.*,\
 	org.apache.cxf.*;version="3.0.3"
 Import-Package:\
+	!com.ctc.wstx.*,\
 	!com.sun.*,\
-	!javax.validation.*,\
+	!javax.crypto.*,\
+	!javax.imageio.*,\
+	!javax.security.auth.x500.*,\
+	!javax.tools.*,\
+  	!javax.validation.*,\
+  	!javax.xml.transform.stax.*\
+  	!javax.xml.ws.*,\
 	!net.sf.cglib.proxy.*,\
 	!org.apache.abdera.*,\
 	!org.apache.aries.*,\
 	!org.apache.cxf.aegis.*,\
+	!org.apache.cxf.management.*,\
 	!org.apache.cxf.ws.policy.*,\
 	!org.apache.neethi.*,\
 	!org.apache.velocity.*,\
+	!org.apache.ws.*,\
 	!org.apache.xml.resolver.*,\
 	!org.apache.xmlbeans.*,\
+	!org.codehaus.stax2.*,\
 	!org.junit.*,\
 	!org.jvnet.fastinfoset.*,\
 	!org.jvnet.staxex.*,\
