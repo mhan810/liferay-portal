@@ -1,3 +1,9 @@
+configurations {
+	compile {
+		transitive = false
+	}
+}
+
 dependencies {
 	provided group: "org.apache.felix", name: "org.apache.felix.dependencymanager", version: "3.2.0"
 	provided group: "org.apache.felix", name: "org.apache.felix.dependencymanager.shell", version: "3.2.0"

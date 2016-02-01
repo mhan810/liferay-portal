@@ -1,3 +1,9 @@
+configurations {
+	compile {
+		transitive = false
+	}
+}
+
 dependencies {
 	provided group: "javax.json", name: "javax.json-api", version: "1.0"
 	provided group: "javax.ws.rs", name: "javax.ws.rs-api", version: "2.0.1"
@@ -9,6 +15,7 @@ dependencies {
 	provided group: "org.eclipse.osgi", name: "org.eclipse.osgi.services", version: "3.5.0-20150611.165350-3"
 	provided group: "org.osgi", name: "org.osgi.compendium", version: "5.0.0"
 	provided group: "org.osgi", name: "org.osgi.core", version: "5.0.0"
+	provided project(":portal-remote-services:portal-cxf-common")
 }
 
 deploy {

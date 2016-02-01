@@ -1,3 +1,9 @@
+configurations {
+	compile {
+		transitive = false
+	}
+}
+
 dependencies {
 	provided group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
 	// @formatter:off
@@ -5,6 +11,8 @@ dependencies {
 	provided group: "com.liferay.portal", name: "portal-impl", version: liferay.portalVersion
 	// @formatter:on
 	provided group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"
+	provided group: "org.apache.cxf", name: "cxf-core", version: "3.0.3"
+	provided group: "org.apache.cxf", name: "cxf-rt-frontend-simple", version: "3.0.3"
 	provided group: "org.apache.cxf", name: "cxf-rt-transports-http", version: "3.0.3"
 	provided group: "org.apache.cxf", name: "cxf-tools-common", version: "3.0.3"
 	provided group: "org.apache.cxf", name: "cxf-tools-validator", version: "3.0.3"
