@@ -193,7 +193,13 @@
 	</command>
 
 	<command name="viewPG">
-		<execute function="AssertElementPresent" locator1="Relatedassets#ASSET_TITLE_IMAGE_1" />
+		<if>
+			<condition function="IsElementPresent" locator1="Relatedassets#ASSET_TITLE_IMAGE_1" />
+			<then>
+				<execute function="AssertVisible" locator1="Relatedassets#ASSET_TITLE_IMAGE_1" />
+			</then>
+		</if>
+
 		<execute function="AssertTextEquals" locator1="Relatedassets#ASSET_TITLE_1" value1="${assetTitle}" />
 		<execute function="AssertElementPresent" locator1="Relatedassets#ASSET_EDIT_1" />
 	</command>
