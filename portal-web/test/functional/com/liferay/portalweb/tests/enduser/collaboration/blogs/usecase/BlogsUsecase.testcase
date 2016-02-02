@@ -1700,7 +1700,7 @@
 			<var name="pageName" value="${pageName2}" />
 		</execute>
 
-		<execute macro="BlogsEntry#viewNoEntryAsGuestViaBlogsAggregatorPG">
+		<execute macro="BlogsEntry#viewNoEntryViaBlogsAggregatorPG" />
 			<var name="entryTitle" value="${entryTitle}" />
 		</execute>
 
@@ -1710,7 +1710,7 @@
 			<var name="pageName" value="${pageName2}" />
 		</execute>
 
-		<execute macro="BlogsEntry#viewEntryAsGuestViaBlogsAggregatorPG">
+		<execute macro="BlogsEntry#viewEntryViaBlogsAggregatorPG">
 			<var name="entryContent" value="${entryContent}" />
 			<var name="entryTitle" value="${entryTitle}" />
 		</execute>
