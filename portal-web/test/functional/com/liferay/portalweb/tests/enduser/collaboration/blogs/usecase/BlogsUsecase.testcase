@@ -388,7 +388,7 @@
 			<var name="userFullName" value="Test Test" />
 		</execute>
 
-		<execute function="AssertClick" locator1="//div[@class='lfr-discussion-message']/a" value1="Read More" />
+		<execute function="AssertClick" locator1="Link#READ_MORE" value1="Read More" />
 		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_TITLE" value1="Blogs Entry2 Title" />
 		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_CONTENT" value1="Blogs Entry2 Content" />
 
@@ -465,7 +465,7 @@
 		</execute>
 
 		<execute function="AssertTextEquals#assertValue" locator1="BlogsEntry#COMMENTS_TRACKBACK_URL" value1="http://www.able.com:8080/blogs-page/-/blogs/trackback/blogs-entry3-title" />
-		<execute function="AssertClick" locator1="//div[@class='lfr-discussion-message']/a" value1="Read More" />
+		<execute function="AssertClick" locator1="Link#READ_MORE" value1="Read More" />
 		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_TITLE" value1="Blogs Entry4 Title" />
 		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_CONTENT" value1="Blogs Entry4 Content" />
 
@@ -521,7 +521,7 @@
 		</execute>
 
 		<execute function="AssertTextEquals#assertValue" locator1="BlogsEntry#COMMENTS_TRACKBACK_URL" value1="http://${ipAddress}:8080/web/guest/blogs-page/-/blogs/trackback/blogs-entry5-title" />
-		<execute function="AssertClick" locator1="//div[@class='lfr-discussion-message']/a" value1="Read More" />
+		<execute function="AssertClick" locator1="Link#READ_MORE" value1="Read More" />
 		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_TITLE" value1="Blogs Entry6 Title" />
 		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_CONTENT" value1="Blogs Entry6 Content" />
 
