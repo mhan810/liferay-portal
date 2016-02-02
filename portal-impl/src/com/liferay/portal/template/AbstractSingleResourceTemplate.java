@@ -91,8 +91,6 @@ public abstract class AbstractSingleResourceTemplate extends AbstractTemplate {
 	}
 
 	protected void cacheTemplateResource(String templateManagerName) {
-		String templateId = templateResource.getTemplateId();
-
 		if (templateManagerName.equals(TemplateConstants.LANG_TYPE_VM)) {
 			return;
 		}
