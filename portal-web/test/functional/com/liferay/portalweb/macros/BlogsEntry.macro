@@ -1366,14 +1366,6 @@
 		</if>
 	</command>
 
-	<command name="viewEntryAsGuestViaBlogsAggregatorPG">
-		<execute function="AssertClick#assertPartialTextClickAt" locator1="PGBlogsAggregator#ENTRY_READ_MORE" value1="Read More" />
-
-		<execute function="AssertTextEquals" locator1="PGBlogs#PORTLET_TITLE" value1="Blogs" />
-		<execute function="AssertElementPresent" locator1="PGBlogsEntry#ENTRY_TITLE" value1="${entryTitle}" />
-		<execute function="AssertElementPresent" locator1="PGBlogsEntry#ENTRY_CONTENT" value1="${entryContent}" />
-	</command>
-
 	<command name="viewEntryAsWorkflowAsset">
 		<execute function="AssertTextEquals" locator1="Home#SITE_ADMINISTRATION_PORTLET_TITLE" value1="${entryTitle}" />
 
@@ -1480,10 +1472,6 @@
 		<var name="key_entryTitle" value="${entryTitle}" />
 
 		<execute function="AssertElementNotPresent" locator1="BlogsEntry#TITLE" value1="${entryTitle}" />
-	</command>
-
-	<command name="viewNoEntryAsGuestViaBlogsAggregatorPG">
-		<execute function="AssertElementPresent" locator1="PGBlogsAggregator#NO_ENTRY_MESSAGE" value1="There are no blogs." />
 	</command>
 
 	<command name="viewNoEntryViaAPPG">
