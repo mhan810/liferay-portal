@@ -59,13 +59,13 @@ if (fieldParamSelection.equals("0")) {
 					<li class="default facet-value">
 
 						<%
-						String taglibClearFacet = "window['" + renderResponse.getNamespace() + HtmlUtil.escapeJS(facet.getFieldId()) + "clearFacet'](0);";
-
 						String defaultRangeCssClass = "text-default";
 
 						if (fieldParamSelection.equals("0")) {
 							defaultRangeCssClass = "text-primary";
 						}
+
+						String taglibClearFacet = "window['" + renderResponse.getNamespace() + HtmlUtil.escapeJS(facet.getFieldId()) + "clearFacet'](0);";
 						%>
 
 						<aui:a cssClass="<%= defaultRangeCssClass %>" href="javascript:;" onClick="<%= taglibClearFacet %>">
@@ -90,13 +90,13 @@ if (fieldParamSelection.equals("0")) {
 						<li class="facet-value">
 
 							<%
-							String taglibSetRange = "window['" + renderResponse.getNamespace() + HtmlUtil.escapeJS(facet.getFieldId()) + "setRange'](" + index + ", '" + HtmlUtil.escapeJS(range) + "');";
-
 							String rangeCssClass = "text-default";
 
 							if (fieldParamSelection.equals(String.valueOf(index))) {
 								rangeCssClass = "text-primary";
 							}
+
+							String taglibSetRange = "window['" + renderResponse.getNamespace() + HtmlUtil.escapeJS(facet.getFieldId()) + "setRange'](" + index + ", '" + HtmlUtil.escapeJS(range) + "');";
 							%>
 
 							<aui:a cssClass="<%= rangeCssClass %>" href="javascript:;" onClick="<%= taglibSetRange %>">
@@ -119,14 +119,6 @@ if (fieldParamSelection.equals("0")) {
 					<li class="facet-value">
 
 						<%
-						TermCollector termCollector = null;
-
-						if (fieldParamSelection.equals(String.valueOf(index + 1))) {
-							modifiedLabel = LanguageUtil.get(request, "custom-range");
-
-							termCollector = facetCollector.getTermCollector(fieldParam);
-						}
-
 						String customRangeCssClass = randomNamespace + "custom-range-toggle";
 
 						if (fieldParamSelection.equals(String.valueOf(index + 1))) {
@@ -134,7 +126,14 @@ if (fieldParamSelection.equals("0")) {
 						}
 						else {
 							customRangeCssClass += " text-default";
+						}
 
+						TermCollector termCollector = null;
+
+						if (fieldParamSelection.equals(String.valueOf(index + 1))) {
+							modifiedLabel = LanguageUtil.get(request, "custom-range");
+
+							termCollector = facetCollector.getTermCollector(fieldParam);
 						}
 						%>
 
