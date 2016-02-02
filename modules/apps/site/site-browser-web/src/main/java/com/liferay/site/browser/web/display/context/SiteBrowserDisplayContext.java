@@ -204,13 +204,13 @@ public class SiteBrowserDisplayContext {
 		}
 		else if (groupSearchTerms.isAdvancedSearch()) {
 			total = GroupLocalServiceUtil.searchCount(
-				themeDisplay.getCompanyId(), _classNameIds,
+				themeDisplay.getCompanyId(), _CLASS_NAME_IDS,
 				groupSearchTerms.getName(), groupSearchTerms.getDescription(),
 				getGroupParams(), groupSearchTerms.isAndOperator());
 		}
 		else {
 			total = GroupLocalServiceUtil.searchCount(
-				themeDisplay.getCompanyId(), _classNameIds,
+				themeDisplay.getCompanyId(), _CLASS_NAME_IDS,
 				groupSearchTerms.getKeywords(), getGroupParams());
 		}
 
@@ -254,14 +254,14 @@ public class SiteBrowserDisplayContext {
 		}
 		else if (groupSearchTerms.isAdvancedSearch()) {
 			groups = GroupLocalServiceUtil.search(
-				company.getCompanyId(), _classNameIds,
+				company.getCompanyId(), _CLASS_NAME_IDS,
 				groupSearchTerms.getName(), groupSearchTerms.getDescription(),
 				getGroupParams(), groupSearchTerms.isAndOperator(), start, end,
 				groupSearch.getOrderByComparator());
 		}
 		else {
 			groups = GroupLocalServiceUtil.search(
-				company.getCompanyId(), _classNameIds,
+				company.getCompanyId(), _CLASS_NAME_IDS,
 				groupSearchTerms.getKeywords(), getGroupParams(), start, end,
 				groupSearch.getOrderByComparator());
 		}
@@ -409,7 +409,7 @@ public class SiteBrowserDisplayContext {
 		return filteredGroups;
 	}
 
-	private static final long[] _classNameIds = new long[] {
+	private static final long[] _CLASS_NAME_IDS = new long[] {
 		PortalUtil.getClassNameId(Company.class),
 		PortalUtil.getClassNameId(Group.class),
 		PortalUtil.getClassNameId(Organization.class)
