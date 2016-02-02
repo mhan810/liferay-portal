@@ -14,12 +14,15 @@
 
 package com.liferay.portal.template;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.template.TemplateException;
 import com.liferay.portal.kernel.template.TemplateResource;
 import com.liferay.portal.kernel.template.URLTemplateResource;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.io.IOException;
 
@@ -39,6 +42,14 @@ public abstract class URLResourceParser implements TemplateResourceParser {
 
 		templateId = normalizePath(templateId);
 
+		if (!isValidResource(templateId)) {
+			return null;
+		}
+
+		if (!hasValidExtension(templateId)) {
+			return null;
+		}
+
 		try {
 			URL url = getURL(templateId);
 
@@ -54,6 +65,70 @@ public abstract class URLResourceParser implements TemplateResourceParser {
 	}
 
 	public abstract URL getURL(String templateId) throws IOException;
+
+	protected static boolean hasValidExtension(String templateId) {
+		if (!templateId.endsWith(".vm") && !templateId.endsWith(".ftl")) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to load template " + templateId +
+						", template name must end with .vm or .ftl");
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	protected static boolean isValidResource(String templateId) {
+		if (Validator.isBlank(templateId)) {
+			return true;
+		}
+
+		boolean containsDangerousURLSpecialChars = false;
+		boolean containsBackSlash = false;
+
+		char[] templateIdChars = templateId.toCharArray();
+
+		for (int i = 0; i < templateIdChars.length; i++) {
+			char ch = templateIdChars[i];
+
+			if ((ch == CharPool.PERCENT) || (ch == CharPool.POUND) ||
+				(ch == CharPool.QUESTION) || (ch == CharPool.SEMICOLON)) {
+
+				containsDangerousURLSpecialChars = true;
+				break;
+			}
+
+			if (ch == CharPool.BACK_SLASH) {
+				containsBackSlash = true;
+				break;
+			}
+		}
+
+		if (containsDangerousURLSpecialChars) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to load template " + templateId +
+						", template name contains one or more special URL " +
+							"characters %, #, ? or ;");
+			}
+
+			return false;
+		}
+
+		if (containsBackSlash) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to load template " + templateId +
+						", template name contains backslash character");
+			}
+
+			return false;
+		}
+
+		return true;
+	}
 
 	protected static String normalizePath(String path) {
 		List<String> elements = new ArrayList<>();
@@ -123,5 +198,8 @@ public abstract class URLResourceParser implements TemplateResourceParser {
 
 		return normalizedPath;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		URLResourceParser.class);
 
 }
