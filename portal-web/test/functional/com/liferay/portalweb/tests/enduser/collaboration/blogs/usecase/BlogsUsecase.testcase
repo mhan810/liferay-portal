@@ -1682,9 +1682,7 @@
 			<var name="pageName" value="${pageName2}" />
 		</execute>
 
-		<execute macro="BlogsEntry#viewNoEntryViaBlogsAggregatorPG">
-			<var name="entryTitle" value="${entryTitle}" />
-		</execute>
+		<execute macro="BlogsEntry#viewNoEntryViaBlogsAggregatorPG" />
 
 		<execute macro="User#logoutPG" />
 
@@ -1701,8 +1699,6 @@
 		</execute>
 
 		<execute macro="BlogsEntry#viewNoEntryViaBlogsAggregatorPG" />
-			<var name="entryTitle" value="${entryTitle}" />
-		</execute>
 
 		<execute function="Pause" locator1="120000" />
 
