@@ -21,11 +21,18 @@
 		</div>
 	</c:if>
 
-	<c:if test="<%= fileEntry.hasLock() %>">
-		<div class="file-icon-color-0 sticker sticker-right">
-			<aui:icon cssClass="icon-monospaced" image="lock" markupView="lexicon" message="locked" />
-		</div>
-	</c:if>
+	<c:choose>
+		<c:when test="<%= fileShortcut != null %>">
+			<div class="file-icon-color-0 sticker sticker-right">
+				<aui:icon cssClass="icon-monospaced" image="shortcut" markupView="lexicon" message="shortcut" />
+			</div>
+		</c:when>
+		<c:when test="<%= fileEntry.hasLock() %>">
+			<div class="file-icon-color-0 sticker sticker-right">
+				<aui:icon cssClass="icon-monospaced" image="lock" markupView="lexicon" message="locked" />
+			</div>
+		</c:when>
+	</c:choose>
 </liferay-frontend:vertical-card-sticker-bottom>
 
 <liferay-frontend:vertical-card-header>

@@ -281,25 +281,28 @@ if (portletTitleBasedNavigation && (folderId != DLFolderConstants.DEFAULT_PARENT
 							<c:choose>
 								<c:when test="<%= fileShortcut != null %>">
 									<liferay-ui:search-container-column-icon
-										icon="icon-share-alt"
+										icon="shortcut"
 										toggleRowChecker="<%= true %>"
 									/>
 								</c:when>
+								<c:when test="<%= Validator.isNotNull(thumbnailSrc) %>">
+									<liferay-ui:search-container-column-image
+										src="<%= thumbnailSrc %>"
+										toggleRowChecker="<%= true %>"
+									/>
+								</c:when>
+								<c:when test="<%= Validator.isNotNull(latestFileVersion.getExtension()) %>">
+									<liferay-ui:search-container-column-text>
+										<div class="sticker sticker-default sticker-lg <%= dlViewFileVersionDisplayContext.getCssClassFileMimeType() %>">
+											<%= StringUtil.shorten(StringUtil.upperCase(latestFileVersion.getExtension()), 3, StringPool.BLANK) %>
+										</div>
+									</liferay-ui:search-container-column-text>
+								</c:when>
 								<c:otherwise>
-									<c:choose>
-										<c:when test="<%= Validator.isNull(thumbnailSrc) %>">
-											<liferay-ui:search-container-column-icon
-												icon="documents-and-media"
-												toggleRowChecker="<%= true %>"
-											/>
-										</c:when>
-										<c:otherwise>
-											<liferay-ui:search-container-column-image
-												src="<%= thumbnailSrc %>"
-												toggleRowChecker="<%= true %>"
-											/>
-										</c:otherwise>
-									</c:choose>
+									<liferay-ui:search-container-column-icon
+										icon="documents-and-media"
+										toggleRowChecker="<%= true %>"
+									/>
 								</c:otherwise>
 							</c:choose>
 
