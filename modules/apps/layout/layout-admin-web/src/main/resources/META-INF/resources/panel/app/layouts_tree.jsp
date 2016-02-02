@@ -190,6 +190,7 @@ LayoutsTreeDisplayContext layoutsTreeDisplayContext = new LayoutsTreeDisplayCont
 	<div class="alert alert-default alert-dismissible" data-dismiss="alert" role="alert">
 		<button class="close" type="button">
 			<aui:icon image="times" markupView="lexicon" />
+
 			<span class="sr-only"><liferay-ui:message key="close" /></span>
 		</button>
 
