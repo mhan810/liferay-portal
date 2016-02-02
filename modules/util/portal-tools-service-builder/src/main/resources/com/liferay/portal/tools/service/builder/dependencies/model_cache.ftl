@@ -188,8 +188,9 @@ public class ${entity.name}CacheModel implements CacheModel<${entity.name}>, Ext
 
 		<#list entity.regularColList as column>
 			<#if column.primitiveType>
-				<#assign columnFieldType = serviceBuilder.getPrimitiveType(column.genericizedType)>
-				${column.name} = objectInput.read${textFormatter.format(columnFieldType, 6)}();
+				<#assign columnPrimitiveType = serviceBuilder.getPrimitiveType(column.genericizedType)>
+
+				${column.name} = objectInput.read${textFormatter.format(columnPrimitiveType, 6)}();
 			<#elseif column.type == "Date">
 				${column.name} = objectInput.readLong();
 			<#elseif column.type == "String">
@@ -222,8 +223,9 @@ public class ${entity.name}CacheModel implements CacheModel<${entity.name}>, Ext
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
 		<#list entity.regularColList as column>
 			<#if column.primitiveType>
-				<#assign columnFieldType = serviceBuilder.getPrimitiveType(column.genericizedType)>
-				objectOutput.write${textFormatter.format(columnFieldType, 6)}(${column.name});
+				<#assign columnPrimitiveType = serviceBuilder.getPrimitiveType(column.genericizedType)>
+
+				objectOutput.write${textFormatter.format(columnPrimitiveType, 6)}(${column.name});
 			<#elseif column.type == "Date">
 				objectOutput.writeLong(${column.name});
 			<#elseif column.type == "String">
@@ -248,8 +250,9 @@ public class ${entity.name}CacheModel implements CacheModel<${entity.name}>, Ext
 			<#if column.type == "Date">
 				public long ${column.name};
 			<#else>
-				<#assign columnFieldType = serviceBuilder.getPrimitiveType(column.genericizedType)>
-				public ${columnFieldType} ${column.name};
+				<#assign columnPrimitiveType = serviceBuilder.getPrimitiveType(column.genericizedType)>
+
+				public ${columnPrimitiveType} ${column.name};
 			</#if>
 		</#if>
 	</#list>
