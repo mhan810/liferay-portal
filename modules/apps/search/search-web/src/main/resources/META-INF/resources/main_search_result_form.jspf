@@ -35,7 +35,6 @@ AssetEntry assetEntry = AssetEntryLocalServiceUtil.fetchEntry(className, classPK
 <liferay-ui:search-container-column-text
 	colspan="<%= 2 %>"
 >
-
 	<h5>
 		<a href="<%= viewURL %>">
 			<strong><%= summary.getHighlightedTitle() %></strong>
