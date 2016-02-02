@@ -119,14 +119,17 @@ public class ThemeHotDeployListener extends BaseHotDeployListener {
 
 		if (_log.isWarnEnabled()) {
 			for (Theme theme : themes) {
-				if (Validator.equals(
+				if (!Validator.equals(
 						theme.getTemplateExtension(),
 						ThemeHelper.TEMPLATE_EXTENSION_VM)) {
 
-					_log.warn(
-						"Velocity support is deprecated. Update " +
-							theme.getName() + " theme to FreeMarker");
+					continue;
 				}
+
+				_log.warn(
+					"Support of Velocity is deprecated. Update theme " +
+						theme.getName() +
+							" to use FreeMarker for forward compatibility.");
 			}
 		}
 	}
