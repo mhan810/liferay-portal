@@ -23,6 +23,59 @@ import org.junit.Test;
 public class URLResourceParserTest {
 
 	@Test
+	public void testHasValidExtension() {
+		Assert.assertTrue(
+			ClassLoaderResourceParser.hasValidExtension("template.ftl"));
+		Assert.assertTrue(
+			ClassLoaderResourceParser.hasValidExtension("template.vm"));
+
+		Assert.assertTrue(
+			ClassLoaderResourceParser.hasValidExtension(
+				"_SERVLET_CONTEXT_/dir/template.vm"));
+		Assert.assertTrue(
+			ClassLoaderResourceParser.hasValidExtension(
+				"_SERVLET_CONTEXT_/dir/template.ftl"));
+
+		Assert.assertFalse(
+			ClassLoaderResourceParser.hasValidExtension(
+				"/portal-ext.properties"));
+
+		Assert.assertFalse(
+			ClassLoaderResourceParser.hasValidExtension(
+				"_SERVLET_CONTEXT_/WEB-INF/web.xml"));
+	}
+
+	@Test
+	public void testIsValidResource() {
+		Assert.assertTrue(
+			ClassLoaderResourceParser.isValidResource(
+				"12345/_SERVLET_CONTEXT_/dir/template.ftl"));
+
+		Assert.assertFalse(
+			ClassLoaderResourceParser.isValidResource("..\\file"));
+		Assert.assertFalse(
+			ClassLoaderResourceParser.isValidResource("../\\file"));
+		Assert.assertFalse(
+			ClassLoaderResourceParser.isValidResource("..\\/file"));
+		Assert.assertFalse(
+			ClassLoaderResourceParser.isValidResource("\\..\\file"));
+		Assert.assertFalse(
+			ClassLoaderResourceParser.isValidResource("/..\\file"));
+		Assert.assertFalse(
+			ClassLoaderResourceParser.isValidResource("\\../\\file"));
+		Assert.assertFalse(
+			ClassLoaderResourceParser.isValidResource("\\..\\/file"));
+		Assert.assertFalse(
+			ClassLoaderResourceParser.isValidResource("%2f..%2ffile"));
+		Assert.assertFalse(
+			ClassLoaderResourceParser.isValidResource("/file?a=.ftl"));
+		Assert.assertFalse(
+			ClassLoaderResourceParser.isValidResource("/file#a=.ftl"));
+		Assert.assertFalse(
+			ClassLoaderResourceParser.isValidResource("/file;a=.ftl"));
+	}
+
+	@Test
 	public void testNormalizePath() {
 		Assert.assertEquals(
 			"abc", ClassLoaderResourceParser.normalizePath("abc"));
