@@ -880,8 +880,8 @@ public class DLFileEntryLocalServiceImpl
 						dlLatestFileVersion.getFileEntryTypeId(), dlFileEntry);
 
 					dlLatestFileVersion.setModifiedDate(new Date());
-					dlLatestFileVersion.setStatusDate(new Date());
 					dlLatestFileVersion.setFileEntryTypeId(fileEntryTypeId);
+					dlLatestFileVersion.setStatusDate(new Date());
 
 					dlFileVersionPersistence.update(dlLatestFileVersion);
 
