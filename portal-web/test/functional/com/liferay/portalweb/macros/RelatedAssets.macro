@@ -20,6 +20,10 @@
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
+		<execute macro="Panel#expandPanel">
+			<var name="panelHeading" value="Filter" />
+		</execute>
+
 		<execute function="Select" locator1="RelatedassetsConfiguration#FILTER_SELECT" value1="Categories" />
 		<execute function="Click" locator1="Button#SELECT_CATEGORIES" />
 
