@@ -32,7 +32,7 @@
 		<var name="key_categoryName" value="${categoryName}" />
 
 		<execute function="Click" locator1="RelatedassetsConfiguration#CATEGORIES_WINDOW_CATEGORY_CHECKBOX" />
-		<execute function="Click" locator1="Button#CLOSE_IFRAME" />
+		<execute function="Click" locator1="Icon#CLOSE" />
 
 		<execute function="SelectFrameTop" />
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
