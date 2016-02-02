@@ -472,6 +472,7 @@
 		</execute>
 
 		<execute function="AssertTextEquals#assertValue" locator1="BlogsEntry#COMMENTS_TRACKBACK_URL" value1="http://www.able.com:8080/blogs-page/-/blogs/trackback/blogs-entry3-title" />
+
 		<execute function="AssertClick" locator1="Link#READ_MORE" value1="Read More" />
 
 		<execute macro="BlogsEntry#viewPG">
@@ -535,6 +536,7 @@
 		</execute>
 
 		<execute function="AssertTextEquals#assertValue" locator1="BlogsEntry#COMMENTS_TRACKBACK_URL" value1="http://${ipAddress}:8080/web/guest/blogs-page/-/blogs/trackback/blogs-entry5-title" />
+
 		<execute function="AssertClick" locator1="Link#READ_MORE" value1="Read More" />
 
 		<execute macro="BlogsEntry#viewPG">
