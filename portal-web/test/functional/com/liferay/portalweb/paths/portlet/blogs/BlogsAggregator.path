@@ -9,7 +9,7 @@
 </thead>
 <tbody>
 <tr>
-	<td>BLOGS_AGGREGATOR_NO_ENTRY_MESSAGE</td>
+	<td>NO_ENTRY_MESSAGE</td>
 	<td>//div[contains(@class,'portlet-body') and contains(.,'There are no blogs.')]</td>
 	<td></td>
 </tr>
