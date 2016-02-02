@@ -384,6 +384,12 @@ if (portletTitleBasedNavigation && (folderId != DLFolderConstants.DEFAULT_PARENT
 											<aui:icon cssClass="icon-monospaced" image="lock" markupView="lexicon" message="locked" />
 										</span>
 									</c:if>
+
+									<c:if test="<%= fileShortcut != null %>">
+										<span>
+											<aui:icon cssClass="icon-monospaced" image="shortcut" markupView="lexicon" message="shortcut" />
+										</span>
+									</c:if>
 								</liferay-ui:search-container-column-text>
 							</c:if>
 
