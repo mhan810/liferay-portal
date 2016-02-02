@@ -82,7 +82,7 @@ public class LayoutsRemotePublisherMessageListener
 		if (exportImportConfiguration == null) {
 			if (_log.isWarnEnabled()) {
 				_log.warn(
-					"Unable to find export import configuration with id " +
+					"Unable to find export import configuration with ID " +
 						exportImportConfigurationId);
 			}
 
