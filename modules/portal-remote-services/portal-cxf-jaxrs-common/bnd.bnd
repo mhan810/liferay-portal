@@ -15,6 +15,7 @@ Export-Package:\
 	javax.ws.rs.*,\
 	org.apache.cxf.*;version="3.0.3"
 Import-Package:\
+	!com.ctc.wstx.*,\
 	!com.sun.*,\
 	!javax.validation.*,\
 	!net.sf.cglib.proxy.*,\
@@ -26,6 +27,7 @@ Import-Package:\
 	!org.apache.velocity.*,\
 	!org.apache.xml.resolver.*,\
 	!org.apache.xmlbeans.*,\
+	!org.codehaus.stax2.*,\
 	!org.junit.*,\
 	!org.jvnet.fastinfoset.*,\
 	!org.jvnet.staxex.*,\
