@@ -122,9 +122,9 @@ public class TrackbackImpl implements Trackback {
 
 		sb.append("[...] ");
 		sb.append(excerpt);
-		sb.append(" [...] <a href='");
+		sb.append(" [...] <a href=\"");
 		sb.append(url);
-		sb.append("'>");
+		sb.append("\">");
 		sb.append(themeDisplay.translate("read-more"));
 		sb.append("</a>");
 
