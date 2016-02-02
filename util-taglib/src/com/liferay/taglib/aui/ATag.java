@@ -58,11 +58,11 @@ public class ATag extends BaseATag {
 
 				jspWriter.write(StringPool.SPACE);
 				jspWriter.write("<svg class=\"lexicon-icon ");
-				jspWriter.write("lexicon-icon-shortcut\" role=\"img\">");
-				jspWriter.write("<use xlink:href=\"");
+				jspWriter.write("lexicon-icon-shortcut\" role=\"img\"><use ");
+				jspWriter.write("xlink:href=\"");
 				jspWriter.write(themeDisplay.getPathThemeImages());
-				jspWriter.write("/lexicon/icons.svg#shortcut\" />");
-				jspWriter.write("<span class=\"sr-only\">");
+				jspWriter.write("/lexicon/icons.svg#shortcut\" /><span ");
+				jspWriter.write("class=\"sr-only\">");
 				jspWriter.write(
 					LanguageUtil.get(resourceBundle, "opens-new-window"));
 				jspWriter.write("</span>");
