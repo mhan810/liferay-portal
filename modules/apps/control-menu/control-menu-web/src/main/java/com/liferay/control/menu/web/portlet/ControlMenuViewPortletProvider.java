@@ -23,6 +23,7 @@ import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Eudaldo Alonso
+ * @deprecated As of 7.0.0, with no direct replacement. Use the control menu taglib instead
  */
 @Component(
 	immediate = true,
@@ -31,6 +32,7 @@ import org.osgi.service.component.annotations.Component;
 	},
 	service = ViewPortletProvider.class
 )
+@Deprecated
 public class ControlMenuViewPortletProvider
 	extends BasePortletProvider implements ViewPortletProvider {
 

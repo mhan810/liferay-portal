@@ -16,7 +16,9 @@ package com.liferay.portlet.admin.util;
 
 /**
  * @author Eudaldo Alonso
+ * @deprecated As of 7.0.0, with no direct replacement. Use the control menu taglib instead
  */
+@Deprecated
 public class PortalControlMenuApplicationType {
 
 	public interface ControlMenu {
