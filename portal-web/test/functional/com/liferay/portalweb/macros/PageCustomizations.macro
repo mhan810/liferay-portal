@@ -6,7 +6,9 @@
 			<var name="page" value="${sitePageName}" />
 		</execute>
 
-		<execute function="Click" locator1="ProductMenu#EDIT_PAGE" />
+		<execute macro="Navigator#gotoTab">
+			<var name="tab" value="Advanced" />
+		</execute>
 
 		<execute function="AssertClick" locator1="NavListItem#CUSTOMIZATION_SETTINGS" value1="Customization Settings" />
 

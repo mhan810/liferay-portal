@@ -567,9 +567,9 @@
 
 		<var name="key_defaultSiteLanguageKey" value="${defaultSiteLanguageKey}" />
 
-		<if>
-			<condition function="IsElementNotPresent" locator1="SitePagesEditPage#SEO_HTML_TITLE" />
-			<then>
+		<execute macro="Navigator#gotoTab">
+			<var name="tab" value="SEO" />
+		</execute>
 				<execute function="Click" locator1="NavListItem#SEO" />
 			</then>
 		</if>
