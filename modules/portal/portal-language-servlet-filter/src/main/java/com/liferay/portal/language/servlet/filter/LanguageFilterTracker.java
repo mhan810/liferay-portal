@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.language.LanguageResources;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -116,7 +117,7 @@ public class LanguageFilterTracker {
 				List<ServiceRegistration<?>> serviceRegistrations =
 					new ArrayList<>();
 
-				Hashtable<String, Object> properties = new Hashtable<>();
+				Dictionary<String, Object> properties = new Hashtable<>();
 
 				properties.put("bundle.symbolic.name", bundleSymbolicName);
 				properties.put("service.ranking", Integer.MIN_VALUE);
