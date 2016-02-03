@@ -40,18 +40,6 @@
 	</activity>
 	<activity>
 		<model-name>com.liferay.wiki.model.WikiPage</model-name>
-		<activity-type>${com.liferay.wiki.social.WikiActivityKeys.ADD_PAGE}</activity-type>
-		<language-key>ADD_PAGE</language-key>
-		<log-activity>true</log-activity>
-		<contribution-limit enabled="false" />
-		<participation-value>5</participation-value>
-		<counter>
-			<name>user.wikis</name>
-			<owner-type>actor</owner-type>
-		</counter>
-	</activity>
-	<activity>
-		<model-name>com.liferay.wiki.model.WikiPage</model-name>
 		<activity-type>${com.liferay.social.kernel.model.SocialActivityConstants.TYPE_MOVE_ATTACHMENT_TO_TRASH}</activity-type>
 		<log-activity>true</log-activity>
 		<counters-enabled>false</counters-enabled>
@@ -113,6 +101,24 @@
 	</activity>
 	<activity>
 		<model-name>com.liferay.wiki.model.WikiPage</model-name>
+		<activity-type>${com.liferay.social.kernel.model.SocialActivityConstants.TYPE_VIEW}</activity-type>
+		<language-key>VIEW</language-key>
+		<participation-value>1</participation-value>
+	</activity>
+	<activity>
+		<model-name>com.liferay.wiki.model.WikiPage</model-name>
+		<activity-type>${com.liferay.wiki.social.WikiActivityKeys.ADD_PAGE}</activity-type>
+		<language-key>ADD_PAGE</language-key>
+		<log-activity>true</log-activity>
+		<contribution-limit enabled="false" />
+		<participation-value>5</participation-value>
+		<counter>
+			<name>user.wikis</name>
+			<owner-type>actor</owner-type>
+		</counter>
+	</activity>
+	<activity>
+		<model-name>com.liferay.wiki.model.WikiPage</model-name>
 		<activity-type>${com.liferay.wiki.social.WikiActivityKeys.UPDATE_PAGE}</activity-type>
 		<language-key>UPDATE_PAGE</language-key>
 		<log-activity>true</log-activity>
@@ -122,11 +128,5 @@
 			<name>user.wiki-updates</name>
 			<owner-type>actor</owner-type>
 		</counter>
-	</activity>
-	<activity>
-		<model-name>com.liferay.wiki.model.WikiPage</model-name>
-		<activity-type>${com.liferay.social.kernel.model.SocialActivityConstants.TYPE_VIEW}</activity-type>
-		<language-key>VIEW</language-key>
-		<participation-value>1</participation-value>
 	</activity>
 </liferay-social>
