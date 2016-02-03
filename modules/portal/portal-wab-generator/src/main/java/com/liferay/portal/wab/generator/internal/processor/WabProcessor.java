@@ -786,20 +786,20 @@ public class WabProcessor {
 	protected void processPluginPackagePropertiesExportImportPackages(
 		Properties pluginPackageProperties) {
 
-		String exportPackages = pluginPackageProperties.getProperty(
+		String exportPackage = pluginPackageProperties.getProperty(
 			Constants.EXPORT_PACKAGE);
 
-		if (Validator.isNotNull(exportPackages)) {
+		if (Validator.isNotNull(exportPackage)) {
 			Collections.addAll(
-				_exportPackageNames, StringUtil.split(exportPackages));
+				_exportPackageNames, StringUtil.split(exportPackage));
 		}
 
-		String importPackages = pluginPackageProperties.getProperty(
+		String importPackage = pluginPackageProperties.getProperty(
 			Constants.IMPORT_PACKAGE);
 
-		if (Validator.isNotNull(importPackages)) {
+		if (Validator.isNotNull(importPackage)) {
 			Collections.addAll(
-				_importPackageNames, StringUtil.split(importPackages));
+				_importPackageNames, StringUtil.split(importPackage));
 		}
 	}
 
@@ -1098,11 +1098,11 @@ public class WabProcessor {
 
 		Properties pluginPackageProperties = getPluginPackageProperties();
 
-		processPluginPackagePropertiesExportImportPackages(
-			pluginPackageProperties);
 		processBundleClasspath(analyzer, pluginPackageProperties);
 		processBundleSymbolicName(analyzer);
 		processExtraHeaders(analyzer);
+		processPluginPackagePropertiesExportImportPackages(
+			pluginPackageProperties);
 
 		processBundleManifestVersion(analyzer);
 
