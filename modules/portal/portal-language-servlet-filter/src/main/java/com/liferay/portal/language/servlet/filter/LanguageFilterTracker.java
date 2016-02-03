@@ -64,7 +64,7 @@ public class LanguageFilterTracker {
 		_serviceTracker.close();
 	}
 
-	private ServiceTracker<ServletContextHelper, ServiceRegistrations>
+	private ServiceTracker<ServletContextHelper, ServletContextHelperTracked>
 		_serviceTracker;
 
 	private static class ServiceTrackerResourceBundleLoader
@@ -94,34 +94,9 @@ public class LanguageFilterTracker {
 
 	}
 
-	private class ServiceRegistrations {
-
-		public ServiceRegistrations(
-			ServiceTracker<?, ?> serviceTracker,
-			List<ServiceRegistration<?>> serviceRegistrations) {
-
-			_serviceTracker = serviceTracker;
-			_serviceRegistrations = serviceRegistrations;
-		}
-
-		public void clean() {
-			_serviceTracker.close();
-
-			for (ServiceRegistration<?> serviceRegistration :
-					_serviceRegistrations) {
-
-				serviceRegistration.unregister();
-			}
-		}
-
-		private final List<ServiceRegistration<?>> _serviceRegistrations;
-		private ServiceTracker<?, ?> _serviceTracker;
-
-	}
-
 	private class ServletContextHelperServiceTrackerCustomizer
 		implements ServiceTrackerCustomizer
-			<ServletContextHelper, ServiceRegistrations> {
+			<ServletContextHelper, ServletContextHelperTracked> {
 
 		public ServletContextHelperServiceTrackerCustomizer(
 			BundleContext bundleContext) {
@@ -130,7 +105,7 @@ public class LanguageFilterTracker {
 		}
 
 		@Override
-		public ServiceRegistrations addingService(
+		public ServletContextHelperTracked addingService(
 			ServiceReference<ServletContextHelper> serviceReference) {
 
 			Bundle bundle = serviceReference.getBundle();
@@ -202,7 +177,7 @@ public class LanguageFilterTracker {
 					_bundleContext.registerService(
 						Filter.class, filter, properties));
 
-				return new ServiceRegistrations(
+				return new ServletContextHelperTracked(
 					serviceTracker, serviceRegistrations);
 			}
 			catch (InvalidSyntaxException ise) {
@@ -213,7 +188,7 @@ public class LanguageFilterTracker {
 		@Override
 		public void modifiedService(
 			ServiceReference<ServletContextHelper> serviceReference,
-			ServiceRegistrations serviceRegistration) {
+			ServletContextHelperTracked serviceRegistration) {
 
 			removedService(serviceReference, serviceRegistration);
 
@@ -223,14 +198,39 @@ public class LanguageFilterTracker {
 		@Override
 		public void removedService(
 			ServiceReference<ServletContextHelper> serviceReference,
-			ServiceRegistrations serviceRegistrations) {
+			ServletContextHelperTracked servletContextHelperTracked) {
 
-			serviceRegistrations.clean();
+			servletContextHelperTracked.clean();
 
 			_bundleContext.ungetService(serviceReference);
 		}
 
 		private final BundleContext _bundleContext;
+
+	}
+
+	private class ServletContextHelperTracked {
+
+		public ServletContextHelperTracked(
+			ServiceTracker<?, ?> serviceTracker,
+			List<ServiceRegistration<?>> serviceRegistrations) {
+
+			_serviceTracker = serviceTracker;
+			_serviceRegistrations = serviceRegistrations;
+		}
+
+		public void clean() {
+			_serviceTracker.close();
+
+			for (ServiceRegistration<?> serviceRegistration :
+					_serviceRegistrations) {
+
+				serviceRegistration.unregister();
+			}
+		}
+
+		private final List<ServiceRegistration<?>> _serviceRegistrations;
+		private ServiceTracker<?, ?> _serviceTracker;
 
 	}
 
