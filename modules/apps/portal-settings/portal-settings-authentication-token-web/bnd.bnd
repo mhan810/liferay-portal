@@ -1,0 +1,7 @@
+Bundle-Name: Liferay Portal Settings Authentication Token Web
+Bundle-SymbolicName: com.liferay.portal.settings.authentication.token.web
+Bundle-Version: 1.0.0
+Liferay-Releng-Module-Group-Description:
+Liferay-Releng-Module-Group-Title: Portal Settings
+Web-ContextPath: /portal-settings-authentication-token
+-include: ../../../../marketplace/platform/bnd.bnd
