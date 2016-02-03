@@ -51,6 +51,7 @@ import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfig
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch.facet.FacetProcessor;
 import com.liferay.portal.search.elasticsearch.groupby.GroupByTranslator;
+import com.liferay.portal.search.elasticsearch.index.IndexNameBuilder;
 import com.liferay.portal.search.elasticsearch.internal.facet.CompositeFacetProcessor;
 import com.liferay.portal.search.elasticsearch.internal.facet.ElasticsearchFacetFieldCollector;
 import com.liferay.portal.search.elasticsearch.internal.util.DocumentTypes;
@@ -533,7 +534,9 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			return selectedIndexNames;
 		}
 
-		return new String[] {String.valueOf(searchContext.getCompanyId())};
+		String indexName = _indexNameBuilder.getIndexName(searchContext);
+
+		return new String[] {indexName};
 	}
 
 	protected String[] getSelectedTypes(QueryConfig queryConfig) {
@@ -624,7 +627,6 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		return hits;
 	}
 
-	@Reference(unbind = "-")
 	protected void setElasticsearchConnectionManager(
 		ElasticsearchConnectionManager elasticsearchConnectionManager) {
 
@@ -762,6 +764,10 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 	private FacetProcessor<SearchRequestBuilder> _facetProcessor;
 	private FilterTranslator<QueryBuilder> _filterTranslator;
 	private GroupByTranslator _groupByTranslator;
+
+	@Reference(unbind = "-")
+	private final IndexNameBuilder _indexNameBuilder;
+
 	private boolean _logExceptionsOnly;
 	private QueryTranslator<QueryBuilder> _queryTranslator;
 	private StatsTranslator _statsTranslator;

@@ -28,6 +28,7 @@ import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfig
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch.document.ElasticsearchDocumentFactory;
 import com.liferay.portal.search.elasticsearch.document.ElasticsearchUpdateDocumentCommand;
+import com.liferay.portal.search.elasticsearch.index.IndexNameBuilder;
 import com.liferay.portal.search.elasticsearch.internal.util.DocumentTypes;
 import com.liferay.portal.search.elasticsearch.internal.util.LogUtil;
 
@@ -130,7 +131,7 @@ public class ElasticsearchUpdateDocumentCommandImpl
 		Client client = _elasticsearchConnectionManager.getClient();
 
 		UpdateRequestBuilder updateRequestBuilder = client.prepareUpdate(
-			String.valueOf(searchContext.getCompanyId()), documentType,
+			_indexNameBuilder.getIndexName(searchContext), documentType,
 			document.getUID());
 
 		String elasticSearchDocument =
@@ -160,7 +161,7 @@ public class ElasticsearchUpdateDocumentCommandImpl
 				if (deleteFirst) {
 					DeleteRequestBuilder deleteRequestBuilder =
 						client.prepareDelete(
-							String.valueOf(searchContext.getCompanyId()),
+							_indexNameBuilder.getIndexName(searchContext),
 							DocumentTypes.LIFERAY, document.getUID());
 
 					bulkRequestBuilder.add(deleteRequestBuilder);
@@ -197,5 +198,8 @@ public class ElasticsearchUpdateDocumentCommandImpl
 	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
 	private ElasticsearchDocumentFactory _elasticsearchDocumentFactory;
+
+	@Reference(unbind = "-")
+	private final IndexNameBuilder _indexNameBuilder;
 
 }
