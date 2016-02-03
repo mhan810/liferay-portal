@@ -197,8 +197,13 @@
 	<command name="viewDuplicateNames">
 		<var name="key_assetName" value="${assetName}" />
 
-		<execute function="AssertTextEquals" locator1="RecycleBin#RECYCLE_BIN_TABLE_NAME_1" value1="${assetName}" />
-		<execute function="AssertTextEquals" locator1="RecycleBin#RECYCLE_BIN_TABLE_NAME_2" value1="${assetName}" />
+		<var name="key_rowNumber" value="1" />
+
+		<execute function="AssertTextEquals" locator1="ContentRow#ENTRY_CONTENT_ROW_NUMBER_TD_2" value1="${assetName}" />
+
+		<var name="key_rowNumber" value="2" />
+
+		<execute function="AssertTextEquals" locator1="ContentRow#ENTRY_CONTENT_ROW_NUMBER_TD_2" value1="${assetName}" />
 	</command>
 
 	<command name="viewEntry">
