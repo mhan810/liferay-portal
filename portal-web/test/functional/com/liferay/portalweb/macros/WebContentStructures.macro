@@ -237,10 +237,14 @@
 				<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
 				<execute function="AssertClick" locator1="MenuItem#PERMISSIONS_LEXICON" value1="Permissions" />
 
+				<execute function="SelectFrame" locator1="IFrame#DIALOG" />
+
 				<execute macro="PermissionsInline#addOrRemoveViewPermissionFromAllRoles">
 					<var name="addOrRemoveViewPermission" value="Add" />
 					<var name="roleList" value="${addRoleViewPermissions}" />
 				</execute>
+
+				<execute macro="IFrame#selectTopFrame" />
 			</then>
 		</if>
 	</command>

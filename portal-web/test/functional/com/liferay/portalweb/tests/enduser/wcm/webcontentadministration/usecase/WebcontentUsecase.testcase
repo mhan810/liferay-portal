@@ -109,7 +109,7 @@
 			<var name="structureName" value="WC Structure Name" />
 		</execute>
 
-		<execute function="SelectFrame" locator1="IFrame#STRUCTURES" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
 		<execute macro="PermissionsInline#addOrRemoveViewPermissionFromAllRoles">
 			<var name="addOrRemoveViewPermission" value="Remove" />
@@ -139,6 +139,8 @@
 		</execute>
 
 		<execute function="AssertClick" locator1="MenuItem#PERMISSIONS" value1="Permissions" />
+
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
 		<execute macro="PermissionsInline#addOrRemoveViewPermissionFromAllRoles">
 			<var name="addOrRemoveViewPermission" value="Add" />
