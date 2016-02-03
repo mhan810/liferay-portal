@@ -9,6 +9,8 @@
 
 				<execute selenium="selectFrame" />
 
+				<execute argument1="//div[contains(@class,'loading-animation')]" selenium="waitForElementNotPresent" />
+
 				<execute selenium="assertJavaScriptErrors" />
 
 				<execute selenium="assertLiferayErrors" />
