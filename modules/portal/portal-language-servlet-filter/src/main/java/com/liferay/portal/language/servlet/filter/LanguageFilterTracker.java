@@ -112,15 +112,8 @@ public class LanguageFilterTracker {
 			Bundle bundle = serviceReference.getBundle();
 
 			try {
-				String bundleSymbolicName = bundle.getSymbolicName();
-
 				List<ServiceRegistration<?>> serviceRegistrations =
 					new ArrayList<>();
-
-				Dictionary<String, Object> properties = new Hashtable<>();
-
-				properties.put("bundle.symbolic.name", bundleSymbolicName);
-				properties.put("service.ranking", Integer.MIN_VALUE);
 
 				BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
 
@@ -132,6 +125,12 @@ public class LanguageFilterTracker {
 							"content.Language", classLoader),
 						LanguageResources.RESOURCE_BUNDLE_LOADER);
 
+				Dictionary<String, Object> properties = new Hashtable<>();
+
+				properties.put(
+					"bundle.symbolic.name", bundle.getSymbolicName());
+				properties.put("service.ranking", Integer.MIN_VALUE);
+
 				serviceRegistrations.add(
 					_bundleContext.registerService(
 						ResourceBundleLoader.class, resourceBundleLoader,
@@ -141,7 +140,7 @@ public class LanguageFilterTracker {
 					"(&(objectClass=" +
 						ResourceBundleLoader.class.getName() + ")" +
 							"(bundle.symbolic.name=" +
-								bundleSymbolicName + "))";
+								bundle.getSymbolicName() + "))";
 
 				final ServiceTracker<ResourceBundleLoader, ResourceBundleLoader>
 					serviceTracker = ServiceTrackerFactory.open(
