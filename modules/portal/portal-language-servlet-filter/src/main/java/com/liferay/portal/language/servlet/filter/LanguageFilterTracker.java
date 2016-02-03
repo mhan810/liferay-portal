@@ -141,7 +141,7 @@ public class LanguageFilterTracker {
 						")(objectClass=" +
 							ResourceBundleLoader.class.getName() + "))";
 
-				final ServiceTracker<ResourceBundleLoader, ResourceBundleLoader>
+				ServiceTracker<ResourceBundleLoader, ResourceBundleLoader>
 					serviceTracker = ServiceTrackerFactory.open(
 						_bundleContext, filterString);
 
