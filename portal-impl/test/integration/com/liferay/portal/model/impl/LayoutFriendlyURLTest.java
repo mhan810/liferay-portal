@@ -150,10 +150,11 @@ public class LayoutFriendlyURLTest {
 
 			Assert.assertEquals(1, layoutFriendlyURLExceptions.size());
 
-			LayoutFriendlyURLException lfurle2 =
+			LayoutFriendlyURLException layoutFriendlyURLException =
 				(LayoutFriendlyURLException)layoutFriendlyURLExceptions.get(0);
 
-			Assert.assertEquals(lfurle2.getKeywordConflict(), "tags");
+			Assert.assertEquals(
+				layoutFriendlyURLException.getKeywordConflict(), "tags");
 		}
 
 		friendlyURLMap = new HashMap<>();
@@ -174,10 +175,11 @@ public class LayoutFriendlyURLTest {
 
 			Assert.assertEquals(1, layoutFriendlyURLExceptions.size());
 
-			LayoutFriendlyURLException lfurle2 =
+			LayoutFriendlyURLException layoutFriendlyURLException =
 				(LayoutFriendlyURLException)layoutFriendlyURLExceptions.get(0);
 
-			Assert.assertEquals(lfurle2.getKeywordConflict(), "tags");
+			Assert.assertEquals(
+				layoutFriendlyURLException.getKeywordConflict(), "tags");
 		}
 
 		friendlyURLMap = new HashMap<>();
@@ -198,10 +200,11 @@ public class LayoutFriendlyURLTest {
 
 			Assert.assertEquals(1, layoutFriendlyURLExceptions.size());
 
-			LayoutFriendlyURLException lfurle2 =
+			LayoutFriendlyURLException layoutFriendlyURLException =
 				(LayoutFriendlyURLException)layoutFriendlyURLExceptions.get(0);
 
-			Assert.assertEquals(lfurle2.getKeywordConflict(), "tags");
+			Assert.assertEquals(
+				layoutFriendlyURLException.getKeywordConflict(), "tags");
 		}
 
 		friendlyURLMap = new HashMap<>();
@@ -222,10 +225,11 @@ public class LayoutFriendlyURLTest {
 
 			Assert.assertEquals(1, layoutFriendlyURLExceptions.size());
 
-			LayoutFriendlyURLException lfurle2 =
+			LayoutFriendlyURLException layoutFriendlyURLException =
 				(LayoutFriendlyURLException)layoutFriendlyURLExceptions.get(0);
 
-			Assert.assertEquals(lfurle2.getKeywordConflict(), "/-/");
+			Assert.assertEquals(
+				layoutFriendlyURLException.getKeywordConflict(), "/-/");
 		}
 	}
 
