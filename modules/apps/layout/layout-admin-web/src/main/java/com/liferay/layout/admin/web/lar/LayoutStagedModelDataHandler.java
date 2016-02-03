@@ -14,7 +14,7 @@
 
 package com.liferay.layout.admin.web.lar;
 
-import com.liferay.counter.service.CounterLocalService;
+import com.liferay.counter.kernel.service.CounterLocalService;
 import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.PortletDataException;
