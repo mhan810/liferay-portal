@@ -465,7 +465,7 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 			ServiceTrackerMapFactoryImpl serviceTrackerMapFactoryImpl =
 				(ServiceTrackerMapFactoryImpl)serviceTrackerMapFactory;
 
-			serviceTrackerMapFactoryImpl.closeServiceTrackerMaps();
+			serviceTrackerMapFactoryImpl.clearServiceTrackerMaps();
 		}
 
 		_framework.stop();

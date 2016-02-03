@@ -38,7 +38,7 @@ public class ServiceTrackerMapFactoryImpl implements ServiceTrackerMapFactory {
 		_bundleContext = bundleContext;
 	}
 
-	public void closeServiceTrackerMaps() {
+	public void clearServiceTrackerMaps() {
 		for (
 			com.liferay.osgi.service.tracker.collections.map.
 				ServiceTrackerMap<?, ?> serviceTrackerMap :
@@ -350,7 +350,7 @@ public class ServiceTrackerMapFactoryImpl implements ServiceTrackerMapFactory {
 	private final BundleContext _bundleContext;
 	private final Map
 		<com.liferay.osgi.service.tracker.collections.map.
-			ServiceTrackerMap<?,?> ,Void>
+			ServiceTrackerMap<?,?>, Void>
 				_serviceTrackerMaps = new WeakHashMap<>();
 
 	private static class EmitterWrapper<K>
