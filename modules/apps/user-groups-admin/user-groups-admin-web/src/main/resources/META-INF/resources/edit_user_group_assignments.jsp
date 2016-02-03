@@ -48,7 +48,7 @@ UserSearchTerms searchTerms = (UserSearchTerms)userSearchContainer.getSearchTerm
 
 LinkedHashMap<String, Object> userParams = new LinkedHashMap<String, Object>();
 
-userParams.put("forceDatabase", true);
+userParams.put("forceDatabase", Boolean.TRUE);
 
 if (filterManageableOrganizations) {
 	userParams.put("usersOrgsTree", user.getOrganizations());
