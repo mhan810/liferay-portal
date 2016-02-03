@@ -64,7 +64,7 @@ public class LanguageFilterTracker {
 		_serviceTracker.close();
 	}
 
-	private ServiceTracker<ServletContextHelper, ServletContextHelperTracked>
+	private ServiceTracker<ServletContextHelper, TrackedServletContextHelper>
 		_serviceTracker;
 
 	private static class ServiceTrackerResourceBundleLoader
@@ -96,7 +96,7 @@ public class LanguageFilterTracker {
 
 	private class ServletContextHelperServiceTrackerCustomizer
 		implements ServiceTrackerCustomizer
-			<ServletContextHelper, ServletContextHelperTracked> {
+			<ServletContextHelper, TrackedServletContextHelper> {
 
 		public ServletContextHelperServiceTrackerCustomizer(
 			BundleContext bundleContext) {
@@ -105,7 +105,7 @@ public class LanguageFilterTracker {
 		}
 
 		@Override
-		public ServletContextHelperTracked addingService(
+		public TrackedServletContextHelper addingService(
 			ServiceReference<ServletContextHelper> serviceReference) {
 
 			Bundle bundle = serviceReference.getBundle();
@@ -177,7 +177,7 @@ public class LanguageFilterTracker {
 					_bundleContext.registerService(
 						Filter.class, filter, properties));
 
-				return new ServletContextHelperTracked(
+				return new TrackedServletContextHelper(
 					serviceTracker, serviceRegistrations);
 			}
 			catch (InvalidSyntaxException ise) {
@@ -188,7 +188,7 @@ public class LanguageFilterTracker {
 		@Override
 		public void modifiedService(
 			ServiceReference<ServletContextHelper> serviceReference,
-			ServletContextHelperTracked serviceRegistration) {
+			TrackedServletContextHelper serviceRegistration) {
 
 			removedService(serviceReference, serviceRegistration);
 
@@ -198,9 +198,9 @@ public class LanguageFilterTracker {
 		@Override
 		public void removedService(
 			ServiceReference<ServletContextHelper> serviceReference,
-			ServletContextHelperTracked servletContextHelperTracked) {
+			TrackedServletContextHelper trackedServletContextHelper) {
 
-			servletContextHelperTracked.clean();
+			trackedServletContextHelper.clean();
 
 			_bundleContext.ungetService(serviceReference);
 		}
@@ -209,9 +209,9 @@ public class LanguageFilterTracker {
 
 	}
 
-	private class ServletContextHelperTracked {
+	private class TrackedServletContextHelper {
 
-		public ServletContextHelperTracked(
+		public TrackedServletContextHelper(
 			ServiceTracker<?, ?> serviceTracker,
 			List<ServiceRegistration<?>> serviceRegistrations) {
 
