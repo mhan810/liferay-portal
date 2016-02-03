@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.search.suggest.SpellCheckIndexWriter;
 import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch.document.ElasticsearchUpdateDocumentCommand;
+import com.liferay.portal.search.elasticsearch.index.IndexNameBuilder;
 import com.liferay.portal.search.elasticsearch.internal.util.DocumentTypes;
 import com.liferay.portal.search.elasticsearch.internal.util.LogUtil;
 
@@ -88,7 +89,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 
 			RefreshRequestBuilder refreshRequestBuilder =
 				indicesAdminClient.prepareRefresh(
-					String.valueOf(searchContext.getCompanyId()));
+					_indexNameBuilder.getIndexName(searchContext));
 
 			RefreshResponse refreshResponse = refreshRequestBuilder.get();
 
@@ -107,7 +108,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			Client client = _elasticsearchConnectionManager.getClient();
 
 			DeleteRequestBuilder deleteRequestBuilder = client.prepareDelete(
-				String.valueOf(searchContext.getCompanyId()),
+				_indexNameBuilder.getIndexName(searchContext),
 				DocumentTypes.LIFERAY, uid);
 
 			if (PortalRunMode.isTestMode() ||
@@ -124,7 +125,8 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			if (_log.isInfoEnabled()) {
 				_log.info(
 					"No index found while attempting to delete " + uid +
-						" in index " + searchContext.getCompanyId());
+						" in index " +
+							_indexNameBuilder.getIndexName(searchContext));
 			}
 		}
 		catch (Exception e) {
@@ -145,7 +147,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			for (String uid : uids) {
 				DeleteRequestBuilder deleteRequestBuilder =
 					client.prepareDelete(
-						String.valueOf(searchContext.getCompanyId()),
+						_indexNameBuilder.getIndexName(searchContext),
 						DocumentTypes.LIFERAY, uid);
 
 				bulkRequestBuilder.add(deleteRequestBuilder);
@@ -188,7 +190,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			boolQueryBuilder.must(matchAllQueryBuilder);
 
 			searchResponseScroller = new SearchResponseScroller(
-				client, searchContext, boolQueryBuilder,
+				client, searchContext, _indexNameBuilder, boolQueryBuilder,
 				TimeValue.timeValueSeconds(30), DocumentTypes.LIFERAY);
 
 			searchResponseScroller.prepare();
@@ -200,7 +202,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 				_log.info(
 					"No index found while attempting to delete documents for " +
 						className + " in index " +
-							searchContext.getCompanyId());
+							_indexNameBuilder.getIndexName(searchContext));
 			}
 		}
 		catch (Exception e) {
@@ -283,6 +285,10 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
 	private ElasticsearchUpdateDocumentCommand
 		_elasticsearchUpdateDocumentCommand;
+
+	@Reference(unbind = "-")
+	private IndexNameBuilder _indexNameBuilder;
+
 	private SearchHitsProcessor _searchHitsProcessor;
 
 }
