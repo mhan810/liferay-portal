@@ -58,10 +58,10 @@ public class AmazonRankingsPreferencesValidator
 
 		List<String> badIsbns = new ArrayList<>();
 
+		ISBNValidator isbnValidator = new ISBNValidator();
+
 		String[] isbns = portletPreferences.getValues(
 			"isbns", StringPool.EMPTY_ARRAY);
-
-		ISBNValidator isbnValidator = new ISBNValidator();
 
 		for (String isbn : isbns) {
 			if (!isbnValidator.isValid(isbn)) {
