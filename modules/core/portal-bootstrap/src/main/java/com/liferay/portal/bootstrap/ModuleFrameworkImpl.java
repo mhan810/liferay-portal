@@ -455,7 +455,7 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 		if (registry instanceof RegistryImpl) {
 			RegistryImpl registryImpl = (RegistryImpl)registry;
 
-			registryImpl.closeTrackers();
+			registryImpl.closeServiceTrackers();
 		}
 
 		ServiceTrackerMapFactory serviceTrackerMapFactory =

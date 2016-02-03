@@ -49,7 +49,7 @@ public class RegistryImpl implements Registry {
 		_bundleContext = bundleContext;
 	}
 
-	public void closeTrackers() {
+	public void closeServiceTrackers() {
 		for (org.osgi.util.tracker.ServiceTracker<?, ?> serviceTracker :
 				_serviceTrackers.keySet()) {
 
