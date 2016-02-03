@@ -1338,9 +1338,7 @@
 		<if>
 			<isset var="uploadFileName" />
 			<then>
-				<execute macro="BlogsEntry#viewInlineImage">
-					<var name="uploadFileName" value="${uploadFileName}" />
-				</execute>
+				<execute function="AssertElementPresent" locator1="BlogsEntry#ENTRY_COVER_IMAGE" />
 			</then>
 		</if>
 
