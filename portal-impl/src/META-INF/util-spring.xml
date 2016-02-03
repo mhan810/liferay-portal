@@ -596,20 +596,20 @@
 	</bean>
 	<bean id="com.liferay.social.kernel.service.permission.SocialActivityPermissionUtil" class="com.liferay.social.kernel.service.permission.SocialActivityPermissionUtil">
 		<property name="socialActivityPermission">
-			<bean class="com.liferay.social.kernel.service.permission.SocialActivityPermissionImpl" />
+			<bean class="com.liferay.portlet.social.service.permission.SocialActivityPermissionImpl" />
 		</property>
 	</bean>
 	<bean id="com.liferay.social.kernel.util.SocialRelationTypesUtil" class="com.liferay.social.kernel.util.SocialRelationTypesUtil">
 		<property name="socialRelationTypes">
-			<bean class="com.liferay.social.kernel.util.SocialRelationTypesImpl" />
+			<bean class="com.liferay.portlet.social.util.SocialRelationTypesImpl" />
 		</property>
 	</bean>
 	<bean id="com.liferay.social.kernel.service.permission.SocialRequestPermissionUtil" class="com.liferay.social.kernel.service.permission.SocialRequestPermissionUtil">
 		<property name="socialRequestPermission">
-			<bean class="com.liferay.social.kernel.service.permission.SocialRequestPermissionImpl" />
+			<bean class="com.liferay.portlet.social.service.permission.SocialRequestPermissionImpl" />
 		</property>
 	</bean>
-	<bean id="com.liferay.social.kernel.util.SocialConfiguration" class="com.liferay.social.kernel.util.SocialConfigurationImpl" />
+	<bean id="com.liferay.social.kernel.util.SocialConfiguration" class="com.liferay.portlet.social.util.SocialConfigurationImpl" />
 	<bean id="com.liferay.social.kernel.util.SocialConfigurationUtil" class="com.liferay.social.kernel.util.SocialConfigurationUtil">
 		<property name="socialConfiguration" ref="com.liferay.social.kernel.util.SocialConfiguration" />
 	</bean>
