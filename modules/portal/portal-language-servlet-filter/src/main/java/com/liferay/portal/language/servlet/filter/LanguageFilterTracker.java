@@ -137,10 +137,9 @@ public class LanguageFilterTracker {
 						properties));
 
 				String filterString =
-					"(&(objectClass=" +
-						ResourceBundleLoader.class.getName() + ")" +
-							"(bundle.symbolic.name=" +
-								bundle.getSymbolicName() + "))";
+					"(&(bundle.symbolic.name=" + bundle.getSymbolicName() +
+						")(objectClass=" +
+							ResourceBundleLoader.class.getName() + "))";
 
 				final ServiceTracker<ResourceBundleLoader, ResourceBundleLoader>
 					serviceTracker = ServiceTrackerFactory.open(
