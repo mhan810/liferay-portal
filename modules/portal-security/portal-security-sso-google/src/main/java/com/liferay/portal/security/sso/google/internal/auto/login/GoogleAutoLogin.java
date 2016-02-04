@@ -85,7 +85,8 @@ public class GoogleAutoLogin extends BaseAutoLogin {
 				(String)session.getAttribute(GoogleWebKeys.GOOGLE_USER_ID));
 
 			if (Validator.isNotNull(googleUserId)) {
-				return _userLocalService.getUserByGoogleUserId(companyId, googleUserId);
+				return _userLocalService.getUserByGoogleUserId(
+					companyId, googleUserId);
 			}
 		}
 

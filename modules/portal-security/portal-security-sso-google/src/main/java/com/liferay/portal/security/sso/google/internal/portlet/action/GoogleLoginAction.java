@@ -175,7 +175,8 @@ public class GoogleLoginAction extends BaseStrutsAction {
 			birthdayMonth, birthdayDay, birthdayYear, jobTitle, groupIds,
 			organizationIds, roleIds, userGroupIds, sendEmail, serviceContext);
 
-		user = _userLocalService.updateGoogleUserId(user.getUserId(), googleUserId);
+		user = _userLocalService.updateGoogleUserId(
+			user.getUserId(), googleUserId);
 
 		user = _userLocalService.updateLastLogin(
 			user.getUserId(), user.getLoginIP());
@@ -339,7 +340,8 @@ public class GoogleLoginAction extends BaseStrutsAction {
 		String googleUserId = userinfoplus.getId();
 
 		if (Validator.isNotNull(googleUserId)) {
-			user = _userLocalService.fetchUserByGoogleUserId(companyId, googleUserId);
+			user = _userLocalService.fetchUserByGoogleUserId(
+				companyId, googleUserId);
 
 			if ((user != null) &&
 				(user.getStatus() != WorkflowConstants.STATUS_INCOMPLETE)) {
@@ -423,8 +425,11 @@ public class GoogleLoginAction extends BaseStrutsAction {
 
 		ServiceContext serviceContext = new ServiceContext();
 
-		if (!StringUtil.equalsIgnoreCase(googleUserId, user.getGoogleUserId())) {
-			_userLocalService.updateGoogleUserId(user.getUserId(), googleUserId);
+		if (!StringUtil.equalsIgnoreCase(
+				googleUserId, user.getGoogleUserId())) {
+
+			_userLocalService.updateGoogleUserId(
+				user.getUserId(), googleUserId);
 		}
 
 		if (!StringUtil.equalsIgnoreCase(

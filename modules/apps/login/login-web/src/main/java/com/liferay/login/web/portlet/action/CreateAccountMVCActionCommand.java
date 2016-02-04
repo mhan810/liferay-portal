@@ -470,7 +470,8 @@ public class CreateAccountMVCActionCommand extends BaseMVCActionCommand {
 		}
 
 		if (Validator.isNotNull(googleUserId)) {
-			_userLocalService.updateGoogleUserId(user.getUserId(), googleUserId);
+			_userLocalService.updateGoogleUserId(
+				user.getUserId(), googleUserId);
 
 			session.removeAttribute(WebKeys.GOOGLE_INCOMPLETE_USER_ID);
 
