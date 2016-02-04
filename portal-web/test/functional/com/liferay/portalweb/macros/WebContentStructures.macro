@@ -151,7 +151,7 @@
 	<command name="editFieldSettingCP">
 		<var name="key_ddlDataDefinitionName" value="${structureName}" />
 
-		<execute function="AssertClick" locator1="DDMSelectStructure#DDM_STRUCTURE_TABLE_NAME" value1="${structureName}" />
+		<execute function="AssertClick" locator1="DDMSelectStructure#DDM_STRUCTURE_TABLE_NAME_LINK" value1="${structureName}" />
 
 		<execute function="SelectFrame" value1="relative=top" />
 
@@ -304,7 +304,7 @@
 			</then>
 		</if>
 
-		<execute function="AssertClick" locator1="DDMSelectStructure#DDM_STRUCTURE_TABLE_NAME" value1="${structureName}" />
+		<execute function="AssertClick" locator1="DDMSelectStructure#DDM_STRUCTURE_TABLE_NAME_LINK" value1="${structureName}" />
 
 		<execute macro="WebContentNavigator#showStructureDetails" />
 
