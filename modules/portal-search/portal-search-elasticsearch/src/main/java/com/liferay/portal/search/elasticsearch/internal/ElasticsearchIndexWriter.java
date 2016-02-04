@@ -199,7 +199,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			if (_log.isInfoEnabled()) {
 				_log.info(
 					"No index found while attempting to delete documents for " +
-						className + " in index: " +
+						className + " in index " +
 							searchContext.getCompanyId());
 			}
 		}
