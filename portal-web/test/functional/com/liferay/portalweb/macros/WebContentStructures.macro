@@ -304,17 +304,6 @@
 			</then>
 		</if>
 
-		<execute function="AssertClick" locator1="DDMSelectStructure#DDM_STRUCTURE_TABLE_NAME_LINK" value1="${structureName}" />
-
-		<execute macro="WebContentNavigator#showStructureDetails" />
-
-		<if>
-			<isset var="structureDescription" />
-			<then>
-				<execute function="AssertTextEquals" locator1="TextInput#DESCRIPTION" value1="${structureDescription}" />
-			</then>
-		</if>
-
 		<execute function="SelectFrame" value1="relative=top" />
 	</command>
 
