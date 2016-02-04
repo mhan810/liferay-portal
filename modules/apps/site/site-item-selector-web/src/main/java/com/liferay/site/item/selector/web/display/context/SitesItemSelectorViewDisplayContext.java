@@ -23,7 +23,6 @@ import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 
 /**
- *
  * @author Julio Camarero
  */
 public interface SitesItemSelectorViewDisplayContext {

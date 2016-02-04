@@ -15,7 +15,6 @@
 package com.liferay.site.item.selector.web.constants;
 
 /**
- *
  * @author Julio Camarero
  */
 public class SitesItemSelectorWebKeys {
