@@ -53,8 +53,6 @@
 	</command>
 
 	<command name="AddBlogsEntryOrgRole" priority="5">
-		<property name="portal.acceptance" value="true" />
-
 		<execute macro="Permissions#setUpOrgRoleLoginUserPG">
 			<var name="orgName" value="Organization Name" />
 			<var name="orgType" value="Organization" />
@@ -221,8 +219,6 @@
 	</command>
 
 	<command name="AddBlogsEntryRegRole" priority="5">
-		<property name="portal.acceptance" value="true" />
-
 		<execute macro="Permissions#setUpRegRoleLoginUserPG">
 			<var name="pageName" value="Blogs Page" />
 			<var name="portletName" value="Blogs" />
@@ -357,8 +353,6 @@
 	</command>
 
 	<command name="AddBlogsEntrySiteRole" priority="5">
-		<property name="portal.acceptance" value="true" />
-
 		<execute macro="Permissions#setUpSiteRoleLoginUserPG">
 			<var name="page" value="Public Pages" />
 			<var name="pageName" value="Blogs Page" />
