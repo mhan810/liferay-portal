@@ -16,7 +16,7 @@ package com.liferay.control.menu.util;
 
 import com.liferay.control.menu.ControlMenuCategory;
 import com.liferay.control.menu.ControlMenuEntry;
-import com.liferay.osgi.service.tracker.collections.map.ServiceRankingServiceReferenceComparator;
+import com.liferay.osgi.service.tracker.collections.map.PropertyServiceReferenceComparator;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -105,7 +105,8 @@ public class ControlMenuCategoryRegistry {
 				bundleContext, ControlMenuCategory.class,
 				"(control.menu.category.key=*)",
 				new ControlMenuCategoryServiceReferenceMapper(),
-				new ServiceRankingServiceReferenceComparator());
+				Collections.reverseOrder(
+					new PropertyServiceReferenceComparator("service.ranking")));
 	}
 
 	@Deactivate
