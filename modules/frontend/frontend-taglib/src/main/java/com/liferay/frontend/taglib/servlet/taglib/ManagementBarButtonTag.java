@@ -141,6 +141,7 @@ public class ManagementBarButtonTag extends IncludeTag {
 		_data.put("qa-id", _label + "Button");
 
 		setNamespacedAttribute(request, "data", _data);
+
 		setNamespacedAttribute(request, "disabled", _disabled);
 		setNamespacedAttribute(request, "href", _href);
 		setNamespacedAttribute(request, "icon", _icon);
