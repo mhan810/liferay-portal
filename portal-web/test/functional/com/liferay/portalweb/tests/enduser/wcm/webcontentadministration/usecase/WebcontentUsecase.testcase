@@ -118,7 +118,9 @@
 
 		<execute function="SelectFrameTop" />
 
-		<execute function="Refresh" />
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Web Content" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -229,7 +231,9 @@
 			<var name="structureName" value="WC Structure Name" />
 		</execute>
 
-		<execute function="Refresh" />
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Web Content" />
+		</execute>
 
 		<execute macro="WebContentTemplates#viewCP">
 			<var name="templateDescription" value="WC Template Description" />
