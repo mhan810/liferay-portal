@@ -43,12 +43,12 @@ public class DDMFormLayoutTransformerTest {
 	@Test
 	public void testGetPages() {
 
-		// DDM Form
+		// DDM form
 
 		DDMForm ddmForm = DDMFormTestUtil.createDDMForm(
 			"Field_1", "Field_2", "Field_3", "Field_4", "Field_5");
 
-		// DDM Form Layout
+		// DDM form layout
 
 		DDMFormLayout ddmFormLayout = new DDMFormLayout();
 
@@ -83,7 +83,7 @@ public class DDMFormLayoutTransformerTest {
 
 		ddmFormLayout.addDDMFormLayoutPage(ddmFormLayoutPage);
 
-		// Rendered Fields Map
+		// Rendered fields map
 
 		Map<String, String> renderedDDMFormFieldsMap = new HashMap<>();
 
@@ -148,7 +148,7 @@ public class DDMFormLayoutTransformerTest {
 	@Test
 	public void testGetPagesWithRequiredFieldsWarning() {
 
-		// DDM Form
+		// DDM form
 
 		DDMForm ddmForm = DDMFormTestUtil.createDDMForm();
 
@@ -164,7 +164,7 @@ public class DDMFormLayoutTransformerTest {
 
 		ddmForm.addDDMFormField(ddmFormField2);
 
-		// DDM Form Layout
+		// DDM form layout
 
 		DDMFormLayout ddmFormLayout = new DDMFormLayout();
 
@@ -174,7 +174,7 @@ public class DDMFormLayoutTransformerTest {
 		ddmFormLayout.addDDMFormLayoutPage(
 			createDDMFormLayoutPage("Page 2", "Field_2"));
 
-		// Rendered Fields Map
+		// Rendered fields map
 
 		Map<String, String> renderedDDMFormFieldsMap = new HashMap<>();
 
@@ -199,7 +199,6 @@ public class DDMFormLayoutTransformerTest {
 		Assert.assertTrue((Boolean)page2.get("showRequiredFieldsWarning"));
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void assertColumnEquals(
 		String[] expectedRenderedDDMFormFields, int expectedSize,
 		Map<String, Object> actualColumn) {
