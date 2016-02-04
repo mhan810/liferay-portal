@@ -12,14 +12,14 @@
  * details.
  */
 
-package com.liferay.portal.security.sso.google.auto.login;
+package com.liferay.portal.security.sso.google.internal.auto.login;
 
 import com.liferay.portal.kernel.security.auto.login.AutoLogin;
 import com.liferay.portal.kernel.security.auto.login.BaseAutoLogin;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.sso.google.GoogleAuthorization;
 import com.liferay.portal.security.sso.google.constants.GoogleWebKeys;
 import com.liferay.portal.service.UserLocalService;
 import com.liferay.portal.util.PortalUtil;
@@ -44,10 +44,7 @@ public class GoogleAutoLogin extends BaseAutoLogin {
 
 		long companyId = PortalUtil.getCompanyId(request);
 
-		boolean googleAuthEnabled = PrefsPropsUtil.getBoolean(
-			companyId, "google-auth-enabled", true);
-
-		if (!googleAuthEnabled) {
+		if (!_googleAuthorization.isEnabled(companyId)) {
 			return null;
 		}
 
@@ -74,16 +71,29 @@ public class GoogleAutoLogin extends BaseAutoLogin {
 		String emailAddress = GetterUtil.getString(
 			session.getAttribute(GoogleWebKeys.GOOGLE_USER_EMAIL_ADDRESS));
 
-		if (Validator.isNull(emailAddress)) {
-			return null;
+		if (Validator.isNotNull(emailAddress)) {
+			session.removeAttribute(GoogleWebKeys.GOOGLE_USER_EMAIL_ADDRESS);
+
+			return _userLocalService.getUserByEmailAddress(
+				companyId, emailAddress);
+		}
+		else {
+			String googleId = GetterUtil.getString(
+				(String)session.getAttribute(GoogleWebKeys.GOOGLE_USER_ID));
+
+			if (Validator.isNotNull(googleId)) {
+				return _userLocalService.getUserByGoogleId(companyId, googleId);
+			}
 		}
 
-		session.removeAttribute(GoogleWebKeys.GOOGLE_USER_EMAIL_ADDRESS);
+		return null;
+	}
 
-		User user = _userLocalService.getUserByEmailAddress(
-			companyId, emailAddress);
+	@Reference(unbind = "-")
+	protected void setGoogleAuthorization(
+		GoogleAuthorization googleAuthorization) {
 
-		return user;
+		_googleAuthorization = googleAuthorization;
 	}
 
 	@Reference(unbind = "-")
@@ -91,6 +101,7 @@ public class GoogleAutoLogin extends BaseAutoLogin {
 		_userLocalService = userLocalService;
 	}
 
+	private GoogleAuthorization _googleAuthorization;
 	private UserLocalService _userLocalService;
 
 }

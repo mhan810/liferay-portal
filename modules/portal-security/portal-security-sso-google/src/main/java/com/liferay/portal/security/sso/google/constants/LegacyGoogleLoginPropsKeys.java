@@ -12,16 +12,21 @@
  * details.
  */
 
-package com.liferay.portal.security.sso.google.portlet.path;
-
-import org.osgi.service.component.annotations.Component;
+package com.liferay.portal.security.sso.google.constants;
 
 /**
- * @author Sergio González
+ * @author Stian Sigvartsen
  */
-@Component(
-	immediate = true, property = {"auth.public.path=/portal/google_login"},
-	service = Object.class
-)
-public class AuthPublicPath {
+public class LegacyGoogleLoginPropsKeys {
+
+	public static final String AUTH_ENABLED = "google-auth-enabled";
+
+	public static final String CLIENT_ID = "google-client-id";
+
+	public static final String CLIENT_SECRET = "google-client-secret";
+
+	public static final String[] GOOGLE_LOGIN_KEYS = {
+		AUTH_ENABLED, CLIENT_ID, CLIENT_SECRET
+	};
+
 }
