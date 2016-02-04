@@ -2608,7 +2608,7 @@
 		<column name="screenName" type="String" />
 		<column name="emailAddress" type="String" />
 		<column name="facebookId" type="long" />
-		<column name="googleId" type="String" />
+		<column name="googleUserId" type="String" />
 		<column name="ldapServerId" type="long" />
 		<column name="openId" type="String" />
 		<column name="portraitId" type="long" />
@@ -2682,9 +2682,9 @@
 			<finder-column name="companyId" />
 			<finder-column name="facebookId" />
 		</finder>
-		<finder name="C_GID" return-type="User">
+		<finder name="C_GUID" return-type="User">
 			<finder-column name="companyId" />
-			<finder-column name="googleId" />
+			<finder-column name="googleUserId" />
 		</finder>
 		<finder name="C_O" return-type="User">
 			<finder-column name="companyId" />
@@ -3338,7 +3338,7 @@
 		<exception>CountryIdd</exception>
 		<exception>CountryName</exception>
 		<exception>CountryNumber</exception>
-		<exception>DuplicateGoogleId</exception>
+		<exception>DuplicateGoogleUserId</exception>
 		<exception>DuplicateGroup</exception>
 		<exception>DuplicateOpenId</exception>
 		<exception>DuplicateOrganization</exception>

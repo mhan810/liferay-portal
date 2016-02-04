@@ -81,11 +81,11 @@ public class GoogleAutoLogin extends BaseAutoLogin {
 				companyId, emailAddress);
 		}
 		else {
-			String googleId = GetterUtil.getString(
+			String googleUserId = GetterUtil.getString(
 				(String)session.getAttribute(GoogleWebKeys.GOOGLE_USER_ID));
 
-			if (Validator.isNotNull(googleId)) {
-				return _userLocalService.getUserByGoogleId(companyId, googleId);
+			if (Validator.isNotNull(googleUserId)) {
+				return _userLocalService.getUserByGoogleUserId(companyId, googleUserId);
 			}
 		}
 

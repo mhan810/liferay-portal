@@ -147,7 +147,7 @@ public class GoogleLoginAction extends BaseStrutsAction {
 		boolean autoScreenName = true;
 		String screenName = StringPool.BLANK;
 		String emailAddress = userinfoplus.getEmail();
-		String googleId = userinfoplus.getId();
+		String googleUserId = userinfoplus.getId();
 		String openId = StringPool.BLANK;
 		Locale locale = LocaleUtil.getDefault();
 		String firstName = userinfoplus.getGivenName();
@@ -175,7 +175,7 @@ public class GoogleLoginAction extends BaseStrutsAction {
 			birthdayMonth, birthdayDay, birthdayYear, jobTitle, groupIds,
 			organizationIds, roleIds, userGroupIds, sendEmail, serviceContext);
 
-		user = _userLocalService.updateGoogleId(user.getUserId(), googleId);
+		user = _userLocalService.updateGoogleUserId(user.getUserId(), googleUserId);
 
 		user = _userLocalService.updateLastLogin(
 			user.getUserId(), user.getLoginIP());
@@ -336,16 +336,16 @@ public class GoogleLoginAction extends BaseStrutsAction {
 
 		User user = null;
 
-		String googleId = userinfoplus.getId();
+		String googleUserId = userinfoplus.getId();
 
-		if (Validator.isNotNull(googleId)) {
-			user = _userLocalService.fetchUserByGoogleId(companyId, googleId);
+		if (Validator.isNotNull(googleUserId)) {
+			user = _userLocalService.fetchUserByGoogleUserId(companyId, googleUserId);
 
 			if ((user != null) &&
 				(user.getStatus() != WorkflowConstants.STATUS_INCOMPLETE)) {
 
 				session.setAttribute(
-					GoogleWebKeys.GOOGLE_USER_ID, String.valueOf(googleId));
+					GoogleWebKeys.GOOGLE_USER_ID, String.valueOf(googleUserId));
 			}
 		}
 
@@ -393,7 +393,7 @@ public class GoogleLoginAction extends BaseStrutsAction {
 		throws Exception {
 
 		String emailAddress = userinfoplus.getEmail();
-		String googleId = userinfoplus.getId();
+		String googleUserId = userinfoplus.getId();
 		String firstName = userinfoplus.getGivenName();
 		String lastName = userinfoplus.getFamilyName();
 		boolean male = Validator.equals(userinfoplus.getGender(), "male");
@@ -423,8 +423,8 @@ public class GoogleLoginAction extends BaseStrutsAction {
 
 		ServiceContext serviceContext = new ServiceContext();
 
-		if (!StringUtil.equalsIgnoreCase(googleId, user.getGoogleId())) {
-			_userLocalService.updateGoogleId(user.getUserId(), googleId);
+		if (!StringUtil.equalsIgnoreCase(googleUserId, user.getGoogleUserId())) {
+			_userLocalService.updateGoogleUserId(user.getUserId(), googleUserId);
 		}
 
 		if (!StringUtil.equalsIgnoreCase(

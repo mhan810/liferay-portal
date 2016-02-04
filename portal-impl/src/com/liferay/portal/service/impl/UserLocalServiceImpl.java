@@ -19,7 +19,7 @@ import com.liferay.message.boards.kernel.model.MBMessage;
 import com.liferay.portal.exception.CompanyMaxUsersException;
 import com.liferay.portal.exception.ContactBirthdayException;
 import com.liferay.portal.exception.ContactNameException;
-import com.liferay.portal.exception.DuplicateGoogleIdException;
+import com.liferay.portal.exception.DuplicateGoogleUserIdException;
 import com.liferay.portal.exception.DuplicateOpenIdException;
 import com.liferay.portal.exception.GroupFriendlyURLException;
 import com.liferay.portal.exception.ModelListenerException;
@@ -1931,16 +1931,16 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns the user with the Google ID.
+	 * Returns the user with the Google user ID.
 	 *
 	 * @param  companyId the primary key of the user's company
-	 * @param  googleId the user's Google ID
-	 * @return the user with the Google ID, or <code>null</code> if a user with the
-	 *         Google ID could not be found
+	 * @param  googleUserId the user's Google user ID
+	 * @return the user with the Google user ID, or <code>null</code> if a user
+	 *         with the Google user ID could not be found
 	 */
 	@Override
-	public User fetchUserByGoogleId(long companyId, String googleId) {
-		return userPersistence.fetchByC_GID(companyId, googleId);
+	public User fetchUserByGoogleUserId(long companyId, String googleUserId) {
+		return userPersistence.fetchByC_GUID(companyId, googleUserId);
 	}
 
 	/**
@@ -2583,17 +2583,17 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns the user with the Google ID.
+	 * Returns the user with the Google user ID.
 	 *
 	 * @param  companyId the primary key of the user's company
-	 * @param  googleId the user's Google ID
-	 * @return the user with the Google ID
+	 * @param  googleUserId the user's Google user ID
+	 * @return the user with the Google user ID
 	 */
 	@Override
-	public User getUserByGoogleId(long companyId, String googleId)
+	public User getUserByGoogleUserId(long companyId, String googleUserId)
 		throws PortalException {
 
-		return userPersistence.findByC_GID(companyId, googleId);
+		return userPersistence.findByC_GUID(companyId, googleUserId);
 	}
 
 	/**
@@ -4227,23 +4227,23 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Updates the user's GoogleId.
+	 * Updates the user's Google user ID.
 	 *
 	 * @param  userId the primary key of the user
-	 * @param  googleId the new GoogleId
+	 * @param  googleUserId the new Google user ID
 	 * @return the user
 	 */
 	@Override
-	public User updateGoogleId(long userId, String googleId)
+	public User updateGoogleUserId(long userId, String googleUserId)
 		throws PortalException {
 
-		googleId = googleId.trim();
+		googleUserId = googleUserId.trim();
 
 		User user = userPersistence.findByPrimaryKey(userId);
 
-		validateGoogleId(user.getCompanyId(), userId, googleId);
+		validateGoogleUserId(user.getCompanyId(), userId, googleUserId);
 
-		user.setGoogleId(googleId);
+		user.setGoogleUserId(googleUserId);
 
 		userPersistence.update(user);
 
@@ -6493,20 +6493,21 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		}
 	}
 
-	protected void validateGoogleId(
-			long companyId, long userId, String googleId)
+	protected void validateGoogleUserId(
+			long companyId, long userId, String googleUserId)
 		throws PortalException {
 
-		if (Validator.isNull(googleId)) {
+		if (Validator.isNull(googleUserId)) {
 			return;
 		}
 
-		User user = userPersistence.fetchByC_GID(companyId, googleId);
+		User user = userPersistence.fetchByC_GUID(companyId, googleUserId);
 
 		if ((user != null) && (user.getUserId() != userId)) {
-			throw new DuplicateGoogleIdException(
-				"existing userId = =" + user.getUserId() + ", googleId" +
-					googleId + ", userId=" + userId);
+			throw new DuplicateGoogleUserIdException(
+				"New user " + userId + " conflicts with existing user " +
+					userId + " who is already associated with Google user ID " +
+						googleUserId);
 		}
 	}
 
