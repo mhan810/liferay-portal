@@ -51,7 +51,7 @@ public class RecentSitesItemSelectorViewDisplayContext
 			getPortletRequest(), getPortletURL());
 
 		groupSearch.setEmptyResultsMessage(
-			"you-have-not-visited-any-site-recently");
+			"you-have-not-visited-any-sites-recently");
 
 		List<Group> results = _recentGroupManager.getRecentGroups(request);
 
