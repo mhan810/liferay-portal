@@ -182,7 +182,8 @@ public class GoogleLoginAction extends BaseStrutsAction {
 			birthdayMonth, birthdayDay, birthdayYear, jobTitle, groupIds,
 			organizationIds, roleIds, userGroupIds, sendEmail, serviceContext);
 
-		user = _userLocalService.updateGoogleUserId(user.getUserId(), googleUserId);
+		user = _userLocalService.updateGoogleUserId(
+			user.getUserId(), googleUserId);
 
 		user = _userLocalService.updateLastLogin(
 			user.getUserId(), user.getLoginIP());
@@ -329,7 +330,8 @@ public class GoogleLoginAction extends BaseStrutsAction {
 		String googleUserId = userinfoplus.getId();
 
 		if (Validator.isNotNull(googleUserId)) {
-			user = _userLocalService.fetchUserByGoogleUserId(companyId, googleUserId);
+			user = _userLocalService.fetchUserByGoogleUserId(
+				companyId, googleUserId);
 
 			if ((user != null) &&
 				(user.getStatus() != WorkflowConstants.STATUS_INCOMPLETE)) {
@@ -374,18 +376,6 @@ public class GoogleLoginAction extends BaseStrutsAction {
 		return user;
 	}
 
-	@Reference(unbind = "-")
-	protected void setGoogleAuthorization(
-		GoogleAuthorization googleAuthorization) {
-
-		_googleAuthorization = googleAuthorization;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
 	protected User updateUser(User user, Userinfoplus userinfoplus)
 		throws Exception {
 
@@ -420,8 +410,11 @@ public class GoogleLoginAction extends BaseStrutsAction {
 
 		ServiceContext serviceContext = new ServiceContext();
 
-		if (!StringUtil.equalsIgnoreCase(googleUserId, user.getGoogleUserId())) {
-			_userLocalService.updateGoogleUserId(user.getUserId(), googleUserId);
+		if (!StringUtil.equalsIgnoreCase(
+				googleUserId, user.getGoogleUserId())) {
+
+			_userLocalService.updateGoogleUserId(
+				user.getUserId(), googleUserId);
 		}
 
 		if (!StringUtil.equalsIgnoreCase(
@@ -453,7 +446,10 @@ public class GoogleLoginAction extends BaseStrutsAction {
 	private static final List<String> _SCOPES_LOGIN = Arrays.asList(
 		"email", "profile");
 
+	@Reference
 	private GoogleAuthorization _googleAuthorization;
+
+	@Reference
 	private UserLocalService _userLocalService;
 
 }

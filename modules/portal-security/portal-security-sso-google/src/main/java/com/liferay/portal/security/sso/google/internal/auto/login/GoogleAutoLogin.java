@@ -82,26 +82,28 @@ public class GoogleAutoLogin extends BaseAutoLogin {
 				(String)session.getAttribute(GoogleWebKeys.GOOGLE_USER_ID));
 
 			if (Validator.isNotNull(googleUserId)) {
-				return _userLocalService.getUserByGoogleUserId(companyId, googleUserId);
+				return _userLocalService.getUserByGoogleUserId(
+					companyId, googleUserId);
 			}
 		}
 
 		return null;
 	}
 
-	@Reference(unbind = "-")
 	protected void setGoogleAuthorization(
 		GoogleAuthorization googleAuthorization) {
 
 		_googleAuthorization = googleAuthorization;
 	}
 
-	@Reference(unbind = "-")
 	protected void setUserLocalService(UserLocalService userLocalService) {
 		_userLocalService = userLocalService;
 	}
 
+	@Reference
 	private GoogleAuthorization _googleAuthorization;
+
+	@Reference
 	private UserLocalService _userLocalService;
 
 }
