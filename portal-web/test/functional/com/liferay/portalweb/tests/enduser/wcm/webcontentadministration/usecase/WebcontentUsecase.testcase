@@ -227,7 +227,6 @@
 
 		<execute macro="WebContentStructures#viewCP">
 			<var name="structureDescription" value="WC Structure Description" />
-			<var name="structureFieldName" value="Text" />
 			<var name="structureName" value="WC Structure Name" />
 		</execute>
 
