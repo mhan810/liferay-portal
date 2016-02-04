@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.model.CompanyConstants;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ import org.osgi.service.metatype.ObjectClassDefinition;
  * @author Michael C. Han
  */
 @Component(
-	immediate = true,
+	immediate = true, property = { PropsKeys.INDEX_ON_STARTUP + "=false" },
 	service = {ConfigurationModelIndexer.class, Indexer.class}
 )
 public class ConfigurationModelIndexer extends BaseIndexer<ConfigurationModel> {
