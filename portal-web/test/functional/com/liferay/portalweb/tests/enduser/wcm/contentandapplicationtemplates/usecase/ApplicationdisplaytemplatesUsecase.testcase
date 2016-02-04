@@ -304,8 +304,6 @@
 	</command>
 
 	<command name="ADTCategoriesNavigation" priority="5">
-		<property name="portal.acceptance" value="true" />
-
 		<var name="siteName" value="${siteName}" />
 
 		<execute macro="ProductMenu#gotoSite">
@@ -660,8 +658,6 @@
 	</command>
 
 	<command name="ADTTagsNavigationPortlet" priority="5">
-		<property name="portal.acceptance" value="true" />
-
 		<var name="siteName" value="${siteName}" />
 
 		<execute macro="Navigator#openSiteURL">
