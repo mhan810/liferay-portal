@@ -20,6 +20,7 @@ import com.liferay.dynamic.data.mapping.web.configuration.DDMWebConfiguration;
 import com.liferay.portal.kernel.display.context.util.BaseRequestHelper;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.module.configuration.ConfigurationFactoryUtil;
 import com.liferay.portal.kernel.settings.GroupServiceSettingsLocator;
 import com.liferay.portal.kernel.settings.ParameterMapSettingsLocator;
@@ -39,25 +40,8 @@ public class DDMWebRequestHelper extends BaseRequestHelper {
 	public DDMServiceConfiguration getDDMServiceConfiguration() {
 		try {
 			if (_ddmServiceConfiguration == null) {
-				if (Validator.isNotNull(getPortletResource())) {
-					HttpServletRequest request = getRequest();
-
-					_ddmServiceConfiguration =
-						ConfigurationFactoryUtil.getConfiguration(
-							DDMServiceConfiguration.class,
-							new ParameterMapSettingsLocator(
-								request.getParameterMap(),
-								new GroupServiceSettingsLocator(
-									getSiteGroupId(),
-									DDMConstants.SERVICE_NAME)));
-				}
-				else {
-					_ddmServiceConfiguration =
-						ConfigurationFactoryUtil.getConfiguration(
-							DDMServiceConfiguration.class,
-							new GroupServiceSettingsLocator(
-								getSiteGroupId(), DDMConstants.SERVICE_NAME));
-				}
+				_ddmServiceConfiguration = getConfiguration(
+					DDMServiceConfiguration.class);
 			}
 
 			return _ddmServiceConfiguration;
@@ -70,31 +54,35 @@ public class DDMWebRequestHelper extends BaseRequestHelper {
 	public DDMWebConfiguration getDDMWebConfiguration() {
 		try {
 			if (_ddmWebConfiguration == null) {
-				if (Validator.isNotNull(getPortletResource())) {
-					HttpServletRequest request = getRequest();
-
-					_ddmWebConfiguration =
-						ConfigurationFactoryUtil.getConfiguration(
-							DDMWebConfiguration.class,
-							new ParameterMapSettingsLocator(
-								request.getParameterMap(),
-								new GroupServiceSettingsLocator(
-									getSiteGroupId(),
-									DDMConstants.SERVICE_NAME)));
-				}
-				else {
-					_ddmWebConfiguration =
-						ConfigurationFactoryUtil.getConfiguration(
-							DDMWebConfiguration.class,
-							new GroupServiceSettingsLocator(
-								getSiteGroupId(), DDMConstants.SERVICE_NAME));
-				}
+				_ddmWebConfiguration = getConfiguration(
+					DDMWebConfiguration.class);
 			}
 
 			return _ddmWebConfiguration;
 		}
 		catch (PortalException pe) {
 			throw new SystemException(pe);
+		}
+	}
+
+	protected <T> T getConfiguration(Class<T> clazz)
+		throws ConfigurationException {
+
+		if (Validator.isNotNull(getPortletResource())) {
+			HttpServletRequest request = getRequest();
+
+			return (T)ConfigurationFactoryUtil.getConfiguration(
+				clazz,
+				new ParameterMapSettingsLocator(
+					request.getParameterMap(),
+					new GroupServiceSettingsLocator(
+						getSiteGroupId(), DDMConstants.SERVICE_NAME)));
+		}
+		else {
+			return (T)ConfigurationFactoryUtil.getConfiguration(
+				clazz,
+				new GroupServiceSettingsLocator(
+					getSiteGroupId(), DDMConstants.SERVICE_NAME));
 		}
 	}
 
