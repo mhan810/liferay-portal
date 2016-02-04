@@ -1,8 +1,8 @@
 dependencies {
 	compile project(":apps:item-selector:item-selector-api")
 	compile project(":apps:item-selector:item-selector-criteria-api")
-	compile project(":apps:site:site-item-selector-api")
 	compile project(":apps:site:site-api")
+	compile project(":apps:site:site-item-selector-api")
 }
 
 liferay {
