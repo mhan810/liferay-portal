@@ -113,18 +113,19 @@ public abstract class BaseItemSelectorCriterionHandler
 			ServiceReference<ItemSelectorView> serviceReference,
 			Emitter<Class> emitter) {
 
-			ItemSelectorView service = _bundleContext.getService(
+			ItemSelectorView itemSelectorView = _bundleContext.getService(
 				serviceReference);
 
 			try {
 				Class<?> itemSelectorCriterionClass =
-					service.getItemSelectorCriterionClass();
+					itemSelectorView.getItemSelectorCriterionClass();
 
 				if (itemSelectorCriterionClass.isAssignableFrom(
 						BaseItemSelectorCriterionHandler.this.
 							getItemSelectorCriterionClass())) {
 
-					emitter.emit(service.getItemSelectorCriterionClass());
+					emitter.emit(
+						itemSelectorView.getItemSelectorCriterionClass());
 				}
 			}
 			finally {
