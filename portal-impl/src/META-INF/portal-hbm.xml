@@ -7,7 +7,7 @@
 	<import class="com.liferay.announcements.kernel.model.AnnouncementsFlag" />
 	<import class="com.liferay.blogs.kernel.model.BlogsEntry" />
 	<import class="com.liferay.blogs.kernel.model.BlogsStatsUser" />
-	<import class="com.liferay.counter.model.Counter" />
+	<import class="com.liferay.counter.kernel.model.Counter" />
 	<import class="com.liferay.exportimport.kernel.model.ExportImport" />
 	<import class="com.liferay.exportimport.kernel.model.ExportImportConfiguration" />
 	<import class="com.liferay.exportimport.kernel.model.Staging" />
