@@ -38,11 +38,12 @@ public class DDMFormLayoutTransformer {
 		Map<String, String> renderedDDMFormFieldsMap,
 		boolean showRequiredFieldsWarning, Locale locale) {
 
-		_ddmFormFieldsMap = ddmForm.getDDMFormFieldsMap(true);
 		_ddmFormLayout = ddmFormLayout;
 		_renderedDDMFormFieldsMap = renderedDDMFormFieldsMap;
 		_showRequiredFieldsWarning = showRequiredFieldsWarning;
 		_locale = locale;
+
+		_ddmFormFieldsMap = ddmForm.getDDMFormFieldsMap(true);
 	}
 
 	public List<Object> getPages() {
