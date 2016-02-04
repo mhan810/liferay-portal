@@ -39,8 +39,8 @@ public class ProtectedObjectInputStream extends ObjectInputStream {
 	}
 
 	/**
-	 * @throws ClassNotFoundException  
-	 * @throws IOException 
+	 * @throws ClassNotFoundException
+	 * @throws IOException
 	 */
 	protected Class<?> doResolveClass(ObjectStreamClass objectStreamClass)
 		throws ClassNotFoundException, IOException {
