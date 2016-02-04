@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.deploy.auto.AutoDeployException;
 import com.liferay.portal.kernel.deploy.auto.AutoDeployer;
 import com.liferay.portal.kernel.deploy.auto.BaseAutoDeployListener;
 import com.liferay.portal.kernel.deploy.auto.context.AutoDeploymentContext;
+import com.liferay.portal.kernel.deploy.hot.DependencyManagementThreadLocal;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -38,6 +39,12 @@ public class ThemeAutoDeployListener extends BaseAutoDeployListener {
 		throws AutoDeployException {
 
 		File file = autoDeploymentContext.getFile();
+
+		if (isWABCompatible(file) &&
+			DependencyManagementThreadLocal.isEnabled()) {
+
+			return AutoDeployer.CODE_NOT_APPLICABLE;
+		}
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Invoking deploy for " + file.getPath());

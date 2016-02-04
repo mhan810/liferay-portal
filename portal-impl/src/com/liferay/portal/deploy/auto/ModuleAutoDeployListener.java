@@ -56,7 +56,7 @@ public class ModuleAutoDeployListener extends BaseAutoDeployListener {
 			_log.debug("Invoking deploy for " + file.getPath());
 		}
 
-		if (!isModule(file)) {
+		if (!isModule(file) && !isWABCompatible(file)) {
 			return AutoDeployer.CODE_NOT_APPLICABLE;
 		}
 

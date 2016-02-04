@@ -17,6 +17,7 @@ package com.liferay.portal.deploy.auto;
 import com.liferay.portal.kernel.deploy.auto.AutoDeployException;
 import com.liferay.portal.kernel.deploy.auto.AutoDeployer;
 import com.liferay.portal.kernel.deploy.auto.context.AutoDeploymentContext;
+import com.liferay.portal.kernel.deploy.hot.DependencyManagementThreadLocal;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.tools.deploy.BaseDeployer;
@@ -36,6 +37,10 @@ public class ModuleAutoDeployer extends BaseDeployer {
 	@Override
 	public int deployFile(AutoDeploymentContext autoDeploymentContext)
 		throws Exception {
+
+		if (!DependencyManagementThreadLocal.isEnabled()) {
+			return AutoDeployer.CODE_NOT_APPLICABLE;
+		}
 
 		String[] moduleFrameworkAutoDeployDirs = PropsUtil.getArray(
 			PropsKeys.MODULE_FRAMEWORK_AUTO_DEPLOY_DIRS);

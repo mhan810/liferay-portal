@@ -169,6 +169,8 @@ public class AutoDeployDir {
 
 		autoDeploymentContext.setFile(file);
 
+		autoDeploymentContext.setUser(true);
+
 		return autoDeploymentContext;
 	}
 
