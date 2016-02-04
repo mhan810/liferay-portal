@@ -41,7 +41,7 @@ public class UpgradeMVCCVersion extends UpgradeProcess {
 		throws Exception {
 
 		for (String excludeTableName : getExcludedTableNames()) {
-			if (excludeTableName.equalsIgnoreCase(tableName)) {
+			if (StringUtil.equalsIgnoreCase(excludeTableName, tableName)) {
 				return;
 			}
 		}
