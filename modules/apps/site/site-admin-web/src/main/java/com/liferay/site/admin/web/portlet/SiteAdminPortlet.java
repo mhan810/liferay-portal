@@ -304,11 +304,12 @@ public class SiteAdminPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
+		renderRequest.setAttribute(
+			SiteWebKeys.GROUP_SEARCH_PROVIDER, groupSearchProvider);
+
 		PanelCategoryHelper panelCategoryHelper = new PanelCategoryHelper(
 			panelAppRegistry, panelCategoryRegistry);
 
-		renderRequest.setAttribute(
-			SiteWebKeys.GROUP_SEARCH_PROVIDER, groupSearchProvider);
 		renderRequest.setAttribute(
 			ApplicationListWebKeys.PANEL_CATEGORY_HELPER, panelCategoryHelper);
 
