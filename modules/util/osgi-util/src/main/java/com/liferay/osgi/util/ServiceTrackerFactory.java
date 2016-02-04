@@ -130,7 +130,6 @@ public class ServiceTrackerFactory {
 			throwable);
 	}
 
-	@SuppressWarnings("unchecked")
 	private static <T, E extends Throwable> T _throwException(
 			Throwable throwable)
 		throws E {
