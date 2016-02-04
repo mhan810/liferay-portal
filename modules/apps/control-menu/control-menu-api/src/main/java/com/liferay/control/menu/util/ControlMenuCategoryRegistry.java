@@ -16,7 +16,7 @@ package com.liferay.control.menu.util;
 
 import com.liferay.control.menu.ControlMenuCategory;
 import com.liferay.control.menu.ControlMenuEntry;
-import com.liferay.osgi.service.tracker.collections.map.PropertyServiceReferenceComparator;
+import com.liferay.osgi.service.tracker.collections.map.ServiceRankingServiceReferenceComparator;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -32,7 +32,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -106,7 +105,7 @@ public class ControlMenuCategoryRegistry {
 				bundleContext, ControlMenuCategory.class,
 				"(control.menu.category.key=*)",
 				new ControlMenuCategoryServiceReferenceMapper(),
-				new ServiceRankingPropertyServiceReferenceComparator());
+				new ServiceRankingServiceReferenceComparator());
 	}
 
 	@Deactivate
@@ -127,22 +126,5 @@ public class ControlMenuCategoryRegistry {
 	private ServiceTrackerMap<String, List<ControlMenuCategory>>
 		_controlMenuCategoryServiceTrackerMap;
 	private ControlMenuEntryRegistry _controlMenuEntryRegistry;
-
-	private static class ServiceRankingPropertyServiceReferenceComparator
-		extends PropertyServiceReferenceComparator<ControlMenuCategory> {
-
-		public ServiceRankingPropertyServiceReferenceComparator() {
-			super("service.ranking");
-		}
-
-		@Override
-		public int compare(
-			ServiceReference<ControlMenuCategory> serviceReference1,
-			ServiceReference<ControlMenuCategory> serviceReference2) {
-
-			return -(super.compare(serviceReference1, serviceReference2));
-		}
-
-	}
 
 }

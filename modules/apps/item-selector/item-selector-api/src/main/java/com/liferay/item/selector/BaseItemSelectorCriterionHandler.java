@@ -14,7 +14,7 @@
 
 package com.liferay.item.selector;
 
-import com.liferay.osgi.service.tracker.collections.map.PropertyServiceReferenceComparator;
+import com.liferay.osgi.service.tracker.collections.map.ServiceRankingServiceReferenceComparator;
 import com.liferay.osgi.service.tracker.collections.map.ServiceReferenceMapper;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
@@ -67,7 +67,7 @@ public abstract class BaseItemSelectorCriterionHandler
 		_serviceTrackerMap = ServiceTrackerMapFactory.openMultiValueMap(
 			bundleContext, ItemSelectorView.class, null,
 			new ItemSelectorViewServiceReferenceMapper(bundleContext),
-			new ServiceRankingPropertyServiceReferenceComparator());
+			new ServiceRankingServiceReferenceComparator());
 	}
 
 	private boolean _isItemSelectorViewSupported(
@@ -132,23 +132,6 @@ public abstract class BaseItemSelectorCriterionHandler
 		}
 
 		private final BundleContext _bundleContext;
-
-	}
-
-	private class ServiceRankingPropertyServiceReferenceComparator
-		extends PropertyServiceReferenceComparator<ItemSelectorView> {
-
-		public ServiceRankingPropertyServiceReferenceComparator() {
-			super("service.ranking");
-		}
-
-		@Override
-		public int compare(
-			ServiceReference<ItemSelectorView> serviceReference1,
-			ServiceReference<ItemSelectorView> serviceReference2) {
-
-			return -(super.compare(serviceReference1, serviceReference2));
-		}
 
 	}
 
