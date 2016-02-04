@@ -147,8 +147,8 @@ public class GoogleLoginAction extends BaseStrutsAction {
 		boolean autoScreenName = true;
 		String screenName = StringPool.BLANK;
 		String emailAddress = userinfoplus.getEmail();
-		String openId = StringPool.BLANK;
 		String googleId = userinfoplus.getId();
+		String openId = StringPool.BLANK;
 		Locale locale = LocaleUtil.getDefault();
 		String firstName = userinfoplus.getGivenName();
 		String middleName = StringPool.BLANK;
@@ -393,10 +393,10 @@ public class GoogleLoginAction extends BaseStrutsAction {
 		throws Exception {
 
 		String emailAddress = userinfoplus.getEmail();
+		String googleId = userinfoplus.getId();
 		String firstName = userinfoplus.getGivenName();
 		String lastName = userinfoplus.getFamilyName();
 		boolean male = Validator.equals(userinfoplus.getGender(), "male");
-		String googleId = userinfoplus.getId();
 
 		if (emailAddress.equals(user.getEmailAddress()) &&
 			firstName.equals(user.getFirstName()) &&

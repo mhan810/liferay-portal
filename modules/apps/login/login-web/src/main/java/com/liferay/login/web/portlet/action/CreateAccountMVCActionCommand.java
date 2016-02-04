@@ -416,22 +416,18 @@ public class CreateAccountMVCActionCommand extends BaseMVCActionCommand {
 
 		HttpSession session = request.getSession();
 
-		boolean sendEmail = true;
-
 		long facebookId = GetterUtil.getLong(
 			session.getAttribute(WebKeys.FACEBOOK_INCOMPLETE_USER_ID));
-
 		String googleId = GetterUtil.getString(
 			session.getAttribute(WebKeys.GOOGLE_INCOMPLETE_USER_ID));
+
+		if (Validator.isNotNull(googleId)) {
+			autoPassword = false;
+		}
 
 		if ((facebookId > 0) || Validator.isNotNull(googleId)) {
 			password1 = PwdGenerator.getPassword();
 			password2 = password1;
-		}
-
-		if (Validator.isNotNull(googleId)) {
-			autoPassword = false;
-			sendEmail = false;
 		}
 
 		String openId = ParamUtil.getString(actionRequest, "openId");
@@ -448,6 +444,12 @@ public class CreateAccountMVCActionCommand extends BaseMVCActionCommand {
 		String jobTitle = ParamUtil.getString(actionRequest, "jobTitle");
 		boolean updateUserInformation = true;
 
+		boolean sendEmail = true;
+
+		if (Validator.isNotNull(googleId)) {
+			sendEmail = false;
+		}
+
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			User.class.getName(), actionRequest);
 
@@ -461,7 +463,7 @@ public class CreateAccountMVCActionCommand extends BaseMVCActionCommand {
 		if (facebookId > 0) {
 			session.removeAttribute(WebKeys.FACEBOOK_INCOMPLETE_USER_ID);
 
-			updateUserAndRedirect(
+			updateUserAndSendRedirect(
 				actionRequest, actionResponse, themeDisplay, user, password1);
 
 			return;
@@ -472,7 +474,7 @@ public class CreateAccountMVCActionCommand extends BaseMVCActionCommand {
 
 			session.removeAttribute(WebKeys.GOOGLE_INCOMPLETE_USER_ID);
 
-			updateUserAndRedirect(
+			updateUserAndSendRedirect(
 				actionRequest, actionResponse, themeDisplay, user, password1);
 
 			return;
@@ -496,7 +498,7 @@ public class CreateAccountMVCActionCommand extends BaseMVCActionCommand {
 			user.getPasswordUnencrypted());
 	}
 
-	protected void updateUserAndRedirect(
+	protected void updateUserAndSendRedirect(
 			ActionRequest actionRequest, ActionResponse actionResponse,
 			ThemeDisplay themeDisplay, User user, String password1)
 		throws Exception {
@@ -506,8 +508,6 @@ public class CreateAccountMVCActionCommand extends BaseMVCActionCommand {
 		_userLocalService.updatePasswordReset(user.getUserId(), false);
 
 		_userLocalService.updateEmailAddressVerified(user.getUserId(), true);
-
-		// Send redirect
 
 		sendRedirect(
 			actionRequest, actionResponse, themeDisplay, user, password1);
