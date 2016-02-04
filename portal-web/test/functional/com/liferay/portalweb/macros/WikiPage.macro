@@ -11,7 +11,7 @@
 		<execute function="AssertClick" locator1="Wiki#LINK_EDIT" value1="Edit" />
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="${panelHeading}" />
+			<var name="panelHeading" value="Attachments" />
 		</execute>
 
 		<execute function="Click" locator1="Button#SELECT_FILES" />
