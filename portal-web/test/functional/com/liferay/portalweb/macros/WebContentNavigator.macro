@@ -109,7 +109,9 @@
 	</command>
 
 	<command name="gotoPreviewViaHeaderCP">
-		<execute function="AssertTextEquals" locator1="Home#SITE_ADMINISTRATION_PORTLET_TITLE" value1="${webContentTitle}" />
+		<execute macro="SiteAdmin#viewPortletTitle">
+			<var name="portletTitle" value="${webContentTitle}" />
+		</execute>
 
 		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
 
