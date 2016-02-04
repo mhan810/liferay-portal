@@ -268,10 +268,11 @@ public class LayoutServiceSoap {
 	*/
 	@Deprecated
 	public static long exportLayoutsAsFileInBackground(
-		com.liferay.exportimport.kernel.model.ExportImportConfiguration exportImportConfiguration)
+		com.liferay.exportimport.kernel.model.ExportImportConfigurationSoap exportImportConfiguration)
 		throws RemoteException {
 		try {
-			long returnValue = LayoutServiceUtil.exportLayoutsAsFileInBackground(exportImportConfiguration);
+			long returnValue = LayoutServiceUtil.exportLayoutsAsFileInBackground(com.liferay.portlet.exportimport.model.impl.ExportImportConfigurationModelImpl.toModel(
+						exportImportConfiguration));
 
 			return returnValue;
 		}

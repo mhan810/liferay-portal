@@ -55,10 +55,11 @@ import java.rmi.RemoteException;
 @ProviderType
 public class ExportImportServiceSoap {
 	public static long exportLayoutsAsFileInBackground(
-		com.liferay.exportimport.kernel.model.ExportImportConfiguration exportImportConfiguration)
+		com.liferay.exportimport.kernel.model.ExportImportConfigurationSoap exportImportConfiguration)
 		throws RemoteException {
 		try {
-			long returnValue = ExportImportServiceUtil.exportLayoutsAsFileInBackground(exportImportConfiguration);
+			long returnValue = ExportImportServiceUtil.exportLayoutsAsFileInBackground(com.liferay.portlet.exportimport.model.impl.ExportImportConfigurationModelImpl.toModel(
+						exportImportConfiguration));
 
 			return returnValue;
 		}
@@ -84,10 +85,11 @@ public class ExportImportServiceSoap {
 	}
 
 	public static long exportPortletInfoAsFileInBackground(
-		com.liferay.exportimport.kernel.model.ExportImportConfiguration exportImportConfiguration)
+		com.liferay.exportimport.kernel.model.ExportImportConfigurationSoap exportImportConfiguration)
 		throws RemoteException {
 		try {
-			long returnValue = ExportImportServiceUtil.exportPortletInfoAsFileInBackground(exportImportConfiguration);
+			long returnValue = ExportImportServiceUtil.exportPortletInfoAsFileInBackground(com.liferay.portlet.exportimport.model.impl.ExportImportConfigurationModelImpl.toModel(
+						exportImportConfiguration));
 
 			return returnValue;
 		}
