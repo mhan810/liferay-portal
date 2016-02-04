@@ -106,14 +106,14 @@ public class DDMFormLayoutTransformer {
 
 		page.put("rows", getRows(ddmFormLayoutPage.getDDMFormLayoutRows()));
 
-		LocalizedValue title = ddmFormLayoutPage.getTitle();
-
-		page.put("title", title.getString(_locale));
-
 		boolean showRequiredFieldsWarning = isShowRequiredFieldsWarning(
 			ddmFormLayoutPage.getDDMFormLayoutRows());
 
 		page.put("showRequiredFieldsWarning", showRequiredFieldsWarning);
+
+		LocalizedValue title = ddmFormLayoutPage.getTitle();
+
+		page.put("title", title.getString(_locale));
 
 		return page;
 	}
