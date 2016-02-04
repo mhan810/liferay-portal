@@ -12,7 +12,7 @@
 	<command name="_gotoMailMessage">
 		<var name="key_columnEntry" value="${asset}" />
 
-		<execute function="AssertClick#assertPartialTextClickAt" locator1="MockMock#MOCKMOCK_SUBJECT_FIELD" value1="${asset}" />
+		<execute function="AssertClick#assertPartialTextClickAt" locator1="MockMock#MOCKMOCK_SUBJECT_FIELD_LINK" value1="${asset}" />
 	</command>
 
 	<command name="_viewMailFromInbox">
