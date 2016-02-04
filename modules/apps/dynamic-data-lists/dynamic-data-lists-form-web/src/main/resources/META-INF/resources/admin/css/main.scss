@@ -822,13 +822,13 @@ $horizontal-spacing: 35px;
 		}
 	}
 
-	select.form-control[multiple] {
-		height: auto;
-	}
-
 	.toggle-switch {
 		display: none;
 	}
+}
+
+select.form-control[multiple] {
+	height: auto;
 }
 
 @include sm {
