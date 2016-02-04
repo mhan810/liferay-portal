@@ -22,7 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Carlos Lancha
  */
-public class ManagementBarSidenavTogglerButtonTag extends ManagementBarButtonTag {
+public class ManagementBarSidenavTogglerButtonTag
+	extends ManagementBarButtonTag {
 
 	public void setSidenavId(String sidenavId) {
 		_sidenavId = sidenavId;

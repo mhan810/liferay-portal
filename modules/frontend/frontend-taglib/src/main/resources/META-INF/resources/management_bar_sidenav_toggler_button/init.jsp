@@ -16,8 +16,6 @@
 
 <%@ include file="/init.jsp" %>
 
-<%@ page import="com.liferay.portal.util.SessionClicks" %>
-
 <%
 String cssClass = (String)request.getAttribute("liferay-frontend:management-bar-sidenav-toggler-button:cssClass");
 Map<String, Object> data = (Map<String, Object>)request.getAttribute("liferay-frontend:management-bar-sidenav-toggler-button:data");
