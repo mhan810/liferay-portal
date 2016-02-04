@@ -68,14 +68,14 @@ PortletURL portletURL = siteItemSelectorViewDisplayContext.getPortletURL();
 			data.put("url", groupURLProvider.getGroupURL(group, liferayPortletRequest));
 			data.put("uuid", group.getUuid());
 
-			String childrenSitesURL = null;
+			String childGroupsHREF = null;
 
 			if (!childGroups.isEmpty()) {
-				PortletURL childrenPortletURL = siteItemSelectorViewDisplayContext.getPortletURL();
+				PortletURL childGroupsURL = siteItemSelectorViewDisplayContext.getPortletURL();
 
-				childrenPortletURL.setParameter("groupId", String.valueOf(group.getGroupId()));
+				childGroupsURL.setParameter("groupId", String.valueOf(group.getGroupId()));
 
-				childrenSitesURL = childrenPortletURL.toString();
+				childGroupsHREF = childGroupsURL.toString();
 			}
 			%>
 
@@ -105,7 +105,7 @@ PortletURL portletURL = siteItemSelectorViewDisplayContext.getPortletURL();
 									>
 										<c:if test="<%= siteItemSelectorViewDisplayContext.isShowChildSitesLink() %>">
 											<liferay-frontend:vertical-card-footer>
-												<aui:a cssClass='<%= !childGroups.isEmpty() ? "text-default" : "disabled" %>' data="<%= linkData %>" href="<%= childrenSitesURL %>">
+												<aui:a cssClass='<%= !childGroups.isEmpty() ? "text-default" : "disabled" %>' data="<%= linkData %>" href="<%= childGroupsHREF %>">
 													<liferay-ui:message arguments="<%= String.valueOf(childGroups.size()) %>" key="x-child-sites" />
 												</aui:a>
 											</liferay-frontend:vertical-card-footer>
@@ -124,7 +124,7 @@ PortletURL portletURL = siteItemSelectorViewDisplayContext.getPortletURL();
 									>
 										<liferay-frontend:vertical-card-footer>
 											<c:if test="<%= siteItemSelectorViewDisplayContext.isShowChildSitesLink() %>">
-												<aui:a cssClass='<%= !childGroups.isEmpty() ? "text-default" : "disabled" %>' data="<%= linkData %>" href="<%= childrenSitesURL %>">
+												<aui:a cssClass='<%= !childGroups.isEmpty() ? "text-default" : "disabled" %>' data="<%= linkData %>" href="<%= childGroupsHREF %>">
 													<liferay-ui:message arguments="<%= String.valueOf(childGroups.size()) %>" key="x-child-sites" />
 												</aui:a>
 											</c:if>
