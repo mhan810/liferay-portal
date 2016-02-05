@@ -31,18 +31,18 @@ public class MySQLProvider extends BaseDBProvider {
 	public String getControlTableNamesSQL(String schemaName) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("select c.");
+		sb.append("select c1.");
 		sb.append(getTableNameFieldName());
 		sb.append(" from ");
-		sb.append("information_schema.columns c where c.table_schema = '");
+		sb.append("information_schema.columns c1 where c1.table_schema = '");
 		sb.append(schemaName);
-		sb.append("' and c.");
+		sb.append("' and c1.");
 		sb.append(getTableNameFieldName());
 		sb.append(" not in (");
 		sb.append(getPartitionedTableNamesSQL(schemaName));
-		sb.append(") group by c.");
+		sb.append(") group by c1.");
 		sb.append(getTableNameFieldName());
-		sb.append(" order by c.");
+		sb.append(" order by c1.");
 		sb.append(getTableNameFieldName());
 
 		return sb.toString();
@@ -62,14 +62,14 @@ public class MySQLProvider extends BaseDBProvider {
 	public String getPartitionedTableNamesSQL(String schemaName) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("select c1.");
+		sb.append("select c2.");
 		sb.append(getTableNameFieldName());
 		sb.append(" from ");
-		sb.append("information_schema.columns c1 where c1.table_schema = '");
+		sb.append("information_schema.columns c2 where c2.table_schema = '");
 		sb.append(schemaName);
-		sb.append("' and c1.column_name = 'companyId' group by c1.");
+		sb.append("' and c2.column_name = 'companyId' group by c2.");
 		sb.append(getTableNameFieldName());
-		sb.append(" order by c1.");
+		sb.append(" order by c2.");
 		sb.append(getTableNameFieldName());
 
 		return sb.toString();
