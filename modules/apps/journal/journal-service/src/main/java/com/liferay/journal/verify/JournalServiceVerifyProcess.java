@@ -107,15 +107,14 @@ public class JournalServiceVerifyProcess extends VerifyLayout {
 		verifyArticleExpirationDate();
 		verifyArticleLayouts();
 		verifyArticleStructures();
-
-		verifyArticleImages();
-
 		verifyContentSearch();
 		verifyFolderAssets();
 		verifyOracleNewLine();
 		verifyPermissions();
 		verifyTree();
 		verifyURLTitle();
+
+		verifyArticleImages();
 	}
 
 	@Reference(unbind = "-")
