@@ -379,6 +379,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>HISTORY_VERSIONS_ACTIONS</td>
+	<td>//tr[contains(.,'${key_wikiPageRevision}')]/td[8]//span/*[name()='svg'][contains(@class,'icon-ellipsis-v')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>HISTORY_VERSIONS_TAB</td>
 	<td>//li[@class='tab']//a[contains(.,'Versions')]</td>
 	<td></td>
