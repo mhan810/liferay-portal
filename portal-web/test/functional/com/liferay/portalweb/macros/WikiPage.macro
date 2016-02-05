@@ -972,7 +972,9 @@
 		<var name="key_wikiPageRevision" value="1.0" />
 		<var name="key_wikiPageTitle" value="${wikiPage2Title}" />
 
-		<execute function="AssertClick" locator1="Wiki#HISTORY_VERSIONS_REVERT_LINK" value1="Revert" />
+		<execute function="Click" locator1="Wiki#HISTORY_VERSIONS_ACTIONS" />
+
+		<execute function="AssertClick" locator1="MenuItem#REVERT" value1="Revert" />
 
 		<execute macro="Alert#viewRequestCompletedSuccessMessage" />
 
@@ -995,7 +997,9 @@
 		<var name="key_wikiPageRevision" value="${wikiPageRevisionOld}" />
 		<var name="key_wikiPageTitle" value="${wikiPageTitle}" />
 
-		<execute function="AssertClick" locator1="Wiki#HISTORY_VERSIONS_REVERT_LINK" value1="Revert" />
+		<execute function="Click" locator1="Wiki#HISTORY_VERSIONS_ACTIONS" />
+
+		<execute function="AssertClick" locator1="MenuItem#REVERT" value1="Revert" />
 
 		<execute macro="Alert#viewRequestCompletedSuccessMessage" />
 
