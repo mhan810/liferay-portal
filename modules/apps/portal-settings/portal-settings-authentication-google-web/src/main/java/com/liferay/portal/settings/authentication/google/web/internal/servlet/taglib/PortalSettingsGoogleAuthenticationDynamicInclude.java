@@ -47,7 +47,7 @@ public class PortalSettingsGoogleAuthenticationDynamicInclude
 
 	@Override
 	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.portal.security.sso.google)",
+		target = "(osgi.web.symbolicname=com.liferay.portal.settings.authentication.google.web)",
 		unbind = "-"
 	)
 	protected void setServletContext(ServletContext servletContext) {
