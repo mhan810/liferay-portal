@@ -66,7 +66,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 	public void addDocument(SearchContext searchContext, Document document)
 		throws SearchException {
 
-		_elasticsearchUpdateDocumentCommand.updateDocument(
+		elasticsearchUpdateDocumentCommand.updateDocument(
 			DocumentTypes.LIFERAY, searchContext, document, false);
 	}
 
@@ -75,7 +75,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, Collection<Document> documents)
 		throws SearchException {
 
-		_elasticsearchUpdateDocumentCommand.updateDocuments(
+		elasticsearchUpdateDocumentCommand.updateDocuments(
 			DocumentTypes.LIFERAY, searchContext, documents, false);
 	}
 
@@ -83,13 +83,13 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 	public void commit(SearchContext searchContext) throws SearchException {
 		try {
 			AdminClient adminClient =
-				_elasticsearchConnectionManager.getAdminClient();
+				elasticsearchConnectionManager.getAdminClient();
 
 			IndicesAdminClient indicesAdminClient = adminClient.indices();
 
 			RefreshRequestBuilder refreshRequestBuilder =
 				indicesAdminClient.prepareRefresh(
-					_indexNameBuilder.getIndexName(searchContext));
+					indexNameBuilder.getIndexName(searchContext));
 
 			RefreshResponse refreshResponse = refreshRequestBuilder.get();
 
@@ -105,10 +105,10 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		throws SearchException {
 
 		try {
-			Client client = _elasticsearchConnectionManager.getClient();
+			Client client = elasticsearchConnectionManager.getClient();
 
 			DeleteRequestBuilder deleteRequestBuilder = client.prepareDelete(
-				_indexNameBuilder.getIndexName(searchContext),
+				indexNameBuilder.getIndexName(searchContext),
 				DocumentTypes.LIFERAY, uid);
 
 			if (PortalRunMode.isTestMode() ||
@@ -126,7 +126,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 				_log.info(
 					"No index found while attempting to delete " + uid +
 						" in index " +
-							_indexNameBuilder.getIndexName(searchContext));
+							indexNameBuilder.getIndexName(searchContext));
 			}
 		}
 		catch (Exception e) {
@@ -140,14 +140,14 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		throws SearchException {
 
 		try {
-			Client client = _elasticsearchConnectionManager.getClient();
+			Client client = elasticsearchConnectionManager.getClient();
 
 			BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();
 
 			for (String uid : uids) {
 				DeleteRequestBuilder deleteRequestBuilder =
 					client.prepareDelete(
-						_indexNameBuilder.getIndexName(searchContext),
+						indexNameBuilder.getIndexName(searchContext),
 						DocumentTypes.LIFERAY, uid);
 
 				bulkRequestBuilder.add(deleteRequestBuilder);
@@ -176,7 +176,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		SearchResponseScroller searchResponseScroller = null;
 
 		try {
-			Client client = _elasticsearchConnectionManager.getClient();
+			Client client = elasticsearchConnectionManager.getClient();
 
 			MatchAllQueryBuilder matchAllQueryBuilder =
 				QueryBuilders.matchAllQuery();
@@ -190,7 +190,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			boolQueryBuilder.must(matchAllQueryBuilder);
 
 			searchResponseScroller = new SearchResponseScroller(
-				client, searchContext, _indexNameBuilder, boolQueryBuilder,
+				client, searchContext, indexNameBuilder, boolQueryBuilder,
 				TimeValue.timeValueSeconds(30), DocumentTypes.LIFERAY);
 
 			searchResponseScroller.prepare();
@@ -202,7 +202,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 				_log.info(
 					"No index found while attempting to delete documents for " +
 						className + " in index " +
-							_indexNameBuilder.getIndexName(searchContext));
+							indexNameBuilder.getIndexName(searchContext));
 			}
 		}
 		catch (Exception e) {
@@ -221,7 +221,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, Document document)
 		throws SearchException {
 
-		_elasticsearchUpdateDocumentCommand.updateDocument(
+		elasticsearchUpdateDocumentCommand.updateDocument(
 			DocumentTypes.LIFERAY, searchContext, document, false);
 	}
 
@@ -230,7 +230,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, Collection<Document> documents)
 		throws SearchException {
 
-		_elasticsearchUpdateDocumentCommand.updateDocuments(
+		elasticsearchUpdateDocumentCommand.updateDocuments(
 			DocumentTypes.LIFERAY, searchContext, documents, false);
 	}
 
@@ -246,7 +246,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 	public void updateDocument(SearchContext searchContext, Document document)
 		throws SearchException {
 
-		_elasticsearchUpdateDocumentCommand.updateDocument(
+		elasticsearchUpdateDocumentCommand.updateDocument(
 			DocumentTypes.LIFERAY, searchContext, document, true);
 	}
 
@@ -255,7 +255,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, Collection<Document> documents)
 		throws SearchException {
 
-		_elasticsearchUpdateDocumentCommand.updateDocuments(
+		elasticsearchUpdateDocumentCommand.updateDocuments(
 			DocumentTypes.LIFERAY, searchContext, documents, true);
 	}
 
@@ -265,29 +265,17 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 	}
 
 	@Reference(unbind = "-")
-	protected void setElasticsearchConnectionManager(
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
-
-		_elasticsearchConnectionManager = elasticsearchConnectionManager;
-	}
+	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
 
 	@Reference(unbind = "-")
-	protected void setElasticsearchUpdateDocumentCommand(
-		ElasticsearchUpdateDocumentCommand elasticsearchUpdateDocumentCommand) {
+	protected ElasticsearchUpdateDocumentCommand
+		elasticsearchUpdateDocumentCommand;
 
-		_elasticsearchUpdateDocumentCommand =
-			elasticsearchUpdateDocumentCommand;
-	}
+	@Reference(unbind = "-")
+	protected IndexNameBuilder indexNameBuilder;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ElasticsearchIndexWriter.class);
-
-	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
-	private ElasticsearchUpdateDocumentCommand
-		_elasticsearchUpdateDocumentCommand;
-
-	@Reference(unbind = "-")
-	private IndexNameBuilder _indexNameBuilder;
 
 	private SearchHitsProcessor _searchHitsProcessor;
 

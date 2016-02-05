@@ -147,21 +147,6 @@ public class ElasticsearchSpellCheckIndexWriter
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setElasticsearchConnectionManager(
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
-
-		_elasticsearchConnectionManager = elasticsearchConnectionManager;
-	}
-
-	@Reference(unbind = "-")
-	protected void setElasticsearchUpdateDocumentCommand(
-		ElasticsearchUpdateDocumentCommand elasticsearchUpdateDocumentCommand) {
-
-		_elasticsearchUpdateDocumentCommand =
-			elasticsearchUpdateDocumentCommand;
-	}
-
 	@Reference(
 		cardinality = ReferenceCardinality.OPTIONAL,
 		policy = ReferencePolicy.DYNAMIC,
@@ -177,12 +162,15 @@ public class ElasticsearchSpellCheckIndexWriter
 		_searchHitsProcessor = null;
 	}
 
+	@Reference
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
+
+	@Reference
 	private ElasticsearchUpdateDocumentCommand
 		_elasticsearchUpdateDocumentCommand;
 
-	@Reference(unbind = "-")
-	private final IndexNameBuilder _indexNameBuilder;
+	@Reference
+	private IndexNameBuilder _indexNameBuilder;
 
 	private volatile SearchHitsProcessor _searchHitsProcessor;
 
