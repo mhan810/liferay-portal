@@ -1854,7 +1854,7 @@ public class ServiceBuilder {
 		}
 	}
 
-	private void _removeActionableDynamicQuery(Entity entity) throws Exception {
+	private void _removeActionableDynamicQuery(Entity entity) {
 		File ejbFile = new File(
 			_oldServiceOutputPath + "/service/persistence/" +
 				entity.getName() + "ActionableDynamicQuery.java");
@@ -2019,9 +2019,7 @@ public class ServiceBuilder {
 		}
 	}
 
-	private void _removeExportActionableDynamicQuery(Entity entity)
-		throws Exception {
-
+	private void _removeExportActionableDynamicQuery(Entity entity) {
 		File ejbFile = new File(
 			_oldServiceOutputPath + "/service/persistence/" +
 				entity.getName() + "ExportActionableDynamicQuery.java");
