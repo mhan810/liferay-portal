@@ -627,43 +627,6 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		return hits;
 	}
 
-	protected void setElasticsearchConnectionManager(
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
-
-		_elasticsearchConnectionManager = elasticsearchConnectionManager;
-	}
-
-	@Reference(service = CompositeFacetProcessor.class, unbind = "-")
-	protected void setFacetProcessor(
-		FacetProcessor<SearchRequestBuilder> facetProcessor) {
-
-		_facetProcessor = facetProcessor;
-	}
-
-	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
-	protected void setFilterTranslator(
-		FilterTranslator<QueryBuilder> filterTranslator) {
-
-		_filterTranslator = filterTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setGroupByTranslator(GroupByTranslator groupByTranslator) {
-		_groupByTranslator = groupByTranslator;
-	}
-
-	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
-	protected void setQueryTranslator(
-		QueryTranslator<QueryBuilder> queryTranslator) {
-
-		_queryTranslator = queryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setStatsTranslator(StatsTranslator statsTranslator) {
-		_statsTranslator = statsTranslator;
-	}
-
 	protected void updateFacetCollectors(
 		SearchContext searchContext, SearchResponse searchResponse) {
 
@@ -760,16 +723,28 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		ElasticsearchIndexSearcher.class);
 
 	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
+
+	@Reference
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
+
+	@Reference(service = CompositeFacetProcessor.class)
 	private FacetProcessor<SearchRequestBuilder> _facetProcessor;
+
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	private FilterTranslator<QueryBuilder> _filterTranslator;
+
+	@Reference
 	private GroupByTranslator _groupByTranslator;
 
-	@Reference(unbind = "-")
-	private final IndexNameBuilder _indexNameBuilder;
+	@Reference
+	private IndexNameBuilder _indexNameBuilder;
 
 	private boolean _logExceptionsOnly;
+
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	private QueryTranslator<QueryBuilder> _queryTranslator;
+
+	@Reference
 	private StatsTranslator _statsTranslator;
 
 }

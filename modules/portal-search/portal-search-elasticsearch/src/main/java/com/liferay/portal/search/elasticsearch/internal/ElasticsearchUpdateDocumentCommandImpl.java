@@ -59,20 +59,6 @@ import org.osgi.service.component.annotations.Reference;
 public class ElasticsearchUpdateDocumentCommandImpl
 	implements ElasticsearchUpdateDocumentCommand {
 
-	@Reference(unbind = "-")
-	public void setElasticsearchConnectionManager(
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
-
-		_elasticsearchConnectionManager = elasticsearchConnectionManager;
-	}
-
-	@Reference(unbind = "-")
-	public void setElasticsearchDocumentFactory(
-		ElasticsearchDocumentFactory elasticsearchDocumentFactory) {
-
-		_elasticsearchDocumentFactory = elasticsearchDocumentFactory;
-	}
-
 	@Override
 	public String updateDocument(
 			String documentType, SearchContext searchContext, Document document,
@@ -196,10 +182,14 @@ public class ElasticsearchUpdateDocumentCommandImpl
 		ElasticsearchUpdateDocumentCommandImpl.class);
 
 	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
+
+	@Reference
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
+
+	@Reference
 	private ElasticsearchDocumentFactory _elasticsearchDocumentFactory;
 
-	@Reference(unbind = "-")
-	private final IndexNameBuilder _indexNameBuilder;
+	@Reference
+	private IndexNameBuilder _indexNameBuilder;
 
 }
