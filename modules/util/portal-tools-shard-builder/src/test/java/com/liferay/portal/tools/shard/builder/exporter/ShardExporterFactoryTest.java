@@ -44,7 +44,7 @@ public class ShardExporterFactoryTest {
 	protected void testGetShardExporter(
 			String databaseType, Class<?> providerClass)
 		throws Exception {
-		
+
 		Class<?> clazz = getClass();
 
 		URL url = clazz.getResource("/" + databaseType +".properties");

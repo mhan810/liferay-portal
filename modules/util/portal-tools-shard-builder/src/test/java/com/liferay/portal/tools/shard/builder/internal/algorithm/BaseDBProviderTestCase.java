@@ -59,12 +59,12 @@ public abstract class BaseDBProviderTestCase {
 
 		dbProvider = (DBProvider)shardExporter;
 
-		executeUpdate(dbProvider.getDataSource(), getCreateTableStatement());
+		executeUpdate(dbProvider.getDataSource(), getCreateTableSQL());
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		executeUpdate(dbProvider.getDataSource(), getDropTableStatement());
+		executeUpdate(dbProvider.getDataSource(), getDropTableSQL());
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public abstract class BaseDBProviderTestCase {
 		Assert.assertEquals("'1970-01-01 00:01:00'", serializeTableField);
 	}
 
-	protected String getCreateTableStatement() {
+	protected String getCreateTableSQL() {
 		return "create table foo (i INT, f FLOAT, s VARCHAR(75), d DATETIME)";
 	}
 
@@ -99,7 +99,7 @@ public abstract class BaseDBProviderTestCase {
 		};
 	}
 
-	protected String getDropTableStatement() {
+	protected String getDropTableSQL() {
 		return "drop table foo";
 	}
 
