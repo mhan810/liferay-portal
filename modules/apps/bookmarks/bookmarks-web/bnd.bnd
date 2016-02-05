@@ -17,11 +17,8 @@ Import-Package:\
 	com.liferay.bookmarks.trash,\
 	com.liferay.bookmarks.util,\
 	com.liferay.bookmarks.*,\
-	\
 	com.liferay.expando.kernel.model,\
-	\
 	com.liferay.exportimport.kernel.lar,\
-	\
 	com.liferay.portal.kernel.bean,\
 	com.liferay.portal.kernel.configuration,\
 	com.liferay.portal.kernel.xml,\
@@ -42,14 +39,11 @@ Import-Package:\
 	com.liferay.portal.theme,\
 	com.liferay.portal.util,\
 	com.liferay.portal.webserver,\
-	\
 	com.liferay.portlet,\
 	com.liferay.portlet.asset,\
 	com.liferay.portlet.asset.model,\
 	com.liferay.portlet.asset.service,\
-	\
 	com.liferay.social.kernel.model,\
-	\
 	com.liferay.trash.kernel.model,\
 	\
 	org.apache.commons.chain,\
