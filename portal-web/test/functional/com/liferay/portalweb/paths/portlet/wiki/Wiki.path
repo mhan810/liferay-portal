@@ -197,8 +197,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>ATTACHMENT_TABLE_REMOVE</td>
-	<td>//tr[contains(.,'${key_attachmentFileName}')]//span[contains(.,'Remove')]</td>
+	<td>ATTACHMENT_TABLE_MOVE_TO_THE_RECYCLE_BIN</td>
+	<td>//tr[contains(.,'${key_attachmentFileName}')]//span[contains(.,'Move to the Recycle Bin')]</td>
 	<td></td>
 </tr>
 <tr>
