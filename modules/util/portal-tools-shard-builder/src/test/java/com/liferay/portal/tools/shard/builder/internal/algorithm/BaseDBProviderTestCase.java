@@ -43,9 +43,10 @@ public abstract class BaseDBProviderTestCase {
 		throws SQLException {
 
 		try (Connection connection = dataSource.getConnection();
-				PreparedStatement ps = connection.prepareStatement(sql)) {
+				PreparedStatement preparedStatement =
+					connection.prepareStatement(sql)) {
 
-			return ps.executeUpdate();
+			return preparedStatement.executeUpdate();
 		}
 	}
 
