@@ -14,10 +14,10 @@
 
 package com.liferay.control.menu.web.portlet;
 
+import com.liferay.admin.kernel.util.PortalControlMenuApplicationType;
 import com.liferay.control.menu.web.constants.ControlMenuPortletKeys;
 import com.liferay.portal.kernel.portlet.BasePortletProvider;
 import com.liferay.portal.kernel.portlet.ViewPortletProvider;
-import com.liferay.portlet.admin.util.PortalControlMenuApplicationType;
 
 import org.osgi.service.component.annotations.Component;
 
