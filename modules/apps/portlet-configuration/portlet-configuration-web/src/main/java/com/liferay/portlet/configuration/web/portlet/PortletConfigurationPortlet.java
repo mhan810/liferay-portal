@@ -491,13 +491,10 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 				actionRequest, "rolesSearchContainerPrimaryKeys"),
 			0L);
 
-		boolean portletResourceUpdate = true;
-
 		String selResource = PortletConstants.getRootPortletId(portletResource);
 
 		if (Validator.isNotNull(modelResource)) {
 			selResource = modelResource;
-			portletResourceUpdate = false;
 		}
 
 		long resourceGroupId = ParamUtil.getLong(
@@ -545,7 +542,7 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 			}
 		}
 
-		if (portletResourceUpdate) {
+		if (Validator.isNotNull(modelResource)) {
 
 			// Force update of layout modified date. See LPS-59246.
 
