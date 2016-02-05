@@ -1851,22 +1851,34 @@
 	</command>
 
 	<command name="viewWithTrackbackURLPG">
-		<var name="key_entryContent" value="${entryContent}" />
+		<execute macro="BlogsEntry#viewPG">
+			<var name="entryContent" value="${entryContent}" />
+			<var name="entryTitle" value="${entryTitle}" />
+		</execute>
+
 		<var name="key_entryTitle" value="${entryTitle}" />
 
-		<execute function="AssertTextEquals" locator1="PGBlogs#ENTRY_TITLE" value1="${entryTitle}" />
-		<execute function="AssertTextEquals" locator1="PGBlogs#ENTRY_CONTENT" value1="${entryContent}" />
 		<execute function="AssertTextEquals" locator1="PGBlogs#ENTRY_COMMENT_2" value1="1 Comment" />
-		<execute function="AssertClick" locator1="PGBlogs#ENTRY_TITLE" value1="${entryTitle}" />
 
-		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_TITLE" value1="${entryTitle}" />
-		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_CONTENT" value1="${entryContent}" />
-		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_STATS_COMMENTS" value1="1 Comment" />
-		<execute function="AssertTextEquals" locator1="PGBlogsEntry#COMMENT_1" value1="[...] ${entryContent2} [...] Read More" />
 		<execute function="AssertClick" locator1="PGBlogsEntry#COMMENT_READ_MORE_1" value1="Read More" />
 
+		<execute macro="BlogsEntry#viewEntry">
+			<var name="entryContent" value="${entryContent}" />
+			<var name="entryTitle" value="${entryTitle}" />
+		</execute>
+
+		<execute macro="BlogsEntryComment#viewPG">
+			<var name="commentCount" value="1" />
+			<var name="entryComment" value="[...] ${entryContent2} [...] Read More" />
+			<var name="userFullName" value="Test Test" />
+		</execute>
+
 		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_TITLE" value1="${entryTitle2}" />
-		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_CONTENT" value1="${entryContent2}" />
+
+		<execute macro="BlogsEntry#viewEntry">
+			<var name="entryContent" value="${entryContent2}" />
+			<var name="entryTitle" value="${entryTitle2}" />
+		</execute>
 	</command>
 
 	<command name="viewWithWorkflowCP">
