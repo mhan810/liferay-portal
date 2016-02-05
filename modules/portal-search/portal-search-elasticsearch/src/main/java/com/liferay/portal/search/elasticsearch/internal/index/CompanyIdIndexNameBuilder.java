@@ -35,9 +35,13 @@ import org.osgi.service.component.annotations.Component;
 public class CompanyIdIndexNameBuilder implements IndexNameBuilder {
 
 	@Override
+	public String getIndexName(long companyId) {
+		return _elasticsearchConfiguration.indexNamePrefix() + companyId;
+	}
+
+	@Override
 	public String getIndexName(SearchContext searchContext) {
-		return _elasticsearchConfiguration.indexNamePrefix() +
-			searchContext.getCompanyId();
+		return getIndexName(searchContext.getCompanyId());
 	}
 
 	@Activate
