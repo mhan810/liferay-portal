@@ -65,7 +65,7 @@ public class MySQLProvider extends BaseDBProvider {
 		sb.append("select c1.");
 		sb.append(getTableNameFieldName());
 		sb.append(" from ");
-		sb.append("information_schema.columns c1 where c1.table_schema='");
+		sb.append("information_schema.columns c1 where c1.table_schema = '");
 		sb.append(schemaName);
 		sb.append("' and c1.column_name='companyId' group by c1.");
 		sb.append(getTableNameFieldName());
