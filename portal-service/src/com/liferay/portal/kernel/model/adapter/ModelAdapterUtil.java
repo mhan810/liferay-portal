@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.model.adapter;
+package com.liferay.portal.kernel.model.adapter;
 
 import com.liferay.portal.model.adapter.builder.ModelAdapterBuilder;
 import com.liferay.portal.model.adapter.builder.ModelAdapterBuilderLocator;
