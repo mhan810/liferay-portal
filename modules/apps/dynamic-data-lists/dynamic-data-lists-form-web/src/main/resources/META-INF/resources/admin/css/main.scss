@@ -827,10 +827,6 @@ $horizontal-spacing: 35px;
 	}
 }
 
-select.form-control[multiple] {
-	height: auto;
-}
-
 @include sm {
 	.lfr-ddl-field-settings-modal.form-builder-field-settings {
 		height: 670px;
