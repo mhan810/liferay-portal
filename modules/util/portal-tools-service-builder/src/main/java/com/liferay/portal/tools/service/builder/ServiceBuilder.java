@@ -663,8 +663,7 @@ public class ServiceBuilder {
 							}
 						}
 						else {
-							_removeActionableDynamicQuery(
-								entity, _serviceOutputPath);
+							_removeActionableDynamicQuery(entity);
 							_removeExportActionableDynamicQuery(entity);
 						}
 
