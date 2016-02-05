@@ -208,8 +208,8 @@ public class ElasticsearchConnectionManager {
 	private final Map<OperationMode, ElasticsearchConnection>
 		_elasticsearchConnections = new HashMap<>();
 
-	@Reference(unbind = "-")
-	private final IndexFactory _indexFactory;
+	@Reference
+	private IndexFactory _indexFactory;
 
 	private OperationMode _operationMode;
 
