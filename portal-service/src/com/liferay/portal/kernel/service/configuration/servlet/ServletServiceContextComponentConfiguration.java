@@ -16,8 +16,9 @@ package com.liferay.portal.kernel.service.configuration.servlet;
 
 import com.liferay.portal.kernel.service.configuration.ServiceComponentConfiguration;
 
-import javax.servlet.ServletContext;
 import java.io.InputStream;
+
+import javax.servlet.ServletContext;
 
 /**
  * @author Miguel Pastor
@@ -38,15 +39,15 @@ public class ServletServiceContextComponentConfiguration
 	}
 
 	@Override
-	public InputStream getModelHintsInputStream() {
-		return _servletContext.getResourceAsStream(
-			"/WEB-INF/classes/META-INF/portlet-model-hints.xml");
-	}
-
-	@Override
 	public InputStream getModelHintsExtInputStream() {
 		return _servletContext.getResourceAsStream(
 			"/WEB-INF/classes/META-INF/portlet-model-hints-ext.xml");
+	}
+
+	@Override
+	public InputStream getModelHintsInputStream() {
+		return _servletContext.getResourceAsStream(
+			"/WEB-INF/classes/META-INF/portlet-model-hints.xml");
 	}
 
 	@Override
@@ -65,6 +66,6 @@ public class ServletServiceContextComponentConfiguration
 		return _servletContext.getResourceAsStream("/WEB-INF/sql/tables.sql");
 	}
 
-	private ServletContext _servletContext;
+	private final ServletContext _servletContext;
 
 }

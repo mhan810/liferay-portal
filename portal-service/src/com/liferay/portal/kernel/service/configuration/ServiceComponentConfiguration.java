@@ -23,9 +23,9 @@ public interface ServiceComponentConfiguration {
 
 	public InputStream getHibernateInputStream();
 
-	public InputStream getModelHintsInputStream();
-
 	public InputStream getModelHintsExtInputStream();
+
+	public InputStream getModelHintsInputStream();
 
 	public InputStream getSQLIndexesInputStream();
 
