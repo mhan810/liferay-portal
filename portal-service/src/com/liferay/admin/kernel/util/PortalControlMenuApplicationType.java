@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.admin.util;
+package com.liferay.admin.kernel.util;
 
 /**
  * @author     Eudaldo Alonso
