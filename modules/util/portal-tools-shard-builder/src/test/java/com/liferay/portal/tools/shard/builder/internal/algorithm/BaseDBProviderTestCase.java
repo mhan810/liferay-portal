@@ -42,8 +42,8 @@ public abstract class BaseDBProviderTestCase {
 	public int executeUpdate(DataSource dataSource, String sql)
 		throws SQLException {
 
-		try (Connection con = dataSource.getConnection();
-				PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement ps = connection.prepareStatement(sql)) {
 
 			return ps.executeUpdate();
 		}
@@ -51,13 +51,13 @@ public abstract class BaseDBProviderTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		dbProperties = DBProviderTestUtil.readProperties(
+		properties = DBProviderTestUtil.readProperties(
 			getTestPropertiesFileName());
 
-		ShardExporter exporter = ShardExporterFactory.getShardExporter(
-			dbProperties);
+		ShardExporter shardExporter = ShardExporterFactory.getShardExporter(
+			properties);
 
-		dbProvider = (DBProvider)exporter;
+		dbProvider = (DBProvider)shardExporter;
 
 		executeUpdate(dbProvider.getDataSource(), getCreateTableStatement());
 	}
@@ -87,7 +87,7 @@ public abstract class BaseDBProviderTestCase {
 		return "create table foo (i INT, f FLOAT, s VARCHAR(75), d DATETIME)";
 	}
 
-	protected Object[] getDefaultArgs(
+	protected Object[] getDefaultArguments(
 			int expectedInteger, Timestamp expectedTimestamp)
 		throws Exception {
 
@@ -105,7 +105,7 @@ public abstract class BaseDBProviderTestCase {
 
 	protected abstract String getTestPropertiesFileName();
 
-	protected static Properties dbProperties;
 	protected static DBProvider dbProvider;
+	protected static Properties properties;
 
 }

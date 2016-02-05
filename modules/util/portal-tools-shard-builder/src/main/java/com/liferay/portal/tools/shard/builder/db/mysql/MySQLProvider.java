@@ -23,8 +23,8 @@ import java.util.Properties;
  */
 public class MySQLProvider extends BaseDBProvider {
 
-	public MySQLProvider(Properties dbProperties) {
-		super(dbProperties);
+	public MySQLProvider(Properties properties) {
+		super(properties);
 	}
 
 	@Override
