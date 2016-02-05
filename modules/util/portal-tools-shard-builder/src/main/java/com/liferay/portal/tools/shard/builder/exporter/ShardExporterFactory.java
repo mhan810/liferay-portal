@@ -28,14 +28,14 @@ public class ShardExporterFactory {
 		String dataSourceClassName = properties.getProperty(
 			"dataSourceClassName");
 
-		if (_MYSQL_DATASOURCE_CLASSNAME.equals(dataSourceClassName)) {
+		if (_DATASOURCE_CLASS_NAME_MYSQL.equals(dataSourceClassName)) {
 			return new MySQLProvider(properties);
 		}
 
 		throw new DBProviderNotAvailableException();
 	}
 
-	private static final String _MYSQL_DATASOURCE_CLASSNAME =
+	private static final String _DATASOURCE_CLASS_NAME_MYSQL =
 		"com.mysql.jdbc.jdbc2.optional.MysqlDataSource";
 
 }

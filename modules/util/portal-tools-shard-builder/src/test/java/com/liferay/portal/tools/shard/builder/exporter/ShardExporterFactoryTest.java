@@ -38,21 +38,23 @@ public class ShardExporterFactoryTest {
 
 	@Test
 	public void testGetShardExporterReturnsMysqlProvider() throws Exception {
-		_testGetShardExporter("mysql", MySQLProvider.class);
+		testGetShardExporter("mysql", MySQLProvider.class);
 	}
 
-	private void _testGetShardExporter(
+	protected void testGetShardExporter(
 			String databaseType, Class<?> providerClass)
 		throws Exception {
+		
+		Class<?> clazz = getClass();
 
-		URL url = getClass().getResource("/" + databaseType +".properties");
+		URL url = clazz.getResource("/" + databaseType +".properties");
 
 		Assume.assumeNotNull(url);
 
-		Properties databaseProperties = PropsReader.read(url.getPath());
+		Properties properties = PropsReader.read(url.getPath());
 
 		ShardExporter shardExporter = ShardExporterFactory.getShardExporter(
-			databaseProperties);
+			properties);
 
 		Assert.assertTrue(providerClass.isInstance(shardExporter));
 	}
