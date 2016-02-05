@@ -1856,6 +1856,12 @@ public class ServiceBuilder {
 
 	private void _removeActionableDynamicQuery(Entity entity) throws Exception {
 		File ejbFile = new File(
+			_oldServiceOutputPath + "/service/persistence/" +
+				entity.getName() + "ActionableDynamicQuery.java");
+
+		ejbFile.delete();
+
+		ejbFile = new File(
 			_serviceOutputPath + "/service/persistence/" +
 				entity.getName() + "ActionableDynamicQuery.java");
 
@@ -2017,6 +2023,12 @@ public class ServiceBuilder {
 		throws Exception {
 
 		File ejbFile = new File(
+			_oldServiceOutputPath + "/service/persistence/" +
+				entity.getName() + "ExportActionableDynamicQuery.java");
+
+		ejbFile.delete();
+
+		ejbFile = new File(
 			_serviceOutputPath + "/service/persistence/" +
 				entity.getName() + "ExportActionableDynamicQuery.java");
 
@@ -5166,14 +5178,6 @@ public class ServiceBuilder {
 		return lines;
 	}
 
-	private void _removeActionableDynamicQuery(
-		Entity entity, String outputPath) {
-
-		_deleteFile(
-			outputPath + "/service/persistence/" +
-				entity.getName() + "ActionableDynamicQuery.java");
-	}
-
 	private void _removeBlobModels(Entity entity, String outputPath) {
 		for (EntityColumn col : _getBlobList(entity)) {
 			_deleteFile(
@@ -5192,14 +5196,6 @@ public class ServiceBuilder {
 		_deleteFile(
 			outputPath + "/service/persistence/" + entity.getPKClassName() +
 				".java");
-	}
-
-	private void _removeExportActionableDynamicQuery(
-		Entity entity, String outputPath) {
-
-		_deleteFile(
-			outputPath + "/service/persistence/" +
-				entity.getName() + "ExportActionableDynamicQuery.java");
 	}
 
 	private void _removeExtendedModel(Entity entity, String outputPath) {
@@ -5245,10 +5241,8 @@ public class ServiceBuilder {
 			return;
 		}
 
-		_removeActionableDynamicQuery(entity, _oldServiceOutputPath);
 		_removeBlobModels(entity, _oldServiceOutputPath);
 		_removeEJBPK(entity, _oldServiceOutputPath);
-		_removeExportActionableDynamicQuery(entity, _oldServiceOutputPath);
 		_removeExtendedModel(entity, _oldServiceOutputPath);
 		_removeFinder(entity, _oldServiceOutputPath);
 		_removeFinderUtil(entity, _oldServiceOutputPath);
