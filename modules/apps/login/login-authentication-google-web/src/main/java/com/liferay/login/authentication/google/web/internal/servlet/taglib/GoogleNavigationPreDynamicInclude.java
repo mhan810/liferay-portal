@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.login.authentication.google.internal.servlet.taglib;
+package com.liferay.login.authentication.google.web.internal.servlet.taglib;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
