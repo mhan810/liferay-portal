@@ -65,7 +65,6 @@ public class FriendlyURLServletTest {
 	@Before
 	public void setUp() throws Exception {
 		PropsValues.LOCALES_ENABLED = new String[] {"en_US", "hu_HU", "en_GB"};
-
 		PropsValues.LOCALE_USE_DEFAULT_IF_NOT_AVAILABLE = true;
 
 		LanguageUtil.init();
@@ -92,7 +91,6 @@ public class FriendlyURLServletTest {
 
 		PropsValues.LOCALES_ENABLED = PropsUtil.getArray(
 			PropsKeys.LOCALES_ENABLED);
-
 		PropsValues.LOCALE_USE_DEFAULT_IF_NOT_AVAILABLE = GetterUtil.getBoolean(
 			PropsUtil.get(PropsKeys.LOCALE_USE_DEFAULT_IF_NOT_AVAILABLE));
 
@@ -162,9 +160,6 @@ public class FriendlyURLServletTest {
 		MockHttpServletRequest mockHttpServletRequest =
 			new MockHttpServletRequest();
 
-		mockHttpServletRequest.setPathInfo(StringPool.SLASH);
-		mockHttpServletRequest.setServletPath(i18nPath);
-
 		I18nServlet.I18nData i18nData = _i18nServlet.getI18nData(
 			mockHttpServletRequest);
 
@@ -172,11 +167,15 @@ public class FriendlyURLServletTest {
 			WebKeys.I18N_LANGUAGE_ID,
 			(i18nData == null) ? null : i18nData.getLanguageId());
 
+		mockHttpServletRequest.setPathInfo(StringPool.SLASH);
+
 		String requestURI =
 			PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING +
 				getPath(_group, _layout);
 
 		mockHttpServletRequest.setRequestURI(requestURI);
+
+		mockHttpServletRequest.setServletPath(i18nPath);
 
 		Object[] expectedRedirectArray = null;
 
