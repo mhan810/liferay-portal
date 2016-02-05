@@ -654,13 +654,7 @@ public class ServiceBuilder {
 
 						if (entity.hasActionableDynamicQuery()) {
 							_removeActionableDynamicQuery(entity);
-
-							if (entity.isStagedModel()) {
-								_removeExportActionableDynamicQuery(entity);
-							}
-							else {
-								_removeExportActionableDynamicQuery(entity);
-							}
+							_removeExportActionableDynamicQuery(entity);
 						}
 						else {
 							_removeActionableDynamicQuery(entity);
