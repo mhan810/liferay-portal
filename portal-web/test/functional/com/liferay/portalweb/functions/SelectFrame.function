@@ -9,7 +9,7 @@
 
 				<execute selenium="selectFrame" />
 
-				<execute argument1="//div[contains(@class,'loading-animation')]" selenium="waitForElementNotPresent" />
+				<execute argument1="//div[contains(@class,'overlaymask') and not(contains(@class,'hidden'))]//div[contains(@class,'loadingmask-message')]" selenium="waitForElementNotPresent" />
 
 				<execute selenium="assertJavaScriptErrors" />
 
