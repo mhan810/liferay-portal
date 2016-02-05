@@ -1854,20 +1854,6 @@ public class ServiceBuilder {
 		}
 	}
 
-	private void _removeActionableDynamicQuery(Entity entity) {
-		File ejbFile = new File(
-			_oldServiceOutputPath + "/service/persistence/" +
-				entity.getName() + "ActionableDynamicQuery.java");
-
-		ejbFile.delete();
-
-		ejbFile = new File(
-			_serviceOutputPath + "/service/persistence/" +
-				entity.getName() + "ActionableDynamicQuery.java");
-
-		ejbFile.delete();
-	}
-
 	private void _createBlobModels(Entity entity) throws Exception {
 		List<EntityColumn> blobList = _getBlobList(entity);
 
@@ -2017,20 +2003,6 @@ public class ServiceBuilder {
 				}
 			}
 		}
-	}
-
-	private void _removeExportActionableDynamicQuery(Entity entity) {
-		File ejbFile = new File(
-			_oldServiceOutputPath + "/service/persistence/" +
-				entity.getName() + "ExportActionableDynamicQuery.java");
-
-		ejbFile.delete();
-
-		ejbFile = new File(
-			_serviceOutputPath + "/service/persistence/" +
-				entity.getName() + "ExportActionableDynamicQuery.java");
-
-		ejbFile.delete();
 	}
 
 	private void _createExtendedModel(Entity entity) throws Exception {
@@ -5176,6 +5148,20 @@ public class ServiceBuilder {
 		return lines;
 	}
 
+	private void _removeActionableDynamicQuery(Entity entity) {
+		File ejbFile = new File(
+			_oldServiceOutputPath + "/service/persistence/" +
+				entity.getName() + "ActionableDynamicQuery.java");
+
+		ejbFile.delete();
+
+		ejbFile = new File(
+			_serviceOutputPath + "/service/persistence/" +
+				entity.getName() + "ActionableDynamicQuery.java");
+
+		ejbFile.delete();
+	}
+
 	private void _removeBlobModels(Entity entity, String outputPath) {
 		for (EntityColumn col : _getBlobList(entity)) {
 			_deleteFile(
@@ -5194,6 +5180,20 @@ public class ServiceBuilder {
 		_deleteFile(
 			outputPath + "/service/persistence/" + entity.getPKClassName() +
 				".java");
+	}
+
+	private void _removeExportActionableDynamicQuery(Entity entity) {
+		File ejbFile = new File(
+			_oldServiceOutputPath + "/service/persistence/" +
+				entity.getName() + "ExportActionableDynamicQuery.java");
+
+		ejbFile.delete();
+
+		ejbFile = new File(
+			_serviceOutputPath + "/service/persistence/" +
+				entity.getName() + "ExportActionableDynamicQuery.java");
+
+		ejbFile.delete();
 	}
 
 	private void _removeExtendedModel(Entity entity, String outputPath) {
