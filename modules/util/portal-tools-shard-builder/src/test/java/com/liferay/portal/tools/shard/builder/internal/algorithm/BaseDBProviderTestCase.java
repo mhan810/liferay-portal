@@ -68,7 +68,7 @@ public abstract class BaseDBProviderTestCase {
 	}
 
 	@Test
-	public void testSerializeDateFieldShouldAddQuotes() throws Exception {
+	public void testSerializeTableFieldDate() throws Exception {
 		String serializeTableField = dbProvider.serializeTableField(
 			new Date(0L));
 
@@ -76,7 +76,7 @@ public abstract class BaseDBProviderTestCase {
 	}
 
 	@Test
-	public void testSerializeTimestampFieldShouldAddQuotes() throws Exception {
+	public void testSerializeTableFieldTimestamp() throws Exception {
 		String serializeTableField = dbProvider.serializeTableField(
 			new Timestamp(0L));
 
