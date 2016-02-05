@@ -652,14 +652,8 @@ public class ServiceBuilder {
 
 						_removeOldServices(entity);
 
-						if (entity.hasActionableDynamicQuery()) {
-							_removeActionableDynamicQuery(entity);
-							_removeExportActionableDynamicQuery(entity);
-						}
-						else {
-							_removeActionableDynamicQuery(entity);
-							_removeExportActionableDynamicQuery(entity);
-						}
+						_removeActionableDynamicQuery(entity);
+						_removeExportActionableDynamicQuery(entity);
 
 						if (entity.hasColumns()) {
 							_createHbm(entity);
