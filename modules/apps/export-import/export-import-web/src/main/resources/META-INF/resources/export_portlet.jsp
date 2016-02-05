@@ -19,12 +19,12 @@
 <%
 String tabs3 = ParamUtil.getString(request, "tabs3", "new-export-process");
 
+Layout exportableLayout = ExportImportHelperUtil.getExportableLayout(themeDisplay);
+
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("mvcRenderCommandName", "exportImport");
 portletURL.setParameter("portletResource", portletResource);
-
-Layout exportableLayout = ExportImportHelperUtil.getExportableLayout(themeDisplay);
 %>
 
 <aui:nav-bar markupView="lexicon">
