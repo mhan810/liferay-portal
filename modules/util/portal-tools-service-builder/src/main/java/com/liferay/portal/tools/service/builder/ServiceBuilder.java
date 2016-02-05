@@ -653,10 +653,10 @@ public class ServiceBuilder {
 						_removeOldServices(entity);
 
 						if (entity.hasActionableDynamicQuery()) {
-							_createActionableDynamicQuery(entity);
+							_removeActionableDynamicQuery(entity);
 
 							if (entity.isStagedModel()) {
-								_createExportActionableDynamicQuery(entity);
+								_removeExportActionableDynamicQuery(entity);
 							}
 							else {
 								_removeExportActionableDynamicQuery(
@@ -1869,7 +1869,7 @@ public class ServiceBuilder {
 		}
 	}
 
-	private void _createActionableDynamicQuery(Entity entity) throws Exception {
+	private void _removeActionableDynamicQuery(Entity entity) throws Exception {
 		File ejbFile = new File(
 			_serviceOutputPath + "/service/persistence/" +
 				entity.getName() + "ActionableDynamicQuery.java");
@@ -2028,7 +2028,7 @@ public class ServiceBuilder {
 		}
 	}
 
-	private void _createExportActionableDynamicQuery(Entity entity)
+	private void _removeExportActionableDynamicQuery(Entity entity)
 		throws Exception {
 
 		File ejbFile = new File(
