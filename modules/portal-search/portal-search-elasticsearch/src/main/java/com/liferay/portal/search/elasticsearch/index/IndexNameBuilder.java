@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.search.SearchContext;
  */
 public interface IndexNameBuilder {
 
+	public String getIndexName(long companyId);
+
 	public String getIndexName(SearchContext searchContext);
 
 }
