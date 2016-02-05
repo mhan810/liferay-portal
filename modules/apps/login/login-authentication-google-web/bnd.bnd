@@ -6,14 +6,12 @@ Bundle-ClassPath:\
 	lib/google-http-client.jar,\
 	lib/google-oauth-client.jar,\
 	lib/jackson-core.jar
-Bundle-Name: Liferay Portal Security SSO Google
-Bundle-SymbolicName: com.liferay.portal.security.sso.google
+Bundle-Name: Liferay Login Authentication Google Web
+Bundle-SymbolicName: com.liferay.login.authentication.google.web
 Bundle-Version: 1.0.0
-Export-Package:\
-	com.liferay.portal.security.sso.google,\
-	com.liferay.portal.security.sso.google.constants,\
-	com.liferay.portal.security.sso.google.configuration
 Import-Package:\
+    com.liferay.portal.language.resource.bundle,\
+    com.liferay.portal.settings.portlet.action,\
 	!com.fasterxml.jackson.core,\
 	!com.google.*,\
 	!org.apache.http.*,\
@@ -27,5 +25,5 @@ Include-Resource:\
 	lib/jackson-core.jar=lib/jackson-core.jar
 Liferay-Releng-Module-Group-Description:
 Liferay-Releng-Module-Group-Title:
-Web-ContextPath: /portal-security-sso-google
+Web-ContextPath: /login-authentication-google-web
 -include: ../../../marketplace/platform/bnd.bnd
