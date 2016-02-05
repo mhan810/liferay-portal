@@ -71,6 +71,9 @@ public interface ElasticsearchConfiguration {
 	@Meta.AD(deflt = "true", required = false)
 	public boolean httpEnabled();
 
+	@Meta.AD(deflt = "liferay-", required = false)
+	public String indexNamePrefix();
+
 	@Meta.AD(
 		deflt = "true", description = "%log-exceptions-only-help",
 		required = false

@@ -75,7 +75,8 @@ public class CompanyIndexFactory implements IndexFactory {
 
 		LiferayDocumentTypeFactory liferayDocumentTypeFactory =
 			new LiferayDocumentTypeFactory(
-				String.valueOf(companyId), indicesAdminClient);
+				_indexNamePrefix + String.valueOf(companyId),
+				indicesAdminClient);
 
 		createIndex(companyId, indicesAdminClient, liferayDocumentTypeFactory);
 
@@ -93,7 +94,8 @@ public class CompanyIndexFactory implements IndexFactory {
 		}
 
 		DeleteIndexRequestBuilder deleteIndexRequestBuilder =
-			indicesAdminClient.prepareDelete(String.valueOf(companyId));
+			indicesAdminClient.prepareDelete(
+				_indexNamePrefix + String.valueOf(companyId));
 
 		DeleteIndexResponse deleteIndexResponse =
 			deleteIndexRequestBuilder.get();
@@ -116,6 +118,7 @@ public class CompanyIndexFactory implements IndexFactory {
 			elasticsearchConfiguration.additionalIndexConfigurations());
 		setAdditionalTypeMappings(
 			elasticsearchConfiguration.additionalTypeMappings());
+		setIndexNamePrefix(elasticsearchConfiguration.indexNamePrefix());
 
 		Map<String, String> typeMappings = getTypeMappings(properties);
 
@@ -153,7 +156,8 @@ public class CompanyIndexFactory implements IndexFactory {
 		throws Exception {
 
 		CreateIndexRequestBuilder createIndexRequestBuilder =
-			indicesAdminClient.prepareCreate(String.valueOf(companyId));
+			indicesAdminClient.prepareCreate(
+				_indexNamePrefix + String.valueOf(companyId));
 
 		addMappings(createIndexRequestBuilder);
 		setSettings(createIndexRequestBuilder, liferayDocumentTypeFactory);
@@ -189,7 +193,8 @@ public class CompanyIndexFactory implements IndexFactory {
 		throws Exception {
 
 		IndicesExistsRequestBuilder indicesExistsRequestBuilder =
-			indicesAdminClient.prepareExists(String.valueOf(companyId));
+			indicesAdminClient.prepareExists(
+				_indexNamePrefix + String.valueOf(companyId));
 
 		IndicesExistsResponse indicesExistsResponse =
 			indicesExistsRequestBuilder.get();
@@ -249,6 +254,10 @@ public class CompanyIndexFactory implements IndexFactory {
 		_additionalTypeMappings = additionalTypeMappings;
 	}
 
+	protected void setIndexNamePrefix(String indexNamePrefix) {
+		_indexNamePrefix = indexNamePrefix;
+	}
+
 	protected void setSettings(
 		CreateIndexRequestBuilder createIndexRequestBuilder,
 		LiferayDocumentTypeFactory liferayDocumentTypeFactory) {
@@ -281,6 +290,7 @@ public class CompanyIndexFactory implements IndexFactory {
 
 	private volatile String _additionalIndexConfigurations;
 	private String _additionalTypeMappings;
+	private String _indexNamePrefix = "liferay-";
 	private final Set<IndexSettingsContributor> _indexSettingsContributors =
 		new ConcurrentSkipListSet<>();
 	private Map<String, String> _typeMappings = new HashMap<>();

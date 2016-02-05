@@ -17,6 +17,7 @@ package com.liferay.portal.search.elasticsearch.internal.cluster;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.CompanyConstants;
+import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.service.CompanyLocalService;
 
@@ -57,13 +58,15 @@ public class ReplicasManagerImplTest {
 
 		ElasticsearchFixture elasticsearchFixture0 = createNode(0);
 
-		elasticsearchFixture0.createIndex(CompanyConstants.SYSTEM_STRING);
+		elasticsearchFixture0.createIndex(
+			"liferay-" + CompanyConstants.SYSTEM_STRING);
 
 		ElasticsearchFixture elasticsearchFixture1 = createNode(1);
 
 		ClusterAssert.assert1PrimaryShardAnd2Nodes(elasticsearchFixture0);
 
-		elasticsearchFixture1.createIndex(String.valueOf(companyId));
+		elasticsearchFixture1.createIndex(
+			"liferay-" + String.valueOf(companyId));
 
 		ClusterAssert.assert2PrimaryShardsAnd2Nodes(elasticsearchFixture1);
 
@@ -92,6 +95,9 @@ public class ReplicasManagerImplTest {
 		ElasticsearchCluster elasticsearchCluster = new ElasticsearchCluster();
 
 		elasticsearchCluster.setCompanyLocalService(_companyLocalService);
+
+		elasticsearchCluster.setElasticsearchConnectionManager(
+			new ElasticsearchConnectionManager());
 
 		return elasticsearchCluster.new ReplicasClusterContextImpl();
 	}

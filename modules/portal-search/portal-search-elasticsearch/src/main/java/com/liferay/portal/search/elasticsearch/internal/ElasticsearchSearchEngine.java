@@ -191,7 +191,9 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 		IndicesAdminClient indicesAdminClient = adminClient.indices();
 
 		CloseIndexRequestBuilder closeIndexRequestBuilder =
-			indicesAdminClient.prepareClose(String.valueOf(companyId));
+			indicesAdminClient.prepareClose(
+				_elasticsearchConnectionManager.getIndexNamePrefix() +
+					String.valueOf(companyId));
 
 		try {
 			CloseIndexResponse closeIndexResponse =
@@ -210,7 +212,9 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 			clusterAdminClient.prepareRestoreSnapshot(
 				_BACKUP_REPOSITORY_NAME, backupName);
 
-		restoreSnapshotRequestBuilder.setIndices(String.valueOf(companyId));
+		restoreSnapshotRequestBuilder.setIndices(
+			_elasticsearchConnectionManager.getIndexNamePrefix() +
+				String.valueOf(companyId));
 		restoreSnapshotRequestBuilder.setWaitForCompletion(true);
 
 		try {

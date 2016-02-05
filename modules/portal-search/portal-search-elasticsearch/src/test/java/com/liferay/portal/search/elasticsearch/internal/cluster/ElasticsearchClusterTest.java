@@ -15,6 +15,7 @@
 package com.liferay.portal.search.elasticsearch.internal.cluster;
 
 import com.liferay.portal.model.Company;
+import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.service.CompanyLocalService;
 
 import java.util.ArrayList;
@@ -53,13 +54,17 @@ public class ElasticsearchClusterTest {
 		Arrays.sort(targetIndexNames);
 
 		Assert.assertEquals(
-			"[0, 142857, 42]", Arrays.toString(targetIndexNames));
+			"[liferay-0, liferay-142857, liferay-42]",
+			Arrays.toString(targetIndexNames));
 	}
 
 	protected ReplicasClusterContext createReplicasClusterContext() {
 		ElasticsearchCluster elasticsearchCluster = new ElasticsearchCluster();
 
 		elasticsearchCluster.setCompanyLocalService(_companyLocalService);
+
+		elasticsearchCluster.setElasticsearchConnectionManager(
+			new ElasticsearchConnectionManager());
 
 		return elasticsearchCluster.new ReplicasClusterContextImpl();
 	}

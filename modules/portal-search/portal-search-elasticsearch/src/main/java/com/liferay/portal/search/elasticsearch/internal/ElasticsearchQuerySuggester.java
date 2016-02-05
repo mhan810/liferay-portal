@@ -115,7 +115,8 @@ public class ElasticsearchQuerySuggester extends BaseQuerySuggester {
 			suggester, searchContext);
 
 		SuggestRequestBuilder suggestRequestBuilder = client.prepareSuggest(
-			String.valueOf(searchContext.getCompanyId()));
+			_elasticsearchConnectionManager.getIndexNamePrefix() +
+				String.valueOf(searchContext.getCompanyId()));
 
 		for (SuggestBuilder.SuggestionBuilder<?> suggestionBuilder :
 				suggestBuilder.getSuggestion()) {

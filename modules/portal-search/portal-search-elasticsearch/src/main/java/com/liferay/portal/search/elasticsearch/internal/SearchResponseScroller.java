@@ -44,10 +44,11 @@ import org.elasticsearch.search.SearchHits;
 public class SearchResponseScroller {
 
 	public SearchResponseScroller(
-		Client client, SearchContext searchContext, QueryBuilder queryBuilder,
-		TimeValue scrollTimeValue, String... types) {
+		Client client, String indexNamePrefix, SearchContext searchContext,
+		QueryBuilder queryBuilder, TimeValue scrollTimeValue, String... types) {
 
 		_client = client;
+		_indexNamePrefix = indexNamePrefix;
 		_searchContext = searchContext;
 		_queryBuilder = queryBuilder;
 		_scrollTimeValue = scrollTimeValue;
@@ -79,7 +80,7 @@ public class SearchResponseScroller {
 
 	public void prepare() throws Exception {
 		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch(
-			String.valueOf(_searchContext.getCompanyId()));
+			_indexNamePrefix + String.valueOf(_searchContext.getCompanyId()));
 
 		searchRequestBuilder.addField(Field.UID);
 		searchRequestBuilder.setQuery(_queryBuilder);
@@ -138,6 +139,7 @@ public class SearchResponseScroller {
 		SearchResponseScroller.class);
 
 	private final Client _client;
+	private final String _indexNamePrefix;
 	private final List<String> _previousScrollIds = new ArrayList<>();
 	private final QueryBuilder _queryBuilder;
 	private String _scrollId;

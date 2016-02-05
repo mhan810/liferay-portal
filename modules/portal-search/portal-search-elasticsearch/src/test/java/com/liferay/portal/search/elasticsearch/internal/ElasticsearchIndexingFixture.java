@@ -92,7 +92,7 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 	public void setUp() throws Exception {
 		_elasticsearchFixture.setUp();
 
-		_elasticsearchFixture.createIndex(_indexName);
+		_elasticsearchFixture.createIndex("liferay-" + _indexName);
 
 		ElasticsearchConnectionManager elasticsearchConnectionManager =
 			new TestElasticsearchConnectionManager(_elasticsearchFixture);

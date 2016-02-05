@@ -130,8 +130,9 @@ public class ElasticsearchUpdateDocumentCommandImpl
 		Client client = _elasticsearchConnectionManager.getClient();
 
 		UpdateRequestBuilder updateRequestBuilder = client.prepareUpdate(
-			String.valueOf(searchContext.getCompanyId()), documentType,
-			document.getUID());
+			_elasticsearchConnectionManager.getIndexNamePrefix() +
+				String.valueOf(searchContext.getCompanyId()),
+			documentType, document.getUID());
 
 		String elasticSearchDocument =
 			_elasticsearchDocumentFactory.getElasticsearchDocument(document);
@@ -154,13 +155,17 @@ public class ElasticsearchUpdateDocumentCommandImpl
 		try {
 			Client client = _elasticsearchConnectionManager.getClient();
 
+			String indexNamePrefix =
+				_elasticsearchConnectionManager.getIndexNamePrefix();
+
 			BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();
 
 			for (Document document : documents) {
 				if (deleteFirst) {
 					DeleteRequestBuilder deleteRequestBuilder =
 						client.prepareDelete(
-							String.valueOf(searchContext.getCompanyId()),
+							indexNamePrefix +
+								String.valueOf(searchContext.getCompanyId()),
 							DocumentTypes.LIFERAY, document.getUID());
 
 					bulkRequestBuilder.add(deleteRequestBuilder);
