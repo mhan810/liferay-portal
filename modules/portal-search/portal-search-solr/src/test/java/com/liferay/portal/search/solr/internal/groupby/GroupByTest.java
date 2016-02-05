@@ -44,7 +44,7 @@ public class GroupByTest extends BaseGroupByTestCase {
 	}
 
 	@Override
-	protected IndexingFixture createIndexingFixture(String indexName)
+	protected IndexingFixture createIndexingFixture(long companyId)
 		throws Exception {
 
 		return new SolrIndexingFixture();

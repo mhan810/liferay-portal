@@ -15,10 +15,13 @@
 package com.liferay.portal.search.elasticsearch.internal.stats;
 
 import com.liferay.portal.search.elasticsearch.internal.ElasticsearchIndexingFixture;
+import com.liferay.portal.search.elasticsearch.internal.index.CompanyIdIndexNameBuilder;
 import com.liferay.portal.search.unit.test.IndexingFixture;
 import com.liferay.portal.search.unit.test.stats.BaseStatisticsTestCase;
 
 import org.junit.Test;
+
+import java.util.HashMap;
 
 /**
  * @author André de Oliveira
@@ -32,11 +35,17 @@ public class StatisticsTest extends BaseStatisticsTestCase {
 	}
 
 	@Override
-	protected IndexingFixture createIndexingFixture(String indexName)
+	protected IndexingFixture createIndexingFixture(long companyId)
 		throws Exception {
 
+		CompanyIdIndexNameBuilder companyIdIndexNameBuilder =
+			new CompanyIdIndexNameBuilder();
+
+		companyIdIndexNameBuilder.activate(new HashMap<String, Object>());
+
 		return new ElasticsearchIndexingFixture(
-			StatisticsTest.class.getSimpleName(), indexName);
+			StatisticsTest.class.getSimpleName(),
+			companyIdIndexNameBuilder.getIndexName(companyId));
 	}
 
 }

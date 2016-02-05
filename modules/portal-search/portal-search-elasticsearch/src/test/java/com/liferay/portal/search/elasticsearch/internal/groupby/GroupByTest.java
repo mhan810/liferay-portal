@@ -14,11 +14,15 @@ package com.liferay.portal.search.elasticsearch.internal.groupby;
  * details.
  */
 
+import com.liferay.portal.search.elasticsearch.index.IndexNameBuilder;
 import com.liferay.portal.search.elasticsearch.internal.ElasticsearchIndexingFixture;
+import com.liferay.portal.search.elasticsearch.internal.index.CompanyIdIndexNameBuilder;
 import com.liferay.portal.search.unit.test.IndexingFixture;
 import com.liferay.portal.search.unit.test.groupby.BaseGroupByTestCase;
 
 import org.junit.Test;
+
+import java.util.HashMap;
 
 /**
  * @author André de Oliveira
@@ -44,11 +48,17 @@ public class GroupByTest extends BaseGroupByTestCase {
 	}
 
 	@Override
-	protected IndexingFixture createIndexingFixture(String indexName)
+	protected IndexingFixture createIndexingFixture(long companyId)
 		throws Exception {
 
+		CompanyIdIndexNameBuilder companyIdIndexNameBuilder =
+			new CompanyIdIndexNameBuilder();
+
+		companyIdIndexNameBuilder.activate(new HashMap<String, Object>());
+
 		return new ElasticsearchIndexingFixture(
-			GroupByTest.class.getSimpleName(), indexName);
+			GroupByTest.class.getSimpleName(),
+			companyIdIndexNameBuilder.getIndexName(companyId));
 	}
 
 }
