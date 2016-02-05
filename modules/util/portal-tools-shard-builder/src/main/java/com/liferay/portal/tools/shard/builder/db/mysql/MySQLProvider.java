@@ -31,12 +31,23 @@ public class MySQLProvider extends BaseDBProvider {
 	public String getControlTableNamesSQL(String schema) {
 		String tableNameFieldName = getTableNameFieldName();
 
-		return
-			"select c." + tableNameFieldName + " from " +
-				"information_schema.columns c where c.table_schema = '" +
-				schema + "' and c." + tableNameFieldName + " not in (" +
-				getPartitionedTableNamesSQL(schema)+ ") group by c." +
-				tableNameFieldName + " order by c." + tableNameFieldName;
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select c.");
+		sb.append(tableNameFieldName);
+		sb.append(" from ");
+		sb.append("information_schema.columns c where c.table_schema = '");
+		sb.append(schema);
+		sb.append("' and c.");
+		sb.append(tableNameFieldName);
+		sb.append(" not in (");
+		sb.append(getPartitionedTableNamesSQL(schema));
+		sb.append(") group by c.");
+		sb.append(tableNameFieldName);
+		sb.append(" order by c.");
+		sb.append(tableNameFieldName);
+
+		return sb.toString();
 	}
 
 	@Override
@@ -53,12 +64,19 @@ public class MySQLProvider extends BaseDBProvider {
 	public String getPartitionedTableNamesSQL(String schema) {
 		String tableNameFieldName = getTableNameFieldName();
 
-		return
-			"select c1." + tableNameFieldName + " from " +
-				"information_schema.columns c1 where c1.table_schema='" +
-				schema + "' and c1.column_name='companyId' group by " +
-				"c1." + tableNameFieldName + " order by c1." +
-				tableNameFieldName;
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select c1.");
+		sb.append(tableNameFieldName);
+		sb.append(" from ");
+		sb.append("information_schema.columns c1 where c1.table_schema='");
+		sb.append(schema);
+		sb.append("' and c1.column_name='companyId' group by c1.");
+		sb.append(tableNameFieldName);
+		sb.append(" order by c1.");
+		sb.append(tableNameFieldName);
+
+		return sb.toString();
 	}
 
 	@Override
