@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.service.http;
+package com.liferay.portal.kernel.service.http;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
