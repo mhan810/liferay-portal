@@ -1128,7 +1128,7 @@
 
 		<execute function="Click" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
 
-		<execute function="AssertTextEquals" locator1="Wiki#ATTACHMENT_TABLE_REMOVE" value1="Remove" />
+		<execute function="AssertTextEquals" locator1="Wiki#ATTACHMENT_TABLE_MOVE_TO_THE_RECYCLE_BIN" value1="Move to the Recycle Bin" />
 	</command>
 
 	<command name="viewChildPagePG">
