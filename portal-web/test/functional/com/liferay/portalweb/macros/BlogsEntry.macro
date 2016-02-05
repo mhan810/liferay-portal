@@ -1858,9 +1858,9 @@
 
 		<var name="key_entryTitle" value="${entryTitle}" />
 
-		<execute function="AssertTextEquals" locator1="PGBlogs#ENTRY_COMMENT_2" value1="1 Comment" />
+		<execute function="AssertTextEquals" locator1="Blogs#ENTRY_COMMENTS_COUNT" value1="1" />
 
-		<execute function="AssertClick" locator1="PGBlogsEntry#COMMENT_READ_MORE_1" value1="Read More" />
+		<execute function="AssertClick" locator1="BlogsEntry#TITLE_LINK" value1="${entryTitle}" />
 
 		<execute macro="BlogsEntry#viewEntry">
 			<var name="entryContent" value="${entryContent}" />
@@ -1873,7 +1873,7 @@
 			<var name="userFullName" value="Test Test" />
 		</execute>
 
-		<execute function="AssertTextEquals" locator1="PGBlogsEntry#ENTRY_TITLE" value1="${entryTitle2}" />
+		<execute function="AssertClick" locator1="Link#READ_MORE" value1="Read More" />
 
 		<execute macro="BlogsEntry#viewEntry">
 			<var name="entryContent" value="${entryContent2}" />
