@@ -14,8 +14,8 @@
 
 package com.liferay.portal.kernel.model.adapter;
 
-import com.liferay.portal.model.adapter.builder.ModelAdapterBuilder;
-import com.liferay.portal.model.adapter.builder.ModelAdapterBuilderLocator;
+import com.liferay.portal.kernel.model.adapter.builder.ModelAdapterBuilder;
+import com.liferay.portal.kernel.model.adapter.builder.ModelAdapterBuilderLocator;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.ServiceTracker;
