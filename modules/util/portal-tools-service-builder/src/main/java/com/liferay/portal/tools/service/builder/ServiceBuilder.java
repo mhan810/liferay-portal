@@ -659,15 +659,13 @@ public class ServiceBuilder {
 								_removeExportActionableDynamicQuery(entity);
 							}
 							else {
-								_removeExportActionableDynamicQuery(
-									entity, _serviceOutputPath);
+								_removeExportActionableDynamicQuery(entity);
 							}
 						}
 						else {
 							_removeActionableDynamicQuery(
 								entity, _serviceOutputPath);
-							_removeExportActionableDynamicQuery(
-								entity, _serviceOutputPath);
+							_removeExportActionableDynamicQuery(entity);
 						}
 
 						if (entity.hasColumns()) {
