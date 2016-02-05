@@ -81,7 +81,7 @@ public class GoogleNavigationPreDynamicInclude extends BaseDynamicInclude {
 	private GoogleAuthorization _googleAuthorization;
 
 	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.portal.security.sso.google)"
+		target = "(osgi.web.symbolicname=com.liferay.login.authentication.google.web)"
 	)
 	private ServletContext _servletContext;
 
