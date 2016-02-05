@@ -184,7 +184,14 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 						elasticsearchConnectionManager1;
 					elasticsearchDocumentFactory =
 						new DefaultElasticsearchDocumentFactory();
-					indexNameBuilder = new CompanyIdIndexNameBuilder();
+
+					CompanyIdIndexNameBuilder companyIdIndexNameBuilder =
+						new CompanyIdIndexNameBuilder();
+
+					companyIdIndexNameBuilder.activate(
+						new HashMap<String, Object>());
+
+					indexNameBuilder = companyIdIndexNameBuilder;
 
 					activate(_properties);
 				}
@@ -194,7 +201,14 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 			{
 				elasticsearchConnectionManager = elasticsearchConnectionManager;
 				elasticsearchUpdateDocumentCommand = updateDocumentCommand;
-				indexNameBuilder = new CompanyIdIndexNameBuilder();
+
+				CompanyIdIndexNameBuilder companyIdIndexNameBuilder =
+					new CompanyIdIndexNameBuilder();
+
+				companyIdIndexNameBuilder.activate(
+					new HashMap<String, Object>());
+
+				indexNameBuilder = companyIdIndexNameBuilder;
 			}
 		};
 	}

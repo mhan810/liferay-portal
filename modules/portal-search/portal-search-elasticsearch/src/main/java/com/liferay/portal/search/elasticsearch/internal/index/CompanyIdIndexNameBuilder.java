@@ -34,6 +34,12 @@ import org.osgi.service.component.annotations.Component;
 )
 public class CompanyIdIndexNameBuilder implements IndexNameBuilder {
 
+	@Activate
+	public void activate(Map<String, Object> properties) {
+		_elasticsearchConfiguration = Configurable.createConfigurable(
+			ElasticsearchConfiguration.class, properties);
+	}
+
 	@Override
 	public String getIndexName(long companyId) {
 		return _elasticsearchConfiguration.indexNamePrefix() + companyId;
@@ -42,12 +48,6 @@ public class CompanyIdIndexNameBuilder implements IndexNameBuilder {
 	@Override
 	public String getIndexName(SearchContext searchContext) {
 		return getIndexName(searchContext.getCompanyId());
-	}
-
-	@Activate
-	protected void activate(Map<String, Object> properties) {
-		_elasticsearchConfiguration = Configurable.createConfigurable(
-			ElasticsearchConfiguration.class, properties);
 	}
 
 	private ElasticsearchConfiguration _elasticsearchConfiguration;
