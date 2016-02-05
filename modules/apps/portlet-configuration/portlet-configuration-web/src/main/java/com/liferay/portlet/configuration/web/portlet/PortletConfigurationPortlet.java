@@ -555,7 +555,7 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 		}
 	}
 
-	protected void checkEditPermissionsScreenPermissions(PortletRequest request)
+	protected void checkEditPermissionsJSP(PortletRequest request)
 		throws PortalException {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
@@ -566,7 +566,7 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 		long resourceGroupId = ParamUtil.getLong(
 			request, "resourceGroupId", themeDisplay.getScopeGroupId());
 
-		if (!Validator.isBlank(modelResource)) {
+		if (Validator.isNotNull(modelResource)) {
 			String resourcePrimKey = ParamUtil.getString(
 				request, "resourcePrimKey");
 
@@ -598,7 +598,7 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 			String mvcPath = renderRequest.getParameter("mvcPath");
 
 			if (mvcPath.equals("/edit_permissions.jsp")) {
-				checkEditPermissionsScreenPermissions(renderRequest);
+				checkEditPermissionsJSP(renderRequest);
 
 				super.doDispatch(renderRequest, renderResponse);
 
