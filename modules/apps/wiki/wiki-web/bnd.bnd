@@ -4,9 +4,7 @@ Bundle-Version: 1.0.0
 Export-Package: com.liferay.wiki.web.util
 Import-Package:\
 	com.liferay.asset.kernel.util,\
-	\
 	com.liferay.exportimport.kernel.lar,\
-	\
 	com.liferay.portal.kernel.bean,\
 	com.liferay.portal.kernel.configuration,\
 	com.liferay.portal.kernel.exception,\
@@ -29,13 +27,10 @@ Import-Package:\
 	com.liferay.portal.util,\
 	com.liferay.portal.webserver,\
 	com.liferay.portal,\
-	\
 	com.liferay.portlet,\
 	com.liferay.portlet.documentlibrary.antivirus,\
-	\
 	com.liferay.social.kernel.model,\
 	com.liferay.social.kernel.service,\
-	\
 	com.liferay.wiki.asset,\
 	com.liferay.wiki.configuration,\
 	com.liferay.wiki.constants,\
