@@ -12,13 +12,11 @@
 			<bean class="com.liferay.portlet.layoutsadmin.util.SitemapImpl" />
 		</property>
 	</bean>
-	<bean id="com.liferay.portal.service.impl.LayoutLocalServiceHelper" class="com.liferay.portal.service.impl.LayoutLocalServiceHelper" />
 	<bean id="com.liferay.portal.kernel.service.permission.LayoutBranchPermissionUtil" class="com.liferay.portal.kernel.service.permission.LayoutBranchPermissionUtil">
 		<property name="layoutBranchPermission">
 			<bean class="com.liferay.portal.service.permission.LayoutBranchPermissionImpl" />
 		</property>
 	</bean>
-	<bean id="com.liferay.portal.service.permission.LayoutPermissionImpl" class="com.liferay.portal.service.permission.LayoutPermissionImpl" />
 	<bean id="com.liferay.portal.kernel.service.permission.LayoutPermissionUtil" class="com.liferay.portal.kernel.service.permission.LayoutPermissionUtil">
 		<property name="layoutPermission" ref="com.liferay.portal.service.permission.LayoutPermissionImpl" />
 	</bean>
@@ -37,6 +35,8 @@
 			<bean class="com.liferay.portal.service.permission.LayoutSetPrototypePermissionImpl" />
 		</property>
 	</bean>
+	<bean id="com.liferay.portal.service.impl.LayoutLocalServiceHelper" class="com.liferay.portal.service.impl.LayoutLocalServiceHelper" />
+	<bean id="com.liferay.portal.service.permission.LayoutPermissionImpl" class="com.liferay.portal.service.permission.LayoutPermissionImpl" />
 	<bean id="com.liferay.portal.util.LayoutSitemapURLProvider" class="com.liferay.portal.util.LayoutSitemapURLProvider" />
 	<bean id="com.liferay.portal.util.LayoutTypePortletFactoryUtil" class="com.liferay.portal.util.LayoutTypePortletFactoryUtil">
 		<property name="layoutTypePortletFactory">
