@@ -24,9 +24,9 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,26 +38,22 @@ public class SplitPackagesTest {
 
 	@Test
 	public void testSplitPackage() throws IOException {
-		List<String> portalImplList = _getPackageNameList(
+		Set<String> portalImplPackages = _getPackages(
 			Paths.get("portal-impl/src"));
 
-		List<String> portalServiceList = _getPackageNameList(
+		Set<String> portalServicePackages = _getPackages(
 			Paths.get("portal-service/src"));
 
-		portalImplList.retainAll(portalServiceList);
+		portalImplPackages.retainAll(portalServicePackages);
 
-		System.out.println(
-			"The following packages are present in both sides: ");
-
-		for (String duplicated : portalImplList) {
-			System.out.println(duplicated);
-		}
-
-		Assert.assertTrue(portalImplList.isEmpty());
+		Assert.assertTrue(
+			"Detected split packages in portal-service and portal-impl: " +
+				portalImplPackages,
+			portalImplPackages.isEmpty());
 	}
 
-	private List<String> _getPackageNameList(final Path path) throws IOException {
-		final List<String> packageNameList = new ArrayList<>();
+	private Set<String> _getPackages(final Path path) throws IOException {
+		final Set<String> packages = new HashSet<>();
 
 		Files.walkFileTree(
 			path,
@@ -65,31 +61,29 @@ public class SplitPackagesTest {
 
 				@Override
 				public FileVisitResult preVisitDirectory(
-					Path dirPath, BasicFileAttributes attrs)
+						Path dirPath, BasicFileAttributes basicFileAttributes)
 					throws IOException {
 
-					try (DirectoryStream directoryStream =
-						Files.newDirectoryStream(dirPath, "*.java")) {
+					try (DirectoryStream<Path> directoryStream =
+							Files.newDirectoryStream(dirPath, "*.java")) {
 
-						Iterator iterator = directoryStream.iterator();
+						Iterator<Path> iterator = directoryStream.iterator();
 
 						if (iterator.hasNext()) {
 							Path relativePath = path.relativize(dirPath);
 
 							String relativePathString = relativePath.toString();
 
-							String packageName = relativePathString.replace(
-								"/", ".");
-
-							packageNameList.add(packageName);
+							packages.add(relativePathString.replace('/', '.'));
 						}
 					}
 
 					return FileVisitResult.CONTINUE;
 				}
+
 			});
 
-		return packageNameList;
+		return packages;
 	}
 
 }
