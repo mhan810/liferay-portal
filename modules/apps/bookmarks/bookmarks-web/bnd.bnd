@@ -5,7 +5,6 @@ Import-Package:\
 	com.liferay.asset.kernel,\
 	com.liferay.asset.kernel.model,\
 	com.liferay.asset.kernel.service,\
-	\
 	com.liferay.bookmarks.asset,\
 	com.liferay.bookmarks.configuration,\
 	com.liferay.bookmarks.constants,\
