@@ -20,9 +20,7 @@
 	</bean>
 	<bean id="com.liferay.portal.service.permission.LayoutPermissionImpl" class="com.liferay.portal.service.permission.LayoutPermissionImpl" />
 	<bean id="com.liferay.portal.kernel.service.permission.LayoutPermissionUtil" class="com.liferay.portal.kernel.service.permission.LayoutPermissionUtil">
-		<property name="layoutPermission" ref="com.liferay.portal.service.permission.LayoutPermissionImpl">
-
-		</property>
+		<property name="layoutPermission" ref="com.liferay.portal.service.permission.LayoutPermissionImpl" />
 	</bean>
 	<bean id="com.liferay.portal.kernel.service.permission.LayoutPrototypePermissionUtil" class="com.liferay.portal.kernel.service.permission.LayoutPrototypePermissionUtil">
 		<property name="layoutPrototypePermission">
