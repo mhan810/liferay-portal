@@ -94,7 +94,8 @@ public class LiferayTemplateClassResolverTest {
 
 		properties.put(
 			"allowedClasses", "com.liferay.portal.kernel.model.User");
-		properties.put("restrictedClasses", "com.liferay.portal.model.*");
+		properties.put(
+			"restrictedClasses", "com.liferay.portal.kernel.model.*");
 
 		_liferayTemplateClassResolver.activate(properties);
 
