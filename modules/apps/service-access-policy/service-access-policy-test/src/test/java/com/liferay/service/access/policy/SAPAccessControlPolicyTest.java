@@ -37,7 +37,7 @@ public class SAPAccessControlPolicyTest {
 		Assert.assertTrue(
 			_sapAccessControlPolicy.matches(
 				"com.liferay.portal.kernel.service.UserService", "getUserById",
-				"com.liferay.portal.service.*"));
+				"com.liferay.portal.kernel.service.*"));
 		Assert.assertTrue(
 			_sapAccessControlPolicy.matches(
 				"com.liferay.portal.kernel.service.UserService", "getUserById",
@@ -53,7 +53,7 @@ public class SAPAccessControlPolicyTest {
 		Assert.assertTrue(
 			_sapAccessControlPolicy.matches(
 				"com.liferay.portal.kernel.service.UserService", "getUserById",
-				"com.liferay.portal.service.*#get*"));
+				"com.liferay.portal.kernel.service.*#get*"));
 		Assert.assertTrue(
 			_sapAccessControlPolicy.matches(
 				"com.liferay.portal.kernel.service.UserService", "getUserById",
