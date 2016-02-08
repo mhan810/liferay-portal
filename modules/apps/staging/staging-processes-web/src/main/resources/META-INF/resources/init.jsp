@@ -63,6 +63,7 @@ page import="com.liferay.portal.kernel.model.LayoutSetBranch" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
 page import="com.liferay.portal.kernel.portlet.PortalPreferences" %><%@
 page import="com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil" %><%@
+page import="com.liferay.portal.kernel.portlet.PortletURLUtil" %><%@
 page import="com.liferay.portal.kernel.scheduler.SchedulerEngineHelperUtil" %><%@
 page import="com.liferay.portal.kernel.scheduler.StorageType" %><%@
 page import="com.liferay.portal.kernel.scheduler.messaging.SchedulerResponse" %><%@
