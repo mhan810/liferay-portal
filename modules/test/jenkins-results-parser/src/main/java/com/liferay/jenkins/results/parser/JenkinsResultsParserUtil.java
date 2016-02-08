@@ -234,7 +234,7 @@ public class JenkinsResultsParserUtil {
 			remoteURL = fixFileName(remoteURL);
 
 			remoteURL = remoteURL.replace(
-				"${dependencies.url}", DEPENDENCIES_ROOT_URL);
+				"${dependencies.url}", DEPENDENCIES_URL);
 		}
 
 		if (remoteURL.startsWith("file")) {
@@ -383,7 +383,7 @@ public class JenkinsResultsParserUtil {
 		Files.write(Paths.get(file.toURI()), content.getBytes());
 	}
 
-	protected static final String DEPENDENCIES_ROOT_URL =
+	protected static final String DEPENDENCIES_URL =
 		"http://mirrors-no-cache.lax.liferay.com/github.com/liferay/" +
 			"liferay-jenkins-results-parser-samples-ee/1/";
 

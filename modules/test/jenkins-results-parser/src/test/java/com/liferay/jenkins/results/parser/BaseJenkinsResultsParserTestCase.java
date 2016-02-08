@@ -51,10 +51,10 @@ public abstract class BaseJenkinsResultsParserTestCase {
 		actualMessage = actualMessage.replace(" \n", "\n");
 
 		if (actualMessage.contains(
-				JenkinsResultsParserUtil.DEPENDENCIES_ROOT_URL)) {
+				JenkinsResultsParserUtil.DEPENDENCIES_URL)) {
 
 			actualMessage = actualMessage.replace(
-				JenkinsResultsParserUtil.DEPENDENCIES_ROOT_URL,
+				JenkinsResultsParserUtil.DEPENDENCIES_URL,
 				"${dependencies.url}");
 		}
 
@@ -233,10 +233,10 @@ public abstract class BaseJenkinsResultsParserTestCase {
 		String expectedMessage = getMessage(toURLString(sampleDir));
 
 		if (expectedMessage.contains(
-				JenkinsResultsParserUtil.DEPENDENCIES_ROOT_URL)) {
+				JenkinsResultsParserUtil.DEPENDENCIES_URL)) {
 
 			expectedMessage = expectedMessage.replace(
-				JenkinsResultsParserUtil.DEPENDENCIES_ROOT_URL,
+				JenkinsResultsParserUtil.DEPENDENCIES_URL,
 				"${dependencies.url}");
 		}
 
