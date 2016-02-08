@@ -24,7 +24,7 @@ import org.osgi.framework.ServiceRegistration;
 /**
  * @author Raymond Augé
  */
-public class TestWebServiceActivator implements BundleActivator {
+public class TestWebServiceBundleActivator implements BundleActivator {
 
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
