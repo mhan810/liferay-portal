@@ -328,8 +328,8 @@
 		<execute macro="IFrame#saveConfiguration" />
 	</command>
 
-	<command name="editEntryContentCP">
-		<execute macro="BlogsNavigator#gotoEditCP">
+	<command name="editDraftPG">
+		<execute macro="BlogsNavigator#gotoEditPG">
 			<var name="entryTitle" value="${entryTitle}" />
 		</execute>
 
@@ -342,7 +342,9 @@
 			<var name="entryTitleEdit" value="${entryTitleEdit}" />
 		</execute>
 
-		<execute macro="BlogsEntry#publish" />
+		<execute function="AssertClick" locator1="Button#SAVE_AS_DRAFT" value1="Save as Draft" />
+
+		<execute macro="Alert#viewRequestCompletedSuccessMessage" />
 	</command>
 
 	<command name="editEntryPG">
