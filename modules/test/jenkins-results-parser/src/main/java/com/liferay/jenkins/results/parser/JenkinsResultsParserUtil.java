@@ -384,8 +384,8 @@ public class JenkinsResultsParserUtil {
 	}
 
 	protected static final String DEPENDENCIES_URL =
-		"http://mirrors-no-cache.lax.liferay.com/github.com/liferay/" +
-			"liferay-jenkins-results-parser-samples-ee/1/";
+		"http://mirrors-no-cache.lax.liferay.com/github.com/liferay" +
+			"/liferay-jenkins-results-parser-samples-ee/1/";
 
 	private static final Pattern _localURLPattern1 = Pattern.compile(
 		"https://test.liferay.com/([0-9]+)/");

@@ -50,9 +50,7 @@ public abstract class BaseJenkinsResultsParserTestCase {
 
 		actualMessage = actualMessage.replace(" \n", "\n");
 
-		if (actualMessage.contains(
-				JenkinsResultsParserUtil.DEPENDENCIES_URL)) {
-
+		if (actualMessage.contains(JenkinsResultsParserUtil.DEPENDENCIES_URL)) {
 			actualMessage = actualMessage.replace(
 				JenkinsResultsParserUtil.DEPENDENCIES_URL,
 				"${dependencies.url}");
