@@ -1007,7 +1007,7 @@
 			<var name="entryTitle" value="${entryTitle}" />
 		</execute>
 
-		<execute macro="BlogsEntry#editPG">
+		<execute macro="Blogs#editEntryPG">
 			<var name="entryContent" value="${entryContent}" />
 			<var name="entryContentEdit" value="${entryContentEdit}" />
 			<var name="entryTitle" value="${entryTitle}" />
@@ -1155,10 +1155,9 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="BlogsEntry#editContentInlinePG">
+		<execute macro="BlogsEntry#editEntryContent">
 			<var name="entryContent" value="${entryContentOriginal}" />
 			<var name="entryContentEdit" value="${entryContentEdit}" />
-			<var name="useSendKeys" value="true" />
 		</execute>
 
 		<execute macro="Page#gotoPG">
@@ -1328,7 +1327,7 @@
 			<var name="entryTitle" value="${entryTitle}" />
 		</execute>
 
-		<execute macro="BlogsEntry#editPG">
+		<execute macro="Blogs#editEntryPG">
 			<var name="entryContent" value="${entryContent}" />
 			<var name="entryContentEdit" value="${entryContentEdit}" />
 			<var name="entryTitle" value="${entryTitle}" />
@@ -1464,7 +1463,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="BlogsEntry#editPG">
+		<execute macro="Blogs#editEntryPG">
 			<var name="entryContent" value="${entryContent2}" />
 			<var name="entryContentEdit" value="${entryContent2Edit}" />
 			<var name="entryTitle" value="${entryTitle2}" />
@@ -1583,7 +1582,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="BlogsEntry#viewCategoryPG">
+		<execute macro="BlogsEntry#viewCategory">
 			<var name="categoryName" value="${categoryName}" />
 			<var name="entryTitle" value="${entryTitle2Edit}" />
 			<var name="vocabularyName" value="${vocabularyName}" />
@@ -1843,7 +1842,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="BlogsEntry#addDraftPG">
+		<execute macro="Blogs#addDraft">
 			<var name="entryContent" value="${entryContent}" />
 			<var name="entryTitle" value="${entryTitle}" />
 		</execute>
@@ -1868,7 +1867,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="BlogsEntry#addDraftAutoPG">
+		<execute macro="Blogs#addDraftViaAutoSave">
 			<var name="entryContent" value="${entryContent}" />
 			<var name="entryTitle" value="${entryTitle}" />
 		</execute>

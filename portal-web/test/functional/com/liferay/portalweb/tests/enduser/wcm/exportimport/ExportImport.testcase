@@ -757,7 +757,7 @@
 			<var name="uploadFileName" value="DM Document Title" />
 		</execute>
 
-		<execute macro="BlogsEntry#publishCP" />
+		<execute macro="BlogsEntry#publish" />
 
 		<execute macro="LAR#configureExportSiteCP">
 			<var name="mainContent" value="Blogs" />

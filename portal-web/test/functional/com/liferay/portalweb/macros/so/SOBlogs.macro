@@ -42,18 +42,12 @@
 			</then>
 		</if>
 
-		<execute function="MakeVisible" locator1="SOBlogs#BLOGS_PORTLET_OPTIONS" />
-		<execute function="Click" locator1="SOBlogs#BLOGS_PORTLET_OPTIONS_LINK" />
+		<execute macro="Blogs#disableSocialBookmarkSites">
+			<var name="socialBookmarkSites" value="twitter,facebook,plusone,addthis,blinklist,delicious,digg,evernote,linkedin,newsvine,reddit,slashdot,stumbleupon,technorati,tuenti" />
+		</execute>
 
-		<execute function="Click" locator1="BasePortlet#OPTIONS_MENULIST_CONFIGURATION" />
+		<execute macro="Alert#viewSetupUpdatedSuccessMessage" />
 
-		<execute function="SelectFrame" locator1="PGBlogsConfiguration#CONFIGURATION_IFRAME" />
-		<execute function="Uncheck" locator1="PGBlogsConfiguration#SOCIAL_BOOKMARKS_TWITTER_CHECKBOX" />
-		<execute function="Uncheck" locator1="PGBlogsConfiguration#SOCIAL_BOOKMARKS_FACEBOOK_CHECKBOX" />
-		<execute function="Uncheck" locator1="PGBlogsConfiguration#SOCIAL_BOOKMARKS_GOOGLE_PLUS_CHECKBOX" />
-		<execute function="AssertClick" locator1="PGBlogsConfiguration#SAVE_BUTTON" value1="Save" />
-
-		<execute function="AssertElementPresent" locator1="PGBlogsConfiguration#SUCCESS_MESSAGE" value1="You have successfully updated the setup." />
 		<execute function="SelectFrameTop" />
 	</command>
 
