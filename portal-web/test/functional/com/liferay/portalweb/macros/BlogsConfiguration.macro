@@ -164,7 +164,7 @@
 
 	<command name="viewNoPermissionCP">
 		<execute function="AssertTextEquals" locator1="CPBlogs#PORTLET_TITLE" value1="Blogs" />
-		<execute function="AssertElementPresent" locator1="CPBlogs#NAVBAR_CONTAINER" />
+		<execute function="AssertElementPresent" locator1="NavBar#CONTAINER" />
 		<execute function="AssertTextEquals" locator1="CPBlogs#INFO_MESSAGE" value1="No entries were found." />
 	</command>
 

@@ -503,7 +503,7 @@
 
 	<command name="viewNoPermissionCP">
 		<execute function="AssertTextEquals" locator1="BasePortlet#CONTROL_PANEL_TITLE" value1="Blogs" />
-		<execute function="AssertElementPresent" locator1="CPBlogs#NAVBAR_CONTAINER" />
+		<execute function="AssertElementPresent" locator1="NavBar#CONTAINER" />
 		<execute function="AssertTextEquals" locator1="Message#INFO" value1="No entries were found." />
 	</command>
 
