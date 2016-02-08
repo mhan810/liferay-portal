@@ -38,22 +38,22 @@ public class SplitPackagesTest {
 
 	@Test
 	public void testSplitPackage() throws IOException {
-		Set<String> portalImplPackages = _getPackages(
+		Set<String> portalImplPackageNames = _getPackageNames(
 			Paths.get("portal-impl/src"));
 
-		Set<String> portalServicePackages = _getPackages(
+		Set<String> portalServicePackageNames = _getPackageNames(
 			Paths.get("portal-service/src"));
 
-		portalImplPackages.retainAll(portalServicePackages);
+		portalImplPackageNames.retainAll(portalServicePackageNames);
 
 		Assert.assertTrue(
 			"Detected split packages in portal-service and portal-impl: " +
-				portalImplPackages,
-			portalImplPackages.isEmpty());
+				portalImplPackageNames,
+			portalImplPackageNames.isEmpty());
 	}
 
-	private Set<String> _getPackages(final Path path) throws IOException {
-		final Set<String> packages = new HashSet<>();
+	private Set<String> _getPackageNames(final Path path) throws IOException {
+		final Set<String> packageNames = new HashSet<>();
 
 		Files.walkFileTree(
 			path,
@@ -74,7 +74,8 @@ public class SplitPackagesTest {
 
 							String relativePathString = relativePath.toString();
 
-							packages.add(relativePathString.replace('/', '.'));
+							packageNames.add(
+								relativePathString.replace('/', '.'));
 						}
 					}
 
@@ -83,7 +84,7 @@ public class SplitPackagesTest {
 
 			});
 
-		return packages;
+		return packageNames;
 	}
 
 }
