@@ -53,12 +53,12 @@ OrderByComparator<BackgroundTask> orderByComparator = BackgroundTaskComparatorFa
 		<liferay-ui:search-container-results>
 
 			<%
-			int exportProcessesCount = 0;
-			List<BackgroundTask> exportProcesses = null;
+			int backgroundTasksCount = 0;
+			List<BackgroundTask> backgroundTasks = null;
 
 			if (navigation.equals("all")) {
-				exportProcessesCount = BackgroundTaskManagerUtil.getBackgroundTasksCount(groupId, BackgroundTaskExecutorNames.LAYOUT_EXPORT_BACKGROUND_TASK_EXECUTOR);
-				exportProcesses = BackgroundTaskManagerUtil.getBackgroundTasks(groupId, BackgroundTaskExecutorNames.LAYOUT_EXPORT_BACKGROUND_TASK_EXECUTOR, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
+				backgroundTasksCount = BackgroundTaskManagerUtil.getBackgroundTasksCount(groupId, BackgroundTaskExecutorNames.LAYOUT_EXPORT_BACKGROUND_TASK_EXECUTOR);
+				backgroundTasks = BackgroundTaskManagerUtil.getBackgroundTasks(groupId, BackgroundTaskExecutorNames.LAYOUT_EXPORT_BACKGROUND_TASK_EXECUTOR, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
 			}
 			else {
 				boolean completed = false;
@@ -67,12 +67,12 @@ OrderByComparator<BackgroundTask> orderByComparator = BackgroundTaskComparatorFa
 					completed = true;
 				}
 
-				exportProcessesCount = BackgroundTaskManagerUtil.getBackgroundTasksCount(groupId, BackgroundTaskExecutorNames.LAYOUT_EXPORT_BACKGROUND_TASK_EXECUTOR, completed);
-				exportProcesses = BackgroundTaskManagerUtil.getBackgroundTasks(groupId, BackgroundTaskExecutorNames.LAYOUT_EXPORT_BACKGROUND_TASK_EXECUTOR, completed, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
+				backgroundTasksCount = BackgroundTaskManagerUtil.getBackgroundTasksCount(groupId, BackgroundTaskExecutorNames.LAYOUT_EXPORT_BACKGROUND_TASK_EXECUTOR, completed);
+				backgroundTasks = BackgroundTaskManagerUtil.getBackgroundTasks(groupId, BackgroundTaskExecutorNames.LAYOUT_EXPORT_BACKGROUND_TASK_EXECUTOR, completed, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
 			}
 
-			searchContainer.setResults(exportProcesses);
-			searchContainer.setTotal(exportProcessesCount);
+			searchContainer.setResults(backgroundTasks);
+			searchContainer.setTotal(backgroundTasksCount);
 			%>
 
 		</liferay-ui:search-container-results>
