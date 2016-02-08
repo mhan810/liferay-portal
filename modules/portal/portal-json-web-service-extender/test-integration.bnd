@@ -1,0 +1,7 @@
+Bundle-Activator: com.liferay.portal.json.web.service.extender.test.TestWebServiceActivator
+Bundle-Name: Liferay Portal JSON Web Service Extender Test
+Bundle-SymbolicName: com.liferay.portal.json.web.service.extender.test
+Bundle-Version: 1.0.0
+Include-Resource:\
+	com/liferay/portal/json/web/service/extender/test/TestWebServiceActivator.class=test-classes/integration/com/liferay/portal/json/web/service/extender/test/TestWebServiceActivator.class,\
+	com/liferay/portal/json/web/service/extender/test/TestWebService.class=test-classes/integration/com/liferay/portal/json/web/service/extender/test/TestWebService.class
