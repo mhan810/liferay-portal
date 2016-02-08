@@ -419,7 +419,6 @@ public class VelocityTaglibImpl implements VelocityTaglib {
 		return journalArticleTag;
 	}
 
-
 	@Override
 	public MySitesTag getMySitesTag() throws Exception {
 		MySitesTag mySitesTag = new MySitesTag();
