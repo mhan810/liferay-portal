@@ -855,11 +855,19 @@
 			<var name="userScreenName" value="user1" />
 		</execute>
 
+		<execute macro="ProductMenu#gotoControlPanelUsers">
+			<var name="portlet" value="Users and Organizations" />
+		</execute>
+
 		<execute macro="User#addCP">
 			<var name="userEmailAddress" value="5670@liferay.com" />
 			<var name="userFirstName" value="userfnTest2" />
 			<var name="userLastName" value="Two" />
 			<var name="userScreenName" value="screen2" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelUsers">
+			<var name="portlet" value="Users and Organizations" />
 		</execute>
 
 		<execute macro="User#addCP">
