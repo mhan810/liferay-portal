@@ -307,8 +307,8 @@ public class DDMStructureStagedModelDataHandler
 			if (existingStructure == null) {
 				serviceContext.setUuid(structure.getUuid());
 
-				// This means a structure with the same key has been imported
-				// before need to force key auto-generation
+				// Force a new structure key if a structure with the same key
+				// already exists
 
 				existingStructure = _ddmStructureLocalService.fetchStructure(
 					portletDataContext.getScopeGroupId(),
