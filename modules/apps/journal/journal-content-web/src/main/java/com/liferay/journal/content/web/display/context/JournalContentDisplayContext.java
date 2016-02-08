@@ -42,8 +42,6 @@ import com.liferay.journal.web.asset.JournalArticleAssetRenderer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletProvider;
