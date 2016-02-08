@@ -80,7 +80,7 @@ public class UserGroupSearchContainerResultsTag<R> extends IncludeTag {
 		"/html/taglib/ui/user_group_search_container_results/page.jsp";
 
 	private DisplayTerms _searchTerms;
-	private boolean _useIndexer = false;
+	private boolean _useIndexer;
 	private LinkedHashMap<String, Object> _userGroupParams;
 
 }

@@ -90,7 +90,7 @@ public class UserSearchContainerResultsTag<R> extends IncludeTag {
 
 	private SearchContainer<R> _searchContainer;
 	private DisplayTerms _searchTerms;
-	private boolean _useIndexer = false;
+	private boolean _useIndexer;
 	private LinkedHashMap<String, Object> _userParams;
 
 }
