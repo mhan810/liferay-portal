@@ -21,7 +21,7 @@
 		PortletURL showErrorMessageURL = renderResponse.createRenderURL();
 
 		showErrorMessageURL.setParameter("mvcRenderCommandName", "/blogs_aggregator/view");
-		showErrorMessageURL.setParameter("blogsPortletFound", String.valueOf(false));
+		showErrorMessageURL.setParameter("blogsPortletFound", Boolean.FALSE.toString());
 
 		StringBundler sb = new StringBundler(6);
 
