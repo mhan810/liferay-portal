@@ -116,7 +116,9 @@ if (portletTitleBasedNavigation) {
 	</liferay-frontend:info-bar>
 </c:if>
 
-<portlet:actionURL name="/wiki/edit_page" var="editPageActionURL" />
+<portlet:actionURL name="/wiki/edit_page" var="editPageActionURL">
+	<portlet:param name="mvcRenderCommandName" value="/wiki/edit_page" />
+</portlet:actionURL>
 
 <portlet:renderURL var="editPageRenderURL">
 	<portlet:param name="mvcRenderCommandName" value="/wiki/edit_page" />
@@ -126,7 +128,6 @@ if (portletTitleBasedNavigation) {
 	<aui:form action="<%= editPageActionURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "savePage();" %>'>
 		<aui:input name="<%= Constants.CMD %>" type="hidden" />
 		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
-		<aui:input name="mvcRenderCommandName" type="hidden" value="/wiki/edit_page" />
 		<aui:input name="editTitle" type="hidden" value="<%= editTitle %>" />
 		<aui:input name="nodeId" type="hidden" value="<%= nodeId %>" />
 		<aui:input name="newPage" type="hidden" value="<%= newPage %>" />
