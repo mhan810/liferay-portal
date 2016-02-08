@@ -240,10 +240,6 @@
 		</execute>
 	</command>
 
-	<command name="addNoPermissionPG">
-		<execute function="AssertElementNotPresent" locator1="PGBlogs#ADD_ENTRY_BUTTON" />
-	</command>
-
 	<command name="addRelatedAsset">
 		<var name="key_assetType" value="${assetType}" />
 
