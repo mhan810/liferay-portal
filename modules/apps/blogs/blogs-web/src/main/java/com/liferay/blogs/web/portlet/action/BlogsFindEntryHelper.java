@@ -18,7 +18,6 @@ import com.liferay.blogs.kernel.model.BlogsEntry;
 import com.liferay.blogs.kernel.service.BlogsEntryLocalService;
 import com.liferay.blogs.web.constants.BlogsPortletKeys;
 import com.liferay.portal.kernel.portlet.PortletLayoutFinder;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.struts.BaseFindActionHelper;
 import com.liferay.portal.struts.FindActionHelper;
 
@@ -87,8 +86,7 @@ public class BlogsFindEntryHelper extends BaseFindActionHelper {
 			mvcRenderCommandName = "/blogs_aggregator/view";
 		}
 
-		portletURL.setParameter(
-			"mvcRenderCommandName", mvcRenderCommandName);
+		portletURL.setParameter("mvcRenderCommandName", mvcRenderCommandName);
 	}
 
 	@Override
