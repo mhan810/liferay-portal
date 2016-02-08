@@ -66,7 +66,7 @@ public class MainParameters {
 	}
 
 	@Parameter(
-		description = "Comma-separated list of company Ids to be exported",
+		description = "Comma-separated list of company IDs to be exported",
 		names = {"-C", "--company-ids"},
 		validateWith = CompanyIdsRequiredParameterValidator.class
 	)
