@@ -1,16 +1,4 @@
 <definition>
-	<command name="checkComments">
-		<execute function="Check" locator1="Checkbox#ENABLE_COMMENTS" />
-	</command>
-
-	<command name="checkRelatedAssets">
-		<execute function="Check" locator1="Checkbox#ENABLE_RELATED_ASSETS" />
-	</command>
-
-	<command name="checkRSSSubscriptionCheckbox">
-		<execute function="Check" locator1="Checkbox#ENABLE_RSS_SUBSCRIPTION" />
-	</command>
-
 	<command name="checkSocialBookmarks">
 		<execute function="Check" locator1="Checkbox#ENABLE_SOCIAL_BOOKMARKS" />
 	</command>
@@ -43,12 +31,6 @@
 		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="You have successfully updated the setup." />
 	</command>
 
-	<command name="disableSocialBookmarkSites">
-		<var name="key_socialBookmarkSite" value="${socialBookmarkSite}" />
-
-		<execute function="Uncheck" locator1="SocialBookmarks#SOCIAL_BOOKMARKS_CONFIGURATION_CHECKBOX" />
-	</command>
-
 	<command name="enableSocialBookmarkSites">
 		<var name="key_socialBookmarkSite" value="${socialBookmarkSite}" />
 
@@ -73,18 +55,6 @@
 
 	<command name="selectMaximumItemstoDisplay">
 		<execute function="Select" locator1="Configuration#SETUP_DISPLAY_SETTINGS_MAXIMUM_ITEMS_TO_DISPLAY_SELECT" value1="${maximumItemsToDisplay}" />
-	</command>
-
-	<command name="selectRSSDisplayStyle">
-		<execute function="Select" locator1="Configuration#SETUP_RSS_DISPLAY_STYLE_SELECT" value1="${displayStyle}" />
-	</command>
-
-	<command name="selectRSSFormat">
-		<execute function="Select" locator1="Configuration#SETUP_RSS_FORMAT_SELECT" value1="${format}" />
-	</command>
-
-	<command name="selectRSSMaximumItemsToDisplay">
-		<execute function="Select" locator1="Configuration#SETUP_RSS_MAXIMUM_ITEMS_TO_DISPLAY_SELECT" value1="${maximumItemsToDisplay}" />
 	</command>
 
 	<command name="selectScopeCP">
@@ -236,29 +206,6 @@
 		<execute function="AssertTextEquals" locator1="ProductMenu#PRODUCT_MENU_PANEL_SCOPE" value1="${contentScopeName}" />
 
 		<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="No entries were found." />
-	</command>
-
-	<command name="viewScopePG">
-		<if>
-			<equals arg1="${soPage}" arg2="true" />
-			<then>
-				<execute macro="SOPortlet#gotoPortletOptions">
-					<var name="portletName" value="Blogs" />
-					<var name="portletOption" value="Configuration" />
-				</execute>
-			</then>
-			<else>
-				<execute macro="Portlet#gotoPortletOptions">
-					<var name="portletName" value="${portletName}" />
-					<var name="portletOption" value="Configuration" />
-				</execute>
-			</else>
-		</if>
-
-		<execute function="SelectFrame" locator1="BasePortletConfiguration#CONFIGURATION_IFRAME" />
-
-		<execute function="AssertClick" locator1="PGBlogsConfigurationScope#NAVIGATION_SCOPE" value1="Scope" />
-		<execute function="AssertTextEquals" locator1="PGBlogsConfigurationScope#SCOPE_MENULIST" value1="${scopeSelection}" />
 	</command>
 
 	<command name="viewScopeSelection">
