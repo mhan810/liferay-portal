@@ -474,7 +474,7 @@
 			<var name="pageName" value="${pageName}" />
 		</execute>
 
-		<execute function="AssertClick" locator1="PGBlogs#UNSUBSCRIBE_LINK" value1="Unsubscribe" />
+		<execute function="AssertClick" locator1="Link#UNSUBSCRIBE" value1="Unsubscribe" />
 		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 	</command>
 

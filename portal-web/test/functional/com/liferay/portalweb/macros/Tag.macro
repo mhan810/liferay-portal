@@ -74,11 +74,11 @@
 		<execute function="Click" locator1="BlogsEditEntry#SETTINGS_TAB" />
 
 		<for list="${tagNameList}" param="tagName">
-			<execute function="Type#clickAtSendKeys" locator1="PGBlogsAdd#CATEGORIZATION_TAGS_FIELD" value1="${tagName}" />
-			<execute function="Click" locator1="PGBlogsAdd#CATEGORIZATION_TAGS_ADD_BUTTON" />
+			<execute function="Type#clickAtSendKeys" locator1="AssetCategorization#TAGS_FIELD" value1="${tagName}" />
+			<execute function="Click" locator1="AssetCategorization#TAGS_ADD_BUTTON" />
 		</for>
 
-		<execute function="AssertClick" locator1="PGBlogsAdd#PUBLISH_BUTTON" value1="Publish" />
+		<execute function="Click" locator1="Button#PUBLISH" />
 
 		<execute macro="Alert#viewRequestCompletedSuccessMessage" />
 	</command>
