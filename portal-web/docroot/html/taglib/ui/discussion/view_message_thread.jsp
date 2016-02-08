@@ -31,15 +31,6 @@ String randomNamespace = (String)request.getAttribute("liferay-ui:discussion:ran
 
 boolean skipEditorLoading = ParamUtil.getBoolean(request, "skipEditorLoading");
 
-DiscussionRequestHelper discussionRequestHelper = new DiscussionRequestHelper(request);
-DiscussionTaglibHelper discussionTaglibHelper = new DiscussionTaglibHelper(request);
-
-DiscussionPermission discussionPermission = CommentManagerUtil.getDiscussionPermission(discussionRequestHelper.getPermissionChecker());
-
-CommentTreeDisplayContext commentTreeDisplayContext = CommentDisplayContextProviderUtil.getCommentTreeDisplayContext(request, response, discussionPermission, discussionComment);
-
-Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZone);
-
 DiscussionComment rootDiscussionComment = discussion.getRootDiscussionComment();
 
 String articleCssClass = StringPool.BLANK;
@@ -50,6 +41,15 @@ if (rootDiscussionComment.getCommentId() == discussionComment.getParentCommentId
 else if (depth < 4) {
 	articleCssClass = "card-tab";
 }
+
+DiscussionRequestHelper discussionRequestHelper = new DiscussionRequestHelper(request);
+DiscussionTaglibHelper discussionTaglibHelper = new DiscussionTaglibHelper(request);
+
+DiscussionPermission discussionPermission = CommentManagerUtil.getDiscussionPermission(discussionRequestHelper.getPermissionChecker());
+
+CommentTreeDisplayContext commentTreeDisplayContext = CommentDisplayContextProviderUtil.getCommentTreeDisplayContext(request, response, discussionPermission, discussionComment);
+
+Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZone);
 %>
 
 <c:if test="<%= commentTreeDisplayContext.isDiscussionVisible() %>">
