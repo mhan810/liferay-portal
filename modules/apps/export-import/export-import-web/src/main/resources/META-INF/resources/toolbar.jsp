@@ -18,24 +18,25 @@
 
 <%
 String mvcRenderCommandName = ParamUtil.getString(request, "mvcRenderCommandName");
+
 long groupId = ParamUtil.getLong(request, "groupId");
 boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
-String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
-String navigation = ParamUtil.getString(request, "navigation", "all");
 String orderByCol = ParamUtil.getString(request, "orderByCol");
 String orderByType = ParamUtil.getString(request, "orderByType");
+String navigation = ParamUtil.getString(request, "navigation", "all");
+String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 
 PortletURL portletURL = liferayPortletResponse.createRenderURL();
 
 portletURL.setParameter("mvcRenderCommandName", mvcRenderCommandName);
 portletURL.setParameter("groupId", String.valueOf(groupId));
 portletURL.setParameter("privateLayout", String.valueOf(privateLayout));
-portletURL.setParameter("searchContainerId", String.valueOf(searchContainerId));
 portletURL.setParameter("displayStyle", displayStyle);
 portletURL.setParameter("navigation", navigation);
 portletURL.setParameter("orderByCol", orderByCol);
 portletURL.setParameter("orderByType", orderByType);
+portletURL.setParameter("searchContainerId", String.valueOf(searchContainerId));
 %>
 
 <liferay-frontend:management-bar

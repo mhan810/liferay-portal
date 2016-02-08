@@ -17,23 +17,25 @@
 <%@ include file="/init.jsp" %>
 
 <%
-	String mvcRenderCommandName = ParamUtil.getString(request, "mvcRenderCommandName");
-	String tabs1 = ParamUtil.getString(request, "tabs1");
-	String searchContainerId = ParamUtil.getString(request, "searchContainerId");
-	String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
-	String navigation = ParamUtil.getString(request, "navigation", "all");
-	String orderByCol = ParamUtil.getString(request, "orderByCol");
-	String orderByType = ParamUtil.getString(request, "orderByType");
+String mvcRenderCommandName = ParamUtil.getString(request, "mvcRenderCommandName");
 
-	PortletURL portletURL = liferayPortletResponse.createRenderURL();
+String tabs1 = ParamUtil.getString(request, "tabs1");
 
-	portletURL.setParameter("mvcRenderCommandName", mvcRenderCommandName);
-	portletURL.setParameter("tabs1", tabs1);
-	portletURL.setParameter("searchContainerId", String.valueOf(searchContainerId));
-	portletURL.setParameter("displayStyle", displayStyle);
-	portletURL.setParameter("navigation", navigation);
-	portletURL.setParameter("orderByCol", orderByCol);
-	portletURL.setParameter("orderByType", orderByType);
+String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
+String navigation = ParamUtil.getString(request, "navigation", "all");
+String orderByCol = ParamUtil.getString(request, "orderByCol");
+String orderByType = ParamUtil.getString(request, "orderByType");
+String searchContainerId = ParamUtil.getString(request, "searchContainerId");
+
+PortletURL portletURL = liferayPortletResponse.createRenderURL();
+
+portletURL.setParameter("mvcRenderCommandName", mvcRenderCommandName);
+portletURL.setParameter("tabs1", tabs1);
+portletURL.setParameter("displayStyle", displayStyle);
+portletURL.setParameter("navigation", navigation);
+portletURL.setParameter("orderByCol", orderByCol);
+portletURL.setParameter("orderByType", orderByType);
+portletURL.setParameter("searchContainerId", String.valueOf(searchContainerId));
 %>
 
 <liferay-frontend:management-bar

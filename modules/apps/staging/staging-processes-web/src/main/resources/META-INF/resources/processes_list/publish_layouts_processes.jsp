@@ -17,28 +17,28 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String searchContainerId = ParamUtil.getString(request, "searchContainerId");
-String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
-String navigation = ParamUtil.getString(request, "navigation", "all");
-String orderByCol = ParamUtil.getString(request, "orderByCol");
-String orderByType = ParamUtil.getString(request, "orderByType");
-
 boolean localPublishing = true;
 
 if (liveGroup.isStaged() && liveGroup.isStagedRemotely()) {
 	localPublishing = false;
 }
 
+String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
+String navigation = ParamUtil.getString(request, "navigation", "all");
+String orderByCol = ParamUtil.getString(request, "orderByCol");
+String orderByType = ParamUtil.getString(request, "orderByType");
+String searchContainerId = ParamUtil.getString(request, "searchContainerId");
+
 PortletURL renderURL = liferayPortletResponse.createRenderURL();
 
 renderURL.setParameter("mvcRenderCommandName", "publishLayoutsView");
 renderURL.setParameter("tabs1", "processes");
 renderURL.setParameter("localPublishing", String.valueOf(localPublishing));
-renderURL.setParameter("searchContainerId", searchContainerId);
 renderURL.setParameter("displayStyle", displayStyle);
 renderURL.setParameter("navigation", navigation);
 renderURL.setParameter("orderByCol", orderByCol);
 renderURL.setParameter("orderByType", orderByType);
+renderURL.setParameter("searchContainerId", searchContainerId);
 
 String taskExecutorClassName = localPublishing ? BackgroundTaskExecutorNames.LAYOUT_STAGING_BACKGROUND_TASK_EXECUTOR : BackgroundTaskExecutorNames.LAYOUT_REMOTE_STAGING_BACKGROUND_TASK_EXECUTOR;
 
