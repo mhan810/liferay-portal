@@ -17,9 +17,11 @@ package com.liferay.portal.settings.authentication.token.web.internal.portlet.ac
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.security.sso.token.constants.TokenConstants;
 import com.liferay.portal.settings.portlet.action.BasePortalSettingsFormMVCActionCommand;
 import com.liferay.portal.settings.web.constants.PortalSettingsPortletKeys;
+import com.liferay.portal.security.sso.token.security.auth.TokenLocation;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -44,7 +46,49 @@ public class PortalSettingsTokenFormMVCActionCommand
 	protected void doValidateForm(
 		ActionRequest actionRequest, ActionResponse actionResponse) {
 
-		//TODO: Validation
+		boolean tokenEnabled = ParamUtil.getBoolean(actionRequest, "token--enabled");
+
+		if (!tokenEnabled) {
+			return;
+		}
+
+		String tokenAuthenticationCookies = ParamUtil.getString(actionRequest, "token--authenticationCookies");
+		String tokenLogoutURL = ParamUtil.getString(actionRequest, "token--logoutRedirectURL");
+		String tokenUserTokenName = ParamUtil.getString(actionRequest, "token--userTokenName");
+		String tokenLocation = ParamUtil.getString(actionRequest, "token--tokenLocation");
+
+		// Validate tokenAuthenticationCookies
+		if (Validator.isNull(tokenAuthenticationCookies)) {
+			SessionErrors.add(actionRequest, "userAuthenticationCookiesInvalid");
+		}
+
+		// Validate tokenLogoutURL
+		if (!Validator.isUrl(tokenLogoutURL)) {
+			SessionErrors.add(actionRequest, "tokenLogoutURLInvalid");
+		}
+
+		// Validate tokenUserTokenName
+		if (Validator.isNull(tokenUserTokenName)) {
+			SessionErrors.add(actionRequest, "userTokenNameInvalid");
+		}
+
+		// Validate tokenLocation
+		if (Validator.isNull(tokenLocation)) {
+			SessionErrors.add(actionRequest, "userTokenLocationInvalid");
+		}
+
+		// Validate the tokenLocation enum values (COOKIE, REQUEST, REQUEST_HEADER, SESSION)
+		boolean isTokenLocationValid = false;
+		for (TokenLocation t : TokenLocation.values()) {
+			if (tokenLocation.equals(t.name())) {
+				isTokenLocationValid = true;
+				break;
+			}
+		}
+
+		if (!isTokenLocationValid) {
+			SessionErrors.add(actionRequest, "userTokenLocationInvalid");
+		}
 	}
 
 	@Override
