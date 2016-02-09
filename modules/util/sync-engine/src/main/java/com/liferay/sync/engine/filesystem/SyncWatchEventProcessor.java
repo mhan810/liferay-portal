@@ -478,7 +478,7 @@ public class SyncWatchEventProcessor implements Runnable {
 		}
 
 		if (_logger.isTraceEnabled()) {
-			_logger.trace("Processing sync watch events");
+			_logger.trace("Processing Sync watch events");
 		}
 
 		_pendingTypePKSyncFileIds.clear();
@@ -674,7 +674,7 @@ public class SyncWatchEventProcessor implements Runnable {
 
 		if (_logger.isDebugEnabled()) {
 			_logger.debug(
-				"Processing sync watch event {}", syncWatchEvent.toString());
+				"Processing Sync watch event {}", syncWatchEvent.toString());
 		}
 
 		String fileType = syncWatchEvent.getFileType();
@@ -691,7 +691,7 @@ public class SyncWatchEventProcessor implements Runnable {
 
 				if (duplicateSyncWatchEvent != null) {
 					if (_logger.isDebugEnabled()) {
-						_logger.debug("Skipping outdated sync watch event");
+						_logger.debug("Skipping outdated Sync watch event");
 					}
 				}
 				else {
@@ -712,7 +712,7 @@ public class SyncWatchEventProcessor implements Runnable {
 
 			if (duplicateSyncWatchEvent != null) {
 				if (_logger.isDebugEnabled()) {
-					_logger.debug("Skipping outdated sync watch event");
+					_logger.debug("Skipping outdated Sync watch event");
 				}
 			}
 			else {
