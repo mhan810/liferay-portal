@@ -17,7 +17,7 @@
 <%@ include file="/com.liferay.portal.settings.web/init.jsp" %>
 
 <%
-TokenConfiguration tokenConfiguration = ConfigurationFactoryUtil.getConfiguration(TokenConfiguration.class, new ParameterMapSettingsLocator(request.getParameterMap(), "token--", new CompanyServiceSettingsLocator(company.getCompanyId(), TokenConstants.SERVICE_NAME)));
+TokenConfiguration tokenConfiguration = ConfigurationProviderUtil.getConfiguration(TokenConfiguration.class, new ParameterMapSettingsLocator(request.getParameterMap(), "token--", new CompanyServiceSettingsLocator(company.getCompanyId(), TokenConstants.SERVICE_NAME)));
 
 String[] authenticationCookies = tokenConfiguration.authenticationCookies();
 boolean enabled = tokenConfiguration.enabled();
@@ -28,6 +28,12 @@ String userTokenName = tokenConfiguration.userTokenName();
 %>
 
 <aui:fieldset>
+
+	<liferay-ui:error key="userAuthenticationCookiesInvalid" message="the-authentication-cookies-are-invalid" />
+	<liferay-ui:error key="tokenLogoutURLInvalid" message="the-token-logout-url-is-invalid" />
+	<liferay-ui:error key="userTokenNameInvalid" message="the-user-token-name-is-invalid" />
+	<liferay-ui:error key="userTokenLocationInvalid" message="the-user-token-location-is-invalid" />
+
 	<aui:input name="<%= ActionRequest.ACTION_NAME %>" type="hidden" value="/portal_settings/token" />
 
 	<aui:input cssClass="lfr-input-text-container" helpMessage="authentication-cookies-help" label="authentication-cookies" name="token--authenticationCookies" type="text" value="<%= StringUtil.merge(authenticationCookies, StringPool.COMMA) %>" />
