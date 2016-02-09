@@ -536,7 +536,6 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 		}
 	}
 
-	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public DDLRecord updateRecord(
 			long userId, long recordId, boolean majorVersion, int displayIndex,
