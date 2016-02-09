@@ -9,6 +9,7 @@ dependencies {
 	provided project(":apps:portal-settings:portal-settings-web")
 	provided project(":portal:portal-language-resource-bundle")
 	provided project(":portal:portal-metatype")
+	provided project(":portal-security:portal-security-export-import-api")
 }
 
 liferay {
