@@ -127,8 +127,8 @@ List fileEntries = DLAppServiceUtil.getGroupFileEntries(scopeGroupId, 0, folderI
 
 			mediaGalleryMimeTypes = null;
 
-			request.setAttribute("view.jsp-mediaGalleryMimeTypes", mediaGalleryMimeTypes);
 			request.setAttribute("view.jsp-igSearchContainer", igSearchContainer);
+			request.setAttribute("view.jsp-mediaGalleryMimeTypes", mediaGalleryMimeTypes);
 			%>
 
 			<liferay-util:include page="/image_gallery_display/view_images.jsp" servletContext="<%= application %>" />
