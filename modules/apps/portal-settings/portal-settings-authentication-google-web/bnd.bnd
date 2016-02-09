@@ -1,29 +1,7 @@
-Bundle-ClassPath:\
-	.,\
-	lib/google-api-client.jar,\
-	lib/google-api-services-oauth2.jar,\
-	lib/google-http-client-jackson2.jar,\
-	lib/google-http-client.jar,\
-	lib/google-oauth-client.jar,\
-	lib/jackson-core.jar
 Bundle-Name: Liferay Portal Settings Authentication Google Web
 Bundle-SymbolicName: com.liferay.portal.settings.authentication.google.web
 Bundle-Version: 1.0.0
-Import-Package:\
-    com.liferay.portal.language.resource.bundle,\
-    com.liferay.portal.settings.portlet.action,\
-	!com.fasterxml.jackson.core,\
-	!com.google.*,\
-	!org.apache.http.*,\
-	*
-Include-Resource:\
-	lib/google-api-client.jar=lib/google-api-client.jar,\
-	lib/google-api-services-oauth2.jar=lib/google-api-services-oauth2.jar,\
-	lib/google-http-client-jackson2.jar=lib/google-http-client-jackson2.jar,\
-	lib/google-http-client.jar=lib/google-http-client.jar,\
-	lib/google-oauth-client.jar=lib/google-oauth-client.jar,\
-	lib/jackson-core.jar=lib/jackson-core.jar
 Liferay-Releng-Module-Group-Description:
-Liferay-Releng-Module-Group-Title:
-Web-ContextPath: /portal-settings-authentication-google-web
--include: ../../../marketplace/platform/bnd.bnd
+Liferay-Releng-Module-Group-Title: Portal Settings
+Web-ContextPath: /portal-settings-authentication-google
+-include: ../../../../marketplace/platform/bnd.bnd
