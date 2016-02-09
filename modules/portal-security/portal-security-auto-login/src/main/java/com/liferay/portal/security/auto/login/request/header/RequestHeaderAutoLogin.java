@@ -199,4 +199,6 @@ public class RequestHeaderAutoLogin extends BaseAutoLogin {
 
 	private ConfigurationProvider _configurationProvider;
 	private UserImporter _userImporter;
+	private UserLocalService _userLocalService;
+
 }

@@ -3,6 +3,7 @@ dependencies {
 	provided group: "com.liferay.portal", name: "portal-service", version: liferay.portalVersion
 	provided project(":apps:portal-settings:portal-settings-api")
 	provided project(":portal:portal-language-resource-bundle")
+	provided project(":portal-security:portal-security-export-import-api")
 }
 
 liferay {
