@@ -177,7 +177,7 @@ public class PortalSettingsEditLDAPServerMVCActionCommand
 	}
 
 	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.portal.ldap)", unbind = "-"
+		target = "(osgi.web.symbolicname=com.liferay.portal.settigns.authentication.ldap.web)", unbind = "-"
 	)
 	protected void setServletContext(ServletContext servletContext) {
 		_servletContext = servletContext;
