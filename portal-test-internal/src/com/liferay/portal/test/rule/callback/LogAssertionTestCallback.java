@@ -134,6 +134,11 @@ public class LogAssertionTestCallback
 		installJdk14Handler();
 		installLog4jAppender();
 
+		Log4JLoggerTestUtil.configureLog4JLogger(
+			"com.liferay.portal.search.elasticsearch.internal.connection." +
+				"EmbeddedElasticsearchConnection",
+			Level.ERROR);
+
 		return captureAppenders;
 	}
 
