@@ -81,14 +81,16 @@ public class DialectDetector {
 				dialect = new HSQLDialect();
 
 				if (_log.isWarnEnabled()) {
-					sb = new StringBundler(6);
+					sb = new StringBundler(8);
 
+					sb.append("=========================================\n");
 					sb.append("Liferay is configured to use Hypersonic as ");
 					sb.append("its database. Do NOT use Hypersonic in ");
 					sb.append("production. Hypersonic is an embedded ");
 					sb.append("database useful for development and demo'ing ");
 					sb.append("purposes. The database settings can be ");
 					sb.append("changed in portal-ext.properties.");
+					sb.append("=========================================\n");
 
 					_log.warn(sb.toString());
 				}
