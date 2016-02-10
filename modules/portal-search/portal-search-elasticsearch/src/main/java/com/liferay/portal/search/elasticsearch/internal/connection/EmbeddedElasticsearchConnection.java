@@ -178,8 +178,19 @@ public class EmbeddedElasticsearchConnection
 
 		stopWatch.start();
 
-		if (_log.isDebugEnabled()) {
-			_log.debug(
+		if (_log.isWarnEnabled()) {
+			_log.warn(
+				"Liferay is configured to use embedded Elasticsearch as " +
+					"search engine. Do NOT use embedded Elasticsearch in " +
+						"production.");
+
+			_log.warn(
+				"Embedded Elasticsearch is useful for development" +
+					" and demo'ing purposes. Remote Elasticsearch can be " +
+						"configured in Control Panel => System Settings => " +
+							"Platform.");
+
+			_log.warn(
 				"Starting embedded Elasticsearch cluster " +
 					elasticsearchConfiguration.clusterName());
 		}
