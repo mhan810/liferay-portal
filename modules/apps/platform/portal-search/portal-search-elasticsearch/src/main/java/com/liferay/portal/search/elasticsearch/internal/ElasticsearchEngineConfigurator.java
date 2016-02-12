@@ -86,13 +86,6 @@ public class ElasticsearchEngineConfigurator
 		super.initialize();
 	}
 
-	@Reference(unbind = "-")
-	protected void setElasticsearchConnectionManager(
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
-
-		_elasticsearchConnectionManager = elasticsearchConnectionManager;
-	}
-
 	@Reference(target = "(!(search.engine.impl=*))", unbind = "-")
 	protected void setIndexSearcher(IndexSearcher indexSearcher) {
 		_indexSearcher = indexSearcher;
@@ -128,7 +121,9 @@ public class ElasticsearchEngineConfigurator
 		_searchEngines.remove(searchEngineId);
 	}
 
+	@Reference
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
+
 	private IndexSearcher _indexSearcher;
 	private IndexWriter _indexWriter;
 	private final Map<String, SearchEngine> _searchEngines =
