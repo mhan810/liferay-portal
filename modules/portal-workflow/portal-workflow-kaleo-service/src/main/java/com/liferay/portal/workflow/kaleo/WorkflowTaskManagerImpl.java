@@ -48,7 +48,6 @@ import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler;
 import com.liferay.portal.workflow.kaleo.runtime.TaskManager;
 import com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignmentSelector;
-import com.liferay.portal.workflow.kaleo.runtime.util.ClassLoaderUtil;
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskAssignmentLocalServiceUtil;
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskInstanceTokenLocalServiceUtil;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
@@ -826,17 +825,9 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 		for (KaleoTaskAssignment configuredKaleoTaskAssignment :
 				configuredKaleoTaskAssignments) {
 
-			String[] assigneeScriptRequiredContexts = StringUtil.split(
-				configuredKaleoTaskAssignment.
-					getAssigneeScriptRequiredContexts());
-
-			ClassLoader[] classLoaders = ClassLoaderUtil.getClassLoaders(
-				assigneeScriptRequiredContexts);
-
 			Collection<KaleoTaskAssignment> kaleoTaskAssignments =
 				_taskAssignmentSelector.calculateTaskAssignments(
-					configuredKaleoTaskAssignment, executionContext,
-					classLoaders);
+					configuredKaleoTaskAssignment, executionContext);
 
 			calculatedKaleoTaskAssignments.addAll(kaleoTaskAssignments);
 		}
