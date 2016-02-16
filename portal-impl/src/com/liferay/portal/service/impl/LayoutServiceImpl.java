@@ -1799,6 +1799,9 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 			long plid, long parentPlid, int priority)
 		throws PortalException {
 
+		LayoutPermissionUtil.check(
+			getPermissionChecker(), plid, ActionKeys.UPDATE);
+
 		return layoutLocalService.updateParentLayoutIdAndPriority(
 			plid, parentPlid, priority);
 	}
