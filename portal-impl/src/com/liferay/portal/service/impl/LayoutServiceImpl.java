@@ -836,8 +836,29 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		long companyId, String portletId, String preferencesKey,
 		String preferencesValue) {
 
-		return layoutLocalService.getLayouts(
+		LayoutReference[] layoutReferencesArray = layoutLocalService.getLayouts(
 			companyId, portletId, preferencesKey, preferencesValue);
+
+		List<LayoutReference> filteredLayoutReferences = new ArrayList<>(
+			layoutReferencesArray.length);
+
+		for (LayoutReference layoutReference : layoutReferencesArray) {
+			try {
+				if (LayoutPermissionUtil.contains(
+						getPermissionChecker(),
+						layoutReference.getLayoutSoap().getPlid(),
+						ActionKeys.VIEW)) {
+
+					filteredLayoutReferences.add(layoutReference);
+				}
+			}
+			catch (PortalException pe) {
+				continue;
+			}
+		}
+
+		return filteredLayoutReferences.toArray(
+			new LayoutReference[filteredLayoutReferences.size()]);
 	}
 
 	@Override
