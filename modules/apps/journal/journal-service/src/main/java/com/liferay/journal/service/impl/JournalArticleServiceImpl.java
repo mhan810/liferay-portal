@@ -2036,6 +2036,10 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 			String layoutUuid, ServiceContext serviceContext)
 		throws PortalException {
 
+		JournalArticlePermission.check(
+			getPermissionChecker(), groupId, articleId, version,
+			ActionKeys.UPDATE);
+
 		return journalArticleLocalService.updateArticle(
 			userId, groupId, folderId, articleId, version, titleMap,
 			descriptionMap, content, layoutUuid, serviceContext);
