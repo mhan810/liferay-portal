@@ -12,22 +12,20 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.assignment;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment;
-import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
-
-import java.util.Collection;
+package com.liferay.portal.scripting.executor.internal;
 
 /**
  * @author Michael C. Han
  */
-public interface TaskAssignmentSelector {
+public class ScriptingExecutorMessagingConstants {
 
-	public Collection<KaleoTaskAssignment> calculateTaskAssignments(
-			KaleoTaskAssignment kaleoTaskAssignment,
-			ExecutionContext executionContext)
-		throws PortalException;
+	public static final String DEFAULT_SCRIPTING_LANGUAGE = "groovy";
+
+	public static final String DESTINATION_NAME = "liferay/scripting_executor";
+
+	public static final String SCRIPTING_LANGUAGE_MESSAGE_ATTRIBUTE =
+		"scriptingLanguage";
+
+	public static final String URLS_MESSAGE_ATTRIBUTE = "urls";
 
 }
