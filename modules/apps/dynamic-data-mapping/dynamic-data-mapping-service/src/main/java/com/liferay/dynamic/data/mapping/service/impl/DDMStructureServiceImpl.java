@@ -281,7 +281,7 @@ public class DDMStructureServiceImpl extends DDMStructureServiceBaseImpl {
 	@Override
 	public void deleteStructure(long structureId) throws PortalException {
 		DDMStructurePermission.check(
-			getPermissionChecker(), structureId, ActionKeys.VIEW);
+			getPermissionChecker(), structureId, ActionKeys.DELETE);
 
 		ddmStructureLocalService.deleteStructure(structureId);
 	}
