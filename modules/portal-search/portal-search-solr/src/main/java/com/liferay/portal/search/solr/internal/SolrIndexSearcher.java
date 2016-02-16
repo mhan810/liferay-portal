@@ -597,24 +597,9 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 		_filterTranslator = filterTranslator;
 	}
 
-	@Reference(unbind = "-")
-	protected void setGroupByTranslator(GroupByTranslator groupByTranslator) {
-		_groupByTranslator = groupByTranslator;
-	}
-
 	@Reference(target = "(search.engine.impl=Solr)", unbind = "-")
 	protected void setQueryTranslator(QueryTranslator<String> queryTranslator) {
 		_queryTranslator = queryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSolrClientManager(SolrClientManager solrClientManager) {
-		_solrClientManager = solrClientManager;
-	}
-
-	@Reference(unbind = "-")
-	protected void setStatsTranslator(StatsTranslator statsTranslator) {
-		_statsTranslator = statsTranslator;
 	}
 
 	protected String translateQuery(Query query, SearchContext searchContext) {
@@ -711,11 +696,19 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 
 	private FacetProcessor<SolrQuery> _facetProcessor;
 	private FilterTranslator<String> _filterTranslator;
+
+	@Reference
 	private GroupByTranslator _groupByTranslator;
+
 	private boolean _logExceptionsOnly;
 	private QueryTranslator<String> _queryTranslator;
+
+	@Reference
 	private SolrClientManager _solrClientManager;
+
 	private volatile SolrConfiguration _solrConfiguration;
+
+	@Reference
 	private StatsTranslator _statsTranslator;
 
 }
