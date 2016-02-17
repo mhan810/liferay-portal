@@ -280,8 +280,7 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 			boolean autoArticleId, double version)
 		throws PortalException {
 
-		JournalArticle article = journalArticleLocalService.getArticle(
-			groupId, oldArticleId);
+		JournalArticle article = getArticle(groupId, oldArticleId);
 
 		JournalFolderPermission.check(
 			getPermissionChecker(), groupId, article.getFolderId(),
