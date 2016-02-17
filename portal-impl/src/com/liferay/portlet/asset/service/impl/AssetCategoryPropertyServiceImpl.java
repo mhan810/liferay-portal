@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portlet.asset.service.base.AssetCategoryPropertyServiceBaseImpl;
 import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,15 +60,27 @@ public class AssetCategoryPropertyServiceImpl
 
 	@Override
 	public List<AssetCategoryProperty> getCategoryProperties(long entryId) {
-		return assetCategoryPropertyLocalService.getCategoryProperties(entryId);
+		try {
+			if (AssetCategoryPermission.contains(
+					getPermissionChecker(), entryId, ActionKeys.VIEW)) {
+
+				return assetCategoryPropertyLocalService.getCategoryProperties(
+					entryId);
+			}
+		}
+		catch (PortalException pe) {
+		}
+
+		return new ArrayList<>();
 	}
 
 	@Override
 	public List<AssetCategoryProperty> getCategoryPropertyValues(
 		long companyId, String key) {
 
-		return assetCategoryPropertyLocalService.getCategoryPropertyValues(
-			companyId, key);
+		return filterAssetCategoryProperties(
+			assetCategoryPropertyLocalService.getCategoryPropertyValues(
+				companyId, key));
 	}
 
 	@Override
@@ -93,6 +106,32 @@ public class AssetCategoryPropertyServiceImpl
 		throws PortalException {
 
 		return updateCategoryProperty(0, categoryPropertyId, key, value);
+	}
+
+	protected List<AssetCategoryProperty> filterAssetCategoryProperties(
+		List<AssetCategoryProperty> assetCategoryProperties) {
+
+		ArrayList<AssetCategoryProperty> filteredAssetCategoryProperties =
+			new ArrayList<>(assetCategoryProperties.size());
+
+		for (AssetCategoryProperty assetCategoryProperty :
+				assetCategoryProperties) {
+
+			try {
+				if (AssetCategoryPermission.contains(
+						getPermissionChecker(),
+						assetCategoryProperty.getCategoryId(),
+						ActionKeys.VIEW)) {
+
+					filteredAssetCategoryProperties.add(assetCategoryProperty);
+				}
+			}
+			catch (PortalException pe) {
+				continue;
+			}
+		}
+
+		return filteredAssetCategoryProperties;
 	}
 
 }
