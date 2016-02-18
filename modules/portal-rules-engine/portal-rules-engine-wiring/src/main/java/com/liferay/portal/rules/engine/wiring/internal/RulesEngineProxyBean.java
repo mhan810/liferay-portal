@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.bi.rules;
+package com.liferay.portal.rules.engine.wiring.internal;
 
 import com.liferay.portal.kernel.bi.rules.Fact;
 import com.liferay.portal.kernel.bi.rules.Query;
