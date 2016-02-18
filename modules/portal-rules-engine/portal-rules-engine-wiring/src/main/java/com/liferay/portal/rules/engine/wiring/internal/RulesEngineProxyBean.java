@@ -14,12 +14,11 @@
 
 package com.liferay.portal.rules.engine.wiring.internal;
 
-import com.liferay.portal.kernel.bi.rules.Fact;
-import com.liferay.portal.kernel.bi.rules.Query;
-import com.liferay.portal.kernel.bi.rules.RulesEngine;
-import com.liferay.portal.kernel.bi.rules.RulesResourceRetriever;
 import com.liferay.portal.kernel.messaging.proxy.BaseProxyBean;
-import com.liferay.portal.kernel.security.pacl.DoPrivileged;
+import com.liferay.portal.rules.engine.Fact;
+import com.liferay.portal.rules.engine.Query;
+import com.liferay.portal.rules.engine.RulesEngine;
+import com.liferay.portal.rules.engine.RulesResourceRetriever;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ import java.util.Map;
 /**
  * @author Michael C. Han
  */
-@DoPrivileged
 public class RulesEngineProxyBean extends BaseProxyBean implements RulesEngine {
 
 	@Override
@@ -59,7 +57,6 @@ public class RulesEngineProxyBean extends BaseProxyBean implements RulesEngine {
 
 	@Override
 	public void execute(String domainName, List<Fact<?>> facts) {
-
 		throw new UnsupportedOperationException();
 	}
 
