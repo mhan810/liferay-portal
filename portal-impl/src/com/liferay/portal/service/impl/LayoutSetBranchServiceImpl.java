@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.service.permission.GroupPermissionUtil;
 import com.liferay.portal.kernel.service.permission.LayoutSetBranchPermissionUtil;
 import com.liferay.portal.service.base.LayoutSetBranchServiceBaseImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,8 +60,18 @@ public class LayoutSetBranchServiceImpl extends LayoutSetBranchServiceBaseImpl {
 	public List<LayoutSetBranch> getLayoutSetBranches(
 		long groupId, boolean privateLayout) {
 
-		return layoutSetBranchLocalService.getLayoutSetBranches(
-			groupId, privateLayout);
+		try {
+			if (GroupPermissionUtil.contains(
+					getPermissionChecker(), groupId, ActionKeys.VIEW_STAGING)) {
+
+				return layoutSetBranchLocalService.getLayoutSetBranches(
+					groupId, privateLayout);
+			}
+		}
+		catch (PortalException pe) {
+		}
+
+		return new ArrayList<>();
 	}
 
 	@Override
