@@ -12,15 +12,29 @@
  * details.
  */
 
-package com.liferay.portal.kernel.bi.rules;
+package com.liferay.portal.rules.engine;
+
+import java.io.Serializable;
 
 /**
  * @author Michael C. Han
  */
-public enum RulesLanguage {
+public class Fact<T> implements Serializable {
 
-	DROOLS_BRL, DROOLS_CHANGE_SET, DROOLS_DECISION_TABLE,
-	DROOLS_DOMAIN_SPECIFIC, DROOLS_DOMAIN_SPECIFIC_RULE, DROOLS_PKG,
-	DROOLS_RULE_FLOW, DROOLS_RULE_LANGUAGE, DROOLS_XML_LANGUAGE
+	public Fact(String identifier, T object) {
+		_identifier = identifier;
+		_factObject = object;
+	}
+
+	public T getFactObject() {
+		return _factObject;
+	}
+
+	public String getIdentifier() {
+		return _identifier;
+	}
+
+	private final T _factObject;
+	private final String _identifier;
 
 }
