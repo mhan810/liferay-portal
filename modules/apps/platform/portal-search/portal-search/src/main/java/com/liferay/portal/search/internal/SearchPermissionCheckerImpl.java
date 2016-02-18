@@ -520,7 +520,6 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 	@Reference
 	private RoleLocalService _roleLocalService;
 
-	@Reference
 	private SearchPermissionCheckerConfiguration
 		_searchPermissionCheckerConfiguration;
 
