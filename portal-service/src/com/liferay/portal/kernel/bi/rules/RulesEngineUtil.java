@@ -32,14 +32,6 @@ public class RulesEngineUtil {
 		getRulesEngine().add(domainName, rulesResourceRetriever);
 	}
 
-	public static void add(
-			String domainName, RulesResourceRetriever rulesResourceRetriever,
-			ClassLoader... classloaders)
-		throws RulesEngineException {
-
-		getRulesEngine().add(domainName, rulesResourceRetriever, classloaders);
-	}
-
 	public static boolean containsRuleDomain(String domainName)
 		throws RulesEngineException {
 
@@ -53,14 +45,6 @@ public class RulesEngineUtil {
 		getRulesEngine().execute(rulesResourceRetriever, facts);
 	}
 
-	public static void execute(
-			RulesResourceRetriever rulesResourceRetriever, List<Fact<?>> facts,
-			ClassLoader... classloaders)
-		throws RulesEngineException {
-
-		getRulesEngine().execute(rulesResourceRetriever, facts, classloaders);
-	}
-
 	public static Map<String, ?> execute(
 			RulesResourceRetriever rulesResourceRetriever, List<Fact<?>> facts,
 			Query query)
@@ -69,26 +53,10 @@ public class RulesEngineUtil {
 		return getRulesEngine().execute(rulesResourceRetriever, facts, query);
 	}
 
-	public static Map<String, ?> execute(
-			RulesResourceRetriever rulesResourceRetriever, List<Fact<?>> facts,
-			Query query, ClassLoader... classloaders)
-		throws RulesEngineException {
-
-		return getRulesEngine().execute(
-			rulesResourceRetriever, facts, query, classloaders);
-	}
-
 	public static void execute(String domainName, List<Fact<?>> facts)
 		throws RulesEngineException {
 
 		getRulesEngine().execute(domainName, facts);
-	}
-
-	public static void execute(
-			String domainName, List<Fact<?>> facts, ClassLoader... classloaders)
-		throws RulesEngineException {
-
-		getRulesEngine().execute(domainName, facts, classloaders);
 	}
 
 	public static Map<String, ?> execute(
@@ -96,14 +64,6 @@ public class RulesEngineUtil {
 		throws RulesEngineException {
 
 		return getRulesEngine().execute(domainName, facts, query);
-	}
-
-	public static Map<String, ?> execute(
-			String domainName, List<Fact<?>> facts, Query query,
-			ClassLoader... classloaders)
-		throws RulesEngineException {
-
-		return getRulesEngine().execute(domainName, facts, query, classloaders);
 	}
 
 	public static RulesEngine getRulesEngine() {
@@ -121,15 +81,6 @@ public class RulesEngineUtil {
 		throws RulesEngineException {
 
 		getRulesEngine().update(domainName, rulesResourceRetriever);
-	}
-
-	public static void update(
-			String domainName, RulesResourceRetriever rulesResourceRetriever,
-			ClassLoader... classloaders)
-		throws RulesEngineException {
-
-		getRulesEngine().update(
-			domainName, rulesResourceRetriever, classloaders);
 	}
 
 	public void setRulesEngine(RulesEngine rulesEngine) {
