@@ -12,18 +12,18 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.parser;
+package com.liferay.portal.workflow.kaleo.definition.parser;
 
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.workflow.kaleo.definition.Definition;
-
-import java.io.InputStream;
+import com.liferay.portal.workflow.kaleo.definition.Node;
 
 /**
  * @author Michael C. Han
  */
-public interface WorkflowModelParser {
+public interface NodeValidator<T extends Node> {
 
-	public Definition parse(InputStream inputStream) throws WorkflowException;
+	public void validate(Definition definition, T node)
+		throws WorkflowException;
 
 }
