@@ -25,6 +25,8 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.workflow.kaleo.definition.Definition;
 import com.liferay.portal.workflow.kaleo.definition.Node;
+import com.liferay.portal.workflow.kaleo.definition.export.DefinitionExporter;
+import com.liferay.portal.workflow.kaleo.definition.export.NodeExporter;
 import com.liferay.portal.workflow.kaleo.export.builder.DefinitionBuilder;
 
 import java.io.IOException;
