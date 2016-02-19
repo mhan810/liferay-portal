@@ -19,16 +19,20 @@ import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowLog;
 import com.liferay.portal.kernel.workflow.WorkflowLogManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoLog;
-import com.liferay.portal.workflow.kaleo.service.KaleoLogLocalServiceUtil;
+import com.liferay.portal.workflow.kaleo.service.KaleoLogLocalService;
 import com.liferay.portal.workflow.kaleo.util.WorkflowModelUtil;
 import com.liferay.portal.workflow.kaleo.util.comparators.KaleoLogOrderByComparator;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = WorkflowLogManager.class)
 public class WorkflowLogManagerImpl implements WorkflowLogManager {
 
 	@Override
@@ -37,7 +41,7 @@ public class WorkflowLogManagerImpl implements WorkflowLogManager {
 		throws WorkflowException {
 
 		try {
-			return KaleoLogLocalServiceUtil.getKaleoInstanceKaleoLogsCount(
+			return _kaleoLogLocalService.getKaleoInstanceKaleoLogsCount(
 				workflowInstanceId, logTypes);
 		}
 		catch (Exception e) {
@@ -51,7 +55,7 @@ public class WorkflowLogManagerImpl implements WorkflowLogManager {
 		throws WorkflowException {
 
 		try {
-			return KaleoLogLocalServiceUtil.
+			return _kaleoLogLocalService.
 				getKaleoTaskInstanceTokenKaleoLogsCount(
 					workflowTaskId, logTypes);
 		}
@@ -69,7 +73,7 @@ public class WorkflowLogManagerImpl implements WorkflowLogManager {
 
 		try {
 			List<KaleoLog> kaleoLogs =
-				KaleoLogLocalServiceUtil.getKaleoInstanceKaleoLogs(
+				_kaleoLogLocalService.getKaleoInstanceKaleoLogs(
 					workflowInstanceId, logTypes, start, end,
 					KaleoLogOrderByComparator.getOrderByComparator(
 						orderByComparator));
@@ -90,7 +94,7 @@ public class WorkflowLogManagerImpl implements WorkflowLogManager {
 
 		try {
 			List<KaleoLog> kaleoLogs =
-				KaleoLogLocalServiceUtil.getKaleoTaskInstanceTokenKaleoLogs(
+				_kaleoLogLocalService.getKaleoTaskInstanceTokenKaleoLogs(
 					workflowTaskId, logTypes, start, end,
 					KaleoLogOrderByComparator.getOrderByComparator(
 						orderByComparator));
@@ -111,5 +115,8 @@ public class WorkflowLogManagerImpl implements WorkflowLogManager {
 
 		return workflowLogs;
 	}
+
+	@Reference
+	private KaleoLogLocalService _kaleoLogLocalService;
 
 }
