@@ -20,14 +20,15 @@ import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.BaseKaleoBean;
+import com.liferay.portal.workflow.kaleo.internal.runtime.node.NodeExecutorFactory;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoNode;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler;
 import com.liferay.portal.workflow.kaleo.runtime.graph.PathElement;
 import com.liferay.portal.workflow.kaleo.runtime.node.NodeExecutor;
-import com.liferay.portal.workflow.kaleo.runtime.node.NodeExecutorFactory;
 import com.liferay.portal.workflow.kaleo.runtime.util.ExecutionUtil;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class DefaultKaleoSignaler
 			KaleoNode currentKaleoNode, ExecutionContext executionContext)
 		throws PortalException {
 
-		NodeExecutor nodeExecutor = NodeExecutorFactory.getNodeExecutor(
+		NodeExecutor nodeExecutor = _nodeExecutorFactory.getNodeExecutor(
 			currentKaleoNode.getType());
 
 		List<PathElement> remainingPathElements = new ArrayList<>();
@@ -106,6 +107,9 @@ public class DefaultKaleoSignaler
 
 		_singleDestinationMessageSender.send(pathElement);
 	}
+
+	@ServiceReference(type = NodeExecutorFactory.class)
+	private NodeExecutorFactory _nodeExecutorFactory;
 
 	private SingleDestinationMessageSender _singleDestinationMessageSender;
 
