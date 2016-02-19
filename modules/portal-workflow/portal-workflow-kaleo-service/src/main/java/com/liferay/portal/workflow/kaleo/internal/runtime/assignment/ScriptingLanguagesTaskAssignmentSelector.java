@@ -20,7 +20,7 @@ import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.assignment.BaseTaskAssignmentSelector;
-import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderUtil;
+import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilder;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 
 import java.io.Serializable;
@@ -43,7 +43,7 @@ public class ScriptingLanguagesTaskAssignmentSelector
 		throws PortalException {
 
 		Map<String, Object> inputObjects =
-			ScriptingContextBuilderUtil.buildScriptingContext(executionContext);
+			_scriptingContextBuilder.buildScriptingContext(executionContext);
 
 		String assigneeScript = kaleoTaskAssignment.getAssigneeScript();
 
@@ -74,5 +74,8 @@ public class ScriptingLanguagesTaskAssignmentSelector
 
 	@ServiceReference(type = Scripting.class)
 	private Scripting _scripting;
+
+	@ServiceReference(type = ScriptingContextBuilder.class)
+	private ScriptingContextBuilder _scriptingContextBuilder;
 
 }
