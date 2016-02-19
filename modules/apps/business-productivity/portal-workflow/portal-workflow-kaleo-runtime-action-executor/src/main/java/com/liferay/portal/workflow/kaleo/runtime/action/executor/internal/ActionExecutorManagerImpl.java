@@ -19,11 +19,12 @@ import com.liferay.portal.kernel.util.ClassUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.definition.ScriptLanguage;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.ActionExecutorManager;
+import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
+import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorConstants;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,7 +38,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 /**
  * @author Leonardo Barros
  */
-@Component(immediate = true)
+@Component(immediate = true, service = ActionExecutorManager.class)
 public class ActionExecutorManagerImpl implements ActionExecutorManager {
 
 	@Override
@@ -82,7 +83,7 @@ public class ActionExecutorManagerImpl implements ActionExecutorManager {
 		ActionExecutor actionExecutor, Map<String, Object> properties) {
 
 		Object value = properties.get(
-			"com.liferay.portal.workflow.kaleo.runtime.action.executor.language");
+			ActionExecutorConstants.ACTION_EXECUTOR_LANGUAGE_KEY);
 
 		String[] languages = GetterUtil.getStringValues(
 			value, new String[] {String.valueOf(value)});
@@ -99,7 +100,7 @@ public class ActionExecutorManagerImpl implements ActionExecutorManager {
 		ActionExecutor actionExecutor, Map<String, Object> properties) {
 
 		Object value = properties.get(
-			"com.liferay.portal.workflow.kaleo.runtime.action.executor.language");
+			ActionExecutorConstants.ACTION_EXECUTOR_LANGUAGE_KEY);
 
 		String[] languages = GetterUtil.getStringValues(
 			value, new String[] {String.valueOf(value)});
