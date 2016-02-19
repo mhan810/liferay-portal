@@ -154,7 +154,7 @@ public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 		builder.put("http.enabled", false);
 		builder.put("node.client", true);
 		builder.put("node.data", false);
-		builder.put("path.logs", _props.get(PropsKeys.LIFERAY_HOME) + "/logs");
+		builder.put("path.logs", props.get(PropsKeys.LIFERAY_HOME) + "/logs");
 		builder.put(
 			"path.work", SystemProperties.get(SystemProperties.TMP_DIR));
 	}
@@ -193,7 +193,7 @@ public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 		RemoteElasticsearchConnection.class);
 
 	@Reference
-	private Props _props;
+	protected Props props;
 
 	private Set<String> _transportAddresses = new HashSet<>();
 

@@ -113,14 +113,14 @@ public class ElasticsearchUpdateDocumentCommandImpl
 			String documentType, SearchContext searchContext, Document document)
 		throws IOException {
 
-		Client client = _elasticsearchConnectionManager.getClient();
+		Client client = elasticsearchConnectionManager.getClient();
 
 		UpdateRequestBuilder updateRequestBuilder = client.prepareUpdate(
 			String.valueOf(searchContext.getCompanyId()), documentType,
 			document.getUID());
 
 		String elasticSearchDocument =
-			_elasticsearchDocumentFactory.getElasticsearchDocument(document);
+			elasticsearchDocumentFactory.getElasticsearchDocument(document);
 
 		updateRequestBuilder.setDoc(elasticSearchDocument);
 		updateRequestBuilder.setDocAsUpsert(true);
@@ -138,7 +138,7 @@ public class ElasticsearchUpdateDocumentCommandImpl
 		throws SearchException {
 
 		try {
-			Client client = _elasticsearchConnectionManager.getClient();
+			Client client = elasticsearchConnectionManager.getClient();
 
 			BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();
 
@@ -183,9 +183,9 @@ public class ElasticsearchUpdateDocumentCommandImpl
 	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
 
 	@Reference
-	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
+	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
 
 	@Reference
-	private ElasticsearchDocumentFactory _elasticsearchDocumentFactory;
+	protected ElasticsearchDocumentFactory elasticsearchDocumentFactory;
 
 }

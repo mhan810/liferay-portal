@@ -150,17 +150,17 @@ public class EmbeddedElasticsearchConnection
 	protected void configurePaths(Settings.Builder builder) {
 		builder.put(
 			"path.data",
-			_props.get(PropsKeys.LIFERAY_HOME) + "/data/elasticsearch/indices");
+			props.get(PropsKeys.LIFERAY_HOME) + "/data/elasticsearch/indices");
 		builder.put(
 			"path.home",
-			_props.get(PropsKeys.LIFERAY_HOME) + "/data/elasticsearch");
-		builder.put("path.logs", _props.get(PropsKeys.LIFERAY_HOME) + "/logs");
+			props.get(PropsKeys.LIFERAY_HOME) + "/data/elasticsearch");
+		builder.put("path.logs", props.get(PropsKeys.LIFERAY_HOME) + "/logs");
 		builder.put(
 			"path.plugins",
-			_props.get(PropsKeys.LIFERAY_HOME) + "/data/elasticsearch/plugins");
+			props.get(PropsKeys.LIFERAY_HOME) + "/data/elasticsearch/plugins");
 		builder.put(
 			"path.repo",
-			_props.get(PropsKeys.LIFERAY_HOME) + "/data/elasticsearch/repo");
+			props.get(PropsKeys.LIFERAY_HOME) + "/data/elasticsearch/repo");
 		builder.put(
 			"path.work", SystemProperties.get(SystemProperties.TMP_DIR));
 	}
@@ -277,7 +277,7 @@ public class EmbeddedElasticsearchConnection
 			Validator.isNull(elasticsearchConfiguration.networkPublishHost())) {
 
 			InetAddress localBindInetAddress =
-				_clusterSettingsContext.getLocalBindInetAddress();
+				clusterSettingsContext.getLocalBindInetAddress();
 
 			if (localBindInetAddress != null) {
 				networkHost = localBindInetAddress.getHostAddress();
@@ -306,11 +306,11 @@ public class EmbeddedElasticsearchConnection
 		EmbeddedElasticsearchConnection.class);
 
 	@Reference
-	private ClusterSettingsContext _clusterSettingsContext;
+	protected ClusterSettingsContext clusterSettingsContext;
 
 	private Node _node;
 
 	@Reference
-	private Props _props;
+	protected Props props;
 
 }

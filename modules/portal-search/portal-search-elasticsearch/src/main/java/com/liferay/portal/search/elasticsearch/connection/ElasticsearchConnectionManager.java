@@ -182,7 +182,7 @@ public class ElasticsearchConnectionManager {
 
 		for (Long companyId : _companyIds.values()) {
 			try {
-				_indexFactory.createIndices(getAdminClient(), companyId);
+				indexFactory.createIndices(getAdminClient(), companyId);
 			}
 			catch (Exception e) {
 				if (_log.isWarnEnabled()) {
@@ -209,7 +209,7 @@ public class ElasticsearchConnectionManager {
 		_elasticsearchConnections = new HashMap<>();
 
 	@Reference
-	private IndexFactory _indexFactory;
+	protected IndexFactory indexFactory;
 
 	private OperationMode _operationMode;
 
