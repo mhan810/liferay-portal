@@ -17,6 +17,7 @@ package com.liferay.portal.workflow.kaleo.export;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.workflow.kaleo.definition.Node;
 import com.liferay.portal.workflow.kaleo.definition.Task;
+import com.liferay.portal.workflow.kaleo.definition.export.NodeExporter;
 
 /**
  * @author Michael C. Han
