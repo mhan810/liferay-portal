@@ -33,9 +33,12 @@ import java.io.IOException;
 
 import java.util.Collection;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = DefinitionExporter.class)
 public class XMLDefinitionExporter implements DefinitionExporter {
 
 	public void afterPropertiesSet() {
