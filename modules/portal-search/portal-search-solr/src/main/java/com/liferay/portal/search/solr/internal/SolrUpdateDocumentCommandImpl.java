@@ -74,7 +74,7 @@ public class SolrUpdateDocumentCommandImpl
 			boolean deleteFirst)
 		throws SearchException {
 
-		SolrClient solrClient = _solrClientManager.getSolrClient();
+		SolrClient solrClient = solrClientManager.getSolrClient();
 
 		try {
 			List<SolrInputDocument> solrInputDocuments = new ArrayList<>(
@@ -84,7 +84,7 @@ public class SolrUpdateDocumentCommandImpl
 
 			for (Document document : documents) {
 				SolrInputDocument solrInputDocument =
-					_solrDocumentFactory.getSolrInputDocument(document);
+					solrDocumentFactory.getSolrInputDocument(document);
 
 				solrInputDocuments.add(solrInputDocument);
 
@@ -118,9 +118,9 @@ public class SolrUpdateDocumentCommandImpl
 		SolrUpdateDocumentCommandImpl.class);
 
 	@Reference
-	private SolrClientManager _solrClientManager;
+	protected SolrClientManager solrClientManager;
 
 	@Reference
-	private SolrDocumentFactory _solrDocumentFactory;
+	protected SolrDocumentFactory solrDocumentFactory;
 
 }

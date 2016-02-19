@@ -84,40 +84,40 @@ public class SolrFilterTranslator
 
 	@Override
 	public org.apache.lucene.search.Query visit(BooleanFilter booleanFilter) {
-		return _booleanQueryTranslator.translate(booleanFilter, this);
+		return booleanQueryTranslator.translate(booleanFilter, this);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visit(
 		DateRangeTermFilter dateRangeTermFilter) {
 
-		return _dateRangeTermFilterTranslator.translate(dateRangeTermFilter);
+		return dateRangeTermFilterTranslator.translate(dateRangeTermFilter);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visit(ExistsFilter existsFilter) {
-		return _existsFilterTranslator.translate(existsFilter);
+		return existsFilterTranslator.translate(existsFilter);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visit(
 		GeoBoundingBoxFilter geoBoundingBoxFilter) {
 
-		return _geoBoundingBoxFilterTranslator.translate(geoBoundingBoxFilter);
+		return geoBoundingBoxFilterTranslator.translate(geoBoundingBoxFilter);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visit(
 		GeoDistanceFilter geoDistanceFilter) {
 
-		return _geoDistanceFilterTranslator.translate(geoDistanceFilter);
+		return geoDistanceFilterTranslator.translate(geoDistanceFilter);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visit(
 		GeoDistanceRangeFilter geoDistanceRangeFilter) {
 
-		return _geoDistanceRangeFilterTranslator.translate(
+		return geoDistanceRangeFilterTranslator.translate(
 			geoDistanceRangeFilter);
 	}
 
@@ -125,39 +125,39 @@ public class SolrFilterTranslator
 	public org.apache.lucene.search.Query visit(
 		GeoPolygonFilter geoPolygonFilter) {
 
-		return _geoPolygonFilterTranslator.translate(geoPolygonFilter);
+		return geoPolygonFilterTranslator.translate(geoPolygonFilter);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visit(MissingFilter missingFilter) {
-		return _missingFilterTranslator.translate(missingFilter);
+		return missingFilterTranslator.translate(missingFilter);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visit(PrefixFilter prefixFilter) {
-		return _prefixFilterTranslator.translate(prefixFilter);
+		return prefixFilterTranslator.translate(prefixFilter);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visit(QueryFilter queryFilter) {
-		return _queryFilterTranslator.translate(queryFilter);
+		return queryFilterTranslator.translate(queryFilter);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visit(
 		RangeTermFilter rangeTermFilter) {
 
-		return _rangeTermFilterTranslator.translate(rangeTermFilter);
+		return rangeTermFilterTranslator.translate(rangeTermFilter);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visit(TermFilter termFilter) {
-		return _termFilterTranslator.translate(termFilter);
+		return termFilterTranslator.translate(termFilter);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visit(TermsFilter termsFilter) {
-		return _termsFilterTranslator.translate(termsFilter);
+		return termsFilterTranslator.translate(termsFilter);
 	}
 
 	protected String includeCompanyId(
@@ -189,42 +189,42 @@ public class SolrFilterTranslator
 	}
 
 	@Reference
-	private BooleanFilterTranslator _booleanQueryTranslator;
+	protected BooleanFilterTranslator booleanQueryTranslator;
 
 	@Reference
-	private DateRangeTermFilterTranslator _dateRangeTermFilterTranslator;
+	protected DateRangeTermFilterTranslator dateRangeTermFilterTranslator;
 
 	@Reference
-	private ExistsFilterTranslator _existsFilterTranslator;
+	protected ExistsFilterTranslator existsFilterTranslator;
 
 	@Reference
-	private GeoBoundingBoxFilterTranslator _geoBoundingBoxFilterTranslator;
+	protected GeoBoundingBoxFilterTranslator geoBoundingBoxFilterTranslator;
 
 	@Reference
-	private GeoDistanceFilterTranslator _geoDistanceFilterTranslator;
+	protected GeoDistanceFilterTranslator geoDistanceFilterTranslator;
 
 	@Reference
-	private GeoDistanceRangeFilterTranslator _geoDistanceRangeFilterTranslator;
+	protected GeoDistanceRangeFilterTranslator geoDistanceRangeFilterTranslator;
 
 	@Reference
-	private GeoPolygonFilterTranslator _geoPolygonFilterTranslator;
+	protected GeoPolygonFilterTranslator geoPolygonFilterTranslator;
 
 	@Reference
-	private MissingFilterTranslator _missingFilterTranslator;
+	protected MissingFilterTranslator missingFilterTranslator;
 
 	@Reference
-	private PrefixFilterTranslator _prefixFilterTranslator;
+	protected PrefixFilterTranslator prefixFilterTranslator;
 
 	@Reference
-	private QueryFilterTranslator _queryFilterTranslator;
+	protected QueryFilterTranslator queryFilterTranslator;
 
 	@Reference
-	private RangeTermFilterTranslator _rangeTermFilterTranslator;
+	protected RangeTermFilterTranslator rangeTermFilterTranslator;
 
 	@Reference
-	private TermFilterTranslator _termFilterTranslator;
+	protected TermFilterTranslator termFilterTranslator;
 
 	@Reference
-	private TermsFilterTranslator _termsFilterTranslator;
+	protected TermsFilterTranslator termsFilterTranslator;
 
 }
