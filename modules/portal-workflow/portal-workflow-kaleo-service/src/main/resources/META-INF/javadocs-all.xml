@@ -6236,7 +6236,7 @@
 			<name>setWorkflowDeployer</name>
 			<param>
 				<name>workflowDeployer</name>
-				<type>com.liferay.portal.workflow.kaleo.deployment.WorkflowDeployer</type>
+				<type>com.liferay.portal.workflow.kaleo.definition.deployment.WorkflowDeployer</type>
 				<comment><![CDATA[]]></comment>
 			</param>
 		</method>
@@ -6244,7 +6244,7 @@
 			<name>setWorkflowModelParser</name>
 			<param>
 				<name>workflowModelParser</name>
-				<type>com.liferay.portal.workflow.kaleo.parser.WorkflowModelParser</type>
+				<type>com.liferay.portal.workflow.kaleo.definition.parser.WorkflowModelParser</type>
 				<comment><![CDATA[]]></comment>
 			</param>
 		</method>
@@ -6252,7 +6252,7 @@
 			<name>setWorkflowValidator</name>
 			<param>
 				<name>workflowValidator</name>
-				<type>com.liferay.portal.workflow.kaleo.parser.WorkflowValidator</type>
+				<type>com.liferay.portal.workflow.kaleo.definition.parser.WorkflowValidator</type>
 				<comment><![CDATA[]]></comment>
 			</param>
 		</method>

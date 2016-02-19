@@ -18,8 +18,8 @@ import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.workflow.kaleo.definition.Definition;
 import com.liferay.portal.workflow.kaleo.definition.Node;
 import com.liferay.portal.workflow.kaleo.definition.State;
-import com.liferay.portal.workflow.kaleo.parser.NodeValidator;
-import com.liferay.portal.workflow.kaleo.parser.WorkflowValidator;
+import com.liferay.portal.workflow.kaleo.definition.parser.NodeValidator;
+import com.liferay.portal.workflow.kaleo.definition.parser.WorkflowValidator;
 
 import java.util.Collection;
 import java.util.List;
