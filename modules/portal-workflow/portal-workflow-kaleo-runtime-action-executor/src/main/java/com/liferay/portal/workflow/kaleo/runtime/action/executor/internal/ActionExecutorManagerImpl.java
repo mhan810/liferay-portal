@@ -12,14 +12,14 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.action.executor.internal;
+package com.liferay.portal.workflow.kaleo.runtime.action.executor.internal;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.ClassUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.workflow.kaleo.action.executor.ActionExecutor;
+import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.definition.ScriptLanguage;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
@@ -82,7 +82,7 @@ public class ActionExecutorManagerImpl implements ActionExecutorManager {
 		ActionExecutor actionExecutor, Map<String, Object> properties) {
 
 		Object value = properties.get(
-			"com.liferay.portal.workflow.kaleo.action.executor.language");
+			"com.liferay.portal.workflow.kaleo.runtime.action.executor.language");
 
 		String[] languages = GetterUtil.getStringValues(
 			value, new String[] {String.valueOf(value)});
@@ -99,7 +99,7 @@ public class ActionExecutorManagerImpl implements ActionExecutorManager {
 		ActionExecutor actionExecutor, Map<String, Object> properties) {
 
 		Object value = properties.get(
-			"com.liferay.portal.workflow.kaleo.action.executor.language");
+			"com.liferay.portal.workflow.kaleo.runtime.action.executor.language");
 
 		String[] languages = GetterUtil.getStringValues(
 			value, new String[] {String.valueOf(value)});
