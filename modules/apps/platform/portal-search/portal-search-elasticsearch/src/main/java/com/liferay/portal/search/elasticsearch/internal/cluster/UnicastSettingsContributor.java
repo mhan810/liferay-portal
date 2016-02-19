@@ -46,7 +46,7 @@ public class UnicastSettingsContributor extends BaseSettingsContributor {
 
 	@Override
 	public void populate(Settings.Builder builder) {
-		if (!_clusterSettingsContext.isClusterEnabled()) {
+		if (!clusterSettingsContext.isClusterEnabled()) {
 			return;
 		}
 
@@ -65,7 +65,7 @@ public class UnicastSettingsContributor extends BaseSettingsContributor {
 	protected volatile ElasticsearchConfiguration elasticsearchConfiguration;
 
 	private String[] _getHosts() {
-		String[] hosts = _clusterSettingsContext.getHosts();
+		String[] hosts = clusterSettingsContext.getHosts();
 
 		String port =
 			elasticsearchConfiguration.discoveryZenPingUnicastHostsPort();
@@ -80,6 +80,6 @@ public class UnicastSettingsContributor extends BaseSettingsContributor {
 	}
 
 	@Reference
-	private ClusterSettingsContext _clusterSettingsContext;
+	protected ClusterSettingsContext clusterSettingsContext;
 
 }
