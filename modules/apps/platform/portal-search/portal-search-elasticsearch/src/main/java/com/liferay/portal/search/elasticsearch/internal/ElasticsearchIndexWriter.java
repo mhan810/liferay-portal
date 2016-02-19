@@ -65,7 +65,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 	public void addDocument(SearchContext searchContext, Document document)
 		throws SearchException {
 
-		_elasticsearchUpdateDocumentCommand.updateDocument(
+		elasticsearchUpdateDocumentCommand.updateDocument(
 			DocumentTypes.LIFERAY, searchContext, document, false);
 	}
 
@@ -74,7 +74,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, Collection<Document> documents)
 		throws SearchException {
 
-		_elasticsearchUpdateDocumentCommand.updateDocuments(
+		elasticsearchUpdateDocumentCommand.updateDocuments(
 			DocumentTypes.LIFERAY, searchContext, documents, false);
 	}
 
@@ -82,7 +82,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 	public void commit(SearchContext searchContext) throws SearchException {
 		try {
 			AdminClient adminClient =
-				_elasticsearchConnectionManager.getAdminClient();
+				elasticsearchConnectionManager.getAdminClient();
 
 			IndicesAdminClient indicesAdminClient = adminClient.indices();
 
@@ -104,7 +104,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		throws SearchException {
 
 		try {
-			Client client = _elasticsearchConnectionManager.getClient();
+			Client client = elasticsearchConnectionManager.getClient();
 
 			DeleteRequestBuilder deleteRequestBuilder = client.prepareDelete(
 				String.valueOf(searchContext.getCompanyId()),
@@ -138,7 +138,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		throws SearchException {
 
 		try {
-			Client client = _elasticsearchConnectionManager.getClient();
+			Client client = elasticsearchConnectionManager.getClient();
 
 			BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();
 
@@ -174,7 +174,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		SearchResponseScroller searchResponseScroller = null;
 
 		try {
-			Client client = _elasticsearchConnectionManager.getClient();
+			Client client = elasticsearchConnectionManager.getClient();
 
 			MatchAllQueryBuilder matchAllQueryBuilder =
 				QueryBuilders.matchAllQuery();
@@ -219,7 +219,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, Document document)
 		throws SearchException {
 
-		_elasticsearchUpdateDocumentCommand.updateDocument(
+		elasticsearchUpdateDocumentCommand.updateDocument(
 			DocumentTypes.LIFERAY, searchContext, document, false);
 	}
 
@@ -228,7 +228,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, Collection<Document> documents)
 		throws SearchException {
 
-		_elasticsearchUpdateDocumentCommand.updateDocuments(
+		elasticsearchUpdateDocumentCommand.updateDocuments(
 			DocumentTypes.LIFERAY, searchContext, documents, false);
 	}
 
@@ -244,7 +244,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 	public void updateDocument(SearchContext searchContext, Document document)
 		throws SearchException {
 
-		_elasticsearchUpdateDocumentCommand.updateDocument(
+		elasticsearchUpdateDocumentCommand.updateDocument(
 			DocumentTypes.LIFERAY, searchContext, document, true);
 	}
 
@@ -253,7 +253,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, Collection<Document> documents)
 		throws SearchException {
 
-		_elasticsearchUpdateDocumentCommand.updateDocuments(
+		elasticsearchUpdateDocumentCommand.updateDocuments(
 			DocumentTypes.LIFERAY, searchContext, documents, true);
 	}
 
@@ -266,12 +266,12 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		ElasticsearchIndexWriter.class);
 
 	@Reference
-	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
+	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
 
 	@Reference
-	private ElasticsearchUpdateDocumentCommand
-		_elasticsearchUpdateDocumentCommand;
+	protected ElasticsearchUpdateDocumentCommand
+		elasticsearchUpdateDocumentCommand;
 
-	private SearchHitsProcessor _searchHitsProcessor;
+	protected SearchHitsProcessor _searchHitsProcessor;
 
 }

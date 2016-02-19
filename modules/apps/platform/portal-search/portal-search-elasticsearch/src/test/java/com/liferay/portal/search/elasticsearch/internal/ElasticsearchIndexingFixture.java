@@ -111,25 +111,19 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 
 		return new ElasticsearchFilterTranslator() {
 			{
-				setBooleanFilterTranslator(new BooleanFilterTranslatorImpl());
-				setDateRangeTermFilterTranslator(
-					new DateRangeTermFilterTranslatorImpl());
-				setExistsFilterTranslator(new ExistsFilterTranslatorImpl());
-				setGeoBoundingBoxFilterTranslator(
-					new GeoBoundingBoxFilterTranslatorImpl());
-				setGeoDistanceFilterTranslator(
-					new GeoDistanceFilterTranslatorImpl());
-				setGeoDistanceRangeFilterTranslator(
-					new GeoDistanceRangeFilterTranslatorImpl());
-				setGeoPolygonFilterTranslator(
-					new GeoPolygonFilterTranslatorImpl());
-				setMissingFilterTranslator(new MissingFilterTranslatorImpl());
-				setPrefixFilterTranslator(new PrefixFilterTranslatorImpl());
-				setQueryFilterTranslator(new QueryFilterTranslatorImpl());
-				setRangeTermFilterTranslator(
-					new RangeTermFilterTranslatorImpl());
-				setTermFilterTranslator(new TermFilterTranslatorImpl());
-				setTermsFilterTranslator(new TermsFilterTranslatorImpl());
+				booleanFilterTranslator = new BooleanFilterTranslatorImpl();
+				dateRangeTermFilterTranslator = new DateRangeTermFilterTranslatorImpl();
+				existsFilterTranslator = new ExistsFilterTranslatorImpl();
+				geoBoundingBoxFilterTranslator = new GeoBoundingBoxFilterTranslatorImpl();
+				geoDistanceFilterTranslator = new GeoDistanceFilterTranslatorImpl();
+				geoDistanceRangeFilterTranslator = new GeoDistanceRangeFilterTranslatorImpl();
+				geoPolygonFilterTranslator = new GeoPolygonFilterTranslatorImpl();
+				missingFilterTranslator = new MissingFilterTranslatorImpl();
+				prefixFilterTranslator = new PrefixFilterTranslatorImpl();
+				queryFilterTranslator = new QueryFilterTranslatorImpl();
+				rangeTermFilterTranslator = new RangeTermFilterTranslatorImpl();
+				termFilterTranslator = new TermFilterTranslatorImpl();
+				termsFilterTranslator = new TermsFilterTranslatorImpl();
 			}
 		};
 	}
@@ -139,36 +133,33 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 
 		return new ElasticsearchQueryTranslator() {
 			{
-				setBooleanQueryTranslator(new BooleanQueryTranslatorImpl());
-				setDisMaxQueryTranslator(new DisMaxQueryTranslatorImpl());
-				setFuzzyQueryTranslator(new FuzzyQueryTranslatorImpl());
-				setMatchAllQueryTranslator(new MatchAllQueryTranslatorImpl());
-				setMatchQueryTranslator(new MatchQueryTranslatorImpl());
-				setMoreLikeThisQueryTranslator(
-					new MoreLikeThisQueryTranslatorImpl());
-				setMultiMatchQueryTranslator(
-					new MultiMatchQueryTranslatorImpl());
-				setNestedQueryTranslator(new NestedQueryTranslatorImpl());
-				setStringQueryTranslator(new StringQueryTranslatorImpl());
-				setTermQueryTranslator(new TermQueryTranslatorImpl());
-				setTermRangeQueryTranslator(new TermRangeQueryTranslatorImpl());
-				setWildcardQueryTranslator(new WildcardQueryTranslatorImpl());
+				booleanQueryTranslator = new BooleanQueryTranslatorImpl();
+				disMaxQueryTranslator = new DisMaxQueryTranslatorImpl();
+				fuzzyQueryTranslator = new FuzzyQueryTranslatorImpl();
+				matchAllQueryTranslator = new MatchAllQueryTranslatorImpl();
+				matchQueryTranslator = new MatchQueryTranslatorImpl();
+				moreLikeThisQueryTranslator = new MoreLikeThisQueryTranslatorImpl();
+				multiMatchQueryTranslator = new MultiMatchQueryTranslatorImpl();
+				nestedQueryTranslator = new NestedQueryTranslatorImpl();
+				stringQueryTranslator = new StringQueryTranslatorImpl();
+				termQueryTranslator = new TermQueryTranslatorImpl();
+				termRangeQueryTranslator = new TermRangeQueryTranslatorImpl();
+				wildcardQueryTranslator = new WildcardQueryTranslatorImpl();
 			}
 		};
 	}
 
 	protected IndexSearcher createIndexSearcher(
-		final ElasticsearchConnectionManager elasticsearchConnectionManager) {
+		final ElasticsearchConnectionManager elasticsearchConnectionManagerField) {
 
 		return new ElasticsearchIndexSearcher() {
 			{
-				setElasticsearchConnectionManager(
-					elasticsearchConnectionManager);
+				elasticsearchConnectionManager = elasticsearchConnectionManagerField;
 				setFacetProcessor(new DateRangeFacetProcessor());
 				setFilterTranslator(createElasticsearchFilterTranslator());
-				setGroupByTranslator(new DefaultGroupByTranslator());
+				groupByTranslator = new DefaultGroupByTranslator();
 				setQueryTranslator(createElasticsearchQueryTranslator());
-				setStatsTranslator(new DefaultStatsTranslator());
+				statsTranslator = new DefaultStatsTranslator();
 
 				activate(_properties);
 			}
@@ -176,15 +167,13 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 	}
 
 	protected IndexWriter createIndexWriter(
-		final ElasticsearchConnectionManager elasticsearchConnectionManager) {
+		final ElasticsearchConnectionManager elasticsearchConnectionManagerField) {
 
 		final ElasticsearchUpdateDocumentCommand updateDocumentCommand =
 			new ElasticsearchUpdateDocumentCommandImpl() {
 				{
-					setElasticsearchConnectionManager(
-						elasticsearchConnectionManager);
-					setElasticsearchDocumentFactory(
-						new DefaultElasticsearchDocumentFactory());
+					elasticsearchConnectionManager = elasticsearchConnectionManagerField;
+					elasticsearchDocumentFactory = new DefaultElasticsearchDocumentFactory();
 
 					activate(_properties);
 				}
@@ -192,9 +181,8 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 
 		return new ElasticsearchIndexWriter() {
 			{
-				setElasticsearchConnectionManager(
-					elasticsearchConnectionManager);
-				setElasticsearchUpdateDocumentCommand(updateDocumentCommand);
+				elasticsearchConnectionManager = elasticsearchConnectionManagerField;
+				elasticsearchUpdateDocumentCommand = updateDocumentCommand;
 			}
 		};
 	}
