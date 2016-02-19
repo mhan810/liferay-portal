@@ -16,10 +16,11 @@ package com.liferay.portal.workflow.kaleo.runtime.action.executor.internal;
 
 import com.liferay.portal.kernel.scripting.Scripting;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
-import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
+import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
+import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorConstants;
+import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
 import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderUtil;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 
@@ -38,11 +39,11 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"com.liferay.portal.workflow.kaleo.runtime.action.executor.language=beanshell",
-		"com.liferay.portal.workflow.kaleo.runtime.action.executor.language=groovy",
-		"com.liferay.portal.workflow.kaleo.runtime.action.executor.language=javascript",
-		"com.liferay.portal.workflow.kaleo.runtime.action.executor.language=python",
-		"com.liferay.portal.workflow.kaleo.runtime.action.executor.language=ruby"
+		ActionExecutorConstants.ACTION_EXECUTOR_LANGUAGE_KEY + "=beanshell",
+		ActionExecutorConstants.ACTION_EXECUTOR_LANGUAGE_KEY + "=groovy",
+		ActionExecutorConstants.ACTION_EXECUTOR_LANGUAGE_KEY + "=javascript",
+		ActionExecutorConstants.ACTION_EXECUTOR_LANGUAGE_KEY + "=python",
+		ActionExecutorConstants.ACTION_EXECUTOR_LANGUAGE_KEY + "=ruby"
 	},
 	service = ActionExecutor.class
 )
