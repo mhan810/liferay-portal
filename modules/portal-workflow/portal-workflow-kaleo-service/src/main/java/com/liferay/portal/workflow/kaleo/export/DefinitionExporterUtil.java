@@ -17,6 +17,8 @@ package com.liferay.portal.workflow.kaleo.export;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.workflow.kaleo.definition.export.DefinitionExporter;
 
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  */
@@ -36,10 +38,7 @@ public class DefinitionExporterUtil {
 		return _definitionExporter;
 	}
 
-	public void setDefinitionExporter(DefinitionExporter definitionExporter) {
-		_definitionExporter = definitionExporter;
-	}
-
+	@Reference
 	private static DefinitionExporter _definitionExporter;
 
 }
