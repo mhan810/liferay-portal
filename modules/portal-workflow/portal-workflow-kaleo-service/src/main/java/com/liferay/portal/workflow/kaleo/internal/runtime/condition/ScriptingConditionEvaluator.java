@@ -20,7 +20,7 @@ import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.model.KaleoCondition;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.condition.ConditionEvaluator;
-import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderUtil;
+import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilder;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 
 import java.io.Serializable;
@@ -40,7 +40,7 @@ public class ScriptingConditionEvaluator implements ConditionEvaluator {
 		throws PortalException {
 
 		Map<String, Object> inputObjects =
-			ScriptingContextBuilderUtil.buildScriptingContext(executionContext);
+			_scriptingContextBuilder.buildScriptingContext(executionContext);
 
 		Map<String, Object> results = _scripting.eval(
 			null, inputObjects, _outputNames,
@@ -75,5 +75,8 @@ public class ScriptingConditionEvaluator implements ConditionEvaluator {
 
 	@ServiceReference(type = Scripting.class)
 	private Scripting _scripting;
+
+	@ServiceReference(type = ScriptingContextBuilder.class)
+	private ScriptingContextBuilder _scriptingContextBuilder;
 
 }
