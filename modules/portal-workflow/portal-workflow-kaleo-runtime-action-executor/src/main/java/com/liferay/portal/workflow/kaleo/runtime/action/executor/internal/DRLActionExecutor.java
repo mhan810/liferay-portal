@@ -20,10 +20,11 @@ import com.liferay.portal.rules.engine.Fact;
 import com.liferay.portal.rules.engine.Query;
 import com.liferay.portal.rules.engine.RulesEngine;
 import com.liferay.portal.rules.engine.RulesResourceRetriever;
-import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
-import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
+import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
+import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorConstants;
+import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
 import com.liferay.portal.workflow.kaleo.runtime.util.ClassLoaderUtil;
 import com.liferay.portal.workflow.kaleo.runtime.util.RulesContextBuilder;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
@@ -41,7 +42,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"com.liferay.portal.workflow.kaleo.runtime.action.executor.language=drl"},
+	property = {ActionExecutorConstants.ACTION_EXECUTOR_LANGUAGE_KEY + "=drl"},
 	service = ActionExecutor.class
 )
 public class DRLActionExecutor implements ActionExecutor {
