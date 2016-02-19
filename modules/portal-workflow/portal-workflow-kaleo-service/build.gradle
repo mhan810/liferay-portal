@@ -17,6 +17,7 @@ dependencies {
 	provided group: "org.springframework", name: "spring-context", version: "3.2.15.RELEASE"
 	provided project(":portal-rules-engine:portal-rules-engine-api")
 	provided project(":portal-workflow:portal-workflow-kaleo-api")
+	provided project(":portal-workflow:portal-workflow-kaleo-definition-api")
 	provided project(":portal:portal-instance-lifecycle")
 	provided project(":portal:portal-upgrade")
 }

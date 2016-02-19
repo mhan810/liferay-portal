@@ -49,7 +49,7 @@ import com.liferay.portal.workflow.kaleo.definition.Timer;
 import com.liferay.portal.workflow.kaleo.definition.Transition;
 import com.liferay.portal.workflow.kaleo.definition.UserAssignment;
 import com.liferay.portal.workflow.kaleo.definition.UserRecipient;
-import com.liferay.portal.workflow.kaleo.parser.WorkflowModelParser;
+import com.liferay.portal.workflow.kaleo.definition.parser.WorkflowModelParser;
 
 import java.io.InputStream;
 
