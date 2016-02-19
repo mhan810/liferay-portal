@@ -21,7 +21,7 @@ import com.liferay.portal.workflow.kaleo.model.KaleoNotificationRecipient;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.NotificationRecipientEvaluator;
 import com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.ScriptingNotificationRecipientConstants;
-import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderUtil;
+import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilder;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 
 import java.util.HashSet;
@@ -41,7 +41,7 @@ public class ScriptingNotificationRecipientEvaluator
 		throws PortalException {
 
 		Map<String, Object> inputObjects =
-			ScriptingContextBuilderUtil.buildScriptingContext(executionContext);
+			_scriptingContextBuilder.buildScriptingContext(executionContext);
 
 		return _scripting.eval(
 			null, inputObjects, _outputNames,
@@ -61,5 +61,8 @@ public class ScriptingNotificationRecipientEvaluator
 
 	@ServiceReference(type = Scripting.class)
 	private Scripting _scripting;
+
+	@ServiceReference(type = ScriptingContextBuilder.class)
+	private ScriptingContextBuilder _scriptingContextBuilder;
 
 }

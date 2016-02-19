@@ -10213,44 +10213,6 @@
 		</method>
 	</javadoc>
 	<javadoc>
-		<name>ScriptingContextBuilderUtil</name>
-		<type>com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderUtil</type>
-		<author><![CDATA[Michael C. Han]]></author>
-		<method>
-			<name>buildScriptingContext</name>
-			<param>
-				<name>executionContext</name>
-				<type>com.liferay.portal.workflow.kaleo.runtime.ExecutionContext</type>
-				<comment><![CDATA[]]></comment>
-			</param>
-			<return>
-				<comment><![CDATA[]]></comment>
-			</return>
-			<throws>
-				<name>PortalException</name>
-				<type>com.liferay.portal.kernel.exception.PortalException</type>
-				<comment><![CDATA[]]></comment>
-			</throws>
-		</method>
-		<method>
-			<name>getScriptingContextBuilder</name>
-			<return>
-				<comment><![CDATA[]]></comment>
-			</return>
-		</method>
-		<method>
-			<name>setScriptingContextBuilder</name>
-			<param>
-				<name>scriptingContextBuilder</name>
-				<type>ScriptingContextBuilder</type>
-				<comment><![CDATA[]]></comment>
-			</param>
-		</method>
-		<field>
-			<name>_scriptingContextBuilder</name>
-		</field>
-	</javadoc>
-	<javadoc>
 		<name>KaleoActionLocalServiceImpl</name>
 		<type>com.liferay.portal.workflow.kaleo.service.impl.KaleoActionLocalServiceImpl</type>
 		<author><![CDATA[Brian Wing Shun Chan]]></author>
