@@ -55,7 +55,7 @@ public class SolrIndexWriter extends BaseIndexWriter {
 	public void addDocument(SearchContext searchContext, Document document)
 		throws SearchException {
 
-		_solrUpdateDocumentCommand.updateDocument(
+		solrUpdateDocumentCommand.updateDocument(
 			searchContext, document, false);
 	}
 
@@ -64,13 +64,13 @@ public class SolrIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, Collection<Document> documents)
 		throws SearchException {
 
-		_solrUpdateDocumentCommand.updateDocuments(
+		solrUpdateDocumentCommand.updateDocuments(
 			searchContext, documents, false);
 	}
 
 	@Override
 	public void commit(SearchContext searchContext) throws SearchException {
-		SolrClient solrClient = _solrClientManager.getSolrClient();
+		SolrClient solrClient = solrClientManager.getSolrClient();
 
 		try {
 			solrClient.commit();
@@ -94,7 +94,7 @@ public class SolrIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, Collection<String> uids)
 		throws SearchException {
 
-		SolrClient solrClient = _solrClientManager.getSolrClient();
+		SolrClient solrClient = solrClientManager.getSolrClient();
 
 		List<String> uidsList = new ArrayList<>(uids);
 
@@ -121,7 +121,7 @@ public class SolrIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, String className)
 		throws SearchException {
 
-		SolrClient solrClient = _solrClientManager.getSolrClient();
+		SolrClient solrClient = solrClientManager.getSolrClient();
 
 		try {
 			long companyId = searchContext.getCompanyId();
@@ -170,7 +170,7 @@ public class SolrIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, Document document)
 		throws SearchException {
 
-		_solrUpdateDocumentCommand.updateDocument(
+		solrUpdateDocumentCommand.updateDocument(
 			searchContext, document, false);
 	}
 
@@ -179,7 +179,7 @@ public class SolrIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, Collection<Document> documents)
 		throws SearchException {
 
-		_solrUpdateDocumentCommand.updateDocuments(
+		solrUpdateDocumentCommand.updateDocuments(
 			searchContext, documents, false);
 	}
 
@@ -195,7 +195,7 @@ public class SolrIndexWriter extends BaseIndexWriter {
 	public void updateDocument(SearchContext searchContext, Document document)
 		throws SearchException {
 
-		_solrUpdateDocumentCommand.updateDocument(
+		solrUpdateDocumentCommand.updateDocument(
 			searchContext, document, true);
 	}
 
@@ -204,26 +204,17 @@ public class SolrIndexWriter extends BaseIndexWriter {
 			SearchContext searchContext, Collection<Document> documents)
 		throws SearchException {
 
-		_solrUpdateDocumentCommand.updateDocuments(
+		solrUpdateDocumentCommand.updateDocuments(
 			searchContext, documents, true);
-	}
-
-	@Reference(unbind = "-")
-	protected void setSolrClientManager(SolrClientManager solrClientManager) {
-		_solrClientManager = solrClientManager;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSolrUpdateDocumentCommand(
-		SolrUpdateDocumentCommand solrUpdateDocumentCommand) {
-
-		_solrUpdateDocumentCommand = solrUpdateDocumentCommand;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		SolrIndexWriter.class);
 
-	private SolrClientManager _solrClientManager;
-	private SolrUpdateDocumentCommand _solrUpdateDocumentCommand;
+	@Reference
+	protected SolrClientManager solrClientManager;
+
+	@Reference
+	protected SolrUpdateDocumentCommand solrUpdateDocumentCommand;
 
 }

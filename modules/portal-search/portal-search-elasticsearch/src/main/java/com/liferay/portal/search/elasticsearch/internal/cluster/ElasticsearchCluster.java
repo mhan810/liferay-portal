@@ -45,46 +45,27 @@ public class ElasticsearchCluster {
 		_replicasClusterListener = new ReplicasClusterListener(
 			new ReplicasClusterContextImpl());
 
-		_clusterExecutor.addClusterEventListener(_replicasClusterListener);
+		clusterExecutor.addClusterEventListener(_replicasClusterListener);
 
-		_clusterMasterExecutor.addClusterMasterTokenTransitionListener(
+		clusterMasterExecutor.addClusterMasterTokenTransitionListener(
 			_replicasClusterListener);
 	}
 
 	@Deactivate
 	protected void deactivate() {
-		_clusterExecutor.removeClusterEventListener(_replicasClusterListener);
+		clusterExecutor.removeClusterEventListener(_replicasClusterListener);
 
-		_clusterMasterExecutor.removeClusterMasterTokenTransitionListener(
+		clusterMasterExecutor.removeClusterMasterTokenTransitionListener(
 			_replicasClusterListener);
 
 		_replicasClusterListener = null;
 	}
 
 	@Reference(unbind = "-")
-	protected void setClusterExecutor(ClusterExecutor clusterExecutor) {
-		_clusterExecutor = clusterExecutor;
-	}
-
-	@Reference(unbind = "-")
-	protected void setClusterMasterExecutor(
-		ClusterMasterExecutor clusterMasterExecutor) {
-
-		_clusterMasterExecutor = clusterMasterExecutor;
-	}
-
-	@Reference(unbind = "-")
 	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
+			CompanyLocalService companyLocalService) {
 
 		_companyLocalService = companyLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setElasticsearchConnectionManager(
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
-
-		_elasticsearchConnectionManager = elasticsearchConnectionManager;
 	}
 
 	protected class ReplicasClusterContextImpl
@@ -92,7 +73,7 @@ public class ElasticsearchCluster {
 
 		@Override
 		public int getClusterSize() {
-			List<ClusterNode> clusterNodes = _clusterExecutor.getClusterNodes();
+			List<ClusterNode> clusterNodes = clusterExecutor.getClusterNodes();
 
 			return clusterNodes.size();
 		}
@@ -140,19 +121,26 @@ public class ElasticsearchCluster {
 
 		@Override
 		public boolean isMaster() {
-			return _clusterMasterExecutor.isMaster();
+			return clusterMasterExecutor.isMaster();
 		}
 
 		protected ElasticsearchConnection getActiveElasticsearchConnection() {
-			return _elasticsearchConnectionManager.getElasticsearchConnection();
+			return elasticsearchConnectionManager.getElasticsearchConnection();
 		}
 
 	}
 
-	private ClusterExecutor _clusterExecutor;
-	private ClusterMasterExecutor _clusterMasterExecutor;
+	@Reference
+	protected ClusterExecutor clusterExecutor;
+
+	@Reference
+	protected ClusterMasterExecutor clusterMasterExecutor;
+
 	private CompanyLocalService _companyLocalService;
-	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
+
+	@Reference
+	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
+
 	private ReplicasClusterListener _replicasClusterListener;
 
 }

@@ -84,156 +84,72 @@ public class SolrQueryTranslator
 	public org.apache.lucene.search.Query visitQuery(
 		BooleanQuery booleanQuery) {
 
-		return _booleanQueryTranslator.translate(booleanQuery, this);
+		return booleanQueryTranslator.translate(booleanQuery, this);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visitQuery(DisMaxQuery disMaxQuery) {
-		return _disMaxQueryTranslator.translate(disMaxQuery, this);
+		return disMaxQueryTranslator.translate(disMaxQuery, this);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visitQuery(FuzzyQuery fuzzyQuery) {
-		return _fuzzyQueryTranslator.translate(fuzzyQuery);
+		return fuzzyQueryTranslator.translate(fuzzyQuery);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visitQuery(
 		MatchAllQuery matchAllQuery) {
 
-		return _matchAllQueryTranslator.translate(matchAllQuery);
+		return matchAllQueryTranslator.translate(matchAllQuery);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visitQuery(MatchQuery matchQuery) {
-		return _matchQueryTranslator.translate(matchQuery);
+		return matchQueryTranslator.translate(matchQuery);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visitQuery(
 		MoreLikeThisQuery moreLikeThisQuery) {
 
-		return _moreLikeThisQueryTranslator.translate(moreLikeThisQuery);
+		return moreLikeThisQueryTranslator.translate(moreLikeThisQuery);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visitQuery(
 		MultiMatchQuery multiMatchQuery) {
 
-		return _multiMatchQueryTranslator.translate(multiMatchQuery);
+		return multiMatchQueryTranslator.translate(multiMatchQuery);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visitQuery(NestedQuery nestedQuery) {
-		return _nestedQueryTranslator.translate(nestedQuery, this);
+		return nestedQueryTranslator.translate(nestedQuery, this);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visitQuery(StringQuery stringQuery) {
-		return _stringQueryTranslator.translate(stringQuery);
+		return stringQueryTranslator.translate(stringQuery);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visitQuery(TermQuery termQuery) {
-		return _termQueryTranslator.translate(termQuery);
+		return termQueryTranslator.translate(termQuery);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visitQuery(
 		TermRangeQuery termRangeQuery) {
 
-		return _termRangeQueryTranslator.translate(termRangeQuery);
+		return termRangeQueryTranslator.translate(termRangeQuery);
 	}
 
 	@Override
 	public org.apache.lucene.search.Query visitQuery(
 		WildcardQuery wildcardQuery) {
 
-		return _wildcardQueryTranslator.translate(wildcardQuery);
-	}
-
-	@Reference(unbind = "-")
-	protected void setBooleanQueryTranslator(
-		BooleanQueryTranslator booleanQueryTranslator) {
-
-		_booleanQueryTranslator = booleanQueryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setDisMaxQueryTranslator(
-		DisMaxQueryTranslator disMaxQueryTranslator) {
-
-		_disMaxQueryTranslator = disMaxQueryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setFuzzyQueryTranslator(
-		FuzzyQueryTranslator fuzzyQueryTranslator) {
-
-		_fuzzyQueryTranslator = fuzzyQueryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setMatchAllQueryTranslator(
-		MatchAllQueryTranslator matchAllQueryTranslator) {
-
-		_matchAllQueryTranslator = matchAllQueryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setMatchQueryTranslator(
-		MatchQueryTranslator matchQueryTranslator) {
-
-		_matchQueryTranslator = matchQueryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setMoreLikeThisQueryTranslator(
-		MoreLikeThisQueryTranslator moreLikeThisQueryTranslator) {
-
-		_moreLikeThisQueryTranslator = moreLikeThisQueryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setMultiMatchQueryTranslator(
-		MultiMatchQueryTranslator multiMatchQueryTranslator) {
-
-		_multiMatchQueryTranslator = multiMatchQueryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setNestedQueryTranslator(
-		NestedQueryTranslator nestedQueryTranslator) {
-
-		_nestedQueryTranslator = nestedQueryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setStringQueryTranslator(
-		StringQueryTranslator stringQueryTranslator) {
-
-		_stringQueryTranslator = stringQueryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setTermQueryTranslator(
-		TermQueryTranslator termQueryTranslator) {
-
-		_termQueryTranslator = termQueryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setTermRangeQueryTranslator(
-		TermRangeQueryTranslator termRangeQueryTranslator) {
-
-		_termRangeQueryTranslator = termRangeQueryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setWildcardQueryTranslator(
-		WildcardQueryTranslator wildcardQueryTranslator) {
-
-		_wildcardQueryTranslator = wildcardQueryTranslator;
+		return wildcardQueryTranslator.translate(wildcardQuery);
 	}
 
 	private String _postProcess(
@@ -245,17 +161,40 @@ public class SolrQueryTranslator
 		return solrPostProcesor.postProcess();
 	}
 
-	private BooleanQueryTranslator _booleanQueryTranslator;
-	private DisMaxQueryTranslator _disMaxQueryTranslator;
-	private FuzzyQueryTranslator _fuzzyQueryTranslator;
-	private MatchAllQueryTranslator _matchAllQueryTranslator;
-	private MatchQueryTranslator _matchQueryTranslator;
-	private MoreLikeThisQueryTranslator _moreLikeThisQueryTranslator;
-	private MultiMatchQueryTranslator _multiMatchQueryTranslator;
-	private NestedQueryTranslator _nestedQueryTranslator;
-	private StringQueryTranslator _stringQueryTranslator;
-	private TermQueryTranslator _termQueryTranslator;
-	private TermRangeQueryTranslator _termRangeQueryTranslator;
-	private WildcardQueryTranslator _wildcardQueryTranslator;
+	@Reference
+	protected BooleanQueryTranslator booleanQueryTranslator;
+
+	@Reference
+	protected DisMaxQueryTranslator disMaxQueryTranslator;
+
+	@Reference
+	protected FuzzyQueryTranslator fuzzyQueryTranslator;
+
+	@Reference
+	protected MatchAllQueryTranslator matchAllQueryTranslator;
+
+	@Reference
+	protected MatchQueryTranslator matchQueryTranslator;
+
+	@Reference
+	protected MoreLikeThisQueryTranslator moreLikeThisQueryTranslator;
+
+	@Reference
+	protected MultiMatchQueryTranslator multiMatchQueryTranslator;
+
+	@Reference
+	protected NestedQueryTranslator nestedQueryTranslator;
+
+	@Reference
+	protected StringQueryTranslator stringQueryTranslator;
+
+	@Reference
+	protected TermQueryTranslator termQueryTranslator;
+
+	@Reference
+	protected TermRangeQueryTranslator termRangeQueryTranslator;
+
+	@Reference
+	protected WildcardQueryTranslator wildcardQueryTranslator;
 
 }

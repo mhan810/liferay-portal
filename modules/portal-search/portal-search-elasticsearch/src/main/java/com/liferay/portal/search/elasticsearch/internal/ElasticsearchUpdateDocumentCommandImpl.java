@@ -58,20 +58,6 @@ import org.osgi.service.component.annotations.Reference;
 public class ElasticsearchUpdateDocumentCommandImpl
 	implements ElasticsearchUpdateDocumentCommand {
 
-	@Reference(unbind = "-")
-	public void setElasticsearchConnectionManager(
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
-
-		_elasticsearchConnectionManager = elasticsearchConnectionManager;
-	}
-
-	@Reference(unbind = "-")
-	public void setElasticsearchDocumentFactory(
-		ElasticsearchDocumentFactory elasticsearchDocumentFactory) {
-
-		_elasticsearchDocumentFactory = elasticsearchDocumentFactory;
-	}
-
 	@Override
 	public String updateDocument(
 			String documentType, SearchContext searchContext, Document document,
@@ -127,14 +113,14 @@ public class ElasticsearchUpdateDocumentCommandImpl
 			String documentType, SearchContext searchContext, Document document)
 		throws IOException {
 
-		Client client = _elasticsearchConnectionManager.getClient();
+		Client client = elasticsearchConnectionManager.getClient();
 
 		UpdateRequestBuilder updateRequestBuilder = client.prepareUpdate(
 			String.valueOf(searchContext.getCompanyId()), documentType,
 			document.getUID());
 
 		String elasticSearchDocument =
-			_elasticsearchDocumentFactory.getElasticsearchDocument(document);
+			elasticsearchDocumentFactory.getElasticsearchDocument(document);
 
 		updateRequestBuilder.setDoc(elasticSearchDocument);
 		updateRequestBuilder.setDocAsUpsert(true);
@@ -152,7 +138,7 @@ public class ElasticsearchUpdateDocumentCommandImpl
 		throws SearchException {
 
 		try {
-			Client client = _elasticsearchConnectionManager.getClient();
+			Client client = elasticsearchConnectionManager.getClient();
 
 			BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();
 
@@ -195,7 +181,11 @@ public class ElasticsearchUpdateDocumentCommandImpl
 		ElasticsearchUpdateDocumentCommandImpl.class);
 
 	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
-	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
-	private ElasticsearchDocumentFactory _elasticsearchDocumentFactory;
+
+	@Reference
+	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
+
+	@Reference
+	protected ElasticsearchDocumentFactory elasticsearchDocumentFactory;
 
 }

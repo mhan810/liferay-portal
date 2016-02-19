@@ -239,7 +239,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			return;
 		}
 
-		_groupByTranslator.translate(
+		groupByTranslator.translate(
 			searchRequestBuilder, searchContext, start, end);
 	}
 
@@ -433,7 +433,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		Map<String, Stats> statsMap = searchContext.getStats();
 
 		for (Stats stats : statsMap.values()) {
-			_statsTranslator.translate(searchRequestBuilder, stats);
+			statsTranslator.translate(searchRequestBuilder, stats);
 		}
 	}
 
@@ -442,7 +442,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			boolean count)
 		throws Exception {
 
-		Client client = _elasticsearchConnectionManager.getClient();
+		Client client = elasticsearchConnectionManager.getClient();
 
 		QueryConfig queryConfig = query.getQueryConfig();
 
@@ -624,13 +624,6 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		return hits;
 	}
 
-	@Reference(unbind = "-")
-	protected void setElasticsearchConnectionManager(
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
-
-		_elasticsearchConnectionManager = elasticsearchConnectionManager;
-	}
-
 	@Reference(service = CompositeFacetProcessor.class, unbind = "-")
 	protected void setFacetProcessor(
 		FacetProcessor<SearchRequestBuilder> facetProcessor) {
@@ -645,21 +638,11 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		_filterTranslator = filterTranslator;
 	}
 
-	@Reference(unbind = "-")
-	protected void setGroupByTranslator(GroupByTranslator groupByTranslator) {
-		_groupByTranslator = groupByTranslator;
-	}
-
 	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
 	protected void setQueryTranslator(
 		QueryTranslator<QueryBuilder> queryTranslator) {
 
 		_queryTranslator = queryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setStatsTranslator(StatsTranslator statsTranslator) {
-		_statsTranslator = statsTranslator;
 	}
 
 	protected void updateFacetCollectors(
@@ -747,7 +730,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 				continue;
 			}
 
-			StatsResults statsResults = _statsTranslator.translate(
+			StatsResults statsResults = statsTranslator.translate(
 				aggregationsMap, stats);
 
 			hits.addStatsResults(statsResults);
@@ -758,12 +741,20 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		ElasticsearchIndexSearcher.class);
 
 	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
-	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
+
+	@Reference
+	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
+
 	private FacetProcessor<SearchRequestBuilder> _facetProcessor;
 	private FilterTranslator<QueryBuilder> _filterTranslator;
-	private GroupByTranslator _groupByTranslator;
+
+	@Reference
+	protected GroupByTranslator groupByTranslator;
+
 	private boolean _logExceptionsOnly;
 	private QueryTranslator<QueryBuilder> _queryTranslator;
-	private StatsTranslator _statsTranslator;
+
+	@Reference
+	protected StatsTranslator statsTranslator;
 
 }

@@ -218,7 +218,7 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 			FacetConfiguration facetConfiguration =
 				facet.getFacetConfiguration();
 
-			_facetProcessor.processFacet(solrQuery, facet);
+			facetProcessor.processFacet(solrQuery, facet);
 
 			String facetSort = FacetParams.FACET_SORT_COUNT;
 
@@ -245,7 +245,7 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 			return;
 		}
 
-		_groupByTranslator.translate(solrQuery, searchContext, start, end);
+		groupByTranslator.translate(solrQuery, searchContext, start, end);
 	}
 
 	protected void addHighlightedField(
@@ -401,7 +401,7 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 		Map<String, Stats> statsMap = searchContext.getStats();
 
 		for (Stats stats : statsMap.values()) {
-			_statsTranslator.translate(solrQuery, stats);
+			statsTranslator.translate(solrQuery, stats);
 		}
 	}
 
@@ -437,14 +437,14 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 		List<String> filterQueries = new ArrayList<>();
 
 		if (query.getPreBooleanFilter() != null) {
-			String filterQuery = _filterTranslator.translate(
+			String filterQuery = filterTranslator.translate(
 				query.getPreBooleanFilter(), searchContext);
 
 			filterQueries.add(filterQuery);
 		}
 
 		if (query.getPostFilter() != null) {
-			String filterQuery = _filterTranslator.translate(
+			String filterQuery = filterTranslator.translate(
 				query.getPreBooleanFilter(), searchContext);
 
 			filterQueries.add(filterQuery);
@@ -493,7 +493,7 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 	protected QueryResponse executeSearchRequest(SolrQuery solrQuery)
 		throws Exception {
 
-		SolrClient solrClient = _solrClientManager.getSolrClient();
+		SolrClient solrClient = solrClientManager.getSolrClient();
 
 		return solrClient.query(solrQuery, METHOD.POST);
 	}
@@ -585,40 +585,8 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 		}
 	}
 
-	@Reference(service = CompositeFacetProcessor.class, unbind = "-")
-	protected void setFacetProcessor(FacetProcessor<SolrQuery> facetProcessor) {
-		_facetProcessor = facetProcessor;
-	}
-
-	@Reference(target = "(search.engine.impl=Solr)", unbind = "-")
-	protected void setFilterTranslator(
-		FilterTranslator<String> filterTranslator) {
-
-		_filterTranslator = filterTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setGroupByTranslator(GroupByTranslator groupByTranslator) {
-		_groupByTranslator = groupByTranslator;
-	}
-
-	@Reference(target = "(search.engine.impl=Solr)", unbind = "-")
-	protected void setQueryTranslator(QueryTranslator<String> queryTranslator) {
-		_queryTranslator = queryTranslator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSolrClientManager(SolrClientManager solrClientManager) {
-		_solrClientManager = solrClientManager;
-	}
-
-	@Reference(unbind = "-")
-	protected void setStatsTranslator(StatsTranslator statsTranslator) {
-		_statsTranslator = statsTranslator;
-	}
-
 	protected String translateQuery(Query query, SearchContext searchContext) {
-		return _queryTranslator.translate(query, searchContext);
+		return queryTranslator.translate(query, searchContext);
 	}
 
 	protected void updateFacetCollectors(
@@ -699,7 +667,7 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 				continue;
 			}
 
-			StatsResults statsResults = _statsTranslator.translate(
+			StatsResults statsResults = statsTranslator.translate(
 				fieldsStatsInfo.get(stats.getField()), stats);
 
 			hits.addStatsResults(statsResults);
@@ -709,13 +677,26 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 	private static final Log _log = LogFactoryUtil.getLog(
 		SolrIndexSearcher.class);
 
-	private FacetProcessor<SolrQuery> _facetProcessor;
-	private FilterTranslator<String> _filterTranslator;
-	private GroupByTranslator _groupByTranslator;
+	@Reference(service = CompositeFacetProcessor.class)
+	protected FacetProcessor<SolrQuery> facetProcessor;
+
+	@Reference(target = "(search.engine.impl=Solr)")
+	protected FilterTranslator<String> filterTranslator;
+
+	@Reference
+	protected GroupByTranslator groupByTranslator;
+
 	private boolean _logExceptionsOnly;
-	private QueryTranslator<String> _queryTranslator;
-	private SolrClientManager _solrClientManager;
+
+	@Reference(target = "(search.engine.impl=Solr)")
+	protected QueryTranslator<String> queryTranslator;
+
+	@Reference
+	protected SolrClientManager solrClientManager;
+
 	private volatile SolrConfiguration _solrConfiguration;
-	private StatsTranslator _statsTranslator;
+
+	@Reference
+	protected StatsTranslator statsTranslator;
 
 }
