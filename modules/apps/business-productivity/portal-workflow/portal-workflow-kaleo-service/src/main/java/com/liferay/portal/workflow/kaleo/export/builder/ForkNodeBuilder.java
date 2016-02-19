@@ -15,16 +15,16 @@
 package com.liferay.portal.workflow.kaleo.export.builder;
 
 import com.liferay.portal.workflow.kaleo.definition.Fork;
-import com.liferay.portal.workflow.kaleo.definition.Node;
 import com.liferay.portal.workflow.kaleo.model.KaleoNode;
 
 /**
  * @author Michael C. Han
  */
-public class ForkNodeBuilder extends BaseNodeBuilder implements NodeBuilder {
+public class ForkNodeBuilder
+	extends BaseNodeBuilder<Fork> implements NodeBuilder {
 
 	@Override
-	protected Node createNode(KaleoNode kaleoNode) {
+	protected Fork createNode(KaleoNode kaleoNode) {
 		return new Fork(kaleoNode.getName(), kaleoNode.getDescription());
 	}
 
