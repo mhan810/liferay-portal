@@ -59,31 +59,31 @@ import java.util.Set;
 /**
  * @author Michael C. Han
  */
-public abstract class BaseNodeBuilder
+public abstract class BaseNodeBuilder<T extends Node>
 	extends BaseKaleoBean implements NodeBuilder {
 
 	@Override
-	public Node buildNode(KaleoNode kaleoNode) throws PortalException {
-		Node node = createNode(kaleoNode);
+	public T buildNode(KaleoNode kaleoNode) throws PortalException {
+		T t = createNode(kaleoNode);
 
 		Set<Action> actions = buildActions(
 			KaleoNode.class.getName(), kaleoNode.getKaleoNodeId());
 
-		node.setActions(actions);
+		t.setActions(actions);
 
-		node.setMetadata(kaleoNode.getMetadata());
+		t.setMetadata(kaleoNode.getMetadata());
 
 		Set<Notification> notifications = buildNotifications(
 			KaleoNode.class.getName(), kaleoNode.getKaleoNodeId());
 
-		node.setNotifications(notifications);
+		t.setNotifications(notifications);
 
 		Set<Timer> timers = buildTimers(
 			KaleoNode.class.getName(), kaleoNode.getKaleoNodeId());
 
-		node.setTimers(timers);
+		t.setTimers(timers);
 
-		return node;
+		return t;
 	}
 
 	protected void addNotificationRecipients(
@@ -314,8 +314,7 @@ public abstract class BaseNodeBuilder
 		return timers;
 	}
 
-	protected abstract Node createNode(KaleoNode kaleoNode)
-		throws PortalException;
+	protected abstract T createNode(KaleoNode kaleoNode) throws PortalException;
 
 	@ServiceReference(type = RoleLocalService.class)
 	private RoleLocalService _roleLocalService;
