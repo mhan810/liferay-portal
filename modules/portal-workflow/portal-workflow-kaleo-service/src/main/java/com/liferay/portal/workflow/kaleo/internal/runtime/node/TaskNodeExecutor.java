@@ -292,12 +292,12 @@ public class TaskNodeExecutor extends BaseNodeExecutor {
 	private RoleLocalService _roleLocalService;
 
 	@Reference
-	private UserLocalService _userLocalService;
+	private TaskAssignerUtil _taskAssignerUtil;
 
 	@Reference
 	private TaskAssignmentSelector _taskAssignmentSelector;
 
 	@Reference
-	private TaskAssignerUtil _taskAssignerUtil;
+	private UserLocalService _userLocalService;
 
 }
