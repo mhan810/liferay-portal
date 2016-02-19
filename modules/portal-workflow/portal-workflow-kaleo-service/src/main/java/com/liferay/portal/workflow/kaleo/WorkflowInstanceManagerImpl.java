@@ -27,10 +27,14 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  * @author Marcellus Tavares
  */
+@Component(immediate = true, service = WorkflowInstanceManager.class)
 public class WorkflowInstanceManagerImpl implements WorkflowInstanceManager {
 
 	@Override
@@ -199,10 +203,6 @@ public class WorkflowInstanceManagerImpl implements WorkflowInstanceManager {
 			serviceContext);
 	}
 
-	public void setWorkflowEngine(WorkflowEngine workflowEngine) {
-		_workflowEngine = workflowEngine;
-	}
-
 	@Override
 	public WorkflowInstance signalWorkflowInstance(
 			long companyId, long userId, long workflowInstanceId,
@@ -252,6 +252,7 @@ public class WorkflowInstanceManagerImpl implements WorkflowInstanceManager {
 			workflowInstanceId, workflowContext, serviceContext);
 	}
 
+	@Reference
 	private WorkflowEngine _workflowEngine;
 
 }
