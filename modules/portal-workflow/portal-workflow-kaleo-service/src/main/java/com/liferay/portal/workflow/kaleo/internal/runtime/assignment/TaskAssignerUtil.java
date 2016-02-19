@@ -20,6 +20,8 @@ import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignmentSelector;
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskAssignmentInstanceLocalServiceUtil;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,9 +30,10 @@ import java.util.List;
 /**
  * @author Marcellus Tavares
  */
+@Component(immediate = true)
 public class TaskAssignerUtil {
 
-	public static void reassignKaleoTask(
+	public void reassignKaleoTask(
 			List<KaleoTaskAssignment> kaleoTaskAssignments,
 			ExecutionContext executionContext)
 		throws PortalException {
@@ -59,12 +62,7 @@ public class TaskAssignerUtil {
 			executionContext.getServiceContext());
 	}
 
-	public void setTaskAssignmentSelector(
-		TaskAssignmentSelector taskAssignmentSelector) {
-
-		_taskAssignmentSelector = taskAssignmentSelector;
-	}
-
-	private static TaskAssignmentSelector _taskAssignmentSelector;
+	@Reference
+	private TaskAssignmentSelector _taskAssignmentSelector;
 
 }
