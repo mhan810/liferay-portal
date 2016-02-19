@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowDefinition;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowInstance;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.BaseKaleoBean;
 import com.liferay.portal.workflow.kaleo.definition.Definition;
 import com.liferay.portal.workflow.kaleo.definition.deployment.WorkflowDeployer;
@@ -375,20 +376,6 @@ public class DefaultWorkflowEngineImpl
 		_kaleoSignaler = kaleoSignaler;
 	}
 
-	public void setWorkflowDeployer(WorkflowDeployer workflowDeployer) {
-		_workflowDeployer = workflowDeployer;
-	}
-
-	public void setWorkflowModelParser(
-		WorkflowModelParser workflowModelParser) {
-
-		_workflowModelParser = workflowModelParser;
-	}
-
-	public void setWorkflowValidator(WorkflowValidator workflowValidator) {
-		_workflowValidator = workflowValidator;
-	}
-
 	@Override
 	public WorkflowInstance signalWorkflowInstance(
 			long workflowInstanceId, final String transitionName,
@@ -630,8 +617,14 @@ public class DefaultWorkflowEngineImpl
 	}
 
 	private KaleoSignaler _kaleoSignaler;
+
+	@ServiceReference
 	private WorkflowDeployer _workflowDeployer;
+
+	@ServiceReference
 	private WorkflowModelParser _workflowModelParser;
+
+	@ServiceReference
 	private WorkflowValidator _workflowValidator;
 
 }
