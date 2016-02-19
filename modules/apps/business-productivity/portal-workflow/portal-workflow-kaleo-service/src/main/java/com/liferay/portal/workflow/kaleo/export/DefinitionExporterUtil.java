@@ -15,6 +15,7 @@
 package com.liferay.portal.workflow.kaleo.export;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.workflow.kaleo.definition.export.DefinitionExporter;
 
 /**
  * @author Michael C. Han
