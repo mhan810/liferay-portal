@@ -30,6 +30,7 @@ import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 import java.io.Serializable;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;

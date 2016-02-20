@@ -40,7 +40,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true, property = {"scripting.language=drl"},
-	service = TaskAssignmentSelector.class
+	service = ConditionEvaluator.class
 )
 public class DRLConditionEvaluator implements ConditionEvaluator {
 

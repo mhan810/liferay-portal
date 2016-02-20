@@ -271,7 +271,7 @@ public class KaleoTimerInstanceTokenLocalServiceImpl
 
 		String groupName = getSchedulerGroupName(kaleoTimerInstanceToken);
 
-		SchedulerEngineHelperUtil.delete(groupName, StorageType.PERSISTED);
+		_schedulerEngineHelper.delete(groupName, StorageType.PERSISTED);
 	}
 
 	protected String getSchedulerGroupName(
