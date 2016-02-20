@@ -33,9 +33,12 @@ import java.io.Serializable;
 
 import java.util.Map;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Marcellus Tavares
  */
+@Component(immediate = true, service = TimerMessageListener.class)
 public class TimerMessageListener extends BaseMessageListener {
 
 	public void setWorkflowEngine(WorkflowEngine workflowEngine) {
