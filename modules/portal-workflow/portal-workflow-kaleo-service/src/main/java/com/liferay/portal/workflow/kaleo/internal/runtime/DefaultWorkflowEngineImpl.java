@@ -28,9 +28,13 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowDefinition;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowInstance;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.BaseKaleoBean;
 import com.liferay.portal.workflow.kaleo.definition.Definition;
-import com.liferay.portal.workflow.kaleo.deployment.WorkflowDeployer;
+import com.liferay.portal.workflow.kaleo.definition.deployment.WorkflowDeployer;
+import com.liferay.portal.workflow.kaleo.definition.parser.WorkflowModelParser;
+import com.liferay.portal.workflow.kaleo.definition.parser.WorkflowValidator;
+import com.liferay.portal.workflow.kaleo.internal.runtime.node.NodeExecutorFactory;
 import com.liferay.portal.workflow.kaleo.model.KaleoDefinition;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstance;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
@@ -38,13 +42,10 @@ import com.liferay.portal.workflow.kaleo.model.KaleoNode;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoTimerInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoTransition;
-import com.liferay.portal.workflow.kaleo.parser.WorkflowModelParser;
-import com.liferay.portal.workflow.kaleo.parser.WorkflowValidator;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler;
 import com.liferay.portal.workflow.kaleo.runtime.WorkflowEngine;
 import com.liferay.portal.workflow.kaleo.runtime.node.NodeExecutor;
-import com.liferay.portal.workflow.kaleo.runtime.node.NodeExecutorFactory;
 import com.liferay.portal.workflow.kaleo.util.WorkflowModelUtil;
 import com.liferay.portal.workflow.kaleo.util.comparators.KaleoInstanceOrderByComparator;
 
@@ -375,20 +376,6 @@ public class DefaultWorkflowEngineImpl
 		_kaleoSignaler = kaleoSignaler;
 	}
 
-	public void setWorkflowDeployer(WorkflowDeployer workflowDeployer) {
-		_workflowDeployer = workflowDeployer;
-	}
-
-	public void setWorkflowModelParser(
-		WorkflowModelParser workflowModelParser) {
-
-		_workflowModelParser = workflowModelParser;
-	}
-
-	public void setWorkflowValidator(WorkflowValidator workflowValidator) {
-		_workflowValidator = workflowValidator;
-	}
-
 	@Override
 	public WorkflowInstance signalWorkflowInstance(
 			long workflowInstanceId, final String transitionName,
@@ -630,8 +617,17 @@ public class DefaultWorkflowEngineImpl
 	}
 
 	private KaleoSignaler _kaleoSignaler;
+
+	@ServiceReference(type = NodeExecutorFactory.class)
+	private NodeExecutorFactory _nodeExecutorFactory;
+
+	@ServiceReference(type = WorkflowDeployer.class)
 	private WorkflowDeployer _workflowDeployer;
+
+	@ServiceReference(type = WorkflowModelParser.class)
 	private WorkflowModelParser _workflowModelParser;
+
+	@ServiceReference(type = WorkflowValidator.class)
 	private WorkflowValidator _workflowValidator;
 
 }
