@@ -100,5 +100,4 @@ public class ScriptActionExecutor implements ActionExecutor {
 	@Reference
 	private ScriptingContextBuilder _scriptingContextBuilder;
 
-
 }
