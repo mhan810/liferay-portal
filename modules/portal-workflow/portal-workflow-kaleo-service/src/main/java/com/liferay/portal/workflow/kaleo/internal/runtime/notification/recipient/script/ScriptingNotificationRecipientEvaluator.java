@@ -16,7 +16,6 @@ package com.liferay.portal.workflow.kaleo.internal.runtime.notification.recipien
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.scripting.Scripting;
-import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.model.KaleoNotificationRecipient;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.NotificationRecipientEvaluator;
@@ -28,9 +27,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  */
+@Component(
+	immediate = true,
+	property = {
+		"scripting.language=beanshell", "scripting.language=groovy",
+		"scripting.language=javascript", "scripting.language=python",
+		"scripting.language=ruby"
+	},
+	service = NotificationRecipientEvaluator.class
+)
 public class ScriptingNotificationRecipientEvaluator
 	implements NotificationRecipientEvaluator {
 
@@ -59,10 +70,10 @@ public class ScriptingNotificationRecipientEvaluator
 		_outputNames.add(WorkflowContextUtil.WORKFLOW_CONTEXT_NAME);
 	}
 
-	@ServiceReference(type = Scripting.class)
+	@Reference
 	private Scripting _scripting;
 
-	@ServiceReference(type = ScriptingContextBuilder.class)
+	@Reference
 	private ScriptingContextBuilder _scriptingContextBuilder;
 
 }

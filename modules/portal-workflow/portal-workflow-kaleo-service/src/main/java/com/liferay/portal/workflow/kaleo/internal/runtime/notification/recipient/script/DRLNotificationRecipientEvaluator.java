@@ -20,7 +20,6 @@ import com.liferay.portal.rules.engine.Fact;
 import com.liferay.portal.rules.engine.Query;
 import com.liferay.portal.rules.engine.RulesEngine;
 import com.liferay.portal.rules.engine.RulesResourceRetriever;
-import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.model.KaleoNotificationRecipient;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.notification.recipient.script.NotificationRecipientEvaluator;
@@ -29,9 +28,16 @@ import com.liferay.portal.workflow.kaleo.runtime.util.RulesContextBuilder;
 import java.util.List;
 import java.util.Map;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  */
+@Component(
+	immediate = true, property = {"scripting.language=drl"},
+	service = NotificationRecipientEvaluator.class
+)
 public class DRLNotificationRecipientEvaluator
 	implements NotificationRecipientEvaluator {
 
@@ -52,6 +58,7 @@ public class DRLNotificationRecipientEvaluator
 		return _rulesEngine.execute(rulesResourceRetriever, facts, query);
 	}
 
+	@Reference
 	private RulesEngine _rulesEngine;
 
 }
