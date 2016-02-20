@@ -54,7 +54,7 @@ public abstract class BaseNodeExecutor implements NodeExecutor {
 			KaleoNode.class.getName(), currentKaleoNode.getKaleoNodeId(),
 			ExecutionType.ON_ENTRY, executionContext);
 
-		NotificationUtil.sendKaleoNotifications(
+		notificationUtil.sendKaleoNotifications(
 			KaleoNode.class.getName(), currentKaleoNode.getKaleoNodeId(),
 			ExecutionType.ON_ENTRY, executionContext);
 
@@ -99,7 +99,7 @@ public abstract class BaseNodeExecutor implements NodeExecutor {
 			KaleoTimer.class.getName(), kaleoTimer.getKaleoTimerId(),
 			ExecutionType.ON_TIMER, executionContext);
 
-		NotificationUtil.sendKaleoNotifications(
+		notificationUtil.sendKaleoNotifications(
 			KaleoTimer.class.getName(), kaleoTimer.getKaleoTimerId(),
 			ExecutionType.ON_TIMER, executionContext);
 
@@ -126,7 +126,7 @@ public abstract class BaseNodeExecutor implements NodeExecutor {
 			KaleoNode.class.getName(), currentKaleoNode.getKaleoNodeId(),
 			ExecutionType.ON_EXIT, executionContext);
 
-		NotificationUtil.sendKaleoNotifications(
+		notificationUtil.sendKaleoNotifications(
 			KaleoNode.class.getName(), currentKaleoNode.getKaleoNodeId(),
 			ExecutionType.ON_EXIT, executionContext);
 	}
@@ -159,5 +159,8 @@ public abstract class BaseNodeExecutor implements NodeExecutor {
 
 	@Reference
 	protected KaleoTimerLocalService kaleoTimerLocalService;
+
+	@Reference
+	protected NotificationUtil notificationUtil;
 
 }

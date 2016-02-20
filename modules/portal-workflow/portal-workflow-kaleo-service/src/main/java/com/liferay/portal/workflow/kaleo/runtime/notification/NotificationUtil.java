@@ -22,38 +22,43 @@ import com.liferay.portal.workflow.kaleo.definition.ExecutionType;
 import com.liferay.portal.workflow.kaleo.model.KaleoNotification;
 import com.liferay.portal.workflow.kaleo.model.KaleoNotificationRecipient;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
-import com.liferay.portal.workflow.kaleo.service.KaleoNotificationLocalServiceUtil;
-import com.liferay.portal.workflow.kaleo.service.KaleoNotificationRecipientLocalServiceUtil;
+import com.liferay.portal.workflow.kaleo.service.KaleoNotificationLocalService;
+import com.liferay.portal.workflow.kaleo.service.KaleoNotificationRecipientLocalService;
 
 import java.util.List;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true)
 public class NotificationUtil {
 
-	public static void sendKaleoNotifications(
+	public void sendKaleoNotifications(
 			String kaleoClassName, long kaleoClassPK,
 			ExecutionType executionType, ExecutionContext executionContext)
 		throws PortalException {
 
 		List<KaleoNotification> kaleoNotifications =
-			KaleoNotificationLocalServiceUtil.getKaleoNotifications(
+			_kaleoNotificationLocalService.getKaleoNotifications(
 				kaleoClassName, kaleoClassPK, executionType.getValue());
 
 		for (KaleoNotification kaleoNotification : kaleoNotifications) {
-			_sendKaleoNotification(kaleoNotification, executionContext);
+			sendKaleoNotification(kaleoNotification, executionContext);
 		}
 	}
 
-	private static void _sendKaleoNotification(
+	protected void sendKaleoNotification(
 			KaleoNotification kaleoNotification,
 			ExecutionContext executionContext)
 		throws PortalException {
 
 		NotificationMessageGenerator notificationMessageGenerator =
-			NotificationMessageGeneratorFactory.getNotificationMessageGenerator(
-				kaleoNotification.getTemplateLanguage());
+			_notificationMessageGeneratorFactory.
+				getNotificationMessageGenerator(
+					kaleoNotification.getTemplateLanguage());
 
 		String notificationMessage =
 			notificationMessageGenerator.generateMessage(
@@ -78,13 +83,13 @@ public class NotificationUtil {
 			kaleoNotification.getNotificationTypes());
 
 		List<KaleoNotificationRecipient> kaleoNotificationRecipient =
-			KaleoNotificationRecipientLocalServiceUtil.
+			_kaleoNotificationRecipientLocalService.
 				getKaleoNotificationRecipients(
 					kaleoNotification.getKaleoNotificationId());
 
 		for (String notificationType : notificationTypes) {
 			NotificationSender notificationSender =
-				NotificationSenderFactory.getNotificationSender(
+				_notificationSenderFactory.getNotificationSender(
 					notificationType);
 
 			notificationSender.sendNotification(
@@ -92,5 +97,19 @@ public class NotificationUtil {
 				notificationMessage, executionContext);
 		}
 	}
+
+	@Reference
+	private KaleoNotificationLocalService _kaleoNotificationLocalService;
+
+	@Reference
+	private KaleoNotificationRecipientLocalService
+		_kaleoNotificationRecipientLocalService;
+
+	@Reference
+	private NotificationMessageGeneratorFactory
+		_notificationMessageGeneratorFactory;
+
+	@Reference
+	private NotificationSenderFactory _notificationSenderFactory;
 
 }

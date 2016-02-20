@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  */
@@ -56,14 +58,6 @@ public abstract class BaseNotificationSender implements NotificationSender {
 			throw new NotificationMessageSenderException(
 				"Unable to send notification message", e);
 		}
-	}
-
-	public void setNotificationRecipientBuilderRegistry(
-		NotificationRecipientBuilderRegistry
-			notificationRecipientBuilderRegistry) {
-
-		_notificationRecipientBuilderRegistry =
-			notificationRecipientBuilderRegistry;
 	}
 
 	protected abstract void doSendNotification(
@@ -142,6 +136,7 @@ public abstract class BaseNotificationSender implements NotificationSender {
 		return notificationRecipients;
 	}
 
+	@Reference
 	private NotificationRecipientBuilderRegistry
 		_notificationRecipientBuilderRegistry;
 
