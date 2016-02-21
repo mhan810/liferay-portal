@@ -31,10 +31,10 @@
 		if (!RulesEngineUtil.containsRuleDomain(domainName)) {
 			RulesResourceRetriever rulesResourceRetriever = new RulesResourceRetriever(new StringResourceRetriever(rules), String.valueOf(RulesLanguage.DROOLS_RULE_LANGUAGE));
 
-			RulesEngineUtil.update(domainName, rulesResourceRetriever, PortalClassLoaderUtil.getClassLoader());
+			RulesEngineUtil.update(domainName, rulesResourceRetriever);
 		}
 
-		Map<String, ?> results = RulesEngineUtil.execute(domainName, facts, Query.createStandardQuery(), PortalClassLoaderUtil.getClassLoader());
+		Map<String, ?> results = RulesEngineUtil.execute(domainName, facts, Query.createStandardQuery());
 
 		List<AssetEntry> assetEntries = (List<AssetEntry>)results.get("results");
 		%>
