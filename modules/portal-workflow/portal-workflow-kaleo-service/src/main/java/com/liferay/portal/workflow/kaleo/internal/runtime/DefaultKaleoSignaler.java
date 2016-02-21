@@ -16,19 +16,19 @@ package com.liferay.portal.workflow.kaleo.internal.runtime;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender;
-import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactoryUtil;
+import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.BaseKaleoBean;
-import com.liferay.portal.workflow.kaleo.internal.runtime.node.NodeExecutorFactory;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoNode;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler;
 import com.liferay.portal.workflow.kaleo.runtime.graph.PathElement;
 import com.liferay.portal.workflow.kaleo.runtime.node.NodeExecutor;
+import com.liferay.portal.workflow.kaleo.runtime.node.NodeExecutorFactory;
 import com.liferay.portal.workflow.kaleo.runtime.util.ExecutionUtil;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class DefaultKaleoSignaler
 
 	public void setDestinationName(String destinationName) {
 		_singleDestinationMessageSender =
-			SingleDestinationMessageSenderFactoryUtil.
+			_singleDestinationMessageSenderFactory.
 				createSingleDestinationMessageSender(destinationName);
 	}
 
@@ -112,5 +112,9 @@ public class DefaultKaleoSignaler
 	private NodeExecutorFactory _nodeExecutorFactory;
 
 	private SingleDestinationMessageSender _singleDestinationMessageSender;
+
+	@ServiceReference(type = SingleDestinationMessageSenderFactory.class)
+	private SingleDestinationMessageSenderFactory
+		_singleDestinationMessageSenderFactory;
 
 }
