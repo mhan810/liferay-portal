@@ -31,7 +31,9 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 /**
  * @author Michael C. Han
  */
-@Component(immediate = true)
+@Component(
+	immediate = true, service = NotificationMessageGeneratorFactory.class
+)
 public class NotificationMessageGeneratorFactory {
 
 	public NotificationMessageGenerator getNotificationMessageGenerator(
@@ -54,7 +56,7 @@ public class NotificationMessageGeneratorFactory {
 		policy = ReferencePolicy.DYNAMIC,
 		policyOption = ReferencePolicyOption.GREEDY,
 		target = "(template.language=*)",
-		unbind = "remvoeNotificationMessageGenerator"
+		unbind = "removeNotificationMessageGenerator"
 	)
 	protected void addNotificationMessageGenerator(
 		NotificationMessageGenerator notificationMessageGenerator,

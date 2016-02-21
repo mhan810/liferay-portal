@@ -29,11 +29,14 @@ import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
  */
-@Component(immediate = true)
+@Component(immediate = true, service = NotificationUtil.class)
 public class NotificationUtil {
 
 	public void sendKaleoNotifications(
@@ -98,11 +101,20 @@ public class NotificationUtil {
 		}
 	}
 
-	@Reference
-	private KaleoNotificationLocalService _kaleoNotificationLocalService;
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	private volatile KaleoNotificationLocalService
+		_kaleoNotificationLocalService;
 
-	@Reference
-	private KaleoNotificationRecipientLocalService
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	private volatile KaleoNotificationRecipientLocalService
 		_kaleoNotificationRecipientLocalService;
 
 	@Reference

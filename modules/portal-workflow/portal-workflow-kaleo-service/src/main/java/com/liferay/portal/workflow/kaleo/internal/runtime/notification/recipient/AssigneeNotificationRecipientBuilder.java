@@ -113,7 +113,7 @@ public class AssigneeNotificationRecipientBuilder
 		policy = ReferencePolicy.DYNAMIC,
 		policyOption = ReferencePolicyOption.GREEDY
 	)
-	private NotificationRecipientBuilderRegistry
+	private volatile NotificationRecipientBuilderRegistry
 		_notificationRecipientBuilderRegistry;
 
 }
