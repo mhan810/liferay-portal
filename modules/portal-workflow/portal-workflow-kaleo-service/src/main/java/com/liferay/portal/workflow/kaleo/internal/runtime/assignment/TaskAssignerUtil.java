@@ -31,7 +31,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Marcellus Tavares
  */
-@Component(immediate = true)
+@Component(immediate = true, service = TaskAssignerUtil.class)
 public class TaskAssignerUtil {
 
 	public void reassignKaleoTask(
