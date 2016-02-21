@@ -38,7 +38,7 @@ import org.osgi.service.component.annotations.Component;
 /**
  * @author Michael C. Han
  */
-@Component(immediate = true, service = WorkflowComparatorFactory.class)
+@Component(immediate = true, service = WorkflowComparatorFactoryImpl.class)
 public class WorkflowComparatorFactoryImpl
 	implements WorkflowComparatorFactory {
 
