@@ -41,6 +41,9 @@ import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
@@ -144,19 +147,39 @@ public class DefaultWorkflowDeployer implements WorkflowDeployer {
 		return WorkflowModelUtil.toWorkflowDefinition(kaleoDefinition);
 	}
 
-	@Reference
-	private KaleoConditionLocalService _kaleoConditionLocalService;
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	private volatile KaleoConditionLocalService _kaleoConditionLocalService;
 
-	@Reference
-	private KaleoDefinitionLocalService _kaleoDefinitionLocalService;
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	private volatile KaleoDefinitionLocalService _kaleoDefinitionLocalService;
 
-	@Reference
-	private KaleoNodeLocalService _kaleoNodeLocalService;
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	private volatile KaleoNodeLocalService _kaleoNodeLocalService;
 
-	@Reference
-	private KaleoTaskLocalService _kaleoTaskLocalService;
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	private volatile KaleoTaskLocalService _kaleoTaskLocalService;
 
-	@Reference
-	private KaleoTransitionLocalService _kaleoTransitionLocalService;
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	private volatile KaleoTransitionLocalService _kaleoTransitionLocalService;
 
 }

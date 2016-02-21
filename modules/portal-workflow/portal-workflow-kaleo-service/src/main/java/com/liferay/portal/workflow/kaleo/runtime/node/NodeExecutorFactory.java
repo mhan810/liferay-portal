@@ -18,6 +18,7 @@ import com.liferay.portal.workflow.kaleo.util.NodeTypeDependentObjectRegistry;
 
 import java.util.Map;
 
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
@@ -26,6 +27,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = NodeExecutorFactory.class)
 public class NodeExecutorFactory {
 
 	public NodeExecutor getNodeExecutor(String nodeTypeString) {

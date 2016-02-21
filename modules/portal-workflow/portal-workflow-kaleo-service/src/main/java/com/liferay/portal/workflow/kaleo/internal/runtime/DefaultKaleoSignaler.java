@@ -44,10 +44,14 @@ import java.util.List;
 public class DefaultKaleoSignaler
 	extends BaseKaleoBean implements KaleoSignaler {
 
-	public void setDestinationName(String destinationName) {
+	public void afterPropertiesSet() {
 		_singleDestinationMessageSender =
 			_singleDestinationMessageSenderFactory.
-				createSingleDestinationMessageSender(destinationName);
+				createSingleDestinationMessageSender(_destinationName);
+	}
+
+	public void setDestinationName(String destinationName) {
+		_destinationName = destinationName;
 	}
 
 	@Override
@@ -107,6 +111,8 @@ public class DefaultKaleoSignaler
 
 		_singleDestinationMessageSender.send(pathElement);
 	}
+
+	private String _destinationName;
 
 	@ServiceReference(type = NodeExecutorFactory.class)
 	private NodeExecutorFactory _nodeExecutorFactory;

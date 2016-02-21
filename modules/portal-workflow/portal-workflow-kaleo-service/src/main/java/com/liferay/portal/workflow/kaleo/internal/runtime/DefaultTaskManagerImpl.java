@@ -35,6 +35,7 @@ import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignmentInstance;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.TaskManager;
+import com.liferay.portal.workflow.kaleo.runtime.action.KaleoActionExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.notification.NotificationUtil;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 import com.liferay.portal.workflow.kaleo.util.WorkflowModelUtil;
@@ -185,7 +186,7 @@ public class DefaultTaskManagerImpl
 
 		KaleoTask kaleoTask = kaleoTaskInstanceToken.getKaleoTask();
 
-		kaleoActionExecutor.executeKaleoActions(
+		_kaleoActionExecutor.executeKaleoActions(
 			KaleoNode.class.getName(), kaleoTask.getKaleoNodeId(),
 			ExecutionType.ON_ASSIGNMENT, executionContext);
 
@@ -277,6 +278,9 @@ public class DefaultTaskManagerImpl
 
 		return workflowContext;
 	}
+
+	@ServiceReference(type = KaleoActionExecutor.class)
+	private KaleoActionExecutor _kaleoActionExecutor;
 
 	@ServiceReference(type = NotificationUtil.class)
 	private NotificationUtil _notificationUtil;
