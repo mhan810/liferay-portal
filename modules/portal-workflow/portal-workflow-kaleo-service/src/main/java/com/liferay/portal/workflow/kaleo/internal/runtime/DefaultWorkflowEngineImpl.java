@@ -34,6 +34,7 @@ import com.liferay.portal.workflow.kaleo.definition.Definition;
 import com.liferay.portal.workflow.kaleo.definition.deployment.WorkflowDeployer;
 import com.liferay.portal.workflow.kaleo.definition.parser.WorkflowModelParser;
 import com.liferay.portal.workflow.kaleo.definition.parser.WorkflowValidator;
+import com.liferay.portal.workflow.kaleo.internal.runtime.node.NodeExecutorFactory;
 import com.liferay.portal.workflow.kaleo.model.KaleoDefinition;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstance;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
@@ -45,7 +46,6 @@ import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler;
 import com.liferay.portal.workflow.kaleo.runtime.WorkflowEngine;
 import com.liferay.portal.workflow.kaleo.runtime.node.NodeExecutor;
-import com.liferay.portal.workflow.kaleo.runtime.node.NodeExecutorFactory;
 import com.liferay.portal.workflow.kaleo.util.WorkflowModelUtil;
 import com.liferay.portal.workflow.kaleo.util.comparators.KaleoInstanceOrderByComparator;
 

@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
-import com.liferay.portal.workflow.kaleo.runtime.assignment.BaseTaskAssignmentSelector;
 import com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignmentSelector;
 
 import java.io.Serializable;
