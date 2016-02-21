@@ -12,12 +12,15 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.notification;
+package com.liferay.portal.workflow.kaleo.internal.runtime.notification;
 
 import com.liferay.portal.workflow.kaleo.definition.NotificationReceptionType;
 import com.liferay.portal.workflow.kaleo.definition.RecipientType;
 import com.liferay.portal.workflow.kaleo.model.KaleoNotificationRecipient;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
+import com.liferay.portal.workflow.kaleo.runtime.notification.NotificationMessageSenderException;
+import com.liferay.portal.workflow.kaleo.runtime.notification.NotificationRecipient;
+import com.liferay.portal.workflow.kaleo.runtime.notification.NotificationSender;
 import com.liferay.portal.workflow.kaleo.runtime.notification.recipient.NotificationRecipientBuilder;
 import com.liferay.portal.workflow.kaleo.runtime.notification.recipient.NotificationRecipientBuilderRegistry;
 
