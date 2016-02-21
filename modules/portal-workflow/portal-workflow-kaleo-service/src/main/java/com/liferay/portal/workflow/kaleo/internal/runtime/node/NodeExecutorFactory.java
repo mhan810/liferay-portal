@@ -12,12 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.runtime.node;
+package com.liferay.portal.workflow.kaleo.internal.runtime.node;
 
 import com.liferay.portal.workflow.kaleo.definition.NodeTypeDependentObjectRegistry;
 
 import java.util.Map;
 
+import com.liferay.portal.workflow.kaleo.runtime.node.NodeExecutor;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
