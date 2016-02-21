@@ -32,7 +32,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Michael C. Han
  */
-@Component(immediate = true, service = WorkflowLogManager.class)
+@Component(immediate = true, service = WorkflowLogManagerImpl.class)
 public class WorkflowLogManagerImpl implements WorkflowLogManager {
 
 	@Override

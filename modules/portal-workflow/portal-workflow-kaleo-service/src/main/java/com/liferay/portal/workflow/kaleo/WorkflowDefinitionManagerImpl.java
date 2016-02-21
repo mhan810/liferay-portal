@@ -37,7 +37,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Michael C. Han
  * @author Eduardo Lundgren
  */
-@Component(immediate = true, service = WorkflowDefinitionManager.class)
+@Component(immediate = true, service = WorkflowDefinitionManagerImpl.class)
 public class WorkflowDefinitionManagerImpl
 	implements WorkflowDefinitionManager {
 

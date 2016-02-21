@@ -34,7 +34,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Michael C. Han
  * @author Marcellus Tavares
  */
-@Component(immediate = true, service = WorkflowInstanceManager.class)
+@Component(immediate = true, service = WorkflowInstanceManagerImpl.class)
 public class WorkflowInstanceManagerImpl implements WorkflowInstanceManager {
 
 	@Override
