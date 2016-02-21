@@ -28,7 +28,7 @@ import com.liferay.portal.kernel.workflow.WorkflowInstance;
 import com.liferay.portal.kernel.workflow.WorkflowLog;
 import com.liferay.portal.kernel.workflow.WorkflowTask;
 import com.liferay.portal.kernel.workflow.WorkflowTaskAssignee;
-import com.liferay.portal.workflow.kaleo.export.DefinitionExporterUtil;
+import com.liferay.portal.workflow.kaleo.definition.export.DefinitionExporter;
 import com.liferay.portal.workflow.kaleo.model.KaleoDefinition;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstance;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
@@ -41,9 +41,13 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Shuyang Zhou
  */
+@Component(immediate = true, service = WorkflowModelUtil.class)
 public class WorkflowModelUtil {
 
 	public static WorkflowDefinition toWorkflowDefinition(
@@ -58,7 +62,7 @@ public class WorkflowModelUtil {
 
 		if (Validator.isNull(content)) {
 			try {
-				content = DefinitionExporterUtil.export(
+				content = _definitionExporter.export(
 					kaleoDefinition.getKaleoDefinitionId());
 
 				kaleoDefinition.setContent(content);
@@ -220,5 +224,8 @@ public class WorkflowModelUtil {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		WorkflowModelUtil.class);
+
+	@Reference
+	private static DefinitionExporter _definitionExporter;
 
 }
