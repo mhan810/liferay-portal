@@ -6,6 +6,7 @@ dependencies {
 	provided group: "com.fasterxml.jackson.dataformat", name: "jackson-dataformat-smile", version: "2.6.2"
 	provided group: "com.fasterxml.jackson.dataformat", name: "jackson-dataformat-yaml", version: "2.6.2"
 	provided group: "com.google.guava", name: "guava", version: "18.0"
+	provided group: "com.liferay", name: "elasticsearch", version: "2.2.0.LIFERAY-PATCHED-1"
 	provided group: "com.liferay.portal", name: "portal-service", version: liferay.portalVersion
 	provided group: "com.ning", name: "compress-lzf", version: "1.0.2"
 	provided group: "com.spatial4j", name: "spatial4j", version: "0.5"
@@ -30,7 +31,6 @@ dependencies {
 	provided group: "org.apache.lucene", name: "lucene-sandbox", version: "5.4.1"
 	provided group: "org.apache.lucene", name: "lucene-spatial", version: "5.4.1"
 	provided group: "org.apache.lucene", name: "lucene-suggest", version: "5.4.1"
-	provided group: "org.elasticsearch", name: "elasticsearch", version: "2.2.0"
 	provided group: "org.hdrhistogram", name: "HdrHistogram", version: "2.1.8"
 	provided group: "org.joda", name: "joda-convert", version: "1.2"
 	provided group: "org.noggit", name: "noggit", version: "0.6"
