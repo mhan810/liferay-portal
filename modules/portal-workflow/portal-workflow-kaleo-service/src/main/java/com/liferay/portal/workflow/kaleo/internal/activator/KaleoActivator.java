@@ -12,9 +12,9 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.activator;
+package com.liferay.portal.workflow.kaleo.internal.activator;
 
-import com.liferay.portal.workflow.kaleo.manager.PortalKaleoManager;
+import com.liferay.portal.workflow.kaleo.runtime.manager.PortalKaleoManager;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;

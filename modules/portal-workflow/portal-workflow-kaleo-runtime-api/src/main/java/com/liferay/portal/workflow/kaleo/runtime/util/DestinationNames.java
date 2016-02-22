@@ -12,20 +12,19 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.util;
-
-import com.liferay.portal.kernel.util.StringPool;
+package com.liferay.portal.workflow.kaleo.runtime.util;
 
 /**
  * @author Michael C. Han
  */
-public class SchedulerUtil {
+public class DestinationNames {
 
-	public static final String getGroupName(long kaleoTimerInstanceTokenId) {
-		String groupName = DestinationNames.WORKFLOW_TIMER.concat(
-			StringPool.SLASH).concat(String.valueOf(kaleoTimerInstanceTokenId));
+	public static final String KALEO_GRAPH_WALKER =
+		"liferay/kaleo_graph_walker";
 
-		return groupName;
-	}
+	public static final String WORKFLOW_DEFINITION_LINK =
+		"destination.workflow_definition_link";
+
+	public static final String WORKFLOW_TIMER = "destination.workflow_timer";
 
 }

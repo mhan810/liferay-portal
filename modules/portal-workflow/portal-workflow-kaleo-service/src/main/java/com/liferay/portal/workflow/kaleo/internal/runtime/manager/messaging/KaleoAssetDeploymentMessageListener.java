@@ -12,13 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.manager.messaging;
+package com.liferay.portal.workflow.kaleo.internal.runtime.manager.messaging;
 
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageListener;
-import com.liferay.portal.workflow.kaleo.manager.PortalKaleoManager;
-import com.liferay.portal.workflow.kaleo.util.DestinationNames;
+import com.liferay.portal.workflow.kaleo.runtime.manager.PortalKaleoManager;
+import com.liferay.portal.workflow.kaleo.runtime.util.DestinationNames;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;

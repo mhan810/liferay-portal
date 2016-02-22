@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.util;
+package com.liferay.portal.workflow.kaleo.runtime.util;
 
 import com.liferay.portal.kernel.workflow.WorkflowLog;
 import com.liferay.portal.workflow.kaleo.definition.LogType;

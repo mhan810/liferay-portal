@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.manager;
+package com.liferay.portal.workflow.kaleo.internal.runtime.manager;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.workflow.WorkflowDefinitionManager;
 import com.liferay.portal.kernel.workflow.comparator.WorkflowComparatorFactory;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.internal.BaseKaleoBean;
+import com.liferay.portal.workflow.kaleo.runtime.manager.PortalKaleoManager;
 
 import java.io.InputStream;
 

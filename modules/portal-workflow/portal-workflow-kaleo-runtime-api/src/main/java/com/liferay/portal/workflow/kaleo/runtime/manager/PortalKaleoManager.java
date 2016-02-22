@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.manager;
+package com.liferay.portal.workflow.kaleo.runtime.manager;
 
 /**
  * @author Michael C. Han
