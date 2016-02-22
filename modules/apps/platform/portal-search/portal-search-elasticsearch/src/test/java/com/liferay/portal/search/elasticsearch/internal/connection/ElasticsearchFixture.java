@@ -310,9 +310,9 @@ public class ElasticsearchFixture {
 			clusterSettingsContext = Mockito.mock(ClusterSettingsContext.class);
 		}
 
-		embeddedElasticsearchConnection.clusterSettingsContext = clusterSettingsContext;
+		embeddedElasticsearchConnection.setClusterSettingsContext(clusterSettingsContext);
 
-		embeddedElasticsearchConnection.props = props;
+		embeddedElasticsearchConnection.setProps(props);
 
 		embeddedElasticsearchConnection.activate(
 			_elasticsearchConfigurationProperties);
