@@ -193,7 +193,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 
 			searchResponseScroller.prepare();
 
-			searchResponseScroller.scroll(_searchHitsProcessor);
+			searchResponseScroller.scroll(searchHitsProcessor);
 		}
 		catch (IndexNotFoundException infe) {
 			if (_log.isInfoEnabled()) {
@@ -259,10 +259,10 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 
 	@Activate
 	protected void activate() {
-		_searchHitsProcessor = new DeleteDocumentsSearchHitsProcessor(this);
+		searchHitsProcessor = new DeleteDocumentsSearchHitsProcessor(this);
 	}
 
-	protected SearchHitsProcessor _searchHitsProcessor;
+	protected SearchHitsProcessor searchHitsProcessor;
 
 	@Reference
 	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
