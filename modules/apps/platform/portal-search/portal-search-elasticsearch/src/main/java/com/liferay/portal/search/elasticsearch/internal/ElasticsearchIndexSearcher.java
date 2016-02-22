@@ -737,24 +737,22 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		}
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		ElasticsearchIndexSearcher.class);
-
-	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
-
 	@Reference
 	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
-
-	private FacetProcessor<SearchRequestBuilder> _facetProcessor;
-	private FilterTranslator<QueryBuilder> _filterTranslator;
 
 	@Reference
 	protected GroupByTranslator groupByTranslator;
 
-	private boolean _logExceptionsOnly;
-	private QueryTranslator<QueryBuilder> _queryTranslator;
-
 	@Reference
 	protected StatsTranslator statsTranslator;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		ElasticsearchIndexSearcher.class);
+
+	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
+	private FacetProcessor<SearchRequestBuilder> _facetProcessor;
+	private FilterTranslator<QueryBuilder> _filterTranslator;
+	private boolean _logExceptionsOnly;
+	private QueryTranslator<QueryBuilder> _queryTranslator;
 
 }

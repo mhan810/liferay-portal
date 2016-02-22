@@ -200,6 +200,9 @@ public class ElasticsearchConnectionManager {
 		}
 	}
 
+	@Reference
+	protected IndexFactory indexFactory;
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		ElasticsearchConnectionManager.class);
 
@@ -207,10 +210,6 @@ public class ElasticsearchConnectionManager {
 	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
 	private final Map<OperationMode, ElasticsearchConnection>
 		_elasticsearchConnections = new HashMap<>();
-
-	@Reference
-	protected IndexFactory indexFactory;
-
 	private OperationMode _operationMode;
 
 }

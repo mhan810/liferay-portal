@@ -152,15 +152,6 @@ public class SolrQueryTranslator
 		return wildcardQueryTranslator.translate(wildcardQuery);
 	}
 
-	private String _postProcess(
-		String queryString, SearchContext searchContext) {
-
-		SolrPostProcesor solrPostProcesor = new SolrPostProcesor(
-			queryString, searchContext.getKeywords());
-
-		return solrPostProcesor.postProcess();
-	}
-
 	@Reference
 	protected BooleanQueryTranslator booleanQueryTranslator;
 
@@ -196,5 +187,14 @@ public class SolrQueryTranslator
 
 	@Reference
 	protected WildcardQueryTranslator wildcardQueryTranslator;
+
+	private String _postProcess(
+		String queryString, SearchContext searchContext) {
+
+		SolrPostProcesor solrPostProcesor = new SolrPostProcesor(
+			queryString, searchContext.getKeywords());
+
+		return solrPostProcesor.postProcess();
+	}
 
 }

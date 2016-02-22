@@ -674,9 +674,6 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 		}
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		SolrIndexSearcher.class);
-
 	@Reference(service = CompositeFacetProcessor.class)
 	protected FacetProcessor<SolrQuery> facetProcessor;
 
@@ -686,17 +683,19 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 	@Reference
 	protected GroupByTranslator groupByTranslator;
 
-	private boolean _logExceptionsOnly;
-
 	@Reference(target = "(search.engine.impl=Solr)")
 	protected QueryTranslator<String> queryTranslator;
 
 	@Reference
 	protected SolrClientManager solrClientManager;
 
-	private volatile SolrConfiguration _solrConfiguration;
-
 	@Reference
 	protected StatsTranslator statsTranslator;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		SolrIndexSearcher.class);
+
+	private boolean _logExceptionsOnly;
+	private volatile SolrConfiguration _solrConfiguration;
 
 }

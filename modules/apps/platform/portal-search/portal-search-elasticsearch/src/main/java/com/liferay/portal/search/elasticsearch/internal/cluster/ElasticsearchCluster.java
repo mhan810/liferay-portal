@@ -63,10 +63,19 @@ public class ElasticsearchCluster {
 
 	@Reference(unbind = "-")
 	protected void setCompanyLocalService(
-			CompanyLocalService companyLocalService) {
+		CompanyLocalService companyLocalService) {
 
 		_companyLocalService = companyLocalService;
 	}
+
+	@Reference
+	protected ClusterExecutor clusterExecutor;
+
+	@Reference
+	protected ClusterMasterExecutor clusterMasterExecutor;
+
+	@Reference
+	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
 
 	protected class ReplicasClusterContextImpl
 		implements ReplicasClusterContext {
@@ -130,17 +139,7 @@ public class ElasticsearchCluster {
 
 	}
 
-	@Reference
-	protected ClusterExecutor clusterExecutor;
-
-	@Reference
-	protected ClusterMasterExecutor clusterMasterExecutor;
-
 	private CompanyLocalService _companyLocalService;
-
-	@Reference
-	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
-
 	private ReplicasClusterListener _replicasClusterListener;
 
 }

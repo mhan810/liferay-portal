@@ -112,12 +112,17 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 		return new ElasticsearchFilterTranslator() {
 			{
 				booleanFilterTranslator = new BooleanFilterTranslatorImpl();
-				dateRangeTermFilterTranslator = new DateRangeTermFilterTranslatorImpl();
+				dateRangeTermFilterTranslator =
+					new DateRangeTermFilterTranslatorImpl();
 				existsFilterTranslator = new ExistsFilterTranslatorImpl();
-				geoBoundingBoxFilterTranslator = new GeoBoundingBoxFilterTranslatorImpl();
-				geoDistanceFilterTranslator = new GeoDistanceFilterTranslatorImpl();
-				geoDistanceRangeFilterTranslator = new GeoDistanceRangeFilterTranslatorImpl();
-				geoPolygonFilterTranslator = new GeoPolygonFilterTranslatorImpl();
+				geoBoundingBoxFilterTranslator =
+					new GeoBoundingBoxFilterTranslatorImpl();
+				geoDistanceFilterTranslator =
+					new GeoDistanceFilterTranslatorImpl();
+				geoDistanceRangeFilterTranslator =
+					new GeoDistanceRangeFilterTranslatorImpl();
+				geoPolygonFilterTranslator =
+					new GeoPolygonFilterTranslatorImpl();
 				missingFilterTranslator = new MissingFilterTranslatorImpl();
 				prefixFilterTranslator = new PrefixFilterTranslatorImpl();
 				queryFilterTranslator = new QueryFilterTranslatorImpl();
@@ -138,7 +143,8 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 				fuzzyQueryTranslator = new FuzzyQueryTranslatorImpl();
 				matchAllQueryTranslator = new MatchAllQueryTranslatorImpl();
 				matchQueryTranslator = new MatchQueryTranslatorImpl();
-				moreLikeThisQueryTranslator = new MoreLikeThisQueryTranslatorImpl();
+				moreLikeThisQueryTranslator =
+					new MoreLikeThisQueryTranslatorImpl();
 				multiMatchQueryTranslator = new MultiMatchQueryTranslatorImpl();
 				nestedQueryTranslator = new NestedQueryTranslatorImpl();
 				stringQueryTranslator = new StringQueryTranslatorImpl();
@@ -154,7 +160,8 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 
 		return new ElasticsearchIndexSearcher() {
 			{
-				elasticsearchConnectionManager = elasticsearchConnectionManagerField;
+				elasticsearchConnectionManager =
+					elasticsearchConnectionManagerField;
 				setFacetProcessor(new DateRangeFacetProcessor());
 				setFilterTranslator(createElasticsearchFilterTranslator());
 				groupByTranslator = new DefaultGroupByTranslator();
@@ -172,8 +179,10 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 		final ElasticsearchUpdateDocumentCommand updateDocumentCommand =
 			new ElasticsearchUpdateDocumentCommandImpl() {
 				{
-					elasticsearchConnectionManager = elasticsearchConnectionManagerField;
-					elasticsearchDocumentFactory = new DefaultElasticsearchDocumentFactory();
+					elasticsearchConnectionManager =
+						elasticsearchConnectionManagerField;
+					elasticsearchDocumentFactory =
+						new DefaultElasticsearchDocumentFactory();
 
 					activate(_properties);
 				}
@@ -181,7 +190,8 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 
 		return new ElasticsearchIndexWriter() {
 			{
-				elasticsearchConnectionManager = elasticsearchConnectionManagerField;
+				elasticsearchConnectionManager =
+					elasticsearchConnectionManagerField;
 				elasticsearchUpdateDocumentCommand = updateDocumentCommand;
 			}
 		};

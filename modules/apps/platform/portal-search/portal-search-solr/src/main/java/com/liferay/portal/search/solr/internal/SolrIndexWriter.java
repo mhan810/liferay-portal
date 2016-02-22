@@ -195,8 +195,7 @@ public class SolrIndexWriter extends BaseIndexWriter {
 	public void updateDocument(SearchContext searchContext, Document document)
 		throws SearchException {
 
-		solrUpdateDocumentCommand.updateDocument(
-			searchContext, document, true);
+		solrUpdateDocumentCommand.updateDocument(searchContext, document, true);
 	}
 
 	@Override
@@ -208,13 +207,13 @@ public class SolrIndexWriter extends BaseIndexWriter {
 			searchContext, documents, true);
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		SolrIndexWriter.class);
-
 	@Reference
 	protected SolrClientManager solrClientManager;
 
 	@Reference
 	protected SolrUpdateDocumentCommand solrUpdateDocumentCommand;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		SolrIndexWriter.class);
 
 }

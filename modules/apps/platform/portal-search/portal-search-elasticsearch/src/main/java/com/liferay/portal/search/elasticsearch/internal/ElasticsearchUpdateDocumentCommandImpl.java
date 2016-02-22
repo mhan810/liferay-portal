@@ -177,15 +177,15 @@ public class ElasticsearchUpdateDocumentCommandImpl
 		}
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		ElasticsearchUpdateDocumentCommandImpl.class);
-
-	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
-
 	@Reference
 	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
 
 	@Reference
 	protected ElasticsearchDocumentFactory elasticsearchDocumentFactory;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		ElasticsearchUpdateDocumentCommandImpl.class);
+
+	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
 
 }

@@ -51,7 +51,6 @@ import com.liferay.portal.search.solr.internal.query.TermRangeQueryTranslatorImp
 import com.liferay.portal.search.solr.internal.query.WildcardQueryTranslatorImpl;
 import com.liferay.portal.search.solr.internal.stats.DefaultStatsTranslator;
 import com.liferay.portal.search.unit.test.IndexingFixture;
-import com.sun.xml.ws.api.streaming.XMLStreamReaderFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -98,12 +97,17 @@ public class SolrIndexingFixture implements IndexingFixture {
 		return new SolrFilterTranslator() {
 			{
 				booleanQueryTranslator = new BooleanFilterTranslatorImpl();
-				dateRangeTermFilterTranslator = new DateRangeTermFilterTranslatorImpl();
+				dateRangeTermFilterTranslator =
+					new DateRangeTermFilterTranslatorImpl();
 				existsFilterTranslator = new ExistsFilterTranslatorImpl();
-				geoBoundingBoxFilterTranslator = new GeoBoundingBoxFilterTranslatorImpl();
-				geoDistanceFilterTranslator = new GeoDistanceFilterTranslatorImpl();
-				geoDistanceRangeFilterTranslator = new GeoDistanceRangeFilterTranslatorImpl();
-				geoPolygonFilterTranslator = new GeoPolygonFilterTranslatorImpl();
+				geoBoundingBoxFilterTranslator =
+					new GeoBoundingBoxFilterTranslatorImpl();
+				geoDistanceFilterTranslator =
+					new GeoDistanceFilterTranslatorImpl();
+				geoDistanceRangeFilterTranslator =
+					new GeoDistanceRangeFilterTranslatorImpl();
+				geoPolygonFilterTranslator =
+					new GeoPolygonFilterTranslatorImpl();
 				missingFilterTranslator = new MissingFilterTranslatorImpl();
 				prefixFilterTranslator = new PrefixFilterTranslatorImpl();
 				queryFilterTranslator = new QueryFilterTranslatorImpl();
@@ -122,7 +126,8 @@ public class SolrIndexingFixture implements IndexingFixture {
 				fuzzyQueryTranslator = new FuzzyQueryTranslatorImpl();
 				matchAllQueryTranslator = new MatchAllQueryTranslatorImpl();
 				matchQueryTranslator = new MatchQueryTranslatorImpl();
-				moreLikeThisQueryTranslator = new MoreLikeThisQueryTranslatorImpl();
+				moreLikeThisQueryTranslator =
+					new MoreLikeThisQueryTranslatorImpl();
 				multiMatchQueryTranslator = new MultiMatchQueryTranslatorImpl();
 				nestedQueryTranslator = new NestedQueryTranslatorImpl();
 				stringQueryTranslator = new StringQueryTranslatorImpl();
