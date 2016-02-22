@@ -16,14 +16,16 @@ package com.liferay.portal.workflow.kaleo.runtime.internal.runtime.assignment;
 
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.workflow.kaleo.KaleoTaskAssignmentFactory;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment;
-import com.liferay.portal.workflow.kaleo.model.impl.KaleoTaskAssignmentImpl;
 import com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignmentSelector;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
@@ -62,7 +64,7 @@ public abstract class BaseTaskAssignmentSelector
 
 		for (Role role : roles) {
 			KaleoTaskAssignment kaleoTaskAssignment =
-				new KaleoTaskAssignmentImpl();
+				kaleoTaskAssignmentFactory.createKaleoTaskAssignment();
 
 			kaleoTaskAssignment.setAssigneeClassName(Role.class.getName());
 			kaleoTaskAssignment.setAssigneeClassPK(role.getRoleId());
@@ -72,7 +74,8 @@ public abstract class BaseTaskAssignmentSelector
 	}
 
 	protected KaleoTaskAssignment getUserKaleoTaskAssignment(User user) {
-		KaleoTaskAssignment kaleoTaskAssignment = new KaleoTaskAssignmentImpl();
+		KaleoTaskAssignment kaleoTaskAssignment =
+			kaleoTaskAssignmentFactory.createKaleoTaskAssignment();
 
 		kaleoTaskAssignment.setAssigneeClassName(User.class.getName());
 		kaleoTaskAssignment.setAssigneeClassPK(user.getUserId());
@@ -83,5 +86,8 @@ public abstract class BaseTaskAssignmentSelector
 	protected static final String ROLES_ASSIGNMENT = "roles";
 
 	protected static final String USER_ASSIGNMENT = "user";
+
+	@Reference
+	protected KaleoTaskAssignmentFactory kaleoTaskAssignmentFactory;
 
 }
