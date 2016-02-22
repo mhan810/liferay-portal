@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo;
+package com.liferay.portal.workflow.kaleo.internal;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -50,7 +50,7 @@ import com.liferay.portal.workflow.kaleo.service.KaleoTaskAssignmentLocalService
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskInstanceTokenLocalServiceUtil;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 import com.liferay.portal.workflow.kaleo.util.WorkflowModelUtil;
-import com.liferay.portal.workflow.kaleo.util.comparators.KaleoTaskInstanceTokenOrderByComparator;
+import com.liferay.portal.workflow.kaleo.internal.runtime.util.comparators.KaleoTaskInstanceTokenOrderByComparator;
 
 import java.io.Serializable;
 

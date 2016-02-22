@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo;
+package com.liferay.portal.workflow.kaleo.internal;
 
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -25,7 +25,7 @@ import com.liferay.portal.workflow.kaleo.model.KaleoDefinition;
 import com.liferay.portal.workflow.kaleo.runtime.WorkflowEngine;
 import com.liferay.portal.workflow.kaleo.service.KaleoDefinitionLocalServiceUtil;
 import com.liferay.portal.workflow.kaleo.util.WorkflowModelUtil;
-import com.liferay.portal.workflow.kaleo.util.comparators.KaleoDefinitionOrderByComparator;
+import com.liferay.portal.workflow.kaleo.internal.runtime.util.comparators.KaleoDefinitionOrderByComparator;
 
 import java.util.ArrayList;
 import java.util.List;
