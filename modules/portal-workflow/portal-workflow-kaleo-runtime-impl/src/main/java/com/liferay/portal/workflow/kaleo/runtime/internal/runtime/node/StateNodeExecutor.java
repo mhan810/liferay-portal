@@ -16,11 +16,11 @@ package com.liferay.portal.workflow.kaleo.runtime.internal.runtime.node;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.workflow.kaleo.KaleoInstanceTokenConstants;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoNode;
 import com.liferay.portal.workflow.kaleo.model.KaleoTimer;
 import com.liferay.portal.workflow.kaleo.model.KaleoTransition;
-import com.liferay.portal.workflow.kaleo.model.impl.KaleoInstanceTokenImpl;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.graph.PathElement;
 import com.liferay.portal.workflow.kaleo.runtime.node.NodeExecutor;
@@ -65,7 +65,7 @@ public class StateNodeExecutor extends BaseNodeExecutor {
 					kaleoInstanceToken.getKaleoInstanceTokenId());
 
 			if (kaleoInstanceToken.getParentKaleoInstanceTokenId() ==
-					KaleoInstanceTokenImpl.
+					KaleoInstanceTokenConstants.
 						DEFAULT_PARENT_KALEO_INSTANCE_TOKEN_ID) {
 
 				_kaleoInstanceLocalService.completeKaleoInstance(
