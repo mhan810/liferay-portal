@@ -262,14 +262,14 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		searchHitsProcessor = new DeleteDocumentsSearchHitsProcessor(this);
 	}
 
-	protected SearchHitsProcessor searchHitsProcessor;
-
 	@Reference
 	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
 
 	@Reference
 	protected ElasticsearchUpdateDocumentCommand
 		elasticsearchUpdateDocumentCommand;
+
+	protected SearchHitsProcessor searchHitsProcessor;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ElasticsearchIndexWriter.class);
