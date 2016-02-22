@@ -36,7 +36,6 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowTask;
 import com.liferay.portal.kernel.workflow.WorkflowTaskManager;
-import com.liferay.portal.workflow.kaleo.runtime.internal.runtime.util.comparators.KaleoTaskInstanceTokenOrderByComparator;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoNode;
 import com.liferay.portal.workflow.kaleo.model.KaleoTask;
@@ -47,10 +46,11 @@ import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler;
 import com.liferay.portal.workflow.kaleo.runtime.TaskManager;
 import com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignmentSelector;
+import com.liferay.portal.workflow.kaleo.runtime.internal.runtime.util.comparators.KaleoTaskInstanceTokenOrderByComparator;
 import com.liferay.portal.workflow.kaleo.runtime.util.KaleoWorkflowModelConverter;
 import com.liferay.portal.workflow.kaleo.runtime.util.WorkflowContextUtil;
-import com.liferay.portal.workflow.kaleo.service.KaleoTaskAssignmentLocalServiceUtil;
-import com.liferay.portal.workflow.kaleo.service.KaleoTaskInstanceTokenLocalServiceUtil;
+import com.liferay.portal.workflow.kaleo.service.KaleoTaskAssignmentLocalService;
+import com.liferay.portal.workflow.kaleo.service.KaleoTaskInstanceTokenLocalService;
 
 import java.io.Serializable;
 
@@ -143,8 +143,8 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 				workflowContext, serviceContext);
 
 			KaleoTaskInstanceToken kaleoTaskInstanceToken =
-				KaleoTaskInstanceTokenLocalServiceUtil.
-					getKaleoTaskInstanceToken(workflowTask.getWorkflowTaskId());
+				_kaleoTaskInstanceTokenLocalService.getKaleoTaskInstanceToken(
+					workflowTask.getWorkflowTaskId());
 
 			KaleoInstanceToken kaleoInstanceToken =
 				kaleoTaskInstanceToken.getKaleoInstanceToken();
@@ -181,7 +181,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 		throws WorkflowException {
 
 		KaleoTaskInstanceToken kaleoTaskInstanceToken =
-			KaleoTaskInstanceTokenLocalServiceUtil.fetchKaleoTaskInstanceToken(
+			_kaleoTaskInstanceTokenLocalService.fetchKaleoTaskInstanceToken(
 				workflowTaskInstanceId);
 
 		if (kaleoTaskInstanceToken == null) {
@@ -206,8 +206,8 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 
 		try {
 			KaleoTaskInstanceToken kaleoTaskInstanceToken =
-				KaleoTaskInstanceTokenLocalServiceUtil.
-					getKaleoTaskInstanceToken(workflowTaskInstanceId);
+				_kaleoTaskInstanceTokenLocalService.getKaleoTaskInstanceToken(
+					workflowTaskInstanceId);
 
 			if (kaleoTaskInstanceToken.isCompleted()) {
 				return Collections.emptyList();
@@ -240,8 +240,8 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 
 		try {
 			KaleoTaskInstanceToken kaleoTaskInstanceToken =
-				KaleoTaskInstanceTokenLocalServiceUtil.
-					getKaleoTaskInstanceToken(workflowTaskInstanceId);
+				_kaleoTaskInstanceTokenLocalService.getKaleoTaskInstanceToken(
+					workflowTaskInstanceId);
 
 			List<KaleoTaskAssignment> calculatedKaleoTaskAssignments =
 				getCalculatedKaleoTaskAssignments(kaleoTaskInstanceToken);
@@ -330,8 +330,8 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 
 		try {
 			KaleoTaskInstanceToken kaleoTaskInstanceToken =
-				KaleoTaskInstanceTokenLocalServiceUtil.
-					getKaleoTaskInstanceToken(workflowTaskInstanceId);
+				_kaleoTaskInstanceTokenLocalService.getKaleoTaskInstanceToken(
+					workflowTaskInstanceId);
 
 			return _kaleoWorkflowModelConverter.toWorkflowTask(
 				kaleoTaskInstanceToken,
@@ -352,7 +352,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 
 			serviceContext.setCompanyId(companyId);
 
-			return KaleoTaskInstanceTokenLocalServiceUtil.
+			return _kaleoTaskInstanceTokenLocalService.
 				getKaleoTaskInstanceTokensCount(completed, serviceContext);
 		}
 		catch (Exception e) {
@@ -370,7 +370,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 
 			serviceContext.setCompanyId(companyId);
 
-			return KaleoTaskInstanceTokenLocalServiceUtil.
+			return _kaleoTaskInstanceTokenLocalService.
 				getKaleoTaskInstanceTokensCount(
 					Role.class.getName(), roleId, completed, serviceContext);
 		}
@@ -389,7 +389,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 
 			serviceContext.setCompanyId(companyId);
 
-			return KaleoTaskInstanceTokenLocalServiceUtil.
+			return _kaleoTaskInstanceTokenLocalService.
 				getSubmittingUserKaleoTaskInstanceTokensCount(
 					userId, completed, serviceContext);
 		}
@@ -409,7 +409,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			serviceContext.setCompanyId(companyId);
 			serviceContext.setUserId(userId);
 
-			return KaleoTaskInstanceTokenLocalServiceUtil.
+			return _kaleoTaskInstanceTokenLocalService.
 				getKaleoTaskInstanceTokensCount(
 					User.class.getName(), serviceContext.getUserId(), completed,
 					serviceContext);
@@ -430,7 +430,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			serviceContext.setCompanyId(companyId);
 			serviceContext.setUserId(userId);
 
-			return KaleoTaskInstanceTokenLocalServiceUtil.searchCount(
+			return _kaleoTaskInstanceTokenLocalService.searchCount(
 				null, completed, Boolean.TRUE, serviceContext);
 		}
 		catch (Exception e) {
@@ -453,7 +453,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 				serviceContext.setUserId(userId);
 			}
 
-			return KaleoTaskInstanceTokenLocalServiceUtil.
+			return _kaleoTaskInstanceTokenLocalService.
 				getKaleoTaskInstanceTokensCount(
 					workflowInstanceId, completed, serviceContext);
 		}
@@ -474,14 +474,12 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			serviceContext.setCompanyId(companyId);
 
 			List<KaleoTaskInstanceToken> kaleoTaskInstanceTokens =
-				KaleoTaskInstanceTokenLocalServiceUtil.
-					getKaleoTaskInstanceTokens(
-						completed, start, end,
-						KaleoTaskInstanceTokenOrderByComparator.
-							getOrderByComparator(
-								orderByComparator,
-								_kaleoWorkflowModelConverter),
-						serviceContext);
+				_kaleoTaskInstanceTokenLocalService.getKaleoTaskInstanceTokens(
+					completed, start, end,
+					KaleoTaskInstanceTokenOrderByComparator.
+						getOrderByComparator(
+							orderByComparator, _kaleoWorkflowModelConverter),
+					serviceContext);
 
 			return toWorkflowTasks(kaleoTaskInstanceTokens);
 		}
@@ -502,14 +500,12 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			serviceContext.setCompanyId(companyId);
 
 			List<KaleoTaskInstanceToken> kaleoTaskInstanceTokens =
-				KaleoTaskInstanceTokenLocalServiceUtil.
-					getKaleoTaskInstanceTokens(
-						Role.class.getName(), roleId, completed, start, end,
-						KaleoTaskInstanceTokenOrderByComparator.
-							getOrderByComparator(
-								orderByComparator,
-								_kaleoWorkflowModelConverter),
-						serviceContext);
+				_kaleoTaskInstanceTokenLocalService.getKaleoTaskInstanceTokens(
+					Role.class.getName(), roleId, completed, start, end,
+					KaleoTaskInstanceTokenOrderByComparator.
+						getOrderByComparator(
+							orderByComparator, _kaleoWorkflowModelConverter),
+					serviceContext);
 
 			return toWorkflowTasks(kaleoTaskInstanceTokens);
 		}
@@ -530,7 +526,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			serviceContext.setCompanyId(companyId);
 
 			List<KaleoTaskInstanceToken> kaleoTaskInstanceTokens =
-				KaleoTaskInstanceTokenLocalServiceUtil.
+				_kaleoTaskInstanceTokenLocalService.
 					getSubmittingUserKaleoTaskInstanceTokens(
 						userId, completed, start, end,
 						KaleoTaskInstanceTokenOrderByComparator.
@@ -558,14 +554,12 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			serviceContext.setCompanyId(companyId);
 
 			List<KaleoTaskInstanceToken> kaleoTaskInstanceTokens =
-				KaleoTaskInstanceTokenLocalServiceUtil.
-					getKaleoTaskInstanceTokens(
-						User.class.getName(), userId, completed, start, end,
-						KaleoTaskInstanceTokenOrderByComparator.
-							getOrderByComparator(
-								orderByComparator,
-								_kaleoWorkflowModelConverter),
-						serviceContext);
+				_kaleoTaskInstanceTokenLocalService.getKaleoTaskInstanceTokens(
+					User.class.getName(), userId, completed, start, end,
+					KaleoTaskInstanceTokenOrderByComparator.
+						getOrderByComparator(
+							orderByComparator, _kaleoWorkflowModelConverter),
+					serviceContext);
 
 			return toWorkflowTasks(kaleoTaskInstanceTokens);
 		}
@@ -587,7 +581,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			serviceContext.setUserId(userId);
 
 			List<KaleoTaskInstanceToken> kaleoTaskInstanceTokens =
-				KaleoTaskInstanceTokenLocalServiceUtil.search(
+				_kaleoTaskInstanceTokenLocalService.search(
 					null, completed, Boolean.TRUE, start, end,
 					KaleoTaskInstanceTokenOrderByComparator.
 						getOrderByComparator(
@@ -619,14 +613,12 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			}
 
 			List<KaleoTaskInstanceToken> kaleoTaskInstanceTokens =
-				KaleoTaskInstanceTokenLocalServiceUtil.
-					getKaleoTaskInstanceTokens(
-						workflowInstanceId, completed, start, end,
-						KaleoTaskInstanceTokenOrderByComparator.
-							getOrderByComparator(
-								orderByComparator,
-								_kaleoWorkflowModelConverter),
-						serviceContext);
+				_kaleoTaskInstanceTokenLocalService.getKaleoTaskInstanceTokens(
+					workflowInstanceId, completed, start, end,
+					KaleoTaskInstanceTokenOrderByComparator.
+						getOrderByComparator(
+							orderByComparator, _kaleoWorkflowModelConverter),
+					serviceContext);
 
 			return toWorkflowTasks(kaleoTaskInstanceTokens);
 		}
@@ -649,7 +641,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			serviceContext.setUserId(userId);
 
 			List<KaleoTaskInstanceToken> kaleoTaskInstanceTokens =
-				KaleoTaskInstanceTokenLocalServiceUtil.search(
+				_kaleoTaskInstanceTokenLocalService.search(
 					keywords, completed, searchByUserRoles, start, end,
 					KaleoTaskInstanceTokenOrderByComparator.
 						getOrderByComparator(
@@ -680,7 +672,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			serviceContext.setUserId(userId);
 
 			List<KaleoTaskInstanceToken> kaleoTaskInstanceTokens =
-				KaleoTaskInstanceTokenLocalServiceUtil.search(
+				_kaleoTaskInstanceTokenLocalService.search(
 					taskName, assetType, assetPrimaryKey, dueDateGT, dueDateLT,
 					completed, searchByUserRoles, andOperator, start, end,
 					KaleoTaskInstanceTokenOrderByComparator.
@@ -710,7 +702,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			serviceContext.setUserId(userId);
 
 			List<KaleoTaskInstanceToken> kaleoTaskInstanceTokens =
-				KaleoTaskInstanceTokenLocalServiceUtil.search(
+				_kaleoTaskInstanceTokenLocalService.search(
 					keywords, assetTypes, completed, searchByUserRoles, start,
 					end,
 					KaleoTaskInstanceTokenOrderByComparator.
@@ -738,7 +730,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			serviceContext.setCompanyId(companyId);
 			serviceContext.setUserId(userId);
 
-			return KaleoTaskInstanceTokenLocalServiceUtil.searchCount(
+			return _kaleoTaskInstanceTokenLocalService.searchCount(
 				keywords, completed, searchByUserRoles, serviceContext);
 		}
 		catch (Exception e) {
@@ -759,7 +751,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			serviceContext.setCompanyId(companyId);
 			serviceContext.setUserId(userId);
 
-			return KaleoTaskInstanceTokenLocalServiceUtil.searchCount(
+			return _kaleoTaskInstanceTokenLocalService.searchCount(
 				taskName, assetType, assetPrimaryKey, dueDateGT, dueDateLT,
 				completed, searchByUserRoles, andOperator, serviceContext);
 		}
@@ -780,7 +772,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			serviceContext.setCompanyId(companyId);
 			serviceContext.setUserId(userId);
 
-			return KaleoTaskInstanceTokenLocalServiceUtil.searchCount(
+			return _kaleoTaskInstanceTokenLocalService.searchCount(
 				keywords, assetTypes, completed, searchByUserRoles,
 				serviceContext);
 		}
@@ -825,7 +817,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 			kaleoInstanceToken, workflowContext, workflowContextServiceContext);
 
 		List<KaleoTaskAssignment> configuredKaleoTaskAssignments =
-			KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignments(
+			_kaleoTaskAssignmentLocalService.getKaleoTaskAssignments(
 				kaleoTaskInstanceToken.getKaleoTaskId());
 
 		for (KaleoTaskAssignment configuredKaleoTaskAssignment :
@@ -868,6 +860,13 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 
 	@Reference
 	private KaleoSignaler _kaleoSignaler;
+
+	@Reference
+	private KaleoTaskAssignmentLocalService _kaleoTaskAssignmentLocalService;
+
+	@Reference
+	private KaleoTaskInstanceTokenLocalService
+		_kaleoTaskInstanceTokenLocalService;
 
 	@Reference
 	private KaleoWorkflowModelConverter _kaleoWorkflowModelConverter;

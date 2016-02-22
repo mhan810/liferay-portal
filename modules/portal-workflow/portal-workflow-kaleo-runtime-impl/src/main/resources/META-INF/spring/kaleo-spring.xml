@@ -1,5 +1,19 @@
 <?xml version="1.0"?>
 
+<!--
+~ Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+~
+~ This library is free software; you can redistribute it and/or modify it under
+~ the terms of the GNU Lesser General Public License as published by the Free
+~ Software Foundation; either version 2.1 of the License, or (at your option)
+~ any later version.
+~
+~ This library is distributed in the hope that it will be useful, but WITHOUT
+~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+~ FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+~ details.
+-->
+
 <beans
 	default-destroy-method="destroy"
 	default-init-method="afterPropertiesSet"
@@ -47,7 +61,7 @@
 
 	<!-- Manager -->
 
-	<bean id="com.liferay.portal.workflow.kaleo.manager.PortalKaleoManager" class="com.liferay.portal.workflow.kaleo.internal.runtime.manager.DefaultPortalKaleoManager">
+	<bean id="com.liferay.portal.workflow.kaleo.manager.PortalKaleoManager" class="com.liferay.portal.workflow.kaleo.runtime.internal.runtime.manager.DefaultPortalKaleoManager">
 		<property name="defaultDefinitionName" value="Single Approver" />
 		<property name="definitionFiles">
 			<util:map>
@@ -58,12 +72,12 @@
 
 	<!-- Runtime -->
 
-	<bean id="com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler" class="com.liferay.portal.workflow.kaleo.internal.runtime.DefaultKaleoSignaler">
+	<bean id="com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler" class="com.liferay.portal.workflow.kaleo.runtime.internal.runtime.DefaultKaleoSignaler">
 		<property name="destinationName" value="liferay/kaleo_graph_walker" />
 	</bean>
-	<bean id="com.liferay.portal.workflow.kaleo.runtime.TaskManager" class="com.liferay.portal.workflow.kaleo.internal.runtime.DefaultTaskManagerImpl" />
-	<bean id="com.liferay.portal.workflow.kaleo.runtime.WorkflowEngine" class="com.liferay.portal.workflow.kaleo.internal.runtime.DefaultWorkflowEngineImpl">
+	<bean id="com.liferay.portal.workflow.kaleo.runtime.TaskManager" class="com.liferay.portal.workflow.kaleo.runtime.internal.runtime.DefaultTaskManagerImpl" />
+	<bean id="com.liferay.portal.workflow.kaleo.runtime.WorkflowEngine" class="com.liferay.portal.workflow.kaleo.runtime.internal.runtime.DefaultWorkflowEngineImpl">
 		<property name="kaleoSignaler" ref="com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler" />
 	</bean>
-	<bean id="com.liferay.portal.workflow.kaleo.runtime.graph.GraphWalker" class="com.liferay.portal.workflow.kaleo.internal.runtime.graph.DefaultGraphWalker" />
+	<bean id="com.liferay.portal.workflow.kaleo.runtime.graph.GraphWalker" class="com.liferay.portal.workflow.kaleo.runtime.internal.runtime.graph.DefaultGraphWalker" />
 </beans>

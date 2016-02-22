@@ -38,7 +38,7 @@ import com.liferay.portal.workflow.kaleo.runtime.util.KaleoLogUtil;
 import com.liferay.portal.workflow.kaleo.runtime.util.KaleoTaskAssignmentInstanceUtil;
 import com.liferay.portal.workflow.kaleo.runtime.util.KaleoWorkflowModelConverter;
 import com.liferay.portal.workflow.kaleo.runtime.util.WorkflowContextUtil;
-import com.liferay.portal.workflow.kaleo.service.KaleoDefinitionLocalServiceUtil;
+import com.liferay.portal.workflow.kaleo.service.KaleoDefinitionLocalService;
 
 import java.io.Serializable;
 
@@ -72,7 +72,7 @@ public class KaleoWorkflowModelConverterImpl
 
 				kaleoDefinition.setContent(content);
 
-				KaleoDefinitionLocalServiceUtil.updateKaleoDefinition(
+				_kaleoDefinitionLocalService.updateKaleoDefinition(
 					kaleoDefinition);
 			}
 			catch (Exception e) {
@@ -232,5 +232,8 @@ public class KaleoWorkflowModelConverterImpl
 
 	@Reference
 	private static DefinitionExporter _definitionExporter;
+
+	@Reference
+	private KaleoDefinitionLocalService _kaleoDefinitionLocalService;
 
 }

@@ -16,10 +16,12 @@ package com.liferay.portal.workflow.kaleo;
 
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment;
 import com.liferay.portal.workflow.kaleo.model.impl.KaleoTaskAssignmentImpl;
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = KaleoTaskAssignmentFactory.class)
 public class KaleoTaskAssignmentFactoryImpl
 	implements KaleoTaskAssignmentFactory {
 

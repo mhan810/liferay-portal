@@ -23,7 +23,7 @@ import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignmentSelector;
-import com.liferay.portal.workflow.kaleo.service.KaleoInstanceLocalServiceUtil;
+import com.liferay.portal.workflow.kaleo.service.KaleoInstanceLocalService;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -80,7 +80,7 @@ public class MultiLanguageTaskAssignmentSelector
 		KaleoInstanceToken kaleoInstanceToken =
 			executionContext.getKaleoInstanceToken();
 
-		KaleoInstanceLocalServiceUtil.updateKaleoInstance(
+		_kaleoInstanceLocalService.updateKaleoInstance(
 			kaleoInstanceToken.getKaleoInstanceId(),
 			executionContext.getWorkflowContext(),
 			executionContext.getServiceContext());
@@ -137,6 +137,9 @@ public class MultiLanguageTaskAssignmentSelector
 			_taskAssignmentSelectors.remove(scriptingLanguage);
 		}
 	}
+
+	@Reference
+	private KaleoInstanceLocalService _kaleoInstanceLocalService;
 
 	private final Map<String, TaskAssignmentSelector> _taskAssignmentSelectors =
 		new HashMap<>();

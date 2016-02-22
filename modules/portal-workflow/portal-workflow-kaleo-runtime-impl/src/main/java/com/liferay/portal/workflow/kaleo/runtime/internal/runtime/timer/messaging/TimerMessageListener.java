@@ -27,23 +27,20 @@ import com.liferay.portal.workflow.kaleo.model.KaleoTimerInstanceToken;
 import com.liferay.portal.workflow.kaleo.runtime.WorkflowEngine;
 import com.liferay.portal.workflow.kaleo.runtime.util.SchedulerUtil;
 import com.liferay.portal.workflow.kaleo.runtime.util.WorkflowContextUtil;
-import com.liferay.portal.workflow.kaleo.service.KaleoTimerInstanceTokenLocalServiceUtil;
+import com.liferay.portal.workflow.kaleo.service.KaleoTimerInstanceTokenLocalService;
 
 import java.io.Serializable;
 
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Marcellus Tavares
  */
 @Component(immediate = true, service = TimerMessageListener.class)
 public class TimerMessageListener extends BaseMessageListener {
-
-	public void setWorkflowEngine(WorkflowEngine workflowEngine) {
-		_workflowEngine = workflowEngine;
-	}
 
 	@Override
 	protected void doReceive(Message message) throws Exception {
@@ -87,7 +84,7 @@ public class TimerMessageListener extends BaseMessageListener {
 			"kaleoTimerInstanceTokenId");
 
 		KaleoTimerInstanceToken kaleoTimerInstanceToken =
-			KaleoTimerInstanceTokenLocalServiceUtil.getKaleoTimerInstanceToken(
+			_kaleoTimerInstanceTokenLocalService.getKaleoTimerInstanceToken(
 				kaleoTimerInstanceTokenId);
 
 		return kaleoTimerInstanceToken;
@@ -96,6 +93,11 @@ public class TimerMessageListener extends BaseMessageListener {
 	private static final Log _log = LogFactoryUtil.getLog(
 		TimerMessageListener.class);
 
+	@Reference
+	private KaleoTimerInstanceTokenLocalService
+		_kaleoTimerInstanceTokenLocalService;
+
+	@Reference
 	private WorkflowEngine _workflowEngine;
 
 }
