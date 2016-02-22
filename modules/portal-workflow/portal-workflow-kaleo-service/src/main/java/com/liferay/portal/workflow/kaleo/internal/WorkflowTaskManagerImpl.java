@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowTask;
 import com.liferay.portal.kernel.workflow.WorkflowTaskManager;
+import com.liferay.portal.workflow.kaleo.internal.runtime.util.comparators.KaleoTaskInstanceTokenOrderByComparator;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoNode;
 import com.liferay.portal.workflow.kaleo.model.KaleoTask;
@@ -50,7 +51,6 @@ import com.liferay.portal.workflow.kaleo.service.KaleoTaskAssignmentLocalService
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskInstanceTokenLocalServiceUtil;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 import com.liferay.portal.workflow.kaleo.util.WorkflowModelUtil;
-import com.liferay.portal.workflow.kaleo.internal.runtime.util.comparators.KaleoTaskInstanceTokenOrderByComparator;
 
 import java.io.Serializable;
 
