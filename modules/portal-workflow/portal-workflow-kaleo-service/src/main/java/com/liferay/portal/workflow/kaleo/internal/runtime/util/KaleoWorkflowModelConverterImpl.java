@@ -34,26 +34,28 @@ import com.liferay.portal.workflow.kaleo.model.KaleoInstance;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoLog;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken;
+import com.liferay.portal.workflow.kaleo.runtime.util.KaleoWorkflowModelConverter;
 import com.liferay.portal.workflow.kaleo.service.KaleoDefinitionLocalServiceUtil;
+import com.liferay.portal.workflow.kaleo.util.KaleoLogUtil;
+import com.liferay.portal.workflow.kaleo.util.KaleoTaskAssignmentInstanceUtil;
+import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 
 import java.io.Serializable;
 
 import java.util.List;
 import java.util.Map;
 
-import com.liferay.portal.workflow.kaleo.util.KaleoLogUtil;
-import com.liferay.portal.workflow.kaleo.util.KaleoTaskAssignmentInstanceUtil;
-import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Shuyang Zhou
  */
-@Component(immediate = true, service = KaleoWorkflowModelConverterImpl.class)
-public class KaleoWorkflowModelConverterImpl {
+@Component(immediate = true, service = KaleoWorkflowModelConverter.class)
+public class KaleoWorkflowModelConverterImpl
+	implements KaleoWorkflowModelConverter {
 
-	public static WorkflowDefinition toWorkflowDefinition(
+	public WorkflowDefinition toWorkflowDefinition(
 		KaleoDefinition kaleoDefinition) {
 
 		DefaultWorkflowDefinition defaultWorkflowDefinition =
@@ -89,14 +91,14 @@ public class KaleoWorkflowModelConverterImpl {
 		return defaultWorkflowDefinition;
 	}
 
-	public static WorkflowInstance toWorkflowInstance(
+	public WorkflowInstance toWorkflowInstance(
 			KaleoInstance kaleoInstance, KaleoInstanceToken kaleoInstanceToken)
 		throws PortalException {
 
 		return toWorkflowInstance(kaleoInstance, kaleoInstanceToken, null);
 	}
 
-	public static WorkflowInstance toWorkflowInstance(
+	public WorkflowInstance toWorkflowInstance(
 			KaleoInstance kaleoInstance, KaleoInstanceToken kaleoInstanceToken,
 			Map<String, Serializable> workflowContext)
 		throws PortalException {
@@ -128,7 +130,7 @@ public class KaleoWorkflowModelConverterImpl {
 		return defaultWorkflowInstance;
 	}
 
-	public static WorkflowLog toWorkflowLog(KaleoLog kaleoLog) {
+	public WorkflowLog toWorkflowLog(KaleoLog kaleoLog) {
 		DefaultWorkflowLog defaultWorkflowLog = new DefaultWorkflowLog();
 
 		defaultWorkflowLog.setAuditUserId(kaleoLog.getUserId());
@@ -174,7 +176,7 @@ public class KaleoWorkflowModelConverterImpl {
 		return defaultWorkflowLog;
 	}
 
-	public static WorkflowTask toWorkflowTask(
+	public WorkflowTask toWorkflowTask(
 			KaleoTaskInstanceToken kaleoTaskInstanceToken,
 			Map<String, Serializable> workflowContext)
 		throws PortalException {

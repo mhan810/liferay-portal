@@ -28,12 +28,12 @@ import com.liferay.portal.workflow.kaleo.definition.Transition;
 import com.liferay.portal.workflow.kaleo.definition.deployment.WorkflowDeployer;
 import com.liferay.portal.workflow.kaleo.model.KaleoDefinition;
 import com.liferay.portal.workflow.kaleo.model.KaleoNode;
+import com.liferay.portal.workflow.kaleo.runtime.util.KaleoWorkflowModelConverter;
 import com.liferay.portal.workflow.kaleo.service.KaleoConditionLocalService;
 import com.liferay.portal.workflow.kaleo.service.KaleoDefinitionLocalService;
 import com.liferay.portal.workflow.kaleo.service.KaleoNodeLocalService;
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskLocalService;
 import com.liferay.portal.workflow.kaleo.service.KaleoTransitionLocalService;
-import com.liferay.portal.workflow.kaleo.util.WorkflowModelUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -144,7 +144,8 @@ public class DefaultWorkflowDeployer implements WorkflowDeployer {
 		_kaleoDefinitionLocalService.activateKaleoDefinition(
 			kaleoDefinitionId, kaleoNode.getKaleoNodeId(), serviceContext);
 
-		return WorkflowModelUtil.toWorkflowDefinition(kaleoDefinition);
+		return _kaleoWorkflowModelConverter.toWorkflowDefinition(
+			kaleoDefinition);
 	}
 
 	@Reference(
@@ -181,5 +182,8 @@ public class DefaultWorkflowDeployer implements WorkflowDeployer {
 		policyOption = ReferencePolicyOption.GREEDY
 	)
 	private volatile KaleoTransitionLocalService _kaleoTransitionLocalService;
+
+	@Reference
+	private KaleoWorkflowModelConverter _kaleoWorkflowModelConverter;
 
 }

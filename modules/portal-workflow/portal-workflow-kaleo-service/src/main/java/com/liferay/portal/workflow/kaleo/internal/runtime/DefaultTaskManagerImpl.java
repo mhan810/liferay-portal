@@ -37,8 +37,8 @@ import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.TaskManager;
 import com.liferay.portal.workflow.kaleo.runtime.action.KaleoActionExecutor;
+import com.liferay.portal.workflow.kaleo.runtime.util.KaleoWorkflowModelConverter;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
-import com.liferay.portal.workflow.kaleo.util.WorkflowModelUtil;
 
 import java.io.Serializable;
 
@@ -137,7 +137,7 @@ public class DefaultTaskManagerImpl
 				kaleoTaskInstanceToken, comment, workflowContext,
 				serviceContext);
 
-			return WorkflowModelUtil.toWorkflowTask(
+			return _kaleoWorkflowModelConverter.toWorkflowTask(
 				kaleoTaskInstanceToken, workflowContext);
 		}
 		catch (Exception e) {
@@ -198,7 +198,7 @@ public class DefaultTaskManagerImpl
 			previousTaskAssignmentInstances, kaleoTaskInstanceToken, comment,
 			workflowContext, serviceContext);
 
-		return WorkflowModelUtil.toWorkflowTask(
+		return _kaleoWorkflowModelConverter.toWorkflowTask(
 			kaleoTaskInstanceToken, workflowContext);
 	}
 
@@ -244,7 +244,7 @@ public class DefaultTaskManagerImpl
 		kaleoLogLocalService.addTaskCompletionKaleoLog(
 			kaleoTaskInstanceToken, comment, workflowContext, serviceContext);
 
-		return WorkflowModelUtil.toWorkflowTask(
+		return _kaleoWorkflowModelConverter.toWorkflowTask(
 			kaleoTaskInstanceToken, workflowContext);
 	}
 
@@ -281,6 +281,9 @@ public class DefaultTaskManagerImpl
 
 	@ServiceReference(type = KaleoActionExecutor.class)
 	private KaleoActionExecutor _kaleoActionExecutor;
+
+	@ServiceReference(type = KaleoWorkflowModelConverter.class)
+	private KaleoWorkflowModelConverter _kaleoWorkflowModelConverter;
 
 	@ServiceReference(type = NotificationUtil.class)
 	private NotificationUtil _notificationUtil;
