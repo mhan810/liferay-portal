@@ -20,7 +20,7 @@ import com.liferay.portal.kernel.util.OrderByComparatorAdapter;
 import com.liferay.portal.kernel.workflow.WorkflowTask;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken;
 import com.liferay.portal.workflow.kaleo.runtime.util.KaleoWorkflowModelConverter;
-import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
+import com.liferay.portal.workflow.kaleo.runtime.util.WorkflowContextUtil;
 
 /**
  * @author William Newbury

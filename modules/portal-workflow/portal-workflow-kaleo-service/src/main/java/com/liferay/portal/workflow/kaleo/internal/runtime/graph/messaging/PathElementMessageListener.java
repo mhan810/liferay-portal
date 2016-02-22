@@ -21,7 +21,7 @@ import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
 import com.liferay.portal.workflow.kaleo.runtime.graph.GraphWalker;
 import com.liferay.portal.workflow.kaleo.runtime.graph.PathElement;
-import com.liferay.portal.workflow.kaleo.util.DestinationNames;
+import com.liferay.portal.workflow.kaleo.runtime.util.DestinationNames;
 
 import java.util.ArrayList;
 import java.util.List;

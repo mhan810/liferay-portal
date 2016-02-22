@@ -47,7 +47,7 @@
 
 	<!-- Manager -->
 
-	<bean id="com.liferay.portal.workflow.kaleo.manager.PortalKaleoManager" class="com.liferay.portal.workflow.kaleo.manager.DefaultPortalKaleoManager">
+	<bean id="com.liferay.portal.workflow.kaleo.manager.PortalKaleoManager" class="com.liferay.portal.workflow.kaleo.internal.runtime.manager.DefaultPortalKaleoManager">
 		<property name="defaultDefinitionName" value="Single Approver" />
 		<property name="definitionFiles">
 			<util:map>

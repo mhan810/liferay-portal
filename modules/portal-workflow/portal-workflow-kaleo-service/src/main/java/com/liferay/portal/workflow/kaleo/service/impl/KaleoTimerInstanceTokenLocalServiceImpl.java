@@ -37,10 +37,10 @@ import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoTimer;
 import com.liferay.portal.workflow.kaleo.model.KaleoTimerInstanceToken;
 import com.liferay.portal.workflow.kaleo.runtime.calendar.DueDateCalculator;
+import com.liferay.portal.workflow.kaleo.runtime.util.DestinationNames;
+import com.liferay.portal.workflow.kaleo.runtime.util.SchedulerUtil;
+import com.liferay.portal.workflow.kaleo.runtime.util.WorkflowContextUtil;
 import com.liferay.portal.workflow.kaleo.service.base.KaleoTimerInstanceTokenLocalServiceBaseImpl;
-import com.liferay.portal.workflow.kaleo.util.DestinationNames;
-import com.liferay.portal.workflow.kaleo.util.SchedulerUtil;
-import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 
 import java.io.Serializable;
 

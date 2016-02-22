@@ -20,11 +20,11 @@ import com.liferay.portal.rules.engine.Fact;
 import com.liferay.portal.rules.engine.Query;
 import com.liferay.portal.rules.engine.RulesEngine;
 import com.liferay.portal.rules.engine.RulesResourceRetriever;
-import com.liferay.portal.workflow.kaleo.internal.runtime.util.RulesContextBuilder;
 import com.liferay.portal.workflow.kaleo.model.KaleoCondition;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.condition.ConditionEvaluator;
-import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
+import com.liferay.portal.workflow.kaleo.runtime.util.RulesContextBuilder;
+import com.liferay.portal.workflow.kaleo.runtime.util.WorkflowContextUtil;
 
 import java.io.Serializable;
 

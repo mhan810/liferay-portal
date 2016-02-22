@@ -38,7 +38,7 @@ import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.TaskManager;
 import com.liferay.portal.workflow.kaleo.runtime.action.KaleoActionExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.util.KaleoWorkflowModelConverter;
-import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
+import com.liferay.portal.workflow.kaleo.runtime.util.WorkflowContextUtil;
 
 import java.io.Serializable;
 

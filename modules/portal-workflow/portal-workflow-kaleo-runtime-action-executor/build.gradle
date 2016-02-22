@@ -5,7 +5,6 @@ dependencies {
 	provided project(":portal-rules-engine:portal-rules-engine-api")
 	provided project(":portal-workflow:portal-workflow-kaleo-api")
 	provided project(":portal-workflow:portal-workflow-kaleo-runtime-api")
-	provided project(":portal-workflow:portal-workflow-kaleo-service")
 }
 
 liferay {

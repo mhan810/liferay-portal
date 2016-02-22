@@ -22,7 +22,7 @@ import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorConstants;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
 import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilder;
-import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
+import com.liferay.portal.workflow.kaleo.runtime.util.WorkflowContextUtil;
 
 import java.io.Serializable;
 

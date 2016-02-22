@@ -48,9 +48,9 @@ import com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler;
 import com.liferay.portal.workflow.kaleo.runtime.TaskManager;
 import com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignmentSelector;
 import com.liferay.portal.workflow.kaleo.runtime.util.KaleoWorkflowModelConverter;
+import com.liferay.portal.workflow.kaleo.runtime.util.WorkflowContextUtil;
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskAssignmentLocalServiceUtil;
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskInstanceTokenLocalServiceUtil;
-import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 
 import java.io.Serializable;
 
