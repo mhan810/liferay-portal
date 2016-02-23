@@ -156,7 +156,8 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 	}
 
 	protected IndexSearcher createIndexSearcher(
-		final ElasticsearchConnectionManager elasticsearchConnectionManagerField) {
+		final ElasticsearchConnectionManager
+			elasticsearchConnectionManagerField) {
 
 		return new ElasticsearchIndexSearcher() {
 			{
@@ -174,7 +175,8 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 	}
 
 	protected IndexWriter createIndexWriter(
-		final ElasticsearchConnectionManager elasticsearchConnectionManagerField) {
+		final ElasticsearchConnectionManager
+			elasticsearchConnectionManagerField) {
 
 		final ElasticsearchUpdateDocumentCommand updateDocumentCommand =
 			new ElasticsearchUpdateDocumentCommandImpl() {
