@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+String redirect = ParamUtil.getString(request, "redirect");
+
 long formDDMTemplateId = ParamUtil.getLong(request, "formDDMTemplateId");
 
 DDLRecord record = (DDLRecord)request.getAttribute(DDLWebKeys.DYNAMIC_DATA_LISTS_RECORD);
@@ -41,7 +43,7 @@ DDLRecordVersion recordVersion = (DDLRecordVersion)request.getAttribute(DDLWebKe
 	<c:if test="<%= recordVersion.isApproved() && !Validator.equals(record.getVersion(), recordVersion.getVersion()) %>">
 		<portlet:actionURL name="revertRecord" var="revertURL">
 			<portlet:param name="mvcPath" value="/edit_record.jsp" />
-			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="redirect" value="<%= redirect %>" />
 			<portlet:param name="recordId" value="<%= String.valueOf(recordVersion.getRecordId()) %>" />
 			<portlet:param name="version" value="<%= String.valueOf(recordVersion.getVersion()) %>" />
 		</portlet:actionURL>
