@@ -91,12 +91,12 @@ public class ScriptActionExecutor implements ActionExecutor {
 			executionContext, resultsWorkflowContext);
 	}
 
-	private final Set<String> _outputObjects = new HashSet<>();
-
 	@Reference
 	private Scripting _scripting;
 
 	@Reference
 	private ScriptingContextBuilder _scriptingContextBuilder;
+
+	private final Set<String> _outputObjects = new HashSet<>();
 
 }

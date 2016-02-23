@@ -74,10 +74,10 @@ public class UpdateWorkflowDefinitionLinkMVCActionCommand
 		}
 	}
 
-	private static final String _PREFIX = "workflowDefinitionName@";
-
 	@Reference
 	protected WorkflowDefinitionLinkLocalService
 		workflowDefinitionLinkLocalService;
+
+	private static final String _PREFIX = "workflowDefinitionName@";
 
 }
