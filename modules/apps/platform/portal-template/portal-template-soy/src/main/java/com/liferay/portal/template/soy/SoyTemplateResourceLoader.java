@@ -82,17 +82,7 @@ public class SoyTemplateResourceLoader implements TemplateResourceLoader {
 			TemplateConstants.LANG_TYPE_SOY,
 			_soyTemplateEngineConfiguration.templateParsers(),
 			_soyTemplateEngineConfiguration.resourceModificationCheck(),
-			_multiVMPool, _singleVMPool);
-	}
-
-	@Reference(unbind = "-")
-	protected void setMultiVMPool(MultiVMPool multiVMPool) {
-		_multiVMPool = multiVMPool;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSingleVMPool(SingleVMPool singleVMPool) {
-		_singleVMPool = singleVMPool;
+			multiVMPool, singleVMPool);
 	}
 
 	private static volatile DefaultTemplateResourceLoader
@@ -100,7 +90,10 @@ public class SoyTemplateResourceLoader implements TemplateResourceLoader {
 	private static volatile SoyTemplateEngineConfiguration
 		_soyTemplateEngineConfiguration;
 
-	private MultiVMPool _multiVMPool;
-	private SingleVMPool _singleVMPool;
+	@Reference
+	protected MultiVMPool multiVMPool;
+
+	@Reference
+	protected SingleVMPool singleVMPool;
 
 }

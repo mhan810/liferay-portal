@@ -91,7 +91,8 @@ import org.osgi.service.component.annotations.Reference;
  * @author Raymond Augé
  */
 @Component(
-	configurationPid = "com.liferay.portal.template.freemarker.configuration.FreeMarkerEngineConfiguration",
+	configurationPid = "com.liferay.portal.template." +
+			"freemarker.configuration.FreeMarkerEngineConfiguration",
 	configurationPolicy = ConfigurationPolicy.OPTIONAL, immediate = true,
 	property = {"language.type=" + TemplateConstants.LANG_TYPE_FTL},
 	service = TemplateManager.class
@@ -257,7 +258,7 @@ public class FreeMarkerManager extends BaseSingleTemplateManager {
 		_configuration.setDefaultEncoding(StringPool.UTF8);
 		_configuration.setLocalizedLookup(
 			_freemarkerEngineConfiguration.localizedLookup());
-		_configuration.setNewBuiltinClassResolver(_templateClassResolver);
+		_configuration.setNewBuiltinClassResolver(templateClassResolver);
 		_configuration.setObjectWrapper(new LiferayObjectWrapper());
 
 		try {
@@ -278,13 +279,6 @@ public class FreeMarkerManager extends BaseSingleTemplateManager {
 		}
 
 		initTaglibMappings();
-	}
-
-	@Reference(unbind = "-")
-	public void setTemplateClassResolver(
-		TemplateClassResolver templateClassResolver) {
-
-		_templateClassResolver = templateClassResolver;
 	}
 
 	@Override
@@ -400,7 +394,10 @@ public class FreeMarkerManager extends BaseSingleTemplateManager {
 		_freemarkerEngineConfiguration;
 	private final Map<String, String> _taglibMappings =
 		new ConcurrentHashMap<>();
-	private TemplateClassResolver _templateClassResolver;
+
+	@Reference
+	protected TemplateClassResolver templateClassResolver;
+
 	private final Map<String, TemplateModel> _templateModels =
 		new ConcurrentHashMap<>();
 
