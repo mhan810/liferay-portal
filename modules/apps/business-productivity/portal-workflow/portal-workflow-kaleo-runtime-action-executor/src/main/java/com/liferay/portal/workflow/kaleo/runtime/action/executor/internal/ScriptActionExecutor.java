@@ -21,7 +21,7 @@ import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorConstants;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
-import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderUtil;
+import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilder;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
 
 import java.io.Serializable;
@@ -75,7 +75,7 @@ public class ScriptActionExecutor implements ActionExecutor {
 		throws Exception {
 
 		Map<String, Object> inputObjects =
-			ScriptingContextBuilderUtil.buildScriptingContext(executionContext);
+			_scriptingContextBuilder.buildScriptingContext(executionContext);
 
 		String[] scriptRequiredContexts = StringUtil.split(
 			kaleoAction.getScriptRequiredContexts());
@@ -92,12 +92,12 @@ public class ScriptActionExecutor implements ActionExecutor {
 			executionContext, resultsWorkflowContext);
 	}
 
-	@Reference(unbind = "-")
-	protected void setScripting(Scripting scripting) {
-		_scripting = scripting;
-	}
-
 	private final Set<String> _outputObjects = new HashSet<>();
+
+	@Reference
 	private Scripting _scripting;
+
+	@Reference
+	private ScriptingContextBuilder _scriptingContextBuilder;
 
 }

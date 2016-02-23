@@ -33,9 +33,13 @@ import java.io.IOException;
 
 import java.util.Collection;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = DefinitionExporter.class)
 public class XMLDefinitionExporter implements DefinitionExporter {
 
 	public void afterPropertiesSet() {
@@ -60,10 +64,6 @@ public class XMLDefinitionExporter implements DefinitionExporter {
 			companyId, name, version);
 
 		return doExport(definition);
-	}
-
-	public void setDefinitionBuilder(DefinitionBuilder definitionBuilder) {
-		_definitionBuilder = definitionBuilder;
 	}
 
 	public void setVersion(String version) {
@@ -109,7 +109,7 @@ public class XMLDefinitionExporter implements DefinitionExporter {
 
 			for (Node node : nodes) {
 				NodeExporter nodeExporter =
-					NodeExporterRegistry.getNodeExporter(node.getNodeType());
+					_nodeExporterRegistry.getNodeExporter(node.getNodeType());
 
 				nodeExporter.exportNode(
 					node, workflowDefinitionElement, _namespace);
@@ -122,8 +122,14 @@ public class XMLDefinitionExporter implements DefinitionExporter {
 		}
 	}
 
+	@Reference
 	private DefinitionBuilder _definitionBuilder;
+
 	private String _namespace;
+
+	@Reference
+	private NodeExporterRegistry _nodeExporterRegistry;
+
 	private String _schemaVersion;
 	private String _version = ReleaseInfo.getVersion();
 

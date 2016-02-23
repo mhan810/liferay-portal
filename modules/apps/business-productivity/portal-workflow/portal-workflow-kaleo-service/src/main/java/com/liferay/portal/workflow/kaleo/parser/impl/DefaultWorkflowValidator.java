@@ -24,17 +24,15 @@ import com.liferay.portal.workflow.kaleo.definition.parser.WorkflowValidator;
 import java.util.Collection;
 import java.util.List;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  * @author Marcellus Tavares
  */
+@Component(immediate = true, service = WorkflowValidator.class)
 public class DefaultWorkflowValidator implements WorkflowValidator {
-
-	public void setNodeValidatorRegistry(
-		NodeValidatorRegistry nodeValidatorRegistry) {
-
-		_nodeValidatorRegistry = nodeValidatorRegistry;
-	}
 
 	@Override
 	public void validate(Definition definition) throws WorkflowException {
@@ -65,6 +63,7 @@ public class DefaultWorkflowValidator implements WorkflowValidator {
 		}
 	}
 
+	@Reference
 	private NodeValidatorRegistry _nodeValidatorRegistry;
 
 }

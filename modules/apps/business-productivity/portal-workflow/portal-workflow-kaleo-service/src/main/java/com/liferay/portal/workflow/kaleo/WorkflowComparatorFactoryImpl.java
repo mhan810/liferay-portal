@@ -33,9 +33,17 @@ import com.liferay.portal.kernel.workflow.comparator.WorkflowTaskDueDateComparat
 import com.liferay.portal.kernel.workflow.comparator.WorkflowTaskNameComparator;
 import com.liferay.portal.kernel.workflow.comparator.WorkflowTaskUserIdComparator;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Michael C. Han
  */
+@Component(
+	immediate = true,
+	service = {
+		WorkflowComparatorFactory.class, WorkflowComparatorFactoryImpl.class
+	}
+)
 public class WorkflowComparatorFactoryImpl
 	implements WorkflowComparatorFactory {
 
