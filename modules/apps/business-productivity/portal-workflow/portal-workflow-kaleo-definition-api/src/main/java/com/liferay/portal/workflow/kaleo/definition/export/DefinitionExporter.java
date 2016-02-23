@@ -12,16 +12,18 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.export;
+package com.liferay.portal.workflow.kaleo.definition.export;
 
-import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.workflow.kaleo.definition.Node;
+import com.liferay.portal.kernel.exception.PortalException;
 
 /**
  * @author Michael C. Han
  */
-public interface NodeExporter {
+public interface DefinitionExporter {
 
-	public void exportNode(Node node, Element element, String namespace);
+	public String export(long kaleoDefinitionId) throws PortalException;
+
+	public String export(long companyId, String name, int version)
+		throws PortalException;
 
 }
