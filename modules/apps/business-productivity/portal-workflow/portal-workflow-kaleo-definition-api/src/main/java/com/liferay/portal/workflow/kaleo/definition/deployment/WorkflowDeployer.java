@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.deployment;
+package com.liferay.portal.workflow.kaleo.definition.deployment;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
