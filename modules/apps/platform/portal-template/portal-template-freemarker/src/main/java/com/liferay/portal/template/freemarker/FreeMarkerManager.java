@@ -382,6 +382,9 @@ public class FreeMarkerManager extends BaseSingleTemplateManager {
 		return false;
 	}
 
+	@Reference
+	protected TemplateClassResolver templateClassResolver;
+
 	private static final Class<?>[] _INTERFACES = {ServletContext.class};
 
 	private static final Log _log = LogFactoryUtil.getLog(
@@ -394,10 +397,6 @@ public class FreeMarkerManager extends BaseSingleTemplateManager {
 		_freemarkerEngineConfiguration;
 	private final Map<String, String> _taglibMappings =
 		new ConcurrentHashMap<>();
-
-	@Reference
-	protected TemplateClassResolver templateClassResolver;
-
 	private final Map<String, TemplateModel> _templateModels =
 		new ConcurrentHashMap<>();
 
