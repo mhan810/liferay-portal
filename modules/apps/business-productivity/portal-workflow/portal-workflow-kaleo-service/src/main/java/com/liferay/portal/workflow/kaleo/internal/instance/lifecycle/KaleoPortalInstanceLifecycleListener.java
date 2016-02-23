@@ -36,7 +36,7 @@ public class KaleoPortalInstanceLifecycleListener
 
 	@Override
 	public void portalInstanceRegistered(Company company) throws Exception {
-		_portalKaleoManager.deployKaleoDefaults(company.getCompanyId());
+		portalKaleoManager.deployKaleoDefaults(company.getCompanyId());
 	}
 
 	@Reference(unbind = "-")
@@ -64,13 +64,7 @@ public class KaleoPortalInstanceLifecycleListener
 		KaleoTransitionLocalService kaleoTransitionLocalService) {
 	}
 
-	@Reference(unbind = "-")
-	protected void setPortalKaleoManager(
-		PortalKaleoManager portalKaleoManager) {
-
-		_portalKaleoManager = portalKaleoManager;
-	}
-
-	private PortalKaleoManager _portalKaleoManager;
+	@Reference
+	protected PortalKaleoManager portalKaleoManager;
 
 }
