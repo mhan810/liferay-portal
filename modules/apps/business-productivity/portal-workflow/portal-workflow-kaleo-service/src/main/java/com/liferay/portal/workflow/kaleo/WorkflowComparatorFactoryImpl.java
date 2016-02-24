@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.comparator;
+package com.liferay.portal.workflow.kaleo;
 
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.workflow.WorkflowDefinition;
