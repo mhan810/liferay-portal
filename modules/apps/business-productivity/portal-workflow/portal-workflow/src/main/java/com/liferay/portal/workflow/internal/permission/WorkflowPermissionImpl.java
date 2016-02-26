@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.permission;
+package com.liferay.portal.workflow.internal.permission;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;

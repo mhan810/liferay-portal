@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.comparator;
+package com.liferay.portal.workflow.internal.comparator;
 
 import com.liferay.portal.kernel.messaging.proxy.BaseProxyBean;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;

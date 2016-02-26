@@ -12,46 +12,30 @@
  * details.
  */
 
-package com.liferay.portal.workflow;
+package com.liferay.portal.workflow.internal;
 
 import com.liferay.portal.kernel.messaging.proxy.BaseProxyBean;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
-import com.liferay.portal.kernel.workflow.WorkflowEngineManager;
+import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
+
+import java.io.Serializable;
 
 import java.util.Map;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Bruno Farache
  */
 @OSGiBeanProperties(
-	property = "proxy.bean=true", service = WorkflowEngineManager.class
+	property = "proxy.bean=true", service = WorkflowStatusManager.class
 )
-public class WorkflowEngineManagerProxyBean
-	extends BaseProxyBean implements WorkflowEngineManager {
+public class WorkflowStatusManagerProxyBean
+	extends BaseProxyBean implements WorkflowStatusManager {
 
 	@Override
-	public String getKey() {
+	public void updateStatus(
+		int status, Map<String, Serializable> workflowContext) {
+
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getName() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Map<String, Object> getOptionalAttributes() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getVersion() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public boolean isDeployed() {
-		return false;
 	}
 
 }

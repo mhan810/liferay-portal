@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow;
+package com.liferay.portal.workflow.internal;
 
 import com.liferay.portal.kernel.lock.LockManagerUtil;
 import com.liferay.portal.kernel.util.StringPool;
