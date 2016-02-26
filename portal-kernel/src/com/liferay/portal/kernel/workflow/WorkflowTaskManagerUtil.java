@@ -16,6 +16,7 @@ package com.liferay.portal.kernel.workflow;
 
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.ProxyFactory;
 
 import java.io.Serializable;
 
@@ -282,14 +283,8 @@ public class WorkflowTaskManagerUtil {
 			companyId, userId, workflowTaskId, comment, dueDate);
 	}
 
-	public void setWorkflowTaskManager(
-		WorkflowTaskManager workflowTaskManager) {
-
-		PortalRuntimePermission.checkSetBeanProperty(getClass());
-
-		_workflowTaskManager = workflowTaskManager;
-	}
-
-	private static WorkflowTaskManager _workflowTaskManager;
+	private static WorkflowTaskManager _workflowTaskManager =
+		ProxyFactory.newServiceTrackedInstance(
+			WorkflowTaskManager.class, "(proxy.bean=true");
 
 }

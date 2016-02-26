@@ -15,6 +15,7 @@
 package com.liferay.portal.kernel.workflow;
 
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
+import com.liferay.portal.kernel.util.ProxyFactory;
 
 import java.util.Map;
 
@@ -51,14 +52,8 @@ public class WorkflowEngineManagerUtil {
 		return getWorkflowEngineManager().isDeployed();
 	}
 
-	public void setWorkflowEngineManager(
-		WorkflowEngineManager workflowEngineManager) {
-
-		PortalRuntimePermission.checkSetBeanProperty(getClass());
-
-		_workflowEngineManager = workflowEngineManager;
-	}
-
-	private static WorkflowEngineManager _workflowEngineManager;
+	private static WorkflowEngineManager _workflowEngineManager =
+		ProxyFactory.newServiceTrackedInstance(
+			WorkflowEngineManager.class, "(proxy.bean=true");
 
 }

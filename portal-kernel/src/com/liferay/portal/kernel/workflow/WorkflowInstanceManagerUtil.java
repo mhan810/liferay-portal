@@ -16,6 +16,7 @@ package com.liferay.portal.kernel.workflow;
 
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.ProxyFactory;
 
 import java.io.Serializable;
 
@@ -174,14 +175,8 @@ public class WorkflowInstanceManagerUtil {
 			companyId, workflowInstanceId, workflowContext);
 	}
 
-	public void setWorkflowInstanceManager(
-		WorkflowInstanceManager workflowInstanceManager) {
-
-		PortalRuntimePermission.checkSetBeanProperty(getClass());
-
-		_workflowInstanceManager = workflowInstanceManager;
-	}
-
-	private static WorkflowInstanceManager _workflowInstanceManager;
+	private static WorkflowInstanceManager _workflowInstanceManager =
+		ProxyFactory.newServiceTrackedInstance(
+			WorkflowInstanceManager.class, "(proxy.bean=true");
 
 }

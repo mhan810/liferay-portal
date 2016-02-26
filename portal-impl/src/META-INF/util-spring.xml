@@ -453,10 +453,6 @@
 	<bean id="com.liferay.portal.kernel.words.WordsUtil" class="com.liferay.portal.kernel.words.WordsUtil">
 		<property name="words" ref="com.liferay.portal.kernel.words.Words" />
 	</bean>
-	<bean id="com.liferay.portal.kernel.workflow.permission.WorkflowPermission" class="com.liferay.portal.workflow.permission.WorkflowPermissionImpl" />
-	<bean id="com.liferay.portal.kernel.workflow.permission.WorkflowPermissionUtil" class="com.liferay.portal.kernel.workflow.permission.WorkflowPermissionUtil">
-		<property name="workflowPermission" ref="com.liferay.portal.kernel.workflow.permission.WorkflowPermission" />
-	</bean>
 	<bean id="com.liferay.portal.kernel.xmlrpc.XmlRpc" class="com.liferay.portal.xmlrpc.XmlRpcImpl" />
 	<bean id="com.liferay.portal.kernel.xmlrpc.XmlRpcUtil" class="com.liferay.portal.kernel.xmlrpc.XmlRpcUtil">
 		<property name="xmlRpc" ref="com.liferay.portal.kernel.xmlrpc.XmlRpc" />

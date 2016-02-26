@@ -23,88 +23,64 @@
 			<bean class="com.liferay.portal.kernel.messaging.proxy.MessagingProxyInvocationHandler" factory-method="getInvocationHandlerFactory" />
 		</constructor-arg>
 	</bean>
-	<bean id="com.liferay.portal.workflow.WorkflowLinkAdvice" class="com.liferay.portal.workflow.WorkflowLinkAdvice" />
-	<bean id="com.liferay.portal.workflow.WorkflowLockingAdvice" class="com.liferay.portal.workflow.WorkflowLockingAdvice" />
-	<bean id="com.liferay.portal.workflow.WorkflowPermissionAdvice" class="com.liferay.portal.workflow.WorkflowPermissionAdvice" />
+	<bean id="com.liferay.portal.workflow.internal.WorkflowLinkAdvice" class="com.liferay.portal.workflow.internal.WorkflowLinkAdvice" />
+	<bean id="com.liferay.portal.workflow.internal.WorkflowLockingAdvice" class="com.liferay.portal.workflow.internal.WorkflowLockingAdvice" />
+	<bean id="com.liferay.portal.workflow.internal.WorkflowPermissionAdvice" class="com.liferay.portal.workflow.internal.WorkflowPermissionAdvice" />
 	<aop:config>
-		<aop:aspect ref="com.liferay.portal.workflow.WorkflowLockingAdvice" order="1">
-			<aop:around pointcut="bean(com.liferay.portal.workflow.WorkflowDefinitionManagerProxyBean) || bean(com.liferay.portal.workflow.WorkflowInstanceManagerProxyBean)" method="invoke" />
+		<aop:aspect ref="com.liferay.portal.workflow.internal.WorkflowLockingAdvice" order="1">
+			<aop:around pointcut="bean(com.liferay.portal.workflow.internal.WorkflowDefinitionManagerProxyBean) || bean(com.liferay.portal.workflow.internal.WorkflowInstanceManagerProxyBean)" method="invoke" />
 		</aop:aspect>
-		<aop:aspect ref="com.liferay.portal.workflow.WorkflowPermissionAdvice" order="2">
-			<aop:around pointcut="bean(com.liferay.portal.workflow.WorkflowTaskManagerProxyBean)" method="invoke" />
+		<aop:aspect ref="com.liferay.portal.workflow.internal.WorkflowPermissionAdvice" order="2">
+			<aop:around pointcut="bean(com.liferay.portal.workflow.internal.WorkflowTaskManagerProxyBean)" method="invoke" />
 		</aop:aspect>
-		<aop:aspect ref="com.liferay.portal.workflow.WorkflowLinkAdvice" order="3">
-			<aop:around pointcut="bean(com.liferay.portal.workflow.WorkflowDefinitionManagerProxyBean)" method="invoke" />
+		<aop:aspect ref="com.liferay.portal.workflow.internal.WorkflowLinkAdvice" order="3">
+			<aop:around pointcut="bean(com.liferay.portal.workflow.internal.WorkflowDefinitionManagerProxyBean)" method="invoke" />
 		</aop:aspect>
 	</aop:config>
 
 	<!-- Proxy -->
 
-	<bean id="com.liferay.portal.workflow.WorkflowDefinitionManagerProxyBean" class="com.liferay.portal.workflow.WorkflowDefinitionManagerProxyBean">
+	<bean id="com.liferay.portal.workflow.internal.WorkflowDefinitionManagerProxyBean" class="com.liferay.portal.workflow.internal.WorkflowDefinitionManagerProxyBean">
 		<property name="destinationName" value="liferay/workflow_definition" />
 		<property name="synchronousDestinationName" value="liferay/workflow_definition" />
 		<property name="synchronousMessageSenderMode" value="DIRECT" />
 	</bean>
-	<bean id="com.liferay.portal.workflow.WorkflowEngineManagerProxyBean" class="com.liferay.portal.workflow.WorkflowEngineManagerProxyBean">
+	<bean id="com.liferay.portal.workflow.internal.WorkflowEngineManagerProxyBean" class="com.liferay.portal.workflow.internal.WorkflowEngineManagerProxyBean">
 		<property name="destinationName" value="liferay/workflow_engine" />
 		<property name="synchronousDestinationName" value="liferay/workflow_engine" />
 		<property name="synchronousMessageSenderMode" value="DIRECT" />
 	</bean>
-	<bean id="com.liferay.portal.workflow.WorkflowInstanceManagerProxyBean" class="com.liferay.portal.workflow.WorkflowInstanceManagerProxyBean">
+	<bean id="com.liferay.portal.workflow.internal.WorkflowInstanceManagerProxyBean" class="com.liferay.portal.workflow.internal.WorkflowInstanceManagerProxyBean">
 		<property name="destinationName" value="liferay/workflow_instance" />
 		<property name="synchronousDestinationName" value="liferay/workflow_instance" />
 		<property name="synchronousMessageSenderMode" value="DIRECT" />
 	</bean>
-	<bean id="com.liferay.portal.workflow.WorkflowLogManagerProxyBean" class="com.liferay.portal.workflow.WorkflowLogManagerProxyBean">
+	<bean id="com.liferay.portal.workflow.internal.WorkflowLogManagerProxyBean" class="com.liferay.portal.workflow.internal.WorkflowLogManagerProxyBean">
 		<property name="destinationName" value="liferay/workflow_log" />
 		<property name="synchronousDestinationName" value="liferay/workflow_log" />
 		<property name="synchronousMessageSenderMode" value="DIRECT" />
 	</bean>
-	<bean id="com.liferay.portal.workflow.WorkflowStatusManagerProxyBean" class="com.liferay.portal.workflow.WorkflowStatusManagerProxyBean">
+	<bean id="com.liferay.portal.workflow.internal.WorkflowStatusManagerProxyBean" class="com.liferay.portal.workflow.internal.WorkflowStatusManagerProxyBean">
 		<property name="destinationName" value="liferay/workflow_status" />
 		<property name="synchronousDestinationName" value="liferay/workflow_status" />
 		<property name="synchronousMessageSenderMode" value="DIRECT" />
 	</bean>
-	<bean id="com.liferay.portal.workflow.WorkflowTaskManagerProxyBean" class="com.liferay.portal.workflow.WorkflowTaskManagerProxyBean">
+	<bean id="com.liferay.portal.workflow.internal.WorkflowTaskManagerProxyBean" class="com.liferay.portal.workflow.internal.WorkflowTaskManagerProxyBean">
 		<property name="destinationName" value="liferay/workflow_task" />
 		<property name="synchronousDestinationName" value="liferay/workflow_task" />
 		<property name="synchronousMessageSenderMode" value="DIRECT" />
 	</bean>
-	<bean id="com.liferay.portal.workflow.comparator.WorkflowComparatorFactoryProxyBean" class="com.liferay.portal.workflow.comparator.WorkflowComparatorFactoryProxyBean">
+	<bean id="com.liferay.portal.workflow.internal.comparator.WorkflowComparatorFactoryProxyBean" class="com.liferay.portal.workflow.internal.comparator.WorkflowComparatorFactoryProxyBean">
 		<property name="destinationName" value="liferay/workflow_comparator" />
 		<property name="synchronousDestinationName" value="liferay/workflow_comparator" />
 		<property name="synchronousMessageSenderMode" value="DIRECT" />
-	</bean>
-
-	<!-- Util -->
-
-	<bean class="com.liferay.portal.kernel.workflow.WorkflowDefinitionManagerUtil">
-		<property name="workflowDefinitionManager" ref="com.liferay.portal.workflow.WorkflowDefinitionManagerProxyBean" />
-	</bean>
-	<bean class="com.liferay.portal.kernel.workflow.WorkflowEngineManagerUtil">
-		<property name="workflowEngineManager" ref="com.liferay.portal.workflow.WorkflowEngineManagerProxyBean" />
-	</bean>
-	<bean class="com.liferay.portal.kernel.workflow.WorkflowInstanceManagerUtil">
-		<property name="workflowInstanceManager" ref="com.liferay.portal.workflow.WorkflowInstanceManagerProxyBean" />
-	</bean>
-	<bean class="com.liferay.portal.kernel.workflow.WorkflowLogManagerUtil">
-		<property name="workflowLogManager" ref="com.liferay.portal.workflow.WorkflowLogManagerProxyBean" />
-	</bean>
-	<bean class="com.liferay.portal.kernel.workflow.WorkflowStatusManagerUtil">
-		<property name="workflowStatusManager" ref="com.liferay.portal.workflow.WorkflowStatusManagerProxyBean" />
-	</bean>
-	<bean class="com.liferay.portal.kernel.workflow.WorkflowTaskManagerUtil">
-		<property name="workflowTaskManager" ref="com.liferay.portal.workflow.WorkflowTaskManagerProxyBean" />
-	</bean>
-	<bean class="com.liferay.portal.kernel.workflow.comparator.WorkflowComparatorFactoryUtil">
-		<property name="workflowComparatorFactory" ref="com.liferay.portal.workflow.comparator.WorkflowComparatorFactoryProxyBean" />
 	</bean>
 
 	<!-- Messaging -->
 
 	<bean id="messageListener.workflow_status" class="com.liferay.portal.kernel.messaging.proxy.ProxyMessageListener">
 		<property name="manager">
-			<bean class="com.liferay.portal.workflow.WorkflowStatusManagerImpl" />
+			<bean class="com.liferay.portal.workflow.internal.WorkflowStatusManagerImpl" />
 		</property>
 	</bean>
 	<bean id="messagingConfigurator.workflow" class="com.liferay.portal.kernel.messaging.config.DefaultMessagingConfigurator">
