@@ -39,38 +39,22 @@ public class KaleoPortalInstanceLifecycleListener
 		_portalKaleoManager.deployKaleoDefaults(company.getCompanyId());
 	}
 
-	@Reference(unbind = "-")
-	protected void setKaleoConditionLocalService(
-		KaleoConditionLocalService kaleoConditionLocalService) {
-	}
+	@Reference
+	protected KaleoConditionLocalService kaleoConditionLocalService;
 
-	@Reference(unbind = "-")
-	protected void setKaleoDefinitionLocalService(
-		KaleoDefinitionLocalService kaleoDefinitionLocalService) {
-	}
+	@Reference
+	protected KaleoDefinitionLocalService kaleoDefinitionLocalService;
 
-	@Reference(unbind = "-")
-	protected void setKaleoNodeLocalService(
-		KaleoNodeLocalService kaleoNodeLocalService) {
-	}
+	@Reference
+	protected KaleoNodeLocalService kaleoNodeLocalService;
 
-	@Reference(unbind = "-")
-	protected void setKaleoTaskLocalService(
-		KaleoTaskLocalService kaleoTaskLocalService) {
-	}
+	@Reference
+	protected KaleoTaskLocalService kaleoTaskLocalService;
 
-	@Reference(unbind = "-")
-	protected void setKaleoTransitionLocalService(
-		KaleoTransitionLocalService kaleoTransitionLocalService) {
-	}
+	@Reference
+	protected KaleoTransitionLocalService kaleoTransitionLocalService;
 
-	@Reference(unbind = "-")
-	protected void setPortalKaleoManager(
-		PortalKaleoManager portalKaleoManager) {
-
-		_portalKaleoManager = portalKaleoManager;
-	}
-
+	@Reference
 	private PortalKaleoManager _portalKaleoManager;
 
 }
