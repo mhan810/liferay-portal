@@ -74,7 +74,7 @@ public class DeleteWorkflowInstanceMVCActionCommand
 		long classPK = GetterUtil.getLong(
 			workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
 
-		_workflowInstanceLinkLocalService.deleteWorkflowInstanceLink(
+		workflowInstanceLinkLocalService.deleteWorkflowInstanceLink(
 			companyId, groupId, className, classPK);
 	}
 
@@ -132,13 +132,6 @@ public class DeleteWorkflowInstanceMVCActionCommand
 			themeDisplay.getCompanyId(), workflowInstanceId);
 	}
 
-	@Reference(unbind = "-")
-	protected void setWorkflowInstanceLinkLocalService(
-		WorkflowInstanceLinkLocalService workflowInstanceLinkLocalService) {
-
-		_workflowInstanceLinkLocalService = workflowInstanceLinkLocalService;
-	}
-
 	protected void updateEntryStatus(Map<String, Serializable> workflowContext)
 		throws Exception {
 
@@ -166,6 +159,7 @@ public class DeleteWorkflowInstanceMVCActionCommand
 			WorkflowConstants.CONTEXT_USER_ID, String.valueOf(validUserId));
 	}
 
-	private WorkflowInstanceLinkLocalService _workflowInstanceLinkLocalService;
+	@Reference
+	protected WorkflowInstanceLinkLocalService workflowInstanceLinkLocalService;
 
 }

@@ -98,10 +98,10 @@ import com.liferay.wiki.service.base.WikiPageLocalServiceBaseImpl;
 import com.liferay.wiki.social.WikiActivityKeys;
 import com.liferay.wiki.util.WikiCacheThreadLocal;
 import com.liferay.wiki.util.WikiCacheUtil;
-import com.liferay.wiki.util.WikiPageTitleValidator;
 import com.liferay.wiki.util.WikiUtil;
 import com.liferay.wiki.util.comparator.PageCreateDateComparator;
 import com.liferay.wiki.util.comparator.PageVersionComparator;
+import com.liferay.wiki.validator.WikiPageTitleValidator;
 
 import java.io.File;
 import java.io.IOException;

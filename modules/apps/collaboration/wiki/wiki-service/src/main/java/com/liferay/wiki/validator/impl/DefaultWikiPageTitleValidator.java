@@ -12,11 +12,12 @@
  * details.
  */
 
-package com.liferay.wiki.util;
+package com.liferay.wiki.validator.impl;
 
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.wiki.exception.PageTitleException;
+import com.liferay.wiki.validator.WikiPageTitleValidator;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

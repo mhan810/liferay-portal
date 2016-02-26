@@ -63,7 +63,7 @@ public class WorkflowTaskUserNotificationHandler
 			serviceContext.getCompanyId(), workflowTaskId);
 
 		if (workflowTask == null) {
-			_userNotificationEventLocalService.deleteUserNotificationEvent(
+			userNotificationEventLocalService.deleteUserNotificationEvent(
 				userNotificationEvent.getUserNotificationEventId());
 
 			return null;
@@ -96,14 +96,8 @@ public class WorkflowTaskUserNotificationHandler
 			workflowTaskId, serviceContext);
 	}
 
-	@Reference(unbind = "-")
-	protected void setUserNotificationEventLocalService(
-		UserNotificationEventLocalService userNotificationEventLocalService) {
-
-		_userNotificationEventLocalService = userNotificationEventLocalService;
-	}
-
-	private UserNotificationEventLocalService
-		_userNotificationEventLocalService;
+	@Reference
+	protected UserNotificationEventLocalService
+		userNotificationEventLocalService;
 
 }

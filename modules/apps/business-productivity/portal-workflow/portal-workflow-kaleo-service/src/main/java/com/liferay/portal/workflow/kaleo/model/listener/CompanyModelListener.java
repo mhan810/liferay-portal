@@ -34,7 +34,7 @@ public class CompanyModelListener extends BaseModelListener<Company> {
 	@Override
 	public void onAfterRemove(Company company) throws ModelListenerException {
 		try {
-			_portalKaleoManager.deleteKaleoData(company.getCompanyId());
+			portalKaleoManager.deleteKaleoData(company.getCompanyId());
 		}
 		catch (Exception e) {
 			throw new ModelListenerException(e);
@@ -49,14 +49,7 @@ public class CompanyModelListener extends BaseModelListener<Company> {
 		ApplicationContext applicationContext) {
 	}
 
-	@Reference(unbind = "-")
-	protected void setPortalKaleoManager(
-		PortalKaleoManager portalKaleoManager) {
-
-		_portalKaleoManager = portalKaleoManager;
-	}
-
 	@Reference
-	private PortalKaleoManager _portalKaleoManager;
+	protected PortalKaleoManager portalKaleoManager;
 
 }

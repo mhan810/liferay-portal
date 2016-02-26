@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.wiki.util;
+package com.liferay.wiki.validator;
 
 import com.liferay.wiki.exception.PageTitleException;
 

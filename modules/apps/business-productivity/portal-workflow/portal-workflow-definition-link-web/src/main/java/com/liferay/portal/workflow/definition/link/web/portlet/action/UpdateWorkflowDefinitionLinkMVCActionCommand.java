@@ -68,23 +68,16 @@ public class UpdateWorkflowDefinitionLinkMVCActionCommand
 			String workflowDefinition = ParamUtil.getString(
 				actionRequest, name);
 
-			_workflowDefinitionLinkLocalService.updateWorkflowDefinitionLink(
+			workflowDefinitionLinkLocalService.updateWorkflowDefinitionLink(
 				themeDisplay.getUserId(), themeDisplay.getCompanyId(), groupId,
 				className, 0, 0, workflowDefinition);
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setWorkflowDefinitionLinkLocalService(
-		WorkflowDefinitionLinkLocalService workflowDefinitionLinkLocalService) {
-
-		_workflowDefinitionLinkLocalService =
-			workflowDefinitionLinkLocalService;
-	}
+	@Reference
+	protected WorkflowDefinitionLinkLocalService
+		workflowDefinitionLinkLocalService;
 
 	private static final String _PREFIX = "workflowDefinitionName@";
-
-	private WorkflowDefinitionLinkLocalService
-		_workflowDefinitionLinkLocalService;
 
 }
