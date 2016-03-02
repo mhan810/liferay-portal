@@ -81,11 +81,7 @@ public class CompanySettingsMapsFormNavigatorEntry
 		return "/maps.jsp";
 	}
 
-	@Reference(unbind = "-")
-	protected void setMapProviderHelper(MapProviderHelper mapProviderHelper) {
-		_mapProviderHelper = mapProviderHelper;
-	}
-
+	@Reference
 	private MapProviderHelper _mapProviderHelper;
 
 }

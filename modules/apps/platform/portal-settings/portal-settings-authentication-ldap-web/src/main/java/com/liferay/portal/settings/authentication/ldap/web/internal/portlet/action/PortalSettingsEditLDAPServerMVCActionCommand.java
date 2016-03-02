@@ -138,13 +138,6 @@ public class PortalSettingsEditLDAPServerMVCActionCommand
 			themeDisplay.getCompanyId(), ldapServerId);
 	}
 
-	@Reference(unbind = "-")
-	protected void setCounterLocalService(
-		CounterLocalService counterLocalService) {
-
-		_counterLocalService = counterLocalService;
-	}
-
 	@Reference(
 		target = "(factoryPid=com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration)",
 		unbind = "-"
@@ -156,24 +149,12 @@ public class PortalSettingsEditLDAPServerMVCActionCommand
 		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
 	}
 
-	@Reference(unbind = "-")
-	protected void setPortal(Portal portal) {
-		_portal = portal;
-	}
-
 	@Reference(
 		target = "(javax.portlet.name=" + PortalSettingsPortletKeys.PORTAL_SETTINGS + ")",
 		unbind = "-"
 	)
 	protected void setPortlet(Portlet portlet) {
 		_portlet = portlet;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortletContextFactory(
-		PortletContextFactory portletContextFactory) {
-
-		_portletContextFactory = portletContextFactory;
 	}
 
 	@Reference(
@@ -291,11 +272,18 @@ public class PortalSettingsEditLDAPServerMVCActionCommand
 	private static ConfigurationProvider<LDAPServerConfiguration>
 		_ldapServerConfigurationProvider;
 
+	@Reference
 	private CounterLocalService _counterLocalService;
+
+	@Reference
 	private Portal _portal;
+
 	private Portlet _portlet;
 	private PortletContext _portletContext;
+
+	@Reference
 	private PortletContextFactory _portletContextFactory;
+
 	private ServletContext _servletContext;
 
 }
