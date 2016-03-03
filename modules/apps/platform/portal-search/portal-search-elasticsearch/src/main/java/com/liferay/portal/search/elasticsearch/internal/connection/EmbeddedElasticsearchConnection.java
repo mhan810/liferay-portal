@@ -159,7 +159,7 @@ public class EmbeddedElasticsearchConnection
 			Validator.isNull(elasticsearchConfiguration.networkPublishHost())) {
 
 			InetAddress localBindInetAddress =
-				_clusterSettingsContext.getLocalBindInetAddress();
+				clusterSettingsContext.getLocalBindInetAddress();
 
 			if (localBindInetAddress != null) {
 				networkHost = localBindInetAddress.getHostAddress();
@@ -317,12 +317,8 @@ public class EmbeddedElasticsearchConnection
 		super.removeSettingsContributor(settingsContributor);
 	}
 
-	@Reference(unbind = "-")
-	protected void setClusterSettingsContext(
-		ClusterSettingsContext clusterSettingsContext) {
-
-		_clusterSettingsContext = clusterSettingsContext;
-	}
+	@Reference
+	protected ClusterSettingsContext clusterSettingsContext;
 
 	@Reference
 	protected Props props;
@@ -330,7 +326,6 @@ public class EmbeddedElasticsearchConnection
 	private static final Log _log = LogFactoryUtil.getLog(
 		EmbeddedElasticsearchConnection.class);
 
-	private ClusterSettingsContext _clusterSettingsContext;
 	private Node _node;
 
 }
