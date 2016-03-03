@@ -1232,13 +1232,6 @@ public class PortletTracker
 	}
 
 	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
-
-		_companyLocalService = companyLocalService;
-	}
-
-	@Reference(unbind = "-")
 	protected void setHttpServiceRuntime(
 		HttpServiceRuntime httpServiceRuntime, Map<String, Object> properties) {
 
@@ -1253,42 +1246,6 @@ public class PortletTracker
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
 	protected void setModuleServiceLifecycle(
 		ModuleServiceLifecycle moduleServiceLifecycle) {
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortletInstanceFactory(
-		PortletInstanceFactory portletInstanceFactory) {
-
-		_portletInstanceFactory = portletInstanceFactory;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortletLocalService(
-		PortletLocalService portletLocalService) {
-
-		_portletLocalService = portletLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setProps(Props props) {
-		_props = props;
-	}
-
-	@Reference(unbind = "-")
-	protected void setResourceActionLocalService(
-		ResourceActionLocalService resourceActionLocalService) {
-
-		_resourceActionLocalService = resourceActionLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setResourceActions(ResourceActions resourceActions) {
-		_resourceActions = resourceActions;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSAXReader(SAXReader saxReader) {
-		_saxReader = saxReader;
 	}
 
 	protected String toLowerCase(Object object) {
@@ -1334,17 +1291,33 @@ public class PortletTracker
 
 	private static final Log _log = LogFactoryUtil.getLog(PortletTracker.class);
 
+	@Reference
 	private CompanyLocalService _companyLocalService;
+
 	private ComponentContext _componentContext;
 	private String _httpServiceEndpoint = StringPool.BLANK;
+
+	@Reference
 	private PortletInstanceFactory _portletInstanceFactory;
+
+	@Reference
 	private PortletLocalService _portletLocalService;
+
 	private final PortletPropertyValidator _portletPropertyValidator =
 		new PortletPropertyValidator();
+
+	@Reference
 	private Props _props;
+
+	@Reference
 	private ResourceActionLocalService _resourceActionLocalService;
+
+	@Reference
 	private ResourceActions _resourceActions;
+
+	@Reference
 	private SAXReader _saxReader;
+
 	private final ConcurrentMap<Bundle, ServiceRegistrations>
 		_serviceRegistrations = new ConcurrentHashMap<>();
 	private ServiceTracker<Portlet, com.liferay.portal.kernel.model.Portlet>

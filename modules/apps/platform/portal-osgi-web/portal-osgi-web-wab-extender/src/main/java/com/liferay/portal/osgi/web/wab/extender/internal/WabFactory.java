@@ -135,11 +135,6 @@ public class WabFactory extends AbstractExtender {
 		ModuleServiceLifecycle moduleServiceLifecycle) {
 	}
 
-	@Reference(unbind = "-")
-	protected void setSAXParserFactory(SAXParserFactory saxParserFactory) {
-		_saxParserFactory = saxParserFactory;
-	}
-
 	@Override
 	protected void warn(Bundle bundle, String message, Throwable t) {
 		_logger.log(Logger.LOG_WARNING, "[" + bundle + "] " + message, t);
@@ -160,7 +155,10 @@ public class WabFactory extends AbstractExtender {
 	private BundleContext _bundleContext;
 	private EventUtil _eventUtil;
 	private Logger _logger;
+
+	@Reference
 	private SAXParserFactory _saxParserFactory;
+
 	private WabExtenderConfiguration _wabExtenderConfiguration;
 	private WebBundleDeployer _webBundleDeployer;
 
