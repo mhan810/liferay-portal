@@ -138,16 +138,6 @@ public class EditCompanyMVCActionCommand extends BaseFormMVCActionCommand {
 		throws Exception {
 	}
 
-	@Reference(unbind = "-")
-	protected void setCompanyService(CompanyService companyService) {
-		_companyService = companyService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setDLAppLocalService(DLAppLocalService dlAppLocalService) {
-		_dlAppLocalService = dlAppLocalService;
-	}
-
 	protected void updateCompany(ActionRequest actionRequest) throws Exception {
 		long companyId = PortalUtil.getCompanyId(actionRequest);
 
@@ -196,7 +186,10 @@ public class EditCompanyMVCActionCommand extends BaseFormMVCActionCommand {
 		PortalUtil.resetCDNHosts();
 	}
 
+	@Reference
 	private CompanyService _companyService;
+
+	@Reference
 	private DLAppLocalService _dlAppLocalService;
 
 }
