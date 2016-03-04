@@ -280,13 +280,6 @@ public class FreeMarkerManager extends BaseSingleTemplateManager {
 		initTaglibMappings();
 	}
 
-	@Reference(unbind = "-")
-	public void setTemplateClassResolver(
-		TemplateClassResolver templateClassResolver) {
-
-		_templateClassResolver = templateClassResolver;
-	}
-
 	@Override
 	@Reference(service = FreeMarkerTemplateContextHelper.class, unbind = "-")
 	public void setTemplateContextHelper(
@@ -400,7 +393,10 @@ public class FreeMarkerManager extends BaseSingleTemplateManager {
 		_freemarkerEngineConfiguration;
 	private final Map<String, String> _taglibMappings =
 		new ConcurrentHashMap<>();
+
+	@Reference
 	private TemplateClassResolver _templateClassResolver;
+
 	private final Map<String, TemplateModel> _templateModels =
 		new ConcurrentHashMap<>();
 
