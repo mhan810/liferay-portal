@@ -60,6 +60,10 @@ public class IndexOnStartupBackgroundTaskStatusMessageListener
 		BackgroundTask backgroundTask =
 			_backgroundTaskManager.fetchBackgroundTask(backgroundTaskId);
 
+		if (backgroundTask == null) {
+			return;
+		}
+
 		if (!backgroundTask.getName().startsWith(
 				SearchConstants.INDEX_ON_ACTIVATE_BACKGROUND_TASK_NAME)) {
 
