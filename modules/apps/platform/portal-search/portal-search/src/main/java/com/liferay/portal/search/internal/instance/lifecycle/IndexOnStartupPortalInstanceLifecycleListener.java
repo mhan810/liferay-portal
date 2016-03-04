@@ -15,6 +15,7 @@
 package com.liferay.portal.search.internal.instance.lifecycle;
 
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
+import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -25,7 +26,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.search.internal.SearchConstants;
-import com.liferay.portal.util.PortalInstances;
 
 /**
  * @author Michael C. Han
@@ -34,8 +34,10 @@ public class IndexOnStartupPortalInstanceLifecycleListener
 	implements PortalInstanceLifecycleListener {
 
 	public IndexOnStartupPortalInstanceLifecycleListener(
+		ClusterMasterExecutor clusterMasterExecutor,
 		IndexWriterHelper indexWriterHelper, Props props, String className) {
 
+		_clusterMasterExecutor = clusterMasterExecutor;
 		_indexWriterHelper = indexWriterHelper;
 		_props = props;
 		_className = className;
@@ -47,14 +49,17 @@ public class IndexOnStartupPortalInstanceLifecycleListener
 
 	@Override
 	public void portalInstanceRegistered(Company company) throws Exception {
-		if (!GetterUtil.getBoolean(_props.get(PropsKeys.INDEX_ON_STARTUP))) {
+		if (!GetterUtil.getBoolean(_props.get(PropsKeys.INDEX_ON_STARTUP)) ||
+			!_clusterMasterExecutor.isMaster()) {
+
 			return;
 		}
 
 		try {
 			_indexWriterHelper.reindex(
 				UserConstants.USER_ID_DEFAULT,
-				SearchConstants.INDEX_ON_ACTIVATE_BACKGROUND_TASK_NAME,
+				SearchConstants.INDEX_ON_ACTIVATE_BACKGROUND_TASK_NAME + "." +
+					_className,
 				new long[] {company.getCompanyId()}, _className, null);
 		}
 		catch (SearchException se) {
@@ -72,6 +77,7 @@ public class IndexOnStartupPortalInstanceLifecycleListener
 		IndexOnStartupPortalInstanceLifecycleListener.class);
 
 	private final String _className;
+	private final ClusterMasterExecutor _clusterMasterExecutor;
 	private final IndexWriterHelper _indexWriterHelper;
 	private final Props _props;
 

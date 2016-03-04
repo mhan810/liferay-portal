@@ -15,6 +15,7 @@
 package com.liferay.portal.search.internal;
 
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
+import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
@@ -27,13 +28,14 @@ import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.internal.background.task.messaging.IndexOnStartupBackgroundTaskStatusMessageListener;
+import com.liferay.portal.search.internal.instance.lifecycle.IndexOnStartupPortalInstanceLifecycleListener;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.liferay.portal.search.internal.instance.lifecycle.IndexOnStartupPortalInstanceLifecycleListener;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
@@ -79,7 +81,8 @@ public class IndexOnStartupIndexerServiceCustomizer
 
 			PortalInstanceLifecycleListener portalInstanceLifecycleListener =
 				new IndexOnStartupPortalInstanceLifecycleListener(
-					_indexWriterHelper, _props, className);
+					_clusterMasterExecutor, _indexWriterHelper, _props,
+					className);
 
 			ServiceRegistration<PortalInstanceLifecycleListener>
 				serviceRegistration = _bundleContext.registerService(
@@ -161,19 +164,9 @@ public class IndexOnStartupIndexerServiceCustomizer
 		return false;
 	}
 
-	@Reference(unbind = "-")
-	protected void setIndexWriterHelper(IndexWriterHelper indexWriterHelper) {
-		_indexWriterHelper = indexWriterHelper;
-	}
-
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
 	protected void setModuleServiceLifecycle(
 		ModuleServiceLifecycle moduleServiceLifecycle) {
-	}
-
-	@Reference(unbind = "-")
-	protected void setProps(Props props) {
-		_props = props;
 	}
 
 	@Reference(target = "(search.engine.id=SYSTEM_ENGINE)", unbind = "-")
@@ -184,8 +177,20 @@ public class IndexOnStartupIndexerServiceCustomizer
 		IndexOnStartupIndexerServiceCustomizer.class);
 
 	private BundleContext _bundleContext;
+
+	@Reference
+	private ClusterMasterExecutor _clusterMasterExecutor;
+
+	@Reference
+	private IndexOnStartupBackgroundTaskStatusMessageListener
+		_indexOnStartupBackgroundTaskStatusMessageListener;
+
+	@Reference
 	private IndexWriterHelper _indexWriterHelper;
+
+	@Reference
 	private Props _props;
+
 	private final Map
 		<String, ServiceRegistration<PortalInstanceLifecycleListener>>
 			_serviceRegistrations = new HashMap<>();

@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageListener;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.internal.SearchConstants;
 import com.liferay.portal.search.internal.background.task.ReindexSingleIndexerBackgroundTaskExecutor;
 
@@ -33,7 +34,10 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {"destination.name=" + DestinationNames.BACKGROUND_TASK_STATUS},
-	service = MessageListener.class
+	service = {
+		MessageListener.class,
+		IndexOnStartupBackgroundTaskStatusMessageListener.class
+	}
 )
 public class IndexOnStartupBackgroundTaskStatusMessageListener
 	extends BaseMessageListener {
@@ -43,7 +47,8 @@ public class IndexOnStartupBackgroundTaskStatusMessageListener
 		String taskExecutorClassName = (String)message.get(
 			"taskExecutorClassName");
 
-		if (!taskExecutorClassName.equals(
+		if (Validator.isNull(taskExecutorClassName) ||
+			!taskExecutorClassName.equals(
 				ReindexSingleIndexerBackgroundTaskExecutor.class.getName())) {
 
 			return;
@@ -55,7 +60,7 @@ public class IndexOnStartupBackgroundTaskStatusMessageListener
 		BackgroundTask backgroundTask =
 			_backgroundTaskManager.fetchBackgroundTask(backgroundTaskId);
 
-		if (!backgroundTask.getName().equals(
+		if (!backgroundTask.getName().startsWith(
 				SearchConstants.INDEX_ON_ACTIVATE_BACKGROUND_TASK_NAME)) {
 
 			return;
@@ -68,13 +73,7 @@ public class IndexOnStartupBackgroundTaskStatusMessageListener
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setBackgroundTaskManager(
-		BackgroundTaskManager backgroundTaskManager) {
-
-		_backgroundTaskManager = backgroundTaskManager;
-	}
-
+	@Reference
 	private BackgroundTaskManager _backgroundTaskManager;
 
 }
