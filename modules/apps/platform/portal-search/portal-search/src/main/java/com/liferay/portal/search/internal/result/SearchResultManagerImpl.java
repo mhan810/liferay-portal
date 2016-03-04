@@ -76,11 +76,6 @@ public class SearchResultManagerImpl implements SearchResultManager {
 			searchResultContributor.getEntryClassName());
 	}
 
-	@Reference(unbind = "-")
-	public void setSummaryFactory(SummaryFactory newSummaryFactory) {
-		_summaryFactory = newSummaryFactory;
-	}
-
 	@Override
 	public void updateSearchResult(
 			SearchResult searchResult, Document document, Locale locale,
@@ -137,6 +132,7 @@ public class SearchResultManagerImpl implements SearchResultManager {
 
 			});
 
+	@Reference
 	private SummaryFactory _summaryFactory;
 
 }

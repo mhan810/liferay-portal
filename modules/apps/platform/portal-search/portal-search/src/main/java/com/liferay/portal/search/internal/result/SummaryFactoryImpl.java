@@ -49,7 +49,7 @@ public class SummaryFactoryImpl implements SummaryFactory {
 			PortletRequest portletRequest, PortletResponse portletResponse)
 		throws PortalException {
 
-		Indexer<?> indexer = _indexerRegistry.getIndexer(className);
+		Indexer<?> indexer = indexerRegistry.getIndexer(className);
 
 		if (indexer != null) {
 			String snippet = document.get(Field.SNIPPET);
@@ -89,11 +89,7 @@ public class SummaryFactoryImpl implements SummaryFactory {
 		return summary;
 	}
 
-	@Reference(unbind = "-")
-	public void setIndexerRegistry(IndexerRegistry indexerRegistry) {
-		_indexerRegistry = indexerRegistry;
-	}
-
-	private IndexerRegistry _indexerRegistry;
+	@Reference
+	protected IndexerRegistry indexerRegistry;
 
 }

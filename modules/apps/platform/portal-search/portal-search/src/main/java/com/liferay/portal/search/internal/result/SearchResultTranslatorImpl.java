@@ -42,13 +42,6 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true, service = SearchResultTranslator.class)
 public class SearchResultTranslatorImpl implements SearchResultTranslator {
 
-	@Reference(unbind = "-")
-	public void setSearchResultManager(
-		SearchResultManager searchResultManager) {
-
-		_searchResultManager = searchResultManager;
-	}
-
 	@Override
 	public List<SearchResult> translate(
 		Hits hits, Locale locale, PortletRequest portletRequest,
@@ -59,7 +52,7 @@ public class SearchResultTranslatorImpl implements SearchResultTranslator {
 		for (Document document : hits.getDocs()) {
 			try {
 				SearchResult searchResult =
-					_searchResultManager.createSearchResult(document);
+					searchResultManager.createSearchResult(document);
 
 				int index = searchResults.indexOf(searchResult);
 
@@ -76,7 +69,7 @@ public class SearchResultTranslatorImpl implements SearchResultTranslator {
 					searchResult.addVersion(version);
 				}
 
-				_searchResultManager.updateSearchResult(
+				searchResultManager.updateSearchResult(
 					searchResult, document, locale, portletRequest,
 					portletResponse);
 			}
@@ -99,6 +92,7 @@ public class SearchResultTranslatorImpl implements SearchResultTranslator {
 	private static final Log _log = LogFactoryUtil.getLog(
 		SearchResultTranslatorImpl.class);
 
-	private SearchResultManager _searchResultManager;
+	@Reference
+	protected SearchResultManager searchResultManager;
 
 }
