@@ -104,11 +104,6 @@ public class EditInstanceMVCActionCommand extends BaseMVCActionCommand {
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setCompanyService(CompanyService companyService) {
-		_companyService = companyService;
-	}
-
 	protected void updateInstance(ActionRequest actionRequest)
 		throws Exception {
 
@@ -143,6 +138,7 @@ public class EditInstanceMVCActionCommand extends BaseMVCActionCommand {
 		}
 	}
 
+	@Reference
 	private CompanyService _companyService;
 
 }
