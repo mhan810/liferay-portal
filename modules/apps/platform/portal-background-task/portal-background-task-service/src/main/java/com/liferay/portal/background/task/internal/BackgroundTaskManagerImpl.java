@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.ClassUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.PortalRunMode;
 
 import java.io.File;
 import java.io.InputStream;
@@ -560,9 +561,19 @@ public class BackgroundTaskManagerImpl implements BackgroundTaskManager {
 	protected void activate(BundleContext bundleContext) {
 		_bundleContext = bundleContext;
 
-		Destination backgroundTaskDestination = registerDestination(
-			bundleContext, DestinationConfiguration.DESTINATION_TYPE_PARALLEL,
-			DestinationNames.BACKGROUND_TASK);
+		Destination backgroundTaskDestination = null;
+
+		if (PortalRunMode.isTestMode()) {
+			backgroundTaskDestination = registerDestination(
+				bundleContext, DestinationConfiguration.DESTINATION_TYPE_SERIAL,
+				DestinationNames.BACKGROUND_TASK);
+		}
+		else {
+			backgroundTaskDestination = registerDestination(
+				bundleContext,
+				DestinationConfiguration.DESTINATION_TYPE_PARALLEL,
+				DestinationNames.BACKGROUND_TASK);
+		}
 
 		BackgroundTaskMessageListener backgroundTaskMessageListener =
 			new BackgroundTaskMessageListener(
