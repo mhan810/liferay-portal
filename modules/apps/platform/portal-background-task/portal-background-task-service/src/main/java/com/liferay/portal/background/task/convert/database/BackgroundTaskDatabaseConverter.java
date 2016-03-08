@@ -39,11 +39,7 @@ public class BackgroundTaskDatabaseConverter implements DatabaseConverter {
 				clazz.getClassLoader(), ".*BackgroundTask.*"));
 	}
 
-	@Reference(unbind = "-")
-	private void setModelMigrator(ModelMigrator modelMigrator) {
-		_modelMigrator = modelMigrator;
-	}
-
+	@Reference
 	private ModelMigrator _modelMigrator;
 
 }
