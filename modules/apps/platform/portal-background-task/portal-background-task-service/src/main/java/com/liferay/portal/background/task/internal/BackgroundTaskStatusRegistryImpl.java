@@ -123,19 +123,15 @@ public class BackgroundTaskStatusRegistryImpl
 		return null;
 	}
 
-	@Reference(unbind = "-")
-	protected void setClusterMasterExecutor(
-		ClusterMasterExecutor clusterMasterExecutor) {
-
-		_clusterMasterExecutor = clusterMasterExecutor;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		BackgroundTaskStatusRegistryImpl.class);
 
 	private final Map<Long, BackgroundTaskStatus> _backgroundTaskStatuses =
 		new HashMap<>();
+
+	@Reference
 	private ClusterMasterExecutor _clusterMasterExecutor;
+
 	private final ReadWriteLock _readWriteLock = new ReentrantReadWriteLock();
 
 }
