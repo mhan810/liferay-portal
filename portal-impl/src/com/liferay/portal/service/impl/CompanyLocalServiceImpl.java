@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.instance.lifecycle.PortalInstanceLifecycleManag
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.messaging.proxy.ProxyModeThreadLocal;
 import com.liferay.portal.kernel.model.Account;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.CompanyConstants;
@@ -1232,27 +1233,6 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 		accountLocalService.deleteAccount(company.getAccountId());
 
-		// Groups
-
-		DeleteGroupActionableDynamicQuery deleteGroupActionableDynamicQuery =
-			new DeleteGroupActionableDynamicQuery();
-
-		deleteGroupActionableDynamicQuery.setCompanyId(companyId);
-
-		deleteGroupActionableDynamicQuery.performActions();
-
-		String[] systemGroups = PortalUtil.getSystemGroups();
-
-		for (String groupName : systemGroups) {
-			Group group = groupLocalService.getGroup(companyId, groupName);
-
-			deleteGroupActionableDynamicQuery.deleteGroup(group);
-		}
-
-		Group companyGroup = groupLocalService.getCompanyGroup(companyId);
-
-		deleteGroupActionableDynamicQuery.deleteGroup(companyGroup);
-
 		// Layout prototype
 
 		ActionableDynamicQuery layoutPrototypeActionableDynamicQuery =
@@ -1387,6 +1367,27 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		User defaultUser = userLocalService.getDefaultUser(companyId);
 
 		userLocalService.deleteUser(defaultUser);
+
+		// Groups
+
+		DeleteGroupActionableDynamicQuery deleteGroupActionableDynamicQuery =
+			new DeleteGroupActionableDynamicQuery();
+
+		deleteGroupActionableDynamicQuery.setCompanyId(companyId);
+
+		deleteGroupActionableDynamicQuery.performActions();
+
+		String[] systemGroups = PortalUtil.getSystemGroups();
+
+		for (String groupName : systemGroups) {
+			Group group = groupLocalService.getGroup(companyId, groupName);
+
+			deleteGroupActionableDynamicQuery.deleteGroup(group);
+		}
+
+		Group companyGroup = groupLocalService.getCompanyGroup(companyId);
+
+		deleteGroupActionableDynamicQuery.deleteGroup(companyGroup);
 
 		// Virtual host
 
