@@ -72,6 +72,13 @@ public class TicketLocalServiceImpl extends TicketLocalServiceBaseImpl {
 	}
 
 	@Override
+	public Ticket fetchTicket(String className, long classPK, int type) {
+		long classNameId = classNameLocalService.getClassNameId(className);
+		return ticketPersistence.fetchByC_C_T_First(
+			classNameId, classPK, type, null);
+	}
+
+	@Override
 	public Ticket getTicket(String key) throws PortalException {
 		return ticketPersistence.findByKey(key);
 	}
