@@ -117,6 +117,22 @@ public class GroupParentException extends PortalException {
 
 	}
 
+	public static class MustNotHaveDifferentCompanyId
+		extends GroupParentException {
+
+		public MustNotHaveDifferentCompanyId(long companyId, long groupId) {
+			super(
+				String.format(
+					"Site %s cannot have a parent site with a companyId " +
+						"other than %s",
+					groupId, companyId));
+		}
+
+		public long companyId;
+		public long groupId;
+
+	}
+
 	public static class MustNotHaveStagingParent extends GroupParentException {
 
 		public MustNotHaveStagingParent(long groupId, long parentGroupId) {
