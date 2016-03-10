@@ -1351,18 +1351,12 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 				@Override
 				public void performAction(User user) throws PortalException {
-					if (!user.isDefaultUser()) {
-						userLocalService.deleteUser(user.getUserId());
-					}
+					userLocalService.deleteUser(user.getUserId());
 				}
 
 			});
 
 		userActionableDynamicQuery.performActions();
-
-		User defaultUser = userLocalService.getDefaultUser(companyId);
-
-		userLocalService.deleteUser(defaultUser);
 
 		// Groups
 
