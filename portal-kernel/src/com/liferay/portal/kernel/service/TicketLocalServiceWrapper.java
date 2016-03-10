@@ -192,6 +192,12 @@ public class TicketLocalServiceWrapper implements TicketLocalService,
 
 	@Override
 	public com.liferay.portal.kernel.model.Ticket fetchTicket(
+		java.lang.String className, long classPK, int type) {
+		return _ticketLocalService.fetchTicket(className, classPK, type);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.model.Ticket fetchTicket(
 		java.lang.String key) {
 		return _ticketLocalService.fetchTicket(key);
 	}

@@ -192,6 +192,11 @@ public class TicketLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Ticket fetchTicket(
+		java.lang.String className, long classPK, int type) {
+		return getService().fetchTicket(className, classPK, type);
+	}
+
+	public static com.liferay.portal.kernel.model.Ticket fetchTicket(
 		java.lang.String key) {
 		return getService().fetchTicket(key);
 	}

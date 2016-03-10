@@ -171,6 +171,9 @@ public interface TicketLocalService extends BaseLocalService,
 		Projection projection);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Ticket fetchTicket(java.lang.String className, long classPK, int type);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Ticket fetchTicket(java.lang.String key);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
