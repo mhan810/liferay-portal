@@ -498,16 +498,19 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 		Long currentCompanyId = CompanyThreadLocal.getCompanyId();
 		boolean deleteInProcess = CompanyThreadLocal.isDeleteInProcess();
+		boolean forceSync = ProxyModeThreadLocal.isForceSync();
 
 		try {
 			CompanyThreadLocal.setCompanyId(companyId);
 			CompanyThreadLocal.setDeleteInProcess(true);
+			ProxyModeThreadLocal.setForceSync(true);
 
 			return doDeleteCompany(companyId);
 		}
 		finally {
 			CompanyThreadLocal.setCompanyId(currentCompanyId);
 			CompanyThreadLocal.setDeleteInProcess(deleteInProcess);
+			ProxyModeThreadLocal.setForceSync(forceSync);
 		}
 	}
 
