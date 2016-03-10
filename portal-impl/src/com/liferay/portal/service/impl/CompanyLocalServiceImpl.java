@@ -39,7 +39,6 @@ import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.ContactConstants;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.LayoutPrototype;
 import com.liferay.portal.kernel.model.LayoutSetPrototype;
 import com.liferay.portal.kernel.model.Organization;
@@ -1374,23 +1373,9 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		// Groups
 
 		DeleteGroupActionableDynamicQuery deleteGroupActionableDynamicQuery =
-			new DeleteGroupActionableDynamicQuery();
-
-		deleteGroupActionableDynamicQuery.setCompanyId(companyId);
+			new DeleteGroupActionableDynamicQuery(companyId);
 
 		deleteGroupActionableDynamicQuery.performActions();
-
-		String[] systemGroups = PortalUtil.getSystemGroups();
-
-		for (String groupName : systemGroups) {
-			Group group = groupLocalService.getGroup(companyId, groupName);
-
-			deleteGroupActionableDynamicQuery.deleteGroup(group);
-		}
-
-		Group companyGroup = groupLocalService.getCompanyGroup(companyId);
-
-		deleteGroupActionableDynamicQuery.deleteGroup(companyGroup);
 
 		// Virtual host
 
@@ -1592,28 +1577,11 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 	protected class DeleteGroupActionableDynamicQuery {
 
-		protected DeleteGroupActionableDynamicQuery() {
+		protected DeleteGroupActionableDynamicQuery(long companyId) {
 			_actionableDynamicQuery =
 				groupLocalService.getActionableDynamicQuery();
 
-			_actionableDynamicQuery.setAddCriteriaMethod(
-				new ActionableDynamicQuery.AddCriteriaMethod() {
-
-					@Override
-					public void addCriteria(DynamicQuery dynamicQuery) {
-						Property parentGroupIdProperty =
-							PropertyFactoryUtil.forName("parentGroupId");
-
-						dynamicQuery.add(
-							parentGroupIdProperty.eq(_parentGroupId));
-
-						Property siteProperty = PropertyFactoryUtil.forName(
-							"site");
-
-						dynamicQuery.add(siteProperty.eq(Boolean.TRUE));
-					}
-
-				});
+			_actionableDynamicQuery.setCompanyId(companyId);
 			_actionableDynamicQuery.setPerformActionMethod(
 				new ActionableDynamicQuery.PerformActionMethod<Group>() {
 
@@ -1621,47 +1589,20 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 					public void performAction(Group group)
 						throws PortalException {
 
-						if (!PortalUtil.isSystemGroup(group.getGroupKey()) &&
-							!group.isCompany()) {
+						groupLocalService.deleteGroup(group);
 
-							deleteGroup(group);
-						}
+						LiveUsers.deleteGroup(
+							group.getCompanyId(), group.getGroupId());
 					}
 
 				});
-		}
-
-		protected void deleteGroup(Group group) throws PortalException {
-			DeleteGroupActionableDynamicQuery
-				deleteGroupActionableDynamicQuery =
-					new DeleteGroupActionableDynamicQuery();
-
-			deleteGroupActionableDynamicQuery.setCompanyId(
-				group.getCompanyId());
-			deleteGroupActionableDynamicQuery.setParentGroupId(
-				group.getGroupId());
-
-			deleteGroupActionableDynamicQuery.performActions();
-
-			groupLocalService.deleteGroup(group);
-
-			LiveUsers.deleteGroup(group.getCompanyId(), group.getGroupId());
 		}
 
 		protected void performActions() throws PortalException {
 			_actionableDynamicQuery.performActions();
 		}
 
-		protected void setCompanyId(long companyId) {
-			_actionableDynamicQuery.setCompanyId(companyId);
-		}
-
-		protected void setParentGroupId(long parentGroupId) {
-			_parentGroupId = parentGroupId;
-		}
-
 		private ActionableDynamicQuery _actionableDynamicQuery;
-		private long _parentGroupId = GroupConstants.DEFAULT_PARENT_GROUP_ID;
 
 	}
 
