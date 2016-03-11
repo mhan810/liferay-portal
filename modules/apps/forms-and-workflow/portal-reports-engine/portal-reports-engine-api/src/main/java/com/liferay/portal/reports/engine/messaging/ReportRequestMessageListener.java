@@ -19,20 +19,24 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.reports.engine.ReportDesignRetriever;
 import com.liferay.portal.reports.engine.ReportEngine;
 import com.liferay.portal.reports.engine.ReportGenerationException;
 import com.liferay.portal.reports.engine.ReportRequest;
 import com.liferay.portal.reports.engine.ReportResultContainer;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  */
+@Component(
+	immediate = true, property = {"destination=report", "destination.name=" + DestinationNames.REPORT_REQUEST},
+	service = MessageListener.class
+)
 public class ReportRequestMessageListener extends BaseMessageListener {
-
-	public void setReportEngine(ReportEngine reportEngine) {
-		_reportEngine = reportEngine;
-	}
 
 	public void setReportResultContainer(
 		ReportResultContainer reportResultContainer) {
@@ -72,7 +76,9 @@ public class ReportRequestMessageListener extends BaseMessageListener {
 	private static final Log _log = LogFactoryUtil.getLog(
 		ReportRequestMessageListener.class);
 
+	@Reference
 	private ReportEngine _reportEngine;
+
 	private ReportResultContainer _reportResultContainer;
 
 }
