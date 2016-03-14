@@ -3386,6 +3386,7 @@
 		<exception>PortletItemName</exception>
 		<exception>PortletPreferences</exception>
 		<exception>PwdEncryptor</exception>
+		<exception>RateLimitExceeded</exception>
 		<exception>RegionCode</exception>
 		<exception>RegionName</exception>
 		<exception>RequiredCompany</exception>
