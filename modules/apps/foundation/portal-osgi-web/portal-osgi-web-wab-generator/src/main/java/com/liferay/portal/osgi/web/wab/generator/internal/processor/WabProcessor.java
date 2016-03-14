@@ -781,6 +781,11 @@ public class WabProcessor {
 		}
 	}
 
+	protected void processExtraRequirements() {
+		_importPackageNames.add(
+			"org.eclipse.core.runtime;x-liferay-compatibility:=spring");
+	}
+
 	protected void processFiles(
 			File dir, URI uri, Map<String, File> classPath,
 			String[] portalDependencyJars)
@@ -1261,6 +1266,8 @@ public class WabProcessor {
 		processWebXML("WEB-INF/liferay-web.xml");
 
 		processDeclarativeReferences();
+
+		processExtraRequirements();
 
 		processPackageNames(analyzer);
 
