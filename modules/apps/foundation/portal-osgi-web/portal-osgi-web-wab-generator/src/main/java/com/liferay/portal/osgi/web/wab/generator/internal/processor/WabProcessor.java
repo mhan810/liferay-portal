@@ -166,7 +166,9 @@ public class WabProcessor {
 		}
 
 		Jar jar = new Jar(file);
+
 		jar.setDoNotTouchManifest();
+
 		analyzer.addClose(jar);
 
 		String wabLibPath = "WEB-INF/lib/" + file.getName();
@@ -177,40 +179,54 @@ public class WabProcessor {
 
 		try {
 			manifest = jar.getManifest();
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-		}
 
-		if (manifest != null) {
+			if (manifest == null) {
+				if (_log.isDebugEnabled()) {
+					_log.debug("No manifest found for: " + jar.getName());
+				}
+
+				return;
+			}
+
 			Attributes attributes = manifest.getMainAttributes();
+
 			String classPathHeader = attributes.getValue("Class-Path");
 
-			if (classPathHeader != null) {
-				Collection<String> parts = Analyzer.split(classPathHeader, ",");
+			if (Validator.isNull(classPathHeader)) {
+				if (_log.isDebugEnabled()) {
+					_log.debug("No Class-Path header found: " + jar.getName());
+				}
 
-				for (String part : parts) {
-					File subFile = Analyzer.getFile(file.getParentFile(), part);
+				return;
+			}
 
-					if (!subFile.exists() ||
-						!subFile.getParentFile().equals(
-							file.getParentFile())) {
+			Collection<String> classPathHeaderParts = Analyzer.split(
+				classPathHeader, ",");
 
-						analyzer.warning(
-							"Invalid Class-Path entry %s in %s, must " +
-								"exist and must reside in same directory",
-							subFile, file);
-					}
-					else {
-						wabLibPath = "WEB-INF/lib/" + subFile.getName();
+			for (String classPathHeaderPart : classPathHeaderParts) {
+				File subFile = Analyzer.getFile(
+					file.getParentFile(), classPathHeaderPart);
 
-						appendProperty(
-							analyzer, Constants.BUNDLE_CLASSPATH, wabLibPath);
+				if (!subFile.exists() ||
+					!subFile.getParentFile().equals(file.getParentFile())) {
 
-						addWabLib(analyzer, wab, subFile);
-					}
+					analyzer.warning(
+						"Invalid Class-Path entry %s in %s, must " +
+							"exist and must reside in same directory",
+						subFile, file);
+				}
+				else {
+					wabLibPath = "WEB-INF/lib/" + subFile.getName();
+
+					appendProperty(
+						analyzer, Constants.BUNDLE_CLASSPATH, wabLibPath);
+
+					addWabLib(analyzer, wab, subFile);
 				}
 			}
+		}
+		catch (Exception e) {
+			_log.error("Cannot load manifest for: " + jar.getName(), e);
 		}
 	}
 
@@ -298,11 +314,12 @@ public class WabProcessor {
 
 		for (Entry<String, Resource> entry : resources.entrySet()) {
 			String path = entry.getKey();
-			Resource resource = entry.getValue();
 
 			if (!path.startsWith("OSGI-INF/")) {
 				continue;
 			}
+
+			Resource resource = entry.getValue();
 
 			try {
 				FileUtil.write(
@@ -855,19 +872,19 @@ public class WabProcessor {
 					continue;
 				}
 
-				boolean containedInClassPath = false;
+				boolean containedInClasspath = false;
 
 				for (Jar jar : analyzer.getClasspath()) {
 					List<String> packages = jar.getPackages();
 
 					if (packages.contains(importPackageName)) {
-						containedInClassPath = true;
+						containedInClasspath = true;
 
 						break;
 					}
 				}
 
-				if (containedInClassPath) {
+				if (containedInClasspath) {
 					continue;
 				}
 
