@@ -72,9 +72,11 @@ public class FileLocator {
 		_lock.lock();
 
 		try {
-			_serviceTrackerMap.close();
+			if (_serviceTrackerMap != null) {
+				_serviceTrackerMap.close();
 
-			_serviceTrackerMap = null;
+				_serviceTrackerMap = null;
+			}
 		}
 		finally {
 			_lock.unlock();
@@ -82,8 +84,7 @@ public class FileLocator {
 	}
 
 	private static final ReentrantLock _lock = new ReentrantLock(true);
-
-	private static volatile ServiceTrackerMap<String,URLConverter>
+	private static volatile ServiceTrackerMap<String, URLConverter>
 		_serviceTrackerMap;
 
 }
