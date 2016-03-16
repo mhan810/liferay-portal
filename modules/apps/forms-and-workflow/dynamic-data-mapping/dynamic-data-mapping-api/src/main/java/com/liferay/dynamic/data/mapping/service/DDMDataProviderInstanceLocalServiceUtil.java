@@ -56,6 +56,7 @@ public class DDMDataProviderInstanceLocalServiceUtil {
 	public static com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance addDataProviderInstance(
 		long userId, long groupId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.lang.Class ddmDataProviderClass,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		com.liferay.dynamic.data.mapping.storage.DDMFormValues ddmFormValues,
 		java.lang.String type,
@@ -63,7 +64,8 @@ public class DDMDataProviderInstanceLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addDataProviderInstance(userId, groupId, nameMap,
-			descriptionMap, ddmFormValues, type, serviceContext);
+			ddmDataProviderClass, descriptionMap, ddmFormValues, type,
+			serviceContext);
 	}
 
 	/**
@@ -397,13 +399,15 @@ public class DDMDataProviderInstanceLocalServiceUtil {
 	public static com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance updateDataProviderInstance(
 		long userId, long dataProviderInstanceId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.lang.Class<?> ddmDataProviderClass,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		com.liferay.dynamic.data.mapping.storage.DDMFormValues ddmFormValues,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateDataProviderInstance(userId, dataProviderInstanceId,
-			nameMap, descriptionMap, ddmFormValues, serviceContext);
+			nameMap, ddmDataProviderClass, descriptionMap, ddmFormValues,
+			serviceContext);
 	}
 
 	public static DDMDataProviderInstanceLocalService getService() {

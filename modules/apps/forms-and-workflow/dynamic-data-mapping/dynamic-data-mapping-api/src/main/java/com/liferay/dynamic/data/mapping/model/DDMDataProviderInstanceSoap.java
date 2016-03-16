@@ -44,6 +44,7 @@ public class DDMDataProviderInstanceSoap implements Serializable {
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
 		soapModel.setName(model.getName());
+		soapModel.setDdmFormClassName(model.getDdmFormClassName());
 		soapModel.setDescription(model.getDescription());
 		soapModel.setDefinition(model.getDefinition());
 		soapModel.setType(model.getType());
@@ -174,6 +175,14 @@ public class DDMDataProviderInstanceSoap implements Serializable {
 		_name = name;
 	}
 
+	public String getDdmFormClassName() {
+		return _ddmFormClassName;
+	}
+
+	public void setDdmFormClassName(String ddmFormClassName) {
+		_ddmFormClassName = ddmFormClassName;
+	}
+
 	public String getDescription() {
 		return _description;
 	}
@@ -207,6 +216,7 @@ public class DDMDataProviderInstanceSoap implements Serializable {
 	private Date _createDate;
 	private Date _modifiedDate;
 	private String _name;
+	private String _ddmFormClassName;
 	private String _description;
 	private String _definition;
 	private String _type;

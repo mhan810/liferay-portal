@@ -61,6 +61,7 @@ public interface DDMDataProviderInstanceService extends BaseService {
 	 */
 	public DDMDataProviderInstance addDataProviderInstance(long groupId,
 		Map<Locale, java.lang.String> nameMap,
+		java.lang.Class<?> ddmDataProviderClass,
 		Map<Locale, java.lang.String> descriptionMap,
 		DDMFormValues ddmFormValues, java.lang.String type,
 		ServiceContext serviceContext) throws PortalException;
@@ -104,6 +105,7 @@ public interface DDMDataProviderInstanceService extends BaseService {
 
 	public DDMDataProviderInstance updateDataProviderInstance(
 		long dataProviderInstanceId, Map<Locale, java.lang.String> nameMap,
+		java.lang.Class<?> ddmDataProviderClass,
 		Map<Locale, java.lang.String> descriptionMap,
 		DDMFormValues ddmFormValues, ServiceContext serviceContext)
 		throws PortalException;

@@ -70,6 +70,7 @@ public class DDMDataProviderInstanceWrapper implements DDMDataProviderInstance,
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("name", getName());
+		attributes.put("ddmFormClassName", getDdmFormClassName());
 		attributes.put("description", getDescription());
 		attributes.put("definition", getDefinition());
 		attributes.put("type", getType());
@@ -132,6 +133,12 @@ public class DDMDataProviderInstanceWrapper implements DDMDataProviderInstance,
 
 		if (name != null) {
 			setName(name);
+		}
+
+		String ddmFormClassName = (String)attributes.get("ddmFormClassName");
+
+		if (ddmFormClassName != null) {
+			setDdmFormClassName(ddmFormClassName);
 		}
 
 		String description = (String)attributes.get("description");
@@ -197,6 +204,16 @@ public class DDMDataProviderInstanceWrapper implements DDMDataProviderInstance,
 	@Override
 	public long getDataProviderInstanceId() {
 		return _ddmDataProviderInstance.getDataProviderInstanceId();
+	}
+
+	/**
+	* Returns the ddm form class name of this d d m data provider instance.
+	*
+	* @return the ddm form class name of this d d m data provider instance
+	*/
+	@Override
+	public java.lang.String getDdmFormClassName() {
+		return _ddmDataProviderInstance.getDdmFormClassName();
 	}
 
 	@Override
@@ -530,6 +547,16 @@ public class DDMDataProviderInstanceWrapper implements DDMDataProviderInstance,
 	@Override
 	public void setDataProviderInstanceId(long dataProviderInstanceId) {
 		_ddmDataProviderInstance.setDataProviderInstanceId(dataProviderInstanceId);
+	}
+
+	/**
+	* Sets the ddm form class name of this d d m data provider instance.
+	*
+	* @param ddmFormClassName the ddm form class name of this d d m data provider instance
+	*/
+	@Override
+	public void setDdmFormClassName(java.lang.String ddmFormClassName) {
+		_ddmDataProviderInstance.setDdmFormClassName(ddmFormClassName);
 	}
 
 	/**

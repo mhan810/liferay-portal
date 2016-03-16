@@ -58,6 +58,7 @@ public class DDMDataProviderInstanceServiceHttp {
 	public static com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance addDataProviderInstance(
 		HttpPrincipal httpPrincipal, long groupId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.lang.Class<?> ddmDataProviderClass,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		com.liferay.dynamic.data.mapping.storage.DDMFormValues ddmFormValues,
 		java.lang.String type,
@@ -69,7 +70,8 @@ public class DDMDataProviderInstanceServiceHttp {
 					_addDataProviderInstanceParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
-					nameMap, descriptionMap, ddmFormValues, type, serviceContext);
+					nameMap, ddmDataProviderClass, descriptionMap,
+					ddmFormValues, type, serviceContext);
 
 			Object returnObj = null;
 
@@ -306,6 +308,7 @@ public class DDMDataProviderInstanceServiceHttp {
 	public static com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance updateDataProviderInstance(
 		HttpPrincipal httpPrincipal, long dataProviderInstanceId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.lang.Class<?> ddmDataProviderClass,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		com.liferay.dynamic.data.mapping.storage.DDMFormValues ddmFormValues,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
@@ -316,8 +319,8 @@ public class DDMDataProviderInstanceServiceHttp {
 					_updateDataProviderInstanceParameterTypes8);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
-					dataProviderInstanceId, nameMap, descriptionMap,
-					ddmFormValues, serviceContext);
+					dataProviderInstanceId, nameMap, ddmDataProviderClass,
+					descriptionMap, ddmFormValues, serviceContext);
 
 			Object returnObj = null;
 
@@ -343,7 +346,8 @@ public class DDMDataProviderInstanceServiceHttp {
 
 	private static Log _log = LogFactoryUtil.getLog(DDMDataProviderInstanceServiceHttp.class);
 	private static final Class<?>[] _addDataProviderInstanceParameterTypes0 = new Class[] {
-			long.class, java.util.Map.class, java.util.Map.class,
+			long.class, java.util.Map.class, java.lang.Class.class,
+			java.util.Map.class,
 			com.liferay.dynamic.data.mapping.storage.DDMFormValues.class,
 			java.lang.String.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
@@ -374,7 +378,8 @@ public class DDMDataProviderInstanceServiceHttp {
 			java.lang.String.class, boolean.class
 		};
 	private static final Class<?>[] _updateDataProviderInstanceParameterTypes8 = new Class[] {
-			long.class, java.util.Map.class, java.util.Map.class,
+			long.class, java.util.Map.class, java.lang.Class.class,
+			java.util.Map.class,
 			com.liferay.dynamic.data.mapping.storage.DDMFormValues.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};

@@ -314,6 +314,21 @@ public interface DDMDataProviderInstanceModel extends BaseModel<DDMDataProviderI
 	public void setNameMap(Map<Locale, String> nameMap, Locale defaultLocale);
 
 	/**
+	 * Returns the ddm form class name of this d d m data provider instance.
+	 *
+	 * @return the ddm form class name of this d d m data provider instance
+	 */
+	@AutoEscape
+	public String getDdmFormClassName();
+
+	/**
+	 * Sets the ddm form class name of this d d m data provider instance.
+	 *
+	 * @param ddmFormClassName the ddm form class name of this d d m data provider instance
+	 */
+	public void setDdmFormClassName(String ddmFormClassName);
+
+	/**
 	 * Returns the description of this d d m data provider instance.
 	 *
 	 * @return the description of this d d m data provider instance

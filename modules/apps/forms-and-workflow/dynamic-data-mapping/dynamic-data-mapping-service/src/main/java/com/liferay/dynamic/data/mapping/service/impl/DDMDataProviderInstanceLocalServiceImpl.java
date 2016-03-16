@@ -50,7 +50,7 @@ public class DDMDataProviderInstanceLocalServiceImpl
 	public DDMDataProviderInstance addDataProviderInstance(
 			long userId, long groupId, Map<Locale, String> nameMap,
 			Class ddmDataProviderClass, Map<Locale, String> descriptionMap,
-			DDMFormValues ddmFormValues,String type,
+			DDMFormValues ddmFormValues, String type,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -239,7 +239,7 @@ public class DDMDataProviderInstanceLocalServiceImpl
 	public DDMDataProviderInstance updateDataProviderInstance(
 			long userId, long dataProviderInstanceId,
 			Map<Locale, String> nameMap, Class<?> ddmDataProviderClass,
-			Map<Locale, String> descriptionMap,DDMFormValues ddmFormValues,
+			Map<Locale, String> descriptionMap, DDMFormValues ddmFormValues,
 			ServiceContext serviceContext)
 		throws PortalException {
 
