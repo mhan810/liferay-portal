@@ -14,12 +14,24 @@
 
 package com.liferay.portal.reports.engine;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.Validator;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
  */
+@Component(immediate = true, service = ReportFormatExporterRegistry.class)
 public class ReportFormatExporterRegistry {
 
 	public ReportFormatExporter getReportFormatExporter(
@@ -36,18 +48,47 @@ public class ReportFormatExporterRegistry {
 		return reportFormatExporter;
 	}
 
-	public void setReportFormatExporters(
-		Map<String, ReportFormatExporter> reportFormatExporters) {
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		unbind = "unsetReportFormatExporter"
+	)
+	protected void setReportFormatExporter(
+		ReportFormatExporter reportFormatExporter,
+		Map<String, Object> properties) {
 
-		for (Map.Entry<String, ReportFormatExporter> entry :
-				reportFormatExporters.entrySet()) {
+		String reportFormatString = GetterUtil.getString(
+			properties.get("reportFormat"));
 
-			ReportFormat reportFormat = ReportFormat.parse(entry.getKey());
-			ReportFormatExporter reportFormatExporter = entry.getValue();
+		ReportFormat reportFormat = ReportFormat.parse(reportFormatString);
 
-			_reportFormatExporters.put(reportFormat, reportFormatExporter);
-		}
+		_reportFormatExporters.put(reportFormat, reportFormatExporter);
 	}
+
+	protected void unsetReportFormatExporter(
+		ReportFormatExporter reportFormatExporter,
+		Map<String, Object> properties) {
+
+		String reportFormatString = GetterUtil.getString(
+			properties.get("reportFormat"));
+
+		ReportFormat reportFormat = ReportFormat.parse(reportFormatString);
+
+		if (Validator.isNull(reportFormat)) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"No reportFormat specified for: " + reportFormatExporter);
+			}
+
+			return;
+		}
+
+		_reportFormatExporters.remove(reportFormatString);
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		ReportFormatExporterRegistry.class);
 
 	private final Map<ReportFormat, ReportFormatExporter>
 		_reportFormatExporters = new ConcurrentHashMap<>();
