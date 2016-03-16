@@ -32,6 +32,9 @@
 		<field name="name" type="String" localized="true">
 			<validator name="required" />
 		</field>
+		<field name="ddmFormClassName" type="String">
+			<hint name="max-length">300</hint>
+		</field>
 		<field name="description" type="String" localized="true">
 			<hint-collection name="CLOB" />
 		</field>

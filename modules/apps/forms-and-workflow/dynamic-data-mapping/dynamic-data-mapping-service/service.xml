@@ -61,6 +61,7 @@
 		<!-- Other fields -->
 
 		<column name="name" type="String" localized="true" />
+		<column name="ddmFormClassName" type="String" />
 		<column name="description" type="String" localized="true" />
 		<column name="definition" type="String" />
 		<column name="type" type="String" />
