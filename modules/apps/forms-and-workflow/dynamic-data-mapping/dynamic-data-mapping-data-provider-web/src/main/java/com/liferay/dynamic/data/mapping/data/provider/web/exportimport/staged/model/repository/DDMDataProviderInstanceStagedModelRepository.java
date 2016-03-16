@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
@@ -182,15 +182,15 @@ public class DDMDataProviderInstanceStagedModelRepository
 	}
 
 	protected Class<?> getDDMFormClass(
-		DDMDataProviderInstance ddmDataProviderInstance) {
+		DDMDataProviderInstance dataProviderInstance) {
 
 		try {
-			return Class.forName(ddmDataProviderInstance.getDdmFormClassName());
+			return Class.forName(dataProviderInstance.getDdmFormClassName());
 		}
 		catch (ClassNotFoundException cnfe) {
 			throw new SystemException(
 				"DataProvider implementation not found: " +
-					ddmDataProviderInstance.getDdmFormClassName());
+					dataProviderInstance.getDdmFormClassName());
 		}
 	}
 
