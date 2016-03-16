@@ -16,7 +16,6 @@ package com.liferay.dynamic.data.mapping.data.provider.web.lar;
 
 import com.liferay.dynamic.data.mapping.data.provider.DDMDataProvider;
 import com.liferay.dynamic.data.mapping.data.provider.DDMDataProviderTracker;
-import com.liferay.dynamic.data.mapping.data.provider.rest.DDMRESTDataProviderSettings;
 import com.liferay.dynamic.data.mapping.data.provider.web.constants.DDMDataProviderPortletKeys;
 import com.liferay.dynamic.data.mapping.io.DDMFormValuesJSONDeserializer;
 import com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance;
@@ -31,6 +30,7 @@ import com.liferay.exportimport.kernel.lar.StagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.StagedModelModifiedDateComparator;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.xml.Element;
 
@@ -153,8 +153,9 @@ public class DDMDataProviderInstanceStagedModelDataHandler
 
 		String definition = dataProviderInstance.getDefinition();
 
-		DDMForm ddmForm = DDMFormFactory.create(
-			DDMRESTDataProviderSettings.class);
+		Class<?> ddmFormClass = getDDMFormClass(dataProviderInstance);
+
+		DDMForm ddmForm = DDMFormFactory.create(ddmFormClass);
 
 		DDMFormValues ddmFormValues =
 			_ddmFormValuesJSONDeserializer.deserialize(ddmForm, definition);
@@ -165,7 +166,7 @@ public class DDMDataProviderInstanceStagedModelDataHandler
 			importedProvider =
 				_ddmDataProviderInstanceLocalService.addDataProviderInstance(
 					userId, portletDataContext.getScopeGroupId(),
-					dataProviderInstance.getNameMap(),
+					dataProviderInstance.getNameMap(), ddmFormClass,
 					dataProviderInstance.getDescriptionMap(), ddmFormValues,
 					dataProviderInstance.getType(), serviceContext);
 		}
@@ -176,13 +177,26 @@ public class DDMDataProviderInstanceStagedModelDataHandler
 			importedProvider =
 				_ddmDataProviderInstanceLocalService.updateDataProviderInstance(
 					userId, existingProvider.getDataProviderInstanceId(),
-					dataProviderInstance.getNameMap(),
+					dataProviderInstance.getNameMap(), ddmFormClass,
 					dataProviderInstance.getDescriptionMap(), ddmFormValues,
 					serviceContext);
 		}
 
 		portletDataContext.importClassedModel(
 			dataProviderInstance, importedProvider);
+	}
+
+	protected Class<?> getDDMFormClass(
+		DDMDataProviderInstance ddmDataProviderInstance) {
+
+		try {
+			return Class.forName(ddmDataProviderInstance.getDdmFormClassName());
+		}
+		catch (ClassNotFoundException cnfe) {
+			throw new SystemException(
+				"DataProvider implementation not found: " +
+					ddmDataProviderInstance.getDdmFormClassName());
+		}
 	}
 
 	@Reference

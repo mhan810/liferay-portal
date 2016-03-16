@@ -56,15 +56,9 @@ import org.osgi.service.component.annotations.Reference;
 public class AddDataProviderMVCActionCommand extends BaseMVCActionCommand {
 
 	public DDMFormValues getDDMFormValues(
-			ActionRequest actionRequest, ActionResponse actionResponse)
+			ActionRequest actionRequest, ActionResponse actionResponse,
+			Class<?> clazz)
 		throws PortalException {
-
-		String type = ParamUtil.getString(actionRequest, "type");
-
-		DDMDataProvider ddmDataProvider =
-			_ddmDataProviderTracker.getDDMDataProvider(type);
-
-		Class<?> clazz = ddmDataProvider.getSettings();
 
 		DDMForm ddmForm = DDMFormFactory.create(clazz);
 
@@ -83,15 +77,23 @@ public class AddDataProviderMVCActionCommand extends BaseMVCActionCommand {
 
 		String name = ParamUtil.getString(actionRequest, "name");
 		String description = ParamUtil.getString(actionRequest, "description");
-		DDMFormValues ddmFormValues = getDDMFormValues(
-			actionRequest, actionResponse);
+
 		String type = ParamUtil.getString(actionRequest, "type");
+
+		DDMDataProvider ddmDataProvider =
+			ddmDataProviderTracker.getDDMDataProvider(type);
+
+		Class<?> ddmDataProviderClass = ddmDataProvider.getSettings();
+
+		DDMFormValues ddmFormValues = getDDMFormValues(
+			actionRequest, actionResponse, ddmDataProviderClass);
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			DDMDataProviderInstance.class.getName(), actionRequest);
 
 		_ddmDataProviderInstanceService.addDataProviderInstance(
 			groupId, getLocalizedMap(themeDisplay.getLocale(), name),
+			ddmDataProviderClass,
 			getLocalizedMap(themeDisplay.getLocale(), description),
 			ddmFormValues, type, serviceContext);
 	}
@@ -110,29 +112,13 @@ public class AddDataProviderMVCActionCommand extends BaseMVCActionCommand {
 		return localizedMap;
 	}
 
-	@Reference(unbind = "-")
-	protected void setDDMDataProviderInstanceService(
-		DDMDataProviderInstanceService ddmDataProviderInstanceService) {
+	@Reference
+	protected DDMDataProviderTracker ddmDataProviderTracker;
 
-		_ddmDataProviderInstanceService = ddmDataProviderInstanceService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setDDMDataProviderTracker(
-		DDMDataProviderTracker ddmDataProviderTracker) {
-
-		_ddmDataProviderTracker = ddmDataProviderTracker;
-	}
-
-	@Reference(unbind = "-")
-	protected void setDDMFormValuesFactory(
-		DDMFormValuesFactory ddmFormValuesFactory) {
-
-		_ddmFormValuesFactory = ddmFormValuesFactory;
-	}
-
+	@Reference
 	private DDMDataProviderInstanceService _ddmDataProviderInstanceService;
-	private DDMDataProviderTracker _ddmDataProviderTracker;
+
+	@Reference
 	private DDMFormValuesFactory _ddmFormValuesFactory;
 
 }

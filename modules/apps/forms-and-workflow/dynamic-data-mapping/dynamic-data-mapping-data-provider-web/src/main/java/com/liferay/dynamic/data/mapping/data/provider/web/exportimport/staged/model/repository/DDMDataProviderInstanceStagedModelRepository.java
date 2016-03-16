@@ -14,7 +14,6 @@
 
 package com.liferay.dynamic.data.mapping.data.provider.web.exportimport.staged.model.repository;
 
-import com.liferay.dynamic.data.mapping.data.provider.rest.DDMRESTDataProviderSettings;
 import com.liferay.dynamic.data.mapping.io.DDMFormValuesJSONDeserializer;
 import com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
@@ -29,6 +28,7 @@ import com.liferay.exportimport.staged.model.repository.base.BaseStagedModelRepo
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.service.ServiceContext;
 
 import java.util.List;
@@ -65,15 +65,16 @@ public class DDMDataProviderInstanceStagedModelRepository
 
 		String definition = dataProviderInstance.getDefinition();
 
-		DDMForm ddmForm = DDMFormFactory.create(
-			DDMRESTDataProviderSettings.class);
+		Class<?> ddmFormClass = getDDMFormClass(dataProviderInstance);
+
+		DDMForm ddmForm = DDMFormFactory.create(ddmFormClass);
 
 		DDMFormValues ddmFormValues =
 			_ddmFormValuesJSONDeserializer.deserialize(ddmForm, definition);
 
 		return _ddmDataProviderInstanceLocalService.addDataProviderInstance(
 			userId, dataProviderInstance.getGroupId(),
-			dataProviderInstance.getNameMap(),
+			dataProviderInstance.getNameMap(), ddmFormClass,
 			dataProviderInstance.getDescriptionMap(), ddmFormValues,
 			dataProviderInstance.getType(), serviceContext);
 	}
@@ -166,17 +167,31 @@ public class DDMDataProviderInstanceStagedModelRepository
 
 		String definition = dataProviderInstance.getDefinition();
 
-		DDMForm ddmForm = DDMFormFactory.create(
-			DDMRESTDataProviderSettings.class);
+		Class<?> ddmFormClass = getDDMFormClass(dataProviderInstance);
+
+		DDMForm ddmForm = DDMFormFactory.create(ddmFormClass);
 
 		DDMFormValues ddmFormValues =
 			_ddmFormValuesJSONDeserializer.deserialize(ddmForm, definition);
 
 		return _ddmDataProviderInstanceLocalService.updateDataProviderInstance(
 			userId, dataProviderInstance.getDataProviderInstanceId(),
-			dataProviderInstance.getNameMap(),
+			dataProviderInstance.getNameMap(), ddmFormClass,
 			dataProviderInstance.getDescriptionMap(), ddmFormValues,
 			serviceContext);
+	}
+
+	protected Class<?> getDDMFormClass(
+		DDMDataProviderInstance ddmDataProviderInstance) {
+
+		try {
+			return Class.forName(ddmDataProviderInstance.getDdmFormClassName());
+		}
+		catch (ClassNotFoundException cnfe) {
+			throw new SystemException(
+				"DataProvider implementation not found: " +
+					ddmDataProviderInstance.getDdmFormClassName());
+		}
 	}
 
 	@Reference

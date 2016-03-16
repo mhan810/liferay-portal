@@ -49,8 +49,9 @@ public class DDMDataProviderInstanceLocalServiceImpl
 	@Override
 	public DDMDataProviderInstance addDataProviderInstance(
 			long userId, long groupId, Map<Locale, String> nameMap,
-			Map<Locale, String> descriptionMap, DDMFormValues ddmFormValues,
-			String type, ServiceContext serviceContext)
+			Class ddmDataProviderClass, Map<Locale, String> descriptionMap,
+			DDMFormValues ddmFormValues,String type,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		// Data provider instance
@@ -70,6 +71,8 @@ public class DDMDataProviderInstanceLocalServiceImpl
 		dataProviderInstance.setUserId(user.getUserId());
 		dataProviderInstance.setUserName(user.getFullName());
 		dataProviderInstance.setNameMap(nameMap);
+		dataProviderInstance.setDdmFormClassName(
+			ddmDataProviderClass.getName());
 		dataProviderInstance.setDescriptionMap(descriptionMap);
 		dataProviderInstance.setDefinition(
 			ddmFormValuesJSONSerializer.serialize(ddmFormValues));
@@ -235,8 +238,9 @@ public class DDMDataProviderInstanceLocalServiceImpl
 	@Override
 	public DDMDataProviderInstance updateDataProviderInstance(
 			long userId, long dataProviderInstanceId,
-			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
-			DDMFormValues ddmFormValues, ServiceContext serviceContext)
+			Map<Locale, String> nameMap, Class<?> ddmDataProviderClass,
+			Map<Locale, String> descriptionMap,DDMFormValues ddmFormValues,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
@@ -250,6 +254,8 @@ public class DDMDataProviderInstanceLocalServiceImpl
 		dataProviderInstance.setUserId(user.getUserId());
 		dataProviderInstance.setUserName(user.getFullName());
 		dataProviderInstance.setNameMap(nameMap);
+		dataProviderInstance.setDdmFormClassName(
+			ddmDataProviderClass.getName());
 		dataProviderInstance.setDescriptionMap(descriptionMap);
 		dataProviderInstance.setDefinition(
 			ddmFormValuesJSONSerializer.serialize(ddmFormValues));
