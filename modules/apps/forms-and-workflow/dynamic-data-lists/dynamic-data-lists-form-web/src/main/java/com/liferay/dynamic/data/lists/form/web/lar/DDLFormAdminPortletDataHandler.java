@@ -23,6 +23,7 @@ import com.liferay.dynamic.data.lists.service.DDLRecordLocalService;
 import com.liferay.dynamic.data.lists.service.DDLRecordSetLocalService;
 import com.liferay.dynamic.data.lists.service.permission.DDLPermission;
 import com.liferay.dynamic.data.lists.util.comparator.DDLRecordSetNameComparator;
+import com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.exportimport.kernel.lar.BasePortletDataHandler;
@@ -83,7 +84,11 @@ public class DDLFormAdminPortletDataHandler extends BasePortletDataHandler {
 				DDLRecordSet.class.getName()),
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "form-entries", true, false, null,
-				DDLRecord.class.getName()));
+				DDLRecord.class.getName()),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "ddm-data-provider", true, false, null,
+				DDMDataProviderInstance.class.getName())
+		);
 	}
 
 	protected DynamicQuery createRecordSetDynamicQuery() {
@@ -232,6 +237,20 @@ public class DDLFormAdminPortletDataHandler extends BasePortletDataHandler {
 				ddmStructuresElement.elements();
 
 			for (Element ddmStructureElement : ddmStructureElements) {
+				StagedModelDataHandlerUtil.importStagedModel(
+					portletDataContext, ddmStructureElement);
+			}
+
+			Element ddmDataProviderInstanceElement =
+				portletDataContext.getImportDataGroupElement(
+					DDMDataProviderInstance.class);
+
+			List<Element> ddmDataProviderInstanceElements =
+				ddmDataProviderInstanceElement.elements();
+
+			for (Element ddmStructureElement :
+					ddmDataProviderInstanceElements) {
+
 				StagedModelDataHandlerUtil.importStagedModel(
 					portletDataContext, ddmStructureElement);
 			}
