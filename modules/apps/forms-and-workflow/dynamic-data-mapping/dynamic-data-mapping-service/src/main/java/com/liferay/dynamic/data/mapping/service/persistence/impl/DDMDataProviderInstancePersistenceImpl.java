@@ -3795,6 +3795,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 		ddmDataProviderInstanceImpl.setCreateDate(ddmDataProviderInstance.getCreateDate());
 		ddmDataProviderInstanceImpl.setModifiedDate(ddmDataProviderInstance.getModifiedDate());
 		ddmDataProviderInstanceImpl.setName(ddmDataProviderInstance.getName());
+		ddmDataProviderInstanceImpl.setDdmFormClassName(ddmDataProviderInstance.getDdmFormClassName());
 		ddmDataProviderInstanceImpl.setDescription(ddmDataProviderInstance.getDescription());
 		ddmDataProviderInstanceImpl.setDefinition(ddmDataProviderInstance.getDefinition());
 		ddmDataProviderInstanceImpl.setType(ddmDataProviderInstance.getType());

@@ -80,6 +80,7 @@ public interface DDMDataProviderInstanceLocalService extends BaseLocalService,
 
 	public DDMDataProviderInstance addDataProviderInstance(long userId,
 		long groupId, Map<Locale, java.lang.String> nameMap,
+		java.lang.Class ddmDataProviderClass,
 		Map<Locale, java.lang.String> descriptionMap,
 		DDMFormValues ddmFormValues, java.lang.String type,
 		ServiceContext serviceContext) throws PortalException;
@@ -118,6 +119,9 @@ public interface DDMDataProviderInstanceLocalService extends BaseLocalService,
 		DDMDataProviderInstance dataProviderInstance) throws PortalException;
 
 	public void deleteDataProviderInstance(long dataProviderInstanceId)
+		throws PortalException;
+
+	public void deleteDataProviderInstances(long companyId, long groupId)
 		throws PortalException;
 
 	/**
@@ -338,6 +342,7 @@ public interface DDMDataProviderInstanceLocalService extends BaseLocalService,
 
 	public DDMDataProviderInstance updateDataProviderInstance(long userId,
 		long dataProviderInstanceId, Map<Locale, java.lang.String> nameMap,
+		java.lang.Class<?> ddmDataProviderClass,
 		Map<Locale, java.lang.String> descriptionMap,
 		DDMFormValues ddmFormValues, ServiceContext serviceContext)
 		throws PortalException;

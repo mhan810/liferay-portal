@@ -21,6 +21,10 @@ import com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance;
 import com.liferay.dynamic.data.mapping.service.base.DDMDataProviderInstanceLocalServiceBaseImpl;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValuesValidator;
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.User;
@@ -45,8 +49,9 @@ public class DDMDataProviderInstanceLocalServiceImpl
 	@Override
 	public DDMDataProviderInstance addDataProviderInstance(
 			long userId, long groupId, Map<Locale, String> nameMap,
-			Map<Locale, String> descriptionMap, DDMFormValues ddmFormValues,
-			String type, ServiceContext serviceContext)
+			Class ddmDataProviderClass, Map<Locale, String> descriptionMap,
+			DDMFormValues ddmFormValues, String type,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		// Data provider instance
@@ -66,6 +71,8 @@ public class DDMDataProviderInstanceLocalServiceImpl
 		dataProviderInstance.setUserId(user.getUserId());
 		dataProviderInstance.setUserName(user.getFullName());
 		dataProviderInstance.setNameMap(nameMap);
+		dataProviderInstance.setDdmFormClassName(
+			ddmDataProviderClass.getName());
 		dataProviderInstance.setDescriptionMap(descriptionMap);
 		dataProviderInstance.setDefinition(
 			ddmFormValuesJSONSerializer.serialize(ddmFormValues));
@@ -132,6 +139,44 @@ public class DDMDataProviderInstanceLocalServiceImpl
 	}
 
 	@Override
+	public void deleteDataProviderInstances(long companyId, final long groupId)
+		throws PortalException {
+
+		ActionableDynamicQuery actionableDynamicQuery =
+			ddmDataProviderInstanceLocalService.getActionableDynamicQuery();
+
+		actionableDynamicQuery.setAddCriteriaMethod(
+			new ActionableDynamicQuery.AddCriteriaMethod() {
+
+				@Override
+				public void addCriteria(DynamicQuery dynamicQuery) {
+					Property groupIdProperty = PropertyFactoryUtil.forName(
+						"groupId");
+
+					dynamicQuery.add(groupIdProperty.eq(groupId));
+				}
+
+			});
+
+		actionableDynamicQuery.setPerformActionMethod(
+			new ActionableDynamicQuery.
+				PerformActionMethod<DDMDataProviderInstance>() {
+
+				@Override
+				public void performAction(
+						DDMDataProviderInstance ddmDataProviderInstance)
+					throws PortalException {
+
+					deleteDataProviderInstance(ddmDataProviderInstance);
+				}
+
+			});
+
+		actionableDynamicQuery.setCompanyId(companyId);
+		actionableDynamicQuery.performActions();
+	}
+
+	@Override
 	public DDMDataProviderInstance fetchDataProviderInstance(
 		long dataProviderInstanceId) {
 
@@ -193,8 +238,9 @@ public class DDMDataProviderInstanceLocalServiceImpl
 	@Override
 	public DDMDataProviderInstance updateDataProviderInstance(
 			long userId, long dataProviderInstanceId,
-			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
-			DDMFormValues ddmFormValues, ServiceContext serviceContext)
+			Map<Locale, String> nameMap, Class<?> ddmDataProviderClass,
+			Map<Locale, String> descriptionMap, DDMFormValues ddmFormValues,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
@@ -208,6 +254,8 @@ public class DDMDataProviderInstanceLocalServiceImpl
 		dataProviderInstance.setUserId(user.getUserId());
 		dataProviderInstance.setUserName(user.getFullName());
 		dataProviderInstance.setNameMap(nameMap);
+		dataProviderInstance.setDdmFormClassName(
+			ddmDataProviderClass.getName());
 		dataProviderInstance.setDescriptionMap(descriptionMap);
 		dataProviderInstance.setDefinition(
 			ddmFormValuesJSONSerializer.serialize(ddmFormValues));

@@ -50,14 +50,15 @@ public class DDMDataProviderInstanceLocalServiceWrapper
 	public com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance addDataProviderInstance(
 		long userId, long groupId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.lang.Class ddmDataProviderClass,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		com.liferay.dynamic.data.mapping.storage.DDMFormValues ddmFormValues,
 		java.lang.String type,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _ddmDataProviderInstanceLocalService.addDataProviderInstance(userId,
-			groupId, nameMap, descriptionMap, ddmFormValues, type,
-			serviceContext);
+			groupId, nameMap, ddmDataProviderClass, descriptionMap,
+			ddmFormValues, type, serviceContext);
 	}
 
 	/**
@@ -109,6 +110,13 @@ public class DDMDataProviderInstanceLocalServiceWrapper
 	public void deleteDataProviderInstance(long dataProviderInstanceId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_ddmDataProviderInstanceLocalService.deleteDataProviderInstance(dataProviderInstanceId);
+	}
+
+	@Override
+	public void deleteDataProviderInstances(long companyId, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_ddmDataProviderInstanceLocalService.deleteDataProviderInstances(companyId,
+			groupId);
 	}
 
 	/**
@@ -417,13 +425,14 @@ public class DDMDataProviderInstanceLocalServiceWrapper
 	public com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance updateDataProviderInstance(
 		long userId, long dataProviderInstanceId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.lang.Class<?> ddmDataProviderClass,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		com.liferay.dynamic.data.mapping.storage.DDMFormValues ddmFormValues,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _ddmDataProviderInstanceLocalService.updateDataProviderInstance(userId,
-			dataProviderInstanceId, nameMap, descriptionMap, ddmFormValues,
-			serviceContext);
+			dataProviderInstanceId, nameMap, ddmDataProviderClass,
+			descriptionMap, ddmFormValues, serviceContext);
 	}
 
 	@Override

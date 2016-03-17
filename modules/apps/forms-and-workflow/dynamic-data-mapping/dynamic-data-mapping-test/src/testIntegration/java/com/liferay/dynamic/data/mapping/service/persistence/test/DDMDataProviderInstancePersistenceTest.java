@@ -140,6 +140,8 @@ public class DDMDataProviderInstancePersistenceTest {
 
 		newDDMDataProviderInstance.setName(RandomTestUtil.randomString());
 
+		newDDMDataProviderInstance.setDdmFormClassName(RandomTestUtil.randomString());
+
 		newDDMDataProviderInstance.setDescription(RandomTestUtil.randomString());
 
 		newDDMDataProviderInstance.setDefinition(RandomTestUtil.randomString());
@@ -171,6 +173,8 @@ public class DDMDataProviderInstancePersistenceTest {
 			Time.getShortTimestamp(newDDMDataProviderInstance.getModifiedDate()));
 		Assert.assertEquals(existingDDMDataProviderInstance.getName(),
 			newDDMDataProviderInstance.getName());
+		Assert.assertEquals(existingDDMDataProviderInstance.getDdmFormClassName(),
+			newDDMDataProviderInstance.getDdmFormClassName());
 		Assert.assertEquals(existingDDMDataProviderInstance.getDescription(),
 			newDDMDataProviderInstance.getDescription());
 		Assert.assertEquals(existingDDMDataProviderInstance.getDefinition(),
@@ -258,7 +262,8 @@ public class DDMDataProviderInstancePersistenceTest {
 		return OrderByComparatorFactoryUtil.create("DDMDataProviderInstance",
 			"uuid", true, "dataProviderInstanceId", true, "groupId", true,
 			"companyId", true, "userId", true, "userName", true, "createDate",
-			true, "modifiedDate", true, "name", true, "type", true);
+			true, "modifiedDate", true, "name", true, "ddmFormClassName", true,
+			"type", true);
 	}
 
 	@Test
@@ -502,6 +507,8 @@ public class DDMDataProviderInstancePersistenceTest {
 		ddmDataProviderInstance.setModifiedDate(RandomTestUtil.nextDate());
 
 		ddmDataProviderInstance.setName(RandomTestUtil.randomString());
+
+		ddmDataProviderInstance.setDdmFormClassName(RandomTestUtil.randomString());
 
 		ddmDataProviderInstance.setDescription(RandomTestUtil.randomString());
 

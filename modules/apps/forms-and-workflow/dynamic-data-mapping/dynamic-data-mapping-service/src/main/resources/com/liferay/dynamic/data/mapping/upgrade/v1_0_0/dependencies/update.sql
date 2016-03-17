@@ -8,6 +8,7 @@ create table DDMDataProviderInstance (
 	createDate DATE null,
 	modifiedDate DATE null,
 	name STRING null,
+	ddmFormClassName VARCHAR(300) null,
 	description TEXT null,
 	definition TEXT null,
 	type_ VARCHAR(75) null

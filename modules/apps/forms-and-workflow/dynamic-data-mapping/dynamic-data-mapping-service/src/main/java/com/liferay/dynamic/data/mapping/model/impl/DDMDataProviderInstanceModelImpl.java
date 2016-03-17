@@ -89,6 +89,7 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 			{ "createDate", Types.TIMESTAMP },
 			{ "modifiedDate", Types.TIMESTAMP },
 			{ "name", Types.VARCHAR },
+			{ "ddmFormClassName", Types.VARCHAR },
 			{ "description", Types.CLOB },
 			{ "definition", Types.CLOB },
 			{ "type_", Types.VARCHAR }
@@ -105,12 +106,13 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("ddmFormClassName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("description", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("definition", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("type_", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table DDMDataProviderInstance (uuid_ VARCHAR(75) null,dataProviderInstanceId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name STRING null,description TEXT null,definition TEXT null,type_ VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table DDMDataProviderInstance (uuid_ VARCHAR(75) null,dataProviderInstanceId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name STRING null,ddmFormClassName VARCHAR(300) null,description TEXT null,definition TEXT null,type_ VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table DDMDataProviderInstance";
 	public static final String ORDER_BY_JPQL = " ORDER BY ddmDataProviderInstance.dataProviderInstanceId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY DDMDataProviderInstance.dataProviderInstanceId ASC";
@@ -154,6 +156,7 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
 		model.setName(soapModel.getName());
+		model.setDdmFormClassName(soapModel.getDdmFormClassName());
 		model.setDescription(soapModel.getDescription());
 		model.setDefinition(soapModel.getDefinition());
 		model.setType(soapModel.getType());
@@ -231,6 +234,7 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("name", getName());
+		attributes.put("ddmFormClassName", getDdmFormClassName());
 		attributes.put("description", getDescription());
 		attributes.put("definition", getDefinition());
 		attributes.put("type", getType());
@@ -296,6 +300,12 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 
 		if (name != null) {
 			setName(name);
+		}
+
+		String ddmFormClassName = (String)attributes.get("ddmFormClassName");
+
+		if (ddmFormClassName != null) {
+			setDdmFormClassName(ddmFormClassName);
 		}
 
 		String description = (String)attributes.get("description");
@@ -570,6 +580,22 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 
 	@JSON
 	@Override
+	public String getDdmFormClassName() {
+		if (_ddmFormClassName == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _ddmFormClassName;
+		}
+	}
+
+	@Override
+	public void setDdmFormClassName(String ddmFormClassName) {
+		_ddmFormClassName = ddmFormClassName;
+	}
+
+	@JSON
+	@Override
 	public String getDescription() {
 		if (_description == null) {
 			return StringPool.BLANK;
@@ -831,6 +857,7 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 		ddmDataProviderInstanceImpl.setCreateDate(getCreateDate());
 		ddmDataProviderInstanceImpl.setModifiedDate(getModifiedDate());
 		ddmDataProviderInstanceImpl.setName(getName());
+		ddmDataProviderInstanceImpl.setDdmFormClassName(getDdmFormClassName());
 		ddmDataProviderInstanceImpl.setDescription(getDescription());
 		ddmDataProviderInstanceImpl.setDefinition(getDefinition());
 		ddmDataProviderInstanceImpl.setType(getType());
@@ -965,6 +992,14 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 			ddmDataProviderInstanceCacheModel.name = null;
 		}
 
+		ddmDataProviderInstanceCacheModel.ddmFormClassName = getDdmFormClassName();
+
+		String ddmFormClassName = ddmDataProviderInstanceCacheModel.ddmFormClassName;
+
+		if ((ddmFormClassName != null) && (ddmFormClassName.length() == 0)) {
+			ddmDataProviderInstanceCacheModel.ddmFormClassName = null;
+		}
+
 		ddmDataProviderInstanceCacheModel.description = getDescription();
 
 		String description = ddmDataProviderInstanceCacheModel.description;
@@ -994,7 +1029,7 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -1014,6 +1049,8 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 		sb.append(getModifiedDate());
 		sb.append(", name=");
 		sb.append(getName());
+		sb.append(", ddmFormClassName=");
+		sb.append(getDdmFormClassName());
 		sb.append(", description=");
 		sb.append(getDescription());
 		sb.append(", definition=");
@@ -1027,7 +1064,7 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(40);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("<model><model-name>");
 		sb.append(
@@ -1071,6 +1108,10 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 		sb.append(getName());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>ddmFormClassName</column-name><column-value><![CDATA[");
+		sb.append(getDdmFormClassName());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>description</column-name><column-value><![CDATA[");
 		sb.append(getDescription());
 		sb.append("]]></column-value></column>");
@@ -1108,6 +1149,7 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 	private boolean _setModifiedDate;
 	private String _name;
 	private String _nameCurrentLanguageId;
+	private String _ddmFormClassName;
 	private String _description;
 	private String _descriptionCurrentLanguageId;
 	private String _definition;

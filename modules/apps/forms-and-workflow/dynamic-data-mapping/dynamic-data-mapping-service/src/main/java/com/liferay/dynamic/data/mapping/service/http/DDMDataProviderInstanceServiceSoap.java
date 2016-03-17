@@ -72,6 +72,7 @@ public class DDMDataProviderInstanceServiceSoap {
 	public static com.liferay.dynamic.data.mapping.model.DDMDataProviderInstanceSoap addDataProviderInstance(
 		long groupId, java.lang.String[] nameMapLanguageIds,
 		java.lang.String[] nameMapValues,
+		java.lang.Class<?> ddmDataProviderClass,
 		java.lang.String[] descriptionMapLanguageIds,
 		java.lang.String[] descriptionMapValues,
 		com.liferay.dynamic.data.mapping.storage.DDMFormValues ddmFormValues,
@@ -86,7 +87,8 @@ public class DDMDataProviderInstanceServiceSoap {
 
 			com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance returnValue =
 				DDMDataProviderInstanceServiceUtil.addDataProviderInstance(groupId,
-					nameMap, descriptionMap, ddmFormValues, type, serviceContext);
+					nameMap, ddmDataProviderClass, descriptionMap,
+					ddmFormValues, type, serviceContext);
 
 			return com.liferay.dynamic.data.mapping.model.DDMDataProviderInstanceSoap.toSoapModel(returnValue);
 		}
@@ -212,6 +214,7 @@ public class DDMDataProviderInstanceServiceSoap {
 	public static com.liferay.dynamic.data.mapping.model.DDMDataProviderInstanceSoap updateDataProviderInstance(
 		long dataProviderInstanceId, java.lang.String[] nameMapLanguageIds,
 		java.lang.String[] nameMapValues,
+		java.lang.Class<?> ddmDataProviderClass,
 		java.lang.String[] descriptionMapLanguageIds,
 		java.lang.String[] descriptionMapValues,
 		com.liferay.dynamic.data.mapping.storage.DDMFormValues ddmFormValues,
@@ -225,7 +228,8 @@ public class DDMDataProviderInstanceServiceSoap {
 
 			com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance returnValue =
 				DDMDataProviderInstanceServiceUtil.updateDataProviderInstance(dataProviderInstanceId,
-					nameMap, descriptionMap, ddmFormValues, serviceContext);
+					nameMap, ddmDataProviderClass, descriptionMap,
+					ddmFormValues, serviceContext);
 
 			return com.liferay.dynamic.data.mapping.model.DDMDataProviderInstanceSoap.toSoapModel(returnValue);
 		}

@@ -14,6 +14,7 @@
 
 package com.liferay.dynamic.data.mapping.data.provider.web.portlet.action;
 
+import com.liferay.dynamic.data.mapping.data.provider.DDMDataProvider;
 import com.liferay.dynamic.data.mapping.data.provider.web.constants.DDMDataProviderPortletKeys;
 import com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
@@ -56,8 +57,15 @@ public class UpdateDataProviderMVCActionCommand
 
 		String name = ParamUtil.getString(actionRequest, "name");
 		String description = ParamUtil.getString(actionRequest, "description");
+		String type = ParamUtil.getString(actionRequest, "type");
+
+		DDMDataProvider ddmDataProvider =
+			ddmDataProviderTracker.getDDMDataProvider(type);
+
+		Class<?> ddmDataProviderClass = ddmDataProvider.getSettings();
+
 		DDMFormValues ddmFormValues = getDDMFormValues(
-			actionRequest, actionResponse);
+			actionRequest, actionResponse, ddmDataProviderClass);
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			DDMDataProviderInstance.class.getName(), actionRequest);
@@ -65,6 +73,7 @@ public class UpdateDataProviderMVCActionCommand
 		getDDMDataProviderInstanceService().updateDataProviderInstance(
 			dataProviderInstanceId,
 			getLocalizedMap(themeDisplay.getLocale(), name),
+			ddmDataProviderClass,
 			getLocalizedMap(themeDisplay.getLocale(), description),
 			ddmFormValues, serviceContext);
 	}

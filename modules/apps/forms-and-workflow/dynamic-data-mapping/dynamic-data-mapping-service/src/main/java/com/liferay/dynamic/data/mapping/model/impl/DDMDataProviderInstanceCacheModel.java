@@ -66,7 +66,7 @@ public class DDMDataProviderInstanceCacheModel implements CacheModel<DDMDataProv
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -86,6 +86,8 @@ public class DDMDataProviderInstanceCacheModel implements CacheModel<DDMDataProv
 		sb.append(modifiedDate);
 		sb.append(", name=");
 		sb.append(name);
+		sb.append(", ddmFormClassName=");
+		sb.append(ddmFormClassName);
 		sb.append(", description=");
 		sb.append(description);
 		sb.append(", definition=");
@@ -141,6 +143,13 @@ public class DDMDataProviderInstanceCacheModel implements CacheModel<DDMDataProv
 			ddmDataProviderInstanceImpl.setName(name);
 		}
 
+		if (ddmFormClassName == null) {
+			ddmDataProviderInstanceImpl.setDdmFormClassName(StringPool.BLANK);
+		}
+		else {
+			ddmDataProviderInstanceImpl.setDdmFormClassName(ddmFormClassName);
+		}
+
 		if (description == null) {
 			ddmDataProviderInstanceImpl.setDescription(StringPool.BLANK);
 		}
@@ -182,6 +191,7 @@ public class DDMDataProviderInstanceCacheModel implements CacheModel<DDMDataProv
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
 		name = objectInput.readUTF();
+		ddmFormClassName = objectInput.readUTF();
 		description = objectInput.readUTF();
 		definition = objectInput.readUTF();
 		type = objectInput.readUTF();
@@ -222,6 +232,13 @@ public class DDMDataProviderInstanceCacheModel implements CacheModel<DDMDataProv
 			objectOutput.writeUTF(name);
 		}
 
+		if (ddmFormClassName == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(ddmFormClassName);
+		}
+
 		if (description == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
 		}
@@ -253,6 +270,7 @@ public class DDMDataProviderInstanceCacheModel implements CacheModel<DDMDataProv
 	public long createDate;
 	public long modifiedDate;
 	public String name;
+	public String ddmFormClassName;
 	public String description;
 	public String definition;
 	public String type;
