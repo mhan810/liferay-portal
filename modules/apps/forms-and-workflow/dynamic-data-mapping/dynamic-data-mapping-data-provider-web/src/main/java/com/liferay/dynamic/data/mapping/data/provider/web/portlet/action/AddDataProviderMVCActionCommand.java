@@ -62,7 +62,7 @@ public class AddDataProviderMVCActionCommand extends BaseMVCActionCommand {
 
 		DDMForm ddmForm = DDMFormFactory.create(clazz);
 
-		return _ddmFormValuesFactory.create(actionRequest, ddmForm);
+		return ddmFormValuesFactory.create(actionRequest, ddmForm);
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class AddDataProviderMVCActionCommand extends BaseMVCActionCommand {
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			DDMDataProviderInstance.class.getName(), actionRequest);
 
-		_ddmDataProviderInstanceService.addDataProviderInstance(
+		ddmDataProviderInstanceService.addDataProviderInstance(
 			groupId, getLocalizedMap(themeDisplay.getLocale(), name),
 			ddmDataProviderClass,
 			getLocalizedMap(themeDisplay.getLocale(), description),
@@ -101,7 +101,7 @@ public class AddDataProviderMVCActionCommand extends BaseMVCActionCommand {
 	protected DDMDataProviderInstanceService
 		getDDMDataProviderInstanceService() {
 
-		return _ddmDataProviderInstanceService;
+		return ddmDataProviderInstanceService;
 	}
 
 	protected Map<Locale, String> getLocalizedMap(Locale locale, String value) {
@@ -113,12 +113,12 @@ public class AddDataProviderMVCActionCommand extends BaseMVCActionCommand {
 	}
 
 	@Reference
+	protected DDMDataProviderInstanceService ddmDataProviderInstanceService;
+
+	@Reference
 	protected DDMDataProviderTracker ddmDataProviderTracker;
 
 	@Reference
-	private DDMDataProviderInstanceService _ddmDataProviderInstanceService;
-
-	@Reference
-	private DDMFormValuesFactory _ddmFormValuesFactory;
+	protected DDMFormValuesFactory ddmFormValuesFactory;
 
 }
