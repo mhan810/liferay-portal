@@ -30,23 +30,41 @@ public abstract class BaseFailureMessageGenerator
 			String buildURL, String consoleOutput, Project project)
 		throws Exception;
 
-	protected String getConsoleOutputSnippet(String consoleOutput, int end) {
+	protected String getConsoleOutputSnippet(
+		String consoleOutput, boolean truncateTop, int end) {
+
 		if (end == -1) {
 			end = consoleOutput.length();
 		}
 
 		int start = getSnippetStart(consoleOutput, end);
 
-		if ((end - start) > 2500) {
-			start = end - 2500;
+		return getConsoleOutputSnippet(consoleOutput, truncateTop, start, end);
+	}
 
-			start = consoleOutput.indexOf("\n", start);
+	protected String getConsoleOutputSnippet(
+		String consoleOutput, boolean truncateTop, int start, int end) {
+
+		if ((end - start) > 2500) {
+			if (truncateTop) {
+				start = end - 2500;
+
+				start = consoleOutput.indexOf("\n", start);
+			}
+			else {
+				end = start + 2500;
+
+				end = consoleOutput.lastIndexOf("\n", end);
+			}
 		}
 
 		consoleOutput = JenkinsResultsParserUtil.fixMarkdown(
 			consoleOutput.substring(start, end));
 
-		return "<pre>" + consoleOutput + "</pre>";
+		consoleOutput = consoleOutput.replaceFirst("^\\s*\\n", "");
+		consoleOutput = consoleOutput.replaceFirst("\\n\\s*$", "");
+
+		return "<pre><code>" + consoleOutput + "</code></pre>";
 	}
 
 	protected int getSnippetStart(String consoleOutput, int end) {
