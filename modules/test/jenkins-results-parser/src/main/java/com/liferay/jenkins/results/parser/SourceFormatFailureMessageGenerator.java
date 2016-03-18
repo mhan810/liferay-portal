@@ -35,7 +35,7 @@ public class SourceFormatFailureMessageGenerator
 
 		end = consoleOutput.indexOf("[exec] :", end);
 
-		return getConsoleOutputSnippet(consoleOutput, end);
+		return getConsoleOutputSnippet(consoleOutput, true, end);
 	}
 
 	private static final String _MARKER =

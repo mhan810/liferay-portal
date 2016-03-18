@@ -55,7 +55,7 @@ public class PluginGitIDFailureMessageGenerator
 
 		int end = consoleOutput.indexOf("merge-test-results:");
 
-		sb.append(getConsoleOutputSnippet(consoleOutput, end));
+		sb.append(getConsoleOutputSnippet(consoleOutput, true, end));
 
 		return sb.toString();
 	}
