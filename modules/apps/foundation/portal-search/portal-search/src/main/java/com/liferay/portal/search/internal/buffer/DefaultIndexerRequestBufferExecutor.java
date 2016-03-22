@@ -14,6 +14,8 @@
 
 package com.liferay.portal.search.internal.buffer;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.search.buffer.IndexerRequest;
 import com.liferay.portal.search.buffer.IndexerRequestBuffer;
 import com.liferay.portal.search.buffer.IndexerRequestBufferExecutor;
@@ -43,8 +45,20 @@ public class DefaultIndexerRequestBufferExecutor
 
 		Collection<IndexerRequest> completedIndexerRequests = new ArrayList<>();
 
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				"Size of indexRequestBuffer: " +
+					indexerRequestBuffer.getIndexerRequests().size() +
+						" - numRequests to execute: " + numRequests);
+		}
+
 		for (IndexerRequest indexerRequest :
 				indexerRequestBuffer.getIndexerRequests()) {
+
+			if (_log.isDebugEnabled()) {
+				_log.debug( completedIndexerRequests.size() + " - executing: " +
+					indexerRequest);
+			}
 
 			executeIndexerRequest(searchEngineIds, indexerRequest);
 
@@ -61,5 +75,8 @@ public class DefaultIndexerRequestBufferExecutor
 
 		commit(searchEngineIds);
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+			DefaultIndexerRequestBufferExecutor.class);
 
 }
