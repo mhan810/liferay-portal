@@ -1043,32 +1043,6 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 			fileNames = getPluginJavaFiles();
 		}
 
-		_addMissingDeprecationReleaseVersion = GetterUtil.getBoolean(
-			getProperty("add.missing.deprecation.release.version"));
-		_allowUseServiceUtilInServiceImpl = GetterUtil.getBoolean(
-			getProperty("allow.use.service.util.in.service.impl"));
-		_checkJavaFieldTypesExcludes = getPropertyList(
-			"check.java.field.types.excludes");
-		_checkTabsExcludes = getPropertyList("check.tabs.excludes");
-		_diamondOperatorExcludes = getPropertyList("diamond.operator.excludes");
-		_fitOnSingleLineExcludes = getPropertyList(
-			"fit.on.single.line.excludes");
-		_hibernateSQLQueryExcludes = getPropertyList(
-			"hibernate.sql.query.excludes");
-		_javaTermAccessLevelModifierExcludes = getPropertyList(
-			"javaterm.access.level.modifier.excludes");
-		_javaTermSortExcludes = getPropertyList("javaterm.sort.excludes");
-		_lineLengthExcludes = getPropertyList("line.length.excludes");
-		_proxyExcludes = getPropertyList("proxy.excludes");
-		_secureDeserializationExcludes = getPropertyList(
-			"secure.deserialization.excluded.files");
-		_secureRandomExcludes = getPropertyList("secure.random.excludes");
-		_secureXmlExcludes = getPropertyList("secure.xml.excludes");
-		_staticLogVariableExcludes = getPropertyList("static.log.excludes");
-		_testAnnotationsExcludes = getPropertyList("test.annotations.excludes");
-		_upgradeServiceUtilExcludes = getPropertyList(
-			"upgrade.service.util.excludes");
-
 		return new ArrayList<>(fileNames);
 	}
 
@@ -4038,6 +4012,35 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		}
 
 		return false;
+	}
+
+	@Override
+	protected void preFormat() {
+		_addMissingDeprecationReleaseVersion = GetterUtil.getBoolean(
+			getProperty("add.missing.deprecation.release.version"));
+		_allowUseServiceUtilInServiceImpl = GetterUtil.getBoolean(
+			getProperty("allow.use.service.util.in.service.impl"));
+		_checkJavaFieldTypesExcludes = getPropertyList(
+			"check.java.field.types.excludes");
+		_checkTabsExcludes = getPropertyList("check.tabs.excludes");
+		_diamondOperatorExcludes = getPropertyList("diamond.operator.excludes");
+		_fitOnSingleLineExcludes = getPropertyList(
+			"fit.on.single.line.excludes");
+		_hibernateSQLQueryExcludes = getPropertyList(
+			"hibernate.sql.query.excludes");
+		_javaTermAccessLevelModifierExcludes = getPropertyList(
+			"javaterm.access.level.modifier.excludes");
+		_javaTermSortExcludes = getPropertyList("javaterm.sort.excludes");
+		_lineLengthExcludes = getPropertyList("line.length.excludes");
+		_proxyExcludes = getPropertyList("proxy.excludes");
+		_secureDeserializationExcludes = getPropertyList(
+			"secure.deserialization.excluded.files");
+		_secureRandomExcludes = getPropertyList("secure.random.excludes");
+		_secureXmlExcludes = getPropertyList("secure.xml.excludes");
+		_staticLogVariableExcludes = getPropertyList("static.log.excludes");
+		_testAnnotationsExcludes = getPropertyList("test.annotations.excludes");
+		_upgradeServiceUtilExcludes = getPropertyList(
+			"upgrade.service.util.excludes");
 	}
 
 	@Override

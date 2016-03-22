@@ -68,6 +68,8 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 	@Override
 	public final void format() throws Exception {
+		preFormat();
+
 		for (String fileName : getFileNames()) {
 			try {
 				format(fileName);
@@ -1951,6 +1953,9 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 	protected boolean isModulesFile(String absolutePath) {
 		return absolutePath.contains("/modules/");
+	}
+
+	protected void preFormat() throws Exception {
 	}
 
 	protected void postFormat() throws Exception {
