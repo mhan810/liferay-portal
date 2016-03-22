@@ -52,12 +52,15 @@ public class DefaultIndexerRequestBufferExecutor
 						" - numRequests to execute: " + numRequests);
 		}
 
+		int i = 0;
+
 		for (IndexerRequest indexerRequest :
 				indexerRequestBuffer.getIndexerRequests()) {
 
 			if (_log.isDebugEnabled()) {
-				_log.debug( completedIndexerRequests.size() + " - executing: " +
-					indexerRequest);
+				_log.debug(
+					"Executing indexerRequest " + (i++) + ": " +
+						indexerRequest);
 			}
 
 			executeIndexerRequest(searchEngineIds, indexerRequest);
@@ -77,6 +80,6 @@ public class DefaultIndexerRequestBufferExecutor
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-			DefaultIndexerRequestBufferExecutor.class);
+		DefaultIndexerRequestBufferExecutor.class);
 
 }
