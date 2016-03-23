@@ -12,24 +12,29 @@
  * details.
  */
 
-package com.liferay.portal.kernel.model;
+package com.liferay.portal.kernel.exception;
+
+import aQute.bnd.annotation.ProviderType;
 
 /**
- * @author Mika Koivisto
  * @author Brian Wing Shun Chan
  */
-public class TicketConstants {
+@ProviderType
+public class RateLimitExceededException extends PortalException {
 
-	public static final int TYPE_EMAIL_ADDRESS = 1;
+	public RateLimitExceededException() {
+	}
 
-	public static final int TYPE_FLAG = 4;
+	public RateLimitExceededException(String msg) {
+		super(msg);
+	}
 
-	public static final int TYPE_IMPERSONATE = 2;
+	public RateLimitExceededException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
 
-	public static final int TYPE_MEMBERSHIP_REQUEST = 5;
-	
-	public static final int TYPE_PASSWORD = 3;
-	
-	public static final int TYPE_SEND_PASSWORD = 6;	
+	public RateLimitExceededException(Throwable cause) {
+		super(cause);
+	}
 
 }
