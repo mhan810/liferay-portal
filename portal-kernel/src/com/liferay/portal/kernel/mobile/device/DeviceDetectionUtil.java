@@ -163,7 +163,7 @@ public class DeviceDetectionUtil {
 
 			String type = (String)serviceReference.getProperty("type");
 
-			if (type.equals("default")) {
+			if (Validator.isNotNull(type) && type.equals("default")) {
 				_defaultDeviceRecognitionProvider = null;
 			}
 			else {
