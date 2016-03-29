@@ -197,21 +197,25 @@ public class UpgradeModules extends UpgradeProcess {
 			"calendar-portlet", "com.liferay.calendar.service", "Calendar"
 		},
 		{
-			"social-networking-portlet",
-			"com.liferay.social.networking.service", "SN"
+			"kaleo-web", "com.liferay.portal.workflow.kaleo.service", "Kaleo"
 		},
 		{
 			"marketplace-portlet", "com.liferay.marketplace.service",
 			"Marketplace"
 		},
 		{
-			"kaleo-web", "com.liferay.portal.workflow.kaleo.service", "Kaleo"
-		},
-		{
 			"microblogs-portlet", "com.liferay.microblogs.service", "Microblogs"
 		},
 		{
+			"notifications-portlet", "com.liferay.notifications.web",
+			"Notifications"
+		},
+		{
 			"so-portlet", "com.liferay.invitation.invite.members.service", "SO"
+		},
+		{
+			"social-networking-portlet",
+			"com.liferay.social.networking.service", "SN"
 		}
 	};
 

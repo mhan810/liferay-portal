@@ -35,7 +35,4 @@ public interface IndexWriterHelperConfiguration {
 	)
 	public boolean indexCommitImmediately();
 
-	@Meta.AD(deflt = "false", required = false)
-	public boolean indexReadOnly();
-
 }
