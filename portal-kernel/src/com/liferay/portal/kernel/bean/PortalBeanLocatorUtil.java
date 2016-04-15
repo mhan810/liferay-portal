@@ -40,60 +40,36 @@ public class PortalBeanLocatorUtil {
 	public static <T> Map<String, T> locate(Class<T> clazz) {
 		BeanLocator beanLocator = getBeanLocator();
 
-		return _locate(beanLocator, clazz, false);
+		if (beanLocator == null) {
+			_log.error("BeanLocator is null");
+
+			throw new BeanLocatorException("BeanLocator is not set");
+		}
+
+		Thread currentThread = Thread.currentThread();
+
+		ClassLoader contextClassLoader = _pacl.getContextClassLoader(
+			currentThread);
+
+		ClassLoader beanClassLoader = _pacl.getBeanLocatorClassLoader(
+			beanLocator);
+
+		try {
+			if (contextClassLoader != beanClassLoader) {
+				_pacl.setContextClassLoader(currentThread, beanClassLoader);
+			}
+
+			return beanLocator.locate(clazz);
+		}
+		finally {
+			if (contextClassLoader != beanClassLoader) {
+				_pacl.setContextClassLoader(currentThread, contextClassLoader);
+			}
+		}
 	}
 
 	public static <T> Map<String, T> locate(Class<T> clazz, boolean silent) {
 		BeanLocator beanLocator = getBeanLocator();
-
-		return _locate(beanLocator, clazz, silent);
-	}
-
-	public static Object locate(String name) {
-		BeanLocator beanLocator = getBeanLocator();
-
-		return _locate(beanLocator, name, false);
-	}
-
-	public static Object locate(String name, boolean silent) {
-		BeanLocator beanLocator = getBeanLocator();
-
-		return _locate(beanLocator, name, silent);
-	}
-
-	public static void reset() {
-		setBeanLocator(null);
-	}
-
-	public static void setBeanLocator(BeanLocator beanLocator) {
-		PortalRuntimePermission.checkSetBeanProperty(
-			PortalBeanLocatorUtil.class);
-
-		if (_log.isDebugEnabled()) {
-			if (beanLocator == null) {
-				_log.debug("Setting BeanLocator " + beanLocator);
-			}
-			else {
-				_log.debug("Setting BeanLocator " + beanLocator.hashCode());
-			}
-		}
-
-		_beanLocator = beanLocator;
-	}
-
-	public interface PACL {
-
-		public ClassLoader getBeanLocatorClassLoader(BeanLocator beanLocator);
-
-		public ClassLoader getContextClassLoader(Thread currentThread);
-
-		public void setContextClassLoader(
-			Thread currentThread, ClassLoader classLoader);
-
-	}
-
-	private static <T> Map<String, T> _locate(
-		BeanLocator beanLocator, Class<T> clazz, boolean silent) {
 
 		if (beanLocator == null) {
 			_log.error("BeanLocator is null");
@@ -125,8 +101,39 @@ public class PortalBeanLocatorUtil {
 		}
 	}
 
-	private static Object _locate(
-		BeanLocator beanLocator, String name, boolean silent) {
+	public static Object locate(String name) {
+		BeanLocator beanLocator = getBeanLocator();
+
+		if (beanLocator == null) {
+			_log.error("BeanLocator is null");
+
+			throw new BeanLocatorException("BeanLocator is not set");
+		}
+
+		Thread currentThread = Thread.currentThread();
+
+		ClassLoader contextClassLoader = _pacl.getContextClassLoader(
+			currentThread);
+
+		ClassLoader beanClassLoader = _pacl.getBeanLocatorClassLoader(
+			beanLocator);
+
+		try {
+			if (contextClassLoader != beanClassLoader) {
+				_pacl.setContextClassLoader(currentThread, beanClassLoader);
+			}
+
+			return beanLocator.locate(name);
+		}
+		finally {
+			if (contextClassLoader != beanClassLoader) {
+				_pacl.setContextClassLoader(currentThread, contextClassLoader);
+			}
+		}
+	}
+
+	public static Object locate(String name, boolean silent) {
+		BeanLocator beanLocator = getBeanLocator();
 
 		if (beanLocator == null) {
 			_log.error("BeanLocator is null");
@@ -156,6 +163,37 @@ public class PortalBeanLocatorUtil {
 				_pacl.setContextClassLoader(currentThread, contextClassLoader);
 			}
 		}
+	}
+
+	public static void reset() {
+		setBeanLocator(null);
+	}
+
+	public static void setBeanLocator(BeanLocator beanLocator) {
+		PortalRuntimePermission.checkSetBeanProperty(
+			PortalBeanLocatorUtil.class);
+
+		if (_log.isDebugEnabled()) {
+			if (beanLocator == null) {
+				_log.debug("Setting BeanLocator " + beanLocator);
+			}
+			else {
+				_log.debug("Setting BeanLocator " + beanLocator.hashCode());
+			}
+		}
+
+		_beanLocator = beanLocator;
+	}
+
+	public interface PACL {
+
+		public ClassLoader getBeanLocatorClassLoader(BeanLocator beanLocator);
+
+		public ClassLoader getContextClassLoader(Thread currentThread);
+
+		public void setContextClassLoader(
+			Thread currentThread, ClassLoader classLoader);
+
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
