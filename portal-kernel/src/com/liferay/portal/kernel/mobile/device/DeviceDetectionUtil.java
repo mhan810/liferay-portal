@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.mobile.device;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.registry.Registry;
@@ -31,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Milen Dyankov
  * @author Raymond Augé
  */
+@ProviderType
 public class DeviceDetectionUtil {
 
 	public static Device detectDevice(HttpServletRequest request) {

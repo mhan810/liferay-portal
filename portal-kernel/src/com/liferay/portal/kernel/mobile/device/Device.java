@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.mobile.device;
 
+import aQute.bnd.annotation.ProviderType;
+
 import java.io.Serializable;
 
 import java.util.Map;
@@ -22,6 +24,7 @@ import java.util.Map;
  * @author Milen Dyankov
  * @author Michael C. Han
  */
+@ProviderType
 public interface Device extends Serializable {
 
 	public String getBrand();

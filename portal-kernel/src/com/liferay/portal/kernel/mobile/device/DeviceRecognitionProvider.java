@@ -14,12 +14,15 @@
 
 package com.liferay.portal.kernel.mobile.device;
 
+import aQute.bnd.annotation.ProviderType;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Milen Dyankov
  * @author Michael C. Han
  */
+@ProviderType
 public interface DeviceRecognitionProvider {
 
 	public Device detectDevice(HttpServletRequest request);
