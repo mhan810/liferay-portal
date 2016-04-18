@@ -295,12 +295,8 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 				_resourcePermissionLocalService.hasResourcePermission(
 					companyId, className, ResourceConstants.SCOPE_GROUP,
 					String.valueOf(groupId), roleIdsArray,
-					ActionKeys.VIEW)) {
-
-				groupsTermsFilter.addValue(String.valueOf(groupId));
-			}
-
-			if (_resourcePermissionLocalService.hasResourcePermission(
+					ActionKeys.VIEW) ||
+				_resourcePermissionLocalService.hasResourcePermission(
 					companyId, className,
 					ResourceConstants.SCOPE_GROUP_TEMPLATE,
 					String.valueOf(GroupConstants.DEFAULT_PARENT_GROUP_ID),
