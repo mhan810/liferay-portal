@@ -51,6 +51,7 @@ import com.liferay.portal.kernel.util.Validator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -258,8 +259,6 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 		TermsFilter rolesTermsFilter = new TermsFilter(Field.ROLE_ID);
 
 		for (Role role : roles) {
-			String roleName = role.getName();
-
 			if (_resourcePermissionLocalService.hasResourcePermission(
 					companyId, className, ResourceConstants.SCOPE_COMPANY,
 					String.valueOf(companyId), role.getRoleId(),
@@ -306,18 +305,12 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 					}
 				}
 
-				if (group.isSite() &&
-					!roleName.equals(RoleConstants.SITE_MEMBER) &&
-					(role.getType() == RoleConstants.TYPE_SITE)) {
+				List<Role> groupRoles = groupIdsToRoles.get(group.getGroupId());
 
-					List<Role> groupRoles = groupIdsToRoles.get(
-						group.getGroupId());
-
-					if (groupRoles.contains(role)) {
-						groupRolesTermsFilter.addValue(
-							group.getGroupId() + StringPool.DASH +
-								role.getRoleId());
-					}
+				for (Role groupRole : groupRoles) {
+					groupRolesTermsFilter.addValue(
+						group.getGroupId() + StringPool.DASH +
+							groupRole.getRoleId());
 				}
 			}
 
@@ -334,26 +327,6 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 			}
 
 			rolesTermsFilter.addValue(String.valueOf(role.getRoleId()));
-		}
-
-		for (Group group : groups) {
-			if (group.isOrganization()) {
-				Role organizationUserRole = _roleLocalService.getRole(
-					group.getCompanyId(), RoleConstants.ORGANIZATION_USER);
-
-				groupRolesTermsFilter.addValue(
-					group.getGroupId() + StringPool.DASH +
-						organizationUserRole.getRoleId());
-			}
-
-			if (group.isSite()) {
-				Role siteMemberRole = _roleLocalService.getRole(
-					group.getCompanyId(), RoleConstants.SITE_MEMBER);
-
-				groupRolesTermsFilter.addValue(
-					group.getGroupId() + StringPool.DASH +
-						siteMemberRole.getRoleId());
-			}
 		}
 
 		if (!groupsTermsFilter.isEmpty()) {
@@ -417,15 +390,42 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 
 		groups.addAll(userBag.getGroups());
 
+		Role organizationUserRole = _roleLocalService.getRole(
+			companyId, RoleConstants.ORGANIZATION_USER);
+		Role siteMemberRole = _roleLocalService.getRole(
+			companyId, RoleConstants.SITE_MEMBER);
+
 		for (Group group : groups) {
 			long[] roleIds = permissionChecker.getRoleIds(
 				userId, group.getGroupId());
 
 			List<Role> groupRoles = _roleLocalService.getRoles(roleIds);
 
-			groupIdsToRoles.put(group.getGroupId(), groupRoles);
-
 			roles.addAll(groupRoles);
+
+			Iterator<Role> iterator = groupRoles.iterator();
+
+			while (iterator.hasNext()) {
+				Role groupRole = iterator.next();
+
+				if ((groupRole.getType() != RoleConstants.TYPE_ORGANIZATION) &&
+					(groupRole.getType() != RoleConstants.TYPE_SITE)) {
+
+					iterator.remove();
+				}
+			}
+
+			if (group.isOrganization() &&
+				!groupRoles.contains(organizationUserRole)) {
+
+				groupRoles.add(organizationUserRole);
+			}
+
+			if (group.isSite() && !groupRoles.contains(siteMemberRole)) {
+				groupRoles.add(siteMemberRole);
+			}
+
+			groupIdsToRoles.put(group.getGroupId(), groupRoles);
 		}
 	}
 
