@@ -52,8 +52,8 @@ import com.liferay.portal.kernel.util.Validator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -229,7 +229,7 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 			return booleanFilter;
 		}
 
-		Set<Role> roles = new LinkedHashSet<>();
+		Set<Role> roles = new HashSet<>();
 		Map<Long, List<Role>> groupIdsToRoles = new HashMap<>();
 
 		populate(companyId, userId, permissionChecker, roles, groupIdsToRoles);
