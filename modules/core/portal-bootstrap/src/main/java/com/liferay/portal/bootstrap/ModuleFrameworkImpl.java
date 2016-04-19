@@ -51,6 +51,8 @@ import com.liferay.registry.internal.ServiceTrackerMapFactoryImpl;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -750,12 +752,7 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 
 		Manifest extraPackagesManifest = null;
 
-		Class<?> clazz = getClass();
-
-		InputStream inputStream = clazz.getResourceAsStream(
-			"/META-INF/system.packages.extra.mf");
-
-		try {
+		try (InputStream inputStream = _getSystemPackagesExtraStream())  {
 			extraPackagesManifest = new Manifest(inputStream);
 		}
 		catch (IOException ioe) {
@@ -779,6 +776,24 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 		}
 
 		return sb.toString();
+	}
+
+	private InputStream _getSystemPackagesExtraStream()
+		throws FileNotFoundException {
+
+		String systemPackagesExtraManifest = System.getProperty(
+			"system.packages.extra.manifest");
+
+		if (systemPackagesExtraManifest != null) {
+			File systemPackagesExtraManigestFile = new File(
+				systemPackagesExtraManifest);
+
+			return new FileInputStream(systemPackagesExtraManigestFile);
+		}
+
+		Class<?> clazz = getClass();
+
+		return clazz.getResourceAsStream("/META-INF/system.packages.extra.mf");
 	}
 
 	private boolean _hasLazyActivationPolicy(Bundle bundle) {
