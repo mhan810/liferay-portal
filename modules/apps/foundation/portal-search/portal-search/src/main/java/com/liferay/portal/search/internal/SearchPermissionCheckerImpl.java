@@ -250,7 +250,7 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 		Map<Long, List<Role>> groupIdsToRoles = new HashMap<>();
 
 		populate(
-			companyId, groupIds, userId, permissionChecker, groups, roles,
+			companyId, userId, permissionChecker, groups, roles,
 			groupIdsToRoles);
 
 		return doGetPermissionFilter_6(
@@ -395,9 +395,9 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 	}
 
 	protected void populate(
-			long companyId, long[] groupIds, long userId,
-			PermissionChecker permissionChecker, Set<Group> groups,
-			Set<Role> roles, Map<Long, List<Role>> groupIdsToRoles)
+			long companyId, long userId, PermissionChecker permissionChecker,
+			Set<Group> groups, Set<Role> roles,
+			Map<Long, List<Role>> groupIdsToRoles)
 		throws Exception {
 
 		UserBag userBag = permissionChecker.getUserBag();
@@ -417,20 +417,7 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 					userId, Collections.singletonList(guestGroup)));
 		}
 
-		if (ArrayUtil.isEmpty(groupIds)) {
-			groups.addAll(userBag.getGroups());
-		}
-		else {
-			groups.addAll(userBag.getGroups());
-
-			for (long groupId : groupIds) {
-				if (_groupLocalService.hasUserGroup(userId, groupId)) {
-					Group group = _groupLocalService.getGroup(groupId);
-
-					groups.add(group);
-				}
-			}
-		}
+		groups.addAll(userBag.getGroups());
 
 		if (permissionChecker.isSignedIn()) {
 			roles.add(
