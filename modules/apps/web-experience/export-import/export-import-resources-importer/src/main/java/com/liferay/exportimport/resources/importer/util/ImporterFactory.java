@@ -14,6 +14,9 @@
 
 package com.liferay.exportimport.resources.importer.util;
 
+import com.liferay.dynamic.data.mapping.io.DDMFormJSONDeserializer;
+import com.liferay.dynamic.data.mapping.io.DDMFormXSDDeserializer;
+import com.liferay.dynamic.data.mapping.util.DDMXML;
 import com.liferay.journal.util.JournalConverter;
 import com.liferay.portal.kernel.deploy.DeployManagerUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -168,7 +171,8 @@ public class ImporterFactory {
 	}
 
 	protected FileSystemImporter getFileSystemImporter() {
-		return new FileSystemImporter();
+		return new FileSystemImporter(
+			_ddmFormJSONDeserializer, _ddmFormXSDDeserializer, _ddmxml);
 	}
 
 	protected LARImporter getLARImporter() {
@@ -179,17 +183,19 @@ public class ImporterFactory {
 		return new ResourceImporter();
 	}
 
-	@Reference(unbind = "-")
-	protected void setGroupLocalService(GroupLocalService groupLocalService) {
-		_groupLocalService = groupLocalService;
-	}
+	@Reference
+	private DDMFormJSONDeserializer _ddmFormJSONDeserializer;
 
-	@Reference(unbind = "-")
-	protected void setJournalConverter(JournalConverter journalConverter) {
-		_journalConverter = journalConverter;
-	}
+	@Reference
+	private DDMFormXSDDeserializer _ddmFormXSDDeserializer;
 
+	@Reference
+	private DDMXML _ddmxml;
+
+	@Reference
 	private GroupLocalService _groupLocalService;
+
+	@Reference
 	private JournalConverter _journalConverter;
 
 }

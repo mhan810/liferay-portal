@@ -25,8 +25,8 @@ import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.dynamic.data.lists.model.DDLRecordSet;
-import com.liferay.dynamic.data.mapping.io.DDMFormJSONDeserializerUtil;
-import com.liferay.dynamic.data.mapping.io.DDMFormXSDDeserializerUtil;
+import com.liferay.dynamic.data.mapping.io.DDMFormJSONDeserializer;
+import com.liferay.dynamic.data.mapping.io.DDMFormXSDDeserializer;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
@@ -37,7 +37,7 @@ import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.storage.StorageType;
 import com.liferay.dynamic.data.mapping.util.DDMUtil;
-import com.liferay.dynamic.data.mapping.util.DDMXMLUtil;
+import com.liferay.dynamic.data.mapping.util.DDMXML;
 import com.liferay.journal.configuration.JournalServiceConfigurationValues;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
@@ -75,6 +75,7 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.ThemeLocalServiceUtil;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -114,9 +115,18 @@ import javax.portlet.PortletPreferences;
 
 /**
  * @author Ryan Park
- * @author Raymond AugÃ©
+ * @author Raymond Augé
  */
 public class FileSystemImporter extends BaseImporter {
+
+	public FileSystemImporter(
+		DDMFormJSONDeserializer ddmFormJSONDeserializer,
+		DDMFormXSDDeserializer ddmFormXSDDeserializer, DDMXML ddmxml) {
+
+		_ddmFormJSONDeserializer = ddmFormJSONDeserializer;
+		_ddmFormXSDDeserializer = ddmFormXSDDeserializer;
+		_ddmxml = ddmxml;
+	}
 
 	@Override
 	public void importResources() throws Exception {
@@ -335,10 +345,9 @@ public class FileSystemImporter extends BaseImporter {
 		try {
 			String definition = StringUtil.read(inputStream);
 
-			DDMXMLUtil.validateXML(definition);
+			_ddmxml.validateXML(definition);
 
-			DDMForm ddmForm = DDMFormXSDDeserializerUtil.deserialize(
-				definition);
+			DDMForm ddmForm = _ddmFormXSDDeserializer.deserialize(definition);
 
 			DDMFormLayout ddmFormLayout = DDMUtil.getDefaultDDMFormLayout(
 				ddmForm);
@@ -446,12 +455,12 @@ public class FileSystemImporter extends BaseImporter {
 				content = journalConverter.getDDMXSD(content);
 			}
 
-			DDMXMLUtil.validateXML(content);
+			_ddmxml.validateXML(content);
 
-			ddmForm = DDMFormXSDDeserializerUtil.deserialize(content);
+			ddmForm = _ddmFormXSDDeserializer.deserialize(content);
 		}
 		else {
-			ddmForm = DDMFormJSONDeserializerUtil.deserialize(content);
+			ddmForm = _ddmFormJSONDeserializer.deserialize(content);
 		}
 
 		DDMFormLayout ddmFormLayout = DDMUtil.getDefaultDDMFormLayout(ddmForm);
@@ -996,8 +1005,7 @@ public class FileSystemImporter extends BaseImporter {
 
 			if (Validator.isNotNull(layoutPrototypeUuid)) {
 				boolean layoutPrototypeLinkEnabled = GetterUtil.getBoolean(
-					layoutJSONObject.getString("layoutPrototypeLinkEnabled"),
-					false);
+					layoutJSONObject.getString("layoutPrototypeLinkEnabled"));
 
 				serviceContext.setAttribute(
 					"layoutPrototypeLinkEnabled", layoutPrototypeLinkEnabled);
@@ -1437,7 +1445,7 @@ public class FileSystemImporter extends BaseImporter {
 
 		id = StringUtil.toUpperCase(id);
 
-		return StringUtil.replace(id, StringPool.SPACE, StringPool.DASH);
+		return StringUtil.replace(id, CharPool.SPACE, CharPool.DASH);
 	}
 
 	protected String[] getJSONArrayAsStringArray(
@@ -1852,11 +1860,14 @@ public class FileSystemImporter extends BaseImporter {
 			{"asset_tag", "com.liferay.asset.kernel.model.AssetTag"},
 			{"blogs_entry", "com.liferay.blogs.kernel.model.BlogsEntry"},
 			{"bread_crumb",
-				"com.liferay.portal.kernel.servlet.taglib.ui.BreadcrumbEntry"},
+				"com.liferay.portal.kernel.servlet.taglib.ui.BreadcrumbEntry"
+			},
 			{"document_library",
-				"com.liferay.portal.kernel.repository.model.FileEntry"},
+				"com.liferay.portal.kernel.repository.model.FileEntry"
+			},
 			{"language_entry",
-				"com.liferay.portal.kernel.servlet.taglib.ui.LanguageEntry"},
+				"com.liferay.portal.kernel.servlet.taglib.ui.LanguageEntry"
+			},
 			{"rss_feed", "com.liferay.rss.web.util.RSSFeed"},
 			{"site_map", "com.liferay.portal.kernel.model.LayoutSet"},
 			{"wiki_page", "com.liferay.wiki.model.WikiPage"}
@@ -1892,7 +1903,10 @@ public class FileSystemImporter extends BaseImporter {
 		FileSystemImporter.class);
 
 	private final Map<String, JSONObject> _assetJSONObjectMap = new HashMap<>();
+	private final DDMFormJSONDeserializer _ddmFormJSONDeserializer;
+	private final DDMFormXSDDeserializer _ddmFormXSDDeserializer;
 	private final Set<String> _ddmStructureKeys = new HashSet<>();
+	private final DDMXML _ddmxml;
 	private String _defaultLayoutTemplateId;
 	private final Map<String, FileEntry> _fileEntries = new HashMap<>();
 	private final Pattern _fileEntryPattern = Pattern.compile(
