@@ -419,11 +419,6 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 
 		groups.addAll(userBag.getGroups());
 
-		if (permissionChecker.isSignedIn()) {
-			roles.add(
-				_roleLocalService.getRole(companyId, RoleConstants.GUEST));
-		}
-
 		for (Group group : groups) {
 			long[] roleIds = permissionChecker.getRoleIds(
 				userId, group.getGroupId());
