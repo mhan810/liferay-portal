@@ -196,8 +196,9 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 	}
 
 	protected BooleanFilter doGetPermissionBooleanFilter(
-			long companyId, long[] groupIds, long userId, String className,
-			BooleanFilter booleanFilter, SearchContext searchContext)
+			long companyId, long[] searchGroupIds, long userId,
+			String className, BooleanFilter booleanFilter,
+			SearchContext searchContext)
 		throws Exception {
 
 		Indexer<?> indexer = _indexerRegistry.getIndexer(className);
@@ -230,20 +231,21 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 		}
 
 		Set<Role> roles = new HashSet<>();
-		Map<Long, List<Role>> groupIdsToRoles = new HashMap<>();
+		Map<Long, List<Role>> usersGroupIdsToRoles = new HashMap<>();
 
-		populate(companyId, userId, permissionChecker, roles, groupIdsToRoles);
+		populate(
+			companyId, userId, permissionChecker, roles, usersGroupIdsToRoles);
 
 		return doGetPermissionFilter_6(
-			companyId, groupIds, userId, permissionChecker, className,
-			booleanFilter, roles, groupIdsToRoles);
+			companyId, searchGroupIds, userId, permissionChecker, className,
+			booleanFilter, roles, usersGroupIdsToRoles);
 	}
 
 	protected BooleanFilter doGetPermissionFilter_6(
-			long companyId, long[] groupIds, long userId,
+			long companyId, long[] searchGroupIds, long userId,
 			PermissionChecker permissionChecker, String className,
 			BooleanFilter booleanFilter, Set<Role> roles,
-			Map<Long, List<Role>> groupIdsToRoles)
+			Map<Long, List<Role>> usersGroupIdsToRoles)
 		throws Exception {
 
 		BooleanFilter permissionBooleanFilter = new BooleanFilter();
@@ -287,15 +289,16 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 			return booleanFilter;
 		}
 
-		for (Map.Entry<Long, List<Role>> entry : groupIdsToRoles.entrySet()) {
+		for (Map.Entry<Long, List<Role>> entry :
+				usersGroupIdsToRoles.entrySet()) {
+
 			long groupId = entry.getKey();
 			List<Role> groupRoles = entry.getValue();
 
 			if (permissionChecker.isGroupAdmin(groupId) ||
 				_resourcePermissionLocalService.hasResourcePermission(
 					companyId, className, ResourceConstants.SCOPE_GROUP,
-					String.valueOf(groupId), roleIdsArray,
-					ActionKeys.VIEW) ||
+					String.valueOf(groupId), roleIdsArray, ActionKeys.VIEW) ||
 				_resourcePermissionLocalService.hasResourcePermission(
 					companyId, className,
 					ResourceConstants.SCOPE_GROUP_TEMPLATE,
@@ -312,17 +315,17 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 			}
 		}
 
-		if (ArrayUtil.isNotEmpty(groupIds)) {
-			Set<Long> userGroupIds = groupIdsToRoles.keySet();
+		if (ArrayUtil.isNotEmpty(searchGroupIds)) {
+			Set<Long> usersGroupIds = usersGroupIdsToRoles.keySet();
 
-			for (long groupId : groupIds) {
-				if (!userGroupIds.contains(groupId) &&
+			for (long searchGroupId : searchGroupIds) {
+				if (!usersGroupIds.contains(searchGroupId) &&
 					_resourcePermissionLocalService.hasResourcePermission(
 						companyId, className, ResourceConstants.SCOPE_GROUP,
-						String.valueOf(groupId), roleIdsArray,
+						String.valueOf(searchGroupId), roleIdsArray,
 						ActionKeys.VIEW)) {
 
-					groupsTermsFilter.addValue(String.valueOf(groupId));
+					groupsTermsFilter.addValue(String.valueOf(searchGroupId));
 				}
 			}
 		}
@@ -365,7 +368,7 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 
 	protected void populate(
 			long companyId, long userId, PermissionChecker permissionChecker,
-			Set<Role> roles, Map<Long, List<Role>> groupIdsToRoles)
+			Set<Role> roles, Map<Long, List<Role>> usersGroupIdsToRoles)
 		throws Exception {
 
 		UserBag userBag = permissionChecker.getUserBag();
@@ -420,7 +423,7 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 				groupRoles.add(siteMemberRole);
 			}
 
-			groupIdsToRoles.put(group.getGroupId(), groupRoles);
+			usersGroupIdsToRoles.put(group.getGroupId(), groupRoles);
 		}
 	}
 
