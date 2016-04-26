@@ -101,6 +101,7 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1192,15 +1193,47 @@ public class FileSystemImporter extends BaseImporter {
 		while (iterator.hasNext()) {
 			String key = iterator.next();
 
-			String value = portletPreferencesJSONObject.getString(key);
+			if (rootPortletId.equals(_RSS_FEED_PORTLET_ID) &&
+				(key.equals("urls") || key.equals("titles"))) {
 
-			if (rootPortletId.equals(_JOURNAL_CONTENT_PORTLET_ID) &&
-				key.equals("articleId")) {
+				JSONObject preferenceValueJSONObject =
+					portletPreferencesJSONObject.getJSONObject(key);
 
-				value = getJournalId(value);
+				ArrayList<String> preferenceValueArrayList = new ArrayList<>();
+
+				Iterator<String> jsonObjectIterator =
+					preferenceValueJSONObject.keys();
+
+				while (jsonObjectIterator.hasNext()) {
+					String objectKeyString = jsonObjectIterator.next();
+
+					preferenceValueArrayList.add(
+						preferenceValueJSONObject.getString(objectKeyString));
+				}
+
+				if (key.equals("urls")) {
+					Collections.reverse(preferenceValueArrayList);
+				}
+
+				String[] preferencevalueArray =
+					new String[preferenceValueArrayList.size()];
+
+				String[] values = preferenceValueArrayList.toArray(
+					preferencevalueArray);
+
+				portletSetup.setValues(key, values);
 			}
+			else {
+				String value = portletPreferencesJSONObject.getString(key);
 
-			portletSetup.setValue(key, value);
+				if (rootPortletId.equals(_JOURNAL_CONTENT_PORTLET_ID) &&
+					key.equals("articleId")) {
+
+					value = getJournalId(value);
+				}
+
+				portletSetup.setValue(key, value);
+			}
 		}
 
 		portletSetup.store();
@@ -1951,6 +1984,9 @@ public class FileSystemImporter extends BaseImporter {
 		"/journal/templates/";
 
 	private static final String _LAYOUT_PROTOTYPE_DIR_NAME = "/templates/page";
+
+	private static final String _RSS_FEED_PORTLET_ID =
+		"com_liferay_rss_web_portlet_RSSPortlet";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		FileSystemImporter.class);
