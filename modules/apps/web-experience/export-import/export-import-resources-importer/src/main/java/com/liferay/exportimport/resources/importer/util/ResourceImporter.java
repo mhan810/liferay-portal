@@ -76,7 +76,6 @@ public class ResourceImporter extends FileSystemImporter {
 		DLFolderLocalService dlFolderLocalService,
 		IndexStatusManager indexStatusManager, IndexerRegistry indexerRegistry,
 		JournalArticleLocalService journalArticleLocalService,
-		JournalArticleService journalArticleService,
 		LayoutLocalService layoutLocalService,
 		LayoutPrototypeLocalService layoutPrototypeLocalService,
 		LayoutSetLocalService layoutSetLocalService,
@@ -92,11 +91,11 @@ public class ResourceImporter extends FileSystemImporter {
 			ddmFormXSDDeserializer, ddmStructureLocalService,
 			ddmTemplateLocalService, ddmxml, dlAppLocalService,
 			dlFileEntryLocalService, dlFolderLocalService, indexStatusManager,
-			indexerRegistry, journalArticleLocalService, journalArticleService,
-			layoutLocalService, layoutPrototypeLocalService,
-			layoutSetLocalService, layoutSetPrototypeLocalService, mimeTypes,
-			portal, portletPreferencesFactory, repositoryLocalService,
-			saxReader, themeLocalService, portletPreferencesRetrievers);
+			indexerRegistry, journalArticleLocalService, layoutLocalService,
+			layoutPrototypeLocalService, layoutSetLocalService,
+			layoutSetPrototypeLocalService, mimeTypes, portal,
+			portletPreferencesFactory, repositoryLocalService, saxReader,
+			themeLocalService, portletPreferencesRetrievers);
 	}
 
 	@Override
