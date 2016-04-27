@@ -27,6 +27,7 @@ import com.liferay.dynamic.data.mapping.model.DDMTemplateConstants;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
 import com.liferay.dynamic.data.mapping.util.DDMXML;
+import com.liferay.exportimport.resources.importer.portlet.preferences.PortletPreferencesRetriever;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.JournalArticleService;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactory;
@@ -83,7 +84,8 @@ public class ResourceImporter extends FileSystemImporter {
 		MimeTypes mimeTypes, Portal portal,
 		PortletPreferencesFactory portletPreferencesFactory,
 		RepositoryLocalService repositoryLocalService, SAXReader saxReader,
-		ThemeLocalService themeLocalService) {
+		ThemeLocalService themeLocalService, Map<String,
+		PortletPreferencesRetriever> portletPreferencesRetrievers) {
 
 		super(
 			assetTagLocalService, ddmFormJSONDeserializer,
@@ -94,7 +96,7 @@ public class ResourceImporter extends FileSystemImporter {
 			layoutLocalService, layoutPrototypeLocalService,
 			layoutSetLocalService, layoutSetPrototypeLocalService, mimeTypes,
 			portal, portletPreferencesFactory, repositoryLocalService,
-			saxReader, themeLocalService);
+			saxReader, themeLocalService, portletPreferencesRetrievers);
 	}
 
 	@Override
