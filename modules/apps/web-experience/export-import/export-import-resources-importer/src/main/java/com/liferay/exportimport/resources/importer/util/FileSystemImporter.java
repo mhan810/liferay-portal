@@ -38,6 +38,7 @@ import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
 import com.liferay.dynamic.data.mapping.storage.StorageType;
 import com.liferay.dynamic.data.mapping.util.DDMUtil;
 import com.liferay.dynamic.data.mapping.util.DDMXML;
+import com.liferay.exportimport.resources.importer.portlet.preferences.PortletPreferencesRetriever;
 import com.liferay.journal.configuration.JournalServiceConfigurationValues;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
@@ -101,7 +102,6 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -139,7 +139,8 @@ public class FileSystemImporter extends BaseImporter {
 		MimeTypes mimeTypes, Portal portal,
 		PortletPreferencesFactory portletPreferencesFactory,
 		RepositoryLocalService repositoryLocalService, SAXReader saxReader,
-		ThemeLocalService themeLocalService) {
+		ThemeLocalService themeLocalService,
+		Map<String, PortletPreferencesRetriever> portletPreferencesRetrievers) {
 
 		this.assetTagLocalService = assetTagLocalService;
 		this.ddmFormJSONDeserializer = ddmFormJSONDeserializer;
@@ -164,6 +165,7 @@ public class FileSystemImporter extends BaseImporter {
 		this.repositoryLocalService = repositoryLocalService;
 		this.saxReader = saxReader;
 		this.themeLocalService = themeLocalService;
+		this.portletPreferencesRetrievers = portletPreferencesRetrievers;
 	}
 
 	@Override
@@ -1193,47 +1195,21 @@ public class FileSystemImporter extends BaseImporter {
 		while (iterator.hasNext()) {
 			String key = iterator.next();
 
-			if (rootPortletId.equals(_RSS_FEED_PORTLET_ID) &&
-				(key.equals("urls") || key.equals("titles"))) {
+			PortletPreferencesRetriever portletPreferencesRetriever =
+				portletPreferencesRetrievers.get(key);
 
-				JSONObject preferenceValueJSONObject =
-					portletPreferencesJSONObject.getJSONObject(key);
-
-				ArrayList<String> preferenceValueArrayList = new ArrayList<>();
-
-				Iterator<String> jsonObjectIterator =
-					preferenceValueJSONObject.keys();
-
-				while (jsonObjectIterator.hasNext()) {
-					String objectKeyString = jsonObjectIterator.next();
-
-					preferenceValueArrayList.add(
-						preferenceValueJSONObject.getString(objectKeyString));
+			if (portletPreferencesRetriever == null) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(
+						"No PortletPreferenceRetriever configured for : " +
+							rootPortletId);
 				}
 
-				if (key.equals("urls")) {
-					Collections.reverse(preferenceValueArrayList);
-				}
-
-				String[] preferencevalueArray =
-					new String[preferenceValueArrayList.size()];
-
-				String[] values = preferenceValueArrayList.toArray(
-					preferencevalueArray);
-
-				portletSetup.setValues(key, values);
+				continue;
 			}
-			else {
-				String value = portletPreferencesJSONObject.getString(key);
 
-				if (rootPortletId.equals(_JOURNAL_CONTENT_PORTLET_ID) &&
-					key.equals("articleId")) {
-
-					value = getJournalId(value);
-				}
-
-				portletSetup.setValue(key, value);
-			}
+			portletPreferencesRetriever.updatePortletPreferences(
+				portletPreferencesJSONObject, key, portletSetup);
 		}
 
 		portletSetup.store();
@@ -1928,6 +1904,8 @@ public class FileSystemImporter extends BaseImporter {
 	protected final MimeTypes mimeTypes;
 	protected final Portal portal;
 	protected final PortletPreferencesFactory portletPreferencesFactory;
+	protected final Map<String, PortletPreferencesRetriever>
+		portletPreferencesRetrievers;
 	protected final RepositoryLocalService repositoryLocalService;
 	protected final SAXReader saxReader;
 	protected ServiceContext serviceContext;
@@ -1984,9 +1962,6 @@ public class FileSystemImporter extends BaseImporter {
 		"/journal/templates/";
 
 	private static final String _LAYOUT_PROTOTYPE_DIR_NAME = "/templates/page";
-
-	private static final String _RSS_FEED_PORTLET_ID =
-		"com_liferay_rss_web_portlet_RSSPortlet";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		FileSystemImporter.class);
