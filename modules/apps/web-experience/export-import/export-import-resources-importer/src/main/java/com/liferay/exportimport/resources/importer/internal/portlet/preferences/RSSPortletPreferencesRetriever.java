@@ -18,8 +18,8 @@ import com.liferay.exportimport.resources.importer.portlet.preferences.PortletPr
 import com.liferay.portal.kernel.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.portlet.PortletException;
 import javax.portlet.PortletPreferences;
@@ -44,34 +44,28 @@ public class RSSPortletPreferencesRetriever
 		throws PortletException {
 
 		if (!key.equals("urls") && !key.equals("titles")) {
+			String value = portletPreferencesJSONObject.getString(key);
+			portletPreferences.setValue(key, value);
+
 			return;
 		}
 
+		List<String> preferenceValues = new ArrayList<>();
+
 		JSONObject preferenceValueJSONObject =
 			portletPreferencesJSONObject.getJSONObject(key);
-
-		ArrayList<String> preferenceValueArrayList = new ArrayList<>();
 
 		Iterator<String> jsonObjectIterator = preferenceValueJSONObject.keys();
 
 		while (jsonObjectIterator.hasNext()) {
 			String objectKeyString = jsonObjectIterator.next();
 
-			preferenceValueArrayList.add(
+			preferenceValues.add(
 				preferenceValueJSONObject.getString(objectKeyString));
 		}
 
-		if (key.equals("urls")) {
-			Collections.reverse(preferenceValueArrayList);
-		}
-
-		String[] preferencevalueArray =
-			new String[preferenceValueArrayList.size()];
-
-		String[] values = preferenceValueArrayList.toArray(
-			preferencevalueArray);
-
-		portletPreferences.setValues(key, values);
+		portletPreferences.setValues(
+			key, preferenceValues.toArray(new String[preferenceValues.size()]));
 	}
 
 }

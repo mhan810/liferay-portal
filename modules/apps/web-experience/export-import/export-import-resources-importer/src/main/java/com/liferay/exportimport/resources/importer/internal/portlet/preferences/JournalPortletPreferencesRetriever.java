@@ -38,20 +38,18 @@ public class JournalPortletPreferencesRetriever
 
 	@Override
 	public void updatePortletPreferences(
-			JSONObject portletPreferencesJSONObject, String key,
-			PortletPreferences portletPreferences)
-		throws PortletException {
+		JSONObject portletPreferencesJSONObject, String key,
+		PortletPreferences portletPreferences) throws PortletException {
 
 		String value = portletPreferencesJSONObject.getString(key);
 
-		String id = FileUtil.stripExtension(value);
+		if (key.equals("articleId")) {
+			String id = FileUtil.stripExtension(value);
+			id = StringUtil.toUpperCase(id);
+			value = StringUtil.replace(id, CharPool.SPACE, CharPool.DASH);
+		}
 
-		id = StringUtil.toUpperCase(id);
-
-		String journalId = StringUtil.replace(
-			id, CharPool.SPACE, CharPool.DASH);
-
-		portletPreferences.setValue(journalId, value);
+		portletPreferences.setValue(key, value);
 	}
 
 }
