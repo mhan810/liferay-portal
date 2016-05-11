@@ -33,18 +33,20 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class IndexableActionableDynamicQuery
 	extends DefaultActionableDynamicQuery {
 
+	public IndexableActionableDynamicQuery() {
+		super();
+
+		if (isParallel()) {
+			_documents = new ConcurrentLinkedDeque<>();
+		}
+		else {
+			_documents = new ArrayList<>();
+		}
+	}
+
 	public void addDocuments(Document... documents) throws PortalException {
 		if (ArrayUtil.isEmpty(documents)) {
 			return;
-		}
-
-		if (_documents == null) {
-			if (isParallel()) {
-				_documents = new ConcurrentLinkedDeque<>();
-			}
-			else {
-				_documents = new ArrayList<>();
-			}
 		}
 
 		for (Document document : documents) {
@@ -76,6 +78,22 @@ public class IndexableActionableDynamicQuery
 			_count = _total;
 
 			sendStatusMessage();
+		}
+	}
+
+	@Override
+	public void setParallel(boolean parallel) {
+		if (isParallel() == parallel) {
+			return;
+		}
+
+		super.setParallel(parallel);
+
+		if (parallel) {
+			_documents = new ConcurrentLinkedDeque<>();
+		}
+		else {
+			_documents = new ArrayList<>();
 		}
 	}
 
