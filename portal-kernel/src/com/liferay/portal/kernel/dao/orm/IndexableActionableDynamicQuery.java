@@ -33,6 +33,17 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class IndexableActionableDynamicQuery
 	extends DefaultActionableDynamicQuery {
 
+	public IndexableActionableDynamicQuery() {
+		super();
+
+		if (isParallel()) {
+			_documents = new ConcurrentLinkedDeque<>();
+		}
+		else {
+			_documents = new ArrayList<>();
+		}
+	}
+
 	public void addDocuments(Document... documents) throws PortalException {
 		if (ArrayUtil.isEmpty(documents)) {
 			return;
@@ -152,7 +163,7 @@ public class IndexableActionableDynamicQuery
 	private static final long _STATUS_INTERVAL = 1000;
 
 	private long _count;
-	private Collection<Document> _documents = new ArrayList<>();
+	private Collection<Document> _documents;
 	private String _searchEngineId;
 	private long _total;
 
