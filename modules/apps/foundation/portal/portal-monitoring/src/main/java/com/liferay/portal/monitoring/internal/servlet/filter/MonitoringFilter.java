@@ -264,7 +264,7 @@ public class MonitoringFilter
 
 	private DataSampleFactory _dataSampleFactory;
 	private LayoutLocalService _layoutLocalService;
-	private boolean _monitorPortalRequest;
+	private volatile boolean _monitorPortalRequest;
 	private PortletMonitoringControl _portletMonitoringControl;
 	private ServiceMonitoringControl _serviceMonitoringControl;
 
