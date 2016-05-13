@@ -192,10 +192,10 @@ public class MonitoringInvokerPortlet
 				dataSample.capture(RequestStatus.SUCCESS);
 			}
 		}
-		catch (Exception e) {
-			_processException(
+		catch (Throwable t) {
+			_processThrowable(
 				_portletMonitoringControl.isMonitorPortletActionRequest(),
-				dataSample, e);
+				dataSample, t);
 		}
 		finally {
 			if (dataSample != null) {
@@ -227,10 +227,10 @@ public class MonitoringInvokerPortlet
 				dataSample.capture(RequestStatus.SUCCESS);
 			}
 		}
-		catch (Exception e) {
-			_processException(
+		catch (Throwable t) {
+			_processThrowable(
 				_portletMonitoringControl.isMonitorPortletEventRequest(),
-				dataSample, e);
+				dataSample, t);
 		}
 		finally {
 			if (dataSample != null) {
@@ -264,10 +264,10 @@ public class MonitoringInvokerPortlet
 				dataSample.capture(RequestStatus.SUCCESS);
 			}
 		}
-		catch (Exception e) {
-			_processException(
+		catch (Throwable t) {
+			_processThrowable(
 				_portletMonitoringControl.isMonitorPortletRenderRequest(),
-				dataSample, e);
+				dataSample, t);
 		}
 		finally {
 			if (dataSample != null) {
@@ -300,10 +300,10 @@ public class MonitoringInvokerPortlet
 				dataSample.capture(RequestStatus.SUCCESS);
 			}
 		}
-		catch (Exception e) {
-			_processException(
+		catch (Throwable t) {
+			_processThrowable(
 				_portletMonitoringControl.isMonitorPortletResourceRequest(),
-				dataSample, e);
+				dataSample, t);
 		}
 		finally {
 			if (dataSample != null) {
@@ -321,8 +321,8 @@ public class MonitoringInvokerPortlet
 		_invokerPortlet.setPortletFilters();
 	}
 
-	private void _processException(
-			boolean monitorPortletRequest, DataSample dataSample, Exception e)
+	private void _processThrowable(
+			boolean monitorPortletRequest, DataSample dataSample, Throwable e)
 		throws IOException, PortletException {
 
 		if (monitorPortletRequest) {
