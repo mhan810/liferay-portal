@@ -14,6 +14,8 @@
 
 package com.liferay.portal.monitoring.internal.statistics.portlet;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.monitoring.DataSampleProcessor;
 import com.liferay.portal.kernel.monitoring.MonitoringException;
 import com.liferay.portal.kernel.monitoring.PortletRequestType;
@@ -103,6 +105,16 @@ public class PortletStatistics
 		RequestStatus requestStatus =
 			portletRequestDataSample.getRequestStatus();
 
+		if (requestStatus == null) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Invalid data sample, no request status: " +
+						portletRequestDataSample);
+			}
+
+			return;
+		}
+
 		if (requestStatus.equals(RequestStatus.ERROR)) {
 			requestStatistics.incrementError();
 		}
@@ -121,6 +133,9 @@ public class PortletStatistics
 		_renderRequestStatistics.reset();
 		_resourceRequestStatistics.reset();
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		PortletStatistics.class);
 
 	private final RequestStatistics _actionRequestStatistics;
 	private final String _displayName;

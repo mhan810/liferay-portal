@@ -14,6 +14,8 @@
 
 package com.liferay.portal.monitoring.internal.statistics.portal;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.monitoring.DataSampleProcessor;
@@ -90,6 +92,16 @@ public class CompanyStatistics
 		RequestStatus requestStatus =
 			portalRequestDataSample.getRequestStatus();
 
+		if (requestStatus == null) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Invalid data sample, no request status: " +
+						portalRequestDataSample);
+			}
+
+			return;
+		}
+
 		if (requestStatus.equals(RequestStatus.ERROR)) {
 			_requestStatistics.incrementError();
 		}
@@ -117,6 +129,9 @@ public class CompanyStatistics
 
 		_requestStatistics.reset();
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		CompanyStatistics.class);
 
 	private static final long _START_TIME = System.currentTimeMillis();
 
