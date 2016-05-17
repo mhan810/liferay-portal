@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageStatus;
+import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
 import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -135,6 +136,12 @@ public class LayoutsLocalPublisherMessageListener
 		unbind = "-"
 	)
 	protected void setRelease(Release release) {
+	}
+
+	@Reference(unbind = "-")
+	protected void setSingleDestinationMessageSenderFactory(
+		SingleDestinationMessageSenderFactory
+			singleDestinationMessageSenderFactory) {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
