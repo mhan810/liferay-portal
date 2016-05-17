@@ -21,6 +21,7 @@ import com.liferay.portal.cache.ehcache.internal.configurator.MultiVMEhcachePort
 import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.cache.configurator.PortalCacheConfiguratorSettings;
+import com.liferay.portal.kernel.concurrent.ConcurrentHashSet;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.AggregateClassLoader;
@@ -31,6 +32,7 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import java.io.Serializable;
 
 import java.util.Map;
+import java.util.Set;
 
 import javax.management.MBeanServer;
 
@@ -86,6 +88,16 @@ public class MultiVMEhcachePortalCacheManager
 		if (_log.isDebugEnabled()) {
 			_log.debug("Activated " + PortalCacheManagerNames.MULTI_VM);
 		}
+
+		for (PortalCacheConfiguratorSettings portalCacheConfiguratorSettings :
+				_portalCacheConfiguratorSettingsSet) {
+
+			reconfigure(portalCacheConfiguratorSettings);
+		}
+
+		_portalCacheConfiguratorSettingsSet.clear();
+
+		_activated = true;
 	}
 
 	@Deactivate
@@ -124,7 +136,13 @@ public class MultiVMEhcachePortalCacheManager
 	protected void setPortalCacheConfiguratorSettings(
 		PortalCacheConfiguratorSettings portalCacheConfiguratorSettings) {
 
-		reconfigure(portalCacheConfiguratorSettings);
+		if (_activated) {
+			reconfigure(portalCacheConfiguratorSettings);
+		}
+		else {
+			_portalCacheConfiguratorSettingsSet.add(
+				portalCacheConfiguratorSettings);
+		}
 	}
 
 	@Reference(unbind = "-")
@@ -157,5 +175,9 @@ public class MultiVMEhcachePortalCacheManager
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		MultiVMEhcachePortalCacheManager.class);
+
+	private volatile boolean _activated;
+	private final Set<PortalCacheConfiguratorSettings>
+		_portalCacheConfiguratorSettingsSet = new ConcurrentHashSet<>();
 
 }
