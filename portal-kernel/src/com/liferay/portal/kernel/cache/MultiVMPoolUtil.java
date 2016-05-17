@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.util.ProxyFactory;
 
 import java.io.Serializable;
 
+import java.util.List;
+
 /**
  * @author Brian Wing Shun Chan
  * @author Michael Young
@@ -63,6 +65,19 @@ public class MultiVMPoolUtil {
 	}
 
 	public static <K extends Serializable, V extends Serializable>
+		PortalCache<K, V> getDynamicPortalCache(String portalCacheName) {
+
+		return new DynamicPortalCache<>(portalCacheName);
+	}
+
+	public static <K extends Serializable, V extends Serializable>
+		PortalCache<K, V> getDynamicPortalCache(
+			String portalCacheName, boolean blocking) {
+
+		return new DynamicPortalCache<>(portalCacheName, blocking);
+	}
+
+	public static <K extends Serializable, V extends Serializable>
 		PortalCache<K, V> getPortalCache(String portalCacheName) {
 
 		return (PortalCache<K, V>)_multiVMPool.getPortalCache(portalCacheName);
@@ -96,5 +111,215 @@ public class MultiVMPoolUtil {
 
 	private static final MultiVMPool _multiVMPool =
 		ProxyFactory.newServiceTrackedInstance(MultiVMPool.class);
+
+	private static class DynamicPortalCache<K extends Serializable, V>
+		implements PortalCache<K, V> {
+
+		@Override
+		public V get(K key) {
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return null;
+			}
+
+			return portalCache.get(key);
+		}
+
+		@Override
+		public List<K> getKeys() {
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return null;
+			}
+
+			return portalCache.getKeys();
+		}
+
+		/**
+		 * @deprecated As of 7.0.0
+		 */
+		@Deprecated
+		@Override
+		public String getName() {
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return null;
+			}
+
+			return portalCache.getName();
+		}
+
+		@Override
+		public PortalCacheManager<K, V> getPortalCacheManager() {
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return null;
+			}
+
+			return portalCache.getPortalCacheManager();
+		}
+
+		@Override
+		public String getPortalCacheName() {
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return null;
+			}
+
+			return portalCache.getPortalCacheName();
+		}
+
+		public PortalCache<K, V> getWrappedPortalCache() {
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return null;
+			}
+
+			return portalCache;
+		}
+
+		@Override
+		public void put(K key, V value) {
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return;
+			}
+
+			portalCache.put(key, value);
+		}
+
+		@Override
+		public void put(K key, V value, int timeToLive) {
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return;
+			}
+
+			portalCache.put(key, value, timeToLive);
+		}
+
+		@Override
+		public void registerPortalCacheListener(
+			PortalCacheListener<K, V> portalCacheListener) {
+
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return;
+			}
+
+			portalCache.registerPortalCacheListener(portalCacheListener);
+		}
+
+		@Override
+		public void registerPortalCacheListener(
+			PortalCacheListener<K, V> portalCacheListener,
+			PortalCacheListenerScope portalCacheListenerScope) {
+
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return;
+			}
+
+			portalCache.registerPortalCacheListener(
+				portalCacheListener, portalCacheListenerScope);
+		}
+
+		@Override
+		public void remove(K key) {
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return;
+			}
+
+			portalCache.remove(key);
+		}
+
+		@Override
+		public void removeAll() {
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return;
+			}
+
+			portalCache.removeAll();
+		}
+
+		@Override
+		public void unregisterPortalCacheListener(
+			PortalCacheListener<K, V> portalCacheListener) {
+
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return;
+			}
+
+			portalCache.unregisterPortalCacheListener(portalCacheListener);
+		}
+
+		@Override
+		public void unregisterPortalCacheListeners() {
+			PortalCache<K, V> portalCache =
+				(PortalCache<K, V>)_multiVMPool.getPortalCache(
+					_portalCacheName, _blocking);
+
+			if (portalCache == null) {
+				return;
+			}
+
+			portalCache.unregisterPortalCacheListeners();
+		}
+
+		private DynamicPortalCache(String portalCacheName) {
+			this(portalCacheName, false);
+		}
+
+		private DynamicPortalCache(String portalCacheName, boolean blocking) {
+			_portalCacheName = portalCacheName;
+			_blocking = blocking;
+		}
+
+		private final boolean _blocking;
+		private final String _portalCacheName;
+
+	}
 
 }
