@@ -302,7 +302,7 @@ public class PermissionCacheUtil {
 	}
 
 	private static final PortalCache<PermissionKey, Boolean>
-		_permissionPortalCache = MultiVMPoolUtil.getPortalCache(
+		_permissionPortalCache = MultiVMPoolUtil.getDynamicPortalCache(
 			PERMISSION_CACHE_NAME,
 			PropsValues.PERMISSIONS_OBJECT_BLOCKING_CACHE);
 	private static final PortalCacheIndexer<Long, PermissionKey, Boolean>
@@ -313,7 +313,7 @@ public class PermissionCacheUtil {
 			new PermissionKeyNamePrimKeyIndexEncoder(), _permissionPortalCache);
 	private static final
 		PortalCache<ResourceBlockIdsBagKey, ResourceBlockIdsBag>
-			_resourceBlockIdsBagCache = MultiVMPoolUtil.getPortalCache(
+			_resourceBlockIdsBagCache = MultiVMPoolUtil.getDynamicPortalCache(
 				RESOURCE_BLOCK_IDS_BAG_CACHE_NAME,
 				PropsValues.PERMISSIONS_OBJECT_BLOCKING_CACHE);
 	private static final PortalCacheIndexer
@@ -322,10 +322,10 @@ public class PermissionCacheUtil {
 				new ResourceBlockIdsBagKeyIndexEncoder(),
 				_resourceBlockIdsBagCache);
 	private static final PortalCache<Long, UserBag> _userBagPortalCache =
-		MultiVMPoolUtil.getPortalCache(
+		MultiVMPoolUtil.getDynamicPortalCache(
 			USER_BAG_CACHE_NAME, PropsValues.PERMISSIONS_OBJECT_BLOCKING_CACHE);
 	private static final PortalCache<UserGroupRoleIdsKey, long[]>
-		_userGroupRoleIdsPortalCache = MultiVMPoolUtil.getPortalCache(
+		_userGroupRoleIdsPortalCache = MultiVMPoolUtil.getDynamicPortalCache(
 			PERMISSION_CHECKER_BAG_CACHE_NAME,
 			PropsValues.PERMISSIONS_OBJECT_BLOCKING_CACHE);
 	private static final PortalCacheIndexer<Long, UserGroupRoleIdsKey, long[]>
@@ -333,7 +333,7 @@ public class PermissionCacheUtil {
 			new UserGroupRoleIdsKeyIndexEncoder(),
 			_userGroupRoleIdsPortalCache);
 	private static final PortalCache<UserPrimaryKeyRoleKey, Boolean>
-		_userPrimaryKeyRolePortalCache = MultiVMPoolUtil.getPortalCache(
+		_userPrimaryKeyRolePortalCache = MultiVMPoolUtil.getDynamicPortalCache(
 			USER_PRIMARY_KEY_ROLE_CACHE_NAME,
 			PropsValues.PERMISSIONS_OBJECT_BLOCKING_CACHE);
 	private static final PortalCacheIndexer
@@ -343,7 +343,7 @@ public class PermissionCacheUtil {
 					new UserGroupRoleKeyUserIdEncoder(),
 					_userPrimaryKeyRolePortalCache);
 	private static final PortalCache<UserRoleKey, Boolean>
-		_userRolePortalCache = MultiVMPoolUtil.getPortalCache(
+		_userRolePortalCache = MultiVMPoolUtil.getDynamicPortalCache(
 			USER_ROLE_CACHE_NAME,
 			PropsValues.PERMISSIONS_OBJECT_BLOCKING_CACHE);
 	private static final PortalCacheIndexer<Long, UserRoleKey, Boolean>

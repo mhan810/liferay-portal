@@ -15,12 +15,11 @@
 package com.liferay.portal.webserver;
 
 import com.liferay.portal.kernel.cache.MultiVMPool;
+import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.webserver.WebServerServletToken;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.dependency.ServiceDependencyListener;
 import com.liferay.registry.dependency.ServiceDependencyManager;
 
@@ -40,14 +39,8 @@ public class WebServerServletTokenImpl implements WebServerServletToken {
 
 				@Override
 				public void dependenciesFulfilled() {
-					Registry registry = RegistryUtil.getRegistry();
-
-					MultiVMPool multiVMPool = registry.getService(
-						MultiVMPool.class);
-
-					_portalCache =
-						(PortalCache<Long, String>)multiVMPool.getPortalCache(
-							_CACHE_NAME);
+					_portalCache = MultiVMPoolUtil.getDynamicPortalCache(
+						_CACHE_NAME);
 				}
 
 				@Override
