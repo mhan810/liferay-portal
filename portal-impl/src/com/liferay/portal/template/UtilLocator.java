@@ -14,15 +14,20 @@
 
 package com.liferay.portal.template;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.bean.BeanLocatorImpl;
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
 
 /**
  * @author Raymond Augé
  */
+@ProviderType
 public class UtilLocator {
 
 	public static UtilLocator getInstance() {
@@ -33,7 +38,14 @@ public class UtilLocator {
 		Object bean = null;
 
 		try {
-			bean = PortalBeanLocatorUtil.locate(_getUtilName(utilName));
+			Registry registry = RegistryUtil.getRegistry();
+
+			bean = registry.getService(utilName);
+
+			if (bean == null) {
+				bean = PortalBeanLocatorUtil.locate(
+					_getUtilName(utilName));
+			}
 		}
 		catch (Exception e) {
 			_log.error(e, e);
