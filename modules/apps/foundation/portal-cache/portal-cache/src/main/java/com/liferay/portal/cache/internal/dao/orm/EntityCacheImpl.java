@@ -46,6 +46,7 @@ import org.apache.commons.collections.map.LRUMap;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
@@ -387,6 +388,13 @@ public class EntityCacheImpl
 
 		portalCacheManager.registerPortalCacheManagerListener(
 			EntityCacheImpl.this);
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		clearCache();
+
+		_portalCaches.clear();
 	}
 
 	@Reference(unbind = "-")
