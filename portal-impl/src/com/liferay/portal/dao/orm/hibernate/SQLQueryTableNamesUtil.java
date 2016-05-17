@@ -109,6 +109,7 @@ public class SQLQueryTableNamesUtil {
 	}
 
 	private static final PortalCache<String, String[]> _portalCache =
-		SingleVMPoolUtil.getPortalCache(SQLQueryTableNamesUtil.class.getName());
+		SingleVMPoolUtil.getDynamicPortalCache(
+			SQLQueryTableNamesUtil.class.getName());
 
 }

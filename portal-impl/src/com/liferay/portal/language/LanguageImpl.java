@@ -15,6 +15,7 @@
 package com.liferay.portal.language;
 
 import com.liferay.portal.kernel.cache.MultiVMPool;
+import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheMapSynchronizeUtil;
 import com.liferay.portal.kernel.cache.PortalCacheMapSynchronizeUtil.Synchronizer;
@@ -53,8 +54,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.dependency.ServiceDependencyListener;
 import com.liferay.registry.dependency.ServiceDependencyManager;
 
@@ -116,24 +115,17 @@ public class LanguageImpl implements Language, Serializable {
 
 				@Override
 				public void dependenciesFulfilled() {
-					Registry registry = RegistryUtil.getRegistry();
-
-					MultiVMPool multiVMPool = registry.getService(
-						MultiVMPool.class);
-
 					_companyLocalesPortalCache =
-						(PortalCache<Long, Serializable>)
-							multiVMPool.getPortalCache(
-								_COMPANY_LOCALES_PORTAL_CACHE_NAME);
+						MultiVMPoolUtil.getDynamicPortalCache(
+							_COMPANY_LOCALES_PORTAL_CACHE_NAME);
 
 					PortalCacheMapSynchronizeUtil.synchronize(
 						_companyLocalesPortalCache, _companyLocalesBags,
 						_removeSynchronizer);
 
 					_groupLocalesPortalCache =
-						(PortalCache<Long, Serializable>)
-							multiVMPool.getPortalCache(
-								_GROUP_LOCALES_PORTAL_CACHE_NAME);
+						MultiVMPoolUtil.getDynamicPortalCache(
+							_GROUP_LOCALES_PORTAL_CACHE_NAME);
 
 					PortalCacheMapSynchronizeUtil.synchronize(
 						_groupLocalesPortalCache,

@@ -354,7 +354,7 @@ public class SocialActivityCounterFinderImpl
 	}
 
 	private static final PortalCache<String, Serializable> _activityCounters =
-		MultiVMPoolUtil.getPortalCache(
+		MultiVMPoolUtil.getDynamicPortalCache(
 			SocialActivityCounterFinder.class.getName());
 
 }
