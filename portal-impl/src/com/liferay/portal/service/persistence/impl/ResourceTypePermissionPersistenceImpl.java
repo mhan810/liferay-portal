@@ -17,9 +17,7 @@ package com.liferay.portal.service.persistence.impl;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.bean.BeanReference;
-import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
-import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
@@ -195,7 +193,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 		List<ResourceTypePermission> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<ResourceTypePermission>)finderCache.getResult(finderPath,
+			list = (List<ResourceTypePermission>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -261,10 +259,10 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -557,7 +555,8 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 		Object[] finderArgs = new Object[] { roleId };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
@@ -581,10 +580,10 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -728,7 +727,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 		List<ResourceTypePermission> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<ResourceTypePermission>)finderCache.getResult(finderPath,
+			list = (List<ResourceTypePermission>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -819,10 +818,10 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1168,7 +1167,8 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 		Object[] finderArgs = new Object[] { companyId, name, roleId };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(4);
@@ -1214,10 +1214,10 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1332,7 +1332,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 		Object result = null;
 
 		if (retrieveFromCache) {
-			result = finderCache.getResult(FINDER_PATH_FETCH_BY_C_G_N_R,
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_C_G_N_R,
 					finderArgs, this);
 		}
 
@@ -1396,7 +1396,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 				List<ResourceTypePermission> list = q.list();
 
 				if (list.isEmpty()) {
-					finderCache.putResult(FINDER_PATH_FETCH_BY_C_G_N_R,
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_G_N_R,
 						finderArgs, list);
 				}
 				else {
@@ -1411,13 +1411,13 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 							(resourceTypePermission.getName() == null) ||
 							!resourceTypePermission.getName().equals(name) ||
 							(resourceTypePermission.getRoleId() != roleId)) {
-						finderCache.putResult(FINDER_PATH_FETCH_BY_C_G_N_R,
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_G_N_R,
 							finderArgs, resourceTypePermission);
 					}
 				}
 			}
 			catch (Exception e) {
-				finderCache.removeResult(FINDER_PATH_FETCH_BY_C_G_N_R,
+				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_G_N_R,
 					finderArgs);
 
 				throw processException(e);
@@ -1469,7 +1469,8 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 		Object[] finderArgs = new Object[] { companyId, groupId, name, roleId };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(5);
@@ -1519,10 +1520,10 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1552,11 +1553,11 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	 */
 	@Override
 	public void cacheResult(ResourceTypePermission resourceTypePermission) {
-		entityCache.putResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
 			ResourceTypePermissionImpl.class,
 			resourceTypePermission.getPrimaryKey(), resourceTypePermission);
 
-		finderCache.putResult(FINDER_PATH_FETCH_BY_C_G_N_R,
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_G_N_R,
 			new Object[] {
 				resourceTypePermission.getCompanyId(),
 				resourceTypePermission.getGroupId(),
@@ -1576,7 +1577,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	public void cacheResult(
 		List<ResourceTypePermission> resourceTypePermissions) {
 		for (ResourceTypePermission resourceTypePermission : resourceTypePermissions) {
-			if (entityCache.getResult(
+			if (EntityCacheUtil.getResult(
 						ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
 						ResourceTypePermissionImpl.class,
 						resourceTypePermission.getPrimaryKey()) == null) {
@@ -1592,44 +1593,44 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	 * Clears the cache for all resource type permissions.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache() {
-		entityCache.clearCache(ResourceTypePermissionImpl.class);
+		EntityCacheUtil.clearCache(ResourceTypePermissionImpl.class);
 
-		finderCache.clearCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	/**
 	 * Clears the cache for the resource type permission.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache(ResourceTypePermission resourceTypePermission) {
-		entityCache.removeResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.removeResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
 			ResourceTypePermissionImpl.class,
 			resourceTypePermission.getPrimaryKey());
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		clearUniqueFindersCache((ResourceTypePermissionModelImpl)resourceTypePermission);
 	}
 
 	@Override
 	public void clearCache(List<ResourceTypePermission> resourceTypePermissions) {
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		for (ResourceTypePermission resourceTypePermission : resourceTypePermissions) {
-			entityCache.removeResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
+			EntityCacheUtil.removeResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
 				ResourceTypePermissionImpl.class,
 				resourceTypePermission.getPrimaryKey());
 
@@ -1648,9 +1649,9 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 					resourceTypePermissionModelImpl.getRoleId()
 				};
 
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_G_N_R, args,
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_G_N_R, args,
 				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_G_N_R, args,
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_G_N_R, args,
 				resourceTypePermissionModelImpl);
 		}
 		else {
@@ -1663,9 +1664,9 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 						resourceTypePermissionModelImpl.getRoleId()
 					};
 
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_G_N_R, args,
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_G_N_R, args,
 					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_G_N_R, args,
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_G_N_R, args,
 					resourceTypePermissionModelImpl);
 			}
 		}
@@ -1680,8 +1681,8 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 				resourceTypePermissionModelImpl.getRoleId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_G_N_R, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_G_N_R, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_G_N_R, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_G_N_R, args);
 
 		if ((resourceTypePermissionModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_G_N_R.getColumnBitmask()) != 0) {
@@ -1692,8 +1693,8 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 					resourceTypePermissionModelImpl.getOriginalRoleId()
 				};
 
-			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_G_N_R, args);
-			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_G_N_R, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_G_N_R, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_G_N_R, args);
 		}
 	}
 
@@ -1831,10 +1832,10 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			closeSession(session);
 		}
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 
 		if (isNew || !ResourceTypePermissionModelImpl.COLUMN_BITMASK_ENABLED) {
-			finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+			FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 		}
 
 		else {
@@ -1844,14 +1845,14 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 						resourceTypePermissionModelImpl.getOriginalRoleId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_ROLEID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ROLEID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ROLEID, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ROLEID,
 					args);
 
 				args = new Object[] { resourceTypePermissionModelImpl.getRoleId() };
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_ROLEID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ROLEID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ROLEID, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ROLEID,
 					args);
 			}
 
@@ -1863,8 +1864,8 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 						resourceTypePermissionModelImpl.getOriginalRoleId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_N_R, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_N_R,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_N_R, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_N_R,
 					args);
 
 				args = new Object[] {
@@ -1873,13 +1874,13 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 						resourceTypePermissionModelImpl.getRoleId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_N_R, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_N_R,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_N_R, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_N_R,
 					args);
 			}
 		}
 
-		entityCache.putResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
 			ResourceTypePermissionImpl.class,
 			resourceTypePermission.getPrimaryKey(), resourceTypePermission,
 			false);
@@ -1960,7 +1961,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	 */
 	@Override
 	public ResourceTypePermission fetchByPrimaryKey(Serializable primaryKey) {
-		ResourceTypePermission resourceTypePermission = (ResourceTypePermission)entityCache.getResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
+		ResourceTypePermission resourceTypePermission = (ResourceTypePermission)EntityCacheUtil.getResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
 				ResourceTypePermissionImpl.class, primaryKey);
 
 		if (resourceTypePermission == _nullResourceTypePermission) {
@@ -1980,13 +1981,13 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 					cacheResult(resourceTypePermission);
 				}
 				else {
-					entityCache.putResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
+					EntityCacheUtil.putResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
 						ResourceTypePermissionImpl.class, primaryKey,
 						_nullResourceTypePermission);
 				}
 			}
 			catch (Exception e) {
-				entityCache.removeResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.removeResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
 					ResourceTypePermissionImpl.class, primaryKey);
 
 				throw processException(e);
@@ -2037,7 +2038,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			ResourceTypePermission resourceTypePermission = (ResourceTypePermission)entityCache.getResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
+			ResourceTypePermission resourceTypePermission = (ResourceTypePermission)EntityCacheUtil.getResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
 					ResourceTypePermissionImpl.class, primaryKey);
 
 			if (resourceTypePermission == null) {
@@ -2090,7 +2091,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			}
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
-				entityCache.putResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.putResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
 					ResourceTypePermissionImpl.class, primaryKey,
 					_nullResourceTypePermission);
 			}
@@ -2184,7 +2185,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 		List<ResourceTypePermission> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<ResourceTypePermission>)finderCache.getResult(finderPath,
+			list = (List<ResourceTypePermission>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 		}
 
@@ -2233,10 +2234,10 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -2266,7 +2267,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	 */
 	@Override
 	public int countAll() {
-		Long count = (Long)finderCache.getResult(FINDER_PATH_COUNT_ALL,
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_ALL,
 				FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
@@ -2279,11 +2280,11 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(FINDER_PATH_COUNT_ALL, FINDER_ARGS_EMPTY,
-					count);
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_ALL,
+					FINDER_ARGS_EMPTY, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(FINDER_PATH_COUNT_ALL,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_ALL,
 					FINDER_ARGS_EMPTY);
 
 				throw processException(e);
@@ -2308,16 +2309,14 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	}
 
 	public void destroy() {
-		entityCache.removeCache(ResourceTypePermissionImpl.class.getName());
-		finderCache.removeCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		EntityCacheUtil.removeCache(ResourceTypePermissionImpl.class.getName());
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	@BeanReference(type = CompanyProviderWrapper.class)
 	protected CompanyProvider companyProvider;
-	protected EntityCache entityCache = EntityCacheUtil.getEntityCache();
-	protected FinderCache finderCache = FinderCacheUtil.getFinderCache();
 	private static final String _SQL_SELECT_RESOURCETYPEPERMISSION = "SELECT resourceTypePermission FROM ResourceTypePermission resourceTypePermission";
 	private static final String _SQL_SELECT_RESOURCETYPEPERMISSION_WHERE_PKS_IN = "SELECT resourceTypePermission FROM ResourceTypePermission resourceTypePermission WHERE resourceTypePermissionId IN (";
 	private static final String _SQL_SELECT_RESOURCETYPEPERMISSION_WHERE = "SELECT resourceTypePermission FROM ResourceTypePermission resourceTypePermission WHERE ";
