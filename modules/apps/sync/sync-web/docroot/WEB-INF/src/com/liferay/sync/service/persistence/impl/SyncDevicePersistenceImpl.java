@@ -17,9 +17,7 @@ package com.liferay.sync.service.persistence.impl;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.bean.BeanReference;
-import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
-import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
@@ -197,7 +195,7 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 		List<SyncDevice> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<SyncDevice>)finderCache.getResult(finderPath,
+			list = (List<SyncDevice>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -277,10 +275,10 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -582,7 +580,8 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 
 		Object[] finderArgs = new Object[] { uuid };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
@@ -620,10 +619,10 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -752,7 +751,7 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 		List<SyncDevice> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<SyncDevice>)finderCache.getResult(finderPath,
+			list = (List<SyncDevice>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -837,10 +836,10 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1163,7 +1162,8 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 
 		Object[] finderArgs = new Object[] { uuid, companyId };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
@@ -1205,10 +1205,10 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1324,7 +1324,7 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 		List<SyncDevice> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<SyncDevice>)finderCache.getResult(finderPath,
+			list = (List<SyncDevice>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -1412,10 +1412,10 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1738,7 +1738,8 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 
 		Object[] finderArgs = new Object[] { companyId, userName };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
@@ -1780,10 +1781,10 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1811,7 +1812,7 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 	 */
 	@Override
 	public void cacheResult(SyncDevice syncDevice) {
-		entityCache.putResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
 			SyncDeviceImpl.class, syncDevice.getPrimaryKey(), syncDevice);
 
 		syncDevice.resetOriginalValues();
@@ -1825,7 +1826,7 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 	@Override
 	public void cacheResult(List<SyncDevice> syncDevices) {
 		for (SyncDevice syncDevice : syncDevices) {
-			if (entityCache.getResult(
+			if (EntityCacheUtil.getResult(
 						SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
 						SyncDeviceImpl.class, syncDevice.getPrimaryKey()) == null) {
 				cacheResult(syncDevice);
@@ -1840,41 +1841,41 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 	 * Clears the cache for all sync devices.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache() {
-		entityCache.clearCache(SyncDeviceImpl.class);
+		EntityCacheUtil.clearCache(SyncDeviceImpl.class);
 
-		finderCache.clearCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	/**
 	 * Clears the cache for the sync device.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache(SyncDevice syncDevice) {
-		entityCache.removeResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.removeResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
 			SyncDeviceImpl.class, syncDevice.getPrimaryKey());
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	@Override
 	public void clearCache(List<SyncDevice> syncDevices) {
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		for (SyncDevice syncDevice : syncDevices) {
-			entityCache.removeResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
+			EntityCacheUtil.removeResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
 				SyncDeviceImpl.class, syncDevice.getPrimaryKey());
 		}
 	}
@@ -2042,10 +2043,10 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 			closeSession(session);
 		}
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 
 		if (isNew || !SyncDeviceModelImpl.COLUMN_BITMASK_ENABLED) {
-			finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+			FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 		}
 
 		else {
@@ -2055,14 +2056,14 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 						syncDeviceModelImpl.getOriginalUuid()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,
 					args);
 
 				args = new Object[] { syncDeviceModelImpl.getUuid() };
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,
 					args);
 			}
 
@@ -2073,8 +2074,8 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 						syncDeviceModelImpl.getOriginalCompanyId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,
 					args);
 
 				args = new Object[] {
@@ -2082,13 +2083,13 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 						syncDeviceModelImpl.getCompanyId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,
 					args);
 			}
 		}
 
-		entityCache.putResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
 			SyncDeviceImpl.class, syncDevice.getPrimaryKey(), syncDevice, false);
 
 		syncDevice.resetOriginalValues();
@@ -2166,7 +2167,7 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 	 */
 	@Override
 	public SyncDevice fetchByPrimaryKey(Serializable primaryKey) {
-		SyncDevice syncDevice = (SyncDevice)entityCache.getResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
+		SyncDevice syncDevice = (SyncDevice)EntityCacheUtil.getResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
 				SyncDeviceImpl.class, primaryKey);
 
 		if (syncDevice == _nullSyncDevice) {
@@ -2186,12 +2187,12 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 					cacheResult(syncDevice);
 				}
 				else {
-					entityCache.putResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
+					EntityCacheUtil.putResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
 						SyncDeviceImpl.class, primaryKey, _nullSyncDevice);
 				}
 			}
 			catch (Exception e) {
-				entityCache.removeResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.removeResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
 					SyncDeviceImpl.class, primaryKey);
 
 				throw processException(e);
@@ -2241,7 +2242,7 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			SyncDevice syncDevice = (SyncDevice)entityCache.getResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
+			SyncDevice syncDevice = (SyncDevice)EntityCacheUtil.getResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
 					SyncDeviceImpl.class, primaryKey);
 
 			if (syncDevice == null) {
@@ -2293,7 +2294,7 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 			}
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
-				entityCache.putResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.putResult(SyncDeviceModelImpl.ENTITY_CACHE_ENABLED,
 					SyncDeviceImpl.class, primaryKey, _nullSyncDevice);
 			}
 		}
@@ -2386,7 +2387,7 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 		List<SyncDevice> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<SyncDevice>)finderCache.getResult(finderPath,
+			list = (List<SyncDevice>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 		}
 
@@ -2435,10 +2436,10 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -2468,7 +2469,7 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 	 */
 	@Override
 	public int countAll() {
-		Long count = (Long)finderCache.getResult(FINDER_PATH_COUNT_ALL,
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_ALL,
 				FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
@@ -2481,11 +2482,11 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(FINDER_PATH_COUNT_ALL, FINDER_ARGS_EMPTY,
-					count);
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_ALL,
+					FINDER_ARGS_EMPTY, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(FINDER_PATH_COUNT_ALL,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_ALL,
 					FINDER_ARGS_EMPTY);
 
 				throw processException(e);
@@ -2515,16 +2516,14 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 	}
 
 	public void destroy() {
-		entityCache.removeCache(SyncDeviceImpl.class.getName());
-		finderCache.removeCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		EntityCacheUtil.removeCache(SyncDeviceImpl.class.getName());
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	@BeanReference(type = CompanyProviderWrapper.class)
 	protected CompanyProvider companyProvider;
-	protected EntityCache entityCache = EntityCacheUtil.getEntityCache();
-	protected FinderCache finderCache = FinderCacheUtil.getFinderCache();
 	private static final String _SQL_SELECT_SYNCDEVICE = "SELECT syncDevice FROM SyncDevice syncDevice";
 	private static final String _SQL_SELECT_SYNCDEVICE_WHERE_PKS_IN = "SELECT syncDevice FROM SyncDevice syncDevice WHERE syncDeviceId IN (";
 	private static final String _SQL_SELECT_SYNCDEVICE_WHERE = "SELECT syncDevice FROM SyncDevice syncDevice WHERE ";

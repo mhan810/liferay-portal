@@ -21,9 +21,7 @@ import com.liferay.document.library.kernel.model.DLSyncEvent;
 import com.liferay.document.library.kernel.service.persistence.DLSyncEventPersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
-import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
-import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
@@ -182,7 +180,7 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 		List<DLSyncEvent> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<DLSyncEvent>)finderCache.getResult(finderPath,
+			list = (List<DLSyncEvent>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -248,10 +246,10 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -542,7 +540,8 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 
 		Object[] finderArgs = new Object[] { modifiedTime };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
@@ -566,10 +565,10 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -649,7 +648,7 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 		Object result = null;
 
 		if (retrieveFromCache) {
-			result = finderCache.getResult(FINDER_PATH_FETCH_BY_TYPEPK,
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_TYPEPK,
 					finderArgs, this);
 		}
 
@@ -684,7 +683,7 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 				List<DLSyncEvent> list = q.list();
 
 				if (list.isEmpty()) {
-					finderCache.putResult(FINDER_PATH_FETCH_BY_TYPEPK,
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TYPEPK,
 						finderArgs, list);
 				}
 				else {
@@ -695,13 +694,14 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 					cacheResult(dlSyncEvent);
 
 					if ((dlSyncEvent.getTypePK() != typePK)) {
-						finderCache.putResult(FINDER_PATH_FETCH_BY_TYPEPK,
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TYPEPK,
 							finderArgs, dlSyncEvent);
 					}
 				}
 			}
 			catch (Exception e) {
-				finderCache.removeResult(FINDER_PATH_FETCH_BY_TYPEPK, finderArgs);
+				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_TYPEPK,
+					finderArgs);
 
 				throw processException(e);
 			}
@@ -744,7 +744,8 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 
 		Object[] finderArgs = new Object[] { typePK };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
@@ -768,10 +769,10 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -796,10 +797,10 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 	 */
 	@Override
 	public void cacheResult(DLSyncEvent dlSyncEvent) {
-		entityCache.putResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
 			DLSyncEventImpl.class, dlSyncEvent.getPrimaryKey(), dlSyncEvent);
 
-		finderCache.putResult(FINDER_PATH_FETCH_BY_TYPEPK,
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TYPEPK,
 			new Object[] { dlSyncEvent.getTypePK() }, dlSyncEvent);
 
 		dlSyncEvent.resetOriginalValues();
@@ -813,7 +814,7 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 	@Override
 	public void cacheResult(List<DLSyncEvent> dlSyncEvents) {
 		for (DLSyncEvent dlSyncEvent : dlSyncEvents) {
-			if (entityCache.getResult(
+			if (EntityCacheUtil.getResult(
 						DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
 						DLSyncEventImpl.class, dlSyncEvent.getPrimaryKey()) == null) {
 				cacheResult(dlSyncEvent);
@@ -828,43 +829,43 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 	 * Clears the cache for all d l sync events.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache() {
-		entityCache.clearCache(DLSyncEventImpl.class);
+		EntityCacheUtil.clearCache(DLSyncEventImpl.class);
 
-		finderCache.clearCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	/**
 	 * Clears the cache for the d l sync event.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache(DLSyncEvent dlSyncEvent) {
-		entityCache.removeResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.removeResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
 			DLSyncEventImpl.class, dlSyncEvent.getPrimaryKey());
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		clearUniqueFindersCache((DLSyncEventModelImpl)dlSyncEvent);
 	}
 
 	@Override
 	public void clearCache(List<DLSyncEvent> dlSyncEvents) {
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		for (DLSyncEvent dlSyncEvent : dlSyncEvents) {
-			entityCache.removeResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
+			EntityCacheUtil.removeResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
 				DLSyncEventImpl.class, dlSyncEvent.getPrimaryKey());
 
 			clearUniqueFindersCache((DLSyncEventModelImpl)dlSyncEvent);
@@ -876,9 +877,9 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 		if (isNew) {
 			Object[] args = new Object[] { dlSyncEventModelImpl.getTypePK() };
 
-			finderCache.putResult(FINDER_PATH_COUNT_BY_TYPEPK, args,
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_TYPEPK, args,
 				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_TYPEPK, args,
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TYPEPK, args,
 				dlSyncEventModelImpl);
 		}
 		else {
@@ -886,9 +887,9 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 					FINDER_PATH_FETCH_BY_TYPEPK.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] { dlSyncEventModelImpl.getTypePK() };
 
-				finderCache.putResult(FINDER_PATH_COUNT_BY_TYPEPK, args,
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_TYPEPK, args,
 					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_TYPEPK, args,
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TYPEPK, args,
 					dlSyncEventModelImpl);
 			}
 		}
@@ -898,15 +899,15 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 		DLSyncEventModelImpl dlSyncEventModelImpl) {
 		Object[] args = new Object[] { dlSyncEventModelImpl.getTypePK() };
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_TYPEPK, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_TYPEPK, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_TYPEPK, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_TYPEPK, args);
 
 		if ((dlSyncEventModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_TYPEPK.getColumnBitmask()) != 0) {
 			args = new Object[] { dlSyncEventModelImpl.getOriginalTypePK() };
 
-			finderCache.removeResult(FINDER_PATH_COUNT_BY_TYPEPK, args);
-			finderCache.removeResult(FINDER_PATH_FETCH_BY_TYPEPK, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_TYPEPK, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_TYPEPK, args);
 		}
 	}
 
@@ -1041,13 +1042,13 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 			closeSession(session);
 		}
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 
 		if (isNew || !DLSyncEventModelImpl.COLUMN_BITMASK_ENABLED) {
-			finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+			FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 		}
 
-		entityCache.putResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
 			DLSyncEventImpl.class, dlSyncEvent.getPrimaryKey(), dlSyncEvent,
 			false);
 
@@ -1124,7 +1125,7 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 	 */
 	@Override
 	public DLSyncEvent fetchByPrimaryKey(Serializable primaryKey) {
-		DLSyncEvent dlSyncEvent = (DLSyncEvent)entityCache.getResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
+		DLSyncEvent dlSyncEvent = (DLSyncEvent)EntityCacheUtil.getResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
 				DLSyncEventImpl.class, primaryKey);
 
 		if (dlSyncEvent == _nullDLSyncEvent) {
@@ -1144,12 +1145,12 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 					cacheResult(dlSyncEvent);
 				}
 				else {
-					entityCache.putResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
+					EntityCacheUtil.putResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
 						DLSyncEventImpl.class, primaryKey, _nullDLSyncEvent);
 				}
 			}
 			catch (Exception e) {
-				entityCache.removeResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.removeResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
 					DLSyncEventImpl.class, primaryKey);
 
 				throw processException(e);
@@ -1199,7 +1200,7 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			DLSyncEvent dlSyncEvent = (DLSyncEvent)entityCache.getResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
+			DLSyncEvent dlSyncEvent = (DLSyncEvent)EntityCacheUtil.getResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
 					DLSyncEventImpl.class, primaryKey);
 
 			if (dlSyncEvent == null) {
@@ -1251,7 +1252,7 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 			}
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
-				entityCache.putResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.putResult(DLSyncEventModelImpl.ENTITY_CACHE_ENABLED,
 					DLSyncEventImpl.class, primaryKey, _nullDLSyncEvent);
 			}
 		}
@@ -1344,7 +1345,7 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 		List<DLSyncEvent> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<DLSyncEvent>)finderCache.getResult(finderPath,
+			list = (List<DLSyncEvent>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 		}
 
@@ -1393,10 +1394,10 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1426,7 +1427,7 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 	 */
 	@Override
 	public int countAll() {
-		Long count = (Long)finderCache.getResult(FINDER_PATH_COUNT_ALL,
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_ALL,
 				FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
@@ -1439,11 +1440,11 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(FINDER_PATH_COUNT_ALL, FINDER_ARGS_EMPTY,
-					count);
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_ALL,
+					FINDER_ARGS_EMPTY, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(FINDER_PATH_COUNT_ALL,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_ALL,
 					FINDER_ARGS_EMPTY);
 
 				throw processException(e);
@@ -1473,16 +1474,14 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 	}
 
 	public void destroy() {
-		entityCache.removeCache(DLSyncEventImpl.class.getName());
-		finderCache.removeCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		EntityCacheUtil.removeCache(DLSyncEventImpl.class.getName());
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	@BeanReference(type = CompanyProviderWrapper.class)
 	protected CompanyProvider companyProvider;
-	protected EntityCache entityCache = EntityCacheUtil.getEntityCache();
-	protected FinderCache finderCache = FinderCacheUtil.getFinderCache();
 	private static final String _SQL_SELECT_DLSYNCEVENT = "SELECT dlSyncEvent FROM DLSyncEvent dlSyncEvent";
 	private static final String _SQL_SELECT_DLSYNCEVENT_WHERE_PKS_IN = "SELECT dlSyncEvent FROM DLSyncEvent dlSyncEvent WHERE syncEventId IN (";
 	private static final String _SQL_SELECT_DLSYNCEVENT_WHERE = "SELECT dlSyncEvent FROM DLSyncEvent dlSyncEvent WHERE ";
