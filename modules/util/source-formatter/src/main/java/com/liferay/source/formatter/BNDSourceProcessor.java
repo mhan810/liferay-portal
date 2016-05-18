@@ -15,6 +15,7 @@
 package com.liferay.source.formatter;
 
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.NaturalOrderStringComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -103,6 +104,37 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 		}
 	}
 
+	protected void checkWildcardImports(
+		String fileName, String absolutePath, String content, Pattern pattern) {
+
+		if (absolutePath.contains("/portal-kernel/") ||
+			absolutePath.contains("/util-taglib/")) {
+
+			return;
+		}
+
+		Matcher matcher = pattern.matcher(content);
+
+		if (!matcher.find()) {
+			return;
+		}
+
+		String imports = matcher.group(2);
+
+		matcher = _wilcardImportPattern.matcher(imports);
+
+		while (matcher.find()) {
+			String wildcardImport = matcher.group(1);
+
+			if (wildcardImport.matches("^!?com\\.liferay\\..+")) {
+				processErrorMessage(
+					fileName,
+					"Don't use wildcard in Export-Package '" + wildcardImport +
+						"': " + fileName);
+			}
+		}
+	}
+
 	@Override
 	protected String doFormat(
 			File file, String fileName, String absolutePath, String content)
@@ -141,12 +173,16 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 				content, matcher.group(1), StringPool.SPACE, matcher.start());
 		}
 
+		checkWildcardImports(fileName, absolutePath, content, _exportsPattern);
+
 		ImportsFormatter importsFormatter = new BNDImportsFormatter();
 
 		content = importsFormatter.format(content, _exportsPattern);
 		content = importsFormatter.format(content, _importsPattern);
 
 		checkDirectoryAndBundleName(fileName, absolutePath, content);
+
+		content = formatBundleClassPath(content);
 
 		if (portalSource && isModulesFile(absolutePath) &&
 			!fileName.endsWith("test-bnd.bnd")) {
@@ -160,6 +196,17 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 	@Override
 	protected List<String> doGetFileNames() throws Exception {
 		return getFileNames(new String[0], getIncludes());
+	}
+
+	protected String formatBundleClassPath(String content) {
+		Matcher matcher = _bundleClassPathPattern.matcher(content);
+
+		if (matcher.find()) {
+			return sortDefinitionProperties(
+				content, matcher.group(), new NaturalOrderStringComparator());
+		}
+
+		return content;
 	}
 
 	protected String formatIncludeResource(String content) {
@@ -212,7 +259,46 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 			return StringUtil.replace(content, includeResources, replacement);
 		}
 
-		return sortIncludeResources(content, includeResources);
+		return sortDefinitionProperties(
+			content, includeResources, new IncludeResourceComparator());
+	}
+
+	protected String sortDefinitionProperties(
+		String content, String properties, Comparator<String> comparator) {
+
+		String[] lines = StringUtil.splitLines(properties);
+
+		if (lines.length == 1) {
+			return content;
+		}
+
+		String previousProperty = null;
+
+		for (int i = 1; i < lines.length; i++) {
+			String property = StringUtil.trim(lines[i]);
+
+			if (property.endsWith(",\\")) {
+				property = property.substring(0, property.length() - 2);
+			}
+
+			if (previousProperty != null) {
+				int value = comparator.compare(previousProperty, property);
+
+				if (value > 0) {
+					String replacement = StringUtil.replaceFirst(
+						properties, previousProperty, property);
+
+					replacement = StringUtil.replaceLast(
+						replacement, property, previousProperty);
+
+					return StringUtil.replace(content, properties, replacement);
+				}
+			}
+
+			previousProperty = property;
+		}
+
+		return content;
 	}
 
 	protected String sortDefinitions(String content) {
@@ -254,51 +340,6 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 		return content;
 	}
 
-	protected String sortIncludeResources(
-		String content, String includeResources) {
-
-		String[] lines = StringUtil.splitLines(includeResources);
-
-		if (lines.length == 1) {
-			return content;
-		}
-
-		String previousIncludeResource = null;
-
-		IncludeResourceComparator includeResourceComparator =
-			new IncludeResourceComparator();
-
-		for (int i = 1; i < lines.length; i++) {
-			String includeResource = StringUtil.trim(lines[i]);
-
-			if (includeResource.endsWith(",\\")) {
-				includeResource = includeResource.substring(
-					0, includeResource.length() - 2);
-			}
-
-			if (previousIncludeResource != null) {
-				int value = includeResourceComparator.compare(
-					previousIncludeResource, includeResource);
-
-				if (value > 0) {
-					String replacement = StringUtil.replaceFirst(
-						includeResources, previousIncludeResource,
-						includeResource);
-
-					replacement = StringUtil.replaceLast(
-						replacement, includeResource, previousIncludeResource);
-
-					return StringUtil.replace(
-						content, includeResources, replacement);
-				}
-			}
-
-			previousIncludeResource = includeResource;
-		}
-
-		return content;
-	}
-
 	private static final String[] _INCLUDE_RESOURCE_DIRS_BLACKLIST =
 		new String[] {
 			"classes",
@@ -311,15 +352,17 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 
 	private final Pattern _bndDefinitionPattern = Pattern.compile(
 		"^[A-Za-z-][\\s\\S]*?([^\\\\]\n|\\Z)", Pattern.MULTILINE);
+	private final Pattern _bundleClassPathPattern = Pattern.compile(
+		"^Bundle-ClassPath:[\\s\\S]*?([^\\\\]\n|\\Z)", Pattern.MULTILINE);
 	private final Pattern _bundleNamePattern = Pattern.compile(
 		"^Bundle-Name: (.*)\n", Pattern.MULTILINE);
 	private final Pattern _bundleSymbolicNamePattern = Pattern.compile(
 		"^Bundle-SymbolicName: (.*)\n", Pattern.MULTILINE);
 	private final Pattern _exportsPattern = Pattern.compile(
-		"\nExport-Package:\\\\\n(.*?\n)[^\t]",
+		"\nExport-Package:(\\\\\n| )(.*?\n|\\Z)[^\t]",
 		Pattern.DOTALL | Pattern.MULTILINE);
 	private final Pattern _importsPattern = Pattern.compile(
-		"\nImport-Package:\\\\\n(.*?\n)[^\t]",
+		"\nImport-Package:(\\\\\n| )(.*?\n|\\Z)[^\t]",
 		Pattern.DOTALL | Pattern.MULTILINE);
 	private final Pattern _includeResourcePattern = Pattern.compile(
 		"^((-liferay)?-includeresource|Include-Resource):[\\s\\S]*?([^\\\\]" +
@@ -329,6 +372,8 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 		"\n[^\t].*:\\\\\n(\t{2,})[^\t]");
 	private final Pattern _singleValueOnMultipleLinesPattern = Pattern.compile(
 		"\n.*:(\\\\\n\t).*(\n[^\t]|\\Z)");
+	private final Pattern _wilcardImportPattern = Pattern.compile(
+		"\\s(\\S+\\*)(,\\\\\n|\n|\\Z)");
 
 	private static class DefinitionComparator implements Comparator<String> {
 
