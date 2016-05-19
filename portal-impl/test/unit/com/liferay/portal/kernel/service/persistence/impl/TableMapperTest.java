@@ -347,6 +347,10 @@ public class TableMapperTest {
 		PortalCache<Long, long[]> leftToRightPortalCache =
 			_tableMapperImpl.leftToRightPortalCache;
 
+		leftToRightPortalCache =
+			(PortalCache<Long, long[]>)ReflectionTestUtil.invoke(
+				leftToRightPortalCache, "getWrappedPortalCache", null);
+
 		Class<?> clazz = leftToRightPortalCache.getClass();
 
 		Assert.assertEquals(
@@ -364,6 +368,10 @@ public class TableMapperTest {
 
 		PortalCache<Long, long[]> rightToLeftPortalCache =
 			_tableMapperImpl.rightToLeftPortalCache;
+
+		rightToLeftPortalCache =
+			(PortalCache<Long, long[]>)ReflectionTestUtil.invoke(
+				rightToLeftPortalCache, "getWrappedPortalCache", null);
 
 		clazz = rightToLeftPortalCache.getClass();
 
@@ -1540,6 +1548,26 @@ public class TableMapperTest {
 	}
 
 	protected void testDestroy(TableMapper<?, ?> tableMapper) {
+		TableMapper<?, ?> innerTableMapper = tableMapper;
+
+		if (tableMapper instanceof ReverseTableMapper) {
+			innerTableMapper = tableMapper.getReverseTableMapper();
+		}
+
+		Object leftToRightPortalCacheObject = ReflectionTestUtil.getFieldValue(
+			innerTableMapper, "leftToRightPortalCache");
+
+		PortalCache<?, ?> leftToRightPortalCache =
+			(PortalCache<?, ?>)ReflectionTestUtil.invoke(
+				leftToRightPortalCacheObject, "getWrappedPortalCache", null);
+
+		Object rightToLeftPortalCacheObject = ReflectionTestUtil.getFieldValue(
+			innerTableMapper, "rightToLeftPortalCache");
+
+		PortalCache<?, ?> rightToLeftPortalCache =
+			(PortalCache<?, ?>)ReflectionTestUtil.invoke(
+				rightToLeftPortalCacheObject, "getWrappedPortalCache", null);
+
 		Registry registry = RegistryUtil.getRegistry();
 
 		MultiVMPool multiVMPool = registry.getService(MultiVMPool.class);
@@ -1549,36 +1577,16 @@ public class TableMapperTest {
 
 		Assert.assertEquals(2, portalCaches.size());
 
-		if (tableMapper instanceof ReverseTableMapper) {
-			Assert.assertSame(
-				ReflectionTestUtil.getFieldValue(
-					tableMapper.getReverseTableMapper(),
-					"leftToRightPortalCache"),
-				portalCaches.get(
-					TableMapper.class.getName() + "-" + _TABLE_NAME +
-						"-LeftToRight"));
-			Assert.assertSame(
-				ReflectionTestUtil.getFieldValue(
-					tableMapper.getReverseTableMapper(),
-					"rightToLeftPortalCache"),
-				portalCaches.get(
-					TableMapper.class.getName() + "-" + _TABLE_NAME +
-						"-RightToLeft"));
-		}
-		else {
-			Assert.assertSame(
-				ReflectionTestUtil.getFieldValue(
-					tableMapper, "leftToRightPortalCache"),
-				portalCaches.get(
-					TableMapper.class.getName() + "-" + _TABLE_NAME +
-						"-LeftToRight"));
-			Assert.assertSame(
-				ReflectionTestUtil.getFieldValue(
-					tableMapper, "rightToLeftPortalCache"),
-				portalCaches.get(
-					TableMapper.class.getName() + "-" + _TABLE_NAME +
-						"-RightToLeft"));
-		}
+		Assert.assertSame(
+			leftToRightPortalCache,
+			portalCaches.get(
+				TableMapper.class.getName() + "-" + _TABLE_NAME +
+					"-LeftToRight"));
+		Assert.assertSame(
+			rightToLeftPortalCache,
+			portalCaches.get(
+				TableMapper.class.getName() + "-" + _TABLE_NAME +
+					"-RightToLeft"));
 
 		tableMapper.destroy();
 
