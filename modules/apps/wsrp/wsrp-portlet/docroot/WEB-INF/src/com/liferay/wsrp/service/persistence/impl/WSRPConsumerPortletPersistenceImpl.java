@@ -17,9 +17,7 @@ package com.liferay.wsrp.service.persistence.impl;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.bean.BeanReference;
-import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
-import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
@@ -201,7 +199,7 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 		List<WSRPConsumerPortlet> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<WSRPConsumerPortlet>)finderCache.getResult(finderPath,
+			list = (List<WSRPConsumerPortlet>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -281,10 +279,10 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -591,7 +589,8 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 
 		Object[] finderArgs = new Object[] { uuid };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
@@ -629,10 +628,10 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -766,7 +765,7 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 		List<WSRPConsumerPortlet> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<WSRPConsumerPortlet>)finderCache.getResult(finderPath,
+			list = (List<WSRPConsumerPortlet>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -851,10 +850,10 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1178,7 +1177,8 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 
 		Object[] finderArgs = new Object[] { uuid, companyId };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
@@ -1220,10 +1220,10 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1355,7 +1355,7 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 		List<WSRPConsumerPortlet> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<WSRPConsumerPortlet>)finderCache.getResult(finderPath,
+			list = (List<WSRPConsumerPortlet>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -1421,10 +1421,10 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1720,7 +1720,8 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 
 		Object[] finderArgs = new Object[] { wsrpConsumerId };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
@@ -1744,10 +1745,10 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1838,7 +1839,7 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 		Object result = null;
 
 		if (retrieveFromCache) {
-			result = finderCache.getResult(FINDER_PATH_FETCH_BY_W_P,
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_W_P,
 					finderArgs, this);
 		}
 
@@ -1893,8 +1894,8 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 				List<WSRPConsumerPortlet> list = q.list();
 
 				if (list.isEmpty()) {
-					finderCache.putResult(FINDER_PATH_FETCH_BY_W_P, finderArgs,
-						list);
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_W_P,
+						finderArgs, list);
 				}
 				else {
 					if ((list.size() > 1) && _log.isWarnEnabled()) {
@@ -1914,13 +1915,14 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 							(wsrpConsumerPortlet.getPortletHandle() == null) ||
 							!wsrpConsumerPortlet.getPortletHandle()
 													.equals(portletHandle)) {
-						finderCache.putResult(FINDER_PATH_FETCH_BY_W_P,
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_W_P,
 							finderArgs, wsrpConsumerPortlet);
 					}
 				}
 			}
 			catch (Exception e) {
-				finderCache.removeResult(FINDER_PATH_FETCH_BY_W_P, finderArgs);
+				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_W_P,
+					finderArgs);
 
 				throw processException(e);
 			}
@@ -1966,7 +1968,8 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 
 		Object[] finderArgs = new Object[] { wsrpConsumerId, portletHandle };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
@@ -2008,10 +2011,10 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -2039,11 +2042,11 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 	 */
 	@Override
 	public void cacheResult(WSRPConsumerPortlet wsrpConsumerPortlet) {
-		entityCache.putResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
 			WSRPConsumerPortletImpl.class, wsrpConsumerPortlet.getPrimaryKey(),
 			wsrpConsumerPortlet);
 
-		finderCache.putResult(FINDER_PATH_FETCH_BY_W_P,
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_W_P,
 			new Object[] {
 				wsrpConsumerPortlet.getWsrpConsumerId(),
 				wsrpConsumerPortlet.getPortletHandle()
@@ -2060,7 +2063,7 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 	@Override
 	public void cacheResult(List<WSRPConsumerPortlet> wsrpConsumerPortlets) {
 		for (WSRPConsumerPortlet wsrpConsumerPortlet : wsrpConsumerPortlets) {
-			if (entityCache.getResult(
+			if (EntityCacheUtil.getResult(
 						WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
 						WSRPConsumerPortletImpl.class,
 						wsrpConsumerPortlet.getPrimaryKey()) == null) {
@@ -2076,43 +2079,43 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 	 * Clears the cache for all w s r p consumer portlets.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache() {
-		entityCache.clearCache(WSRPConsumerPortletImpl.class);
+		EntityCacheUtil.clearCache(WSRPConsumerPortletImpl.class);
 
-		finderCache.clearCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	/**
 	 * Clears the cache for the w s r p consumer portlet.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache(WSRPConsumerPortlet wsrpConsumerPortlet) {
-		entityCache.removeResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.removeResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
 			WSRPConsumerPortletImpl.class, wsrpConsumerPortlet.getPrimaryKey());
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		clearUniqueFindersCache((WSRPConsumerPortletModelImpl)wsrpConsumerPortlet);
 	}
 
 	@Override
 	public void clearCache(List<WSRPConsumerPortlet> wsrpConsumerPortlets) {
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		for (WSRPConsumerPortlet wsrpConsumerPortlet : wsrpConsumerPortlets) {
-			entityCache.removeResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
+			EntityCacheUtil.removeResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
 				WSRPConsumerPortletImpl.class,
 				wsrpConsumerPortlet.getPrimaryKey());
 
@@ -2128,9 +2131,9 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 					wsrpConsumerPortletModelImpl.getPortletHandle()
 				};
 
-			finderCache.putResult(FINDER_PATH_COUNT_BY_W_P, args,
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_W_P, args,
 				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_W_P, args,
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_W_P, args,
 				wsrpConsumerPortletModelImpl);
 		}
 		else {
@@ -2141,9 +2144,9 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 						wsrpConsumerPortletModelImpl.getPortletHandle()
 					};
 
-				finderCache.putResult(FINDER_PATH_COUNT_BY_W_P, args,
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_W_P, args,
 					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_W_P, args,
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_W_P, args,
 					wsrpConsumerPortletModelImpl);
 			}
 		}
@@ -2156,8 +2159,8 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 				wsrpConsumerPortletModelImpl.getPortletHandle()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_W_P, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_W_P, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_W_P, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_W_P, args);
 
 		if ((wsrpConsumerPortletModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_W_P.getColumnBitmask()) != 0) {
@@ -2166,8 +2169,8 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 					wsrpConsumerPortletModelImpl.getOriginalPortletHandle()
 				};
 
-			finderCache.removeResult(FINDER_PATH_COUNT_BY_W_P, args);
-			finderCache.removeResult(FINDER_PATH_FETCH_BY_W_P, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_W_P, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_W_P, args);
 		}
 	}
 
@@ -2339,10 +2342,10 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 			closeSession(session);
 		}
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 
 		if (isNew || !WSRPConsumerPortletModelImpl.COLUMN_BITMASK_ENABLED) {
-			finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+			FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 		}
 
 		else {
@@ -2352,14 +2355,14 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 						wsrpConsumerPortletModelImpl.getOriginalUuid()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,
 					args);
 
 				args = new Object[] { wsrpConsumerPortletModelImpl.getUuid() };
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,
 					args);
 			}
 
@@ -2370,8 +2373,8 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 						wsrpConsumerPortletModelImpl.getOriginalCompanyId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,
 					args);
 
 				args = new Object[] {
@@ -2379,8 +2382,8 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 						wsrpConsumerPortletModelImpl.getCompanyId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,
 					args);
 			}
 
@@ -2390,23 +2393,23 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 						wsrpConsumerPortletModelImpl.getOriginalWsrpConsumerId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_WSRPCONSUMERID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_WSRPCONSUMERID,
 					args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_WSRPCONSUMERID,
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_WSRPCONSUMERID,
 					args);
 
 				args = new Object[] {
 						wsrpConsumerPortletModelImpl.getWsrpConsumerId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_WSRPCONSUMERID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_WSRPCONSUMERID,
 					args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_WSRPCONSUMERID,
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_WSRPCONSUMERID,
 					args);
 			}
 		}
 
-		entityCache.putResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
 			WSRPConsumerPortletImpl.class, wsrpConsumerPortlet.getPrimaryKey(),
 			wsrpConsumerPortlet, false);
 
@@ -2487,7 +2490,7 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 	 */
 	@Override
 	public WSRPConsumerPortlet fetchByPrimaryKey(Serializable primaryKey) {
-		WSRPConsumerPortlet wsrpConsumerPortlet = (WSRPConsumerPortlet)entityCache.getResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
+		WSRPConsumerPortlet wsrpConsumerPortlet = (WSRPConsumerPortlet)EntityCacheUtil.getResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
 				WSRPConsumerPortletImpl.class, primaryKey);
 
 		if (wsrpConsumerPortlet == _nullWSRPConsumerPortlet) {
@@ -2507,13 +2510,13 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 					cacheResult(wsrpConsumerPortlet);
 				}
 				else {
-					entityCache.putResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
+					EntityCacheUtil.putResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
 						WSRPConsumerPortletImpl.class, primaryKey,
 						_nullWSRPConsumerPortlet);
 				}
 			}
 			catch (Exception e) {
-				entityCache.removeResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.removeResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
 					WSRPConsumerPortletImpl.class, primaryKey);
 
 				throw processException(e);
@@ -2563,7 +2566,7 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			WSRPConsumerPortlet wsrpConsumerPortlet = (WSRPConsumerPortlet)entityCache.getResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
+			WSRPConsumerPortlet wsrpConsumerPortlet = (WSRPConsumerPortlet)EntityCacheUtil.getResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
 					WSRPConsumerPortletImpl.class, primaryKey);
 
 			if (wsrpConsumerPortlet == null) {
@@ -2616,7 +2619,7 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 			}
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
-				entityCache.putResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.putResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,
 					WSRPConsumerPortletImpl.class, primaryKey,
 					_nullWSRPConsumerPortlet);
 			}
@@ -2710,7 +2713,7 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 		List<WSRPConsumerPortlet> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<WSRPConsumerPortlet>)finderCache.getResult(finderPath,
+			list = (List<WSRPConsumerPortlet>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 		}
 
@@ -2759,10 +2762,10 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -2792,7 +2795,7 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 	 */
 	@Override
 	public int countAll() {
-		Long count = (Long)finderCache.getResult(FINDER_PATH_COUNT_ALL,
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_ALL,
 				FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
@@ -2805,11 +2808,11 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(FINDER_PATH_COUNT_ALL, FINDER_ARGS_EMPTY,
-					count);
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_ALL,
+					FINDER_ARGS_EMPTY, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(FINDER_PATH_COUNT_ALL,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_ALL,
 					FINDER_ARGS_EMPTY);
 
 				throw processException(e);
@@ -2839,16 +2842,14 @@ public class WSRPConsumerPortletPersistenceImpl extends BasePersistenceImpl<WSRP
 	}
 
 	public void destroy() {
-		entityCache.removeCache(WSRPConsumerPortletImpl.class.getName());
-		finderCache.removeCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		EntityCacheUtil.removeCache(WSRPConsumerPortletImpl.class.getName());
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	@BeanReference(type = CompanyProviderWrapper.class)
 	protected CompanyProvider companyProvider;
-	protected EntityCache entityCache = EntityCacheUtil.getEntityCache();
-	protected FinderCache finderCache = FinderCacheUtil.getFinderCache();
 	private static final String _SQL_SELECT_WSRPCONSUMERPORTLET = "SELECT wsrpConsumerPortlet FROM WSRPConsumerPortlet wsrpConsumerPortlet";
 	private static final String _SQL_SELECT_WSRPCONSUMERPORTLET_WHERE_PKS_IN = "SELECT wsrpConsumerPortlet FROM WSRPConsumerPortlet wsrpConsumerPortlet WHERE wsrpConsumerPortletId IN (";
 	private static final String _SQL_SELECT_WSRPCONSUMERPORTLET_WHERE = "SELECT wsrpConsumerPortlet FROM WSRPConsumerPortlet wsrpConsumerPortlet WHERE ";
