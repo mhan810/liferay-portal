@@ -102,9 +102,9 @@ NumberFormat percentFormat = NumberFormat.getPercentInstance(locale);
 
 			ResourceURL resourceURL = renderResponse.createResourceURL();
 
-			resourceURL.setParameter("mvcRenderCommandName", "/polls/view_chart");
 			resourceURL.setParameter("questionId", Long.toString(question.getQuestionId()));
 			resourceURL.setParameter("chartType", TextFormatter.format(chart, TextFormatter.N));
+			resourceURL.setResourceID("/polls/view_chart");
 
 			String hrefTaglib = "javascript:var viewChartWindow = window.open('" + resourceURL + "', 'viewChart', 'directories=no,height=430,location=no,menubar=no,resizable=no,scrollbars=no,status=no,toolbar=no,width=420'); void(''); viewChartWindow.focus();";
 		%>
