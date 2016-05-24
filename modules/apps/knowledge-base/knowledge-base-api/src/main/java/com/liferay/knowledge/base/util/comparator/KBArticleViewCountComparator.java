@@ -16,7 +16,6 @@ package com.liferay.knowledge.base.util.comparator;
 
 import com.liferay.knowledge.base.model.KBArticle;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.StringUtil;
 
 /**
  * @author Peter Shin
