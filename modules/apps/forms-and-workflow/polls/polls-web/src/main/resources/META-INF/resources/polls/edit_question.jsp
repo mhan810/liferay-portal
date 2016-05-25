@@ -76,6 +76,7 @@ portletDisplay.setURLBack(redirect);
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
 	<aui:input name="questionId" type="hidden" value="<%= questionId %>" />
+	<aui:input name="neverExpire" type="hidden" value="<%= neverExpire %>" />
 	<aui:input name="choicesCount" type="hidden" value="<%= choicesCount %>" />
 	<aui:input name="choiceName" type="hidden" value="" />
 
@@ -156,33 +157,47 @@ portletDisplay.setURLBack(redirect);
 
 <aui:script>
 	function <portlet:namespace />addPollChoice() {
-		document.<portlet:namespace />fm.<portlet:namespace />choicesCount.value = '<%= choicesCount + 1 %>';
+		var form = AUI.$(<portlet:namespace />fm);
+
+		var neverExpire = form.fm('fmexpirationDate').prop('checked');
+
+		form.fm('choicesCount').val('<%= choicesCount + 1 %>');
+		form.fm('neverExpire').val(neverExpire);
 
 		<liferay-portlet:renderURL allowEmptyParam="<%= true %>" var="addPollChoiceURL">
 			<liferay-portlet:param name="mvcRenderCommandName" value="/polls/edit_question" />
-			<liferay-portlet:param name="redirect" value="<%= currentURL %>" />
 			<liferay-portlet:param name="<%= EditQuestionMVCActionCommand.CHOICE_DESCRIPTION_PREFIX + (char)(96 + choicesCount + 1) %>" value="" />
 		</liferay-portlet:renderURL>
 
-		submitForm(document.<portlet:namespace />fm, '<%= addPollChoiceURL %>');
+		submitForm(form, '<%= addPollChoiceURL %>');
 	}
 
 	function <portlet:namespace />deletePollChoice(choiceName) {
-		document.<portlet:namespace />fm.<portlet:namespace />choicesCount.value = '<%= choicesCount - 1 %>';
-		document.<portlet:namespace />fm.<portlet:namespace />choiceName.value = '<%= choiceName %>';
+		var form = AUI.$(<portlet:namespace />fm);
+
+		var neverExpire = form.fm('fmexpirationDate').prop('checked');
+
+		form.fm('choicesCount').val('<%= choicesCount - 1 %>');
+		form.fm('choiceName').val('<%= choiceName %>');
+		form.fm('neverExpire').val(neverExpire);
 
 		<liferay-portlet:renderURL allowEmptyParam="<%= true %>" var="deletePollChoiceURL">
 			<liferay-portlet:param name="mvcRenderCommandName" value="/polls/edit_question" />
-			<liferay-portlet:param name="redirect" value="<%= currentURL %>" />
+			<liferay-portlet:param name="<%= EditQuestionMVCActionCommand.CHOICE_DESCRIPTION_PREFIX + (char)(96 + choicesCount - 1) %>" value="" />
 		</liferay-portlet:renderURL>
 
-		submitForm(document.<portlet:namespace />fm, '<%= deletePollChoiceURL %>');
+		submitForm(form, '<%= deletePollChoiceURL %>');
 	}
 
 	function <portlet:namespace />saveQuestion() {
-		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = '<%= (question == null) ? Constants.ADD : Constants.UPDATE %>';
+		var form = AUI.$(<portlet:namespace />fm);
 
-		submitForm(document.<portlet:namespace />fm);
+		var neverExpire = form.fm('fmexpirationDate').prop('checked');
+
+		form.fm('<%= Constants.CMD %>').val('<%= (question == null) ? Constants.ADD : Constants.UPDATE %>');
+		form.fm('neverExpire').val(neverExpire);
+
+		submitForm(form);
 	}
 </aui:script>
 
