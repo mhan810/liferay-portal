@@ -29,6 +29,42 @@ import java.sql.ResultSet;
  */
 public class UpgradePortletPreferences extends UpgradeProcess {
 
+	protected void deleteLayoutRevisionPortletPreferences() throws Exception {
+		try (LoggingTimer loggingTimer = new LoggingTimer()) {
+			StringBundler sb = new StringBundler(7);
+
+			sb.append("select PortletPreferences.portletPreferencesId, ");
+			sb.append("PortletPreferences.plid,");
+			sb.append(
+				"PortletPreferences.portletId, LayoutRevision.typeSettings ");
+			sb.append("from PortletPreferences inner join LayoutRevision on ");
+			sb.append("PortletPreferences.plid = LayoutRevision.layoutRevisionId ");
+			sb.append("where preferences like '%<portlet-preferences />%' or ");
+			sb.append("preferences like '' or preferences is null");
+
+			String sql = sb.toString();
+
+			try (PreparedStatement ps = connection.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+
+				while (rs.next()) {
+					long portletPreferencesId = rs.getLong(
+						"portletPreferencesId");
+					String portletId = GetterUtil.getString(
+						rs.getString("portletId"));
+					String typeSettings = GetterUtil.getString(
+						rs.getString("typeSettings"));
+
+					if (typeSettings.contains(portletId)) {
+						continue;
+					}
+
+					deletePortletPreferences(portletPreferencesId);
+				}
+			}
+		}
+	}
+
 	protected void deletePortletPreferences() throws Exception {
 		try (LoggingTimer loggingTimer = new LoggingTimer()) {
 			StringBundler sb = new StringBundler(7);
@@ -73,11 +109,12 @@ public class UpgradePortletPreferences extends UpgradeProcess {
 
 		runSQL(
 			"delete from PortletPreferences where portletPreferencesId = " +
-				portletPreferencesId);
+			portletPreferencesId);
 	}
 
 	@Override
 	protected void doUpgrade() throws Exception {
+		deleteLayoutRevisionPortletPreferences();
 		deletePortletPreferences();
 	}
 
