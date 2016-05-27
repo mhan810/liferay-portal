@@ -234,8 +234,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 						ldapServerId, companyId, binding));
 
 				return importUser(
-					ldapServerId, companyId, ldapContext, attributes,
-					null);
+					ldapServerId, companyId, ldapContext, attributes, null);
 			}
 			else {
 				return null;
@@ -785,8 +784,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 					User user = importUser(
 						ldapServerId, companyId, userAttributes, userMappings,
 						userExpandoMappings, contactMappings,
-						contactExpandoMappings, null,
-						ldapUserIgnoreAttributes);
+						contactExpandoMappings, null, ldapUserIgnoreAttributes);
 
 					importGroups(
 						ldapServerId, companyId, ldapContext, userAttributes,
@@ -1154,8 +1152,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 				User user = importUser(
 					ldapServerId, companyId, userAttributes, userMappings,
 					userExpandoMappings, contactMappings,
-					contactExpandoMappings, null,
-					ldapUserIgnoreAttributes);
+					contactExpandoMappings, null, ldapUserIgnoreAttributes);
 
 				if (user != null) {
 					if (_log.isDebugEnabled()) {
