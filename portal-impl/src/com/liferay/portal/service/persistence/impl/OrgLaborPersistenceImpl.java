@@ -17,9 +17,7 @@ package com.liferay.portal.service.persistence.impl;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.bean.BeanReference;
-import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
-import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
@@ -198,7 +196,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 		List<OrgLabor> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<OrgLabor>)finderCache.getResult(finderPath,
+			list = (List<OrgLabor>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -264,10 +262,10 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -558,7 +556,8 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 
 		Object[] finderArgs = new Object[] { organizationId };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
@@ -582,10 +581,10 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -610,7 +609,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 	 */
 	@Override
 	public void cacheResult(OrgLabor orgLabor) {
-		entityCache.putResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
 			OrgLaborImpl.class, orgLabor.getPrimaryKey(), orgLabor);
 
 		orgLabor.resetOriginalValues();
@@ -624,7 +623,8 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 	@Override
 	public void cacheResult(List<OrgLabor> orgLabors) {
 		for (OrgLabor orgLabor : orgLabors) {
-			if (entityCache.getResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
+			if (EntityCacheUtil.getResult(
+						OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
 						OrgLaborImpl.class, orgLabor.getPrimaryKey()) == null) {
 				cacheResult(orgLabor);
 			}
@@ -638,41 +638,41 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 	 * Clears the cache for all org labors.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache() {
-		entityCache.clearCache(OrgLaborImpl.class);
+		EntityCacheUtil.clearCache(OrgLaborImpl.class);
 
-		finderCache.clearCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	/**
 	 * Clears the cache for the org labor.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache(OrgLabor orgLabor) {
-		entityCache.removeResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.removeResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
 			OrgLaborImpl.class, orgLabor.getPrimaryKey());
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	@Override
 	public void clearCache(List<OrgLabor> orgLabors) {
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		for (OrgLabor orgLabor : orgLabors) {
-			entityCache.removeResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
+			EntityCacheUtil.removeResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
 				OrgLaborImpl.class, orgLabor.getPrimaryKey());
 		}
 	}
@@ -808,10 +808,10 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 			closeSession(session);
 		}
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 
 		if (isNew || !OrgLaborModelImpl.COLUMN_BITMASK_ENABLED) {
-			finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+			FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 		}
 
 		else {
@@ -821,21 +821,21 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 						orgLaborModelImpl.getOriginalOrganizationId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_ORGANIZATIONID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ORGANIZATIONID,
 					args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ORGANIZATIONID,
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ORGANIZATIONID,
 					args);
 
 				args = new Object[] { orgLaborModelImpl.getOrganizationId() };
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_ORGANIZATIONID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ORGANIZATIONID,
 					args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ORGANIZATIONID,
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ORGANIZATIONID,
 					args);
 			}
 		}
 
-		entityCache.putResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
 			OrgLaborImpl.class, orgLabor.getPrimaryKey(), orgLabor, false);
 
 		orgLabor.resetOriginalValues();
@@ -921,7 +921,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 	 */
 	@Override
 	public OrgLabor fetchByPrimaryKey(Serializable primaryKey) {
-		OrgLabor orgLabor = (OrgLabor)entityCache.getResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
+		OrgLabor orgLabor = (OrgLabor)EntityCacheUtil.getResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
 				OrgLaborImpl.class, primaryKey);
 
 		if (orgLabor == _nullOrgLabor) {
@@ -940,12 +940,12 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 					cacheResult(orgLabor);
 				}
 				else {
-					entityCache.putResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
+					EntityCacheUtil.putResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
 						OrgLaborImpl.class, primaryKey, _nullOrgLabor);
 				}
 			}
 			catch (Exception e) {
-				entityCache.removeResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.removeResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
 					OrgLaborImpl.class, primaryKey);
 
 				throw processException(e);
@@ -995,7 +995,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			OrgLabor orgLabor = (OrgLabor)entityCache.getResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
+			OrgLabor orgLabor = (OrgLabor)EntityCacheUtil.getResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
 					OrgLaborImpl.class, primaryKey);
 
 			if (orgLabor == null) {
@@ -1047,7 +1047,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 			}
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
-				entityCache.putResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.putResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
 					OrgLaborImpl.class, primaryKey, _nullOrgLabor);
 			}
 		}
@@ -1139,7 +1139,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 		List<OrgLabor> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<OrgLabor>)finderCache.getResult(finderPath,
+			list = (List<OrgLabor>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 		}
 
@@ -1188,10 +1188,10 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1221,7 +1221,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 	 */
 	@Override
 	public int countAll() {
-		Long count = (Long)finderCache.getResult(FINDER_PATH_COUNT_ALL,
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_ALL,
 				FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
@@ -1234,11 +1234,11 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(FINDER_PATH_COUNT_ALL, FINDER_ARGS_EMPTY,
-					count);
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_ALL,
+					FINDER_ARGS_EMPTY, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(FINDER_PATH_COUNT_ALL,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_ALL,
 					FINDER_ARGS_EMPTY);
 
 				throw processException(e);
@@ -1263,16 +1263,14 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 	}
 
 	public void destroy() {
-		entityCache.removeCache(OrgLaborImpl.class.getName());
-		finderCache.removeCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		EntityCacheUtil.removeCache(OrgLaborImpl.class.getName());
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	@BeanReference(type = CompanyProviderWrapper.class)
 	protected CompanyProvider companyProvider;
-	protected EntityCache entityCache = EntityCacheUtil.getEntityCache();
-	protected FinderCache finderCache = FinderCacheUtil.getFinderCache();
 	private static final String _SQL_SELECT_ORGLABOR = "SELECT orgLabor FROM OrgLabor orgLabor";
 	private static final String _SQL_SELECT_ORGLABOR_WHERE_PKS_IN = "SELECT orgLabor FROM OrgLabor orgLabor WHERE orgLaborId IN (";
 	private static final String _SQL_SELECT_ORGLABOR_WHERE = "SELECT orgLabor FROM OrgLabor orgLabor WHERE ";
