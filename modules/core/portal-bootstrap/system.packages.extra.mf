@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1464381909341
+Bnd-LastModified: 1464580464459
 Bundle-ManifestVersion: 2
 Bundle-Name: system.packages.extra
 Bundle-SymbolicName: system.packages.extra
 Bundle-Vendor: Liferay, Inc.
 Bundle-Version: 1.0.0
-Created-By: 1.7.0_80 (Oracle Corporation)
+Created-By: 1.8.0_65 (Oracle Corporation)
 Export-Package: com.liferay.ibm.icu;version="4.0.1",com.liferay.ibm.ic
  u.impl;version="4.0.1";uses:="com.liferay.ibm.icu.math,com.liferay.ib
  m.icu.text,com.liferay.ibm.icu.util",com.liferay.ibm.icu.impl.coll;ve
@@ -2463,7 +2463,7 @@ Export-Package: com.liferay.ibm.icu;version="4.0.1",com.liferay.ibm.ic
  0.0";uses:="com.liferay.portal.kernel.backgroundtask,com.liferay.port
  al.kernel.json,com.liferay.portal.kernel.template",com.liferay.portal
  .kernel.bean;version="7.0.0";uses:="javax.portlet,javax.servlet.http"
- ,com.liferay.portal.kernel.cache;version="7.0.0";uses:="com.liferay.p
+ ,com.liferay.portal.kernel.cache;version="7.1.0";uses:="com.liferay.p
  ortal.kernel.nio.intraband.proxy.annotation,com.liferay.portal.kernel
  .spring.osgi",com.liferay.portal.kernel.cache.configurator;version="1
  .0.0",com.liferay.portal.kernel.cache.index;version="6.2.0";uses:="co
@@ -2571,7 +2571,7 @@ Export-Package: com.liferay.ibm.icu;version="4.0.1",com.liferay.ibm.ic
  ay.portal.kernel.messaging",com.liferay.portal.kernel.messaging.proxy
  ;version="7.0.0";uses:="com.liferay.portal.kernel.messaging,com.lifer
  ay.portal.kernel.messaging.sender,com.liferay.portal.kernel.spring.ao
- p",com.liferay.portal.kernel.messaging.sender;version="7.0.0";uses:="
+ p",com.liferay.portal.kernel.messaging.sender;version="7.1.0";uses:="
  com.liferay.portal.kernel.messaging",com.liferay.portal.kernel.metada
  ta;version="7.0.0";uses:="com.liferay.dynamic.data.mapping.kernel,com
  .liferay.exportimport.kernel.lar,com.liferay.portal.kernel.exception,
