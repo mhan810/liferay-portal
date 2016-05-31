@@ -17,6 +17,7 @@ package com.liferay.portal.target.platform.indexer.main;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import com.liferay.portal.kernel.util.Time;
+import com.liferay.portal.target.platform.indexer.Indexer;
 import com.liferay.portal.target.platform.indexer.internal.DefaultIndexValidator;
 
 import java.io.File;
@@ -103,15 +104,33 @@ public class IndexValidatorMain {
 			return;
 		}
 
-		DefaultIndexValidator defaultIndexValidator =
-			new DefaultIndexValidator();
+		List<URI> targetPlatformIndexURIs = new ArrayList<>();
 
-		defaultIndexValidator.setIncludeTargetPlatform(includeTargetPlatform);
+		File targetPlatformDir = new File(
+			moduleFrameworkBaseDirName, Indexer.DIR_NAME_TARGET_PLATFORM);
 
-		if (includeTargetPlatform) {
-			defaultIndexValidator.setModuleFrameworkBaseDirName(
-				moduleFrameworkBaseDirName);
+		if (targetPlatformDir.exists() && targetPlatformDir.canRead()) {
+			File[] indexFiles = targetPlatformDir.listFiles(
+				new FilenameFilter() {
+
+					@Override
+					public boolean accept(File dir, String name) {
+						if (name.endsWith(".xml") || name.endsWith(".xml.gz")) {
+							return true;
+						}
+
+						return false;
+					}
+
+				});
+
+			for (File indexFile : indexFiles) {
+				targetPlatformIndexURIs.add(indexFile.toURI());
+			}
 		}
+
+		DefaultIndexValidator defaultIndexValidator = new DefaultIndexValidator(
+			targetPlatformIndexURIs);
 
 		long start = System.currentTimeMillis();
 

@@ -23,9 +23,7 @@ import com.liferay.mail.model.impl.FolderModelImpl;
 import com.liferay.mail.service.persistence.FolderPersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
-import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
-import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
@@ -196,8 +194,8 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 		List<Folder> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<Folder>)finderCache.getResult(finderPath, finderArgs,
-					this);
+			list = (List<Folder>)FinderCacheUtil.getResult(finderPath,
+					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Folder folder : list) {
@@ -262,10 +260,10 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -553,7 +551,8 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 
 		Object[] finderArgs = new Object[] { accountId };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
@@ -577,10 +576,10 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -668,7 +667,7 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 		Object result = null;
 
 		if (retrieveFromCache) {
-			result = finderCache.getResult(FINDER_PATH_FETCH_BY_A_F,
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_A_F,
 					finderArgs, this);
 		}
 
@@ -722,8 +721,8 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 				List<Folder> list = q.list();
 
 				if (list.isEmpty()) {
-					finderCache.putResult(FINDER_PATH_FETCH_BY_A_F, finderArgs,
-						list);
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_F,
+						finderArgs, list);
 				}
 				else {
 					if ((list.size() > 1) && _log.isWarnEnabled()) {
@@ -742,13 +741,14 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 					if ((folder.getAccountId() != accountId) ||
 							(folder.getFullName() == null) ||
 							!folder.getFullName().equals(fullName)) {
-						finderCache.putResult(FINDER_PATH_FETCH_BY_A_F,
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_F,
 							finderArgs, folder);
 					}
 				}
 			}
 			catch (Exception e) {
-				finderCache.removeResult(FINDER_PATH_FETCH_BY_A_F, finderArgs);
+				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A_F,
+					finderArgs);
 
 				throw processException(e);
 			}
@@ -793,7 +793,8 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 
 		Object[] finderArgs = new Object[] { accountId, fullName };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
@@ -835,10 +836,10 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -866,10 +867,10 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 	 */
 	@Override
 	public void cacheResult(Folder folder) {
-		entityCache.putResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
 			FolderImpl.class, folder.getPrimaryKey(), folder);
 
-		finderCache.putResult(FINDER_PATH_FETCH_BY_A_F,
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_F,
 			new Object[] { folder.getAccountId(), folder.getFullName() }, folder);
 
 		folder.resetOriginalValues();
@@ -883,8 +884,9 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 	@Override
 	public void cacheResult(List<Folder> folders) {
 		for (Folder folder : folders) {
-			if (entityCache.getResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
-						FolderImpl.class, folder.getPrimaryKey()) == null) {
+			if (EntityCacheUtil.getResult(
+						FolderModelImpl.ENTITY_CACHE_ENABLED, FolderImpl.class,
+						folder.getPrimaryKey()) == null) {
 				cacheResult(folder);
 			}
 			else {
@@ -897,43 +899,43 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 	 * Clears the cache for all folders.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache() {
-		entityCache.clearCache(FolderImpl.class);
+		EntityCacheUtil.clearCache(FolderImpl.class);
 
-		finderCache.clearCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	/**
 	 * Clears the cache for the folder.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache(Folder folder) {
-		entityCache.removeResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.removeResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
 			FolderImpl.class, folder.getPrimaryKey());
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		clearUniqueFindersCache((FolderModelImpl)folder);
 	}
 
 	@Override
 	public void clearCache(List<Folder> folders) {
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		for (Folder folder : folders) {
-			entityCache.removeResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
+			EntityCacheUtil.removeResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
 				FolderImpl.class, folder.getPrimaryKey());
 
 			clearUniqueFindersCache((FolderModelImpl)folder);
@@ -948,9 +950,9 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 					folderModelImpl.getFullName()
 				};
 
-			finderCache.putResult(FINDER_PATH_COUNT_BY_A_F, args,
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_A_F, args,
 				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_A_F, args,
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_F, args,
 				folderModelImpl);
 		}
 		else {
@@ -961,9 +963,9 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 						folderModelImpl.getFullName()
 					};
 
-				finderCache.putResult(FINDER_PATH_COUNT_BY_A_F, args,
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_A_F, args,
 					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_A_F, args,
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_F, args,
 					folderModelImpl);
 			}
 		}
@@ -974,8 +976,8 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 				folderModelImpl.getAccountId(), folderModelImpl.getFullName()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_A_F, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_A_F, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_A_F, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A_F, args);
 
 		if ((folderModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_A_F.getColumnBitmask()) != 0) {
@@ -984,8 +986,8 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 					folderModelImpl.getOriginalFullName()
 				};
 
-			finderCache.removeResult(FINDER_PATH_COUNT_BY_A_F, args);
-			finderCache.removeResult(FINDER_PATH_FETCH_BY_A_F, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_A_F, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A_F, args);
 		}
 	}
 
@@ -1140,10 +1142,10 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 			closeSession(session);
 		}
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 
 		if (isNew || !FolderModelImpl.COLUMN_BITMASK_ENABLED) {
-			finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+			FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 		}
 
 		else {
@@ -1153,19 +1155,21 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 						folderModelImpl.getOriginalAccountId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_ACCOUNTID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACCOUNTID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ACCOUNTID,
+					args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACCOUNTID,
 					args);
 
 				args = new Object[] { folderModelImpl.getAccountId() };
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_ACCOUNTID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACCOUNTID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ACCOUNTID,
+					args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACCOUNTID,
 					args);
 			}
 		}
 
-		entityCache.putResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
 			FolderImpl.class, folder.getPrimaryKey(), folder, false);
 
 		clearUniqueFindersCache(folderModelImpl);
@@ -1244,7 +1248,7 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 	 */
 	@Override
 	public Folder fetchByPrimaryKey(Serializable primaryKey) {
-		Folder folder = (Folder)entityCache.getResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
+		Folder folder = (Folder)EntityCacheUtil.getResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
 				FolderImpl.class, primaryKey);
 
 		if (folder == _nullFolder) {
@@ -1263,12 +1267,12 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 					cacheResult(folder);
 				}
 				else {
-					entityCache.putResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
+					EntityCacheUtil.putResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
 						FolderImpl.class, primaryKey, _nullFolder);
 				}
 			}
 			catch (Exception e) {
-				entityCache.removeResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.removeResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
 					FolderImpl.class, primaryKey);
 
 				throw processException(e);
@@ -1318,7 +1322,7 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Folder folder = (Folder)entityCache.getResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
+			Folder folder = (Folder)EntityCacheUtil.getResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
 					FolderImpl.class, primaryKey);
 
 			if (folder == null) {
@@ -1370,7 +1374,7 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 			}
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
-				entityCache.putResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.putResult(FolderModelImpl.ENTITY_CACHE_ENABLED,
 					FolderImpl.class, primaryKey, _nullFolder);
 			}
 		}
@@ -1462,8 +1466,8 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 		List<Folder> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<Folder>)finderCache.getResult(finderPath, finderArgs,
-					this);
+			list = (List<Folder>)FinderCacheUtil.getResult(finderPath,
+					finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1511,10 +1515,10 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1544,7 +1548,7 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 	 */
 	@Override
 	public int countAll() {
-		Long count = (Long)finderCache.getResult(FINDER_PATH_COUNT_ALL,
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_ALL,
 				FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
@@ -1557,11 +1561,11 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(FINDER_PATH_COUNT_ALL, FINDER_ARGS_EMPTY,
-					count);
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_ALL,
+					FINDER_ARGS_EMPTY, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(FINDER_PATH_COUNT_ALL,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_ALL,
 					FINDER_ARGS_EMPTY);
 
 				throw processException(e);
@@ -1586,16 +1590,14 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 	}
 
 	public void destroy() {
-		entityCache.removeCache(FolderImpl.class.getName());
-		finderCache.removeCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		EntityCacheUtil.removeCache(FolderImpl.class.getName());
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	@BeanReference(type = CompanyProviderWrapper.class)
 	protected CompanyProvider companyProvider;
-	protected EntityCache entityCache = EntityCacheUtil.getEntityCache();
-	protected FinderCache finderCache = FinderCacheUtil.getFinderCache();
 	private static final String _SQL_SELECT_FOLDER = "SELECT folder FROM Folder folder";
 	private static final String _SQL_SELECT_FOLDER_WHERE_PKS_IN = "SELECT folder FROM Folder folder WHERE folderId IN (";
 	private static final String _SQL_SELECT_FOLDER_WHERE = "SELECT folder FROM Folder folder WHERE ";

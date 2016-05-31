@@ -35,7 +35,7 @@ public class TemplateResourcePortalCacheListener
 		portalCacheName = portalCacheName.concat(StringPool.POUND).concat(
 			templateResourceLoaderName);
 
-		_portalCache = SingleVMPoolUtil.getPortalCache(portalCacheName);
+		_portalCache = SingleVMPoolUtil.getDynamicPortalCache(portalCacheName);
 	}
 
 	@Override

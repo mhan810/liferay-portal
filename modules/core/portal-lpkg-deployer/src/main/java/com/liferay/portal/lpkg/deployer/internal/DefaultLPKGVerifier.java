@@ -33,8 +33,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.net.URI;
+
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
@@ -61,7 +69,7 @@ public class DefaultLPKGVerifier implements LPKGVerifier {
 	@Override
 	public List<Bundle> verify(File lpkgFile) {
 		try {
-			Indexer indexer = _indexerFactory.create(lpkgFile);
+			Indexer indexer = _indexerFactory.createLPKGIndexer(lpkgFile);
 
 			File indexFile = indexer.index(
 				new File(
@@ -72,7 +80,8 @@ public class DefaultLPKGVerifier implements LPKGVerifier {
 				_log.info("Wrote index " + indexFile.getPath());
 			}
 
-			IndexValidator indexValidator = _indexValidatorFactory.create();
+			IndexValidator indexValidator = _indexValidatorFactory.create(
+				_getTargetPlatformIndexURIs());
 
 			long start = System.currentTimeMillis();
 
@@ -192,6 +201,27 @@ public class DefaultLPKGVerifier implements LPKGVerifier {
 		catch (IOException ioe) {
 			throw new LPKGVerifyException(ioe);
 		}
+	}
+
+	private List<URI> _getTargetPlatformIndexURIs() throws IOException {
+		List<URI> uris = new ArrayList<>();
+
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(
+				Paths.get(
+					PropsValues.MODULE_FRAMEWORK_BASE_DIR,
+					Indexer.DIR_NAME_TARGET_PLATFORM),
+				"*.xml")) {
+
+			Iterator<Path> iterator = directoryStream.iterator();
+
+			while (iterator.hasNext()) {
+				Path path = iterator.next();
+
+				uris.add(path.toUri());
+			}
+		}
+
+		return uris;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

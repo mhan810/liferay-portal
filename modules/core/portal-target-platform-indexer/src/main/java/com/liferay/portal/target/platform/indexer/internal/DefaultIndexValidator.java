@@ -23,10 +23,7 @@ import biz.aQute.resolve.ResolverValidator;
 import biz.aQute.resolve.ResolverValidator.Resolution;
 
 import com.liferay.portal.target.platform.indexer.IndexValidator;
-import com.liferay.portal.target.platform.indexer.Indexer;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.InputStream;
 
 import java.net.URI;
@@ -51,14 +48,8 @@ import org.osgi.resource.Resource;
  */
 public class DefaultIndexValidator implements IndexValidator {
 
-	public void setIncludeTargetPlatform(boolean includeTargetPlatform) {
-		_includeTargetPlatform = includeTargetPlatform;
-	}
-
-	public void setModuleFrameworkBaseDirName(
-		String moduleFrameworkBaseDirName) {
-
-		_moduleFrameworkBaseDirName = moduleFrameworkBaseDirName;
+	public DefaultIndexValidator(List<URI> targetPlatformIndexURIs) {
+		_targetPlatformIndexURIs = targetPlatformIndexURIs;
 	}
 
 	@Override
@@ -152,46 +143,19 @@ public class DefaultIndexValidator implements IndexValidator {
 			ResourceBuilder resourceBuilder, Set<String> identities)
 		throws Exception {
 
-		if (!_includeTargetPlatform) {
-			return;
-		}
+		for (URI uri : _targetPlatformIndexURIs) {
+			URL url = uri.toURL();
 
-		File targetPlatformDir = new File(
-			_moduleFrameworkBaseDirName, Indexer.DIR_NAME_TARGET_PLATFORM);
+			try (InputStream inputStream = url.openStream()) {
+				String identity = _getRepositoryIdentity(
+					uri.getPath(), inputStream);
 
-		if (!targetPlatformDir.exists() || !targetPlatformDir.canRead()) {
-			System.err.printf(
-				"== Unable to read target platform dir %s\n",
-				targetPlatformDir);
-
-			return;
-		}
-
-		File[] indexFiles = targetPlatformDir.listFiles(
-			new FilenameFilter() {
-
-				@Override
-				public boolean accept(File dir, String name) {
-					if (name.endsWith(".xml") || name.endsWith(".xml.gz")) {
-						return true;
-					}
-
-					return false;
+				if (identities.contains(identity)) {
+					continue;
 				}
 
-			});
-
-		for (File indexFile : indexFiles) {
-			URI uri = indexFile.toURI();
-
-			String identity = _getRepositoryIdentity(
-				uri.getPath(), Files.newInputStream(indexFile.toPath()));
-
-			if (identities.contains(identity)) {
-				continue;
+				identities.add(identity);
 			}
-
-			identities.add(identity);
 
 			try (XMLResourceParser xmlResourceParser =
 					new XMLResourceParser(uri)) {
@@ -209,7 +173,6 @@ public class DefaultIndexValidator implements IndexValidator {
 	private static final String _MESSAGE_PREFIX =
 		"Unable to resolve <<INITIAL>> version=null: ";
 
-	private boolean _includeTargetPlatform;
-	private String _moduleFrameworkBaseDirName;
+	private final List<URI> _targetPlatformIndexURIs;
 
 }

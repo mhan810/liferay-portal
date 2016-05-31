@@ -18,12 +18,14 @@ import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.module.framework.ThrowableCollector;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.lpkg.deployer.LPKGDeployer;
 import com.liferay.portal.lpkg.deployer.LPKGVerifier;
+import com.liferay.portal.lpkg.deployer.LPKGVerifyException;
 import com.liferay.portal.lpkg.deployer.LPKGWARBundleRegistry;
 import com.liferay.portal.util.PropsValues;
 
@@ -74,92 +76,27 @@ import org.osgi.util.tracker.BundleTracker;
 public class DefaultLPKGDeployer implements LPKGDeployer {
 
 	@Activate
-	public void activate(final BundleContext bundleContext) throws IOException {
-		Dictionary<String, Object> properties = new HashMapDictionary<>();
-
-		properties.put(
-			URLConstants.URL_HANDLER_PROTOCOL, new String[] {"lpkg"});
-
-		bundleContext.registerService(
-			URLStreamHandlerService.class.getName(),
-			new LPKGURLStreamHandlerService(_urls), properties);
-
-		_warWrapperBundlerTracker = new BundleTracker<>(
-			bundleContext, ~Bundle.UNINSTALLED,
-			new WARWrapperBundleTrackCustomizer(_lpkgWarBundleRegistry));
-
-		_warWrapperBundlerTracker.open();
-
-		_lpkgBundleTracker = new BundleTracker<>(
-			bundleContext, ~Bundle.UNINSTALLED,
-			new LPKGBundleTrackerCustomizer(bundleContext, _urls));
-
-		_lpkgBundleTracker.open();
-
-		String deploymentDir = GetterUtil.getString(
-			bundleContext.getProperty("lpkg.deployer.dir"),
-			PropsValues.MODULE_FRAMEWORK_BASE_DIR + "/marketplace");
-
-		Path deploymentDirPath = Paths.get(deploymentDir);
-
-		Files.createDirectories(deploymentDirPath);
-
-		Files.walkFileTree(
-			deploymentDirPath,
-			new SimpleFileVisitor<Path>() {
-
-				@Override
-				public FileVisitResult visitFile(
-					Path filePath, BasicFileAttributes basicFileAttributes) {
-
-					Path fileNamePath = filePath.getFileName();
-
-					String fileName = StringUtil.toLowerCase(
-						fileNamePath.toString());
-
-					if (!fileName.endsWith(".lpkg")) {
-						return FileVisitResult.CONTINUE;
-					}
-
-					try {
-						List<Bundle> bundles = deploy(
-							bundleContext, filePath.toFile());
-
-						for (Bundle bundle : bundles) {
-							Dictionary<String, String> headers =
-								bundle.getHeaders();
-
-							String fragmentHost = headers.get(
-								Constants.FRAGMENT_HOST);
-
-							if (fragmentHost != null) {
-								continue;
-							}
-
-							try {
-								bundle.start();
-							}
-							catch (BundleException be) {
-								_log.error(
-									"Unable to start " + bundle + " for " +
-										filePath,
-									be);
-							}
-						}
-					}
-					catch (Exception e) {
-						_log.error("Unable to deploy LPKG file " + filePath, e);
-					}
-
-					return FileVisitResult.CONTINUE;
-				}
-
-			});
+	public void activate(BundleContext bundleContext) {
+		try {
+			_doActivate(bundleContext);
+		}
+		catch (Throwable t) {
+			_throwableCollector.collect(t);
+		}
 	}
 
 	@Override
 	public List<Bundle> deploy(BundleContext bundleContext, File lpkgFile)
 		throws IOException {
+
+		Path lpkgFilePath = lpkgFile.toPath();
+
+		if (!lpkgFilePath.startsWith(_deploymentDirPath)) {
+			throw new LPKGVerifyException(
+				"Unable to deploy " + lpkgFile +
+					" from outside the deployment directory " +
+						_deploymentDirPath);
+		}
 
 		for (Bundle bundle : _lpkgVerifier.verify(lpkgFile)) {
 			try {
@@ -260,6 +197,91 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 		_warWrapperBundlerTracker.close();
 	}
 
+	private void _doActivate(final BundleContext bundleContext)
+		throws IOException {
+
+		Dictionary<String, Object> properties = new HashMapDictionary<>();
+
+		properties.put(
+			URLConstants.URL_HANDLER_PROTOCOL, new String[] {"lpkg"});
+
+		bundleContext.registerService(
+			URLStreamHandlerService.class.getName(),
+			new LPKGURLStreamHandlerService(_urls), properties);
+
+		_warWrapperBundlerTracker = new BundleTracker<>(
+			bundleContext, ~Bundle.UNINSTALLED,
+			new WARWrapperBundleTrackCustomizer(_lpkgWarBundleRegistry));
+
+		_warWrapperBundlerTracker.open();
+
+		_lpkgBundleTracker = new BundleTracker<>(
+			bundleContext, ~Bundle.UNINSTALLED,
+			new LPKGBundleTrackerCustomizer(bundleContext, _urls));
+
+		_lpkgBundleTracker.open();
+
+		String deploymentDir = GetterUtil.getString(
+			bundleContext.getProperty("lpkg.deployer.dir"),
+			PropsValues.MODULE_FRAMEWORK_BASE_DIR + "/marketplace");
+
+		_deploymentDirPath = Paths.get(deploymentDir);
+
+		Files.createDirectories(_deploymentDirPath);
+
+		Files.walkFileTree(
+			_deploymentDirPath,
+			new SimpleFileVisitor<Path>() {
+
+				@Override
+				public FileVisitResult visitFile(
+					Path filePath, BasicFileAttributes basicFileAttributes) {
+
+					Path fileNamePath = filePath.getFileName();
+
+					String fileName = StringUtil.toLowerCase(
+						fileNamePath.toString());
+
+					if (!fileName.endsWith(".lpkg")) {
+						return FileVisitResult.CONTINUE;
+					}
+
+					try {
+						List<Bundle> bundles = deploy(
+							bundleContext, filePath.toFile());
+
+						for (Bundle bundle : bundles) {
+							Dictionary<String, String> headers =
+								bundle.getHeaders();
+
+							String fragmentHost = headers.get(
+								Constants.FRAGMENT_HOST);
+
+							if (fragmentHost != null) {
+								continue;
+							}
+
+							try {
+								bundle.start();
+							}
+							catch (BundleException be) {
+								_log.error(
+									"Unable to start " + bundle + " for " +
+										filePath,
+									be);
+							}
+						}
+					}
+					catch (Exception e) {
+						_log.error("Unable to deploy LPKG file " + filePath, e);
+					}
+
+					return FileVisitResult.CONTINUE;
+				}
+
+			});
+	}
+
 	private void _writeManifest(
 			ZipFile zipFile, JarOutputStream jarOutputStream)
 		throws IOException {
@@ -294,6 +316,7 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultLPKGDeployer.class);
 
+	private Path _deploymentDirPath;
 	private BundleTracker<List<Bundle>> _lpkgBundleTracker;
 
 	@Reference
@@ -301,6 +324,9 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 
 	@Reference
 	private LPKGWARBundleRegistry _lpkgWarBundleRegistry;
+
+	@Reference(target = "(throwable.collector=initial.bundles)")
+	private ThrowableCollector _throwableCollector;
 
 	private final Map<String, URL> _urls = new ConcurrentHashMap<>();
 	private BundleTracker<Bundle> _warWrapperBundlerTracker;

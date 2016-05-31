@@ -20,6 +20,7 @@ import com.liferay.portal.cache.ehcache.internal.configurator.SingleVMEhcachePor
 import com.liferay.portal.kernel.cache.PortalCacheManager;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.cache.configurator.PortalCacheConfiguratorSettings;
+import com.liferay.portal.kernel.concurrent.ConcurrentHashSet;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Props;
@@ -28,6 +29,7 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import java.io.Serializable;
 
 import java.util.Map;
+import java.util.Set;
 
 import javax.management.MBeanServer;
 
@@ -62,6 +64,16 @@ public class SingleVMEhcachePortalCacheManager<K extends Serializable, V>
 
 		initialize();
 
+		for (PortalCacheConfiguratorSettings portalCacheConfiguratorSettings :
+				_portalCacheConfiguratorSettingsSet) {
+
+			reconfigure(portalCacheConfiguratorSettings);
+		}
+
+		_portalCacheConfiguratorSettingsSet.clear();
+
+		_activated = true;
+
 		if (_log.isDebugEnabled()) {
 			_log.debug("Activated " + PortalCacheManagerNames.SINGLE_VM);
 		}
@@ -86,7 +98,13 @@ public class SingleVMEhcachePortalCacheManager<K extends Serializable, V>
 	protected void setPortalCacheConfiguratorSettings(
 		PortalCacheConfiguratorSettings portalCacheConfiguratorSettings) {
 
-		reconfigure(portalCacheConfiguratorSettings);
+		if (_activated) {
+			reconfigure(portalCacheConfiguratorSettings);
+		}
+		else {
+			_portalCacheConfiguratorSettingsSet.add(
+				portalCacheConfiguratorSettings);
+		}
 	}
 
 	@Reference(unbind = "-")
@@ -128,5 +146,9 @@ public class SingleVMEhcachePortalCacheManager<K extends Serializable, V>
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		SingleVMEhcachePortalCacheManager.class);
+
+	private volatile boolean _activated;
+	private final Set<PortalCacheConfiguratorSettings>
+		_portalCacheConfiguratorSettingsSet = new ConcurrentHashSet<>();
 
 }
