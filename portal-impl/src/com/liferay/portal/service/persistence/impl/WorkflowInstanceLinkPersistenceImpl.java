@@ -17,9 +17,7 @@ package com.liferay.portal.service.persistence.impl;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.bean.BeanReference;
-import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
-import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
@@ -230,7 +228,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 		List<WorkflowInstanceLink> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<WorkflowInstanceLink>)finderCache.getResult(finderPath,
+			list = (List<WorkflowInstanceLink>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -311,10 +309,10 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -671,7 +669,8 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 				groupId, companyId, classNameId, classPK
 			};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(5);
@@ -707,10 +706,10 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -738,7 +737,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 */
 	@Override
 	public void cacheResult(WorkflowInstanceLink workflowInstanceLink) {
-		entityCache.putResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
 			WorkflowInstanceLinkImpl.class,
 			workflowInstanceLink.getPrimaryKey(), workflowInstanceLink);
 
@@ -753,7 +752,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	@Override
 	public void cacheResult(List<WorkflowInstanceLink> workflowInstanceLinks) {
 		for (WorkflowInstanceLink workflowInstanceLink : workflowInstanceLinks) {
-			if (entityCache.getResult(
+			if (EntityCacheUtil.getResult(
 						WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
 						WorkflowInstanceLinkImpl.class,
 						workflowInstanceLink.getPrimaryKey()) == null) {
@@ -769,41 +768,41 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 * Clears the cache for all workflow instance links.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache() {
-		entityCache.clearCache(WorkflowInstanceLinkImpl.class);
+		EntityCacheUtil.clearCache(WorkflowInstanceLinkImpl.class);
 
-		finderCache.clearCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	/**
 	 * Clears the cache for the workflow instance link.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache(WorkflowInstanceLink workflowInstanceLink) {
-		entityCache.removeResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.removeResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
 			WorkflowInstanceLinkImpl.class, workflowInstanceLink.getPrimaryKey());
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	@Override
 	public void clearCache(List<WorkflowInstanceLink> workflowInstanceLinks) {
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		for (WorkflowInstanceLink workflowInstanceLink : workflowInstanceLinks) {
-			entityCache.removeResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
+			EntityCacheUtil.removeResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
 				WorkflowInstanceLinkImpl.class,
 				workflowInstanceLink.getPrimaryKey());
 		}
@@ -967,10 +966,10 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 			closeSession(session);
 		}
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 
 		if (isNew || !WorkflowInstanceLinkModelImpl.COLUMN_BITMASK_ENABLED) {
-			finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+			FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 		}
 
 		else {
@@ -983,8 +982,8 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 						workflowInstanceLinkModelImpl.getOriginalClassPK()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_G_C_C_C, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C_C_C,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C_C_C,
 					args);
 
 				args = new Object[] {
@@ -994,13 +993,13 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 						workflowInstanceLinkModelImpl.getClassPK()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_G_C_C_C, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C_C_C,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C_C_C,
 					args);
 			}
 		}
 
-		entityCache.putResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
 			WorkflowInstanceLinkImpl.class,
 			workflowInstanceLink.getPrimaryKey(), workflowInstanceLink, false);
 
@@ -1080,7 +1079,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 */
 	@Override
 	public WorkflowInstanceLink fetchByPrimaryKey(Serializable primaryKey) {
-		WorkflowInstanceLink workflowInstanceLink = (WorkflowInstanceLink)entityCache.getResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
+		WorkflowInstanceLink workflowInstanceLink = (WorkflowInstanceLink)EntityCacheUtil.getResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
 				WorkflowInstanceLinkImpl.class, primaryKey);
 
 		if (workflowInstanceLink == _nullWorkflowInstanceLink) {
@@ -1100,13 +1099,13 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 					cacheResult(workflowInstanceLink);
 				}
 				else {
-					entityCache.putResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
+					EntityCacheUtil.putResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
 						WorkflowInstanceLinkImpl.class, primaryKey,
 						_nullWorkflowInstanceLink);
 				}
 			}
 			catch (Exception e) {
-				entityCache.removeResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.removeResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
 					WorkflowInstanceLinkImpl.class, primaryKey);
 
 				throw processException(e);
@@ -1156,7 +1155,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			WorkflowInstanceLink workflowInstanceLink = (WorkflowInstanceLink)entityCache.getResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
+			WorkflowInstanceLink workflowInstanceLink = (WorkflowInstanceLink)EntityCacheUtil.getResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
 					WorkflowInstanceLinkImpl.class, primaryKey);
 
 			if (workflowInstanceLink == null) {
@@ -1209,7 +1208,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 			}
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
-				entityCache.putResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.putResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
 					WorkflowInstanceLinkImpl.class, primaryKey,
 					_nullWorkflowInstanceLink);
 			}
@@ -1303,7 +1302,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 		List<WorkflowInstanceLink> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<WorkflowInstanceLink>)finderCache.getResult(finderPath,
+			list = (List<WorkflowInstanceLink>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 		}
 
@@ -1352,10 +1351,10 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1385,7 +1384,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 */
 	@Override
 	public int countAll() {
-		Long count = (Long)finderCache.getResult(FINDER_PATH_COUNT_ALL,
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_ALL,
 				FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
@@ -1398,11 +1397,11 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(FINDER_PATH_COUNT_ALL, FINDER_ARGS_EMPTY,
-					count);
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_ALL,
+					FINDER_ARGS_EMPTY, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(FINDER_PATH_COUNT_ALL,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_ALL,
 					FINDER_ARGS_EMPTY);
 
 				throw processException(e);
@@ -1427,16 +1426,14 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	}
 
 	public void destroy() {
-		entityCache.removeCache(WorkflowInstanceLinkImpl.class.getName());
-		finderCache.removeCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		EntityCacheUtil.removeCache(WorkflowInstanceLinkImpl.class.getName());
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	@BeanReference(type = CompanyProviderWrapper.class)
 	protected CompanyProvider companyProvider;
-	protected EntityCache entityCache = EntityCacheUtil.getEntityCache();
-	protected FinderCache finderCache = FinderCacheUtil.getFinderCache();
 	private static final String _SQL_SELECT_WORKFLOWINSTANCELINK = "SELECT workflowInstanceLink FROM WorkflowInstanceLink workflowInstanceLink";
 	private static final String _SQL_SELECT_WORKFLOWINSTANCELINK_WHERE_PKS_IN = "SELECT workflowInstanceLink FROM WorkflowInstanceLink workflowInstanceLink WHERE workflowInstanceLinkId IN (";
 	private static final String _SQL_SELECT_WORKFLOWINSTANCELINK_WHERE = "SELECT workflowInstanceLink FROM WorkflowInstanceLink workflowInstanceLink WHERE ";

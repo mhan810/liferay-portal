@@ -17,9 +17,7 @@ package com.liferay.portal.service.persistence.impl;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.bean.BeanReference;
-import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
-import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
@@ -196,7 +194,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 		List<EmailAddress> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<EmailAddress>)finderCache.getResult(finderPath,
+			list = (List<EmailAddress>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -276,10 +274,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -581,7 +579,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 		Object[] finderArgs = new Object[] { uuid };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
@@ -619,10 +618,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -752,7 +751,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 		List<EmailAddress> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<EmailAddress>)finderCache.getResult(finderPath,
+			list = (List<EmailAddress>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -837,10 +836,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1163,7 +1162,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 		Object[] finderArgs = new Object[] { uuid, companyId };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
@@ -1205,10 +1205,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1330,7 +1330,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 		List<EmailAddress> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<EmailAddress>)finderCache.getResult(finderPath,
+			list = (List<EmailAddress>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -1396,10 +1396,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1690,7 +1690,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 		Object[] finderArgs = new Object[] { companyId };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
@@ -1714,10 +1715,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -1834,7 +1835,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 		List<EmailAddress> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<EmailAddress>)finderCache.getResult(finderPath,
+			list = (List<EmailAddress>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -1900,10 +1901,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -2192,7 +2193,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 		Object[] finderArgs = new Object[] { userId };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
@@ -2216,10 +2218,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -2347,7 +2349,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 		List<EmailAddress> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<EmailAddress>)finderCache.getResult(finderPath,
+			list = (List<EmailAddress>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -2418,10 +2420,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -2730,7 +2732,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 		Object[] finderArgs = new Object[] { companyId, classNameId };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
@@ -2758,10 +2761,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -2902,7 +2905,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 		List<EmailAddress> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<EmailAddress>)finderCache.getResult(finderPath,
+			list = (List<EmailAddress>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -2978,10 +2981,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -3308,7 +3311,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 		Object[] finderArgs = new Object[] { companyId, classNameId, classPK };
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(4);
@@ -3340,10 +3344,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -3495,7 +3499,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 		List<EmailAddress> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<EmailAddress>)finderCache.getResult(finderPath,
+			list = (List<EmailAddress>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
@@ -3576,10 +3580,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -3933,7 +3937,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 				companyId, classNameId, classPK, primary
 			};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
 
 		if (count == null) {
 			StringBundler query = new StringBundler(5);
@@ -3969,10 +3974,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(finderPath, finderArgs, count);
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -4000,7 +4005,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 */
 	@Override
 	public void cacheResult(EmailAddress emailAddress) {
-		entityCache.putResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
 			EmailAddressImpl.class, emailAddress.getPrimaryKey(), emailAddress);
 
 		emailAddress.resetOriginalValues();
@@ -4014,7 +4019,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	@Override
 	public void cacheResult(List<EmailAddress> emailAddresses) {
 		for (EmailAddress emailAddress : emailAddresses) {
-			if (entityCache.getResult(
+			if (EntityCacheUtil.getResult(
 						EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
 						EmailAddressImpl.class, emailAddress.getPrimaryKey()) == null) {
 				cacheResult(emailAddress);
@@ -4029,41 +4034,41 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 * Clears the cache for all email addresses.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache() {
-		entityCache.clearCache(EmailAddressImpl.class);
+		EntityCacheUtil.clearCache(EmailAddressImpl.class);
 
-		finderCache.clearCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	/**
 	 * Clears the cache for the email address.
 	 *
 	 * <p>
-	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
+	 * The {@link com.liferay.portal.kernel.dao.orm.EntityCache} and {@link com.liferay.portal.kernel.dao.orm.FinderCache} are both cleared by this method.
 	 * </p>
 	 */
 	@Override
 	public void clearCache(EmailAddress emailAddress) {
-		entityCache.removeResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.removeResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
 			EmailAddressImpl.class, emailAddress.getPrimaryKey());
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	@Override
 	public void clearCache(List<EmailAddress> emailAddresses) {
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		for (EmailAddress emailAddress : emailAddresses) {
-			entityCache.removeResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
+			EntityCacheUtil.removeResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
 				EmailAddressImpl.class, emailAddress.getPrimaryKey());
 		}
 	}
@@ -4232,10 +4237,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			closeSession(session);
 		}
 
-		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 
 		if (isNew || !EmailAddressModelImpl.COLUMN_BITMASK_ENABLED) {
-			finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+			FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 		}
 
 		else {
@@ -4245,14 +4250,14 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 						emailAddressModelImpl.getOriginalUuid()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,
 					args);
 
 				args = new Object[] { emailAddressModelImpl.getUuid() };
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,
 					args);
 			}
 
@@ -4263,8 +4268,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 						emailAddressModelImpl.getOriginalCompanyId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,
 					args);
 
 				args = new Object[] {
@@ -4272,8 +4277,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 						emailAddressModelImpl.getCompanyId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,
 					args);
 			}
 
@@ -4283,14 +4288,16 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 						emailAddressModelImpl.getOriginalCompanyId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_COMPANYID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
+					args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
 				args = new Object[] { emailAddressModelImpl.getCompanyId() };
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_COMPANYID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
+					args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 			}
 
@@ -4300,14 +4307,14 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 						emailAddressModelImpl.getOriginalUserId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
 				args = new Object[] { emailAddressModelImpl.getUserId() };
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 			}
 
@@ -4318,8 +4325,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 						emailAddressModelImpl.getOriginalClassNameId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C,
 					args);
 
 				args = new Object[] {
@@ -4327,8 +4334,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 						emailAddressModelImpl.getClassNameId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C,
 					args);
 			}
 
@@ -4340,8 +4347,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 						emailAddressModelImpl.getOriginalClassPK()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C,
 					args);
 
 				args = new Object[] {
@@ -4350,8 +4357,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 						emailAddressModelImpl.getClassPK()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C,
 					args);
 			}
 
@@ -4364,8 +4371,8 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 						emailAddressModelImpl.getOriginalPrimary()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C_P,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C_P,
 					args);
 
 				args = new Object[] {
@@ -4375,13 +4382,13 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 						emailAddressModelImpl.getPrimary()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C_P,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C_P,
 					args);
 			}
 		}
 
-		entityCache.putResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
+		EntityCacheUtil.putResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
 			EmailAddressImpl.class, emailAddress.getPrimaryKey(), emailAddress,
 			false);
 
@@ -4462,7 +4469,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 */
 	@Override
 	public EmailAddress fetchByPrimaryKey(Serializable primaryKey) {
-		EmailAddress emailAddress = (EmailAddress)entityCache.getResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
+		EmailAddress emailAddress = (EmailAddress)EntityCacheUtil.getResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
 				EmailAddressImpl.class, primaryKey);
 
 		if (emailAddress == _nullEmailAddress) {
@@ -4482,12 +4489,12 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 					cacheResult(emailAddress);
 				}
 				else {
-					entityCache.putResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
+					EntityCacheUtil.putResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
 						EmailAddressImpl.class, primaryKey, _nullEmailAddress);
 				}
 			}
 			catch (Exception e) {
-				entityCache.removeResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.removeResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
 					EmailAddressImpl.class, primaryKey);
 
 				throw processException(e);
@@ -4537,7 +4544,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			EmailAddress emailAddress = (EmailAddress)entityCache.getResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
+			EmailAddress emailAddress = (EmailAddress)EntityCacheUtil.getResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
 					EmailAddressImpl.class, primaryKey);
 
 			if (emailAddress == null) {
@@ -4589,7 +4596,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			}
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
-				entityCache.putResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
+				EntityCacheUtil.putResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
 					EmailAddressImpl.class, primaryKey, _nullEmailAddress);
 			}
 		}
@@ -4682,7 +4689,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 		List<EmailAddress> list = null;
 
 		if (retrieveFromCache) {
-			list = (List<EmailAddress>)finderCache.getResult(finderPath,
+			list = (List<EmailAddress>)FinderCacheUtil.getResult(finderPath,
 					finderArgs, this);
 		}
 
@@ -4731,10 +4738,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				cacheResult(list);
 
-				finderCache.putResult(finderPath, finderArgs, list);
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(finderPath, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -4764,7 +4771,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 */
 	@Override
 	public int countAll() {
-		Long count = (Long)finderCache.getResult(FINDER_PATH_COUNT_ALL,
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_ALL,
 				FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
@@ -4777,11 +4784,11 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 				count = (Long)q.uniqueResult();
 
-				finderCache.putResult(FINDER_PATH_COUNT_ALL, FINDER_ARGS_EMPTY,
-					count);
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_ALL,
+					FINDER_ARGS_EMPTY, count);
 			}
 			catch (Exception e) {
-				finderCache.removeResult(FINDER_PATH_COUNT_ALL,
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_ALL,
 					FINDER_ARGS_EMPTY);
 
 				throw processException(e);
@@ -4811,16 +4818,14 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	}
 
 	public void destroy() {
-		entityCache.removeCache(EmailAddressImpl.class.getName());
-		finderCache.removeCache(FINDER_CLASS_NAME_ENTITY);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		EntityCacheUtil.removeCache(EmailAddressImpl.class.getName());
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
 	@BeanReference(type = CompanyProviderWrapper.class)
 	protected CompanyProvider companyProvider;
-	protected EntityCache entityCache = EntityCacheUtil.getEntityCache();
-	protected FinderCache finderCache = FinderCacheUtil.getFinderCache();
 	private static final String _SQL_SELECT_EMAILADDRESS = "SELECT emailAddress FROM EmailAddress emailAddress";
 	private static final String _SQL_SELECT_EMAILADDRESS_WHERE_PKS_IN = "SELECT emailAddress FROM EmailAddress emailAddress WHERE emailAddressId IN (";
 	private static final String _SQL_SELECT_EMAILADDRESS_WHERE = "SELECT emailAddress FROM EmailAddress emailAddress WHERE ";
