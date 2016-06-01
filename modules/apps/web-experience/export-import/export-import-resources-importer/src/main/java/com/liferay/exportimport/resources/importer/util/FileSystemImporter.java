@@ -715,7 +715,7 @@ public class FileSystemImporter extends BaseImporter {
 
 		addJournalArticles(
 			ddmStructureKey, ddmTemplate.getTemplateKey(),
-			_JOURNAL_ARTICLES_DIR_NAME + fileName);
+			_JOURNAL_ARTICLES_DIR_NAME + fileName, 0);
 	}
 
 	protected void addDLFileEntries(String dirName) throws Exception {
@@ -849,7 +849,8 @@ public class FileSystemImporter extends BaseImporter {
 	}
 
 	protected void addJournalArticles(
-			String ddmStructureKey, String ddmTemplateKey, String dirName)
+			String ddmStructureKey, String ddmTemplateKey, String dirName,
+			long folderId)
 		throws Exception {
 
 		File dir = new File(_resourcesDir, dirName);
@@ -868,7 +869,7 @@ public class FileSystemImporter extends BaseImporter {
 					new FileInputStream(file));
 
 				addJournalArticles(
-					ddmStructureKey, ddmTemplateKey, file.getName(),
+					ddmStructureKey, ddmTemplateKey, file.getName(), folderId,
 					inputStream);
 			}
 			finally {
@@ -881,7 +882,7 @@ public class FileSystemImporter extends BaseImporter {
 
 	protected void addJournalArticles(
 			String ddmStructureKey, String ddmTemplateKey, String fileName,
-			InputStream inputStream)
+			long folderId, InputStream inputStream)
 		throws Exception {
 
 		String title = FileUtil.stripExtension(fileName);
@@ -939,7 +940,7 @@ public class FileSystemImporter extends BaseImporter {
 		try {
 			if (journalArticle == null) {
 				journalArticle = journalArticleLocalService.addArticle(
-					userId, groupId, 0, 0, 0, journalArticleId, false,
+					userId, groupId, folderId, 0, 0, journalArticleId, false,
 					JournalArticleConstants.VERSION_DEFAULT,
 					getMap(articleDefaultLocale, title), descriptionMap,
 					content, ddmStructureKey, ddmTemplateKey, StringPool.BLANK,
@@ -950,7 +951,7 @@ public class FileSystemImporter extends BaseImporter {
 			}
 			else {
 				journalArticle = journalArticleLocalService.updateArticle(
-					userId, groupId, 0, journalArticleId,
+					userId, groupId, folderId, journalArticleId,
 					journalArticle.getVersion(),
 					getMap(articleDefaultLocale, title), descriptionMap,
 					content, ddmStructureKey, ddmTemplateKey, StringPool.BLANK,
