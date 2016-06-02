@@ -294,6 +294,7 @@ String signature = ParamUtil.getString(request, "signature");
 			<aui:script>
 				Liferay.TPL_DATA_TYPES = {
 					array: {},
+					file: {},
 					other: {},
 					string: {}
 				};
@@ -372,6 +373,9 @@ String signature = ParamUtil.getString(request, "signature");
 						if (methodParameterTypeClass.isArray()) {
 							jsObjectType = "array";
 						}
+						else if (methodParameterTypeClass.equals(File.class)) {
+							jsObjectType = "file";
+						}
 						else if (methodParameterTypeClass.equals(String.class)) {
 							jsObjectType = "string";
 						}
@@ -393,19 +397,26 @@ String signature = ParamUtil.getString(request, "signature");
 
 			var form = A.one('#execute');
 
+			var tplDataTypes = Liferay.TPL_DATA_TYPES;
+
+			var multipart = !A.Object.isEmpty(tplDataTypes.file);
+
 			var curlTpl = A.Template.from('#curlTpl');
+
 			var scriptTpl = A.Template.from('#scriptTpl');
 			var urlTpl = A.Template.from('#urlTpl');
 
-			var tplDataTypes = Liferay.TPL_DATA_TYPES;
-
 			var arrayType = tplDataTypes.array;
+			var fileType = tplDataTypes.file;
 			var stringType = tplDataTypes.string;
 
 			var formatDataType = function(key, value, includeNull) {
 				value = decodeURIComponent(value.replace(/\+/g, ' '));
 
-				if (stringType[key]) {
+				if (fileType[key]) {
+					value = 'null';
+				}
+				else if (stringType[key]) {
 					value = '\'' + value + '\'';
 				}
 				else if (arrayType[key]) {
@@ -420,7 +431,20 @@ String signature = ParamUtil.getString(request, "signature");
 				return value;
 			};
 
-			curlTpl.formatDataType = formatDataType;
+			var formatCurlDataType = function(key, value, includeNull) {
+				var filePath = fileType[key];
+
+				if (!multipart || !filePath) {
+					value = formatDataType(key, value, includeNull);
+				}
+				else {
+					value = '@path_to_file';
+				}
+
+				return value;
+			};
+
+			curlTpl.formatDataType = formatCurlDataType;
 			scriptTpl.formatDataType = A.rbind(formatDataType, scriptTpl, true);
 
 			urlTpl.toURIParam = function(value) {
@@ -461,6 +485,14 @@ String signature = ParamUtil.getString(request, "signature");
 
 					var formQueryString = A.IO.prototype._serialize(formEl);
 
+					if (multipart) {
+						formQueryString += Object.keys(tplDataTypes.file).map(
+							function(item, index) {
+								return '&' + item + '=';
+							}
+						).join('');
+					}
+
 					var curlData = [];
 					var scriptData = [];
 
@@ -491,7 +523,8 @@ String signature = ParamUtil.getString(request, "signature");
 					);
 
 					var tplCurlData = {
-						data: curlData
+						data: curlData,
+						flag: multipart ? 'F' : 'd'
 					};
 
 					var tplScriptData = {
@@ -562,7 +595,7 @@ Liferay.Service(
 <textarea class="hide" id="curlTpl">
 curl <%= themeDisplay.getPortalURL() + jsonWSPath + jsonWebServiceActionMapping.getPath() %> \\
   -u test@liferay.com:test <tpl if="data.length">\\
-  <tpl for="data">-d {key}={[this.formatDataType(values.key, values.value)]} <tpl if="!$last">\\
+  <tpl for="data">-{parent.flag} {key}={[this.formatDataType(values.key, values.value)]} <tpl if="!$last">\\
   </tpl></tpl></tpl>
 </textarea>
 
