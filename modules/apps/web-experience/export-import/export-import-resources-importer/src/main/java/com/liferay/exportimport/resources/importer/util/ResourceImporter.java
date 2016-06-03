@@ -367,21 +367,20 @@ public class ResourceImporter extends FileSystemImporter {
 						resourcePath, CharPool.FORWARD_SLASH,
 						StringPool.BLANK));
 
-				JournalFolder subFolder =
+				JournalFolder journalFolder =
 					JournalFolderLocalServiceUtil.fetchFolder(
 						groupId, folderName);
 
-				if (subFolder == null) {
-					subFolder = JournalFolderLocalServiceUtil.addFolder(
+				if (journalFolder == null) {
+					journalFolder = JournalFolderLocalServiceUtil.addFolder(
 						userId, groupId, folderId, folderName, StringPool.BLANK,
 						serviceContext);
 				}
 
 				addJournalArticles(
 					ddmStructureKey, ddmTemplateKey,
-					dirName + CharPool.FORWARD_SLASH +
-						folderName,
-					subFolder.getPrimaryKey());
+					dirName + CharPool.FORWARD_SLASH + folderName,
+					journalFolder.getFolderId());
 			}
 			else {
 				String name = FileUtil.getShortFileName(resourcePath);
