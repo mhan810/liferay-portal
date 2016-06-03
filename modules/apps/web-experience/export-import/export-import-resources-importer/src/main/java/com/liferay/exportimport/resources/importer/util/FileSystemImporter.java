@@ -42,6 +42,7 @@ import com.liferay.exportimport.resources.importer.portlet.preferences.PortletPr
 import com.liferay.journal.configuration.JournalServiceConfigurationValues;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
+import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -716,7 +717,8 @@ public class FileSystemImporter extends BaseImporter {
 
 		addJournalArticles(
 			ddmStructureKey, ddmTemplate.getTemplateKey(),
-			_JOURNAL_ARTICLES_DIR_NAME + fileName, 0);
+			_JOURNAL_ARTICLES_DIR_NAME + fileName,
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 	}
 
 	protected void addDLFileEntries(String dirName) throws Exception {
