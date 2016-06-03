@@ -30,7 +30,7 @@ import com.liferay.dynamic.data.mapping.util.DDMXML;
 import com.liferay.exportimport.resources.importer.portlet.preferences.PortletPreferencesTranslator;
 import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.service.JournalArticleLocalService;
-import com.liferay.journal.service.JournalFolderLocalServiceUtil;
+import com.liferay.journal.service.JournalFolderLocalService;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactory;
 import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.service.LayoutLocalService;
@@ -78,6 +78,7 @@ public class ResourceImporter extends FileSystemImporter {
 		DLFolderLocalService dlFolderLocalService,
 		IndexStatusManager indexStatusManager, IndexerRegistry indexerRegistry,
 		JournalArticleLocalService journalArticleLocalService,
+		JournalFolderLocalService journalFolderLocalService,
 		LayoutLocalService layoutLocalService,
 		LayoutPrototypeLocalService layoutPrototypeLocalService,
 		LayoutSetLocalService layoutSetLocalService,
@@ -95,7 +96,8 @@ public class ResourceImporter extends FileSystemImporter {
 			ddmFormXSDDeserializer, ddmStructureLocalService,
 			ddmTemplateLocalService, ddmxml, dlAppLocalService,
 			dlFileEntryLocalService, dlFolderLocalService, indexStatusManager,
-			indexerRegistry, journalArticleLocalService, layoutLocalService,
+			indexerRegistry, journalArticleLocalService,
+			journalFolderLocalService, layoutLocalService,
 			layoutPrototypeLocalService, layoutSetLocalService,
 			layoutSetPrototypeLocalService, mimeTypes, portal,
 			portletPreferencesFactory, portletPreferencesLocalService,
@@ -368,11 +370,10 @@ public class ResourceImporter extends FileSystemImporter {
 						StringPool.BLANK));
 
 				JournalFolder journalFolder =
-					JournalFolderLocalServiceUtil.fetchFolder(
-						groupId, folderName);
+					journalFolderLocalService.fetchFolder(groupId, folderName);
 
 				if (journalFolder == null) {
-					journalFolder = JournalFolderLocalServiceUtil.addFolder(
+					journalFolder = journalFolderLocalService.addFolder(
 						userId, groupId, folderId, folderName, StringPool.BLANK,
 						serviceContext);
 				}
