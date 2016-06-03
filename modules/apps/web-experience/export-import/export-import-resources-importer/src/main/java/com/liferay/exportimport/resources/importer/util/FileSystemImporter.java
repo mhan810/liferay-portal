@@ -44,6 +44,7 @@ import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalArticleLocalService;
+import com.liferay.journal.service.JournalFolderLocalService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -134,6 +135,7 @@ public class FileSystemImporter extends BaseImporter {
 		DLFolderLocalService dlFolderLocalService,
 		IndexStatusManager indexStatusManager, IndexerRegistry indexerRegistry,
 		JournalArticleLocalService journalArticleLocalService,
+		JournalFolderLocalService journalFolderLocalService,
 		LayoutLocalService layoutLocalService,
 		LayoutPrototypeLocalService layoutPrototypeLocalService,
 		LayoutSetLocalService layoutSetLocalService,
@@ -158,6 +160,7 @@ public class FileSystemImporter extends BaseImporter {
 		this.indexStatusManager = indexStatusManager;
 		this.indexerRegistry = indexerRegistry;
 		this.journalArticleLocalService = journalArticleLocalService;
+		this.journalFolderLocalService = journalFolderLocalService;
 		this.layoutLocalService = layoutLocalService;
 		this.layoutPrototypeLocalService = layoutPrototypeLocalService;
 		this.layoutSetLocalService = layoutSetLocalService;
@@ -1939,6 +1942,7 @@ public class FileSystemImporter extends BaseImporter {
 	protected final IndexerRegistry indexerRegistry;
 	protected final IndexStatusManager indexStatusManager;
 	protected final JournalArticleLocalService journalArticleLocalService;
+	protected final JournalFolderLocalService journalFolderLocalService;
 	protected final LayoutLocalService layoutLocalService;
 	protected final LayoutPrototypeLocalService layoutPrototypeLocalService;
 	protected final LayoutSetLocalService layoutSetLocalService;
