@@ -329,26 +329,28 @@ public class ResourcesImporterTest {
 	}
 
 	protected void validateJournal(Group importedGroup) throws Exception {
-		long groupId = importedGroup.getGroupId();
-
 		List<JournalArticle> journalArticles =
-			JournalArticleLocalServiceUtil.getArticles(groupId);
+			JournalArticleLocalServiceUtil.getArticles(
+				importedGroup.getGroupId());
 
 		Assert.assertEquals(5, journalArticles.size());
 
 		int ddmStructuresCount =
 			DDMStructureLocalServiceUtil.getStructuresCount(
-				groupId, PortalUtil.getClassNameId(JournalArticle.class));
+				importedGroup.getGroupId(),
+				PortalUtil.getClassNameId(JournalArticle.class));
 
 		Assert.assertEquals(3, ddmStructuresCount);
 
 		int ddmTemplatesCount = DDMTemplateLocalServiceUtil.getTemplatesCount(
-			groupId, PortalUtil.getClassNameId(DDMStructure.class));
+			importedGroup.getGroupId(),
+			PortalUtil.getClassNameId(DDMStructure.class));
 
 		Assert.assertEquals(3, ddmTemplatesCount);
 
 		JournalArticle journalArticle =
-			JournalArticleLocalServiceUtil.getArticle(groupId, "BASIC-ARTICLE");
+			JournalArticleLocalServiceUtil.getArticle(
+				importedGroup.getGroupId(), "BASIC-ARTICLE");
 
 		Assert.assertTrue(journalArticle.isSmallImage());
 
@@ -367,25 +369,25 @@ public class ResourcesImporterTest {
 
 		JournalFolder parentJournalFolder =
 			JournalFolderLocalServiceUtil.fetchFolder(
-				groupId, "Basic Web Content Parent Folder");
+				importedGroup.getGroupId(), "Basic Web Content Parent Folder");
 
 		JournalArticle articleInParentFolder =
 			JournalArticleLocalServiceUtil.getArticle(
-				groupId, "BASIC-ARTICLE-IN-PARENT-FOLDER");
+				importedGroup.getGroupId(), "BASIC-ARTICLE-IN-PARENT-FOLDER");
 
 		Assert.assertEquals(
 			articleInParentFolder.getFolder(), parentJournalFolder);
 
 		JournalFolder childJournalFolder =
 			JournalFolderLocalServiceUtil.fetchFolder(
-				groupId, "Basic Web Content Child Folder");
+				importedGroup.getGroupId(), "Basic Web Content Child Folder");
 
 		Assert.assertEquals(
 			parentJournalFolder, childJournalFolder.getParentFolder());
 
 		JournalArticle articleInChildFolder =
 			JournalArticleLocalServiceUtil.getArticle(
-				groupId, "BASIC-ARTICLE-IN-CHILD-FOLDER");
+				importedGroup.getGroupId(), "BASIC-ARTICLE-IN-CHILD-FOLDER");
 
 		Assert.assertEquals(
 			articleInChildFolder.getFolder(), childJournalFolder);
