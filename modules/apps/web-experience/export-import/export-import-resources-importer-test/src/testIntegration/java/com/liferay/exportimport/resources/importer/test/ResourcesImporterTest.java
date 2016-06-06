@@ -375,6 +375,8 @@ public class ResourcesImporterTest {
 			JournalArticleLocalServiceUtil.getArticle(
 				importedGroup.getGroupId(), "BASIC-ARTICLE-IN-PARENT-FOLDER");
 
+		Assert.assertNotNull(parentJournalFolder);
+
 		Assert.assertEquals(
 			articleInParentFolder.getFolder(), parentJournalFolder);
 
