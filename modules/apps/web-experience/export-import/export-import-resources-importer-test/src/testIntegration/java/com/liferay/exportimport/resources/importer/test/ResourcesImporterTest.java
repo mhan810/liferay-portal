@@ -29,7 +29,9 @@ import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.journal.model.JournalArticle;
+import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.journal.service.JournalFolderLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
@@ -224,6 +226,17 @@ public class ResourcesImporterTest {
 				"/Basic Article.xml");
 		addWebInfResource(
 			webArchive,
+			"classes/resources-importer/journal/articles/BASIC_WEB_CONTENT" +
+				"/Basic Web Content Parent Folder" +
+					"/Basic Article in Parent Folder.xml");
+		addWebInfResource(
+			webArchive,
+			"classes/resources-importer/journal/articles/BASIC_WEB_CONTENT" +
+				"/Basic Web Content Parent Folder" +
+					"/Basic Web Content Child Folder" +
+						"/Basic Article in Child Folder.xml");
+		addWebInfResource(
+			webArchive,
 			"classes/resources-importer/journal/structures" +
 				"/BASIC_WEB_CONTENT.json");
 		addWebInfResource(
@@ -316,28 +329,26 @@ public class ResourcesImporterTest {
 	}
 
 	protected void validateJournal(Group importedGroup) throws Exception {
-		List<JournalArticle> journalArticles =
-			JournalArticleLocalServiceUtil.getArticles(
-				importedGroup.getGroupId());
+		long groupId = importedGroup.getGroupId();
 
-		Assert.assertEquals(3, journalArticles.size());
+		List<JournalArticle> journalArticles =
+			JournalArticleLocalServiceUtil.getArticles(groupId);
+
+		Assert.assertEquals(5, journalArticles.size());
 
 		int ddmStructuresCount =
 			DDMStructureLocalServiceUtil.getStructuresCount(
-				importedGroup.getGroupId(),
-				PortalUtil.getClassNameId(JournalArticle.class));
+				groupId, PortalUtil.getClassNameId(JournalArticle.class));
 
 		Assert.assertEquals(3, ddmStructuresCount);
 
 		int ddmTemplatesCount = DDMTemplateLocalServiceUtil.getTemplatesCount(
-			importedGroup.getGroupId(),
-			PortalUtil.getClassNameId(DDMStructure.class));
+			groupId, PortalUtil.getClassNameId(DDMStructure.class));
 
 		Assert.assertEquals(3, ddmTemplatesCount);
 
 		JournalArticle journalArticle =
-			JournalArticleLocalServiceUtil.getArticle(
-				importedGroup.getGroupId(), "BASIC-ARTICLE");
+			JournalArticleLocalServiceUtil.getArticle(groupId, "BASIC-ARTICLE");
 
 		Assert.assertTrue(journalArticle.isSmallImage());
 
@@ -353,6 +364,31 @@ public class ResourcesImporterTest {
 			assetEntry.getEntryId());
 
 		Assert.assertEquals(1, assetTags.size());
+
+		JournalFolder parentJournalFolder =
+			JournalFolderLocalServiceUtil.fetchFolder(
+				groupId, "Basic Web Content Parent Folder");
+
+		JournalArticle articleInParentFolder =
+			JournalArticleLocalServiceUtil.getArticle(
+				groupId, "BASIC-ARTICLE-IN-PARENT-FOLDER");
+
+		Assert.assertEquals(
+			articleInParentFolder.getFolder(), parentJournalFolder);
+
+		JournalFolder childJournalFolder =
+			JournalFolderLocalServiceUtil.fetchFolder(
+				groupId, "Basic Web Content Child Folder");
+
+		Assert.assertEquals(
+			parentJournalFolder, childJournalFolder.getParentFolder());
+
+		JournalArticle articleInChildFolder =
+			JournalArticleLocalServiceUtil.getArticle(
+				groupId, "BASIC-ARTICLE-IN-CHILD-FOLDER");
+
+		Assert.assertEquals(
+			articleInChildFolder.getFolder(), childJournalFolder);
 	}
 
 	protected void validateLayouts(Group importedGroup) throws Exception {
