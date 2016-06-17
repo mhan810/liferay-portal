@@ -68,6 +68,13 @@ public class FieldQueryFactoryImpl implements FieldQueryFactory {
 				booleanQuery.add(query, BooleanClauseOccur.SHOULD);
 			}
 
+			MatchQuery matchQuery = new MatchQuery(field, value);
+
+			matchQuery.setType(MatchQuery.Type.PHRASE);
+			matchQuery.setBoost(2.0f);
+
+			booleanQuery.add(matchQuery, BooleanClauseOccur.SHOULD);
+
 			return booleanQuery;
 		}
 
