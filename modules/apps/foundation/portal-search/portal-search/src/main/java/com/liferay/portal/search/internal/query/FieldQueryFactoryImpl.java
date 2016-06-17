@@ -28,6 +28,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.analysis.KeywordTokenizer;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +48,17 @@ public class FieldQueryFactoryImpl implements FieldQueryFactory {
 	@Override
 	public Query createQuery(
 		String field, String value, boolean like, boolean splitKeywords) {
+
+		boolean isSubstringSearchAlways = false;
+
+		if (_queryPreProcessConfiguration != null) {
+			isSubstringSearchAlways =
+				_queryPreProcessConfiguration.isSubstringSearchAlways(field);
+		}
+
+		if (!isSubstringSearchAlways) {
+			return doCreateQueryForFullTextSearch(field, value);
+		}
 
 		KeywordTokenizer keywordTokenizer = getKeywordTokenizer();
 
@@ -74,61 +87,131 @@ public class FieldQueryFactoryImpl implements FieldQueryFactory {
 		return doCreateQuery(field, value, like);
 	}
 
-	protected Query doCreateQuery(String field, String value, boolean like) {
-		boolean isSubstringSearchAlways = false;
-
-		if (_queryPreProcessConfiguration != null) {
-			isSubstringSearchAlways =
-				_queryPreProcessConfiguration.isSubstringSearchAlways(field);
+	protected Query doCreatePhraseMatchQuery(String field, String value) {
+		if (!isPhrase(value)) {
+			return null;
 		}
 
-		boolean phrase = false;
+		value = value.substring(1, value.length() - 1);
 
-		if (value.startsWith(StringPool.QUOTE) &&
-			value.endsWith(StringPool.QUOTE)) {
+		MatchQuery matchQuery = new MatchQuery(field, value);
 
-			phrase = true;
-		}
-
-		Query query = null;
-
-		if (!phrase && (like || isSubstringSearchAlways)) {
-			value = StringUtil.replace(
-				value, CharPool.PERCENT, StringPool.BLANK);
-
-			if (isSubstringSearchAlways) {
-				if (value.length() == 0) {
-					value = StringPool.STAR;
-				}
-				else {
-					value = StringUtil.toLowerCase(value);
-
-					value = StringPool.STAR + value + StringPool.STAR;
-				}
-			}
-
-			query = new WildcardQueryImpl(new QueryTermImpl(field, value));
+		if (value.endsWith(StringPool.STAR)) {
+			matchQuery.setType(MatchQuery.Type.PHRASE_PREFIX);
 		}
 		else {
-			MatchQuery matchQuery = new MatchQuery(field, value);
-
-			if (value.startsWith(StringPool.QUOTE) &&
-				value.endsWith(StringPool.QUOTE)) {
-
-				value = value.substring(1, value.length() - 1);
-
-				if (value.endsWith(StringPool.STAR)) {
-					matchQuery.setType(MatchQuery.Type.PHRASE_PREFIX);
-				}
-				else {
-					matchQuery.setType(MatchQuery.Type.PHRASE);
-				}
-			}
-
-			query = matchQuery;
+			matchQuery.setType(MatchQuery.Type.PHRASE);
 		}
 
-		return query;
+		return matchQuery;
+	}
+
+	protected Query doCreateQuery(String field, String value, boolean like) {
+		Query query = doCreatePhraseMatchQuery(field, value);
+
+		if (query != null) {
+			return query;
+		}
+
+		return doCreateQueryForSubstringSearch(field, value);
+	}
+
+	protected Query doCreateQueryForFullTextExactMatch(
+		String field, String value) {
+
+		MatchQuery matchQuery = new MatchQuery(field, value);
+
+		matchQuery.setType(MatchQuery.Type.PHRASE);
+
+		matchQuery.setBoost(_FULL_TEXT_EXACT_MATCH_BOOST);
+
+		return matchQuery;
+	}
+
+	protected Query doCreateQueryForFullTextProximity(
+		String field, String value) {
+
+		MatchQuery matchQuery = new MatchQuery(field, value);
+
+		matchQuery.setType(MatchQuery.Type.PHRASE);
+
+		matchQuery.setSlop(_FULL_TEXT_PROXIMITY_SLOP);
+
+		return matchQuery;
+	}
+
+	protected Query doCreateQueryForFullTextScoring(
+		String field, String value) {
+
+		BooleanQueryImpl booleanQueryImpl = new BooleanQueryImpl();
+
+		booleanQueryImpl.add(
+			new MatchQuery(field, value), BooleanClauseOccur.MUST);
+
+		booleanQueryImpl.add(
+			doCreateQueryForFullTextExactMatch(field, value),
+			BooleanClauseOccur.SHOULD);
+
+		booleanQueryImpl.add(
+			doCreateQueryForFullTextProximity(field, value),
+			BooleanClauseOccur.SHOULD);
+
+		List<String> phrases = getEmbeddedPhrases(value);
+
+		for (String phrase : phrases) {
+			booleanQueryImpl.add(
+				doCreatePhraseMatchQuery(field, phrase),
+				BooleanClauseOccur.MUST);
+		}
+
+		return booleanQueryImpl;
+	}
+
+	protected Query doCreateQueryForFullTextSearch(String field, String value) {
+		Query query = doCreatePhraseMatchQuery(field, value);
+
+		if (query != null) {
+			return query;
+		}
+
+		return doCreateQueryForFullTextScoring(field, value);
+	}
+
+	protected Query doCreateQueryForSubstringSearch(
+		String field, String value) {
+
+		value = StringUtil.replace(value, CharPool.PERCENT, StringPool.BLANK);
+
+		if (value.length() == 0) {
+			value = StringPool.STAR;
+		}
+		else {
+			value = StringUtil.toLowerCase(value);
+
+			value = StringPool.STAR + value + StringPool.STAR;
+		}
+
+		return new WildcardQueryImpl(new QueryTermImpl(field, value));
+	}
+
+	protected List<String> getEmbeddedPhrases(String value) {
+		KeywordTokenizer keywordTokenizer = getKeywordTokenizer();
+
+		if (keywordTokenizer == null) {
+			return Collections.emptyList();
+		}
+
+		List<String> tokens = keywordTokenizer.tokenize(value);
+
+		List<String> phrases = new ArrayList<>(tokens.size());
+
+		for (String token : tokens) {
+			if (isPhrase(token)) {
+				phrases.add(token);
+			}
+		}
+
+		return phrases;
 	}
 
 	protected KeywordTokenizer getKeywordTokenizer() {
@@ -137,6 +220,16 @@ public class FieldQueryFactoryImpl implements FieldQueryFactory {
 		}
 
 		return _defaultKeywordTokenizer;
+	}
+
+	protected boolean isPhrase(String value) {
+		if (value.startsWith(StringPool.QUOTE) &&
+			value.endsWith(StringPool.QUOTE)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	@Reference(
@@ -169,6 +262,10 @@ public class FieldQueryFactoryImpl implements FieldQueryFactory {
 			_keywordTokenizer = null;
 		}
 	}
+
+	private static final float _FULL_TEXT_EXACT_MATCH_BOOST = 2.0f;
+
+	private static final int _FULL_TEXT_PROXIMITY_SLOP = 50;
 
 	private KeywordTokenizer _defaultKeywordTokenizer;
 	private KeywordTokenizer _keywordTokenizer;
