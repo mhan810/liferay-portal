@@ -27,6 +27,7 @@ import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Michael C. Han
+ * @author Tibor Lipusz
  */
 @Component(
 	immediate = true, property = {"type=CLOUD"},
@@ -48,7 +49,19 @@ public class CloudSolrClientFactory implements SolrClientFactory {
 
 		HttpClient httpClient = httpClientFactory.createInstance();
 
-		return new CloudSolrClient(zkHost, httpClient);
+		CloudSolrClient cloudSolrClient = new CloudSolrClient(
+			zkHost, httpClient);
+
+		String defaultCollection = solrConfiguration.defaultCollection();
+
+		if (Validator.isNull(defaultCollection)) {
+			throw new IllegalStateException(
+				"Must configure default collection name");
+		}
+
+		cloudSolrClient.setDefaultCollection(defaultCollection);
+
+		return cloudSolrClient;
 	}
 
 }
