@@ -26,8 +26,6 @@ Import-Package:\
 	!org.apache.log4j.*,\
 	!org.apache.lucene.sandbox.*,\
 	\
-	!org.ietf.jgss.*,\
-	\
 	!org.jboss.netty.*,\
 	\
 	!org.relaxng.datatype.*,\
