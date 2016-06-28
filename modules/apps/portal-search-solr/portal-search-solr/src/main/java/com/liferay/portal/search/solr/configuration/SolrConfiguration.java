@@ -40,6 +40,9 @@ public interface SolrConfiguration {
 	)
 	public String clientType();
 
+	@Meta.AD(deflt = "liferay", required = false)
+	public String defaultCollection();
+
 	@Meta.AD(
 		deflt = "true",
 		description = "Set to true to only log exceptions from Solr and not rethrow them.",
