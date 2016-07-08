@@ -195,6 +195,23 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="forms">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" name="form">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="name" type="xs:string" />
+							<xs:element minOccurs="0" name="description" type="xs:string" />
+							<xs:element name="form-uuid" type="xs:string" />
+							<xs:element minOccurs="0" name="metadata" type="xs:string" />
+							<xs:element name="priority" type="xs:int" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="join">
 		<xs:complexType>
 			<xs:complexContent>
@@ -268,6 +285,7 @@
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="name" type="xs:string" />
+							<xs:element maxOccurs="1" minOccurs="0" ref="forms" />
 							<xs:element name="target" type="xs:string" />
 							<xs:element default="true" minOccurs="0" name="default" type="xs:boolean" />
 						</xs:sequence>
