@@ -16,6 +16,7 @@ package com.liferay.portal.workflow.kaleo.definition.internal.parser;
 
 import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowDefinitionFileException;
@@ -33,6 +34,7 @@ import com.liferay.portal.workflow.kaleo.definition.Definition;
 import com.liferay.portal.workflow.kaleo.definition.DelayDuration;
 import com.liferay.portal.workflow.kaleo.definition.DurationScale;
 import com.liferay.portal.workflow.kaleo.definition.Fork;
+import com.liferay.portal.workflow.kaleo.definition.Form;
 import com.liferay.portal.workflow.kaleo.definition.Join;
 import com.liferay.portal.workflow.kaleo.definition.JoinXor;
 import com.liferay.portal.workflow.kaleo.definition.Node;
@@ -357,6 +359,42 @@ public class XMLWorkflowModelParser implements WorkflowModelParser {
 		parseTimerElements(timersElement, fork);
 
 		return fork;
+	}
+
+	protected void parseFormsElement(
+		Element formsElement, Transition transition) {
+
+		List<Element> formElements = formsElement.elements("form");
+
+		if (ListUtil.isEmpty(formElements)) {
+			return;
+		}
+
+		for (Element formElement : formElements) {
+			String name = formElement.elementText("name");
+
+			long formId = GetterUtil.getLong(
+				formElement.elementText("form-id"));
+
+			int priority = GetterUtil.getInteger(
+				formElement.elementText("priority"));
+
+			Form form = new Form(name, formId, priority);
+
+			String description = formElement.elementText("description");
+
+			if (Validator.isNotNull(description)) {
+				form.setDescription(description);
+			}
+
+			String metadata = formElement.elementText("metadata");
+
+			if (Validator.isNotNull(metadata)) {
+				form.setMetadata(metadata);
+			}
+
+			transition.addForm(form);
+		}
 	}
 
 	protected Join parseJoin(Element joinElement) {
@@ -737,6 +775,12 @@ public class XMLWorkflowModelParser implements WorkflowModelParser {
 
 			Transition transition = new Transition(
 				transitionName, sourceNode, targetNode, defaultValue);
+
+			Element formsElement = transitionElement.element("forms");
+
+			if (formsElement != null) {
+				parseFormsElement(formsElement, transition);
+			}
 
 			Element timerElement = transitionElement.element("timer");
 
