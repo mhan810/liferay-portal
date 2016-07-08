@@ -14,6 +14,11 @@
 
 package com.liferay.portal.workflow.kaleo.definition;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
+
 /**
  * @author Michael C. Han
  */
@@ -26,6 +31,14 @@ public class Transition {
 		_sourceNode = sourceNode;
 		_targetNode = targetNode;
 		_default = defaultValue;
+	}
+
+	public void addForm(Form form) {
+		_forms.add(form);
+	}
+
+	public Collection<Form> getForms() {
+		return Collections.unmodifiableCollection(_forms);
 	}
 
 	public String getName() {
@@ -53,6 +66,7 @@ public class Transition {
 	}
 
 	private final boolean _default;
+	private Set<Form> _forms = new TreeSet<>();
 	private final String _name;
 	private final Node _sourceNode;
 	private final Node _targetNode;
