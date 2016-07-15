@@ -69,11 +69,11 @@ public class BaseKaleoBean {
 	@ServiceReference(type = KaleoTaskAssignmentLocalService.class)
 	protected KaleoTaskAssignmentLocalService kaleoTaskAssignmentLocalService;
 
-	@ServiceReference
+	@ServiceReference(type = KaleoTaskFormInstanceLocalService.class)
 	protected KaleoTaskFormInstanceLocalService
 		kaleoTaskFormInstanceLocalService;
 
-	@ServiceReference
+	@ServiceReference(type = KaleoTaskFormLocalService.class)
 	protected KaleoTaskFormLocalService kaleoTaskFormLocalService;
 
 	@ServiceReference(type = KaleoTaskInstanceTokenLocalService.class)
