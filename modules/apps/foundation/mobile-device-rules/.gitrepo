@@ -4,7 +4,7 @@
 ;
 [subrepo]
 	cmdver = liferay
-	commit = afecb9cee465b3a7b50d2af0b8b4eaf820ef0050
+	commit = 0fa4ed6b1ff07b4eddcf93039ac8362b31a68418
 	mode = push
-	parent = d1d335eeb005f3908ad90ea618e75aa7efb0f214
+	parent = f673911b3ed0f53e677006fe0d7a8ade6dc6fbc3
 	remote = git@github.com:liferay/com-liferay-mobile-device-rules.git

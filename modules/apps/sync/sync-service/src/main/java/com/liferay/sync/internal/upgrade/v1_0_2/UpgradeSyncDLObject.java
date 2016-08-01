@@ -122,9 +122,9 @@ public class UpgradeSyncDLObject extends UpgradeProcess {
 		sb1.append("DLFolder.userName, DLFolder.createDate, ");
 		sb1.append("DLFolder.modifiedDate, DLFolder.repositoryId, ");
 		sb1.append("DLFolder.parentFolderId as parentFolderId, ");
-		sb1.append("DLFolder.treePath, DLFolder.name, null as extension, ");
-		sb1.append("null as mimeType, DLFolder.description, null as ");
-		sb1.append("changeLog, null as version, 0 as versionId, 0 as size, '");
+		sb1.append("DLFolder.treePath, DLFolder.name, '' as extension, ");
+		sb1.append("'' as mimeType, DLFolder.description, '' as ");
+		sb1.append("changeLog, '' as version, 0 as versionId, 0 as size_, '");
 		sb1.append(SyncDLObjectConstants.TYPE_FOLDER);
 		sb1.append("' as type, DLFolder.folderId as typePK, ");
 		sb1.append("DLFolder.uuid_ as typeUuid, DLFolder.status ");
@@ -139,7 +139,7 @@ public class UpgradeSyncDLObject extends UpgradeProcess {
 		sb1.append("DLFileVersion.mimeType, DLFileVersion.description, ");
 		sb1.append("DLFileVersion.changeLog, DLFileVersion.version, ");
 		sb1.append("DLFileVersion.fileVersionId as versionId, ");
-		sb1.append("DLFileVersion.size_ as size, '");
+		sb1.append("DLFileVersion.size_ as size_, '");
 		sb1.append(SyncDLObjectConstants.TYPE_FILE);
 		sb1.append("' as type, DLFileVersion.fileEntryId as typePK, ");
 		sb1.append("DLFileEntry.uuid_ as typeUuid, DLFileVersion.status ");
@@ -157,7 +157,7 @@ public class UpgradeSyncDLObject extends UpgradeProcess {
 		sb1.append("DLFileVersion.mimeType, DLFileVersion.description, ");
 		sb1.append("DLFileVersion.changeLog, DLFileVersion.version, ");
 		sb1.append("DLFileVersion.fileVersionId as versionId, ");
-		sb1.append("DLFileVersion.size_ as size, '");
+		sb1.append("DLFileVersion.size_ as size_, '");
 		sb1.append(SyncDLObjectConstants.TYPE_PRIVATE_WORKING_COPY);
 		sb1.append("' as type, DLFileVersion.fileEntryId as typePK, ");
 		sb1.append("DLFileEntry.uuid_ as typeUuid, DLFileVersion.status ");
@@ -215,7 +215,7 @@ public class UpgradeSyncDLObject extends UpgradeProcess {
 				ps2.setString(14, rs.getString("changeLog"));
 				ps2.setString(15, rs.getString("version"));
 				ps2.setLong(16, rs.getLong("versionId"));
-				ps2.setLong(17, rs.getLong("size"));
+				ps2.setLong(17, rs.getLong("size_"));
 				ps2.setString(18, event);
 				ps2.setString(19, rs.getString("type"));
 				ps2.setLong(20, rs.getLong("typePK"));

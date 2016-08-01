@@ -94,7 +94,7 @@ Format format = FastDateFormatFactoryUtil.getSimpleDateFormat(simpleDateFormatPa
 	<input <%= disabled ? "disabled=\"disabled\"" : "" %> id="<%= yearParamId %>" name="<%= namespace + HtmlUtil.escapeAttribute(yearParam) %>" type="hidden" value="<%= yearValue %>" />
 </span>
 
-<c:if test="<%= nullable %>">
+<c:if test="<%= nullable && !required %>">
 
 	<%
 	String dateTogglerCheckboxName = TextFormatter.format(dateTogglerCheckboxLabel, TextFormatter.M);
@@ -111,6 +111,10 @@ Format format = FastDateFormatFactoryUtil.getSimpleDateFormat(simpleDateFormatPa
 				var checked = checkbox.prop('checked');
 
 				var form = $(document.forms.<%= namespace + formName %>);
+
+				if (!form.length) {
+					form = $(checkbox.prop('form'));
+				}
 
 				form.fm('<%= HtmlUtil.getAUICompatibleId(name) %>').prop('disabled', checked);
 				form.fm('<%= HtmlUtil.escapeJS(dayParam) %>').prop('disabled', checked);

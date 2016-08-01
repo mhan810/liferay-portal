@@ -154,6 +154,15 @@ public abstract class DoulosServlet extends HttpServlet {
 					request.getParameterMap(), payloadJSONObject,
 					responseJSONObject);
 
+				String redirect = responseJSONObject.optString(
+					"doulosRedirect");
+
+				if (redirect != null) {
+					response.sendRedirect(redirect);
+
+					return;
+				}
+
 				String json = responseJSONObject.toString();
 
 				write(

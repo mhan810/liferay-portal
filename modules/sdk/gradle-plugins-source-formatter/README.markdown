@@ -10,7 +10,7 @@ To use the plugin, include it in your build script:
 ```gradle
 buildscript {
 	dependencies {
-		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "1.0.18"
+		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "1.0.19"
 	}
 
 	repositories {
@@ -45,7 +45,7 @@ Name | Depends On | Type | Description
 `formatSource` | \- | [`FormatSourceTask`](#formatsourcetask) | Runs the Liferay Source Formatter to format the project files.
 
 If desired, it is possible to check for source formatting errors while executing
-the [`check`]((https://docs.gradle.org/current/userguide/java_plugin.html#N15056))
+the [`check`](https://docs.gradle.org/current/userguide/java_plugin.html#N15056)
 task by adding the following dependency:
 
 ```gradle
