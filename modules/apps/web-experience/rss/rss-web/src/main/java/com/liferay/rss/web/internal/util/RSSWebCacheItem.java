@@ -18,19 +18,11 @@ import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.webcache.WebCacheException;
 import com.liferay.portal.kernel.webcache.WebCacheItem;
-import com.liferay.portal.security.lang.DoPrivilegedBean;
-import com.liferay.portal.util.HttpImpl;
-import com.liferay.portal.util.PropsValues;
 import com.liferay.rss.web.configuration.RSSWebCacheConfiguration;
 
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
-
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.params.HttpClientParams;
 
 /**
  * @author Brian Wing Shun Chan
@@ -65,42 +57,9 @@ public class RSSWebCacheItem implements WebCacheItem {
 
 			channel = FeedParser.parse(builder, reader);*/
 
-			HttpImpl httpImpl = null;
-
-			Object httpObject = HttpUtil.getHttp();
-
-			if (httpObject instanceof DoPrivilegedBean) {
-				DoPrivilegedBean doPrivilegedBean =
-					(DoPrivilegedBean)httpObject;
-
-				httpImpl = (HttpImpl)doPrivilegedBean.getActualBean();
-			}
-			else {
-				httpImpl = (HttpImpl)httpObject;
-			}
-
-			HostConfiguration hostConfiguration = httpImpl.getHostConfiguration(
-				_url);
-
-			HttpClient httpClient = httpImpl.getClient(hostConfiguration);
-
-			httpImpl.proxifyState(httpClient.getState(), hostConfiguration);
-
-			HttpClientParams httpClientParams = httpClient.getParams();
-
-			httpClientParams.setConnectionManagerTimeout(
-				PropsValues.RSS_CONNECTION_TIMEOUT);
-			httpClientParams.setSoTimeout(PropsValues.RSS_CONNECTION_TIMEOUT);
-
-			GetMethod getMethod = new GetMethod(
-				httpImpl.encodeParameters(_url));
-
-			httpClient.executeMethod(hostConfiguration, getMethod);
-
 			SyndFeedInput input = new SyndFeedInput();
 
-			feed = input.build(
-				new XmlReader(getMethod.getResponseBodyAsStream()));
+			feed = input.build(new XmlReader(HttpUtil.URLtoInputStream(_url)));
 		}
 		catch (Exception e) {
 			throw new WebCacheException(_url + " " + e.toString());
