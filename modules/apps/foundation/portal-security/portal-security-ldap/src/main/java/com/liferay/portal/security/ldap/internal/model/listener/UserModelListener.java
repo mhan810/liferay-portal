@@ -16,6 +16,8 @@ package com.liferay.portal.security.ldap.internal.model.listener;
 
 import com.liferay.portal.kernel.exception.ModelListenerException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.MembershipRequest;
@@ -68,22 +70,22 @@ public class UserModelListener extends BaseModelListener<User> {
 	}
 
 	@Override
-	public void onAfterCreate(User user) throws ModelListenerException {
+	public void onAfterCreate(User user) {
 		try {
 			exportToLDAP(user);
 		}
 		catch (Exception e) {
-			throw new ModelListenerException(e);
+			_log.error(e, e);
 		}
 	}
 
 	@Override
-	public void onAfterUpdate(User user) throws ModelListenerException {
+	public void onAfterUpdate(User user) {
 		try {
 			exportToLDAP(user);
 		}
 		catch (Exception e) {
-			throw new ModelListenerException(e);
+			_log.error(e, e);
 		}
 	}
 
@@ -151,6 +153,9 @@ public class UserModelListener extends BaseModelListener<User> {
 				new ServiceContext());
 		}
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		UserModelListener.class);
 
 	private MembershipRequestLocalService _membershipRequestLocalService;
 	private UserExporter _userExporter;
