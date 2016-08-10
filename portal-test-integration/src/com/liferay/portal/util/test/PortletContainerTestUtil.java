@@ -16,6 +16,8 @@ package com.liferay.portal.util.test;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.WriterOutputStream;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -218,13 +220,14 @@ public class PortletContainerTestUtil {
 			throw new IllegalStateException("Cookie is null");
 		}
 
-		CloseableHttpClient httpClient = null;
 		CloseableHttpResponse httpResponse = null;
 
-		try {
-			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
-			httpClient = httpClientBuilder.build();
+		try (CloseableHttpClient httpClient = httpClientBuilder.build();
+			StringWriter stringWriter = new StringWriter();
+			WriterOutputStream writerOutputStream = new WriterOutputStream(
+				stringWriter)) {
 
 			RequestBuilder requestBuilder = RequestBuilder.post(url);
 
@@ -255,25 +258,23 @@ public class PortletContainerTestUtil {
 
 			HttpEntity httpEntity = httpResponse.getEntity();
 
-			StringWriter stringWriter = new StringWriter();
-
-			WriterOutputStream writerOutputStream = new WriterOutputStream(
-				stringWriter);
-
 			httpEntity.writeTo(writerOutputStream);
 
-			stringWriter.close();
+			writerOutputStream.flush();
 
 			return new Response(
 				statusLine.getStatusCode(), stringWriter.toString(), null);
 		}
 		finally {
-			if (httpResponse != null) {
-				httpResponse.close();
+			try {
+				if (httpResponse != null) {
+					httpResponse.close();
+				}
 			}
-
-			if (httpClient != null) {
-				httpClient.close();
+			catch (IOException ioe) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(ioe, ioe);
+				}
 			}
 		}
 	}
@@ -357,5 +358,8 @@ public class PortletContainerTestUtil {
 		private final List<String> _cookies;
 
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		PortletContainerTestUtil.class);
 
 }
