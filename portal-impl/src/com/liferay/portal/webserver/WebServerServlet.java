@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.flash.FlashMagicBytesUtil;
 import com.liferay.portal.kernel.image.ImageBag;
 import com.liferay.portal.kernel.image.ImageToolUtil;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -93,10 +94,12 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.webdav.WebDAVUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.impl.ImageImpl;
+import com.liferay.portal.util.PortalInstances;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.util.DocumentConversionUtil;
 import com.liferay.trash.kernel.model.TrashEntry;
 import com.liferay.trash.kernel.util.TrashUtil;
+import com.liferay.util.ContentUtil;
 
 import java.awt.image.RenderedImage;
 
@@ -104,6 +107,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 
 import java.net.URL;
 
@@ -112,6 +116,7 @@ import java.text.Format;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.ServletConfig;
@@ -226,6 +231,18 @@ public class WebServerServlet extends HttpServlet {
 	public void service(
 			HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
+
+		long companyId = PortalInstances.getCompanyId(request);
+
+		if (!PortalInstances.isCompanyActive(companyId)) {
+			processCompanyInactiveRequest(request, response);
+
+			if (_log.isDebugEnabled()) {
+				_log.debug("Processed company inactive request");
+			}
+
+			return;
+		}
 
 		User user = null;
 
@@ -746,6 +763,39 @@ public class WebServerServlet extends HttpServlet {
 
 	protected boolean isSupportsRangeHeader(String contentType) {
 		return _acceptRangesMimeTypes.contains(contentType);
+	}
+
+	protected void processCompanyInactiveRequest(
+			HttpServletRequest request, HttpServletResponse response)
+		throws IOException {
+
+		response.setContentType(ContentTypes.TEXT_HTML_UTF8);
+
+		Locale locale = PortalUtil.getLocale(request);
+
+		String message;
+
+		if (LanguageUtil.isValidLanguageKey(
+				locale,
+				"this-instance-is-inactive-please-contact-the-administrator")) {
+
+			message = LanguageUtil.get(
+				locale,
+				"this-instance-is-inactive-please-contact-the-administrator");
+		}
+		else {
+			message = HtmlUtil.escape(
+				"this-instance-is-inactive-please-contact-the-administrator");
+		}
+
+		String html = ContentUtil.get(
+			"com/liferay/portal/dependencies/inactive.html");
+
+		html = StringUtil.replace(html, "[$MESSAGE$]", message);
+
+		PrintWriter printWriter = response.getWriter();
+
+		printWriter.print(html);
 	}
 
 	protected void processPrincipalException(
