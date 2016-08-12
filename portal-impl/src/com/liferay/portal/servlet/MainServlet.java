@@ -1107,6 +1107,10 @@ public class MainServlet extends ActionServlet {
 		return true;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	protected void processInactiveRequest(
 			HttpServletRequest request, HttpServletResponse response,
 			String messageKey)
