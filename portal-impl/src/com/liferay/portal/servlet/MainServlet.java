@@ -420,16 +420,6 @@ public class MainServlet extends ActionServlet {
 			_log.debug("Get company id");
 		}
 
-		long companyId = getCompanyId(request);
-
-		if (processCompanyInactiveRequest(request, response, companyId)) {
-			if (_log.isDebugEnabled()) {
-				_log.debug("Processed company inactive request");
-			}
-
-			return;
-		}
-
 		try {
 			if (processGroupInactiveRequest(request, response)) {
 				if (_log.isDebugEnabled()) {
@@ -471,6 +461,8 @@ public class MainServlet extends ActionServlet {
 		if (_log.isDebugEnabled()) {
 			_log.debug("Encrypt request");
 		}
+
+		long companyId = getCompanyId(request);
 
 		request = encryptRequest(request, companyId);
 
