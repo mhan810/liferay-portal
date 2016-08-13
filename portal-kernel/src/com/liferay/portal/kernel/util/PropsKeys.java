@@ -2329,6 +2329,8 @@ public interface PropsKeys {
 
 	public static final String VIRTUAL_HOSTS_VALID_HOSTS = "virtual.hosts.valid.hosts";
 
+	public static final String VIRTUAL_INSTANCES_SHOW_INACTIVE_MESSAGE = "virtual.instances.show.inactive.message";
+
 	public static final String WEB_SERVER_DISPLAY_NODE = "web.server.display.node";
 
 	public static final String WEB_SERVER_FORWARDED_HOST_ENABLED = "web.server.forwarded.host.enabled";
