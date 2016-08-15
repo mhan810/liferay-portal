@@ -18,7 +18,9 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.util.ContentUtil;
 
 import java.io.IOException;
@@ -39,6 +41,16 @@ public class InactiveRequestHandler {
 			String messageKey)
 		throws IOException {
 
+		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+		PrintWriter printWriter = response.getWriter();
+
+		if (!PropsValues.VIRTUAL_INSTANCES_SHOW_INACTIVE_MESSAGE) {
+			printWriter.print(StringPool.BLANK);
+
+			return;
+		}
+
 		response.setContentType(ContentTypes.TEXT_HTML_UTF8);
 
 		Locale locale = PortalUtil.getLocale(request);
@@ -56,8 +68,6 @@ public class InactiveRequestHandler {
 			"com/liferay/portal/dependencies/inactive.html");
 
 		html = StringUtil.replace(html, "[$MESSAGE$]", message);
-
-		PrintWriter printWriter = response.getWriter();
 
 		printWriter.print(html);
 	}
