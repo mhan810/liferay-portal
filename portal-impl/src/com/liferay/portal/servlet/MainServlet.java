@@ -420,16 +420,6 @@ public class MainServlet extends ActionServlet {
 			_log.debug("Get company id");
 		}
 
-		long companyId = getCompanyId(request);
-
-		if (processCompanyInactiveRequest(request, response, companyId)) {
-			if (_log.isDebugEnabled()) {
-				_log.debug("Processed company inactive request");
-			}
-
-			return;
-		}
-
 		try {
 			if (processGroupInactiveRequest(request, response)) {
 				if (_log.isDebugEnabled()) {
@@ -471,6 +461,8 @@ public class MainServlet extends ActionServlet {
 		if (_log.isDebugEnabled()) {
 			_log.debug("Encrypt request");
 		}
+
+		long companyId = getCompanyId(request);
 
 		request = encryptRequest(request, companyId);
 
@@ -1053,6 +1045,10 @@ public class MainServlet extends ActionServlet {
 		return userId;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	protected boolean processCompanyInactiveRequest(
 			HttpServletRequest request, HttpServletResponse response,
 			long companyId)
@@ -1062,7 +1058,7 @@ public class MainServlet extends ActionServlet {
 			return false;
 		}
 
-		processInactiveRequest(
+		InactiveRequestHandler.processInactiveRequest(
 			request, response,
 			"this-instance-is-inactive-please-contact-the-administrator");
 
@@ -1100,13 +1096,17 @@ public class MainServlet extends ActionServlet {
 			return false;
 		}
 
-		processInactiveRequest(
+		InactiveRequestHandler.processInactiveRequest(
 			request, response,
 			"this-site-is-inactive-please-contact-the-administrator");
 
 		return true;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	protected void processInactiveRequest(
 			HttpServletRequest request, HttpServletResponse response,
 			String messageKey)
@@ -1279,7 +1279,8 @@ public class MainServlet extends ActionServlet {
 			messageKey = "the-system-is-shutdown-please-try-again-later";
 		}
 
-		processInactiveRequest(request, response, messageKey);
+		InactiveRequestHandler.processInactiveRequest(
+			request, response, messageKey);
 
 		return true;
 	}
