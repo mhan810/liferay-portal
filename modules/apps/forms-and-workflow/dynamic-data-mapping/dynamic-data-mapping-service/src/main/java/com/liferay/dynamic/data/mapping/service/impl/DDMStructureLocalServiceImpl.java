@@ -25,10 +25,12 @@ import com.liferay.dynamic.data.mapping.exception.StructureNameException;
 import com.liferay.dynamic.data.mapping.io.DDMFormJSONDeserializer;
 import com.liferay.dynamic.data.mapping.io.DDMFormJSONSerializer;
 import com.liferay.dynamic.data.mapping.io.DDMFormXSDDeserializer;
+import com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance;
 import com.liferay.dynamic.data.mapping.model.DDMDataProviderInstanceLink;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
+import com.liferay.dynamic.data.mapping.model.DDMFormRule;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMStructureConstants;
 import com.liferay.dynamic.data.mapping.model.DDMStructureVersion;
@@ -80,6 +82,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Provides the local service for accessing, adding, deleting, and updating
@@ -184,7 +188,7 @@ public class DDMStructureLocalServiceImpl
 
 		// Data provider instance links
 
-		addDataProviderInstanceLinks(structureId, ddmForm);
+		addDataProviderInstanceLinks(structureId, ddmForm, groupId);
 
 		return structure;
 	}
@@ -1444,9 +1448,10 @@ public class DDMStructureLocalServiceImpl
 	}
 
 	protected void addDataProviderInstanceLinks(
-		long structureId, DDMForm ddmForm) {
+		long structureId, DDMForm ddmForm, long groupId) {
 
-		Set<Long> dataProviderInstanceIds = getDataProviderInstanceIds(ddmForm);
+		Set<Long> dataProviderInstanceIds = getDataProviderInstanceIds(
+			ddmForm, groupId);
 
 		for (Long dataProviderInstanceId : dataProviderInstanceIds) {
 			ddmDataProviderInstanceLinkLocalService.addDataProviderInstanceLink(
@@ -1490,6 +1495,32 @@ public class DDMStructureLocalServiceImpl
 		ddmStructureVersionPersistence.update(structureVersion);
 
 		return structureVersion;
+	}
+
+	protected Set<Long> collectDataProviderInstanceIds(
+		DDMFormRule ddmFormRule, long groupId) {
+
+		Set<Long> dataProviderInstanceIds = new HashSet<>();
+
+		for (String action : ddmFormRule.getActions()) {
+			Matcher matcher = _callFunctionPattern.matcher(action);
+
+			while (matcher.find()) {
+				String dataProviderUuid = matcher.group(1);
+
+				DDMDataProviderInstance dataProviderInstance =
+					ddmDataProviderInstanceLocalService.
+						fetchDDMDataProviderInstanceByUuidAndGroupId(
+							dataProviderUuid, groupId);
+
+				if (dataProviderInstance != null) {
+					dataProviderInstanceIds.add(
+						dataProviderInstance.getDataProviderInstanceId());
+				}
+			}
+		}
+
+		return dataProviderInstanceIds;
 	}
 
 	protected Set<Long> deleteStructures(List<DDMStructure> structures)
@@ -1577,7 +1608,8 @@ public class DDMStructureLocalServiceImpl
 
 		// Data provider instance links
 
-		updateDataProviderInstanceLinks(structure.getStructureId(), ddmForm);
+		updateDataProviderInstanceLinks(
+			structure.getStructureId(), ddmForm, structure.getGroupId());
 
 		// Indexer
 
@@ -1586,7 +1618,9 @@ public class DDMStructureLocalServiceImpl
 		return structure;
 	}
 
-	protected Set<Long> getDataProviderInstanceIds(DDMForm ddmForm) {
+	protected Set<Long> getDataProviderInstanceIds(
+		DDMForm ddmForm, long groupId) {
+
 		Set<Long> dataProviderInstanceIds = new HashSet<>();
 
 		Map<String, DDMFormField> ddmFormFieldsMap =
@@ -1599,6 +1633,11 @@ public class DDMStructureLocalServiceImpl
 			if (ddmDataProviderInstanceId > 0) {
 				dataProviderInstanceIds.add(ddmDataProviderInstanceId);
 			}
+		}
+
+		for (DDMFormRule ddmFormRule : ddmForm.getDDMFormRules()) {
+			dataProviderInstanceIds.addAll(
+				collectDataProviderInstanceIds(ddmFormRule, groupId));
 		}
 
 		return dataProviderInstanceIds;
@@ -1713,9 +1752,10 @@ public class DDMStructureLocalServiceImpl
 	}
 
 	protected void updateDataProviderInstanceLinks(
-		long structureId, DDMForm ddmForm) {
+		long structureId, DDMForm ddmForm, long groupId) {
 
-		Set<Long> dataProviderInstanceIds = getDataProviderInstanceIds(ddmForm);
+		Set<Long> dataProviderInstanceIds = getDataProviderInstanceIds(
+			ddmForm, groupId);
 
 		List<DDMDataProviderInstanceLink> dataProviderInstaceLinks =
 			ddmDataProviderInstanceLinkLocalService.
@@ -1864,5 +1904,9 @@ public class DDMStructureLocalServiceImpl
 
 	@ServiceReference(type = DDMXML.class)
 	protected DDMXML ddmXML;
+
+	private final Pattern _callFunctionPattern = Pattern.compile(
+		"call\\(\\s*([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-" +
+			"[0-9a-f]{12})");
 
 }
