@@ -41,6 +41,8 @@ public class InactiveRequestHandlerImpl implements InactiveRequestHandler {
 			String messageKey)
 		throws IOException {
 
+		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
 		response.setContentType(ContentTypes.TEXT_HTML_UTF8);
 
 		Locale locale = PortalUtil.getLocale(request);
