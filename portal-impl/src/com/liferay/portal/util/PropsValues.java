@@ -1602,6 +1602,8 @@ public class PropsValues {
 
 	public static final String[] VIRTUAL_HOSTS_VALID_HOSTS = PropsUtil.getArray(PropsKeys.VIRTUAL_HOSTS_VALID_HOSTS);
 
+	public static final Boolean VIRTUAL_INSTANCES_SHOW_INACTIVE_MESSAGE = GetterUtil.getBoolean(PropsKeys.VIRTUAL_INSTANCES_SHOW_INACTIVE_MESSAGE);
+
 	public static final boolean WEB_SERVER_DISPLAY_NODE = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.WEB_SERVER_DISPLAY_NODE));
 
 	public static final boolean WEB_SERVER_FORWARDED_HOST_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.WEB_SERVER_FORWARDED_HOST_ENABLED));
