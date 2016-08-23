@@ -17,6 +17,7 @@ package com.liferay.portal.settings.authentication.ldap.web.internal.portlet.act
 import com.liferay.counter.kernel.service.CounterLocalService;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.portlet.PortletContextFactory;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderConstants;
@@ -48,6 +49,8 @@ import java.util.Map;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletContext;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -116,7 +119,18 @@ public class PortalSettingsEditLDAPServerMVCActionCommand
 				throw e;
 			}
 
-			actionResponse.setRenderParameter("mvcPath", mvcPath);
+			PortletURL portletURL = PortletURLFactoryUtil.create(
+				actionRequest, PortalSettingsPortletKeys.PORTAL_SETTINGS,
+				PortletRequest.RENDER_PHASE);
+
+			portletURL.setParameter(
+				"mvcRenderCommandName", "/portal_settings/edit_ldap_server");
+
+			String redirect = ParamUtil.getString(actionRequest, "redirect");
+
+			portletURL.setParameter("redirect", redirect);
+
+			actionResponse.sendRedirect(portletURL.toString());
 		}
 	}
 
