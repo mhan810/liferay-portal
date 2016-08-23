@@ -100,15 +100,6 @@ public class PortalSettingsEditLDAPServerMVCActionCommand
 				e instanceof LDAPServerNameException) {
 
 				SessionErrors.add(actionRequest, e.getClass());
-
-				HttpServletRequest httpServletRequest =
-					_portal.getHttpServletRequest(actionRequest);
-
-				httpServletRequest.setAttribute(
-					MVCRenderConstants.
-						PORTLET_CONTEXT_OVERRIDE_REQUEST_ATTIBUTE_NAME_PREFIX +
-							mvcPath,
-					_portletContext);
 			}
 			else if (e instanceof PrincipalException) {
 				SessionErrors.add(actionRequest, e.getClass());
