@@ -14,7 +14,11 @@
 
 package com.liferay.gradle.plugins.defaults.internal.util;
 
+import com.liferay.gradle.util.Validator;
+
 import java.io.File;
+
+import java.lang.reflect.Method;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,6 +31,7 @@ import java.util.Set;
 
 import org.gradle.StartParameter;
 import org.gradle.api.Action;
+import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
@@ -60,7 +65,7 @@ public class GradleUtil extends com.liferay.gradle.util.GradleUtil {
 	}
 
 	public static String getArchivesBaseName(Project project) {
-		BasePluginConvention basePluginConvention = GradleUtil.getConvention(
+		BasePluginConvention basePluginConvention = getConvention(
 			project, BasePluginConvention.class);
 
 		return basePluginConvention.getArchivesBaseName();
@@ -74,6 +79,48 @@ public class GradleUtil extends com.liferay.gradle.util.GradleUtil {
 		}
 
 		return null;
+	}
+
+	public static Object getProperty(Object object, String name) {
+		try {
+			Class<?> clazz = object.getClass();
+
+			Method hasPropertyMethod = clazz.getMethod(
+				"hasProperty", String.class);
+
+			boolean hasProperty = (boolean)hasPropertyMethod.invoke(
+				object, name);
+
+			if (!hasProperty) {
+				return null;
+			}
+
+			Method getPropertyMethod = clazz.getMethod(
+				"getProperty", String.class);
+
+			Object value = getPropertyMethod.invoke(object, name);
+
+			if ((value instanceof String) && Validator.isNull((String)value)) {
+				value = null;
+			}
+
+			return value;
+		}
+		catch (ReflectiveOperationException roe) {
+			throw new GradleException("Unable to get property", roe);
+		}
+	}
+
+	public static String getProperty(
+		Object object, String name, String defaultValue) {
+
+		Object value = getProperty(object, name);
+
+		if (value == null) {
+			return defaultValue;
+		}
+
+		return toString(value);
 	}
 
 	public static File getRootDir(File dir, String markerFileName) {
@@ -160,12 +207,25 @@ public class GradleUtil extends com.liferay.gradle.util.GradleUtil {
 		return false;
 	}
 
-	public static void setProjectSnapshotVersion(Project project) {
+	public static void setProjectSnapshotVersion(
+		Project project, String... propertyNames) {
+
 		boolean snapshot = false;
 
 		if (project.hasProperty(SNAPSHOT_PROPERTY_NAME)) {
-			snapshot = GradleUtil.getProperty(
-				project, SNAPSHOT_PROPERTY_NAME, true);
+			snapshot = getProperty(project, SNAPSHOT_PROPERTY_NAME, true);
+		}
+
+		if (!snapshot) {
+			for (String propertyName : propertyNames) {
+				if (project.hasProperty(propertyName) &&
+					getProperty(project, propertyName, true)) {
+
+					snapshot = true;
+
+					break;
+				}
+			}
 		}
 
 		String version = String.valueOf(project.getVersion());

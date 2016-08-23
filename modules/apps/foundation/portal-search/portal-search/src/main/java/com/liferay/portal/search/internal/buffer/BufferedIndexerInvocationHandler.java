@@ -18,9 +18,12 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.ClassedModel;
+import com.liferay.portal.kernel.model.ResourcedModel;
 import com.liferay.portal.kernel.search.Bufferable;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
+import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistryUtil;
 import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.search.buffer.IndexerRequest;
 import com.liferay.portal.search.buffer.IndexerRequestBuffer;
@@ -96,7 +99,22 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 			return method.invoke(_indexer, args);
 		}
 
-		if (args[0] instanceof ClassedModel) {
+		if (args[0] instanceof ResourcedModel &&
+			args[0] instanceof ClassedModel &&
+			"reindex".equals(method.getName())) {
+
+			MethodKey methodKey = new MethodKey(
+				Indexer.class, method.getName(), String.class, Long.TYPE);
+
+			ResourcedModel resourcedModel = (ResourcedModel)args[0];
+			ClassedModel classedModel = (ClassedModel)args[0];
+
+			String className = classedModel.getModelClassName();
+			Long classPK = resourcedModel.getResourcePrimKey();
+
+			bufferRequest(methodKey, className, classPK, indexerRequestBuffer);
+		}
+		else if (args[0] instanceof ClassedModel) {
 			MethodKey methodKey = new MethodKey(
 				Indexer.class, method.getName(), Object.class);
 
@@ -108,6 +126,22 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 
 			String className = (String)args[0];
 			Long classPK = (Long)args[1];
+
+			PersistedModelLocalService service =
+				PersistedModelLocalServiceRegistryUtil.
+					getPersistedModelLocalService(className);
+
+			try {
+				Object obj = service.getPersistedModel(classPK);
+
+				if (obj instanceof ResourcedModel) {
+					ResourcedModel resourcedModel = (ResourcedModel)obj;
+
+					classPK = resourcedModel.getResourcePrimKey();
+				}
+			}
+			catch (Exception e) {
+			}
 
 			bufferRequest(methodKey, className, classPK, indexerRequestBuffer);
 		}
