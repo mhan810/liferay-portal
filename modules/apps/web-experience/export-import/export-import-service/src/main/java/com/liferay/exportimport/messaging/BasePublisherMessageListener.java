@@ -14,6 +14,8 @@
 
 package com.liferay.exportimport.messaging;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.messaging.BaseMessageStatusMessageListener;
@@ -47,6 +49,7 @@ import org.osgi.service.component.ComponentContext;
 /**
  * @author Levente Hudák
  */
+@ProviderType
 public abstract class BasePublisherMessageListener
 	extends BaseMessageStatusMessageListener {
 

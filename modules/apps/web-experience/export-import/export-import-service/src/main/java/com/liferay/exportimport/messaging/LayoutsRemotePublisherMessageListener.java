@@ -14,6 +14,8 @@
 
 package com.liferay.exportimport.messaging;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.exportimport.kernel.model.ExportImportConfiguration;
 import com.liferay.exportimport.kernel.service.ExportImportConfigurationLocalService;
 import com.liferay.exportimport.kernel.staging.StagingUtil;
@@ -54,6 +56,7 @@ import org.osgi.service.component.annotations.Reference;
 	},
 	service = LayoutsRemotePublisherMessageListener.class
 )
+@ProviderType
 public class LayoutsRemotePublisherMessageListener
 	extends BasePublisherMessageListener {
 
