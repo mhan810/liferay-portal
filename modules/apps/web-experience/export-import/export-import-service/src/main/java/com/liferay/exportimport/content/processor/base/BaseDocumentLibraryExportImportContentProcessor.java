@@ -121,7 +121,6 @@ public abstract class BaseDocumentLibraryExportImportContentProcessor
 	}
 
 	protected String getDLReference(String content, int beginPos, int endPos) {
-
 		char[] stopChars = DL_REFERENCE_LEGACY_STOP_CHARS;
 
 		if (content.startsWith("/documents/", beginPos)) {
@@ -533,7 +532,7 @@ public abstract class BaseDocumentLibraryExportImportContentProcessor
 			if (fileEntry == null) {
 				throw new NoSuchFileEntryException(
 					getDLReference(
-						content, beginPos + portalURL.length(), endPos);
+						content, beginPos + portalURL.length(), endPos));
 			}
 
 			endPos = beginPos - 1;
