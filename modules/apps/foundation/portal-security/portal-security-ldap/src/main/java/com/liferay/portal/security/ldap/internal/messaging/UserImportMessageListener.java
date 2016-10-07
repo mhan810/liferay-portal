@@ -51,6 +51,19 @@ public class UserImportMessageListener
 
 		int interval = ldapImportConfiguration.importInterval();
 
+		List<Company> companies = _companyLocalService.getCompanies(false);
+
+		for (Company company : companies) {
+			long companyId = company.getCompanyId();
+
+			ldapImportConfiguration =
+				_ldapImportConfigurationProvider.getConfiguration(companyId);
+
+			if (ldapImportConfiguration.importInterval() < interval) {
+				interval = ldapImportConfiguration.importInterval();
+			}
+		}
+
 		schedulerEntryImpl.setTrigger(
 			TriggerFactoryUtil.createTrigger(
 				getEventListenerClass(), getEventListenerClass(), interval,
