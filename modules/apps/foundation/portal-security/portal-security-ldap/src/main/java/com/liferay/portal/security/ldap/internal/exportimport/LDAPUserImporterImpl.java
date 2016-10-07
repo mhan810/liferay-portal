@@ -115,9 +115,24 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 
+	/**
+	 * @deprecated As of 1.1.0, with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public long getLastImportTime() {
-		return _lastImportTime;
+		return 0;
+	}
+
+	@Override
+	public long getLastImportTime(long companyId) {
+		Long lastImportTime = _lastImportTimeMap.get(companyId);
+
+		if (lastImportTime == null) {
+			return 0;
+		}
+
+		return lastImportTime;
 	}
 
 	@Override
@@ -415,7 +430,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			return;
 		}
 
-		_lastImportTime = System.currentTimeMillis();
+		_lastImportTimeMap.put(companyId, System.currentTimeMillis());
 
 		LDAPImportConfiguration ldapImportConfiguration =
 			_ldapImportConfigurationProvider.getConfiguration(companyId);
@@ -1606,7 +1621,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	private String _companySecurityAuthType;
 	private ExpandoValueLocalService _expandoValueLocalService;
 	private GroupLocalService _groupLocalService;
-	private long _lastImportTime;
+	private final Map<Long, Long> _lastImportTimeMap = new HashMap<>();
 	private ConfigurationProvider<LDAPImportConfiguration>
 		_ldapImportConfigurationProvider;
 	private ConfigurationProvider<LDAPServerConfiguration>
