@@ -14,11 +14,14 @@
 
 package com.liferay.portal.security.exportimport;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.model.User;
 
 /**
  * @author Michael C. Han
  */
+@ProviderType
 public interface UserImporter {
 
 	/**
