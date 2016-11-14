@@ -18,6 +18,8 @@ import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProvider;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderRegistry;
 import com.liferay.portal.security.sso.openid.connect.configuration.OpenIdConnectProviderConfiguration;
@@ -57,8 +59,8 @@ public class OpenIdConnectProviderRegistryImpl
 	public void configurationEvent(ConfigurationEvent configurationEvent) {
 		String factoryPid = configurationEvent.getFactoryPid();
 
-		if (!factoryPid.equals(
-				OpenIdConnectProviderConfiguration.class.getName())) {
+		if (!OpenIdConnectProviderConfiguration.class.getName().equals(
+				factoryPid) {
 
 			return;
 		}
