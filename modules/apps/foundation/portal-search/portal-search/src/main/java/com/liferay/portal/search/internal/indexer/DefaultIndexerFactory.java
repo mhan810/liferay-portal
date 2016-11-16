@@ -14,9 +14,6 @@
 
 package com.liferay.portal.search.internal.indexer;
 
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
-import com.liferay.asset.kernel.service.AssetEntryLocalService;
-import com.liferay.asset.kernel.service.AssetTagLocalService;
 import com.liferay.expando.kernel.service.ExpandoColumnLocalService;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactory;
 import com.liferay.expando.kernel.util.ExpandoBridgeIndexer;
@@ -28,11 +25,9 @@ import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.search.SearchPermissionChecker;
 import com.liferay.portal.kernel.search.hits.HitsProcessorRegistry;
 import com.liferay.portal.kernel.service.GroupLocalService;
-import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.search.index.IndexStatusManager;
 import com.liferay.portal.search.indexer.IndexerFactory;
 import com.liferay.portal.search.indexer.ModelIndexer;
-import com.liferay.ratings.kernel.service.RatingsStatsLocalService;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -40,7 +35,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Michael C. Han
  */
-@Component
+@Component(immediate = true, service = IndexerFactory.class)
 public class DefaultIndexerFactory implements IndexerFactory {
 
 	@Override
@@ -51,22 +46,11 @@ public class DefaultIndexerFactory implements IndexerFactory {
 			expandoBridgeFactory, expandoBridgeIndexer, hitsProcessorRegistry,
 			indexerRegistry, indexSearcherHelper, indexStatusManager,
 			indexWriterHelper, modelIndexer, searchEngineHelper, searchEngineId,
-			searchPermissionChecker, assetCategoryLocalService,
-			assetEntryLocalService, assetTagLocalService,
-			expandoColumnLocalService, groupLocalService,
-			ratingsStatsLocalService, userLocalService);
+			searchPermissionChecker, expandoColumnLocalService,
+			groupLocalService);
 
 		return indexer;
 	}
-
-	@Reference
-	protected AssetCategoryLocalService assetCategoryLocalService;
-
-	@Reference
-	protected AssetEntryLocalService assetEntryLocalService;
-
-	@Reference
-	protected AssetTagLocalService assetTagLocalService;
 
 	@Reference
 	protected ExpandoBridgeFactory expandoBridgeFactory;
@@ -96,15 +80,9 @@ public class DefaultIndexerFactory implements IndexerFactory {
 	protected IndexWriterHelper indexWriterHelper;
 
 	@Reference
-	protected RatingsStatsLocalService ratingsStatsLocalService;
-
-	@Reference
 	protected SearchEngineHelper searchEngineHelper;
 
 	@Reference
 	protected SearchPermissionChecker searchPermissionChecker;
-
-	@Reference
-	protected UserLocalService userLocalService;
 
 }
