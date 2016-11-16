@@ -28,6 +28,7 @@ import java.util.List;
 
 /**
  * @author Tina Tian
+ * @deprecated see com.liferay.portal.search.internal.indexer.DefaultSearchResultPermissionFilter
  */
 public class DefaultSearchResultPermissionFilter
 	extends BaseSearchResultPermissionFilter {
