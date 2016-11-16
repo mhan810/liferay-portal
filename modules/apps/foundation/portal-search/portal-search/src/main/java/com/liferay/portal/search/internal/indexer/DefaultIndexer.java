@@ -14,14 +14,6 @@
 
 package com.liferay.portal.search.internal.indexer;
 
-import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetRendererFactory;
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
-import com.liferay.asset.kernel.service.AssetEntryLocalService;
-import com.liferay.asset.kernel.service.AssetTagLocalService;
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.model.ExpandoColumn;
 import com.liferay.expando.kernel.model.ExpandoColumnConstants;
@@ -33,21 +25,11 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.AttachedModel;
-import com.liferay.portal.kernel.model.AuditedModel;
-import com.liferay.portal.kernel.model.BaseModel;
-import com.liferay.portal.kernel.model.Country;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.GroupedModel;
-import com.liferay.portal.kernel.model.ResourcedModel;
-import com.liferay.portal.kernel.model.TrashedModel;
-import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.model.WorkflowedModel;
 import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.DocumentHelper;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
@@ -81,18 +63,12 @@ import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.GroupLocalService;
-import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.SetUtil;
@@ -102,16 +78,11 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.index.IndexStatusManager;
 import com.liferay.portal.search.indexer.ModelIndexer;
-import com.liferay.ratings.kernel.model.RatingsStats;
-import com.liferay.ratings.kernel.service.RatingsStatsLocalService;
-import com.liferay.trash.kernel.model.TrashEntry;
 
 import java.io.Serializable;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -138,13 +109,8 @@ public class DefaultIndexer<T> implements Indexer<T> {
 		IndexWriterHelper indexWriterHelper, ModelIndexer modelIndexer,
 		SearchEngineHelper searchEngineHelper, String searchEngineId,
 		SearchPermissionChecker searchPermissionChecker,
-		AssetCategoryLocalService assetCategoryLocalService,
-		AssetEntryLocalService assetEntryLocalService,
-		AssetTagLocalService assetTagLocalService,
 		ExpandoColumnLocalService expandoColumnLocalService,
-		GroupLocalService groupLocalService,
-		RatingsStatsLocalService ratingsStatsLocalService,
-		UserLocalService userLocalService) {
+		GroupLocalService groupLocalService) {
 
 		_expandoBridgeFactory = expandoBridgeFactory;
 		_expandoBridgeIndexer = expandoBridgeIndexer;
@@ -157,13 +123,8 @@ public class DefaultIndexer<T> implements Indexer<T> {
 		_searchEngineId = searchEngineId;
 		_searchEngineHelper = searchEngineHelper;
 		_searchPermissionChecker = searchPermissionChecker;
-		_assetCategoryLocalService = assetCategoryLocalService;
-		_assetEntryLocalService = assetEntryLocalService;
-		_assetTagLocalService = assetTagLocalService;
 		_expandoColumnLocalService = expandoColumnLocalService;
 		_groupLocalService = groupLocalService;
-		_ratingsStatsLocalService = ratingsStatsLocalService;
-		_userLocalService = userLocalService;
 	}
 
 	@Override
@@ -682,9 +643,7 @@ public class DefaultIndexer<T> implements Indexer<T> {
 			PermissionChecker permissionChecker =
 				PermissionThreadLocal.getPermissionChecker();
 
-			if ((permissionChecker != null) &&
-				isUseSearchResultPermissionFilter(searchContext)) {
-
+			if ((permissionChecker != null) && isFilterSearch()) {
 				if (searchContext.getUserId() == 0) {
 					searchContext.setUserId(permissionChecker.getUserId());
 				}
@@ -730,9 +689,7 @@ public class DefaultIndexer<T> implements Indexer<T> {
 		PermissionChecker permissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
 
-		if ((permissionChecker != null) &&
-			isUseSearchResultPermissionFilter(searchContext)) {
-
+		if ((permissionChecker != null) && isFilterSearch()) {
 			Hits hits = search(searchContext);
 
 			return hits.getLength();
@@ -779,69 +736,6 @@ public class DefaultIndexer<T> implements Indexer<T> {
 
 		_indexerPostProcessors = indexerPostProcessorsList.toArray(
 			new IndexerPostProcessor[indexerPostProcessorsList.size()]);
-	}
-
-	protected void addAssetFields(
-		Document document, String className, long classPK) {
-
-		AssetRendererFactory<?> assetRendererFactory =
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
-				className);
-
-		if ((assetRendererFactory == null) ||
-			!assetRendererFactory.isSelectable()) {
-
-			return;
-		}
-
-		AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
-			className, classPK);
-
-		if (assetEntry == null) {
-			return;
-		}
-
-		if (!document.hasField(Field.CREATE_DATE)) {
-			document.addDate(Field.CREATE_DATE, assetEntry.getCreateDate());
-		}
-
-		if (assetEntry.getExpirationDate() != null) {
-			document.addDate(
-				Field.EXPIRATION_DATE, assetEntry.getExpirationDate());
-		}
-		else {
-			document.addDate(Field.EXPIRATION_DATE, new Date(Long.MAX_VALUE));
-		}
-
-		if (!document.hasField(Field.MODIFIED_DATE)) {
-			document.addDate(Field.MODIFIED_DATE, assetEntry.getModifiedDate());
-		}
-
-		document.addNumber(Field.PRIORITY, assetEntry.getPriority());
-
-		if (assetEntry.getPublishDate() != null) {
-			document.addDate(Field.PUBLISH_DATE, assetEntry.getPublishDate());
-		}
-		else {
-			document.addDate(Field.PUBLISH_DATE, new Date(0));
-		}
-
-		RatingsStats ratingsStats = _ratingsStatsLocalService.fetchStats(
-			className, classPK);
-
-		if (ratingsStats != null) {
-			document.addNumber(Field.RATINGS, ratingsStats.getAverageScore());
-		}
-		else {
-			document.addNumber(Field.RATINGS, 0.0f);
-		}
-
-		document.addNumber(Field.VIEW_COUNT, assetEntry.getViewCount());
-
-		document.addLocalizedKeyword(
-			"localized_title",
-			populateMap(assetEntry, assetEntry.getTitleMap()), true, true);
-		document.addKeyword("visible", assetEntry.isVisible());
 	}
 
 	protected void addDefaultHighlightFieldNames(QueryConfig queryConfig) {
@@ -941,54 +835,6 @@ public class DefaultIndexer<T> implements Indexer<T> {
 		multiValueFacet.setValues(searchContext.getAssetCategoryIds());
 
 		searchContext.addFacet(multiValueFacet);
-	}
-
-	protected void addSearchAssetCategoryTitles(
-		Document document, String field, List<AssetCategory> assetCategories) {
-
-		Map<Locale, List<String>> assetCategoryTitles = new HashMap<>();
-
-		Locale defaultLocale = LocaleUtil.getDefault();
-
-		for (AssetCategory assetCategory : assetCategories) {
-			Map<Locale, String> titleMap = assetCategory.getTitleMap();
-
-			for (Map.Entry<Locale, String> entry : titleMap.entrySet()) {
-				Locale locale = entry.getKey();
-				String title = entry.getValue();
-
-				if (Validator.isNull(title)) {
-					continue;
-				}
-
-				List<String> titles = assetCategoryTitles.get(locale);
-
-				if (titles == null) {
-					titles = new ArrayList<>();
-
-					assetCategoryTitles.put(locale, titles);
-				}
-
-				titles.add(StringUtil.toLowerCase(title));
-			}
-		}
-
-		for (Map.Entry<Locale, List<String>> entry :
-				assetCategoryTitles.entrySet()) {
-
-			Locale locale = entry.getKey();
-			List<String> titles = entry.getValue();
-
-			String[] titlesArray = titles.toArray(new String[titles.size()]);
-
-			if (locale.equals(defaultLocale)) {
-				document.addText(field, titlesArray);
-			}
-
-			document.addText(
-				field.concat(StringPool.UNDERLINE).concat(locale.toString()),
-				titlesArray);
-		}
 	}
 
 	protected void addSearchAssetTagNames(
@@ -1247,83 +1093,6 @@ public class DefaultIndexer<T> implements Indexer<T> {
 		document.addKeyword(Field.STAGING_GROUP, isStagingGroup(groupId));
 	}
 
-	protected void addTrashFields(
-		Document document, TrashedModel trashedModel) {
-
-		TrashEntry trashEntry = null;
-
-		try {
-			trashEntry = trashedModel.getTrashEntry();
-		}
-		catch (PortalException pe) {
-			if (_log.isDebugEnabled()) {
-				_log.debug("Unable to get trash entry for " + trashedModel, pe);
-			}
-		}
-
-		if (trashEntry == null) {
-			document.addDate(Field.REMOVED_DATE, new Date());
-
-			ServiceContext serviceContext =
-				ServiceContextThreadLocal.getServiceContext();
-
-			if (serviceContext != null) {
-				try {
-					User user = _userLocalService.getUser(
-						serviceContext.getUserId());
-
-					document.addKeyword(
-						Field.REMOVED_BY_USER_NAME, user.getFullName(), true);
-				}
-				catch (PortalException pe) {
-					if (_log.isDebugEnabled()) {
-						_log.debug(
-							"Unable to locate user: " +
-								serviceContext.getUserId(),
-							pe);
-					}
-				}
-			}
-		}
-		else {
-			document.addDate(Field.REMOVED_DATE, trashEntry.getCreateDate());
-			document.addKeyword(
-				Field.REMOVED_BY_USER_NAME, trashEntry.getUserName(), true);
-
-			if (trashedModel.isInTrash() &&
-				!trashedModel.isInTrashExplicitly()) {
-
-				document.addKeyword(
-					Field.ROOT_ENTRY_CLASS_NAME, trashEntry.getClassName());
-				document.addKeyword(
-					Field.ROOT_ENTRY_CLASS_PK, trashEntry.getClassPK());
-			}
-		}
-
-		TrashHandler trashHandler = trashedModel.getTrashHandler();
-
-		try {
-			TrashRenderer trashRenderer = null;
-
-			if ((trashHandler != null) && (trashEntry != null)) {
-				trashRenderer = trashHandler.getTrashRenderer(
-					trashEntry.getClassPK());
-			}
-
-			if (trashRenderer != null) {
-				document.addKeyword(Field.TYPE, trashRenderer.getType(), true);
-			}
-		}
-		catch (PortalException pe) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					"Unable to get trash renderer for " +
-						trashEntry.getClassName(),
-					pe);
-			}
-		}
-	}
-
 	protected BooleanQuery createFullQuery(
 			BooleanFilter fullQueryBooleanFilter, SearchContext searchContext)
 		throws Exception {
@@ -1398,61 +1167,6 @@ public class DefaultIndexer<T> implements Indexer<T> {
 		return fullBooleanQuery;
 	}
 
-	protected Summary createSummary(Document document) {
-		return createSummary(document, Field.TITLE, Field.CONTENT);
-	}
-
-	protected Summary createSummary(
-		Document document, String titleField, String contentField) {
-
-		String prefix = Field.SNIPPET + StringPool.UNDERLINE;
-
-		String title = document.get(prefix + titleField, titleField);
-		String content = document.get(prefix + contentField, contentField);
-
-		return new Summary(title, content);
-	}
-
-	protected void deleteDocument(long companyId, long field1)
-		throws Exception {
-
-		deleteDocument(companyId, String.valueOf(field1));
-	}
-
-	protected void deleteDocument(long companyId, long field1, String field2)
-		throws Exception {
-
-		deleteDocument(companyId, String.valueOf(field1), field2);
-	}
-
-	protected void deleteDocument(long companyId, String field1)
-		throws Exception {
-
-		Document document = new DocumentImpl();
-
-		document.addUID(getClassName(), field1);
-
-		_indexWriterHelper.deleteDocument(
-			getSearchEngineId(), companyId, document.get(Field.UID),
-			_commitImmediately);
-	}
-
-	protected void deleteDocument(long companyId, String field1, String field2)
-		throws Exception {
-
-		Document document = new DocumentImpl();
-
-		document.addUID(getClassName(), field1, field2);
-
-		_indexWriterHelper.deleteDocument(
-			getSearchEngineId(), companyId, document.get(Field.UID),
-			_commitImmediately);
-	}
-
-	protected String doGetSortField(String orderByCol) {
-		return orderByCol;
-	}
-
 	/**
 	 * @deprecated As of 3.4.0, added strictly to support backwards
 	 *             compatibility of {@link
@@ -1485,125 +1199,6 @@ public class DefaultIndexer<T> implements Indexer<T> {
 		fullQuery.setQueryConfig(queryConfig);
 
 		return _indexSearchHelper.search(searchContext, fullQuery);
-	}
-
-	protected Document getBaseModelDocument(
-		String portletId, BaseModel<?> baseModel) {
-
-		return getBaseModelDocument(portletId, baseModel, baseModel);
-	}
-
-	protected Document getBaseModelDocument(
-		String portletId, BaseModel<?> baseModel,
-		BaseModel<?> workflowedBaseModel) {
-
-		Document document = newDocument();
-
-		String className = baseModel.getModelClassName();
-
-		long classPK = 0;
-		long resourcePrimKey = 0;
-
-		if (baseModel instanceof ResourcedModel) {
-			ResourcedModel resourcedModel = (ResourcedModel)baseModel;
-
-			classPK = resourcedModel.getResourcePrimKey();
-			resourcePrimKey = resourcedModel.getResourcePrimKey();
-		}
-		else {
-			classPK = (Long)baseModel.getPrimaryKeyObj();
-		}
-
-		DocumentHelper documentHelper = new DocumentHelper(document);
-
-		documentHelper.setEntryKey(className, classPK);
-
-		document.addUID(className, classPK);
-
-		List<AssetCategory> assetCategories =
-			_assetCategoryLocalService.getCategories(className, classPK);
-
-		long[] assetCategoryIds = ListUtil.toLongArray(
-			assetCategories, AssetCategory.CATEGORY_ID_ACCESSOR);
-
-		document.addKeyword(Field.ASSET_CATEGORY_IDS, assetCategoryIds);
-
-		addSearchAssetCategoryTitles(
-			document, Field.ASSET_CATEGORY_TITLES, assetCategories);
-
-		long classNameId = PortalUtil.getClassNameId(className);
-
-		List<AssetTag> assetTags = _assetTagLocalService.getTags(
-			classNameId, classPK);
-
-		String[] assetTagNames = ListUtil.toArray(
-			assetTags, AssetTag.NAME_ACCESSOR);
-
-		document.addText(Field.ASSET_TAG_NAMES, assetTagNames);
-
-		long[] assetTagsIds = ListUtil.toLongArray(
-			assetTags, AssetTag.TAG_ID_ACCESSOR);
-
-		document.addKeyword(Field.ASSET_TAG_IDS, assetTagsIds);
-
-		if (resourcePrimKey > 0) {
-			document.addKeyword(Field.ROOT_ENTRY_CLASS_PK, resourcePrimKey);
-		}
-
-		if (baseModel instanceof AttachedModel) {
-			AttachedModel attachedModel = (AttachedModel)baseModel;
-
-			documentHelper.setAttachmentOwnerKey(
-				attachedModel.getClassNameId(), attachedModel.getClassPK());
-		}
-
-		if (baseModel instanceof AuditedModel) {
-			AuditedModel auditedModel = (AuditedModel)baseModel;
-
-			document.addKeyword(Field.COMPANY_ID, auditedModel.getCompanyId());
-			document.addDate(Field.CREATE_DATE, auditedModel.getCreateDate());
-			document.addDate(
-				Field.MODIFIED_DATE, auditedModel.getModifiedDate());
-			document.addKeyword(Field.USER_ID, auditedModel.getUserId());
-
-			String userName = PortalUtil.getUserName(
-				auditedModel.getUserId(), auditedModel.getUserName());
-
-			document.addKeyword(Field.USER_NAME, userName, true);
-		}
-
-		GroupedModel groupedModel = null;
-
-		if (baseModel instanceof GroupedModel) {
-			groupedModel = (GroupedModel)baseModel;
-
-			document.addKeyword(
-				Field.GROUP_ID, getSiteGroupId(groupedModel.getGroupId()));
-			document.addKeyword(
-				Field.SCOPE_GROUP_ID, groupedModel.getGroupId());
-		}
-
-		if (workflowedBaseModel instanceof WorkflowedModel) {
-			WorkflowedModel workflowedModel =
-				(WorkflowedModel)workflowedBaseModel;
-
-			document.addKeyword(Field.STATUS, workflowedModel.getStatus());
-		}
-
-		if ((groupedModel != null) && (baseModel instanceof TrashedModel)) {
-			TrashedModel trashedModel = (TrashedModel)baseModel;
-
-			if (trashedModel.isInTrash()) {
-				addTrashFields(document, trashedModel);
-			}
-		}
-
-		addAssetFields(document, className, classPK);
-
-		_expandoBridgeIndexer.addAttributes(
-			document, baseModel.getExpandoBridge());
-
-		return document;
 	}
 
 	protected String[] getDefaultSelectedFieldNames() {
@@ -1643,28 +1238,6 @@ public class DefaultIndexer<T> implements Indexer<T> {
 		return LocaleUtil.getMostRelevantLocale();
 	}
 
-	protected Set<String> getLocalizedCountryNames(Country country) {
-		Set<String> countryNames = new HashSet<>();
-
-		for (Locale locale : LanguageUtil.getAvailableLocales()) {
-			String countryName = country.getName(locale);
-
-			countryName = StringUtil.toLowerCase(countryName);
-
-			countryNames.add(countryName);
-		}
-
-		return countryNames;
-	}
-
-	/**
-	 * @deprecated As of 3.4.0, replaced by {@link #getClassName}
-	 */
-	@Deprecated
-	protected String getPortletId(SearchContext searchContext) {
-		return StringPool.BLANK;
-	}
-
 	protected Group getSiteGroup(long groupId) {
 		Group group = null;
 
@@ -1684,16 +1257,6 @@ public class DefaultIndexer<T> implements Indexer<T> {
 		return group;
 	}
 
-	protected long getSiteGroupId(long groupId) {
-		Group group = getSiteGroup(groupId);
-
-		if (group == null) {
-			return groupId;
-		}
-
-		return group.getGroupId();
-	}
-
 	protected boolean isStagingGroup(long groupId) {
 		Group group = getSiteGroup(groupId);
 
@@ -1702,35 +1265,6 @@ public class DefaultIndexer<T> implements Indexer<T> {
 		}
 
 		return group.isStagingGroup();
-	}
-
-	protected boolean isUseSearchResultPermissionFilter(
-		SearchContext searchContext) {
-
-		return isFilterSearch();
-	}
-
-	protected Document newDocument() {
-		return (Document)_document.clone();
-	}
-
-	protected Map<Locale, String> populateMap(
-		AssetEntry assetEntry, Map<Locale, String> map) {
-
-		String defaultValue = map.get(
-			LocaleUtil.fromLanguageId(assetEntry.getDefaultLanguageId()));
-
-		for (Locale availableLocale : LanguageUtil.getAvailableLocales(
-				assetEntry.getGroupId())) {
-
-			if (!map.containsKey(availableLocale) ||
-				Validator.isNull(map.get(availableLocale))) {
-
-				map.put(availableLocale, defaultValue);
-			}
-		}
-
-		return map;
 	}
 
 	protected void postProcessFullQuery(
@@ -1785,9 +1319,6 @@ public class DefaultIndexer<T> implements Indexer<T> {
 
 	private static final Log _log = LogFactoryUtil.getLog(DefaultIndexer.class);
 
-	private final AssetCategoryLocalService _assetCategoryLocalService;
-	private final AssetEntryLocalService _assetEntryLocalService;
-	private final AssetTagLocalService _assetTagLocalService;
 	private boolean _commitImmediately;
 	private String[] _defaultSelectedFieldNames;
 	private String[] _defaultSelectedLocalizedFieldNames;
@@ -1807,12 +1338,10 @@ public class DefaultIndexer<T> implements Indexer<T> {
 	private final IndexWriterHelper _indexWriterHelper;
 	private final ModelIndexer<T> _modelIndexer;
 	private boolean _permissionAware;
-	private final RatingsStatsLocalService _ratingsStatsLocalService;
 	private final SearchEngineHelper _searchEngineHelper;
 	private String _searchEngineId;
 	private final SearchPermissionChecker _searchPermissionChecker;
 	private boolean _selectAllLocales;
 	private boolean _stagingAware = true;
-	private final UserLocalService _userLocalService;
 
 }
