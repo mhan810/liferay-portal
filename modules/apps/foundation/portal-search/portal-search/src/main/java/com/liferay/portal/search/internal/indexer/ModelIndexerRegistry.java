@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.internal.indexer;
 
-import com.liferay.osgi.util.ServiceTrackerFactory;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -25,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;

@@ -14,25 +14,21 @@
 
 package com.liferay.portal.search.indexer;
 
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+
 /**
  * @author Michael C. Han
  */
-public class IndexerPropertyKeys {
+public interface PermissionAwareModelIndexer {
 
-	public static final String COMMIT_IMMEDIATELY = "commitImmediately";
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, String entryClassName,
+			long entryClassPK, String actionId)
+		throws Exception;
 
-	public static final String DEFAULT_SELECTED_FIELD_NAMES =
-		"defaultSelectedFieldNames";
+	public boolean isVisible(long classPK, int status) throws Exception;
 
-	public static final String DEFAULT_SELECTED_LOCALIZED_FIELD_NAMES =
-		"defaultSelectedLocalizedFieldNames";
-
-	public static final String FILTER_SEARCH = "filterSearch";
-
-	public static final String PERMISSION_AWARE = "permissionAware";
-
-	public static final String SELECT_ALL_LOCALES = "selectAllLocales";
-
-	public static final String STAGING_AWARE = "stagingAware";
+	public boolean isVisibleRelatedEntry(long classPK, int status)
+		throws Exception;
 
 }

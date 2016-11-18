@@ -17,22 +17,8 @@ package com.liferay.portal.search.indexer;
 /**
  * @author Michael C. Han
  */
-public class IndexerPropertyKeys {
+public interface SortableModelIndexer {
 
-	public static final String COMMIT_IMMEDIATELY = "commitImmediately";
-
-	public static final String DEFAULT_SELECTED_FIELD_NAMES =
-		"defaultSelectedFieldNames";
-
-	public static final String DEFAULT_SELECTED_LOCALIZED_FIELD_NAMES =
-		"defaultSelectedLocalizedFieldNames";
-
-	public static final String FILTER_SEARCH = "filterSearch";
-
-	public static final String PERMISSION_AWARE = "permissionAware";
-
-	public static final String SELECT_ALL_LOCALES = "selectAllLocales";
-
-	public static final String STAGING_AWARE = "stagingAware";
+	public String getSortField(String orderByCol);
 
 }
