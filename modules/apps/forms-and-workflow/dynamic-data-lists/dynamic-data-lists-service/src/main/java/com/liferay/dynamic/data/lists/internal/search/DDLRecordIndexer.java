@@ -42,15 +42,18 @@ import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
 import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineHelperUtil;
 import com.liferay.portal.kernel.search.SearchPermissionChecker;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.QueryFilter;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -62,24 +65,31 @@ import java.util.Locale;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
+import com.liferay.portal.search.document.DocumentHelper;
+import com.liferay.portal.search.indexer.IndexerHelper;
+import com.liferay.portal.search.indexer.IndexerPropertyKeys;
+import com.liferay.portal.search.indexer.ModelIndexer;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Marcellus Tavares
  */
-@Component(immediate = true, service = Indexer.class)
-public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
+@Component(
+	immediate = true,
+	property = {
+		IndexerPropertyKeys.DEFAULT_SELECTED_FIELD_NAMES + "=" +
+			Field.COMPANY_ID + "|" + Field.ENTRY_CLASS_NAME + "|" +
+			Field.ENTRY_CLASS_PK + "|" + Field.UID,
+		IndexerPropertyKeys.DEFAULT_SELECTED_LOCALIZED_FIELD_NAMES + "=" +
+			Field.DESCRIPTION + "|" + Field.TITLE,
+		IndexerPropertyKeys.PERMISSION_AWARE + "=true"
+	},
+	service = ModelIndexer.class
+)
+public class DDLRecordIndexer implements ModelIndexer<DDLRecord> {
 
 	public static final String CLASS_NAME = DDLRecord.class.getName();
-
-	public DDLRecordIndexer() {
-		setDefaultSelectedFieldNames(
-			Field.COMPANY_ID, Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK,
-			Field.UID);
-		setDefaultSelectedLocalizedFieldNames(Field.DESCRIPTION, Field.TITLE);
-		setPermissionAware(true);
-	}
 
 	@Override
 	public String getClassName() {
@@ -136,7 +146,8 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 
 		contextBooleanFilter.addRequiredTerm("recordSetScope", recordSetScope);
 
-		addSearchClassTypeIds(contextBooleanFilter, searchContext);
+		indexerHelper.addSearchClassTypeIds(
+			contextBooleanFilter, searchContext);
 
 		String ddmStructureFieldName = (String)searchContext.getAttribute(
 			"ddmStructureFieldName");
@@ -160,19 +171,23 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 			SearchContext searchContext)
 		throws Exception {
 
-		addSearchTerm(searchQuery, searchContext, Field.USER_NAME, false);
+		indexerHelper.addSearchTerm(
+			searchQuery, searchContext, Field.USER_NAME, false);
 
-		addSearchTerm(searchQuery, searchContext, "ddmContent", false);
+		indexerHelper.addSearchTerm(
+			searchQuery, searchContext, "ddmContent", false);
 	}
 
 	@Override
-	protected void doDelete(DDLRecord ddlRecord) throws Exception {
-		deleteDocument(ddlRecord.getCompanyId(), ddlRecord.getRecordId());
+	public void delete(DDLRecord ddlRecord) throws Exception {
+		indexerHelper.deleteDocument(
+			ddlRecord.getCompanyId(), ddlRecord.getRecordId(), this);
 	}
 
 	@Override
-	protected Document doGetDocument(DDLRecord ddlRecord) throws Exception {
-		Document document = getBaseModelDocument(CLASS_NAME, ddlRecord);
+	public Document getDocument(DDLRecord ddlRecord) throws PortalException {
+		Document document = documentHelper.getBaseModelDocument(
+			CLASS_NAME, ddlRecord);
 
 		DDLRecordVersion recordVersion = ddlRecord.getRecordVersion();
 
@@ -205,7 +220,7 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 	}
 
 	@Override
-	protected Summary doGetSummary(
+	public Summary getSummary(
 		Document document, Locale locale, String snippet,
 		PortletRequest portletRequest, PortletResponse portletResponse) {
 
@@ -213,7 +228,7 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 
 		String title = getTitle(recordSetId, locale);
 
-		Summary summary = createSummary(
+		Summary summary = documentHelper.createSummary(
 			document, Field.TITLE, Field.DESCRIPTION);
 
 		summary.setMaxContentLength(200);
@@ -223,23 +238,25 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 	}
 
 	@Override
-	protected void doReindex(DDLRecord ddlRecord) throws Exception {
+	public void reindex(DDLRecord ddlRecord) throws Exception {
 		Document document = getDocument(ddlRecord);
 
+		Indexer<?> indexer = indexerRegistry.nullSafeGetIndexer(getClassName());
+
 		IndexWriterHelperUtil.updateDocument(
-			getSearchEngineId(), ddlRecord.getCompanyId(), document,
-			isCommitImmediately());
+			indexer.getSearchEngineId(), ddlRecord.getCompanyId(), document,
+			indexer.isCommitImmediately());
 	}
 
 	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
+	public void reindex(String className, long classPK) throws Exception {
 		DDLRecord record = _ddlRecordLocalService.getRecord(classPK);
 
-		doReindex(record);
+		reindex(record);
 	}
 
 	@Override
-	protected void doReindex(String[] ids) throws Exception {
+	public void reindex(String[] ids) throws Exception {
 		long companyId = GetterUtil.getLong(ids[0]);
 
 		reindexRecords(companyId);
@@ -247,7 +264,7 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 
 	protected String extractDDMContent(
 			DDLRecordVersion recordVersion, Locale locale)
-		throws Exception {
+		throws PortalException {
 
 		DDMFormValues ddmFormValues = _storageEngine.getDDMFormValues(
 			recordVersion.getDDMStorageId());
@@ -352,7 +369,11 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 				}
 
 			});
-		indexableActionableDynamicQuery.setSearchEngineId(getSearchEngineId());
+
+		Indexer<?> indexer = indexerRegistry.nullSafeGetIndexer(getClassName());
+
+		indexableActionableDynamicQuery.setSearchEngineId(
+			indexer.getSearchEngineId());
 
 		indexableActionableDynamicQuery.performActions();
 	}
@@ -410,5 +431,14 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 	private DDLRecordVersionLocalService _ddlRecordVersionLocalService;
 	private DDMIndexer _ddmIndexer;
 	private StorageEngine _storageEngine;
+
+	@Reference
+	protected DocumentHelper documentHelper;
+
+	@Reference
+	protected IndexerHelper indexerHelper;
+
+	@Reference
+	protected IndexerRegistry indexerRegistry;
 
 }
