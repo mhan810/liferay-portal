@@ -466,20 +466,23 @@ public class DefaultIndexer<T> implements Indexer<T> {
 
 	@Override
 	public boolean isVisible(long classPK, int status) throws Exception {
-		return true;
+		return _modelIndexer.isVisible(classPK, status);
 	}
 
 	@Override
 	public boolean isVisibleRelatedEntry(long classPK, int status)
 		throws Exception {
 
-		return true;
+		return _modelIndexer.isVisibleRelatedEntry(classPK, status);
 	}
 
 	@Override
 	public void postProcessContextBooleanFilter(
 			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
+
+		_modelIndexer.postProcessContextBooleanFilter(
+			contextBooleanFilter, searchContext);
 	}
 
 	/**
