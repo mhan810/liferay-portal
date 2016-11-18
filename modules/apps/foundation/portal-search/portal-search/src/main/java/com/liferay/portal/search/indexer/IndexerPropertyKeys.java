@@ -14,16 +14,25 @@
 
 package com.liferay.portal.search.indexer;
 
-import com.liferay.portal.kernel.search.Indexer;
-
-import java.util.Map;
-
 /**
  * @author Michael C. Han
  */
-public interface IndexerFactory {
+public class IndexerPropertyKeys {
 
-	public Indexer<?> create(
-		String searchEngineId, ModelIndexer<?> modelIndexer, Map<String, Object> properties);
+	public static final String COMMIT_IMMEDIATELY = "commitImmediately";
+
+	public static final String DEFAULT_SELECTED_FIELD_NAMES =
+		"defaultSelectedFieldNames";
+
+	public static final String DEFAULT_SELECTED_LOCALIZED_FIELD_NAMES =
+		"defaultSelectedLocalizedFieldNames";
+
+	public static final String FILTER_SEARCH = "filterSearch";
+
+	public static final String PERMISSION_AWARE = "permissionAware";
+
+	public static final String SELECT_ALL_LOCALES = "selectAllLocales";
+
+	public static final String STAGING_AWARE = "stagingAware";
 
 }

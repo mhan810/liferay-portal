@@ -14,8 +14,12 @@
 
 package com.liferay.portal.search.indexer;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 
 import java.util.Locale;
@@ -32,7 +36,7 @@ public interface ModelIndexer<T> {
 
 	public String getClassName();
 
-	public Document getDocument(T t) throws Exception;
+	public Document getDocument(T t) throws PortalException;
 
 	public String getSortField(String orderByCol);
 
@@ -44,6 +48,20 @@ public interface ModelIndexer<T> {
 	public boolean hasPermission(
 			PermissionChecker permissionChecker, String entryClassName,
 			long entryClassPK, String actionId)
+		throws Exception;
+
+	public boolean isVisible(long classPK, int status) throws Exception;
+
+	public boolean isVisibleRelatedEntry(long classPK, int status)
+		throws Exception;
+
+	public void postProcessContextBooleanFilter(
+		BooleanFilter contextBooleanFilter, SearchContext searchContext)
+		throws Exception;
+
+	public void postProcessSearchQuery(
+		BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
+		SearchContext searchContext)
 		throws Exception;
 
 	public void reindex(String className, long classPK) throws Exception;

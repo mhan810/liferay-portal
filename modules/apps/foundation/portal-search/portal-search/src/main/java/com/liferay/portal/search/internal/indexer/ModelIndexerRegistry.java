@@ -17,6 +17,7 @@ package com.liferay.portal.search.internal.indexer;
 import com.liferay.osgi.util.ServiceTrackerFactory;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.util.HashMapDictionary;
+import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.search.indexer.IndexerFactory;
 import com.liferay.portal.search.indexer.ModelIndexer;
 
@@ -29,8 +30,9 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.util.tracker.ServiceTracker;
-import org.osgi.util.tracker.ServiceTrackerCustomizer;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
@@ -41,83 +43,71 @@ public class ModelIndexerRegistry {
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_bundleContext = bundleContext;
-
-		_serviceTracker = ServiceTrackerFactory.open(
-			bundleContext, "(objectClass=)" + ModelIndexer.class.getName(),
-			new ModelIndexerServiceTrackerCustomizer());
 	}
 
 	@Activate
 	protected void deactivate() {
-		_serviceTracker.close();
+		synchronized (_serviceRegistrations) {
+			if (MapUtil.isNotEmpty(_serviceRegistrations)) {
+				for (ServiceRegistration<?> serviceRegistration :
+						_serviceRegistrations.values()) {
+
+					serviceRegistration.unregister();
+				}
+			}
+		}
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		unbind = "unsetModelIndexer"
+	)
+	protected void setModelIndexer(
+		ModelIndexer<?> modelIndexer, Map<String, Object> properties) {
+
+		String searchEngineId = (String)properties.get("search.engine.id");
+
+		Indexer<?> indexer = indexerFactory.create(
+			searchEngineId, modelIndexer, properties);
+
+		ServiceRegistration<Indexer> serviceRegistration = null;
+
+		synchronized (_serviceRegistrations) {
+			serviceRegistration = _serviceRegistrations.get(
+				modelIndexer.getClassName());
+
+			if (serviceRegistration != null) {
+				serviceRegistration.unregister();
+			}
+
+			serviceRegistration = _bundleContext.registerService(
+				Indexer.class, indexer, new HashMapDictionary<>());
+
+			_serviceRegistrations.put(
+				modelIndexer.getClassName(), serviceRegistration);
+		}
+	}
+
+	protected void unsetModelIndexer(
+		ModelIndexer<?> modelIndexer, Map<String, Object> properties) {
+
+		synchronized (_serviceRegistrations) {
+			ServiceRegistration<?> serviceRegistration =
+				_serviceRegistrations.get(modelIndexer.getClassName());
+
+			if (serviceRegistration != null) {
+				serviceRegistration.unregister();
+			}
+		}
 	}
 
 	@Reference
 	protected IndexerFactory indexerFactory;
 
 	private BundleContext _bundleContext;
-	private ServiceTracker<ModelIndexer<?>, ModelIndexer<?>> _serviceTracker;
-
-	private class ModelIndexerServiceTrackerCustomizer
-		implements ServiceTrackerCustomizer<ModelIndexer<?>, ModelIndexer<?>> {
-
-		@Override
-		public ModelIndexer<?> addingService(
-			ServiceReference<ModelIndexer<?>> serviceReference) {
-
-			ModelIndexer<?> modelIndexer = _bundleContext.getService(
-				serviceReference);
-
-			String searchEngineId = (String)serviceReference.getProperty(
-				"search.engine.id");
-
-			Indexer<?> indexer = indexerFactory.create(
-				searchEngineId, modelIndexer);
-
-			ServiceRegistration<Indexer> serviceRegistration = null;
-
-			synchronized (_serviceRegistrations) {
-				serviceRegistration = _serviceRegistrations.get(
-					modelIndexer.getClassName());
-
-				if (serviceRegistration != null) {
-					serviceRegistration.unregister();
-				}
-
-				serviceRegistration = _bundleContext.registerService(
-					Indexer.class, indexer, new HashMapDictionary<>());
-
-				_serviceRegistrations.put(
-					modelIndexer.getClassName(), serviceRegistration);
-			}
-
-			return modelIndexer;
-		}
-
-		@Override
-		public void modifiedService(
-			ServiceReference<ModelIndexer<?>> serviceReference,
-			ModelIndexer<?> modelIndexer) {
-		}
-
-		@Override
-		public void removedService(
-			ServiceReference<ModelIndexer<?>> serviceReference,
-			ModelIndexer<?> modelIndexer) {
-
-			synchronized (_serviceRegistrations) {
-				ServiceRegistration<?> serviceRegistration =
-					_serviceRegistrations.get(modelIndexer.getClassName());
-
-				if (serviceRegistration != null) {
-					serviceRegistration.unregister();
-				}
-			}
-		}
-
-		private final Map<String, ServiceRegistration<Indexer>>
-			_serviceRegistrations = new HashMap<>();
-
-	}
+	private final Map<String, ServiceRegistration<Indexer>>
+		_serviceRegistrations = new HashMap<>();
 
 }
