@@ -14,96 +14,91 @@
 
 package com.liferay.portal.search.indexer;
 
-import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Query;
-import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.Filter;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Michael C. Han
  */
 public interface IndexerHelper {
 
-	public void addStatus(
-		BooleanFilter contextBooleanFilter, SearchContext searchContext)
-		throws Exception;
-
 	public void addSearchAssetCategoryIds(
-		BooleanFilter queryBooleanFilter, SearchContext searchContext)
+			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception;
 
 	public Filter addSearchClassTypeIds(
-		BooleanFilter contextBooleanFilter, SearchContext searchContext)
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception;
 
 	public void addSearchEntryClassNames(
-		BooleanFilter queryBooleanFilter, SearchContext searchContext)
+			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception;
 
 	public Map<String, Query> addSearchExpando(
-		BooleanQuery searchQuery, ModelIndexer<?> modelIndexer,
-		SearchContext searchContext, String keywords)
+			BooleanQuery searchQuery, ModelIndexer<?> modelIndexer,
+			SearchContext searchContext, String keywords)
 		throws Exception;
 
 	public void addSearchFolderId(
 		BooleanFilter queryBooleanFilter, SearchContext searchContext);
 
 	public void addSearchGroupId(
-		BooleanFilter queryBooleanFilter, SearchContext searchContext)
+			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception;
 
 	public Map<String, Query> addSearchKeywords(
-		BooleanQuery searchQuery, ModelIndexer<?> modelIndexer,
-		SearchContext searchContext)
+			BooleanQuery searchQuery, ModelIndexer<?> modelIndexer,
+			SearchContext searchContext)
 		throws Exception;
 
 	public void addSearchLayout(
-		BooleanFilter queryBooleanFilter, SearchContext searchContext)
+			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception;
 
 	public Map<String, Query> addSearchLocalizedTerm(
-		BooleanQuery searchQuery, SearchContext searchContext, String field,
-		boolean like)
+			BooleanQuery searchQuery, SearchContext searchContext, String field,
+			boolean like)
 		throws Exception;
 
 	public Query addSearchTerm(
-		BooleanQuery searchQuery, SearchContext searchContext, String field,
-		boolean like)
+			BooleanQuery searchQuery, SearchContext searchContext, String field,
+			boolean like)
 		throws Exception;
 
 	public void addSearchUserId(
-		BooleanFilter queryBooleanFilter, SearchContext searchContext)
+			BooleanFilter queryBooleanFilter, SearchContext searchContext)
+		throws Exception;
+
+	public void addStatus(
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
+		throws Exception;
+
+	public void deleteDocument(
+			long companyId, long field1, ModelIndexer<?> modelIndexer)
+		throws Exception;
+
+	public void deleteDocument(
+			long companyId, long field1, String field2,
+			ModelIndexer<?> modelIndexer)
+		throws Exception;
+
+	public void deleteDocument(
+			long companyId, String field1, ModelIndexer<?> modelIndexer)
+		throws Exception;
+
+	public void deleteDocument(
+			long companyId, String field1, String field2,
+			ModelIndexer<?> modelIndexer)
 		throws Exception;
 
 	public String getExpandoFieldName(
 		SearchContext searchContext, ExpandoBridge expandoBridge,
 		String attributeName);
 
-	public void deleteDocument(
-		long companyId, long field1, ModelIndexer<?> modelIndexer)
-	throws Exception;
-
-	public void deleteDocument(
-		long companyId, String field1, ModelIndexer<?> modelIndexer)
-		throws Exception;
-
-	public void deleteDocument(
-		long companyId, String field1, String field2,
-		ModelIndexer<?> modelIndexer)
-		throws Exception;
-
-	public void deleteDocument(
-		long companyId, long field1, String field2,
-		ModelIndexer<?> modelIndexer)
-		throws Exception;
-
-	}
+}

@@ -24,6 +24,7 @@ import java.util.Map;
 public interface IndexerFactory {
 
 	public Indexer<?> create(
-		String searchEngineId, ModelIndexer<?> modelIndexer, Map<String, Object> properties);
+		String searchEngineId, ModelIndexer<?> modelIndexer,
+		Map<String, Object> properties);
 
 }

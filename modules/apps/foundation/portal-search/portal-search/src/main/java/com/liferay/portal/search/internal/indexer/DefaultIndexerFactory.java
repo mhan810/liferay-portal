@@ -32,10 +32,10 @@ import com.liferay.portal.search.indexer.IndexerFactory;
 import com.liferay.portal.search.indexer.IndexerPropertyKeys;
 import com.liferay.portal.search.indexer.ModelIndexer;
 
+import java.util.Map;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-
-import java.util.Map;
 
 /**
  * @author Michael C. Han

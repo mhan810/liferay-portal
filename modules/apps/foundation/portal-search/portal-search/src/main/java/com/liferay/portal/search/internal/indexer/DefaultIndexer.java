@@ -78,6 +78,8 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.index.IndexStatusManager;
 import com.liferay.portal.search.indexer.ModelIndexer;
+import com.liferay.portal.search.indexer.PermissionAwareModelIndexer;
+import com.liferay.portal.search.indexer.SortableModelIndexer;
 
 import java.io.Serializable;
 
@@ -120,8 +122,8 @@ public class DefaultIndexer<T> implements Indexer<T> {
 		_indexSearchHelper = indexSearcherHelper;
 		_indexWriterHelper = indexWriterHelper;
 		_modelIndexer = modelIndexer;
-		_searchEngineId = searchEngineId;
 		_searchEngineHelper = searchEngineHelper;
+		_searchEngineId = searchEngineId;
 		_searchPermissionChecker = searchPermissionChecker;
 		_expandoColumnLocalService = expandoColumnLocalService;
 		_groupLocalService = groupLocalService;
@@ -346,13 +348,18 @@ public class DefaultIndexer<T> implements Indexer<T> {
 
 	@Override
 	public String getSortField(String orderByCol) {
-		String sortField = _modelIndexer.getSortField(orderByCol);
+		if (_modelIndexer instanceof SortableModelIndexer) {
+			SortableModelIndexer sortableModelIndexer =
+				(SortableModelIndexer)_modelIndexer;
 
-		if (_document.isDocumentSortableTextField(sortField)) {
-			return DocumentImpl.getSortableFieldName(sortField);
+			String sortField = sortableModelIndexer.getSortField(orderByCol);
+
+			if (_document.isDocumentSortableTextField(sortField)) {
+				return DocumentImpl.getSortableFieldName(sortField);
+			}
 		}
 
-		return sortField;
+		return orderByCol;
 	}
 
 	@Override
@@ -418,8 +425,14 @@ public class DefaultIndexer<T> implements Indexer<T> {
 			long entryClassPK, String actionId)
 		throws Exception {
 
-		_modelIndexer.hasPermission(
-			permissionChecker, entryClassName, entryClassPK, actionId);
+		if (_modelIndexer instanceof PermissionAwareModelIndexer) {
+			PermissionAwareModelIndexer permissionAwareModelIndexer =
+				(PermissionAwareModelIndexer)_modelIndexer;
+
+			return permissionAwareModelIndexer.hasPermission(
+				permissionChecker, entryClassName, entryClassPK, actionId);
+		}
+
 		return true;
 	}
 
@@ -466,14 +479,29 @@ public class DefaultIndexer<T> implements Indexer<T> {
 
 	@Override
 	public boolean isVisible(long classPK, int status) throws Exception {
-		return _modelIndexer.isVisible(classPK, status);
+		if (_modelIndexer instanceof PermissionAwareModelIndexer) {
+			PermissionAwareModelIndexer permissionAwareModelIndexer =
+				(PermissionAwareModelIndexer)_modelIndexer;
+
+			return permissionAwareModelIndexer.isVisible(classPK, status);
+		}
+
+		return true;
 	}
 
 	@Override
 	public boolean isVisibleRelatedEntry(long classPK, int status)
 		throws Exception {
 
-		return _modelIndexer.isVisibleRelatedEntry(classPK, status);
+		if (_modelIndexer instanceof PermissionAwareModelIndexer) {
+			PermissionAwareModelIndexer permissionAwareModelIndexer =
+				(PermissionAwareModelIndexer)_modelIndexer;
+
+			return permissionAwareModelIndexer.isVisibleRelatedEntry(
+				classPK, status);
+		}
+
+		return true;
 	}
 
 	@Override
@@ -610,7 +638,7 @@ public class DefaultIndexer<T> implements Indexer<T> {
 	@Override
 	public void reindex(T object) throws SearchException {
 		try {
-			if (_indexWriterHelper.isIndexReadOnly() || !isIndexerEnabled()) {
+			if (_indexStatusManager.isIndexReadOnly() || !isIndexerEnabled()) {
 				return;
 			}
 

@@ -48,6 +48,7 @@ import com.liferay.portal.search.indexer.IndexerHelper;
 import com.liferay.portal.search.indexer.ModelIndexer;
 
 import java.io.Serializable;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,38 +64,8 @@ import org.osgi.service.component.annotations.Reference;
 public class IndexerHelperImpl implements IndexerHelper {
 
 	@Override
-	public void addStatus(
-			BooleanFilter contextBooleanFilter, SearchContext searchContext)
-		throws Exception {
-
-		int[] statuses = GetterUtil.getIntegerValues(
-			searchContext.getAttribute(Field.STATUS), null);
-
-		if (ArrayUtil.isEmpty(statuses)) {
-			int status = GetterUtil.getInteger(
-				searchContext.getAttribute(Field.STATUS),
-				WorkflowConstants.STATUS_APPROVED);
-
-			statuses = new int[] {status};
-		}
-
-		if (!ArrayUtil.contains(statuses, WorkflowConstants.STATUS_ANY)) {
-			TermsFilter statusesTermsFilter = new TermsFilter(Field.STATUS);
-
-			statusesTermsFilter.addValues(ArrayUtil.toStringArray(statuses));
-
-			contextBooleanFilter.add(
-				statusesTermsFilter, BooleanClauseOccur.MUST);
-		}
-		else {
-			contextBooleanFilter.addTerm(
-				Field.STATUS, String.valueOf(WorkflowConstants.STATUS_IN_TRASH),
-				BooleanClauseOccur.MUST_NOT);
-		}
-	}
-
-	@Override
-	public void addSearchAssetCategoryIds(BooleanFilter queryBooleanFilter, SearchContext searchContext)
+	public void addSearchAssetCategoryIds(
+			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		MultiValueFacet multiValueFacet = new MultiValueFacet(searchContext);
@@ -107,7 +78,8 @@ public class IndexerHelperImpl implements IndexerHelper {
 	}
 
 	@Override
-	public Filter addSearchClassTypeIds(BooleanFilter contextBooleanFilter, SearchContext searchContext)
+	public Filter addSearchClassTypeIds(
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		long[] classTypeIds = searchContext.getClassTypeIds();
@@ -127,7 +99,8 @@ public class IndexerHelperImpl implements IndexerHelper {
 	}
 
 	@Override
-	public void addSearchEntryClassNames(BooleanFilter queryBooleanFilter, SearchContext searchContext)
+	public void addSearchEntryClassNames(
+			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		Facet facet = new AssetEntriesFacet(searchContext);
@@ -189,7 +162,9 @@ public class IndexerHelperImpl implements IndexerHelper {
 	}
 
 	@Override
-	public void addSearchFolderId(BooleanFilter queryBooleanFilter, SearchContext searchContext) {
+	public void addSearchFolderId(
+		BooleanFilter queryBooleanFilter, SearchContext searchContext) {
+
 		MultiValueFacet multiValueFacet = new MultiValueFacet(searchContext);
 
 		multiValueFacet.setFieldName(Field.TREE_PATH);
@@ -207,7 +182,8 @@ public class IndexerHelperImpl implements IndexerHelper {
 	}
 
 	@Override
-	public void addSearchGroupId(BooleanFilter queryBooleanFilter, SearchContext searchContext)
+	public void addSearchGroupId(
+			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		Facet facet = new ScopeFacet(searchContext);
@@ -240,7 +216,8 @@ public class IndexerHelperImpl implements IndexerHelper {
 	}
 
 	@Override
-	public void addSearchLayout(BooleanFilter queryBooleanFilter, SearchContext searchContext)
+	public void addSearchLayout(
+			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		MultiValueFacet multiValueFacet = new MultiValueFacet(searchContext);
@@ -253,8 +230,8 @@ public class IndexerHelperImpl implements IndexerHelper {
 
 	@Override
 	public Map<String, Query> addSearchLocalizedTerm(
-			BooleanQuery searchQuery, SearchContext searchContext,
-			String field, boolean like)
+			BooleanQuery searchQuery, SearchContext searchContext, String field,
+			boolean like)
 		throws Exception {
 
 		Map<String, Query> queries = new HashMap<>();
@@ -275,7 +252,9 @@ public class IndexerHelperImpl implements IndexerHelper {
 	}
 
 	@Override
-	public Query addSearchTerm(BooleanQuery searchQuery, SearchContext searchContext, String field, boolean like)
+	public Query addSearchTerm(
+			BooleanQuery searchQuery, SearchContext searchContext, String field,
+			boolean like)
 		throws Exception {
 
 		if (Validator.isNull(field)) {
@@ -326,9 +305,9 @@ public class IndexerHelperImpl implements IndexerHelper {
 		return query;
 	}
 
-
 	@Override
-	public void addSearchUserId(BooleanFilter queryBooleanFilter, SearchContext searchContext)
+	public void addSearchUserId(
+			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		MultiValueFacet multiValueFacet = new MultiValueFacet(searchContext);
@@ -347,26 +326,34 @@ public class IndexerHelperImpl implements IndexerHelper {
 	}
 
 	@Override
-	public String getExpandoFieldName(
-		SearchContext searchContext, ExpandoBridge expandoBridge,
-		String attributeName) {
+	public void addStatus(
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
+		throws Exception {
 
-		ExpandoColumn expandoColumn =
-			expandoColumnLocalService.getDefaultTableColumn(
-				expandoBridge.getCompanyId(), expandoBridge.getClassName(),
-				attributeName);
+		int[] statuses = GetterUtil.getIntegerValues(
+			searchContext.getAttribute(Field.STATUS), null);
 
-		String fieldName = expandoBridgeIndexer.encodeFieldName(
-			attributeName);
+		if (ArrayUtil.isEmpty(statuses)) {
+			int status = GetterUtil.getInteger(
+				searchContext.getAttribute(Field.STATUS),
+				WorkflowConstants.STATUS_APPROVED);
 
-		if (expandoColumn.getType() ==
-			ExpandoColumnConstants.STRING_LOCALIZED) {
-
-			fieldName = DocumentImpl.getLocalizedName(
-				searchContext.getLocale(), fieldName);
+			statuses = new int[] {status};
 		}
 
-		return fieldName;
+		if (!ArrayUtil.contains(statuses, WorkflowConstants.STATUS_ANY)) {
+			TermsFilter statusesTermsFilter = new TermsFilter(Field.STATUS);
+
+			statusesTermsFilter.addValues(ArrayUtil.toStringArray(statuses));
+
+			contextBooleanFilter.add(
+				statusesTermsFilter, BooleanClauseOccur.MUST);
+		}
+		else {
+			contextBooleanFilter.addTerm(
+				Field.STATUS, String.valueOf(WorkflowConstants.STATUS_IN_TRASH),
+				BooleanClauseOccur.MUST_NOT);
+		}
 	}
 
 	@Override
@@ -419,6 +406,28 @@ public class IndexerHelperImpl implements IndexerHelper {
 		indexWriterHelper.deleteDocument(
 			indexer.getSearchEngineId(), companyId, document.get(Field.UID),
 			indexer.isCommitImmediately());
+	}
+
+	@Override
+	public String getExpandoFieldName(
+		SearchContext searchContext, ExpandoBridge expandoBridge,
+		String attributeName) {
+
+		ExpandoColumn expandoColumn =
+			expandoColumnLocalService.getDefaultTableColumn(
+				expandoBridge.getCompanyId(), expandoBridge.getClassName(),
+				attributeName);
+
+		String fieldName = expandoBridgeIndexer.encodeFieldName(attributeName);
+
+		if (expandoColumn.getType() ==
+				ExpandoColumnConstants.STRING_LOCALIZED) {
+
+			fieldName = DocumentImpl.getLocalizedName(
+				searchContext.getLocale(), fieldName);
+		}
+
+		return fieldName;
 	}
 
 	@Reference

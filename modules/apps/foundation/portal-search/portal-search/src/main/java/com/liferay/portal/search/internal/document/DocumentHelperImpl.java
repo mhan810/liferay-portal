@@ -19,10 +19,10 @@ import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
-import com.liferay.expando.kernel.util.ExpandoBridgeIndexerUtil;
+import com.liferay.asset.kernel.service.AssetCategoryLocalService;
+import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.asset.kernel.service.AssetTagLocalService;
+import com.liferay.expando.kernel.util.ExpandoBridgeIndexer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -45,7 +45,7 @@ import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -57,10 +57,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.document.DocumentHelper;
 import com.liferay.ratings.kernel.model.RatingsStats;
-import com.liferay.ratings.kernel.service.RatingsStatsLocalServiceUtil;
+import com.liferay.ratings.kernel.service.RatingsStatsLocalService;
 import com.liferay.trash.kernel.model.TrashEntry;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,6 +67,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Michael C. Han
  */
@@ -76,21 +77,14 @@ import java.util.Map;
 public class DocumentHelperImpl implements DocumentHelper {
 
 	@Override
-	public void addAttachmentOwnerKey(
-		Document document, long classNameId, long classPK) {
-
-		document.addKeyword(Field.CLASS_NAME_ID, String.valueOf(classNameId));
-		document.addKeyword(Field.CLASS_PK, String.valueOf(classPK));
+	public void addAssetCategoryTitles(
+		Document document, String field, List<AssetCategory> assetCategories) {
 	}
 
 	@Override
-	public void addEntryKey(Document document, String className, long classPK) {
-		document.addKeyword(Field.ENTRY_CLASS_NAME, className);
-		document.addKeyword(Field.ENTRY_CLASS_PK, String.valueOf(classPK));
-	}
+	public void addAssetFields(
+		Document document, String className, long classPK) {
 
-	@Override
-	public void addAssetFields(Document document, String className, long classPK) {
 		AssetRendererFactory<?> assetRendererFactory =
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
 				className);
@@ -101,7 +95,7 @@ public class DocumentHelperImpl implements DocumentHelper {
 			return;
 		}
 
-		AssetEntry assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
+		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(
 			className, classPK);
 
 		if (assetEntry == null) {
@@ -133,7 +127,7 @@ public class DocumentHelperImpl implements DocumentHelper {
 			document.addDate(Field.PUBLISH_DATE, new Date(0));
 		}
 
-		RatingsStats ratingsStats = RatingsStatsLocalServiceUtil.fetchStats(
+		RatingsStats ratingsStats = ratingsStatsLocalService.fetchStats(
 			className, classPK);
 
 		if (ratingsStats != null) {
@@ -149,6 +143,95 @@ public class DocumentHelperImpl implements DocumentHelper {
 			"localized_title",
 			populateMap(assetEntry, assetEntry.getTitleMap()), true, true);
 		document.addKeyword("visible", assetEntry.isVisible());
+	}
+
+	@Override
+	public void addAssetTagNames(
+			BooleanFilter queryBooleanFilter, SearchContext searchContext)
+		throws Exception {
+	}
+
+	@Override
+	public void addAttachmentOwnerKey(
+		Document document, long classNameId, long classPK) {
+
+		document.addKeyword(Field.CLASS_NAME_ID, String.valueOf(classNameId));
+		document.addKeyword(Field.CLASS_PK, String.valueOf(classPK));
+	}
+
+	@Override
+	public void addEntryKey(Document document, String className, long classPK) {
+		document.addKeyword(Field.ENTRY_CLASS_NAME, className);
+		document.addKeyword(Field.ENTRY_CLASS_PK, String.valueOf(classPK));
+	}
+
+	@Override
+	public void addLocalizedField(
+		Document document, String field, Locale siteDefaultLocale,
+		Map<Locale, String> map) {
+
+		for (Map.Entry<Locale, String> entry : map.entrySet()) {
+			Locale locale = entry.getKey();
+
+			if (locale.equals(siteDefaultLocale)) {
+				document.addText(field, entry.getValue());
+			}
+
+			String languageId = LocaleUtil.toLanguageId(locale);
+
+			document.addText(
+				LocalizationUtil.getLocalizedName(field, languageId),
+				entry.getValue());
+		}
+	}
+
+	@Override
+	public void addSearchAssetCategoryTitles(
+		Document document, String field, List<AssetCategory> assetCategories) {
+
+		Map<Locale, List<String>> assetCategoryTitles = new HashMap<>();
+
+		Locale defaultLocale = LocaleUtil.getDefault();
+
+		for (AssetCategory assetCategory : assetCategories) {
+			Map<Locale, String> titleMap = assetCategory.getTitleMap();
+
+			for (Map.Entry<Locale, String> entry : titleMap.entrySet()) {
+				Locale locale = entry.getKey();
+				String title = entry.getValue();
+
+				if (Validator.isNull(title)) {
+					continue;
+				}
+
+				List<String> titles = assetCategoryTitles.get(locale);
+
+				if (titles == null) {
+					titles = new ArrayList<>();
+
+					assetCategoryTitles.put(locale, titles);
+				}
+
+				titles.add(StringUtil.toLowerCase(title));
+			}
+		}
+
+		for (Map.Entry<Locale, List<String>> entry :
+				assetCategoryTitles.entrySet()) {
+
+			Locale locale = entry.getKey();
+			List<String> titles = entry.getValue();
+
+			String[] titlesArray = titles.toArray(new String[titles.size()]);
+
+			if (locale.equals(defaultLocale)) {
+				document.addText(field, titlesArray);
+			}
+
+			document.addText(
+				field.concat(StringPool.UNDERLINE).concat(locale.toString()),
+				titlesArray);
+		}
 	}
 
 	@Override
@@ -172,7 +255,7 @@ public class DocumentHelperImpl implements DocumentHelper {
 
 			if (serviceContext != null) {
 				try {
-					User user = UserLocalServiceUtil.getUser(
+					User user = userLocalService.getUser(
 						serviceContext.getUserId());
 
 					document.addKeyword(
@@ -228,31 +311,20 @@ public class DocumentHelperImpl implements DocumentHelper {
 	}
 
 	@Override
-	public void addLocalizedField(Document document, String field, Locale siteDefaultLocale, Map<Locale, String> map) {
-		for (Map.Entry<Locale, String> entry : map.entrySet()) {
-			Locale locale = entry.getKey();
-
-			if (locale.equals(siteDefaultLocale)) {
-				document.addText(field, entry.getValue());
-			}
-
-			String languageId = LocaleUtil.toLanguageId(locale);
-
-			document.addText(
-				LocalizationUtil.getLocalizedName(field, languageId),
-				entry.getValue());
-		}
+	public Summary createSummary(Document document) {
+		return createSummary(document, Field.TITLE, Field.CONTENT);
 	}
 
 	@Override
-	public void addAssetCategoryTitles(Document document, String field, List<AssetCategory> assetCategories) {
+	public Summary createSummary(
+		Document document, String titleField, String contentField) {
 
-	}
+		String prefix = Field.SNIPPET + StringPool.UNDERLINE;
 
-	@Override
-	public void addAssetTagNames(BooleanFilter queryBooleanFilter, SearchContext searchContext)
-		throws Exception {
+		String title = document.get(prefix + titleField, titleField);
+		String content = document.get(prefix + contentField, contentField);
 
+		return new Summary(title, content);
 	}
 
 	@Override
@@ -267,7 +339,7 @@ public class DocumentHelperImpl implements DocumentHelper {
 		String portletId, BaseModel<?> baseModel,
 		BaseModel<?> workflowedBaseModel) {
 
-		Document document = (Document) this.document.clone();
+		Document document = (Document)this.document.clone();
 
 		String className = baseModel.getModelClassName();
 
@@ -284,14 +356,15 @@ public class DocumentHelperImpl implements DocumentHelper {
 			classPK = (Long)baseModel.getPrimaryKeyObj();
 		}
 
-		com.liferay.portal.kernel.search.DocumentHelper documentHelper = new com.liferay.portal.kernel.search.DocumentHelper(document);
+		com.liferay.portal.kernel.search.DocumentHelper documentHelper =
+			new com.liferay.portal.kernel.search.DocumentHelper(document);
 
 		documentHelper.setEntryKey(className, classPK);
 
 		document.addUID(className, classPK);
 
 		List<AssetCategory> assetCategories =
-			AssetCategoryLocalServiceUtil.getCategories(className, classPK);
+			assetCategoryLocalService.getCategories(className, classPK);
 
 		long[] assetCategoryIds = ListUtil.toLongArray(
 			assetCategories, AssetCategory.CATEGORY_ID_ACCESSOR);
@@ -303,7 +376,7 @@ public class DocumentHelperImpl implements DocumentHelper {
 
 		long classNameId = PortalUtil.getClassNameId(className);
 
-		List<AssetTag> assetTags = AssetTagLocalServiceUtil.getTags(
+		List<AssetTag> assetTags = assetTagLocalService.getTags(
 			classNameId, classPK);
 
 		String[] assetTagNames = ListUtil.toArray(
@@ -370,7 +443,7 @@ public class DocumentHelperImpl implements DocumentHelper {
 
 		addAssetFields(document, className, classPK);
 
-		ExpandoBridgeIndexerUtil.addAttributes(
+		expandoBridgeIndexer.addAttributes(
 			document, baseModel.getExpandoBridge());
 
 		return document;
@@ -402,74 +475,6 @@ public class DocumentHelperImpl implements DocumentHelper {
 		return null;
 	}
 
-
-
-	@Override
-	public void addSearchAssetCategoryTitles(
-		Document document, String field, List<AssetCategory> assetCategories) {
-
-		Map<Locale, List<String>> assetCategoryTitles = new HashMap<>();
-
-		Locale defaultLocale = LocaleUtil.getDefault();
-
-		for (AssetCategory assetCategory : assetCategories) {
-			Map<Locale, String> titleMap = assetCategory.getTitleMap();
-
-			for (Map.Entry<Locale, String> entry : titleMap.entrySet()) {
-				Locale locale = entry.getKey();
-				String title = entry.getValue();
-
-				if (Validator.isNull(title)) {
-					continue;
-				}
-
-				List<String> titles = assetCategoryTitles.get(locale);
-
-				if (titles == null) {
-					titles = new ArrayList<>();
-
-					assetCategoryTitles.put(locale, titles);
-				}
-
-				titles.add(StringUtil.toLowerCase(title));
-			}
-		}
-
-		for (Map.Entry<Locale, List<String>> entry :
-			assetCategoryTitles.entrySet()) {
-
-			Locale locale = entry.getKey();
-			List<String> titles = entry.getValue();
-
-			String[] titlesArray = titles.toArray(new String[titles.size()]);
-
-			if (locale.equals(defaultLocale)) {
-				document.addText(field, titlesArray);
-			}
-
-			document.addText(
-				field.concat(StringPool.UNDERLINE).concat(locale.toString()),
-				titlesArray);
-		}
-	}
-
-	@Override
-	public Summary createSummary(Document document) {
-		return createSummary(document, Field.TITLE, Field.CONTENT);
-	}
-
-	@Override
-	public Summary createSummary(
-		Document document, String titleField, String contentField) {
-
-		String prefix = Field.SNIPPET + StringPool.UNDERLINE;
-
-		String title = document.get(prefix + titleField, titleField);
-		String content = document.get(prefix + contentField, contentField);
-
-		return new Summary(title, content);
-	}
-
 	@Override
 	public Map<Locale, String> populateMap(
 		AssetEntry assetEntry, Map<Locale, String> map) {
@@ -478,7 +483,7 @@ public class DocumentHelperImpl implements DocumentHelper {
 			LocaleUtil.fromLanguageId(assetEntry.getDefaultLanguageId()));
 
 		for (Locale availableLocale : LanguageUtil.getAvailableLocales(
-			assetEntry.getGroupId())) {
+				assetEntry.getGroupId())) {
 
 			if (!map.containsKey(availableLocale) ||
 				Validator.isNull(map.get(availableLocale))) {
@@ -521,10 +526,28 @@ public class DocumentHelperImpl implements DocumentHelper {
 		return group.getGroupId();
 	}
 
+	@Reference
+	protected AssetCategoryLocalService assetCategoryLocalService;
+
+	@Reference
+	protected AssetEntryLocalService assetEntryLocalService;
+
+	@Reference
+	protected AssetTagLocalService assetTagLocalService;
+
 	protected Document document = new DocumentImpl();
 
 	@Reference
+	protected ExpandoBridgeIndexer expandoBridgeIndexer;
+
+	@Reference
 	protected GroupLocalService groupLocalService;
+
+	@Reference
+	protected RatingsStatsLocalService ratingsStatsLocalService;
+
+	@Reference
+	protected UserLocalService userLocalService;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DocumentHelperImpl.class);
