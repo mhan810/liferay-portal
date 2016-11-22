@@ -51,6 +51,19 @@ public class UserImportMessageListener
 
 		int interval = ldapImportConfiguration.importInterval();
 
+		List<Company> companies = _companyLocalService.getCompanies(false);
+
+		for (Company company : companies) {
+			long companyId = company.getCompanyId();
+
+			ldapImportConfiguration =
+				_ldapImportConfigurationProvider.getConfiguration(companyId);
+
+			if (ldapImportConfiguration.importInterval() < interval) {
+				interval = ldapImportConfiguration.importInterval();
+			}
+		}
+
 		schedulerEntryImpl.setTrigger(
 			TriggerFactoryUtil.createTrigger(
 				getEventListenerClass(), getEventListenerClass(), interval,
@@ -68,11 +81,6 @@ public class UserImportMessageListener
 
 	@Override
 	protected void doReceive(Message message) throws Exception {
-		long time =
-			System.currentTimeMillis() - _ldapUserImporter.getLastImportTime();
-
-		time = Math.round(time / 60000.0);
-
 		List<Company> companies = _companyLocalService.getCompanies(false);
 
 		for (Company company : companies) {
@@ -84,6 +92,12 @@ public class UserImportMessageListener
 			if (!ldapImportConfiguration.importEnabled()) {
 				continue;
 			}
+
+			long time =
+				System.currentTimeMillis() -
+					_ldapUserImporter.getLastImportTime(companyId);
+
+			time = Math.round(time / 60000.0);
 
 			if (time >= ldapImportConfiguration.importInterval()) {
 				_ldapUserImporter.importUsers(companyId);

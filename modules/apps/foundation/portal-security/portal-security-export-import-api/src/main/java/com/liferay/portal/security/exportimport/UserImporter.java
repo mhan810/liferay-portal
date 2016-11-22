@@ -14,14 +14,23 @@
 
 package com.liferay.portal.security.exportimport;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.model.User;
 
 /**
  * @author Michael C. Han
  */
+@ProviderType
 public interface UserImporter {
 
+	/**
+	 * @deprecated As of 1.1.0, with no direct replacement
+	 */
+	@Deprecated
 	public long getLastImportTime() throws Exception;
+
+	public long getLastImportTime(long companyId) throws Exception;
 
 	public User importUser(
 			long ldapServerId, long companyId, String emailAddress,
