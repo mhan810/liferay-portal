@@ -209,6 +209,8 @@ public class BindConfigurationMVCActionCommand implements MVCActionCommand {
 					ConfigurationModel.PROPERTY_VALUE_COMPANY_ID_DEFAULT);
 			}
 
+			// LPS-69521
+
 			if (configurationModel.isFactory()) {
 				String pid = configuration.getPid();
 
