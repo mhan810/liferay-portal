@@ -42,6 +42,8 @@ import org.osgi.service.metatype.ObjectClassDefinition;
  */
 public class ConfigurationModel implements ExtendedObjectClassDefinition {
 
+	public static final String CONFIG_FILE_EXTENSION = ".config";
+
 	public static final String FELIX_FILEINSTALL_FILENAME =
 		"felix.fileinstall.filename";
 
