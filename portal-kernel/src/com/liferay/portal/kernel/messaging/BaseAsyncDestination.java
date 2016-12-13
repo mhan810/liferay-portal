@@ -199,10 +199,14 @@ public abstract class BaseAsyncDestination extends BaseDestination {
 
 	public void setWorkersCoreSize(int workersCoreSize) {
 		_workersCoreSize = workersCoreSize;
+
+		_threadPoolExecutor.adjustPoolSize(workersCoreSize, _workersMaxSize);
 	}
 
 	public void setWorkersMaxSize(int workersMaxSize) {
 		_workersMaxSize = workersMaxSize;
+
+		_threadPoolExecutor.adjustPoolSize(_workersCoreSize, workersMaxSize);
 	}
 
 	protected RejectedExecutionHandler createRejectionExecutionHandler() {
