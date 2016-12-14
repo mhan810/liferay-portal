@@ -553,6 +553,13 @@ public class BackgroundTaskManagerImpl implements BackgroundTaskManager {
 	}
 
 	@Override
+	public void stopBackgroundTask(long backgroundTaskId)
+		throws PortalException {
+
+		_backgroundTaskLocalService.stopBackgroundTask(backgroundTaskId);
+	}
+
+	@Override
 	public void triggerBackgroundTask(long backgroundTaskId) {
 		_backgroundTaskLocalService.triggerBackgroundTask(backgroundTaskId);
 	}
