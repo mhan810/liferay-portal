@@ -336,6 +336,13 @@ public class BackgroundTaskLocalServiceImpl
 	}
 
 	@Override
+	public BackgroundTask fetchBackgroundTaskWithoutCaching(
+		long backgroundTaskId) {
+
+		return backgroundTaskFinder.findById(backgroundTaskId).orElse(null);
+	}
+
+	@Override
 	public BackgroundTask fetchFirstBackgroundTask(
 		long groupId, String taskExecutorClassName, boolean completed,
 		OrderByComparator<BackgroundTask> orderByComparator) {
@@ -616,6 +623,25 @@ public class BackgroundTaskLocalServiceImpl
 			BackgroundTaskConstants.BACKGROUND_TASK_ID, backgroundTaskId);
 
 		MessageBusUtil.sendMessage(DestinationNames.BACKGROUND_TASK, message);
+	}
+
+	@Clusterable(onMaster = true)
+	@Override
+	public void stopBackgroundTask(long backgroundTaskId)
+		throws PortalException {
+
+		BackgroundTask backgroundTask =
+			backgroundTaskPersistence.fetchByPrimaryKey(backgroundTaskId);
+
+		if ((backgroundTask == null) || !backgroundTask.isInProgress() ||
+			backgroundTask.isInterrupted()) {
+
+			return;
+		}
+
+		backgroundTask.setStatus(BackgroundTaskConstants.STATUS_INTERRUPTED);
+
+		backgroundTaskPersistence.update(backgroundTask);
 	}
 
 	@Clusterable(onMaster = true)
