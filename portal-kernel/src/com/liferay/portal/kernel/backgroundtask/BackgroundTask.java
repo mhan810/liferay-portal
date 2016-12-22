@@ -79,6 +79,8 @@ public interface BackgroundTask {
 
 	public boolean isInProgress();
 
+	public boolean isInterrupted();
+
 	public void setTaskContextMap(Map<String, Serializable> taskContextMap);
 
 }
