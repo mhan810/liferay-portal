@@ -14,12 +14,15 @@
 
 package com.liferay.portal.kernel.backgroundtask;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.StringPool;
 
 /**
  * @author Daniel Kocsis
  * @author Eduardo Garcia
  */
+@ProviderType
 public class BackgroundTaskConstants {
 
 	public static final String BACKGROUND_TASK_ID = "backgroundTaskId";
