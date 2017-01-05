@@ -2449,7 +2449,7 @@ Export-Package: com.liferay.ibm.icu;version="4.0.1",com.liferay.ibm.ic
  ;uses:="com.liferay.portal.kernel.exception",com.liferay.portal.kerne
  l.audit;version="7.0.0";uses:="com.liferay.portal.kernel.exception,co
  m.liferay.portal.kernel.json,com.liferay.portal.kernel.messaging.prox
- y",com.liferay.portal.kernel.backgroundtask;version="7.0.0";uses:="co
+ y",com.liferay.portal.kernel.backgroundtask;version="7.1.0";uses:="co
  m.liferay.portal.kernel.backgroundtask.display,com.liferay.portal.ker
  nel.exception,com.liferay.portal.kernel.lock,com.liferay.portal.kerne
  l.messaging,com.liferay.portal.kernel.model,com.liferay.portal.kernel
