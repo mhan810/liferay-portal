@@ -1276,6 +1276,10 @@ public class LocalizationImpl implements Localization {
 	private String _getRootAttributeValue(
 		String xml, String name, String defaultValue) {
 
+		if (!Validator.isXml(xml)) {
+			return defaultValue;
+		}
+
 		String value = null;
 
 		XMLStreamReader xmlStreamReader = null;
