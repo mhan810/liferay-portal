@@ -126,6 +126,10 @@ public interface BackgroundTaskLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public BackgroundTask fetchBackgroundTask(long backgroundTaskId);
 
+	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
+	public BackgroundTask fetchBackgroundTaskWithoutCaching(
+		long backgroundTaskId);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public BackgroundTask fetchFirstBackgroundTask(
 		java.lang.String taskExecutorClassName, int status);
@@ -397,6 +401,10 @@ public interface BackgroundTaskLocalService extends BaseLocalService,
 
 	@Clusterable(onMaster = true)
 	public void resumeBackgroundTask(long backgroundTaskId);
+
+	@Clusterable(onMaster = true)
+	public void stopBackgroundTask(long backgroundTaskId)
+		throws PortalException;
 
 	@Clusterable(onMaster = true)
 	public void triggerBackgroundTask(long backgroundTaskId);

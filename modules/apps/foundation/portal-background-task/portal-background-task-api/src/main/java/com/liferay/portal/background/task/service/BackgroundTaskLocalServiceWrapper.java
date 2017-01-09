@@ -137,6 +137,12 @@ public class BackgroundTaskLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.portal.background.task.model.BackgroundTask fetchBackgroundTaskWithoutCaching(
+		long backgroundTaskId) {
+		return _backgroundTaskLocalService.fetchBackgroundTaskWithoutCaching(backgroundTaskId);
+	}
+
+	@Override
 	public com.liferay.portal.background.task.model.BackgroundTask fetchFirstBackgroundTask(
 		java.lang.String taskExecutorClassName, int status) {
 		return _backgroundTaskLocalService.fetchFirstBackgroundTask(taskExecutorClassName,
@@ -573,6 +579,12 @@ public class BackgroundTaskLocalServiceWrapper
 	@Override
 	public void resumeBackgroundTask(long backgroundTaskId) {
 		_backgroundTaskLocalService.resumeBackgroundTask(backgroundTaskId);
+	}
+
+	@Override
+	public void stopBackgroundTask(long backgroundTaskId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_backgroundTaskLocalService.stopBackgroundTask(backgroundTaskId);
 	}
 
 	@Override

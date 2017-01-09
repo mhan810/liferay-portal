@@ -139,6 +139,11 @@ public class BackgroundTaskLocalServiceUtil {
 		return getService().fetchBackgroundTask(backgroundTaskId);
 	}
 
+	public static com.liferay.portal.background.task.model.BackgroundTask fetchBackgroundTaskWithoutCaching(
+		long backgroundTaskId) {
+		return getService().fetchBackgroundTaskWithoutCaching(backgroundTaskId);
+	}
+
 	public static com.liferay.portal.background.task.model.BackgroundTask fetchFirstBackgroundTask(
 		java.lang.String taskExecutorClassName, int status) {
 		return getService()
@@ -541,6 +546,11 @@ public class BackgroundTaskLocalServiceUtil {
 
 	public static void resumeBackgroundTask(long backgroundTaskId) {
 		getService().resumeBackgroundTask(backgroundTaskId);
+	}
+
+	public static void stopBackgroundTask(long backgroundTaskId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().stopBackgroundTask(backgroundTaskId);
 	}
 
 	public static void triggerBackgroundTask(long backgroundTaskId) {
