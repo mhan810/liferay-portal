@@ -11,17 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.liferay.portal.background.task.exception;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 
 /**
  * @author Brian Wing Shun Chan
  */
 @ProviderType
-public class BackgroundTaskInterruptionException extends PortalException {
+public class BackgroundTaskInterruptionException extends SystemException {
 
 	public BackgroundTaskInterruptionException() {
 	}
