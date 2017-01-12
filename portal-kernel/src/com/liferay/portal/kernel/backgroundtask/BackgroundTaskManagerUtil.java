@@ -364,6 +364,10 @@ public class BackgroundTaskManagerUtil {
 		_backgroundTaskManager.stopBackgroundTask(backgroundTaskId);
 	}
 
+	public static void stopCurrentBackgrounTask() {
+		_backgroundTaskManager.stopCurrentBackgroundTask();
+	}
+
 	public static void triggerBackgroundTask(long backgroundTaskId) {
 		_backgroundTaskManager.triggerBackgroundTask(backgroundTaskId);
 	}

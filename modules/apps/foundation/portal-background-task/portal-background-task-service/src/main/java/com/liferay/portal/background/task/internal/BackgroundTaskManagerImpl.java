@@ -17,6 +17,7 @@ package com.liferay.portal.background.task.internal;
 import com.liferay.background.task.kernel.util.comparator.BackgroundTaskCompletionDateComparator;
 import com.liferay.background.task.kernel.util.comparator.BackgroundTaskCreateDateComparator;
 import com.liferay.background.task.kernel.util.comparator.BackgroundTaskNameComparator;
+import com.liferay.portal.background.task.exception.BackgroundTaskInterruptionException;
 import com.liferay.portal.background.task.internal.messaging.BackgroundTaskMessageListener;
 import com.liferay.portal.background.task.internal.messaging.BackgroundTaskQueuingMessageListener;
 import com.liferay.portal.background.task.internal.messaging.RemoveOnCompletionBackgroundTaskStatusMessageListener;
@@ -25,6 +26,7 @@ import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutorRegistry;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatusRegistry;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskThreadLocal;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskThreadLocalManager;
 import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -557,6 +559,21 @@ public class BackgroundTaskManagerImpl implements BackgroundTaskManager {
 		throws PortalException {
 
 		_backgroundTaskLocalService.stopBackgroundTask(backgroundTaskId);
+	}
+
+	@Override
+	public void stopCurrentBackgroundTask() {
+		if (!BackgroundTaskThreadLocal.hasBackgroundTask()) {
+			return;
+		}
+
+		com.liferay.portal.background.task.model.BackgroundTask backgroundTask =
+			_backgroundTaskLocalService.fetchBackgroundTaskWithoutCaching(
+				BackgroundTaskThreadLocal.getBackgroundTaskId());
+
+		if (backgroundTask.isInterrupted() && !backgroundTask.isCompleted()) {
+			throw new BackgroundTaskInterruptionException();
+		}
 	}
 
 	@Override
