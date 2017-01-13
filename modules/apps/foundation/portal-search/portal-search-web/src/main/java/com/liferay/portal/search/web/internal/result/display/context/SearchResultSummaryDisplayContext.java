@@ -29,6 +29,10 @@ public class SearchResultSummaryDisplayContext implements Serializable {
 		return _assetEntryUserId;
 	}
 
+	public String getAssetIcon() {
+		return _assetIcon;
+	}
+
 	public String getAssetRendererURLDownload() {
 		return _assetRendererURLDownload;
 	}
@@ -43,6 +47,18 @@ public class SearchResultSummaryDisplayContext implements Serializable {
 
 	public String getContent() {
 		return _content;
+	}
+
+	public String getCoverImageURL() {
+		return _coverImageURL;
+	}
+
+	public String getCreationDateString() {
+		return _creationDateString;
+	}
+
+	public String getCreator() {
+		return _creator;
 	}
 
 	public List<SearchResultFieldDisplayContext>
@@ -75,6 +91,10 @@ public class SearchResultSummaryDisplayContext implements Serializable {
 		return _modelResource;
 	}
 
+	public String getPathThemeImages() {
+		return _pathThemeImages;
+	}
+
 	public PortletURL getPortletURL() {
 		return _portletURL;
 	}
@@ -91,12 +111,28 @@ public class SearchResultSummaryDisplayContext implements Serializable {
 		return _assetCategoriesOrTagsVisible;
 	}
 
+	public boolean isAssetIconVisible() {
+		return _assetIconVisible;
+	}
+
 	public boolean isAssetRendererURLDownloadVisible() {
 		return _assetRendererURLDownloadVisible;
 	}
 
 	public boolean isContentVisible() {
 		return _contentVisible;
+	}
+
+	public boolean isCoverImageVisible() {
+		return _coverImageVisible;
+	}
+
+	public boolean isCreationDateVisible() {
+		return _creationDateVisible;
+	}
+
+	public boolean isCreatorVisible() {
+		return _creatorVisible;
 	}
 
 	public boolean isDocumentFormVisible() {
@@ -119,6 +155,14 @@ public class SearchResultSummaryDisplayContext implements Serializable {
 
 	public void setAssetEntryUserId(long assetEntryUserId) {
 		_assetEntryUserId = assetEntryUserId;
+	}
+
+	public void setAssetIcon(String assetIcon) {
+		_assetIcon = assetIcon;
+	}
+
+	public void setAssetIconVisible(boolean assetIconVisible) {
+		_assetIconVisible = assetIconVisible;
 	}
 
 	public void setAssetRendererURLDownload(String assetRendererURLDownload) {
@@ -145,6 +189,30 @@ public class SearchResultSummaryDisplayContext implements Serializable {
 
 	public void setContentVisible(boolean contentVisible) {
 		_contentVisible = contentVisible;
+	}
+
+	public void setCoverImageURL(String coverImageURL) {
+		_coverImageURL = coverImageURL;
+	}
+
+	public void setCoverImageVisible(boolean coverImageVisible) {
+		_coverImageVisible = coverImageVisible;
+	}
+
+	public void setCreationDateString(String creationDateString) {
+		_creationDateString = creationDateString;
+	}
+
+	public void setCreationDateVisible(boolean creationDateVisible) {
+		_creationDateVisible = creationDateVisible;
+	}
+
+	public void setCreator(String writtenBy) {
+		_creator = writtenBy;
+	}
+
+	public void setCreatorVisible(boolean writtenByVisible) {
+		_creatorVisible = writtenByVisible;
 	}
 
 	public void setDocumentFormFieldDisplayContexts(
@@ -186,6 +254,10 @@ public class SearchResultSummaryDisplayContext implements Serializable {
 		_modelResource = modelResource;
 	}
 
+	public void setPathThemeImages(String pathThemeImages) {
+		_pathThemeImages = pathThemeImages;
+	}
+
 	public void setPortletURL(PortletURL portletURL) {
 		_portletURL = portletURL;
 	}
@@ -204,12 +276,20 @@ public class SearchResultSummaryDisplayContext implements Serializable {
 
 	private boolean _assetCategoriesOrTagsVisible;
 	private long _assetEntryUserId;
+	private String _assetIcon;
+	private boolean _assetIconVisible;
 	private String _assetRendererURLDownload;
 	private boolean _assetRendererURLDownloadVisible;
 	private String _className;
 	private long _classPK;
 	private String _content;
 	private boolean _contentVisible;
+	private String _coverImageURL;
+	private boolean _coverImageVisible;
+	private String _creationDateString;
+	private boolean _creationDateVisible;
+	private String _creator;
+	private boolean _creatorVisible;
 	private List<SearchResultFieldDisplayContext>
 		_documentFormFieldDisplayContexts;
 	private boolean _documentFormVisible;
@@ -220,6 +300,7 @@ public class SearchResultSummaryDisplayContext implements Serializable {
 	private String _localeReminder;
 	private boolean _localeReminderVisible;
 	private String _modelResource;
+	private String _pathThemeImages;
 	private PortletURL _portletURL;
 	private String _title;
 	private boolean _userPortraitVisible;
