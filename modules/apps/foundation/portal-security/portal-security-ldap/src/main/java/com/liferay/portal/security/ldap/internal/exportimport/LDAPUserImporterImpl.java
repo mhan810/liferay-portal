@@ -1169,6 +1169,12 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 					contactExpandoMappings, null, ldapUserIgnoreAttributes);
 
 				if (user != null) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(
+							"Adding user " + user + " to user group " +
+								userGroupId);
+					}
+
 					newUserIds.add(user.getUserId());
 				}
 			}
@@ -1200,10 +1206,6 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 				_userLocalService.deleteUserGroupUser(
 					userGroupId, user.getUserId());
 			}
-		}
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("Adding users to user group " + userGroupId);
 		}
 
 		_userLocalService.addUserGroupUsers(
