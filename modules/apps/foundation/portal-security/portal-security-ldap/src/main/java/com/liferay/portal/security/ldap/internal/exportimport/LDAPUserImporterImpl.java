@@ -1193,6 +1193,8 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		List<User> userGroupUsers = _userLocalService.getUserGroupUsers(
 			userGroupId);
 
+		Set<Long> deletedUserIds = new LinkedHashSet<>();
+
 		for (User user : userGroupUsers) {
 			if ((ldapServerId == user.getLdapServerId()) &&
 				!newUserIds.contains(user.getUserId())) {
@@ -1203,13 +1205,15 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 							userGroupId);
 				}
 
-				_userLocalService.deleteUserGroupUser(
-					userGroupId, user.getUserId());
+				deletedUserIds.add(user.getUserId());
 			}
 		}
 
 		_userLocalService.addUserGroupUsers(
 			userGroupId, ArrayUtil.toLongArray(newUserIds));
+
+		_userLocalService.deleteUserGroupUsers(
+			userGroupId, ArrayUtil.toLongArray(deletedUserIds));
 	}
 
 	protected void populateExpandoAttributes(
