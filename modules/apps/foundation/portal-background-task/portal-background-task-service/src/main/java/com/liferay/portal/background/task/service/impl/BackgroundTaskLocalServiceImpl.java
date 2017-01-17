@@ -175,8 +175,8 @@ public class BackgroundTaskLocalServiceImpl
 		long backgroundTaskId, Map<String, Serializable> taskContextMap,
 		int status, String statusMessage, ServiceContext serviceContext) {
 
-		BackgroundTask backgroundTask =
-			backgroundTaskPersistence.fetchByPrimaryKey(backgroundTaskId);
+		BackgroundTask backgroundTask = fetchBackgroundTaskWithoutCaching(
+			backgroundTaskId);
 
 		if (backgroundTask == null) {
 			return null;
@@ -653,8 +653,8 @@ public class BackgroundTaskLocalServiceImpl
 	public void stopBackgroundTask(long backgroundTaskId)
 		throws PortalException {
 
-		BackgroundTask backgroundTask =
-			backgroundTaskPersistence.fetchByPrimaryKey(backgroundTaskId);
+		BackgroundTask backgroundTask = fetchBackgroundTaskWithoutCaching(
+			backgroundTaskId);
 
 		if ((backgroundTask == null) || !backgroundTask.isInProgress() ||
 			backgroundTask.isInterrupted()) {
