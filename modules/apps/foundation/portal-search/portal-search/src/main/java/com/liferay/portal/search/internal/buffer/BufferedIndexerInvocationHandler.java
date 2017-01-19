@@ -216,7 +216,7 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
 					"Skipping indexer request buffer because index for " +
-						className + " is read " + "only");
+						className + " is read only");
 			}
 
 			return;
