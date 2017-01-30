@@ -70,8 +70,8 @@ public class ScriptingLanguagesTaskAssignmentSelector
 		Class<?> clazz = getClass();
 
 		ClassLoader classLoader = clazz.getClassLoader();
-		
-		Map<String, Object> results = new HashMap<String, Object>();
+
+		Map<String, Object> results = new HashMap<>();
 
 		try {
 			currentThread.setContextClassLoader(classLoader);
@@ -79,7 +79,8 @@ public class ScriptingLanguagesTaskAssignmentSelector
 			results = _scripting.eval(
 				null, inputObjects, _outputNames, assigneeScriptingLanguage,
 				assigneeScript);
-		} finally {
+		}
+		finally {
 			currentThread.setContextClassLoader(contextClassLoader);
 		}
 
