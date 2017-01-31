@@ -143,7 +143,7 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 					classPK = resourcedModel.getResourcePrimKey();
 				}
 			}
-			catch (Exception e) {
+			catch (NoSuchModelException nsme) {
 				if (_log.isDebugEnabled()) {
 					_log.debug(
 						"Unable to get resource primary key for class " +
