@@ -1,0 +1,24 @@
+import com.liferay.gradle.plugins.patcher.PatchTask
+
+apply plugin: "com.liferay.patcher"
+
+task patch(type: PatchTask)
+
+sourceCompatibility = "1.6"
+targetCompatibility = "1.6"
+
+dependencies {
+	provided group: "org.apache.felix", name: "org.apache.felix.fileinstall", version: "3.5.6"
+	provided group: "org.apache.felix", name: "org.apache.felix.framework", version: "5.4.0"
+	provided group: "org.osgi", name: "org.osgi.compendium", version: "5.0.0"
+}
+
+patch {
+	ext {
+		autoClean = false
+	}
+
+	fileNames "org/apache/felix/fileinstall/internal/ConfigInstaller.java"
+
+	originalLibModuleName = "org.apache.felix.fileinstall"
+}

@@ -1,0 +1,39 @@
+diff --git a/org/apache/felix/fileinstall/internal/ConfigInstaller.java b/org/apache/felix/fileinstall/internal/ConfigInstaller.java
+index 001aad9..b6ff478 100644
+--- a/org/apache/felix/fileinstall/internal/ConfigInstaller.java
++++ b/org/apache/felix/fileinstall/internal/ConfigInstaller.java
+@@ -336,10 +336,26 @@ public class ConfigInstaller implements ArtifactInstaller, ConfigurationListener
+         }
+         else
+         {
+-            Configuration newConfiguration;
++            Configuration newConfiguration = null;
+             if (factoryPid != null)
+             {
+-                newConfiguration = getConfigurationAdmin().createFactoryConfiguration(pid, null);
++                String instanceId = pid + "." + factoryPid;
++
++                Configuration[] configurations = getConfigurationAdmin().listConfigurations("(service.factoryPid=" + pid + ")");
++
++                if (configurations != null) {
++                    for (Configuration configuration : configurations) {
++                        if (instanceId.equals(configuration.getPid())) {
++                            newConfiguration = configuration;
++
++                            break;
++                        }
++                    }
++                }
++
++                if (newConfiguration == null) {
++                    newConfiguration = getConfigurationAdmin().createFactoryConfiguration(pid, null);
++                }
+             }
+             else
+             {
+@@ -371,3 +387,4 @@ public class ConfigInstaller implements ArtifactInstaller, ConfigurationListener
+     }
+ 
+ }
++/* @generated */
+\ No newline at end of file
