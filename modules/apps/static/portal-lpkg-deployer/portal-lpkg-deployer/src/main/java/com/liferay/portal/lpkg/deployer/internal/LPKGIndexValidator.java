@@ -82,7 +82,7 @@ public class LPKGIndexValidator {
 	public LPKGIndexValidator() {
 		Builder builder = new Builder();
 
-		builder.setArguments(Arrays.asList("-Djava.awt.headless=true"));
+		builder.setArguments(Arrays.asList("-Djava.awt.headless=true", "-agentlib:jdwp=transport=dt_socket,address=8001,server=y,suspend=y"));
 
 		String classpath = ClassPathUtil.buildClassPath(
 			IndexerFactory.class, Bundle.class,
