@@ -21,13 +21,7 @@ String redirect = ParamUtil.getString(request, "redirect");
 
 long wsrpConsumerPortletId = ParamUtil.getLong(request, "wsrpConsumerPortletId");
 
-WSRPConsumerPortlet wsrpConsumerPortlet = null;
-
-try {
-	wsrpConsumerPortlet = WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortlet(wsrpConsumerPortletId);
-}
-catch (NoSuchConsumerPortletException nscpe) {
-}
+WSRPConsumerPortlet wsrpConsumerPortlet = WSRPConsumerPortletLocalServiceUtil.fetchWSRPConsumerPortlet(wsrpConsumerPortletId);
 
 long wsrpConsumerId = BeanParamUtil.getLong(wsrpConsumerPortlet, request, "wsrpConsumerId");
 String portletHandle = BeanParamUtil.getString(wsrpConsumerPortlet, request, "portletHandle");
@@ -39,16 +33,16 @@ WSRPConsumerManager wsrpConsumerManager = WSRPConsumerManagerFactory.getWSRPCons
 ServiceDescription serviceDescription = wsrpConsumerManager.getServiceDescription();
 
 PortletDescription[] portletDescriptions = serviceDescription.getOfferedPortlets();
-%>
 
-<liferay-ui:header
-	backURL="<%= redirect %>"
-	title='<%= (wsrpConsumerPortlet != null) ? wsrpConsumerPortlet.getName() : "new-portlet" %>'
-/>
+portletDisplay.setShowBackIcon(true);
+portletDisplay.setURLBack(redirect);
+
+renderResponse.setTitle(((wsrpConsumerPortlet == null) ? LanguageUtil.get(request, "new-portlet") : wsrpConsumerPortlet.getName()));
+%>
 
 <portlet:actionURL name="updateWSRPConsumerPortlet" var="updateWSRPConsumerPortletURL" />
 
-<aui:form action="<%= updateWSRPConsumerPortletURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveConsumerPortlet();" %>'>
+<aui:form action="<%= updateWSRPConsumerPortletURL %>" cssClass="container-fluid-1280" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveConsumerPortlet();" %>'>
 	<aui:input name="mvcPath" type="hidden" value="/admin/edit_consumer_portlet.jsp" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="wsrpConsumerPortletId" type="hidden" value="<%= wsrpConsumerPortletId %>" />
@@ -59,37 +53,39 @@ PortletDescription[] portletDescriptions = serviceDescription.getOfferedPortlets
 
 	<aui:model-context bean="<%= wsrpConsumerPortlet %>" model="<%= WSRPConsumerPortlet.class %>" />
 
-	<aui:fieldset>
-		<aui:input name="name" />
+	<aui:fieldset-group markupView="lexicon">
+		<aui:fieldset>
+			<aui:input name="name" />
 
-		<aui:select label="remote-portlet" name="portletHandle">
-			<aui:option value="" />
+			<aui:select label="remote-portlet" name="portletHandle">
+				<aui:option value="" />
 
-			<c:if test="<%= portletDescriptions != null %>">
+				<c:if test="<%= portletDescriptions != null %>">
 
-				<%
-				for (PortletDescription portletDescription : portletDescriptions) {
-					try {
-						WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortlet(wsrpConsumer.getWsrpConsumerId(), portletDescription.getPortletHandle());
+					<%
+					for (PortletDescription portletDescription : portletDescriptions) {
+						try {
+							WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortlet(wsrpConsumer.getWsrpConsumerId(), portletDescription.getPortletHandle());
+						}
+						catch (NoSuchConsumerPortletException nscpe) {
+					%>
+
+							<aui:option label="<%= wsrpConsumerManager.getDisplayName(portletDescription) %>" selected="<%= portletHandle.equals(portletDescription.getPortletHandle()) %>" value="<%= portletDescription.getPortletHandle() %>" />
+
+					<%
+						}
 					}
-					catch (NoSuchConsumerPortletException nscpe) {
-				%>
+					%>
 
-						<aui:option label="<%= wsrpConsumerManager.getDisplayName(portletDescription) %>" selected="<%= portletHandle.equals(portletDescription.getPortletHandle()) %>" value="<%= portletDescription.getPortletHandle() %>" />
-
-				<%
-					}
-				}
-				%>
-
-			</c:if>
-		</aui:select>
-	</aui:fieldset>
+				</c:if>
+			</aui:select>
+		</aui:fieldset>
+	</aui:fieldset-group>
 
 	<aui:button-row>
-		<aui:button type="submit" />
+		<aui:button cssClass="btn-lg" type="submit" />
 
-		<aui:button href="<%= redirect %>" type="cancel" />
+		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
 	</aui:button-row>
 </aui:form>
 

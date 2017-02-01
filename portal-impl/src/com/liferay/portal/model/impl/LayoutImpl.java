@@ -1045,26 +1045,14 @@ public class LayoutImpl extends LayoutBaseImpl {
 
 	@Override
 	public boolean isPortletEmbedded(String portletId, long groupId) {
-		List<PortletPreferences> portletPreferences = _getPortletPreferences(
-			groupId);
+		List<Portlet> embeddedPortlets = getEmbeddedPortlets(groupId);
 
-		if (portletPreferences.isEmpty()) {
+		if (embeddedPortlets.isEmpty()) {
 			return false;
 		}
 
-		for (PortletPreferences portletPreference : portletPreferences) {
-			String currentPortletId = portletPreference.getPortletId();
-
-			if (!portletId.equals(currentPortletId)) {
-				continue;
-			}
-
-			Portlet portlet = PortletLocalServiceUtil.getPortletById(
-				getCompanyId(), currentPortletId);
-
-			if ((portlet != null) && portlet.isReady() &&
-				!portlet.isUndeployedPortlet() && portlet.isActive()) {
-
+		for (Portlet portlet : embeddedPortlets) {
+			if (Objects.equals(portlet.getPortletId(), portletId)) {
 				return true;
 			}
 		}

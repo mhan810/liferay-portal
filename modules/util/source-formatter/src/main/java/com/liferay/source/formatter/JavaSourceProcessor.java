@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.tools.ImportsFormatter;
 import com.liferay.portal.tools.JavaImportsFormatter;
@@ -382,6 +381,34 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 					processMessage(
 						fileName, "There should be a line break after '+'",
 						lineCount);
+				}
+			}
+
+			x = trimmedLine.length() + 1;
+
+			while (true) {
+				x = trimmedLine.lastIndexOf(StringPool.COMMA, x - 1);
+
+				if (x == -1) {
+					break;
+				}
+
+				if (ToolsUtil.isInsideQuotes(trimmedLine, x)) {
+					continue;
+				}
+
+				String linePart = trimmedLine.substring(x);
+
+				if ((getLevel(linePart) == 1) &&
+					(getLevel(linePart, "<", ">") == 0)) {
+
+					processMessage(
+						fileName,
+						"There should be a line break after '" +
+							trimmedLine.substring(0, x + 1) + "'",
+						lineCount);
+
+					break;
 				}
 			}
 		}

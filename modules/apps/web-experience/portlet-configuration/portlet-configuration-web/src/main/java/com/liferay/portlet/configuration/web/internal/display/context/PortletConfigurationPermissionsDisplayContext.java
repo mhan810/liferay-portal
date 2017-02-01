@@ -227,7 +227,11 @@ public class PortletConfigurationPermissionsDisplayContext {
 		portletURL.setParameter(
 			"portletConfiguration", Boolean.TRUE.toString());
 		portletURL.setParameter("portletResource", _getPortletResource());
+		portletURL.setParameter("modelResource", getModelResource());
+		portletURL.setParameter(
+			"resourceGroupId", String.valueOf(_getResourceGroupId()));
 		portletURL.setParameter("resourcePrimKey", getResourcePrimKey());
+		portletURL.setParameter("roleTypes", _getRoleTypesParam());
 
 		portletURL.setWindowState(LiferayWindowState.POP_UP);
 

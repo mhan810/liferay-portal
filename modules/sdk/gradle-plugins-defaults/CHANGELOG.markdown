@@ -946,7 +946,8 @@ file contains a `Main-Class` header.
 
 ### Changed
 - [LPS-70282]: Update the [Liferay Gradle Plugins] dependency to version 3.1.2.
-- [LPS-70286]: Change `appJavadoc` module headings.
+- [LPS-70286]: Change the `appJavadoc` task's generated module headings (e.g.,
+*Liferay Journal API - com.liferay:com.liferay.journal:2.0.0*).
 
 ## 2.4.18 - 2017-01-27
 
@@ -967,6 +968,18 @@ sub-repositories.
 
 ### Fixed
 - [LPS-70335]: Fix location of version override files.
+
+## 2.4.21 - 2017-01-30
+
+### Changed
+- [LPS-66853]: Update the [Liferay Gradle Plugins] dependency to version 3.1.4.
+
+## 2.4.22 - 2017-01-31
+
+### Changed
+- [LPS-70379]: Update the [Liferay Gradle Plugins] dependency to version 3.1.5.
+- [LPS-70379]: Update the [Liferay Gradle Plugins Baseline] dependency to
+version 1.1.2.
 
 [Liferay CDN]: https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public
 [Liferay Gradle Plugins]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins
@@ -1062,6 +1075,7 @@ sub-repositories.
 [LPS-70286]: https://issues.liferay.com/browse/LPS-70286
 [LPS-70335]: https://issues.liferay.com/browse/LPS-70335
 [LPS-70336]: https://issues.liferay.com/browse/LPS-70336
+[LPS-70379]: https://issues.liferay.com/browse/LPS-70379
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981

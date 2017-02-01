@@ -17,8 +17,6 @@
 <%@ include file="/init.jsp" %>
 
 <%
-ArticleSearch articleSearchContainer = journalDisplayContext.getSearchContainer();
-
 String title = journalDisplayContext.getFolderTitle();
 
 if (Validator.isNotNull(title)) {

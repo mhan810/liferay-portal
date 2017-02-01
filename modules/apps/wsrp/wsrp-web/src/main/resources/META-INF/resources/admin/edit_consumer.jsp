@@ -22,16 +22,16 @@ String redirect = ParamUtil.getString(request, "redirect");
 long wsrpConsumerId = ParamUtil.getLong(request, "wsrpConsumerId");
 
 WSRPConsumer wsrpConsumer = WSRPConsumerLocalServiceUtil.fetchWSRPConsumer(wsrpConsumerId);
-%>
 
-<liferay-ui:header
-	backURL="<%= redirect %>"
-	title='<%= (wsrpConsumer != null) ? wsrpConsumer.getName() : "new-consumer" %>'
-/>
+portletDisplay.setShowBackIcon(true);
+portletDisplay.setURLBack(redirect);
+
+renderResponse.setTitle(((wsrpConsumer == null) ? LanguageUtil.get(request, "new-consumer") : wsrpConsumer.getName()));
+%>
 
 <portlet:actionURL name="updateWSRPConsumer" var="updateWSRPConsumerURL" />
 
-<aui:form action="<%= updateWSRPConsumerURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveConsumer();" %>'>
+<aui:form action="<%= updateWSRPConsumerURL %>" cssClass="container-fluid-1280" method="post" name="fm">
 	<aui:input name="mvcPath" type="hidden" value="/admin/edit_consumer.jsp" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="wsrpConsumerId" type="hidden" value="<%= wsrpConsumerId %>" />
@@ -41,32 +41,26 @@ WSRPConsumer wsrpConsumer = WSRPConsumerLocalServiceUtil.fetchWSRPConsumer(wsrpC
 
 	<aui:model-context bean="<%= wsrpConsumer %>" model="<%= WSRPConsumer.class %>" />
 
-	<aui:fieldset>
-		<aui:input name="name" />
+	<aui:fieldset-group markupView="lexicon">
+		<aui:fieldset>
+			<aui:input autoFocus="<%= true %>" name="name" />
 
-		<aui:input name="url" type="textarea" />
+			<aui:input name="url" type="textarea" />
 
-		<aui:input name="forwardCookies" />
+			<aui:input name="forwardCookies" />
 
-		<aui:input name="forwardHeaders" />
+			<aui:input name="forwardHeaders" />
 
-		<aui:input helpMessage="markup-character-sets-help" name="markupCharacterSets" />
-	</aui:fieldset>
+			<aui:input helpMessage="markup-character-sets-help" name="markupCharacterSets" />
+		</aui:fieldset>
+	</aui:fieldset-group>
 
 	<aui:button-row>
-		<aui:button type="submit" />
+		<aui:button cssClass="btn-lg" type="submit" />
 
-		<aui:button href="<%= redirect %>" type="cancel" />
+		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
 	</aui:button-row>
 </aui:form>
-
-<aui:script>
-	function <portlet:namespace />saveConsumer() {
-		submitForm(document.<portlet:namespace />fm);
-	}
-
-	Liferay.Util.focusFormField(document.<portlet:namespace />fm.<portlet:namespace />name);
-</aui:script>
 
 <%
 if (wsrpConsumer != null) {

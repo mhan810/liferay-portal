@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+String redirect = ParamUtil.getString(request, "redirect");
+
 long wsrpConsumerId = ParamUtil.getLong(request, "wsrpConsumerId");
 
 WSRPConsumer wsrpConsumer = WSRPConsumerLocalServiceUtil.getWSRPConsumer(wsrpConsumerId);
@@ -27,65 +29,94 @@ PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("mvcPath", "/admin/view_consumer_portlets.jsp");
 portletURL.setParameter("wsrpConsumerId", String.valueOf(wsrpConsumerId));
+
+portletDisplay.setShowBackIcon(true);
+portletDisplay.setURLBack(redirect);
+
+renderResponse.setTitle(LanguageUtil.get(request, "manage-portlets"));
 %>
 
-<aui:button-row>
-	<portlet:renderURL var="addPortletURL">
-		<portlet:param name="mvcPath" value="/admin/edit_consumer_portlet.jsp" />
-		<portlet:param name="redirect" value="<%= currentURL %>" />
-		<portlet:param name="wsrpConsumerId" value="<%= String.valueOf(wsrpConsumer.getWsrpConsumerId()) %>" />
-	</portlet:renderURL>
+<aui:nav-bar markupView="lexicon">
+	<aui:nav cssClass="navbar-nav">
+		<aui:nav-item label="portlets" selected="<%= true %>" />
+	</aui:nav>
+</aui:nav-bar>
 
-	<aui:button href="<%= addPortletURL %>" value="add-portlet" />
-</aui:button-row>
+<liferay-frontend:management-bar>
+	<liferay-frontend:management-bar-buttons>
+		<liferay-frontend:management-bar-display-buttons
+			displayViews='<%= new String[] {"list"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+			selectedDisplayStyle="list"
+		/>
+	</liferay-frontend:management-bar-buttons>
 
-<liferay-ui:search-container
-	emptyResultsMessage="there-are-no-portlets"
-	headerNames="name,remote-portlet"
-	iteratorURL="<%= portletURL %>"
-	total="<%= WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortletsCount(wsrpConsumerId) %>"
->
-	<liferay-ui:search-container-results
-		results="<%= WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortlets(wsrpConsumerId, searchContainer.getStart(), searchContainer.getEnd()) %>"
-	/>
+	<liferay-frontend:management-bar-filters>
+		<liferay-frontend:management-bar-navigation
+			navigationKeys='<%= new String[] {"all"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+		/>
+	</liferay-frontend:management-bar-filters>
+</liferay-frontend:management-bar>
 
-	<liferay-ui:search-container-row
-		className="com.liferay.wsrp.model.WSRPConsumerPortlet"
-		keyProperty="wsrpConsumerPortletId"
-		modelVar="wsrpConsumerPortlet"
+<div class="container-fluid-1280">
+	<liferay-ui:search-container
+		emptyResultsMessage="there-are-no-portlets"
+		headerNames="name,remote-portlet"
+		iteratorURL="<%= portletURL %>"
+		total="<%= WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortletsCount(wsrpConsumerId) %>"
 	>
-		<liferay-ui:search-container-column-text
-			property="name"
+		<liferay-ui:search-container-results
+			results="<%= WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortlets(wsrpConsumerId, searchContainer.getStart(), searchContainer.getEnd()) %>"
 		/>
 
-		<liferay-ui:search-container-column-text
-			buffer="buffer"
-			name="remote-portlet"
+		<liferay-ui:search-container-row
+			className="com.liferay.wsrp.model.WSRPConsumerPortlet"
+			keyProperty="wsrpConsumerPortletId"
+			modelVar="wsrpConsumerPortlet"
 		>
+			<liferay-ui:search-container-column-text
+				cssClass="table-cell-content"
+				property="name"
+			/>
 
-			<%
-			PortletDescription portletDescription = wsrpConsumerManager.getPortletDescription(wsrpConsumerPortlet.getPortletHandle());
+			<liferay-ui:search-container-column-text
+				buffer="buffer"
+				cssClass="table-cell-content"
+				name="remote-portlet"
+			>
 
-			if (portletDescription != null) {
-				buffer.append(wsrpConsumerManager.getDisplayName(portletDescription));
-			}
-			else {
-				buffer.append(LanguageUtil.format(locale, "is-temporarily-unavailable", "remote-portlet"));
-			}
-			%>
+				<%
+				PortletDescription portletDescription = wsrpConsumerManager.getPortletDescription(wsrpConsumerPortlet.getPortletHandle());
 
-		</liferay-ui:search-container-column-text>
+				if (portletDescription != null) {
+					buffer.append(wsrpConsumerManager.getDisplayName(portletDescription));
+				}
+				else {
+					buffer.append(LanguageUtil.format(locale, "is-temporarily-unavailable", "remote-portlet"));
+				}
+				%>
 
-		<liferay-ui:search-container-column-jsp
-			align="right"
-			cssClass="entry-action"
-			path="/admin/consumer_portlet_action.jsp"
-			valign="top"
-		/>
-	</liferay-ui:search-container-row>
+			</liferay-ui:search-container-column-text>
 
-	<liferay-ui:search-iterator />
-</liferay-ui:search-container>
+			<liferay-ui:search-container-column-jsp
+				path="/admin/consumer_portlet_action.jsp"
+			/>
+		</liferay-ui:search-container-row>
+
+		<liferay-ui:search-iterator markupView="lexicon" />
+	</liferay-ui:search-container>
+</div>
+
+<portlet:renderURL var="addPortletURL">
+	<portlet:param name="mvcPath" value="/admin/edit_consumer_portlet.jsp" />
+	<portlet:param name="redirect" value="<%= currentURL %>" />
+	<portlet:param name="wsrpConsumerId" value="<%= String.valueOf(wsrpConsumer.getWsrpConsumerId()) %>" />
+</portlet:renderURL>
+
+<liferay-frontend:add-menu>
+	<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add-portlet") %>' url="<%= addPortletURL.toString() %>" />
+</liferay-frontend:add-menu>
 
 <%
 PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "manage-portlets"), currentURL);

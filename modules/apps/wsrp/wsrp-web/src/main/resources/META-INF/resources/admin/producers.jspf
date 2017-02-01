@@ -14,65 +14,78 @@
  */
 --%>
 
+<liferay-frontend:management-bar>
+	<liferay-frontend:management-bar-buttons>
+		<liferay-frontend:management-bar-display-buttons
+			displayViews='<%= new String[] {"list"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+			selectedDisplayStyle="list"
+		/>
+	</liferay-frontend:management-bar-buttons>
+
+	<liferay-frontend:management-bar-filters>
+		<liferay-frontend:management-bar-navigation
+			navigationKeys='<%= new String[] {"all"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+		/>
+	</liferay-frontend:management-bar-filters>
+</liferay-frontend:management-bar>
+
+<div class="container-fluid-1280">
+	<liferay-ui:search-container
+		emptyResultsMessage="there-are-no-producers"
+		headerNames="name"
+		iteratorURL="<%= portletURL %>"
+		total="<%= WSRPProducerLocalServiceUtil.getWSRPProducersCount(company.getCompanyId()) %>"
+	>
+		<liferay-ui:search-container-results
+			results="<%= WSRPProducerLocalServiceUtil.getWSRPProducers(company.getCompanyId(), searchContainer.getStart(), searchContainer.getEnd()) %>"
+		/>
+
+		<liferay-ui:search-container-row
+			className="com.liferay.wsrp.model.WSRPProducer"
+			escapedModel="<%= true %>"
+			keyProperty="wsrpProducerId"
+			modelVar="producer"
+		>
+			<liferay-ui:search-container-column-text
+				cssClass="table-cell-content"
+				name="producer"
+				property="name"
+			/>
+
+			<%
+			String producerURL = producer.getURL(themeDisplay.getPortalURL() + "/o/wsrp-service");
+			%>
+
+			<liferay-ui:search-container-column-text
+				cssClass="table-cell-content"
+				href="<%= producerURL %>"
+				name="url"
+				value="<%= producerURL %>"
+			/>
+
+			<liferay-ui:search-container-column-text
+				property="version"
+			/>
+
+			<liferay-ui:search-container-column-jsp
+				path="/admin/producer_action.jsp"
+			/>
+		</liferay-ui:search-container-row>
+
+		<liferay-ui:search-iterator markupView="lexicon" />
+	</liferay-ui:search-container>
+</div>
+
 <portlet:renderURL var="addProducerURL">
 	<portlet:param name="mvcPath" value="/admin/edit_producer.jsp" />
 	<portlet:param name="redirect" value="<%= currentURL %>" />
 </portlet:renderURL>
 
-<aui:button href="<%= addProducerURL %>" value="add-producer" />
-
-<liferay-ui:search-container
-	emptyResultsMessage="there-are-no-producers"
-	headerNames="name"
-	iteratorURL="<%= portletURL %>"
-	total="<%= WSRPProducerLocalServiceUtil.getWSRPProducersCount(company.getCompanyId()) %>"
->
-	<liferay-ui:search-container-results
-		results="<%= WSRPProducerLocalServiceUtil.getWSRPProducers(company.getCompanyId(), searchContainer.getStart(), searchContainer.getEnd()) %>"
-	/>
-
-	<liferay-ui:search-container-row
-		className="com.liferay.wsrp.model.WSRPProducer"
-		escapedModel="<%= true %>"
-		keyProperty="wsrpProducerId"
-		modelVar="producer"
-	>
-		<portlet:renderURL var="rowURL">
-			<portlet:param name="mvcPath" value="/admin/edit_producer.jsp" />
-			<portlet:param name="redirect" value="<%= currentURL %>" />
-			<portlet:param name="wsrpProducerId" value="<%= String.valueOf(producer.getWsrpProducerId()) %>" />
-		</portlet:renderURL>
-
-		<liferay-ui:search-container-column-text
-			href="<%= rowURL %>"
-			name="producer"
-			property="name"
-		/>
-
-		<%
-		String producerURL = producer.getURL(themeDisplay.getPortalURL() + "/o/wsrp-service");
-		%>
-
-		<liferay-ui:search-container-column-text
-			href="<%= producerURL %>"
-			name="url"
-			value="<%= producerURL %>"
-		/>
-
-		<liferay-ui:search-container-column-text
-			property="version"
-		/>
-
-		<liferay-ui:search-container-column-jsp
-			align="right"
-			cssClass="entry-action"
-			path="/admin/producer_action.jsp"
-			valign="top"
-		/>
-	</liferay-ui:search-container-row>
-
-	<liferay-ui:search-iterator />
-</liferay-ui:search-container>
+<liferay-frontend:add-menu>
+	<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add-producer") %>' url="<%= addProducerURL.toString() %>" />
+</liferay-frontend:add-menu>
 
 <%
 PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "producers"), currentURL);
