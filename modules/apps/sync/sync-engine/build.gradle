@@ -23,8 +23,6 @@ dependencies {
 	compileInclude group: "oauth.signpost", name: "signpost-commonshttp4", version: "1.2.1.2"
 	compileInclude group: "oauth.signpost", name: "signpost-core", version: "1.2.1.2"
 	compileInclude group: "org.apache.commons", name: "commons-collections4", version: "4.1"
-	compileInclude group: "org.apache.httpcomponents", name: "httpclient", version: "4.5.2"
-	compileInclude group: "org.apache.httpcomponents", name: "httpcore", version: "4.4.5"
 	compileInclude group: "org.apache.httpcomponents", name: "httpmime", version: "4.5.2"
 	compileInclude group: "org.apache.poi", name: "poi", version: "3.14"
 	compileInclude group: "org.apache.poi", name: "poi-ooxml", version: "3.14"
@@ -32,6 +30,9 @@ dependencies {
 	compileInclude group: "org.bouncycastle", name: "bcprov-jdk15on", version: "1.54"
 	compileInclude group: "org.slf4j", name: "jcl-over-slf4j", version: "1.7.25"
 	compileInclude group: "org.slf4j", name: "slf4j-api", version: "1.7.25"
+
+	provided group: "org.apache.httpcomponents", name: "httpclient", version: "4.5.2"
+	provided group: "org.apache.httpcomponents", name: "httpcore", version: "4.4.5"
 }
 
 liferayOSGi {
