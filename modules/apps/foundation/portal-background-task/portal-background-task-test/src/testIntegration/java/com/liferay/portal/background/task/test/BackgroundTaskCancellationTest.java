@@ -181,7 +181,7 @@ public class BackgroundTaskCancellationTest {
 			com.liferay.portal.kernel.backgroundtask.BackgroundTask
 				backgroundTask, Exception e) {
 
-			Assert.fail("Exception happened during the task execution");
+			Assert.fail();
 
 			return StringPool.BLANK;
 		}
