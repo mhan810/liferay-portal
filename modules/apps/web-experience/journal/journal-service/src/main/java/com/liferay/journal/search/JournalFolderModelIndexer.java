@@ -50,12 +50,12 @@ import org.osgi.service.component.annotations.Reference;
  * @author Eduardo Garcia
  */
 @Component(immediate = true, service = Indexer.class)
-public class JournalFolderIndexer
+public class JournalFolderModelIndexer
 	extends BaseIndexer<JournalFolder> implements FolderIndexer {
 
 	public static final String CLASS_NAME = JournalFolder.class.getName();
 
-	public JournalFolderIndexer() {
+	public JournalFolderModelIndexer() {
 		setDefaultSelectedFieldNames(
 			Field.COMPANY_ID, Field.DESCRIPTION, Field.ENTRY_CLASS_NAME,
 			Field.ENTRY_CLASS_PK, Field.TITLE, Field.UID);
@@ -210,7 +210,7 @@ public class JournalFolderIndexer
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		JournalFolderIndexer.class);
+		JournalFolderModelIndexer.class);
 
 	@Reference
 	private IndexWriterHelper _indexWriterHelper;

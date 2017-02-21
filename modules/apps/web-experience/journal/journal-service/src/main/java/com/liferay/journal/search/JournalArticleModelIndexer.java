@@ -102,12 +102,12 @@ import org.osgi.service.component.annotations.Reference;
  * @author Tibor Lipusz
  */
 @Component(immediate = true, service = Indexer.class)
-public class JournalArticleIndexer
+public class JournalArticleModelIndexer
 	extends BaseIndexer<JournalArticle> implements DDMStructureIndexer {
 
 	public static final String CLASS_NAME = JournalArticle.class.getName();
 
-	public JournalArticleIndexer() {
+	public JournalArticleModelIndexer() {
 		setDefaultSelectedFieldNames(
 			Field.ASSET_TAG_NAMES, Field.ARTICLE_ID, Field.COMPANY_ID,
 			Field.DEFAULT_LANGUAGE_ID, Field.ENTRY_CLASS_NAME,
@@ -920,7 +920,7 @@ public class JournalArticleIndexer
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		JournalArticleIndexer.class);
+		JournalArticleModelIndexer.class);
 
 	private ConfigurationProvider _configurationProvider;
 	private DDMIndexer _ddmIndexer;
