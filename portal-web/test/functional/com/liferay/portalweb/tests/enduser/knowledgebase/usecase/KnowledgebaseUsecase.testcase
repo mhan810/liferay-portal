@@ -73,6 +73,8 @@
 			<var name="saveAsDraft" value="true" />
 		</execute>
 
+		<execute function="Pause" locator1="5000" />
+
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Knowledge Base Page" />
 		</execute>

@@ -100,7 +100,23 @@ public class UserImpl extends UserBaseImpl {
 
 	@Override
 	public Contact fetchContact() {
-		return ContactLocalServiceUtil.fetchContact(getContactId());
+		if (_contact == _NULL_CONTACT) {
+			return null;
+		}
+
+		if (_contact == null) {
+			Contact contact = ContactLocalServiceUtil.fetchContact(
+				getContactId());
+
+			if (contact == null) {
+				_contact = _NULL_CONTACT;
+			}
+			else {
+				_contact = contact;
+			}
+		}
+
+		return _contact;
 	}
 
 	/**
@@ -145,7 +161,7 @@ public class UserImpl extends UserBaseImpl {
 	 */
 	@Override
 	public Contact getContact() throws PortalException {
-		if (_contact == null) {
+		if ((_contact == null) || (_contact == _NULL_CONTACT)) {
 			_contact = ContactLocalServiceUtil.getContact(getContactId());
 		}
 
@@ -597,8 +613,7 @@ public class UserImpl extends UserBaseImpl {
 	public PasswordPolicy getPasswordPolicy() throws PortalException {
 		if (_passwordPolicy == null) {
 			_passwordPolicy =
-				PasswordPolicyLocalServiceUtil.getPasswordPolicyByUserId(
-					getUserId());
+				PasswordPolicyLocalServiceUtil.getPasswordPolicyByUser(this);
 		}
 
 		return _passwordPolicy;
@@ -965,6 +980,8 @@ public class UserImpl extends UserBaseImpl {
 				HtmlUtil.escapeURL(getScreenName()), String.valueOf(getUserId())
 			});
 	}
+
+	private static final Contact _NULL_CONTACT = new ContactImpl();
 
 	private static final Log _log = LogFactoryUtil.getLog(UserImpl.class);
 

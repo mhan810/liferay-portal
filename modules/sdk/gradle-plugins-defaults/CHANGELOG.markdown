@@ -1071,10 +1071,45 @@ from the `com.liferay.jasper.jspc` default dependency in the `jspCTool`
 configuration.
 - [LPS-70699]: Disable the update check when building themes.
 
-## 2.4.35 - 2017-02-16
+## 2.4.35 - 2017-02-17
 
 ### Changed
 - [LPS-70707]: Update the [Liferay Gradle Plugins] dependency to version 3.2.6.
+
+## 2.4.36 - 2017-02-21
+
+### Added
+- [LPS-70170]: Print out implicit dependency replacements in the `jspC`
+configuration.
+
+## 2.5.0 - 2017-02-22
+
+### Added
+- [LPS-70819]: Publish a JAR file with the compiled JSP classes of an OSGi
+project with the `install` and `uploadArchives` tasks.
+
+### Changed
+- [LPS-66853]: Update the [Liferay Gradle Plugins] dependency to version 3.2.7.
+
+## 3.0.0 - 2017-02-23
+
+### Changed
+- [LPS-63943]: Refactor and rename `PrintArtifactPublishCommandsTask` class to
+`WriteArtifactPublishCommandsTask`. Executing
+`gradlew writeArtifactPublishCommands` in a parent directory causes the file
+`build/artifacts-publish-commands/artifacts-publish-commands.sh` to be generated
+with the following commands for all publishable subprojects:
+	- `gradlew baseline`
+	- `gradlew baseline` and Git commands to commit the files modified by the
+	`baseline` task
+	- the publish commands returned by the previous version of the plugin
+- [LPS-63943]: Rename `printArtifactPublishCommands` task to
+`writeArtifactPublishCommands`.
+
+## 3.0.1 - 2017-02-24
+
+### Changed
+- [LPS-70870]: Update the [Liferay Gradle Plugins] dependency to version 3.2.8.
 
 [Liferay CDN]: https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public
 [Liferay Gradle Plugins]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins
@@ -1087,6 +1122,7 @@ configuration.
 [LPS-58672]: https://issues.liferay.com/browse/LPS-58672
 [LPS-61099]: https://issues.liferay.com/browse/LPS-61099
 [LPS-61987]: https://issues.liferay.com/browse/LPS-61987
+[LPS-63943]: https://issues.liferay.com/browse/LPS-63943
 [LPS-65179]: https://issues.liferay.com/browse/LPS-65179
 [LPS-66396]: https://issues.liferay.com/browse/LPS-66396
 [LPS-66762]: https://issues.liferay.com/browse/LPS-66762
@@ -1182,6 +1218,8 @@ configuration.
 [LPS-70677]: https://issues.liferay.com/browse/LPS-70677
 [LPS-70699]: https://issues.liferay.com/browse/LPS-70699
 [LPS-70707]: https://issues.liferay.com/browse/LPS-70707
+[LPS-70819]: https://issues.liferay.com/browse/LPS-70819
+[LPS-70870]: https://issues.liferay.com/browse/LPS-70870
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981

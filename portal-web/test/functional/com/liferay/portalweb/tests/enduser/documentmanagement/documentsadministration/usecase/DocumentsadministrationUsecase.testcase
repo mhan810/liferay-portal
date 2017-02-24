@@ -120,6 +120,8 @@
 			<var name="portlet" value="Documents and Media" />
 		</execute>
 
+		<execute macro="DMPortlet#setDescriptiveView" />
+
 		<execute macro="DMNavigator#gotoDocumentCP">
 			<var name="dmDocumentTitle" value="DM Document Type Contract Title" />
 		</execute>

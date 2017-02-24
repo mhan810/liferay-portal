@@ -304,7 +304,9 @@
 
 		<execute function="Click" locator1="Translation#ADD" />
 
-		<execute function="AssertClick" locator1="MenuItem#WEB_CONTENT_LANGUAGE" value1="${localizedLanguage}" />
+		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="${localizedLanguage}">
+			<var name="key_menuItem" value="${localizedLanguage}" />
+		</execute>
 
 		<if>
 			<not>
@@ -1567,6 +1569,18 @@
 		</for>
 	</command>
 
+	<command name="viewCompareVersions">
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
+
+		<execute macro="LexiconEntry#gotoEntry">
+			<var name="rowEntry" value="${version}" />
+		</execute>
+
+		<execute function="SelectFrameTop" />
+
+		<execute function="AssertTextEquals" locator1="WCViewHistory#VIEW_COMPARE_VERSIONS_CONTENT" value1="${newContent}" />
+	</command>
+
 	<command name="viewConversionLinksPGViaAP">
 		<var name="key_assetTitle" value="${webContentTitle}" />
 
@@ -2023,7 +2037,17 @@
 			<then>
 				<var name="key_localizedLanguage" value="${webContentTranslationLanguage}" />
 
-				<execute function="Click" locator1="Translation#AVAILABLE_TRANSLATION" />
+				<toggle name="LPS-67821">
+					<on>
+						<execute function="Click" locator1="NavTab#TAB_LINK">
+							<var name="key_tab" value="${webContentTranslationLanguage}" />
+						</execute>
+					</on>
+
+					<off>
+						<execute function="Click" locator1="Translation#AVAILABLE_TRANSLATION" />
+					</off>
+				</toggle>
 
 				<if>
 					<isset var="localizedTitle" />

@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -85,6 +86,10 @@ public class FieldConstants {
 			}
 
 			return values.toArray(new String[values.size()]);
+		}
+
+		if (isNumericType(type)) {
+			values.removeAll(Collections.singleton(StringPool.BLANK));
 		}
 
 		if (type.equals(FieldConstants.BOOLEAN)) {

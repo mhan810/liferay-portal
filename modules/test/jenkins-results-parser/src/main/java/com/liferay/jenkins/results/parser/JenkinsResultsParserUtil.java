@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 
@@ -150,7 +151,7 @@ public class JenkinsResultsParserUtil {
 	}
 
 	public static Process executeBashCommands(
-			boolean exitOnFirstFail, String... commands)
+			boolean exitOnFirstFail, File basedir, String... commands)
 		throws InterruptedException, IOException {
 
 		System.out.print("Executing commands: ");
@@ -158,8 +159,6 @@ public class JenkinsResultsParserUtil {
 		for (String command : commands) {
 			System.out.println(command);
 		}
-
-		Runtime runtime = Runtime.getRuntime();
 
 		String[] bashCommands = new String[3];
 
@@ -184,7 +183,11 @@ public class JenkinsResultsParserUtil {
 
 		bashCommands[2] = sb.toString();
 
-		Process process = runtime.exec(bashCommands);
+		ProcessBuilder processBuilder = new ProcessBuilder(bashCommands);
+
+		processBuilder.directory(basedir.getAbsoluteFile());
+
+		Process process = processBuilder.start();
 
 		if (debug) {
 			System.out.println(
@@ -201,10 +204,17 @@ public class JenkinsResultsParserUtil {
 		return process;
 	}
 
+	public static Process executeBashCommands(
+			boolean exitOnFirstFail, String... commands)
+		throws InterruptedException, IOException {
+
+		return executeBashCommands(exitOnFirstFail, new File("."), commands);
+	}
+
 	public static Process executeBashCommands(String... commands)
 		throws InterruptedException, IOException {
 
-		return executeBashCommands(true, commands);
+		return executeBashCommands(true, new File("."), commands);
 	}
 
 	public static String expandSlaveRange(String value) {
@@ -734,6 +744,45 @@ public class JenkinsResultsParserUtil {
 		return durationString;
 	}
 
+	public static JSONArray toJSONArray(String url) throws IOException {
+		return toJSONArray(
+			url, true, _MAX_RETRIES_DEFAULT, null, _RETRY_PERIOD_DEFAULT,
+			_TIMEOUT_DEFAULT);
+	}
+
+	public static JSONArray toJSONArray(String url, boolean checkCache)
+		throws IOException {
+
+		return toJSONArray(
+			url, checkCache, _MAX_RETRIES_DEFAULT, null, _RETRY_PERIOD_DEFAULT,
+			_TIMEOUT_DEFAULT);
+	}
+
+	public static JSONArray toJSONArray(
+			String url, boolean checkCache, int maxRetries, String postContent,
+			int retryPeriod, int timeout)
+		throws IOException {
+
+		String response = toString(
+			url, checkCache, maxRetries, postContent, retryPeriod, timeout);
+
+		if ((response == null) ||
+			response.endsWith("was truncated due to its size.")) {
+
+			return null;
+		}
+
+		return new JSONArray(response);
+	}
+
+	public static JSONArray toJSONArray(String url, String postContent)
+		throws IOException {
+
+		return toJSONArray(
+			url, false, _MAX_RETRIES_DEFAULT, postContent,
+			_RETRY_PERIOD_DEFAULT, _TIMEOUT_DEFAULT);
+	}
+
 	public static JSONObject toJSONObject(String url) throws IOException {
 		return toJSONObject(
 			url, true, _MAX_RETRIES_DEFAULT, _RETRY_PERIOD_DEFAULT,
@@ -743,10 +792,9 @@ public class JenkinsResultsParserUtil {
 	public static JSONObject toJSONObject(String url, boolean checkCache)
 		throws IOException {
 
-		return createJSONObject(
-			toString(
-				url, checkCache, _MAX_RETRIES_DEFAULT, _RETRY_PERIOD_DEFAULT,
-				_TIMEOUT_DEFAULT));
+		return toJSONObject(
+			url, checkCache, _MAX_RETRIES_DEFAULT, _RETRY_PERIOD_DEFAULT,
+			_TIMEOUT_DEFAULT);
 	}
 
 	public static JSONObject toJSONObject(
@@ -763,8 +811,17 @@ public class JenkinsResultsParserUtil {
 			int timeout)
 		throws IOException {
 
+		return toJSONObject(
+			url, checkCache, maxRetries, null, retryPeriod, timeout);
+	}
+
+	public static JSONObject toJSONObject(
+			String url, boolean checkCache, int maxRetries, String postContent,
+			int retryPeriod, int timeout)
+		throws IOException {
+
 		String response = toString(
-			url, checkCache, maxRetries, retryPeriod, timeout);
+			url, checkCache, maxRetries, postContent, retryPeriod, timeout);
 
 		if ((response == null) ||
 			response.endsWith("was truncated due to its size.")) {
@@ -773,6 +830,14 @@ public class JenkinsResultsParserUtil {
 		}
 
 		return createJSONObject(response);
+	}
+
+	public static JSONObject toJSONObject(String url, String postContent)
+		throws IOException {
+
+		return toJSONObject(
+			url, false, _MAX_RETRIES_DEFAULT, postContent,
+			_RETRY_PERIOD_DEFAULT, _TIMEOUT_DEFAULT);
 	}
 
 	public static String toString(String url) throws IOException {
@@ -800,6 +865,15 @@ public class JenkinsResultsParserUtil {
 	public static String toString(
 			String url, boolean checkCache, int maxRetries, int retryPeriod,
 			int timeout)
+		throws IOException {
+
+		return toString(
+			url, checkCache, maxRetries, null, retryPeriod, timeout);
+	}
+
+	public static String toString(
+			String url, boolean checkCache, int maxRetries, String postContent,
+			int retryPeriod, int timeout)
 		throws IOException {
 
 		url = fixURL(url);
@@ -851,6 +925,20 @@ public class JenkinsResultsParserUtil {
 
 					httpURLConnection.setRequestProperty(
 						"Content-Type", "application/json");
+
+					if (postContent != null) {
+						httpURLConnection.setRequestMethod("POST");
+
+						httpURLConnection.setDoOutput(true);
+
+						try (OutputStream outputStream =
+								httpURLConnection.getOutputStream()) {
+
+							outputStream.write(postContent.getBytes("UTF-8"));
+
+							outputStream.flush();
+						}
+					}
 				}
 
 				if (timeout != 0) {
@@ -903,6 +991,14 @@ public class JenkinsResultsParserUtil {
 				sleep(1000 * retryPeriod);
 			}
 		}
+	}
+
+	public static String toString(String url, String postContent)
+		throws IOException {
+
+		return toString(
+			url, false, _MAX_RETRIES_DEFAULT, postContent,
+			_RETRY_PERIOD_DEFAULT, _TIMEOUT_DEFAULT);
 	}
 
 	public static void write(File file, String content) throws IOException {

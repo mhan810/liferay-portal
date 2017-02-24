@@ -4974,11 +4974,15 @@ go]]></replacevalue>
 			<then>
 				<for list="${osgi.app.includes}" param="osgi.app.name">
 					<sequential>
+						<antelope:stringutil property="osgi.app.name" string="@{osgi.app.name}">
+							<antelope:trim />
+						</antelope:stringutil>
+
 						<for param="app.dir">
 							<path>
 								<dirset dir="modules">
-									<include name="apps/@{osgi.app.name}" />
-									<include name="private/apps/@{osgi.app.name}" />
+									<include name="apps/${osgi.app.name}" />
+									<include name="private/apps/${osgi.app.name}" />
 								</dirset>
 							</path>
 							<sequential>
@@ -7837,6 +7841,8 @@ ANT_OPTS=${env.ANT_OPTS}</echo>
 	</target>
 
 	<target name="prepare-test-bundle">
+		<setup-libs />
+
 		<if>
 			<not>
 				<isset property="app.server.name" />
@@ -8423,6 +8429,8 @@ if (ppstate.equals("normal")) {
 	</target>
 
 	<target name="record-test-case-method-names">
+		<setup-libs />
+
 		<delete failonerror="false" file="${test.ext.properties.file}" />
 
 		<if>
@@ -8498,6 +8506,8 @@ if (ppstate.equals("normal")) {
 	</target>
 
 	<target name="record-test-generated-properties">
+		<setup-libs />
+
 		<delete failonerror="false" file="${test.ext.properties.file}" />
 
 		<if>

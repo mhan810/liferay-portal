@@ -13,6 +13,21 @@ AUI.add(
 		var VALIDATIONS = {
 			number: [
 				{
+					label: Liferay.Language.get('is-integer'),
+					name: 'integer',
+					parameterMessage: '',
+					regex: /^isInteger\((\w+)\)$/,
+					template: 'isInteger({name})'
+				},
+				{
+					dataType: 'double',
+					label: Liferay.Language.get('is-decimal'),
+					name: 'decimal',
+					parameterMessage: '',
+					regex: /^isDecimal\((\w+)\)$/,
+					template: 'isDecimal({name})'
+				},
+				{
 					label: Liferay.Language.get('is-greater-than-or-equal-to'),
 					name: 'gteq',
 					parameterMessage: Liferay.Language.get('this-number'),
@@ -168,7 +183,12 @@ AUI.add(
 						var regex = validations[i].regex;
 
 						if (regex.test(expression)) {
-							dataType = type;
+							if (validations[i].dataType) {
+								dataType = validations[i].dataType;
+							}
+							else {
+								dataType = type;
+							}
 
 							break;
 						}

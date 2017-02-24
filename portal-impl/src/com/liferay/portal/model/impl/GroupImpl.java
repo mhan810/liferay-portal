@@ -644,7 +644,9 @@ public class GroupImpl extends GroupBaseImpl {
 		}
 
 		try {
-			if (_stagingGroup == null) {
+			if ((_stagingGroup == null) ||
+				(_stagingGroup == _NULL_STAGING_GROUP)) {
+
 				_stagingGroup = GroupLocalServiceUtil.getStagingGroup(
 					getGroupId());
 
@@ -788,7 +790,7 @@ public class GroupImpl extends GroupBaseImpl {
 
 	@Override
 	public boolean hasStagingGroup() {
-		if (isStagingGroup()) {
+		if (isStagingGroup() || (_stagingGroup == _NULL_STAGING_GROUP)) {
 			return false;
 		}
 
@@ -796,12 +798,18 @@ public class GroupImpl extends GroupBaseImpl {
 			return true;
 		}
 
-		try {
-			return GroupLocalServiceUtil.hasStagingGroup(getGroupId());
-		}
-		catch (Exception e) {
+		Group stagingGroup = GroupLocalServiceUtil.fetchStagingGroup(
+			getGroupId());
+
+		if (stagingGroup == null) {
+			_stagingGroup = _NULL_STAGING_GROUP;
+
 			return false;
 		}
+
+		_stagingGroup = stagingGroup;
+
+		return true;
 	}
 
 	/**
@@ -1164,6 +1172,8 @@ public class GroupImpl extends GroupBaseImpl {
 
 		return LayoutConstants.DEFAULT_PLID;
 	}
+
+	private static final Group _NULL_STAGING_GROUP = new GroupImpl();
 
 	private static final Log _log = LogFactoryUtil.getLog(GroupImpl.class);
 

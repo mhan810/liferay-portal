@@ -61,6 +61,42 @@ public class DDMFormEvaluatorTest extends BaseDDMServiceTestCase {
 	}
 
 	@Test
+	public void testSumValuesForRepeatableField() throws Exception {
+		String serializedDDMForm = read(
+			"ddm-form-evaluator-sum-values-repeatable-field.json");
+
+		DDMForm ddmForm = _ddmFormJSONDeserializer.deserialize(
+			serializedDDMForm);
+
+		String serializedDDMFormValues = read(
+			"ddm-form-evaluator-sum-values-repeatable-field-test-data.json");
+
+		DDMFormValues ddmFormValues =
+			_ddmFormValuesJSONDeserializer.deserialize(
+				ddmForm, serializedDDMFormValues);
+
+		Registry registry = RegistryUtil.getRegistry();
+
+		DDMFormEvaluator ddmFormEvaluator = registry.getService(
+			DDMFormEvaluator.class);
+
+		DDMFormEvaluationResult ddmFormEvaluationResult =
+			ddmFormEvaluator.evaluate(
+				new DDMFormEvaluatorContext(
+					ddmForm, ddmFormValues, LocaleUtil.US));
+
+		JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();
+
+		String actualResult = jsonSerializer.serializeDeep(
+			ddmFormEvaluationResult);
+
+		String expectedResult = read(
+			"ddm-form-evaluator-result-sum-values-repeatable-field.json");
+
+		JSONAssert.assertEquals(expectedResult, actualResult, false);
+	}
+
+	@Test
 	public void testValidFields() throws Exception {
 		String serializedDDMForm = read(
 			"ddm-form-evaluator-form-valid-fields-test-data.json");

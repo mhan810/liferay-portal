@@ -382,6 +382,8 @@
 			<var name="kbArticleTitleEdit" value="Knowledge Base Article Parent Title Edited 1" />
 		</execute>
 
+		<execute function="Pause" locator1="5000" />
+
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Knowledge Base Display Page" />
 		</execute>
@@ -395,6 +397,8 @@
 			<var name="kbArticleContentEdit" value="Knowledge Base Child Article Content Edited 1" />
 			<var name="kbArticleTitleEdit" value="Knowledge Base Article Parent Title Edited 1 Child 1" />
 		</execute>
+
+		<execute function="Pause" locator1="5000" />
 
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Knowledge Base Display Page" />
@@ -439,6 +443,8 @@
 			<var name="kbArticleTitle" value="Knowledge Base Article Title" />
 			<var name="kbArticleTitleEdit" value="Knowledge Base Article Title Edit" />
 		</execute>
+
+		<execute function="Pause" locator1="5000" />
 
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Knowledge Base Display Page" />

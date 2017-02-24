@@ -34,8 +34,8 @@ import com.liferay.gradle.plugins.defaults.internal.util.GradleUtil;
 import com.liferay.gradle.plugins.defaults.internal.util.IncrementVersionClosure;
 import com.liferay.gradle.plugins.defaults.internal.util.copy.RenameDependencyAction;
 import com.liferay.gradle.plugins.defaults.tasks.InstallCacheTask;
-import com.liferay.gradle.plugins.defaults.tasks.PrintArtifactPublishCommandsTask;
 import com.liferay.gradle.plugins.defaults.tasks.ReplaceRegexTask;
+import com.liferay.gradle.plugins.defaults.tasks.WriteArtifactPublishCommandsTask;
 import com.liferay.gradle.plugins.defaults.tasks.WritePropertiesTask;
 import com.liferay.gradle.plugins.dependency.checker.DependencyCheckerExtension;
 import com.liferay.gradle.plugins.dependency.checker.DependencyCheckerPlugin;
@@ -232,9 +232,14 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 
 	public static final String DEPLOY_TOOL_TASK_NAME = "deployTool";
 
+	public static final String DOWNLOAD_COMPILED_JSP_TASK_NAME =
+		"downloadCompiledJSP";
+
 	public static final String INSTALL_CACHE_TASK_NAME = "installCache";
 
 	public static final String JAR_JAVADOC_TASK_NAME = "jarJavadoc";
+
+	public static final String JAR_JSP_TASK_NAME = "jarJSP";
 
 	public static final String JAR_SOURCES_TASK_NAME = "jarSources";
 
@@ -364,6 +369,7 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 				LiferayBasePlugin.DEPLOY_TASK_NAME);
 		}
 
+		final Jar jarJSPsTask = _addTaskJarJSP(project);
 		final Jar jarJavadocTask = _addTaskJarJavadoc(project);
 		final Jar jarSourcesTask = _addTaskJarSources(project, testProject);
 		final Jar jarTLDDocTask = _addTaskJarTLDDoc(project);
@@ -440,7 +446,8 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 					_checkVersion(project);
 
 					_configureArtifacts(
-						project, jarJavadocTask, jarSourcesTask, jarTLDDocTask);
+						project, jarJSPsTask, jarJavadocTask, jarSourcesTask,
+						jarTLDDocTask);
 					_configureTaskJarSources(jarSourcesTask);
 					_configureTaskUpdateFileVersions(
 						updateFileVersionsTask, portalRootDir);
@@ -853,6 +860,43 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 		return copy;
 	}
 
+	private Copy _addTaskDownloadCompiledJSP(
+		JavaCompile compileJSPTask, Properties artifactProperties) {
+
+		final String artifactJspcURL = artifactProperties.getProperty(
+			"artifact.jspc.url");
+
+		if (Validator.isNull(artifactJspcURL)) {
+			return null;
+		}
+
+		final Project project = compileJSPTask.getProject();
+
+		Copy copy = GradleUtil.addTask(
+			project, DOWNLOAD_COMPILED_JSP_TASK_NAME, Copy.class);
+
+		copy.exclude("META-INF/MANIFEST.MF");
+
+		copy.from(
+			new Callable<FileTree>() {
+
+				@Override
+				public FileTree call() throws Exception {
+					File file = FileUtil.get(project, artifactJspcURL);
+
+					return project.zipTree(file);
+				}
+
+			});
+
+		copy.setDescription(
+			"Downloads the latest compiled JSP classes for this project.");
+		copy.setDestinationDir(compileJSPTask.getDestinationDir());
+		copy.setIncludeEmptyDirs(false);
+
+		return copy;
+	}
+
 	private InstallCacheTask _addTaskInstallCache(final Project project) {
 		InstallCacheTask installCacheTask = GradleUtil.addTask(
 			project, INSTALL_CACHE_TASK_NAME, InstallCacheTask.class);
@@ -933,6 +977,24 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 			project, JavaPlugin.JAVADOC_TASK_NAME);
 
 		jar.from(javadoc);
+
+		return jar;
+	}
+
+	private Jar _addTaskJarJSP(Project project) {
+		Jar jar = GradleUtil.addTask(project, JAR_JSP_TASK_NAME, Jar.class);
+
+		jar.setClassifier("jspc");
+		jar.setDescription(
+			"Assembles a jar archive containing the compiled JSP classes for " +
+				"this project.");
+		jar.setGroup(BasePlugin.BUILD_GROUP);
+		jar.setIncludeEmptyDirs(false);
+
+		JavaCompile javaCompile = (JavaCompile)GradleUtil.getTask(
+			project, JspCPlugin.COMPILE_JSP_TASK_NAME);
+
+		jar.from(javaCompile);
 
 		return jar;
 	}
@@ -1397,10 +1459,37 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 	}
 
 	private void _configureArtifacts(
-		Project project, Jar jarJavadocTask, Jar jarSourcesTask,
+		Project project, Jar jarJSPTask, Jar jarJavadocTask, Jar jarSourcesTask,
 		Jar jarTLDDocTask) {
 
 		ArtifactHandler artifactHandler = project.getArtifacts();
+
+		SourceSet sourceSet = GradleUtil.getSourceSet(
+			project, SourceSet.MAIN_SOURCE_SET_NAME);
+
+		FileCollection resourcesFileCollection = sourceSet.getResources();
+
+		FileCollection jspFileCollection = resourcesFileCollection.filter(
+			new Spec<File>() {
+
+				@Override
+				public boolean isSatisfiedBy(File file) {
+					String fileName = file.getName();
+
+					if (fileName.endsWith(".jsp") ||
+						fileName.endsWith(".jspf")) {
+
+						return true;
+					}
+
+					return false;
+				}
+
+			});
+
+		if (!jspFileCollection.isEmpty()) {
+			artifactHandler.add(Dependency.ARCHIVES_CONFIGURATION, jarJSPTask);
+		}
 
 		Spec<File> spec = new Spec<File>() {
 
@@ -1647,6 +1736,8 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 	private void _configureConfigurationJspC(
 		final Project project, final LiferayExtension liferayExtension) {
 
+		final Logger logger = project.getLogger();
+
 		final Configuration configuration = GradleUtil.getConfiguration(
 			project, JspCPlugin.CONFIGURATION_NAME);
 
@@ -1695,6 +1786,18 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 							moduleVersionSelector);
 
 						dependencyResolveDetails.useVersion(version);
+
+						if (logger.isLifecycleEnabled()) {
+							File file = GradleUtil.getMavenLocalFile(
+								project, group, name,
+								moduleVersionSelector.getVersion());
+
+							logger.lifecycle(
+								"Compiling JSP files of {} with {} as " +
+									"dependency in place of '{}:{}:{}'",
+								project, file.getAbsolutePath(), group, name,
+								moduleVersionSelector.getVersion());
+						}
 					}
 				}
 
@@ -1739,6 +1842,16 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 							throw new GradleException(
 								"Unable to find " + fileName + " in " +
 									osgiDir);
+						}
+
+						if (logger.isLifecycleEnabled()) {
+							logger.lifecycle(
+								"Compiling JSP files of {} with {} as " +
+									"dependency in place of '{}:{}:{}'",
+								project, file.getAbsolutePath(),
+								externalModuleDependency.getGroup(),
+								externalModuleDependency.getName(),
+								externalModuleDependency.getVersion());
 						}
 
 						GradleUtil.addDependency(
@@ -2377,6 +2490,7 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 		JavaCompile javaCompile = (JavaCompile)GradleUtil.getTask(
 			project, JspCPlugin.COMPILE_JSP_TASK_NAME);
 
+		Properties artifactProperties = null;
 		String dirName = null;
 
 		TaskContainer taskContainer = project.getTasks();
@@ -2391,10 +2505,10 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 			File artifactPropertiesFile = recordArtifactTask.getOutputFile();
 
 			if (artifactPropertiesFile.exists()) {
-				Properties properties = GUtil.loadProperties(
+				artifactProperties = GUtil.loadProperties(
 					artifactPropertiesFile);
 
-				artifactURL = properties.getProperty("artifact.url");
+				artifactURL = artifactProperties.getProperty("artifact.url");
 			}
 
 			if (Validator.isNotNull(artifactURL)) {
@@ -2415,6 +2529,19 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 			liferayExtension.getLiferayHome(), "work/" + dirName);
 
 		javaCompile.setDestinationDir(dir);
+
+		boolean jspPrecompileFromSource = GradleUtil.getProperty(
+			project, "jsp.precompile.from.source", true);
+
+		if (!jspPrecompileFromSource && (artifactProperties != null)) {
+			Copy copy = _addTaskDownloadCompiledJSP(
+				javaCompile, artifactProperties);
+
+			if (copy != null) {
+				javaCompile.deleteAllActions();
+				javaCompile.setDependsOn(Collections.singleton(copy));
+			}
+		}
 	}
 
 	private void _configureTaskDeploy(
@@ -3395,7 +3522,7 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 			}
 
 			if (!line.contains(
-					PrintArtifactPublishCommandsTask.IGNORED_MESSAGE_PATTERN)) {
+					WriteArtifactPublishCommandsTask.IGNORED_MESSAGE_PATTERN)) {
 
 				return true;
 			}

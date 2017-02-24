@@ -212,9 +212,10 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 			</liferay-frontend:info-bar>
 		</c:if>
 
-		<aui:translation-manager
+		<liferay-frontend:translation-manager
 			availableLocales="<%= availableLocales %>"
 			changeableDefaultLanguage="<%= changeableDefaultLanguage %>"
+			componentId='<%= renderResponse.getNamespace() + "translationManager" %>'
 			defaultLanguageId="<%= defaultLanguageId %>"
 			id="translationManager"
 		/>

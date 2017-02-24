@@ -1,0 +1,24 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.wutka</groupId>
+  <artifactId>dtdparser</artifactId>
+  <version>1.21</version>
+  <name>dtdparser</name>
+  <url>http://www.wutka.com/dtdparser.html</url>
+  <description>A Java DTD Parser</description>
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License</name>
+      <url>http://www.gnu.org/licenses/lgpl.txt</url>
+      <distribution>repo</distribution>
+    </license>
+    <license>
+      <name>Apache-style license</name>
+      <url>http://www.wutka.com/dtdparserasllicense.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <url>http://dtdparser.cvs.sourceforge.net/dtdparser</url>
+  </scm>
+</project>

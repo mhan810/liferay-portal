@@ -23,8 +23,8 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 
-import java.util.Iterator;
 import java.util.Locale;
+import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -52,23 +52,25 @@ public class GridDDMFormFieldValueRenderer
 
 		StringBundler sb = new StringBundler(valuesJSONObject.length() * 5);
 
-		Iterator<String> values = valuesJSONObject.keys();
+		Set<String> rowOptions = rows.getOptionsValues();
 
-		while (values.hasNext()) {
-			String value = values.next();
+		for (String rowOption : rowOptions) {
+			if (valuesJSONObject.has(rowOption)) {
+				String columnOption = valuesJSONObject.getString(rowOption);
 
-			LocalizedValue rowLabel = rows.getOptionLabels(value);
-			LocalizedValue columnLabel = columns.getOptionLabels(
-				valuesJSONObject.getString(value));
+				LocalizedValue rowLabel = rows.getOptionLabels(rowOption);
+				LocalizedValue columnLabel = columns.getOptionLabels(
+					columnOption);
 
-			sb.append(rowLabel != null ? rowLabel.getString(locale) : value);
+				sb.append(getLabel(rowLabel, rowOption, locale));
 
-			sb.append(StringPool.COLON);
-			sb.append(StringPool.SPACE);
+				sb.append(StringPool.COLON);
+				sb.append(StringPool.SPACE);
 
-			sb.append(
-				columnLabel != null ? columnLabel.getString(locale) : value);
-			sb.append(StringPool.COMMA_AND_SPACE);
+				sb.append(getLabel(columnLabel, columnOption, locale));
+
+				sb.append(StringPool.COMMA_AND_SPACE);
+			}
 		}
 
 		if (sb.index() > 0) {
@@ -84,6 +86,16 @@ public class GridDDMFormFieldValueRenderer
 		DDMFormField ddmFormField = ddmFormFieldValue.getDDMFormField();
 
 		return (DDMFormFieldOptions)ddmFormField.getProperty(optionType);
+	}
+
+	protected String getLabel(
+		LocalizedValue label, String defaultLabel, Locale locale) {
+
+		if (label != null) {
+			return label.getString(locale);
+		}
+
+		return defaultLabel;
 	}
 
 	@Reference

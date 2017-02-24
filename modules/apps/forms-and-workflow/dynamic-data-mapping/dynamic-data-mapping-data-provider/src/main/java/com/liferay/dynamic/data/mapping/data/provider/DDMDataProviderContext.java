@@ -28,6 +28,15 @@ import javax.servlet.http.HttpServletRequest;
 public class DDMDataProviderContext {
 
 	public DDMDataProviderContext(DDMFormValues ddmFormValues) {
+		this(null, null, ddmFormValues);
+	}
+
+	public DDMDataProviderContext(
+		String type, String ddmDataProviderInstanceId,
+		DDMFormValues ddmFormValues) {
+
+		_type = type;
+		_ddmDataProviderInstanceId = ddmDataProviderInstanceId;
 		_ddmFormValues = ddmFormValues;
 	}
 
@@ -37,6 +46,10 @@ public class DDMDataProviderContext {
 
 	public void addParameters(Map<String, String> parameters) {
 		_parameters.putAll(parameters);
+	}
+
+	public String getDDMDataProviderInstanceId() {
+		return _ddmDataProviderInstanceId;
 	}
 
 	public DDMFormValues getDDMFormValues() {
@@ -59,12 +72,18 @@ public class DDMDataProviderContext {
 		return DDMFormInstanceFactory.create(clazz, _ddmFormValues);
 	}
 
+	public String getType() {
+		return _type;
+	}
+
 	public void setHttpServletRequest(HttpServletRequest httpServletRequest) {
 		_httpServletRequest = httpServletRequest;
 	}
 
+	private final String _ddmDataProviderInstanceId;
 	private final DDMFormValues _ddmFormValues;
 	private HttpServletRequest _httpServletRequest;
 	private final Map<String, String> _parameters = new HashMap<>();
+	private final String _type;
 
 }

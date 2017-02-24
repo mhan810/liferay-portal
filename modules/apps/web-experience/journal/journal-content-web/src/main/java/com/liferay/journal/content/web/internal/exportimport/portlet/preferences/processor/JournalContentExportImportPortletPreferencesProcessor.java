@@ -254,33 +254,34 @@ public class JournalContentExportImportPortletPreferencesProcessor
 
 		try {
 			if (Validator.isNotNull(articleId)) {
-				Map<String, String> articleIds =
-					(Map<String, String>)
-						portletDataContext.getNewPrimaryKeysMap(
-							JournalArticle.class + ".articleId");
-
-				articleId = MapUtil.getString(articleIds, articleId, articleId);
-
-				portletPreferences.setValue("articleId", articleId);
-
 				Group importedArticleGroup = _groupLocalService.getGroup(
 					groupId);
 
 				if (importedArticleGroup.isStagedPortlet(
 						JournalPortletKeys.JOURNAL)) {
 
+					Map<String, String> articleIds =
+						(Map<String, String>)
+							portletDataContext.getNewPrimaryKeysMap(
+								JournalArticle.class + ".articleId");
+
+					articleId = MapUtil.getString(
+						articleIds, articleId, articleId);
+
+					portletPreferences.setValue("articleId", articleId);
+
 					portletPreferences.setValue(
 						"groupId", String.valueOf(groupId));
-				}
 
-				if (portletDataContext.getPlid() > 0) {
-					Layout layout = _layoutLocalService.fetchLayout(
-						portletDataContext.getPlid());
+					if (portletDataContext.getPlid() > 0) {
+						Layout layout = _layoutLocalService.fetchLayout(
+							portletDataContext.getPlid());
 
-					_journalContentSearchLocalService.updateContentSearch(
-						layout.getGroupId(), layout.isPrivateLayout(),
-						layout.getLayoutId(), portletDataContext.getPortletId(),
-						articleId, true);
+						_journalContentSearchLocalService.updateContentSearch(
+							layout.getGroupId(), layout.isPrivateLayout(),
+							layout.getLayoutId(),
+							portletDataContext.getPortletId(), articleId, true);
+					}
 				}
 			}
 

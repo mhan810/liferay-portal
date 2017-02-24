@@ -334,6 +334,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>EDIT_PENCIL</td>
+	<td>//a[contains(@class,'btn')]//i[contains(@class,'icon-pencil')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>ENTER</td>
 	<td>//button[contains(.,'Enter')]</td>
 	<td></td>

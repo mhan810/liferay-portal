@@ -267,11 +267,8 @@ public class PasswordPolicyLocalServiceImpl
 	}
 
 	@Override
-	@ThreadLocalCachable
-	public PasswordPolicy getPasswordPolicyByUserId(long userId)
+	public PasswordPolicy getPasswordPolicyByUser(User user)
 		throws PortalException {
-
-		User user = userPersistence.findByPrimaryKey(userId);
 
 		if (LDAPSettingsUtil.isPasswordPolicyEnabled(user.getCompanyId())) {
 			return null;
@@ -281,14 +278,15 @@ public class PasswordPolicyLocalServiceImpl
 			User.class.getName());
 
 		PasswordPolicyRel passwordPolicyRel =
-			passwordPolicyRelPersistence.fetchByC_C(classNameId, userId);
+			passwordPolicyRelPersistence.fetchByC_C(
+				classNameId, user.getUserId());
 
 		if (passwordPolicyRel != null) {
 			return getPasswordPolicy(passwordPolicyRel.getPasswordPolicyId());
 		}
 
 		long[] organizationIds = userPersistence.getOrganizationPrimaryKeys(
-			userId);
+			user.getUserId());
 
 		if (organizationIds.length == 0) {
 			return passwordPolicyPersistence.findByC_DP(
@@ -296,6 +294,15 @@ public class PasswordPolicyLocalServiceImpl
 		}
 
 		return getPasswordPolicy(user.getCompanyId(), organizationIds);
+	}
+
+	@Override
+	@ThreadLocalCachable
+	public PasswordPolicy getPasswordPolicyByUserId(long userId)
+		throws PortalException {
+
+		return getPasswordPolicyByUser(
+			userPersistence.findByPrimaryKey(userId));
 	}
 
 	@Override

@@ -4,4 +4,9 @@
 		<description>Testing toggles in a subrepository.</description>
 		<owner>Michael Hashimoto</owner>
 	</toggle>
+	<toggle name="LPS-67821">
+		<date>2017-02-22</date>
+		<description>Applying Lexicon to web content localization manager.</description>
+		<owner>Anthony Chu</owner>
+	</toggle>
 </toggles>

@@ -928,7 +928,7 @@ public class ServicePreAction extends Action {
 				themeDisplay.setShowPageSettingsIcon(true);
 			}
 
-			if (group.hasStagingGroup() && !group.isStagingGroup()) {
+			if (group.hasStagingGroup()) {
 				themeDisplay.setShowLayoutTemplatesIcon(false);
 				themeDisplay.setURLPublishToLive(null);
 			}
@@ -1017,7 +1017,7 @@ public class ServicePreAction extends Action {
 			themeDisplay.setShowPageCustomizationIcon(false);
 		}
 
-		if (group.hasStagingGroup() && !group.isStagingGroup()) {
+		if (group.hasStagingGroup()) {
 			themeDisplay.setShowLayoutTemplatesIcon(false);
 			themeDisplay.setShowPageCustomizationIcon(false);
 		}

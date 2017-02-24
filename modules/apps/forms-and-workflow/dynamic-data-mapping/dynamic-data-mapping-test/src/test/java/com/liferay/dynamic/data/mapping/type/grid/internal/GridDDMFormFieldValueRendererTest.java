@@ -79,6 +79,55 @@ public class GridDDMFormFieldValueRendererTest {
 				ddmFormFieldValue, LocaleUtil.US));
 	}
 
+	@Test
+	public void testRenderWithTwoRows() throws Exception {
+		DDMForm ddmForm = DDMFormTestUtil.createDDMForm();
+
+		DDMFormField ddmFormField = DDMFormTestUtil.createDDMFormField(
+			"Grid", "Grid", "grid", "string", false, false, false);
+
+		DDMFormFieldOptions ddmFormFieldRows = new DDMFormFieldOptions();
+
+		ddmFormFieldRows.addOptionLabel(
+			"rowValue 1", LocaleUtil.US, "rowLabel 1");
+		ddmFormFieldRows.addOptionLabel(
+			"rowValue 2", LocaleUtil.US, "rowLabel 2");
+
+		ddmFormField.setProperty("rows", ddmFormFieldRows);
+
+		DDMFormFieldOptions ddmFormFieldColumns = new DDMFormFieldOptions();
+
+		ddmFormFieldColumns.addOptionLabel(
+			"columnValue 1", LocaleUtil.US, "columnLabel 1");
+		ddmFormFieldColumns.addOptionLabel(
+			"columnValue 2", LocaleUtil.US, "columnLabel 2");
+
+		ddmFormField.setProperty("columns", ddmFormFieldColumns);
+
+		ddmForm.addDDMFormField(ddmFormField);
+
+		DDMFormValues ddmFormValues = DDMFormValuesTestUtil.createDDMFormValues(
+			ddmForm);
+
+		String value =
+			"{\"rowValue 2\":\"columnValue 2\", \"rowValue 1\":\"" +
+				"columnValue 1\"}";
+
+		DDMFormFieldValue ddmFormFieldValue =
+			DDMFormValuesTestUtil.createDDMFormFieldValue(
+				"Grid", new UnlocalizedValue(value));
+
+		ddmFormValues.addDDMFormFieldValue(ddmFormFieldValue);
+
+		GridDDMFormFieldValueRenderer gridDDMFormFieldValueRenderer =
+			createGridDDMFormFieldValueRenderer();
+
+		Assert.assertEquals(
+			"rowLabel 1: columnLabel 1, rowLabel 2: columnLabel 2",
+			gridDDMFormFieldValueRenderer.render(
+				ddmFormFieldValue, LocaleUtil.US));
+	}
+
 	protected GridDDMFormFieldValueAccessor
 		createGridDDMFormFieldValueAccessor() {
 

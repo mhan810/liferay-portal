@@ -18,6 +18,8 @@ import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormFieldEvaluationRes
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Leonardo Barros
@@ -47,7 +49,21 @@ public class GetPropertyFunction extends BaseDDMFormRuleFunction {
 		DDMFormFieldEvaluationResult ddmFormFieldEvaluationResult =
 			ddmFormFieldEvaluationResults.get(0);
 
-		return ddmFormFieldEvaluationResult.getProperty(_propertyName);
+		if (ddmFormFieldEvaluationResults.size() == 1) {
+			return ddmFormFieldEvaluationResult.getProperty(_propertyName);
+		}
+		else {
+			Stream<DDMFormFieldEvaluationResult>
+				ddmFormFieldEvaluationResultStream =
+					ddmFormFieldEvaluationResults.stream();
+
+			Stream<Object> valueStream = ddmFormFieldEvaluationResultStream.map(
+				result -> result.getProperty(_propertyName));
+
+			List<Object> values = valueStream.collect(Collectors.toList());
+
+			return values.toArray();
+		}
 	}
 
 	private final String _propertyName;
