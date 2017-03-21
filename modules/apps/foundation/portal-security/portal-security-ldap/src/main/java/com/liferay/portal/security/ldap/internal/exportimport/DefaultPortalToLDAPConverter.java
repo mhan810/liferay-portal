@@ -42,6 +42,7 @@ import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.security.ldap.exportimport.Modifications;
 import com.liferay.portal.security.ldap.exportimport.PortalToLDAPConverter;
+import com.liferay.portal.util.PropsValues;
 
 import java.io.Serializable;
 
@@ -435,7 +436,10 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 		try {
 			StringBundler sb = new StringBundler(4);
 
-			if (!algorithm.equals(PasswordEncryptorUtil.TYPE_NONE)) {
+			if (!algorithm.equals(PasswordEncryptorUtil.TYPE_NONE) &&
+				Validator.isNull(
+					PropsValues.PASSWORDS_ENCRYPTION_ALGORITHM_LEGACY)) {
+
 				sb.append(StringPool.OPEN_CURLY_BRACE);
 				sb.append(algorithm);
 				sb.append(StringPool.CLOSE_CURLY_BRACE);
