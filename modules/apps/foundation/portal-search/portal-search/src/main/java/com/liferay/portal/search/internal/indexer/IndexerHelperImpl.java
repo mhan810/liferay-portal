@@ -49,6 +49,7 @@ import com.liferay.portal.search.indexer.ModelIndexer;
 
 import java.io.Serializable;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -428,6 +429,34 @@ public class IndexerHelperImpl implements IndexerHelper {
 		}
 
 		return fieldName;
+	}
+
+	@Override
+	public void updateDocument(
+			long companyId, Document document, ModelIndexer<?> modelIndexer)
+		throws Exception {
+
+		final Indexer<?> indexer =
+			indexerRegistry.nullSafeGetIndexer(modelIndexer.getClassName());
+
+		indexWriterHelper.updateDocument(
+			indexer.getSearchEngineId(), companyId, document,
+			indexer.isCommitImmediately());
+	}
+
+	@Override
+	public void updateDocuments(
+			long companyId, Collection<Document> documents,
+			ModelIndexer<?> modelIndexer)
+		throws Exception {
+
+
+		final Indexer<?> indexer =
+			indexerRegistry.nullSafeGetIndexer(modelIndexer.getClassName());
+
+		indexWriterHelper.updateDocuments(
+			indexer.getSearchEngineId(), companyId, documents,
+			indexer.isCommitImmediately());
 	}
 
 	@Reference

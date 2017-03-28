@@ -16,11 +16,13 @@ package com.liferay.portal.search.indexer;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.portal.kernel.search.BooleanQuery;
+import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.Filter;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -100,5 +102,14 @@ public interface IndexerHelper {
 	public String getExpandoFieldName(
 		SearchContext searchContext, ExpandoBridge expandoBridge,
 		String attributeName);
+
+	public void updateDocument(
+			long companyId, Document document, ModelIndexer<?> modelIndexer)
+		throws Exception;
+
+	public void updateDocuments(
+			long companyId, Collection<Document> documents,
+			ModelIndexer<?> modelIndexer)
+		throws Exception;
 
 }

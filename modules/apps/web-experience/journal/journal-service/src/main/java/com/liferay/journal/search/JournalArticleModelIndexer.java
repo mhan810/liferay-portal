@@ -40,14 +40,12 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
-import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.DDMStructureIndexer;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.IndexWriterHelper;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.Query;
@@ -68,7 +66,6 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -135,8 +132,8 @@ public class JournalArticleModelIndexer
 
 		if (!isIndexAllArticleVersions()) {
 			if (_journalArticleLocalService.getArticlesCount(
-					journalArticle.getGroupId(),
-					journalArticle.getArticleId()) > 0) {
+				journalArticle.getGroupId(),
+				journalArticle.getArticleId()) > 0) {
 
 				reindex(journalArticle);
 
@@ -165,12 +162,9 @@ public class JournalArticleModelIndexer
 			return;
 		}
 
-		final Indexer<JournalArticle> indexer =
-			indexerRegistry.nullSafeGetIndexer(JournalArticle.class);
-
-		indexWriterHelper.updateDocument(
-			indexer.getSearchEngineId(), journalArticle.getCompanyId(),
-			getDocument(latestIndexableArticle), indexer.isCommitImmediately());
+		indexerHelper.updateDocument(
+			journalArticle.getCompanyId(), getDocument(latestIndexableArticle),
+			this);
 	}
 
 	@Override
@@ -209,7 +203,6 @@ public class JournalArticleModelIndexer
 			if (languageId.equals(articleDefaultLanguageId)) {
 				document.addText(Field.CONTENT, content);
 				document.addText(Field.DESCRIPTION, description);
-				document.addText(Field.TITLE, title);
 				document.addText("defaultLanguageId", languageId);
 			}
 
@@ -233,7 +226,7 @@ public class JournalArticleModelIndexer
 			articleId = TrashUtil.getOriginalTitle(articleId);
 		}
 
-		document.addKeyword(Field.ARTICLE_ID, articleId);
+		document.addKeywordSortable(Field.ARTICLE_ID, articleId);
 
 		document.addKeyword(Field.LAYOUT_UUID, journalArticle.getLayoutUuid());
 		document.addKeyword(
@@ -288,8 +281,9 @@ public class JournalArticleModelIndexer
 
 	@Override
 	public Summary getSummary(
-		Document document, Locale locale, String snippet,
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+			Document document, Locale locale, String snippet,
+			PortletRequest portletRequest, PortletResponse portletResponse)
+		throws Exception {
 
 		Locale defaultLocale = LocaleUtil.fromLanguageId(
 			document.get("defaultLanguageId"));
@@ -441,13 +435,13 @@ public class JournalArticleModelIndexer
 			searchQuery, searchContext, Field.ARTICLE_ID, false);
 		indexerHelper.addSearchTerm(
 			searchQuery, searchContext, Field.CLASS_PK, false);
-		indexerHelper.addSearchLocalizedTerm(
+		addSearchLocalizedTerm(
 			searchQuery, searchContext, Field.CONTENT, false);
-		indexerHelper.addSearchLocalizedTerm(
+		addSearchLocalizedTerm(
 			searchQuery, searchContext, Field.DESCRIPTION, false);
 		indexerHelper.addSearchTerm(
 			searchQuery, searchContext, Field.ENTRY_CLASS_PK, false);
-		indexerHelper.addSearchLocalizedTerm(
+		addSearchLocalizedTerm(
 			searchQuery, searchContext, Field.TITLE, false);
 		indexerHelper.addSearchTerm(
 			searchQuery, searchContext, Field.USER_NAME, false);
@@ -467,17 +461,13 @@ public class JournalArticleModelIndexer
 
 	@Override
 	public void reindex(JournalArticle article) throws Exception {
-		if (PortalUtil.getClassNameId(DDMStructure.class) ==
-				article.getClassNameId()) {
+		if (_portal.getClassNameId(DDMStructure.class) ==
+			article.getClassNameId()) {
 
 			Document document = getDocument(article);
 
-			final Indexer<JournalArticle> indexer =
-				indexerRegistry.nullSafeGetIndexer(JournalArticle.class);
-
-			indexWriterHelper.deleteDocument(
-				indexer.getSearchEngineId(), article.getCompanyId(),
-				document.get(Field.UID), indexer.isCommitImmediately());
+			indexerHelper.deleteDocument(
+				article.getCompanyId(), document.get(Field.UID), this);
 
 			return;
 		}
@@ -510,12 +500,11 @@ public class JournalArticleModelIndexer
 	public void reindexDDMStructures(List<Long> ddmStructureIds)
 		throws SearchException {
 
-		if (_indexStatusManager.isIndexReadOnly() || !isIndexerEnabled()) {
-			final Indexer<JournalArticle> indexer =
-				indexerRegistry.nullSafeGetIndexer(JournalArticle.class);
+		final Indexer<JournalArticle> indexer =
+			indexerRegistry.nullSafeGetIndexer(JournalArticle.class);
 
-			if (indexStatusManager.isIndexReadOnly() ||
-				!indexer.isIndexerEnabled()) {
+		if (indexStatusManager.isIndexReadOnly() ||
+			!indexer.isIndexerEnabled()) {
 
 			return;
 		}
@@ -619,7 +608,6 @@ public class JournalArticleModelIndexer
 		}
 	}
 
-	@Override
 	protected Map<String, Query> addSearchLocalizedTerm(
 			BooleanQuery searchQuery, SearchContext searchContext, String field,
 			boolean like)
@@ -671,238 +659,6 @@ public class JournalArticleModelIndexer
 		}
 
 		return queries;
-	}
-
-	@Override
-	protected void doDelete(JournalArticle journalArticle) throws Exception {
-		long classPK = journalArticle.getId();
-
-		if (!isIndexAllArticleVersions()) {
-			if (_journalArticleLocalService.getArticlesCount(
-					journalArticle.getGroupId(),
-					journalArticle.getArticleId()) > 0) {
-
-				doReindex(journalArticle);
-
-				return;
-			}
-			else {
-				classPK = journalArticle.getResourcePrimKey();
-			}
-		}
-
-		deleteDocument(journalArticle.getCompanyId(), classPK);
-
-		if (!journalArticle.isApproved()) {
-			return;
-		}
-
-		JournalArticle latestIndexableArticle =
-			_journalArticleLocalService.fetchLatestIndexableArticle(
-				journalArticle.getResourcePrimKey());
-
-		if ((latestIndexableArticle == null) ||
-			(latestIndexableArticle.getVersion() >
-				journalArticle.getVersion())) {
-
-			return;
-		}
-
-		_indexWriterHelper.updateDocument(
-			getSearchEngineId(), journalArticle.getCompanyId(),
-			getDocument(latestIndexableArticle), isCommitImmediately());
-	}
-
-	@Override
-	protected Document doGetDocument(JournalArticle journalArticle)
-		throws Exception {
-
-		Document document = getBaseModelDocument(CLASS_NAME, journalArticle);
-
-		long classPK = journalArticle.getId();
-
-		if (!isIndexAllArticleVersions()) {
-			classPK = journalArticle.getResourcePrimKey();
-		}
-
-		document.addUID(CLASS_NAME, classPK);
-
-		String articleDefaultLanguageId = LocalizationUtil.getDefaultLanguageId(
-			journalArticle.getDocument());
-
-		String[] languageIds = LocalizationUtil.getAvailableLanguageIds(
-			journalArticle.getDocument());
-
-		for (String languageId : languageIds) {
-			String content = extractDDMContent(journalArticle, languageId);
-
-			String description = journalArticle.getDescription(languageId);
-
-			String title = journalArticle.getTitle(languageId);
-
-			if (languageId.equals(articleDefaultLanguageId)) {
-				document.addText(Field.CONTENT, content);
-				document.addText(Field.DESCRIPTION, description);
-				document.addText("defaultLanguageId", languageId);
-			}
-
-			document.addText(
-				LocalizationUtil.getLocalizedName(Field.CONTENT, languageId),
-				content);
-			document.addText(
-				LocalizationUtil.getLocalizedName(
-					Field.DESCRIPTION, languageId),
-				description);
-			document.addText(
-				LocalizationUtil.getLocalizedName(Field.TITLE, languageId),
-				title);
-		}
-
-		document.addKeyword(Field.FOLDER_ID, journalArticle.getFolderId());
-
-		String articleId = journalArticle.getArticleId();
-
-		if (journalArticle.isInTrash()) {
-			articleId = TrashUtil.getOriginalTitle(articleId);
-		}
-
-		document.addKeywordSortable(Field.ARTICLE_ID, articleId);
-
-		document.addKeyword(Field.LAYOUT_UUID, journalArticle.getLayoutUuid());
-		document.addKeyword(
-			Field.TREE_PATH,
-			StringUtil.split(journalArticle.getTreePath(), CharPool.SLASH));
-		document.addKeyword(Field.VERSION, journalArticle.getVersion());
-
-		document.addKeyword(
-			"ddmStructureKey", journalArticle.getDDMStructureKey());
-		document.addKeyword(
-			"ddmTemplateKey", journalArticle.getDDMTemplateKey());
-		document.addDate("displayDate", journalArticle.getDisplayDate());
-		document.addKeyword("head", JournalUtil.isHead(journalArticle));
-
-		boolean headListable = JournalUtil.isHeadListable(journalArticle);
-
-		document.addKeyword("headListable", headListable);
-
-		// Scheduled listable articles should be visible in asset browser
-
-		if (journalArticle.isScheduled() && headListable) {
-			boolean visible = GetterUtil.getBoolean(document.get("visible"));
-
-			if (!visible) {
-				document.addKeyword("visible", true);
-			}
-		}
-
-		addDDMStructureAttributes(document, journalArticle);
-
-		return document;
-	}
-
-	@Override
-	protected String doGetSortField(String orderByCol) {
-		if (orderByCol.equals("display-date")) {
-			return "displayDate";
-		}
-		else if (orderByCol.equals("id")) {
-			return Field.ENTRY_CLASS_PK;
-		}
-		else if (orderByCol.equals("modified-date")) {
-			return Field.MODIFIED_DATE;
-		}
-		else if (orderByCol.equals("title")) {
-			return Field.TITLE;
-		}
-		else {
-			return orderByCol;
-		}
-	}
-
-	@Override
-	protected Summary doGetSummary(
-		Document document, Locale locale, String snippet,
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
-		Locale defaultLocale = LocaleUtil.fromLanguageId(
-			document.get("defaultLanguageId"));
-
-		Locale snippetLocale = getSnippetLocale(document, locale);
-
-		String localizedTitleName = DocumentImpl.getLocalizedName(
-			locale, Field.TITLE);
-
-		if ((snippetLocale == null) &&
-			(document.getField(localizedTitleName) == null)) {
-
-			snippetLocale = defaultLocale;
-		}
-		else {
-			snippetLocale = locale;
-		}
-
-		String title = document.get(
-			snippetLocale, Field.SNIPPET + StringPool.UNDERLINE + Field.TITLE,
-			Field.TITLE);
-
-		if (Validator.isNull(title) && !snippetLocale.equals(defaultLocale)) {
-			title = document.get(
-				defaultLocale,
-				Field.SNIPPET + StringPool.UNDERLINE + Field.TITLE,
-				Field.TITLE);
-		}
-
-		String content = getDDMContentSummary(
-			document, snippetLocale, portletRequest, portletResponse);
-
-		if (Validator.isNull(content) && !snippetLocale.equals(defaultLocale)) {
-			content = getDDMContentSummary(
-				document, defaultLocale, portletRequest, portletResponse);
-		}
-
-		Summary summary = new Summary(snippetLocale, title, content);
-
-		summary.setMaxContentLength(200);
-
-		return summary;
-	}
-
-	@Override
-	protected void doReindex(JournalArticle article) throws Exception {
-		if (_portal.getClassNameId(DDMStructure.class) ==
-				article.getClassNameId()) {
-
-			Document document = getDocument(article);
-
-			_indexWriterHelper.deleteDocument(
-				getSearchEngineId(), article.getCompanyId(),
-				document.get(Field.UID), isCommitImmediately());
-
-			return;
-		}
-
-		reindexArticleVersions(article);
-	}
-
-	@Override
-	protected void doReindex(String className, long classPK) throws Exception {
-		JournalArticle article =
-			_journalArticleLocalService.fetchJournalArticle(classPK);
-
-		if (article == null) {
-			article = _journalArticleLocalService.fetchLatestArticle(classPK);
-		}
-
-		if (article != null) {
-			doReindex(article);
-		}
-	}
-
-	@Override
-	protected void doReindex(String[] ids) throws Exception {
-		long companyId = GetterUtil.getLong(ids[0]);
-
-		reindexArticles(companyId);
 	}
 
 	protected String extractDDMContent(
@@ -1133,18 +889,10 @@ public class JournalArticleModelIndexer
 	}
 
 	protected void reindexArticleVersions(JournalArticle article)
-		throws PortalException {
+		throws Exception {
 
-		final Indexer<JournalArticle> indexer =
-			indexerRegistry.nullSafeGetIndexer(JournalArticle.class);
-
-		_indexWriterHelper.updateDocuments(
-			indexer.getSearchEngineId(), article.getCompanyId(),
-			getArticleVersions(article), indexer.isCommitImmediately());
-
-		indexWriterHelper.updateDocuments(
-			indexer.getSearchEngineId(), article.getCompanyId(),
-			getArticleVersions(article), indexer.isCommitImmediately());
+		indexerHelper.updateDocuments(
+			article.getCompanyId(), getArticleVersions(article), this);
 	}
 
 	@Reference(unbind = "-")
@@ -1210,9 +958,6 @@ public class JournalArticleModelIndexer
 	@Reference
 	protected IndexStatusManager indexStatusManager;
 
-	@Reference
-	protected IndexWriterHelper indexWriterHelper;
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		JournalArticleModelIndexer.class);
 
@@ -1220,15 +965,6 @@ public class JournalArticleModelIndexer
 	private DDMIndexer _ddmIndexer;
 	private DDMStructureLocalService _ddmStructureLocalService;
 	private FieldsToDDMFormValuesConverter _fieldsToDDMFormValuesConverter;
-
-	@Reference
-	private IndexerRegistry _indexerRegistry;
-
-	@Reference
-	private IndexStatusManager _indexStatusManager;
-
-	@Reference
-	private IndexWriterHelper _indexWriterHelper;
 
 	private JournalArticleLocalService _journalArticleLocalService;
 	private JournalArticleResourceLocalService
