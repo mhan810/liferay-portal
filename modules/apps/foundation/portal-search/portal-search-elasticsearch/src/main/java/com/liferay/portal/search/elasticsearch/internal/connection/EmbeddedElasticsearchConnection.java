@@ -316,8 +316,8 @@ public class EmbeddedElasticsearchConnection
 	protected void loadRequiredDefaultConfigurations() {
 		settingsBuilder.put("action.auto_create_index", false);
 		settingsBuilder.put(
-			"bootstrap.mlockall",
-			elasticsearchConfiguration.bootstrapMlockAll());
+			"bootstrap.memory_lock",
+			elasticsearchConfiguration.bootstrapMemoryLock());
 
 		configureClustering();
 
