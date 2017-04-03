@@ -20,7 +20,7 @@ import java.net.URL;
 
 import java.nio.file.Path;
 
-import org.elasticsearch.common.cli.Terminal;
+import org.elasticsearch.cli.Terminal;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.env.Environment;
 import org.elasticsearch.plugins.PluginManager.OutputMode;

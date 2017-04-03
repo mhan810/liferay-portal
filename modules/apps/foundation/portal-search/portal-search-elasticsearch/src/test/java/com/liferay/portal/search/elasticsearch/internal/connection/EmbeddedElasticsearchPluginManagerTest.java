@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import org.elasticsearch.Version;
-import org.elasticsearch.common.cli.Terminal;
+import org.elasticsearch.cli.Terminal;
 
 import org.junit.Assert;
 import org.junit.Before;
