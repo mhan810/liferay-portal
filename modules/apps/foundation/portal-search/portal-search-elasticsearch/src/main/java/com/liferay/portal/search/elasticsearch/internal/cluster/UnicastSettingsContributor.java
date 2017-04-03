@@ -51,7 +51,7 @@ public class UnicastSettingsContributor extends BaseSettingsContributor {
 		clientSettingsHelper.putArray(
 			"discovery.zen.ping.unicast.hosts", _getHosts());
 
-		clientSettingsHelper.put("node.local", "false");
+		clientSettingsHelper.put("transport.type", "local");
 	}
 
 	@Activate

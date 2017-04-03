@@ -28,6 +28,6 @@ monitor.jvm.gc.young.debug: 400ms
 monitor.jvm.gc.young.info: 700ms
 monitor.jvm.gc.young.warn: 1000ms
 
-threadpool:
+thread_pool:
     bulk:
         queue_size: 100

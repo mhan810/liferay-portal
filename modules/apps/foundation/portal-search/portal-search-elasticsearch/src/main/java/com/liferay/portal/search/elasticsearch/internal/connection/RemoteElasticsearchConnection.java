@@ -179,8 +179,9 @@ public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 		settingsBuilder.put(
 			"cluster.name", elasticsearchConfiguration.clusterName());
 		settingsBuilder.put("http.enabled", false);
-		settingsBuilder.put("node.client", true);
+		settingsBuilder.put("node.master", false);
 		settingsBuilder.put("node.data", false);
+		settingsBuilder.put("node.ingest", false);
 		settingsBuilder.put(
 			"path.logs", props.get(PropsKeys.LIFERAY_HOME) + "/logs");
 		settingsBuilder.put(

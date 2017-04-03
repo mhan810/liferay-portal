@@ -328,9 +328,10 @@ public class EmbeddedElasticsearchConnection
 
 		configureNetworking();
 
-		settingsBuilder.put("node.client", false);
+		settingsBuilder.put("node.master", true);
 		settingsBuilder.put("node.data", true);
-		settingsBuilder.put("node.local", true);
+		settingsBuilder.put("node.ingest", true);
+		settingsBuilder.put("transport.type", "local");
 
 		configurePaths();
 
