@@ -297,7 +297,7 @@ public class CompanyIndexFactory implements IndexFactory {
 		CreateIndexRequestBuilder createIndexRequestBuilder,
 		LiferayDocumentTypeFactory liferayDocumentTypeFactory) {
 
-		Settings.Builder builder = Settings.settingsBuilder();
+		Settings.Builder builder = Settings.builder();
 
 		liferayDocumentTypeFactory.createRequiredDefaultAnalyzers(builder);
 

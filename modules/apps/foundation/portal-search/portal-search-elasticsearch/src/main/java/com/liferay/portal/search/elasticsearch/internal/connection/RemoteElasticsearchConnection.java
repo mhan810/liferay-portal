@@ -42,6 +42,7 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.plugins.Plugin;
 
+import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -137,16 +138,13 @@ public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 	}
 
 	protected TransportClient createTransportClient() {
-		TransportClient.Builder transportClientBuilder =
-			TransportClient.builder();
+		Class[] classes = new Class[transportClientPlugins.size()];
 
-		transportClientBuilder.settings(settingsBuilder);
-
-		for (String plugin : transportClientPlugins) {
-			transportClientBuilder.addPlugin(getPluginClass(plugin));
+		for (int i = 0; i < transportClientPlugins.size(); i++){
+			classes[i] = getPluginClass(transportClientPlugins.get(i));
 		}
 
-		return transportClientBuilder.build();
+		return  new PreBuiltTransportClient(settingsBuilder.build(), classes);
 	}
 
 	@Deactivate
