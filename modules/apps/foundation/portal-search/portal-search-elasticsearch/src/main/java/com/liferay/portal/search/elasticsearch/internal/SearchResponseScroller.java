@@ -31,13 +31,13 @@ import org.elasticsearch.action.search.ClearScrollResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchScrollRequestBuilder;
-import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.sort.SortOrder;
 
 /**
  * @author Michael C. Han
@@ -84,9 +84,9 @@ public class SearchResponseScroller {
 		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch(
 			_indexNameBuilder.getIndexName(_searchContext.getCompanyId()));
 
-		searchRequestBuilder.addField(Field.UID);
+		searchRequestBuilder.addStoredField(Field.UID);
 		searchRequestBuilder.setQuery(_queryBuilder);
-		searchRequestBuilder.setSearchType(SearchType.SCAN);
+		searchRequestBuilder.addSort("_doc", SortOrder.DESC);
 		searchRequestBuilder.setTypes(_types);
 
 		Scroll scroll = new Scroll(_scrollTimeValue);
