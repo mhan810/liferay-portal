@@ -37,6 +37,9 @@ Import-Package:\
 	!org.apache.commons.cli.*,\
 	!org.apache.commons.io.*,\
 	!org.apache.commons.lang.*,\
+	!org.apache.commons.csv.*,\
+	!org.apache.commons.compress.*,\
+	!org.apache.http.*,\
 	!org.apache.ivy.*,\
 	!org.apache.lucene.expressions.*,\
 	!org.apache.lucene.geo3d.*,\
@@ -47,6 +50,7 @@ Import-Package:\
 	!org.codehaus.groovy.*,\
 	\
 	!org.eclipse.jetty.npn.*,\
+	!org.eclipse.jetty.alpn.*,\
 	\
 	!org.elasticsearch.index.shard.service.*,\
 	\
@@ -63,6 +67,19 @@ Import-Package:\
 	!org.junit.*,\
 	\
 	!sun.security.*,\
+	!com.sun.nio.sctp.*,\
+	!com.barchart.udt.*,\
+	!com.jcraft.*,\
+	!gnu.io.*,\
+	!javassist.*,\
+	!joptsimple.*,\
+	!org.apache.lucene.spatial.*,\
+	!com.lmax.disruptor.*,\
+	!org.apache.kafka.clients.producer.*,\
+	!org.zeromq.*,\
+	!com.puppycrawl.tools.checkstyle.*,\
+    !lzma.sdk.*,\
+    !net.jpountz.*,\
 	\
 	com.liferay.portal.search.analysis,\
 	*
