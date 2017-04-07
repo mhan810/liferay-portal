@@ -184,8 +184,6 @@ public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 		settingsBuilder.put("node.ingest", false);
 		settingsBuilder.put(
 			"path.logs", props.get(PropsKeys.LIFERAY_HOME) + "/logs");
-		settingsBuilder.put(
-			"path.work", SystemProperties.get(SystemProperties.TMP_DIR));
 	}
 
 	@Modified
