@@ -1,5 +1,5 @@
 {
-	"SpellCheckDocumentType": {
+	"spellChecker": {
 		"dynamic_templates": [
 			{
 				"template_": {

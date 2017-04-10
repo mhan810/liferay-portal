@@ -1,5 +1,5 @@
 {
-	"KeywordQueryDocumentType": {
+	"querySuggestion": {
 		"dynamic_templates": [
 			{
 				"template_": {
