@@ -165,7 +165,8 @@ public class ElasticsearchUpdateDocumentCommandImpl
 			if (PortalRunMode.isTestMode() ||
 				searchContext.isCommitImmediately()) {
 
-				bulkRequestBuilder.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+				bulkRequestBuilder.setRefreshPolicy(
+					WriteRequest.RefreshPolicy.IMMEDIATE);
 			}
 
 			BulkResponse bulkResponse = bulkRequestBuilder.get();

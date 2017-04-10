@@ -26,8 +26,8 @@ import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-
 import org.elasticsearch.index.search.MatchQuery;
+
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -116,9 +116,8 @@ public class MultiMatchQueryTranslatorImpl
 		}
 
 		if (multiMatchQuery.getZeroTermsQuery() != null) {
-			MatchQuery.ZeroTermsQuery
-				multiMatchQueryBuilderZeroTermsQuery = translate(
-					multiMatchQuery.getZeroTermsQuery());
+			MatchQuery.ZeroTermsQuery multiMatchQueryBuilderZeroTermsQuery =
+				translate(multiMatchQuery.getZeroTermsQuery());
 
 			multiMatchQueryBuilder.zeroTermsQuery(
 				multiMatchQueryBuilderZeroTermsQuery);

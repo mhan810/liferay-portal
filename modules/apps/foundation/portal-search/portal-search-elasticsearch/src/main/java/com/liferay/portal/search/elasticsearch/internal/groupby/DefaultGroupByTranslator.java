@@ -59,10 +59,12 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 
 		GroupBy groupBy = searchContext.getGroupBy();
 
-		TermsAggregationBuilder termsAggregationBuilder = AggregationBuilders.terms(
-			GROUP_BY_AGGREGATION_PREFIX + groupBy.getField());
+		TermsAggregationBuilder termsAggregationBuilder =
+			AggregationBuilders.terms(
+				GROUP_BY_AGGREGATION_PREFIX + groupBy.getField());
 
-		termsAggregationBuilder = termsAggregationBuilder.field(groupBy.getField());
+		termsAggregationBuilder = termsAggregationBuilder.field(
+			groupBy.getField());
 
 		TopHitsAggregationBuilder topHitsAggregationBuilder = getTopHitsBuilder(
 			searchContext, start, end, groupBy);
@@ -73,7 +75,8 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 	}
 
 	protected void addHighlightedField(
-		TopHitsAggregationBuilder topHitsAggregationBuilder, HighlightBuilder highlightBuilder, QueryConfig queryConfig,
+		TopHitsAggregationBuilder topHitsAggregationBuilder,
+		HighlightBuilder highlightBuilder, QueryConfig queryConfig,
 		String fieldName) {
 
 		highlightBuilder.field(
@@ -91,7 +94,8 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 	}
 
 	protected void addHighlights(
-		TopHitsAggregationBuilder topHitsAggregationBuilder, QueryConfig queryConfig) {
+		TopHitsAggregationBuilder topHitsAggregationBuilder,
+		QueryConfig queryConfig) {
 
 		if (!queryConfig.isHighlightEnabled()) {
 			return;
@@ -101,7 +105,8 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 
 		for (String highlightFieldName : queryConfig.getHighlightFieldNames()) {
 			addHighlightedField(
-				topHitsAggregationBuilder, highlightBuilder, queryConfig, highlightFieldName);
+				topHitsAggregationBuilder, highlightBuilder, queryConfig,
+				highlightFieldName);
 		}
 
 		highlightBuilder.postTags(HighlightUtil.HIGHLIGHT_TAG_CLOSE);
@@ -112,7 +117,9 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 		topHitsAggregationBuilder.highlighter(highlightBuilder);
 	}
 
-	protected void addSorts(TopHitsAggregationBuilder topHitsAggregationBuilder, Sort[] sorts) {
+	protected void addSorts(
+		TopHitsAggregationBuilder topHitsAggregationBuilder, Sort[] sorts) {
+
 		if (ArrayUtil.isEmpty(sorts)) {
 			return;
 		}
@@ -148,16 +155,20 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 				GeoDistanceSort geoDistanceSort = (GeoDistanceSort)sort;
 
 				List<GeoPoint> geoPoints = new ArrayList<>();
+
 				for (GeoLocationPoint geoLocationPoint :
 						geoDistanceSort.getGeoLocationPoints()) {
 
-					geoPoints.add(new GeoPoint(
-						geoLocationPoint.getLatitude(),
-						geoLocationPoint.getLongitude()));
+					geoPoints.add(
+						new GeoPoint(
+							geoLocationPoint.getLatitude(),
+							geoLocationPoint.getLongitude()));
 				}
 
 				GeoDistanceSortBuilder geoDistanceSortBuilder =
-					SortBuilders.geoDistanceSort(sortFieldName, geoPoints.toArray(new GeoPoint[geoPoints.size()]));
+					SortBuilders.geoDistanceSort(
+						sortFieldName,
+						geoPoints.toArray(new GeoPoint[geoPoints.size()]));
 
 				geoDistanceSortBuilder.geoDistance(GeoDistance.DEFAULT);
 
@@ -188,8 +199,8 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 	protected TopHitsAggregationBuilder getTopHitsBuilder(
 		SearchContext searchContext, int start, int end, GroupBy groupBy) {
 
-		TopHitsAggregationBuilder topHitsAggregationBuilder = AggregationBuilders.topHits(
-			TOP_HITS_AGGREGATION_NAME);
+		TopHitsAggregationBuilder topHitsAggregationBuilder =
+			AggregationBuilders.topHits(TOP_HITS_AGGREGATION_NAME);
 
 		int groupyByStart = groupBy.getStart();
 
@@ -207,7 +218,8 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 
 		topHitsAggregationBuilder.size(groupBySize);
 
-		addHighlights(topHitsAggregationBuilder, searchContext.getQueryConfig());
+		addHighlights(
+			topHitsAggregationBuilder, searchContext.getQueryConfig());
 		addSorts(topHitsAggregationBuilder, searchContext.getSorts());
 
 		return topHitsAggregationBuilder;

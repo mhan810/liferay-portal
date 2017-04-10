@@ -36,7 +36,8 @@ public class CompletionSuggesterTranslatorImpl
 		SuggestBuilder suggestBuilder = new SuggestBuilder();
 
 		CompletionSuggestionBuilder completionSuggesterBuilder =
-			SuggestBuilders.completionSuggestion(completionSuggester.getField());
+			SuggestBuilders.completionSuggestion(
+				completionSuggester.getField());
 
 		if (Validator.isNotNull(completionSuggester.getAnalyzer())) {
 			completionSuggesterBuilder.analyzer(
@@ -54,7 +55,8 @@ public class CompletionSuggesterTranslatorImpl
 
 		completionSuggesterBuilder.text(completionSuggester.getValue());
 
-		suggestBuilder.addSuggestion(completionSuggester.getName(), completionSuggesterBuilder);
+		suggestBuilder.addSuggestion(
+			completionSuggester.getName(), completionSuggesterBuilder);
 
 		return suggestBuilder;
 	}

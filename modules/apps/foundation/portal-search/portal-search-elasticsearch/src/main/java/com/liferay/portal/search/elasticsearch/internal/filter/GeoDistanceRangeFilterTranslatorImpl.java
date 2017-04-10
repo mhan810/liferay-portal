@@ -40,7 +40,9 @@ public class GeoDistanceRangeFilterTranslatorImpl
 
 		GeoDistanceRangeQueryBuilder geoDistanceRangeQueryBuilder =
 			QueryBuilders.geoDistanceRangeQuery(
-				geoDistanceRangeFilter.getField(), pinGeoLocationPoint.getLatitude(), pinGeoLocationPoint.getLongitude());
+				geoDistanceRangeFilter.getField(),
+				pinGeoLocationPoint.getLatitude(),
+				pinGeoLocationPoint.getLongitude());
 
 		geoDistanceRangeQueryBuilder.from(
 			String.valueOf(geoDistanceRangeFilter.getLowerBoundGeoDistance()));

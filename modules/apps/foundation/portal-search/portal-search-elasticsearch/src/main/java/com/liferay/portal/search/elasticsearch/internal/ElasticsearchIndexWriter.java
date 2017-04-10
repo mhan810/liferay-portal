@@ -118,7 +118,8 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			if (PortalRunMode.isTestMode() ||
 				searchContext.isCommitImmediately()) {
 
-				deleteRequestBuilder.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+				deleteRequestBuilder.setRefreshPolicy(
+					WriteRequest.RefreshPolicy.IMMEDIATE);
 			}
 
 			DeleteResponse deleteResponse = deleteRequestBuilder.get();
@@ -160,7 +161,8 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			if (PortalRunMode.isTestMode() ||
 				searchContext.isCommitImmediately()) {
 
-				bulkRequestBuilder.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+				bulkRequestBuilder.setRefreshPolicy(
+					WriteRequest.RefreshPolicy.IMMEDIATE);
 			}
 
 			BulkResponse bulkResponse = bulkRequestBuilder.get();

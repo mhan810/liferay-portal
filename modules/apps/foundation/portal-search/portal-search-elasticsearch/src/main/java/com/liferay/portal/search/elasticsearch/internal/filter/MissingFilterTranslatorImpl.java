@@ -19,8 +19,8 @@ import com.liferay.portal.search.elasticsearch.filter.MissingFilterTranslator;
 
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.ExistsQueryBuilder;
-
 import org.elasticsearch.index.query.QueryBuilder;
+
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -31,9 +31,8 @@ public class MissingFilterTranslatorImpl implements MissingFilterTranslator {
 
 	@Override
 	public QueryBuilder translate(MissingFilter missingFilter) {
-		BoolQueryBuilder missingQueryBuilder =
-			new BoolQueryBuilder().mustNot(new ExistsQueryBuilder(
-				missingFilter.getField()));
+		BoolQueryBuilder missingQueryBuilder = new BoolQueryBuilder().mustNot(
+			new ExistsQueryBuilder(missingFilter.getField()));
 
 		if (missingFilter.isExists() != null) {
 			missingFilter.setExists(missingFilter.isExists());

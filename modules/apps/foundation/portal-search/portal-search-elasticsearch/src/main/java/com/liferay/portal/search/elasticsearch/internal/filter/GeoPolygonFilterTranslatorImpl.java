@@ -18,15 +18,14 @@ import com.liferay.portal.kernel.search.filter.GeoPolygonFilter;
 import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
 import com.liferay.portal.search.elasticsearch.filter.GeoPolygonFilterTranslator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.elasticsearch.common.geo.GeoPoint;
-import org.elasticsearch.index.query.GeoPolygonQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
 import org.osgi.service.component.annotations.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Michael C. Han
@@ -37,17 +36,19 @@ public class GeoPolygonFilterTranslatorImpl
 
 	@Override
 	public QueryBuilder translate(GeoPolygonFilter geoPolygonFilter) {
-
 		List<GeoPoint> geoPoints = new ArrayList<>();
+
 		for (GeoLocationPoint geoLocationPoint :
 				geoPolygonFilter.getGeoLocationPoints()) {
 
-			geoPoints.add(new GeoPoint(
-				geoLocationPoint.getLatitude(),
-				geoLocationPoint.getLongitude()));
+			geoPoints.add(
+				new GeoPoint(
+					geoLocationPoint.getLatitude(),
+					geoLocationPoint.getLongitude()));
 		}
 
-		return QueryBuilders.geoPolygonQuery(geoPolygonFilter.getField(), geoPoints);
+		return QueryBuilders.geoPolygonQuery(
+			geoPolygonFilter.getField(), geoPoints);
 	}
 
 }

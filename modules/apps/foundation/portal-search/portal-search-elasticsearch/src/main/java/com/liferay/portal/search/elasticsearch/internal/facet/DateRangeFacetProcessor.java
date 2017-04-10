@@ -54,8 +54,8 @@ public class DateRangeFacetProcessor
 			return;
 		}
 
-		DateRangeAggregationBuilder dateRangeAggregationBuilder = AggregationBuilders.dateRange(
-			facetConfiguration.getFieldName());
+		DateRangeAggregationBuilder dateRangeAggregationBuilder =
+			AggregationBuilders.dateRange(facetConfiguration.getFieldName());
 
 		String format = jsonObject.getString("format");
 

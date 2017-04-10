@@ -96,7 +96,8 @@ public class TermSuggesterTranslatorImpl
 
 		termSuggesterBuilder.text(termSuggester.getValue());
 
-		suggestBuilder.addSuggestion(termSuggester.getName(), termSuggesterBuilder);
+		suggestBuilder.addSuggestion(
+			termSuggester.getName(), termSuggesterBuilder);
 
 		return suggestBuilder;
 	}

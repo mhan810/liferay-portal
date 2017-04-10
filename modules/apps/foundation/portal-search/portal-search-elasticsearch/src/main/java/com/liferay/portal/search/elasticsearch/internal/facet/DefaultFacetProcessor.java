@@ -41,7 +41,8 @@ public class DefaultFacetProcessor
 
 		String fieldName = facetConfiguration.getFieldName();
 
-		TermsAggregationBuilder termsAggregationBuilder = AggregationBuilders.terms(fieldName);
+		TermsAggregationBuilder termsAggregationBuilder =
+			AggregationBuilders.terms(fieldName);
 
 		termsAggregationBuilder.field(fieldName);
 

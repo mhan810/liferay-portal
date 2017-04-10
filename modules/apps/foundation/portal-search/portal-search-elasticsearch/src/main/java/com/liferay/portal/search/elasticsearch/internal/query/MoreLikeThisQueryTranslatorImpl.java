@@ -43,9 +43,11 @@ public class MoreLikeThisQueryTranslatorImpl
 		List<String> fields = moreLikeThisQuery.getFields();
 
 		List<String> likeTexts = new ArrayList<>();
+
 		likeTexts.addAll(fields);
 
 		List<MoreLikeThisQueryBuilder.Item> likeItems = new ArrayList<>();
+
 		if (moreLikeThisQuery.getDocumentUIDs() != null) {
 			String type = moreLikeThisQuery.getType();
 
@@ -69,7 +71,10 @@ public class MoreLikeThisQueryTranslatorImpl
 		}
 
 		MoreLikeThisQueryBuilder moreLikeThisQueryBuilder =
-			QueryBuilders.moreLikeThisQuery(likeTexts.toArray(new String[likeTexts.size()]), likeItems.toArray(new MoreLikeThisQueryBuilder.Item[likeItems.size()]));
+			QueryBuilders.moreLikeThisQuery(
+				likeTexts.toArray(new String[likeTexts.size()]),
+				likeItems.toArray(
+					new MoreLikeThisQueryBuilder.Item[likeItems.size()]));
 
 		if (Validator.isNotNull(moreLikeThisQuery.getAnalyzer())) {
 			moreLikeThisQueryBuilder.analyzer(moreLikeThisQuery.getAnalyzer());

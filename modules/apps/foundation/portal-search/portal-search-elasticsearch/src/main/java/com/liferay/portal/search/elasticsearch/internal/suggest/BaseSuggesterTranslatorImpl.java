@@ -15,6 +15,7 @@
 package com.liferay.portal.search.elasticsearch.internal.suggest;
 
 import com.liferay.portal.kernel.search.suggest.Suggester;
+
 import org.elasticsearch.search.suggest.SortBy;
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder;
 
@@ -29,15 +30,6 @@ public abstract class BaseSuggesterTranslatorImpl {
 		}
 		else {
 			return "score";
-		}
-	}
-
-	protected SortBy translateSort(Suggester.Sort sort) {
-		if (sort == Suggester.Sort.FREQUENCY) {
-			return SortBy.FREQUENCY;
-		}
-		else {
-			return SortBy.SCORE;
 		}
 	}
 
@@ -59,7 +51,21 @@ public abstract class BaseSuggesterTranslatorImpl {
 		}
 	}
 
-	protected TermSuggestionBuilder.StringDistanceImpl translateDistance(Suggester.StringDistance stringDistance) {
+	protected String translate(Suggester.SuggestMode suggestMode) {
+		if (suggestMode == Suggester.SuggestMode.ALWAYS) {
+			return "always";
+		}
+		else if (suggestMode == Suggester.SuggestMode.POPULAR) {
+			return "popular";
+		}
+		else {
+			return "missing";
+		}
+	}
+
+	protected TermSuggestionBuilder.StringDistanceImpl translateDistance(
+		Suggester.StringDistance stringDistance) {
+
 		if (stringDistance == Suggester.StringDistance.DAMERAU_LEVENSHTEIN) {
 			return TermSuggestionBuilder.StringDistanceImpl.DAMERAU_LEVENSHTEIN;
 		}
@@ -77,19 +83,9 @@ public abstract class BaseSuggesterTranslatorImpl {
 		}
 	}
 
-	protected String translate(Suggester.SuggestMode suggestMode) {
-		if (suggestMode == Suggester.SuggestMode.ALWAYS) {
-			return "always";
-		}
-		else if (suggestMode == Suggester.SuggestMode.POPULAR) {
-			return "popular";
-		}
-		else {
-			return "missing";
-		}
-	}
+	protected TermSuggestionBuilder.SuggestMode translateMode(
+		Suggester.SuggestMode suggestMode) {
 
-	protected TermSuggestionBuilder.SuggestMode translateMode(Suggester.SuggestMode suggestMode) {
 		if (suggestMode == Suggester.SuggestMode.ALWAYS) {
 			return TermSuggestionBuilder.SuggestMode.ALWAYS;
 		}
@@ -98,6 +94,15 @@ public abstract class BaseSuggesterTranslatorImpl {
 		}
 		else {
 			return TermSuggestionBuilder.SuggestMode.MISSING;
+		}
+	}
+
+	protected SortBy translateSort(Suggester.Sort sort) {
+		if (sort == Suggester.Sort.FREQUENCY) {
+			return SortBy.FREQUENCY;
+		}
+		else {
+			return SortBy.SCORE;
 		}
 	}
 

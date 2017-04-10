@@ -104,7 +104,8 @@ public class PhraseSuggesterTranslatorImpl
 
 		phraseSuggestionBuilder.text(phraseSuggester.getValue());
 
-		suggestBuilder.addSuggestion(phraseSuggester.getName(), phraseSuggestionBuilder);
+		suggestBuilder.addSuggestion(
+			phraseSuggester.getName(), phraseSuggestionBuilder);
 
 		return suggestBuilder;
 	}
@@ -134,10 +135,9 @@ public class PhraseSuggesterTranslatorImpl
 		for (PhraseSuggester.CandidateGenerator candidateGenerator :
 				candidateGenerators) {
 
-			DirectCandidateGeneratorBuilder
-				directCandidateGenerator =
-					new DirectCandidateGeneratorBuilder(
-						candidateGenerator.getField());
+			DirectCandidateGeneratorBuilder directCandidateGenerator =
+				new DirectCandidateGeneratorBuilder(
+					candidateGenerator.getField());
 
 			if (candidateGenerator.getAccuracy() != null) {
 				directCandidateGenerator.accuracy(

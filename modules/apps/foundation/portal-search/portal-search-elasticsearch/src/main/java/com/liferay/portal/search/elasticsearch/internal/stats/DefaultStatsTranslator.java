@@ -121,8 +121,8 @@ public class DefaultStatsTranslator implements StatsTranslator {
 		String field = stats.getField();
 
 		if (stats.isCount()) {
-			ValueCountAggregationBuilder valueCountAggregationBuilder = AggregationBuilders.count(
-				field + "_count");
+			ValueCountAggregationBuilder valueCountAggregationBuilder =
+				AggregationBuilders.count(field + "_count");
 
 			valueCountAggregationBuilder.field(field);
 
@@ -130,7 +130,8 @@ public class DefaultStatsTranslator implements StatsTranslator {
 		}
 
 		if (stats.isMax()) {
-			MaxAggregationBuilder maxAggregationBuilder = AggregationBuilders.max(field + "_max");
+			MaxAggregationBuilder maxAggregationBuilder =
+				AggregationBuilders.max(field + "_max");
 
 			maxAggregationBuilder.field(field);
 
@@ -138,8 +139,8 @@ public class DefaultStatsTranslator implements StatsTranslator {
 		}
 
 		if (stats.isMean()) {
-			StatsAggregationBuilder statsAggregationBuilder = AggregationBuilders.stats(
-				field + "_stats");
+			StatsAggregationBuilder statsAggregationBuilder =
+				AggregationBuilders.stats(field + "_stats");
 
 			statsAggregationBuilder.field(field);
 
@@ -147,7 +148,8 @@ public class DefaultStatsTranslator implements StatsTranslator {
 		}
 
 		if (stats.isMin()) {
-			MinAggregationBuilder minAggregationBuilder = AggregationBuilders.min(field + "_min");
+			MinAggregationBuilder minAggregationBuilder =
+				AggregationBuilders.min(field + "_min");
 
 			minAggregationBuilder.field(field);
 
@@ -155,8 +157,8 @@ public class DefaultStatsTranslator implements StatsTranslator {
 		}
 
 		if (stats.isMissing()) {
-			MissingAggregationBuilder missingAggregationBuilder = AggregationBuilders.missing(
-				field + "_missing");
+			MissingAggregationBuilder missingAggregationBuilder =
+				AggregationBuilders.missing(field + "_missing");
 
 			missingAggregationBuilder.field(field);
 
@@ -169,11 +171,13 @@ public class DefaultStatsTranslator implements StatsTranslator {
 
 			extendedStatsAggregationBuilder.field(field);
 
-			searchRequestBuilder.addAggregation(extendedStatsAggregationBuilder);
+			searchRequestBuilder.addAggregation(
+				extendedStatsAggregationBuilder);
 		}
 
 		if (stats.isSum()) {
-			SumAggregationBuilder sumAggregationBuilder = AggregationBuilders.sum(field + "_sum");
+			SumAggregationBuilder sumAggregationBuilder =
+				AggregationBuilders.sum(field + "_sum");
 
 			sumAggregationBuilder.field(field);
 

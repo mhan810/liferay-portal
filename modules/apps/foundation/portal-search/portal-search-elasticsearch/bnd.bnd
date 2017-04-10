@@ -3,6 +3,8 @@ Bundle-SymbolicName: com.liferay.portal.search.elasticsearch
 Bundle-Version: 2.1.3
 Export-Package: com.liferay.portal.search.elasticsearch.settings
 Import-Package:\
+	!com.barchart.udt.*,\
+	\
 	!com.carrotsearch.hppc.*,\
 	\
 	!com.fasterxml.jackson.*,\
@@ -12,9 +14,16 @@ Import-Package:\
 	!com.google.common.*,\
 	!com.google.protobuf.*,\
 	\
+	!com.jcraft.*,\
+	\
+	!com.lmax.disruptor.*,\
+	\
 	!com.ning.compress.*,\
 	\
+	!com.puppycrawl.tools.checkstyle.*,\
+	\
 	!com.sun.jna.*,\
+	!com.sun.nio.sctp.*,\
 	\
 	!com.tdunning.math.stats.*,\
 	\
@@ -23,11 +32,21 @@ Import-Package:\
 	\
 	!com.twitter.jsr166e.*,\
 	\
+	!gnu.io.*,\
+	\
 	!groovy.*,\
+	\
+	!javassist.*,\
 	\
 	!jline.*,\
 	\
+	!joptsimple.*,\
+	\
 	!junit.*,\
+	\
+	!lzma.sdk.*,\
+	\
+	!net.jpountz.*,\
 	\
 	!org.HdrHistogram.*,\
 	\
@@ -35,22 +54,24 @@ Import-Package:\
 	\
 	!org.apache.bsf.*,\
 	!org.apache.commons.cli.*,\
+	!org.apache.commons.compress.*,\
+	!org.apache.commons.csv.*,\
 	!org.apache.commons.io.*,\
 	!org.apache.commons.lang.*,\
-	!org.apache.commons.csv.*,\
-	!org.apache.commons.compress.*,\
 	!org.apache.http.*,\
 	!org.apache.ivy.*,\
+	!org.apache.kafka.clients.producer.*,\
 	!org.apache.lucene.expressions.*,\
 	!org.apache.lucene.geo3d.*,\
+	!org.apache.lucene.spatial.*,\
 	!org.apache.tomcat.jni.*,\
 	\
 	!org.bouncycastle.*,\
 	\
 	!org.codehaus.groovy.*,\
 	\
-	!org.eclipse.jetty.npn.*,\
 	!org.eclipse.jetty.alpn.*,\
+	!org.eclipse.jetty.npn.*,\
 	\
 	!org.elasticsearch.index.shard.service.*,\
 	\
@@ -66,20 +87,9 @@ Import-Package:\
 	\
 	!org.junit.*,\
 	\
-	!sun.security.*,\
-	!com.sun.nio.sctp.*,\
-	!com.barchart.udt.*,\
-	!com.jcraft.*,\
-	!gnu.io.*,\
-	!javassist.*,\
-	!joptsimple.*,\
-	!org.apache.lucene.spatial.*,\
-	!com.lmax.disruptor.*,\
-	!org.apache.kafka.clients.producer.*,\
 	!org.zeromq.*,\
-	!com.puppycrawl.tools.checkstyle.*,\
-    !lzma.sdk.*,\
-    !net.jpountz.*,\
+	\
+	!sun.security.*,\
 	\
 	com.liferay.portal.search.analysis,\
 	*

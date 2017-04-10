@@ -126,10 +126,15 @@ public class ElasticsearchQuerySuggester extends BaseQuerySuggester {
 		final SearchRequestBuilder searchRequestBuilder = client.prepareSearch(
 			indexNameBuilder.getIndexName(searchContext.getCompanyId()));
 
-		Map<String, SuggestionBuilder<?>> suggestionBuilders = suggestBuilder.getSuggestions();
+		Map<String, SuggestionBuilder<?>> suggestionBuilders =
+			suggestBuilder.getSuggestions();
 
-		for (Map.Entry<String, SuggestionBuilder<?>> entry : suggestionBuilders.entrySet()) {
-			searchRequestBuilder.suggest(new SuggestBuilder().addSuggestion(entry.getKey(), entry.getValue()));
+		for (Map.Entry<String, SuggestionBuilder<?>> entry :
+				suggestionBuilders.entrySet()) {
+
+			searchRequestBuilder.suggest(
+				new SuggestBuilder().addSuggestion(
+					entry.getKey(), entry.getValue()));
 		}
 
 		SearchResponse suggestResponse = searchRequestBuilder.get();

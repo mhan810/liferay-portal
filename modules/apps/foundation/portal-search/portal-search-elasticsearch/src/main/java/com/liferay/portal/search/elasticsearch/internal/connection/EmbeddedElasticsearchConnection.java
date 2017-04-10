@@ -17,11 +17,9 @@ package com.liferay.portal.search.elasticsearch.internal.connection;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnection;
@@ -30,6 +28,8 @@ import com.liferay.portal.search.elasticsearch.index.IndexFactory;
 import com.liferay.portal.search.elasticsearch.internal.cluster.ClusterSettingsContext;
 import com.liferay.portal.search.elasticsearch.settings.SettingsContributor;
 
+import io.netty.buffer.ByteBufUtil;
+
 import java.io.IOException;
 
 import java.net.InetAddress;
@@ -37,18 +37,16 @@ import java.net.InetAddress;
 import java.util.Collections;
 import java.util.Map;
 
-import io.netty.buffer.ByteBufUtil;
 import org.apache.commons.lang.time.StopWatch;
 
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.Node;
-
 import org.elasticsearch.node.NodeValidationException;
-
 import org.elasticsearch.node.internal.InternalSettingsPreparer;
 import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.transport.Netty4Plugin;
+
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -93,8 +91,8 @@ public class EmbeddedElasticsearchConnection
 		try {
 			_node.close();
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		catch (IOException ioe) {
+			ioe.printStackTrace();
 		}
 
 		_node = null;
@@ -223,7 +221,7 @@ public class EmbeddedElasticsearchConnection
 			props.get(PropsKeys.LIFERAY_HOME) + "/data/elasticsearch/repo");
 	}
 
-/*	protected void configurePlugin(String name, Settings settings) {
+	/* protected void configurePlugin(String name, Settings settings) {
 		EmbeddedElasticsearchPluginManager embeddedElasticsearchPluginManager =
 			new EmbeddedElasticsearchPluginManager(
 				name, settings.get("path.plugins"),
@@ -239,7 +237,7 @@ public class EmbeddedElasticsearchConnection
 		}
 	}*/
 
-/*	protected void configurePlugins() {
+	/* protected void configurePlugins() {
 		Settings settings = settingsBuilder.build();
 
 		String[] plugins = {
@@ -282,8 +280,8 @@ public class EmbeddedElasticsearchConnection
 		try {
 			_node.start();
 		}
-		catch (NodeValidationException e) {
-			e.printStackTrace();
+		catch (NodeValidationException nve) {
+			nve.printStackTrace();
 		}
 
 		Client client = _node.client();
@@ -317,15 +315,20 @@ public class EmbeddedElasticsearchConnection
 		}
 	}
 
-	static class PluginNode extends Node {
-		public PluginNode(final Settings settings) {
-			super(InternalSettingsPreparer.prepareEnvironment(settings, null), Collections.<Class<? extends Plugin>>singletonList(Netty4Plugin.class));
-		}
-	}
-
 	@Deactivate
 	protected void deactivate(Map<String, Object> properties) {
 		close();
+	}
+
+	private static class PluginNode extends Node {
+
+		private PluginNode(final Settings settings) {
+			super(
+				InternalSettingsPreparer.prepareEnvironment(settings, null),
+				Collections.<Class<? extends Plugin>>singletonList(
+					Netty4Plugin.class));
+		}
+
 	}
 
 	@Override
@@ -348,7 +351,7 @@ public class EmbeddedElasticsearchConnection
 
 		configurePaths();
 
-/*		configurePlugins();*/
+		/* configurePlugins();*/
 	}
 
 	@Override
