@@ -89,7 +89,7 @@ public class SearchAssert {
 
 		SearchRequestBuilder searchRequestBuilder = client.prepareSearch();
 
-		searchRequestBuilder.addField(StringPool.STAR);
+		searchRequestBuilder.addStoredField(StringPool.STAR);
 
 		searchRequestBuilder.setQuery(queryBuilder);
 

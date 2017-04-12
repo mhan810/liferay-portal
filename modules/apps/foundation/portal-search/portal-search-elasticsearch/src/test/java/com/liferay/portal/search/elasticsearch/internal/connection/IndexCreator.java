@@ -55,7 +55,7 @@ public class IndexCreator {
 
 		indexCreationHelper.contribute(createIndexRequestBuilder);
 
-		Settings.Builder builder = Settings.settingsBuilder();
+		Settings.Builder builder = Settings.builder();
 
 		indexCreationHelper.contributeIndexSettings(builder);
 
