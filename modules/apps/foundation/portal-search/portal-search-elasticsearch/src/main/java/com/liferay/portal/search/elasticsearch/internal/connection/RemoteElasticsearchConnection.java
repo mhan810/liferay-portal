@@ -143,7 +143,8 @@ public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 			classes[i] = getPluginClass(transportClientPlugins.get(i));
 		}
 
-		return new PreBuiltTransportClient(settingsBuilder.build(), classes);
+		return new PreBuiltTransportClient(
+			settingsBuilder.build(), (Class<? extends Plugin>[])classes);
 	}
 
 	@Deactivate

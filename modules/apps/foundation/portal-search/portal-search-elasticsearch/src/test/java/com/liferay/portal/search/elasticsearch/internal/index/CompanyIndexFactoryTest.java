@@ -236,8 +236,7 @@ public class CompanyIndexFactoryTest {
 		createIndices();
 
 		assertIndicesExist(
-			LiferayTypeMappingsConstants.LIFERAY_DOCUMENT_TYPE,
-			"spellChecker");
+			LiferayTypeMappingsConstants.LIFERAY_DOCUMENT_TYPE, "spellChecker");
 	}
 
 	@Test

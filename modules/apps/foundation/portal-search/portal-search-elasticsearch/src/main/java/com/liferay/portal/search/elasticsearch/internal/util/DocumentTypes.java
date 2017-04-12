@@ -21,10 +21,12 @@ import com.liferay.portal.kernel.search.suggest.SuggestionConstants;
  */
 public class DocumentTypes {
 
-	public static final String KEYWORD_QUERY = SuggestionConstants.TYPE_QUERY_SUGGESTION;
+	public static final String KEYWORD_QUERY =
+		SuggestionConstants.TYPE_QUERY_SUGGESTION;
 
 	public static final String LIFERAY = "LiferayDocumentType";
 
-	public static final String SPELL_CHECK = SuggestionConstants.TYPE_SPELL_CHECKER;
+	public static final String SPELL_CHECK =
+		SuggestionConstants.TYPE_SPELL_CHECKER;
 
 }

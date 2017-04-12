@@ -61,13 +61,13 @@
 				"template_expando_keyword": {
 					"mapping": {
 						"analyzer" : "keyword_lowercase",
-						"store": "true",
-						"type": "text",
 						"fields": {
 							"keyword": {
 								"type": "keyword"
 							}
-						}
+						},
+						"store": "true",
+						"type": "text"
 					},
 					"match": "expando__keyword__*",
 					"match_mapping_type": "string"
@@ -523,13 +523,13 @@
 			},
 			"articleId": {
 				"analyzer": "keyword_lowercase",
-				"store": "true",
-				"type": "text",
 				"fields": {
 					"keyword": {
 						"type": "keyword"
 					}
-				}
+				},
+				"store": "true",
+				"type": "text"
 			},
 			"assetCategoryId": {
 				"index": "true",
@@ -553,15 +553,15 @@
 			},
 			"assetTagNames": {
 				"analyzer" : "keyword_lowercase",
-				"search_analyzer" : "asset_tag_name",
-				"store": "true",
-				"term_vector": "with_positions_offsets",
-				"type": "text",
 				"fields": {
 					"keyword": {
 						"type": "keyword"
 					}
-				}
+				},
+				"search_analyzer" : "asset_tag_name",
+				"store": "true",
+				"term_vector": "with_positions_offsets",
+				"type": "text"
 			},
 			"assetVocabularyId": {
 				"index": "true",

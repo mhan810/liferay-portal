@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
@@ -16,6 +16,7 @@ package com.liferay.portal.search.elasticsearch.internal.configuration;
 
 import aQute.bnd.annotation.ProviderType;
 import aQute.bnd.annotation.metatype.Meta;
+
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 
 /**
@@ -24,14 +25,15 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 @ExtendedObjectClassDefinition(category = "foundation")
 @Meta.OCD(
 	id = "com.liferay.portal.search.elasticsearch.internal.configuration.FacetConfiguration",
-	localization = "content/Language",
-	name = "elastic.facet.configuration.name"
+	localization = "content/Language", name = "elastic.facet.configuration.name"
 )
 @ProviderType
 public interface FacetConfiguration {
+
 	@Meta.AD(
 		deflt = "articleId|assetTagNames|template_expando_keyword",
 		required = false
 	)
 	public String[] facetKeywordFields();
+
 }
