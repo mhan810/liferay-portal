@@ -62,7 +62,12 @@
 					"mapping": {
 						"analyzer" : "keyword_lowercase",
 						"store": "true",
-						"type": "text"
+						"type": "text",
+						"fields": {
+							"keyword": {
+								"type": "keyword"
+							}
+						}
 					},
 					"match": "expando__keyword__*",
 					"match_mapping_type": "string"
@@ -519,7 +524,12 @@
 			"articleId": {
 				"analyzer": "keyword_lowercase",
 				"store": "true",
-				"type": "text"
+				"type": "text",
+				"fields": {
+					"keyword": {
+						"type": "keyword"
+					}
+				}
 			},
 			"assetCategoryId": {
 				"index": "true",
@@ -546,7 +556,12 @@
 				"search_analyzer" : "asset_tag_name",
 				"store": "true",
 				"term_vector": "with_positions_offsets",
-				"type": "text"
+				"type": "text",
+				"fields": {
+					"keyword": {
+						"type": "keyword"
+					}
+				}
 			},
 			"assetVocabularyId": {
 				"index": "true",
