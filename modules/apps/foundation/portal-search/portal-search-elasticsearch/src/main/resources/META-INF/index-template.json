@@ -1,0 +1,21 @@
+{
+	"index": {
+		"indexing.slowlog.threshold.index.debug": "2s",
+		"indexing.slowlog.threshold.index.info": "5s",
+
+		"indexing.slowlog.threshold.index.trace": "500ms",
+		"indexing.slowlog.threshold.index.warn": "10s",
+		"number_of_replicas": 0,
+		"number_of_shards": 1,
+
+		"search.slowlog.threshold.fetch.debug": "500ms",
+		"search.slowlog.threshold.fetch.info": "800ms",
+		"search.slowlog.threshold.fetch.trace": "200ms",
+		"search.slowlog.threshold.fetch.warn": "1s",
+
+		"search.slowlog.threshold.query.debug": "2s",
+		"search.slowlog.threshold.query.info": "5s",
+		"search.slowlog.threshold.query.trace": "500ms",
+		"search.slowlog.threshold.query.warn": "10s"
+	}
+}
