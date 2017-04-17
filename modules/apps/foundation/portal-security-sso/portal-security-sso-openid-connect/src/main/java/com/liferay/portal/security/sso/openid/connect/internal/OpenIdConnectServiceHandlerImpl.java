@@ -181,7 +181,7 @@ public class OpenIdConnectServiceHandlerImpl
 				tokens.getAccessToken(), oidcProviderMetadata);
 
 			long userId = _openIdConnectUserInfoProcessor.processUserInfo(
-				userInfo, themeDisplay);
+				userInfo, themeDisplay.getCompanyId());
 
 			httpSession.setAttribute(
 				OpenIdConnectWebKeys.OPEN_ID_CONNECT_LOGIN, userId);
