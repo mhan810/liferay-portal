@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProvider;
+import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderMetadataFactory;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderRegistry;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceException;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceHandler;
@@ -51,7 +52,6 @@ import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.ClientID;
-import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
@@ -64,7 +64,6 @@ import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 import com.nimbusds.openid.connect.sdk.Nonce;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
-import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.UserInfoErrorResponse;
 import com.nimbusds.openid.connect.sdk.UserInfoRequest;
 import com.nimbusds.openid.connect.sdk.UserInfoResponse;
@@ -78,17 +77,13 @@ import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -158,8 +153,13 @@ public class OpenIdConnectServiceHandlerImpl
 				return null;
 			}
 
+			OpenIdConnectProviderMetadataFactory
+				openIdConnectProviderMetadataFactory =
+					openIdConnectProvider.
+						getOpenIdConnectProviderMetadataFactory();
+
 			OIDCProviderMetadata oidcProviderMetadata =
-				initOIDCProviderMetadata(openIdConnectProvider);
+				openIdConnectProviderMetadataFactory.getOIDCProviderMetadata();
 
 			OIDCTokenResponse oidcTokenResponse = requestToken(
 				openIdConnectProviderName, httpServletRequest,
@@ -227,8 +227,13 @@ public class OpenIdConnectServiceHandlerImpl
 			OpenIdConnectWebKeys.OPEN_ID_CONNECT_STATE, state);
 
 		try {
+			OpenIdConnectProviderMetadataFactory
+				openIdConnectProviderMetadataFactory =
+					openIdConnectProvider.
+						getOpenIdConnectProviderMetadataFactory();
+
 			OIDCProviderMetadata oidcProviderMetadata =
-				initOIDCProviderMetadata(openIdConnectProvider);
+				openIdConnectProviderMetadataFactory.getOIDCProviderMetadata();
 
 			OIDCClientInformation oidcClientInformation =
 				getOIDCClientInformation(
@@ -247,7 +252,7 @@ public class OpenIdConnectServiceHandlerImpl
 			httpServletResponse.sendRedirect(
 				authenticationRequestURI.toString());
 		}
-		catch (IOException | ParseException | URISyntaxException e) {
+		catch (IOException | URISyntaxException e) {
 			httpSession.removeAttribute(
 				OpenIdConnectWebKeys.OPEN_ID_CONNECT_PROVIDER_NAME);
 			httpSession.removeAttribute(
@@ -326,63 +331,6 @@ public class OpenIdConnectServiceHandlerImpl
 
 		return new OIDCClientInformation(
 			clientID, new Date(), oidcClientMetadata, secret);
-	}
-
-	protected OIDCProviderMetadata initOIDCProviderMetadata(
-			OpenIdConnectProvider openIdConnectProvider)
-		throws IOException, ParseException, PortalException,
-			URISyntaxException {
-
-		OIDCProviderMetadata oidcProviderMetadata = null;
-
-		String discoveryEndpoint = openIdConnectProvider.getDiscoveryEndPoint();
-
-		if (Validator.isNull(discoveryEndpoint)) {
-			Issuer issuer = new Issuer(openIdConnectProvider.getIssuerURL());
-
-			List<SubjectType> subjectTypes = new ArrayList<>();
-
-			for (String subjectType : openIdConnectProvider.getSubjectTypes()) {
-				subjectTypes.add(SubjectType.parse(subjectType));
-			}
-
-			oidcProviderMetadata = new OIDCProviderMetadata(
-				issuer, subjectTypes,
-				new URI(openIdConnectProvider.getJWKSURI()));
-
-			oidcProviderMetadata.setAuthorizationEndpointURI(
-				new URI(openIdConnectProvider.getAuthorizationEndPoint()));
-			oidcProviderMetadata.setTokenEndpointURI(
-				new URI(openIdConnectProvider.getTokenEndPoint()));
-			oidcProviderMetadata.setUserInfoEndpointURI(
-				new URI(openIdConnectProvider.getUserInfoEndPoint()));
-		}
-		else {
-			String json = null;
-
-			URI discoveryEndpointURI = new URI(
-				openIdConnectProvider.getDiscoveryEndPoint());
-
-			URL discoveryEndpointURL = discoveryEndpointURI.toURL();
-
-			try (InputStream discoveryEndpointStream =
-					discoveryEndpointURL.openStream();
-				Scanner scanner = new Scanner(discoveryEndpointStream)) {
-
-				Scanner delimiterScanner = scanner.useDelimiter("\\A");
-
-				if (delimiterScanner.hasNext()) {
-					json = scanner.next();
-				}
-				else {
-					json = StringPool.BLANK;
-				}
-			}
-
-			oidcProviderMetadata = OIDCProviderMetadata.parse(json);
-		}
-
-		return oidcProviderMetadata;
 	}
 
 	protected OIDCTokenResponse requestToken(
