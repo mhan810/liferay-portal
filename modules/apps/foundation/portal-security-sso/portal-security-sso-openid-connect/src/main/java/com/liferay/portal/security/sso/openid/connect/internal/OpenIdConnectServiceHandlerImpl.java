@@ -90,9 +90,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -109,8 +106,8 @@ public class OpenIdConnectServiceHandlerImpl
 
 	@Override
 	public String processAuthenticationResponse(
-			ThemeDisplay themeDisplay, ActionRequest actionRequest,
-			ActionResponse actionResponse)
+			ThemeDisplay themeDisplay, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse)
 		throws PortalException {
 
 		try {
@@ -128,9 +125,6 @@ public class OpenIdConnectServiceHandlerImpl
 				throw new OpenIdConnectServiceException.
 					AuthenticationErrorException(errorObject.toString());
 			}
-
-			HttpServletRequest httpServletRequest = getOriginalServletRequest(
-				actionRequest);
 
 			HttpSession httpSession = httpServletRequest.getSession();
 
@@ -172,8 +166,8 @@ public class OpenIdConnectServiceHandlerImpl
 				authorizationCode, oidcProviderMetadata);
 
 			validateToken(
-				openIdConnectProviderName, actionRequest, oidcProviderMetadata,
-				oidcTokenResponse);
+				openIdConnectProviderName, httpServletRequest,
+				oidcProviderMetadata, oidcTokenResponse);
 
 			Tokens tokens = oidcTokenResponse.getTokens();
 
@@ -201,8 +195,9 @@ public class OpenIdConnectServiceHandlerImpl
 
 	@Override
 	public void requestAuthentication(
-			String openIdConnectProviderName, ActionRequest actionRequest,
-			ActionResponse actionResponse)
+			String openIdConnectProviderName,
+			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse)
 		throws PortalException {
 
 		OpenIdConnectProvider openIdConnectProvider =
@@ -214,9 +209,6 @@ public class OpenIdConnectServiceHandlerImpl
 				"Unable to get OpenId Connect provider with name " +
 					openIdConnectProviderName);
 		}
-
-		HttpServletRequest httpServletRequest = getOriginalServletRequest(
-			actionRequest);
 
 		HttpSession httpSession = httpServletRequest.getSession();
 
@@ -235,9 +227,6 @@ public class OpenIdConnectServiceHandlerImpl
 			OpenIdConnectWebKeys.OPEN_ID_CONNECT_STATE, state);
 
 		try {
-			HttpServletResponse httpServletResponse =
-				_portal.getHttpServletResponse(actionResponse);
-
 			OIDCProviderMetadata oidcProviderMetadata =
 				initOIDCProviderMetadata(openIdConnectProvider);
 
@@ -337,18 +326,6 @@ public class OpenIdConnectServiceHandlerImpl
 
 		return new OIDCClientInformation(
 			clientID, new Date(), oidcClientMetadata, secret);
-	}
-
-	protected HttpServletRequest getOriginalServletRequest(
-		ActionRequest actionRequest) {
-
-		HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
-			actionRequest);
-
-		httpServletRequest = _portal.getOriginalServletRequest(
-			httpServletRequest);
-
-		return httpServletRequest;
 	}
 
 	protected OIDCProviderMetadata initOIDCProviderMetadata(
@@ -480,7 +457,8 @@ public class OpenIdConnectServiceHandlerImpl
 	}
 
 	protected IDTokenClaimsSet validateToken(
-			String openIdConnectProviderName, ActionRequest actionRequest,
+			String openIdConnectProviderName,
+			HttpServletRequest httpServletRequest,
 			OIDCProviderMetadata oidcProviderMetadata,
 			OIDCTokenResponse oidcTokenResponse)
 		throws BadJOSEException, GeneralException, JOSEException,
@@ -493,9 +471,6 @@ public class OpenIdConnectServiceHandlerImpl
 			oidcProviderMetadata, oidcClientInformation, null);
 
 		OIDCTokens oidcTokens = oidcTokenResponse.getOIDCTokens();
-
-		HttpServletRequest httpServletRequest = getOriginalServletRequest(
-			actionRequest);
 
 		Nonce nonce = (Nonce)httpServletRequest.getAttribute(
 			OpenIdConnectWebKeys.OPEN_ID_CONNECT_NONCE);
