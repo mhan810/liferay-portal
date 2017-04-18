@@ -14,15 +14,14 @@
 
 package com.liferay.portal.security.sso.openid.connect;
 
-import java.util.Collection;
+import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 
 /**
- * @author Thuong Dinh
+ * @author Edward C. Han
  */
-public interface OpenIdConnectProviderRegistry {
+public interface OpenIdConnectProviderMetadataFactory {
 
-	public OpenIdConnectProvider getOpenIdConnectProvider(String name);
-
-	public Collection<String> getOpenIdConnectProviderNames();
+	public OIDCProviderMetadata getOIDCProviderMetadata()
+		throws OpenIdConnectServiceException.ProviderException;
 
 }
