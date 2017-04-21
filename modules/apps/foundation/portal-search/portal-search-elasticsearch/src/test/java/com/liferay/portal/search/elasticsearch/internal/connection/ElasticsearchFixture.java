@@ -216,6 +216,7 @@ public class ElasticsearchFixture implements IndicesAdminClientSupplier {
 			elasticsearchConfigurationProperties);
 
 		map.put("configurationPid", ElasticsearchConfiguration.class.getName());
+		map.put("httpCORSAllowOrigin", "*");
 		map.put("logExceptionsOnly", false);
 
 		return map;
