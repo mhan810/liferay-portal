@@ -23,6 +23,7 @@ import org.elasticsearch.search.aggregations.AggregatorFactory;
 import org.elasticsearch.search.aggregations.bucket.range.AbstractRangeBuilder;
 import org.elasticsearch.search.aggregations.bucket.range.InternalRange;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregator;
+import org.elasticsearch.search.aggregations.bucket.range.RangeAggregatorFactory;
 import org.elasticsearch.search.aggregations.support.AggregationContext;
 import org.elasticsearch.search.aggregations.support.ValuesSource;
 import org.elasticsearch.search.aggregations.support.ValuesSourceAggregatorFactory;
@@ -104,8 +105,10 @@ public class DefaultRangeBuilder
 			AggregatorFactories.Builder factoriesBuilder)
 		throws IOException {
 
-		//TODO implement this method
-		return null;
+		return new RangeAggregatorFactory(
+			name, type, config,
+			ranges.toArray(new RangeAggregator.Range[ranges.size()]), keyed,
+			rangeFactory, context, parent, factoriesBuilder, metaData);
 	}
 
 	private String _format;
