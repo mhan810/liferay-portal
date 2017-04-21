@@ -24,6 +24,7 @@ import java.util.Set;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.phrase.DirectCandidateGeneratorBuilder;
 import org.elasticsearch.search.suggest.phrase.PhraseSuggestionBuilder;
 
 import org.osgi.service.component.annotations.Component;
@@ -41,13 +42,10 @@ public class PhraseSuggesterTranslatorImpl
 
 	@Override
 	public SuggestBuilder translate(PhraseSuggester phraseSuggester) {
-		SuggestBuilder suggestBuilder = new SuggestBuilder(
-			phraseSuggester.getName());
+		SuggestBuilder suggestBuilder = new SuggestBuilder();
 
 		PhraseSuggestionBuilder phraseSuggestionBuilder =
-			SuggestBuilders.phraseSuggestion(phraseSuggester.getName());
-
-		phraseSuggestionBuilder.field(phraseSuggester.getField());
+			SuggestBuilders.phraseSuggestion(phraseSuggester.getField());
 
 		if (Validator.isNotNull(phraseSuggester.getAnalyzer())) {
 			phraseSuggestionBuilder.analyzer(phraseSuggester.getAnalyzer());
@@ -106,7 +104,8 @@ public class PhraseSuggesterTranslatorImpl
 
 		phraseSuggestionBuilder.text(phraseSuggester.getValue());
 
-		suggestBuilder.addSuggestion(phraseSuggestionBuilder);
+		suggestBuilder.addSuggestion(
+			phraseSuggester.getName(), phraseSuggestionBuilder);
 
 		return suggestBuilder;
 	}
@@ -136,10 +135,9 @@ public class PhraseSuggesterTranslatorImpl
 		for (PhraseSuggester.CandidateGenerator candidateGenerator :
 				candidateGenerators) {
 
-			PhraseSuggestionBuilder.DirectCandidateGenerator
-				directCandidateGenerator =
-					new PhraseSuggestionBuilder.DirectCandidateGenerator(
-						candidateGenerator.getField());
+			DirectCandidateGeneratorBuilder directCandidateGenerator =
+				new DirectCandidateGeneratorBuilder(
+					candidateGenerator.getField());
 
 			if (candidateGenerator.getAccuracy() != null) {
 				directCandidateGenerator.accuracy(

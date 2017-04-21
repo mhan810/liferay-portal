@@ -1,13 +1,13 @@
 {
-	"KeywordQueryDocumentType": {
+	"querySuggestion": {
 		"dynamic_templates": [
 			{
 				"template_": {
 					"mapping": {
-						"index": "not_analyzed",
+						"index": "true",
 						"index_options": "docs",
 						"omit_norms": "yes",
-						"type": "string"
+						"type": "keyword"
 					},
 					"match": "*",
 					"match_mapping_type": "string"
@@ -16,8 +16,8 @@
 			{
 				"template_keywordSearch": {
 					"mapping": {
-						"index": "analyzed",
-						"type": "string"
+						"index": "true",
+						"type": "text"
 					},
 					"match": "keywordSearch_*",
 					"match_mapping_type": "string"
@@ -26,23 +26,23 @@
 		],
 		"properties": {
 			"companyId": {
-				"index": "not_analyzed",
+				"index": "true",
 				"store": "yes",
-				"type": "string"
+				"type": "keyword"
 			},
 			"groupId": {
-				"index": "not_analyzed",
+				"index": "true",
 				"store": "yes",
-				"type": "string"
+				"type": "keyword"
 			},
 			"priority": {
-				"index": "not_analyzed",
+				"index": "true",
 				"type": "float"
 			},
 			"uid": {
-				"index": "not_analyzed",
+				"index": "true",
 				"store": "yes",
-				"type": "string"
+				"type": "keyword"
 			}
 		}
 	}

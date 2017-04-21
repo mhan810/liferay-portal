@@ -42,6 +42,7 @@ import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
+import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.action.update.UpdateRequestBuilder;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.Client;
@@ -164,7 +165,8 @@ public class ElasticsearchUpdateDocumentCommandImpl
 			if (PortalRunMode.isTestMode() ||
 				searchContext.isCommitImmediately()) {
 
-				bulkRequestBuilder.setRefresh(true);
+				bulkRequestBuilder.setRefreshPolicy(
+					WriteRequest.RefreshPolicy.IMMEDIATE);
 			}
 
 			BulkResponse bulkResponse = bulkRequestBuilder.get();

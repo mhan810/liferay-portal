@@ -44,8 +44,6 @@ public class GeoBoundingBoxFilterTranslatorImpl
 			bottomRightGeoLocationPoint.getLatitude(),
 			bottomRightGeoLocationPoint.getLongitude());
 
-		geoBoundingBoxQueryBuilder.bottomRight(bottomRightGeoPoint);
-
 		GeoLocationPoint topLeftGeoLocationPoint =
 			geoBoundingBoxFilter.getTopLeftGeoLocationPoint();
 
@@ -53,7 +51,8 @@ public class GeoBoundingBoxFilterTranslatorImpl
 			topLeftGeoLocationPoint.getLatitude(),
 			topLeftGeoLocationPoint.getLongitude());
 
-		geoBoundingBoxQueryBuilder.topLeft(topLeftGeoPoint);
+		geoBoundingBoxQueryBuilder.setCorners(
+			topLeftGeoPoint, bottomRightGeoPoint);
 
 		return geoBoundingBoxQueryBuilder;
 	}

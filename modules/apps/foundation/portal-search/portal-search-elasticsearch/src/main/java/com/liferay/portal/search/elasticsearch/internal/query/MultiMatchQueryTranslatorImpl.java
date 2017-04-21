@@ -22,10 +22,11 @@ import com.liferay.portal.search.elasticsearch.query.MultiMatchQueryTranslator;
 import java.util.Map;
 
 import org.elasticsearch.common.unit.Fuzziness;
-import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.search.MatchQuery;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -92,7 +93,7 @@ public class MultiMatchQueryTranslatorImpl
 		}
 
 		if (multiMatchQuery.getOperator() != null) {
-			MatchQueryBuilder.Operator matchQueryBuilderOperator = translate(
+			Operator matchQueryBuilderOperator = translate(
 				multiMatchQuery.getOperator());
 
 			multiMatchQueryBuilder.operator(matchQueryBuilderOperator);
@@ -115,9 +116,8 @@ public class MultiMatchQueryTranslatorImpl
 		}
 
 		if (multiMatchQuery.getZeroTermsQuery() != null) {
-			MatchQueryBuilder.ZeroTermsQuery
-				multiMatchQueryBuilderZeroTermsQuery = translate(
-					multiMatchQuery.getZeroTermsQuery());
+			MatchQuery.ZeroTermsQuery multiMatchQueryBuilderZeroTermsQuery =
+				translate(multiMatchQuery.getZeroTermsQuery());
 
 			multiMatchQueryBuilder.zeroTermsQuery(
 				multiMatchQueryBuilderZeroTermsQuery);

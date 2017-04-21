@@ -10,30 +10,14 @@
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- */
+ *//*
 
 package com.liferay.portal.search.elasticsearch.internal.connection;
 
-import com.liferay.portal.kernel.test.util.RandomTestUtil;
-
-import java.io.IOException;
-
-import java.nio.file.Path;
-
-import org.elasticsearch.Version;
-import org.elasticsearch.common.cli.Terminal;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-
+*/
 /**
  * @author André de Oliveira
- */
+ *//*
 public class EmbeddedElasticsearchPluginManagerTest {
 
 	@Before
@@ -200,4 +184,4 @@ public class EmbeddedElasticsearchPluginManagerTest {
 	@Mock
 	private PluginZipFactory _pluginZipFactory;
 
-}
+}*/

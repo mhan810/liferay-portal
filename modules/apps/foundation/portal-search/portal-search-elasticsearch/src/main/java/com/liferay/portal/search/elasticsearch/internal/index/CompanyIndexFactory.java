@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch.index.IndexFactory;
 import com.liferay.portal.search.elasticsearch.index.IndexNameBuilder;
+import com.liferay.portal.search.elasticsearch.internal.util.DocumentTypes;
 import com.liferay.portal.search.elasticsearch.internal.util.LogUtil;
 import com.liferay.portal.search.elasticsearch.internal.util.ResourceUtil;
 import com.liferay.portal.search.elasticsearch.settings.IndexSettingsContributor;
@@ -58,8 +59,8 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 	configurationPid = "com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration",
 	immediate = true,
 	property = {
-		"typeMappings.KeywordQueryDocumentType=/META-INF/mappings/keyword-query-type-mappings.json",
-		"typeMappings.SpellCheckDocumentType=/META-INF/mappings/spellcheck-type-mappings.json"
+		"typeMappings." + DocumentTypes.KEYWORD_QUERY + "=/META-INF/mappings/keyword-query-type-mappings.json",
+		"typeMappings." + DocumentTypes.SPELL_CHECK + "=/META-INF/mappings/spellcheck-type-mappings.json"
 	}
 )
 public class CompanyIndexFactory implements IndexFactory {
@@ -240,6 +241,13 @@ public class CompanyIndexFactory implements IndexFactory {
 			indexName, _additionalTypeMappings);
 	}
 
+	protected void loadDefaultIndexSettings(Settings.Builder builder) {
+		String defaultIndexSettings = ResourceUtil.getResourceAsString(
+			getClass(), "/META-INF/index-template.json");
+
+		builder.loadFromSource(defaultIndexSettings);
+	}
+
 	protected void loadIndexSettingsContributors(
 		final Settings.Builder builder) {
 
@@ -297,9 +305,11 @@ public class CompanyIndexFactory implements IndexFactory {
 		CreateIndexRequestBuilder createIndexRequestBuilder,
 		LiferayDocumentTypeFactory liferayDocumentTypeFactory) {
 
-		Settings.Builder builder = Settings.settingsBuilder();
+		Settings.Builder builder = Settings.builder();
 
 		liferayDocumentTypeFactory.createRequiredDefaultAnalyzers(builder);
+
+		loadDefaultIndexSettings(builder);
 
 		loadAdditionalIndexConfigurations(builder);
 

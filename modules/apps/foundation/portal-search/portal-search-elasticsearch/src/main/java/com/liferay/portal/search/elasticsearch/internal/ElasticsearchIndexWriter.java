@@ -38,6 +38,7 @@ import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.IndicesAdminClient;
@@ -117,7 +118,8 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			if (PortalRunMode.isTestMode() ||
 				searchContext.isCommitImmediately()) {
 
-				deleteRequestBuilder.setRefresh(true);
+				deleteRequestBuilder.setRefreshPolicy(
+					WriteRequest.RefreshPolicy.IMMEDIATE);
 			}
 
 			DeleteResponse deleteResponse = deleteRequestBuilder.get();
@@ -159,7 +161,8 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			if (PortalRunMode.isTestMode() ||
 				searchContext.isCommitImmediately()) {
 
-				bulkRequestBuilder.setRefresh(true);
+				bulkRequestBuilder.setRefreshPolicy(
+					WriteRequest.RefreshPolicy.IMMEDIATE);
 			}
 
 			BulkResponse bulkResponse = bulkRequestBuilder.get();

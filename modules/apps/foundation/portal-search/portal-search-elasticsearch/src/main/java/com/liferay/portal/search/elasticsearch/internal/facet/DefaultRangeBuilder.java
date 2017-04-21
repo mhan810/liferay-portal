@@ -16,18 +16,27 @@ package com.liferay.portal.search.elasticsearch.internal.facet;
 
 import java.io.IOException;
 
+import org.elasticsearch.common.xcontent.ToXContent;
 import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.search.aggregations.AggregatorFactories;
+import org.elasticsearch.search.aggregations.AggregatorFactory;
 import org.elasticsearch.search.aggregations.bucket.range.AbstractRangeBuilder;
 import org.elasticsearch.search.aggregations.bucket.range.InternalRange;
-import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder;
+import org.elasticsearch.search.aggregations.bucket.range.RangeAggregator;
+import org.elasticsearch.search.aggregations.bucket.range.RangeAggregatorFactory;
+import org.elasticsearch.search.aggregations.support.AggregationContext;
+import org.elasticsearch.search.aggregations.support.ValuesSource;
+import org.elasticsearch.search.aggregations.support.ValuesSourceAggregatorFactory;
+import org.elasticsearch.search.aggregations.support.ValuesSourceConfig;
 
 /**
  * @author Michael C. Han
  */
-public class DefaultRangeBuilder extends AbstractRangeBuilder<RangeBuilder> {
+public class DefaultRangeBuilder
+	extends AbstractRangeBuilder<DefaultRangeBuilder, RangeAggregator.Range> {
 
 	public DefaultRangeBuilder(String name) {
-		super(name, InternalRange.TYPE.name());
+		super(name, new InternalRange.Factory<>());
 	}
 
 	public DefaultRangeBuilder addRange(String from, String to) {
@@ -35,7 +44,7 @@ public class DefaultRangeBuilder extends AbstractRangeBuilder<RangeBuilder> {
 	}
 
 	public DefaultRangeBuilder addRange(String key, String from, String to) {
-		ranges.add(new Range(key, from, to));
+		ranges.add(new RangeAggregator.Range(key, from, to));
 
 		return this;
 	}
@@ -45,7 +54,7 @@ public class DefaultRangeBuilder extends AbstractRangeBuilder<RangeBuilder> {
 	}
 
 	public DefaultRangeBuilder addUnboundedFrom(String key, String from) {
-		ranges.add(new Range(key, from, null));
+		ranges.add(new RangeAggregator.Range(key, from, null));
 		return this;
 	}
 
@@ -54,7 +63,7 @@ public class DefaultRangeBuilder extends AbstractRangeBuilder<RangeBuilder> {
 	}
 
 	public DefaultRangeBuilder addUnboundedTo(String key, String to) {
-		ranges.add(new Range(key, null, to));
+		ranges.add(new RangeAggregator.Range(key, null, to));
 
 		return this;
 	}
@@ -65,22 +74,41 @@ public class DefaultRangeBuilder extends AbstractRangeBuilder<RangeBuilder> {
 		return this;
 	}
 
+	@Override
+	public String getWriteableName() {
+		return "range";
+	}
+
 	public boolean hasRanges() {
 		return !ranges.isEmpty();
 	}
 
 	@Override
-	protected XContentBuilder doInternalXContent(
-			XContentBuilder builder, Params params)
+	protected XContentBuilder doXContentBody(
+			XContentBuilder builder, ToXContent.Params params)
 		throws IOException {
 
-		super.doInternalXContent(builder, params);
+		super.doXContentBody(builder, params);
 
 		if (_format != null) {
 			builder.field("format", _format);
 		}
 
 		return builder;
+	}
+
+	@Override
+	protected ValuesSourceAggregatorFactory<ValuesSource.Numeric, ?> innerBuild(
+			AggregationContext context,
+			ValuesSourceConfig<ValuesSource.Numeric> config,
+			AggregatorFactory<?> parent,
+			AggregatorFactories.Builder factoriesBuilder)
+		throws IOException {
+
+		return new RangeAggregatorFactory(
+			name, type, config,
+			ranges.toArray(new RangeAggregator.Range[ranges.size()]), keyed,
+			rangeFactory, context, parent, factoriesBuilder, metaData);
 	}
 
 	private String _format;

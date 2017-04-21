@@ -69,6 +69,7 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.geo.GeoDistance;
+import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -80,7 +81,8 @@ import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.tophits.TopHits;
-import org.elasticsearch.search.highlight.HighlightField;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
@@ -242,19 +244,22 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 	}
 
 	protected void addHighlightedField(
-		SearchRequestBuilder searchRequestBuilder, QueryConfig queryConfig,
+		SearchRequestBuilder searchRequestBuilder,
+		HighlightBuilder highlightBuilder, QueryConfig queryConfig,
 		String fieldName) {
 
-		searchRequestBuilder.addHighlightedField(
+		highlightBuilder.field(
 			fieldName, queryConfig.getHighlightFragmentSize(),
 			queryConfig.getHighlightSnippetSize());
 
 		String localizedFieldName = DocumentImpl.getLocalizedName(
 			queryConfig.getLocale(), fieldName);
 
-		searchRequestBuilder.addHighlightedField(
+		highlightBuilder.field(
 			localizedFieldName, queryConfig.getHighlightFragmentSize(),
 			queryConfig.getHighlightSnippetSize());
+
+		searchRequestBuilder.highlighter(highlightBuilder);
 	}
 
 	protected void addHighlights(
@@ -264,17 +269,20 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			return;
 		}
 
+		HighlightBuilder highlightBuilder = new HighlightBuilder();
+
 		for (String highlightFieldName : queryConfig.getHighlightFieldNames()) {
 			addHighlightedField(
-				searchRequestBuilder, queryConfig, highlightFieldName);
+				searchRequestBuilder, highlightBuilder, queryConfig,
+				highlightFieldName);
 		}
 
-		searchRequestBuilder.setHighlighterPostTags(
-			HighlightUtil.HIGHLIGHT_TAG_CLOSE);
-		searchRequestBuilder.setHighlighterPreTags(
-			HighlightUtil.HIGHLIGHT_TAG_OPEN);
-		searchRequestBuilder.setHighlighterRequireFieldMatch(
+		highlightBuilder.postTags(HighlightUtil.HIGHLIGHT_TAG_CLOSE);
+		highlightBuilder.preTags(HighlightUtil.HIGHLIGHT_TAG_OPEN);
+		highlightBuilder.requireFieldMatch(
 			queryConfig.isHighlightRequireFieldMatch());
+
+		searchRequestBuilder.highlighter(highlightBuilder);
 	}
 
 	protected void addPagination(
@@ -290,10 +298,10 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		String[] selectedFieldNames = queryConfig.getSelectedFieldNames();
 
 		if (ArrayUtil.isEmpty(selectedFieldNames)) {
-			searchRequestBuilder.addField(StringPool.STAR);
+			searchRequestBuilder.addStoredField(StringPool.STAR);
 		}
 		else {
-			searchRequestBuilder.addFields(selectedFieldNames);
+			searchRequestBuilder.storedFields(selectedFieldNames);
 		}
 	}
 
@@ -391,18 +399,23 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			else if (sort.getType() == Sort.GEO_DISTANCE_TYPE) {
 				GeoDistanceSort geoDistanceSort = (GeoDistanceSort)sort;
 
-				GeoDistanceSortBuilder geoDistanceSortBuilder =
-					SortBuilders.geoDistanceSort(sortFieldName);
-
-				geoDistanceSortBuilder.geoDistance(GeoDistance.DEFAULT);
+				List<GeoPoint> geoPoints = new ArrayList<>();
 
 				for (GeoLocationPoint geoLocationPoint :
 						geoDistanceSort.getGeoLocationPoints()) {
 
-					geoDistanceSortBuilder.point(
-						geoLocationPoint.getLatitude(),
-						geoLocationPoint.getLongitude());
+					geoPoints.add(
+						new GeoPoint(
+							geoLocationPoint.getLatitude(),
+							geoLocationPoint.getLongitude()));
 				}
+
+				GeoDistanceSortBuilder geoDistanceSortBuilder =
+					SortBuilders.geoDistanceSort(
+						sortFieldName,
+						geoPoints.toArray(new GeoPoint[geoPoints.size()]));
+
+				geoDistanceSortBuilder.geoDistance(GeoDistance.DEFAULT);
 
 				Collection<String> geoHashes = geoDistanceSort.getGeoHashes();
 

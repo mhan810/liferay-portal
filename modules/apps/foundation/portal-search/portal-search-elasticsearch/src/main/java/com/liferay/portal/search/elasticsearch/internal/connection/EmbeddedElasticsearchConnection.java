@@ -17,11 +17,9 @@ package com.liferay.portal.search.elasticsearch.internal.connection;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnection;
@@ -30,10 +28,13 @@ import com.liferay.portal.search.elasticsearch.index.IndexFactory;
 import com.liferay.portal.search.elasticsearch.internal.cluster.ClusterSettingsContext;
 import com.liferay.portal.search.elasticsearch.settings.SettingsContributor;
 
+import io.netty.buffer.ByteBufUtil;
+
 import java.io.IOException;
 
 import java.net.InetAddress;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.apache.commons.lang.time.StopWatch;
@@ -41,8 +42,10 @@ import org.apache.commons.lang.time.StopWatch;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.Node;
-
-import org.jboss.netty.util.internal.ByteBufferUtil;
+import org.elasticsearch.node.NodeValidationException;
+import org.elasticsearch.node.internal.InternalSettingsPreparer;
+import org.elasticsearch.plugins.Plugin;
+import org.elasticsearch.transport.Netty4Plugin;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -73,19 +76,24 @@ public class EmbeddedElasticsearchConnection
 		}
 
 		try {
-			Class.forName(ByteBufferUtil.class.getName());
+			Class.forName(ByteBufUtil.class.getName());
 		}
 		catch (ClassNotFoundException cnfe) {
 			if (_log.isWarnEnabled()) {
 				_log.warn(
-					"Unable to preload " + ByteBufferUtil.class +
+					"Unable to preload " + ByteBufUtil.class +
 						" to prevent Netty shutdown concurrent class loading " +
 							"interruption issue",
 					cnfe);
 			}
 		}
 
-		_node.close();
+		try {
+			_node.close();
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 
 		_node = null;
 	}
@@ -130,7 +138,7 @@ public class EmbeddedElasticsearchConnection
 			"cluster.name", elasticsearchConfiguration.clusterName());
 		settingsBuilder.put(
 			"cluster.routing.allocation.disk.threshold_enabled", false);
-		settingsBuilder.put("discovery.zen.ping.multicast.enabled", false);
+		settingsBuilder.put("discovery.type", "zen");
 	}
 
 	protected void configureHttp() {
@@ -209,16 +217,11 @@ public class EmbeddedElasticsearchConnection
 		settingsBuilder.put(
 			"path.logs", props.get(PropsKeys.LIFERAY_HOME) + "/logs");
 		settingsBuilder.put(
-			"path.plugins",
-			props.get(PropsKeys.LIFERAY_HOME) + "/data/elasticsearch/plugins");
-		settingsBuilder.put(
 			"path.repo",
 			props.get(PropsKeys.LIFERAY_HOME) + "/data/elasticsearch/repo");
-		settingsBuilder.put(
-			"path.work", SystemProperties.get(SystemProperties.TMP_DIR));
 	}
 
-	protected void configurePlugin(String name, Settings settings) {
+	/* protected void configurePlugin(String name, Settings settings) {
 		EmbeddedElasticsearchPluginManager embeddedElasticsearchPluginManager =
 			new EmbeddedElasticsearchPluginManager(
 				name, settings.get("path.plugins"),
@@ -232,9 +235,9 @@ public class EmbeddedElasticsearchConnection
 			throw new RuntimeException(
 				"Unable to install " + name + " plugin", ioe);
 		}
-	}
+	}*/
 
-	protected void configurePlugins() {
+	/* protected void configurePlugins() {
 		Settings settings = settingsBuilder.build();
 
 		String[] plugins = {
@@ -245,7 +248,7 @@ public class EmbeddedElasticsearchConnection
 		for (String plugin : plugins) {
 			configurePlugin(plugin, settings);
 		}
-	}
+	}*/
 
 	@Override
 	protected Client createClient() {
@@ -274,7 +277,12 @@ public class EmbeddedElasticsearchConnection
 
 		_node = createNode(settingsBuilder.build());
 
-		_node.start();
+		try {
+			_node.start();
+		}
+		catch (NodeValidationException nve) {
+			nve.printStackTrace();
+		}
 
 		Client client = _node.client();
 
@@ -300,7 +308,7 @@ public class EmbeddedElasticsearchConnection
 		thread.setContextClassLoader(clazz.getClassLoader());
 
 		try {
-			return new Node(settings);
+			return new PluginNode(settings);
 		}
 		finally {
 			thread.setContextClassLoader(contextClassLoader);
@@ -312,35 +320,38 @@ public class EmbeddedElasticsearchConnection
 		close();
 	}
 
+	private static class PluginNode extends Node {
+
+		private PluginNode(final Settings settings) {
+			super(
+				InternalSettingsPreparer.prepareEnvironment(settings, null),
+				Collections.<Class<? extends Plugin>>singletonList(
+					Netty4Plugin.class));
+		}
+
+	}
+
 	@Override
 	protected void loadRequiredDefaultConfigurations() {
 		settingsBuilder.put("action.auto_create_index", false);
 		settingsBuilder.put(
-			"bootstrap.mlockall",
-			elasticsearchConfiguration.bootstrapMlockAll());
+			"bootstrap.memory_lock",
+			elasticsearchConfiguration.bootstrapMemoryLock());
 
 		configureClustering();
 
 		configureHttp();
 
-		settingsBuilder.put("index.number_of_replicas", 0);
-		settingsBuilder.put("index.number_of_shards", 1);
-
 		configureNetworking();
 
-		settingsBuilder.put("node.client", false);
+		settingsBuilder.put("node.master", true);
 		settingsBuilder.put("node.data", true);
-		settingsBuilder.put("node.local", true);
+		settingsBuilder.put("node.ingest", true);
+		settingsBuilder.put("transport.type", "local");
 
 		configurePaths();
 
-		configurePlugins();
-
-		if (PortalRunMode.isTestMode()) {
-			settingsBuilder.put("index.refresh_interval", "1ms");
-			settingsBuilder.put("index.translog.flush_threshold_ops", "1");
-			settingsBuilder.put("index.translog.interval", "1ms");
-		}
+		/* configurePlugins();*/
 	}
 
 	@Override

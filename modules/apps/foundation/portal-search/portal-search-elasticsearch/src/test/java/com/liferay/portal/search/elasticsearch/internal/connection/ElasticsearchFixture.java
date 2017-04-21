@@ -107,7 +107,7 @@ public class ElasticsearchFixture implements IndicesAdminClientSupplier {
 			healthExpectations.activeShards);
 		clusterHealthRequest.waitForNodes(
 			String.valueOf(healthExpectations.numberOfNodes));
-		clusterHealthRequest.waitForRelocatingShards(0);
+		clusterHealthRequest.waitForNoRelocatingShards(true);
 		clusterHealthRequest.waitForStatus(healthExpectations.status);
 
 		ActionFuture<ClusterHealthResponse> health = clusterAdminClient.health(
@@ -216,6 +216,7 @@ public class ElasticsearchFixture implements IndicesAdminClientSupplier {
 			elasticsearchConfigurationProperties);
 
 		map.put("configurationPid", ElasticsearchConfiguration.class.getName());
+		map.put("httpCORSAllowOrigin", "*");
 		map.put("logExceptionsOnly", false);
 
 		return map;

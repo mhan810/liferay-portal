@@ -14,15 +14,19 @@
 
 package com.liferay.portal.search.elasticsearch.internal.util;
 
+import com.liferay.portal.kernel.search.suggest.SuggestionConstants;
+
 /**
  * @author Michael C. Han
  */
 public class DocumentTypes {
 
-	public static final String KEYWORD_QUERY = "KeywordQueryDocumentType";
+	public static final String KEYWORD_QUERY =
+		SuggestionConstants.TYPE_QUERY_SUGGESTION;
 
 	public static final String LIFERAY = "LiferayDocumentType";
 
-	public static final String SPELL_CHECK = "SpellCheckDocumentType";
+	public static final String SPELL_CHECK =
+		SuggestionConstants.TYPE_SPELL_CHECKER;
 
 }

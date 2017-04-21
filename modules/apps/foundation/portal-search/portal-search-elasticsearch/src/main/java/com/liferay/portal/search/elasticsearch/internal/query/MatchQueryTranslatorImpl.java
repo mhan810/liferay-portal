@@ -21,8 +21,11 @@ import com.liferay.portal.search.elasticsearch.query.MatchQueryTranslator;
 
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.search.MatchQuery.Type;
+import org.elasticsearch.index.search.MatchQuery.ZeroTermsQuery;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -87,8 +90,7 @@ public class MatchQueryTranslatorImpl
 		}
 
 		if (matchQuery.getOperator() != null) {
-			MatchQueryBuilder.Operator operator = translate(
-				matchQuery.getOperator());
+			Operator operator = translate(matchQuery.getOperator());
 
 			matchQueryBuilder.operator(operator);
 		}
@@ -102,15 +104,14 @@ public class MatchQueryTranslatorImpl
 		}
 
 		if (matchQueryType != null) {
-			MatchQueryBuilder.Type matchQueryBuilderType = translate(
-				matchQueryType);
+			Type matchQueryBuilderType = translate(matchQueryType);
 
 			matchQueryBuilder.type(matchQueryBuilderType);
 		}
 
 		if (matchQuery.getZeroTermsQuery() != null) {
-			MatchQueryBuilder.ZeroTermsQuery matchQueryBuilderZeroTermsQuery =
-				translate(matchQuery.getZeroTermsQuery());
+			ZeroTermsQuery matchQueryBuilderZeroTermsQuery = translate(
+				matchQuery.getZeroTermsQuery());
 
 			matchQueryBuilder.zeroTermsQuery(matchQueryBuilderZeroTermsQuery);
 		}
@@ -131,15 +132,15 @@ public class MatchQueryTranslatorImpl
 		return matchQueryBuilder;
 	}
 
-	protected MatchQueryBuilder.Type translate(MatchQuery.Type matchQueryType) {
+	protected Type translate(MatchQuery.Type matchQueryType) {
 		if (matchQueryType == MatchQuery.Type.BOOLEAN) {
-			return MatchQueryBuilder.Type.BOOLEAN;
+			return Type.BOOLEAN;
 		}
 		else if (matchQueryType == MatchQuery.Type.PHRASE) {
-			return MatchQueryBuilder.Type.PHRASE;
+			return Type.PHRASE;
 		}
 		else if (matchQueryType == MatchQuery.Type.PHRASE_PREFIX) {
-			return MatchQueryBuilder.Type.PHRASE_PREFIX;
+			return Type.PHRASE_PREFIX;
 		}
 
 		throw new IllegalArgumentException(
