@@ -64,13 +64,13 @@ public class OpenIdConnectLoginResponseMVCActionCommand
 				(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
 			HttpServletRequest httpServletRequest =
-				PortalUtil.getHttpServletRequest(actionRequest);
+				_portal.getHttpServletRequest(actionRequest);
 
-			httpServletRequest = PortalUtil.getOriginalServletRequest(
+			httpServletRequest = _portal.getOriginalServletRequest(
 				httpServletRequest);
 
 			HttpServletResponse httpServletResponse =
-				PortalUtil.getHttpServletResponse(actionResponse);
+				_portal.getHttpServletResponse(actionResponse);
 
 			_openIdConnectServiceHandler.processAuthenticationResponse(
 				themeDisplay, httpServletRequest, httpServletResponse);
