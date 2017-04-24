@@ -19,11 +19,15 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author Thuong Dinh
  */
 public interface OpenIdConnectServiceHandler {
+
+	public boolean hasValidOpenIdConnectSession(HttpSession httpSession)
+		throws PortalException;
 
 	public String processAuthenticationResponse(
 			ThemeDisplay themeDisplay, HttpServletRequest httpServletRequest,

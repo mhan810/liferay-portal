@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProvider;
@@ -30,6 +31,7 @@ import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderMetad
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderRegistry;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceException;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceHandler;
+import com.liferay.portal.security.sso.openid.connect.OpenIdConnectSession;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectUserInfoProcessor;
 import com.liferay.portal.security.sso.openid.connect.constants.OpenIdConnectWebKeys;
 
@@ -39,14 +41,17 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.AuthorizationCodeGrant;
+import com.nimbusds.oauth2.sdk.AuthorizationGrant;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.GeneralException;
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.RefreshTokenGrant;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.nimbusds.oauth2.sdk.TokenResponse;
+import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
@@ -55,6 +60,7 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
+import com.nimbusds.oauth2.sdk.token.RefreshToken;
 import com.nimbusds.oauth2.sdk.token.Tokens;
 import com.nimbusds.openid.connect.sdk.AuthenticationErrorResponse;
 import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
@@ -94,10 +100,29 @@ import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Thuong Dinh
+ * @author Edward C. Han
  */
 @Component(immediate = true, service = OpenIdConnectServiceHandler.class)
 public class OpenIdConnectServiceHandlerImpl
 	implements OpenIdConnectServiceHandler {
+
+	@Override
+	public boolean hasValidOpenIdConnectSession(HttpSession httpSession)
+		throws PortalException {
+
+		OpenIdConnectSession openIdConnectSession =
+			(OpenIdConnectSession)httpSession.getAttribute(
+				OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION);
+
+		boolean validAccessToken = hasValidAccessToken(openIdConnectSession);
+
+		if (!validAccessToken) {
+			return refreshAuthToken(openIdConnectSession);
+		}
+		else {
+			return true;
+		}
+	}
 
 	@Override
 	public String processAuthenticationResponse(
@@ -123,34 +148,34 @@ public class OpenIdConnectServiceHandlerImpl
 
 			HttpSession httpSession = httpServletRequest.getSession();
 
+			OpenIdConnectSession openIdConnectSession =
+				(OpenIdConnectSession)httpSession.getAttribute(
+					OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION);
+
+			if (Validator.isNull(openIdConnectSession)) {
+				throw new OpenIdConnectServiceException.
+					AuthenticationErrorException(
+						"No existing OpenId Connect Session Found");
+			}
+
 			AuthenticationSuccessResponse authenticationSuccessResponse =
 				(AuthenticationSuccessResponse)authenticationResponse;
 
-			if (!verifyState(
-					httpSession, authenticationSuccessResponse.getState())) {
+			validateState(
+				openIdConnectSession.getState(),
+				authenticationSuccessResponse.getState());
 
-				throw new OpenIdConnectServiceException.
-					AuthenticationErrorException("Invalid state");
-			}
-
-			AuthorizationCode authorizationCode =
-				authenticationSuccessResponse.getAuthorizationCode();
-
-			String openIdConnectProviderName = (String)httpSession.getAttribute(
-				OpenIdConnectWebKeys.OPEN_ID_CONNECT_PROVIDER_NAME);
+			String openIdConnectProviderName =
+				openIdConnectSession.getOpenIdProviderName();
 
 			OpenIdConnectProvider openIdConnectProvider =
 				_openIdConnectProviderRegistry.getOpenIdConnectProvider(
 					openIdConnectProviderName);
 
 			if (openIdConnectProvider == null) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(
-						"Unable to get OpenId Connect provider with name " +
-							openIdConnectProviderName);
-				}
-
-				return null;
+				throw new OpenIdConnectServiceException.ProviderException(
+					"Unable to get OpenId Connect provider with name " +
+						openIdConnectProviderName);
 			}
 
 			OpenIdConnectProviderMetadataFactory
@@ -161,12 +186,19 @@ public class OpenIdConnectServiceHandlerImpl
 			OIDCProviderMetadata oidcProviderMetadata =
 				openIdConnectProviderMetadataFactory.getOIDCProviderMetadata();
 
-			OIDCTokenResponse oidcTokenResponse = requestToken(
-				openIdConnectProviderName, httpServletRequest,
-				authorizationCode, oidcProviderMetadata);
+			OIDCClientInformation oidcClientInformation =
+				getOIDCClientInformation(
+					openIdConnectProvider, oidcProviderMetadata);
 
-			validateToken(
-				openIdConnectProviderName, httpServletRequest,
+			AuthorizationCode authorizationCode =
+				authenticationSuccessResponse.getAuthorizationCode();
+
+			OIDCTokenResponse oidcTokenResponse = requestIdToken(
+				oidcClientInformation, httpServletRequest, authorizationCode,
+				oidcProviderMetadata);
+
+			validateIdToken(
+				oidcClientInformation, openIdConnectSession.getNonce(),
 				oidcProviderMetadata, oidcTokenResponse);
 
 			Tokens tokens = oidcTokenResponse.getTokens();
@@ -179,6 +211,11 @@ public class OpenIdConnectServiceHandlerImpl
 
 			httpSession.setAttribute(
 				OpenIdConnectWebKeys.OPEN_ID_CONNECT_LOGIN, userId);
+
+			openIdConnectSession.setUserInfo(userInfo);
+
+			updateSession(
+				openIdConnectSession, tokens, System.currentTimeMillis());
 
 			return null;
 		}
@@ -210,23 +247,10 @@ public class OpenIdConnectServiceHandlerImpl
 					openIdConnectProviderName);
 		}
 
-		HttpSession httpSession = httpServletRequest.getSession();
-
-		httpSession.setAttribute(
-			OpenIdConnectWebKeys.OPEN_ID_CONNECT_PROVIDER_NAME,
-			openIdConnectProviderName);
-
-		Nonce nonce = new Nonce();
-
-		httpSession.setAttribute(
-			OpenIdConnectWebKeys.OPEN_ID_CONNECT_NONCE, nonce);
-
-		State state = new State();
-
-		httpSession.setAttribute(
-			OpenIdConnectWebKeys.OPEN_ID_CONNECT_STATE, state);
-
 		try {
+			State state = new State();
+			Nonce nonce = new Nonce();
+
 			OpenIdConnectProviderMetadataFactory
 				openIdConnectProviderMetadataFactory =
 					openIdConnectProvider.
@@ -237,7 +261,7 @@ public class OpenIdConnectServiceHandlerImpl
 
 			OIDCClientInformation oidcClientInformation =
 				getOIDCClientInformation(
-					openIdConnectProviderName, oidcProviderMetadata);
+					openIdConnectProvider, oidcProviderMetadata);
 
 			AuthenticationRequest authenticationRequest =
 				new AuthenticationRequest(
@@ -251,15 +275,16 @@ public class OpenIdConnectServiceHandlerImpl
 
 			httpServletResponse.sendRedirect(
 				authenticationRequestURI.toString());
+
+			OpenIdConnectSession oidcSession = new OpenIdConnectSession(
+				openIdConnectProviderName, nonce, state);
+
+			HttpSession httpSession = httpServletRequest.getSession();
+
+			httpSession.setAttribute(
+				OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION, oidcSession);
 		}
 		catch (IOException | URISyntaxException e) {
-			httpSession.removeAttribute(
-				OpenIdConnectWebKeys.OPEN_ID_CONNECT_PROVIDER_NAME);
-			httpSession.removeAttribute(
-				OpenIdConnectWebKeys.OPEN_ID_CONNECT_STATE);
-			httpSession.removeAttribute(
-				OpenIdConnectWebKeys.OPEN_ID_CONNECT_NONCE);
-
 			throw new SystemException(
 				"Unable to communicate with OpenId Connect provider", e);
 		}
@@ -288,24 +313,9 @@ public class OpenIdConnectServiceHandlerImpl
 	}
 
 	protected OIDCClientInformation getOIDCClientInformation(
-			String openIdConnectProviderName,
+			OpenIdConnectProvider openIdConnectProvider,
 			OIDCProviderMetadata oidcProviderMetadata)
 		throws OpenIdConnectServiceException {
-
-		OpenIdConnectProvider openIdConnectProvider =
-			_openIdConnectProviderRegistry.getOpenIdConnectProvider(
-				openIdConnectProviderName);
-
-		if (Validator.isNull(openIdConnectProvider)) {
-			_log.error(
-				"Unable to get OpenId Connect provider with name " +
-					openIdConnectProviderName);
-
-			throw new OpenIdConnectServiceException.
-				MissingClientInformationException(
-					"Unable to get OpenId Connect provider with name " +
-						openIdConnectProviderName);
-		}
 
 		ClientID clientID = new ClientID(openIdConnectProvider.getClientId());
 
@@ -333,16 +343,93 @@ public class OpenIdConnectServiceHandlerImpl
 			clientID, new Date(), oidcClientMetadata, secret);
 	}
 
-	protected OIDCTokenResponse requestToken(
-			String openIdConnectProviderName,
+	protected boolean hasValidAccessToken(
+		OpenIdConnectSession openIdConnectSession) {
+
+		AccessToken accessToken = openIdConnectSession.getAccessToken();
+
+		if (Validator.isNull(accessToken)) {
+			return false;
+		}
+
+		long lifetime = accessToken.getLifetime() * Time.SECOND;
+		long currentTime = System.currentTimeMillis();
+		long loginTime = openIdConnectSession.getLoginTime();
+
+		if ((currentTime - loginTime) < lifetime) {
+			return true;
+		}
+
+		return false;
+	}
+
+	protected boolean refreshAuthToken(
+			OpenIdConnectSession openIdConnectSession)
+		throws OpenIdConnectServiceException {
+
+		synchronized (openIdConnectSession) {
+			if (hasValidAccessToken(openIdConnectSession)) {
+				return true;
+			}
+
+			if (_log.isInfoEnabled()) {
+				_log.info(
+					"User session auth token is invalid, attempting to use " +
+						"refresh token to obtain a valid auth token.");
+			}
+
+			RefreshToken refreshToken = openIdConnectSession.getRefreshToken();
+
+			if (refreshToken == null) {
+				if (_log.isInfoEnabled()) {
+					_log.info(
+						"Cannot refresh auth token, no refresh token " +
+							"supplied.");
+				}
+
+				return false;
+			}
+
+			String openIdConnectProviderName =
+				openIdConnectSession.getOpenIdProviderName();
+
+			OpenIdConnectProvider openIdConnectProvider =
+				_openIdConnectProviderRegistry.getOpenIdConnectProvider(
+					openIdConnectProviderName);
+
+			if (openIdConnectProvider == null) {
+				throw new OpenIdConnectServiceException.ProviderException(
+					"Unable to get OpenId Connect provider with name " +
+						openIdConnectProviderName);
+			}
+
+			OpenIdConnectProviderMetadataFactory
+				openIdConnectProviderMetadataFactory =
+					openIdConnectProvider.
+						getOpenIdConnectProviderMetadataFactory();
+
+			OIDCProviderMetadata oidcProviderMetadata =
+				openIdConnectProviderMetadataFactory.getOIDCProviderMetadata();
+
+			OIDCTokenResponse oidcTokenResponse = requestRefreshToken(
+				refreshToken, openIdConnectProvider, oidcProviderMetadata);
+
+			Tokens tokens = oidcTokenResponse.getOIDCTokens();
+
+			updateSession(
+				openIdConnectSession, tokens, System.currentTimeMillis());
+
+			return true;
+		}
+	}
+
+	protected OIDCTokenResponse requestIdToken(
+			OIDCClientInformation oidcClientInformation,
 			HttpServletRequest httpServletRequest,
 			AuthorizationCode authorizationCode,
 			OIDCProviderMetadata oidcProviderMetadata)
 		throws IOException, ParseException,
 			PortalException, URISyntaxException {
-
-		OIDCClientInformation oidcClientInformation = getOIDCClientInformation(
-			openIdConnectProviderName, oidcProviderMetadata);
 
 		URI redirectURI = createRedirectURI(httpServletRequest);
 
@@ -371,6 +458,55 @@ public class OpenIdConnectServiceHandlerImpl
 		}
 
 		return (OIDCTokenResponse)tokenResponse;
+	}
+
+	protected OIDCTokenResponse requestRefreshToken(
+			RefreshToken refreshToken,
+			OpenIdConnectProvider openIdConnectProvider,
+			OIDCProviderMetadata oidcProviderMetadata)
+		throws OpenIdConnectServiceException {
+
+		try {
+			AuthorizationGrant refreshTokenGrant = new RefreshTokenGrant(
+				refreshToken);
+
+			ClientID clientID = new ClientID(
+				openIdConnectProvider.getClientId());
+			Secret clientSecret = new Secret(
+				openIdConnectProvider.getClientSecret());
+
+			ClientAuthentication clientAuthentication = new ClientSecretBasic(
+				clientID, clientSecret);
+
+			URI tokenEndpoint = oidcProviderMetadata.getTokenEndpointURI();
+
+			TokenRequest tokenRequest = new TokenRequest(
+				tokenEndpoint, clientAuthentication, refreshTokenGrant);
+
+			HTTPRequest httpRequest = tokenRequest.toHTTPRequest();
+
+			HTTPResponse httpResponse = httpRequest.send();
+
+			TokenResponse tokenResponse = OIDCTokenResponseParser.parse(
+				httpResponse);
+
+			if (tokenResponse instanceof TokenErrorResponse) {
+				TokenErrorResponse tokenErrorResponse =
+					(TokenErrorResponse)tokenResponse;
+
+				ErrorObject errorObject = tokenErrorResponse.getErrorObject();
+
+				throw new OpenIdConnectServiceException.TokenErrorException(
+					errorObject.toString());
+			}
+
+			return (OIDCTokenResponse)tokenResponse;
+		}
+		catch (IOException | ParseException e) {
+			throw new OpenIdConnectServiceException.
+				AuthenticationErrorException(
+					"Unable to process refresh request", e);
+		}
 	}
 
 	protected UserInfo requestUserInfo(
@@ -404,37 +540,36 @@ public class OpenIdConnectServiceHandlerImpl
 		return userInfoSuccessResponse.getUserInfo();
 	}
 
-	protected IDTokenClaimsSet validateToken(
-			String openIdConnectProviderName,
-			HttpServletRequest httpServletRequest,
+	protected void updateSession(
+		OpenIdConnectSession session, Tokens tokens, long loginTime) {
+
+		session.setAccessToken(tokens.getAccessToken());
+		session.setRefreshToken(tokens.getRefreshToken());
+		session.setLoginTime(loginTime);
+	}
+
+	protected IDTokenClaimsSet validateIdToken(
+			OIDCClientInformation oidcClientInformation, Nonce nonce,
 			OIDCProviderMetadata oidcProviderMetadata,
 			OIDCTokenResponse oidcTokenResponse)
 		throws BadJOSEException, GeneralException, JOSEException,
 			   MalformedURLException, OpenIdConnectServiceException {
-
-		OIDCClientInformation oidcClientInformation = getOIDCClientInformation(
-			openIdConnectProviderName, oidcProviderMetadata);
 
 		IDTokenValidator idTokenValidator = IDTokenValidator.create(
 			oidcProviderMetadata, oidcClientInformation, null);
 
 		OIDCTokens oidcTokens = oidcTokenResponse.getOIDCTokens();
 
-		Nonce nonce = (Nonce)httpServletRequest.getAttribute(
-			OpenIdConnectWebKeys.OPEN_ID_CONNECT_NONCE);
-
 		return idTokenValidator.validate(oidcTokens.getIDToken(), nonce);
 	}
 
-	protected boolean verifyState(HttpSession httpSession, State state) {
-		State httpSessionState = (State)httpSession.getAttribute(
-			OpenIdConnectWebKeys.OPEN_ID_CONNECT_STATE);
+	protected void validateState(State requestedState, State state)
+		throws OpenIdConnectServiceException {
 
-		if (Validator.isNull(httpSessionState)) {
-			return false;
+		if (!state.equals(requestedState)) {
+			throw new OpenIdConnectServiceException.
+				AuthenticationErrorException("Invalid state");
 		}
-
-		return state.equals(httpSessionState);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
