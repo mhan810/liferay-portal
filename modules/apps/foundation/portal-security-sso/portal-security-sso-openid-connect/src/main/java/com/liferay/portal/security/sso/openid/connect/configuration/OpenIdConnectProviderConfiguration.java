@@ -43,6 +43,12 @@ public interface OpenIdConnectProviderConfiguration {
 	public String openIdConnectClientSecret();
 
 	@Meta.AD(
+		deflt = "openid email profile", description = "scopes-help",
+		required = true
+	)
+	public String scopes();
+
+	@Meta.AD(
 		deflt = "", description = "discovery-endpoint-help", required = false
 	)
 	public String discoveryEndPoint();

@@ -158,9 +158,10 @@ public class OpenIdConnectProviderRegistryImpl
 			openIdConnectProviderConfiguration.openIdConnectClientId();
 		String clientSecret =
 			openIdConnectProviderConfiguration.openIdConnectClientSecret();
+		String scopes = openIdConnectProviderConfiguration.scopes();
 
 		OpenIdConnectProvider openIdConnectProvider = new OpenIdConnectProvider(
-			providerName, clientId, clientSecret,
+			providerName, clientId, clientSecret, scopes,
 			openIdConnectProviderMetadataFactory);
 
 		return openIdConnectProvider;

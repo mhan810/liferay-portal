@@ -250,6 +250,7 @@ public class OpenIdConnectServiceHandlerImpl
 		try {
 			State state = new State();
 			Nonce nonce = new Nonce();
+			Scope scope = Scope.parse(openIdConnectProvider.getScopes());
 
 			OpenIdConnectProviderMetadataFactory
 				openIdConnectProviderMetadataFactory =
@@ -266,8 +267,7 @@ public class OpenIdConnectServiceHandlerImpl
 			AuthenticationRequest authenticationRequest =
 				new AuthenticationRequest(
 					oidcProviderMetadata.getAuthorizationEndpointURI(),
-					new ResponseType(ResponseType.Value.CODE),
-					Scope.parse("openid email profile"),
+					new ResponseType(ResponseType.Value.CODE), scope,
 					oidcClientInformation.getID(),
 					createRedirectURI(httpServletRequest), state, nonce);
 

@@ -21,13 +21,14 @@ package com.liferay.portal.security.sso.openid.connect;
 public class OpenIdConnectProvider {
 
 	public OpenIdConnectProvider(
-		String name, String clientId, String clientSecret,
+		String name, String clientId, String clientSecret, String scopes,
 		OpenIdConnectProviderMetadataFactory
 			openIdConnectProviderMetadataFactory) {
 
 		_name = name;
 		_clientId = clientId;
 		_clientSecret = clientSecret;
+		_scopes = scopes;
 		_openIdConnectProviderMetadataFactory =
 			openIdConnectProviderMetadataFactory;
 	}
@@ -50,10 +51,15 @@ public class OpenIdConnectProvider {
 		return _openIdConnectProviderMetadataFactory;
 	}
 
+	public String getScopes() {
+		return _scopes;
+	}
+
 	private final String _clientId;
 	private final String _clientSecret;
 	private final String _name;
 	private final OpenIdConnectProviderMetadataFactory
 		_openIdConnectProviderMetadataFactory;
+	private final String _scopes;
 
 }
