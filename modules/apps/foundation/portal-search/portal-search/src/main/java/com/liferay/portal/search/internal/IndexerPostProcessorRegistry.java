@@ -36,52 +36,6 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 @Component(immediate = true)
 public class IndexerPostProcessorRegistry {
 
-	@Reference(
-		cardinality = ReferenceCardinality.MULTIPLE,
-		policy = ReferencePolicy.DYNAMIC,
-		policyOption = ReferencePolicyOption.GREEDY,
-		target = "(indexer.class.name=*)", unbind = "removeIndexerPostProcessor"
-	)
-	protected void addIndexerPostProcessor(
-		IndexerPostProcessor indexerPostProcessor,
-		Map<String, Object> properties) {
-
-		List<String> indexerClassNames = StringPlus.asList(
-			properties.get("indexer.class.name"));
-
-		for (String indexerClassName : indexerClassNames) {
-			Indexer<?> indexer = _indexerRegistry.getIndexer(indexerClassName);
-
-			if (indexer == null) {
-				_log.error("No indexer exists for " + indexerClassName);
-
-				continue;
-			}
-
-			indexer.registerIndexerPostProcessor(indexerPostProcessor);
-		}
-	}
-
-	protected void removeIndexerPostProcessor(
-		IndexerPostProcessor indexerPostProcessor,
-		Map<String, Object> properties) {
-
-		List<String> indexerClassNames = StringPlus.asList(
-			properties.get("indexer.class.name"));
-
-		for (String indexerClassName : indexerClassNames) {
-			Indexer<?> indexer = _indexerRegistry.getIndexer(indexerClassName);
-
-			if (indexer == null) {
-				_log.error("No indexer exists for " + indexerClassName);
-
-				continue;
-			}
-
-			indexer.unregisterIndexerPostProcessor(indexerPostProcessor);
-		}
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		IndexerPostProcessorRegistry.class);
 

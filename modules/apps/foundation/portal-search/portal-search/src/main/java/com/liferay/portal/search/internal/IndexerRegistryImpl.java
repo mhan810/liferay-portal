@@ -14,10 +14,12 @@
 
 package com.liferay.portal.search.internal;
 
+import com.liferay.osgi.util.StringPlus;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerPostProcessor;
 import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.dummy.DummyIndexer;
 import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
@@ -135,6 +137,32 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 		}
 	}
 
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(indexer.class.name=*)", unbind = "removeIndexerPostProcessor"
+	)
+	protected void addIndexerPostProcessor(
+		IndexerPostProcessor indexerPostProcessor,
+		Map<String, Object> properties) {
+
+		List<String> indexerClassNames = StringPlus.asList(
+			properties.get("indexer.class.name"));
+
+		for (String indexerClassName : indexerClassNames) {
+			Indexer<?> indexer = _indexerRegistry.getIndexer(indexerClassName);
+
+			if (indexer == null) {
+				_log.error("No indexer exists for " + indexerClassName);
+
+				continue;
+			}
+
+			indexer.registerIndexerPostProcessor(indexerPostProcessor);
+		}
+	}
+
 	protected <T> Indexer<T> proxyIndexer(Indexer<T> indexer) {
 		if (indexer == null) {
 			return null;
@@ -183,6 +211,26 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 		}
 
 		return (Indexer<T>)proxiedIndexer;
+	}
+
+	protected void removeIndexerPostProcessor(
+		IndexerPostProcessor indexerPostProcessor,
+		Map<String, Object> properties) {
+
+		List<String> indexerClassNames = StringPlus.asList(
+			properties.get("indexer.class.name"));
+
+		for (String indexerClassName : indexerClassNames) {
+			Indexer<?> indexer = _indexerRegistry.getIndexer(indexerClassName);
+
+			if (indexer == null) {
+				_log.error("No indexer exists for " + indexerClassName);
+
+				continue;
+			}
+
+			indexer.unregisterIndexerPostProcessor(indexerPostProcessor);
+		}
 	}
 
 	@Reference(
