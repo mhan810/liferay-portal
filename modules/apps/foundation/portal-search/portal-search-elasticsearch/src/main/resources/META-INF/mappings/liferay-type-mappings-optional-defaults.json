@@ -5,7 +5,12 @@
 				"mapping": {
 					"index": "true",
 					"store": "true",
-					"type": "keyword"
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword"
+						}
+					}
 				},
 				"match": "*",
 				"match_mapping_type": "string"
