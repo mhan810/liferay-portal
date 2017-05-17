@@ -151,7 +151,7 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 			properties.get("indexer.class.name"));
 
 		for (String indexerClassName : indexerClassNames) {
-			Indexer<?> indexer = _indexerRegistry.getIndexer(indexerClassName);
+			Indexer<?> indexer = getIndexer(indexerClassName);
 
 			if (indexer == null) {
 				_log.error("No indexer exists for " + indexerClassName);
@@ -221,7 +221,7 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 			properties.get("indexer.class.name"));
 
 		for (String indexerClassName : indexerClassNames) {
-			Indexer<?> indexer = _indexerRegistry.getIndexer(indexerClassName);
+			Indexer<?> indexer = getIndexer(indexerClassName);
 
 			if (indexer == null) {
 				_log.error("No indexer exists for " + indexerClassName);
