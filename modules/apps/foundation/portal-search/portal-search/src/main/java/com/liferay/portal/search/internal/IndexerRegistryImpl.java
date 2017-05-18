@@ -32,7 +32,6 @@ import com.liferay.portal.search.index.IndexStatusManager;
 import com.liferay.portal.search.internal.buffer.BufferedIndexerInvocationHandler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -108,19 +107,19 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 		_indexers.put(indexer.getClassName(), indexer);
 
-		List<IndexerPostProcessor> indexerPP = _indexerPostProcessors.get(
-			indexer.getClassName());
+		List<IndexerPostProcessor> indexerPostProcessors =
+			_indexerPostProcessorsMap.get(indexer.getClassName());
 
-		if ((indexerPP != null) && !indexerPP.isEmpty()) {
-			Map<String, Object> properties = new HashMap<>();
+		if ((indexerPostProcessors != null) &&
+			!indexerPostProcessors.isEmpty()) {
 
-			properties.put("indexer.class.name", indexer.getClassName());
+			for (IndexerPostProcessor indexerPostProcessor :
+					indexerPostProcessors) {
 
-			for (IndexerPostProcessor indexerPostProcessor : indexerPP) {
 				indexer.registerIndexerPostProcessor(indexerPostProcessor);
 			}
 
-			_indexerPostProcessors.remove(indexer.getClassName());
+			_indexerPostProcessorsMap.remove(indexer.getClassName());
 		}
 	}
 
@@ -171,16 +170,17 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 			Indexer<?> indexer = getIndexer(indexerClassName);
 
 			if (indexer == null) {
-				List<IndexerPostProcessor> indexerPP =
-					_indexerPostProcessors.get(indexerClassName);
+				List<IndexerPostProcessor> indexerPostProcessors =
+					_indexerPostProcessorsMap.get(indexerClassName);
 
-				if (indexerPP == null) {
-					indexerPP = new ArrayList<>();
+				if (indexerPostProcessors == null) {
+					indexerPostProcessors = new ArrayList<>();
 				}
 
-				indexerPP.add(indexerPostProcessor);
+				indexerPostProcessors.add(indexerPostProcessor);
 
-				_indexerPostProcessors.put(indexerClassName, indexerPP);
+				_indexerPostProcessorsMap.put(
+					indexerClassName, indexerPostProcessors);
 
 				if (_log.isDebugEnabled()) {
 					_log.debug("No indexer exists for " + indexerClassName);
@@ -263,7 +263,7 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 			indexer.unregisterIndexerPostProcessor(indexerPostProcessor);
 
-			_indexerPostProcessors.remove(indexerClassName);
+			_indexerPostProcessorsMap.remove(indexerClassName);
 		}
 	}
 
@@ -315,7 +315,7 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 	private final Indexer<?> _dummyIndexer = new DummyIndexer();
 	private final Map<String, List<IndexerPostProcessor>>
-		_indexerPostProcessors = new ConcurrentHashMap<>();
+		_indexerPostProcessorsMap = new ConcurrentHashMap<>();
 	private volatile IndexerRegistryConfiguration _indexerRegistryConfiguration;
 	private volatile IndexerRequestBufferOverflowHandler
 		_indexerRequestBufferOverflowHandler;
