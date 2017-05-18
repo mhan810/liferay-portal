@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.search.dummy.DummyIndexer;
 import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.search.buffer.IndexerRequestBuffer;
 import com.liferay.portal.search.buffer.IndexerRequestBufferOverflowHandler;
 import com.liferay.portal.search.configuration.IndexerRegistryConfiguration;
@@ -183,7 +184,14 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 					indexerClassName, indexerPostProcessors);
 
 				if (_log.isDebugEnabled()) {
-					_log.debug("No indexer exists for " + indexerClassName);
+					StringBundler sb = new StringBundler();
+
+					sb.append("Registration of IndexerPostProcessor for ");
+					sb.append(indexerClassName);
+					sb.append(" will be completed once the indexer ");
+					sb.append("becomes available.");
+
+					_log.debug(sb.toString());
 				}
 
 				continue;
