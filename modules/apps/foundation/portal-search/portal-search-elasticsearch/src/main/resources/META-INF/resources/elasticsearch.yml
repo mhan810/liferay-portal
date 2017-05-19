@@ -1,0 +1,4 @@
+cluster.name: LiferayElasticsearchCluster
+cluster.routing.allocation.disk.threshold_enabled: false
+http.cors.allow-origin: /.*/
+http.cors.enabled: true
