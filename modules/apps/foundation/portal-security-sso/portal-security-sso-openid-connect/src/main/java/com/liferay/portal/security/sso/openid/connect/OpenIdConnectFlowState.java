@@ -14,18 +14,10 @@
 
 package com.liferay.portal.security.sso.openid.connect;
 
-import java.util.Collection;
-
 /**
- * @author Thuong Dinh
+ * @author Edward C. Han
  */
-public interface OpenIdConnectProviderRegistry {
+public enum OpenIdConnectFlowState {
 
-	public OpenIdConnectProvider findOpenIdConnectProvider(String name)
-		throws OpenIdConnectServiceException.ProviderException;
-
-	public OpenIdConnectProvider getOpenIdConnectProvider(String name);
-
-	public Collection<String> getOpenIdConnectProviderNames();
-
+	INITIALIZED, AUTH_REQUESTED, AUTH_COMPLETE, PORTAL_AUTH_COMPLETE
 }
