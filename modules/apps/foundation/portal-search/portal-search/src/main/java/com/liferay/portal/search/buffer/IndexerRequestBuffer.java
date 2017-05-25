@@ -71,7 +71,9 @@ public class IndexerRequestBuffer {
 	 */
 	@Deprecated
 	public void add(IndexerRequest indexerRequest) {
-		_indexerRequests.put(indexerRequest, indexerRequest);
+		synchronized (_indexerRequests) {
+			_indexerRequests.put(indexerRequest, indexerRequest);
+		}
 	}
 
 	public void add(
@@ -79,30 +81,42 @@ public class IndexerRequestBuffer {
 		IndexerRequestBufferOverflowHandler indexerRequestBufferOverflowHandler,
 		int maxBufferSize) {
 
-		_indexerRequests.put(indexerRequest, indexerRequest);
+		synchronized (_indexerRequests) {
+			_indexerRequests.put(indexerRequest, indexerRequest);
+		}
 
 		indexerRequestBufferOverflowHandler.bufferOverflowed(
 			this, maxBufferSize);
 	}
 
 	public void clear() {
-		_indexerRequests.clear();
+		synchronized (_indexerRequests) {
+			_indexerRequests.clear();
+		}
 	}
 
 	public Collection<IndexerRequest> getIndexerRequests() {
-		return _indexerRequests.values();
+		synchronized (_indexerRequests) {
+			return new ArrayList<>(_indexerRequests.values());
+		}
 	}
 
 	public boolean isEmpty() {
-		return _indexerRequests.isEmpty();
+		synchronized (_indexerRequests) {
+			return _indexerRequests.isEmpty();
+		}
 	}
 
 	public void remove(IndexerRequest indexerRequest) {
-		_indexerRequests.remove(indexerRequest);
+		synchronized (_indexerRequests) {
+			_indexerRequests.remove(indexerRequest);
+		}
 	}
 
 	public int size() {
-		return _indexerRequests.size();
+		synchronized (_indexerRequests) {
+			return _indexerRequests.size();
+		}
 	}
 
 	private static final ThreadLocal<List<IndexerRequestBuffer>>
