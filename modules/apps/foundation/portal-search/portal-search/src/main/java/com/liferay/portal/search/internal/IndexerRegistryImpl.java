@@ -33,6 +33,7 @@ import com.liferay.portal.search.index.IndexStatusManager;
 import com.liferay.portal.search.internal.buffer.BufferedIndexerInvocationHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -108,19 +109,19 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 		_indexers.put(indexer.getClassName(), indexer);
 
-		List<IndexerPostProcessor> indexerPostProcessors =
-			_queuedIndexerPostProcessors.get(indexer.getClassName());
+		synchronized (_queuedIndexerPostProcessors) {
+			List<IndexerPostProcessor> indexerPostProcessors =
+				_queuedIndexerPostProcessors.get(indexer.getClassName());
 
-		if ((indexerPostProcessors != null) &&
-			!indexerPostProcessors.isEmpty()) {
-
-			for (IndexerPostProcessor indexerPostProcessor :
+			if (indexerPostProcessors != null) {
+				for (IndexerPostProcessor indexerPostProcessor :
 					indexerPostProcessors) {
 
-				indexer.registerIndexerPostProcessor(indexerPostProcessor);
-			}
+					indexer.registerIndexerPostProcessor(indexerPostProcessor);
+				}
 
-			_queuedIndexerPostProcessors.remove(indexer.getClassName());
+				_queuedIndexerPostProcessors.remove(indexer.getClassName());
+			}
 		}
 	}
 
@@ -170,34 +171,35 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 		for (String indexerClassName : indexerClassNames) {
 			Indexer<?> indexer = getIndexer(indexerClassName);
 
-			if (indexer == null) {
-				List<IndexerPostProcessor> indexerPostProcessors =
-					_queuedIndexerPostProcessors.get(indexerClassName);
-
-				if (indexerPostProcessors == null) {
-					indexerPostProcessors = new ArrayList<>();
-				}
-
-				indexerPostProcessors.add(indexerPostProcessor);
-
-				_queuedIndexerPostProcessors.put(
-					indexerClassName, indexerPostProcessors);
-
-				if (_log.isDebugEnabled()) {
-					StringBundler sb = new StringBundler();
-
-					sb.append("Registration of IndexerPostProcessor for ");
-					sb.append(indexerClassName);
-					sb.append(" will be completed once the indexer ");
-					sb.append("becomes available.");
-
-					_log.debug(sb.toString());
-				}
-
-				continue;
+			if (indexer != null) {
+				indexer.registerIndexerPostProcessor(indexerPostProcessor);
 			}
+			else {
+				synchronized (_queuedIndexerPostProcessors) {
+					List<IndexerPostProcessor> indexerPostProcessors =
+						_queuedIndexerPostProcessors.get(indexerClassName);
 
-			indexer.registerIndexerPostProcessor(indexerPostProcessor);
+					if (indexerPostProcessors == null) {
+						indexerPostProcessors = new ArrayList<>();
+					}
+
+					indexerPostProcessors.add(indexerPostProcessor);
+
+					_queuedIndexerPostProcessors.put(
+						indexerClassName, indexerPostProcessors);
+
+					if (_log.isDebugEnabled()) {
+						StringBundler sb = new StringBundler();
+
+						sb.append("Registration of IndexerPostProcessor for ");
+						sb.append(indexerClassName);
+						sb.append(" will be completed once the indexer ");
+						sb.append("becomes available.");
+
+						_log.debug(sb.toString());
+					}
+				}
+			}
 		}
 	}
 
@@ -271,7 +273,9 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 			indexer.unregisterIndexerPostProcessor(indexerPostProcessor);
 
-			_queuedIndexerPostProcessors.remove(indexerClassName);
+			synchronized (_queuedIndexerPostProcessors) {
+				_queuedIndexerPostProcessors.remove(indexerClassName);
+			}
 		}
 	}
 
@@ -338,6 +342,6 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 	private final Map<String, Indexer<? extends Object>> _proxiedIndexers =
 		new ConcurrentHashMap<>();
 	private final Map<String, List<IndexerPostProcessor>>
-		_queuedIndexerPostProcessors = new ConcurrentHashMap<>();
+		_queuedIndexerPostProcessors = new HashMap<>();
 
 }
