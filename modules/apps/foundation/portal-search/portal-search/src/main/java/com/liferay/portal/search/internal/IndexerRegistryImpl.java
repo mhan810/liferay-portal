@@ -109,7 +109,7 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 		_indexers.put(indexer.getClassName(), indexer);
 
 		List<IndexerPostProcessor> indexerPostProcessors =
-			_indexerPostProcessorsMap.get(indexer.getClassName());
+			_queuedIndexerPostProcessors.get(indexer.getClassName());
 
 		if ((indexerPostProcessors != null) &&
 			!indexerPostProcessors.isEmpty()) {
@@ -120,7 +120,7 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 				indexer.registerIndexerPostProcessor(indexerPostProcessor);
 			}
 
-			_indexerPostProcessorsMap.remove(indexer.getClassName());
+			_queuedIndexerPostProcessors.remove(indexer.getClassName());
 		}
 	}
 
@@ -172,7 +172,7 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 			if (indexer == null) {
 				List<IndexerPostProcessor> indexerPostProcessors =
-					_indexerPostProcessorsMap.get(indexerClassName);
+					_queuedIndexerPostProcessors.get(indexerClassName);
 
 				if (indexerPostProcessors == null) {
 					indexerPostProcessors = new ArrayList<>();
@@ -180,7 +180,7 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 				indexerPostProcessors.add(indexerPostProcessor);
 
-				_indexerPostProcessorsMap.put(
+				_queuedIndexerPostProcessors.put(
 					indexerClassName, indexerPostProcessors);
 
 				if (_log.isDebugEnabled()) {
@@ -271,7 +271,7 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 			indexer.unregisterIndexerPostProcessor(indexerPostProcessor);
 
-			_indexerPostProcessorsMap.remove(indexerClassName);
+			_queuedIndexerPostProcessors.remove(indexerClassName);
 		}
 	}
 
@@ -322,8 +322,6 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 		_defaultIndexerRequestBufferOverflowHandler;
 
 	private final Indexer<?> _dummyIndexer = new DummyIndexer();
-	private final Map<String, List<IndexerPostProcessor>>
-		_indexerPostProcessorsMap = new ConcurrentHashMap<>();
 	private volatile IndexerRegistryConfiguration _indexerRegistryConfiguration;
 	private volatile IndexerRequestBufferOverflowHandler
 		_indexerRequestBufferOverflowHandler;
@@ -339,5 +337,7 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 	private final Map<String, Indexer<? extends Object>> _proxiedIndexers =
 		new ConcurrentHashMap<>();
+	private final Map<String, List<IndexerPostProcessor>>
+		_queuedIndexerPostProcessors = new ConcurrentHashMap<>();
 
 }
