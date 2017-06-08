@@ -46,10 +46,10 @@ public class DefaultIndexerRequestBufferExecutor
 
 		Collection<IndexerRequest> completedIndexerRequests = new ArrayList<>();
 
-		if (_log.isDebugEnabled()) {
-			Collection<IndexerRequest> indexerRequests =
-				indexerRequestBuffer.getIndexerRequests();
+		Collection<IndexerRequest> indexerRequests =
+			indexerRequestBuffer.getIndexerRequests();
 
+		if (_log.isDebugEnabled()) {
 			_log.debug(
 				"Indexer request buffer size " + indexerRequests.size() +
 					" to execute " + numRequests + " requests");
@@ -57,9 +57,7 @@ public class DefaultIndexerRequestBufferExecutor
 
 		int i = 0;
 
-		for (IndexerRequest indexerRequest :
-				indexerRequestBuffer.getIndexerRequests()) {
-
+		for (IndexerRequest indexerRequest : indexerRequests) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
 					"Executing indexer request " + (i++) + ": " +
