@@ -115,7 +115,7 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 			if (indexerPostProcessors != null) {
 				for (IndexerPostProcessor indexerPostProcessor :
-					indexerPostProcessors) {
+						indexerPostProcessors) {
 
 					indexer.registerIndexerPostProcessor(indexerPostProcessor);
 				}
