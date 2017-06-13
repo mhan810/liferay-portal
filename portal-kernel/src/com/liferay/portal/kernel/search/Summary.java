@@ -31,10 +31,17 @@ import java.util.Locale;
  */
 public class Summary {
 
-	public Summary(Locale locale, String title, String content) {
+	public Summary(
+		boolean mutable, Locale locale, String title, String content) {
+
+		_mutable = mutable;
 		_locale = locale;
 		_title = title;
 		_content = content;
+	}
+
+	public Summary(Locale locale, String title, String content) {
+		this(true, locale, title, content);
 	}
 
 	public Summary(String title, String content) {
@@ -42,6 +49,10 @@ public class Summary {
 	}
 
 	public String getContent() {
+		if (!_mutable) {
+			return _content;
+		}
+
 		if (Validator.isNull(_content)) {
 			return StringPool.BLANK;
 		}
@@ -65,11 +76,27 @@ public class Summary {
 		return _content;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	public String getHighlightedContent() {
+		if (!_mutable) {
+			return _content;
+		}
+
 		return _escapeAndHighlight(_content);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	public String getHighlightedTitle() {
+		if (!_mutable) {
+			return _title;
+		}
+
 		return _escapeAndHighlight(_title);
 	}
 
@@ -77,15 +104,27 @@ public class Summary {
 		return _locale;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	public int getMaxContentLength() {
 		return _maxContentLength;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	public String[] getQueryTerms() {
 		return _queryTerms;
 	}
 
 	public String getTitle() {
+		if (!_mutable) {
+			return _title;
+		}
+
 		if (Validator.isNull(_title)) {
 			return StringPool.BLANK;
 		}
@@ -93,10 +132,18 @@ public class Summary {
 		return _title;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	public boolean isEscape() {
 		return _escape;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	public boolean isHighlight() {
 		return _highlight;
 	}
@@ -105,10 +152,18 @@ public class Summary {
 		_content = content;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	public void setEscape(boolean escape) {
 		_escape = escape;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	public void setHighlight(boolean highlight) {
 		_highlight = highlight;
 	}
@@ -117,10 +172,18 @@ public class Summary {
 		_locale = locale;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	public void setMaxContentLength(int maxContentLength) {
 		_maxContentLength = maxContentLength;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	public void setQueryTerms(String[] queryTerms) {
 		if (ArrayUtil.isEmpty(queryTerms)) {
 			return;
@@ -164,6 +227,7 @@ public class Summary {
 	private boolean _highlight;
 	private Locale _locale;
 	private int _maxContentLength;
+	private boolean _mutable;
 	private String[] _queryTerms;
 	private String _title;
 
