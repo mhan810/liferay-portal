@@ -24,7 +24,7 @@ public class Keywords {
 	public Keywords(String keywords) {
 		boolean luceneSyntax = false;
 
-		if ((keywords.charAt(0) == CharPool.STAR) && (keywords.length() > 1)) {
+		if ((keywords.length() > 1) && (keywords.charAt(0) == CharPool.STAR)) {
 			keywords = keywords.substring(1);
 
 			luceneSyntax = true;
