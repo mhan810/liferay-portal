@@ -20,6 +20,7 @@ import com.liferay.dynamic.data.mapping.expression.DDMExpressionFactory;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeServicesTracker;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldValueAccessor;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldValueValidator;
+import com.liferay.dynamic.data.mapping.form.field.type.DefaultDDMFormFieldValueAccessor;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormFieldValidation;
@@ -133,6 +134,19 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 		}
 	}
 
+	protected DDMFormFieldValueAccessor<?> getDDMFormFieldValueAccessor(
+		String type) {
+
+		DDMFormFieldValueAccessor<?> ddmFormFieldValueAccessor =
+			_ddmFormFieldTypeServicesTracker.getDDMFormFieldValueAccessor(type);
+
+		if (ddmFormFieldValueAccessor != null) {
+			return ddmFormFieldValueAccessor;
+		}
+
+		return _defaultDDMFormFieldValueAccessor;
+	}
+
 	protected List<DDMFormFieldValue> getDDMFormFieldValuesByFieldName(
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap,
 		String fieldName) {
@@ -168,30 +182,20 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 	}
 
 	protected boolean isNull(
-		DDMFormField ddmFormField,
-		DDMFormFieldValueAccessor<?> ddmFormFieldValueAccessor, Value value,
-		Locale locale) {
+		DDMFormField ddmFormField, DDMFormFieldValue ddmFormFieldValue) {
 
-		if (ddmFormFieldValueAccessor == null) {
-			return Validator.isNull(value.getString(locale));
-		}
+		Value value = ddmFormFieldValue.getValue();
 
-		return ddmFormFieldValueAccessor.isEmpty(ddmFormField, value, locale);
-	}
-
-	protected boolean isNull(DDMFormField ddmFormField, Value value) {
 		if (value == null) {
 			return true;
 		}
 
 		DDMFormFieldValueAccessor<?> ddmFormFieldValueAccessor =
-			_ddmFormFieldTypeServicesTracker.getDDMFormFieldValueAccessor(
-				ddmFormField.getType());
+			getDDMFormFieldValueAccessor(ddmFormField.getType());
 
 		for (Locale availableLocale : value.getAvailableLocales()) {
-			if (isNull(
-					ddmFormField, ddmFormFieldValueAccessor, value,
-					availableLocale)) {
+			if (ddmFormFieldValueAccessor.isEmpty(
+					ddmFormFieldValue, availableLocale)) {
 
 				return true;
 			}
@@ -309,7 +313,7 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 
 		validateDDMFormFieldValue(
 			ddmFormField, ddmFormValues.getAvailableLocales(),
-			ddmFormValues.getDefaultLocale(), ddmFormFieldValue.getValue());
+			ddmFormValues.getDefaultLocale(), ddmFormFieldValue);
 
 		invokeDDMFormFieldValueValidator(ddmFormField, ddmFormFieldValue);
 
@@ -320,8 +324,10 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 
 	protected void validateDDMFormFieldValue(
 			DDMFormField ddmFormField, Set<Locale> availableLocales,
-			Locale defaultLocale, Value value)
+			Locale defaultLocale, DDMFormFieldValue ddmFormFieldValue)
 		throws DDMFormValuesValidationException {
+
+		Value value = ddmFormFieldValue.getValue();
 
 		if (Validator.isNull(ddmFormField.getDataType())) {
 			if (value != null) {
@@ -330,7 +336,8 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 		}
 		else {
 			if ((value == null) ||
-				(ddmFormField.isRequired() && isNull(ddmFormField, value))) {
+				(ddmFormField.isRequired() &&
+				 isNull(ddmFormField, ddmFormFieldValue))) {
 
 				throw new RequiredValue(ddmFormField.getName());
 			}
@@ -384,6 +391,9 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 	private DDMFormFieldTypeServicesTracker _ddmFormFieldTypeServicesTracker;
 	private final Map<String, DDMFormFieldValueValidator>
 		_ddmFormFieldValueValidators = new ConcurrentHashMap<>();
+	private final DDMFormFieldValueAccessor<String>
+		_defaultDDMFormFieldValueAccessor =
+			new DefaultDDMFormFieldValueAccessor();
 	private JSONFactory _jsonFactory;
 
 }

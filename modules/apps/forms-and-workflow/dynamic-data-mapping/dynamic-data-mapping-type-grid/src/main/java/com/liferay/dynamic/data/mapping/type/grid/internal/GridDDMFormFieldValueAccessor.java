@@ -39,9 +39,8 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true, property = "ddm.form.field.type.name=grid",
-	service = {
-		DDMFormFieldValueAccessor.class, GridDDMFormFieldValueAccessor.class
-	}
+	service =
+		{DDMFormFieldValueAccessor.class, GridDDMFormFieldValueAccessor.class}
 )
 public class GridDDMFormFieldValueAccessor
 	implements DDMFormFieldValueAccessor<JSONObject> {
@@ -50,31 +49,23 @@ public class GridDDMFormFieldValueAccessor
 	public JSONObject getValue(
 		DDMFormFieldValue ddmFormFieldValue, Locale locale) {
 
-		return getValue(ddmFormFieldValue.getValue(), locale);
+		Value value = ddmFormFieldValue.getValue();
+
+		return createJSONObject(value.getString(locale));
 	}
 
 	@Override
-	public boolean isEmpty(
-		DDMFormField ddmFormField, Value value, Locale locale) {
+	public boolean isEmpty(DDMFormFieldValue ddmFormFieldValue, Locale locale) {
+		JSONObject jsonObject = getValue(ddmFormFieldValue, locale);
 
-		JSONObject jsonObject = getValue(value, locale);
+		Set<String> keys = getUniqueKeys(jsonObject);
 
-		Iterator<String> keys = jsonObject.keys();
+		Set<String> rowValues = getDDMFormFieldRowValues(
+			ddmFormFieldValue.getDDMFormField());
 
-		Set<String> keyValues = new HashSet<>();
+		Stream<String> stream = rowValues.stream();
 
-		while (keys.hasNext()) {
-			keyValues.add(keys.next());
-		}
-
-		DDMFormFieldOptions ddmFormFieldOptions =
-			(DDMFormFieldOptions)ddmFormField.getProperty("rows");
-
-		Set<String> optionsValues = ddmFormFieldOptions.getOptionsValues();
-
-		Stream<String> stream = optionsValues.stream();
-
-		return stream.anyMatch(rowValue -> !keyValues.contains(rowValue));
+		return stream.anyMatch(rowValue -> !keys.contains(rowValue));
 	}
 
 	protected JSONObject createJSONObject(String json) {
@@ -83,15 +74,30 @@ public class GridDDMFormFieldValueAccessor
 		}
 		catch (JSONException jsone) {
 			if (_log.isDebugEnabled()) {
-				_log.debug(jsone, jsone);
+				_log.debug("Unable to parse JSON object", jsone);
 			}
 
 			return jsonFactory.createJSONObject();
 		}
 	}
 
-	protected JSONObject getValue(Value value, Locale locale) {
-		return createJSONObject(value.getString(locale));
+	protected Set<String> getDDMFormFieldRowValues(DDMFormField ddmFormField) {
+		DDMFormFieldOptions ddmFormFieldOptions =
+			(DDMFormFieldOptions)ddmFormField.getProperty("rows");
+
+		return ddmFormFieldOptions.getOptionsValues();
+	}
+
+	protected Set<String> getUniqueKeys(JSONObject jsonObject) {
+		Set<String> uniqueKeys = new HashSet<>();
+
+		Iterator<String> keys = jsonObject.keys();
+
+		while (keys.hasNext()) {
+			uniqueKeys.add(keys.next());
+		}
+
+		return uniqueKeys;
 	}
 
 	@Reference

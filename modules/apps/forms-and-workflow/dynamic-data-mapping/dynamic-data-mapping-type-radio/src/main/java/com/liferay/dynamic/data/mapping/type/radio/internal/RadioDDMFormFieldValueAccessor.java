@@ -34,9 +34,8 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true, property = "ddm.form.field.type.name=radio",
-	service = {
-		DDMFormFieldValueAccessor.class, RadioDDMFormFieldValueAccessor.class
-	}
+	service =
+		{DDMFormFieldValueAccessor.class, RadioDDMFormFieldValueAccessor.class}
 )
 public class RadioDDMFormFieldValueAccessor
 	implements DDMFormFieldValueAccessor<String> {

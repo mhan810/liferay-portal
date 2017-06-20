@@ -6,6 +6,6 @@
 		"liferay-karma-config": "0.0.3",
 		"soyutils-nogoog": "^1.0.0"
 	},
-	"name": "dynamic-data-mapping-type-select",
+	"name": "dynamic-data-mapping-type-fieldset",
 	"version": "1.0.0"
 }

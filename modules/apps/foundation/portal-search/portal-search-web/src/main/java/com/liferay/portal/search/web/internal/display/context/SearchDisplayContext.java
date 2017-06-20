@@ -90,12 +90,15 @@ public class SearchDisplayContext {
 
 		if (keywords == null) {
 			_hits = null;
+			_keywords = null;
 			_queryString = null;
 			_searchContainer = null;
 			_searchContext = null;
 
 			return;
 		}
+
+		_keywords = new Keywords(keywords);
 
 		HttpServletRequest request = portal.getHttpServletRequest(
 			_renderRequest);
@@ -108,6 +111,18 @@ public class SearchDisplayContext {
 			_renderRequest, getPortletURL(), null, emptyResultMessage);
 
 		SearchContext searchContext = SearchContextFactory.getInstance(request);
+
+		boolean luceneSyntax = isUseAdvancedSearchSyntax();
+
+		if (!luceneSyntax) {
+			luceneSyntax = _keywords.isLuceneSyntax();
+		}
+
+		if (luceneSyntax) {
+			searchContext.setAttribute("luceneSyntax", Boolean.TRUE);
+		}
+
+		searchContext.setKeywords(_keywords.getKeywords());
 
 		SearchRequestImpl searchRequestImpl = new SearchRequestImpl(
 			() -> searchContext, searchContainerOptions -> searchContainer,
@@ -193,6 +208,8 @@ public class SearchDisplayContext {
 			isCollatedSpellCheckResultEnabled());
 		_queryConfig.setCollatedSpellCheckResultScoresThreshold(
 			getCollatedSpellCheckResultDisplayThreshold());
+		_queryConfig.setHighlightEnabled(
+			_searchResultPreferences.isHighlightEnabled());
 		_queryConfig.setQueryIndexingEnabled(isQueryIndexingEnabled());
 		_queryConfig.setQueryIndexingThreshold(getQueryIndexingThreshold());
 		_queryConfig.setQuerySuggestionEnabled(isQuerySuggestionsEnabled());
@@ -446,6 +463,17 @@ public class SearchDisplayContext {
 		return false;
 	}
 
+	public boolean isUseAdvancedSearchSyntax() {
+		if (_useAdvancedSearchSyntax != null) {
+			return _useAdvancedSearchSyntax;
+		}
+
+		_useAdvancedSearchSyntax = GetterUtil.getBoolean(
+			_portletPreferences.getValue("useAdvancedSearchSyntax", null));
+
+		return _useAdvancedSearchSyntax;
+	}
+
 	public boolean isViewInContext() {
 		return _searchResultPreferences.isViewInContext();
 	}
@@ -468,7 +496,7 @@ public class SearchDisplayContext {
 	}
 
 	protected void contributeSearchSettings(SearchSettings searchSettings) {
-		searchSettings.setKeywords(getKeywords());
+		searchSettings.setKeywords(_keywords.getKeywords());
 
 		QueryConfig queryConfig = searchSettings.getQueryConfig();
 
@@ -568,6 +596,7 @@ public class SearchDisplayContext {
 	private final Hits _hits;
 	private Boolean _includeSystemPortlets;
 	private final IndexSearchPropsValues _indexSearchPropsValues;
+	private final Keywords _keywords;
 	private final PortletPreferences _portletPreferences;
 	private final PortletURLFactory _portletURLFactory;
 	private QueryConfig _queryConfig;
@@ -584,5 +613,6 @@ public class SearchDisplayContext {
 	private final SearchResultPreferences _searchResultPreferences;
 	private String _searchScopePreferenceString;
 	private final ThemeDisplaySupplier _themeDisplaySupplier;
+	private Boolean _useAdvancedSearchSyntax;
 
 }
