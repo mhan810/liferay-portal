@@ -152,18 +152,23 @@ public class DDMRESTDataProvider implements DDMDataProvider {
 			String path = outputParameterSettings.outputParameterPath();
 
 			if (Objects.equals(type, "text")) {
-				String nomalizedPath = normalizePath(path);
+				String value = documentContext.read(
+					normalizePath(path), String.class);
 
-				ddmDataProviderResponseOutputs.add(
-					DDMDataProviderResponseOutput.of(
-						name, "text", documentContext.read(nomalizedPath)));
+				if (value != null) {
+					ddmDataProviderResponseOutputs.add(
+						DDMDataProviderResponseOutput.of(name, "text", value));
+				}
 			}
 			else if (Objects.equals(type, "number")) {
-				String nomalizedPath = normalizePath(path);
+				Number value = documentContext.read(
+					normalizePath(path), Number.class);
 
-				ddmDataProviderResponseOutputs.add(
-					DDMDataProviderResponseOutput.of(
-						name, "number", documentContext.read(nomalizedPath)));
+				if (value != null) {
+					ddmDataProviderResponseOutputs.add(
+						DDMDataProviderResponseOutput.of(
+							name, "number", value));
+				}
 			}
 			else if (Objects.equals(type, "list")) {
 				String[] paths = StringUtil.split(path, CharPool.SEMICOLON);
@@ -172,7 +177,12 @@ public class DDMRESTDataProvider implements DDMDataProvider {
 
 				String normalizedKeyPath = normalizedValuePath;
 
-				List<String> values = documentContext.read(normalizedValuePath);
+				List<String> values = documentContext.read(
+					normalizedValuePath, List.class);
+
+				if (values == null) {
+					continue;
+				}
 
 				List<String> keys = new ArrayList<>(values);
 

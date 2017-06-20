@@ -321,9 +321,8 @@ public class DDMFormInstanceFactoryTest {
 		DDMFormValues ddmFormValues = DDMFormValuesTestUtil.createDDMFormValues(
 			ddmForm);
 
-		String[][] expectedParameters = {
-			{"Parameter 1", "Value 1"}, {"Parameter 2", "Value 2"}
-		};
+		String[][] expectedParameters =
+			{{"Parameter 1", "Value 1"}, {"Parameter 2", "Value 2"}};
 
 		for (int i = 0; i < expectedParameters.length; i++) {
 			DDMFormFieldValue ddmFormFieldValue = new DDMFormFieldValue();

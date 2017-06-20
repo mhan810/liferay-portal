@@ -72,6 +72,14 @@ public class SearchResultsPortletPreferencesImpl
 	}
 
 	@Override
+	public boolean isQueryIndexingEnabled() {
+		return _portletPreferencesHelper.getBoolean(
+			SearchResultsPortletPreferences.
+				PREFERENCE_KEY_QUERY_INDEXING_ENABLED,
+			true);
+	}
+
+	@Override
 	public boolean isViewInContext() {
 		return _portletPreferencesHelper.getBoolean(
 			SearchResultsPortletPreferences.PREFERENCE_KEY_VIEW_IN_CONTEXT,

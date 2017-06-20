@@ -43,4 +43,15 @@ public class CheckboxDDMFormFieldValueAccessor
 		return Boolean.valueOf(value.getString(locale));
 	}
 
+	@Override
+	public boolean isEmpty(DDMFormFieldValue ddmFormFieldValue, Locale locale) {
+		Boolean valueBoolean = getValue(ddmFormFieldValue, locale);
+
+		if (valueBoolean == Boolean.FALSE) {
+			return true;
+		}
+
+		return false;
+	}
+
 }

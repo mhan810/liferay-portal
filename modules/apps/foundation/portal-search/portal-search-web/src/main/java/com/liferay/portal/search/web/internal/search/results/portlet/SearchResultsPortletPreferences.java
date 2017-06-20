@@ -34,6 +34,9 @@ public interface SearchResultsPortletPreferences {
 	public static final String PREFERENCE_KEY_PAGINATION_START_PARAMETER_NAME =
 		"paginationStartParameterName";
 
+	public static final String PREFERENCE_KEY_QUERY_INDEXING_ENABLED =
+		"queryIndexingEnabled";
+
 	public static final String PREFERENCE_KEY_VIEW_IN_CONTEXT = "viewInContext";
 
 	public int getPaginationDelta();
@@ -45,6 +48,8 @@ public interface SearchResultsPortletPreferences {
 	public boolean isDisplayInDocumentForm();
 
 	public boolean isHighlightEnabled();
+
+	public boolean isQueryIndexingEnabled();
 
 	public boolean isViewInContext();
 

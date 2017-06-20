@@ -38,9 +38,8 @@ import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 					{
 						@DDMFormLayoutColumn(
 							size = 12,
-							value = {
-								"label", "tip", "required", "showAsSwitcher"
-							}
+							value =
+								{"label", "tip", "required", "showAsSwitcher"}
 						)
 					}
 				)

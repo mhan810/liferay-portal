@@ -809,6 +809,8 @@ AUI.add(
 						}
 						else if (currentTarget.hasClass('lfr-ddm-repeatable-delete-button')) {
 							instance.remove();
+
+							instance.syncRepeatablelUI();
 						}
 
 						event.stopPropagation();

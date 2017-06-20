@@ -40,7 +40,7 @@ public class DDMFormSuccessPageSettings implements Serializable {
 	}
 
 	public DDMFormSuccessPageSettings(
-		String body, String title, boolean enabled) {
+		LocalizedValue body, LocalizedValue title, boolean enabled) {
 
 		_body = body;
 		_title = title;
@@ -70,11 +70,11 @@ public class DDMFormSuccessPageSettings implements Serializable {
 		return false;
 	}
 
-	public String getBody() {
+	public LocalizedValue getBody() {
 		return _body;
 	}
 
-	public String getTitle() {
+	public LocalizedValue getTitle() {
 		return _title;
 	}
 
@@ -91,7 +91,7 @@ public class DDMFormSuccessPageSettings implements Serializable {
 		return _enabled;
 	}
 
-	public void setBody(String body) {
+	public void setBody(LocalizedValue body) {
 		_body = body;
 	}
 
@@ -99,12 +99,12 @@ public class DDMFormSuccessPageSettings implements Serializable {
 		_enabled = enabled;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(LocalizedValue title) {
 		_title = title;
 	}
 
-	private String _body;
+	private LocalizedValue _body;
 	private boolean _enabled;
-	private String _title;
+	private LocalizedValue _title;
 
 }
