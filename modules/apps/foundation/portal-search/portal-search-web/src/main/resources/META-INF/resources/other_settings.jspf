@@ -20,6 +20,8 @@
 
 <aui:input label="enable-highlighting" name="preferences--highlightEnabled--" type="checkbox" value="<%= searchDisplayContext.isHighlightEnabled() %>" />
 
+<aui:input helpMessage="query-indexing-enabled-help" label="enable-query-indexing" name="preferences--queryIndexingEnabled--" type="checkbox" value="<%= searchDisplayContext.isQueryIndexingEnabled() %>" />
+
 <aui:input name="preferences--viewInContext--" type="checkbox" value="<%= searchDisplayContext.isViewInContext() %>" />
 
 <aui:input helpMessage="display-main-query-help" name="preferences--displayMainQuery--" type="checkbox" value="<%= searchDisplayContext.isDisplayMainQuery() %>" />

@@ -23,6 +23,8 @@ public interface SearchResultPreferences {
 
 	public boolean isHighlightEnabled();
 
+	public boolean isQueryIndexingEnabled();
+
 	public boolean isViewInContext();
 
 }

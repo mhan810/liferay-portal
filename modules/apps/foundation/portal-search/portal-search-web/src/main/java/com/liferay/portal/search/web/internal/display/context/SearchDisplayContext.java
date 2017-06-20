@@ -210,7 +210,8 @@ public class SearchDisplayContext {
 			getCollatedSpellCheckResultDisplayThreshold());
 		_queryConfig.setHighlightEnabled(
 			_searchResultPreferences.isHighlightEnabled());
-		_queryConfig.setQueryIndexingEnabled(isQueryIndexingEnabled());
+		_queryConfig.setQueryIndexingEnabled(
+			_searchResultPreferences.isQueryIndexingEnabled());
 		_queryConfig.setQueryIndexingThreshold(getQueryIndexingThreshold());
 		_queryConfig.setQuerySuggestionEnabled(isQuerySuggestionsEnabled());
 		_queryConfig.setQuerySuggestionScoresThreshold(
@@ -405,15 +406,9 @@ public class SearchDisplayContext {
 	}
 
 	public boolean isQueryIndexingEnabled() {
-		if (_queryIndexingEnabled != null) {
-			return _queryIndexingEnabled;
-		}
+		QueryConfig queryConfig = getQueryConfig();
 
-		_queryIndexingEnabled = GetterUtil.getBoolean(
-			_portletPreferences.getValue("queryIndexingEnabled", null),
-			_indexSearchPropsValues.isQueryIndexingEnabled());
-
-		return _queryIndexingEnabled;
+		return queryConfig.isQueryIndexingEnabled();
 	}
 
 	public boolean isQuerySuggestionsEnabled() {
@@ -600,7 +595,6 @@ public class SearchDisplayContext {
 	private final PortletPreferences _portletPreferences;
 	private final PortletURLFactory _portletURLFactory;
 	private QueryConfig _queryConfig;
-	private Boolean _queryIndexingEnabled;
 	private Integer _queryIndexingThreshold;
 	private final String _queryString;
 	private Integer _querySuggestionsDisplayThreshold;

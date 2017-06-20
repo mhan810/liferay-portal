@@ -49,6 +49,11 @@ public class SearchResultPreferencesImpl implements SearchResultPreferences {
 	}
 
 	@Override
+	public boolean isQueryIndexingEnabled() {
+		return _searchResultsPortletPreferences.isQueryIndexingEnabled();
+	}
+
+	@Override
 	public boolean isViewInContext() {
 		return _searchResultsPortletPreferences.isViewInContext();
 	}
