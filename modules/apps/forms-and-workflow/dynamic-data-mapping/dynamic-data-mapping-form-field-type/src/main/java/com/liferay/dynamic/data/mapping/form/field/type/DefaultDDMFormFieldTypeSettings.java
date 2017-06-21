@@ -37,9 +37,8 @@ import com.liferay.portal.kernel.util.StringPool;
 					{
 						@DDMFormLayoutColumn(
 							size = 12,
-							value = {
-								"label", "predefinedValue", "required", "tip"
-							}
+							value =
+								{"label", "predefinedValue", "required", "tip"}
 						)
 					}
 				)

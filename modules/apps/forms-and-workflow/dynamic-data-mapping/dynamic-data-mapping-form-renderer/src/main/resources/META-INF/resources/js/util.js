@@ -11,35 +11,35 @@ AUI.add(
 					label: Liferay.Language.get('is-greater-than-or-equal-to'),
 					name: 'gteq',
 					parameterMessage: Liferay.Language.get('this-number'),
-					regex: /^(\w+)\>\=(\d+)$/,
+					regex: /^(.+)\>\=(\d+)$/,
 					template: '{name}>={parameter}'
 				},
 				{
 					label: Liferay.Language.get('is-greater-than'),
 					name: 'gt',
 					parameterMessage: Liferay.Language.get('this-number'),
-					regex: /^(\w+)\>(\d+)$/,
+					regex: /^(.+)\>(\d+)$/,
 					template: '{name}>{parameter}'
 				},
 				{
 					label: Liferay.Language.get('is-equal-to'),
 					name: 'eq',
 					parameterMessage: Liferay.Language.get('this-number'),
-					regex: /^(\w+)\=\=(\d+)$/,
+					regex: /^(.+)\=\=(\d+)$/,
 					template: '{name}=={parameter}'
 				},
 				{
 					label: Liferay.Language.get('is-less-than-or-equal-to'),
 					name: 'lteq',
 					parameterMessage: Liferay.Language.get('this-number'),
-					regex: /^(\w+)\<\=(\d+)$/,
+					regex: /^(.+)\<\=(\d+)$/,
 					template: '{name}<={parameter}'
 				},
 				{
 					label: Liferay.Language.get('is-less-than'),
 					name: 'lt',
 					parameterMessage: Liferay.Language.get('this-number'),
-					regex: /^(\w+)\<(\d+)$/,
+					regex: /^(.+)\<(\d+)$/,
 					template: '{name}<{parameter}'
 				}
 			],

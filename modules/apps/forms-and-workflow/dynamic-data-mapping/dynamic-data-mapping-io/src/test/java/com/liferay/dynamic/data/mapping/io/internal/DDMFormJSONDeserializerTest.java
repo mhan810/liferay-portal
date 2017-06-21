@@ -24,9 +24,11 @@ import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormFieldValidation;
 import com.liferay.dynamic.data.mapping.model.DDMFormRule;
 import com.liferay.dynamic.data.mapping.model.DDMFormSuccessPageSettings;
+import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.test.util.DDMFormFieldTypeSettingsTestUtil;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ReflectionUtil;
 
 import java.lang.reflect.Field;
@@ -196,9 +198,17 @@ public class DDMFormJSONDeserializerTest
 		DDMFormSuccessPageSettings ddmFormSuccessPageSettings) {
 
 		Assert.assertNotNull(ddmFormSuccessPageSettings);
-		Assert.assertEquals("Body Text", ddmFormSuccessPageSettings.getBody());
-		Assert.assertEquals(
-			"Title Text", ddmFormSuccessPageSettings.getTitle());
+
+		LocalizedValue body = ddmFormSuccessPageSettings.getBody();
+
+		Assert.assertEquals("Body Text", body.getString(LocaleUtil.US));
+		Assert.assertEquals("Texto", body.getString(LocaleUtil.BRAZIL));
+
+		LocalizedValue title = ddmFormSuccessPageSettings.getTitle();
+
+		Assert.assertEquals("Title Text", title.getString(LocaleUtil.US));
+		Assert.assertEquals("Título", title.getString(LocaleUtil.BRAZIL));
+
 		Assert.assertTrue(ddmFormSuccessPageSettings.isEnabled());
 	}
 

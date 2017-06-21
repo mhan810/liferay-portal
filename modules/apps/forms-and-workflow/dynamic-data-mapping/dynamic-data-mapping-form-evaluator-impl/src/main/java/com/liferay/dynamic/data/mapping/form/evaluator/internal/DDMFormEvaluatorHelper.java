@@ -30,6 +30,9 @@ import com.liferay.dynamic.data.mapping.form.evaluator.internal.functions.JumpPa
 import com.liferay.dynamic.data.mapping.form.evaluator.internal.functions.SetEnabledFunction;
 import com.liferay.dynamic.data.mapping.form.evaluator.internal.functions.SetInvalidFunction;
 import com.liferay.dynamic.data.mapping.form.evaluator.internal.functions.SetPropertyFunction;
+import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeServicesTracker;
+import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldValueAccessor;
+import com.liferay.dynamic.data.mapping.form.field.type.DefaultDDMFormFieldValueAccessor;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormFieldValidation;
@@ -78,12 +81,14 @@ public class DDMFormEvaluatorHelper {
 		DDMDataProviderInvoker ddmDataProviderInvoker,
 		DDMExpressionFactory ddmExpressionFactory,
 		DDMFormEvaluatorContext ddmFormEvaluatorContext,
+		DDMFormFieldTypeServicesTracker ddmFormFieldTypeServicesTracker,
 		JSONFactory jsonFactory, RoleLocalService roleLocalService,
 		UserGroupRoleLocalService userGroupRoleLocalService,
 		UserLocalService userLocalService) {
 
 		_ddmDataProviderInvoker = ddmDataProviderInvoker;
 		_ddmExpressionFactory = ddmExpressionFactory;
+		_ddmFormFieldTypeServicesTracker = ddmFormFieldTypeServicesTracker;
 		_jsonFactory = jsonFactory;
 		_roleLocalService = roleLocalService;
 		_userGroupRoleLocalService = userGroupRoleLocalService;
@@ -305,6 +310,19 @@ public class DDMFormEvaluatorHelper {
 		return null;
 	}
 
+	protected DDMFormFieldValueAccessor<?> getDDMFormFieldValueAccessor(
+		String type) {
+
+		DDMFormFieldValueAccessor<?> ddmFormFieldValueAccessor =
+			_ddmFormFieldTypeServicesTracker.getDDMFormFieldValueAccessor(type);
+
+		if (ddmFormFieldValueAccessor != null) {
+			return ddmFormFieldValueAccessor;
+		}
+
+		return _defaultDDMFormFieldValueAccessor;
+	}
+
 	protected boolean getDefaultBooleanPropertyState(
 		String functionName, String ddmFormFieldName, boolean defaultValue) {
 
@@ -372,27 +390,10 @@ public class DDMFormEvaluatorHelper {
 	protected boolean isDDMFormFieldValueEmpty(
 		DDMFormField ddmFormField, DDMFormFieldValue ddmFormFieldValue) {
 
-		Value value = ddmFormFieldValue.getValue();
+		DDMFormFieldValueAccessor<?> ddmFormFieldValueAccessor =
+			getDDMFormFieldValueAccessor(ddmFormField.getType());
 
-		if (value == null) {
-			return true;
-		}
-
-		String valueString = value.getString(_locale);
-
-		if (Validator.isNull(StringUtil.trim(valueString))) {
-			return true;
-		}
-
-		String dataType = ddmFormField.getDataType();
-
-		if (Objects.equals(dataType, "boolean") &&
-			Objects.equals(valueString, "false")) {
-
-			return true;
-		}
-
-		return false;
+		return ddmFormFieldValueAccessor.isEmpty(ddmFormFieldValue, _locale);
 	}
 
 	protected void populateDDMFormFieldValues(
@@ -663,8 +664,13 @@ public class DDMFormEvaluatorHelper {
 	private final Map<String, List<DDMFormFieldEvaluationResult>>
 		_ddmFormFieldEvaluationResultsMap = new HashMap<>();
 	private final Map<String, DDMFormField> _ddmFormFieldsMap;
+	private final DDMFormFieldTypeServicesTracker
+		_ddmFormFieldTypeServicesTracker;
 	private final Map<String, List<DDMFormFieldValue>> _ddmFormFieldValuesMap =
 		new LinkedHashMap<>();
+	private final DDMFormFieldValueAccessor<String>
+		_defaultDDMFormFieldValueAccessor =
+			new DefaultDDMFormFieldValueAccessor();
 	private final long _groupId;
 	private final JSONFactory _jsonFactory;
 	private final Locale _locale;

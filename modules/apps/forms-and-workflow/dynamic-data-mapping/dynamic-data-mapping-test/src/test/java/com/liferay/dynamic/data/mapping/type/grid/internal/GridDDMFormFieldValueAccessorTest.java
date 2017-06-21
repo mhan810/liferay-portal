@@ -14,10 +14,12 @@
 
 package com.liferay.dynamic.data.mapping.type.grid.internal;
 
+import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormFieldOptions;
 import com.liferay.dynamic.data.mapping.model.UnlocalizedValue;
 import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
+import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.test.util.DDMFormTestUtil;
 import com.liferay.dynamic.data.mapping.test.util.DDMFormValuesTestUtil;
 import com.liferay.portal.json.JSONFactoryImpl;
@@ -45,8 +47,10 @@ public class GridDDMFormFieldValueAccessorTest extends PowerMockito {
 
 	@Test
 	public void testEmpty() {
+		DDMForm ddmForm = DDMFormTestUtil.createDDMForm();
+
 		DDMFormField ddmFormField = DDMFormTestUtil.createDDMFormField(
-			"grid0", "Grid", "grid", "string", false, false, true);
+			"Grid", "Grid", "grid", "string", false, false, true);
 
 		DDMFormFieldOptions ddmFormFieldOptions = new DDMFormFieldOptions();
 
@@ -55,13 +59,20 @@ public class GridDDMFormFieldValueAccessorTest extends PowerMockito {
 
 		ddmFormField.setProperty("rows", ddmFormFieldOptions);
 
+		ddmForm.addDDMFormField(ddmFormField);
+
+		DDMFormValues ddmFormValues = DDMFormValuesTestUtil.createDDMFormValues(
+			ddmForm);
+
 		DDMFormFieldValue ddmFormFieldValue =
 			DDMFormValuesTestUtil.createDDMFormFieldValue(
 				"Grid", new UnlocalizedValue("{\"row1\":\"column1\"}"));
 
+		ddmFormFieldValue.setDDMFormValues(ddmFormValues);
+
 		Assert.assertTrue(
 			_gridDDMFormFieldValueAccessor.isEmpty(
-				ddmFormField, ddmFormFieldValue.getValue(), LocaleUtil.US));
+				ddmFormFieldValue, LocaleUtil.US));
 	}
 
 	@Test
@@ -72,14 +83,17 @@ public class GridDDMFormFieldValueAccessorTest extends PowerMockito {
 
 		Assert.assertEquals(
 			"{\"RowValue\":\"ColumnValue\"}",
-			_gridDDMFormFieldValueAccessor.getValue(
-				ddmFormFieldValue, LocaleUtil.US).toString());
+			String.valueOf(
+				_gridDDMFormFieldValueAccessor.getValue(
+					ddmFormFieldValue, LocaleUtil.US)));
 	}
 
 	@Test
 	public void testNotEmpty() {
+		DDMForm ddmForm = DDMFormTestUtil.createDDMForm();
+
 		DDMFormField ddmFormField = DDMFormTestUtil.createDDMFormField(
-			"grid0", "Grid", "grid", "string", false, false, true);
+			"Grid", "Grid", "grid", "string", false, false, true);
 
 		DDMFormFieldOptions ddmFormFieldOptions = new DDMFormFieldOptions();
 
@@ -88,15 +102,22 @@ public class GridDDMFormFieldValueAccessorTest extends PowerMockito {
 
 		ddmFormField.setProperty("rows", ddmFormFieldOptions);
 
+		ddmForm.addDDMFormField(ddmFormField);
+
+		DDMFormValues ddmFormValues = DDMFormValuesTestUtil.createDDMFormValues(
+			ddmForm);
+
 		DDMFormFieldValue ddmFormFieldValue =
 			DDMFormValuesTestUtil.createDDMFormFieldValue(
 				"Grid",
 				new UnlocalizedValue(
 					"{\"row1\":\"column1\",\"row2\":\"column1\"}"));
 
+		ddmFormFieldValue.setDDMFormValues(ddmFormValues);
+
 		Assert.assertFalse(
 			_gridDDMFormFieldValueAccessor.isEmpty(
-				ddmFormField, ddmFormFieldValue.getValue(), LocaleUtil.US));
+				ddmFormFieldValue, LocaleUtil.US));
 	}
 
 	protected void setUpGridDDMFormFieldValueAccessor() throws Exception {

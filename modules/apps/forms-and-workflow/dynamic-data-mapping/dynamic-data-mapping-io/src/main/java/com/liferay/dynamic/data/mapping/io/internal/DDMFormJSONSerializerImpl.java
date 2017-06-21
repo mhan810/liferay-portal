@@ -302,21 +302,27 @@ public class DDMFormJSONSerializerImpl implements DDMFormJSONSerializer {
 
 		JSONObject jsonObject = _jsonFactory.createJSONObject();
 
-		jsonObject.put("body", ddmFormSuccessPageSettings.getBody());
+		jsonObject.put(
+			"body", toJSONObject(ddmFormSuccessPageSettings.getBody()));
 		jsonObject.put("enabled", ddmFormSuccessPageSettings.isEnabled());
-		jsonObject.put("title", ddmFormSuccessPageSettings.getTitle());
+		jsonObject.put(
+			"title", toJSONObject(ddmFormSuccessPageSettings.getTitle()));
 
 		return jsonObject;
 	}
 
 	protected JSONObject toJSONObject(LocalizedValue localizedValue) {
-		Map<Locale, String> values = localizedValue.getValues();
-
-		if (values.isEmpty()) {
-			return null;
+		if (localizedValue == null) {
+			return _jsonFactory.createJSONObject();
 		}
 
 		JSONObject jsonObject = _jsonFactory.createJSONObject();
+
+		Map<Locale, String> values = localizedValue.getValues();
+
+		if (values.isEmpty()) {
+			return jsonObject;
+		}
 
 		for (Locale availableLocale : localizedValue.getAvailableLocales()) {
 			jsonObject.put(
