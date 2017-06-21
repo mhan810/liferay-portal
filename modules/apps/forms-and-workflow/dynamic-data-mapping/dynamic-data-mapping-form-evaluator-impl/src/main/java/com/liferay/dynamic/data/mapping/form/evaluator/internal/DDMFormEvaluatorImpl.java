@@ -20,6 +20,7 @@ import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormEvaluationExceptio
 import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormEvaluationResult;
 import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormEvaluator;
 import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormEvaluatorContext;
+import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeServicesTracker;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.service.RoleLocalService;
@@ -44,8 +45,9 @@ public class DDMFormEvaluatorImpl implements DDMFormEvaluator {
 			DDMFormEvaluatorHelper ddmFormRuleEvaluatorHelper =
 				new DDMFormEvaluatorHelper(
 					_ddmDataProviderInvoker, _ddmExpressionFactory,
-					ddmFormEvaluatorContext, _jsonFactory, _roleLocalService,
-					_userGroupRoleLocalService, _userLocalService);
+					ddmFormEvaluatorContext, _ddmFormFieldTypeServicesTracker,
+					_jsonFactory, _roleLocalService, _userGroupRoleLocalService,
+					_userLocalService);
 
 			return ddmFormRuleEvaluatorHelper.evaluate();
 		}
@@ -59,6 +61,9 @@ public class DDMFormEvaluatorImpl implements DDMFormEvaluator {
 
 	@Reference
 	private DDMExpressionFactory _ddmExpressionFactory;
+
+	@Reference
+	private DDMFormFieldTypeServicesTracker _ddmFormFieldTypeServicesTracker;
 
 	@Reference
 	private JSONFactory _jsonFactory;

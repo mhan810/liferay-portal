@@ -566,8 +566,14 @@
 		}
 	],
 	"successPage": {
-		"body": "Body Text",
+		"body": {
+			"en_US": "Body Text",
+			"pt_BR": "Texto"
+		},
 		"enabled": true,
-		"title": "Title Text"
+		"title": {
+			"en_US": "Title Text",
+			"pt_BR": "Título"
+		}
 	}
 }

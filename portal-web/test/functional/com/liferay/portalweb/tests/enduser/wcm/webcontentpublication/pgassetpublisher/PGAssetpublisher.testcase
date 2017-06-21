@@ -22,37 +22,9 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
-
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-			<else>
-				<execute macro="User#firstLoginPG" />
-
-				<execute macro="Site#tearDownCP" />
-
-				<execute macro="User#tearDownCP" />
-
-				<execute macro="Role#tearDownCP" />
-
-				<execute macro="Page#tearDownPG" />
-
-				<execute macro="Bookmark#tearDownCP" />
-
-				<execute macro="BookmarksFolder#tearDownCP" />
-
-				<execute macro="WebContent#tearDownCP" />
-
-				<execute macro="WebContentTemplates#tearDownCP" />
-
-				<execute macro="WebContentStructures#tearDownCP" />
-
-				<execute macro="BlogsEntry#tearDownCP" />
-			</else>
-		</if>
+		<execute macro="PortalInstances#tearDownCP">
+			<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		</execute>
 	</tear-down>
 
 	<command name="AddAndRemoveCustomTitleViaAP" priority="3">
@@ -861,7 +833,7 @@
 
 		<execute macro="AssetPublisherPortlet#configureAssetDisplayOrderPG">
 			<var name="fieldNameOrder" value="Modified Date" />
-			<var name="sortOrder" value="Descending" />
+			<var name="sortOrder" value="Ascending" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -896,9 +868,9 @@
 		</execute>
 
 		<execute macro="AssetPublisherPortlet#viewMultipleAssetOrderPGViaAP">
-			<var name="assetTitle1" value="WebContent Title 3" />
+			<var name="assetTitle1" value="WebContent Title 1" />
 			<var name="assetTitle2" value="WebContent Title 2" />
-			<var name="assetTitle3" value="WebContent Title 1" />
+			<var name="assetTitle3" value="WebContent Title 3" />
 		</execute>
 
 		<execute macro="WebContent#editPGViaAP">
@@ -912,9 +884,9 @@
 		</execute>
 
 		<execute macro="AssetPublisherPortlet#viewMultipleAssetOrderPGViaAP">
-			<var name="assetTitle1" value="WebContent Title 1 Edit" />
+			<var name="assetTitle1" value="WebContent Title 2" />
 			<var name="assetTitle2" value="WebContent Title 3" />
-			<var name="assetTitle3" value="WebContent Title 2" />
+			<var name="assetTitle3" value="WebContent Title 1 Edit" />
 		</execute>
 	</command>
 
@@ -936,7 +908,7 @@
 
 		<execute macro="AssetPublisherPortlet#configureAssetDisplayOrderPG">
 			<var name="fieldNameOrder" value="Modified Date" />
-			<var name="sortOrder" value="Descending" />
+			<var name="sortOrder" value="Ascending" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -971,9 +943,9 @@
 		</execute>
 
 		<execute macro="AssetPublisherPortlet#viewMultipleAssetOrderPGViaAP">
-			<var name="assetTitle1" value="WebContent Title 3" />
+			<var name="assetTitle1" value="WebContent Title 1" />
 			<var name="assetTitle2" value="WebContent Title 2" />
-			<var name="assetTitle3" value="WebContent Title 1" />
+			<var name="assetTitle3" value="WebContent Title 3" />
 		</execute>
 
 		<execute macro="WebContent#editPGViaAP">
@@ -987,9 +959,9 @@
 		</execute>
 
 		<execute macro="AssetPublisherPortlet#viewMultipleAssetOrderPGViaAP">
-			<var name="assetTitle1" value="WebContent Title 1 Edit" />
+			<var name="assetTitle1" value="WebContent Title 2" />
 			<var name="assetTitle2" value="WebContent Title 3" />
-			<var name="assetTitle3" value="WebContent Title 2" />
+			<var name="assetTitle3" value="WebContent Title 1 Edit" />
 		</execute>
 	</command>
 
@@ -1110,7 +1082,6 @@
 
 		<execute macro="AssetPublisherPortlet#configureAssetDisplayOrderPG">
 			<var name="fieldNameOrder" value="Publish Date" />
-			<var name="sortOrder" value="Descending" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -1149,9 +1120,9 @@
 		</execute>
 
 		<execute macro="AssetPublisherPortlet#viewMultipleAssetOrderPGViaAP">
-			<var name="assetTitle1" value="WebContent Title 3" />
+			<var name="assetTitle1" value="WebContent Title 1" />
 			<var name="assetTitle2" value="WebContent Title 2" />
-			<var name="assetTitle3" value="WebContent Title 1" />
+			<var name="assetTitle3" value="WebContent Title 3" />
 		</execute>
 	</command>
 
