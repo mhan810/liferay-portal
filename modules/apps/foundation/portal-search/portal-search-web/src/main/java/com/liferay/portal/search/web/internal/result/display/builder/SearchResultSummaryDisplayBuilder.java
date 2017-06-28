@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.summary.SummaryBuilder;
 import com.liferay.portal.search.web.internal.display.context.PortletURLFactory;
 import com.liferay.portal.search.web.internal.display.context.SearchResultPreferences;
 import com.liferay.portal.search.web.internal.result.display.context.SearchResultFieldDisplayContext;
@@ -133,10 +134,6 @@ public class SearchResultSummaryDisplayBuilder {
 		_portletURLFactory = portletURLFactory;
 	}
 
-	public void setQueryTerms(String[] queryTerms) {
-		_queryTerms = queryTerms;
-	}
-
 	public void setRenderRequest(RenderRequest renderRequest) {
 		_renderRequest = renderRequest;
 	}
@@ -219,13 +216,12 @@ public class SearchResultSummaryDisplayBuilder {
 		searchResultSummaryDisplayContext.setClassPK(classPK);
 
 		if (Validator.isNotNull(summary.getContent())) {
-			searchResultSummaryDisplayContext.setContent(
-				summary.getHighlightedContent());
+			searchResultSummaryDisplayContext.setContent(summary.getContent());
 			searchResultSummaryDisplayContext.setContentVisible(true);
 		}
 
 		searchResultSummaryDisplayContext.setHighlightedTitle(
-			summary.getHighlightedTitle());
+			summary.getTitle());
 		searchResultSummaryDisplayContext.setPortletURL(
 			_portletURLFactory.getPortletURL());
 
@@ -555,28 +551,29 @@ public class SearchResultSummaryDisplayBuilder {
 			String className, AssetRenderer<?> assetRenderer)
 		throws SearchException {
 
-		Summary summary = null;
+		SummaryBuilder summaryBuilder = new SummaryBuilder();
+
+		summaryBuilder.setHighlight(_highlightEnabled);
 
 		Indexer<?> indexer = getIndexer(className);
 
 		if (indexer != null) {
 			String snippet = _document.get(Field.SNIPPET);
 
-			summary = indexer.getSummary(
+			Summary summary = indexer.getSummary(
 				_document, snippet, _renderRequest, _renderResponse);
+
+			summaryBuilder.setContent(summary.getContent());
+			summaryBuilder.setLocale(summary.getLocale());
+			summaryBuilder.setTitle(summary.getTitle());
 		}
 		else if (assetRenderer != null) {
-			summary = new Summary(
-				_locale, assetRenderer.getTitle(_locale),
-				assetRenderer.getSearchSummary(_locale));
+			summaryBuilder.setContent(assetRenderer.getSearchSummary(_locale));
+			summaryBuilder.setLocale(_locale);
+			summaryBuilder.setTitle(assetRenderer.getTitle(_locale));
 		}
 
-		if (summary != null) {
-			summary.setHighlight(_highlightEnabled);
-			summary.setQueryTerms(_queryTerms);
-		}
-
-		return summary;
+		return summaryBuilder.build();
 	}
 
 	protected String getValuesToString(Field field) {
@@ -662,7 +659,6 @@ public class SearchResultSummaryDisplayBuilder {
 	private Language _language;
 	private Locale _locale;
 	private PortletURLFactory _portletURLFactory;
-	private String[] _queryTerms;
 	private RenderRequest _renderRequest;
 	private RenderResponse _renderResponse;
 	private HttpServletRequest _request;

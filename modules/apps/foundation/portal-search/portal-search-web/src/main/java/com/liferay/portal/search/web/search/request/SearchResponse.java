@@ -33,6 +33,10 @@ public interface SearchResponse {
 
 	public Facet getFacet(String fieldName);
 
+	/**
+	 * @deprecated As of 1.2.0
+	 */
+	@Deprecated
 	public String[] getHighlights();
 
 	public Optional<String> getKeywords();
