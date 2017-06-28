@@ -319,8 +319,6 @@ public class SearchResultsPortlet
 		searchResultSummaryDisplayBuilder.setLocale(themeDisplay.getLocale());
 		searchResultSummaryDisplayBuilder.setPortletURLFactory(
 			portletURLFactory);
-		searchResultSummaryDisplayBuilder.setQueryTerms(
-			portletSharedSearchResponse.getHighlights());
 		searchResultSummaryDisplayBuilder.setRenderRequest(renderRequest);
 		searchResultSummaryDisplayBuilder.setRenderResponse(renderResponse);
 		searchResultSummaryDisplayBuilder.setRequest(
