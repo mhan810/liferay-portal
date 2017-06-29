@@ -22,20 +22,20 @@ import com.liferay.portal.kernel.exception.SystemException;
  * @author Brian Wing Shun Chan
  */
 @ProviderType
-public class BackgroundTaskInterruptionException extends SystemException {
+public class BackgroundTaskInterruptedException extends SystemException {
 
-	public BackgroundTaskInterruptionException() {
+	public BackgroundTaskInterruptedException() {
 	}
 
-	public BackgroundTaskInterruptionException(String msg) {
+	public BackgroundTaskInterruptedException(String msg) {
 		super(msg);
 	}
 
-	public BackgroundTaskInterruptionException(String msg, Throwable cause) {
+	public BackgroundTaskInterruptedException(String msg, Throwable cause) {
 		super(msg, cause);
 	}
 
-	public BackgroundTaskInterruptionException(Throwable cause) {
+	public BackgroundTaskInterruptedException(Throwable cause) {
 		super(cause);
 	}
 

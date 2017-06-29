@@ -14,7 +14,7 @@
 
 package com.liferay.portal.background.task.internal.messaging;
 
-import com.liferay.portal.background.task.exception.BackgroundTaskInterruptionException;
+import com.liferay.portal.background.task.exception.BackgroundTaskInterruptedException;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutor;
@@ -127,7 +127,7 @@ public class BackgroundTaskMessageListener extends BaseMessageListener {
 			status = backgroundTaskResult.getStatus();
 			statusMessage = backgroundTaskResult.getStatusMessage();
 		}
-		catch (BackgroundTaskInterruptionException btie) {
+		catch (BackgroundTaskInterruptedException btie) {
 			status = BackgroundTaskConstants.STATUS_CANCELLED;
 
 			if (_log.isDebugEnabled()) {

@@ -17,7 +17,7 @@ package com.liferay.portal.background.task.internal;
 import com.liferay.background.task.kernel.util.comparator.BackgroundTaskCompletionDateComparator;
 import com.liferay.background.task.kernel.util.comparator.BackgroundTaskCreateDateComparator;
 import com.liferay.background.task.kernel.util.comparator.BackgroundTaskNameComparator;
-import com.liferay.portal.background.task.exception.BackgroundTaskInterruptionException;
+import com.liferay.portal.background.task.exception.BackgroundTaskInterruptedException;
 import com.liferay.portal.background.task.internal.messaging.BackgroundTaskMessageListener;
 import com.liferay.portal.background.task.internal.messaging.BackgroundTaskQueuingMessageListener;
 import com.liferay.portal.background.task.internal.messaging.RemoveOnCompletionBackgroundTaskStatusMessageListener;
@@ -572,7 +572,7 @@ public class BackgroundTaskManagerImpl implements BackgroundTaskManager {
 				BackgroundTaskThreadLocal.getBackgroundTaskId());
 
 		if (backgroundTask.isInterrupted() && !backgroundTask.isCompleted()) {
-			throw new BackgroundTaskInterruptionException();
+			throw new BackgroundTaskInterruptedException();
 		}
 	}
 
