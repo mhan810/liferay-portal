@@ -550,11 +550,6 @@ public class BackgroundTaskManagerImpl implements BackgroundTaskManager {
 	}
 
 	@Override
-	public void resumeBackgroundTask(long backgroundTaskId) {
-		_backgroundTaskLocalService.resumeBackgroundTask(backgroundTaskId);
-	}
-
-	@Override
 	public void interruptBackgroundTask(long backgroundTaskId)
 		throws PortalException {
 
@@ -574,6 +569,11 @@ public class BackgroundTaskManagerImpl implements BackgroundTaskManager {
 		if (backgroundTask.isInterrupted() && !backgroundTask.isCompleted()) {
 			throw new BackgroundTaskInterruptedException();
 		}
+	}
+
+	@Override
+	public void resumeBackgroundTask(long backgroundTaskId) {
+		_backgroundTaskLocalService.resumeBackgroundTask(backgroundTaskId);
 	}
 
 	@Override

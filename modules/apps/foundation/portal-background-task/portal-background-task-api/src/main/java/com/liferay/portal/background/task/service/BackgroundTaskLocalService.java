@@ -400,11 +400,11 @@ public interface BackgroundTaskLocalService extends BaseLocalService,
 		java.lang.String taskExecutorClassName) throws PortalException;
 
 	@Clusterable(onMaster = true)
-	public void resumeBackgroundTask(long backgroundTaskId);
-
-	@Clusterable(onMaster = true)
 	public void interruptBackgroundTask(long backgroundTaskId)
 		throws PortalException;
+
+	@Clusterable(onMaster = true)
+	public void resumeBackgroundTask(long backgroundTaskId);
 
 	@Clusterable(onMaster = true)
 	public void triggerBackgroundTask(long backgroundTaskId);

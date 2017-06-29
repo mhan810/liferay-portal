@@ -618,6 +618,25 @@ public class BackgroundTaskLocalServiceImpl
 
 	@Clusterable(onMaster = true)
 	@Override
+	public void interruptBackgroundTask(long backgroundTaskId)
+		throws PortalException {
+
+		BackgroundTask backgroundTask = fetchBackgroundTaskWithoutCaching(
+			backgroundTaskId);
+
+		if ((backgroundTask == null) || !backgroundTask.isInProgress() ||
+			backgroundTask.isInterrupted()) {
+
+			return;
+		}
+
+		backgroundTask.setStatus(BackgroundTaskConstants.STATUS_INTERRUPTED);
+
+		backgroundTaskPersistence.update(backgroundTask);
+	}
+
+	@Clusterable(onMaster = true)
+	@Override
 	public void resumeBackgroundTask(long backgroundTaskId) {
 		BackgroundTask backgroundTask =
 			backgroundTaskPersistence.fetchByPrimaryKey(backgroundTaskId);
@@ -646,25 +665,6 @@ public class BackgroundTaskLocalServiceImpl
 			BackgroundTaskConstants.BACKGROUND_TASK_ID, backgroundTaskId);
 
 		MessageBusUtil.sendMessage(DestinationNames.BACKGROUND_TASK, message);
-	}
-
-	@Clusterable(onMaster = true)
-	@Override
-	public void interruptBackgroundTask(long backgroundTaskId)
-		throws PortalException {
-
-		BackgroundTask backgroundTask = fetchBackgroundTaskWithoutCaching(
-			backgroundTaskId);
-
-		if ((backgroundTask == null) || !backgroundTask.isInProgress() ||
-			backgroundTask.isInterrupted()) {
-
-			return;
-		}
-
-		backgroundTask.setStatus(BackgroundTaskConstants.STATUS_INTERRUPTED);
-
-		backgroundTaskPersistence.update(backgroundTask);
 	}
 
 	@Clusterable(onMaster = true)

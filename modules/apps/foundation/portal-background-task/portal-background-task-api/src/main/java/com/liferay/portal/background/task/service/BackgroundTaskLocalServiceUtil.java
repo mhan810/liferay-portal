@@ -544,13 +544,13 @@ public class BackgroundTaskLocalServiceUtil {
 			.deleteGroupBackgroundTasks(groupId, name, taskExecutorClassName);
 	}
 
-	public static void resumeBackgroundTask(long backgroundTaskId) {
-		getService().resumeBackgroundTask(backgroundTaskId);
-	}
-
 	public static void interruptBackgroundTask(long backgroundTaskId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().interruptBackgroundTask(backgroundTaskId);
+	}
+
+	public static void resumeBackgroundTask(long backgroundTaskId) {
+		getService().resumeBackgroundTask(backgroundTaskId);
 	}
 
 	public static void triggerBackgroundTask(long backgroundTaskId) {

@@ -577,14 +577,14 @@ public class BackgroundTaskLocalServiceWrapper
 	}
 
 	@Override
-	public void resumeBackgroundTask(long backgroundTaskId) {
-		_backgroundTaskLocalService.resumeBackgroundTask(backgroundTaskId);
-	}
-
-	@Override
 	public void interruptBackgroundTask(long backgroundTaskId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_backgroundTaskLocalService.interruptBackgroundTask(backgroundTaskId);
+	}
+
+	@Override
+	public void resumeBackgroundTask(long backgroundTaskId) {
+		_backgroundTaskLocalService.resumeBackgroundTask(backgroundTaskId);
 	}
 
 	@Override

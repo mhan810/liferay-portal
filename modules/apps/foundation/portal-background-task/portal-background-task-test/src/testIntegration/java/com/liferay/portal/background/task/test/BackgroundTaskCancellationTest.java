@@ -108,9 +108,9 @@ public class BackgroundTaskCancellationTest {
 
 	private final CountDownLatch _interruptBackgroundTaskSignal =
 		new CountDownLatch(1);
-	private final CountDownLatch _startBackgroundTaskSignal =
-		new CountDownLatch(1);
 	private final CountDownLatch _interruptBackgroundTaskSignalSignal =
+		new CountDownLatch(1);
+	private final CountDownLatch _startBackgroundTaskSignal =
 		new CountDownLatch(1);
 
 	private class MockBackgroundTaskExecutor implements BackgroundTaskExecutor {
