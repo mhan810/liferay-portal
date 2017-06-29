@@ -191,10 +191,10 @@ public interface BackgroundTaskManager {
 
 	public void resumeBackgroundTask(long backgroundTaskId);
 
-	public void stopBackgroundTask(long backgroundTaskId)
+	public void interruptBackgroundTask(long backgroundTaskId)
 		throws PortalException;
 
-	public void stopCurrentBackgroundTask();
+	public void interruptCurrentBackgroundTask();
 
 	public void triggerBackgroundTask(long backgroundTaskId);
 

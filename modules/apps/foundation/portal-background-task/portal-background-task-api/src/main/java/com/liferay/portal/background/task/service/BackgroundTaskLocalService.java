@@ -403,7 +403,7 @@ public interface BackgroundTaskLocalService extends BaseLocalService,
 	public void resumeBackgroundTask(long backgroundTaskId);
 
 	@Clusterable(onMaster = true)
-	public void stopBackgroundTask(long backgroundTaskId)
+	public void interruptBackgroundTask(long backgroundTaskId)
 		throws PortalException;
 
 	@Clusterable(onMaster = true)

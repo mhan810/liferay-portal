@@ -548,9 +548,9 @@ public class BackgroundTaskLocalServiceUtil {
 		getService().resumeBackgroundTask(backgroundTaskId);
 	}
 
-	public static void stopBackgroundTask(long backgroundTaskId)
+	public static void interruptBackgroundTask(long backgroundTaskId)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		getService().stopBackgroundTask(backgroundTaskId);
+		getService().interruptBackgroundTask(backgroundTaskId);
 	}
 
 	public static void triggerBackgroundTask(long backgroundTaskId) {

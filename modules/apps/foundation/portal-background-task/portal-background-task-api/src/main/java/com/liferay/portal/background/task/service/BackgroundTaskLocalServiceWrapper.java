@@ -582,9 +582,9 @@ public class BackgroundTaskLocalServiceWrapper
 	}
 
 	@Override
-	public void stopBackgroundTask(long backgroundTaskId)
+	public void interruptBackgroundTask(long backgroundTaskId)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		_backgroundTaskLocalService.stopBackgroundTask(backgroundTaskId);
+		_backgroundTaskLocalService.interruptBackgroundTask(backgroundTaskId);
 	}
 
 	@Override

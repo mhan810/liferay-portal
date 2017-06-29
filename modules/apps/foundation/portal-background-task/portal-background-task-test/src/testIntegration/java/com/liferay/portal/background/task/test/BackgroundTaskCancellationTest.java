@@ -90,7 +90,7 @@ public class BackgroundTaskCancellationTest {
 
 		_interruptBackgroundTaskSignal.countDown();
 
-		_stopBackgroundTaskSignalSignal.await(10, TimeUnit.SECONDS);
+		_interruptBackgroundTaskSignalSignal.await(10, TimeUnit.SECONDS);
 
 		backgroundTask =
 			BackgroundTaskLocalServiceUtil.fetchBackgroundTaskWithoutCaching(
@@ -110,7 +110,7 @@ public class BackgroundTaskCancellationTest {
 		new CountDownLatch(1);
 	private final CountDownLatch _startBackgroundTaskSignal =
 		new CountDownLatch(1);
-	private final CountDownLatch _stopBackgroundTaskSignalSignal =
+	private final CountDownLatch _interruptBackgroundTaskSignalSignal =
 		new CountDownLatch(1);
 
 	private class MockBackgroundTaskExecutor implements BackgroundTaskExecutor {
@@ -136,7 +136,7 @@ public class BackgroundTaskCancellationTest {
 				return BackgroundTaskResult.SUCCESS;
 			}
 			finally {
-				_stopBackgroundTaskSignalSignal.countDown();
+				_interruptBackgroundTaskSignalSignal.countDown();
 			}
 		}
 

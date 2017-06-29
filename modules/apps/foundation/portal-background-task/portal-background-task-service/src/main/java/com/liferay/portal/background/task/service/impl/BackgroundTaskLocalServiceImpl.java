@@ -650,7 +650,7 @@ public class BackgroundTaskLocalServiceImpl
 
 	@Clusterable(onMaster = true)
 	@Override
-	public void stopBackgroundTask(long backgroundTaskId)
+	public void interruptBackgroundTask(long backgroundTaskId)
 		throws PortalException {
 
 		BackgroundTask backgroundTask = fetchBackgroundTaskWithoutCaching(

@@ -361,11 +361,11 @@ public class BackgroundTaskManagerUtil {
 	public static void stopBackgrounTask(long backgroundTaskId)
 		throws PortalException {
 
-		_backgroundTaskManager.stopBackgroundTask(backgroundTaskId);
+		_backgroundTaskManager.interruptBackgroundTask(backgroundTaskId);
 	}
 
 	public static void stopCurrentBackgrounTask() {
-		_backgroundTaskManager.stopCurrentBackgroundTask();
+		_backgroundTaskManager.interruptCurrentBackgroundTask();
 	}
 
 	public static void triggerBackgroundTask(long backgroundTaskId) {

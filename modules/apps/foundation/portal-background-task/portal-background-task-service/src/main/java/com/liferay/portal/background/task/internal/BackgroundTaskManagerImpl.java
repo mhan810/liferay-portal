@@ -555,14 +555,14 @@ public class BackgroundTaskManagerImpl implements BackgroundTaskManager {
 	}
 
 	@Override
-	public void stopBackgroundTask(long backgroundTaskId)
+	public void interruptBackgroundTask(long backgroundTaskId)
 		throws PortalException {
 
-		_backgroundTaskLocalService.stopBackgroundTask(backgroundTaskId);
+		_backgroundTaskLocalService.interruptBackgroundTask(backgroundTaskId);
 	}
 
 	@Override
-	public void stopCurrentBackgroundTask() {
+	public void interruptCurrentBackgroundTask() {
 		if (!BackgroundTaskThreadLocal.hasBackgroundTask()) {
 			return;
 		}
