@@ -566,6 +566,10 @@ public class BackgroundTaskManagerImpl implements BackgroundTaskManager {
 			_backgroundTaskLocalService.fetchBackgroundTaskWithoutCaching(
 				BackgroundTaskThreadLocal.getBackgroundTaskId());
 
+		if (backgroundTask == null) {
+			return;
+		}
+
 		if (backgroundTask.isInterrupted() && !backgroundTask.isCompleted()) {
 			throw new BackgroundTaskInterruptedException();
 		}
