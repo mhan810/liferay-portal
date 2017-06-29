@@ -77,6 +77,9 @@ public class BackgroundTaskConstants {
 		else if (status == STATUS_IN_PROGRESS) {
 			return "text-warning";
 		}
+		else if (status == STATUS_INTERRUPTED) {
+			return "text-info";
+		}
 		else if ((status == BackgroundTaskConstants.STATUS_NEW) ||
 				 (status == BackgroundTaskConstants.STATUS_QUEUED)) {
 
@@ -98,6 +101,9 @@ public class BackgroundTaskConstants {
 		}
 		else if (status == STATUS_IN_PROGRESS) {
 			return LABEL_IN_PROGRESS;
+		}
+		else if (status == STATUS_INTERRUPTED) {
+			return LABEL_INTERRUPTED;
 		}
 		else if (status == STATUS_NEW) {
 			return LABEL_NEW;
