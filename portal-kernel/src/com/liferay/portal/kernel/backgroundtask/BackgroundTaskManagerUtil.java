@@ -354,18 +354,18 @@ public class BackgroundTaskManagerUtil {
 			backgroundTaskId);
 	}
 
-	public static void resumeBackgroundTask(long backgroundTaskId) {
-		_backgroundTaskManager.resumeBackgroundTask(backgroundTaskId);
-	}
-
-	public static void stopBackgrounTask(long backgroundTaskId)
+	public static void interruptBackgroundTask(long backgroundTaskId)
 		throws PortalException {
 
 		_backgroundTaskManager.interruptBackgroundTask(backgroundTaskId);
 	}
 
-	public static void stopCurrentBackgrounTask() {
+	public static void interruptCurrentBackgroundTask() {
 		_backgroundTaskManager.interruptCurrentBackgroundTask();
+	}
+
+	public static void resumeBackgroundTask(long backgroundTaskId) {
+		_backgroundTaskManager.resumeBackgroundTask(backgroundTaskId);
 	}
 
 	public static void triggerBackgroundTask(long backgroundTaskId) {

@@ -85,7 +85,7 @@ public class BackgroundTaskCancellationTest {
 
 		_startBackgroundTaskSignal.await(10, TimeUnit.SECONDS);
 
-		BackgroundTaskManagerUtil.stopBackgrounTask(
+		BackgroundTaskManagerUtil.interruptBackgroundTask(
 			backgroundTask.getBackgroundTaskId());
 
 		_interruptBackgroundTaskSignal.countDown();
@@ -131,7 +131,7 @@ public class BackgroundTaskCancellationTest {
 
 				_interruptBackgroundTaskSignal.await(10, TimeUnit.SECONDS);
 
-				BackgroundTaskManagerUtil.stopCurrentBackgrounTask();
+				BackgroundTaskManagerUtil.interruptCurrentBackgroundTask();
 
 				return BackgroundTaskResult.SUCCESS;
 			}
