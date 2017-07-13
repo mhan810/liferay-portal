@@ -59,6 +59,16 @@ public class FacetFactoryUtil {
 		return facet;
 	}
 
+	public static Facet create(
+			String facetClassName, SearchContext searchContext)
+		throws Exception {
+
+		FacetFactory facetFactory = _instance._facetFactories.get(
+			facetClassName);
+
+		return facetFactory.newInstance(searchContext);
+	}
+
 	public FacetFactoryUtil() {
 		Registry registry = RegistryUtil.getRegistry();
 
