@@ -592,7 +592,6 @@ public class SearchDisplayContext {
 	}
 
 	private final AssetEntriesFacetFactory _assetEntriesFacetFactory;
-
 	private Integer _collatedSpellCheckResultDisplayThreshold;
 	private Boolean _collatedSpellCheckResultEnabled;
 	private Boolean _displayMainQuery;

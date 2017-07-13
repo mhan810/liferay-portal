@@ -64,7 +64,7 @@ public class DummyIndexer implements Indexer<Object> {
 	}
 
 	/**
-	 * @deprecated As of 7.1.0.  replaced by
+	 * @deprecated As of 7.0.0,  replaced by
 	 *      com.liferay.portal.search.facet.asset.
 	 *          AssetEntriesFacetBooleanFilterBuilder
 	 */

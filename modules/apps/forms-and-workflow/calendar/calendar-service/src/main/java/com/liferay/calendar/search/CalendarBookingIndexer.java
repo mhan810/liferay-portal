@@ -78,7 +78,7 @@ public class CalendarBookingIndexer extends BaseIndexer<CalendarBooking> {
 	}
 
 	/**
-	 * @deprecated As of 2.3.0.  replaced by
+	 * @deprecated As of 2.2.0,  replaced by
 	 *      com.liferay.calendar.search.facet.asset.
 	 *          AssetEntriesFacetBooleanFilterBuilderImpl
 	 * @param className

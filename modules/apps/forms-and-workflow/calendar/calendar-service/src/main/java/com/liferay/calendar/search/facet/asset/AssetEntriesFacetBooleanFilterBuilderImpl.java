@@ -30,9 +30,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {
-		"entry.class.name=com.liferay.calendar.model.CalendarBooking"
-	},
+	property = {"entry.class.name=com.liferay.calendar.model.CalendarBooking"},
 	service = AssetEntriesFacetBooleanFilterBuilder.class
 )
 public class AssetEntriesFacetBooleanFilterBuilderImpl

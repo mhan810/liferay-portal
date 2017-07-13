@@ -197,7 +197,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 	}
 
 	/**
-	 * @deprecated As of 7.1.0.  replaced by
+	 * @deprecated As of 7.0.0,  replaced by
 	 *      com.liferay.portal.search.facet.asset.
 	 *          AssetEntriesFacetBooleanFilterBuilder
 	 * @param className

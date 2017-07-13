@@ -86,6 +86,11 @@ public class NoAutoCommitIndexer<T> implements Indexer<T> {
 		return _indexer.getDocument(object);
 	}
 
+	/**
+	 * @deprecated As of 3.8.0,  replaced by
+	 *      com.liferay.portal.search.facet.asset.
+	 *          AssetEntriesFacetBooleanFilterBuilder
+	 */
 	@Deprecated
 	@Override
 	public BooleanFilter getFacetBooleanFilter(

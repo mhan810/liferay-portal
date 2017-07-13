@@ -87,7 +87,7 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 	}
 
 	/**
-	 * @deprecated As of 2.3.0.  replaced by
+	 * @deprecated As of 1.2.0,  replaced by
 	 *      com.liferay.dynamic.data.lists.internal.search.facet.asset.
 	 *          AssetEntriesFacetBooleanFilterBuilderImpl
 	 *
