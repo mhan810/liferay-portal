@@ -43,7 +43,6 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriterHelper;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.SearchPermissionChecker;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.QueryFilter;
@@ -87,25 +86,23 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 		return CLASS_NAME;
 	}
 
+	/**
+	 * @deprecated As of 2.3.0.  replaced by
+	 *      com.liferay.dynamic.data.lists.internal.search.facet.asset.
+	 *          AssetEntriesFacetBooleanFilterBuilderImpl
+	 *
+	 * @param className
+	 * @param searchContext
+	 * @return
+	 * @throws Exception
+	 */
+	@Deprecated
 	@Override
 	public BooleanFilter getFacetBooleanFilter(
 			String className, SearchContext searchContext)
 		throws Exception {
 
-		BooleanFilter facetBooleanFilter = new BooleanFilter();
-
-		facetBooleanFilter.addTerm(
-			Field.ENTRY_CLASS_NAME, DDLRecord.class.getName());
-
-		if (searchContext.getUserId() > 0) {
-			facetBooleanFilter =
-				searchPermissionChecker.getPermissionBooleanFilter(
-					searchContext.getCompanyId(), searchContext.getGroupIds(),
-					searchContext.getUserId(), DDLRecordSet.class.getName(),
-					facetBooleanFilter, searchContext);
-		}
-
-		return facetBooleanFilter;
+		return null;
 	}
 
 	@Override
@@ -405,9 +402,6 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 
 	@Reference
 	protected IndexWriterHelper indexWriterHelper;
-
-	@Reference
-	protected SearchPermissionChecker searchPermissionChecker;
 
 	@Reference
 	protected StorageEngine storageEngine;
