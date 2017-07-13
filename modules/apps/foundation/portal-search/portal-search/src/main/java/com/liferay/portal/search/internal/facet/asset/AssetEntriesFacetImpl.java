@@ -239,7 +239,7 @@ public class AssetEntriesFacetImpl
 	@Reference(
 		policy = ReferencePolicy.DYNAMIC,
 		policyOption = ReferencePolicyOption.GREEDY,
-		target = "!(entry.class.name=default)",
+		target = "(!(entry.class.name=default))",
 		unbind = "removeAssetEntriesFacetBooleanFilterBuilder"
 	)
 	protected void setAssetEntriesFacetBooleanFilterBuilder(
