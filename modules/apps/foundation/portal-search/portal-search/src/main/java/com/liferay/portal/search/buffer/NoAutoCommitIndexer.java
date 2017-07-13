@@ -86,6 +86,7 @@ public class NoAutoCommitIndexer<T> implements Indexer<T> {
 		return _indexer.getDocument(object);
 	}
 
+	@Deprecated
 	@Override
 	public BooleanFilter getFacetBooleanFilter(
 			String className, SearchContext searchContext)

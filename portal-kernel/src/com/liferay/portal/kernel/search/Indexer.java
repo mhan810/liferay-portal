@@ -47,6 +47,12 @@ public interface Indexer<T> {
 
 	public Document getDocument(T object) throws SearchException;
 
+	/**
+	 * @deprecated As of 7.1.0.  replaced by
+	 *      com.liferay.portal.search.facet.asset.
+	 *          AssetEntriesFacetBooleanFilterBuilder
+	 */
+	@Deprecated
 	public BooleanFilter getFacetBooleanFilter(
 			String className, SearchContext searchContext)
 		throws Exception;

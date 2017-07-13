@@ -63,6 +63,12 @@ public class DummyIndexer implements Indexer<Object> {
 		return null;
 	}
 
+	/**
+	 * @deprecated As of 7.1.0.  replaced by
+	 *      com.liferay.portal.search.facet.asset.
+	 *          AssetEntriesFacetBooleanFilterBuilder
+	 */
+	@Deprecated
 	@Override
 	public BooleanFilter getFacetBooleanFilter(
 		String className, SearchContext searchContext) {
