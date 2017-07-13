@@ -176,7 +176,7 @@ public class PortletSharedSearchRequestImpl
 
 		SearchRequest searchRequest = new SearchRequestImpl(
 			searchContextBuilder, searchContainerBuilder,
-			facetedSearcherManager);
+			facetedSearcherManager, assetEntriesFacetFactory);
 
 		Stream<Portlet> portletsStream = getExplicitlyAddedPortlets(
 			themeDisplay);

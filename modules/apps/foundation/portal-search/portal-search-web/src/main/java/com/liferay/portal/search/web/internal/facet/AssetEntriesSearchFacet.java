@@ -20,8 +20,6 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.facet.AssetEntriesFacet;
-import com.liferay.portal.kernel.search.facet.AssetEntriesFacetFactory;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
 import com.liferay.portal.kernel.search.facet.util.FacetFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -29,6 +27,8 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.search.facet.asset.AssetEntriesFacet;
+import com.liferay.portal.search.facet.asset.AssetEntriesFacetFactory;
 import com.liferay.portal.search.web.facet.BaseJSPSearchFacet;
 import com.liferay.portal.search.web.facet.SearchFacet;
 

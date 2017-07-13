@@ -20,11 +20,11 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.HitsImpl;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.kernel.search.facet.AssetEntriesFacet;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ScopeFacet;
 import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcher;
 import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcherManager;
+import com.liferay.portal.search.facet.asset.AssetEntriesFacetFactory;
 import com.liferay.portal.search.web.internal.util.SearchStringUtil;
 import com.liferay.portal.search.web.search.request.SearchRequest;
 import com.liferay.portal.search.web.search.request.SearchSettingsContributor;
@@ -41,11 +41,12 @@ public class SearchRequestImpl implements SearchRequest {
 	public SearchRequestImpl(
 		SearchContextBuilder searchContextBuilder,
 		SearchContainerBuilder searchContainerBuilder,
-		FacetedSearcherManager facetedSearcherManager) {
+		FacetedSearcherManager facetedSearcherManager, AssetEntriesFacetFactory assetEntriesFacetFactory) {
 
 		_searchContextBuilder = searchContextBuilder;
 		_searchContainerBuilder = searchContainerBuilder;
 		_facetedSearcherManager = facetedSearcherManager;
+		_assetEntriesFacetFactory = assetEntriesFacetFactory;
 	}
 
 	@Override
@@ -89,7 +90,8 @@ public class SearchRequestImpl implements SearchRequest {
 	}
 
 	protected void addAssetEntriesFacet(SearchContext searchContext) {
-		Facet assetEntriesFacet = new AssetEntriesFacet(searchContext);
+		Facet assetEntriesFacet = _assetEntriesFacetFactory.newInstance(
+			searchContext);
 
 		assetEntriesFacet.setStatic(true);
 
@@ -185,5 +187,6 @@ public class SearchRequestImpl implements SearchRequest {
 	private final SearchContextBuilder _searchContextBuilder;
 	private final Set<SearchSettingsContributor> _searchSettingsContributors =
 		new HashSet<>();
+	private final AssetEntriesFacetFactory _assetEntriesFacetFactory;
 
 }

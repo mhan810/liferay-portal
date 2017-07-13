@@ -126,7 +126,7 @@ public class SearchDisplayContext {
 
 		SearchRequestImpl searchRequestImpl = new SearchRequestImpl(
 			() -> searchContext, searchContainerOptions -> searchContainer,
-			facetedSearcherManager);
+			facetedSearcherManager, assetEntriesFacetFactory);
 
 		searchRequestImpl.addSearchSettingsContributor(
 			this::contributeSearchSettings);

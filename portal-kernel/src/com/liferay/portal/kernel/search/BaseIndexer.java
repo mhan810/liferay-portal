@@ -46,10 +46,10 @@ import com.liferay.portal.kernel.model.Region;
 import com.liferay.portal.kernel.model.ResourcedModel;
 import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.model.WorkflowedModel;
-import com.liferay.portal.kernel.search.facet.AssetEntriesFacet;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.MultiValueFacet;
 import com.liferay.portal.kernel.search.facet.ScopeFacet;
+import com.liferay.portal.kernel.search.facet.util.FacetFactoryUtil;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.search.filter.QueryFilter;
@@ -999,7 +999,13 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
-		Facet facet = new AssetEntriesFacet(searchContext);
+		Facet facet = FacetFactoryUtil.create(
+			_ASSET_ENTRIES_FACET_CLASS_NAME, searchContext);
+
+		if (facet == null) {
+			throw new IllegalStateException(
+				"No facet defined for: " + _ASSET_ENTRIES_FACET_CLASS_NAME);
+		}
 
 		facet.setStatic(true);
 
@@ -1871,6 +1877,9 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 	protected void setStagingAware(boolean stagingAware) {
 		_stagingAware = stagingAware;
 	}
+
+	private static final String _ASSET_ENTRIES_FACET_CLASS_NAME =
+		"com.liferay.portal.search.facet.asset.AssetEntriesFacet";
 
 	private static final long _DEFAULT_FOLDER_ID = 0L;
 
