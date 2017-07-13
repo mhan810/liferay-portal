@@ -41,7 +41,8 @@ public class SearchRequestImpl implements SearchRequest {
 	public SearchRequestImpl(
 		SearchContextBuilder searchContextBuilder,
 		SearchContainerBuilder searchContainerBuilder,
-		FacetedSearcherManager facetedSearcherManager, AssetEntriesFacetFactory assetEntriesFacetFactory) {
+		FacetedSearcherManager facetedSearcherManager,
+		AssetEntriesFacetFactory assetEntriesFacetFactory) {
 
 		_searchContextBuilder = searchContextBuilder;
 		_searchContainerBuilder = searchContainerBuilder;
@@ -182,11 +183,11 @@ public class SearchRequestImpl implements SearchRequest {
 		return hitsOptional.orElseGet(HitsImpl::new);
 	}
 
+	private final AssetEntriesFacetFactory _assetEntriesFacetFactory;
 	private final FacetedSearcherManager _facetedSearcherManager;
 	private final SearchContainerBuilder _searchContainerBuilder;
 	private final SearchContextBuilder _searchContextBuilder;
 	private final Set<SearchSettingsContributor> _searchSettingsContributors =
 		new HashSet<>();
-	private final AssetEntriesFacetFactory _assetEntriesFacetFactory;
 
 }
