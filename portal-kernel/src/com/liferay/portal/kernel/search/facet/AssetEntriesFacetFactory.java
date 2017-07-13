@@ -14,22 +14,45 @@
 
 package com.liferay.portal.kernel.search.facet;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.util.FacetFactory;
+import com.liferay.portal.kernel.search.facet.util.FacetFactoryUtil;
 
 /**
  * @author Raymond Augé
+ * @deprecated As of 7.0.0, replaced by
+ *      com.liferay.portal.search.facet.asset.AssetEntriesFacetFactory
  */
+@Deprecated
 public class AssetEntriesFacetFactory implements FacetFactory {
 
 	@Override
 	public String getFacetClassName() {
-		return AssetEntriesFacet.class.getName();
+		return _ASSET_ENTRIES_FACET_CLASS_NAME;
 	}
 
 	@Override
 	public Facet newInstance(SearchContext searchContext) {
-		return new AssetEntriesFacet(searchContext);
+		Facet facet = null;
+
+		try {
+			facet = FacetFactoryUtil.create(
+				_ASSET_ENTRIES_FACET_CLASS_NAME, searchContext);
+		}
+		catch (Exception e) {
+			throw new SystemException(e);
+		}
+
+		if (facet == null) {
+			throw new IllegalStateException(
+				"No facet defined for: " + _ASSET_ENTRIES_FACET_CLASS_NAME);
+		}
+
+		return facet;
 	}
+
+	private static final String _ASSET_ENTRIES_FACET_CLASS_NAME =
+		"com.liferay.portal.search.facet.asset.AssetEntriesFacet";
 
 }
