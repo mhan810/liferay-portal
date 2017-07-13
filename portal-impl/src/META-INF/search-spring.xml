@@ -34,6 +34,10 @@
 
 	<!-- Util -->
 
+	<bean class="com.liferay.portal.kernel.search.generic.BooleanClauseFactoryImpl" id="com.liferay.portal.kernel.search.BooleanClauseFactory" />
+	<bean class="com.liferay.portal.kernel.search.BooleanClauseFactoryUtil" id="com.liferay.portal.kernel.search.BooleanClauseFactoryUtil">
+		<property name="booleanClauseFactory" ref="com.liferay.portal.kernel.search.BooleanClauseFactory" />
+	</bean>
 	<bean class="com.liferay.portal.kernel.search.generic.StringQueryFactoryImpl" id="com.liferay.portal.kernel.search.StringQueryFactory" />
 	<bean class="com.liferay.portal.kernel.search.StringQueryFactoryUtil" id="com.liferay.portal.kernel.search.StringQueryFactoryUtil">
 		<property name="stringQueryFactory" ref="com.liferay.portal.kernel.search.StringQueryFactory" />
