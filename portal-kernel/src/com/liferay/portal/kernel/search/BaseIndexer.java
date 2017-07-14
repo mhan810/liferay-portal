@@ -50,6 +50,7 @@ import com.liferay.portal.kernel.search.facet.AssetEntriesFacet;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.MultiValueFacet;
 import com.liferay.portal.kernel.search.facet.ScopeFacet;
+import com.liferay.portal.kernel.search.facet.util.FacetFactoryUtil;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.search.filter.QueryFilter;
@@ -196,6 +197,16 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0,  replaced by
+	 *      com.liferay.portal.search.facet.asset.
+	 *          AssetEntriesFacetBooleanFilterBuilder
+	 * @param className
+	 * @param searchContext
+	 * @return
+	 * @throws Exception
+	 */
+	@Deprecated
 	@Override
 	public BooleanFilter getFacetBooleanFilter(
 			String className, SearchContext searchContext)
@@ -1871,6 +1882,9 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 	protected void setStagingAware(boolean stagingAware) {
 		_stagingAware = stagingAware;
 	}
+
+	private static final String _ASSET_ENTRIES_FACET_CLASS_NAME =
+		"com.liferay.portal.search.facet.asset.AssetEntriesFacet";
 
 	private static final long _DEFAULT_FOLDER_ID = 0L;
 
