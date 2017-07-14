@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.search.facet.util;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
@@ -33,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @deprecated As of 7.0.0, with no direct replacement
  */
 @Deprecated
+@ProviderType
 public class FacetFactoryUtil {
 
 	public static Facet create(
@@ -57,6 +60,16 @@ public class FacetFactoryUtil {
 		facet.setFacetConfiguration(facetConfiguration);
 
 		return facet;
+	}
+
+	public static Facet create(
+			String facetClassName, SearchContext searchContext)
+		throws Exception {
+
+		FacetFactory facetFactory = _instance._facetFactories.get(
+			facetClassName);
+
+		return facetFactory.newInstance(searchContext);
 	}
 
 	public FacetFactoryUtil() {

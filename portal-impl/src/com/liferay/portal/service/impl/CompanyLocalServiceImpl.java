@@ -57,11 +57,11 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineHelperUtil;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.kernel.search.facet.AssetEntriesFacet;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ScopeFacet;
 import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcher;
 import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcherManagerUtil;
+import com.liferay.portal.kernel.search.facet.util.FacetFactoryUtil;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
@@ -1273,11 +1273,24 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	}
 
 	protected void addAssetEntriesFacet(SearchContext searchContext) {
-		Facet assetEntriesFacet = new AssetEntriesFacet(searchContext);
+		Facet facet = null;
 
-		assetEntriesFacet.setStatic(true);
+		try {
+			facet = FacetFactoryUtil.create(
+				_ASSET_ENTRIES_FACET_CLASS_NAME, searchContext);
+		}
+		catch (Exception e) {
+			throw new SystemException(e);
+		}
 
-		searchContext.addFacet(assetEntriesFacet);
+		if (facet == null) {
+			throw new IllegalStateException(
+				"No facet defined for: " + _ASSET_ENTRIES_FACET_CLASS_NAME);
+		}
+
+		facet.setStatic(true);
+
+		searchContext.addFacet(facet);
 	}
 
 	protected void addScopeFacet(SearchContext searchContext) {
@@ -1892,6 +1905,9 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 			companyPersistence.clearCache(company);
 		}
 	}
+
+	private static final String _ASSET_ENTRIES_FACET_CLASS_NAME =
+		"com.liferay.portal.search.facet.asset.AssetEntriesFacet";
 
 	private static final String _DEFAULT_VIRTUAL_HOST = "localhost";
 

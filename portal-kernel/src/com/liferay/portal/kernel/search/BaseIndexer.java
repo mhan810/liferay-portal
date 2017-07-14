@@ -1010,7 +1010,8 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
-		Facet facet = new AssetEntriesFacet(searchContext);
+		Facet facet = FacetFactoryUtil.create(
+			_ASSET_ENTRIES_FACET_CLASS_NAME , searchContext);
 
 		facet.setStatic(true);
 
