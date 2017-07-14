@@ -84,6 +84,7 @@ public class AssetEntriesFacetFactoryImpl
 
 
 	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC,
 		policyOption = ReferencePolicyOption.GREEDY,
 		target = "(!(entry.class.name=default))",
