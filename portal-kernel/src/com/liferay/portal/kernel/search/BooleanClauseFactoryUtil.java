@@ -14,12 +14,14 @@
 
 package com.liferay.portal.kernel.search;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.search.filter.Filter;
-import com.liferay.portal.kernel.search.generic.BooleanClauseFactoryImpl;
 
 /**
  * @author Bruno Farache
  */
+@ProviderType
 public class BooleanClauseFactoryUtil {
 
 	public static BooleanClause<Query> create(Query query, String occur) {
@@ -98,7 +100,12 @@ public class BooleanClauseFactoryUtil {
 		return _booleanClauseFactory;
 	}
 
-	private static final BooleanClauseFactory _booleanClauseFactory =
-		new BooleanClauseFactoryImpl();
+	public void setBooleanClauseFactory(
+		BooleanClauseFactory booleanClauseFactory) {
+
+		_booleanClauseFactory = booleanClauseFactory;
+	}
+
+	private static BooleanClauseFactory _booleanClauseFactory;
 
 }
