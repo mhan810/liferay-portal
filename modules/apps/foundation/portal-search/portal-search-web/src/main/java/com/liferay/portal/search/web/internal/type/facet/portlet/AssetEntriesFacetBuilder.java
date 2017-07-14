@@ -17,10 +17,10 @@ package com.liferay.portal.search.web.internal.type.facet.portlet;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.facet.AssetEntriesFacetFactory;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.search.facet.asset.AssetEntriesFacetFactory;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcherMa
 import com.liferay.portal.kernel.service.PortletPreferencesLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.PortletKeys;
+import com.liferay.portal.search.facet.asset.AssetEntriesFacetFactory;
 import com.liferay.portal.search.web.internal.display.context.PortletRequestThemeDisplaySupplier;
 import com.liferay.portal.search.web.internal.display.context.ThemeDisplaySupplier;
 import com.liferay.portal.search.web.internal.portlet.shared.task.PortletSharedRequestHelper;
@@ -176,7 +177,7 @@ public class PortletSharedSearchRequestImpl
 
 		SearchRequest searchRequest = new SearchRequestImpl(
 			searchContextBuilder, searchContainerBuilder,
-			facetedSearcherManager);
+			facetedSearcherManager, assetEntriesFacetFactory);
 
 		Stream<Portlet> portletsStream = getExplicitlyAddedPortlets(
 			themeDisplay);
@@ -269,6 +270,9 @@ public class PortletSharedSearchRequestImpl
 
 		_portletSharedSearchContributors.remove(className);
 	}
+
+	@Reference
+	protected AssetEntriesFacetFactory assetEntriesFacetFactory;
 
 	@Reference
 	protected FacetedSearcherManager facetedSearcherManager;

@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.facet.asset.AssetEntriesFacetFactory;
 import com.liferay.portal.search.web.constants.SearchPortletParameterNames;
 import com.liferay.portal.search.web.facet.SearchFacet;
 import com.liferay.portal.search.web.facet.util.SearchFacetTracker;
@@ -67,13 +68,15 @@ public class SearchDisplayContext {
 			Portal portal, Html html, Language language,
 			FacetedSearcherManager facetedSearcherManager,
 			IndexSearchPropsValues indexSearchPropsValues,
-			PortletURLFactory portletURLFactory)
+			PortletURLFactory portletURLFactory,
+			AssetEntriesFacetFactory assetEntriesFacetFactory)
 		throws PortletException {
 
 		_renderRequest = renderRequest;
 		_portletPreferences = portletPreferences;
 		_indexSearchPropsValues = indexSearchPropsValues;
 		_portletURLFactory = portletURLFactory;
+		_assetEntriesFacetFactory = assetEntriesFacetFactory;
 
 		ThemeDisplaySupplier themeDisplaySupplier =
 			new PortletRequestThemeDisplaySupplier(renderRequest);
@@ -126,7 +129,7 @@ public class SearchDisplayContext {
 
 		SearchRequestImpl searchRequestImpl = new SearchRequestImpl(
 			() -> searchContext, searchContainerOptions -> searchContainer,
-			facetedSearcherManager);
+			facetedSearcherManager, assetEntriesFacetFactory);
 
 		searchRequestImpl.addSearchSettingsContributor(
 			this::contributeSearchSettings);
@@ -588,6 +591,7 @@ public class SearchDisplayContext {
 		return Optional.of(searchScopeGroupId);
 	}
 
+	private final AssetEntriesFacetFactory _assetEntriesFacetFactory;
 	private Integer _collatedSpellCheckResultDisplayThreshold;
 	private Boolean _collatedSpellCheckResultEnabled;
 	private Boolean _displayMainQuery;
