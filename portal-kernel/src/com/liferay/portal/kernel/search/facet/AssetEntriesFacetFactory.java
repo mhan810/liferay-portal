@@ -29,7 +29,7 @@ public class AssetEntriesFacetFactory implements FacetFactory {
 
 	@Override
 	public String getFacetClassName() {
-		return _ASSET_ENTRIES_FACET_CLASS_NAME;
+		return AssetEntriesFacet.class.getName();
 	}
 
 	@Override

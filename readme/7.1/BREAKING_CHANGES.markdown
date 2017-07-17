@@ -352,3 +352,43 @@ This change was made as part of the modularization efforts to ease portal
 configuration changes.
 
 ---------------------------------------
+
+### Deprecated com.liferay.portal.kernel.search.facet.AssetEntriesFacet,
+ com.liferay.portal.kernel.search.facet.AssetEntriesFacetFactory
+- **Date:** 2017-Jul-14
+- **JIRA Ticket:** LPS-73590
+
+#### What changed?
+
+The com.liferay.portal.kernel.search.facet.AssetEntriesFacet class has been
+deprecated.  In addition Indexer.getFacetBooleanFilter has been deprecated.
+
+#### Who is affected?
+
+This affects anyone who:
+- directly instantiates an AssetEntriesFacet or
+- directly instantiates an AssetEntriesFacetFactory or
+- extends BaseIndexer and overrides BaseIndexer.getFacetBooleanFilter
+-.implements Indexer.getFacetBooleanFilter
+
+#### How should I update my code?
+
+For those directly instantiating AssetEntriesFacet, you should obtain an OSGi
+reference to
+
+Instead of overriding the `portal.properties` file, you can manage the
+properties from Portal's configuration administrator. This can be accessed by
+navigating to Liferay Portal's *Control Panel* &rarr; *Configuration* &rarr;
+*System Settings* &rarr; *Upload Servlet Request* and editing the settings
+there.
+
+If you would like to include the new configuration in your application, follow
+the instructions for
+[making your applications configurable in Liferay 7.0](https://dev.liferay.com/develop/tutorials/-/knowledge_base/7-0/making-your-applications-configurable).
+
+#### Why was this change made?
+
+This change was made as part of the modularization efforts to ease portal
+configuration changes.
+
+---------------------------------------
