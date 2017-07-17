@@ -40,6 +40,11 @@ public class Summary {
 		_content = content;
 	}
 
+	public Summary(boolean mutable, String title, String content) {
+		this(
+			mutable, LocaleThreadLocal.getThemeDisplayLocale(), title, content);
+	}
+
 	public Summary(Locale locale, String title, String content) {
 		this(true, locale, title, content);
 	}
