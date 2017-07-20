@@ -25,6 +25,8 @@ import com.liferay.portal.kernel.search.SearchResult;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.result.SearchResultContributor;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.StringPool;
 
 import java.util.Locale;
 
@@ -56,7 +58,14 @@ public class MBMessageCommentSearchResultContributor
 		Comment comment = _commentManager.fetchComment(
 			mbMessage.getMessageId());
 
-		Summary summary = new Summary(null, mbMessage.getBody());
+		String content = document.get(
+			locale, Field.SNIPPET + StringPool.UNDERLINE + "content");
+
+		if (content.equals(StringPool.BLANK)) {
+			content = HtmlUtil.extractText(mbMessage.getBody());
+		}
+
+		Summary summary = new Summary(null, content);
 
 		summary.setEscape(false);
 
