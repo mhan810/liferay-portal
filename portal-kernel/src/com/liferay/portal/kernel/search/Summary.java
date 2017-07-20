@@ -31,26 +31,26 @@ import java.util.Locale;
  */
 public class Summary {
 
-	public Summary(
-		boolean mutable, Locale locale, String title, String content) {
+	public Summary(Locale locale, String title, String content) {
+		this(locale, title, content, true);
+	}
 
-		_mutable = mutable;
+	public Summary(
+		Locale locale, String title, String content, boolean mutable) {
+
 		_locale = locale;
 		_title = title;
 		_content = content;
-	}
-
-	public Summary(boolean mutable, String title, String content) {
-		this(
-			mutable, LocaleThreadLocal.getThemeDisplayLocale(), title, content);
-	}
-
-	public Summary(Locale locale, String title, String content) {
-		this(true, locale, title, content);
+		_mutable = mutable;
 	}
 
 	public Summary(String title, String content) {
 		this(LocaleThreadLocal.getThemeDisplayLocale(), title, content);
+	}
+
+	public Summary(String title, String content, boolean mutable) {
+		this(
+			LocaleThreadLocal.getThemeDisplayLocale(), title, content, mutable);
 	}
 
 	public String getContent() {

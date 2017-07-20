@@ -32,7 +32,7 @@ import java.util.Locale;
 public class SummaryBuilder {
 
 	public Summary build() {
-		return new Summary(false, _locale, buildTitle(), buildContent());
+		return new Summary(_locale, buildTitle(), buildContent(), false);
 	}
 
 	public void setContent(String content) {

@@ -1362,7 +1362,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		String title = document.get(prefix + titleField, titleField);
 		String content = document.get(prefix + contentField, contentField);
 
-		return new Summary(false, title, content);
+		return new Summary(title, content, false);
 	}
 
 	protected void deleteDocument(long companyId, long field1)
