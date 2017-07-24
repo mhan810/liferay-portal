@@ -46,7 +46,6 @@ import com.liferay.portal.kernel.model.Region;
 import com.liferay.portal.kernel.model.ResourcedModel;
 import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.model.WorkflowedModel;
-import com.liferay.portal.kernel.search.facet.AssetEntriesFacet;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.MultiValueFacet;
 import com.liferay.portal.kernel.search.facet.ScopeFacet;
@@ -1011,7 +1010,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		throws Exception {
 
 		Facet facet = FacetFactoryUtil.create(
-			_ASSET_ENTRIES_FACET_CLASS_NAME , searchContext);
+			_ASSET_ENTRIES_FACET_CLASS_NAME, searchContext);
 
 		facet.setStatic(true);
 

@@ -28,14 +28,14 @@ import com.liferay.portal.search.facet.asset.AssetEntriesFacet;
 import com.liferay.portal.search.facet.asset.AssetEntriesFacetBooleanFilterBuilder;
 import com.liferay.portal.search.facet.asset.AssetEntriesFacetFactory;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Michael C. Han
@@ -82,7 +82,6 @@ public class AssetEntriesFacetFactoryImpl
 			entryClassName, assetEntriesFacetBooleanFilterBuilder);
 	}
 
-
 	@Reference(
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC,
@@ -110,7 +109,7 @@ public class AssetEntriesFacetFactoryImpl
 	private static final Log _log = LogFactoryUtil.getLog(
 		AssetEntriesFacetFactoryImpl.class);
 
-	private Map<String, AssetEntriesFacetBooleanFilterBuilder>
+	private final Map<String, AssetEntriesFacetBooleanFilterBuilder>
 		_assetEntriesFacetBooleanFilterBuilders = new ConcurrentHashMap<>();
 
 	@Reference
@@ -133,6 +132,5 @@ public class AssetEntriesFacetFactoryImpl
 
 	@Reference
 	private SearchEngineHelper _searchEngineHelper;
-
 
 }

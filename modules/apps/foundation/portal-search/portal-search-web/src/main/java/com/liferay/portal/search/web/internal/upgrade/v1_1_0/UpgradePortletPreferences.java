@@ -64,7 +64,7 @@ public class UpgradePortletPreferences extends BaseUpgradePortletPreferences {
 		{
 			"com.liferay.portal.kernel.search.facet.AssetEntriesFacet",
 			"com.liferay.portal.search.facet.asset.AssetEntriesFacet"
-		},
+		}
 	};
 
 }

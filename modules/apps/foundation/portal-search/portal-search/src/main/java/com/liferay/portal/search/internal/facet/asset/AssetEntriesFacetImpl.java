@@ -224,16 +224,11 @@ public class AssetEntriesFacetImpl
 
 	private final Map<String, AssetEntriesFacetBooleanFilterBuilder>
 		_assetEntriesFacetBooleanFilterBuilders;
-
-	private BooleanClauseFactory _booleanClauseFactory;
-
+	private final BooleanClauseFactory _booleanClauseFactory;
 	private final AssetEntriesFacetBooleanFilterBuilder
 		_defaultAssetEntriesFacetBooleanFilterBuilder;
-
 	private final IndexerRegistry _indexerRegistry;
-
-	private JSONFactory _jsonFactory;
-
-	private SearchEngineHelper _searchEngineHelper;
+	private final JSONFactory _jsonFactory;
+	private final SearchEngineHelper _searchEngineHelper;
 
 }

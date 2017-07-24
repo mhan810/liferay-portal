@@ -16,7 +16,6 @@ package com.liferay.portal.search.facet.asset;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 
 /**
