@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.internal.document;
+package com.liferay.portal.search.internal.contributor.document;
 
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.Group;
