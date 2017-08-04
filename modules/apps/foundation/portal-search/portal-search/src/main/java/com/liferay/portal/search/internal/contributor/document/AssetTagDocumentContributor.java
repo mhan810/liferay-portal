@@ -22,7 +22,7 @@ import com.liferay.portal.kernel.search.DocumentContributor;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class AssetTagDocumentContributor implements DocumentContributor {
 
 		long classPK = GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK));
 
-		long classNameId = PortalUtil.getClassNameId(className);
+		long classNameId = portal.getClassNameId(className);
 
 		List<AssetTag> assetTags = assetTagLocalService.getTags(
 			classNameId, classPK);
@@ -59,5 +59,8 @@ public class AssetTagDocumentContributor implements DocumentContributor {
 
 	@Reference
 	protected AssetTagLocalService assetTagLocalService;
+
+	@Reference
+	protected Portal portal;
 
 }
