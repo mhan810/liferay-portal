@@ -1538,9 +1538,6 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 
 		addAssetFields(document, className, classPK);
 
-		ExpandoBridgeIndexerUtil.addAttributes(
-			document, baseModel.getExpandoBridge());
-
 		for (DocumentContributor documentContributor :
 				getDocumentContributors()) {
 
