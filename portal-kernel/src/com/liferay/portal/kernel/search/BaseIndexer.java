@@ -41,7 +41,6 @@ import com.liferay.portal.kernel.model.AuditedModel;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.Country;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.GroupedModel;
 import com.liferay.portal.kernel.model.Region;
 import com.liferay.portal.kernel.model.ResourcedModel;
 import com.liferay.portal.kernel.model.TrashedModel;
@@ -1566,17 +1565,6 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 				auditedModel.getUserId(), auditedModel.getUserName());
 
 			document.addKeyword(Field.USER_NAME, userName, true);
-		}
-
-		GroupedModel groupedModel = null;
-
-		if (baseModel instanceof GroupedModel) {
-			groupedModel = (GroupedModel)baseModel;
-
-			document.addKeyword(
-				Field.GROUP_ID, getSiteGroupId(groupedModel.getGroupId()));
-			document.addKeyword(
-				Field.SCOPE_GROUP_ID, groupedModel.getGroupId());
 		}
 
 		if (workflowedBaseModel instanceof WorkflowedModel) {
