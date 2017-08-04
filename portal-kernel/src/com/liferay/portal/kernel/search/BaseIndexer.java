@@ -1529,21 +1529,6 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 			document.addKeyword(Field.ROOT_ENTRY_CLASS_PK, resourcePrimKey);
 		}
 
-		long classNameId = PortalUtil.getClassNameId(className);
-
-		List<AssetTag> assetTags = AssetTagLocalServiceUtil.getTags(
-			classNameId, classPK);
-
-		String[] assetTagNames = ListUtil.toArray(
-			assetTags, AssetTag.NAME_ACCESSOR);
-
-		document.addText(Field.ASSET_TAG_NAMES, assetTagNames);
-
-		long[] assetTagsIds = ListUtil.toLongArray(
-			assetTags, AssetTag.TAG_ID_ACCESSOR);
-
-		document.addKeyword(Field.ASSET_TAG_IDS, assetTagsIds);
-
 		if (workflowedBaseModel instanceof WorkflowedModel) {
 			WorkflowedModel workflowedModel =
 				(WorkflowedModel)workflowedBaseModel;
