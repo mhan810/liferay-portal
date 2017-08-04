@@ -56,11 +56,11 @@ public class AssetCategoryDocumentContributor implements DocumentContributor {
 
 		document.addKeyword(Field.ASSET_CATEGORY_IDS, assetCategoryIds);
 
-		addSearchAssetCategoryTitles(
+		addAssetCategoryTitles(
 			document, Field.ASSET_CATEGORY_TITLES, assetCategories);
 	}
 
-	protected void addSearchAssetCategoryTitles(
+	protected void addAssetCategoryTitles(
 		Document document, String field, List<AssetCategory> assetCategories) {
 
 		Map<Locale, List<String>> assetCategoryTitles = new HashMap<>();
@@ -78,13 +78,8 @@ public class AssetCategoryDocumentContributor implements DocumentContributor {
 					continue;
 				}
 
-				List<String> titles = assetCategoryTitles.get(locale);
-
-				if (titles == null) {
-					titles = new ArrayList<>();
-
-					assetCategoryTitles.put(locale, titles);
-				}
+				List<String> titles = assetCategoryTitles.computeIfAbsent(
+					locale, k -> new ArrayList<>());
 
 				titles.add(StringUtil.toLowerCase(title));
 			}
