@@ -18,10 +18,7 @@ import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
 import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.model.ExpandoColumn;
 import com.liferay.expando.kernel.model.ExpandoColumnConstants;
@@ -36,8 +33,6 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Address;
-import com.liferay.portal.kernel.model.AttachedModel;
-import com.liferay.portal.kernel.model.AuditedModel;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.Country;
 import com.liferay.portal.kernel.model.Group;
@@ -68,7 +63,6 @@ import com.liferay.portal.kernel.util.HashUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.SetUtil;
@@ -737,9 +731,9 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 	}
 
 	/**
-	 * @deprecated since 7.1.0 no direct replacement. Logic not encapsulated in
+	 * @deprecated As of 7.0.0, no direct replacement. Logic now encapsulated in
 	 *             {@link com.liferay.portal.search.internal.contributor.
-	 *                  document.AssetDocumentContrbutor}
+	 *             document.AssetDocumentContrbutor}
 	 * @param document
 	 * @param className
 	 * @param classPK
@@ -935,7 +929,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 	}
 
 	/**
-	 * @deprecated since 7.1.0 no direct replacement. Logic not encapsulated in
+	 * @deprecated As of 7.0.0, no direct replacement. Logic not encapsulated in
 	 *             {@link com.liferay.portal.search.internal.contributor.
 	 *                  document.AssetCategoryDocumentContrbutor}
 	 *
@@ -1436,7 +1430,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 	protected abstract Document doGetDocument(T object) throws Exception;
 
 	/**
-	 * @deprecated As of 7.1.0, replaced by
+	 * @deprecated As of 7.0.0, replaced by
 	 *             {@link com.liferay.portal.search.contributor.sort.
 	 *             SortFieldTranslator}
 	 */
@@ -1452,7 +1446,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		throws Exception;
 
 	/**
-	 * @deprecated As of 7.0.0, added strictly to support backwards
+	 * @deprecated As of 7.1.0, added strictly to support backwards
 	 *             compatibility of {@link
 	 *             Indexer#postProcessSearchQuery(BooleanQuery, SearchContext)}
 	 */
@@ -1545,9 +1539,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 			document.addKeyword(Field.STATUS, workflowedModel.getStatus());
 		}
 
-		for (DocumentContributor documentContributor :
-				getDocumentContributors()) {
-
+		for (DocumentContributor documentContributor : _documentContributors) {
 			documentContributor.contribute(document, baseModel);
 		}
 
@@ -1566,14 +1558,12 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		return _defaultSelectedLocalizedFieldNames;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, no direct replacement
+	 * @return
+	 */
+	@Deprecated
 	protected List<DocumentContributor> getDocumentContributors() {
-		if (_documentContributors != null) {
-			return _documentContributors;
-		}
-
-		_documentContributors = ServiceTrackerCollections.openList(
-			DocumentContributor.class);
-
 		return _documentContributors;
 	}
 
@@ -1852,7 +1842,8 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 	private String[] _defaultSelectedFieldNames;
 	private String[] _defaultSelectedLocalizedFieldNames;
 	private final Document _document = new DocumentImpl();
-	private List<DocumentContributor> _documentContributors;
+	private final List<DocumentContributor> _documentContributors =
+		ServiceTrackerCollections.openList(DocumentContributor.class);
 	private boolean _filterSearch;
 	private Boolean _indexerEnabled;
 	private IndexerPostProcessor[] _indexerPostProcessors =
