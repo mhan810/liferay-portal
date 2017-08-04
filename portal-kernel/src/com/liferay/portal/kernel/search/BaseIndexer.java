@@ -736,6 +736,15 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 			new IndexerPostProcessor[indexerPostProcessorsList.size()]);
 	}
 
+	/**
+	 * @deprecated since 7.1.0 no direct replacement. Logic not encapsulated in
+	 *             {@link com.liferay.portal.search.internal.contributor.
+	 *                  document.AssetDocumentContrbutor}
+	 * @param document
+	 * @param className
+	 * @param classPK
+	 */
+	@Deprecated
 	protected void addAssetFields(
 		Document document, String className, long classPK) {
 
@@ -1535,8 +1544,6 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 
 			document.addKeyword(Field.STATUS, workflowedModel.getStatus());
 		}
-
-		addAssetFields(document, className, classPK);
 
 		for (DocumentContributor documentContributor :
 				getDocumentContributors()) {
