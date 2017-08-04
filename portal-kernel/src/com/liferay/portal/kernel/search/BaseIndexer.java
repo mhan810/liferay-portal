@@ -1545,21 +1545,6 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 			document.addKeyword(Field.ROOT_ENTRY_CLASS_PK, resourcePrimKey);
 		}
 
-		if (baseModel instanceof AuditedModel) {
-			AuditedModel auditedModel = (AuditedModel)baseModel;
-
-			document.addKeyword(Field.COMPANY_ID, auditedModel.getCompanyId());
-			document.addDate(Field.CREATE_DATE, auditedModel.getCreateDate());
-			document.addDate(
-				Field.MODIFIED_DATE, auditedModel.getModifiedDate());
-			document.addKeyword(Field.USER_ID, auditedModel.getUserId());
-
-			String userName = PortalUtil.getUserName(
-				auditedModel.getUserId(), auditedModel.getUserName());
-
-			document.addKeyword(Field.USER_NAME, userName, true);
-		}
-
 		if (workflowedBaseModel instanceof WorkflowedModel) {
 			WorkflowedModel workflowedModel =
 				(WorkflowedModel)workflowedBaseModel;
