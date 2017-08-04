@@ -1545,13 +1545,6 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 			document.addKeyword(Field.ROOT_ENTRY_CLASS_PK, resourcePrimKey);
 		}
 
-		if (baseModel instanceof AttachedModel) {
-			AttachedModel attachedModel = (AttachedModel)baseModel;
-
-			documentHelper.setAttachmentOwnerKey(
-				attachedModel.getClassNameId(), attachedModel.getClassPK());
-		}
-
 		if (baseModel instanceof AuditedModel) {
 			AuditedModel auditedModel = (AuditedModel)baseModel;
 
