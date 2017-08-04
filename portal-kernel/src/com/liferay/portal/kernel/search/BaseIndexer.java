@@ -925,6 +925,16 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		searchContext.addFacet(multiValueFacet);
 	}
 
+	/**
+	 * @deprecated since 7.1.0 no direct replacement. Logic not encapsulated in
+	 *             {@link com.liferay.portal.search.internal.contributor.
+	 *                  document.AssetCategoryDocumentContrbutor}
+	 *
+	 * @param document
+	 * @param field
+	 * @param assetCategories
+	 */
+	@Deprecated
 	protected void addSearchAssetCategoryTitles(
 		Document document, String field, List<AssetCategory> assetCategories) {
 
@@ -1515,16 +1525,9 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 
 		document.addUID(className, classPK);
 
-		List<AssetCategory> assetCategories =
-			AssetCategoryLocalServiceUtil.getCategories(className, classPK);
-
-		long[] assetCategoryIds = ListUtil.toLongArray(
-			assetCategories, AssetCategory.CATEGORY_ID_ACCESSOR);
-
-		document.addKeyword(Field.ASSET_CATEGORY_IDS, assetCategoryIds);
-
-		addSearchAssetCategoryTitles(
-			document, Field.ASSET_CATEGORY_TITLES, assetCategories);
+		if (resourcePrimKey > 0) {
+			document.addKeyword(Field.ROOT_ENTRY_CLASS_PK, resourcePrimKey);
+		}
 
 		long classNameId = PortalUtil.getClassNameId(className);
 
@@ -1540,10 +1543,6 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 			assetTags, AssetTag.TAG_ID_ACCESSOR);
 
 		document.addKeyword(Field.ASSET_TAG_IDS, assetTagsIds);
-
-		if (resourcePrimKey > 0) {
-			document.addKeyword(Field.ROOT_ENTRY_CLASS_PK, resourcePrimKey);
-		}
 
 		if (workflowedBaseModel instanceof WorkflowedModel) {
 			WorkflowedModel workflowedModel =
