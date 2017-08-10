@@ -173,7 +173,8 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 			UserOperation userOperation)
 		throws Exception {
 
-		Modifications modifications = Modifications.getInstance();
+		Modifications modifications = getModifications(
+			userGroup, groupMappings, new HashMap<String, String>());
 
 		String groupDN = getGroupDNName(ldapServerId, userGroup, groupMappings);
 		String userDN = getUserDNName(ldapServerId, user, userMappings);
