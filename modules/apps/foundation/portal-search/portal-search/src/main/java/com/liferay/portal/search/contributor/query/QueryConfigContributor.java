@@ -15,7 +15,7 @@
 package com.liferay.portal.search.contributor.query;
 
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.search.contributor.model.ModelSearchConfiguration;
+import com.liferay.portal.search.contributor.model.ModelSearchSettings;
 
 /**
  * @author Michael C. Han
@@ -23,7 +23,6 @@ import com.liferay.portal.search.contributor.model.ModelSearchConfiguration;
 public interface QueryConfigContributor {
 
 	public void contributeQueryConfigurations(
-		ModelSearchConfiguration modelSearchConfiguration,
-		SearchContext searchContext);
+		ModelSearchSettings modelSearchSettings, SearchContext searchContext);
 
 }

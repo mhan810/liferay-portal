@@ -22,7 +22,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.SetUtil;
-import com.liferay.portal.search.contributor.model.ModelSearchConfiguration;
+import com.liferay.portal.search.contributor.model.ModelSearchSettings;
 import com.liferay.portal.search.contributor.query.QueryConfigContributor;
 
 import java.util.HashSet;
@@ -48,8 +48,7 @@ public class DefaultSelectedFieldNamesQueryConfigContributor
 
 	@Override
 	public void contributeQueryConfigurations(
-		ModelSearchConfiguration modelSearchConfiguration,
-		SearchContext searchContext) {
+		ModelSearchSettings modelSearchSettings, SearchContext searchContext) {
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();
 
@@ -60,7 +59,7 @@ public class DefaultSelectedFieldNamesQueryConfigContributor
 		Set<String> selectedFieldNames = null;
 
 		String[] defaultSelectedFieldNames =
-			modelSearchConfiguration.getDefaultSelectedFieldNames();
+			modelSearchSettings.getDefaultSelectedFieldNames();
 
 		if (!ArrayUtil.isEmpty(defaultSelectedFieldNames)) {
 			selectedFieldNames = SetUtil.fromArray(defaultSelectedFieldNames);
@@ -74,21 +73,21 @@ public class DefaultSelectedFieldNamesQueryConfigContributor
 		}
 
 		if (!ArrayUtil.isEmpty(
-				modelSearchConfiguration.getDefaultSelectedFieldNames())) {
+				modelSearchSettings.getDefaultSelectedFieldNames())) {
 
 			if (selectedFieldNames == null) {
 				selectedFieldNames = new HashSet<>();
 			}
 
-			if (modelSearchConfiguration.isSelectAllLocales()) {
+			if (modelSearchSettings.isSelectAllLocales()) {
 				addSelectedLocalizedFieldNames(
-					modelSearchConfiguration, selectedFieldNames,
+					modelSearchSettings, selectedFieldNames,
 					LocaleUtil.toLanguageIds(
 						LanguageUtil.getSupportedLocales()));
 			}
 			else {
 				addSelectedLocalizedFieldNames(
-					modelSearchConfiguration, selectedFieldNames,
+					modelSearchSettings, selectedFieldNames,
 					LocaleUtil.toLanguageId(queryConfig.getLocale()));
 			}
 		}
@@ -101,12 +100,11 @@ public class DefaultSelectedFieldNamesQueryConfigContributor
 	}
 
 	protected void addSelectedLocalizedFieldNames(
-		ModelSearchConfiguration modelSearchConfiguration,
-		Set<String> selectedFieldNames, String... languageIds) {
+		ModelSearchSettings modelSearchSettings, Set<String> selectedFieldNames,
+		String... languageIds) {
 
 		for (String defaultLocalizedSelectedFieldName :
-				modelSearchConfiguration.
-					getDefaultSelectedLocalizedFieldNames()) {
+				modelSearchSettings.getDefaultSelectedLocalizedFieldNames()) {
 
 			selectedFieldNames.add(defaultLocalizedSelectedFieldName);
 

@@ -17,7 +17,7 @@ package com.liferay.portal.search.internal.contributor.query;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.search.contributor.model.ModelSearchConfiguration;
+import com.liferay.portal.search.contributor.model.ModelSearchSettings;
 import com.liferay.portal.search.contributor.query.QueryConfigContributor;
 
 import org.osgi.service.component.annotations.Component;
@@ -31,8 +31,7 @@ public class DefaultHighlightFieldNamesQueryConfigContributor
 
 	@Override
 	public void contributeQueryConfigurations(
-		ModelSearchConfiguration modelSearchConfiguration,
-		SearchContext searchContext) {
+		ModelSearchSettings modelSearchSettings, SearchContext searchContext) {
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();
 
