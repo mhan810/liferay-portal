@@ -20,8 +20,14 @@ import com.liferay.portal.kernel.model.ModelListener;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.ldap.LDAPSettings;
 import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
 import com.liferay.portal.security.exportimport.UserExporter;
 import com.liferay.portal.security.ldap.internal.UserImportTransactionThreadLocal;
+
+import java.io.Serializable;
+
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -62,14 +68,39 @@ public class ContactModelListener extends BaseLDAPExportModelListener<Contact> {
 		}
 	}
 
-	protected void exportToLDAP(Contact contact) throws Exception {
+	protected void exportToLDAP(final Contact contact) throws Exception {
 		if (UserImportTransactionThreadLocal.isOriginatesFromImport()) {
 			return;
 		}
 
-		User user = _userLocalService.fetchUser(contact.getClassPK());
+		User user = _userLocalService.fetchUser(contact.getUserId());
 
-		exportToLDAP(user, _userExporter, _ldapSettings);
+		if ((user == null) || user.isDefaultUser()) {
+			return;
+		}
+
+		Callable<Void> callable = new Callable<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+				ServiceContext serviceContext =
+					ServiceContextThreadLocal.getServiceContext();
+
+				Map<String, Serializable> expandoBridgeAttributes = null;
+
+				if (serviceContext != null) {
+					expandoBridgeAttributes =
+						serviceContext.getExpandoBridgeAttributes();
+				}
+
+				_userExporter.exportUser(contact, expandoBridgeAttributes);
+
+				return null;
+			}
+
+		};
+
+		TransactionCommitCallbackUtil.registerCallback(callable);
 	}
 
 	@Reference(
