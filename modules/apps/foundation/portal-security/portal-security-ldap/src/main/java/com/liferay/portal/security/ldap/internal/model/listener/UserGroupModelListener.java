@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.ModelListener;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserGroup;
+import com.liferay.portal.kernel.service.UserGroupLocalService;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
 import com.liferay.portal.security.exportimport.UserExporter;
 import com.liferay.portal.security.exportimport.UserOperation;
@@ -91,6 +93,13 @@ public class UserGroupModelListener extends BaseModelListener<UserGroup> {
 
 			@Override
 			public Void call() throws Exception {
+				if ((_userLocalService.fetchUser(userId) == null) ||
+					(_userGroupLocalService.fetchUserGroup(userGroupId) ==
+						null)) {
+
+					return null;
+				}
+
 				_userExporter.exportUser(userId, userGroupId, userOperation);
 
 				if (_log.isDebugEnabled()) {
@@ -115,5 +124,11 @@ public class UserGroupModelListener extends BaseModelListener<UserGroup> {
 
 	@Reference(policyOption = ReferencePolicyOption.GREEDY)
 	private UserExporter _userExporter;
+
+	@Reference
+	private UserGroupLocalService _userGroupLocalService;
+
+	@Reference
+	private UserLocalService _userLocalService;
 
 }
