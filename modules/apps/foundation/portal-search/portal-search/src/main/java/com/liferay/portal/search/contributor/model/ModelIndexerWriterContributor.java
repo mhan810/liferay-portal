@@ -34,15 +34,15 @@ public interface ModelIndexerWriterContributor<T extends BaseModel> {
 
 	public Optional<T> getBaseModel(long classPK);
 
-	default IndexerWriterMode getIndexerWriterMode(T baseModel) {
-		return IndexerWriterMode.UPDATE;
-	}
-
 	public long getCompanyId(T object);
 
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
 
-	default void modelIndexed(T baseModel) {
+	public default IndexerWriterMode getIndexerWriterMode(T baseModel) {
+		return IndexerWriterMode.UPDATE;
+	}
+
+	public default void modelIndexed(T baseModel) {
 	}
 
 }

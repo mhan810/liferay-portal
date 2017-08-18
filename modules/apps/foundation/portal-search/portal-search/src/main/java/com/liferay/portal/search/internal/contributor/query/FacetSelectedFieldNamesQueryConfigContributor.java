@@ -20,7 +20,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.SetUtil;
-import com.liferay.portal.search.contributor.model.ModelSearchConfigurator;
+import com.liferay.portal.search.contributor.model.ModelSearchSettings;
 import com.liferay.portal.search.contributor.query.QueryConfigContributor;
 
 import java.util.Map;
@@ -44,8 +44,7 @@ public class FacetSelectedFieldNamesQueryConfigContributor
 
 	@Override
 	public void contributeQueryConfigurations(
-		ModelSearchConfigurator<?> modelSearchConfigurator,
-		SearchContext searchContext) {
+		ModelSearchSettings modelSearchSettings, SearchContext searchContext) {
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();
 

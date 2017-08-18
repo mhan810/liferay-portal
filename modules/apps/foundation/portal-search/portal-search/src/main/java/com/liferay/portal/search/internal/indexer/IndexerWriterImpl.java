@@ -156,7 +156,7 @@ public class IndexerWriterImpl<T extends BaseModel>
 					_log.debug(
 						"No entity found: " +
 							_modelSearchSettings.getClassName() + "-" +
-							classPK);
+								classPK);
 				}
 
 				return;
