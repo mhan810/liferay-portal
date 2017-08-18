@@ -17,6 +17,7 @@ package com.liferay.portal.search.internal.buffer;
 import com.liferay.portal.search.buffer.IndexerRequest;
 import com.liferay.portal.search.buffer.IndexerRequestBuffer;
 import com.liferay.portal.search.buffer.IndexerRequestBufferOverflowHandler;
+import com.liferay.portal.search.buffer.MassUpdateThreadLocal;
 import com.liferay.portal.search.configuration.IndexerRegistryConfiguration;
 
 /**
@@ -41,9 +42,16 @@ public class IndexerRequestBufferHandler {
 		throws Exception {
 
 		if (!BufferOverflowThreadLocal.isOverflowMode()) {
+			int maxBufferSize = _indexerRegistryConfiguration.maxBufferSize();
+
+			if (MassUpdateThreadLocal.isMassUpdateMode()) {
+				maxBufferSize =
+					_indexerRegistryConfiguration.maxBufferSizeForMassUpdates();
+			}
+
 			indexerRequestBuffer.add(
 				indexerRequest, _indexerRequestBufferOverflowHandler,
-				_indexerRegistryConfiguration.maxBufferSize());
+				maxBufferSize);
 		}
 		else {
 			indexerRequest.execute();
