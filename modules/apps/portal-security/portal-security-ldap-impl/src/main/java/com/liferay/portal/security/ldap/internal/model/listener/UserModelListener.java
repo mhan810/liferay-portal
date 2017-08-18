@@ -31,6 +31,7 @@ import com.liferay.portal.security.exportimport.UserExporter;
 import com.liferay.portal.security.ldap.internal.UserImportTransactionThreadLocal;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -97,28 +98,25 @@ public class UserModelListener extends BaseLDAPExportModelListener<User> {
 			user.getOriginalEmailAddress());
 	}
 
-	protected void exportToLDAP(final User user) throws Exception {
+	protected void exportToLDAP(final User user) {
 		if (user.isDefaultUser() ||
 			UserImportTransactionThreadLocal.isOriginatesFromImport()) {
 
 			return;
 		}
 
-		Callable<Void> callable = () -> {
-			ServiceContext serviceContext =
-				ServiceContextThreadLocal.getServiceContext();
-
-			Map<String, Serializable> expandoBridgeAttributes = null;
-
-			if (serviceContext != null) {
-				expandoBridgeAttributes =
-					serviceContext.getExpandoBridgeAttributes();
-			}
-
-			_userExporter.exportUser(user, expandoBridgeAttributes);
-
-			return null;
-		};
+		Callable<Void> callable = CallableUtil.getCallable(
+			expandoBridgeAttributes -> {
+				try {
+					_userExporter.exportUser(user, expandoBridgeAttributes);
+				}
+				catch (Exception e) {
+					_log.error(
+						"Unable to export user with user ID " +
+							user.getUserId() + " to LDAP on after create",
+						e);
+				}
+			});
 
 		TransactionCommitCallbackUtil.registerCallback(callable);
 	}
