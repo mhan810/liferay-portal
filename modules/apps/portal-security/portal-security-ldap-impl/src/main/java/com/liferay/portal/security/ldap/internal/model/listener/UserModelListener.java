@@ -98,7 +98,29 @@ public class UserModelListener extends BaseLDAPExportModelListener<User> {
 	}
 
 	protected void exportToLDAP(final User user) throws Exception {
-		exportToLDAP(user, _userExporter, _ldapSettings);
+		if (user.isDefaultUser() ||
+			UserImportTransactionThreadLocal.isOriginatesFromImport()) {
+
+			return;
+		}
+
+		Callable<Void> callable = () -> {
+			ServiceContext serviceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
+			Map<String, Serializable> expandoBridgeAttributes = null;
+
+			if (serviceContext != null) {
+				expandoBridgeAttributes =
+					serviceContext.getExpandoBridgeAttributes();
+			}
+
+			_userExporter.exportUser(user, expandoBridgeAttributes);
+
+			return null;
+		};
+
+		TransactionCommitCallbackUtil.registerCallback(callable);
 	}
 
 	protected void updateMembershipRequestStatus(long userId, long groupId)
