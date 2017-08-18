@@ -111,6 +111,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipReaderFactoryUtil;
+import com.liferay.portal.search.buffer.MassUpdateThreadLocal;
 import com.liferay.portlet.PortletPreferencesImpl;
 
 import java.io.File;
@@ -220,6 +221,8 @@ public class PortletImportController implements ImportController {
 		try {
 			ExportImportThreadLocal.setPortletImportInProcess(true);
 
+			MassUpdateThreadLocal.setMassUpdateMode(true);
+
 			portletDataContext = getPortletDataContext(
 				exportImportConfiguration, file);
 
@@ -239,6 +242,8 @@ public class PortletImportController implements ImportController {
 
 			ExportImportThreadLocal.setPortletImportInProcess(false);
 
+			MassUpdateThreadLocal.setMassUpdateMode(false);
+
 			_exportImportLifecycleManager.fireExportImportLifecycleEvent(
 				EVENT_PORTLET_IMPORT_SUCCEEDED, getProcessFlag(),
 				String.valueOf(
@@ -249,6 +254,8 @@ public class PortletImportController implements ImportController {
 		}
 		catch (Throwable t) {
 			ExportImportThreadLocal.setPortletImportInProcess(false);
+
+			MassUpdateThreadLocal.setMassUpdateMode(false);
 
 			_exportImportLifecycleManager.fireExportImportLifecycleEvent(
 				EVENT_PORTLET_IMPORT_FAILED, getProcessFlag(),
