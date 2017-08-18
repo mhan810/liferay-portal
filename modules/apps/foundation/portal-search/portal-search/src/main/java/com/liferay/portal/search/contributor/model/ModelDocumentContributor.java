@@ -12,21 +12,16 @@
  * details.
  */
 
-package com.liferay.portal.search.indexer;
+package com.liferay.portal.search.contributor.model;
 
-import aQute.bnd.annotation.ProviderType;
-
+import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.SearchException;
 
 /**
  * @author Michael C. Han
  */
-@ProviderType
-public interface IndexerDocumentBuilder<T> {
+public interface ModelDocumentContributor<T extends BaseModel> {
 
-	public Document getDocument(T object) throws SearchException;
-
-	public String getDocumentUID(T object) throws SearchException;
+	public void contribute(Document document, T baseModel);
 
 }

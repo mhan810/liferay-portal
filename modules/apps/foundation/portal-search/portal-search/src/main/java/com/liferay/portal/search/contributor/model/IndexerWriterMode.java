@@ -12,21 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.search.indexer;
-
-import aQute.bnd.annotation.ProviderType;
-
-import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.SearchException;
+package com.liferay.portal.search.contributor.model;
 
 /**
  * @author Michael C. Han
  */
-@ProviderType
-public interface IndexerDocumentBuilder<T> {
+public enum IndexerWriterMode {
 
-	public Document getDocument(T object) throws SearchException;
-
-	public String getDocumentUID(T object) throws SearchException;
+	DELETE, UPDATE, PARTIAL_UPDATE
 
 }

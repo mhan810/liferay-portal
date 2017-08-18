@@ -18,7 +18,7 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.model.BaseModel;
-import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.search.indexer.IndexerDocumentBuilder;
 
 import java.util.Optional;
 
@@ -30,19 +30,19 @@ public interface ModelIndexerWriterContributor<T extends BaseModel> {
 
 	public void customize(
 		IndexableActionableDynamicQuery indexableActionableDynamicQuery,
-		long companyId);
+		IndexerDocumentBuilder<T> indexerDocumentBuilder, long companyId);
 
-	public T getBaseModel(long classPK) throws SearchException;
+	public Optional<T> getBaseModel(long classPK);
 
-	public long getCompanyId(T object) throws SearchException;
+	default IndexerWriterMode getIndexerWriterMode(T baseModel) {
+		return IndexerWriterMode.UPDATE;
+	}
 
-	public String getDocumentUID(T object) throws SearchException;
+	public long getCompanyId(T object);
 
-	public Optional<IndexableActionableDynamicQuery>
-		getIndexableActionableDynamicQueryOptional();
+	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
 
-	public boolean isIndexable(T object) throws SearchException;
-
-	public void reindex(String[] companyIds) throws SearchException;
+	default void modelIndexed(T baseModel) {
+	}
 
 }

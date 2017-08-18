@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.search.contributor.model.IndexerWriterMode;
 import com.liferay.portal.search.contributor.model.ModelIndexerWriterContributor;
 import com.liferay.portal.search.contributor.model.ModelSearchSettings;
 import com.liferay.portal.search.index.IndexStatusManager;
@@ -85,7 +86,7 @@ public class IndexerWriterImpl<T extends BaseModel>
 
 		long companyId = _modelIndexerWriterContributor.getCompanyId(baseModel);
 
-		String uid = _modelIndexerWriterContributor.getDocumentUID(baseModel);
+		String uid = _indexerDocumentBuilder.getDocumentUID(baseModel);
 
 		delete(companyId, uid);
 	}
@@ -147,14 +148,23 @@ public class IndexerWriterImpl<T extends BaseModel>
 		}
 
 		try {
-			T baseModel = _modelIndexerWriterContributor.getBaseModel(classPK);
+			Optional<T> baseModelOptional =
+				_modelIndexerWriterContributor.getBaseModel(classPK);
 
-			Document document = _indexerDocumentBuilder.getDocument(baseModel);
+			if (!baseModelOptional.isPresent()) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(
+						"No entity found: " +
+							_modelSearchSettings.getClassName() + "-" +
+							classPK);
+				}
 
-			_indexWriterHelper.updateDocument(
-				_modelSearchSettings.getSearchEngineId(),
-				_modelIndexerWriterContributor.getCompanyId(baseModel),
-				document, _modelSearchSettings.isCommitImmediately());
+				return;
+			}
+
+			T baseModel = baseModelOptional.get();
+
+			reindex(baseModel);
 		}
 		catch (SearchException se) {
 			throw se;
@@ -174,60 +184,42 @@ public class IndexerWriterImpl<T extends BaseModel>
 			return;
 		}
 
-		Optional<IndexableActionableDynamicQuery>
-			indexableActionableDynamicQueryOptional =
-				_modelIndexerWriterContributor.
-					getIndexableActionableDynamicQueryOptional();
+		IndexableActionableDynamicQuery indexableActionableDynamicQuery =
+			_modelIndexerWriterContributor.getIndexableActionableDynamicQuery();
 
 		long companyThreadLocalCompanyId = CompanyThreadLocal.getCompanyId();
 
 		try {
-			if (!indexableActionableDynamicQueryOptional.isPresent()) {
-				long companyId = GetterUtil.getLong(ids[0]);
+			for (String id : ids) {
+				long companyId = GetterUtil.getLong(id);
 
 				CompanyThreadLocal.setCompanyId(companyId);
 
-				_modelIndexerWriterContributor.reindex(ids);
+				indexableActionableDynamicQuery.setCompanyId(companyId);
 
-				return;
-			}
+				indexableActionableDynamicQuery.setSearchEngineId(
+					_modelSearchSettings.getSearchEngineId());
 
-			indexableActionableDynamicQueryOptional.ifPresent(
-				indexableActionableDynamicQuery -> {
-					for (String id : ids) {
-						long companyId = GetterUtil.getLong(id);
+				_modelIndexerWriterContributor.customize(
+					indexableActionableDynamicQuery, _indexerDocumentBuilder,
+					companyId);
 
-						CompanyThreadLocal.setCompanyId(companyId);
+				try {
+					indexableActionableDynamicQuery.performActions();
+				}
+				catch (PortalException pe) {
+					if (_log.isWarnEnabled()) {
+						StringBundler sb = new StringBundler(4);
 
-						indexableActionableDynamicQuery.setCompanyId(companyId);
+						sb.append("Error reindexing all ");
+						sb.append(_modelSearchSettings.getClassName());
+						sb.append(" for company: ");
+						sb.append(companyId);
 
-						indexableActionableDynamicQuery.setSearchEngineId(
-							_modelSearchSettings.getSearchEngineId());
-
-						_modelIndexerWriterContributor.customize(
-							indexableActionableDynamicQuery, companyId);
-
-						try {
-							indexableActionableDynamicQuery.performActions();
-						}
-						catch (PortalException pe) {
-							if (_log.isWarnEnabled()) {
-								StringBundler sb = new StringBundler(4);
-
-								sb.append("Error reindexing all ");
-								sb.append(_modelSearchSettings.getClassName());
-								sb.append(" for company: ");
-								sb.append(companyId);
-
-								_log.warn(sb.toString(), pe);
-							}
-						}
+						_log.warn(sb.toString(), pe);
 					}
-
-				});
-		}
-		catch (SearchException se) {
-			throw se;
+				}
+			}
 		}
 		catch (Exception e) {
 			throw new SearchException(e);
@@ -248,12 +240,25 @@ public class IndexerWriterImpl<T extends BaseModel>
 		}
 
 		try {
-			Document document = _indexerDocumentBuilder.getDocument(baseModel);
+			IndexerWriterMode indexerWriterMode =
+				_modelIndexerWriterContributor.getIndexerWriterMode(baseModel);
 
-			_indexWriterHelper.updateDocument(
-				_modelSearchSettings.getSearchEngineId(),
-				_modelIndexerWriterContributor.getCompanyId(baseModel),
-				document, _modelSearchSettings.isCommitImmediately());
+			if ((indexerWriterMode == IndexerWriterMode.UPDATE) ||
+				(indexerWriterMode == IndexerWriterMode.PARTIAL_UPDATE)) {
+
+				Document document = _indexerDocumentBuilder.getDocument(
+					baseModel);
+
+				_indexWriterHelper.updateDocument(
+					_modelSearchSettings.getSearchEngineId(),
+					_modelIndexerWriterContributor.getCompanyId(baseModel),
+					document, _modelSearchSettings.isCommitImmediately());
+			}
+			else if (indexerWriterMode == IndexerWriterMode.DELETE) {
+				delete(baseModel);
+			}
+
+			_modelIndexerWriterContributor.modelIndexed(baseModel);
 		}
 		catch (SearchException se) {
 			throw se;

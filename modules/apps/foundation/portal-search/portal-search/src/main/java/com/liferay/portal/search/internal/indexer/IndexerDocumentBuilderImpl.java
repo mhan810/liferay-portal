@@ -25,7 +25,8 @@ import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexerPostProcessor;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.search.contributor.model.ModelIndexerWriterContributor;
+import com.liferay.portal.kernel.util.Tuple;
+import com.liferay.portal.search.contributor.model.ModelDocumentContributor;
 import com.liferay.portal.search.indexer.IndexerDocumentBuilder;
 
 /**
@@ -35,46 +36,37 @@ public class IndexerDocumentBuilderImpl<T extends BaseModel>
 	implements IndexerDocumentBuilder<T> {
 
 	public IndexerDocumentBuilderImpl(
-		Iterable<DocumentContributor<T>> modelDocumentContributor,
-		ModelIndexerWriterContributor<T> modelIndexerWriterContributor,
+		Iterable<ModelDocumentContributor<T>> modelDocumentContributor,
 		Iterable<DocumentContributor<T>> documentContributors,
 		Iterable<IndexerPostProcessor> indexerPostProcessors) {
 
 		_modelDocumentContributor = modelDocumentContributor;
-		_modelIndexerWriterContributor = modelIndexerWriterContributor;
 		_documentContributors = documentContributors;
 		_indexerPostProcessors = indexerPostProcessors;
 	}
 
 	@Override
 	public Document getDocument(T baseModel) throws SearchException {
-		if (!_modelIndexerWriterContributor.isIndexable(baseModel)) {
-			return null;
-		}
-
 		try {
 			Document document = (Document)_document.clone();
 
 			String className = baseModel.getModelClassName();
 
-			long classPK = 0;
-			long resourcePrimKey = 0;
+			Tuple classPKResourcePrimKeyTuple = getClassPKResourcePrimKey(
+				baseModel);
 
-			if (baseModel instanceof ResourcedModel) {
-				ResourcedModel resourcedModel = (ResourcedModel)baseModel;
+			long classPK = (Long)classPKResourcePrimKeyTuple.getObject(0);
 
-				classPK = resourcedModel.getResourcePrimKey();
-				resourcePrimKey = resourcedModel.getResourcePrimKey();
-			}
-			else {
-				classPK = (Long)baseModel.getPrimaryKeyObj();
-			}
+			String uid = doGetDocumentUID(className, classPK);
+
+			document.addKeyword(Field.UID, uid);
 
 			DocumentHelper documentHelper = new DocumentHelper(document);
 
-			documentHelper.setEntryKey(className, classPK);
+			long resourcePrimKey = (Long)classPKResourcePrimKeyTuple.getObject(
+				1);
 
-			document.addUID(className, classPK);
+			documentHelper.setEntryKey(className, classPK);
 
 			if (resourcePrimKey > 0) {
 				document.addKeyword(Field.ROOT_ENTRY_CLASS_PK, resourcePrimKey);
@@ -116,14 +108,49 @@ public class IndexerDocumentBuilderImpl<T extends BaseModel>
 		}
 	}
 
+	@Override
+	public String getDocumentUID(T baseModel) throws SearchException {
+		Tuple classPKResourcePrimKey = getClassPKResourcePrimKey(baseModel);
+
+		long classPK = (Long)classPKResourcePrimKey.getObject(0);
+
+		String className = baseModel.getModelClassName();
+
+		return doGetDocumentUID(className, classPK);
+	}
+
+	protected String doGetDocumentUID(String className, long classPK) {
+		String uid = Field.getUID(className, String.valueOf(classPK));
+
+		return uid;
+	}
+
+	protected Tuple getClassPKResourcePrimKey(T baseModel) {
+		long classPK = 0;
+		long resourcePrimKey = 0;
+
+		if (baseModel instanceof ResourcedModel) {
+			ResourcedModel resourcedModel = (ResourcedModel)baseModel;
+
+			classPK = resourcedModel.getResourcePrimKey();
+			resourcePrimKey = resourcedModel.getResourcePrimKey();
+		}
+		else {
+			classPK = (Long)baseModel.getPrimaryKeyObj();
+		}
+
+		Tuple tuple = new Tuple(classPK, resourcePrimKey);
+
+		return tuple;
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		IndexerDocumentBuilderImpl.class);
 
 	private Document _document = new DocumentImpl();
 	private final Iterable<DocumentContributor<T>> _documentContributors;
 	private final Iterable<IndexerPostProcessor> _indexerPostProcessors;
-	private final Iterable<DocumentContributor<T>> _modelDocumentContributor;
-	private final ModelIndexerWriterContributor<T>
-		_modelIndexerWriterContributor;
+	private final Iterable<ModelDocumentContributor<T>>
+		_modelDocumentContributor;
 
 }
