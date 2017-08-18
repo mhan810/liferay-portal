@@ -15,6 +15,7 @@
 package com.liferay.portal.search.contributor.model;
 
 import com.liferay.portal.kernel.search.IndexerPostProcessor;
+import com.liferay.portal.kernel.search.SearchEngineHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,8 +26,16 @@ import java.util.List;
  */
 public class ModelSearchSettings {
 
+	public ModelSearchSettings(String className) {
+		this(SearchEngineHelper.SYSTEM_ENGINE_ID, className);
+	}
+
 	public ModelSearchSettings(String searchEngineId, String className) {
-		this(searchEngineId, className, className);
+		this(searchEngineId, className, new String[] {className});
+	}
+
+	public ModelSearchSettings(String className, String... searchClassNames) {
+		this(SearchEngineHelper.SYSTEM_ENGINE_ID, className, searchClassNames);
 	}
 
 	public ModelSearchSettings(

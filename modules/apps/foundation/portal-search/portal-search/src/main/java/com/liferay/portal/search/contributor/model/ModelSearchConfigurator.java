@@ -17,7 +17,6 @@ package com.liferay.portal.search.contributor.model;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
 import com.liferay.portal.kernel.model.BaseModel;
-import com.liferay.portal.kernel.search.DocumentContributor;
 
 import org.osgi.framework.BundleContext;
 
@@ -27,7 +26,18 @@ import org.osgi.framework.BundleContext;
 public class ModelSearchConfigurator<T extends BaseModel> {
 
 	public ModelSearchConfigurator(
-		BundleContext bundleContext, String className,
+		BundleContext bundleContext,
+		ModelIndexerWriterContributor<T> modelIndexerWriterContributor,
+		ModelPermissionPostFilter modelPermissionPostFilter,
+		ModelSearchSettings modelSearchSettings) {
+
+		this (
+			bundleContext, modelIndexerWriterContributor,
+			modelPermissionPostFilter, modelSearchSettings, null);
+	}
+
+	public ModelSearchConfigurator(
+		BundleContext bundleContext,
 		ModelIndexerWriterContributor<T> modelIndexerWriterContributor,
 		ModelPermissionPostFilter modelPermissionPostFilter,
 		ModelSearchSettings modelSearchSettings,
@@ -40,52 +50,41 @@ public class ModelSearchConfigurator<T extends BaseModel> {
 
 		_modelIndexerSearcherContributorsHolder =
 			new ModelIndexerSearcherContributorsHolder(
-				bundleContext, className);
+				bundleContext, _modelSearchSettings.getClassName());
 
-		_documentContributors = ServiceTrackerListFactory.create(
-			bundleContext, DocumentContributor.class,
-			"(indexer.class.name=" + className + ")");
+		_modelDocumentContributors = ServiceTrackerListFactory.create(
+			bundleContext, ModelDocumentContributor.class,
+			"(indexer.class.name=" + modelSearchSettings.getClassName() + ")");
 	}
 
 	public ModelSearchConfigurator(
-		BundleContext bundleContext, String className,
-		ModelPermissionPostFilter modelPermissionPostFilter,
-		ModelSearchSettings modelSearchSettings,
-		ModelIndexerWriterContributor<T> modelIndexerWriterContributor) {
+		BundleContext bundleContext,
+		ModelIndexerWriterContributor<T> modelIndexerWriterContributor,
+		ModelSearchSettings modelSearchSettings) {
 
 		this (
-			bundleContext, className, modelIndexerWriterContributor,
-			modelPermissionPostFilter, modelSearchSettings, null);
-	}
-
-	public ModelSearchConfigurator(
-		BundleContext bundleContext, String className,
-		ModelSearchSettings modelSearchSettings,
-		ModelIndexerWriterContributor<T> modelIndexerWriterContributor) {
-
-		this (
-			bundleContext, className, modelIndexerWriterContributor, null,
+			bundleContext, modelIndexerWriterContributor, null,
 			modelSearchSettings, null);
 	}
 
 	public ModelSearchConfigurator(
-		BundleContext bundleContext, String className,
+		BundleContext bundleContext,
+		ModelIndexerWriterContributor<T> modelIndexerWriterContributor,
 		ModelSearchSettings modelSearchSettings,
-		ModelSummaryContributor modelSummaryContributor,
-		ModelIndexerWriterContributor<T> modelIndexerWriterContributor) {
+		ModelSummaryContributor modelSummaryContributor) {
 
 		this (
-			bundleContext, className, modelIndexerWriterContributor, null,
+			bundleContext, modelIndexerWriterContributor, null,
 			modelSearchSettings, modelSummaryContributor);
 	}
 
 	public void close() {
-		_documentContributors.close();
+		_modelDocumentContributors.close();
 		_modelIndexerSearcherContributorsHolder.close();
 	}
 
-	public Iterable<DocumentContributor> getModelDocumentContributors() {
-		return _documentContributors;
+	public Iterable<ModelDocumentContributor> getModelDocumentContributors() {
+		return _modelDocumentContributors;
 	}
 
 	public ModelIndexerWriterContributor<T> getModelIndexerWriterContributor() {
@@ -110,8 +109,9 @@ public class ModelSearchConfigurator<T extends BaseModel> {
 		return _modelSummaryContributor;
 	}
 
-	private final ServiceTrackerList<DocumentContributor, DocumentContributor>
-		_documentContributors;
+	private final ServiceTrackerList
+		<ModelDocumentContributor, ModelDocumentContributor>
+			_modelDocumentContributors;
 	private final ModelIndexerSearcherContributorsHolder
 		_modelIndexerSearcherContributorsHolder;
 	private final ModelIndexerWriterContributor<T>

@@ -185,7 +185,6 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		IndexerDocumentBuilder<T> indexerDocumentBuilder =
 			new IndexerDocumentBuilderImpl(
 				modelSearchConfigurator.getModelDocumentContributors(),
-				modelSearchConfigurator.getModelIndexerWriterContributor(),
 				_documentContributors,
 				modelSearchSettings.getIndexerPostProcessors());
 

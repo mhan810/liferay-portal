@@ -29,6 +29,8 @@ public interface ModelPermissionPostFilter {
 			long entryClassPK, String actionId)
 		throws Exception;
 
-	public boolean isVisible(long classPK, int status) throws Exception;
+	default boolean isVisible(long classPK, int status) throws Exception {
+		return true;
+	}
 
 }
