@@ -1731,6 +1731,11 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			user.setPasswordModified(true);
 			user.setPasswordModifiedDate(new Date());
 
+			PasswordModificationThreadLocal.setPasswordModified(
+				user.getPasswordModified());
+			PasswordModificationThreadLocal.setPasswordUnencrypted(
+				user.getPasswordUnencrypted());
+
 			userPersistence.update(user);
 
 			user.setPasswordModified(false);
