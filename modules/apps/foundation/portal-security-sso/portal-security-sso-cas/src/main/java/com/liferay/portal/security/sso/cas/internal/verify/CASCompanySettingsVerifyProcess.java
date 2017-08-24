@@ -59,6 +59,13 @@ public class CASCompanySettingsVerifyProcess
 	protected Dictionary<String, String> getPropertyValues(long companyId) {
 		Dictionary<String, String> dictionary = new HashMapDictionary<>();
 
+		boolean casEnabled = _prefsProps.getBoolean(
+			companyId, LegacyCASPropsKeys.CAS_AUTH_ENABLED);
+
+		if (!casEnabled) {
+			return dictionary;
+		}
+
 		dictionary.put(
 			CASConfigurationKeys.AUTH_ENABLED,
 			_prefsProps.getString(

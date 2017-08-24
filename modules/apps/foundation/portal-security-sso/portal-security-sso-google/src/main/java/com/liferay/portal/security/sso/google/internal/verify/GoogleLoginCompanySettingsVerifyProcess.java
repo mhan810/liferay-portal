@@ -57,6 +57,13 @@ public class GoogleLoginCompanySettingsVerifyProcess
 	protected Dictionary<String, String> getPropertyValues(long companyId) {
 		Dictionary<String, String> dictionary = new HashMapDictionary<>();
 
+		boolean googleLoginEnabled = _prefsProps.getBoolean(
+			companyId, LegacyGoogleLoginPropsKeys.AUTH_ENABLED);
+
+		if (!googleLoginEnabled) {
+			return dictionary;
+		}
+
 		dictionary.put(
 			GoogleAuthorizationConfigurationKeys.AUTH_ENABLED,
 			_prefsProps.getString(

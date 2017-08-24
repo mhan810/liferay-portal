@@ -57,6 +57,13 @@ public class OpenIdCompanySettingsVerifyProcess
 	protected Dictionary<String, String> getPropertyValues(long companyId) {
 		Dictionary<String, String> dictionary = new HashMapDictionary<>();
 
+		boolean openIdEnabled = _prefsProps.getBoolean(
+			companyId, LegacyOpenIdPropsKeys.OPENID_AUTH_ENABLED);
+
+		if (!openIdEnabled) {
+			return dictionary;
+		}
+
 		dictionary.put(
 			OpenIdConfigurationKeys.AUTH_ENABLED,
 			_prefsProps.getString(

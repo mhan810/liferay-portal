@@ -59,6 +59,13 @@ public class FacebookConnectCompanySettingsVerifyProcess
 	protected Dictionary<String, String> getPropertyValues(long companyId) {
 		Dictionary<String, String> dictionary = new HashMapDictionary<>();
 
+		boolean facebookConnectEnabled = _prefsProps.getBoolean(
+			companyId, LegacyFacebookConnectPropsKeys.AUTH_ENABLED);
+
+		if (!facebookConnectEnabled) {
+			return dictionary;
+		}
+
 		dictionary.put(
 			FacebookConnectConfigurationKeys.AUTH_ENABLED,
 			_prefsProps.getString(
