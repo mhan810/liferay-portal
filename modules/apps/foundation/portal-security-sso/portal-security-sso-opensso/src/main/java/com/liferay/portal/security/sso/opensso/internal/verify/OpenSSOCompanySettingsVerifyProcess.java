@@ -57,6 +57,13 @@ public class OpenSSOCompanySettingsVerifyProcess
 	protected Dictionary<String, String> getPropertyValues(long companyId) {
 		Dictionary<String, String> dictionary = new HashMapDictionary<>();
 
+		boolean openSSOEnabled = _prefsProps.getBoolean(
+			companyId, LegacyOpenSSOPropsKeys.OPENSSO_AUTH_ENABLED);
+
+		if (!openSSOEnabled) {
+			return dictionary;
+		}
+
 		dictionary.put(
 			OpenSSOConfigurationKeys.EMAIL_ADDRESS_ATTR,
 			_prefsProps.getString(
