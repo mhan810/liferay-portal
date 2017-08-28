@@ -57,6 +57,13 @@ public class NtlmCompanySettingsVerifyProcess
 	protected Dictionary<String, String> getPropertyValues(long companyId) {
 		Dictionary<String, String> dictionary = new HashMapDictionary<>();
 
+		boolean ntlmEnabled = _prefsProps.getBoolean(
+			companyId, LegacyNtlmPropsKeys.NTLM_AUTH_ENABLED);
+
+		if (!ntlmEnabled) {
+			return dictionary;
+		}
+
 		dictionary.put(
 			NtlmConfigurationKeys.AUTH_DOMAIN,
 			_prefsProps.getString(
