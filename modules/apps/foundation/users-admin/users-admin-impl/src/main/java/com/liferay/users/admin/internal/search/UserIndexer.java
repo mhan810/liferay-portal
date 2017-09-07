@@ -259,7 +259,7 @@ public class UserIndexer extends BaseIndexer<User> {
 
 		document.addKeyword(Field.COMPANY_ID, user.getCompanyId());
 
-		document.addKeyword(Field.GROUP_ID, _getActiveGroupIds(user));
+		document.addKeyword(Field.GROUP_ID, getActiveGroupIds(user));
 		document.addDate(Field.MODIFIED_DATE, user.getModifiedDate());
 		document.addKeyword(Field.SCOPE_GROUP_ID, user.getGroupIds());
 		document.addKeyword(Field.STATUS, user.getStatus());
@@ -350,6 +350,18 @@ public class UserIndexer extends BaseIndexer<User> {
 		}
 	}
 
+	protected long[] getActiveGroupIds(User user) {
+		List<Long> groupIds = new ArrayList<>();
+
+		for (Group group : user.getGroups()) {
+			if (group.isActive()) {
+				groupIds.add(group.getGroupId());
+			}
+		}
+
+		return ArrayUtil.toArray(groupIds.toArray(new Long[groupIds.size()]));
+	}
+
 	protected long[] getAncestorOrganizationIds(long[] organizationIds)
 		throws Exception {
 
@@ -411,18 +423,6 @@ public class UserIndexer extends BaseIndexer<User> {
 
 	@Reference
 	protected UserLocalService userLocalService;
-
-	private long[] _getActiveGroupIds(User user) {
-		List<Long> groupIds = new ArrayList<>();
-
-		for (Group group : user.getGroups()) {
-			if (group.isActive()) {
-				groupIds.add(group.getGroupId());
-			}
-		}
-
-		return ArrayUtil.toArray(groupIds.toArray(new Long[groupIds.size()]));
-	}
 
 	private static final Log _log = LogFactoryUtil.getLog(UserIndexer.class);
 
