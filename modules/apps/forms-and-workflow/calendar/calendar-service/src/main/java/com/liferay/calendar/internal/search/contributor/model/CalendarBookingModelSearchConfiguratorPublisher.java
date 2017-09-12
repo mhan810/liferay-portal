@@ -43,7 +43,7 @@ public class CalendarBookingModelSearchConfiguratorPublisher {
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		ModelSearchSettings modelSearchSettings = new ModelSearchSettings(
-			ClassUtil.getClassName(CalendarBooking.class));
+			CalendarBooking.class.getName());
 
 		ModelSearchConfigurator<CalendarBooking> modelSearchConfigurator =
 			new ModelSearchConfigurator<>(

@@ -45,7 +45,7 @@ public class CalendarModelSearchConfiguratorPublisher {
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		ModelSearchSettings modelSearchSettings = new ModelSearchSettings(
-			ClassUtil.getClassName(Calendar.class));
+			Calendar.class.getName());
 
 		modelSearchSettings.setDefaultSelectedFieldNames(
 			Field.COMPANY_ID, Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK,
