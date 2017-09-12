@@ -13,6 +13,7 @@ Export-Package:\
 	com.liferay.portal.search.index,\
 	com.liferay.portal.search.indexer,\
 	com.liferay.portal.search.permission,\
+	com.liferay.portal.search.query,\
 	com.liferay.portal.search.summary
 Import-Package:\
 	com.liferay.portal.kernel.search;version="[7.1.0,8)",\
