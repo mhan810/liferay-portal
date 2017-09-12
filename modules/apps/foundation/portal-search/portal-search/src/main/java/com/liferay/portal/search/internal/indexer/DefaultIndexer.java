@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.liferay.portal.search.internal.indexer;
 
 import com.liferay.portal.kernel.model.BaseModel;

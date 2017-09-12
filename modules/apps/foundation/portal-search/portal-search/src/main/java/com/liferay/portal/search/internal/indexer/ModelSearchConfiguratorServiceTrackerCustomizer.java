@@ -45,6 +45,7 @@ import com.liferay.portal.search.indexer.IndexerSearcher;
 import com.liferay.portal.search.indexer.IndexerSummaryBuilder;
 import com.liferay.portal.search.indexer.IndexerWriter;
 
+import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -106,15 +107,25 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 			return modelSearchConfigurator;
 		}
 
-		Indexer defaultIndexer = buildIndexer(
-			modelSearchConfigurator, modelSearchSettings);
-
-		ServiceRegistration<Indexer> serviceRegistration =
-			_bundleContext.registerService(
-				Indexer.class, defaultIndexer, new HashMapDictionary<>());
-
 		serviceRegistrationHolder = new ServiceRegistrationHolder(
-			modelSearchConfigurator, serviceRanking, serviceRegistration);
+			modelSearchConfigurator, serviceRanking);
+
+		Dictionary<String, Object> serviceProperties =
+			new HashMapDictionary<>();
+
+		serviceProperties.put(
+			"indexer.class.name", modelSearchSettings.getClassName());
+
+		Indexer defaultIndexer = buildIndexer(
+			modelSearchConfigurator, modelSearchSettings,
+			serviceRegistrationHolder, serviceProperties);
+
+		ServiceRegistration<Indexer> indexerServiceRegistration =
+			_bundleContext.registerService(
+				Indexer.class, defaultIndexer, serviceProperties);
+
+		serviceRegistrationHolder.setIndexerServiceRegistration(
+			indexerServiceRegistration);
 
 		_serviceRegistrationHolders.put(
 			modelSearchSettings.getClassName(), serviceRegistrationHolder);
@@ -180,13 +191,24 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 	@SuppressWarnings(value = "unchecked")
 	protected Indexer buildIndexer(
 		ModelSearchConfigurator<T> modelSearchConfigurator,
-		ModelSearchSettings modelSearchSettings) {
+		ModelSearchSettings modelSearchSettings,
+		ServiceRegistrationHolder serviceRegistrationHolder,
+		Dictionary<String, Object> serviceProperties) {
 
 		IndexerDocumentBuilder<T> indexerDocumentBuilder =
 			new IndexerDocumentBuilderImpl(
 				modelSearchConfigurator.getModelDocumentContributors(),
 				_documentContributors,
 				modelSearchSettings.getIndexerPostProcessors());
+
+		ServiceRegistration<IndexerDocumentBuilder>
+			indexerDocumentBuilderServiceRegistration =
+				_bundleContext.registerService(
+					IndexerDocumentBuilder.class, indexerDocumentBuilder,
+					serviceProperties);
+
+		serviceRegistrationHolder.setIndexerDocumentBuilderServiceRegistration(
+			indexerDocumentBuilderServiceRegistration);
 
 		ModelIndexerSearcherContributorsHolder
 			modelIndexerSearcherContributorsHolder =
@@ -205,9 +227,28 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 			_searchContextContributors,
 			modelSearchSettings.getIndexerPostProcessors());
 
+		ServiceRegistration<IndexerQueryBuilder>
+			indexerQueryBuilderServiceRegistration =
+				_bundleContext.registerService(
+					IndexerQueryBuilder.class, indexerQueryBuilder,
+					serviceProperties);
+
+		serviceRegistrationHolder.setIndexerQueryBuilderServiceRegistration(
+			indexerQueryBuilderServiceRegistration);
+
 		IndexerPermissionPostFilter indexerPermissionPostFilter =
 			new IndexerPermissionPostFilterImpl(
 				modelSearchConfigurator.getModelPermissionPostFilter());
+
+		ServiceRegistration<IndexerPermissionPostFilter>
+			indexerPermissionPostFilterServiceRegistration =
+				_bundleContext.registerService(
+					IndexerPermissionPostFilter.class,
+					indexerPermissionPostFilter, serviceProperties);
+
+		serviceRegistrationHolder.
+			setIndexerPermissionPostFilterServiceRegistration(
+				indexerPermissionPostFilterServiceRegistration);
 
 		IndexerSearcher indexerSearcher = new IndexerSearcherImpl<>(
 			modelSearchSettings,
@@ -217,16 +258,39 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 			hitsProcessorRegistry, indexSearcherHelper,
 			_queryConfigContributor);
 
+		ServiceRegistration<IndexerSearcher>
+			indexerSearcherServiceRegistration = _bundleContext.registerService(
+				IndexerSearcher.class, indexerSearcher, serviceProperties);
+
+		serviceRegistrationHolder.setIndexerSearcherServiceRegistration(
+			indexerSearcherServiceRegistration);
+
 		IndexerWriter<T> indexerWriter = new IndexerWriterImpl<>(
 			modelSearchSettings,
 			modelSearchConfigurator.getModelIndexerWriterContributor(),
 			indexerDocumentBuilder, indexStatusManager, indexWriterHelper,
 			props);
 
+		ServiceRegistration<IndexerWriter> indexerWriterServiceRegistration =
+			_bundleContext.registerService(
+				IndexerWriter.class, indexerWriter, serviceProperties);
+
+		serviceRegistrationHolder.setIndexerWriterServiceRegistration(
+			indexerWriterServiceRegistration);
+
 		IndexerSummaryBuilder indexerSummaryBuilder =
 			new IndexerSummaryBuilderImpl(
 				modelSearchConfigurator.getModelSummaryBuilder(),
 				modelSearchSettings.getIndexerPostProcessors());
+
+		ServiceRegistration<IndexerSummaryBuilder>
+			indexerSummaryBuilderServiceRegistration =
+				_bundleContext.registerService(
+					IndexerSummaryBuilder.class, indexerSummaryBuilder,
+					serviceProperties);
+
+		serviceRegistrationHolder.setIndexerSummaryBuilderServiceRegistration(
+			indexerSummaryBuilderServiceRegistration);
 
 		return new DefaultIndexer<>(
 			modelSearchSettings, indexerDocumentBuilder, indexerSearcher,
@@ -289,20 +353,112 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 	private class ServiceRegistrationHolder {
 
 		public ServiceRegistrationHolder(
-			ModelSearchConfigurator modelSearchConfigurator, int serviceRanking,
-			ServiceRegistration<Indexer> indexerServiceRegistration) {
+			ModelSearchConfigurator modelSearchConfigurator,
+			int serviceRanking) {
 
 			_modelSearchConfigurator = modelSearchConfigurator;
 			_serviceRanking = serviceRanking;
-			_indexerServiceRegistration = indexerServiceRegistration;
 		}
 
 		public void close() {
 			_modelSearchConfigurator.close();
-			_indexerServiceRegistration.unregister();
+
+			if (_indexerDocumentBuilderServiceRegistration != null) {
+				_indexerDocumentBuilderServiceRegistration.unregister();
+			}
+
+			if (_indexerPermissionPostFilterServiceRegistration != null) {
+				_indexerPermissionPostFilterServiceRegistration.unregister();
+			}
+
+			if (_indexerQueryBuilderServiceRegistration != null) {
+				_indexerQueryBuilderServiceRegistration.unregister();
+			}
+
+			if (_indexerSearcherServiceRegistration != null) {
+				_indexerSearcherServiceRegistration.unregister();
+			}
+
+			if (_indexerServiceRegistration != null) {
+				_indexerServiceRegistration.unregister();
+			}
+
+			if (_indexerSummaryBuilderServiceRegistration != null) {
+				_indexerSummaryBuilderServiceRegistration.unregister();
+			}
+
+			if (_indexerWriterServiceRegistration != null) {
+				_indexerWriterServiceRegistration.unregister();
+			}
 		}
 
-		private final ServiceRegistration<Indexer> _indexerServiceRegistration;
+		public void setIndexerDocumentBuilderServiceRegistration(
+			ServiceRegistration<IndexerDocumentBuilder>
+				indexerDocumentBuilderServiceRegistration) {
+
+			_indexerDocumentBuilderServiceRegistration =
+				indexerDocumentBuilderServiceRegistration;
+		}
+
+		public void setIndexerPermissionPostFilterServiceRegistration(
+			ServiceRegistration<IndexerPermissionPostFilter>
+				indexerPermissionPostFilterServiceRegistration) {
+
+			_indexerPermissionPostFilterServiceRegistration =
+				indexerPermissionPostFilterServiceRegistration;
+		}
+
+		public void setIndexerQueryBuilderServiceRegistration(
+			ServiceRegistration<IndexerQueryBuilder>
+				indexerQueryBuilderServiceRegistration) {
+
+			_indexerQueryBuilderServiceRegistration =
+				indexerQueryBuilderServiceRegistration;
+		}
+
+		public void setIndexerSearcherServiceRegistration(
+			ServiceRegistration<IndexerSearcher>
+				indexerSearcherServiceRegistration) {
+
+			_indexerSearcherServiceRegistration =
+				indexerSearcherServiceRegistration;
+		}
+
+		public void setIndexerServiceRegistration(
+			ServiceRegistration<Indexer> indexerServiceRegistration) {
+
+			_indexerServiceRegistration = indexerServiceRegistration;
+		}
+
+		public void setIndexerSummaryBuilderServiceRegistration(
+			ServiceRegistration<IndexerSummaryBuilder>
+				indexerSummaryBuilderServiceRegistration) {
+
+			_indexerSummaryBuilderServiceRegistration =
+				indexerSummaryBuilderServiceRegistration;
+		}
+
+		public void setIndexerWriterServiceRegistration(
+			ServiceRegistration<IndexerWriter>
+				indexerWriterServiceRegistration) {
+
+			_indexerWriterServiceRegistration =
+				indexerWriterServiceRegistration;
+		}
+
+		private ServiceRegistration<IndexerDocumentBuilder>
+			_indexerDocumentBuilderServiceRegistration;
+		private ServiceRegistration<IndexerPermissionPostFilter>
+			_indexerPermissionPostFilterServiceRegistration;
+		private ServiceRegistration<IndexerQueryBuilder>
+			_indexerQueryBuilderServiceRegistration;
+		private ServiceRegistration<IndexerSearcher>
+			_indexerSearcherServiceRegistration;
+		private ServiceRegistration<Indexer> _indexerServiceRegistration;
+		private ServiceRegistration<IndexerSummaryBuilder>
+			_indexerSummaryBuilderServiceRegistration;
+		private ServiceRegistration<IndexerWriter>
+			_indexerWriterServiceRegistration;
 		private final ModelSearchConfigurator _modelSearchConfigurator;
 		private final int _serviceRanking;
 
