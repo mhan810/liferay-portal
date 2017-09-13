@@ -55,6 +55,7 @@ import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.RelatedEntryIndexer;
+import com.liferay.portal.kernel.search.RelatedEntryIndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
@@ -98,7 +99,11 @@ import javax.portlet.PortletResponse;
  * @author Raymond Augé
  * @author Alexander Chow
  */
-@OSGiBeanProperties
+@OSGiBeanProperties(
+	property = {
+		"related.indexer.class.name=com.liferay.document.library.kernel.model.DLFileEntry"
+	}
+)
 public class DLFileEntryIndexer
 	extends BaseIndexer<DLFileEntry> implements RelatedEntryIndexer {
 
@@ -472,14 +477,12 @@ public class DLFileEntryIndexer
 			addFileEntryTypeAttributes(document, dlFileVersion);
 
 			if (dlFileEntry.isInHiddenFolder()) {
-				Indexer<?> indexer = IndexerRegistryUtil.getIndexer(
-					dlFileEntry.getClassName());
+				List<RelatedEntryIndexer> relatedEntryIndexers =
+					RelatedEntryIndexerRegistryUtil.getRelatedEntryIndexers(
+						dlFileEntry.getClassName());
 
-				if ((indexer != null) &&
-					(indexer instanceof RelatedEntryIndexer)) {
-
-					RelatedEntryIndexer relatedEntryIndexer =
-						(RelatedEntryIndexer)indexer;
+				for (RelatedEntryIndexer relatedEntryIndexer :
+						relatedEntryIndexers) {
 
 					relatedEntryIndexer.addRelatedEntryFields(
 						document, new LiferayFileEntry(dlFileEntry));
