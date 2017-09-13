@@ -53,7 +53,7 @@ public class RelatedEntryIndexerRegistryImpl
 
 	@Override
 	public List<RelatedEntryIndexer> getRelatedEntryIndexers(Class clazz) {
-		return serviceTrackerMap.values(clazz.getName());
+		return serviceTrackerMap.getService(clazz.getName());
 	}
 
 	@Override
