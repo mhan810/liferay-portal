@@ -481,20 +481,23 @@ public class DLFileEntryIndexer
 					RelatedEntryIndexerRegistryUtil.getRelatedEntryIndexers(
 						dlFileEntry.getClassName());
 
-				for (RelatedEntryIndexer relatedEntryIndexer :
-						relatedEntryIndexers) {
+				if (relatedEntryIndexers != null) {
+					for (RelatedEntryIndexer relatedEntryIndexer :
+							relatedEntryIndexers) {
 
-					relatedEntryIndexer.addRelatedEntryFields(
-						document, new LiferayFileEntry(dlFileEntry));
+						relatedEntryIndexer.addRelatedEntryFields(
+							document, new LiferayFileEntry(dlFileEntry));
 
-					DocumentHelper documentHelper = new DocumentHelper(
-						document);
+						DocumentHelper documentHelper = new DocumentHelper(
+							document);
 
-					documentHelper.setAttachmentOwnerKey(
-						PortalUtil.getClassNameId(dlFileEntry.getClassName()),
-						dlFileEntry.getClassPK());
+						documentHelper.setAttachmentOwnerKey(
+							PortalUtil.getClassNameId(
+								dlFileEntry.getClassName()),
+							dlFileEntry.getClassPK());
 
-					document.addKeyword(Field.RELATED_ENTRY, true);
+						document.addKeyword(Field.RELATED_ENTRY, true);
+					}
 				}
 			}
 
