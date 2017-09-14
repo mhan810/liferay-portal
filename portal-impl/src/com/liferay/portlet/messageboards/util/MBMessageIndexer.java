@@ -279,17 +279,19 @@ public class MBMessageIndexer
 				RelatedEntryIndexerRegistryUtil.getRelatedEntryIndexers(
 					mbMessage.getClassName());
 
-			for (RelatedEntryIndexer relatedEntryIndexer :
+			if (relatedEntryIndexers != null) {
+				for (RelatedEntryIndexer relatedEntryIndexer :
 					relatedEntryIndexers) {
 
-				Comment comment = CommentManagerUtil.fetchComment(
-					mbMessage.getMessageId());
+					Comment comment = CommentManagerUtil.fetchComment(
+						mbMessage.getMessageId());
 
-				if (comment != null) {
-					relatedEntryIndexer.addRelatedEntryFields(
-						document, comment);
+					if (comment != null) {
+						relatedEntryIndexer.addRelatedEntryFields(
+							document, comment);
 
-					document.addKeyword(Field.RELATED_ENTRY, true);
+						document.addKeyword(Field.RELATED_ENTRY, true);
+					}
 				}
 			}
 		}
