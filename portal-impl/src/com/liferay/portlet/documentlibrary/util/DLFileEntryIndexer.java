@@ -179,20 +179,27 @@ public class DLFileEntryIndexer
 	}
 
 	@Override
-	public boolean isVisibleRelatedEntry(long classPK, int status)
-		throws Exception {
+	public boolean isVisibleRelatedEntry(long classPK, int status) {
+		try {
+			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(classPK);
 
-		FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(classPK);
+			if (fileEntry instanceof LiferayFileEntry) {
+				DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
 
-		if (fileEntry instanceof LiferayFileEntry) {
-			DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
+				if (dlFileEntry.isInHiddenFolder()) {
+					Indexer<?> indexer = IndexerRegistryUtil.getIndexer(
+						dlFileEntry.getClassName());
 
-			if (dlFileEntry.isInHiddenFolder()) {
-				Indexer<?> indexer = IndexerRegistryUtil.getIndexer(
-					dlFileEntry.getClassName());
-
-				return indexer.isVisible(dlFileEntry.getClassPK(), status);
+					return indexer.isVisible(dlFileEntry.getClassPK(), status);
+				}
 			}
+		}
+		catch (Exception e) {
+			if (_log.isInfoEnabled()) {
+				_log.info("Error retrieving file entry", e);
+			}
+
+			return false;
 		}
 
 		return true;
