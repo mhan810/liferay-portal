@@ -127,8 +127,22 @@ public interface Indexer<T> {
 
 	public boolean isVisible(long classPK, int status) throws Exception;
 
-	public boolean isVisibleRelatedEntry(long classPK, int status)
-		throws Exception;
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             RelatedEntryIndexer.
+	 *             isVisibleRelatedEntry(long, int)}
+	 *
+	 * @param classPK
+	 * @param status
+	 * @return
+	 * @throws Exception
+	 */
+	@Deprecated
+	public default boolean isVisibleRelatedEntry(long classPK, int status)
+		throws Exception {
+
+		return true;
+	}
 
 	public void postProcessContextBooleanFilter(
 			BooleanFilter contextBooleanFilter, SearchContext searchContext)
