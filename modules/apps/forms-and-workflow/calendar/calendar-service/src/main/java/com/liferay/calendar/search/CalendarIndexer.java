@@ -47,13 +47,13 @@ import java.util.Locale;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
-import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
+ * @deprecated As of 3.0.0, since 7.1.0
  * @author Adam Brandizzi
  */
-@Component(immediate = true, service = Indexer.class)
+@Deprecated
 public class CalendarIndexer extends BaseIndexer<Calendar> {
 
 	public static final String CLASS_NAME = Calendar.class.getName();
