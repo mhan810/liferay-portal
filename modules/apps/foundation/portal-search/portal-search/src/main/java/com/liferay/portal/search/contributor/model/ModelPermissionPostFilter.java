@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.indexer;
+package com.liferay.portal.search.contributor.model;
 
 import aQute.bnd.annotation.ProviderType;
 
@@ -22,14 +22,14 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
  * @author Michael C. Han
  */
 @ProviderType
-public interface IndexerPermissionPostFilter {
+public interface ModelPermissionPostFilter {
 
 	public boolean hasPermission(
 		PermissionChecker permissionChecker, String entryClassName,
 		long entryClassPK, String actionId);
 
-	public boolean isPermissionAware();
-
-	public boolean isVisible(long classPK, int status);
+	public default boolean isVisible(long classPK, int status) {
+		return true;
+	}
 
 }
