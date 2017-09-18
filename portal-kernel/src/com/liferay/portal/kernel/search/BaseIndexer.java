@@ -449,6 +449,16 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		return true;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             RelatedEntryIndexer.isVisibleRelatedEntry(long, int)}
+	 *
+	 * @param classPK
+	 * @param status
+	 * @return
+	 * @throws Exception
+	 */
+	@Deprecated
 	@Override
 	public boolean isVisibleRelatedEntry(long classPK, int status)
 		throws Exception {
