@@ -153,16 +153,23 @@ public class MBMessageIndexer
 	}
 
 	@Override
-	public boolean isVisibleRelatedEntry(long classPK, int status)
-		throws Exception {
+	public boolean isVisibleRelatedEntry(long classPK, int status) {
+		try {
+			MBMessage message = MBMessageLocalServiceUtil.getMessage(classPK);
 
-		MBMessage message = MBMessageLocalServiceUtil.getMessage(classPK);
+			if (message.isDiscussion()) {
+				Indexer<?> indexer = IndexerRegistryUtil.getIndexer(
+					message.getClassName());
 
-		if (message.isDiscussion()) {
-			Indexer<?> indexer = IndexerRegistryUtil.getIndexer(
-				message.getClassName());
+				return indexer.isVisible(message.getClassPK(), status);
+			}
+		}
+		catch (Exception e) {
+			if (_log.isInfoEnabled()) {
+				_log.info("Error retrieving message", e);
+			}
 
-			return indexer.isVisible(message.getClassPK(), status);
+			return false;
 		}
 
 		return true;
