@@ -19,7 +19,8 @@ dependencies {
 	compileOnly project(":apps:foundation:petra:petra-model-adapter")
 	compileOnly project(":apps:foundation:portal-configuration:portal-configuration-upgrade-api")
 	compileOnly project(":apps:foundation:portal-instances:portal-instances-api")
-	compileOnly project(":apps:foundation:portal-search:portal-search")
+	compileOnly project(":apps:foundation:portal-search:portal-search-api")
+	compileOnly project(":apps:foundation:portal-search:portal-search-spi")
 	compileOnly project(":apps:foundation:portal:portal-instance-lifecycle-api")
 	compileOnly project(":apps:foundation:portal:portal-upgrade-api")
 	compileOnly project(":apps:foundation:xstream:xstream-configurator-api")
@@ -30,6 +31,7 @@ dependencies {
 	compileOnly project(":core:petra:petra-function")
 	compileOnly project(":core:petra:petra-string")
 
+	testCompile project(":apps:foundation:portal-search:portal-search")
 	testCompile project(":core:petra:petra-lang")
 	testCompile project(":core:registry-api")
 }
