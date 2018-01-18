@@ -19,10 +19,19 @@ import com.liferay.calendar.model.CalendarBooking;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.model.RoleConstants;
+import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.service.RoleLocalService;
+import com.liferay.portal.kernel.search.SearchEngine;
+import com.liferay.portal.kernel.search.SearchEngineHelperUtil;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
+import com.liferay.portal.kernel.util.Validator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,26 +40,70 @@ import java.util.Map;
  */
 public class CalendarFieldsFixture {
 
-	public CalendarFieldsFixture(RoleLocalService roleLocalService) {
-		_roleLocalService = roleLocalService;
+	public CalendarFieldsFixture(
+		ResourcePermissionLocalService resourcePermissionLocalService) {
+
+		_resourcePermissionLocalService = resourcePermissionLocalService;
 	}
 
-	public void populateGroupRoleId(Map<String, String> fieldValues)
-		throws PortalException {
+	public boolean isSearchEngineElasticsearch() {
+		SearchEngine searchEngine = SearchEngineHelperUtil.getSearchEngine(
+			SearchEngineHelperUtil.getDefaultSearchEngineId());
 
-		Role role = _roleLocalService.getDefaultGroupRole(_group.getGroupId());
+		String vendor = searchEngine.getVendor();
 
-		fieldValues.put(
-			Field.GROUP_ROLE_ID,
-			_group.getGroupId() + StringPool.DASH + role.getRoleId());
+		return vendor.equals("Elasticsearch");
 	}
 
-	public void populateRoleId(String roleName, Map<String, String> fieldValues)
+	public boolean isSearchEngineSolr() {
+		SearchEngine searchEngine = SearchEngineHelperUtil.getSearchEngine(
+			SearchEngineHelperUtil.getDefaultSearchEngineId());
+
+		String vendor = searchEngine.getVendor();
+
+		return vendor.equals("Solr");
+	}
+
+	public void populateRoleIdFields(
+			long companyId, String className, long classPK, long groupId,
+			String viewActionId, Map<String, String> fieldValues)
 		throws PortalException {
 
-		Role role = _roleLocalService.getRole(_group.getCompanyId(), roleName);
+		if (Validator.isNull(viewActionId)) {
+			viewActionId = ActionKeys.VIEW;
+		}
 
-		fieldValues.put(Field.ROLE_ID, String.valueOf(role.getRoleId()));
+		List<Role> roles = _resourcePermissionLocalService.getRoles(
+			companyId, className, ResourceConstants.SCOPE_INDIVIDUAL,
+			Long.toString(classPK), viewActionId);
+
+		List<String> groupRoleIds = new ArrayList<>();
+		List<Long> roleIds = new ArrayList<>();
+
+		for (Role role : roles) {
+			if ((role.getType() == RoleConstants.TYPE_ORGANIZATION) ||
+				(role.getType() == RoleConstants.TYPE_SITE)) {
+
+				groupRoleIds.add(groupId + StringPool.DASH + role.getRoleId());
+			}
+			else {
+				roleIds.add(role.getRoleId());
+			}
+		}
+
+		if (groupRoleIds.size() == 1) {
+			fieldValues.put(Field.GROUP_ROLE_ID, groupRoleIds.get(0));
+		}
+		else if (groupRoleIds.size() > 1) {
+			fieldValues.put(Field.GROUP_ROLE_ID, groupRoleIds.toString());
+		}
+
+		if (roleIds.size() == 1) {
+			fieldValues.put(Field.ROLE_ID, String.valueOf(roleIds.get(0)));
+		}
+		else if (roleIds.size() > 1) {
+			fieldValues.put(Field.ROLE_ID, roleIds.toString());
+		}
 	}
 
 	public void populateUID(
@@ -71,11 +124,18 @@ public class CalendarFieldsFixture {
 				calendarBooking.getCalendarBookingId());
 	}
 
+	public void postProcessDocument(Document document) {
+		if (isSearchEngineSolr()) {
+			document.remove("score");
+		}
+	}
+
 	public void setGroup(Group group) {
 		_group = group;
 	}
 
 	private Group _group;
-	private final RoleLocalService _roleLocalService;
+	private final ResourcePermissionLocalService
+		_resourcePermissionLocalService;
 
 }

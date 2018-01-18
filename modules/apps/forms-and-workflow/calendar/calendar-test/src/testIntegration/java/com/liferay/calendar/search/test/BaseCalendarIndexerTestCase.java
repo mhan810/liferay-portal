@@ -21,7 +21,7 @@ import com.liferay.calendar.service.CalendarLocalService;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.IndexerRegistry;
-import com.liferay.portal.kernel.service.RoleLocalService;
+import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.test.rule.Inject;
 
@@ -46,7 +46,7 @@ public abstract class BaseCalendarIndexerTestCase {
 	}
 
 	protected CalendarFieldsFixture createCalendarFieldsFixture() {
-		return new CalendarFieldsFixture(roleLocalService);
+		return new CalendarFieldsFixture(resourcePermissionLocalService);
 	}
 
 	protected CalendarFixture createCalendarFixture() {
@@ -89,7 +89,7 @@ public abstract class BaseCalendarIndexerTestCase {
 	protected IndexerRegistry indexerRegistry;
 
 	@Inject
-	protected RoleLocalService roleLocalService;
+	protected ResourcePermissionLocalService resourcePermissionLocalService;
 
 	@DeleteAfterTestRun
 	private final List<CalendarBooking> _calendarBookings = new ArrayList<>(1);
