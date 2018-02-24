@@ -32,6 +32,4 @@ public interface IndexerPermissionPostFilter {
 
 	public boolean isVisible(long classPK, int status);
 
-	public boolean isVisibleRelatedEntry(long classPK, int status);
-
 }
