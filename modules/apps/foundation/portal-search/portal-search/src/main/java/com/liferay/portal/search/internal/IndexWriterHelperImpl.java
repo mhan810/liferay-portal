@@ -431,8 +431,6 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 
 		IndexWriter indexWriter = searchEngine.getIndexWriter();
 
-		_searchPermissionChecker.addPermissionFields(companyId, document);
-
 		SearchContext searchContext = new SearchContext();
 
 		searchContext.setCompanyId(companyId);
@@ -459,14 +457,6 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 			searchEngineId);
 
 		IndexWriter indexWriter = searchEngine.getIndexWriter();
-
-		for (Document document : documents) {
-			if (_log.isDebugEnabled()) {
-				_log.debug("Document " + document.toString());
-			}
-
-			_searchPermissionChecker.addPermissionFields(companyId, document);
-		}
 
 		SearchContext searchContext = new SearchContext();
 
