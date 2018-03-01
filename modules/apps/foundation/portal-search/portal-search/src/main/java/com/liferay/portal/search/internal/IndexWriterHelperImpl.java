@@ -21,24 +21,31 @@ import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.messaging.proxy.ProxyModeThreadLocal;
+import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.CompanyConstants;
+import com.liferay.portal.kernel.model.ShardedModel;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.IndexWriter;
 import com.liferay.portal.kernel.search.IndexWriterHelper;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngine;
 import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.kernel.search.SearchPermissionChecker;
 import com.liferay.portal.kernel.search.background.task.ReindexBackgroundTaskConstants;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.configuration.IndexWriterHelperConfiguration;
 import com.liferay.portal.search.index.IndexStatusManager;
+import com.liferay.portal.search.index.UpdateDocumentIndexWriter;
+import com.liferay.portal.search.indexer.BaseModelRetriever;
 import com.liferay.portal.search.internal.background.task.ReindexPortalBackgroundTaskExecutor;
 import com.liferay.portal.search.internal.background.task.ReindexSingleIndexerBackgroundTaskExecutor;
+import com.liferay.portal.search.permission.SearchPermissionDocumentContributor;
+import com.liferay.portal.search.permission.SearchPermissionIndexWriter;
 
 import java.io.Serializable;
 
@@ -46,6 +53,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.osgi.service.component.annotations.Activate;
@@ -81,7 +89,8 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 
 		IndexWriter indexWriter = searchEngine.getIndexWriter();
 
-		_searchPermissionChecker.addPermissionFields(companyId, document);
+		_searchPermissionDocumentContributor.addPermissionFields(
+			companyId, document);
 
 		SearchContext searchContext = new SearchContext();
 
@@ -115,7 +124,8 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 				_log.debug("Add document " + document.toString());
 			}
 
-			_searchPermissionChecker.addPermissionFields(companyId, document);
+			_searchPermissionDocumentContributor.addPermissionFields(
+				companyId, document);
 		}
 
 		SearchContext searchContext = new SearchContext();
@@ -418,29 +428,8 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 			boolean commitImmediately)
 		throws SearchException {
 
-		if (_indexStatusManager.isIndexReadOnly() || (document == null)) {
-			return;
-		}
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("Document " + document.toString());
-		}
-
-		SearchEngine searchEngine = _searchEngineHelper.getSearchEngine(
-			searchEngineId);
-
-		IndexWriter indexWriter = searchEngine.getIndexWriter();
-
-		_searchPermissionChecker.addPermissionFields(companyId, document);
-
-		SearchContext searchContext = new SearchContext();
-
-		searchContext.setCompanyId(companyId);
-		searchContext.setSearchEngineId(searchEngineId);
-
-		setCommitImmediately(searchContext, commitImmediately);
-
-		indexWriter.partiallyUpdateDocument(searchContext, document);
+		updateDocumentIndexWriter.updateDocumentPartially(
+			searchEngineId, companyId, document, commitImmediately);
 	}
 
 	@Override
@@ -449,33 +438,8 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 			Collection<Document> documents, boolean commitImmediately)
 		throws SearchException {
 
-		if (_indexStatusManager.isIndexReadOnly() || (documents == null) ||
-			documents.isEmpty()) {
-
-			return;
-		}
-
-		SearchEngine searchEngine = _searchEngineHelper.getSearchEngine(
-			searchEngineId);
-
-		IndexWriter indexWriter = searchEngine.getIndexWriter();
-
-		for (Document document : documents) {
-			if (_log.isDebugEnabled()) {
-				_log.debug("Document " + document.toString());
-			}
-
-			_searchPermissionChecker.addPermissionFields(companyId, document);
-		}
-
-		SearchContext searchContext = new SearchContext();
-
-		searchContext.setCompanyId(companyId);
-		searchContext.setSearchEngineId(searchEngineId);
-
-		setCommitImmediately(searchContext, commitImmediately);
-
-		indexWriter.partiallyUpdateDocuments(searchContext, documents);
+		updateDocumentIndexWriter.updateDocumentsPartially(
+			searchEngineId, companyId, documents, commitImmediately);
 	}
 
 	@Override
@@ -562,31 +526,8 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 			boolean commitImmediately)
 		throws SearchException {
 
-		if (_indexStatusManager.isIndexReadOnly() || (document == null)) {
-			return;
-		}
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("Document " + document.toString());
-		}
-
-		SearchEngine searchEngine = _searchEngineHelper.getSearchEngine(
-			searchEngineId);
-
-		IndexWriter indexWriter = searchEngine.getIndexWriter();
-
-		_searchPermissionChecker.addPermissionFields(companyId, document);
-
-		SearchContext searchContext = new SearchContext();
-
-		searchContext.setCompanyId(companyId);
-		searchContext.setSearchEngineId(searchEngineId);
-
-		setCommitImmediately(
-			searchContext,
-			commitImmediately || ProxyModeThreadLocal.isForceSync());
-
-		indexWriter.updateDocument(searchContext, document);
+		updateDocumentIndexWriter.updateDocument(
+			searchEngineId, companyId, document, commitImmediately);
 	}
 
 	@Override
@@ -595,46 +536,39 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 			Collection<Document> documents, boolean commitImmediately)
 		throws SearchException {
 
-		if (_indexStatusManager.isIndexReadOnly() || (documents == null) ||
-			documents.isEmpty()) {
-
-			return;
-		}
-
-		SearchEngine searchEngine = _searchEngineHelper.getSearchEngine(
-			searchEngineId);
-
-		IndexWriter indexWriter = searchEngine.getIndexWriter();
-
-		for (Document document : documents) {
-			if (_log.isDebugEnabled()) {
-				_log.debug("Document " + document.toString());
-			}
-
-			_searchPermissionChecker.addPermissionFields(companyId, document);
-		}
-
-		SearchContext searchContext = new SearchContext();
-
-		searchContext.setCompanyId(companyId);
-		searchContext.setSearchEngineId(searchEngineId);
-
-		setCommitImmediately(searchContext, commitImmediately);
-
-		indexWriter.updateDocuments(searchContext, documents);
+		updateDocumentIndexWriter.updateDocuments(
+			searchEngineId, companyId, documents, commitImmediately);
 	}
 
 	@Override
 	public void updatePermissionFields(String name, String primKey) {
+		long classPK = GetterUtil.getLong(primKey);
+
+		if (classPK == 0) {
+			return;
+		}
+
 		if (_indexStatusManager.isIndexReadOnly()) {
 			return;
 		}
 
-		if (PermissionThreadLocal.isFlushResourcePermissionEnabled(
+		if (!PermissionThreadLocal.isFlushResourcePermissionEnabled(
 				name, primKey)) {
 
-			_searchPermissionChecker.updatePermissionFields(name, primKey);
+			return;
 		}
+
+		Indexer<?> indexer = indexerRegistry.getIndexer(name);
+
+		if (indexer == null) {
+			return;
+		}
+
+		Optional<BaseModel<?>> optional = baseModelRetriever.fetchBaseModel(
+			name, classPK);
+
+		optional.ifPresent(
+			baseModel -> updatePermissionFields(indexer, baseModel));
 	}
 
 	@Activate
@@ -659,6 +593,35 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 		}
 	}
 
+	protected void updatePermissionFields(
+		Indexer<?> indexer, BaseModel<?> baseModel) {
+
+		if (!(baseModel instanceof ShardedModel)) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(baseModel + " is not a ShardedModel");
+			}
+
+			return;
+		}
+
+		ShardedModel shardedModel = (ShardedModel)baseModel;
+
+		long companyId = shardedModel.getCompanyId();
+
+		_searchPermissionIndexWriter.updatePermissionFields(
+			baseModel, companyId, indexer.getSearchEngineId(),
+			indexer.isCommitImmediately());
+	}
+
+	@Reference
+	protected BaseModelRetriever baseModelRetriever;
+
+	@Reference
+	protected IndexerRegistry indexerRegistry;
+
+	@Reference
+	protected UpdateDocumentIndexWriter updateDocumentIndexWriter;
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		IndexWriterHelperImpl.class);
 
@@ -674,6 +637,10 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 	private SearchEngineHelper _searchEngineHelper;
 
 	@Reference
-	private SearchPermissionChecker _searchPermissionChecker;
+	private SearchPermissionDocumentContributor
+		_searchPermissionDocumentContributor;
+
+	@Reference
+	private SearchPermissionIndexWriter _searchPermissionIndexWriter;
 
 }
