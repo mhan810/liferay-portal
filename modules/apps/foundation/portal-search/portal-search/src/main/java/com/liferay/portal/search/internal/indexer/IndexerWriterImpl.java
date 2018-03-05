@@ -15,6 +15,7 @@
 package com.liferay.portal.search.internal.indexer;
 
 import com.liferay.portal.kernel.configuration.Filter;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
@@ -129,7 +130,41 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 	}
 
 	@Override
-	public void reindex(Collection<T> baseModels) {
+	public void partiallyUpdateDocument(long companyId, Document document) {
+		if (!isEnabled()) {
+			return;
+		}
+
+		try {
+			_indexWriterHelper.partiallyUpdateDocument(
+				_modelSearchSettings.getSearchEngineId(), companyId, document,
+				_modelSearchSettings.isCommitImmediately());
+		}
+		catch (SearchException se) {
+			throw new SystemException(se);
+		}
+	}
+
+	@Override
+	public void partiallyUpdateDocuments(
+		long companyId, Collection<Document> documents) {
+
+		if (!isEnabled()) {
+			return;
+		}
+
+		try {
+			_indexWriterHelper.partiallyUpdateDocuments(
+				_modelSearchSettings.getSearchEngineId(), companyId, documents,
+				_modelSearchSettings.isCommitImmediately());
+		}
+		catch (SearchException se) {
+			throw new SystemException(se);
+		}
+	}
+
+	@Override
+	public void reindex(Collection<T> baseModels) throws SearchException {
 		if (!isEnabled()) {
 			return;
 		}

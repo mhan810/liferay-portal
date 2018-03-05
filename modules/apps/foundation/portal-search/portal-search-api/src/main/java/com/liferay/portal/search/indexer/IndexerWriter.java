@@ -16,6 +16,8 @@ package com.liferay.portal.search.indexer;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.search.batch.BatchIndexingActionable;
 
 import java.util.Collection;
@@ -34,7 +36,12 @@ public interface IndexerWriter<T> {
 
 	public boolean isEnabled();
 
-	public void reindex(Collection<T> objects);
+	public void partiallyUpdateDocument(long companyId, Document document);
+
+	public void partiallyUpdateDocuments(
+		long companyId, Collection<Document> documents);
+
+	public void reindex(Collection<T> objects) throws SearchException;
 
 	public void reindex(long classPK);
 
