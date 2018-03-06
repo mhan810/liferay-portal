@@ -33,8 +33,6 @@ public interface ModelIndexerWriterContributor<T extends BaseModel<?>> {
 		BatchIndexingActionable batchIndexingActionable,
 		ModelIndexerWriterDocumentHelper modelIndexerWriterDocumentHelper);
 
-	public Optional<T> getBaseModel(long classPK);
-
 	public BatchIndexingActionable getBatchIndexingActionable();
 
 	public long getCompanyId(T baseModel);
