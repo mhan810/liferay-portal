@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.search.index.IndexStatusManager;
+import com.liferay.portal.search.indexer.BaseModelRetriever;
 import com.liferay.portal.search.indexer.IndexerDocumentBuilder;
 import com.liferay.portal.search.indexer.IndexerPermissionPostFilter;
 import com.liferay.portal.search.indexer.IndexerQueryBuilder;
@@ -257,6 +258,7 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 
 		IndexerWriter<T> indexerWriter = new IndexerWriterImpl<>(
 			modelSearchConfigurator.getModelSearchSettings(),
+			baseModelRetriever,
 			modelSearchConfigurator.getModelIndexerWriterContributor(),
 			indexerDocumentBuilder, indexStatusManager, indexWriterHelper,
 			props);
@@ -304,6 +306,9 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 			(key, serviceRegistrationHolder) ->
 				serviceRegistrationHolder.close());
 	}
+
+	@Reference
+	protected BaseModelRetriever baseModelRetriever;
 
 	@Reference
 	protected HitsProcessorRegistry hitsProcessorRegistry;

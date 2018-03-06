@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.search.batch.BatchIndexingActionable;
 import com.liferay.portal.search.index.IndexStatusManager;
+import com.liferay.portal.search.indexer.BaseModelRetriever;
 import com.liferay.portal.search.indexer.IndexerDocumentBuilder;
 import com.liferay.portal.search.indexer.IndexerWriter;
 import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
@@ -49,12 +50,14 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 
 	public IndexerWriterImpl(
 		ModelSearchSettings modelSearchSettings,
+		BaseModelRetriever baseModelRetriever,
 		ModelIndexerWriterContributor<T> modelIndexerWriterContributor,
 		IndexerDocumentBuilder indexerDocumentBuilder,
 		IndexStatusManager indexStatusManager,
 		IndexWriterHelper indexWriterHelper, Props props) {
 
 		_modelSearchSettings = modelSearchSettings;
+		_baseModelRetriever = baseModelRetriever;
 		_modelIndexerWriterContributor = modelIndexerWriterContributor;
 		_indexerDocumentBuilder = indexerDocumentBuilder;
 		_indexStatusManager = indexStatusManager;
@@ -150,24 +153,11 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 			return;
 		}
 
-		Optional<T> baseModelOptional =
-			_modelIndexerWriterContributor.getBaseModel(classPK);
+		Optional<BaseModel> baseModelOptional =
+			_baseModelRetriever.fetchBaseModel(
+				_modelSearchSettings.getClassName(), classPK);
 
-		if (!baseModelOptional.isPresent()) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					StringBundler.concat(
-						"No entity found: ",
-						_modelSearchSettings.getClassName(), "-",
-						String.valueOf(classPK)));
-			}
-
-			return;
-		}
-
-		T baseModel = baseModelOptional.get();
-
-		reindex(baseModel);
+		baseModelOptional.ifPresent(baseModel -> reindex((T)baseModel));
 	}
 
 	@Override
@@ -296,6 +286,7 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 	private static final Log _log = LogFactoryUtil.getLog(
 		IndexerWriterImpl.class);
 
+	private final BaseModelRetriever _baseModelRetriever;
 	private final IndexerDocumentBuilder _indexerDocumentBuilder;
 	private Boolean _indexerEnabled;
 	private final IndexStatusManager _indexStatusManager;
