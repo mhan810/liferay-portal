@@ -23,12 +23,30 @@ import com.liferay.portal.kernel.search.filter.BooleanFilter;
  */
 public interface SearchPermissionChecker {
 
+	/**
+	 * @deprecated As of 4.0.0, as of 7.1.0.  Replace with
+	 *             {@link com.liferay.portal.search.permission.
+	 *             SearchPermissionDocumentContributor.addPermissionFields(
+	 *             long, Document}
+	 * @param companyId
+	 * @param document
+	 */
+	@Deprecated
 	public void addPermissionFields(long companyId, Document doc);
 
 	public BooleanFilter getPermissionBooleanFilter(
 		long companyId, long[] groupIds, long userId, String className,
 		BooleanFilter booleanFilter, SearchContext searchContext);
 
+	/**
+	 * @deprecated As of 4.0.0, as of 7.1.0.  Replace with
+	 *             {@link com.liferay.portal.search.permission.
+	 *             SearchPermissionIndexWriter.updatePermissionFields(
+	 *             long, String, String}
+	 * @param name
+	 * @param primKey
+	 */
+	@Deprecated
 	public void updatePermissionFields(String name, String primKey);
 
 }

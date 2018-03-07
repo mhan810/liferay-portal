@@ -271,6 +271,13 @@ public class IndexWriterHelperUtil {
 			searchEngineId, companyId, documents, commitImmediately);
 	}
 
+	/**
+	 * @deprecated As of 7.1.0, replaced by {@link
+	 *             com.liferay.portal.search.permission.
+	 *             SearchPermissionIndexWriter#updatePermissionFields(
+	 *             long, String, String)}
+	 */
+	@Deprecated
 	public static void updatePermissionFields(String name, String primKey) {
 		_indexWriterHelper.updatePermissionFields(name, primKey);
 	}

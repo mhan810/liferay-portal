@@ -108,6 +108,15 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 		return booleanFilter;
 	}
 
+	/**
+	 * @deprecated As of 4.0.0, as of 7.1.0.  Replace with
+	 *             {@link com.liferay.portal.search.permission.
+	 *             SearchPermissionIndexWriter.updatePermissionFields(
+	 *             long, String, String}
+	 * @param name
+	 * @param primKey
+	 */
+	@Deprecated
 	@Override
 	public void updatePermissionFields(
 		String resourceName, String resourceClassPK) {
