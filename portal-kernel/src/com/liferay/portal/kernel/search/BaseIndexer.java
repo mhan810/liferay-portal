@@ -460,6 +460,23 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 	}
 
 	@Override
+	public void partiallyUpdateDocument(long companyId, Document document)
+		throws SearchException {
+
+		IndexWriterHelperUtil.partiallyUpdateDocument(
+			getSearchEngineId(), companyId, document, _commitImmediately);
+	}
+
+	@Override
+	public void partiallyUpdateDocuments(
+			long companyId, Collection<Document> documents)
+		throws SearchException {
+
+		IndexWriterHelperUtil.partiallyUpdateDocuments(
+			getSearchEngineId(), companyId, documents, _commitImmediately);
+	}
+
+	@Override
 	public void postProcessContextBooleanFilter(
 			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {

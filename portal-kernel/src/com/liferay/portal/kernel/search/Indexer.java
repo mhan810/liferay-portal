@@ -139,6 +139,11 @@ public interface Indexer<T> {
 	public boolean isVisibleRelatedEntry(long classPK, int status)
 		throws Exception;
 
+	public void partiallyUpdateDocument(long companyId, Document document);
+
+	public void partiallyUpdateDocuments(
+		long companyId, Collection<Document> documents);
+
 	public void postProcessContextBooleanFilter(
 			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception;

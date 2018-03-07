@@ -237,6 +237,18 @@ public class DefaultIndexer<T extends BaseModel<?>> implements Indexer<T> {
 	}
 
 	@Override
+	public void partiallyUpdateDocument(long companyId, Document document) {
+		_indexerWriter.partiallyUpdateDocument(companyId, document);
+	}
+
+	@Override
+	public void partiallyUpdateDocuments(
+		long companyId, Collection<Document> documents) {
+
+		_indexerWriter.partiallyUpdateDocuments(companyId, documents);
+	}
+
+	@Override
 	public void postProcessContextBooleanFilter(
 			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {

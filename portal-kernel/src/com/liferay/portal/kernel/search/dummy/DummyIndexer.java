@@ -175,6 +175,15 @@ public class DummyIndexer implements Indexer<Object> {
 	}
 
 	@Override
+	public void partiallyUpdateDocument(long companyId, Document document) {
+	}
+
+	@Override
+	public void partiallyUpdateDocuments(
+		long companyId, Collection<Document> documents) {
+	}
+
+	@Override
 	public void postProcessContextBooleanFilter(
 			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {

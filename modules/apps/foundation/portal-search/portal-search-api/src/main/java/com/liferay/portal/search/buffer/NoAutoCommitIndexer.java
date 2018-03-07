@@ -210,6 +210,18 @@ public class NoAutoCommitIndexer<T> implements Indexer<T> {
 	}
 
 	@Override
+	public void partiallyUpdateDocument(long companyId, Document document) {
+		_indexer.partiallyUpdateDocument(companyId, document);
+	}
+
+	@Override
+	public void partiallyUpdateDocuments(
+		long companyId, Collection<Document> documents) {
+
+		_indexer.partiallyUpdateDocuments(companyId, documents);
+	}
+
+	@Override
 	public void postProcessContextBooleanFilter(
 			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
