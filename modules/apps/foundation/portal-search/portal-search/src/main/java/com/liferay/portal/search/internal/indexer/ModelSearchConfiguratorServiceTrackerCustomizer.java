@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.search.index.IndexStatusManager;
+import com.liferay.portal.search.indexer.BaseModelDocumentFactory;
 import com.liferay.portal.search.indexer.BaseModelRetriever;
 import com.liferay.portal.search.indexer.IndexerDocumentBuilder;
 import com.liferay.portal.search.indexer.IndexerPermissionPostFilter;
@@ -198,8 +199,8 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 
 		IndexerDocumentBuilder indexerDocumentBuilder =
 			new IndexerDocumentBuilderImpl(
-				modelDocumentContributors, documentContributors,
-				indexerPostProcessorsHolder);
+				baseModelDocumentFactory, modelDocumentContributors,
+				documentContributors, indexerPostProcessorsHolder);
 
 		ServiceRegistration<IndexerDocumentBuilder>
 			indexerDocumentBuilderServiceRegistration =
@@ -306,6 +307,9 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 			(key, serviceRegistrationHolder) ->
 				serviceRegistrationHolder.close());
 	}
+
+	@Reference
+	protected BaseModelDocumentFactory baseModelDocumentFactory;
 
 	@Reference
 	protected BaseModelRetriever baseModelRetriever;

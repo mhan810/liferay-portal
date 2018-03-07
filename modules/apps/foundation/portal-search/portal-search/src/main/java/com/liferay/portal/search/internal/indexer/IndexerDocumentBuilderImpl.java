@@ -17,14 +17,11 @@ package com.liferay.portal.search.internal.indexer;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
-import com.liferay.portal.kernel.model.ResourcedModel;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentContributor;
-import com.liferay.portal.kernel.search.DocumentHelper;
-import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexerPostProcessor;
-import com.liferay.portal.kernel.util.Tuple;
+import com.liferay.portal.search.indexer.BaseModelDocumentFactory;
 import com.liferay.portal.search.indexer.IndexerDocumentBuilder;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 
@@ -36,10 +33,12 @@ import java.util.stream.Stream;
 public class IndexerDocumentBuilderImpl implements IndexerDocumentBuilder {
 
 	public IndexerDocumentBuilderImpl(
+		BaseModelDocumentFactory baseModelDocumentFactory,
 		Iterable<ModelDocumentContributor> modelDocumentContributors,
 		Iterable<DocumentContributor> documentContributors,
 		IndexerPostProcessorsHolder indexerPostProcessorsHolder) {
 
+		_baseModelDocumentFactory = baseModelDocumentFactory;
 		_modelDocumentContributors = modelDocumentContributors;
 		_documentContributors = documentContributors;
 		_indexerPostProcessorsHolder = indexerPostProcessorsHolder;
@@ -47,28 +46,7 @@ public class IndexerDocumentBuilderImpl implements IndexerDocumentBuilder {
 
 	@Override
 	public <T extends BaseModel<?>> Document getDocument(T baseModel) {
-		Document document = (Document)_document.clone();
-
-		String className = baseModel.getModelClassName();
-
-		Tuple classPKResourcePrimKeyTuple = getClassPKResourcePrimKey(
-			baseModel);
-
-		long classPK = (Long)classPKResourcePrimKeyTuple.getObject(0);
-
-		String uid = doGetDocumentUID(className, classPK);
-
-		document.addKeyword(Field.UID, uid);
-
-		DocumentHelper documentHelper = new DocumentHelper(document);
-
-		long resourcePrimKey = (Long)classPKResourcePrimKeyTuple.getObject(1);
-
-		documentHelper.setEntryKey(className, classPK);
-
-		if (resourcePrimKey > 0) {
-			document.addKeyword(Field.ROOT_ENTRY_CLASS_PK, resourcePrimKey);
-		}
+		Document document = _baseModelDocumentFactory.createDocument(baseModel);
 
 		_documentContributors.forEach(
 			(DocumentContributor documentContributor) ->
@@ -85,38 +63,9 @@ public class IndexerDocumentBuilderImpl implements IndexerDocumentBuilder {
 
 	@Override
 	public <T extends BaseModel<?>> String getDocumentUID(T baseModel) {
-		Tuple classPKResourcePrimKey = getClassPKResourcePrimKey(baseModel);
+		Document document = _baseModelDocumentFactory.createDocument(baseModel);
 
-		long classPK = (Long)classPKResourcePrimKey.getObject(0);
-
-		String className = baseModel.getModelClassName();
-
-		return doGetDocumentUID(className, classPK);
-	}
-
-	protected String doGetDocumentUID(String className, long classPK) {
-		String uid = Field.getUID(className, String.valueOf(classPK));
-
-		return uid;
-	}
-
-	protected Tuple getClassPKResourcePrimKey(BaseModel<?> baseModel) {
-		long classPK = 0;
-		long resourcePrimKey = 0;
-
-		if (baseModel instanceof ResourcedModel) {
-			ResourcedModel resourcedModel = (ResourcedModel)baseModel;
-
-			classPK = resourcedModel.getResourcePrimKey();
-			resourcePrimKey = resourcedModel.getResourcePrimKey();
-		}
-		else {
-			classPK = (Long)baseModel.getPrimaryKeyObj();
-		}
-
-		Tuple tuple = new Tuple(classPK, resourcePrimKey);
-
-		return tuple;
+		return document.get(Field.UID);
 	}
 
 	protected <T extends BaseModel<?>> void postProcessDocument(
@@ -143,7 +92,7 @@ public class IndexerDocumentBuilderImpl implements IndexerDocumentBuilder {
 	private static final Log _log = LogFactoryUtil.getLog(
 		IndexerDocumentBuilderImpl.class);
 
-	private Document _document = new DocumentImpl();
+	private final BaseModelDocumentFactory _baseModelDocumentFactory;
 	private final Iterable<DocumentContributor> _documentContributors;
 	private final IndexerPostProcessorsHolder _indexerPostProcessorsHolder;
 	private final Iterable<ModelDocumentContributor> _modelDocumentContributors;
