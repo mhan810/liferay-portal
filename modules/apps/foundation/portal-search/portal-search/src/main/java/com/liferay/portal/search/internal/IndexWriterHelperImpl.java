@@ -30,8 +30,8 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngine;
 import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.kernel.search.SearchPermissionChecker;
 import com.liferay.portal.kernel.search.background.task.ReindexBackgroundTaskConstants;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.Validator;
@@ -39,6 +39,8 @@ import com.liferay.portal.search.configuration.IndexWriterHelperConfiguration;
 import com.liferay.portal.search.index.IndexStatusManager;
 import com.liferay.portal.search.internal.background.task.ReindexPortalBackgroundTaskExecutor;
 import com.liferay.portal.search.internal.background.task.ReindexSingleIndexerBackgroundTaskExecutor;
+import com.liferay.portal.search.permission.SearchPermissionDocumentContributor;
+import com.liferay.portal.search.permission.SearchPermissionIndexWriter;
 
 import java.io.Serializable;
 
@@ -81,7 +83,8 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 
 		IndexWriter indexWriter = searchEngine.getIndexWriter();
 
-		_searchPermissionChecker.addPermissionFields(companyId, document);
+		_searchPermissionDocumentContributor.addPermissionFields(
+			companyId, document);
 
 		SearchContext searchContext = new SearchContext();
 
@@ -115,7 +118,8 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 				_log.debug("Add document " + document.toString());
 			}
 
-			_searchPermissionChecker.addPermissionFields(companyId, document);
+			_searchPermissionDocumentContributor.addPermissionFields(
+				companyId, document);
 		}
 
 		SearchContext searchContext = new SearchContext();
@@ -565,7 +569,8 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 
 		IndexWriter indexWriter = searchEngine.getIndexWriter();
 
-		_searchPermissionChecker.addPermissionFields(companyId, document);
+		_searchPermissionDocumentContributor.addPermissionFields(
+			companyId, document);
 
 		SearchContext searchContext = new SearchContext();
 
@@ -601,7 +606,8 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 				_log.debug("Document " + document.toString());
 			}
 
-			_searchPermissionChecker.addPermissionFields(companyId, document);
+			_searchPermissionDocumentContributor.addPermissionFields(
+				companyId, document);
 		}
 
 		SearchContext searchContext = new SearchContext();
@@ -614,6 +620,13 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 		indexWriter.updateDocuments(searchContext, documents);
 	}
 
+	/**
+	 * @deprecated As of 4.0.0, replaced by {@link
+	 *             com.liferay.portal.search.permission.
+	 *             SearchPermissionIndexWriter#updatePermissionFields(
+	 *             String, String)}
+	 */
+	@Deprecated
 	@Override
 	public void updatePermissionFields(String name, String primKey) {
 		if (_indexStatusManager.isIndexReadOnly()) {
@@ -623,7 +636,8 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 		if (PermissionThreadLocal.isFlushResourcePermissionEnabled(
 				name, primKey)) {
 
-			_searchPermissionChecker.updatePermissionFields(name, primKey);
+			_searchPermissionIndexWriter.updatePermissionFields(
+				CompanyThreadLocal.getCompanyId(), name, primKey);
 		}
 	}
 
@@ -664,6 +678,10 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 	private SearchEngineHelper _searchEngineHelper;
 
 	@Reference
-	private SearchPermissionChecker _searchPermissionChecker;
+	private SearchPermissionDocumentContributor
+		_searchPermissionDocumentContributor;
+
+	@Reference
+	private SearchPermissionIndexWriter _searchPermissionIndexWriter;
 
 }
