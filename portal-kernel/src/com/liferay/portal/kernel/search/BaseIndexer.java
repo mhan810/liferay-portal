@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.search;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetEntry;
@@ -30,6 +32,7 @@ import com.liferay.portal.kernel.exception.NoSuchCountryException;
 import com.liferay.portal.kernel.exception.NoSuchModelException;
 import com.liferay.portal.kernel.exception.NoSuchRegionException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -98,6 +101,7 @@ import javax.portlet.PortletResponse;
  * @author Ryan Park
  * @author Raymond Augé
  */
+@ProviderType
 public abstract class BaseIndexer<T> implements Indexer<T> {
 
 	@Override
@@ -460,20 +464,28 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 	}
 
 	@Override
-	public void partiallyUpdateDocument(long companyId, Document document)
-		throws SearchException {
+	public void partiallyUpdateDocument(long companyId, Document document) {
 
-		IndexWriterHelperUtil.partiallyUpdateDocument(
-			getSearchEngineId(), companyId, document, _commitImmediately);
+		try {
+			IndexWriterHelperUtil.partiallyUpdateDocument(
+				getSearchEngineId(), companyId, document, _commitImmediately);
+		}
+		catch (SearchException se) {
+			throw new SystemException(se);
+		}
 	}
 
 	@Override
 	public void partiallyUpdateDocuments(
-			long companyId, Collection<Document> documents)
-		throws SearchException {
+			long companyId, Collection<Document> documents) {
 
-		IndexWriterHelperUtil.partiallyUpdateDocuments(
-			getSearchEngineId(), companyId, documents, _commitImmediately);
+		try {
+			IndexWriterHelperUtil.partiallyUpdateDocuments(
+				getSearchEngineId(), companyId, documents, _commitImmediately);
+		}
+		catch (SearchException se) {
+			throw new SystemException(se);
+		}
 	}
 
 	@Override

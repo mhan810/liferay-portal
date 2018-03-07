@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.search.dummy;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
@@ -34,6 +36,7 @@ import javax.portlet.PortletResponse;
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class DummyIndexer implements Indexer<Object> {
 
 	@Override

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.search;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 
@@ -28,6 +30,7 @@ import javax.portlet.PortletResponse;
  * @author Raymond Augé
  * @author Ryan Park
  */
+@ProviderType
 public interface Indexer<T> {
 
 	public static final int DEFAULT_INTERVAL = 10000;
