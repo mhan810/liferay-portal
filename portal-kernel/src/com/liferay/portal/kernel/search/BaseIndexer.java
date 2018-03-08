@@ -465,7 +465,6 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 
 	@Override
 	public void partiallyUpdateDocument(long companyId, Document document) {
-
 		try {
 			IndexWriterHelperUtil.partiallyUpdateDocument(
 				getSearchEngineId(), companyId, document, _commitImmediately);
@@ -477,7 +476,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 
 	@Override
 	public void partiallyUpdateDocuments(
-			long companyId, Collection<Document> documents) {
+		long companyId, Collection<Document> documents) {
 
 		try {
 			IndexWriterHelperUtil.partiallyUpdateDocuments(
