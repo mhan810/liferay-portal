@@ -14,12 +14,15 @@
 
 package com.liferay.portal.search.web.internal.search.bar.portlet;
 
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.generic.BooleanClauseImpl;
 import com.liferay.portal.kernel.search.generic.TermQueryImpl;
+import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.web.internal.display.context.SearchScope;
 import com.liferay.portal.search.web.internal.search.bar.constants.SearchBarPortletKeys;
@@ -125,6 +128,9 @@ public class SearchBarPortlet
 		SearchBarPortletDisplayBuilder searchBarPortletDisplayBuilder =
 			new SearchBarPortletDisplayBuilder();
 
+		searchBarPortletDisplayBuilder.setDestination(
+			searchBarPortletPreferences.getDestinationString());
+
 		copy(
 			portletSharedSearchResponse::getKeywordsOptional,
 			searchBarPortletDisplayBuilder::setKeywords);
@@ -142,6 +148,10 @@ public class SearchBarPortlet
 			() -> portletSharedSearchResponse.getParameter(
 				scopeParameterName, renderRequest),
 			searchBarPortletDisplayBuilder::setScopeParameterValue);
+
+		searchBarPortletDisplayBuilder.setSearchLayoutAvailable(
+			isSearchLayoutAvailable(
+				renderRequest, searchBarPortletPreferences));
 
 		searchBarPortletDisplayBuilder.setSearchScopePreference(
 			searchBarPortletPreferences.getSearchScopePreference());
@@ -177,6 +187,13 @@ public class SearchBarPortlet
 		return themeDisplay.getScopeGroupId();
 	}
 
+	protected long getScopeGroupId(RenderRequest renderRequest) {
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		return themeDisplay.getScopeGroupId();
+	}
+
 	protected Optional<SearchScope> getSearchScope(
 		SearchBarPortletPreferences searchBarPortletPreferences,
 		PortletSharedSearchSettings portletSharedSearchSettings) {
@@ -207,6 +224,26 @@ public class SearchBarPortlet
 			searchScope -> getScopeGroupId(portletSharedSearchSettings));
 	}
 
+	protected boolean isSearchLayoutAvailable(
+		RenderRequest renderRequest,
+		SearchBarPortletPreferences searchBarPortletPreferences) {
+
+		String destination = searchBarPortletPreferences.getDestinationString();
+
+		if (Validator.isNull(destination)) {
+			return false;
+		}
+
+		Layout layout = layoutLocalService.fetchLayoutByFriendlyURL(
+			getScopeGroupId(renderRequest), false, destination);
+
+		if (layout != null) {
+			return true;
+		}
+
+		return false;
+	}
+
 	protected void setKeywords(
 		SearchBarPortletPreferences searchBarPortletPreferences,
 		PortletSharedSearchSettings portletSharedSearchSettings) {
@@ -221,6 +258,9 @@ public class SearchBarPortlet
 		portletSharedSearchSettings.setKeywordsParameterName(
 			searchBarPortletPreferences.getKeywordsParameterName());
 	}
+
+	@Reference
+	protected LayoutLocalService layoutLocalService;
 
 	@Reference
 	protected PortletSharedSearchRequest portletSharedSearchRequest;
