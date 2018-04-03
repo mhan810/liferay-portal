@@ -19,6 +19,7 @@ import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFileEntryMetadata;
 import com.liferay.document.library.kernel.model.DLFileVersion;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
@@ -40,6 +41,7 @@ import java.text.Format;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Before;
@@ -246,12 +248,14 @@ public class DLFileEntryIndexerIndexedFieldsTest extends BaseDLIndexerTestCase {
 
 		map.put("localized_title", title);
 
-		String key =
-			"localized_title_" +
-				LocaleUtil.toLanguageId(LocaleUtil.getSiteDefault());
+		for (Locale locale : LanguageUtil.getAvailableLocales()) {
+			String languageId = LocaleUtil.toLanguageId(locale);
 
-		map.put(key, title);
-		map.put(key.concat("_sortable"), title);
+			String key = "localized_title_" + languageId;
+
+			map.put(key, title);
+			map.put(key.concat("_sortable"), title);
+		}
 	}
 
 }
