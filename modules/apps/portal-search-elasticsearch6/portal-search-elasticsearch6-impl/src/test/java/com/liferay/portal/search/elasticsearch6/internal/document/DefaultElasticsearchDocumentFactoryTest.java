@@ -41,7 +41,7 @@ public class DefaultElasticsearchDocumentFactoryTest {
 
 	@Test
 	public void testNull() throws Exception {
-		assertElasticsearchDocument(null, "{}");
+		assertElasticsearchDocument(null, "{\"field\":null}");
 	}
 
 	@Test
