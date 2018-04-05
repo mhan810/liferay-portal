@@ -126,11 +126,22 @@ public class SearchPermissionDocumentContributorImpl
 				}
 			}
 
-			doc.addKeyword(
-				Field.ROLE_ID, roleIds.toArray(new Long[roleIds.size()]));
-			doc.addKeyword(
-				Field.GROUP_ROLE_ID,
-				groupRoleIds.toArray(new String[groupRoleIds.size()]));
+			if (roleIds.isEmpty()) {
+				doc.addKeyword(Field.ROLE_ID, (Long)null);
+			}
+			else {
+				doc.addKeyword(
+					Field.ROLE_ID, roleIds.toArray(new Long[roleIds.size()]));
+			}
+
+			if (groupRoleIds.isEmpty()) {
+				doc.addKeyword(Field.GROUP_ROLE_ID, (String)null);
+			}
+			else {
+				doc.addKeyword(
+					Field.GROUP_ROLE_ID,
+					groupRoleIds.toArray(new String[groupRoleIds.size()]));
+			}
 		}
 		catch (NoSuchResourceException nsre) {
 			if (_log.isDebugEnabled()) {
