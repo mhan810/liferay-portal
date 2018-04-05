@@ -102,10 +102,11 @@ public class DefaultElasticsearchDocumentFactory
 
 			for (String value : values) {
 				if (value == null) {
-					continue;
+					valuesList.add(null);
 				}
-
-				valuesList.add(value.trim());
+				else {
+					valuesList.add(value.trim());
+				}
 			}
 
 			if (valuesList.isEmpty()) {
