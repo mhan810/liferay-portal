@@ -14,6 +14,9 @@
 
 package com.liferay.portal.search.internal.indexer;
 
+import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
+import com.liferay.asset.kernel.model.AssetRenderer;
+import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -42,19 +45,59 @@ public class BaseModelRetrieverImpl implements BaseModelRetriever {
 
 		PersistedModel persistModel = _getPersistedModel(className, classPK);
 
-		if (persistModel == null) {
-			return Optional.empty();
-		}
+		if (persistModel != null) {
+			if (!(persistModel instanceof BaseModel)) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(persistModel + " is not a base model");
+				}
 
-		if (!(persistModel instanceof BaseModel)) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(persistModel + " is not a base model");
+				return Optional.empty();
 			}
 
-			return Optional.empty();
+			return Optional.ofNullable((BaseModel<?>)persistModel);
 		}
 
-		return Optional.ofNullable((BaseModel<?>)persistModel);
+		BaseModel<?> assetBaseModel = _getAssetBaseModel(className, classPK);
+
+		if (assetBaseModel != null) {
+			return Optional.ofNullable(assetBaseModel);
+		}
+
+		return Optional.empty();
+	}
+
+	private BaseModel<?> _getAssetBaseModel(String className, long classPK) {
+		AssetRendererFactory assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+				className);
+
+		if (assetRendererFactory == null) {
+			return null;
+		}
+
+		try {
+			AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(
+				classPK);
+
+			if (assetRenderer != null) {
+				Object assetObject = assetRenderer.getAssetObject();
+
+				if (assetObject instanceof BaseModel<?>) {
+					return (BaseModel<?>)assetObject;
+				}
+			}
+		}
+		catch (PortalException pe) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					StringBundler.concat(
+						"Unable to get asset renderer for ", className,
+						" with class PK ", String.valueOf(classPK)),
+					pe);
+			}
+		}
+
+		return null;
 	}
 
 	private PersistedModel _getPersistedModel(String className, long classPK) {
