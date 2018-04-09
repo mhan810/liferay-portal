@@ -44,6 +44,8 @@ public class CalendarKeywordQueryContributor
 			keywordQueryContributorHelper.getSearchContext();
 
 		queryHelper.addSearchLocalizedTerm(
+			booleanQuery, searchContext, Field.DESCRIPTION, true);
+		queryHelper.addSearchLocalizedTerm(
 			booleanQuery, searchContext, Field.NAME, true);
 		queryHelper.addSearchLocalizedTerm(
 			booleanQuery, searchContext, CalendarField.RESOURCE_NAME, true);

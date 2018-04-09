@@ -44,9 +44,9 @@ public class CalendarBookingKeywordQueryContributor
 			keywordQueryContributorHelper.getSearchContext();
 
 		queryHelper.addSearchLocalizedTerm(
-			booleanQuery, searchContext, Field.NAME, true);
+			booleanQuery, searchContext, Field.DESCRIPTION, true);
 		queryHelper.addSearchLocalizedTerm(
-			booleanQuery, searchContext, CalendarField.RESOURCE_NAME, true);
+			booleanQuery, searchContext, Field.TITLE, true);
 	}
 
 	@Reference

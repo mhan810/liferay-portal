@@ -85,7 +85,8 @@ public class CalendarBookingModelIndexerWriterContributor
 		int status = calendarBooking.getStatus();
 
 		if ((status == WorkflowConstants.STATUS_APPROVED) ||
-			(status == CalendarBookingWorkflowConstants.STATUS_MAYBE)) {
+			(status == CalendarBookingWorkflowConstants.STATUS_MAYBE) ||
+			(status == WorkflowConstants.STATUS_IN_TRASH)) {
 
 			return IndexerWriterMode.UPDATE;
 		}
