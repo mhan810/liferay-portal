@@ -108,7 +108,7 @@ public class DLFileEntryModelDocumentContributor
 							dlFileEntry.getGroupId());
 
 						String localizedField = Field.getLocalizedName(
-							Field.CONTENT, defaultLocale.toString());
+							defaultLocale.toString(), Field.CONTENT);
 
 						document.addFile(
 							localizedField, is, dlFileEntry.getTitle(),
@@ -134,6 +134,7 @@ public class DLFileEntryModelDocumentContributor
 			document.addKeyword(Field.HIDDEN, dlFileEntry.isInHiddenFolder());
 			document.addText(
 				Field.PROPERTIES, dlFileEntry.getLuceneProperties());
+			document.addKeyword(Field.STATUS, dlFileVersion.getStatus());
 
 			String title = dlFileEntry.getTitle();
 
