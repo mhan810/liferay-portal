@@ -69,10 +69,7 @@ public class FieldValuesAssert {
 					String[] fieldValues = field.getValues();
 
 					if ((fieldValues != null) && (fieldValues.length > 1)) {
-						ArrayList<String> list = new ArrayList<>(
-							Arrays.asList(fieldValues));
-
-						return list.toString();
+						return Arrays.toString(fieldValues);
 					}
 
 					return field.getValue();
