@@ -45,7 +45,7 @@ public class BaseModelRetrieverImpl implements BaseModelRetriever {
 		String className, long classPK) {
 
 		Optional<BaseModel<?>> baseModel = null;
-		
+
 		try {
 			Class clazz = Class.forName(className);
 

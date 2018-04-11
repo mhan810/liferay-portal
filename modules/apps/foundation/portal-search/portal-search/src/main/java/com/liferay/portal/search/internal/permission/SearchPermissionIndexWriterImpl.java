@@ -67,6 +67,7 @@ public class SearchPermissionIndexWriterImpl
 	}
 
 	protected Document createBasePermissionDocument(BaseModel<?> baseModel) {
+		//todo this is super expensive.
 		Indexer<BaseModel<?>> indexer = indexerRegistry.getIndexer(
 			baseModel.getModelClassName());
 
