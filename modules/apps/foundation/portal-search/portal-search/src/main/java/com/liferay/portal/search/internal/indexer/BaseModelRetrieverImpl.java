@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.PersistedModel;
+import com.liferay.portal.kernel.model.ResourcedModel;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -43,36 +44,35 @@ public class BaseModelRetrieverImpl implements BaseModelRetriever {
 	public Optional<BaseModel<?>> fetchBaseModel(
 		String className, long classPK) {
 
-		PersistedModel persistModel = _getPersistedModel(className, classPK);
+		Optional<BaseModel<?>> baseModel = null;
+		
+		try {
+			Class clazz = Class.forName(className);
 
-		if (persistModel != null) {
-			if (!(persistModel instanceof BaseModel)) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(persistModel + " is not a base model");
-				}
-
-				return Optional.empty();
+			if (ResourcedModel.class.isAssignableFrom(clazz)) {
+				baseModel = _getAssetBaseModel(
+					className, classPK);
 			}
-
-			return Optional.ofNullable((BaseModel<?>)persistModel);
+			else if (BaseModel.class.isAssignableFrom(clazz)) {
+				baseModel = _getPersistedModel(className, classPK);
+			}
+		}
+		catch (ClassNotFoundException e) {
+			throw new SystemException(e);
 		}
 
-		BaseModel<?> assetBaseModel = _getAssetBaseModel(className, classPK);
-
-		if (assetBaseModel != null) {
-			return Optional.ofNullable(assetBaseModel);
-		}
-
-		return Optional.empty();
+		return baseModel;
 	}
 
-	private BaseModel<?> _getAssetBaseModel(String className, long classPK) {
+	private Optional<BaseModel<?>> _getAssetBaseModel(
+		String className, long classPK) {
+
 		AssetRendererFactory assetRendererFactory =
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
 				className);
 
 		if (assetRendererFactory == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		try {
@@ -83,7 +83,7 @@ public class BaseModelRetrieverImpl implements BaseModelRetriever {
 				Object assetObject = assetRenderer.getAssetObject();
 
 				if (assetObject instanceof BaseModel<?>) {
-					return (BaseModel<?>)assetObject;
+					return Optional.ofNullable((BaseModel<?>)assetObject);
 				}
 			}
 		}
@@ -97,15 +97,20 @@ public class BaseModelRetrieverImpl implements BaseModelRetriever {
 			}
 		}
 
-		return null;
+		return Optional.empty();
 	}
 
-	private PersistedModel _getPersistedModel(String className, long classPK) {
+	private Optional<BaseModel<?>> _getPersistedModel(
+		String className, long classPK) {
+
 		PersistedModelLocalService persistedModelLocalService =
 			_getPersistedModelLocalService(className);
 
 		try {
-			return persistedModelLocalService.getPersistedModel(classPK);
+			PersistedModel persistedModel =
+				persistedModelLocalService.getPersistedModel(classPK);
+
+			return Optional.ofNullable((BaseModel<?>)persistedModel);
 		}
 		catch (PortalException pe) {
 			if (_log.isWarnEnabled()) {
@@ -116,7 +121,7 @@ public class BaseModelRetrieverImpl implements BaseModelRetriever {
 					pe);
 			}
 
-			return null;
+			return Optional.empty();
 		}
 	}
 
