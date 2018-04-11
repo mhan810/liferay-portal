@@ -14,19 +14,25 @@
 
 package com.liferay.portal.search.internal.indexer;
 
+import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
+import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
+import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexerPostProcessor;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.RelatedEntryIndexer;
 import com.liferay.portal.kernel.search.RelatedEntryIndexerRegistry;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchEngineHelperUtil;
+import com.liferay.portal.kernel.search.SearchPermissionChecker;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.search.indexer.IndexerQueryBuilder;
+import com.liferay.portal.search.permission.SearchPermissionFilterContributor;
 import com.liferay.portal.search.spi.model.query.contributor.KeywordQueryContributor;
 import com.liferay.portal.search.spi.model.query.contributor.QueryPreFilterContributor;
 import com.liferay.portal.search.spi.model.query.contributor.SearchContextContributor;
@@ -34,7 +40,12 @@ import com.liferay.portal.search.spi.model.query.contributor.helper.KeywordQuery
 import com.liferay.portal.search.spi.model.query.contributor.helper.SearchContextContributorHelper;
 import com.liferay.portal.search.spi.model.registrar.ModelSearchSettings;
 
+import java.util.Optional;
 import java.util.stream.Stream;
+
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * @author Michael C. Han
@@ -45,21 +56,23 @@ public class IndexerQueryBuilderImpl<T extends BaseModel<?>>
 	public IndexerQueryBuilderImpl(
 		ModelSearchSettings modelSearchSettings,
 		Iterable<KeywordQueryContributor> modelKeywordQueryContributors,
-		Iterable<QueryPreFilterContributor> modelQueryPreFilterContributor,
 		Iterable<SearchContextContributor> modelSearchContextContributor,
 		Iterable<KeywordQueryContributor> keywordQueryContributors,
 		Iterable<QueryPreFilterContributor> queryPreFilterContributors,
 		Iterable<SearchContextContributor> searchContextContributors,
+		Iterable<SearchPermissionFilterContributor>
+			searchPermissionFilterContributors,
 		IndexerPostProcessorsHolder indexerPostProcessorsHolder,
 		RelatedEntryIndexerRegistry relatedEntryIndexerRegistry) {
 
 		_modelSearchSettings = modelSearchSettings;
 		_modelKeywordQueryContributors = modelKeywordQueryContributors;
-		_modelQueryPreFilterContributors = modelQueryPreFilterContributor;
 		_modelSearchContextContributors = modelSearchContextContributor;
 		_keywordQueryContributors = keywordQueryContributors;
 		_queryPreFilterContributors = queryPreFilterContributors;
 		_searchContextContributors = searchContextContributors;
+		_searchPermissionFilterContributors =
+			searchPermissionFilterContributors;
 		_indexerPostProcessorsHolder = indexerPostProcessorsHolder;
 		_relatedEntryIndexerRegistry = relatedEntryIndexerRegistry;
 	}
@@ -82,13 +95,7 @@ public class IndexerQueryBuilderImpl<T extends BaseModel<?>>
 
 			final BooleanFilter fullQueryBooleanFilter = new BooleanFilter();
 
-			contribute(
-				_queryPreFilterContributors, searchContext,
-				fullQueryBooleanFilter);
-
-			contribute(
-				_modelQueryPreFilterContributors, searchContext,
-				fullQueryBooleanFilter);
+			contributePreFilter(fullQueryBooleanFilter, searchContext);
 
 			BooleanQuery fullQuery = createFullQuery(
 				fullQueryBooleanFilter, searchContext);
@@ -138,14 +145,53 @@ public class IndexerQueryBuilderImpl<T extends BaseModel<?>>
 	}
 
 	protected void contribute(
-		Iterable<QueryPreFilterContributor> queryPreFilterContributors,
-		SearchContext searchContext, BooleanFilter fullQueryBooleanFilter) {
+			Iterable<QueryPreFilterContributor> queryPreFilterContributors,
+			BooleanFilter fullQueryBooleanFilter, SearchContext searchContext)
+		throws Exception {
 
 		for (QueryPreFilterContributor queryPreFilterContributor :
 				queryPreFilterContributors) {
 
 			queryPreFilterContributor.contribute(
 				fullQueryBooleanFilter, searchContext);
+		}
+	}
+
+	protected void contributePreFilter(
+			BooleanFilter fullQueryBooleanFilter, SearchContext searchContext)
+		throws Exception {
+
+		contribute(
+			_queryPreFilterContributors, fullQueryBooleanFilter, searchContext);
+
+		Bundle bundle = FrameworkUtil.getBundle(getClass());
+
+		BundleContext bundleContext = bundle.getBundleContext();
+
+		for (String entryClassName : searchContext.getEntryClassNames()) {
+			BooleanFilter entryClassNameBooleanFilter = new BooleanFilter();
+
+			entryClassNameBooleanFilter.addRequiredTerm(
+				Field.ENTRY_CLASS_NAME, entryClassName);
+
+			_addPermissionFilter(
+				entryClassNameBooleanFilter, entryClassName, searchContext);
+
+			ServiceTrackerList
+				<QueryPreFilterContributor, QueryPreFilterContributor>
+					entryClassNameModelQueryPreFilterContributors =
+						ServiceTrackerListFactory.open(
+							bundleContext, QueryPreFilterContributor.class,
+							"(indexer.class.name=" + entryClassName + ")");
+
+			contribute(
+				entryClassNameModelQueryPreFilterContributors,
+				entryClassNameBooleanFilter, searchContext);
+
+			fullQueryBooleanFilter.add(
+				entryClassNameBooleanFilter, BooleanClauseOccur.SHOULD);
+
+			entryClassNameModelQueryPreFilterContributors.close();
 		}
 	}
 
@@ -260,12 +306,55 @@ public class IndexerQueryBuilderImpl<T extends BaseModel<?>>
 			});
 	}
 
+	private void _addPermissionFilter(
+			BooleanFilter booleanFilter, String entryClassName,
+			SearchContext searchContext)
+		throws Exception {
+
+		if (searchContext.getUserId() == 0) {
+			return;
+		}
+
+		SearchPermissionChecker searchPermissionChecker =
+			SearchEngineHelperUtil.getSearchPermissionChecker();
+
+		Optional<String> permissionedEntryClassNameOptional =
+			_getPermissionedEntryClassName(entryClassName);
+
+		String permissionedEntryClassName =
+			permissionedEntryClassNameOptional.orElse(entryClassName);
+
+		searchPermissionChecker.getPermissionBooleanFilter(
+			searchContext.getCompanyId(), searchContext.getGroupIds(),
+			searchContext.getUserId(), permissionedEntryClassName,
+			booleanFilter, searchContext);
+	}
+
+	private Optional<String> _getPermissionedEntryClassName(
+		String entryClassName) {
+
+		for (SearchPermissionFilterContributor
+				searchPermissionFilterContributor :
+					_searchPermissionFilterContributors) {
+
+			Optional<String> permissionedEntryClassNameOptional =
+				searchPermissionFilterContributor.
+					getParentEntryClassNameOptional(entryClassName);
+
+			if ((permissionedEntryClassNameOptional != null) &&
+				permissionedEntryClassNameOptional.isPresent()) {
+
+				return permissionedEntryClassNameOptional;
+			}
+		}
+
+		return Optional.empty();
+	}
+
 	private final IndexerPostProcessorsHolder _indexerPostProcessorsHolder;
 	private final Iterable<KeywordQueryContributor> _keywordQueryContributors;
 	private final Iterable<KeywordQueryContributor>
 		_modelKeywordQueryContributors;
-	private final Iterable<QueryPreFilterContributor>
-		_modelQueryPreFilterContributors;
 	private final Iterable<SearchContextContributor>
 		_modelSearchContextContributors;
 	private final ModelSearchSettings _modelSearchSettings;
@@ -273,5 +362,7 @@ public class IndexerQueryBuilderImpl<T extends BaseModel<?>>
 		_queryPreFilterContributors;
 	private final RelatedEntryIndexerRegistry _relatedEntryIndexerRegistry;
 	private final Iterable<SearchContextContributor> _searchContextContributors;
+	private final Iterable<SearchPermissionFilterContributor>
+		_searchPermissionFilterContributors;
 
 }
