@@ -1,0 +1,10 @@
+Bundle-Name: Liferay Portal Search Engine API
+Bundle-SymbolicName: com.liferay.portal.search.engine.api
+Bundle-Version: 1.0.0
+Export-Package:
+Import-Package:\
+	com.liferay.portal.kernel.search;version="[7.1.0,8)",\
+	\
+	*
+Liferay-Releng-Module-Group-Description:
+Liferay-Releng-Module-Group-Title: Search
