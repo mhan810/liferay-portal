@@ -92,7 +92,7 @@ public class SearchPermissionIndexWriterImpl
 				for (String relatedPermissionFieldName :
 						relatedPermissionFieldNames) {
 
-					if (indexerDocument.hasField(relatedPermissionFieldName)) {
+					if (document.hasField(relatedPermissionFieldName)) {
 						document.addKeyword(
 							relatedPermissionFieldName,
 							indexerDocument.get(relatedPermissionFieldName));
