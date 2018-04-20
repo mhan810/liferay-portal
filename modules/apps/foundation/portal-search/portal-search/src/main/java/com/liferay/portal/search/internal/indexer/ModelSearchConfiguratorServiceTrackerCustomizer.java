@@ -44,6 +44,7 @@ import com.liferay.portal.search.indexer.IndexerQueryBuilder;
 import com.liferay.portal.search.indexer.IndexerSearcher;
 import com.liferay.portal.search.indexer.IndexerSummaryBuilder;
 import com.liferay.portal.search.indexer.IndexerWriter;
+import com.liferay.portal.search.permission.SearchPermissionFilterContributor;
 import com.liferay.portal.search.permission.SearchPermissionIndexWriter;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 import com.liferay.portal.search.spi.model.query.contributor.KeywordQueryContributor;
@@ -191,6 +192,9 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 			_bundleContext, SearchContextContributor.class,
 			"(!(indexer.class.name=*))");
 
+		_searchPermissionFilterContributors = ServiceTrackerListFactory.open(
+			_bundleContext, SearchPermissionFilterContributor.class);
+
 		_serviceTracker = ServiceTrackerFactory.open(
 			bundleContext, ModelSearchConfigurator.class, this);
 	}
@@ -226,11 +230,10 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		IndexerQueryBuilder indexerQueryBuilder = new IndexerQueryBuilderImpl<>(
 			modelSearchConfigurator.getModelSearchSettings(),
 			modelSearchConfigurator.getKeywordQueryContributors(),
-			modelSearchConfigurator.getQueryPreFilterContributors(),
 			modelSearchConfigurator.getSearchContextContributors(),
 			_keywordQueryContributors, _queryPreFilterContributors,
-			_searchContextContributors, indexerPostProcessorsHolder,
-			relatedEntryIndexerRegistry);
+			_searchContextContributors, _searchPermissionFilterContributors,
+			indexerPostProcessorsHolder, relatedEntryIndexerRegistry);
 
 		ServiceRegistration<IndexerQueryBuilder>
 			indexerQueryBuilderServiceRegistration =
@@ -319,6 +322,7 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		_queryPreFilterContributors.close();
 		_queryConfigContributors.close();
 		_searchContextContributors.close();
+		_searchPermissionFilterContributors.close();
 
 		_serviceRegistrationHolders.forEach(
 			(key, serviceRegistrationHolder) ->
@@ -377,6 +381,9 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 	private ServiceTrackerList
 		<SearchContextContributor, SearchContextContributor>
 			_searchContextContributors;
+	private ServiceTrackerList
+		<SearchPermissionFilterContributor, SearchPermissionFilterContributor>
+			_searchPermissionFilterContributors;
 	private final Map<String, ServiceRegistrationHolder>
 		_serviceRegistrationHolders = new Hashtable<>();
 	private ServiceTracker

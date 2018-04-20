@@ -22,19 +22,53 @@ import com.liferay.portal.kernel.search.filter.TermsFilter;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.search.spi.model.query.contributor.QueryPreFilterContributor;
+import com.liferay.portal.search.query.ModelQueryPreFilterContributorHelper;
 
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author Michael C. Han
+ * @author Bryan Engler
  */
-@Component(immediate = true, service = QueryPreFilterContributor.class)
-public class StatusQueryPreFilterContributor
-	implements QueryPreFilterContributor {
+@Component(
+	immediate = true, service = ModelQueryPreFilterContributorHelper.class
+)
+public class ModelQueryPreFilterContributorHelperImpl
+	implements ModelQueryPreFilterContributorHelper {
 
 	@Override
-	public void contribute(
+	public void addClassTypeIdsFilter(
+		BooleanFilter fullQueryBooleanFilter, SearchContext searchContext) {
+
+		long[] classTypeIds = searchContext.getClassTypeIds();
+
+		if (ArrayUtil.isEmpty(classTypeIds)) {
+			return;
+		}
+
+		TermsFilter termsFilter = new TermsFilter(Field.CLASS_TYPE_ID);
+
+		termsFilter.addValues(ArrayUtil.toStringArray(classTypeIds));
+
+		fullQueryBooleanFilter.add(termsFilter, BooleanClauseOccur.MUST);
+	}
+
+	public void addStagingFilter(
+		BooleanFilter booleanFilter, SearchContext searchContext) {
+
+		if (!searchContext.isIncludeLiveGroups() &&
+			searchContext.isIncludeStagingGroups()) {
+
+			booleanFilter.addRequiredTerm(Field.STAGING_GROUP, true);
+		}
+		else if (searchContext.isIncludeLiveGroups() &&
+				 !searchContext.isIncludeStagingGroups()) {
+
+			booleanFilter.addRequiredTerm(Field.STAGING_GROUP, false);
+		}
+	}
+
+	@Override
+	public void addWorkflowStatusesFilter(
 		BooleanFilter booleanFilter, SearchContext searchContext) {
 
 		int[] statuses = GetterUtil.getIntegerValues(

@@ -12,43 +12,51 @@
  * details.
  */
 
-package com.liferay.portal.search.internal.contributor.query;
+package com.liferay.document.library.internal.search;
 
-import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
-import com.liferay.portal.kernel.search.filter.TermsFilter;
-import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.search.query.ModelQueryPreFilterContributorHelper;
 import com.liferay.portal.search.spi.model.query.contributor.QueryPreFilterContributor;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
  */
-@Component(immediate = true, service = QueryPreFilterContributor.class)
-public class ClassTypeIdsQueryPreFilterContributor
+@Component(
+	immediate = true,
+	property = "indexer.class.name=com.liferay.document.library.kernel.model.DLFolder",
+	service = QueryPreFilterContributor.class
+)
+public class DLFolderModelQueryPreFilterContributor
 	implements QueryPreFilterContributor {
 
 	@Override
 	public void contribute(
 		BooleanFilter fullQueryBooleanFilter, SearchContext searchContext) {
 
-		long[] classTypeIds = searchContext.getClassTypeIds();
-
-		if (ArrayUtil.isEmpty(classTypeIds)) {
-			return;
-		}
-
-		TermsFilter classTypeIdsTermsFilter = new TermsFilter(
-			Field.CLASS_TYPE_ID);
-
-		classTypeIdsTermsFilter.addValues(
-			ArrayUtil.toStringArray(classTypeIds));
-
-		fullQueryBooleanFilter.add(
-			classTypeIdsTermsFilter, BooleanClauseOccur.MUST);
+		addHiddenFilter(fullQueryBooleanFilter);
+		addHelperFilters(fullQueryBooleanFilter, searchContext);
 	}
+
+	protected void addHelperFilters(
+		BooleanFilter fullQueryBooleanFilter, SearchContext searchContext) {
+
+		modelQueryPreFilterContributorHelper.addStagingFilter(
+			fullQueryBooleanFilter, searchContext);
+		modelQueryPreFilterContributorHelper.addWorkflowStatusesFilter(
+			fullQueryBooleanFilter, searchContext);
+	}
+
+	protected void addHiddenFilter(BooleanFilter booleanFilter) {
+		booleanFilter.addRequiredTerm(Field.HIDDEN, false);
+	}
+
+	@Reference
+	protected ModelQueryPreFilterContributorHelper
+		modelQueryPreFilterContributorHelper;
 
 }

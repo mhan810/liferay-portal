@@ -16,7 +16,6 @@ package com.liferay.portal.search.internal;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.portal.kernel.exception.NoSuchResourceException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -48,8 +47,8 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.configuration.SearchPermissionCheckerConfiguration;
+import com.liferay.portal.search.permission.SearchPermissionDocumentContributor;
 
 import java.io.Serializable;
 
@@ -81,56 +80,8 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 
 	@Override
 	public void addPermissionFields(long companyId, Document document) {
-		try {
-			long groupId = GetterUtil.getLong(document.get(Field.GROUP_ID));
-
-			String className = document.get(Field.ENTRY_CLASS_NAME);
-			String classPK = document.get(Field.ENTRY_CLASS_PK);
-
-			if (Validator.isNull(className) && Validator.isNull(classPK)) {
-				className = document.get(Field.ROOT_ENTRY_CLASS_NAME);
-				classPK = document.get(Field.ROOT_ENTRY_CLASS_PK);
-			}
-
-			boolean relatedEntry = GetterUtil.getBoolean(
-				document.get(Field.RELATED_ENTRY));
-
-			if (relatedEntry) {
-				long classNameId = GetterUtil.getLong(
-					document.get(Field.CLASS_NAME_ID));
-
-				className = _portal.getClassName(classNameId);
-
-				classPK = document.get(Field.CLASS_PK);
-			}
-
-			if (Validator.isNull(className) || Validator.isNull(classPK)) {
-				return;
-			}
-
-			Indexer<?> indexer = _indexerRegistry.nullSafeGetIndexer(className);
-
-			if (!indexer.isPermissionAware()) {
-				return;
-			}
-
-			String viewActionId = document.get(Field.VIEW_ACTION_ID);
-
-			if (Validator.isNull(viewActionId)) {
-				viewActionId = ActionKeys.VIEW;
-			}
-
-			_addPermissionFields(
-				companyId, groupId, className, classPK, viewActionId, document);
-		}
-		catch (NoSuchResourceException nsre) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(nsre, nsre);
-			}
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-		}
+		_searchPermissionDocumentContributor.addPermissionFields(
+			companyId, document);
 	}
 
 	@Override
@@ -168,9 +119,13 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
-		_searchPermissionCheckerConfiguration =
-			ConfigurableUtil.createConfigurable(
-				SearchPermissionCheckerConfiguration.class, properties);
+		SearchPermissionCheckerConfiguration
+			searchPermissionCheckerConfiguration =
+				ConfigurableUtil.createConfigurable(
+					SearchPermissionCheckerConfiguration.class, properties);
+
+		_permissionTermsLimit =
+			searchPermissionCheckerConfiguration.permissionTermsLimit();
 	}
 
 	private void _addGroup(
@@ -181,40 +136,6 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 			usersGroupIdsRoles.add(
 				new UsersGroupIdRoles(group.getGroupId(), groupRoles));
 		}
-	}
-
-	private void _addPermissionFields(
-			long companyId, long groupId, String className, String classPK,
-			String viewActionId, Document doc)
-		throws Exception {
-
-		List<Role> roles = _resourcePermissionLocalService.getRoles(
-			companyId, className, ResourceConstants.SCOPE_INDIVIDUAL, classPK,
-			viewActionId);
-
-		if (roles.isEmpty()) {
-			return;
-		}
-
-		List<Long> roleIds = new ArrayList<>();
-		List<String> groupRoleIds = new ArrayList<>();
-
-		for (Role role : roles) {
-			if ((role.getType() == RoleConstants.TYPE_ORGANIZATION) ||
-				(role.getType() == RoleConstants.TYPE_SITE)) {
-
-				groupRoleIds.add(groupId + StringPool.DASH + role.getRoleId());
-			}
-			else {
-				roleIds.add(role.getRoleId());
-			}
-		}
-
-		doc.addKeyword(
-			Field.ROLE_ID, roleIds.toArray(new Long[roleIds.size()]));
-		doc.addKeyword(
-			Field.GROUP_ROLE_ID,
-			groupRoleIds.toArray(new String[groupRoleIds.size()]));
 	}
 
 	private SearchPermissionContext _createSearchPermissionContext(
@@ -243,16 +164,13 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 
 		int termsCount = roles.size();
 
-		int permissionTermsLimit =
-			_searchPermissionCheckerConfiguration.permissionTermsLimit();
-
-		if (termsCount > permissionTermsLimit) {
+		if (termsCount > _permissionTermsLimit) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
 					StringBundler.concat(
 						"Skipping presearch permission checking due to too ",
 						"many roles: ", String.valueOf(termsCount), " > ",
-						String.valueOf(permissionTermsLimit)));
+						String.valueOf(_permissionTermsLimit)));
 			}
 
 			return null;
@@ -270,13 +188,13 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 
 		termsCount += groups.size();
 
-		if (termsCount > permissionTermsLimit) {
+		if (termsCount > _permissionTermsLimit) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
 					StringBundler.concat(
 						"Skipping presearch permission checking due to too ",
 						"many roles and groups: ", String.valueOf(termsCount),
-						" > ", String.valueOf(permissionTermsLimit)));
+						" > ", String.valueOf(_permissionTermsLimit)));
 			}
 
 			return null;
@@ -318,14 +236,14 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 
 			termsCount += groupRoles.size();
 
-			if (termsCount > permissionTermsLimit) {
+			if (termsCount > _permissionTermsLimit) {
 				if (_log.isDebugEnabled()) {
 					_log.debug(
 						StringBundler.concat(
 							"Skipping presearch permission checking due to ",
 							"too many roles, groups, and group roles: ",
 							String.valueOf(termsCount), " > ",
-							String.valueOf(permissionTermsLimit)));
+							String.valueOf(_permissionTermsLimit)));
 				}
 
 				return null;
@@ -506,6 +424,8 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 	@Reference
 	private IndexerRegistry _indexerRegistry;
 
+	private volatile int _permissionTermsLimit;
+
 	@Reference
 	private Portal _portal;
 
@@ -515,8 +435,9 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 	@Reference
 	private RoleLocalService _roleLocalService;
 
-	private volatile SearchPermissionCheckerConfiguration
-		_searchPermissionCheckerConfiguration;
+	@Reference
+	private SearchPermissionDocumentContributor
+		_searchPermissionDocumentContributor;
 
 	@Reference
 	private UserLocalService _userLocalService;

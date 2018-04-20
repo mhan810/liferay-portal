@@ -12,55 +12,37 @@
  * details.
  */
 
-package com.liferay.portal.search.internal.contributor.query;
+package com.liferay.calendar.internal.search;
 
-import com.liferay.portal.kernel.search.BooleanClause;
-import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
-import com.liferay.portal.kernel.search.filter.Filter;
+import com.liferay.portal.search.query.ModelQueryPreFilterContributorHelper;
 import com.liferay.portal.search.spi.model.query.contributor.QueryPreFilterContributor;
 
-import java.util.Map;
-
-import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Michael C. Han
+ * @author Bryan Engler
  */
 @Component(
 	immediate = true,
-	property = Constants.SERVICE_RANKING + "=" + Integer.MIN_VALUE,
+	property = "indexer.class.name=com.liferay.calendar.model.CalendarBooking",
 	service = QueryPreFilterContributor.class
 )
-public class FacetQueryPostFilterContributor
+public class CalendarBookingModelQueryPreFilterContributor
 	implements QueryPreFilterContributor {
 
 	@Override
 	public void contribute(
 		BooleanFilter fullQueryBooleanFilter, SearchContext searchContext) {
 
-		Map<String, Facet> facets = searchContext.getFacets();
-
-		BooleanFilter facetBooleanFilter = new BooleanFilter();
-
-		for (Facet facet : facets.values()) {
-			BooleanClause<Filter> filterBooleanClause =
-				facet.getFacetFilterBooleanClause();
-
-			if (filterBooleanClause != null) {
-				facetBooleanFilter.add(
-					filterBooleanClause.getClause(),
-					filterBooleanClause.getBooleanClauseOccur());
-			}
-		}
-
-		if (facetBooleanFilter.hasClauses()) {
-			fullQueryBooleanFilter.add(
-				facetBooleanFilter, BooleanClauseOccur.MUST);
-		}
+		modelQueryPreFilterContributorHelper.addWorkflowStatusesFilter(
+			fullQueryBooleanFilter, searchContext);
 	}
+
+	@Reference
+	protected ModelQueryPreFilterContributorHelper
+		modelQueryPreFilterContributorHelper;
 
 }
