@@ -45,20 +45,19 @@ public class BaseModelRetrieverImpl implements BaseModelRetriever {
 		String className, long classPK) {
 
 		Optional<BaseModel<?>> baseModel = null;
-		
+
 		try {
-			Class clazz = Class.forName(className);
+			Class<?> clazz = Class.forName(className);
 
 			if (ResourcedModel.class.isAssignableFrom(clazz)) {
-				baseModel = _getAssetBaseModel(
-					className, classPK);
+				baseModel = _getAssetBaseModel(className, classPK);
 			}
 			else if (BaseModel.class.isAssignableFrom(clazz)) {
 				baseModel = _getPersistedModel(className, classPK);
 			}
 		}
-		catch (ClassNotFoundException e) {
-			throw new SystemException(e);
+		catch (ClassNotFoundException cnfe) {
+			throw new SystemException(cnfe);
 		}
 
 		return baseModel;
