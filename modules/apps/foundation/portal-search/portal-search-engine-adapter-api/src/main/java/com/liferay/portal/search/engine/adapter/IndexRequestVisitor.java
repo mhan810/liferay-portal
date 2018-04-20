@@ -14,15 +14,20 @@
 
 package com.liferay.portal.search.engine.adapter;
 
+import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.GetMappingIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.PutMappingIndexRequest;
+
 /**
- * @author Michael C. Han
+ * @author Dylan Rebelak
  */
-public interface IndexRequest {
+public interface IndexRequestVisitor<T> {
 
-	public <T> T accept(IndexRequestVisitor<T> indexRequestVisitor);
+	public T visitIndexRequest(
+		GetFieldMappingIndexRequest getFieldMappingIndexRequest);
 
-	public String getIndexName();
+	public T visitIndexRequest(GetMappingIndexRequest getMappingIndexRequest);
 
-	public String getMappingName();
+	public T visitIndexRequest(PutMappingIndexRequest putMappingIndexRequest);
 
 }
