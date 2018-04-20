@@ -300,8 +300,6 @@ public class MBMessageIndexer
 					if (comment != null) {
 						relatedEntryIndexer.addRelatedEntryFields(
 							document, comment);
-
-						document.addKeyword(Field.RELATED_ENTRY, true);
 					}
 				}
 			}

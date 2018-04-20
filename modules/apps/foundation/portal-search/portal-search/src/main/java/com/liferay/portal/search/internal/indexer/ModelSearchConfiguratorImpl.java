@@ -17,6 +17,7 @@ package com.liferay.portal.search.internal.indexer;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
 import com.liferay.portal.kernel.model.BaseModel;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
 import com.liferay.portal.search.spi.model.query.contributor.KeywordQueryContributor;
@@ -68,7 +69,10 @@ public class ModelSearchConfiguratorImpl<T extends BaseModel<?>>
 
 		_modelDocumentContributors = ServiceTrackerListFactory.open(
 			bundleContext, ModelDocumentContributor.class,
-			"(indexer.class.name=" + modelSearchSettings.getClassName() + ")");
+			StringBundler.concat(
+				"(&(!(base.model.document.contributor=true))",
+				"(indexer.class.name=", modelSearchSettings.getClassName(),
+				"))"));
 	}
 
 	@Override

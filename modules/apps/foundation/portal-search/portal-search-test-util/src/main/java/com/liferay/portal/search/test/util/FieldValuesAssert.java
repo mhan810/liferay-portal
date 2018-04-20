@@ -17,6 +17,8 @@ package com.liferay.portal.search.test.util;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -63,6 +65,12 @@ public class FieldValuesAssert {
 				Map.Entry::getKey,
 				entry -> {
 					Field field = entry.getValue();
+
+					String[] fieldValues = field.getValues();
+
+					if ((fieldValues != null) && (fieldValues.length > 1)) {
+						return Arrays.toString(fieldValues);
+					}
 
 					return field.getValue();
 				}));

@@ -15,7 +15,9 @@
 package com.liferay.portal.search.internal.permission;
 
 import com.liferay.portal.kernel.model.BaseModel;
+import com.liferay.portal.kernel.model.GroupedModel;
 import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.search.index.UpdateDocumentIndexWriter;
 import com.liferay.portal.search.indexer.BaseModelDocumentFactory;
 import com.liferay.portal.search.permission.SearchPermissionDocumentContributor;
@@ -37,6 +39,11 @@ public class SearchPermissionIndexWriterImpl
 		boolean commitImmediately) {
 
 		Document document = baseModelDocumentFactory.createDocument(baseModel);
+
+		if (baseModel instanceof GroupedModel) {
+			document.addKeyword(
+				Field.GROUP_ID, ((GroupedModel)baseModel).getGroupId());
+		}
 
 		searchPermissionDocumentContributor.addPermissionFields(
 			companyId, document);
