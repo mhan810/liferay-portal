@@ -414,7 +414,11 @@ public class DLFileEntryIndexer
 		try {
 			dlFileVersion = dlFileEntry.getFileVersion();
 		}
-		catch (NoSuchFileVersionException nsfve) {}
+		catch (NoSuchFileVersionException nsfve) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(nsfve, nsfve);
+			}
+		}
 
 		try {
 			Document document = null;
