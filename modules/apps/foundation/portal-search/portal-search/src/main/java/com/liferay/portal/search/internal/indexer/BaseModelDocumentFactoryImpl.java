@@ -14,15 +14,22 @@
 
 package com.liferay.portal.search.internal.indexer;
 
+import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
+import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.ResourcedModel;
 import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.DocumentContributor;
 import com.liferay.portal.kernel.search.DocumentHelper;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.search.indexer.BaseModelDocumentFactory;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -56,6 +63,15 @@ public class BaseModelDocumentFactoryImpl implements BaseModelDocumentFactory {
 			document.addKeyword(Field.ROOT_ENTRY_CLASS_PK, resourcePrimKey);
 		}
 
+		ServiceTrackerList<DocumentContributor, DocumentContributor>
+			documentContributors = getDocumentContributors(baseModel);
+
+		documentContributors.forEach(
+			(DocumentContributor documentContributor) ->
+				documentContributor.contribute(document, baseModel));
+
+		documentContributors.close();
+
 		return document;
 	}
 
@@ -76,6 +92,20 @@ public class BaseModelDocumentFactoryImpl implements BaseModelDocumentFactory {
 		Tuple tuple = new Tuple(classPK, resourcePrimKey);
 
 		return tuple;
+	}
+
+	protected ServiceTrackerList<DocumentContributor, DocumentContributor>
+		getDocumentContributors(BaseModel<?> baseModel) {
+
+		Bundle bundle = FrameworkUtil.getBundle(getClass());
+
+		BundleContext bundleContext = bundle.getBundleContext();
+
+		return ServiceTrackerListFactory.open(
+			bundleContext, DocumentContributor.class,
+			StringBundler.concat(
+				"(&(base.model.document.contributor=true)",
+				"(indexer.class.name=", baseModel.getModelClassName(), "))"));
 	}
 
 	protected String getDocumentUID(String className, long classPK) {

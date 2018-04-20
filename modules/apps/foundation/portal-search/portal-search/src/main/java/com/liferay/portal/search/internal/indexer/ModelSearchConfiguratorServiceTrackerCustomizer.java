@@ -168,7 +168,9 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 
 		_documentContributors = ServiceTrackerListFactory.open(
 			_bundleContext, DocumentContributor.class,
-			"(!(indexer.class.name=*))");
+			StringBundler.concat(
+				"(&(!(base.model.document.contributor=true))",
+				"(!(indexer.class.name=*)))"));
 
 		_keywordQueryContributors = ServiceTrackerListFactory.open(
 			_bundleContext, KeywordQueryContributor.class,
