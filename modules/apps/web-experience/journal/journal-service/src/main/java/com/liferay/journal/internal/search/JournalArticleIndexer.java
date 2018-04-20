@@ -494,14 +494,6 @@ public class JournalArticleIndexer
 
 		Document document = getBaseModelDocument(CLASS_NAME, journalArticle);
 
-		long classPK = journalArticle.getId();
-
-		if (!isIndexAllArticleVersions()) {
-			classPK = journalArticle.getResourcePrimKey();
-		}
-
-		document.addUID(CLASS_NAME, classPK);
-
 		String articleDefaultLanguageId = LocalizationUtil.getDefaultLanguageId(
 			journalArticle.getDocument());
 
