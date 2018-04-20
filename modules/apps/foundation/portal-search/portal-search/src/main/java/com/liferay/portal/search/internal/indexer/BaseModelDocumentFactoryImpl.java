@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.search.indexer.BaseModelDocumentFactory;
+import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -72,6 +73,15 @@ public class BaseModelDocumentFactoryImpl implements BaseModelDocumentFactory {
 
 		documentContributors.close();
 
+		ServiceTrackerList<ModelDocumentContributor, ModelDocumentContributor>
+			modelDocumentContributors = getModelDocumentContributors(baseModel);
+
+		modelDocumentContributors.forEach(
+			(ModelDocumentContributor modelDocumentContributor) ->
+				modelDocumentContributor.contribute(document, baseModel));
+
+		modelDocumentContributors.close();
+
 		return document;
 	}
 
@@ -112,6 +122,21 @@ public class BaseModelDocumentFactoryImpl implements BaseModelDocumentFactory {
 		String uid = Field.getUID(className, String.valueOf(classPK));
 
 		return uid;
+	}
+
+	protected ServiceTrackerList
+		<ModelDocumentContributor, ModelDocumentContributor>
+			getModelDocumentContributors(BaseModel<?> baseModel) {
+
+		Bundle bundle = FrameworkUtil.getBundle(getClass());
+
+		BundleContext bundleContext = bundle.getBundleContext();
+
+		return ServiceTrackerListFactory.open(
+			bundleContext, ModelDocumentContributor.class,
+			StringBundler.concat(
+				"(&(base.model.document.contributor=true)",
+				"(indexer.class.name=", baseModel.getModelClassName(), "))"));
 	}
 
 	private final Document _document = new DocumentImpl();
