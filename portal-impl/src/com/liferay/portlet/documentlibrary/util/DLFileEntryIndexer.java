@@ -51,7 +51,6 @@ import com.liferay.portal.kernel.search.BaseRelatedEntryIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.DocumentHelper;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
 import com.liferay.portal.kernel.search.Indexer;
@@ -522,16 +521,6 @@ public class DLFileEntryIndexer
 
 						relatedEntryIndexer.addRelatedEntryFields(
 							document, new LiferayFileEntry(dlFileEntry));
-
-						DocumentHelper documentHelper = new DocumentHelper(
-							document);
-
-						documentHelper.setAttachmentOwnerKey(
-							PortalUtil.getClassNameId(
-								dlFileEntry.getClassName()),
-							dlFileEntry.getClassPK());
-
-						document.addKeyword(Field.RELATED_ENTRY, true);
 					}
 				}
 			}
