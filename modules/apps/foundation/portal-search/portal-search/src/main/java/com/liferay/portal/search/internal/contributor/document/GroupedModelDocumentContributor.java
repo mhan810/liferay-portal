@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentContributor;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.search.spi.model.index.contributor.SearchPermissionModelDocumentContributor;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -29,9 +30,13 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true, property = "service.ranking=10000",
-	service = DocumentContributor.class
+	service = {
+		DocumentContributor.class,
+		SearchPermissionModelDocumentContributor.class
+	}
 )
-public class GroupedModelDocumentContributor implements DocumentContributor {
+public class GroupedModelDocumentContributor
+	implements DocumentContributor, SearchPermissionModelDocumentContributor {
 
 	@Override
 	public void contribute(Document document, BaseModel baseModel) {
