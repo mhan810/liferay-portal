@@ -52,6 +52,27 @@ public class SearchPermissionIndexWriterImpl
 
 		Document document = baseModelDocumentFactory.createDocument(baseModel);
 
+		_defaultSearchPermissionModelDocumentContributors.forEach(
+			(SearchPermissionModelDocumentContributor
+				searchPermissionModelDocumentContributor) ->
+				searchPermissionModelDocumentContributor.contribute(
+					document, baseModel));
+
+		if (_searchPermissionModelDocumentContributorMap.containsKey(
+				baseModel.getModelClassName())) {
+
+			List<SearchPermissionModelDocumentContributor>
+				searchPermissionModelDocumentContributors =
+					_searchPermissionModelDocumentContributorMap.get(
+						baseModel.getModelClassName());
+
+			searchPermissionModelDocumentContributors.forEach(
+				(SearchPermissionModelDocumentContributor
+					searchPermissionModelDocumentContributor) ->
+					searchPermissionModelDocumentContributor.contribute(
+						document, baseModel));
+		}
+
 		searchPermissionDocumentContributor.addPermissionFields(
 			companyId, document);
 
