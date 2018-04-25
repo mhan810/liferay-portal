@@ -409,11 +409,28 @@ public class DLFileEntryIndexer
 			}
 		}
 
-		DLFileVersion dlFileVersion = dlFileEntry.getFileVersion();
+		DLFileVersion dlFileVersion = null;
 
 		try {
-			Document document = getBaseModelDocument(
-				CLASS_NAME, dlFileEntry, dlFileVersion);
+			dlFileVersion = dlFileEntry.getFileVersion();
+		}
+		catch (NoSuchFileVersionException nsfve) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(nsfve, nsfve);
+			}
+		}
+
+		try {
+			Document document = null;
+
+			if (dlFileVersion != null) {
+				document = getBaseModelDocument(
+					CLASS_NAME, dlFileEntry, dlFileVersion);
+			}
+			else {
+				document = getBaseModelDocument(
+					CLASS_NAME, dlFileEntry, dlFileEntry);
+			}
 
 			if (indexContent) {
 				if (is != null) {
@@ -463,9 +480,14 @@ public class DLFileEntryIndexer
 
 			document.addKeyword(
 				"dataRepositoryId", dlFileEntry.getDataRepositoryId());
-			document.addText(
-				"ddmContent",
-				extractDDMContent(dlFileVersion, LocaleUtil.getSiteDefault()));
+
+			if (dlFileVersion != null) {
+				document.addText(
+					"ddmContent",
+					extractDDMContent(
+						dlFileVersion, LocaleUtil.getSiteDefault()));
+			}
+
 			document.addKeyword("extension", dlFileEntry.getExtension());
 			document.addKeyword(
 				"fileEntryTypeId", dlFileEntry.getFileEntryTypeId());
@@ -478,14 +500,16 @@ public class DLFileEntryIndexer
 			document.addKeyword("readCount", dlFileEntry.getReadCount());
 			document.addKeyword("size", dlFileEntry.getSize());
 
-			ExpandoBridge expandoBridge =
-				ExpandoBridgeFactoryUtil.getExpandoBridge(
-					dlFileEntry.getCompanyId(), DLFileEntry.class.getName(),
-					dlFileVersion.getFileVersionId());
+			if (dlFileVersion != null) {
+				ExpandoBridge expandoBridge =
+					ExpandoBridgeFactoryUtil.getExpandoBridge(
+						dlFileEntry.getCompanyId(), DLFileEntry.class.getName(),
+						dlFileVersion.getFileVersionId());
 
-			ExpandoBridgeIndexerUtil.addAttributes(document, expandoBridge);
+				ExpandoBridgeIndexerUtil.addAttributes(document, expandoBridge);
 
-			addFileEntryTypeAttributes(document, dlFileVersion);
+				addFileEntryTypeAttributes(document, dlFileVersion);
+			}
 
 			if (dlFileEntry.isInHiddenFolder()) {
 				List<RelatedEntryIndexer> relatedEntryIndexers =

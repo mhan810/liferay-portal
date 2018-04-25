@@ -14,12 +14,16 @@
 
 package com.liferay.portal.search.internal.indexer;
 
+import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
+import com.liferay.asset.kernel.model.AssetRenderer;
+import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.PersistedModel;
+import com.liferay.portal.kernel.model.ResourcedModel;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -40,29 +44,72 @@ public class BaseModelRetrieverImpl implements BaseModelRetriever {
 	public Optional<BaseModel<?>> fetchBaseModel(
 		String className, long classPK) {
 
-		PersistedModel persistModel = _getPersistedModel(className, classPK);
+		Optional<BaseModel<?>> baseModel = null;
 
-		if (persistModel == null) {
-			return Optional.empty();
-		}
+		try {
+			Class<?> clazz = Class.forName(className);
 
-		if (!(persistModel instanceof BaseModel)) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(persistModel + " is not a base model");
+			if (ResourcedModel.class.isAssignableFrom(clazz)) {
+				baseModel = _getAssetBaseModel(className, classPK);
 			}
-
-			return Optional.empty();
+			else if (BaseModel.class.isAssignableFrom(clazz)) {
+				baseModel = _getPersistedModel(className, classPK);
+			}
+		}
+		catch (ClassNotFoundException cnfe) {
+			throw new SystemException(cnfe);
 		}
 
-		return Optional.ofNullable((BaseModel<?>)persistModel);
+		return baseModel;
 	}
 
-	private PersistedModel _getPersistedModel(String className, long classPK) {
+	private Optional<BaseModel<?>> _getAssetBaseModel(
+		String className, long classPK) {
+
+		AssetRendererFactory assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+				className);
+
+		if (assetRendererFactory == null) {
+			return Optional.empty();
+		}
+
+		try {
+			AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(
+				classPK);
+
+			if (assetRenderer != null) {
+				Object assetObject = assetRenderer.getAssetObject();
+
+				if (assetObject instanceof BaseModel<?>) {
+					return Optional.ofNullable((BaseModel<?>)assetObject);
+				}
+			}
+		}
+		catch (PortalException pe) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					StringBundler.concat(
+						"Unable to get asset renderer for ", className,
+						" with class PK ", String.valueOf(classPK)),
+					pe);
+			}
+		}
+
+		return Optional.empty();
+	}
+
+	private Optional<BaseModel<?>> _getPersistedModel(
+		String className, long classPK) {
+
 		PersistedModelLocalService persistedModelLocalService =
 			_getPersistedModelLocalService(className);
 
 		try {
-			return persistedModelLocalService.getPersistedModel(classPK);
+			PersistedModel persistedModel =
+				persistedModelLocalService.getPersistedModel(classPK);
+
+			return Optional.ofNullable((BaseModel<?>)persistedModel);
 		}
 		catch (PortalException pe) {
 			if (_log.isWarnEnabled()) {
@@ -73,7 +120,7 @@ public class BaseModelRetrieverImpl implements BaseModelRetriever {
 					pe);
 			}
 
-			return null;
+			return Optional.empty();
 		}
 	}
 

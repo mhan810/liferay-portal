@@ -1,6 +1,7 @@
 Bundle-Name: Liferay Portal Search
 Bundle-SymbolicName: com.liferay.portal.search
 Bundle-Version: 5.0.0
+DynamicImport-Package: *
 Import-Package:\
 	com.liferay.portal.kernel.search;version="[7.1.0,8)",\
 	\
