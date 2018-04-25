@@ -15,20 +15,16 @@
 package com.liferay.portal.search.elasticsearch6.internal.adapter.index;
 
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
-import com.liferay.portal.search.engine.adapter.IndexRequestVisitor;
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexRequest;
-
-import org.elasticsearch.action.ActionRequestBuilder;
-import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsRequestBuilder;
+import com.liferay.portal.search.engine.adapter.index.GetMappingIndexResponse;
 
 /**
  * @author Dylan Rebelak
  */
 public interface GetMappingIndexRequestTranslator {
 
-	public GetMappingsRequestBuilder translate(
+	public GetMappingIndexResponse execute(
 		GetMappingIndexRequest getMappingIndexRequest,
-		IndexRequestVisitor<ActionRequestBuilder> indexRequestVisitor,
 		ElasticsearchConnectionManager elasticsearchConnectionManager);
 
 }

@@ -15,11 +15,11 @@
 package com.liferay.portal.search.elasticsearch6.internal.adapter.index;
 
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
-import com.liferay.portal.search.engine.adapter.IndexRequestVisitor;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.PutMappingIndexResponse;
 
-import org.elasticsearch.action.ActionRequestBuilder;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
 import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -34,9 +34,20 @@ public class PutMappingIndexRequestTranslatorImpl
 	implements PutMappingIndexRequestTranslator {
 
 	@Override
-	public PutMappingRequestBuilder translate(
+	public PutMappingIndexResponse execute(
 		PutMappingIndexRequest putMappingIndexRequest,
-		IndexRequestVisitor<ActionRequestBuilder> indexRequestVisitor,
+		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+
+		PutMappingRequestBuilder putMappingRequestBuilder = createBuilder(
+			putMappingIndexRequest, elasticsearchConnectionManager);
+
+		PutMappingResponse putMappingResponse = putMappingRequestBuilder.get();
+
+		return new PutMappingIndexResponse(putMappingResponse.isAcknowledged());
+	}
+
+	protected PutMappingRequestBuilder createBuilder(
+		PutMappingIndexRequest putMappingIndexRequest,
 		ElasticsearchConnectionManager elasticsearchConnectionManager) {
 
 		AdminClient adminClient =
@@ -50,6 +61,7 @@ public class PutMappingIndexRequestTranslatorImpl
 
 		putMappingRequestBuilder.setSource(
 			putMappingIndexRequest.getMapping(), XContentType.JSON);
+
 		putMappingRequestBuilder.setType(
 			putMappingIndexRequest.getMappingName());
 

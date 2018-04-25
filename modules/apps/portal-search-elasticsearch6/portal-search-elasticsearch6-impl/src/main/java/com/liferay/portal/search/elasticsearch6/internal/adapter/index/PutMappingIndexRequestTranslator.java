@@ -15,20 +15,16 @@
 package com.liferay.portal.search.elasticsearch6.internal.adapter.index;
 
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
-import com.liferay.portal.search.engine.adapter.IndexRequestVisitor;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexRequest;
-
-import org.elasticsearch.action.ActionRequestBuilder;
-import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
+import com.liferay.portal.search.engine.adapter.index.PutMappingIndexResponse;
 
 /**
  * @author Dylan Rebelak
  */
 public interface PutMappingIndexRequestTranslator {
 
-	public PutMappingRequestBuilder translate(
+	public PutMappingIndexResponse execute(
 		PutMappingIndexRequest putMappingIndexRequest,
-		IndexRequestVisitor<ActionRequestBuilder> indexRequestVisitor,
 		ElasticsearchConnectionManager elasticsearchConnectionManager);
 
 }

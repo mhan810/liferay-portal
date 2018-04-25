@@ -19,7 +19,7 @@ package com.liferay.portal.search.engine.adapter;
  */
 public interface IndexRequest {
 
-	public <T> T accept(IndexRequestVisitor<T> indexRequestVisitor);
+	public <T> T accept(IndexRequestExecutor<T> indexRequestExecutor);
 
 	public String getIndexName();
 

@@ -21,13 +21,13 @@ import com.liferay.portal.search.engine.adapter.index.PutMappingIndexRequest;
 /**
  * @author Dylan Rebelak
  */
-public interface IndexRequestVisitor<T> {
+public interface IndexRequestExecutor<T> {
 
-	public T visitIndexRequest(
+	public T executeIndexRequest(
 		GetFieldMappingIndexRequest getFieldMappingIndexRequest);
 
-	public T visitIndexRequest(GetMappingIndexRequest getMappingIndexRequest);
+	public T executeIndexRequest(GetMappingIndexRequest getMappingIndexRequest);
 
-	public T visitIndexRequest(PutMappingIndexRequest putMappingIndexRequest);
+	public T executeIndexRequest(PutMappingIndexRequest putMappingIndexRequest);
 
 }

@@ -15,13 +15,16 @@
 package com.liferay.portal.search.elasticsearch6.internal.adapter.index;
 
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
-import com.liferay.portal.search.engine.adapter.IndexRequestVisitor;
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.GetMappingIndexResponse;
 
-import org.elasticsearch.action.ActionRequestBuilder;
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsRequestBuilder;
+import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse;
 import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.client.IndicesAdminClient;
+import org.elasticsearch.cluster.metadata.MappingMetaData;
+import org.elasticsearch.common.collect.ImmutableOpenMap;
+import org.elasticsearch.common.compress.CompressedXContent;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -33,9 +36,32 @@ public class GetMappingIndexRequestTranslatorImpl
 	implements GetMappingIndexRequestTranslator {
 
 	@Override
-	public GetMappingsRequestBuilder translate(
+	public GetMappingIndexResponse execute(
 		GetMappingIndexRequest getMappingIndexRequest,
-		IndexRequestVisitor<ActionRequestBuilder> indexRequestVisitor,
+		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+
+		GetMappingsRequestBuilder getMappingsRequestBuilder = createdBuilder(
+			getMappingIndexRequest, elasticsearchConnectionManager);
+
+		GetMappingsResponse getMappingsResponse =
+			getMappingsRequestBuilder.get();
+
+		ImmutableOpenMap<String, ImmutableOpenMap<String, MappingMetaData>>
+			mappings = getMappingsResponse.getMappings();
+
+		ImmutableOpenMap<String, MappingMetaData> indexMapping = mappings.get(
+			getMappingIndexRequest.getIndexName());
+
+		MappingMetaData mappingMetaData = indexMapping.get(
+			getMappingIndexRequest.getMappingName());
+
+		CompressedXContent mappingContent = mappingMetaData.source();
+
+		return new GetMappingIndexResponse(mappingContent.toString());
+	}
+
+	protected GetMappingsRequestBuilder createdBuilder(
+		GetMappingIndexRequest getMappingIndexRequest,
 		ElasticsearchConnectionManager elasticsearchConnectionManager) {
 
 		AdminClient adminClient =

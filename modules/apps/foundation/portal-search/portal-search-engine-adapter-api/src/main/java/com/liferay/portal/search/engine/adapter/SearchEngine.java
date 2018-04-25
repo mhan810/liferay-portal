@@ -19,12 +19,12 @@ package com.liferay.portal.search.engine.adapter;
  */
 public interface SearchEngine {
 
+	public void execute(ClusterRequest clusterRequest);
+
 	public void execute(DocumentRequest documentRequest);
 
+	public IndexResponse execute(IndexRequest indexRequest);
+
 	public void execute(SearchRequest searchRequest);
-
-	public void execute(IndexRequest indexRequest);
-
-	public void execute(ClusterRequest clusterRequest);
 
 }

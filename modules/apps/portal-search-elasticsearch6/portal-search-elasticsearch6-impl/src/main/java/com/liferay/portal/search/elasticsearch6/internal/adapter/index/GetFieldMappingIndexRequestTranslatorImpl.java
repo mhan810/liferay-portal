@@ -15,11 +15,13 @@
 package com.liferay.portal.search.elasticsearch6.internal.adapter.index;
 
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
-import com.liferay.portal.search.engine.adapter.IndexRequestVisitor;
 import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexResponse;
 
-import org.elasticsearch.action.ActionRequestBuilder;
+import java.util.Map;
+
 import org.elasticsearch.action.admin.indices.mapping.get.GetFieldMappingsRequestBuilder;
+import org.elasticsearch.action.admin.indices.mapping.get.GetFieldMappingsResponse;
 import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.client.IndicesAdminClient;
 
@@ -35,9 +37,32 @@ public class GetFieldMappingIndexRequestTranslatorImpl
 	implements GetFieldMappingIndexRequestTranslator {
 
 	@Override
-	public GetFieldMappingsRequestBuilder translate(
+	public GetFieldMappingIndexResponse execute(
 		GetFieldMappingIndexRequest getFieldMappingIndexRequest,
-		IndexRequestVisitor<ActionRequestBuilder> indexRequestVisitor,
+		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+
+		GetFieldMappingsRequestBuilder getFieldMappingsRequestBuilder =
+			createBuilder(
+				getFieldMappingIndexRequest, elasticsearchConnectionManager);
+
+		GetFieldMappingsResponse getFieldMappingsResponse =
+			getFieldMappingsRequestBuilder.get();
+
+		Map<String, Map<String, Map<String,
+			GetFieldMappingsResponse.FieldMappingMetaData>>>
+				mappings = getFieldMappingsResponse.mappings();
+
+		//TODO This needs to be broken down to JSON
+		Map<String, GetFieldMappingsResponse.FieldMappingMetaData>
+			fieldMappings = mappings.get(
+				getFieldMappingIndexRequest.getIndexName()).get(
+					getFieldMappingIndexRequest.getMappingName());
+
+		return new GetFieldMappingIndexResponse(fieldMappings.toString());
+	}
+
+	protected GetFieldMappingsRequestBuilder createBuilder(
+		GetFieldMappingIndexRequest getFieldMappingIndexRequest,
 		ElasticsearchConnectionManager elasticsearchConnectionManager) {
 
 		AdminClient adminClient =
@@ -51,6 +76,7 @@ public class GetFieldMappingIndexRequestTranslatorImpl
 
 		getFieldMappingsRequestBuilder.setTypes(
 			getFieldMappingIndexRequest.getMappingName());
+
 		getFieldMappingsRequestBuilder.setFields(
 			getFieldMappingIndexRequest.getFields());
 

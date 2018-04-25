@@ -15,7 +15,7 @@
 package com.liferay.portal.search.engine.adapter.index;
 
 import com.liferay.portal.search.engine.adapter.IndexRequest;
-import com.liferay.portal.search.engine.adapter.IndexRequestVisitor;
+import com.liferay.portal.search.engine.adapter.IndexRequestExecutor;
 
 /**
  * @author Dylan Rebelak
@@ -31,8 +31,8 @@ public class PutMappingIndexRequest implements IndexRequest {
 	}
 
 	@Override
-	public <T> T accept(IndexRequestVisitor<T> indexRequestVisitor) {
-		return indexRequestVisitor.visitIndexRequest(this);
+	public <T> T accept(IndexRequestExecutor<T> indexRequestExecutor) {
+		return indexRequestExecutor.executeIndexRequest(this);
 	}
 
 	@Override

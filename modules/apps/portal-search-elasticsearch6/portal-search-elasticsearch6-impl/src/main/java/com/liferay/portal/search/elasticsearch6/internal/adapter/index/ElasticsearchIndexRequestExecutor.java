@@ -15,15 +15,14 @@
 package com.liferay.portal.search.elasticsearch6.internal.adapter.index;
 
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
-import com.liferay.portal.search.engine.adapter.IndexRequestVisitor;
+import com.liferay.portal.search.engine.adapter.IndexRequestExecutor;
+import com.liferay.portal.search.engine.adapter.IndexResponse;
 import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.GetMappingIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexRequest;
-
-import org.elasticsearch.action.ActionRequestBuilder;
-import org.elasticsearch.action.admin.indices.mapping.get.GetFieldMappingsRequestBuilder;
-import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsRequestBuilder;
-import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
+import com.liferay.portal.search.engine.adapter.index.PutMappingIndexResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -33,33 +32,33 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true, property = "search.engine.impl=Elasticsearch",
-	service = IndexRequestVisitor.class
+	service = IndexRequestExecutor.class
 )
-public class ElasticsearchIndexRequestVisitor
-	implements IndexRequestVisitor<ActionRequestBuilder> {
+public class ElasticsearchIndexRequestExecutor
+	implements IndexRequestExecutor<IndexResponse> {
 
 	@Override
-	public GetFieldMappingsRequestBuilder visitIndexRequest(
+	public GetFieldMappingIndexResponse executeIndexRequest(
 		GetFieldMappingIndexRequest getFieldMappingIndexRequest) {
 
-		return getFieldMappingIndexRequestTranslator.translate(
-			getFieldMappingIndexRequest, this, elasticsearchConnectionManager);
+		return getFieldMappingIndexRequestTranslator.execute(
+			getFieldMappingIndexRequest, elasticsearchConnectionManager);
 	}
 
 	@Override
-	public GetMappingsRequestBuilder visitIndexRequest(
+	public GetMappingIndexResponse executeIndexRequest(
 		GetMappingIndexRequest getMappingIndexRequest) {
 
-		return getMappingIndexRequestTranslator.translate(
-			getMappingIndexRequest, this, elasticsearchConnectionManager);
+		return getMappingIndexRequestTranslator.execute(
+			getMappingIndexRequest, elasticsearchConnectionManager);
 	}
 
 	@Override
-	public PutMappingRequestBuilder visitIndexRequest(
+	public PutMappingIndexResponse executeIndexRequest(
 		PutMappingIndexRequest putMappingIndexRequest) {
 
-		return putMappingIndexRequestTranslator.translate(
-			putMappingIndexRequest, this, elasticsearchConnectionManager);
+		return putMappingIndexRequestTranslator.execute(
+			putMappingIndexRequest, elasticsearchConnectionManager);
 	}
 
 	@Reference
