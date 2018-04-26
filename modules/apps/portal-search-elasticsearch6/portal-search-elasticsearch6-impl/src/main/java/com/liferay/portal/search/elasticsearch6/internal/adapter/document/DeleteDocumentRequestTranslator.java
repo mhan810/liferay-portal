@@ -12,19 +12,19 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
+package com.liferay.portal.search.elasticsearch6.internal.adapter.document;
+
+import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
+import com.liferay.portal.search.engine.adapter.document.DeleteDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.DeleteDocumentResponse;
 
 /**
- * @author Michael C. Han
+ * @author Dylan Rebelak
  */
-public interface SearchEngine {
+public interface DeleteDocumentRequestTranslator {
 
-	public void execute(ClusterRequest clusterRequest);
-
-	public DocumentResponse execute(DocumentRequest documentRequest);
-
-	public IndexResponse execute(IndexRequest indexRequest);
-
-	public void execute(SearchRequest searchRequest);
+	public DeleteDocumentResponse execute(
+		DeleteDocumentRequest deleteDocumentRequest,
+		ElasticsearchConnectionManager elasticsearchConnectionManager);
 
 }

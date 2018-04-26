@@ -17,6 +17,7 @@ package com.liferay.portal.search.engine.adapter.document;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.search.engine.adapter.DocumentRequest;
+import com.liferay.portal.search.engine.adapter.DocumentRequestExecutor;
 
 /**
  * @author Michael C. Han
@@ -24,10 +25,16 @@ import com.liferay.portal.search.engine.adapter.DocumentRequest;
 public class UpdateByQueryDocumentRequest implements DocumentRequest {
 
 	public UpdateByQueryDocumentRequest(
-		String indexName, Query query, JSONObject scripJson) {
+		String indexName, Query query, JSONObject scriptJson) {
 		_indexName = indexName;
 		_query = query;
-		_scripJson = scripJson;
+		_scriptJson = scriptJson;
+	}
+
+	@Override
+	public <T> T accept(
+		DocumentRequestExecutor<T> documentRequestExecutor) {
+		return documentRequestExecutor.executeDocumentRequest(this);
 	}
 
 	@Override
@@ -39,8 +46,8 @@ public class UpdateByQueryDocumentRequest implements DocumentRequest {
 		return _query;
 	}
 
-	public JSONObject getScripJson() {
-		return _scripJson;
+	public JSONObject getScriptJson() {
+		return _scriptJson;
 	}
 
 	public void setRefresh(boolean refresh) {
@@ -63,6 +70,6 @@ public class UpdateByQueryDocumentRequest implements DocumentRequest {
 	private boolean _waitForCompletion;
 	private final String _indexName;
 	private final Query _query;
-	private final JSONObject _scripJson;
+	private final JSONObject _scriptJson;
 
 }

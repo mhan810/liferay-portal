@@ -16,6 +16,7 @@ package com.liferay.portal.search.engine.adapter.document;
 
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.search.engine.adapter.DocumentRequest;
+import com.liferay.portal.search.engine.adapter.DocumentRequestExecutor;
 
 /**
  * @author Michael C. Han
@@ -25,6 +26,12 @@ public class DeleteByQueryDocumentRequest implements DocumentRequest {
 	public DeleteByQueryDocumentRequest(String indexName, Query query) {
 		_indexName = indexName;
 		_query = query;
+	}
+
+	@Override
+	public <T> T accept(
+		DocumentRequestExecutor<T> documentRequestExecutor) {
+		return documentRequestExecutor.executeDocumentRequest(this);
 	}
 
 	@Override

@@ -12,19 +12,19 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
+package com.liferay.portal.search.elasticsearch6.internal.adapter.document;
+
+import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
+import com.liferay.portal.search.engine.adapter.document.UpdateDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.UpdateDocumentResponse;
 
 /**
- * @author Michael C. Han
+ * @author Dylan Rebelak
  */
-public interface SearchEngine {
+public interface UpdateDocumentRequestTranslator {
 
-	public void execute(ClusterRequest clusterRequest);
-
-	public DocumentResponse execute(DocumentRequest documentRequest);
-
-	public IndexResponse execute(IndexRequest indexRequest);
-
-	public void execute(SearchRequest searchRequest);
+	public UpdateDocumentResponse execute(
+		UpdateDocumentRequest updateDocumentRequest,
+		ElasticsearchConnectionManager elasticsearchConnectionManager);
 
 }

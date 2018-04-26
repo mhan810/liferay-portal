@@ -19,6 +19,8 @@ package com.liferay.portal.search.engine.adapter;
  */
 public interface DocumentRequest {
 
+	public <T> T accept(DocumentRequestExecutor<T> documentRequestExecutor);
+
 	public String getIndexName();
 
 }

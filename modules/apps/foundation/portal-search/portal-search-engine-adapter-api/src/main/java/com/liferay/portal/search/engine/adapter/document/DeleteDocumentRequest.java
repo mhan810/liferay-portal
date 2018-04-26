@@ -15,19 +15,31 @@
 package com.liferay.portal.search.engine.adapter.document;
 
 import com.liferay.portal.search.engine.adapter.DocumentRequest;
+import com.liferay.portal.search.engine.adapter.DocumentRequestExecutor;
 
 /**
  * @author Michael C. Han
  */
 public class DeleteDocumentRequest implements DocumentRequest {
 
-	public DeleteDocumentRequest(String indexName, String uid) {
+	public DeleteDocumentRequest(String indexName, String type, String uid) {
 		_indexName = indexName;
+		_type = type;
 		_uid = uid;
+	}
+
+	@Override
+	public <T> T accept(
+		DocumentRequestExecutor<T> documentRequestExecutor) {
+		return documentRequestExecutor.executeDocumentRequest(this);
 	}
 
 	public String getUid() {
 		return _uid;
+	}
+
+	public String getType() {
+		return _type;
 	}
 
 	@Override
@@ -47,5 +59,6 @@ public class DeleteDocumentRequest implements DocumentRequest {
 
 	private final String _uid;
 	private final String _indexName;
+	private final String _type;
 	
 }
