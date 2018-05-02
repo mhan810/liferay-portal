@@ -12,19 +12,17 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
+package com.liferay.portal.search.elasticsearch6.internal.adapter.cluster;
+
+import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
+import com.liferay.portal.search.engine.adapter.cluster.StateClusterRequest;
+import com.liferay.portal.search.engine.adapter.cluster.StateClusterResponse;
 
 /**
- * @author Michael C. Han
+ * @author Dylan Rebelak
  */
-public interface SearchEngine {
-
-	public ClusterResponse execute(ClusterRequest clusterRequest);
-
-	public DocumentResponse execute(DocumentRequest documentRequest);
-
-	public IndexResponse execute(IndexRequest indexRequest);
-
-	public void execute(SearchRequest searchRequest);
-
+public interface StateClusterRequestTranslator {
+	public StateClusterResponse execute(
+		StateClusterRequest stateClusterRequest,
+		ElasticsearchConnectionManager elasticsearchConnectionManager);
 }

@@ -18,4 +18,7 @@ package com.liferay.portal.search.engine.adapter;
  * @author Michael C. Han
  */
 public interface ClusterRequest {
+	public <T> T accept(ClusterRequestExecutor<T> clusterRequestExecutor);
+
+	public String getIndexName();
 }

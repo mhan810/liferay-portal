@@ -15,6 +15,8 @@
 package com.liferay.portal.search.elasticsearch6.internal.adapter;
 
 import com.liferay.portal.search.engine.adapter.ClusterRequest;
+import com.liferay.portal.search.engine.adapter.ClusterRequestExecutor;
+import com.liferay.portal.search.engine.adapter.ClusterResponse;
 import com.liferay.portal.search.engine.adapter.DocumentRequest;
 import com.liferay.portal.search.engine.adapter.DocumentRequestExecutor;
 import com.liferay.portal.search.engine.adapter.DocumentResponse;
@@ -34,7 +36,8 @@ import org.osgi.service.component.annotations.Reference;
 public class ElasticsearchSearchEngineImpl implements SearchEngine {
 
 	@Override
-	public void execute(ClusterRequest clusterRequest) {
+	public ClusterResponse execute(ClusterRequest clusterRequest) {
+		return clusterRequest.accept(clusterRequestExecutor);
 	}
 
 	@Override
@@ -57,4 +60,7 @@ public class ElasticsearchSearchEngineImpl implements SearchEngine {
 	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	protected IndexRequestExecutor<IndexResponse> indexRequestExecutor;
 
+
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
+	protected ClusterRequestExecutor<ClusterResponse> clusterRequestExecutor;
 }

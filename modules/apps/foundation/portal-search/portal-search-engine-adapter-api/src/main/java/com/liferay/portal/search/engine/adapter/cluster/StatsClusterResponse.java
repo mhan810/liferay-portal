@@ -12,19 +12,21 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
+package com.liferay.portal.search.engine.adapter.cluster;
+
+import com.liferay.portal.search.engine.adapter.ClusterResponse;
 
 /**
- * @author Michael C. Han
+ * @author Dylan Rebelak
  */
-public interface SearchEngine {
+public class StatsClusterResponse implements ClusterResponse {
+	public StatsClusterResponse(String stats) {
+		_stats = stats;
+	}
 
-	public ClusterResponse execute(ClusterRequest clusterRequest);
+	public String getStats() {
+		return _stats;
+	}
 
-	public DocumentResponse execute(DocumentRequest documentRequest);
-
-	public IndexResponse execute(IndexRequest indexRequest);
-
-	public void execute(SearchRequest searchRequest);
-
+	private final String _stats;
 }

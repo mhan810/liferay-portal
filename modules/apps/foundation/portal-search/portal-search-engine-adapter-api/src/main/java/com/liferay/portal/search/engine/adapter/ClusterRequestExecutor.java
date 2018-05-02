@@ -14,17 +14,17 @@
 
 package com.liferay.portal.search.engine.adapter;
 
+import com.liferay.portal.search.engine.adapter.cluster.HealthClusterRequest;
+import com.liferay.portal.search.engine.adapter.cluster.StateClusterRequest;
+import com.liferay.portal.search.engine.adapter.cluster.StatsClusterRequest;
+
 /**
- * @author Michael C. Han
+ * @author Dylan Rebelak
  */
-public interface SearchEngine {
+public interface ClusterRequestExecutor<T> {
+	public T executeClusterRequest(HealthClusterRequest healthClusterRequest);
 
-	public ClusterResponse execute(ClusterRequest clusterRequest);
+	public T executeClusterRequest(StateClusterRequest stateClusterRequest);
 
-	public DocumentResponse execute(DocumentRequest documentRequest);
-
-	public IndexResponse execute(IndexRequest indexRequest);
-
-	public void execute(SearchRequest searchRequest);
-
+	public T executeClusterRequest(StatsClusterRequest statsClusterRequest);
 }
