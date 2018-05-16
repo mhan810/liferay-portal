@@ -1,0 +1,41 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
+package com.liferay.portal.search.engine.adapter.cluster;
+
+import com.liferay.portal.search.engine.adapter.ClusterRequest;
+import com.liferay.portal.search.engine.adapter.ClusterRequestExecutor;
+
+/**
+ * @author Dylan Rebelak
+ */
+public class HealthClusterRequest implements ClusterRequest {
+
+	public HealthClusterRequest(String indexName) {
+		_indexName = indexName;
+	}
+
+	@Override
+	public <T> T accept(ClusterRequestExecutor<T> clusterRequestExecutor) {
+		return clusterRequestExecutor.executeClusterRequest(this);
+	}
+
+	@Override
+	public String getIndexName() {
+		return _indexName;
+	}
+
+	private final String _indexName;
+
+}
