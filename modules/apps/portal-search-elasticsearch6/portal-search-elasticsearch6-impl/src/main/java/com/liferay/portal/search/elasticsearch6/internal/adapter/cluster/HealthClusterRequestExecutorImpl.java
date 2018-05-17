@@ -37,20 +37,19 @@ public class HealthClusterRequestExecutorImpl
 	public HealthClusterResponse execute(
 		HealthClusterRequest healthClusterRequest) {
 
-		ClusterHealthRequestBuilder clusterHealthRequestBuilder = createBuilder(
-			healthClusterRequest);
+		ClusterHealthRequestBuilder clusterHealthRequestBuilder =
+			createClusterHealthRequestBuilder(healthClusterRequest);
 
 		ClusterHealthResponse clusterHealthResponse =
 			clusterHealthRequestBuilder.get();
 
-		RestStatus status = clusterHealthResponse.status();
+		RestStatus restStatus = clusterHealthResponse.status();
 
-		String health = clusterHealthResponse.toString();
-
-		return new HealthClusterResponse(health, status.getStatus());
+		return new HealthClusterResponse(
+			clusterHealthResponse.toString(), restStatus.getStatus());
 	}
 
-	protected ClusterHealthRequestBuilder createBuilder(
+	protected ClusterHealthRequestBuilder createClusterHealthRequestBuilder(
 		HealthClusterRequest healthClusterRequest) {
 
 		ClusterAdminClient clusterAdminClient =

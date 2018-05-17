@@ -37,8 +37,8 @@ public class StateClusterRequestExecutorImpl
 	public StateClusterResponse execute(
 		StateClusterRequest stateClusterRequest) {
 
-		ClusterStateRequestBuilder clusterStateRequestBuilder = createBuilder(
-			stateClusterRequest);
+		ClusterStateRequestBuilder clusterStateRequestBuilder =
+			createClusterStateRequestBuilder(stateClusterRequest);
 
 		ClusterStateResponse clusterStateResponse =
 			clusterStateRequestBuilder.get();
@@ -48,7 +48,7 @@ public class StateClusterRequestExecutorImpl
 		return new StateClusterResponse(clusterState.toString());
 	}
 
-	protected ClusterStateRequestBuilder createBuilder(
+	protected ClusterStateRequestBuilder createClusterStateRequestBuilder(
 		StateClusterRequest stateClusterRequest) {
 
 		ClusterAdminClient clusterAdminClient =

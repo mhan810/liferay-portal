@@ -42,8 +42,8 @@ public class StatsClusterRequestExecutorImpl
 	public StatsClusterResponse execute(
 		StatsClusterRequest statsClusterRequest) {
 
-		ClusterStatsRequestBuilder clusterStatsRequestBuilder = createBuilder(
-			statsClusterRequest);
+		ClusterStatsRequestBuilder clusterStatsRequestBuilder =
+			createClusterStatsRequestBuilder(statsClusterRequest);
 
 		ClusterStatsResponse clusterStatsResponse =
 			clusterStatsRequestBuilder.get();
@@ -58,14 +58,17 @@ public class StatsClusterRequestExecutorImpl
 
 			xContentBuilder.endObject();
 
-			return new StatsClusterResponse(xContentBuilder.toString());
+			StatsClusterResponse statsClusterResponse =
+				new StatsClusterResponse(xContentBuilder.toString());
+
+			return statsClusterResponse;
 		}
 		catch (IOException ioe) {
 			throw new SystemException(ioe);
 		}
 	}
 
-	protected ClusterStatsRequestBuilder createBuilder(
+	protected ClusterStatsRequestBuilder createClusterStatsRequestBuilder(
 		StatsClusterRequest statsClusterRequest) {
 
 		ClusterAdminClient clusterAdminClient =

@@ -54,14 +54,15 @@ public class StateClusterRequestExecutorTest {
 		StateClusterRequest stateClusterRequest = new StateClusterRequest(
 			_INDEX_NAME);
 
-		StateClusterRequestExecutorImpl stateClusterRequestTranslator =
+		StateClusterRequestExecutorImpl stateClusterRequestExecutorImpl =
 			new StateClusterRequestExecutorImpl();
 
-		stateClusterRequestTranslator.elasticsearchConnectionManager =
+		stateClusterRequestExecutorImpl.elasticsearchConnectionManager =
 			_elasticsearchConnectionManager;
 
 		ClusterStateRequestBuilder clusterStateRequestBuilder =
-			stateClusterRequestTranslator.createBuilder(stateClusterRequest);
+			stateClusterRequestExecutorImpl.createClusterStateRequestBuilder(
+				stateClusterRequest);
 
 		ClusterStateRequest clusterStateRequest =
 			clusterStateRequestBuilder.request();

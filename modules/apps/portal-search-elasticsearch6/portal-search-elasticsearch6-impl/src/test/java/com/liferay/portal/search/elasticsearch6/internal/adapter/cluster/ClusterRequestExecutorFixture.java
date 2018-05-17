@@ -31,29 +31,29 @@ public class ClusterRequestExecutorFixture {
 		ElasticsearchClusterRequestExecutor clusterRequestExecutor =
 			new ElasticsearchClusterRequestExecutor();
 
-		HealthClusterRequestExecutorImpl healthClusterRequestExecutor =
+		HealthClusterRequestExecutorImpl healthClusterRequestExecutorImpl =
 			new HealthClusterRequestExecutorImpl();
 
-		healthClusterRequestExecutor.elasticsearchConnectionManager =
+		healthClusterRequestExecutorImpl.elasticsearchConnectionManager =
 			_elasticsearchConnectionManager;
 		clusterRequestExecutor.healthClusterRequestExecutor =
-			healthClusterRequestExecutor;
+			healthClusterRequestExecutorImpl;
 
-		StateClusterRequestExecutorImpl stateClusterRequestExecutor =
+		StateClusterRequestExecutorImpl stateClusterRequestExecutorImpl =
 			new StateClusterRequestExecutorImpl();
 
-		stateClusterRequestExecutor.elasticsearchConnectionManager =
+		stateClusterRequestExecutorImpl.elasticsearchConnectionManager =
 			_elasticsearchConnectionManager;
 		clusterRequestExecutor.stateClusterRequestExecutor =
-			stateClusterRequestExecutor;
+			stateClusterRequestExecutorImpl;
 
-		StatsClusterRequestExecutorImpl statsClusterRequestExecutor =
+		StatsClusterRequestExecutorImpl statsClusterRequestExecutorImpl =
 			new StatsClusterRequestExecutorImpl();
 
-		statsClusterRequestExecutor.elasticsearchConnectionManager =
+		statsClusterRequestExecutorImpl.elasticsearchConnectionManager =
 			_elasticsearchConnectionManager;
 		clusterRequestExecutor.statsClusterRequestExecutor =
-			statsClusterRequestExecutor;
+			statsClusterRequestExecutorImpl;
 
 		return clusterRequestExecutor;
 	}

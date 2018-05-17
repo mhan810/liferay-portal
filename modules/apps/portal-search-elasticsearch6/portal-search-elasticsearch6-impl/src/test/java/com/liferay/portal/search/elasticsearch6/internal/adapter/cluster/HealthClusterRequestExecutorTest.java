@@ -54,14 +54,15 @@ public class HealthClusterRequestExecutorTest {
 		HealthClusterRequest healthClusterRequest = new HealthClusterRequest(
 			_INDEX_NAME);
 
-		HealthClusterRequestExecutorImpl healthClusterRequestTranslator =
+		HealthClusterRequestExecutorImpl healthClusterRequestExecutorImpl =
 			new HealthClusterRequestExecutorImpl();
 
-		healthClusterRequestTranslator.elasticsearchConnectionManager =
+		healthClusterRequestExecutorImpl.elasticsearchConnectionManager =
 			_elasticsearchConnectionManager;
 
 		ClusterHealthRequestBuilder clusterHealthRequestBuilder =
-			healthClusterRequestTranslator.createBuilder(healthClusterRequest);
+			healthClusterRequestExecutorImpl.createClusterHealthRequestBuilder(
+				healthClusterRequest);
 
 		ClusterHealthRequest clusterHealthRequest =
 			clusterHealthRequestBuilder.request();
