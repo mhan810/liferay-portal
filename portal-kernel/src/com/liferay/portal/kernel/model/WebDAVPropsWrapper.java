@@ -121,19 +121,19 @@ public class WebDAVPropsWrapper implements WebDAVProps,
 	}
 
 	@Override
-	public void addProp(String name, String prefix, String uri)
-		throws Exception {
+	public void addProp(java.lang.String name, java.lang.String prefix,
+		java.lang.String uri) throws java.lang.Exception {
 		_webDAVProps.addProp(name, prefix, uri);
 	}
 
 	@Override
-	public void addProp(String name, String prefix, String uri, String text)
-		throws Exception {
+	public void addProp(java.lang.String name, java.lang.String prefix,
+		java.lang.String uri, java.lang.String text) throws java.lang.Exception {
 		_webDAVProps.addProp(name, prefix, uri, text);
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new WebDAVPropsWrapper((WebDAVProps)_webDAVProps.clone());
 	}
 
@@ -148,7 +148,7 @@ public class WebDAVPropsWrapper implements WebDAVProps,
 	* @return the fully qualified class name of this web dav props
 	*/
 	@Override
-	public String getClassName() {
+	public java.lang.String getClassName() {
 		return _webDAVProps.getClassName();
 	}
 
@@ -238,19 +238,20 @@ public class WebDAVPropsWrapper implements WebDAVProps,
 	* @return the props of this web dav props
 	*/
 	@Override
-	public String getProps() {
+	public java.lang.String getProps() {
 		return _webDAVProps.getProps();
 	}
 
 	@Override
 	public java.util.Set<com.liferay.portal.kernel.xml.QName> getPropsSet()
-		throws Exception {
+		throws java.lang.Exception {
 		return _webDAVProps.getPropsSet();
 	}
 
 	@Override
-	public String getText(String name, String prefix, String uri)
-		throws Exception {
+	public java.lang.String getText(java.lang.String name,
+		java.lang.String prefix, java.lang.String uri)
+		throws java.lang.Exception {
 		return _webDAVProps.getText(name, prefix, uri);
 	}
 
@@ -290,8 +291,8 @@ public class WebDAVPropsWrapper implements WebDAVProps,
 	}
 
 	@Override
-	public void removeProp(String name, String prefix, String uri)
-		throws Exception {
+	public void removeProp(java.lang.String name, java.lang.String prefix,
+		java.lang.String uri) throws java.lang.Exception {
 		_webDAVProps.removeProp(name, prefix, uri);
 	}
 
@@ -301,7 +302,7 @@ public class WebDAVPropsWrapper implements WebDAVProps,
 	}
 
 	@Override
-	public void setClassName(String className) {
+	public void setClassName(java.lang.String className) {
 		_webDAVProps.setClassName(className);
 	}
 
@@ -406,7 +407,7 @@ public class WebDAVPropsWrapper implements WebDAVProps,
 	* @param props the props of this web dav props
 	*/
 	@Override
-	public void setProps(String props) {
+	public void setProps(java.lang.String props) {
 		_webDAVProps.setProps(props);
 	}
 
@@ -421,7 +422,7 @@ public class WebDAVPropsWrapper implements WebDAVProps,
 	}
 
 	@Override
-	public void store() throws Exception {
+	public void store() throws java.lang.Exception {
 		_webDAVProps.store();
 	}
 
@@ -436,7 +437,7 @@ public class WebDAVPropsWrapper implements WebDAVProps,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _webDAVProps.toString();
 	}
 
@@ -446,7 +447,7 @@ public class WebDAVPropsWrapper implements WebDAVProps,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _webDAVProps.toXmlString();
 	}
 

@@ -73,7 +73,6 @@ public interface AccountLocalService extends BaseLocalService,
 	* @param accountId the primary key for the new account
 	* @return the new account
 	*/
-	@Transactional(enabled = false)
 	public Account createAccount(long accountId);
 
 	/**
@@ -211,7 +210,7 @@ public interface AccountLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

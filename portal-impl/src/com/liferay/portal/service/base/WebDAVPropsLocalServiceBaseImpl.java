@@ -39,7 +39,6 @@ import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
 import com.liferay.portal.kernel.service.WebDAVPropsLocalService;
 import com.liferay.portal.kernel.service.persistence.ClassNamePersistence;
 import com.liferay.portal.kernel.service.persistence.WebDAVPropsPersistence;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 
@@ -92,7 +91,6 @@ public abstract class WebDAVPropsLocalServiceBaseImpl
 	 * @return the new web dav props
 	 */
 	@Override
-	@Transactional(enabled = false)
 	public WebDAVProps createWebDAVProps(long webDavPropsId) {
 		return webDAVPropsPersistence.create(webDavPropsId);
 	}

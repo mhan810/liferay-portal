@@ -309,7 +309,8 @@ public interface UserTrackerPersistence extends BasePersistence<UserTracker> {
 	* @param sessionId the session ID
 	* @return the matching user trackers
 	*/
-	public java.util.List<UserTracker> findBySessionId(String sessionId);
+	public java.util.List<UserTracker> findBySessionId(
+		java.lang.String sessionId);
 
 	/**
 	* Returns a range of all the user trackers where sessionId = &#63;.
@@ -323,8 +324,8 @@ public interface UserTrackerPersistence extends BasePersistence<UserTracker> {
 	* @param end the upper bound of the range of user trackers (not inclusive)
 	* @return the range of matching user trackers
 	*/
-	public java.util.List<UserTracker> findBySessionId(String sessionId,
-		int start, int end);
+	public java.util.List<UserTracker> findBySessionId(
+		java.lang.String sessionId, int start, int end);
 
 	/**
 	* Returns an ordered range of all the user trackers where sessionId = &#63;.
@@ -339,8 +340,8 @@ public interface UserTrackerPersistence extends BasePersistence<UserTracker> {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching user trackers
 	*/
-	public java.util.List<UserTracker> findBySessionId(String sessionId,
-		int start, int end,
+	public java.util.List<UserTracker> findBySessionId(
+		java.lang.String sessionId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<UserTracker> orderByComparator);
 
 	/**
@@ -357,8 +358,8 @@ public interface UserTrackerPersistence extends BasePersistence<UserTracker> {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching user trackers
 	*/
-	public java.util.List<UserTracker> findBySessionId(String sessionId,
-		int start, int end,
+	public java.util.List<UserTracker> findBySessionId(
+		java.lang.String sessionId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<UserTracker> orderByComparator,
 		boolean retrieveFromCache);
 
@@ -370,7 +371,7 @@ public interface UserTrackerPersistence extends BasePersistence<UserTracker> {
 	* @return the first matching user tracker
 	* @throws NoSuchUserTrackerException if a matching user tracker could not be found
 	*/
-	public UserTracker findBySessionId_First(String sessionId,
+	public UserTracker findBySessionId_First(java.lang.String sessionId,
 		com.liferay.portal.kernel.util.OrderByComparator<UserTracker> orderByComparator)
 		throws NoSuchUserTrackerException;
 
@@ -381,7 +382,7 @@ public interface UserTrackerPersistence extends BasePersistence<UserTracker> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching user tracker, or <code>null</code> if a matching user tracker could not be found
 	*/
-	public UserTracker fetchBySessionId_First(String sessionId,
+	public UserTracker fetchBySessionId_First(java.lang.String sessionId,
 		com.liferay.portal.kernel.util.OrderByComparator<UserTracker> orderByComparator);
 
 	/**
@@ -392,7 +393,7 @@ public interface UserTrackerPersistence extends BasePersistence<UserTracker> {
 	* @return the last matching user tracker
 	* @throws NoSuchUserTrackerException if a matching user tracker could not be found
 	*/
-	public UserTracker findBySessionId_Last(String sessionId,
+	public UserTracker findBySessionId_Last(java.lang.String sessionId,
 		com.liferay.portal.kernel.util.OrderByComparator<UserTracker> orderByComparator)
 		throws NoSuchUserTrackerException;
 
@@ -403,7 +404,7 @@ public interface UserTrackerPersistence extends BasePersistence<UserTracker> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching user tracker, or <code>null</code> if a matching user tracker could not be found
 	*/
-	public UserTracker fetchBySessionId_Last(String sessionId,
+	public UserTracker fetchBySessionId_Last(java.lang.String sessionId,
 		com.liferay.portal.kernel.util.OrderByComparator<UserTracker> orderByComparator);
 
 	/**
@@ -416,7 +417,7 @@ public interface UserTrackerPersistence extends BasePersistence<UserTracker> {
 	* @throws NoSuchUserTrackerException if a user tracker with the primary key could not be found
 	*/
 	public UserTracker[] findBySessionId_PrevAndNext(long userTrackerId,
-		String sessionId,
+		java.lang.String sessionId,
 		com.liferay.portal.kernel.util.OrderByComparator<UserTracker> orderByComparator)
 		throws NoSuchUserTrackerException;
 
@@ -425,7 +426,7 @@ public interface UserTrackerPersistence extends BasePersistence<UserTracker> {
 	*
 	* @param sessionId the session ID
 	*/
-	public void removeBySessionId(String sessionId);
+	public void removeBySessionId(java.lang.String sessionId);
 
 	/**
 	* Returns the number of user trackers where sessionId = &#63;.
@@ -433,7 +434,7 @@ public interface UserTrackerPersistence extends BasePersistence<UserTracker> {
 	* @param sessionId the session ID
 	* @return the number of matching user trackers
 	*/
-	public int countBySessionId(String sessionId);
+	public int countBySessionId(java.lang.String sessionId);
 
 	/**
 	* Caches the user tracker in the entity cache if it is enabled.

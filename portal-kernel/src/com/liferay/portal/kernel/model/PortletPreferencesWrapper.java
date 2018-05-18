@@ -120,7 +120,7 @@ public class PortletPreferencesWrapper implements PortletPreferences,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new PortletPreferencesWrapper((PortletPreferences)_portletPreferences.clone());
 	}
 
@@ -190,7 +190,7 @@ public class PortletPreferencesWrapper implements PortletPreferences,
 	* @return the portlet ID of this portlet preferences
 	*/
 	@Override
-	public String getPortletId() {
+	public java.lang.String getPortletId() {
 		return _portletPreferences.getPortletId();
 	}
 
@@ -210,7 +210,7 @@ public class PortletPreferencesWrapper implements PortletPreferences,
 	* @return the preferences of this portlet preferences
 	*/
 	@Override
-	public String getPreferences() {
+	public java.lang.String getPreferences() {
 		return _portletPreferences.getPreferences();
 	}
 
@@ -335,7 +335,7 @@ public class PortletPreferencesWrapper implements PortletPreferences,
 	* @param portletId the portlet ID of this portlet preferences
 	*/
 	@Override
-	public void setPortletId(String portletId) {
+	public void setPortletId(java.lang.String portletId) {
 		_portletPreferences.setPortletId(portletId);
 	}
 
@@ -355,7 +355,7 @@ public class PortletPreferencesWrapper implements PortletPreferences,
 	* @param preferences the preferences of this portlet preferences
 	*/
 	@Override
-	public void setPreferences(String preferences) {
+	public void setPreferences(java.lang.String preferences) {
 		_portletPreferences.setPreferences(preferences);
 	}
 
@@ -385,7 +385,7 @@ public class PortletPreferencesWrapper implements PortletPreferences,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _portletPreferences.toString();
 	}
 
@@ -395,7 +395,7 @@ public class PortletPreferencesWrapper implements PortletPreferences,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _portletPreferences.toXmlString();
 	}
 

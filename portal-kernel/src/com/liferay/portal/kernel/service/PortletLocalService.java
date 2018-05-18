@@ -80,7 +80,7 @@ public interface PortletLocalService extends BaseLocalService,
 	public Portlet addPortlet(Portlet portlet);
 
 	@Skip
-	public void addPortletCategory(long companyId, String categoryName);
+	public void addPortletCategory(long companyId, java.lang.String categoryName);
 
 	public void checkPortlet(Portlet portlet) throws PortalException;
 
@@ -93,7 +93,7 @@ public interface PortletLocalService extends BaseLocalService,
 	* @deprecated As of 7.0.0, replaced by {@link #clearPortletsMap)}
 	*/
 	@Clusterable
-	@Deprecated
+	@java.lang.Deprecated
 	@Transactional(enabled = false)
 	public void clearCompanyPortletsPool();
 
@@ -102,7 +102,7 @@ public interface PortletLocalService extends BaseLocalService,
 	public void clearPortletsMap();
 
 	@Skip
-	public Portlet clonePortlet(String portletId);
+	public Portlet clonePortlet(java.lang.String portletId);
 
 	/**
 	* Creates a new portlet with the primary key. Does not add the portlet to the database.
@@ -110,7 +110,6 @@ public interface PortletLocalService extends BaseLocalService,
 	* @param id the primary key for the new portlet
 	* @return the new portlet
 	*/
-	@Transactional(enabled = false)
 	public Portlet createPortlet(long id);
 
 	/**
@@ -130,8 +129,8 @@ public interface PortletLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.DELETE)
 	public Portlet deletePortlet(long id) throws PortalException;
 
-	public void deletePortlet(long companyId, String portletId, long plid)
-		throws PortalException;
+	public void deletePortlet(long companyId, java.lang.String portletId,
+		long plid) throws PortalException;
 
 	/**
 	* Deletes the portlet from the database. Also notifies the appropriate model listeners.
@@ -142,20 +141,21 @@ public interface PortletLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.DELETE)
 	public Portlet deletePortlet(Portlet portlet);
 
-	public void deletePortlets(long companyId, String[] portletIds, long plid)
-		throws PortalException;
+	public void deletePortlets(long companyId, java.lang.String[] portletIds,
+		long plid) throws PortalException;
 
 	@Skip
-	public void deployPortlet(Portlet portlet) throws Exception;
+	public void deployPortlet(Portlet portlet) throws java.lang.Exception;
 
-	public Portlet deployRemotePortlet(Portlet portlet, String categoryName)
+	public Portlet deployRemotePortlet(Portlet portlet,
+		java.lang.String categoryName) throws PortalException;
+
+	public Portlet deployRemotePortlet(Portlet portlet,
+		java.lang.String[] categoryNames) throws PortalException;
+
+	public Portlet deployRemotePortlet(Portlet portlet,
+		java.lang.String[] categoryNames, boolean eagerDestroy)
 		throws PortalException;
-
-	public Portlet deployRemotePortlet(Portlet portlet, String[] categoryNames)
-		throws PortalException;
-
-	public Portlet deployRemotePortlet(Portlet portlet, String[] categoryNames,
-		boolean eagerDestroy) throws PortalException;
 
 	@Skip
 	public void destroyPortlet(Portlet portlet);
@@ -227,7 +227,7 @@ public interface PortletLocalService extends BaseLocalService,
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Portlet fetchPortletById(long companyId, String portletId);
+	public Portlet fetchPortletById(long companyId, java.lang.String portletId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
@@ -238,7 +238,7 @@ public interface PortletLocalService extends BaseLocalService,
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public PortletCategory getEARDisplay(String xml);
+	public PortletCategory getEARDisplay(java.lang.String xml);
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -256,7 +256,7 @@ public interface PortletLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -275,19 +275,20 @@ public interface PortletLocalService extends BaseLocalService,
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public PortletApp getPortletApp(String servletContextName);
+	public PortletApp getPortletApp(java.lang.String servletContextName);
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Portlet getPortletById(long companyId, String portletId);
+	public Portlet getPortletById(long companyId, java.lang.String portletId);
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Portlet getPortletById(String portletId);
+	public Portlet getPortletById(java.lang.String portletId);
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Portlet getPortletByStrutsPath(long companyId, String strutsPath);
+	public Portlet getPortletByStrutsPath(long companyId,
+		java.lang.String strutsPath);
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -333,37 +334,38 @@ public interface PortletLocalService extends BaseLocalService,
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public PortletCategory getWARDisplay(String servletContextName, String xml);
+	public PortletCategory getWARDisplay(java.lang.String servletContextName,
+		java.lang.String xml);
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean hasPortlet(long companyId, String portletId);
+	public boolean hasPortlet(long companyId, java.lang.String portletId);
 
 	@Skip
-	public void initEAR(ServletContext servletContext, String[] xmls,
+	public void initEAR(ServletContext servletContext, java.lang.String[] xmls,
 		PluginPackage pluginPackage);
 
 	@Skip
-	public List<Portlet> initWAR(String servletContextName,
-		ServletContext servletContext, String[] xmls,
+	public List<Portlet> initWAR(java.lang.String servletContextName,
+		ServletContext servletContext, java.lang.String[] xmls,
 		PluginPackage pluginPackage);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Map<String, Portlet> loadGetPortletsMap(long companyId);
+	public Map<java.lang.String, Portlet> loadGetPortletsMap(long companyId);
 
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link #loadGetPortletsMap(long))}
 	*/
-	@Deprecated
+	@java.lang.Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Map<String, Portlet> loadGetPortletsPool(long companyId);
+	public Map<java.lang.String, Portlet> loadGetPortletsPool(long companyId);
 
 	@Clusterable
 	@Transactional(enabled = false)
 	public void removeCompanyPortletsPool(long companyId);
 
-	public Portlet updatePortlet(long companyId, String portletId,
-		String roles, boolean active);
+	public Portlet updatePortlet(long companyId, java.lang.String portletId,
+		java.lang.String roles, boolean active);
 
 	/**
 	* Updates the portlet in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

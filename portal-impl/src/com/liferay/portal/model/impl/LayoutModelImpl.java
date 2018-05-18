@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutModel;
 import com.liferay.portal.kernel.model.LayoutSoap;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -196,7 +195,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		model.setUserName(soapModel.getUserName());
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
-		model.setPrivateLayout(soapModel.isPrivateLayout());
+		model.setPrivateLayout(soapModel.getPrivateLayout());
 		model.setLayoutId(soapModel.getLayoutId());
 		model.setParentLayoutId(soapModel.getParentLayoutId());
 		model.setName(soapModel.getName());
@@ -206,7 +205,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		model.setRobots(soapModel.getRobots());
 		model.setType(soapModel.getType());
 		model.setTypeSettings(soapModel.getTypeSettings());
-		model.setHidden(soapModel.isHidden());
+		model.setHidden(soapModel.getHidden());
 		model.setFriendlyURL(soapModel.getFriendlyURL());
 		model.setIconImageId(soapModel.getIconImageId());
 		model.setThemeId(soapModel.getThemeId());
@@ -214,7 +213,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		model.setCss(soapModel.getCss());
 		model.setPriority(soapModel.getPriority());
 		model.setLayoutPrototypeUuid(soapModel.getLayoutPrototypeUuid());
-		model.setLayoutPrototypeLinkEnabled(soapModel.isLayoutPrototypeLinkEnabled());
+		model.setLayoutPrototypeLinkEnabled(soapModel.getLayoutPrototypeLinkEnabled());
 		model.setSourcePrototypeLayoutUuid(soapModel.getSourcePrototypeLayoutUuid());
 		model.setLastPublishDate(soapModel.getLastPublishDate());
 
@@ -290,7 +289,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("privateLayout", isPrivateLayout());
+		attributes.put("privateLayout", getPrivateLayout());
 		attributes.put("layoutId", getLayoutId());
 		attributes.put("parentLayoutId", getParentLayoutId());
 		attributes.put("name", getName());
@@ -300,7 +299,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		attributes.put("robots", getRobots());
 		attributes.put("type", getType());
 		attributes.put("typeSettings", getTypeSettings());
-		attributes.put("hidden", isHidden());
+		attributes.put("hidden", getHidden());
 		attributes.put("friendlyURL", getFriendlyURL());
 		attributes.put("iconImageId", getIconImageId());
 		attributes.put("themeId", getThemeId());
@@ -309,7 +308,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		attributes.put("priority", getPriority());
 		attributes.put("layoutPrototypeUuid", getLayoutPrototypeUuid());
 		attributes.put("layoutPrototypeLinkEnabled",
-			isLayoutPrototypeLinkEnabled());
+			getLayoutPrototypeLinkEnabled());
 		attributes.put("sourcePrototypeLayoutUuid",
 			getSourcePrototypeLayoutUuid());
 		attributes.put("lastPublishDate", getLastPublishDate());
@@ -1693,7 +1692,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		layoutImpl.setUserName(getUserName());
 		layoutImpl.setCreateDate(getCreateDate());
 		layoutImpl.setModifiedDate(getModifiedDate());
-		layoutImpl.setPrivateLayout(isPrivateLayout());
+		layoutImpl.setPrivateLayout(getPrivateLayout());
 		layoutImpl.setLayoutId(getLayoutId());
 		layoutImpl.setParentLayoutId(getParentLayoutId());
 		layoutImpl.setName(getName());
@@ -1703,7 +1702,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		layoutImpl.setRobots(getRobots());
 		layoutImpl.setType(getType());
 		layoutImpl.setTypeSettings(getTypeSettings());
-		layoutImpl.setHidden(isHidden());
+		layoutImpl.setHidden(getHidden());
 		layoutImpl.setFriendlyURL(getFriendlyURL());
 		layoutImpl.setIconImageId(getIconImageId());
 		layoutImpl.setThemeId(getThemeId());
@@ -1711,7 +1710,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		layoutImpl.setCss(getCss());
 		layoutImpl.setPriority(getPriority());
 		layoutImpl.setLayoutPrototypeUuid(getLayoutPrototypeUuid());
-		layoutImpl.setLayoutPrototypeLinkEnabled(isLayoutPrototypeLinkEnabled());
+		layoutImpl.setLayoutPrototypeLinkEnabled(getLayoutPrototypeLinkEnabled());
 		layoutImpl.setSourcePrototypeLayoutUuid(getSourcePrototypeLayoutUuid());
 		layoutImpl.setLastPublishDate(getLastPublishDate());
 
@@ -1887,7 +1886,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 			layoutCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
-		layoutCacheModel.privateLayout = isPrivateLayout();
+		layoutCacheModel.privateLayout = getPrivateLayout();
 
 		layoutCacheModel.layoutId = getLayoutId();
 
@@ -1949,7 +1948,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 			layoutCacheModel.typeSettings = null;
 		}
 
-		layoutCacheModel.hidden = isHidden();
+		layoutCacheModel.hidden = getHidden();
 
 		layoutCacheModel.friendlyURL = getFriendlyURL();
 
@@ -1996,7 +1995,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 			layoutCacheModel.layoutPrototypeUuid = null;
 		}
 
-		layoutCacheModel.layoutPrototypeLinkEnabled = isLayoutPrototypeLinkEnabled();
+		layoutCacheModel.layoutPrototypeLinkEnabled = getLayoutPrototypeLinkEnabled();
 
 		layoutCacheModel.sourcePrototypeLayoutUuid = getSourcePrototypeLayoutUuid();
 
@@ -2042,7 +2041,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		sb.append(", modifiedDate=");
 		sb.append(getModifiedDate());
 		sb.append(", privateLayout=");
-		sb.append(isPrivateLayout());
+		sb.append(getPrivateLayout());
 		sb.append(", layoutId=");
 		sb.append(getLayoutId());
 		sb.append(", parentLayoutId=");
@@ -2062,7 +2061,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		sb.append(", typeSettings=");
 		sb.append(getTypeSettings());
 		sb.append(", hidden=");
-		sb.append(isHidden());
+		sb.append(getHidden());
 		sb.append(", friendlyURL=");
 		sb.append(getFriendlyURL());
 		sb.append(", iconImageId=");
@@ -2078,7 +2077,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		sb.append(", layoutPrototypeUuid=");
 		sb.append(getLayoutPrototypeUuid());
 		sb.append(", layoutPrototypeLinkEnabled=");
-		sb.append(isLayoutPrototypeLinkEnabled());
+		sb.append(getLayoutPrototypeLinkEnabled());
 		sb.append(", sourcePrototypeLayoutUuid=");
 		sb.append(getSourcePrototypeLayoutUuid());
 		sb.append(", lastPublishDate=");
@@ -2134,7 +2133,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>privateLayout</column-name><column-value><![CDATA[");
-		sb.append(isPrivateLayout());
+		sb.append(getPrivateLayout());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>layoutId</column-name><column-value><![CDATA[");
@@ -2174,7 +2173,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>hidden</column-name><column-value><![CDATA[");
-		sb.append(isHidden());
+		sb.append(getHidden());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>friendlyURL</column-name><column-value><![CDATA[");
@@ -2206,7 +2205,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>layoutPrototypeLinkEnabled</column-name><column-value><![CDATA[");
-		sb.append(isLayoutPrototypeLinkEnabled());
+		sb.append(getLayoutPrototypeLinkEnabled());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>sourcePrototypeLayoutUuid</column-name><column-value><![CDATA[");
@@ -2224,7 +2223,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 
 	private static final ClassLoader _classLoader = Layout.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			Layout.class, ModelWrapper.class
+			Layout.class
 		};
 	private long _mvccVersion;
 	private String _uuid;

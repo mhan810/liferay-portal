@@ -113,7 +113,8 @@ public class ReleaseUtil {
 	* @return the matching release
 	* @throws NoSuchReleaseException if a matching release could not be found
 	*/
-	public static Release findByServletContextName(String servletContextName)
+	public static Release findByServletContextName(
+		java.lang.String servletContextName)
 		throws com.liferay.portal.kernel.exception.NoSuchReleaseException {
 		return getPersistence().findByServletContextName(servletContextName);
 	}
@@ -124,7 +125,8 @@ public class ReleaseUtil {
 	* @param servletContextName the servlet context name
 	* @return the matching release, or <code>null</code> if a matching release could not be found
 	*/
-	public static Release fetchByServletContextName(String servletContextName) {
+	public static Release fetchByServletContextName(
+		java.lang.String servletContextName) {
 		return getPersistence().fetchByServletContextName(servletContextName);
 	}
 
@@ -135,8 +137,8 @@ public class ReleaseUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching release, or <code>null</code> if a matching release could not be found
 	*/
-	public static Release fetchByServletContextName(String servletContextName,
-		boolean retrieveFromCache) {
+	public static Release fetchByServletContextName(
+		java.lang.String servletContextName, boolean retrieveFromCache) {
 		return getPersistence()
 				   .fetchByServletContextName(servletContextName,
 			retrieveFromCache);
@@ -148,7 +150,8 @@ public class ReleaseUtil {
 	* @param servletContextName the servlet context name
 	* @return the release that was removed
 	*/
-	public static Release removeByServletContextName(String servletContextName)
+	public static Release removeByServletContextName(
+		java.lang.String servletContextName)
 		throws com.liferay.portal.kernel.exception.NoSuchReleaseException {
 		return getPersistence().removeByServletContextName(servletContextName);
 	}
@@ -159,7 +162,8 @@ public class ReleaseUtil {
 	* @param servletContextName the servlet context name
 	* @return the number of matching releases
 	*/
-	public static int countByServletContextName(String servletContextName) {
+	public static int countByServletContextName(
+		java.lang.String servletContextName) {
 		return getPersistence().countByServletContextName(servletContextName);
 	}
 
@@ -310,7 +314,7 @@ public class ReleaseUtil {
 		return getPersistence().countAll();
 	}
 
-	public static java.util.Set<String> getBadColumnNames() {
+	public static java.util.Set<java.lang.String> getBadColumnNames() {
 		return getPersistence().getBadColumnNames();
 	}
 

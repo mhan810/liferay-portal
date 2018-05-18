@@ -35,14 +35,11 @@ import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.LayoutBranchPersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.model.impl.LayoutBranchImpl;
 import com.liferay.portal.model.impl.LayoutBranchModelImpl;
 
 import java.io.Serializable;
-
-import java.lang.reflect.InvocationHandler;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -1559,7 +1556,7 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 				for (LayoutBranch layoutBranch : list) {
 					if ((layoutSetBranchId != layoutBranch.getLayoutSetBranchId()) ||
 							(plid != layoutBranch.getPlid()) ||
-							(master != layoutBranch.isMaster())) {
+							(master != layoutBranch.getMaster())) {
 						list = null;
 
 						break;
@@ -2210,6 +2207,8 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 
 	@Override
 	protected LayoutBranch removeImpl(LayoutBranch layoutBranch) {
+		layoutBranch = toUnwrappedModel(layoutBranch);
+
 		Session session = null;
 
 		try {
@@ -2240,23 +2239,9 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 
 	@Override
 	public LayoutBranch updateImpl(LayoutBranch layoutBranch) {
+		layoutBranch = toUnwrappedModel(layoutBranch);
+
 		boolean isNew = layoutBranch.isNew();
-
-		if (!(layoutBranch instanceof LayoutBranchModelImpl)) {
-			InvocationHandler invocationHandler = null;
-
-			if (ProxyUtil.isProxyClass(layoutBranch.getClass())) {
-				invocationHandler = ProxyUtil.getInvocationHandler(layoutBranch);
-
-				throw new IllegalArgumentException(
-					"Implement ModelWrapper in layoutBranch proxy " +
-					invocationHandler.getClass());
-			}
-
-			throw new IllegalArgumentException(
-				"Implement ModelWrapper in custom LayoutBranch implementation " +
-				layoutBranch.getClass());
-		}
 
 		LayoutBranchModelImpl layoutBranchModelImpl = (LayoutBranchModelImpl)layoutBranch;
 
@@ -2309,7 +2294,7 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 			args = new Object[] {
 					layoutBranchModelImpl.getLayoutSetBranchId(),
 					layoutBranchModelImpl.getPlid(),
-					layoutBranchModelImpl.isMaster()
+					layoutBranchModelImpl.getMaster()
 				};
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_L_P_M, args);
@@ -2377,7 +2362,7 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 				args = new Object[] {
 						layoutBranchModelImpl.getLayoutSetBranchId(),
 						layoutBranchModelImpl.getPlid(),
-						layoutBranchModelImpl.isMaster()
+						layoutBranchModelImpl.getMaster()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_L_P_M, args);
@@ -2396,6 +2381,31 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 		layoutBranch.resetOriginalValues();
 
 		return layoutBranch;
+	}
+
+	protected LayoutBranch toUnwrappedModel(LayoutBranch layoutBranch) {
+		if (layoutBranch instanceof LayoutBranchImpl) {
+			return layoutBranch;
+		}
+
+		LayoutBranchImpl layoutBranchImpl = new LayoutBranchImpl();
+
+		layoutBranchImpl.setNew(layoutBranch.isNew());
+		layoutBranchImpl.setPrimaryKey(layoutBranch.getPrimaryKey());
+
+		layoutBranchImpl.setMvccVersion(layoutBranch.getMvccVersion());
+		layoutBranchImpl.setLayoutBranchId(layoutBranch.getLayoutBranchId());
+		layoutBranchImpl.setGroupId(layoutBranch.getGroupId());
+		layoutBranchImpl.setCompanyId(layoutBranch.getCompanyId());
+		layoutBranchImpl.setUserId(layoutBranch.getUserId());
+		layoutBranchImpl.setUserName(layoutBranch.getUserName());
+		layoutBranchImpl.setLayoutSetBranchId(layoutBranch.getLayoutSetBranchId());
+		layoutBranchImpl.setPlid(layoutBranch.getPlid());
+		layoutBranchImpl.setName(layoutBranch.getName());
+		layoutBranchImpl.setDescription(layoutBranch.getDescription());
+		layoutBranchImpl.setMaster(layoutBranch.isMaster());
+
+		return layoutBranchImpl;
 	}
 
 	/**

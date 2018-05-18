@@ -73,7 +73,6 @@ public interface VirtualHostLocalService extends BaseLocalService,
 	* @param virtualHostId the primary key for the new virtual host
 	* @return the new virtual host
 	*/
-	@Transactional(enabled = false)
 	public VirtualHost createVirtualHost(long virtualHostId);
 
 	/**
@@ -169,7 +168,7 @@ public interface VirtualHostLocalService extends BaseLocalService,
 	public VirtualHost fetchVirtualHost(long companyId, long layoutSetId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public VirtualHost fetchVirtualHost(String hostname);
+	public VirtualHost fetchVirtualHost(java.lang.String hostname);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
@@ -182,7 +181,7 @@ public interface VirtualHostLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -205,7 +204,7 @@ public interface VirtualHostLocalService extends BaseLocalService,
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public VirtualHost getVirtualHost(String hostname)
+	public VirtualHost getVirtualHost(java.lang.String hostname)
 		throws PortalException;
 
 	/**
@@ -231,7 +230,7 @@ public interface VirtualHostLocalService extends BaseLocalService,
 	public int getVirtualHostsCount();
 
 	public VirtualHost updateVirtualHost(long companyId, long layoutSetId,
-		String hostname);
+		java.lang.String hostname);
 
 	/**
 	* Updates the virtual host in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

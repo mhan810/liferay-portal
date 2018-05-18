@@ -60,7 +60,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 		attributes.put("companyId", getCompanyId());
 		attributes.put("portletId", getPortletId());
 		attributes.put("roles", getRoles());
-		attributes.put("active", isActive());
+		attributes.put("active", getActive());
 
 		return attributes;
 	}
@@ -154,7 +154,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new PortletWrapper((Portlet)_portlet.clone());
 	}
 
@@ -223,7 +223,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the portlet modes of the portlet
 	*/
 	@Override
-	public java.util.Set<String> getAllPortletModes() {
+	public java.util.Set<java.lang.String> getAllPortletModes() {
 		return _portlet.getAllPortletModes();
 	}
 
@@ -233,7 +233,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the window states of the portlet
 	*/
 	@Override
-	public java.util.Set<String> getAllWindowStates() {
+	public java.util.Set<java.lang.String> getAllWindowStates() {
 		return _portlet.getAllWindowStates();
 	}
 
@@ -255,7 +255,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	with the portlet
 	*/
 	@Override
-	public java.util.List<String> getAssetRendererFactoryClasses() {
+	public java.util.List<java.lang.String> getAssetRendererFactoryClasses() {
 		return _portlet.getAssetRendererFactoryClasses();
 	}
 
@@ -277,7 +277,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	associated with the portlet
 	*/
 	@Override
-	public java.util.List<String> getAtomCollectionAdapterClasses() {
+	public java.util.List<java.lang.String> getAtomCollectionAdapterClasses() {
 		return _portlet.getAtomCollectionAdapterClasses();
 	}
 
@@ -299,7 +299,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	through the portlet
 	*/
 	@Override
-	public java.util.Set<String> getAutopropagatedParameters() {
+	public java.util.Set<java.lang.String> getAutopropagatedParameters() {
 		return _portlet.getAutopropagatedParameters();
 	}
 
@@ -310,7 +310,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return a cloned instance of the portlet
 	*/
 	@Override
-	public Portlet getClonedInstance(String portletId) {
+	public Portlet getClonedInstance(java.lang.String portletId) {
 		return _portlet.getClonedInstance(portletId);
 	}
 
@@ -330,7 +330,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the configuration action class of the portlet
 	*/
 	@Override
-	public String getConfigurationActionClass() {
+	public java.lang.String getConfigurationActionClass() {
 		return _portlet.getConfigurationActionClass();
 	}
 
@@ -350,7 +350,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the servlet context name of the portlet
 	*/
 	@Override
-	public String getContextName() {
+	public java.lang.String getContextName() {
 		return _portlet.getContextName();
 	}
 
@@ -360,7 +360,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the servlet context path of the portlet
 	*/
 	@Override
-	public String getContextPath() {
+	public java.lang.String getContextPath() {
 		return _portlet.getContextPath();
 	}
 
@@ -372,7 +372,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	will be shown
 	*/
 	@Override
-	public String getControlPanelEntryCategory() {
+	public java.lang.String getControlPanelEntryCategory() {
 		return _portlet.getControlPanelEntryCategory();
 	}
 
@@ -384,7 +384,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	shown in the Control Panel
 	*/
 	@Override
-	public String getControlPanelEntryClass() {
+	public java.lang.String getControlPanelEntryClass() {
 		return _portlet.getControlPanelEntryClass();
 	}
 
@@ -420,7 +420,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	wraps this portlet
 	*/
 	@Override
-	public String getCssClassWrapper() {
+	public java.lang.String getCssClassWrapper() {
 		return _portlet.getCssClassWrapper();
 	}
 
@@ -432,7 +432,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	with the portlet
 	*/
 	@Override
-	public java.util.List<String> getCustomAttributesDisplayClasses() {
+	public java.util.List<java.lang.String> getCustomAttributesDisplayClasses() {
 		return _portlet.getCustomAttributesDisplayClasses();
 	}
 
@@ -462,7 +462,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the default preferences of the portlet
 	*/
 	@Override
-	public String getDefaultPreferences() {
+	public java.lang.String getDefaultPreferences() {
 		return _portlet.getDefaultPreferences();
 	}
 
@@ -472,7 +472,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the display name of the portlet
 	*/
 	@Override
-	public String getDisplayName() {
+	public java.lang.String getDisplayName() {
 		return _portlet.getDisplayName();
 	}
 
@@ -487,7 +487,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return expiration cache of the portlet
 	*/
 	@Override
-	public Integer getExpCache() {
+	public java.lang.Integer getExpCache() {
 		return _portlet.getExpCache();
 	}
 
@@ -499,7 +499,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Deprecated
 	@Override
-	public String getFacebookIntegration() {
+	public java.lang.String getFacebookIntegration() {
 		return _portlet.getFacebookIntegration();
 	}
 
@@ -511,7 +511,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	footer relative to the portal's context path
 	*/
 	@Override
-	public java.util.List<String> getFooterPortalCss() {
+	public java.util.List<java.lang.String> getFooterPortalCss() {
 		return _portlet.getFooterPortalCss();
 	}
 
@@ -523,7 +523,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	page's footer relative to the portal's context path
 	*/
 	@Override
-	public java.util.List<String> getFooterPortalJavaScript() {
+	public java.util.List<java.lang.String> getFooterPortalJavaScript() {
 		return _portlet.getFooterPortalJavaScript();
 	}
 
@@ -535,7 +535,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	footer relative to the portlet's context path
 	*/
 	@Override
-	public java.util.List<String> getFooterPortletCss() {
+	public java.util.List<java.lang.String> getFooterPortletCss() {
 		return _portlet.getFooterPortletCss();
 	}
 
@@ -547,7 +547,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	page's footer relative to the portlet's context path
 	*/
 	@Override
-	public java.util.List<String> getFooterPortletJavaScript() {
+	public java.util.List<java.lang.String> getFooterPortletJavaScript() {
 		return _portlet.getFooterPortletJavaScript();
 	}
 
@@ -557,7 +557,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the friendly URL mapper class of the portlet
 	*/
 	@Override
-	public String getFriendlyURLMapperClass() {
+	public java.lang.String getFriendlyURLMapperClass() {
 		return _portlet.getFriendlyURLMapperClass();
 	}
 
@@ -577,7 +577,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the friendly URL mapping of the portlet
 	*/
 	@Override
-	public String getFriendlyURLMapping() {
+	public java.lang.String getFriendlyURLMapping() {
 		return _portlet.getFriendlyURLMapping();
 	}
 
@@ -589,7 +589,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	portlet
 	*/
 	@Override
-	public String getFriendlyURLRoutes() {
+	public java.lang.String getFriendlyURLRoutes() {
 		return _portlet.getFriendlyURLRoutes();
 	}
 
@@ -601,7 +601,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	header relative to the portal's context path
 	*/
 	@Override
-	public java.util.List<String> getHeaderPortalCss() {
+	public java.util.List<java.lang.String> getHeaderPortalCss() {
 		return _portlet.getHeaderPortalCss();
 	}
 
@@ -613,7 +613,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	page's header relative to the portal's context path
 	*/
 	@Override
-	public java.util.List<String> getHeaderPortalJavaScript() {
+	public java.util.List<java.lang.String> getHeaderPortalJavaScript() {
 		return _portlet.getHeaderPortalJavaScript();
 	}
 
@@ -625,7 +625,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	header relative to the portlet's context path
 	*/
 	@Override
-	public java.util.List<String> getHeaderPortletCss() {
+	public java.util.List<java.lang.String> getHeaderPortletCss() {
 		return _portlet.getHeaderPortletCss();
 	}
 
@@ -637,7 +637,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	page's header relative to the portlet's context path
 	*/
 	@Override
-	public java.util.List<String> getHeaderPortletJavaScript() {
+	public java.util.List<java.lang.String> getHeaderPortletJavaScript() {
 		return _portlet.getHeaderPortletJavaScript();
 	}
 
@@ -647,7 +647,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the icon of the portlet
 	*/
 	@Override
-	public String getIcon() {
+	public java.lang.String getIcon() {
 		return _portlet.getIcon();
 	}
 
@@ -681,7 +681,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	the portlet
 	*/
 	@Override
-	public java.util.List<String> getIndexerClasses() {
+	public java.util.List<java.lang.String> getIndexerClasses() {
 		return _portlet.getIndexerClasses();
 	}
 
@@ -701,7 +701,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return init parameters of the portlet
 	*/
 	@Override
-	public Map<String, String> getInitParams() {
+	public Map<java.lang.String, java.lang.String> getInitParams() {
 		return _portlet.getInitParams();
 	}
 
@@ -723,7 +723,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the instance ID of the portlet
 	*/
 	@Override
-	public String getInstanceId() {
+	public java.lang.String getInstanceId() {
 		return _portlet.getInstanceId();
 	}
 
@@ -778,7 +778,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the open search class of the portlet
 	*/
 	@Override
-	public String getOpenSearchClass() {
+	public java.lang.String getOpenSearchClass() {
 		return _portlet.getOpenSearchClass();
 	}
 
@@ -798,7 +798,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the parent struts path of the portlet.
 	*/
 	@Override
-	public String getParentStrutsPath() {
+	public java.lang.String getParentStrutsPath() {
 		return _portlet.getParentStrutsPath();
 	}
 
@@ -808,7 +808,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the permission propagator class of the portlet
 	*/
 	@Override
-	public String getPermissionPropagatorClass() {
+	public java.lang.String getPermissionPropagatorClass() {
 		return _portlet.getPermissionPropagatorClass();
 	}
 
@@ -828,7 +828,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the plugin ID of the portlet
 	*/
 	@Override
-	public String getPluginId() {
+	public java.lang.String getPluginId() {
 		return _portlet.getPluginId();
 	}
 
@@ -848,7 +848,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the plugin type of the portlet
 	*/
 	@Override
-	public String getPluginType() {
+	public java.lang.String getPluginType() {
 		return _portlet.getPluginType();
 	}
 
@@ -858,7 +858,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the poller processor class of the portlet
 	*/
 	@Override
-	public String getPollerProcessorClass() {
+	public java.lang.String getPollerProcessorClass() {
 		return _portlet.getPollerProcessorClass();
 	}
 
@@ -878,7 +878,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the POP message listener class of the portlet
 	*/
 	@Override
-	public String getPopMessageListenerClass() {
+	public java.lang.String getPopMessageListenerClass() {
 		return _portlet.getPopMessageListenerClass();
 	}
 
@@ -920,7 +920,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the portlet class of the portlet
 	*/
 	@Override
-	public String getPortletClass() {
+	public java.lang.String getPortletClass() {
 		return _portlet.getPortletClass();
 	}
 
@@ -930,7 +930,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the portlet data handler class of the portlet
 	*/
 	@Override
-	public String getPortletDataHandlerClass() {
+	public java.lang.String getPortletDataHandlerClass() {
 		return _portlet.getPortletDataHandlerClass();
 	}
 
@@ -950,7 +950,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return filters of the portlet
 	*/
 	@Override
-	public Map<String, PortletFilter> getPortletFilters() {
+	public Map<java.lang.String, PortletFilter> getPortletFilters() {
 		return _portlet.getPortletFilters();
 	}
 
@@ -960,7 +960,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the portlet ID of this portlet
 	*/
 	@Override
-	public String getPortletId() {
+	public java.lang.String getPortletId() {
 		return _portlet.getPortletId();
 	}
 
@@ -980,7 +980,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the portlet layout listener class of the portlet
 	*/
 	@Override
-	public String getPortletLayoutListenerClass() {
+	public java.lang.String getPortletLayoutListenerClass() {
 		return _portlet.getPortletLayoutListenerClass();
 	}
 
@@ -1000,7 +1000,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return portlet modes of the portlet
 	*/
 	@Override
-	public Map<String, java.util.Set<String>> getPortletModes() {
+	public Map<java.lang.String, java.util.Set<java.lang.String>> getPortletModes() {
 		return _portlet.getPortletModes();
 	}
 
@@ -1010,7 +1010,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the display name of the portlet
 	*/
 	@Override
-	public String getPortletName() {
+	public java.lang.String getPortletName() {
 		return _portlet.getPortletName();
 	}
 
@@ -1020,7 +1020,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the portlet URL class of the portlet
 	*/
 	@Override
-	public String getPortletURLClass() {
+	public java.lang.String getPortletURLClass() {
 		return _portlet.getPortletURLClass();
 	}
 
@@ -1066,7 +1066,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the preferences validator class of the portlet
 	*/
 	@Override
-	public String getPreferencesValidator() {
+	public java.lang.String getPreferencesValidator() {
 		return _portlet.getPreferencesValidator();
 	}
 
@@ -1117,8 +1117,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the processing event from a namespace URI and a local part
 	*/
 	@Override
-	public com.liferay.portal.kernel.xml.QName getProcessingEvent(String uri,
-		String localPart) {
+	public com.liferay.portal.kernel.xml.QName getProcessingEvent(
+		java.lang.String uri, java.lang.String localPart) {
 		return _portlet.getProcessingEvent(uri, localPart);
 	}
 
@@ -1139,7 +1139,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the public render parameter from an identifier
 	*/
 	@Override
-	public PublicRenderParameter getPublicRenderParameter(String identifier) {
+	public PublicRenderParameter getPublicRenderParameter(
+		java.lang.String identifier) {
 		return _portlet.getPublicRenderParameter(identifier);
 	}
 
@@ -1153,8 +1154,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	part
 	*/
 	@Override
-	public PublicRenderParameter getPublicRenderParameter(String uri,
-		String localPart) {
+	public PublicRenderParameter getPublicRenderParameter(
+		java.lang.String uri, java.lang.String localPart) {
 		return _portlet.getPublicRenderParameter(uri, localPart);
 	}
 
@@ -1214,7 +1215,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return resource bundle of the portlet
 	*/
 	@Override
-	public String getResourceBundle() {
+	public java.lang.String getResourceBundle() {
 		return _portlet.getResourceBundle();
 	}
 
@@ -1236,7 +1237,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return role mappers of the portlet
 	*/
 	@Override
-	public Map<String, String> getRoleMappers() {
+	public Map<java.lang.String, java.lang.String> getRoleMappers() {
 		return _portlet.getRoleMappers();
 	}
 
@@ -1246,7 +1247,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the roles of this portlet
 	*/
 	@Override
-	public String getRoles() {
+	public java.lang.String getRoles() {
 		return _portlet.getRoles();
 	}
 
@@ -1256,7 +1257,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return an array of required roles of the portlet
 	*/
 	@Override
-	public String[] getRolesArray() {
+	public java.lang.String[] getRolesArray() {
 		return _portlet.getRolesArray();
 	}
 
@@ -1276,7 +1277,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the root portlet ID of the portlet
 	*/
 	@Override
-	public String getRootPortletId() {
+	public java.lang.String getRootPortletId() {
 		return _portlet.getRootPortletId();
 	}
 
@@ -1341,7 +1342,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	interpreters associated with the portlet
 	*/
 	@Override
-	public java.util.List<String> getSocialActivityInterpreterClasses() {
+	public java.util.List<java.lang.String> getSocialActivityInterpreterClasses() {
 		return _portlet.getSocialActivityInterpreterClasses();
 	}
 
@@ -1361,7 +1362,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the social request interpreter class of the portlet
 	*/
 	@Override
-	public String getSocialRequestInterpreterClass() {
+	public java.lang.String getSocialRequestInterpreterClass() {
 		return _portlet.getSocialRequestInterpreterClass();
 	}
 
@@ -1385,7 +1386,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	handlers associated with the portlet
 	*/
 	@Override
-	public java.util.List<String> getStagedModelDataHandlerClasses() {
+	public java.util.List<java.lang.String> getStagedModelDataHandlerClasses() {
 		return _portlet.getStagedModelDataHandlerClasses();
 	}
 
@@ -1429,7 +1430,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the path for static resources served by this portlet
 	*/
 	@Override
-	public String getStaticResourcePath() {
+	public java.lang.String getStaticResourcePath() {
 		return _portlet.getStaticResourcePath();
 	}
 
@@ -1451,7 +1452,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the struts path of the portlet
 	*/
 	@Override
-	public String getStrutsPath() {
+	public java.lang.String getStrutsPath() {
 		return _portlet.getStrutsPath();
 	}
 
@@ -1461,7 +1462,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the supported locales of the portlet
 	*/
 	@Override
-	public java.util.Set<String> getSupportedLocales() {
+	public java.util.Set<java.lang.String> getSupportedLocales() {
 		return _portlet.getSupportedLocales();
 	}
 
@@ -1483,7 +1484,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the template handler class of the portlet
 	*/
 	@Override
-	public String getTemplateHandlerClass() {
+	public java.lang.String getTemplateHandlerClass() {
 		return _portlet.getTemplateHandlerClass();
 	}
 
@@ -1515,7 +1516,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	with the portlet
 	*/
 	@Override
-	public java.util.List<String> getTrashHandlerClasses() {
+	public java.util.List<java.lang.String> getTrashHandlerClasses() {
 		return _portlet.getTrashHandlerClasses();
 	}
 
@@ -1546,7 +1547,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return unlinked roles of the portlet
 	*/
 	@Override
-	public java.util.Set<String> getUnlinkedRoles() {
+	public java.util.Set<java.lang.String> getUnlinkedRoles() {
 		return _portlet.getUnlinkedRoles();
 	}
 
@@ -1556,7 +1557,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the URL encoder class of the portlet
 	*/
 	@Override
-	public String getURLEncoderClass() {
+	public java.lang.String getURLEncoderClass() {
 		return _portlet.getURLEncoderClass();
 	}
 
@@ -1599,7 +1600,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	definitions of the portlet
 	*/
 	@Override
-	public String getUserNotificationDefinitions() {
+	public java.lang.String getUserNotificationDefinitions() {
 		return _portlet.getUserNotificationDefinitions();
 	}
 
@@ -1611,7 +1612,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	handlers associated with the portlet
 	*/
 	@Override
-	public java.util.List<String> getUserNotificationHandlerClasses() {
+	public java.util.List<java.lang.String> getUserNotificationHandlerClasses() {
 		return _portlet.getUserNotificationHandlerClasses();
 	}
 
@@ -1631,7 +1632,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the user principal strategy of the portlet
 	*/
 	@Override
-	public String getUserPrincipalStrategy() {
+	public java.lang.String getUserPrincipalStrategy() {
 		return _portlet.getUserPrincipalStrategy();
 	}
 
@@ -1641,7 +1642,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the virtual path of the portlet
 	*/
 	@Override
-	public String getVirtualPath() {
+	public java.lang.String getVirtualPath() {
 		return _portlet.getVirtualPath();
 	}
 
@@ -1651,7 +1652,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the WebDAV storage class of the portlet
 	*/
 	@Override
-	public String getWebDAVStorageClass() {
+	public java.lang.String getWebDAVStorageClass() {
 		return _portlet.getWebDAVStorageClass();
 	}
 
@@ -1671,7 +1672,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the WebDAV storage token of the portlet
 	*/
 	@Override
-	public String getWebDAVStorageToken() {
+	public java.lang.String getWebDAVStorageToken() {
 		return _portlet.getWebDAVStorageToken();
 	}
 
@@ -1681,7 +1682,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return window states of the portlet
 	*/
 	@Override
-	public Map<String, java.util.Set<String>> getWindowStates() {
+	public Map<java.lang.String, java.util.Set<java.lang.String>> getWindowStates() {
 		return _portlet.getWindowStates();
 	}
 
@@ -1693,7 +1694,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	associated with the portlet
 	*/
 	@Override
-	public java.util.List<String> getWorkflowHandlerClasses() {
+	public java.util.List<java.lang.String> getWorkflowHandlerClasses() {
 		return _portlet.getWorkflowHandlerClasses();
 	}
 
@@ -1713,7 +1714,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the name of the XML-RPC method class of the portlet
 	*/
 	@Override
-	public String getXmlRpcMethodClass() {
+	public java.lang.String getXmlRpcMethodClass() {
 		return _portlet.getXmlRpcMethodClass();
 	}
 
@@ -1806,7 +1807,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	and portlet mode
 	*/
 	@Override
-	public boolean hasPortletMode(String mimeType,
+	public boolean hasPortletMode(java.lang.String mimeType,
 		javax.portlet.PortletMode portletMode) {
 		return _portlet.hasPortletMode(mimeType, portletMode);
 	}
@@ -1820,7 +1821,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	name
 	*/
 	@Override
-	public boolean hasRoleWithName(String roleName) {
+	public boolean hasRoleWithName(java.lang.String roleName) {
 		return _portlet.hasRoleWithName(roleName);
 	}
 
@@ -1834,7 +1835,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	and window state
 	*/
 	@Override
-	public boolean hasWindowState(String mimeType,
+	public boolean hasWindowState(java.lang.String mimeType,
 		javax.portlet.WindowState windowState) {
 		return _portlet.hasWindowState(mimeType, windowState);
 	}
@@ -2269,7 +2270,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setAssetRendererFactoryClasses(
-		java.util.List<String> assetRendererFactoryClasses) {
+		java.util.List<java.lang.String> assetRendererFactoryClasses) {
 		_portlet.setAssetRendererFactoryClasses(assetRendererFactoryClasses);
 	}
 
@@ -2282,7 +2283,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setAtomCollectionAdapterClasses(
-		java.util.List<String> atomCollectionAdapterClasses) {
+		java.util.List<java.lang.String> atomCollectionAdapterClasses) {
 		_portlet.setAtomCollectionAdapterClasses(atomCollectionAdapterClasses);
 	}
 
@@ -2295,7 +2296,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setAutopropagatedParameters(
-		java.util.Set<String> autopropagatedParameters) {
+		java.util.Set<java.lang.String> autopropagatedParameters) {
 		_portlet.setAutopropagatedParameters(autopropagatedParameters);
 	}
 
@@ -2321,7 +2322,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	portlet
 	*/
 	@Override
-	public void setConfigurationActionClass(String configurationActionClass) {
+	public void setConfigurationActionClass(
+		java.lang.String configurationActionClass) {
 		_portlet.setConfigurationActionClass(configurationActionClass);
 	}
 
@@ -2333,7 +2335,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	Panel where the portlet will be shown
 	*/
 	@Override
-	public void setControlPanelEntryCategory(String controlPanelEntryCategory) {
+	public void setControlPanelEntryCategory(
+		java.lang.String controlPanelEntryCategory) {
 		_portlet.setControlPanelEntryCategory(controlPanelEntryCategory);
 	}
 
@@ -2345,7 +2348,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	when the portlet will be shown in the Control Panel
 	*/
 	@Override
-	public void setControlPanelEntryClass(String controlPanelEntryClass) {
+	public void setControlPanelEntryClass(
+		java.lang.String controlPanelEntryClass) {
 		_portlet.setControlPanelEntryClass(controlPanelEntryClass);
 	}
 
@@ -2370,7 +2374,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	the DIV that wraps this portlet
 	*/
 	@Override
-	public void setCssClassWrapper(String cssClassWrapper) {
+	public void setCssClassWrapper(java.lang.String cssClassWrapper) {
 		_portlet.setCssClassWrapper(cssClassWrapper);
 	}
 
@@ -2383,7 +2387,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setCustomAttributesDisplayClasses(
-		java.util.List<String> customAttributesDisplayClasses) {
+		java.util.List<java.lang.String> customAttributesDisplayClasses) {
 		_portlet.setCustomAttributesDisplayClasses(customAttributesDisplayClasses);
 	}
 
@@ -2403,7 +2407,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param defaultPreferences the default preferences of the portlet
 	*/
 	@Override
-	public void setDefaultPreferences(String defaultPreferences) {
+	public void setDefaultPreferences(java.lang.String defaultPreferences) {
 		_portlet.setDefaultPreferences(defaultPreferences);
 	}
 
@@ -2413,7 +2417,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param displayName the display name of the portlet
 	*/
 	@Override
-	public void setDisplayName(String displayName) {
+	public void setDisplayName(java.lang.String displayName) {
 		_portlet.setDisplayName(displayName);
 	}
 
@@ -2438,7 +2442,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param expCache expiration cache of the portlet
 	*/
 	@Override
-	public void setExpCache(Integer expCache) {
+	public void setExpCache(java.lang.Integer expCache) {
 		_portlet.setExpCache(expCache);
 	}
 
@@ -2451,7 +2455,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Deprecated
 	@Override
-	public void setFacebookIntegration(String facebookIntegration) {
+	public void setFacebookIntegration(java.lang.String facebookIntegration) {
 		_portlet.setFacebookIntegration(facebookIntegration);
 	}
 
@@ -2463,7 +2467,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	the page's footer relative to the portal's context path
 	*/
 	@Override
-	public void setFooterPortalCss(java.util.List<String> footerPortalCss) {
+	public void setFooterPortalCss(
+		java.util.List<java.lang.String> footerPortalCss) {
 		_portlet.setFooterPortalCss(footerPortalCss);
 	}
 
@@ -2477,7 +2482,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setFooterPortalJavaScript(
-		java.util.List<String> footerPortalJavaScript) {
+		java.util.List<java.lang.String> footerPortalJavaScript) {
 		_portlet.setFooterPortalJavaScript(footerPortalJavaScript);
 	}
 
@@ -2489,7 +2494,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	the page's footer relative to the portlet's context path
 	*/
 	@Override
-	public void setFooterPortletCss(java.util.List<String> footerPortletCss) {
+	public void setFooterPortletCss(
+		java.util.List<java.lang.String> footerPortletCss) {
 		_portlet.setFooterPortletCss(footerPortletCss);
 	}
 
@@ -2503,7 +2509,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setFooterPortletJavaScript(
-		java.util.List<String> footerPortletJavaScript) {
+		java.util.List<java.lang.String> footerPortletJavaScript) {
 		_portlet.setFooterPortletJavaScript(footerPortletJavaScript);
 	}
 
@@ -2514,7 +2520,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	of the portlet
 	*/
 	@Override
-	public void setFriendlyURLMapperClass(String friendlyURLMapperClass) {
+	public void setFriendlyURLMapperClass(
+		java.lang.String friendlyURLMapperClass) {
 		_portlet.setFriendlyURLMapperClass(friendlyURLMapperClass);
 	}
 
@@ -2525,7 +2532,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	portlet
 	*/
 	@Override
-	public void setFriendlyURLMapping(String friendlyURLMapping) {
+	public void setFriendlyURLMapping(java.lang.String friendlyURLMapping) {
 		_portlet.setFriendlyURLMapping(friendlyURLMapping);
 	}
 
@@ -2537,7 +2544,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	URL routes of the portlet
 	*/
 	@Override
-	public void setFriendlyURLRoutes(String friendlyURLRoutes) {
+	public void setFriendlyURLRoutes(java.lang.String friendlyURLRoutes) {
 		_portlet.setFriendlyURLRoutes(friendlyURLRoutes);
 	}
 
@@ -2549,7 +2556,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	the page's header relative to the portal's context path
 	*/
 	@Override
-	public void setHeaderPortalCss(java.util.List<String> headerPortalCss) {
+	public void setHeaderPortalCss(
+		java.util.List<java.lang.String> headerPortalCss) {
 		_portlet.setHeaderPortalCss(headerPortalCss);
 	}
 
@@ -2563,7 +2571,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setHeaderPortalJavaScript(
-		java.util.List<String> headerPortalJavaScript) {
+		java.util.List<java.lang.String> headerPortalJavaScript) {
 		_portlet.setHeaderPortalJavaScript(headerPortalJavaScript);
 	}
 
@@ -2575,7 +2583,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	the page's header relative to the portlet's context path
 	*/
 	@Override
-	public void setHeaderPortletCss(java.util.List<String> headerPortletCss) {
+	public void setHeaderPortletCss(
+		java.util.List<java.lang.String> headerPortletCss) {
 		_portlet.setHeaderPortletCss(headerPortletCss);
 	}
 
@@ -2589,7 +2598,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setHeaderPortletJavaScript(
-		java.util.List<String> headerPortletJavaScript) {
+		java.util.List<java.lang.String> headerPortletJavaScript) {
 		_portlet.setHeaderPortletJavaScript(headerPortletJavaScript);
 	}
 
@@ -2599,7 +2608,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param icon the icon of the portlet
 	*/
 	@Override
-	public void setIcon(String icon) {
+	public void setIcon(java.lang.String icon) {
 		_portlet.setIcon(icon);
 	}
 
@@ -2633,7 +2642,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	associated with the portlet
 	*/
 	@Override
-	public void setIndexerClasses(java.util.List<String> indexerClasses) {
+	public void setIndexerClasses(
+		java.util.List<java.lang.String> indexerClasses) {
 		_portlet.setIndexerClasses(indexerClasses);
 	}
 
@@ -2643,7 +2653,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param initParams the init parameters of the portlet
 	*/
 	@Override
-	public void setInitParams(Map<String, String> initParams) {
+	public void setInitParams(
+		Map<java.lang.String, java.lang.String> initParams) {
 		_portlet.setInitParams(initParams);
 	}
 
@@ -2716,7 +2727,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param openSearchClass the name of the open search class of the portlet
 	*/
 	@Override
-	public void setOpenSearchClass(String openSearchClass) {
+	public void setOpenSearchClass(java.lang.String openSearchClass) {
 		_portlet.setOpenSearchClass(openSearchClass);
 	}
 
@@ -2726,7 +2737,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param parentStrutsPath the parent struts path of the portlet
 	*/
 	@Override
-	public void setParentStrutsPath(String parentStrutsPath) {
+	public void setParentStrutsPath(java.lang.String parentStrutsPath) {
 		_portlet.setParentStrutsPath(parentStrutsPath);
 	}
 
@@ -2734,7 +2745,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* Sets the name of the permission propagator class of the portlet.
 	*/
 	@Override
-	public void setPermissionPropagatorClass(String permissionPropagatorClass) {
+	public void setPermissionPropagatorClass(
+		java.lang.String permissionPropagatorClass) {
 		_portlet.setPermissionPropagatorClass(permissionPropagatorClass);
 	}
 
@@ -2756,7 +2768,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	portlet
 	*/
 	@Override
-	public void setPollerProcessorClass(String pollerProcessorClass) {
+	public void setPollerProcessorClass(java.lang.String pollerProcessorClass) {
 		_portlet.setPollerProcessorClass(pollerProcessorClass);
 	}
 
@@ -2767,7 +2779,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	of the portlet
 	*/
 	@Override
-	public void setPopMessageListenerClass(String popMessageListenerClass) {
+	public void setPopMessageListenerClass(
+		java.lang.String popMessageListenerClass) {
 		_portlet.setPopMessageListenerClass(popMessageListenerClass);
 	}
 
@@ -2799,7 +2812,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param portletClass the name of the portlet class of the portlet
 	*/
 	@Override
-	public void setPortletClass(String portletClass) {
+	public void setPortletClass(java.lang.String portletClass) {
 		_portlet.setPortletClass(portletClass);
 	}
 
@@ -2810,7 +2823,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	the portlet
 	*/
 	@Override
-	public void setPortletDataHandlerClass(String portletDataHandlerClass) {
+	public void setPortletDataHandlerClass(
+		java.lang.String portletDataHandlerClass) {
 		_portlet.setPortletDataHandlerClass(portletDataHandlerClass);
 	}
 
@@ -2820,7 +2834,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param portletFilters the filters of the portlet
 	*/
 	@Override
-	public void setPortletFilters(Map<String, PortletFilter> portletFilters) {
+	public void setPortletFilters(
+		Map<java.lang.String, PortletFilter> portletFilters) {
 		_portlet.setPortletFilters(portletFilters);
 	}
 
@@ -2830,7 +2845,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param portletId the portlet ID of this portlet
 	*/
 	@Override
-	public void setPortletId(String portletId) {
+	public void setPortletId(java.lang.String portletId) {
 		_portlet.setPortletId(portletId);
 	}
 
@@ -2851,7 +2866,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	class of the portlet
 	*/
 	@Override
-	public void setPortletLayoutListenerClass(String portletLayoutListenerClass) {
+	public void setPortletLayoutListenerClass(
+		java.lang.String portletLayoutListenerClass) {
 		_portlet.setPortletLayoutListenerClass(portletLayoutListenerClass);
 	}
 
@@ -2861,7 +2877,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param portletModes the portlet modes of the portlet
 	*/
 	@Override
-	public void setPortletModes(Map<String, java.util.Set<String>> portletModes) {
+	public void setPortletModes(
+		Map<java.lang.String, java.util.Set<java.lang.String>> portletModes) {
 		_portlet.setPortletModes(portletModes);
 	}
 
@@ -2871,7 +2888,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param portletName the name of the portlet
 	*/
 	@Override
-	public void setPortletName(String portletName) {
+	public void setPortletName(java.lang.String portletName) {
 		_portlet.setPortletName(portletName);
 	}
 
@@ -2881,7 +2898,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param portletURLClass the name of the portlet URL class of the portlet
 	*/
 	@Override
-	public void setPortletURLClass(String portletURLClass) {
+	public void setPortletURLClass(java.lang.String portletURLClass) {
 		_portlet.setPortletURLClass(portletURLClass);
 	}
 
@@ -2930,7 +2947,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	of the portlet
 	*/
 	@Override
-	public void setPreferencesValidator(String preferencesValidator) {
+	public void setPreferencesValidator(java.lang.String preferencesValidator) {
 		_portlet.setPreferencesValidator(preferencesValidator);
 	}
 
@@ -3056,7 +3073,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param resourceBundle the resource bundle of the portlet
 	*/
 	@Override
-	public void setResourceBundle(String resourceBundle) {
+	public void setResourceBundle(java.lang.String resourceBundle) {
 		_portlet.setResourceBundle(resourceBundle);
 	}
 
@@ -3078,7 +3095,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param roleMappers the role mappers of the portlet
 	*/
 	@Override
-	public void setRoleMappers(Map<String, String> roleMappers) {
+	public void setRoleMappers(
+		Map<java.lang.String, java.lang.String> roleMappers) {
 		_portlet.setRoleMappers(roleMappers);
 	}
 
@@ -3088,7 +3106,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param roles the roles of this portlet
 	*/
 	@Override
-	public void setRoles(String roles) {
+	public void setRoles(java.lang.String roles) {
 		_portlet.setRoles(roles);
 	}
 
@@ -3098,7 +3116,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param rolesArray an array of required roles of the portlet
 	*/
 	@Override
-	public void setRolesArray(String[] rolesArray) {
+	public void setRolesArray(java.lang.String[] rolesArray) {
 		_portlet.setRolesArray(rolesArray);
 	}
 
@@ -3167,7 +3185,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setSocialActivityInterpreterClasses(
-		java.util.List<String> socialActivityInterpreterClasses) {
+		java.util.List<java.lang.String> socialActivityInterpreterClasses) {
 		_portlet.setSocialActivityInterpreterClasses(socialActivityInterpreterClasses);
 	}
 
@@ -3179,7 +3197,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setSocialRequestInterpreterClass(
-		String socialRequestInterpreterClass) {
+		java.lang.String socialRequestInterpreterClass) {
 		_portlet.setSocialRequestInterpreterClass(socialRequestInterpreterClass);
 	}
 
@@ -3192,7 +3210,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setStagedModelDataHandlerClasses(
-		java.util.List<String> stagedModelDataHandlerClasses) {
+		java.util.List<java.lang.String> stagedModelDataHandlerClasses) {
 		_portlet.setStagedModelDataHandlerClasses(stagedModelDataHandlerClasses);
 	}
 
@@ -3226,7 +3244,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param strutsPath the struts path of the portlet
 	*/
 	@Override
-	public void setStrutsPath(String strutsPath) {
+	public void setStrutsPath(java.lang.String strutsPath) {
 		_portlet.setStrutsPath(strutsPath);
 	}
 
@@ -3236,7 +3254,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param supportedLocales the supported locales of the portlet
 	*/
 	@Override
-	public void setSupportedLocales(java.util.Set<String> supportedLocales) {
+	public void setSupportedLocales(
+		java.util.Set<java.lang.String> supportedLocales) {
 		_portlet.setSupportedLocales(supportedLocales);
 	}
 
@@ -3259,7 +3278,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	portlet
 	*/
 	@Override
-	public void setTemplateHandlerClass(String templateHandlerClass) {
+	public void setTemplateHandlerClass(java.lang.String templateHandlerClass) {
 		_portlet.setTemplateHandlerClass(templateHandlerClass);
 	}
 
@@ -3272,7 +3291,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setTrashHandlerClasses(
-		java.util.List<String> trashHandlerClasses) {
+		java.util.List<java.lang.String> trashHandlerClasses) {
 		_portlet.setTrashHandlerClasses(trashHandlerClasses);
 	}
 
@@ -3293,7 +3312,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param unlinkedRoles the unlinked roles of the portlet
 	*/
 	@Override
-	public void setUnlinkedRoles(java.util.Set<String> unlinkedRoles) {
+	public void setUnlinkedRoles(java.util.Set<java.lang.String> unlinkedRoles) {
 		_portlet.setUnlinkedRoles(unlinkedRoles);
 	}
 
@@ -3303,7 +3322,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param urlEncoderClass the name of the URL encoder class of the portlet
 	*/
 	@Override
-	public void setURLEncoderClass(String urlEncoderClass) {
+	public void setURLEncoderClass(java.lang.String urlEncoderClass) {
 		_portlet.setURLEncoderClass(urlEncoderClass);
 	}
 
@@ -3327,7 +3346,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setUserNotificationDefinitions(
-		String userNotificationDefinitions) {
+		java.lang.String userNotificationDefinitions) {
 		_portlet.setUserNotificationDefinitions(userNotificationDefinitions);
 	}
 
@@ -3340,7 +3359,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setUserNotificationHandlerClasses(
-		java.util.List<String> userNotificationHandlerClasses) {
+		java.util.List<java.lang.String> userNotificationHandlerClasses) {
 		_portlet.setUserNotificationHandlerClasses(userNotificationHandlerClasses);
 	}
 
@@ -3350,7 +3369,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param userPrincipalStrategy the user principal strategy of the portlet
 	*/
 	@Override
-	public void setUserPrincipalStrategy(String userPrincipalStrategy) {
+	public void setUserPrincipalStrategy(java.lang.String userPrincipalStrategy) {
 		_portlet.setUserPrincipalStrategy(userPrincipalStrategy);
 	}
 
@@ -3360,7 +3379,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param virtualPath the virtual path of the portlet
 	*/
 	@Override
-	public void setVirtualPath(String virtualPath) {
+	public void setVirtualPath(java.lang.String virtualPath) {
 		_portlet.setVirtualPath(virtualPath);
 	}
 
@@ -3371,7 +3390,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	portlet
 	*/
 	@Override
-	public void setWebDAVStorageClass(String webDAVStorageClass) {
+	public void setWebDAVStorageClass(java.lang.String webDAVStorageClass) {
 		_portlet.setWebDAVStorageClass(webDAVStorageClass);
 	}
 
@@ -3382,7 +3401,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	portlet
 	*/
 	@Override
-	public void setWebDAVStorageToken(String webDAVStorageToken) {
+	public void setWebDAVStorageToken(java.lang.String webDAVStorageToken) {
 		_portlet.setWebDAVStorageToken(webDAVStorageToken);
 	}
 
@@ -3392,7 +3411,8 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @param windowStates the window states of the portlet
 	*/
 	@Override
-	public void setWindowStates(Map<String, java.util.Set<String>> windowStates) {
+	public void setWindowStates(
+		Map<java.lang.String, java.util.Set<java.lang.String>> windowStates) {
 		_portlet.setWindowStates(windowStates);
 	}
 
@@ -3405,7 +3425,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	*/
 	@Override
 	public void setWorkflowHandlerClasses(
-		java.util.List<String> workflowHandlerClasses) {
+		java.util.List<java.lang.String> workflowHandlerClasses) {
 		_portlet.setWorkflowHandlerClasses(workflowHandlerClasses);
 	}
 
@@ -3416,7 +3436,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	portlet
 	*/
 	@Override
-	public void setXmlRpcMethodClass(String xmlRpcMethodClass) {
+	public void setXmlRpcMethodClass(java.lang.String xmlRpcMethodClass) {
 		_portlet.setXmlRpcMethodClass(xmlRpcMethodClass);
 	}
 
@@ -3431,7 +3451,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _portlet.toString();
 	}
 
@@ -3441,7 +3461,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _portlet.toXmlString();
 	}
 

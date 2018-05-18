@@ -70,10 +70,12 @@ public interface LayoutRevisionLocalService extends BaseLocalService,
 	public LayoutRevision addLayoutRevision(long userId,
 		long layoutSetBranchId, long layoutBranchId,
 		long parentLayoutRevisionId, boolean head, long plid,
-		long portletPreferencesPlid, boolean privateLayout, String name,
-		String title, String description, String keywords, String robots,
-		String typeSettings, boolean iconImage, long iconImageId,
-		String themeId, String colorSchemeId, String css,
+		long portletPreferencesPlid, boolean privateLayout,
+		java.lang.String name, java.lang.String title,
+		java.lang.String description, java.lang.String keywords,
+		java.lang.String robots, java.lang.String typeSettings,
+		boolean iconImage, long iconImageId, java.lang.String themeId,
+		java.lang.String colorSchemeId, java.lang.String css,
 		ServiceContext serviceContext) throws PortalException;
 
 	/**
@@ -82,7 +84,6 @@ public interface LayoutRevisionLocalService extends BaseLocalService,
 	* @param layoutRevisionId the primary key for the new layout revision
 	* @return the new layout revision
 	*/
-	@Transactional(enabled = false)
 	public LayoutRevision createLayoutRevision(long layoutRevisionId);
 
 	public void deleteLayoutLayoutRevisions(long plid)
@@ -198,7 +199,7 @@ public interface LayoutRevisionLocalService extends BaseLocalService,
 	/**
 	* @deprecated As of 7.0.0, with no direct replacement
 	*/
-	@Deprecated
+	@java.lang.Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public LayoutRevision fetchLayoutRevision(long layoutSetBranchId,
 		boolean head, long plid);
@@ -240,7 +241,7 @@ public interface LayoutRevisionLocalService extends BaseLocalService,
 	/**
 	* @deprecated As of 7.0.0, with no direct replacement
 	*/
-	@Deprecated
+	@java.lang.Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public LayoutRevision getLayoutRevision(long layoutSetBranchId, long plid,
 		boolean head) throws PortalException;
@@ -313,7 +314,7 @@ public interface LayoutRevisionLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -330,11 +331,13 @@ public interface LayoutRevisionLocalService extends BaseLocalService,
 	public LayoutRevision updateLayoutRevision(LayoutRevision layoutRevision);
 
 	public LayoutRevision updateLayoutRevision(long userId,
-		long layoutRevisionId, long layoutBranchId, String name, String title,
-		String description, String keywords, String robots,
-		String typeSettings, boolean iconImage, long iconImageId,
-		String themeId, String colorSchemeId, String css,
-		ServiceContext serviceContext) throws PortalException;
+		long layoutRevisionId, long layoutBranchId, java.lang.String name,
+		java.lang.String title, java.lang.String description,
+		java.lang.String keywords, java.lang.String robots,
+		java.lang.String typeSettings, boolean iconImage, long iconImageId,
+		java.lang.String themeId, java.lang.String colorSchemeId,
+		java.lang.String css, ServiceContext serviceContext)
+		throws PortalException;
 
 	public LayoutRevision updateStatus(long userId, long layoutRevisionId,
 		int status, ServiceContext serviceContext) throws PortalException;

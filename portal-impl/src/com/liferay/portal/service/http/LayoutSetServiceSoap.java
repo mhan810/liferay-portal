@@ -84,7 +84,7 @@ public class LayoutSetServiceSoap {
 	*/
 	public static void updateLayoutSetPrototypeLinkEnabled(long groupId,
 		boolean privateLayout, boolean layoutSetPrototypeLinkEnabled,
-		String layoutSetPrototypeUuid) throws RemoteException {
+		java.lang.String layoutSetPrototypeUuid) throws RemoteException {
 		try {
 			LayoutSetServiceUtil.updateLayoutSetPrototypeLinkEnabled(groupId,
 				privateLayout, layoutSetPrototypeLinkEnabled,
@@ -110,8 +110,9 @@ public class LayoutSetServiceSoap {
 	}
 
 	public static com.liferay.portal.kernel.model.LayoutSetSoap updateLookAndFeel(
-		long groupId, boolean privateLayout, String themeId,
-		String colorSchemeId, String css) throws RemoteException {
+		long groupId, boolean privateLayout, java.lang.String themeId,
+		java.lang.String colorSchemeId, java.lang.String css)
+		throws RemoteException {
 		try {
 			com.liferay.portal.kernel.model.LayoutSet returnValue = LayoutSetServiceUtil.updateLookAndFeel(groupId,
 					privateLayout, themeId, colorSchemeId, css);
@@ -126,7 +127,7 @@ public class LayoutSetServiceSoap {
 	}
 
 	public static com.liferay.portal.kernel.model.LayoutSetSoap updateSettings(
-		long groupId, boolean privateLayout, String settings)
+		long groupId, boolean privateLayout, java.lang.String settings)
 		throws RemoteException {
 		try {
 			com.liferay.portal.kernel.model.LayoutSet returnValue = LayoutSetServiceUtil.updateSettings(groupId,
@@ -142,7 +143,7 @@ public class LayoutSetServiceSoap {
 	}
 
 	public static com.liferay.portal.kernel.model.LayoutSetSoap updateVirtualHost(
-		long groupId, boolean privateLayout, String virtualHost)
+		long groupId, boolean privateLayout, java.lang.String virtualHost)
 		throws RemoteException {
 		try {
 			com.liferay.portal.kernel.model.LayoutSet returnValue = LayoutSetServiceUtil.updateVirtualHost(groupId,

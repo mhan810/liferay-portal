@@ -144,7 +144,7 @@ public class WorkflowInstanceLinkWrapper implements WorkflowInstanceLink,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new WorkflowInstanceLinkWrapper((WorkflowInstanceLink)_workflowInstanceLink.clone());
 	}
 
@@ -159,7 +159,7 @@ public class WorkflowInstanceLinkWrapper implements WorkflowInstanceLink,
 	* @return the fully qualified class name of this workflow instance link
 	*/
 	@Override
-	public String getClassName() {
+	public java.lang.String getClassName() {
 		return _workflowInstanceLink.getClassName();
 	}
 
@@ -269,7 +269,7 @@ public class WorkflowInstanceLinkWrapper implements WorkflowInstanceLink,
 	* @return the user name of this workflow instance link
 	*/
 	@Override
-	public String getUserName() {
+	public java.lang.String getUserName() {
 		return _workflowInstanceLink.getUserName();
 	}
 
@@ -279,7 +279,7 @@ public class WorkflowInstanceLinkWrapper implements WorkflowInstanceLink,
 	* @return the user uuid of this workflow instance link
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _workflowInstanceLink.getUserUuid();
 	}
 
@@ -334,7 +334,7 @@ public class WorkflowInstanceLinkWrapper implements WorkflowInstanceLink,
 	}
 
 	@Override
-	public void setClassName(String className) {
+	public void setClassName(java.lang.String className) {
 		_workflowInstanceLink.setClassName(className);
 	}
 
@@ -459,7 +459,7 @@ public class WorkflowInstanceLinkWrapper implements WorkflowInstanceLink,
 	* @param userName the user name of this workflow instance link
 	*/
 	@Override
-	public void setUserName(String userName) {
+	public void setUserName(java.lang.String userName) {
 		_workflowInstanceLink.setUserName(userName);
 	}
 
@@ -469,7 +469,7 @@ public class WorkflowInstanceLinkWrapper implements WorkflowInstanceLink,
 	* @param userUuid the user uuid of this workflow instance link
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_workflowInstanceLink.setUserUuid(userUuid);
 	}
 
@@ -504,7 +504,7 @@ public class WorkflowInstanceLinkWrapper implements WorkflowInstanceLink,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _workflowInstanceLink.toString();
 	}
 
@@ -514,7 +514,7 @@ public class WorkflowInstanceLinkWrapper implements WorkflowInstanceLink,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _workflowInstanceLink.toXmlString();
 	}
 

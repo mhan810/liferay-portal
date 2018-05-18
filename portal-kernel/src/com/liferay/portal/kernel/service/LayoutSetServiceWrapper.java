@@ -36,7 +36,7 @@ public class LayoutSetServiceWrapper implements LayoutSetService,
 	* @return the OSGi service identifier
 	*/
 	@Override
-	public String getOSGiServiceIdentifier() {
+	public java.lang.String getOSGiServiceIdentifier() {
 		return _layoutSetService.getOSGiServiceIdentifier();
 	}
 
@@ -61,7 +61,7 @@ public class LayoutSetServiceWrapper implements LayoutSetService,
 	@Override
 	public void updateLayoutSetPrototypeLinkEnabled(long groupId,
 		boolean privateLayout, boolean layoutSetPrototypeLinkEnabled,
-		String layoutSetPrototypeUuid)
+		java.lang.String layoutSetPrototypeUuid)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_layoutSetService.updateLayoutSetPrototypeLinkEnabled(groupId,
 			privateLayout, layoutSetPrototypeLinkEnabled, layoutSetPrototypeUuid);
@@ -98,8 +98,8 @@ public class LayoutSetServiceWrapper implements LayoutSetService,
 
 	@Override
 	public com.liferay.portal.kernel.model.LayoutSet updateLookAndFeel(
-		long groupId, boolean privateLayout, String themeId,
-		String colorSchemeId, String css)
+		long groupId, boolean privateLayout, java.lang.String themeId,
+		java.lang.String colorSchemeId, java.lang.String css)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _layoutSetService.updateLookAndFeel(groupId, privateLayout,
 			themeId, colorSchemeId, css);
@@ -107,14 +107,14 @@ public class LayoutSetServiceWrapper implements LayoutSetService,
 
 	@Override
 	public com.liferay.portal.kernel.model.LayoutSet updateSettings(
-		long groupId, boolean privateLayout, String settings)
+		long groupId, boolean privateLayout, java.lang.String settings)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _layoutSetService.updateSettings(groupId, privateLayout, settings);
 	}
 
 	@Override
 	public com.liferay.portal.kernel.model.LayoutSet updateVirtualHost(
-		long groupId, boolean privateLayout, String virtualHost)
+		long groupId, boolean privateLayout, java.lang.String virtualHost)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _layoutSetService.updateVirtualHost(groupId, privateLayout,
 			virtualHost);

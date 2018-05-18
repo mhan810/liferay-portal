@@ -39,7 +39,6 @@ import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
 import com.liferay.portal.kernel.service.TicketLocalService;
 import com.liferay.portal.kernel.service.persistence.ClassNamePersistence;
 import com.liferay.portal.kernel.service.persistence.TicketPersistence;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 
@@ -91,7 +90,6 @@ public abstract class TicketLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the new ticket
 	 */
 	@Override
-	@Transactional(enabled = false)
 	public Ticket createTicket(long ticketId) {
 		return ticketPersistence.create(ticketId);
 	}

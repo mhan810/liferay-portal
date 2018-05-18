@@ -21,7 +21,6 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.model.ReleaseModel;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
@@ -155,7 +154,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 		attributes.put("schemaVersion", getSchemaVersion());
 		attributes.put("buildNumber", getBuildNumber());
 		attributes.put("buildDate", getBuildDate());
-		attributes.put("verified", isVerified());
+		attributes.put("verified", getVerified());
 		attributes.put("state", getState());
 		attributes.put("testString", getTestString());
 
@@ -419,7 +418,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 		releaseImpl.setSchemaVersion(getSchemaVersion());
 		releaseImpl.setBuildNumber(getBuildNumber());
 		releaseImpl.setBuildDate(getBuildDate());
-		releaseImpl.setVerified(isVerified());
+		releaseImpl.setVerified(getVerified());
 		releaseImpl.setState(getState());
 		releaseImpl.setTestString(getTestString());
 
@@ -544,7 +543,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 			releaseCacheModel.buildDate = Long.MIN_VALUE;
 		}
 
-		releaseCacheModel.verified = isVerified();
+		releaseCacheModel.verified = getVerified();
 
 		releaseCacheModel.state = getState();
 
@@ -580,7 +579,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 		sb.append(", buildDate=");
 		sb.append(getBuildDate());
 		sb.append(", verified=");
-		sb.append(isVerified());
+		sb.append(getVerified());
 		sb.append(", state=");
 		sb.append(getState());
 		sb.append(", testString=");
@@ -632,7 +631,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>verified</column-name><column-value><![CDATA[");
-		sb.append(isVerified());
+		sb.append(getVerified());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>state</column-name><column-value><![CDATA[");
@@ -650,7 +649,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 
 	private static final ClassLoader _classLoader = Release.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			Release.class, ModelWrapper.class
+			Release.class
 		};
 	private long _mvccVersion;
 	private long _releaseId;

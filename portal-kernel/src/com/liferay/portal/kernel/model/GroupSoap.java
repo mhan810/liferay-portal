@@ -48,13 +48,13 @@ public class GroupSoap implements Serializable {
 		soapModel.setDescription(model.getDescription());
 		soapModel.setType(model.getType());
 		soapModel.setTypeSettings(model.getTypeSettings());
-		soapModel.setManualMembership(model.isManualMembership());
+		soapModel.setManualMembership(model.getManualMembership());
 		soapModel.setMembershipRestriction(model.getMembershipRestriction());
 		soapModel.setFriendlyURL(model.getFriendlyURL());
-		soapModel.setSite(model.isSite());
+		soapModel.setSite(model.getSite());
 		soapModel.setRemoteStagingGroupCount(model.getRemoteStagingGroupCount());
-		soapModel.setInheritContent(model.isInheritContent());
-		soapModel.setActive(model.isActive());
+		soapModel.setInheritContent(model.getInheritContent());
+		soapModel.setActive(model.getActive());
 
 		return soapModel;
 	}

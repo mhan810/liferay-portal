@@ -41,8 +41,9 @@ public class RepositoryServiceUtil {
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.portal.service.impl.RepositoryServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static com.liferay.portal.kernel.model.Repository addRepository(
-		long groupId, long classNameId, long parentFolderId, String name,
-		String description, String portletId,
+		long groupId, long classNameId, long parentFolderId,
+		java.lang.String name, java.lang.String description,
+		java.lang.String portletId,
 		com.liferay.portal.kernel.util.UnicodeProperties typeSettingsProperties,
 		ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -66,7 +67,7 @@ public class RepositoryServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -80,7 +81,8 @@ public class RepositoryServiceUtil {
 	* @deprecated As of 7.0.0, with no direct replacement
 	*/
 	@Deprecated
-	public static String[] getSupportedConfigurations(long classNameId) {
+	public static java.lang.String[] getSupportedConfigurations(
+		long classNameId) {
 		return getService().getSupportedConfigurations(classNameId);
 	}
 
@@ -88,8 +90,8 @@ public class RepositoryServiceUtil {
 	* @deprecated As of 7.0.0, with no direct replacement
 	*/
 	@Deprecated
-	public static String[] getSupportedParameters(long classNameId,
-		String configuration) {
+	public static java.lang.String[] getSupportedParameters(long classNameId,
+		java.lang.String configuration) {
 		return getService().getSupportedParameters(classNameId, configuration);
 	}
 
@@ -97,8 +99,8 @@ public class RepositoryServiceUtil {
 	* @deprecated As of 7.0.0, with no direct replacement
 	*/
 	@Deprecated
-	public static String[] getSupportedParameters(String className,
-		String configuration) {
+	public static java.lang.String[] getSupportedParameters(
+		java.lang.String className, java.lang.String configuration) {
 		return getService().getSupportedParameters(className, configuration);
 	}
 
@@ -108,8 +110,8 @@ public class RepositoryServiceUtil {
 		return getService().getTypeSettingsProperties(repositoryId);
 	}
 
-	public static void updateRepository(long repositoryId, String name,
-		String description)
+	public static void updateRepository(long repositoryId,
+		java.lang.String name, java.lang.String description)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().updateRepository(repositoryId, name, description);
 	}

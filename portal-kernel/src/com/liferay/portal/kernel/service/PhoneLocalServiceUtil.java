@@ -41,8 +41,9 @@ public class PhoneLocalServiceUtil {
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.portal.service.impl.PhoneLocalServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static com.liferay.portal.kernel.model.Phone addPhone(long userId,
-		String className, long classPK, String number, String extension,
-		long typeId, boolean primary, ServiceContext serviceContext)
+		java.lang.String className, long classPK, java.lang.String number,
+		java.lang.String extension, long typeId, boolean primary,
+		ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addPhone(userId, className, classPK, number, extension,
@@ -104,7 +105,7 @@ public class PhoneLocalServiceUtil {
 		return getService().deletePhone(phone);
 	}
 
-	public static void deletePhones(long companyId, String className,
+	public static void deletePhones(long companyId, java.lang.String className,
 		long classPK) {
 		getService().deletePhones(companyId, className, classPK);
 	}
@@ -199,7 +200,7 @@ public class PhoneLocalServiceUtil {
 	* @return the matching phone, or <code>null</code> if a matching phone could not be found
 	*/
 	public static com.liferay.portal.kernel.model.Phone fetchPhoneByUuidAndCompanyId(
-		String uuid, long companyId) {
+		java.lang.String uuid, long companyId) {
 		return getService().fetchPhoneByUuidAndCompanyId(uuid, companyId);
 	}
 
@@ -221,7 +222,7 @@ public class PhoneLocalServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -252,7 +253,7 @@ public class PhoneLocalServiceUtil {
 	* @throws PortalException if a matching phone could not be found
 	*/
 	public static com.liferay.portal.kernel.model.Phone getPhoneByUuidAndCompanyId(
-		String uuid, long companyId)
+		java.lang.String uuid, long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getPhoneByUuidAndCompanyId(uuid, companyId);
 	}
@@ -278,7 +279,7 @@ public class PhoneLocalServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Phone> getPhones(
-		long companyId, String className, long classPK) {
+		long companyId, java.lang.String className, long classPK) {
 		return getService().getPhones(companyId, className, classPK);
 	}
 
@@ -292,8 +293,8 @@ public class PhoneLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Phone updatePhone(
-		long phoneId, String number, String extension, long typeId,
-		boolean primary)
+		long phoneId, java.lang.String number, java.lang.String extension,
+		long typeId, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updatePhone(phoneId, number, extension, typeId, primary);

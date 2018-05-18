@@ -210,17 +210,18 @@ public class ResourceBlockPermissionLocalServiceWrapper
 	*/
 	@Deprecated
 	@Override
-	public java.util.Map<Long, java.util.Set<String>> getAvailableResourceBlockPermissionActionIds(
-		long[] roleIds, String name, long primKey,
-		java.util.List<String> actionIds)
+	public java.util.Map<java.lang.Long, java.util.Set<java.lang.String>> getAvailableResourceBlockPermissionActionIds(
+		long[] roleIds, java.lang.String name, long primKey,
+		java.util.List<java.lang.String> actionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _resourceBlockPermissionLocalService.getAvailableResourceBlockPermissionActionIds(roleIds,
 			name, primKey, actionIds);
 	}
 
 	@Override
-	public java.util.Map<Long, java.util.Set<String>> getAvailableResourceBlockPermissionActionIds(
-		String name, long primKey, java.util.List<String> actionIds)
+	public java.util.Map<java.lang.Long, java.util.Set<java.lang.String>> getAvailableResourceBlockPermissionActionIds(
+		java.lang.String name, long primKey,
+		java.util.List<java.lang.String> actionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _resourceBlockPermissionLocalService.getAvailableResourceBlockPermissionActionIds(name,
 			primKey, actionIds);
@@ -237,7 +238,7 @@ public class ResourceBlockPermissionLocalServiceWrapper
 	* @return the OSGi service identifier
 	*/
 	@Override
-	public String getOSGiServiceIdentifier() {
+	public java.lang.String getOSGiServiceIdentifier() {
 		return _resourceBlockPermissionLocalService.getOSGiServiceIdentifier();
 	}
 

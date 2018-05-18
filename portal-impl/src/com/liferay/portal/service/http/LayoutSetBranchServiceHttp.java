@@ -56,7 +56,7 @@ import com.liferay.portal.kernel.util.MethodKey;
 public class LayoutSetBranchServiceHttp {
 	public static com.liferay.portal.kernel.model.LayoutSetBranch addLayoutSetBranch(
 		HttpPrincipal httpPrincipal, long groupId, boolean privateLayout,
-		String name, String description, boolean master,
+		java.lang.String name, java.lang.String description, boolean master,
 		long copyLayoutSetBranchId,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -182,7 +182,7 @@ public class LayoutSetBranchServiceHttp {
 
 	public static com.liferay.portal.kernel.model.LayoutSetBranch updateLayoutSetBranch(
 		HttpPrincipal httpPrincipal, long groupId, long layoutSetBranchId,
-		String name, String description,
+		java.lang.String name, java.lang.String description,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -217,8 +217,9 @@ public class LayoutSetBranchServiceHttp {
 
 	private static Log _log = LogFactoryUtil.getLog(LayoutSetBranchServiceHttp.class);
 	private static final Class<?>[] _addLayoutSetBranchParameterTypes0 = new Class[] {
-			long.class, boolean.class, String.class, String.class, boolean.class,
-			long.class, com.liferay.portal.kernel.service.ServiceContext.class
+			long.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, boolean.class, long.class,
+			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _deleteLayoutSetBranchParameterTypes1 = new Class[] {
 			long.class
@@ -231,7 +232,8 @@ public class LayoutSetBranchServiceHttp {
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _updateLayoutSetBranchParameterTypes4 = new Class[] {
-			long.class, long.class, String.class, String.class,
+			long.class, long.class, java.lang.String.class,
+			java.lang.String.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 }

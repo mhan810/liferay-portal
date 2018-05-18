@@ -49,10 +49,12 @@ public interface AddressService extends BaseService {
 	 *
 	 * Never modify or reference this interface directly. Always use {@link AddressServiceUtil} to access the address remote service. Add custom service methods to {@link com.liferay.portal.service.impl.AddressServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public Address addAddress(String className, long classPK, String street1,
-		String street2, String street3, String city, String zip, long regionId,
-		long countryId, long typeId, boolean mailing, boolean primary,
-		ServiceContext serviceContext) throws PortalException;
+	public Address addAddress(java.lang.String className, long classPK,
+		java.lang.String street1, java.lang.String street2,
+		java.lang.String street3, java.lang.String city, java.lang.String zip,
+		long regionId, long countryId, long typeId, boolean mailing,
+		boolean primary, ServiceContext serviceContext)
+		throws PortalException;
 
 	public void deleteAddress(long addressId) throws PortalException;
 
@@ -60,7 +62,7 @@ public interface AddressService extends BaseService {
 	public Address getAddress(long addressId) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Address> getAddresses(String className, long classPK)
+	public List<Address> getAddresses(java.lang.String className, long classPK)
 		throws PortalException;
 
 	/**
@@ -68,10 +70,11 @@ public interface AddressService extends BaseService {
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
-	public Address updateAddress(long addressId, String street1,
-		String street2, String street3, String city, String zip, long regionId,
+	public Address updateAddress(long addressId, java.lang.String street1,
+		java.lang.String street2, java.lang.String street3,
+		java.lang.String city, java.lang.String zip, long regionId,
 		long countryId, long typeId, boolean mailing, boolean primary)
 		throws PortalException;
 }

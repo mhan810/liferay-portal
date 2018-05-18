@@ -42,7 +42,6 @@ import com.liferay.portal.kernel.service.persistence.PasswordPolicyPersistence;
 import com.liferay.portal.kernel.service.persistence.PasswordTrackerPersistence;
 import com.liferay.portal.kernel.service.persistence.UserFinder;
 import com.liferay.portal.kernel.service.persistence.UserPersistence;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 
@@ -95,7 +94,6 @@ public abstract class PasswordTrackerLocalServiceBaseImpl
 	 * @return the new password tracker
 	 */
 	@Override
-	@Transactional(enabled = false)
 	public PasswordTracker createPasswordTracker(long passwordTrackerId) {
 		return passwordTrackerPersistence.create(passwordTrackerId);
 	}

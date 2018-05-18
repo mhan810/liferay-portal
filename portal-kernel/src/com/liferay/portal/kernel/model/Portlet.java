@@ -111,7 +111,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return <code>true</code> if the portlet is equal to the specified object
 	*/
 	@Override
-	public boolean equals(Object obj);
+	public boolean equals(java.lang.Object obj);
 
 	/**
 	* Returns the action timeout of the portlet.
@@ -150,14 +150,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the portlet modes of the portlet
 	*/
-	public java.util.Set<String> getAllPortletModes();
+	public java.util.Set<java.lang.String> getAllPortletModes();
 
 	/**
 	* Returns the window states of the portlet.
 	*
 	* @return the window states of the portlet
 	*/
-	public java.util.Set<String> getAllWindowStates();
+	public java.util.Set<java.lang.String> getAllWindowStates();
 
 	/**
 	* Returns the application types of the portlet.
@@ -173,7 +173,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the names of the classes that represent asset types associated
 	with the portlet
 	*/
-	public java.util.List<String> getAssetRendererFactoryClasses();
+	public java.util.List<java.lang.String> getAssetRendererFactoryClasses();
 
 	/**
 	* Returns the asset type instances of the portlet.
@@ -189,7 +189,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the names of the classes that represent atom collection adapters
 	associated with the portlet
 	*/
-	public java.util.List<String> getAtomCollectionAdapterClasses();
+	public java.util.List<java.lang.String> getAtomCollectionAdapterClasses();
 
 	/**
 	* Returns the atom collection adapter instances of the portlet.
@@ -205,7 +205,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the names of the parameters that will be automatically propagated
 	through the portlet
 	*/
-	public java.util.Set<String> getAutopropagatedParameters();
+	public java.util.Set<java.lang.String> getAutopropagatedParameters();
 
 	/**
 	* Returns <code>true</code> if the portlet is found in a WAR file.
@@ -213,14 +213,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param portletId the cloned instance portlet ID
 	* @return a cloned instance of the portlet
 	*/
-	public Portlet getClonedInstance(String portletId);
+	public Portlet getClonedInstance(java.lang.String portletId);
 
 	/**
 	* Returns the configuration action class of the portlet.
 	*
 	* @return the configuration action class of the portlet
 	*/
-	public String getConfigurationActionClass();
+	public java.lang.String getConfigurationActionClass();
 
 	/**
 	* Returns the configuration action instance of the portlet.
@@ -234,14 +234,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the servlet context name of the portlet
 	*/
-	public String getContextName();
+	public java.lang.String getContextName();
 
 	/**
 	* Returns the servlet context path of the portlet.
 	*
 	* @return the servlet context path of the portlet
 	*/
-	public String getContextPath();
+	public java.lang.String getContextPath();
 
 	/**
 	* Returns the name of the category of the Control Panel where the portlet
@@ -250,7 +250,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the name of the category of the Control Panel where the portlet
 	will be shown
 	*/
-	public String getControlPanelEntryCategory();
+	public java.lang.String getControlPanelEntryCategory();
 
 	/**
 	* Returns the name of the class that will control when the portlet will be
@@ -259,7 +259,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the name of the class that will control when the portlet will be
 	shown in the Control Panel
 	*/
-	public String getControlPanelEntryClass();
+	public java.lang.String getControlPanelEntryClass();
 
 	/**
 	* Returns an instance of the class that will control when the portlet will
@@ -286,7 +286,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the name of the CSS class that will be injected in the DIV that
 	wraps this portlet
 	*/
-	public String getCssClassWrapper();
+	public java.lang.String getCssClassWrapper();
 
 	/**
 	* Returns the names of the classes that represent custom attribute displays
@@ -295,7 +295,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the names of the classes that represent asset types associated
 	with the portlet
 	*/
-	public java.util.List<String> getCustomAttributesDisplayClasses();
+	public java.util.List<java.lang.String> getCustomAttributesDisplayClasses();
 
 	/**
 	* Returns the custom attribute display instances of the portlet.
@@ -316,21 +316,21 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the default preferences of the portlet
 	*/
-	public String getDefaultPreferences();
+	public java.lang.String getDefaultPreferences();
 
 	/**
 	* Returns the display name of the portlet.
 	*
 	* @return the display name of the portlet
 	*/
-	public String getDisplayName();
+	public java.lang.String getDisplayName();
 
 	/**
 	* Returns expiration cache of the portlet.
 	*
 	* @return expiration cache of the portlet
 	*/
-	public Integer getExpCache();
+	public java.lang.Integer getExpCache();
 
 	/**
 	* Returns the Facebook integration method of the portlet.
@@ -338,8 +338,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the Facebook integration method of the portlet
 	* @deprecated As of 7.0.0, with no direct replacement
 	*/
-	@Deprecated()
-	public String getFacebookIntegration();
+	@java.lang.Deprecated()
+	public java.lang.String getFacebookIntegration();
 
 	/**
 	* Returns a list of CSS files that will be referenced from the page's
@@ -348,7 +348,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return a list of CSS files that will be referenced from the page's
 	footer relative to the portal's context path
 	*/
-	public java.util.List<String> getFooterPortalCss();
+	public java.util.List<java.lang.String> getFooterPortalCss();
 
 	/**
 	* Returns a list of JavaScript files that will be referenced from the
@@ -357,7 +357,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return a list of JavaScript files that will be referenced from the
 	page's footer relative to the portal's context path
 	*/
-	public java.util.List<String> getFooterPortalJavaScript();
+	public java.util.List<java.lang.String> getFooterPortalJavaScript();
 
 	/**
 	* Returns a list of CSS files that will be referenced from the page's
@@ -366,7 +366,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return a list of CSS files that will be referenced from the page's
 	footer relative to the portlet's context path
 	*/
-	public java.util.List<String> getFooterPortletCss();
+	public java.util.List<java.lang.String> getFooterPortletCss();
 
 	/**
 	* Returns a list of JavaScript files that will be referenced from the
@@ -375,14 +375,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return a list of JavaScript files that will be referenced from the
 	page's footer relative to the portlet's context path
 	*/
-	public java.util.List<String> getFooterPortletJavaScript();
+	public java.util.List<java.lang.String> getFooterPortletJavaScript();
 
 	/**
 	* Returns the name of the friendly URL mapper class of the portlet.
 	*
 	* @return the name of the friendly URL mapper class of the portlet
 	*/
-	public String getFriendlyURLMapperClass();
+	public java.lang.String getFriendlyURLMapperClass();
 
 	/**
 	* Returns the friendly URL mapper instance of the portlet.
@@ -396,7 +396,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the name of the friendly URL mapping of the portlet
 	*/
-	public String getFriendlyURLMapping();
+	public java.lang.String getFriendlyURLMapping();
 
 	/**
 	* Returns the class loader resource path to the friendly URL routes of the
@@ -405,7 +405,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the class loader resource path to the friendly URL routes of the
 	portlet
 	*/
-	public String getFriendlyURLRoutes();
+	public java.lang.String getFriendlyURLRoutes();
 
 	/**
 	* Returns a list of CSS files that will be referenced from the page's
@@ -414,7 +414,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return a list of CSS files that will be referenced from the page's
 	header relative to the portal's context path
 	*/
-	public java.util.List<String> getHeaderPortalCss();
+	public java.util.List<java.lang.String> getHeaderPortalCss();
 
 	/**
 	* Returns a list of JavaScript files that will be referenced from the
@@ -423,7 +423,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return a list of JavaScript files that will be referenced from the
 	page's header relative to the portal's context path
 	*/
-	public java.util.List<String> getHeaderPortalJavaScript();
+	public java.util.List<java.lang.String> getHeaderPortalJavaScript();
 
 	/**
 	* Returns a list of CSS files that will be referenced from the page's
@@ -432,7 +432,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return a list of CSS files that will be referenced from the page's
 	header relative to the portlet's context path
 	*/
-	public java.util.List<String> getHeaderPortletCss();
+	public java.util.List<java.lang.String> getHeaderPortletCss();
 
 	/**
 	* Returns a list of JavaScript files that will be referenced from the
@@ -441,14 +441,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return a list of JavaScript files that will be referenced from the
 	page's header relative to the portlet's context path
 	*/
-	public java.util.List<String> getHeaderPortletJavaScript();
+	public java.util.List<java.lang.String> getHeaderPortletJavaScript();
 
 	/**
 	* Returns the icon of the portlet.
 	*
 	* @return the icon of the portlet
 	*/
-	public String getIcon();
+	public java.lang.String getIcon();
 
 	/**
 	* Returns <code>true</code> to include the portlet and make it available to
@@ -466,7 +466,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the names of the classes that represent indexers associated with
 	the portlet
 	*/
-	public java.util.List<String> getIndexerClasses();
+	public java.util.List<java.lang.String> getIndexerClasses();
 
 	/**
 	* Returns the indexer instances of the portlet.
@@ -480,7 +480,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return init parameters of the portlet
 	*/
-	public java.util.Map<String, String> getInitParams();
+	public java.util.Map<java.lang.String, java.lang.String> getInitParams();
 
 	/**
 	* Returns <code>true</code> if the portlet can be added multiple times to a
@@ -496,7 +496,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the instance ID of the portlet
 	*/
-	public String getInstanceId();
+	public java.lang.String getInstanceId();
 
 	/**
 	* Returns <code>true</code> to allow the portlet to be cached within the
@@ -529,7 +529,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the name of the open search class of the portlet
 	*/
-	public String getOpenSearchClass();
+	public java.lang.String getOpenSearchClass();
 
 	/**
 	* Returns the indexer instance of the portlet.
@@ -543,14 +543,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the parent struts path of the portlet.
 	*/
-	public String getParentStrutsPath();
+	public java.lang.String getParentStrutsPath();
 
 	/**
 	* Returns the name of the permission propagator class of the portlet.
 	*
 	* @return the name of the permission propagator class of the portlet
 	*/
-	public String getPermissionPropagatorClass();
+	public java.lang.String getPermissionPropagatorClass();
 
 	/**
 	* Returns the permission propagator instance of the portlet.
@@ -564,7 +564,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the plugin ID of the portlet
 	*/
-	public String getPluginId();
+	public java.lang.String getPluginId();
 
 	/**
 	* Returns this portlet's plugin package.
@@ -578,14 +578,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the plugin type of the portlet
 	*/
-	public String getPluginType();
+	public java.lang.String getPluginType();
 
 	/**
 	* Returns the name of the poller processor class of the portlet.
 	*
 	* @return the name of the poller processor class of the portlet
 	*/
-	public String getPollerProcessorClass();
+	public java.lang.String getPollerProcessorClass();
 
 	/**
 	* Returns the poller processor instance of the portlet.
@@ -599,7 +599,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the name of the POP message listener class of the portlet
 	*/
-	public String getPopMessageListenerClass();
+	public java.lang.String getPopMessageListenerClass();
 
 	/**
 	* Returns the POP message listener instance of the portlet.
@@ -629,14 +629,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the name of the portlet class of the portlet
 	*/
-	public String getPortletClass();
+	public java.lang.String getPortletClass();
 
 	/**
 	* Returns the name of the portlet data handler class of the portlet.
 	*
 	* @return the name of the portlet data handler class of the portlet
 	*/
-	public String getPortletDataHandlerClass();
+	public java.lang.String getPortletDataHandlerClass();
 
 	/**
 	* Returns the portlet data handler instance of the portlet.
@@ -650,7 +650,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return filters of the portlet
 	*/
-	public java.util.Map<String, PortletFilter> getPortletFilters();
+	public java.util.Map<java.lang.String, PortletFilter> getPortletFilters();
 
 	/**
 	* Returns the portlet info of the portlet.
@@ -664,7 +664,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the name of the portlet layout listener class of the portlet
 	*/
-	public String getPortletLayoutListenerClass();
+	public java.lang.String getPortletLayoutListenerClass();
 
 	/**
 	* Returns the portlet layout listener instance of the portlet.
@@ -678,21 +678,21 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return portlet modes of the portlet
 	*/
-	public java.util.Map<String, java.util.Set<String>> getPortletModes();
+	public java.util.Map<java.lang.String, java.util.Set<java.lang.String>> getPortletModes();
 
 	/**
 	* Returns the name of the portlet.
 	*
 	* @return the display name of the portlet
 	*/
-	public String getPortletName();
+	public java.lang.String getPortletName();
 
 	/**
 	* Returns the name of the portlet URL class of the portlet.
 	*
 	* @return the name of the portlet URL class of the portlet
 	*/
-	public String getPortletURLClass();
+	public java.lang.String getPortletURLClass();
 
 	/**
 	* Returns <code>true</code> if preferences are shared across the entire
@@ -726,7 +726,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the name of the preferences validator class of the portlet
 	*/
-	public String getPreferencesValidator();
+	public java.lang.String getPreferencesValidator();
 
 	/**
 	* Returns <code>true</code> if the portlet does not share request
@@ -753,8 +753,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param localPart the local part
 	* @return the processing event from a namespace URI and a local part
 	*/
-	public com.liferay.portal.kernel.xml.QName getProcessingEvent(String uri,
-		String localPart);
+	public com.liferay.portal.kernel.xml.QName getProcessingEvent(
+		java.lang.String uri, java.lang.String localPart);
 
 	/**
 	* Returns the processing events of the portlet.
@@ -769,7 +769,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param identifier the identifier
 	* @return the public render parameter from an identifier
 	*/
-	public PublicRenderParameter getPublicRenderParameter(String identifier);
+	public PublicRenderParameter getPublicRenderParameter(
+		java.lang.String identifier);
 
 	/**
 	* Returns the spublic render parameter from a namespace URI and a local
@@ -780,8 +781,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the spublic render parameter from a namespace URI and a local
 	part
 	*/
-	public PublicRenderParameter getPublicRenderParameter(String uri,
-		String localPart);
+	public PublicRenderParameter getPublicRenderParameter(
+		java.lang.String uri, java.lang.String localPart);
 
 	/**
 	* Returns the public render parameters of the portlet.
@@ -823,7 +824,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return resource bundle of the portlet
 	*/
-	public String getResourceBundle();
+	public java.lang.String getResourceBundle();
 
 	/**
 	* Returns <code>true</code> if the portlet restores to the current view
@@ -839,14 +840,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return role mappers of the portlet
 	*/
-	public java.util.Map<String, String> getRoleMappers();
+	public java.util.Map<java.lang.String, java.lang.String> getRoleMappers();
 
 	/**
 	* Returns an array of required roles of the portlet.
 	*
 	* @return an array of required roles of the portlet
 	*/
-	public String[] getRolesArray();
+	public java.lang.String[] getRolesArray();
 
 	/**
 	* Returns the root portlet of this portlet instance.
@@ -860,7 +861,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the root portlet ID of the portlet
 	*/
-	public String getRootPortletId();
+	public java.lang.String getRootPortletId();
 
 	/**
 	* Returns the scheduler entries of the portlet.
@@ -907,7 +908,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the names of the classes that represent social activity
 	interpreters associated with the portlet
 	*/
-	public java.util.List<String> getSocialActivityInterpreterClasses();
+	public java.util.List<java.lang.String> getSocialActivityInterpreterClasses();
 
 	/**
 	* Returns the social activity interpreter instances of the portlet.
@@ -921,7 +922,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the name of the social request interpreter class of the portlet
 	*/
-	public String getSocialRequestInterpreterClass();
+	public java.lang.String getSocialRequestInterpreterClass();
 
 	/**
 	* Returns the name of the social request interpreter instance of the
@@ -939,7 +940,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the names of the classes that represent staged model data
 	handlers associated with the portlet
 	*/
-	public java.util.List<String> getStagedModelDataHandlerClasses();
+	public java.util.List<java.lang.String> getStagedModelDataHandlerClasses();
 
 	/**
 	* Returns the staged model data handler instances of the portlet.
@@ -971,7 +972,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the path for static resources served by this portlet
 	*/
-	public String getStaticResourcePath();
+	public java.lang.String getStaticResourcePath();
 
 	/**
 	* Returns <code>true</code> if the portlet is a static portlet at the start
@@ -987,14 +988,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the struts path of the portlet
 	*/
-	public String getStrutsPath();
+	public java.lang.String getStrutsPath();
 
 	/**
 	* Returns the supported locales of the portlet.
 	*
 	* @return the supported locales of the portlet
 	*/
-	public java.util.Set<String> getSupportedLocales();
+	public java.util.Set<java.lang.String> getSupportedLocales();
 
 	/**
 	* Returns <code>true</code> if the portlet is a system portlet that a user
@@ -1010,7 +1011,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the name of the template handler class of the portlet
 	*/
-	public String getTemplateHandlerClass();
+	public java.lang.String getTemplateHandlerClass();
 
 	/**
 	* Returns the template handler instance of the portlet.
@@ -1033,7 +1034,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the names of the classes that represent trash handlers associated
 	with the portlet
 	*/
-	public java.util.List<String> getTrashHandlerClasses();
+	public java.util.List<java.lang.String> getTrashHandlerClasses();
 
 	/**
 	* Returns the trash handler instances of the portlet.
@@ -1055,14 +1056,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return unlinked roles of the portlet
 	*/
-	public java.util.Set<String> getUnlinkedRoles();
+	public java.util.Set<java.lang.String> getUnlinkedRoles();
 
 	/**
 	* Returns the name of the URL encoder class of the portlet.
 	*
 	* @return the name of the URL encoder class of the portlet
 	*/
-	public String getURLEncoderClass();
+	public java.lang.String getURLEncoderClass();
 
 	/**
 	* Returns the URL encoder instance of the portlet.
@@ -1093,7 +1094,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the class loader resource path to the use notification
 	definitions of the portlet
 	*/
-	public String getUserNotificationDefinitions();
+	public java.lang.String getUserNotificationDefinitions();
 
 	/**
 	* Returns the names of the classes that represent user notification
@@ -1102,7 +1103,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the names of the classes that represent user notification
 	handlers associated with the portlet
 	*/
-	public java.util.List<String> getUserNotificationHandlerClasses();
+	public java.util.List<java.lang.String> getUserNotificationHandlerClasses();
 
 	/**
 	* Returns the user notification handler instances of the portlet.
@@ -1116,21 +1117,21 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the user principal strategy of the portlet
 	*/
-	public String getUserPrincipalStrategy();
+	public java.lang.String getUserPrincipalStrategy();
 
 	/**
 	* Returns the virtual path of the portlet.
 	*
 	* @return the virtual path of the portlet
 	*/
-	public String getVirtualPath();
+	public java.lang.String getVirtualPath();
 
 	/**
 	* Returns the name of the WebDAV storage class of the portlet.
 	*
 	* @return the name of the WebDAV storage class of the portlet
 	*/
-	public String getWebDAVStorageClass();
+	public java.lang.String getWebDAVStorageClass();
 
 	/**
 	* Returns the name of the WebDAV storage instance of the portlet.
@@ -1144,14 +1145,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the name of the WebDAV storage token of the portlet
 	*/
-	public String getWebDAVStorageToken();
+	public java.lang.String getWebDAVStorageToken();
 
 	/**
 	* Returns the window states of the portlet.
 	*
 	* @return window states of the portlet
 	*/
-	public java.util.Map<String, java.util.Set<String>> getWindowStates();
+	public java.util.Map<java.lang.String, java.util.Set<java.lang.String>> getWindowStates();
 
 	/**
 	* Returns the names of the classes that represent workflow handlers
@@ -1160,7 +1161,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return the names of the classes that represent workflow handlers
 	associated with the portlet
 	*/
-	public java.util.List<String> getWorkflowHandlerClasses();
+	public java.util.List<java.lang.String> getWorkflowHandlerClasses();
 
 	/**
 	* Returns the workflow handler instances of the portlet.
@@ -1174,7 +1175,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @return the name of the XML-RPC method class of the portlet
 	*/
-	public String getXmlRpcMethodClass();
+	public java.lang.String getXmlRpcMethodClass();
 
 	/**
 	* Returns the name of the XML-RPC method instance of the portlet.
@@ -1226,7 +1227,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return <code>true</code> if the portlet supports the specified mime type
 	and portlet mode
 	*/
-	public boolean hasPortletMode(String mimeType,
+	public boolean hasPortletMode(java.lang.String mimeType,
 		javax.portlet.PortletMode portletMode);
 
 	/**
@@ -1237,7 +1238,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return <code>true</code> if the portlet has a role with the specified
 	name
 	*/
-	public boolean hasRoleWithName(String roleName);
+	public boolean hasRoleWithName(java.lang.String roleName);
 
 	/**
 	* Returns <code>true</code> if the portlet supports the specified mime type
@@ -1248,7 +1249,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @return <code>true</code> if the portlet supports the specified mime type
 	and window state
 	*/
-	public boolean hasWindowState(String mimeType,
+	public boolean hasWindowState(java.lang.String mimeType,
 		javax.portlet.WindowState windowState);
 
 	/**
@@ -1538,7 +1539,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	represent asset types associated with the portlet
 	*/
 	public void setAssetRendererFactoryClasses(
-		java.util.List<String> assetRendererFactoryClasses);
+		java.util.List<java.lang.String> assetRendererFactoryClasses);
 
 	/**
 	* Sets the names of the classes that represent atom collection adapters
@@ -1548,7 +1549,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	represent atom collection adapters associated with the portlet
 	*/
 	public void setAtomCollectionAdapterClasses(
-		java.util.List<String> atomCollectionAdapterClasses);
+		java.util.List<java.lang.String> atomCollectionAdapterClasses);
 
 	/**
 	* Sets the names of the parameters that will be automatically propagated
@@ -1558,7 +1559,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	automatically propagated through the portlet
 	*/
 	public void setAutopropagatedParameters(
-		java.util.Set<String> autopropagatedParameters);
+		java.util.Set<java.lang.String> autopropagatedParameters);
 
 	/**
 	* Sets the configuration action class of the portlet.
@@ -1566,7 +1567,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param configurationActionClass the configuration action class of the
 	portlet
 	*/
-	public void setConfigurationActionClass(String configurationActionClass);
+	public void setConfigurationActionClass(
+		java.lang.String configurationActionClass);
 
 	/**
 	* Set the name of the category of the Control Panel where the portlet will
@@ -1575,7 +1577,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param controlPanelEntryCategory the name of the category of the Control
 	Panel where the portlet will be shown
 	*/
-	public void setControlPanelEntryCategory(String controlPanelEntryCategory);
+	public void setControlPanelEntryCategory(
+		java.lang.String controlPanelEntryCategory);
 
 	/**
 	* Sets the name of the class that will control when the portlet will be
@@ -1584,7 +1587,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param controlPanelEntryClass the name of the class that will control
 	when the portlet will be shown in the Control Panel
 	*/
-	public void setControlPanelEntryClass(String controlPanelEntryClass);
+	public void setControlPanelEntryClass(
+		java.lang.String controlPanelEntryClass);
 
 	/**
 	* Sets the relative weight of the portlet with respect to the other
@@ -1603,7 +1607,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param cssClassWrapper the name of the CSS class that will be injected in
 	the DIV that wraps this portlet
 	*/
-	public void setCssClassWrapper(String cssClassWrapper);
+	public void setCssClassWrapper(java.lang.String cssClassWrapper);
 
 	/**
 	* Sets the names of the classes that represent custom attribute displays
@@ -1613,7 +1617,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	represent custom attribute displays associated with the portlet
 	*/
 	public void setCustomAttributesDisplayClasses(
-		java.util.List<String> customAttributesDisplayClasses);
+		java.util.List<java.lang.String> customAttributesDisplayClasses);
 
 	/**
 	* Sets the default plugin settings of the portlet.
@@ -1627,21 +1631,21 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @param defaultPreferences the default preferences of the portlet
 	*/
-	public void setDefaultPreferences(String defaultPreferences);
+	public void setDefaultPreferences(java.lang.String defaultPreferences);
 
 	/**
 	* Sets the display name of the portlet.
 	*
 	* @param displayName the display name of the portlet
 	*/
-	public void setDisplayName(String displayName);
+	public void setDisplayName(java.lang.String displayName);
 
 	/**
 	* Sets expiration cache of the portlet.
 	*
 	* @param expCache expiration cache of the portlet
 	*/
-	public void setExpCache(Integer expCache);
+	public void setExpCache(java.lang.Integer expCache);
 
 	/**
 	* Sets the Facebook integration method of the portlet.
@@ -1650,8 +1654,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	portlet
 	* @deprecated As of 7.0.0, with no direct replacement
 	*/
-	@Deprecated()
-	public void setFacebookIntegration(String facebookIntegration);
+	@java.lang.Deprecated()
+	public void setFacebookIntegration(java.lang.String facebookIntegration);
 
 	/**
 	* Sets a list of CSS files that will be referenced from the page's footer
@@ -1660,7 +1664,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param footerPortalCss a list of CSS files that will be referenced from
 	the page's footer relative to the portal's context path
 	*/
-	public void setFooterPortalCss(java.util.List<String> footerPortalCss);
+	public void setFooterPortalCss(
+		java.util.List<java.lang.String> footerPortalCss);
 
 	/**
 	* Sets a list of JavaScript files that will be referenced from the page's
@@ -1671,7 +1676,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	path
 	*/
 	public void setFooterPortalJavaScript(
-		java.util.List<String> footerPortalJavaScript);
+		java.util.List<java.lang.String> footerPortalJavaScript);
 
 	/**
 	* Sets a list of CSS files that will be referenced from the page's footer
@@ -1680,7 +1685,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param footerPortletCss a list of CSS files that will be referenced from
 	the page's footer relative to the portlet's context path
 	*/
-	public void setFooterPortletCss(java.util.List<String> footerPortletCss);
+	public void setFooterPortletCss(
+		java.util.List<java.lang.String> footerPortletCss);
 
 	/**
 	* Sets a list of JavaScript files that will be referenced from the page's
@@ -1691,7 +1697,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	context path
 	*/
 	public void setFooterPortletJavaScript(
-		java.util.List<String> footerPortletJavaScript);
+		java.util.List<java.lang.String> footerPortletJavaScript);
 
 	/**
 	* Sets the name of the friendly URL mapper class of the portlet.
@@ -1699,7 +1705,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param friendlyURLMapperClass the name of the friendly URL mapper class
 	of the portlet
 	*/
-	public void setFriendlyURLMapperClass(String friendlyURLMapperClass);
+	public void setFriendlyURLMapperClass(
+		java.lang.String friendlyURLMapperClass);
 
 	/**
 	* Sets the name of the friendly URL mapping of the portlet.
@@ -1707,7 +1714,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param friendlyURLMapping the name of the friendly URL mapping of the
 	portlet
 	*/
-	public void setFriendlyURLMapping(String friendlyURLMapping);
+	public void setFriendlyURLMapping(java.lang.String friendlyURLMapping);
 
 	/**
 	* Sets the class loader resource path to the friendly URL routes of the
@@ -1716,7 +1723,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param friendlyURLRoutes the class loader resource path to the friendly
 	URL routes of the portlet
 	*/
-	public void setFriendlyURLRoutes(String friendlyURLRoutes);
+	public void setFriendlyURLRoutes(java.lang.String friendlyURLRoutes);
 
 	/**
 	* Sets a list of CSS files that will be referenced from the page's header
@@ -1725,7 +1732,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param headerPortalCss a list of CSS files that will be referenced from
 	the page's header relative to the portal's context path
 	*/
-	public void setHeaderPortalCss(java.util.List<String> headerPortalCss);
+	public void setHeaderPortalCss(
+		java.util.List<java.lang.String> headerPortalCss);
 
 	/**
 	* Sets a list of JavaScript files that will be referenced from the page's
@@ -1736,7 +1744,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	path
 	*/
 	public void setHeaderPortalJavaScript(
-		java.util.List<String> headerPortalJavaScript);
+		java.util.List<java.lang.String> headerPortalJavaScript);
 
 	/**
 	* Sets a list of CSS files that will be referenced from the page's header
@@ -1745,7 +1753,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param headerPortletCss a list of CSS files that will be referenced from
 	the page's header relative to the portlet's context path
 	*/
-	public void setHeaderPortletCss(java.util.List<String> headerPortletCss);
+	public void setHeaderPortletCss(
+		java.util.List<java.lang.String> headerPortletCss);
 
 	/**
 	* Sets a list of JavaScript files that will be referenced from the page's
@@ -1756,14 +1765,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	context path
 	*/
 	public void setHeaderPortletJavaScript(
-		java.util.List<String> headerPortletJavaScript);
+		java.util.List<java.lang.String> headerPortletJavaScript);
 
 	/**
 	* Sets the icon of the portlet.
 	*
 	* @param icon the icon of the portlet
 	*/
-	public void setIcon(String icon);
+	public void setIcon(java.lang.String icon);
 
 	/**
 	* Set to <code>true</code> to include the portlet and make it available to
@@ -1781,14 +1790,16 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param indexerClasses the names of the classes that represent indexers
 	associated with the portlet
 	*/
-	public void setIndexerClasses(java.util.List<String> indexerClasses);
+	public void setIndexerClasses(
+		java.util.List<java.lang.String> indexerClasses);
 
 	/**
 	* Sets the init parameters of the portlet.
 	*
 	* @param initParams the init parameters of the portlet
 	*/
-	public void setInitParams(java.util.Map<String, String> initParams);
+	public void setInitParams(
+		java.util.Map<java.lang.String, java.lang.String> initParams);
 
 	/**
 	* Set to <code>true</code> if the portlet can be added multiple times to a
@@ -1831,19 +1842,20 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @param openSearchClass the name of the open search class of the portlet
 	*/
-	public void setOpenSearchClass(String openSearchClass);
+	public void setOpenSearchClass(java.lang.String openSearchClass);
 
 	/**
 	* Sets the parent struts path of the portlet.
 	*
 	* @param parentStrutsPath the parent struts path of the portlet
 	*/
-	public void setParentStrutsPath(String parentStrutsPath);
+	public void setParentStrutsPath(java.lang.String parentStrutsPath);
 
 	/**
 	* Sets the name of the permission propagator class of the portlet.
 	*/
-	public void setPermissionPropagatorClass(String permissionPropagatorClass);
+	public void setPermissionPropagatorClass(
+		java.lang.String permissionPropagatorClass);
 
 	/**
 	* Sets this portlet's plugin package.
@@ -1859,7 +1871,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param pollerProcessorClass the name of the poller processor class of the
 	portlet
 	*/
-	public void setPollerProcessorClass(String pollerProcessorClass);
+	public void setPollerProcessorClass(java.lang.String pollerProcessorClass);
 
 	/**
 	* Sets the name of the POP message listener class of the portlet.
@@ -1867,7 +1879,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param popMessageListenerClass the name of the POP message listener class
 	of the portlet
 	*/
-	public void setPopMessageListenerClass(String popMessageListenerClass);
+	public void setPopMessageListenerClass(
+		java.lang.String popMessageListenerClass);
 
 	/**
 	* Set to <code>true</code> if the portlet goes into the pop up state when
@@ -1890,7 +1903,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @param portletClass the name of the portlet class of the portlet
 	*/
-	public void setPortletClass(String portletClass);
+	public void setPortletClass(java.lang.String portletClass);
 
 	/**
 	* Sets the name of the portlet data handler class of the portlet.
@@ -1898,7 +1911,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param portletDataHandlerClass the name of portlet data handler class of
 	the portlet
 	*/
-	public void setPortletDataHandlerClass(String portletDataHandlerClass);
+	public void setPortletDataHandlerClass(
+		java.lang.String portletDataHandlerClass);
 
 	/**
 	* Sets the filters of the portlet.
@@ -1906,7 +1920,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param portletFilters the filters of the portlet
 	*/
 	public void setPortletFilters(
-		java.util.Map<String, PortletFilter> portletFilters);
+		java.util.Map<java.lang.String, PortletFilter> portletFilters);
 
 	/**
 	* Sets the portlet info of the portlet.
@@ -1921,7 +1935,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param portletLayoutListenerClass the name of the portlet layout listener
 	class of the portlet
 	*/
-	public void setPortletLayoutListenerClass(String portletLayoutListenerClass);
+	public void setPortletLayoutListenerClass(
+		java.lang.String portletLayoutListenerClass);
 
 	/**
 	* Sets the portlet modes of the portlet.
@@ -1929,21 +1944,21 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param portletModes the portlet modes of the portlet
 	*/
 	public void setPortletModes(
-		java.util.Map<String, java.util.Set<String>> portletModes);
+		java.util.Map<java.lang.String, java.util.Set<java.lang.String>> portletModes);
 
 	/**
 	* Sets the name of the portlet.
 	*
 	* @param portletName the name of the portlet
 	*/
-	public void setPortletName(String portletName);
+	public void setPortletName(java.lang.String portletName);
 
 	/**
 	* Sets the name of the portlet URL class of the portlet.
 	*
 	* @param portletURLClass the name of the portlet URL class of the portlet
 	*/
-	public void setPortletURLClass(String portletURLClass);
+	public void setPortletURLClass(java.lang.String portletURLClass);
 
 	/**
 	* Set to <code>true</code> if preferences are shared across the entire
@@ -1980,7 +1995,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param preferencesValidator the name of the preferences validator class
 	of the portlet
 	*/
-	public void setPreferencesValidator(String preferencesValidator);
+	public void setPreferencesValidator(java.lang.String preferencesValidator);
 
 	/**
 	* Set to <code>true</code> if the portlet does not share request attributes
@@ -2061,7 +2076,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @param resourceBundle the resource bundle of the portlet
 	*/
-	public void setResourceBundle(String resourceBundle);
+	public void setResourceBundle(java.lang.String resourceBundle);
 
 	/**
 	* Set to <code>true</code> if the portlet restores to the current view from
@@ -2077,14 +2092,15 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @param roleMappers the role mappers of the portlet
 	*/
-	public void setRoleMappers(java.util.Map<String, String> roleMappers);
+	public void setRoleMappers(
+		java.util.Map<java.lang.String, java.lang.String> roleMappers);
 
 	/**
 	* Sets an array of required roles of the portlet.
 	*
 	* @param rolesArray an array of required roles of the portlet
 	*/
-	public void setRolesArray(String[] rolesArray);
+	public void setRolesArray(java.lang.String[] rolesArray);
 
 	/**
 	* Sets the scheduler entries of the portlet.
@@ -2135,7 +2151,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	represent social activity interpreters associated with the portlet
 	*/
 	public void setSocialActivityInterpreterClasses(
-		java.util.List<String> socialActivityInterpreterClasses);
+		java.util.List<java.lang.String> socialActivityInterpreterClasses);
 
 	/**
 	* Sets the name of the social request interpreter class of the portlet.
@@ -2144,7 +2160,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	class of the portlet
 	*/
 	public void setSocialRequestInterpreterClass(
-		String socialRequestInterpreterClass);
+		java.lang.String socialRequestInterpreterClass);
 
 	/**
 	* Sets the names of the classes that represent staged model data handlers
@@ -2154,7 +2170,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	represent staged model data handlers associated with the portlet
 	*/
 	public void setStagedModelDataHandlerClasses(
-		java.util.List<String> stagedModelDataHandlerClasses);
+		java.util.List<java.lang.String> stagedModelDataHandlerClasses);
 
 	/**
 	* Set to <code>true</code> if the portlet is a static portlet that is
@@ -2179,14 +2195,15 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @param strutsPath the struts path of the portlet
 	*/
-	public void setStrutsPath(String strutsPath);
+	public void setStrutsPath(java.lang.String strutsPath);
 
 	/**
 	* Sets the supported locales of the portlet.
 	*
 	* @param supportedLocales the supported locales of the portlet
 	*/
-	public void setSupportedLocales(java.util.Set<String> supportedLocales);
+	public void setSupportedLocales(
+		java.util.Set<java.lang.String> supportedLocales);
 
 	/**
 	* Set to <code>true</code> if the portlet is a system portlet that a user
@@ -2203,7 +2220,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param templateHandlerClass the name of template handler class of the
 	portlet
 	*/
-	public void setTemplateHandlerClass(String templateHandlerClass);
+	public void setTemplateHandlerClass(java.lang.String templateHandlerClass);
 
 	/**
 	* Sets the names of the classes that represent trash handlers associated to
@@ -2213,7 +2230,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	handlers associated with the portlet
 	*/
 	public void setTrashHandlerClasses(
-		java.util.List<String> trashHandlerClasses);
+		java.util.List<java.lang.String> trashHandlerClasses);
 
 	/**
 	* Set to <code>true</code> if the portlet is an undeployed portlet.
@@ -2228,14 +2245,14 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*
 	* @param unlinkedRoles the unlinked roles of the portlet
 	*/
-	public void setUnlinkedRoles(java.util.Set<String> unlinkedRoles);
+	public void setUnlinkedRoles(java.util.Set<java.lang.String> unlinkedRoles);
 
 	/**
 	* Sets the name of the URL encoder class of the portlet.
 	*
 	* @param urlEncoderClass the name of the URL encoder class of the portlet
 	*/
-	public void setURLEncoderClass(String urlEncoderClass);
+	public void setURLEncoderClass(java.lang.String urlEncoderClass);
 
 	/**
 	* Set to <code>true</code> if the portlet uses the default template.
@@ -2253,7 +2270,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	user notification definitions of the portlet
 	*/
 	public void setUserNotificationDefinitions(
-		String userNotificationDefinitions);
+		java.lang.String userNotificationDefinitions);
 
 	/**
 	* Sets the names of the classes that represent user notification handlers
@@ -2263,21 +2280,21 @@ public interface Portlet extends PortletModel, PersistedModel {
 	represent user notification handlers associated with the portlet
 	*/
 	public void setUserNotificationHandlerClasses(
-		java.util.List<String> userNotificationHandlerClasses);
+		java.util.List<java.lang.String> userNotificationHandlerClasses);
 
 	/**
 	* Sets the user principal strategy of the portlet.
 	*
 	* @param userPrincipalStrategy the user principal strategy of the portlet
 	*/
-	public void setUserPrincipalStrategy(String userPrincipalStrategy);
+	public void setUserPrincipalStrategy(java.lang.String userPrincipalStrategy);
 
 	/**
 	* Sets the virtual path of the portlet.
 	*
 	* @param virtualPath the virtual path of the portlet
 	*/
-	public void setVirtualPath(String virtualPath);
+	public void setVirtualPath(java.lang.String virtualPath);
 
 	/**
 	* Sets the name of the WebDAV storage class of the portlet.
@@ -2285,7 +2302,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param webDAVStorageClass the name of the WebDAV storage class of the
 	portlet
 	*/
-	public void setWebDAVStorageClass(String webDAVStorageClass);
+	public void setWebDAVStorageClass(java.lang.String webDAVStorageClass);
 
 	/**
 	* Sets the name of the WebDAV storage token of the portlet.
@@ -2293,7 +2310,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param webDAVStorageToken the name of the WebDAV storage token of the
 	portlet
 	*/
-	public void setWebDAVStorageToken(String webDAVStorageToken);
+	public void setWebDAVStorageToken(java.lang.String webDAVStorageToken);
 
 	/**
 	* Sets the window states of the portlet.
@@ -2301,7 +2318,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param windowStates the window states of the portlet
 	*/
 	public void setWindowStates(
-		java.util.Map<String, java.util.Set<String>> windowStates);
+		java.util.Map<java.lang.String, java.util.Set<java.lang.String>> windowStates);
 
 	/**
 	* Sets the names of the classes that represent workflow handlers associated
@@ -2311,7 +2328,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	workflow handlers associated with the portlet
 	*/
 	public void setWorkflowHandlerClasses(
-		java.util.List<String> workflowHandlerClasses);
+		java.util.List<java.lang.String> workflowHandlerClasses);
 
 	/**
 	* Sets the name of the XML-RPC method class of the portlet.
@@ -2319,7 +2336,7 @@ public interface Portlet extends PortletModel, PersistedModel {
 	* @param xmlRpcMethodClass the name of the XML-RPC method class of the
 	portlet
 	*/
-	public void setXmlRpcMethodClass(String xmlRpcMethodClass);
+	public void setXmlRpcMethodClass(java.lang.String xmlRpcMethodClass);
 
 	public void unsetReady();
 }

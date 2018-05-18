@@ -35,23 +35,23 @@ public class ResourceBlockLocalServiceWrapper
 	}
 
 	@Override
-	public void addCompanyScopePermission(long companyId, String name,
-		long roleId, String actionId)
+	public void addCompanyScopePermission(long companyId,
+		java.lang.String name, long roleId, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.addCompanyScopePermission(companyId, name,
 			roleId, actionId);
 	}
 
 	@Override
-	public void addCompanyScopePermissions(long companyId, String name,
-		long roleId, long actionIdsLong) {
+	public void addCompanyScopePermissions(long companyId,
+		java.lang.String name, long roleId, long actionIdsLong) {
 		_resourceBlockLocalService.addCompanyScopePermissions(companyId, name,
 			roleId, actionIdsLong);
 	}
 
 	@Override
 	public void addGroupScopePermission(long companyId, long groupId,
-		String name, long roleId, String actionId)
+		java.lang.String name, long roleId, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.addGroupScopePermission(companyId, groupId,
 			name, roleId, actionId);
@@ -59,14 +59,15 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public void addGroupScopePermissions(long companyId, long groupId,
-		String name, long roleId, long actionIdsLong) {
+		java.lang.String name, long roleId, long actionIdsLong) {
 		_resourceBlockLocalService.addGroupScopePermissions(companyId, groupId,
 			name, roleId, actionIdsLong);
 	}
 
 	@Override
 	public void addIndividualScopePermission(long companyId, long groupId,
-		String name, long primKey, long roleId, String actionId)
+		java.lang.String name, long primKey, long roleId,
+		java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.addIndividualScopePermission(companyId,
 			groupId, name, primKey, roleId, actionId);
@@ -74,9 +75,9 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public void addIndividualScopePermission(long companyId, long groupId,
-		String name,
+		java.lang.String name,
 		com.liferay.portal.kernel.model.PermissionedModel permissionedModel,
-		long roleId, String actionId)
+		long roleId, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.addIndividualScopePermission(companyId,
 			groupId, name, permissionedModel, roleId, actionId);
@@ -84,7 +85,7 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public void addIndividualScopePermissions(long companyId, long groupId,
-		String name, long primKey, long roleId, long actionIdsLong)
+		java.lang.String name, long primKey, long roleId, long actionIdsLong)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.addIndividualScopePermissions(companyId,
 			groupId, name, primKey, roleId, actionIdsLong);
@@ -92,7 +93,7 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public void addIndividualScopePermissions(long companyId, long groupId,
-		String name,
+		java.lang.String name,
 		com.liferay.portal.kernel.model.PermissionedModel permissionedModel,
 		long roleId, long actionIdsLong) {
 		_resourceBlockLocalService.addIndividualScopePermissions(companyId,
@@ -114,7 +115,8 @@ public class ResourceBlockLocalServiceWrapper
 	*/
 	@Override
 	public com.liferay.portal.kernel.model.ResourceBlock addResourceBlock(
-		long companyId, long groupId, String name, String permissionsHash,
+		long companyId, long groupId, java.lang.String name,
+		java.lang.String permissionsHash,
 		com.liferay.portal.kernel.model.ResourceBlockPermissionsContainer resourceBlockPermissionsContainer) {
 		return _resourceBlockLocalService.addResourceBlock(companyId, groupId,
 			name, permissionsHash, resourceBlockPermissionsContainer);
@@ -277,31 +279,33 @@ public class ResourceBlockLocalServiceWrapper
 	}
 
 	@Override
-	public long getActionId(String name, String actionId)
+	public long getActionId(java.lang.String name, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _resourceBlockLocalService.getActionId(name, actionId);
 	}
 
 	@Override
-	public long getActionIds(String name, java.util.List<String> actionIds)
+	public long getActionIds(java.lang.String name,
+		java.util.List<java.lang.String> actionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _resourceBlockLocalService.getActionIds(name, actionIds);
 	}
 
 	@Override
-	public java.util.List<String> getActionIds(String name, long actionIdsLong) {
+	public java.util.List<java.lang.String> getActionIds(
+		java.lang.String name, long actionIdsLong) {
 		return _resourceBlockLocalService.getActionIds(name, actionIdsLong);
 	}
 
 	@Override
-	public java.util.List<String> getCompanyScopePermissions(
+	public java.util.List<java.lang.String> getCompanyScopePermissions(
 		com.liferay.portal.kernel.model.ResourceBlock resourceBlock, long roleId) {
 		return _resourceBlockLocalService.getCompanyScopePermissions(resourceBlock,
 			roleId);
 	}
 
 	@Override
-	public java.util.List<String> getGroupScopePermissions(
+	public java.util.List<java.lang.String> getGroupScopePermissions(
 		com.liferay.portal.kernel.model.ResourceBlock resourceBlock, long roleId) {
 		return _resourceBlockLocalService.getGroupScopePermissions(resourceBlock,
 			roleId);
@@ -318,19 +322,19 @@ public class ResourceBlockLocalServiceWrapper
 	* @return the OSGi service identifier
 	*/
 	@Override
-	public String getOSGiServiceIdentifier() {
+	public java.lang.String getOSGiServiceIdentifier() {
 		return _resourceBlockLocalService.getOSGiServiceIdentifier();
 	}
 
 	@Override
 	public com.liferay.portal.kernel.model.PermissionedModel getPermissionedModel(
-		String name, long primKey)
+		java.lang.String name, long primKey)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _resourceBlockLocalService.getPermissionedModel(name, primKey);
 	}
 
 	@Override
-	public java.util.List<String> getPermissions(
+	public java.util.List<java.lang.String> getPermissions(
 		com.liferay.portal.kernel.model.ResourceBlock resourceBlock, long roleId) {
 		return _resourceBlockLocalService.getPermissions(resourceBlock, roleId);
 	}
@@ -358,15 +362,15 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.model.ResourceBlock getResourceBlock(
-		String name, long primKey)
+		java.lang.String name, long primKey)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _resourceBlockLocalService.getResourceBlock(name, primKey);
 	}
 
 	@Override
-	public java.util.List<Long> getResourceBlockIds(
+	public java.util.List<java.lang.Long> getResourceBlockIds(
 		com.liferay.portal.kernel.security.permission.ResourceBlockIdsBag resourceBlockIdsBag,
-		String name, String actionId)
+		java.lang.String name, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _resourceBlockLocalService.getResourceBlockIds(resourceBlockIdsBag,
 			name, actionId);
@@ -374,7 +378,7 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.security.permission.ResourceBlockIdsBag getResourceBlockIdsBag(
-		long companyId, long groupId, String name, long[] roleIds) {
+		long companyId, long groupId, java.lang.String name, long[] roleIds) {
 		return _resourceBlockLocalService.getResourceBlockIdsBag(companyId,
 			groupId, name, roleIds);
 	}
@@ -408,13 +412,14 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.liferay.portal.kernel.model.Role> getRoles(
-		String name, long primKey, String actionId)
+		java.lang.String name, long primKey, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _resourceBlockLocalService.getRoles(name, primKey, actionId);
 	}
 
 	@Override
-	public boolean hasPermission(String name, long primKey, String actionId,
+	public boolean hasPermission(java.lang.String name, long primKey,
+		java.lang.String actionId,
 		com.liferay.portal.kernel.security.permission.ResourceBlockIdsBag resourceBlockIdsBag)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _resourceBlockLocalService.hasPermission(name, primKey,
@@ -422,9 +427,9 @@ public class ResourceBlockLocalServiceWrapper
 	}
 
 	@Override
-	public boolean hasPermission(String name,
+	public boolean hasPermission(java.lang.String name,
 		com.liferay.portal.kernel.model.PermissionedModel permissionedModel,
-		String actionId,
+		java.lang.String actionId,
 		com.liferay.portal.kernel.security.permission.ResourceBlockIdsBag resourceBlockIdsBag)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _resourceBlockLocalService.hasPermission(name,
@@ -432,7 +437,7 @@ public class ResourceBlockLocalServiceWrapper
 	}
 
 	@Override
-	public boolean isSupported(String name) {
+	public boolean isSupported(java.lang.String name) {
 		return _resourceBlockLocalService.isSupported(name);
 	}
 
@@ -443,7 +448,8 @@ public class ResourceBlockLocalServiceWrapper
 	}
 
 	@Override
-	public void releasePermissionedModelResourceBlock(String name, long primKey)
+	public void releasePermissionedModelResourceBlock(java.lang.String name,
+		long primKey)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.releasePermissionedModelResourceBlock(name,
 			primKey);
@@ -475,38 +481,38 @@ public class ResourceBlockLocalServiceWrapper
 	}
 
 	@Override
-	public void removeAllGroupScopePermissions(long companyId, String name,
-		long roleId, long actionIdsLong) {
+	public void removeAllGroupScopePermissions(long companyId,
+		java.lang.String name, long roleId, long actionIdsLong) {
 		_resourceBlockLocalService.removeAllGroupScopePermissions(companyId,
 			name, roleId, actionIdsLong);
 	}
 
 	@Override
-	public void removeAllGroupScopePermissions(long companyId, String name,
-		long roleId, String actionId)
+	public void removeAllGroupScopePermissions(long companyId,
+		java.lang.String name, long roleId, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.removeAllGroupScopePermissions(companyId,
 			name, roleId, actionId);
 	}
 
 	@Override
-	public void removeCompanyScopePermission(long companyId, String name,
-		long roleId, String actionId)
+	public void removeCompanyScopePermission(long companyId,
+		java.lang.String name, long roleId, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.removeCompanyScopePermission(companyId,
 			name, roleId, actionId);
 	}
 
 	@Override
-	public void removeCompanyScopePermissions(long companyId, String name,
-		long roleId, long actionIdsLong) {
+	public void removeCompanyScopePermissions(long companyId,
+		java.lang.String name, long roleId, long actionIdsLong) {
 		_resourceBlockLocalService.removeCompanyScopePermissions(companyId,
 			name, roleId, actionIdsLong);
 	}
 
 	@Override
 	public void removeGroupScopePermission(long companyId, long groupId,
-		String name, long roleId, String actionId)
+		java.lang.String name, long roleId, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.removeGroupScopePermission(companyId,
 			groupId, name, roleId, actionId);
@@ -514,14 +520,15 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public void removeGroupScopePermissions(long companyId, long groupId,
-		String name, long roleId, long actionIdsLong) {
+		java.lang.String name, long roleId, long actionIdsLong) {
 		_resourceBlockLocalService.removeGroupScopePermissions(companyId,
 			groupId, name, roleId, actionIdsLong);
 	}
 
 	@Override
 	public void removeIndividualScopePermission(long companyId, long groupId,
-		String name, long primKey, long roleId, String actionId)
+		java.lang.String name, long primKey, long roleId,
+		java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.removeIndividualScopePermission(companyId,
 			groupId, name, primKey, roleId, actionId);
@@ -529,9 +536,9 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public void removeIndividualScopePermission(long companyId, long groupId,
-		String name,
+		java.lang.String name,
 		com.liferay.portal.kernel.model.PermissionedModel permissionedModel,
-		long roleId, String actionId)
+		long roleId, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.removeIndividualScopePermission(companyId,
 			groupId, name, permissionedModel, roleId, actionId);
@@ -539,7 +546,7 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public void removeIndividualScopePermissions(long companyId, long groupId,
-		String name, long primKey, long roleId, long actionIdsLong)
+		java.lang.String name, long primKey, long roleId, long actionIdsLong)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.removeIndividualScopePermissions(companyId,
 			groupId, name, primKey, roleId, actionIdsLong);
@@ -547,7 +554,7 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public void removeIndividualScopePermissions(long companyId, long groupId,
-		String name,
+		java.lang.String name,
 		com.liferay.portal.kernel.model.PermissionedModel permissionedModel,
 		long roleId, long actionIdsLong) {
 		_resourceBlockLocalService.removeIndividualScopePermissions(companyId,
@@ -555,23 +562,25 @@ public class ResourceBlockLocalServiceWrapper
 	}
 
 	@Override
-	public void setCompanyScopePermissions(long companyId, String name,
-		long roleId, java.util.List<String> actionIds)
+	public void setCompanyScopePermissions(long companyId,
+		java.lang.String name, long roleId,
+		java.util.List<java.lang.String> actionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.setCompanyScopePermissions(companyId, name,
 			roleId, actionIds);
 	}
 
 	@Override
-	public void setCompanyScopePermissions(long companyId, String name,
-		long roleId, long actionIdsLong) {
+	public void setCompanyScopePermissions(long companyId,
+		java.lang.String name, long roleId, long actionIdsLong) {
 		_resourceBlockLocalService.setCompanyScopePermissions(companyId, name,
 			roleId, actionIdsLong);
 	}
 
 	@Override
 	public void setGroupScopePermissions(long companyId, long groupId,
-		String name, long roleId, java.util.List<String> actionIds)
+		java.lang.String name, long roleId,
+		java.util.List<java.lang.String> actionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.setGroupScopePermissions(companyId, groupId,
 			name, roleId, actionIds);
@@ -579,14 +588,15 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public void setGroupScopePermissions(long companyId, long groupId,
-		String name, long roleId, long actionIdsLong) {
+		java.lang.String name, long roleId, long actionIdsLong) {
 		_resourceBlockLocalService.setGroupScopePermissions(companyId, groupId,
 			name, roleId, actionIdsLong);
 	}
 
 	@Override
 	public void setIndividualScopePermissions(long companyId, long groupId,
-		String name, long primKey, long roleId, java.util.List<String> actionIds)
+		java.lang.String name, long primKey, long roleId,
+		java.util.List<java.lang.String> actionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.setIndividualScopePermissions(companyId,
 			groupId, name, primKey, roleId, actionIds);
@@ -594,7 +604,7 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public void setIndividualScopePermissions(long companyId, long groupId,
-		String name, long primKey, long roleId, long actionIdsLong)
+		java.lang.String name, long primKey, long roleId, long actionIdsLong)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.setIndividualScopePermissions(companyId,
 			groupId, name, primKey, roleId, actionIdsLong);
@@ -602,8 +612,8 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public void setIndividualScopePermissions(long companyId, long groupId,
-		String name, long primKey,
-		java.util.Map<Long, String[]> roleIdsToActionIds)
+		java.lang.String name, long primKey,
+		java.util.Map<java.lang.Long, java.lang.String[]> roleIdsToActionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.setIndividualScopePermissions(companyId,
 			groupId, name, primKey, roleIdsToActionIds);
@@ -611,9 +621,9 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public void setIndividualScopePermissions(long companyId, long groupId,
-		String name,
+		java.lang.String name,
 		com.liferay.portal.kernel.model.PermissionedModel permissionedModel,
-		long roleId, java.util.List<String> actionIds)
+		long roleId, java.util.List<java.lang.String> actionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.setIndividualScopePermissions(companyId,
 			groupId, name, permissionedModel, roleId, actionIds);
@@ -621,7 +631,7 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public void setIndividualScopePermissions(long companyId, long groupId,
-		String name,
+		java.lang.String name,
 		com.liferay.portal.kernel.model.PermissionedModel permissionedModel,
 		long roleId, long actionIdsLong) {
 		_resourceBlockLocalService.setIndividualScopePermissions(companyId,
@@ -629,22 +639,22 @@ public class ResourceBlockLocalServiceWrapper
 	}
 
 	@Override
-	public void updateCompanyScopePermissions(long companyId, String name,
-		long roleId, long actionIdsLong, int operator) {
+	public void updateCompanyScopePermissions(long companyId,
+		java.lang.String name, long roleId, long actionIdsLong, int operator) {
 		_resourceBlockLocalService.updateCompanyScopePermissions(companyId,
 			name, roleId, actionIdsLong, operator);
 	}
 
 	@Override
 	public void updateGroupScopePermissions(long companyId, long groupId,
-		String name, long roleId, long actionIdsLong, int operator) {
+		java.lang.String name, long roleId, long actionIdsLong, int operator) {
 		_resourceBlockLocalService.updateGroupScopePermissions(companyId,
 			groupId, name, roleId, actionIdsLong, operator);
 	}
 
 	@Override
 	public void updateIndividualScopePermissions(long companyId, long groupId,
-		String name,
+		java.lang.String name,
 		com.liferay.portal.kernel.model.PermissionedModel permissionedModel,
 		long roleId, long actionIdsLong, int operator) {
 		_resourceBlockLocalService.updateIndividualScopePermissions(companyId,
@@ -665,9 +675,9 @@ public class ResourceBlockLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.model.ResourceBlock updateResourceBlockId(
-		long companyId, long groupId, String name,
+		long companyId, long groupId, java.lang.String name,
 		com.liferay.portal.kernel.model.PermissionedModel permissionedModel,
-		String permissionsHash,
+		java.lang.String permissionsHash,
 		com.liferay.portal.kernel.model.ResourceBlockPermissionsContainer resourceBlockPermissionsContainer) {
 		return _resourceBlockLocalService.updateResourceBlockId(companyId,
 			groupId, name, permissionedModel, permissionsHash,
@@ -675,7 +685,8 @@ public class ResourceBlockLocalServiceWrapper
 	}
 
 	@Override
-	public void verifyResourceBlockId(long companyId, String name, long primKey)
+	public void verifyResourceBlockId(long companyId, java.lang.String name,
+		long primKey)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_resourceBlockLocalService.verifyResourceBlockId(companyId, name,
 			primKey);

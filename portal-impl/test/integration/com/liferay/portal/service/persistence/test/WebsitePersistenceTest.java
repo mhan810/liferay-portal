@@ -167,7 +167,8 @@ public class WebsitePersistenceTest {
 			newWebsite.getClassPK());
 		Assert.assertEquals(existingWebsite.getUrl(), newWebsite.getUrl());
 		Assert.assertEquals(existingWebsite.getTypeId(), newWebsite.getTypeId());
-		Assert.assertEquals(existingWebsite.isPrimary(), newWebsite.isPrimary());
+		Assert.assertEquals(existingWebsite.getPrimary(),
+			newWebsite.getPrimary());
 		Assert.assertEquals(Time.getShortTimestamp(
 				existingWebsite.getLastPublishDate()),
 			Time.getShortTimestamp(newWebsite.getLastPublishDate()));

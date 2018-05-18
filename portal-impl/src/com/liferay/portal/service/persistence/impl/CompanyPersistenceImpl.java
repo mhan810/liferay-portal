@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.service.persistence.CompanyPersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -42,7 +41,6 @@ import com.liferay.portal.model.impl.CompanyModelImpl;
 import java.io.Serializable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -878,7 +876,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Company company : list) {
-					if ((system != company.isSystem())) {
+					if ((system != company.getSystem())) {
 						list = null;
 
 						break;
@@ -1521,6 +1519,8 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 	@Override
 	protected Company removeImpl(Company company) {
+		company = toUnwrappedModel(company);
+
 		Session session = null;
 
 		try {
@@ -1551,23 +1551,9 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 	@Override
 	public Company updateImpl(Company company) {
+		company = toUnwrappedModel(company);
+
 		boolean isNew = company.isNew();
-
-		if (!(company instanceof CompanyModelImpl)) {
-			InvocationHandler invocationHandler = null;
-
-			if (ProxyUtil.isProxyClass(company.getClass())) {
-				invocationHandler = ProxyUtil.getInvocationHandler(company);
-
-				throw new IllegalArgumentException(
-					"Implement ModelWrapper in company proxy " +
-					invocationHandler.getClass());
-			}
-
-			throw new IllegalArgumentException(
-				"Implement ModelWrapper in custom Company implementation " +
-				company.getClass());
-		}
 
 		CompanyModelImpl companyModelImpl = (CompanyModelImpl)company;
 
@@ -1599,7 +1585,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 		}
 		else
 		 if (isNew) {
-			Object[] args = new Object[] { companyModelImpl.isSystem() };
+			Object[] args = new Object[] { companyModelImpl.getSystem() };
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_SYSTEM, args);
 			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SYSTEM,
@@ -1621,7 +1607,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SYSTEM,
 					args);
 
-				args = new Object[] { companyModelImpl.isSystem() };
+				args = new Object[] { companyModelImpl.getSystem() };
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_SYSTEM, args);
 				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SYSTEM,
@@ -1638,6 +1624,31 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 		company.resetOriginalValues();
 
 		return company;
+	}
+
+	protected Company toUnwrappedModel(Company company) {
+		if (company instanceof CompanyImpl) {
+			return company;
+		}
+
+		CompanyImpl companyImpl = new CompanyImpl();
+
+		companyImpl.setNew(company.isNew());
+		companyImpl.setPrimaryKey(company.getPrimaryKey());
+
+		companyImpl.setMvccVersion(company.getMvccVersion());
+		companyImpl.setCompanyId(company.getCompanyId());
+		companyImpl.setAccountId(company.getAccountId());
+		companyImpl.setWebId(company.getWebId());
+		companyImpl.setKey(company.getKey());
+		companyImpl.setMx(company.getMx());
+		companyImpl.setHomeURL(company.getHomeURL());
+		companyImpl.setLogoId(company.getLogoId());
+		companyImpl.setSystem(company.isSystem());
+		companyImpl.setMaxUsers(company.getMaxUsers());
+		companyImpl.setActive(company.isActive());
+
+		return companyImpl;
 	}
 
 	/**

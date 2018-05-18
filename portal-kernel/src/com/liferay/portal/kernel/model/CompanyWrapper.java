@@ -63,9 +63,9 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 		attributes.put("mx", getMx());
 		attributes.put("homeURL", getHomeURL());
 		attributes.put("logoId", getLogoId());
-		attributes.put("system", isSystem());
+		attributes.put("system", getSystem());
 		attributes.put("maxUsers", getMaxUsers());
-		attributes.put("active", isActive());
+		attributes.put("active", getActive());
 
 		return attributes;
 	}
@@ -140,7 +140,7 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new CompanyWrapper((Company)_company.clone());
 	}
 
@@ -176,12 +176,12 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	}
 
 	@Override
-	public String getAdminName() {
+	public java.lang.String getAdminName() {
 		return _company.getAdminName();
 	}
 
 	@Override
-	public String getAuthType() {
+	public java.lang.String getAuthType() {
 		return _company.getAuthType();
 	}
 
@@ -202,12 +202,12 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	}
 
 	@Override
-	public String getDefaultWebId() {
+	public java.lang.String getDefaultWebId() {
 		return _company.getDefaultWebId();
 	}
 
 	@Override
-	public String getEmailAddress() {
+	public java.lang.String getEmailAddress() {
 		return _company.getEmailAddress();
 	}
 
@@ -234,7 +234,7 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	* @return the home url of this company
 	*/
 	@Override
-	public String getHomeURL() {
+	public java.lang.String getHomeURL() {
 		return _company.getHomeURL();
 	}
 
@@ -244,7 +244,7 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	* @return the key of this company
 	*/
 	@Override
-	public String getKey() {
+	public java.lang.String getKey() {
 		return _company.getKey();
 	}
 
@@ -295,18 +295,18 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	* @return the mx of this company
 	*/
 	@Override
-	public String getMx() {
+	public java.lang.String getMx() {
 		return _company.getMx();
 	}
 
 	@Override
-	public String getName()
+	public java.lang.String getName()
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _company.getName();
 	}
 
 	@Override
-	public String getPortalURL(long groupId)
+	public java.lang.String getPortalURL(long groupId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _company.getPortalURL(groupId);
 	}
@@ -327,7 +327,7 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	}
 
 	@Override
-	public String getShortName()
+	public java.lang.String getShortName()
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _company.getShortName();
 	}
@@ -349,7 +349,7 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	}
 
 	@Override
-	public String getVirtualHostname() {
+	public java.lang.String getVirtualHostname() {
 		return _company.getVirtualHostname();
 	}
 
@@ -359,12 +359,12 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	* @return the web ID of this company
 	*/
 	@Override
-	public String getWebId() {
+	public java.lang.String getWebId() {
 		return _company.getWebId();
 	}
 
 	@Override
-	public boolean hasCompanyMx(String emailAddress) {
+	public boolean hasCompanyMx(java.lang.String emailAddress) {
 		return _company.hasCompanyMx(emailAddress);
 	}
 
@@ -504,7 +504,7 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	* @param homeURL the home url of this company
 	*/
 	@Override
-	public void setHomeURL(String homeURL) {
+	public void setHomeURL(java.lang.String homeURL) {
 		_company.setHomeURL(homeURL);
 	}
 
@@ -514,7 +514,7 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	* @param key the key of this company
 	*/
 	@Override
-	public void setKey(String key) {
+	public void setKey(java.lang.String key) {
 		_company.setKey(key);
 	}
 
@@ -559,7 +559,7 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	* @param mx the mx of this company
 	*/
 	@Override
-	public void setMx(String mx) {
+	public void setMx(java.lang.String mx) {
 		_company.setMx(mx);
 	}
 
@@ -594,7 +594,7 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	}
 
 	@Override
-	public void setVirtualHostname(String virtualHostname) {
+	public void setVirtualHostname(java.lang.String virtualHostname) {
 		_company.setVirtualHostname(virtualHostname);
 	}
 
@@ -604,7 +604,7 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	* @param webId the web ID of this company
 	*/
 	@Override
-	public void setWebId(String webId) {
+	public void setWebId(java.lang.String webId) {
 		_company.setWebId(webId);
 	}
 
@@ -619,7 +619,7 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _company.toString();
 	}
 
@@ -629,7 +629,7 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _company.toXmlString();
 	}
 

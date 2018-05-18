@@ -27,7 +27,6 @@ import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.LayoutRevision;
 import com.liferay.portal.kernel.model.LayoutRevisionModel;
 import com.liferay.portal.kernel.model.LayoutRevisionSoap;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -190,10 +189,10 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 		model.setLayoutSetBranchId(soapModel.getLayoutSetBranchId());
 		model.setLayoutBranchId(soapModel.getLayoutBranchId());
 		model.setParentLayoutRevisionId(soapModel.getParentLayoutRevisionId());
-		model.setHead(soapModel.isHead());
-		model.setMajor(soapModel.isMajor());
+		model.setHead(soapModel.getHead());
+		model.setMajor(soapModel.getMajor());
 		model.setPlid(soapModel.getPlid());
-		model.setPrivateLayout(soapModel.isPrivateLayout());
+		model.setPrivateLayout(soapModel.getPrivateLayout());
 		model.setName(soapModel.getName());
 		model.setTitle(soapModel.getTitle());
 		model.setDescription(soapModel.getDescription());
@@ -283,10 +282,10 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 		attributes.put("layoutSetBranchId", getLayoutSetBranchId());
 		attributes.put("layoutBranchId", getLayoutBranchId());
 		attributes.put("parentLayoutRevisionId", getParentLayoutRevisionId());
-		attributes.put("head", isHead());
-		attributes.put("major", isMajor());
+		attributes.put("head", getHead());
+		attributes.put("major", getMajor());
 		attributes.put("plid", getPlid());
-		attributes.put("privateLayout", isPrivateLayout());
+		attributes.put("privateLayout", getPrivateLayout());
 		attributes.put("name", getName());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
@@ -1675,10 +1674,10 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 		layoutRevisionImpl.setLayoutSetBranchId(getLayoutSetBranchId());
 		layoutRevisionImpl.setLayoutBranchId(getLayoutBranchId());
 		layoutRevisionImpl.setParentLayoutRevisionId(getParentLayoutRevisionId());
-		layoutRevisionImpl.setHead(isHead());
-		layoutRevisionImpl.setMajor(isMajor());
+		layoutRevisionImpl.setHead(getHead());
+		layoutRevisionImpl.setMajor(getMajor());
 		layoutRevisionImpl.setPlid(getPlid());
-		layoutRevisionImpl.setPrivateLayout(isPrivateLayout());
+		layoutRevisionImpl.setPrivateLayout(getPrivateLayout());
 		layoutRevisionImpl.setName(getName());
 		layoutRevisionImpl.setTitle(getTitle());
 		layoutRevisionImpl.setDescription(getDescription());
@@ -1831,13 +1830,13 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 
 		layoutRevisionCacheModel.parentLayoutRevisionId = getParentLayoutRevisionId();
 
-		layoutRevisionCacheModel.head = isHead();
+		layoutRevisionCacheModel.head = getHead();
 
-		layoutRevisionCacheModel.major = isMajor();
+		layoutRevisionCacheModel.major = getMajor();
 
 		layoutRevisionCacheModel.plid = getPlid();
 
-		layoutRevisionCacheModel.privateLayout = isPrivateLayout();
+		layoutRevisionCacheModel.privateLayout = getPrivateLayout();
 
 		layoutRevisionCacheModel.name = getName();
 
@@ -1964,13 +1963,13 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 		sb.append(", parentLayoutRevisionId=");
 		sb.append(getParentLayoutRevisionId());
 		sb.append(", head=");
-		sb.append(isHead());
+		sb.append(getHead());
 		sb.append(", major=");
-		sb.append(isMajor());
+		sb.append(getMajor());
 		sb.append(", plid=");
 		sb.append(getPlid());
 		sb.append(", privateLayout=");
-		sb.append(isPrivateLayout());
+		sb.append(getPrivateLayout());
 		sb.append(", name=");
 		sb.append(getName());
 		sb.append(", title=");
@@ -2058,11 +2057,11 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>head</column-name><column-value><![CDATA[");
-		sb.append(isHead());
+		sb.append(getHead());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>major</column-name><column-value><![CDATA[");
-		sb.append(isMajor());
+		sb.append(getMajor());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>plid</column-name><column-value><![CDATA[");
@@ -2070,7 +2069,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>privateLayout</column-name><column-value><![CDATA[");
-		sb.append(isPrivateLayout());
+		sb.append(getPrivateLayout());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>name</column-name><column-value><![CDATA[");
@@ -2136,7 +2135,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 
 	private static final ClassLoader _classLoader = LayoutRevision.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			LayoutRevision.class, ModelWrapper.class
+			LayoutRevision.class
 		};
 	private long _mvccVersion;
 	private long _layoutRevisionId;

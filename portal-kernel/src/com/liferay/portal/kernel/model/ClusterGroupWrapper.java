@@ -60,7 +60,7 @@ public class ClusterGroupWrapper implements ClusterGroup,
 		attributes.put("clusterGroupId", getClusterGroupId());
 		attributes.put("name", getName());
 		attributes.put("clusterNodeIds", getClusterNodeIds());
-		attributes.put("wholeCluster", isWholeCluster());
+		attributes.put("wholeCluster", getWholeCluster());
 
 		return attributes;
 	}
@@ -99,7 +99,7 @@ public class ClusterGroupWrapper implements ClusterGroup,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new ClusterGroupWrapper((ClusterGroup)_clusterGroup.clone());
 	}
 
@@ -124,12 +124,12 @@ public class ClusterGroupWrapper implements ClusterGroup,
 	* @return the cluster node IDs of this cluster group
 	*/
 	@Override
-	public String getClusterNodeIds() {
+	public java.lang.String getClusterNodeIds() {
 		return _clusterGroup.getClusterNodeIds();
 	}
 
 	@Override
-	public String[] getClusterNodeIdsArray() {
+	public java.lang.String[] getClusterNodeIdsArray() {
 		return _clusterGroup.getClusterNodeIdsArray();
 	}
 
@@ -154,7 +154,7 @@ public class ClusterGroupWrapper implements ClusterGroup,
 	* @return the name of this cluster group
 	*/
 	@Override
-	public String getName() {
+	public java.lang.String getName() {
 		return _clusterGroup.getName();
 	}
 
@@ -239,7 +239,7 @@ public class ClusterGroupWrapper implements ClusterGroup,
 	* @param clusterNodeIds the cluster node IDs of this cluster group
 	*/
 	@Override
-	public void setClusterNodeIds(String clusterNodeIds) {
+	public void setClusterNodeIds(java.lang.String clusterNodeIds) {
 		_clusterGroup.setClusterNodeIds(clusterNodeIds);
 	}
 
@@ -274,7 +274,7 @@ public class ClusterGroupWrapper implements ClusterGroup,
 	* @param name the name of this cluster group
 	*/
 	@Override
-	public void setName(String name) {
+	public void setName(java.lang.String name) {
 		_clusterGroup.setName(name);
 	}
 
@@ -319,7 +319,7 @@ public class ClusterGroupWrapper implements ClusterGroup,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _clusterGroup.toString();
 	}
 
@@ -329,7 +329,7 @@ public class ClusterGroupWrapper implements ClusterGroup,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _clusterGroup.toXmlString();
 	}
 

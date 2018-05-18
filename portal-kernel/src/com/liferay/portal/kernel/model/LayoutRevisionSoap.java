@@ -45,10 +45,10 @@ public class LayoutRevisionSoap implements Serializable {
 		soapModel.setLayoutSetBranchId(model.getLayoutSetBranchId());
 		soapModel.setLayoutBranchId(model.getLayoutBranchId());
 		soapModel.setParentLayoutRevisionId(model.getParentLayoutRevisionId());
-		soapModel.setHead(model.isHead());
-		soapModel.setMajor(model.isMajor());
+		soapModel.setHead(model.getHead());
+		soapModel.setMajor(model.getMajor());
 		soapModel.setPlid(model.getPlid());
-		soapModel.setPrivateLayout(model.isPrivateLayout());
+		soapModel.setPrivateLayout(model.getPrivateLayout());
 		soapModel.setName(model.getName());
 		soapModel.setTitle(model.getTitle());
 		soapModel.setDescription(model.getDescription());

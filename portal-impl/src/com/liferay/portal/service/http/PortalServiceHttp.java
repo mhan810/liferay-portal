@@ -54,7 +54,8 @@ import com.liferay.portal.kernel.util.MethodKey;
  */
 @ProviderType
 public class PortalServiceHttp {
-	public static String getAutoDeployDirectory(HttpPrincipal httpPrincipal) {
+	public static java.lang.String getAutoDeployDirectory(
+		HttpPrincipal httpPrincipal) {
 		try {
 			MethodKey methodKey = new MethodKey(PortalServiceUtil.class,
 					"getAutoDeployDirectory",
@@ -71,7 +72,7 @@ public class PortalServiceHttp {
 				throw new com.liferay.portal.kernel.exception.SystemException(e);
 			}
 
-			return (String)returnObj;
+			return (java.lang.String)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException se) {
 			_log.error(se, se);
@@ -105,7 +106,7 @@ public class PortalServiceHttp {
 		}
 	}
 
-	public static String getVersion(HttpPrincipal httpPrincipal) {
+	public static java.lang.String getVersion(HttpPrincipal httpPrincipal) {
 		try {
 			MethodKey methodKey = new MethodKey(PortalServiceUtil.class,
 					"getVersion", _getVersionParameterTypes2);
@@ -121,7 +122,7 @@ public class PortalServiceHttp {
 				throw new com.liferay.portal.kernel.exception.SystemException(e);
 			}
 
-			return (String)returnObj;
+			return (java.lang.String)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException se) {
 			_log.error(se, se);
@@ -131,7 +132,7 @@ public class PortalServiceHttp {
 	}
 
 	public static void testAddClassName_Rollback(HttpPrincipal httpPrincipal,
-		String classNameValue) {
+		java.lang.String classNameValue) {
 		try {
 			MethodKey methodKey = new MethodKey(PortalServiceUtil.class,
 					"testAddClassName_Rollback",
@@ -155,7 +156,7 @@ public class PortalServiceHttp {
 	}
 
 	public static void testAddClassName_Success(HttpPrincipal httpPrincipal,
-		String classNameValue) {
+		java.lang.String classNameValue) {
 		try {
 			MethodKey methodKey = new MethodKey(PortalServiceUtil.class,
 					"testAddClassName_Success",
@@ -179,7 +180,7 @@ public class PortalServiceHttp {
 	}
 
 	public static void testAddClassNameAndTestTransactionPortletBar_PortalRollback(
-		HttpPrincipal httpPrincipal, String transactionPortletBarText) {
+		HttpPrincipal httpPrincipal, java.lang.String transactionPortletBarText) {
 		try {
 			MethodKey methodKey = new MethodKey(PortalServiceUtil.class,
 					"testAddClassNameAndTestTransactionPortletBar_PortalRollback",
@@ -203,7 +204,7 @@ public class PortalServiceHttp {
 	}
 
 	public static void testAddClassNameAndTestTransactionPortletBar_PortletRollback(
-		HttpPrincipal httpPrincipal, String transactionPortletBarText) {
+		HttpPrincipal httpPrincipal, java.lang.String transactionPortletBarText) {
 		try {
 			MethodKey methodKey = new MethodKey(PortalServiceUtil.class,
 					"testAddClassNameAndTestTransactionPortletBar_PortletRollback",
@@ -227,7 +228,7 @@ public class PortalServiceHttp {
 	}
 
 	public static void testAddClassNameAndTestTransactionPortletBar_Success(
-		HttpPrincipal httpPrincipal, String transactionPortletBarText) {
+		HttpPrincipal httpPrincipal, java.lang.String transactionPortletBarText) {
 		try {
 			MethodKey methodKey = new MethodKey(PortalServiceUtil.class,
 					"testAddClassNameAndTestTransactionPortletBar_Success",
@@ -379,17 +380,17 @@ public class PortalServiceHttp {
 		};
 	private static final Class<?>[] _getVersionParameterTypes2 = new Class[] {  };
 	private static final Class<?>[] _testAddClassName_RollbackParameterTypes3 = new Class[] {
-			String.class
+			java.lang.String.class
 		};
 	private static final Class<?>[] _testAddClassName_SuccessParameterTypes4 = new Class[] {
-			String.class
+			java.lang.String.class
 		};
 	private static final Class<?>[] _testAddClassNameAndTestTransactionPortletBar_PortalRollbackParameterTypes5 =
-		new Class[] { String.class };
+		new Class[] { java.lang.String.class };
 	private static final Class<?>[] _testAddClassNameAndTestTransactionPortletBar_PortletRollbackParameterTypes6 =
-		new Class[] { String.class };
+		new Class[] { java.lang.String.class };
 	private static final Class<?>[] _testAddClassNameAndTestTransactionPortletBar_SuccessParameterTypes7 =
-		new Class[] { String.class };
+		new Class[] { java.lang.String.class };
 	private static final Class<?>[] _testAutoSyncHibernateSessionStateOnTxCreationParameterTypes8 =
 		new Class[] {  };
 	private static final Class<?>[] _testDeleteClassNameParameterTypes9 = new Class[] {

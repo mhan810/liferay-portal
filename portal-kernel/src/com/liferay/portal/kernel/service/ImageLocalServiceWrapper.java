@@ -254,7 +254,7 @@ public class ImageLocalServiceWrapper implements ImageLocalService,
 	* @return the OSGi service identifier
 	*/
 	@Override
-	public String getOSGiServiceIdentifier() {
+	public java.lang.String getOSGiServiceIdentifier() {
 		return _imageLocalService.getOSGiServiceIdentifier();
 	}
 
@@ -293,7 +293,7 @@ public class ImageLocalServiceWrapper implements ImageLocalService,
 
 	@Override
 	public com.liferay.portal.kernel.model.Image updateImage(long imageId,
-		byte[] bytes, String type, int height, int width, int size)
+		byte[] bytes, java.lang.String type, int height, int width, int size)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _imageLocalService.updateImage(imageId, bytes, type, height,
 			width, size);

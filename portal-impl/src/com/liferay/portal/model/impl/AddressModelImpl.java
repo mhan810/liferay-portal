@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.model.Address;
 import com.liferay.portal.kernel.model.AddressModel;
 import com.liferay.portal.kernel.model.AddressSoap;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -176,8 +175,8 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 		model.setRegionId(soapModel.getRegionId());
 		model.setCountryId(soapModel.getCountryId());
 		model.setTypeId(soapModel.getTypeId());
-		model.setMailing(soapModel.isMailing());
-		model.setPrimary(soapModel.isPrimary());
+		model.setMailing(soapModel.getMailing());
+		model.setPrimary(soapModel.getPrimary());
 
 		return model;
 	}
@@ -260,8 +259,8 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 		attributes.put("regionId", getRegionId());
 		attributes.put("countryId", getCountryId());
 		attributes.put("typeId", getTypeId());
-		attributes.put("mailing", isMailing());
-		attributes.put("primary", isPrimary());
+		attributes.put("mailing", getMailing());
+		attributes.put("primary", getPrimary());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -838,8 +837,8 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 		addressImpl.setRegionId(getRegionId());
 		addressImpl.setCountryId(getCountryId());
 		addressImpl.setTypeId(getTypeId());
-		addressImpl.setMailing(isMailing());
-		addressImpl.setPrimary(isPrimary());
+		addressImpl.setMailing(getMailing());
+		addressImpl.setPrimary(getPrimary());
 
 		addressImpl.resetOriginalValues();
 
@@ -1027,9 +1026,9 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 
 		addressCacheModel.typeId = getTypeId();
 
-		addressCacheModel.mailing = isMailing();
+		addressCacheModel.mailing = getMailing();
 
-		addressCacheModel.primary = isPrimary();
+		addressCacheModel.primary = getPrimary();
 
 		return addressCacheModel;
 	}
@@ -1075,9 +1074,9 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 		sb.append(", typeId=");
 		sb.append(getTypeId());
 		sb.append(", mailing=");
-		sb.append(isMailing());
+		sb.append(getMailing());
 		sb.append(", primary=");
-		sb.append(isPrimary());
+		sb.append(getPrimary());
 		sb.append("}");
 
 		return sb.toString();
@@ -1165,11 +1164,11 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>mailing</column-name><column-value><![CDATA[");
-		sb.append(isMailing());
+		sb.append(getMailing());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>primary</column-name><column-value><![CDATA[");
-		sb.append(isPrimary());
+		sb.append(getPrimary());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -1179,7 +1178,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 
 	private static final ClassLoader _classLoader = Address.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			Address.class, ModelWrapper.class
+			Address.class
 		};
 	private long _mvccVersion;
 	private String _uuid;

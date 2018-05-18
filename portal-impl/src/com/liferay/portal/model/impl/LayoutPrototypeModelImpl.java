@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.LayoutPrototype;
 import com.liferay.portal.kernel.model.LayoutPrototypeModel;
 import com.liferay.portal.kernel.model.LayoutPrototypeSoap;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -154,7 +153,7 @@ public class LayoutPrototypeModelImpl extends BaseModelImpl<LayoutPrototype>
 		model.setName(soapModel.getName());
 		model.setDescription(soapModel.getDescription());
 		model.setSettings(soapModel.getSettings());
-		model.setActive(soapModel.isActive());
+		model.setActive(soapModel.getActive());
 
 		return model;
 	}
@@ -231,7 +230,7 @@ public class LayoutPrototypeModelImpl extends BaseModelImpl<LayoutPrototype>
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
 		attributes.put("settings", getSettings());
-		attributes.put("active", isActive());
+		attributes.put("active", getActive());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -831,7 +830,7 @@ public class LayoutPrototypeModelImpl extends BaseModelImpl<LayoutPrototype>
 		layoutPrototypeImpl.setName(getName());
 		layoutPrototypeImpl.setDescription(getDescription());
 		layoutPrototypeImpl.setSettings(getSettings());
-		layoutPrototypeImpl.setActive(isActive());
+		layoutPrototypeImpl.setActive(getActive());
 
 		layoutPrototypeImpl.resetOriginalValues();
 
@@ -979,7 +978,7 @@ public class LayoutPrototypeModelImpl extends BaseModelImpl<LayoutPrototype>
 			layoutPrototypeCacheModel.settings = null;
 		}
 
-		layoutPrototypeCacheModel.active = isActive();
+		layoutPrototypeCacheModel.active = getActive();
 
 		return layoutPrototypeCacheModel;
 	}
@@ -1011,7 +1010,7 @@ public class LayoutPrototypeModelImpl extends BaseModelImpl<LayoutPrototype>
 		sb.append(", settings=");
 		sb.append(getSettings());
 		sb.append(", active=");
-		sb.append(isActive());
+		sb.append(getActive());
 		sb.append("}");
 
 		return sb.toString();
@@ -1071,7 +1070,7 @@ public class LayoutPrototypeModelImpl extends BaseModelImpl<LayoutPrototype>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>active</column-name><column-value><![CDATA[");
-		sb.append(isActive());
+		sb.append(getActive());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -1081,7 +1080,7 @@ public class LayoutPrototypeModelImpl extends BaseModelImpl<LayoutPrototype>
 
 	private static final ClassLoader _classLoader = LayoutPrototype.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			LayoutPrototype.class, ModelWrapper.class
+			LayoutPrototype.class
 		};
 	private long _mvccVersion;
 	private String _uuid;

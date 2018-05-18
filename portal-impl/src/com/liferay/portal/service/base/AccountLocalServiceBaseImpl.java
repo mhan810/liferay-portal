@@ -38,7 +38,6 @@ import com.liferay.portal.kernel.service.AccountLocalService;
 import com.liferay.portal.kernel.service.BaseLocalServiceImpl;
 import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
 import com.liferay.portal.kernel.service.persistence.AccountPersistence;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 
@@ -90,7 +89,6 @@ public abstract class AccountLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the new account
 	 */
 	@Override
-	@Transactional(enabled = false)
 	public Account createAccount(long accountId) {
 		return accountPersistence.create(accountId);
 	}

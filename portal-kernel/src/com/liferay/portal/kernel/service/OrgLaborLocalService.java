@@ -77,7 +77,6 @@ public interface OrgLaborLocalService extends BaseLocalService,
 	* @param orgLaborId the primary key for the new org labor
 	* @return the new org labor
 	*/
-	@Transactional(enabled = false)
 	public OrgLabor createOrgLabor(long orgLaborId);
 
 	/**
@@ -214,7 +213,7 @@ public interface OrgLaborLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

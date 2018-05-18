@@ -22,7 +22,6 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserTracker;
 import com.liferay.portal.kernel.model.UserTrackerModel;
@@ -631,7 +630,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	private static final ClassLoader _classLoader = UserTracker.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			UserTracker.class, ModelWrapper.class
+			UserTracker.class
 		};
 	private long _mvccVersion;
 	private long _userTrackerId;

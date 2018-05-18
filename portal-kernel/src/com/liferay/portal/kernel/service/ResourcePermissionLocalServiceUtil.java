@@ -76,8 +76,9 @@ public class ResourcePermissionLocalServiceUtil {
 	* @param roleId the primary key of the role
 	* @param actionId the action ID
 	*/
-	public static void addResourcePermission(long companyId, String name,
-		int scope, String primKey, long roleId, String actionId)
+	public static void addResourcePermission(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey,
+		long roleId, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService()
 			.addResourcePermission(companyId, name, scope, primKey, roleId,
@@ -112,8 +113,8 @@ public class ResourcePermissionLocalServiceUtil {
 	* @param scope the scope
 	* @param resourceActionBitwiseValue the bitwise IDs of the actions
 	*/
-	public static void addResourcePermissions(String resourceName,
-		String roleName, int scope, long resourceActionBitwiseValue) {
+	public static void addResourcePermissions(java.lang.String resourceName,
+		java.lang.String roleName, int scope, long resourceActionBitwiseValue) {
 		getService()
 			.addResourcePermissions(resourceName, roleName, scope,
 			resourceActionBitwiseValue);
@@ -184,8 +185,8 @@ public class ResourcePermissionLocalServiceUtil {
 	* @param scope the scope
 	* @param primKey the primary key
 	*/
-	public static void deleteResourcePermissions(long companyId, String name,
-		int scope, long primKey)
+	public static void deleteResourcePermissions(long companyId,
+		java.lang.String name, int scope, long primKey)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().deleteResourcePermissions(companyId, name, scope, primKey);
 	}
@@ -211,8 +212,8 @@ public class ResourcePermissionLocalServiceUtil {
 	* @param scope the scope
 	* @param primKey the primary key
 	*/
-	public static void deleteResourcePermissions(long companyId, String name,
-		int scope, String primKey)
+	public static void deleteResourcePermissions(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().deleteResourcePermissions(companyId, name, scope, primKey);
 	}
@@ -301,7 +302,8 @@ public class ResourcePermissionLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.ResourcePermission fetchResourcePermission(
-		long companyId, String name, int scope, String primKey, long roleId) {
+		long companyId, java.lang.String name, int scope,
+		java.lang.String primKey, long roleId) {
 		return getService()
 				   .fetchResourcePermission(companyId, name, scope, primKey,
 			roleId);
@@ -311,9 +313,10 @@ public class ResourcePermissionLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
-	public static java.util.Map<Long, java.util.Set<String>> getAvailableResourcePermissionActionIds(
-		long companyId, String name, int scope, String primKey,
-		java.util.Collection<String> actionIds) {
+	public static java.util.Map<java.lang.Long, java.util.Set<java.lang.String>> getAvailableResourcePermissionActionIds(
+		long companyId, java.lang.String name, int scope,
+		java.lang.String primKey,
+		java.util.Collection<java.lang.String> actionIds) {
 		return getService()
 				   .getAvailableResourcePermissionActionIds(companyId, name,
 			scope, primKey, actionIds);
@@ -333,9 +336,10 @@ public class ResourcePermissionLocalServiceUtil {
 	* @return the intersection of action IDs the role has permission at the
 	scope to perform on resources of the type
 	*/
-	public static java.util.List<String> getAvailableResourcePermissionActionIds(
-		long companyId, String name, int scope, String primKey, long roleId,
-		java.util.Collection<String> actionIds)
+	public static java.util.List<java.lang.String> getAvailableResourcePermissionActionIds(
+		long companyId, java.lang.String name, int scope,
+		java.lang.String primKey, long roleId,
+		java.util.Collection<java.lang.String> actionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .getAvailableResourcePermissionActionIds(companyId, name,
@@ -348,9 +352,10 @@ public class ResourcePermissionLocalServiceUtil {
 	String, Collection)}
 	*/
 	@Deprecated
-	public static java.util.Map<Long, java.util.Set<String>> getAvailableResourcePermissionActionIds(
-		long companyId, String name, int scope, String primKey, long[] roleIds,
-		java.util.Collection<String> actionIds) {
+	public static java.util.Map<java.lang.Long, java.util.Set<java.lang.String>> getAvailableResourcePermissionActionIds(
+		long companyId, java.lang.String name, int scope,
+		java.lang.String primKey, long[] roleIds,
+		java.util.Collection<java.lang.String> actionIds) {
 		return getService()
 				   .getAvailableResourcePermissionActionIds(companyId, name,
 			scope, primKey, roleIds, actionIds);
@@ -365,7 +370,7 @@ public class ResourcePermissionLocalServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -402,7 +407,8 @@ public class ResourcePermissionLocalServiceUtil {
 	actions on resources of the type
 	*/
 	public static com.liferay.portal.kernel.model.ResourcePermission getResourcePermission(
-		long companyId, String name, int scope, String primKey, long roleId)
+		long companyId, java.lang.String name, int scope,
+		java.lang.String primKey, long roleId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .getResourcePermission(companyId, name, scope, primKey,
@@ -436,7 +442,8 @@ public class ResourcePermissionLocalServiceUtil {
 	* @return the resource permissions at the scope of the type
 	*/
 	public static java.util.List<com.liferay.portal.kernel.model.ResourcePermission> getResourcePermissions(
-		long companyId, String name, int scope, String primKey) {
+		long companyId, java.lang.String name, int scope,
+		java.lang.String primKey) {
 		return getService()
 				   .getResourcePermissions(companyId, name, scope, primKey);
 	}
@@ -460,8 +467,8 @@ public class ResourcePermissionLocalServiceUtil {
 	* @param primKey the primary key
 	* @return the number of resource permissions at the scope of the type
 	*/
-	public static int getResourcePermissionsCount(long companyId, String name,
-		int scope, String primKey) {
+	public static int getResourcePermissionsCount(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey) {
 		return getService()
 				   .getResourcePermissionsCount(companyId, name, scope, primKey);
 	}
@@ -477,7 +484,8 @@ public class ResourcePermissionLocalServiceUtil {
 	* @return the resource permissions associated with the resource
 	*/
 	public static java.util.List<com.liferay.portal.kernel.model.ResourcePermission> getResourceResourcePermissions(
-		long companyId, long groupId, String name, String primKey) {
+		long companyId, long groupId, java.lang.String name,
+		java.lang.String primKey) {
 		return getService()
 				   .getResourceResourcePermissions(companyId, groupId, name,
 			primKey);
@@ -521,7 +529,8 @@ public class ResourcePermissionLocalServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Role> getRoles(
-		long companyId, String name, int scope, String primKey, String actionId)
+		long companyId, java.lang.String name, int scope,
+		java.lang.String primKey, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getRoles(companyId, name, scope, primKey, actionId);
 	}
@@ -583,7 +592,7 @@ public class ResourcePermissionLocalServiceUtil {
 	*/
 	public static boolean hasResourcePermission(
 		java.util.List<com.liferay.portal.kernel.model.Resource> resources,
-		long[] roleIds, String actionId)
+		long[] roleIds, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().hasResourcePermission(resources, roleIds, actionId);
 	}
@@ -608,8 +617,9 @@ public class ResourcePermissionLocalServiceUtil {
 	* @return <code>true</code> if the role has permission to perform the
 	action on the resource; <code>false</code> otherwise
 	*/
-	public static boolean hasResourcePermission(long companyId, String name,
-		int scope, String primKey, long roleId, String actionId)
+	public static boolean hasResourcePermission(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey,
+		long roleId, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .hasResourcePermission(companyId, name, scope, primKey,
@@ -636,8 +646,9 @@ public class ResourcePermissionLocalServiceUtil {
 	* @return <code>true</code> if any one of the roles has permission to
 	perform the action on the resource; <code>false</code> otherwise
 	*/
-	public static boolean hasResourcePermission(long companyId, String name,
-		int scope, String primKey, long[] roleIds, String actionId)
+	public static boolean hasResourcePermission(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey,
+		long[] roleIds, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .hasResourcePermission(companyId, name, scope, primKey,
@@ -649,8 +660,9 @@ public class ResourcePermissionLocalServiceUtil {
 	String, String}
 	*/
 	@Deprecated
-	public static boolean[] hasResourcePermissions(long companyId, String name,
-		int scope, String primKey, long[] roleIds, String actionId)
+	public static boolean[] hasResourcePermissions(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey,
+		long[] roleIds, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .hasResourcePermissions(companyId, name, scope, primKey,
@@ -677,7 +689,7 @@ public class ResourcePermissionLocalServiceUtil {
 	action on the resource; <code>false</code> otherwise
 	*/
 	public static boolean hasScopeResourcePermission(long companyId,
-		String name, int scope, long roleId, String actionId)
+		java.lang.String name, int scope, long roleId, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .hasScopeResourcePermission(companyId, name, scope, roleId,
@@ -730,8 +742,9 @@ public class ResourcePermissionLocalServiceUtil {
 	* @param roleId the primary key of the role
 	* @param actionId the action ID
 	*/
-	public static void removeResourcePermission(long companyId, String name,
-		int scope, String primKey, long roleId, String actionId)
+	public static void removeResourcePermission(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey,
+		long roleId, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService()
 			.removeResourcePermission(companyId, name, scope, primKey, roleId,
@@ -751,8 +764,8 @@ public class ResourcePermissionLocalServiceUtil {
 	* @param roleId the primary key of the role
 	* @param actionId the action ID
 	*/
-	public static void removeResourcePermissions(long companyId, String name,
-		int scope, long roleId, String actionId)
+	public static void removeResourcePermissions(long companyId,
+		java.lang.String name, int scope, long roleId, java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService()
 			.removeResourcePermissions(companyId, name, scope, roleId, actionId);
@@ -785,8 +798,9 @@ public class ResourcePermissionLocalServiceUtil {
 	created the resource)
 	* @param actionIds the action IDs of the actions
 	*/
-	public static void setOwnerResourcePermissions(long companyId, String name,
-		int scope, String primKey, long roleId, long ownerId, String[] actionIds)
+	public static void setOwnerResourcePermissions(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey,
+		long roleId, long ownerId, java.lang.String[] actionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService()
 			.setOwnerResourcePermissions(companyId, name, scope, primKey,
@@ -817,8 +831,9 @@ public class ResourcePermissionLocalServiceUtil {
 	* @param roleId the primary key of the role
 	* @param actionIds the action IDs of the actions
 	*/
-	public static void setResourcePermissions(long companyId, String name,
-		int scope, String primKey, long roleId, String[] actionIds)
+	public static void setResourcePermissions(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey,
+		long roleId, java.lang.String[] actionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService()
 			.setResourcePermissions(companyId, name, scope, primKey, roleId,
@@ -848,9 +863,9 @@ public class ResourcePermissionLocalServiceUtil {
 	* @param primKey the primary key
 	* @param roleIdsToActionIds a map of role IDs to action IDs of the actions
 	*/
-	public static void setResourcePermissions(long companyId, String name,
-		int scope, String primKey,
-		java.util.Map<Long, String[]> roleIdsToActionIds)
+	public static void setResourcePermissions(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey,
+		java.util.Map<java.lang.Long, java.lang.String[]> roleIdsToActionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService()
 			.setResourcePermissions(companyId, name, scope, primKey,

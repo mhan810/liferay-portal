@@ -41,7 +41,6 @@ import com.liferay.portal.kernel.service.BaseLocalServiceImpl;
 import com.liferay.portal.kernel.service.ImageLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
 import com.liferay.portal.kernel.service.persistence.ImagePersistence;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 
@@ -93,7 +92,6 @@ public abstract class ImageLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the new image
 	 */
 	@Override
-	@Transactional(enabled = false)
 	public Image createImage(long imageId) {
 		return imagePersistence.create(imageId);
 	}

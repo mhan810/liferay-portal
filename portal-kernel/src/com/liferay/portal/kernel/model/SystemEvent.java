@@ -53,7 +53,7 @@ public interface SystemEvent extends SystemEventModel, PersistedModel {
 			}
 		};
 
-	public String getReferrerClassName();
+	public java.lang.String getReferrerClassName();
 
-	public void setReferrerClassName(String referrerClassName);
+	public void setReferrerClassName(java.lang.String referrerClassName);
 }

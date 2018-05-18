@@ -36,15 +36,12 @@ import com.liferay.portal.kernel.service.persistence.UserGroupGroupRolePK;
 import com.liferay.portal.kernel.service.persistence.UserGroupGroupRolePersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.model.impl.UserGroupGroupRoleImpl;
 import com.liferay.portal.model.impl.UserGroupGroupRoleModelImpl;
 
 import java.io.Serializable;
-
-import java.lang.reflect.InvocationHandler;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -2865,6 +2862,8 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 	@Override
 	protected UserGroupGroupRole removeImpl(
 		UserGroupGroupRole userGroupGroupRole) {
+		userGroupGroupRole = toUnwrappedModel(userGroupGroupRole);
+
 		Session session = null;
 
 		try {
@@ -2895,23 +2894,9 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 
 	@Override
 	public UserGroupGroupRole updateImpl(UserGroupGroupRole userGroupGroupRole) {
+		userGroupGroupRole = toUnwrappedModel(userGroupGroupRole);
+
 		boolean isNew = userGroupGroupRole.isNew();
-
-		if (!(userGroupGroupRole instanceof UserGroupGroupRoleModelImpl)) {
-			InvocationHandler invocationHandler = null;
-
-			if (ProxyUtil.isProxyClass(userGroupGroupRole.getClass())) {
-				invocationHandler = ProxyUtil.getInvocationHandler(userGroupGroupRole);
-
-				throw new IllegalArgumentException(
-					"Implement ModelWrapper in userGroupGroupRole proxy " +
-					invocationHandler.getClass());
-			}
-
-			throw new IllegalArgumentException(
-				"Implement ModelWrapper in custom UserGroupGroupRole implementation " +
-				userGroupGroupRole.getClass());
-		}
 
 		UserGroupGroupRoleModelImpl userGroupGroupRoleModelImpl = (UserGroupGroupRoleModelImpl)userGroupGroupRole;
 
@@ -3088,6 +3073,26 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 		userGroupGroupRole.resetOriginalValues();
 
 		return userGroupGroupRole;
+	}
+
+	protected UserGroupGroupRole toUnwrappedModel(
+		UserGroupGroupRole userGroupGroupRole) {
+		if (userGroupGroupRole instanceof UserGroupGroupRoleImpl) {
+			return userGroupGroupRole;
+		}
+
+		UserGroupGroupRoleImpl userGroupGroupRoleImpl = new UserGroupGroupRoleImpl();
+
+		userGroupGroupRoleImpl.setNew(userGroupGroupRole.isNew());
+		userGroupGroupRoleImpl.setPrimaryKey(userGroupGroupRole.getPrimaryKey());
+
+		userGroupGroupRoleImpl.setMvccVersion(userGroupGroupRole.getMvccVersion());
+		userGroupGroupRoleImpl.setUserGroupId(userGroupGroupRole.getUserGroupId());
+		userGroupGroupRoleImpl.setGroupId(userGroupGroupRole.getGroupId());
+		userGroupGroupRoleImpl.setRoleId(userGroupGroupRole.getRoleId());
+		userGroupGroupRoleImpl.setCompanyId(userGroupGroupRole.getCompanyId());
+
+		return userGroupGroupRoleImpl;
 	}
 
 	/**

@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.Website;
 import com.liferay.portal.kernel.model.WebsiteModel;
@@ -157,7 +156,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 		model.setClassPK(soapModel.getClassPK());
 		model.setUrl(soapModel.getUrl());
 		model.setTypeId(soapModel.getTypeId());
-		model.setPrimary(soapModel.isPrimary());
+		model.setPrimary(soapModel.getPrimary());
 		model.setLastPublishDate(soapModel.getLastPublishDate());
 
 		return model;
@@ -235,7 +234,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 		attributes.put("classPK", getClassPK());
 		attributes.put("url", getUrl());
 		attributes.put("typeId", getTypeId());
-		attributes.put("primary", isPrimary());
+		attributes.put("primary", getPrimary());
 		attributes.put("lastPublishDate", getLastPublishDate());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
@@ -667,7 +666,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 		websiteImpl.setClassPK(getClassPK());
 		websiteImpl.setUrl(getUrl());
 		websiteImpl.setTypeId(getTypeId());
-		websiteImpl.setPrimary(isPrimary());
+		websiteImpl.setPrimary(getPrimary());
 		websiteImpl.setLastPublishDate(getLastPublishDate());
 
 		websiteImpl.resetOriginalValues();
@@ -816,7 +815,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 
 		websiteCacheModel.typeId = getTypeId();
 
-		websiteCacheModel.primary = isPrimary();
+		websiteCacheModel.primary = getPrimary();
 
 		Date lastPublishDate = getLastPublishDate();
 
@@ -859,7 +858,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 		sb.append(", typeId=");
 		sb.append(getTypeId());
 		sb.append(", primary=");
-		sb.append(isPrimary());
+		sb.append(getPrimary());
 		sb.append(", lastPublishDate=");
 		sb.append(getLastPublishDate());
 		sb.append("}");
@@ -925,7 +924,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>primary</column-name><column-value><![CDATA[");
-		sb.append(isPrimary());
+		sb.append(getPrimary());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>lastPublishDate</column-name><column-value><![CDATA[");
@@ -939,7 +938,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 
 	private static final ClassLoader _classLoader = Website.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			Website.class, ModelWrapper.class
+			Website.class
 		};
 	private long _mvccVersion;
 	private String _uuid;

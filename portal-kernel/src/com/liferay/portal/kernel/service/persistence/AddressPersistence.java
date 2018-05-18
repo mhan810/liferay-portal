@@ -45,7 +45,7 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param uuid the uuid
 	* @return the matching addresses
 	*/
-	public java.util.List<Address> findByUuid(String uuid);
+	public java.util.List<Address> findByUuid(java.lang.String uuid);
 
 	/**
 	* Returns a range of all the addresses where uuid = &#63;.
@@ -59,7 +59,8 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param end the upper bound of the range of addresses (not inclusive)
 	* @return the range of matching addresses
 	*/
-	public java.util.List<Address> findByUuid(String uuid, int start, int end);
+	public java.util.List<Address> findByUuid(java.lang.String uuid, int start,
+		int end);
 
 	/**
 	* Returns an ordered range of all the addresses where uuid = &#63;.
@@ -74,7 +75,8 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching addresses
 	*/
-	public java.util.List<Address> findByUuid(String uuid, int start, int end,
+	public java.util.List<Address> findByUuid(java.lang.String uuid, int start,
+		int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator);
 
 	/**
@@ -91,7 +93,8 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching addresses
 	*/
-	public java.util.List<Address> findByUuid(String uuid, int start, int end,
+	public java.util.List<Address> findByUuid(java.lang.String uuid, int start,
+		int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator,
 		boolean retrieveFromCache);
 
@@ -103,7 +106,7 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @return the first matching address
 	* @throws NoSuchAddressException if a matching address could not be found
 	*/
-	public Address findByUuid_First(String uuid,
+	public Address findByUuid_First(java.lang.String uuid,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator)
 		throws NoSuchAddressException;
 
@@ -114,7 +117,7 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching address, or <code>null</code> if a matching address could not be found
 	*/
-	public Address fetchByUuid_First(String uuid,
+	public Address fetchByUuid_First(java.lang.String uuid,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator);
 
 	/**
@@ -125,7 +128,7 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @return the last matching address
 	* @throws NoSuchAddressException if a matching address could not be found
 	*/
-	public Address findByUuid_Last(String uuid,
+	public Address findByUuid_Last(java.lang.String uuid,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator)
 		throws NoSuchAddressException;
 
@@ -136,7 +139,7 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching address, or <code>null</code> if a matching address could not be found
 	*/
-	public Address fetchByUuid_Last(String uuid,
+	public Address fetchByUuid_Last(java.lang.String uuid,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator);
 
 	/**
@@ -148,7 +151,8 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @return the previous, current, and next address
 	* @throws NoSuchAddressException if a address with the primary key could not be found
 	*/
-	public Address[] findByUuid_PrevAndNext(long addressId, String uuid,
+	public Address[] findByUuid_PrevAndNext(long addressId,
+		java.lang.String uuid,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator)
 		throws NoSuchAddressException;
 
@@ -157,7 +161,7 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	*
 	* @param uuid the uuid
 	*/
-	public void removeByUuid(String uuid);
+	public void removeByUuid(java.lang.String uuid);
 
 	/**
 	* Returns the number of addresses where uuid = &#63;.
@@ -165,7 +169,7 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param uuid the uuid
 	* @return the number of matching addresses
 	*/
-	public int countByUuid(String uuid);
+	public int countByUuid(java.lang.String uuid);
 
 	/**
 	* Returns all the addresses where uuid = &#63; and companyId = &#63;.
@@ -174,7 +178,8 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param companyId the company ID
 	* @return the matching addresses
 	*/
-	public java.util.List<Address> findByUuid_C(String uuid, long companyId);
+	public java.util.List<Address> findByUuid_C(java.lang.String uuid,
+		long companyId);
 
 	/**
 	* Returns a range of all the addresses where uuid = &#63; and companyId = &#63;.
@@ -189,8 +194,8 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param end the upper bound of the range of addresses (not inclusive)
 	* @return the range of matching addresses
 	*/
-	public java.util.List<Address> findByUuid_C(String uuid, long companyId,
-		int start, int end);
+	public java.util.List<Address> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end);
 
 	/**
 	* Returns an ordered range of all the addresses where uuid = &#63; and companyId = &#63;.
@@ -206,8 +211,8 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching addresses
 	*/
-	public java.util.List<Address> findByUuid_C(String uuid, long companyId,
-		int start, int end,
+	public java.util.List<Address> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator);
 
 	/**
@@ -225,8 +230,8 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching addresses
 	*/
-	public java.util.List<Address> findByUuid_C(String uuid, long companyId,
-		int start, int end,
+	public java.util.List<Address> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator,
 		boolean retrieveFromCache);
 
@@ -239,7 +244,7 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @return the first matching address
 	* @throws NoSuchAddressException if a matching address could not be found
 	*/
-	public Address findByUuid_C_First(String uuid, long companyId,
+	public Address findByUuid_C_First(java.lang.String uuid, long companyId,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator)
 		throws NoSuchAddressException;
 
@@ -251,7 +256,7 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching address, or <code>null</code> if a matching address could not be found
 	*/
-	public Address fetchByUuid_C_First(String uuid, long companyId,
+	public Address fetchByUuid_C_First(java.lang.String uuid, long companyId,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator);
 
 	/**
@@ -263,7 +268,7 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @return the last matching address
 	* @throws NoSuchAddressException if a matching address could not be found
 	*/
-	public Address findByUuid_C_Last(String uuid, long companyId,
+	public Address findByUuid_C_Last(java.lang.String uuid, long companyId,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator)
 		throws NoSuchAddressException;
 
@@ -275,7 +280,7 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching address, or <code>null</code> if a matching address could not be found
 	*/
-	public Address fetchByUuid_C_Last(String uuid, long companyId,
+	public Address fetchByUuid_C_Last(java.lang.String uuid, long companyId,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator);
 
 	/**
@@ -288,8 +293,8 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @return the previous, current, and next address
 	* @throws NoSuchAddressException if a address with the primary key could not be found
 	*/
-	public Address[] findByUuid_C_PrevAndNext(long addressId, String uuid,
-		long companyId,
+	public Address[] findByUuid_C_PrevAndNext(long addressId,
+		java.lang.String uuid, long companyId,
 		com.liferay.portal.kernel.util.OrderByComparator<Address> orderByComparator)
 		throws NoSuchAddressException;
 
@@ -299,7 +304,7 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param uuid the uuid
 	* @param companyId the company ID
 	*/
-	public void removeByUuid_C(String uuid, long companyId);
+	public void removeByUuid_C(java.lang.String uuid, long companyId);
 
 	/**
 	* Returns the number of addresses where uuid = &#63; and companyId = &#63;.
@@ -308,7 +313,7 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	* @param companyId the company ID
 	* @return the number of matching addresses
 	*/
-	public int countByUuid_C(String uuid, long companyId);
+	public int countByUuid_C(java.lang.String uuid, long companyId);
 
 	/**
 	* Returns all the addresses where companyId = &#63;.
@@ -1338,5 +1343,5 @@ public interface AddressPersistence extends BasePersistence<Address> {
 	public int countAll();
 
 	@Override
-	public java.util.Set<String> getBadColumnNames();
+	public java.util.Set<java.lang.String> getBadColumnNames();
 }

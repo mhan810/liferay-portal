@@ -88,10 +88,10 @@ public interface Role extends RoleModel, PersistedModel {
 			}
 		};
 
-	public String getDescriptiveName()
+	public java.lang.String getDescriptiveName()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
-	public String getTypeLabel();
+	public java.lang.String getTypeLabel();
 
 	public boolean isSystem();
 

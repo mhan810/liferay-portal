@@ -95,7 +95,7 @@ public interface ResourceLocalService extends BaseLocalService {
 		ServiceContext serviceContext) throws PortalException;
 
 	public void addModelResources(long companyId, long groupId, long userId,
-		String name, long primKey, ModelPermissions modelPermissions)
+		java.lang.String name, long primKey, ModelPermissions modelPermissions)
 		throws PortalException;
 
 	/**
@@ -114,12 +114,13 @@ public interface ResourceLocalService extends BaseLocalService {
 	* @param guestPermissions the guest permissions to be applied
 	*/
 	public void addModelResources(long companyId, long groupId, long userId,
-		String name, long primKey, String[] groupPermissions,
-		String[] guestPermissions) throws PortalException;
+		java.lang.String name, long primKey,
+		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
+		throws PortalException;
 
 	public void addModelResources(long companyId, long groupId, long userId,
-		String name, String primKey, ModelPermissions modelPermissions)
-		throws PortalException;
+		java.lang.String name, java.lang.String primKey,
+		ModelPermissions modelPermissions) throws PortalException;
 
 	/**
 	* Adds resources for the model with the name and primary key string, always
@@ -137,8 +138,9 @@ public interface ResourceLocalService extends BaseLocalService {
 	* @param guestPermissions the guest permissions to be applied
 	*/
 	public void addModelResources(long companyId, long groupId, long userId,
-		String name, String primKey, String[] groupPermissions,
-		String[] guestPermissions) throws PortalException;
+		java.lang.String name, java.lang.String primKey,
+		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
+		throws PortalException;
 
 	/**
 	* Adds resources for the entity with the name and primary key, always
@@ -159,7 +161,7 @@ public interface ResourceLocalService extends BaseLocalService {
 	* @param addGuestPermissions whether to add guest permissions
 	*/
 	public void addResources(long companyId, long groupId, long userId,
-		String name, long primKey, boolean portletActions,
+		java.lang.String name, long primKey, boolean portletActions,
 		boolean addGroupPermissions, boolean addGuestPermissions)
 		throws PortalException;
 
@@ -182,9 +184,9 @@ public interface ResourceLocalService extends BaseLocalService {
 	* @param addGuestPermissions whether to add guest permissions
 	*/
 	public void addResources(long companyId, long groupId, long userId,
-		String name, String primKey, boolean portletActions,
-		boolean addGroupPermissions, boolean addGuestPermissions)
-		throws PortalException;
+		java.lang.String name, java.lang.String primKey,
+		boolean portletActions, boolean addGroupPermissions,
+		boolean addGuestPermissions) throws PortalException;
 
 	/**
 	* Adds resources for the entity with the name. Use this method if the user
@@ -197,8 +199,9 @@ public interface ResourceLocalService extends BaseLocalService {
 	* @param portletActions whether to associate portlet actions with the
 	resource
 	*/
-	public void addResources(long companyId, long groupId, String name,
-		boolean portletActions) throws PortalException;
+	public void addResources(long companyId, long groupId,
+		java.lang.String name, boolean portletActions)
+		throws PortalException;
 
 	/**
 	* Deletes the resource associated with the model at the scope.
@@ -220,8 +223,8 @@ public interface ResourceLocalService extends BaseLocalService {
 	ResourceConstants}.
 	* @param primKey the primary key of the resource instance
 	*/
-	public void deleteResource(long companyId, String name, int scope,
-		long primKey) throws PortalException;
+	public void deleteResource(long companyId, java.lang.String name,
+		int scope, long primKey) throws PortalException;
 
 	/**
 	* Deletes the resource matching the primary key at the scope.
@@ -233,15 +236,15 @@ public interface ResourceLocalService extends BaseLocalService {
 	ResourceConstants}.
 	* @param primKey the primary key string of the resource instance
 	*/
-	public void deleteResource(long companyId, String name, int scope,
-		String primKey) throws PortalException;
+	public void deleteResource(long companyId, java.lang.String name,
+		int scope, java.lang.String primKey) throws PortalException;
 
 	/**
 	* Returns the OSGi service identifier.
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	/**
 	* Returns a new resource with the name and primary key at the scope.
@@ -255,8 +258,8 @@ public interface ResourceLocalService extends BaseLocalService {
 	* @return the new resource
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Resource getResource(long companyId, String name, int scope,
-		String primKey);
+	public Resource getResource(long companyId, java.lang.String name,
+		int scope, java.lang.String primKey);
 
 	/**
 	* Returns <code>true</code> if the roles have permission to perform the
@@ -276,7 +279,7 @@ public interface ResourceLocalService extends BaseLocalService {
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasUserPermissions(long userId, long resourceId,
-		List<Resource> resources, String actionId, long[] roleIds)
+		List<Resource> resources, java.lang.String actionId, long[] roleIds)
 		throws PortalException;
 
 	/**
@@ -301,8 +304,8 @@ public interface ResourceLocalService extends BaseLocalService {
 	* @param primKey the primary key of the resource instance
 	* @param modelPermissions the model permissions to be applied
 	*/
-	public void updateResources(long companyId, long groupId, String name,
-		long primKey, ModelPermissions modelPermissions)
+	public void updateResources(long companyId, long groupId,
+		java.lang.String name, long primKey, ModelPermissions modelPermissions)
 		throws PortalException;
 
 	/**
@@ -317,8 +320,9 @@ public interface ResourceLocalService extends BaseLocalService {
 	* @param groupPermissions the group permissions to be applied
 	* @param guestPermissions the guest permissions to be applied
 	*/
-	public void updateResources(long companyId, long groupId, String name,
-		long primKey, String[] groupPermissions, String[] guestPermissions)
+	public void updateResources(long companyId, long groupId,
+		java.lang.String name, long primKey,
+		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
 		throws PortalException;
 
 	/**
@@ -332,9 +336,9 @@ public interface ResourceLocalService extends BaseLocalService {
 	* @param primKey the primary key string of the resource instance
 	* @param modelPermissions the model permissions to be applied
 	*/
-	public void updateResources(long companyId, long groupId, String name,
-		String primKey, ModelPermissions modelPermissions)
-		throws PortalException;
+	public void updateResources(long companyId, long groupId,
+		java.lang.String name, java.lang.String primKey,
+		ModelPermissions modelPermissions) throws PortalException;
 
 	/**
 	* Updates resources matching the group, name, and primary key string at the
@@ -348,8 +352,9 @@ public interface ResourceLocalService extends BaseLocalService {
 	* @param groupPermissions the group permissions to be applied
 	* @param guestPermissions the guest permissions to be applied
 	*/
-	public void updateResources(long companyId, long groupId, String name,
-		String primKey, String[] groupPermissions, String[] guestPermissions)
+	public void updateResources(long companyId, long groupId,
+		java.lang.String name, java.lang.String primKey,
+		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
 		throws PortalException;
 
 	/**
@@ -365,6 +370,6 @@ public interface ResourceLocalService extends BaseLocalService {
 	* @param primKey the primary key string of the resource instance
 	* @param newPrimKey the new primary key string of the resource
 	*/
-	public void updateResources(long companyId, String name, int scope,
-		String primKey, String newPrimKey);
+	public void updateResources(long companyId, java.lang.String name,
+		int scope, java.lang.String primKey, java.lang.String newPrimKey);
 }

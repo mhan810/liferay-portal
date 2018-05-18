@@ -91,7 +91,7 @@ public class ListTypeWrapper implements ListType, ModelWrapper<ListType> {
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new ListTypeWrapper((ListType)_listType.clone());
 	}
 
@@ -131,7 +131,7 @@ public class ListTypeWrapper implements ListType, ModelWrapper<ListType> {
 	* @return the name of this list type
 	*/
 	@Override
-	public String getName() {
+	public java.lang.String getName() {
 		return _listType.getName();
 	}
 
@@ -156,7 +156,7 @@ public class ListTypeWrapper implements ListType, ModelWrapper<ListType> {
 	* @return the type of this list type
 	*/
 	@Override
-	public String getType() {
+	public java.lang.String getType() {
 		return _listType.getType();
 	}
 
@@ -231,7 +231,7 @@ public class ListTypeWrapper implements ListType, ModelWrapper<ListType> {
 	* @param name the name of this list type
 	*/
 	@Override
-	public void setName(String name) {
+	public void setName(java.lang.String name) {
 		_listType.setName(name);
 	}
 
@@ -261,7 +261,7 @@ public class ListTypeWrapper implements ListType, ModelWrapper<ListType> {
 	* @param type the type of this list type
 	*/
 	@Override
-	public void setType(String type) {
+	public void setType(java.lang.String type) {
 		_listType.setType(type);
 	}
 
@@ -276,7 +276,7 @@ public class ListTypeWrapper implements ListType, ModelWrapper<ListType> {
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _listType.toString();
 	}
 
@@ -286,7 +286,7 @@ public class ListTypeWrapper implements ListType, ModelWrapper<ListType> {
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _listType.toXmlString();
 	}
 

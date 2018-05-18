@@ -44,14 +44,15 @@ public class PortletPreferencesServiceWrapper
 	* @return the OSGi service identifier
 	*/
 	@Override
-	public String getOSGiServiceIdentifier() {
+	public java.lang.String getOSGiServiceIdentifier() {
 		return _portletPreferencesService.getOSGiServiceIdentifier();
 	}
 
 	@Override
 	public void restoreArchivedPreferences(long groupId,
-		com.liferay.portal.kernel.model.Layout layout, String portletId,
-		long portletItemId, javax.portlet.PortletPreferences preferences)
+		com.liferay.portal.kernel.model.Layout layout,
+		java.lang.String portletId, long portletItemId,
+		javax.portlet.PortletPreferences preferences)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_portletPreferencesService.restoreArchivedPreferences(groupId, layout,
 			portletId, portletItemId, preferences);
@@ -59,7 +60,8 @@ public class PortletPreferencesServiceWrapper
 
 	@Override
 	public void restoreArchivedPreferences(long groupId,
-		com.liferay.portal.kernel.model.Layout layout, String portletId,
+		com.liferay.portal.kernel.model.Layout layout,
+		java.lang.String portletId,
 		com.liferay.portal.kernel.model.PortletItem portletItem,
 		javax.portlet.PortletPreferences preferences)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -68,9 +70,9 @@ public class PortletPreferencesServiceWrapper
 	}
 
 	@Override
-	public void restoreArchivedPreferences(long groupId, String name,
-		com.liferay.portal.kernel.model.Layout layout, String portletId,
-		javax.portlet.PortletPreferences preferences)
+	public void restoreArchivedPreferences(long groupId, java.lang.String name,
+		com.liferay.portal.kernel.model.Layout layout,
+		java.lang.String portletId, javax.portlet.PortletPreferences preferences)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_portletPreferencesService.restoreArchivedPreferences(groupId, name,
 			layout, portletId, preferences);
@@ -78,7 +80,7 @@ public class PortletPreferencesServiceWrapper
 
 	@Override
 	public void updateArchivePreferences(long userId, long groupId,
-		String name, String portletId,
+		java.lang.String name, java.lang.String portletId,
 		javax.portlet.PortletPreferences preferences)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_portletPreferencesService.updateArchivePreferences(userId, groupId,

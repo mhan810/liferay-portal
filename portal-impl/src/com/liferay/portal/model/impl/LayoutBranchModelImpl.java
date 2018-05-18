@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.LayoutBranch;
 import com.liferay.portal.kernel.model.LayoutBranchModel;
 import com.liferay.portal.kernel.model.LayoutBranchSoap;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -141,7 +140,7 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 		model.setPlid(soapModel.getPlid());
 		model.setName(soapModel.getName());
 		model.setDescription(soapModel.getDescription());
-		model.setMaster(soapModel.isMaster());
+		model.setMaster(soapModel.getMaster());
 
 		return model;
 	}
@@ -216,7 +215,7 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 		attributes.put("plid", getPlid());
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
-		attributes.put("master", isMaster());
+		attributes.put("master", getMaster());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -538,7 +537,7 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 		layoutBranchImpl.setPlid(getPlid());
 		layoutBranchImpl.setName(getName());
 		layoutBranchImpl.setDescription(getDescription());
-		layoutBranchImpl.setMaster(isMaster());
+		layoutBranchImpl.setMaster(getMaster());
 
 		layoutBranchImpl.resetOriginalValues();
 
@@ -660,7 +659,7 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 			layoutBranchCacheModel.description = null;
 		}
 
-		layoutBranchCacheModel.master = isMaster();
+		layoutBranchCacheModel.master = getMaster();
 
 		return layoutBranchCacheModel;
 	}
@@ -690,7 +689,7 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 		sb.append(", description=");
 		sb.append(getDescription());
 		sb.append(", master=");
-		sb.append(isMaster());
+		sb.append(getMaster());
 		sb.append("}");
 
 		return sb.toString();
@@ -746,7 +745,7 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>master</column-name><column-value><![CDATA[");
-		sb.append(isMaster());
+		sb.append(getMaster());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -756,7 +755,7 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 
 	private static final ClassLoader _classLoader = LayoutBranch.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			LayoutBranch.class, ModelWrapper.class
+			LayoutBranch.class
 		};
 	private long _mvccVersion;
 	private long _layoutBranchId;

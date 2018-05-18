@@ -22,7 +22,6 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserNotificationDelivery;
 import com.liferay.portal.kernel.model.UserNotificationDeliveryModel;
@@ -160,7 +159,7 @@ public class UserNotificationDeliveryModelImpl extends BaseModelImpl<UserNotific
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("notificationType", getNotificationType());
 		attributes.put("deliveryType", getDeliveryType());
-		attributes.put("deliver", isDeliver());
+		attributes.put("deliver", getDeliver());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -459,7 +458,7 @@ public class UserNotificationDeliveryModelImpl extends BaseModelImpl<UserNotific
 		userNotificationDeliveryImpl.setClassNameId(getClassNameId());
 		userNotificationDeliveryImpl.setNotificationType(getNotificationType());
 		userNotificationDeliveryImpl.setDeliveryType(getDeliveryType());
-		userNotificationDeliveryImpl.setDeliver(isDeliver());
+		userNotificationDeliveryImpl.setDeliver(getDeliver());
 
 		userNotificationDeliveryImpl.resetOriginalValues();
 
@@ -569,7 +568,7 @@ public class UserNotificationDeliveryModelImpl extends BaseModelImpl<UserNotific
 
 		userNotificationDeliveryCacheModel.deliveryType = getDeliveryType();
 
-		userNotificationDeliveryCacheModel.deliver = isDeliver();
+		userNotificationDeliveryCacheModel.deliver = getDeliver();
 
 		return userNotificationDeliveryCacheModel;
 	}
@@ -595,7 +594,7 @@ public class UserNotificationDeliveryModelImpl extends BaseModelImpl<UserNotific
 		sb.append(", deliveryType=");
 		sb.append(getDeliveryType());
 		sb.append(", deliver=");
-		sb.append(isDeliver());
+		sb.append(getDeliver());
 		sb.append("}");
 
 		return sb.toString();
@@ -643,7 +642,7 @@ public class UserNotificationDeliveryModelImpl extends BaseModelImpl<UserNotific
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>deliver</column-name><column-value><![CDATA[");
-		sb.append(isDeliver());
+		sb.append(getDeliver());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -653,7 +652,7 @@ public class UserNotificationDeliveryModelImpl extends BaseModelImpl<UserNotific
 
 	private static final ClassLoader _classLoader = UserNotificationDelivery.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			UserNotificationDelivery.class, ModelWrapper.class
+			UserNotificationDelivery.class
 		};
 	private long _mvccVersion;
 	private long _userNotificationDeliveryId;

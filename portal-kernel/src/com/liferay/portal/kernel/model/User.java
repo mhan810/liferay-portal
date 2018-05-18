@@ -78,7 +78,7 @@ public interface User extends UserModel, PersistedModel {
 	*
 	* @return the user's company's mail domain
 	*/
-	public String getCompanyMx()
+	public java.lang.String getCompanyMx()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	/**
@@ -96,7 +96,7 @@ public interface User extends UserModel, PersistedModel {
 	* @param password a password to incorporate with the digest
 	* @return a digest for the user, incorporating the password
 	*/
-	public String getDigest(String password);
+	public java.lang.String getDigest(java.lang.String password);
 
 	/**
 	* Returns the user's primary email address, or a blank string if the
@@ -105,7 +105,7 @@ public interface User extends UserModel, PersistedModel {
 	* @return the user's primary email address, or a blank string if the
 	address is fake
 	*/
-	public String getDisplayEmailAddress();
+	public java.lang.String getDisplayEmailAddress();
 
 	/**
 	* Returns the user's display URL, discounting the URL of the user's default
@@ -133,8 +133,9 @@ public interface User extends UserModel, PersistedModel {
 	* @return the user's display URL
 	* @deprecated As of 7.0.0, replaced by {@link #getDisplayURL(ThemeDisplay)}
 	*/
-	@Deprecated()
-	public String getDisplayURL(String portalURL, String mainPath)
+	@java.lang.Deprecated()
+	public java.lang.String getDisplayURL(java.lang.String portalURL,
+		java.lang.String mainPath)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	/**
@@ -170,9 +171,9 @@ public interface User extends UserModel, PersistedModel {
 	* @throws PortalException
 	* @deprecated As of 7.0.0, replaced by {@link #getDisplayURL(ThemeDisplay)}
 	*/
-	@Deprecated()
-	public String getDisplayURL(String portalURL, String mainPath,
-		boolean privateLayout)
+	@java.lang.Deprecated()
+	public java.lang.String getDisplayURL(java.lang.String portalURL,
+		java.lang.String mainPath, boolean privateLayout)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	/**
@@ -199,7 +200,7 @@ public interface User extends UserModel, PersistedModel {
 	* @param themeDisplay the theme display
 	* @return the user's display URL
 	*/
-	public String getDisplayURL(
+	public java.lang.String getDisplayURL(
 		com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
@@ -234,7 +235,7 @@ public interface User extends UserModel, PersistedModel {
 	* @return the user's display URL
 	* @throws PortalException
 	*/
-	public String getDisplayURL(
+	public java.lang.String getDisplayURL(
 		com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay,
 		boolean privateLayout)
 		throws com.liferay.portal.kernel.exception.PortalException;
@@ -261,7 +262,7 @@ public interface User extends UserModel, PersistedModel {
 	* @return the user's full name
 	*/
 	@com.liferay.portal.kernel.bean.AutoEscape()
-	public String getFullName();
+	public java.lang.String getFullName();
 
 	/**
 	* Returns the user's full name.
@@ -269,7 +270,7 @@ public interface User extends UserModel, PersistedModel {
 	* @return the user's full name
 	*/
 	@com.liferay.portal.kernel.bean.AutoEscape()
-	public String getFullName(boolean usePrefix, boolean useSuffix);
+	public java.lang.String getFullName(boolean usePrefix, boolean useSuffix);
 
 	public Group getGroup();
 
@@ -279,11 +280,11 @@ public interface User extends UserModel, PersistedModel {
 
 	public java.util.List<Group> getGroups();
 
-	public String getInitials();
+	public java.lang.String getInitials();
 
 	public java.util.Locale getLocale();
 
-	public String getLogin()
+	public java.lang.String getLogin()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	/**
@@ -301,7 +302,8 @@ public interface User extends UserModel, PersistedModel {
 	public java.util.List<Group> getMySiteGroups(int max)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
-	public java.util.List<Group> getMySiteGroups(String[] classNames, int max)
+	public java.util.List<Group> getMySiteGroups(
+		java.lang.String[] classNames, int max)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	public long[] getOrganizationIds()
@@ -317,18 +319,18 @@ public interface User extends UserModel, PersistedModel {
 		boolean includeAdministrative)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
-	public String getOriginalEmailAddress();
+	public java.lang.String getOriginalEmailAddress();
 
 	public boolean getPasswordModified();
 
 	public PasswordPolicy getPasswordPolicy()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
-	public String getPasswordUnencrypted();
+	public java.lang.String getPasswordUnencrypted();
 
 	public java.util.List<Phone> getPhones();
 
-	public String getPortraitURL(
+	public java.lang.String getPortraitURL(
 		com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
@@ -338,13 +340,13 @@ public interface User extends UserModel, PersistedModel {
 	public int getPublicLayoutsPageCount()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
-	public java.util.Set<String> getReminderQueryQuestions()
+	public java.util.Set<java.lang.String> getReminderQueryQuestions()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	public com.liferay.portal.kernel.util.RemotePreference getRemotePreference(
-		String name);
+		java.lang.String name);
 
-	public Iterable<com.liferay.portal.kernel.util.RemotePreference> getRemotePreferences();
+	public java.lang.Iterable<com.liferay.portal.kernel.util.RemotePreference> getRemotePreferences();
 
 	public long[] getRoleIds();
 
@@ -376,7 +378,7 @@ public interface User extends UserModel, PersistedModel {
 	public boolean hasCompanyMx()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
-	public boolean hasCompanyMx(String emailAddress)
+	public boolean hasCompanyMx(java.lang.String emailAddress)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	public boolean hasMySites()
@@ -414,5 +416,5 @@ public interface User extends UserModel, PersistedModel {
 
 	public void setPasswordModified(boolean passwordModified);
 
-	public void setPasswordUnencrypted(String passwordUnencrypted);
+	public void setPasswordUnencrypted(java.lang.String passwordUnencrypted);
 }

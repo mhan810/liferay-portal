@@ -198,13 +198,15 @@ public class UserServiceHttp {
 
 	public static com.liferay.portal.kernel.model.User addUser(
 		HttpPrincipal httpPrincipal, long companyId, boolean autoPassword,
-		String password1, String password2, boolean autoScreenName,
-		String screenName, String emailAddress, long facebookId, String openId,
-		java.util.Locale locale, String firstName, String middleName,
-		String lastName, long prefixId, long suffixId, boolean male,
-		int birthdayMonth, int birthdayDay, int birthdayYear, String jobTitle,
-		long[] groupIds, long[] organizationIds, long[] roleIds,
-		long[] userGroupIds, boolean sendEmail,
+		java.lang.String password1, java.lang.String password2,
+		boolean autoScreenName, java.lang.String screenName,
+		java.lang.String emailAddress, long facebookId,
+		java.lang.String openId, java.util.Locale locale,
+		java.lang.String firstName, java.lang.String middleName,
+		java.lang.String lastName, long prefixId, long suffixId, boolean male,
+		int birthdayMonth, int birthdayDay, int birthdayYear,
+		java.lang.String jobTitle, long[] groupIds, long[] organizationIds,
+		long[] roleIds, long[] userGroupIds, boolean sendEmail,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -243,13 +245,15 @@ public class UserServiceHttp {
 
 	public static com.liferay.portal.kernel.model.User addUser(
 		HttpPrincipal httpPrincipal, long companyId, boolean autoPassword,
-		String password1, String password2, boolean autoScreenName,
-		String screenName, String emailAddress, long facebookId, String openId,
-		java.util.Locale locale, String firstName, String middleName,
-		String lastName, long prefixId, long suffixId, boolean male,
-		int birthdayMonth, int birthdayDay, int birthdayYear, String jobTitle,
-		long[] groupIds, long[] organizationIds, long[] roleIds,
-		long[] userGroupIds,
+		java.lang.String password1, java.lang.String password2,
+		boolean autoScreenName, java.lang.String screenName,
+		java.lang.String emailAddress, long facebookId,
+		java.lang.String openId, java.util.Locale locale,
+		java.lang.String firstName, java.lang.String middleName,
+		java.lang.String lastName, long prefixId, long suffixId, boolean male,
+		int birthdayMonth, int birthdayDay, int birthdayYear,
+		java.lang.String jobTitle, long[] groupIds, long[] organizationIds,
+		long[] roleIds, long[] userGroupIds,
 		java.util.List<com.liferay.portal.kernel.model.Address> addresses,
 		java.util.List<com.liferay.portal.kernel.model.EmailAddress> emailAddresses,
 		java.util.List<com.liferay.portal.kernel.model.Phone> phones,
@@ -323,13 +327,15 @@ public class UserServiceHttp {
 
 	public static com.liferay.portal.kernel.model.User addUserWithWorkflow(
 		HttpPrincipal httpPrincipal, long companyId, boolean autoPassword,
-		String password1, String password2, boolean autoScreenName,
-		String screenName, String emailAddress, long facebookId, String openId,
-		java.util.Locale locale, String firstName, String middleName,
-		String lastName, long prefixId, long suffixId, boolean male,
-		int birthdayMonth, int birthdayDay, int birthdayYear, String jobTitle,
-		long[] groupIds, long[] organizationIds, long[] roleIds,
-		long[] userGroupIds, boolean sendEmail,
+		java.lang.String password1, java.lang.String password2,
+		boolean autoScreenName, java.lang.String screenName,
+		java.lang.String emailAddress, long facebookId,
+		java.lang.String openId, java.util.Locale locale,
+		java.lang.String firstName, java.lang.String middleName,
+		java.lang.String lastName, long prefixId, long suffixId, boolean male,
+		int birthdayMonth, int birthdayDay, int birthdayYear,
+		java.lang.String jobTitle, long[] groupIds, long[] organizationIds,
+		long[] roleIds, long[] userGroupIds, boolean sendEmail,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -368,13 +374,15 @@ public class UserServiceHttp {
 
 	public static com.liferay.portal.kernel.model.User addUserWithWorkflow(
 		HttpPrincipal httpPrincipal, long companyId, boolean autoPassword,
-		String password1, String password2, boolean autoScreenName,
-		String screenName, String emailAddress, long facebookId, String openId,
-		java.util.Locale locale, String firstName, String middleName,
-		String lastName, long prefixId, long suffixId, boolean male,
-		int birthdayMonth, int birthdayDay, int birthdayYear, String jobTitle,
-		long[] groupIds, long[] organizationIds, long[] roleIds,
-		long[] userGroupIds,
+		java.lang.String password1, java.lang.String password2,
+		boolean autoScreenName, java.lang.String screenName,
+		java.lang.String emailAddress, long facebookId,
+		java.lang.String openId, java.util.Locale locale,
+		java.lang.String firstName, java.lang.String middleName,
+		java.lang.String lastName, long prefixId, long suffixId, boolean male,
+		int birthdayMonth, int birthdayDay, int birthdayYear,
+		java.lang.String jobTitle, long[] groupIds, long[] organizationIds,
+		long[] roleIds, long[] userGroupIds,
 		java.util.List<com.liferay.portal.kernel.model.Address> addresses,
 		java.util.List<com.liferay.portal.kernel.model.EmailAddress> emailAddresses,
 		java.util.List<com.liferay.portal.kernel.model.Phone> phones,
@@ -952,7 +960,8 @@ public class UserServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.User getUserByEmailAddress(
-		HttpPrincipal httpPrincipal, long companyId, String emailAddress)
+		HttpPrincipal httpPrincipal, long companyId,
+		java.lang.String emailAddress)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserServiceUtil.class,
@@ -1016,7 +1025,7 @@ public class UserServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.User getUserByScreenName(
-		HttpPrincipal httpPrincipal, long companyId, String screenName)
+		HttpPrincipal httpPrincipal, long companyId, java.lang.String screenName)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserServiceUtil.class,
@@ -1080,7 +1089,7 @@ public class UserServiceHttp {
 	}
 
 	public static long getUserIdByEmailAddress(HttpPrincipal httpPrincipal,
-		long companyId, String emailAddress)
+		long companyId, java.lang.String emailAddress)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserServiceUtil.class,
@@ -1113,7 +1122,7 @@ public class UserServiceHttp {
 	}
 
 	public static long getUserIdByScreenName(HttpPrincipal httpPrincipal,
-		long companyId, String screenName)
+		long companyId, java.lang.String screenName)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserServiceUtil.class,
@@ -1209,7 +1218,7 @@ public class UserServiceHttp {
 	}
 
 	public static boolean hasRoleUser(HttpPrincipal httpPrincipal,
-		long companyId, String name, long userId, boolean inherited)
+		long companyId, java.lang.String name, long userId, boolean inherited)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserServiceUtil.class,
@@ -1241,7 +1250,8 @@ public class UserServiceHttp {
 	}
 
 	public static boolean sendPasswordByEmailAddress(
-		HttpPrincipal httpPrincipal, long companyId, String emailAddress)
+		HttpPrincipal httpPrincipal, long companyId,
+		java.lang.String emailAddress)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserServiceUtil.class,
@@ -1274,7 +1284,7 @@ public class UserServiceHttp {
 	}
 
 	public static boolean sendPasswordByScreenName(
-		HttpPrincipal httpPrincipal, long companyId, String screenName)
+		HttpPrincipal httpPrincipal, long companyId, java.lang.String screenName)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserServiceUtil.class,
@@ -1627,8 +1637,8 @@ public class UserServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.User updateEmailAddress(
-		HttpPrincipal httpPrincipal, long userId, String password,
-		String emailAddress1, String emailAddress2,
+		HttpPrincipal httpPrincipal, long userId, java.lang.String password,
+		java.lang.String emailAddress1, java.lang.String emailAddress2,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -1662,12 +1672,15 @@ public class UserServiceHttp {
 
 	public static com.liferay.portal.kernel.model.User updateIncompleteUser(
 		HttpPrincipal httpPrincipal, long companyId, boolean autoPassword,
-		String password1, String password2, boolean autoScreenName,
-		String screenName, String emailAddress, long facebookId, String openId,
-		java.util.Locale locale, String firstName, String middleName,
-		String lastName, long prefixId, long suffixId, boolean male,
-		int birthdayMonth, int birthdayDay, int birthdayYear, String jobTitle,
-		boolean updateUserInformation, boolean sendEmail,
+		java.lang.String password1, java.lang.String password2,
+		boolean autoScreenName, java.lang.String screenName,
+		java.lang.String emailAddress, long facebookId,
+		java.lang.String openId, java.util.Locale locale,
+		java.lang.String firstName, java.lang.String middleName,
+		java.lang.String lastName, long prefixId, long suffixId, boolean male,
+		int birthdayMonth, int birthdayDay, int birthdayYear,
+		java.lang.String jobTitle, boolean updateUserInformation,
+		boolean sendEmail,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -1737,7 +1750,7 @@ public class UserServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.User updateOpenId(
-		HttpPrincipal httpPrincipal, long userId, String openId)
+		HttpPrincipal httpPrincipal, long userId, java.lang.String openId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserServiceUtil.class,
@@ -1798,8 +1811,8 @@ public class UserServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.User updatePassword(
-		HttpPrincipal httpPrincipal, long userId, String password1,
-		String password2, boolean passwordReset)
+		HttpPrincipal httpPrincipal, long userId, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserServiceUtil.class,
@@ -1863,7 +1876,8 @@ public class UserServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.User updateReminderQuery(
-		HttpPrincipal httpPrincipal, long userId, String question, String answer)
+		HttpPrincipal httpPrincipal, long userId, java.lang.String question,
+		java.lang.String answer)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserServiceUtil.class,
@@ -1895,7 +1909,7 @@ public class UserServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.User updateScreenName(
-		HttpPrincipal httpPrincipal, long userId, String screenName)
+		HttpPrincipal httpPrincipal, long userId, java.lang.String screenName)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserServiceUtil.class,
@@ -1992,16 +2006,20 @@ public class UserServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.User updateUser(
-		HttpPrincipal httpPrincipal, long userId, String oldPassword,
-		String newPassword1, String newPassword2, boolean passwordReset,
-		String reminderQueryQuestion, String reminderQueryAnswer,
-		String screenName, String emailAddress, long facebookId, String openId,
-		boolean portrait, byte[] portraitBytes, String languageId,
-		String timeZoneId, String greeting, String comments, String firstName,
-		String middleName, String lastName, long prefixId, long suffixId,
-		boolean male, int birthdayMonth, int birthdayDay, int birthdayYear,
-		String smsSn, String facebookSn, String jabberSn, String skypeSn,
-		String twitterSn, String jobTitle, long[] groupIds,
+		HttpPrincipal httpPrincipal, long userId, java.lang.String oldPassword,
+		java.lang.String newPassword1, java.lang.String newPassword2,
+		boolean passwordReset, java.lang.String reminderQueryQuestion,
+		java.lang.String reminderQueryAnswer, java.lang.String screenName,
+		java.lang.String emailAddress, long facebookId,
+		java.lang.String openId, boolean portrait, byte[] portraitBytes,
+		java.lang.String languageId, java.lang.String timeZoneId,
+		java.lang.String greeting, java.lang.String comments,
+		java.lang.String firstName, java.lang.String middleName,
+		java.lang.String lastName, long prefixId, long suffixId, boolean male,
+		int birthdayMonth, int birthdayDay, int birthdayYear,
+		java.lang.String smsSn, java.lang.String facebookSn,
+		java.lang.String jabberSn, java.lang.String skypeSn,
+		java.lang.String twitterSn, java.lang.String jobTitle, long[] groupIds,
 		long[] organizationIds, long[] roleIds,
 		java.util.List<com.liferay.portal.kernel.model.UserGroupRole> userGroupRoles,
 		long[] userGroupIds,
@@ -2051,15 +2069,19 @@ public class UserServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.User updateUser(
-		HttpPrincipal httpPrincipal, long userId, String oldPassword,
-		String newPassword1, String newPassword2, boolean passwordReset,
-		String reminderQueryQuestion, String reminderQueryAnswer,
-		String screenName, String emailAddress, long facebookId, String openId,
-		String languageId, String timeZoneId, String greeting, String comments,
-		String firstName, String middleName, String lastName, long prefixId,
+		HttpPrincipal httpPrincipal, long userId, java.lang.String oldPassword,
+		java.lang.String newPassword1, java.lang.String newPassword2,
+		boolean passwordReset, java.lang.String reminderQueryQuestion,
+		java.lang.String reminderQueryAnswer, java.lang.String screenName,
+		java.lang.String emailAddress, long facebookId,
+		java.lang.String openId, java.lang.String languageId,
+		java.lang.String timeZoneId, java.lang.String greeting,
+		java.lang.String comments, java.lang.String firstName,
+		java.lang.String middleName, java.lang.String lastName, long prefixId,
 		long suffixId, boolean male, int birthdayMonth, int birthdayDay,
-		int birthdayYear, String smsSn, String facebookSn, String jabberSn,
-		String skypeSn, String twitterSn, String jobTitle, long[] groupIds,
+		int birthdayYear, java.lang.String smsSn, java.lang.String facebookSn,
+		java.lang.String jabberSn, java.lang.String skypeSn,
+		java.lang.String twitterSn, java.lang.String jobTitle, long[] groupIds,
 		long[] organizationIds, long[] roleIds,
 		java.util.List<com.liferay.portal.kernel.model.UserGroupRole> userGroupRoles,
 		long[] userGroupIds,
@@ -2108,15 +2130,19 @@ public class UserServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.User updateUser(
-		HttpPrincipal httpPrincipal, long userId, String oldPassword,
-		String newPassword1, String newPassword2, boolean passwordReset,
-		String reminderQueryQuestion, String reminderQueryAnswer,
-		String screenName, String emailAddress, long facebookId, String openId,
-		String languageId, String timeZoneId, String greeting, String comments,
-		String firstName, String middleName, String lastName, long prefixId,
+		HttpPrincipal httpPrincipal, long userId, java.lang.String oldPassword,
+		java.lang.String newPassword1, java.lang.String newPassword2,
+		boolean passwordReset, java.lang.String reminderQueryQuestion,
+		java.lang.String reminderQueryAnswer, java.lang.String screenName,
+		java.lang.String emailAddress, long facebookId,
+		java.lang.String openId, java.lang.String languageId,
+		java.lang.String timeZoneId, java.lang.String greeting,
+		java.lang.String comments, java.lang.String firstName,
+		java.lang.String middleName, java.lang.String lastName, long prefixId,
 		long suffixId, boolean male, int birthdayMonth, int birthdayDay,
-		int birthdayYear, String smsSn, String facebookSn, String jabberSn,
-		String skypeSn, String twitterSn, String jobTitle, long[] groupIds,
+		int birthdayYear, java.lang.String smsSn, java.lang.String facebookSn,
+		java.lang.String jabberSn, java.lang.String skypeSn,
+		java.lang.String twitterSn, java.lang.String jobTitle, long[] groupIds,
 		long[] organizationIds, long[] roleIds,
 		java.util.List<com.liferay.portal.kernel.model.UserGroupRole> userGroupRoles,
 		long[] userGroupIds,
@@ -2176,20 +2202,24 @@ public class UserServiceHttp {
 			long.class, long[].class
 		};
 	private static final Class<?>[] _addUserParameterTypes5 = new Class[] {
-			long.class, boolean.class, String.class, String.class, boolean.class,
-			String.class, String.class, long.class, String.class,
-			java.util.Locale.class, String.class, String.class, String.class,
-			long.class, long.class, boolean.class, int.class, int.class,
-			int.class, String.class, long[].class, long[].class, long[].class,
+			long.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, long.class, java.lang.String.class,
+			java.util.Locale.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class, long.class,
+			long.class, boolean.class, int.class, int.class, int.class,
+			java.lang.String.class, long[].class, long[].class, long[].class,
 			long[].class, boolean.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _addUserParameterTypes6 = new Class[] {
-			long.class, boolean.class, String.class, String.class, boolean.class,
-			String.class, String.class, long.class, String.class,
-			java.util.Locale.class, String.class, String.class, String.class,
-			long.class, long.class, boolean.class, int.class, int.class,
-			int.class, String.class, long[].class, long[].class, long[].class,
+			long.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, long.class, java.lang.String.class,
+			java.util.Locale.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class, long.class,
+			long.class, boolean.class, int.class, int.class, int.class,
+			java.lang.String.class, long[].class, long[].class, long[].class,
 			long[].class, java.util.List.class, java.util.List.class,
 			java.util.List.class, java.util.List.class, java.util.List.class,
 			boolean.class,
@@ -2199,20 +2229,24 @@ public class UserServiceHttp {
 			long.class, long[].class
 		};
 	private static final Class<?>[] _addUserWithWorkflowParameterTypes8 = new Class[] {
-			long.class, boolean.class, String.class, String.class, boolean.class,
-			String.class, String.class, long.class, String.class,
-			java.util.Locale.class, String.class, String.class, String.class,
-			long.class, long.class, boolean.class, int.class, int.class,
-			int.class, String.class, long[].class, long[].class, long[].class,
+			long.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, long.class, java.lang.String.class,
+			java.util.Locale.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class, long.class,
+			long.class, boolean.class, int.class, int.class, int.class,
+			java.lang.String.class, long[].class, long[].class, long[].class,
 			long[].class, boolean.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _addUserWithWorkflowParameterTypes9 = new Class[] {
-			long.class, boolean.class, String.class, String.class, boolean.class,
-			String.class, String.class, long.class, String.class,
-			java.util.Locale.class, String.class, String.class, String.class,
-			long.class, long.class, boolean.class, int.class, int.class,
-			int.class, String.class, long[].class, long[].class, long[].class,
+			long.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, long.class, java.lang.String.class,
+			java.util.Locale.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class, long.class,
+			long.class, boolean.class, int.class, int.class, int.class,
+			java.lang.String.class, long[].class, long[].class, long[].class,
 			long[].class, java.util.List.class, java.util.List.class,
 			java.util.List.class, java.util.List.class, java.util.List.class,
 			boolean.class,
@@ -2274,22 +2308,22 @@ public class UserServiceHttp {
 			long.class
 		};
 	private static final Class<?>[] _getUserByEmailAddressParameterTypes27 = new Class[] {
-			long.class, String.class
+			long.class, java.lang.String.class
 		};
 	private static final Class<?>[] _getUserByIdParameterTypes28 = new Class[] {
 			long.class
 		};
 	private static final Class<?>[] _getUserByScreenNameParameterTypes29 = new Class[] {
-			long.class, String.class
+			long.class, java.lang.String.class
 		};
 	private static final Class<?>[] _getUserGroupUsersParameterTypes30 = new Class[] {
 			long.class
 		};
 	private static final Class<?>[] _getUserIdByEmailAddressParameterTypes31 = new Class[] {
-			long.class, String.class
+			long.class, java.lang.String.class
 		};
 	private static final Class<?>[] _getUserIdByScreenNameParameterTypes32 = new Class[] {
-			long.class, String.class
+			long.class, java.lang.String.class
 		};
 	private static final Class<?>[] _hasGroupUserParameterTypes33 = new Class[] {
 			long.class, long.class
@@ -2298,13 +2332,13 @@ public class UserServiceHttp {
 			long.class, long.class
 		};
 	private static final Class<?>[] _hasRoleUserParameterTypes35 = new Class[] {
-			long.class, String.class, long.class, boolean.class
+			long.class, java.lang.String.class, long.class, boolean.class
 		};
 	private static final Class<?>[] _sendPasswordByEmailAddressParameterTypes36 = new Class[] {
-			long.class, String.class
+			long.class, java.lang.String.class
 		};
 	private static final Class<?>[] _sendPasswordByScreenNameParameterTypes37 = new Class[] {
-			long.class, String.class
+			long.class, java.lang.String.class
 		};
 	private static final Class<?>[] _sendPasswordByUserIdParameterTypes38 = new Class[] {
 			long.class
@@ -2341,38 +2375,42 @@ public class UserServiceHttp {
 			long.class, boolean.class
 		};
 	private static final Class<?>[] _updateEmailAddressParameterTypes49 = new Class[] {
-			long.class, String.class, String.class, String.class,
+			long.class, java.lang.String.class, java.lang.String.class,
+			java.lang.String.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _updateIncompleteUserParameterTypes50 = new Class[] {
-			long.class, boolean.class, String.class, String.class, boolean.class,
-			String.class, String.class, long.class, String.class,
-			java.util.Locale.class, String.class, String.class, String.class,
-			long.class, long.class, boolean.class, int.class, int.class,
-			int.class, String.class, boolean.class, boolean.class,
+			long.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, long.class, java.lang.String.class,
+			java.util.Locale.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class, long.class,
+			long.class, boolean.class, int.class, int.class, int.class,
+			java.lang.String.class, boolean.class, boolean.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _updateLockoutByIdParameterTypes51 = new Class[] {
 			long.class, boolean.class
 		};
 	private static final Class<?>[] _updateOpenIdParameterTypes52 = new Class[] {
-			long.class, String.class
+			long.class, java.lang.String.class
 		};
 	private static final Class<?>[] _updateOrganizationsParameterTypes53 = new Class[] {
 			long.class, long[].class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _updatePasswordParameterTypes54 = new Class[] {
-			long.class, String.class, String.class, boolean.class
+			long.class, java.lang.String.class, java.lang.String.class,
+			boolean.class
 		};
 	private static final Class<?>[] _updatePortraitParameterTypes55 = new Class[] {
 			long.class, byte[].class
 		};
 	private static final Class<?>[] _updateReminderQueryParameterTypes56 = new Class[] {
-			long.class, String.class, String.class
+			long.class, java.lang.String.class, java.lang.String.class
 		};
 	private static final Class<?>[] _updateScreenNameParameterTypes57 = new Class[] {
-			long.class, String.class
+			long.class, java.lang.String.class
 		};
 	private static final Class<?>[] _updateStatusParameterTypes58 = new Class[] {
 			long.class, int.class
@@ -2382,38 +2420,55 @@ public class UserServiceHttp {
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _updateUserParameterTypes60 = new Class[] {
-			long.class, String.class, String.class, String.class, boolean.class,
-			String.class, String.class, String.class, String.class, long.class,
-			String.class, boolean.class, byte[].class, String.class,
-			String.class, String.class, String.class, String.class, String.class,
-			String.class, long.class, long.class, boolean.class, int.class,
-			int.class, int.class, String.class, String.class, String.class,
-			String.class, String.class, String.class, long[].class, long[].class,
-			long[].class, java.util.List.class, long[].class,
+			long.class, java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, long.class, java.lang.String.class,
+			boolean.class, byte[].class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class, long.class,
+			long.class, boolean.class, int.class, int.class, int.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class, long[].class,
+			long[].class, long[].class, java.util.List.class, long[].class,
 			java.util.List.class, java.util.List.class, java.util.List.class,
 			java.util.List.class, java.util.List.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _updateUserParameterTypes61 = new Class[] {
-			long.class, String.class, String.class, String.class, boolean.class,
-			String.class, String.class, String.class, String.class, long.class,
-			String.class, String.class, String.class, String.class, String.class,
-			String.class, String.class, String.class, long.class, long.class,
-			boolean.class, int.class, int.class, int.class, String.class,
-			String.class, String.class, String.class, String.class, String.class,
-			long[].class, long[].class, long[].class, java.util.List.class,
-			long[].class, java.util.List.class, java.util.List.class,
+			long.class, java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, long.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, long.class, long.class, boolean.class,
+			int.class, int.class, int.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, long[].class, long[].class, long[].class,
+			java.util.List.class, long[].class, java.util.List.class,
 			java.util.List.class, java.util.List.class, java.util.List.class,
+			java.util.List.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _updateUserParameterTypes62 = new Class[] {
-			long.class, String.class, String.class, String.class, boolean.class,
-			String.class, String.class, String.class, String.class, long.class,
-			String.class, String.class, String.class, String.class, String.class,
-			String.class, String.class, String.class, long.class, long.class,
-			boolean.class, int.class, int.class, int.class, String.class,
-			String.class, String.class, String.class, String.class, String.class,
-			long[].class, long[].class, long[].class, java.util.List.class,
-			long[].class, com.liferay.portal.kernel.service.ServiceContext.class
+			long.class, java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, long.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, long.class, long.class, boolean.class,
+			int.class, int.class, int.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, long[].class, long[].class, long[].class,
+			java.util.List.class, long[].class,
+			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 }

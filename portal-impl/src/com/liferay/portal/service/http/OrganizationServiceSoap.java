@@ -112,8 +112,9 @@ public class OrganizationServiceSoap {
 	* @return the organization
 	*/
 	public static com.liferay.portal.kernel.model.OrganizationSoap addOrganization(
-		long parentOrganizationId, String name, String type, long regionId,
-		long countryId, long statusId, String comments, boolean site,
+		long parentOrganizationId, java.lang.String name,
+		java.lang.String type, long regionId, long countryId, long statusId,
+		java.lang.String comments, boolean site,
 		com.liferay.portal.kernel.model.AddressSoap[] addresses,
 		com.liferay.portal.kernel.model.EmailAddressSoap[] emailAddresses,
 		com.liferay.portal.kernel.model.OrgLaborSoap[] orgLabors,
@@ -168,8 +169,9 @@ public class OrganizationServiceSoap {
 	* @return the organization
 	*/
 	public static com.liferay.portal.kernel.model.OrganizationSoap addOrganization(
-		long parentOrganizationId, String name, String type, long regionId,
-		long countryId, long statusId, String comments, boolean site,
+		long parentOrganizationId, java.lang.String name,
+		java.lang.String type, long regionId, long countryId, long statusId,
+		java.lang.String comments, boolean site,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
@@ -291,7 +293,7 @@ public class OrganizationServiceSoap {
 	* @return the primary key of the organization with the name, or
 	<code>0</code> if the organization could not be found
 	*/
-	public static long getOrganizationId(long companyId, String name)
+	public static long getOrganizationId(long companyId, java.lang.String name)
 		throws RemoteException {
 		try {
 			long returnValue = OrganizationServiceUtil.getOrganizationId(companyId,
@@ -506,10 +508,10 @@ public class OrganizationServiceSoap {
 	* @return the organization
 	*/
 	public static com.liferay.portal.kernel.model.OrganizationSoap updateOrganization(
-		long organizationId, long parentOrganizationId, String name,
-		String type, long regionId, long countryId, long statusId,
-		String comments, boolean logo, byte[] logoBytes, boolean site,
-		com.liferay.portal.kernel.model.AddressSoap[] addresses,
+		long organizationId, long parentOrganizationId, java.lang.String name,
+		java.lang.String type, long regionId, long countryId, long statusId,
+		java.lang.String comments, boolean logo, byte[] logoBytes,
+		boolean site, com.liferay.portal.kernel.model.AddressSoap[] addresses,
 		com.liferay.portal.kernel.model.EmailAddressSoap[] emailAddresses,
 		com.liferay.portal.kernel.model.OrgLaborSoap[] orgLabors,
 		com.liferay.portal.kernel.model.PhoneSoap[] phones,
@@ -571,9 +573,9 @@ public class OrganizationServiceSoap {
 	*/
 	@Deprecated
 	public static com.liferay.portal.kernel.model.OrganizationSoap updateOrganization(
-		long organizationId, long parentOrganizationId, String name,
-		String type, long regionId, long countryId, long statusId,
-		String comments, boolean site,
+		long organizationId, long parentOrganizationId, java.lang.String name,
+		java.lang.String type, long regionId, long countryId, long statusId,
+		java.lang.String comments, boolean site,
 		com.liferay.portal.kernel.model.AddressSoap[] addresses,
 		com.liferay.portal.kernel.model.EmailAddressSoap[] emailAddresses,
 		com.liferay.portal.kernel.model.OrgLaborSoap[] orgLabors,
@@ -626,9 +628,9 @@ public class OrganizationServiceSoap {
 	* @return the organization
 	*/
 	public static com.liferay.portal.kernel.model.OrganizationSoap updateOrganization(
-		long organizationId, long parentOrganizationId, String name,
-		String type, long regionId, long countryId, long statusId,
-		String comments, boolean site,
+		long organizationId, long parentOrganizationId, java.lang.String name,
+		java.lang.String type, long regionId, long countryId, long statusId,
+		java.lang.String comments, boolean site,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {

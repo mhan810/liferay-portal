@@ -32,7 +32,7 @@ public class RegionServiceWrapper implements RegionService,
 
 	@Override
 	public com.liferay.portal.kernel.model.Region addRegion(long countryId,
-		String regionCode, String name, boolean active)
+		java.lang.String regionCode, java.lang.String name, boolean active)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _regionService.addRegion(countryId, regionCode, name, active);
 	}
@@ -44,7 +44,7 @@ public class RegionServiceWrapper implements RegionService,
 
 	@Override
 	public com.liferay.portal.kernel.model.Region fetchRegion(long countryId,
-		String regionCode) {
+		java.lang.String regionCode) {
 		return _regionService.fetchRegion(countryId, regionCode);
 	}
 
@@ -54,7 +54,7 @@ public class RegionServiceWrapper implements RegionService,
 	* @return the OSGi service identifier
 	*/
 	@Override
-	public String getOSGiServiceIdentifier() {
+	public java.lang.String getOSGiServiceIdentifier() {
 		return _regionService.getOSGiServiceIdentifier();
 	}
 
@@ -66,7 +66,7 @@ public class RegionServiceWrapper implements RegionService,
 
 	@Override
 	public com.liferay.portal.kernel.model.Region getRegion(long countryId,
-		String regionCode)
+		java.lang.String regionCode)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _regionService.getRegion(countryId, regionCode);
 	}

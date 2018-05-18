@@ -26,20 +26,22 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
 @ProviderType
 public class RoleFinderUtil {
 	public static int countByGroupRoleAndTeamRole(long companyId,
-		String keywords, java.util.List<String> excludedNames, int[] types,
+		java.lang.String keywords,
+		java.util.List<java.lang.String> excludedNames, int[] types,
 		long excludedTeamRoleId, long teamGroupId) {
 		return getFinder()
 				   .countByGroupRoleAndTeamRole(companyId, keywords,
 			excludedNames, types, excludedTeamRoleId, teamGroupId);
 	}
 
-	public static int countByKeywords(long companyId, String keywords,
-		Integer[] types) {
+	public static int countByKeywords(long companyId,
+		java.lang.String keywords, java.lang.Integer[] types) {
 		return getFinder().countByKeywords(companyId, keywords, types);
 	}
 
-	public static int countByKeywords(long companyId, String keywords,
-		Integer[] types, java.util.LinkedHashMap<String, Object> params) {
+	public static int countByKeywords(long companyId,
+		java.lang.String keywords, java.lang.Integer[] types,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params) {
 		return getFinder().countByKeywords(companyId, keywords, types, params);
 	}
 
@@ -55,64 +57,73 @@ public class RoleFinderUtil {
 		return getFinder().countByU_G_R(userId, groupId, roleId);
 	}
 
-	public static int countByC_N_D_T(long companyId, String name,
-		String description, Integer[] types,
-		java.util.LinkedHashMap<String, Object> params, boolean andOperator) {
+	public static int countByC_N_D_T(long companyId, java.lang.String name,
+		java.lang.String description, java.lang.Integer[] types,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andOperator) {
 		return getFinder()
 				   .countByC_N_D_T(companyId, name, description, types, params,
 			andOperator);
 	}
 
-	public static int countByC_N_D_T(long companyId, String[] names,
-		String[] descriptions, Integer[] types,
-		java.util.LinkedHashMap<String, Object> params, boolean andOperator) {
+	public static int countByC_N_D_T(long companyId, java.lang.String[] names,
+		java.lang.String[] descriptions, java.lang.Integer[] types,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andOperator) {
 		return getFinder()
 				   .countByC_N_D_T(companyId, names, descriptions, types,
 			params, andOperator);
 	}
 
 	public static int filterCountByGroupRoleAndTeamRole(long companyId,
-		String keywords, java.util.List<String> excludedNames, int[] types,
+		java.lang.String keywords,
+		java.util.List<java.lang.String> excludedNames, int[] types,
 		long excludedTeamRoleId, long teamGroupId) {
 		return getFinder()
 				   .filterCountByGroupRoleAndTeamRole(companyId, keywords,
 			excludedNames, types, excludedTeamRoleId, teamGroupId);
 	}
 
-	public static int filterCountByKeywords(long companyId, String keywords,
-		Integer[] types, java.util.LinkedHashMap<String, Object> params) {
+	public static int filterCountByKeywords(long companyId,
+		java.lang.String keywords, java.lang.Integer[] types,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params) {
 		return getFinder()
 				   .filterCountByKeywords(companyId, keywords, types, params);
 	}
 
-	public static int filterCountByC_N_D_T(long companyId, String name,
-		String description, Integer[] types,
-		java.util.LinkedHashMap<String, Object> params, boolean andOperator) {
+	public static int filterCountByC_N_D_T(long companyId,
+		java.lang.String name, java.lang.String description,
+		java.lang.Integer[] types,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andOperator) {
 		return getFinder()
 				   .filterCountByC_N_D_T(companyId, name, description, types,
 			params, andOperator);
 	}
 
-	public static int filterCountByC_N_D_T(long companyId, String[] names,
-		String[] descriptions, Integer[] types,
-		java.util.LinkedHashMap<String, Object> params, boolean andOperator) {
+	public static int filterCountByC_N_D_T(long companyId,
+		java.lang.String[] names, java.lang.String[] descriptions,
+		java.lang.Integer[] types,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andOperator) {
 		return getFinder()
 				   .filterCountByC_N_D_T(companyId, names, descriptions, types,
 			params, andOperator);
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Role> filterFindByGroupRoleAndTeamRole(
-		long companyId, String keywords, java.util.List<String> excludedNames,
-		int[] types, long excludedTeamRoleId, long teamGroupId, int start,
-		int end) {
+		long companyId, java.lang.String keywords,
+		java.util.List<java.lang.String> excludedNames, int[] types,
+		long excludedTeamRoleId, long teamGroupId, int start, int end) {
 		return getFinder()
 				   .filterFindByGroupRoleAndTeamRole(companyId, keywords,
 			excludedNames, types, excludedTeamRoleId, teamGroupId, start, end);
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Role> filterFindByKeywords(
-		long companyId, String keywords, Integer[] types,
-		java.util.LinkedHashMap<String, Object> params, int start, int end,
+		long companyId, java.lang.String keywords, java.lang.Integer[] types,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.Role> obc) {
 		return getFinder()
 				   .filterFindByKeywords(companyId, keywords, types, params,
@@ -120,9 +131,10 @@ public class RoleFinderUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Role> filterFindByC_N_D_T(
-		long companyId, String name, String description, Integer[] types,
-		java.util.LinkedHashMap<String, Object> params, boolean andOperator,
-		int start, int end,
+		long companyId, java.lang.String name, java.lang.String description,
+		java.lang.Integer[] types,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andOperator, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.Role> obc) {
 		return getFinder()
 				   .filterFindByC_N_D_T(companyId, name, description, types,
@@ -130,9 +142,10 @@ public class RoleFinderUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Role> filterFindByC_N_D_T(
-		long companyId, String[] names, String[] descriptions, Integer[] types,
-		java.util.LinkedHashMap<String, Object> params, boolean andOperator,
-		int start, int end,
+		long companyId, java.lang.String[] names,
+		java.lang.String[] descriptions, java.lang.Integer[] types,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andOperator, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.Role> obc) {
 		return getFinder()
 				   .filterFindByC_N_D_T(companyId, names, descriptions, types,
@@ -140,24 +153,26 @@ public class RoleFinderUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Role> findByGroupRoleAndTeamRole(
-		long companyId, String keywords, java.util.List<String> excludedNames,
-		int[] types, long excludedTeamRoleId, long teamGroupId, int start,
-		int end) {
+		long companyId, java.lang.String keywords,
+		java.util.List<java.lang.String> excludedNames, int[] types,
+		long excludedTeamRoleId, long teamGroupId, int start, int end) {
 		return getFinder()
 				   .findByGroupRoleAndTeamRole(companyId, keywords,
 			excludedNames, types, excludedTeamRoleId, teamGroupId, start, end);
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Role> findByKeywords(
-		long companyId, String keywords, Integer[] types, int start, int end,
+		long companyId, java.lang.String keywords, java.lang.Integer[] types,
+		int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.Role> obc) {
 		return getFinder()
 				   .findByKeywords(companyId, keywords, types, start, end, obc);
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Role> findByKeywords(
-		long companyId, String keywords, Integer[] types,
-		java.util.LinkedHashMap<String, Object> params, int start, int end,
+		long companyId, java.lang.String keywords, java.lang.Integer[] types,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.Role> obc) {
 		return getFinder()
 				   .findByKeywords(companyId, keywords, types, params, start,
@@ -190,7 +205,7 @@ public class RoleFinderUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Role findByC_N(
-		long companyId, String name)
+		long companyId, java.lang.String name)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getFinder().findByC_N(companyId, name);
 	}
@@ -212,14 +227,16 @@ public class RoleFinderUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Role> findByR_N_A(
-		long resourceBlockId, String className, String actionId) {
+		long resourceBlockId, java.lang.String className,
+		java.lang.String actionId) {
 		return getFinder().findByR_N_A(resourceBlockId, className, actionId);
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Role> findByC_N_D_T(
-		long companyId, String name, String description, Integer[] types,
-		java.util.LinkedHashMap<String, Object> params, boolean andOperator,
-		int start, int end,
+		long companyId, java.lang.String name, java.lang.String description,
+		java.lang.Integer[] types,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andOperator, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.Role> obc) {
 		return getFinder()
 				   .findByC_N_D_T(companyId, name, description, types, params,
@@ -227,22 +244,25 @@ public class RoleFinderUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Role> findByC_N_D_T(
-		long companyId, String[] names, String[] descriptions, Integer[] types,
-		java.util.LinkedHashMap<String, Object> params, boolean andOperator,
-		int start, int end,
+		long companyId, java.lang.String[] names,
+		java.lang.String[] descriptions, java.lang.Integer[] types,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andOperator, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.Role> obc) {
 		return getFinder()
 				   .findByC_N_D_T(companyId, names, descriptions, types,
 			params, andOperator, start, end, obc);
 	}
 
-	public static java.util.Map<String, java.util.List<String>> findByC_N_S_P(
-		long companyId, String name, int scope, String primKey) {
+	public static java.util.Map<java.lang.String, java.util.List<java.lang.String>> findByC_N_S_P(
+		long companyId, java.lang.String name, int scope,
+		java.lang.String primKey) {
 		return getFinder().findByC_N_S_P(companyId, name, scope, primKey);
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Role> findByC_N_S_P_A(
-		long companyId, String name, int scope, String primKey, String actionId) {
+		long companyId, java.lang.String name, int scope,
+		java.lang.String primKey, java.lang.String actionId) {
 		return getFinder()
 				   .findByC_N_S_P_A(companyId, name, scope, primKey, actionId);
 	}

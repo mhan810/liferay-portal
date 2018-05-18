@@ -37,7 +37,6 @@ import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
@@ -48,7 +47,6 @@ import com.liferay.portal.model.impl.AddressModelImpl;
 import java.io.Serializable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 
 import java.util.Collections;
 import java.util.Date;
@@ -3490,7 +3488,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 					if ((companyId != address.getCompanyId()) ||
 							(classNameId != address.getClassNameId()) ||
 							(classPK != address.getClassPK()) ||
-							(mailing != address.isMailing())) {
+							(mailing != address.getMailing())) {
 						list = null;
 
 						break;
@@ -4117,7 +4115,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 					if ((companyId != address.getCompanyId()) ||
 							(classNameId != address.getClassNameId()) ||
 							(classPK != address.getClassPK()) ||
-							(primary != address.isPrimary())) {
+							(primary != address.getPrimary())) {
 						list = null;
 
 						break;
@@ -4773,6 +4771,8 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 
 	@Override
 	protected Address removeImpl(Address address) {
+		address = toUnwrappedModel(address);
+
 		Session session = null;
 
 		try {
@@ -4803,23 +4803,9 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 
 	@Override
 	public Address updateImpl(Address address) {
+		address = toUnwrappedModel(address);
+
 		boolean isNew = address.isNew();
-
-		if (!(address instanceof AddressModelImpl)) {
-			InvocationHandler invocationHandler = null;
-
-			if (ProxyUtil.isProxyClass(address.getClass())) {
-				invocationHandler = ProxyUtil.getInvocationHandler(address);
-
-				throw new IllegalArgumentException(
-					"Implement ModelWrapper in address proxy " +
-					invocationHandler.getClass());
-			}
-
-			throw new IllegalArgumentException(
-				"Implement ModelWrapper in custom Address implementation " +
-				address.getClass());
-		}
 
 		AddressModelImpl addressModelImpl = (AddressModelImpl)address;
 
@@ -4927,7 +4913,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			args = new Object[] {
 					addressModelImpl.getCompanyId(),
 					addressModelImpl.getClassNameId(),
-					addressModelImpl.getClassPK(), addressModelImpl.isMailing()
+					addressModelImpl.getClassPK(), addressModelImpl.getMailing()
 				};
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C_C_M, args);
@@ -4937,7 +4923,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			args = new Object[] {
 					addressModelImpl.getCompanyId(),
 					addressModelImpl.getClassNameId(),
-					addressModelImpl.getClassPK(), addressModelImpl.isPrimary()
+					addressModelImpl.getClassPK(), addressModelImpl.getPrimary()
 				};
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -5081,7 +5067,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 						addressModelImpl.getCompanyId(),
 						addressModelImpl.getClassNameId(),
 						addressModelImpl.getClassPK(),
-						addressModelImpl.isMailing()
+						addressModelImpl.getMailing()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C_C_M, args);
@@ -5106,7 +5092,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 						addressModelImpl.getCompanyId(),
 						addressModelImpl.getClassNameId(),
 						addressModelImpl.getClassPK(),
-						addressModelImpl.isPrimary()
+						addressModelImpl.getPrimary()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -5121,6 +5107,40 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 		address.resetOriginalValues();
 
 		return address;
+	}
+
+	protected Address toUnwrappedModel(Address address) {
+		if (address instanceof AddressImpl) {
+			return address;
+		}
+
+		AddressImpl addressImpl = new AddressImpl();
+
+		addressImpl.setNew(address.isNew());
+		addressImpl.setPrimaryKey(address.getPrimaryKey());
+
+		addressImpl.setMvccVersion(address.getMvccVersion());
+		addressImpl.setUuid(address.getUuid());
+		addressImpl.setAddressId(address.getAddressId());
+		addressImpl.setCompanyId(address.getCompanyId());
+		addressImpl.setUserId(address.getUserId());
+		addressImpl.setUserName(address.getUserName());
+		addressImpl.setCreateDate(address.getCreateDate());
+		addressImpl.setModifiedDate(address.getModifiedDate());
+		addressImpl.setClassNameId(address.getClassNameId());
+		addressImpl.setClassPK(address.getClassPK());
+		addressImpl.setStreet1(address.getStreet1());
+		addressImpl.setStreet2(address.getStreet2());
+		addressImpl.setStreet3(address.getStreet3());
+		addressImpl.setCity(address.getCity());
+		addressImpl.setZip(address.getZip());
+		addressImpl.setRegionId(address.getRegionId());
+		addressImpl.setCountryId(address.getCountryId());
+		addressImpl.setTypeId(address.getTypeId());
+		addressImpl.setMailing(address.isMailing());
+		addressImpl.setPrimary(address.isPrimary());
+
+		return addressImpl;
 	}
 
 	/**

@@ -22,7 +22,6 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.Region;
 import com.liferay.portal.kernel.model.RegionModel;
 import com.liferay.portal.kernel.model.RegionSoap;
@@ -122,7 +121,7 @@ public class RegionModelImpl extends BaseModelImpl<Region>
 		model.setCountryId(soapModel.getCountryId());
 		model.setRegionCode(soapModel.getRegionCode());
 		model.setName(soapModel.getName());
-		model.setActive(soapModel.isActive());
+		model.setActive(soapModel.getActive());
 
 		return model;
 	}
@@ -192,7 +191,7 @@ public class RegionModelImpl extends BaseModelImpl<Region>
 		attributes.put("countryId", getCountryId());
 		attributes.put("regionCode", getRegionCode());
 		attributes.put("name", getName());
-		attributes.put("active", isActive());
+		attributes.put("active", getActive());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -393,7 +392,7 @@ public class RegionModelImpl extends BaseModelImpl<Region>
 		regionImpl.setCountryId(getCountryId());
 		regionImpl.setRegionCode(getRegionCode());
 		regionImpl.setName(getName());
-		regionImpl.setActive(isActive());
+		regionImpl.setActive(getActive());
 
 		regionImpl.resetOriginalValues();
 
@@ -493,7 +492,7 @@ public class RegionModelImpl extends BaseModelImpl<Region>
 			regionCacheModel.name = null;
 		}
 
-		regionCacheModel.active = isActive();
+		regionCacheModel.active = getActive();
 
 		return regionCacheModel;
 	}
@@ -513,7 +512,7 @@ public class RegionModelImpl extends BaseModelImpl<Region>
 		sb.append(", name=");
 		sb.append(getName());
 		sb.append(", active=");
-		sb.append(isActive());
+		sb.append(getActive());
 		sb.append("}");
 
 		return sb.toString();
@@ -549,7 +548,7 @@ public class RegionModelImpl extends BaseModelImpl<Region>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>active</column-name><column-value><![CDATA[");
-		sb.append(isActive());
+		sb.append(getActive());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -559,7 +558,7 @@ public class RegionModelImpl extends BaseModelImpl<Region>
 
 	private static final ClassLoader _classLoader = Region.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			Region.class, ModelWrapper.class
+			Region.class
 		};
 	private long _mvccVersion;
 	private long _regionId;

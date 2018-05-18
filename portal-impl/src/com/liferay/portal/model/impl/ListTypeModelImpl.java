@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.ListType;
 import com.liferay.portal.kernel.model.ListTypeModel;
 import com.liferay.portal.kernel.model.ListTypeSoap;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -469,7 +468,7 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 
 	private static final ClassLoader _classLoader = ListType.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			ListType.class, ModelWrapper.class
+			ListType.class
 		};
 	private long _mvccVersion;
 	private long _listTypeId;

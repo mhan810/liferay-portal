@@ -196,7 +196,7 @@ public class UserIdMapperLocalServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -220,13 +220,13 @@ public class UserIdMapperLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.UserIdMapper getUserIdMapper(
-		long userId, String type)
+		long userId, java.lang.String type)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getUserIdMapper(userId, type);
 	}
 
 	public static com.liferay.portal.kernel.model.UserIdMapper getUserIdMapperByExternalUserId(
-		String type, String externalUserId)
+		java.lang.String type, java.lang.String externalUserId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getUserIdMapperByExternalUserId(type, externalUserId);
 	}
@@ -262,7 +262,8 @@ public class UserIdMapperLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.UserIdMapper updateUserIdMapper(
-		long userId, String type, String description, String externalUserId) {
+		long userId, java.lang.String type, java.lang.String description,
+		java.lang.String externalUserId) {
 		return getService()
 				   .updateUserIdMapper(userId, type, description, externalUserId);
 	}

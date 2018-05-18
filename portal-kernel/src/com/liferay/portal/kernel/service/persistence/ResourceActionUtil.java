@@ -114,7 +114,7 @@ public class ResourceActionUtil {
 	* @param name the name
 	* @return the matching resource actions
 	*/
-	public static List<ResourceAction> findByName(String name) {
+	public static List<ResourceAction> findByName(java.lang.String name) {
 		return getPersistence().findByName(name);
 	}
 
@@ -130,8 +130,8 @@ public class ResourceActionUtil {
 	* @param end the upper bound of the range of resource actions (not inclusive)
 	* @return the range of matching resource actions
 	*/
-	public static List<ResourceAction> findByName(String name, int start,
-		int end) {
+	public static List<ResourceAction> findByName(java.lang.String name,
+		int start, int end) {
 		return getPersistence().findByName(name, start, end);
 	}
 
@@ -148,8 +148,8 @@ public class ResourceActionUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching resource actions
 	*/
-	public static List<ResourceAction> findByName(String name, int start,
-		int end, OrderByComparator<ResourceAction> orderByComparator) {
+	public static List<ResourceAction> findByName(java.lang.String name,
+		int start, int end, OrderByComparator<ResourceAction> orderByComparator) {
 		return getPersistence().findByName(name, start, end, orderByComparator);
 	}
 
@@ -167,8 +167,9 @@ public class ResourceActionUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching resource actions
 	*/
-	public static List<ResourceAction> findByName(String name, int start,
-		int end, OrderByComparator<ResourceAction> orderByComparator,
+	public static List<ResourceAction> findByName(java.lang.String name,
+		int start, int end,
+		OrderByComparator<ResourceAction> orderByComparator,
 		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByName(name, start, end, orderByComparator,
@@ -183,7 +184,7 @@ public class ResourceActionUtil {
 	* @return the first matching resource action
 	* @throws NoSuchResourceActionException if a matching resource action could not be found
 	*/
-	public static ResourceAction findByName_First(String name,
+	public static ResourceAction findByName_First(java.lang.String name,
 		OrderByComparator<ResourceAction> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchResourceActionException {
 		return getPersistence().findByName_First(name, orderByComparator);
@@ -196,7 +197,7 @@ public class ResourceActionUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching resource action, or <code>null</code> if a matching resource action could not be found
 	*/
-	public static ResourceAction fetchByName_First(String name,
+	public static ResourceAction fetchByName_First(java.lang.String name,
 		OrderByComparator<ResourceAction> orderByComparator) {
 		return getPersistence().fetchByName_First(name, orderByComparator);
 	}
@@ -209,7 +210,7 @@ public class ResourceActionUtil {
 	* @return the last matching resource action
 	* @throws NoSuchResourceActionException if a matching resource action could not be found
 	*/
-	public static ResourceAction findByName_Last(String name,
+	public static ResourceAction findByName_Last(java.lang.String name,
 		OrderByComparator<ResourceAction> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchResourceActionException {
 		return getPersistence().findByName_Last(name, orderByComparator);
@@ -222,7 +223,7 @@ public class ResourceActionUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching resource action, or <code>null</code> if a matching resource action could not be found
 	*/
-	public static ResourceAction fetchByName_Last(String name,
+	public static ResourceAction fetchByName_Last(java.lang.String name,
 		OrderByComparator<ResourceAction> orderByComparator) {
 		return getPersistence().fetchByName_Last(name, orderByComparator);
 	}
@@ -237,7 +238,7 @@ public class ResourceActionUtil {
 	* @throws NoSuchResourceActionException if a resource action with the primary key could not be found
 	*/
 	public static ResourceAction[] findByName_PrevAndNext(
-		long resourceActionId, String name,
+		long resourceActionId, java.lang.String name,
 		OrderByComparator<ResourceAction> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchResourceActionException {
 		return getPersistence()
@@ -250,7 +251,7 @@ public class ResourceActionUtil {
 	*
 	* @param name the name
 	*/
-	public static void removeByName(String name) {
+	public static void removeByName(java.lang.String name) {
 		getPersistence().removeByName(name);
 	}
 
@@ -260,7 +261,7 @@ public class ResourceActionUtil {
 	* @param name the name
 	* @return the number of matching resource actions
 	*/
-	public static int countByName(String name) {
+	public static int countByName(java.lang.String name) {
 		return getPersistence().countByName(name);
 	}
 
@@ -272,7 +273,8 @@ public class ResourceActionUtil {
 	* @return the matching resource action
 	* @throws NoSuchResourceActionException if a matching resource action could not be found
 	*/
-	public static ResourceAction findByN_A(String name, String actionId)
+	public static ResourceAction findByN_A(java.lang.String name,
+		java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.NoSuchResourceActionException {
 		return getPersistence().findByN_A(name, actionId);
 	}
@@ -284,7 +286,8 @@ public class ResourceActionUtil {
 	* @param actionId the action ID
 	* @return the matching resource action, or <code>null</code> if a matching resource action could not be found
 	*/
-	public static ResourceAction fetchByN_A(String name, String actionId) {
+	public static ResourceAction fetchByN_A(java.lang.String name,
+		java.lang.String actionId) {
 		return getPersistence().fetchByN_A(name, actionId);
 	}
 
@@ -296,8 +299,8 @@ public class ResourceActionUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching resource action, or <code>null</code> if a matching resource action could not be found
 	*/
-	public static ResourceAction fetchByN_A(String name, String actionId,
-		boolean retrieveFromCache) {
+	public static ResourceAction fetchByN_A(java.lang.String name,
+		java.lang.String actionId, boolean retrieveFromCache) {
 		return getPersistence().fetchByN_A(name, actionId, retrieveFromCache);
 	}
 
@@ -308,7 +311,8 @@ public class ResourceActionUtil {
 	* @param actionId the action ID
 	* @return the resource action that was removed
 	*/
-	public static ResourceAction removeByN_A(String name, String actionId)
+	public static ResourceAction removeByN_A(java.lang.String name,
+		java.lang.String actionId)
 		throws com.liferay.portal.kernel.exception.NoSuchResourceActionException {
 		return getPersistence().removeByN_A(name, actionId);
 	}
@@ -320,7 +324,8 @@ public class ResourceActionUtil {
 	* @param actionId the action ID
 	* @return the number of matching resource actions
 	*/
-	public static int countByN_A(String name, String actionId) {
+	public static int countByN_A(java.lang.String name,
+		java.lang.String actionId) {
 		return getPersistence().countByN_A(name, actionId);
 	}
 

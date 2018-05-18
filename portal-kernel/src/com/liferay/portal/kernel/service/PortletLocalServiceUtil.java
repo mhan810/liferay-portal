@@ -52,7 +52,8 @@ public class PortletLocalServiceUtil {
 		return getService().addPortlet(portlet);
 	}
 
-	public static void addPortletCategory(long companyId, String categoryName) {
+	public static void addPortletCategory(long companyId,
+		java.lang.String categoryName) {
 		getService().addPortletCategory(companyId, categoryName);
 	}
 
@@ -84,7 +85,7 @@ public class PortletLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Portlet clonePortlet(
-		String portletId) {
+		java.lang.String portletId) {
 		return getService().clonePortlet(portletId);
 	}
 
@@ -119,7 +120,8 @@ public class PortletLocalServiceUtil {
 		return getService().deletePortlet(id);
 	}
 
-	public static void deletePortlet(long companyId, String portletId, long plid)
+	public static void deletePortlet(long companyId,
+		java.lang.String portletId, long plid)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().deletePortlet(companyId, portletId, plid);
 	}
@@ -135,32 +137,35 @@ public class PortletLocalServiceUtil {
 		return getService().deletePortlet(portlet);
 	}
 
-	public static void deletePortlets(long companyId, String[] portletIds,
-		long plid) throws com.liferay.portal.kernel.exception.PortalException {
+	public static void deletePortlets(long companyId,
+		java.lang.String[] portletIds, long plid)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().deletePortlets(companyId, portletIds, plid);
 	}
 
 	public static void deployPortlet(
 		com.liferay.portal.kernel.model.Portlet portlet)
-		throws Exception {
+		throws java.lang.Exception {
 		getService().deployPortlet(portlet);
 	}
 
 	public static com.liferay.portal.kernel.model.Portlet deployRemotePortlet(
-		com.liferay.portal.kernel.model.Portlet portlet, String categoryName)
+		com.liferay.portal.kernel.model.Portlet portlet,
+		java.lang.String categoryName)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().deployRemotePortlet(portlet, categoryName);
 	}
 
 	public static com.liferay.portal.kernel.model.Portlet deployRemotePortlet(
-		com.liferay.portal.kernel.model.Portlet portlet, String[] categoryNames)
+		com.liferay.portal.kernel.model.Portlet portlet,
+		java.lang.String[] categoryNames)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().deployRemotePortlet(portlet, categoryNames);
 	}
 
 	public static com.liferay.portal.kernel.model.Portlet deployRemotePortlet(
 		com.liferay.portal.kernel.model.Portlet portlet,
-		String[] categoryNames, boolean eagerDestroy)
+		java.lang.String[] categoryNames, boolean eagerDestroy)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .deployRemotePortlet(portlet, categoryNames, eagerDestroy);
@@ -259,7 +264,7 @@ public class PortletLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Portlet fetchPortletById(
-		long companyId, String portletId) {
+		long companyId, java.lang.String portletId) {
 		return getService().fetchPortletById(companyId, portletId);
 	}
 
@@ -272,7 +277,7 @@ public class PortletLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.PortletCategory getEARDisplay(
-		String xml) {
+		java.lang.String xml) {
 		return getService().getEARDisplay(xml);
 	}
 
@@ -293,7 +298,7 @@ public class PortletLocalServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -316,22 +321,22 @@ public class PortletLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.PortletApp getPortletApp(
-		String servletContextName) {
+		java.lang.String servletContextName) {
 		return getService().getPortletApp(servletContextName);
 	}
 
 	public static com.liferay.portal.kernel.model.Portlet getPortletById(
-		long companyId, String portletId) {
+		long companyId, java.lang.String portletId) {
 		return getService().getPortletById(companyId, portletId);
 	}
 
 	public static com.liferay.portal.kernel.model.Portlet getPortletById(
-		String portletId) {
+		java.lang.String portletId) {
 		return getService().getPortletById(portletId);
 	}
 
 	public static com.liferay.portal.kernel.model.Portlet getPortletByStrutsPath(
-		long companyId, String strutsPath) {
+		long companyId, java.lang.String strutsPath) {
 		return getService().getPortletByStrutsPath(companyId, strutsPath);
 	}
 
@@ -383,30 +388,30 @@ public class PortletLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.PortletCategory getWARDisplay(
-		String servletContextName, String xml) {
+		java.lang.String servletContextName, java.lang.String xml) {
 		return getService().getWARDisplay(servletContextName, xml);
 	}
 
-	public static boolean hasPortlet(long companyId, String portletId) {
+	public static boolean hasPortlet(long companyId, java.lang.String portletId) {
 		return getService().hasPortlet(companyId, portletId);
 	}
 
 	public static void initEAR(javax.servlet.ServletContext servletContext,
-		String[] xmls,
+		java.lang.String[] xmls,
 		com.liferay.portal.kernel.plugin.PluginPackage pluginPackage) {
 		getService().initEAR(servletContext, xmls, pluginPackage);
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Portlet> initWAR(
-		String servletContextName, javax.servlet.ServletContext servletContext,
-		String[] xmls,
+		java.lang.String servletContextName,
+		javax.servlet.ServletContext servletContext, java.lang.String[] xmls,
 		com.liferay.portal.kernel.plugin.PluginPackage pluginPackage) {
 		return getService()
 				   .initWAR(servletContextName, servletContext, xmls,
 			pluginPackage);
 	}
 
-	public static java.util.Map<String, com.liferay.portal.kernel.model.Portlet> loadGetPortletsMap(
+	public static java.util.Map<java.lang.String, com.liferay.portal.kernel.model.Portlet> loadGetPortletsMap(
 		long companyId) {
 		return getService().loadGetPortletsMap(companyId);
 	}
@@ -415,7 +420,7 @@ public class PortletLocalServiceUtil {
 	* @deprecated As of 7.0.0, replaced by {@link #loadGetPortletsMap(long))}
 	*/
 	@Deprecated
-	public static java.util.Map<String, com.liferay.portal.kernel.model.Portlet> loadGetPortletsPool(
+	public static java.util.Map<java.lang.String, com.liferay.portal.kernel.model.Portlet> loadGetPortletsPool(
 		long companyId) {
 		return getService().loadGetPortletsPool(companyId);
 	}
@@ -425,7 +430,8 @@ public class PortletLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Portlet updatePortlet(
-		long companyId, String portletId, String roles, boolean active) {
+		long companyId, java.lang.String portletId, java.lang.String roles,
+		boolean active) {
 		return getService().updatePortlet(companyId, portletId, roles, active);
 	}
 

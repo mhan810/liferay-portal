@@ -48,5 +48,5 @@ public interface PortalLocalService extends BaseLocalService {
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 }

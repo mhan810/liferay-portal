@@ -113,7 +113,7 @@ public class CompanyUtil {
 	* @return the matching company
 	* @throws NoSuchCompanyException if a matching company could not be found
 	*/
-	public static Company findByWebId(String webId)
+	public static Company findByWebId(java.lang.String webId)
 		throws com.liferay.portal.kernel.exception.NoSuchCompanyException {
 		return getPersistence().findByWebId(webId);
 	}
@@ -124,7 +124,7 @@ public class CompanyUtil {
 	* @param webId the web ID
 	* @return the matching company, or <code>null</code> if a matching company could not be found
 	*/
-	public static Company fetchByWebId(String webId) {
+	public static Company fetchByWebId(java.lang.String webId) {
 		return getPersistence().fetchByWebId(webId);
 	}
 
@@ -135,7 +135,8 @@ public class CompanyUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching company, or <code>null</code> if a matching company could not be found
 	*/
-	public static Company fetchByWebId(String webId, boolean retrieveFromCache) {
+	public static Company fetchByWebId(java.lang.String webId,
+		boolean retrieveFromCache) {
 		return getPersistence().fetchByWebId(webId, retrieveFromCache);
 	}
 
@@ -145,7 +146,7 @@ public class CompanyUtil {
 	* @param webId the web ID
 	* @return the company that was removed
 	*/
-	public static Company removeByWebId(String webId)
+	public static Company removeByWebId(java.lang.String webId)
 		throws com.liferay.portal.kernel.exception.NoSuchCompanyException {
 		return getPersistence().removeByWebId(webId);
 	}
@@ -156,7 +157,7 @@ public class CompanyUtil {
 	* @param webId the web ID
 	* @return the number of matching companies
 	*/
-	public static int countByWebId(String webId) {
+	public static int countByWebId(java.lang.String webId) {
 		return getPersistence().countByWebId(webId);
 	}
 
@@ -167,7 +168,7 @@ public class CompanyUtil {
 	* @return the matching company
 	* @throws NoSuchCompanyException if a matching company could not be found
 	*/
-	public static Company findByMx(String mx)
+	public static Company findByMx(java.lang.String mx)
 		throws com.liferay.portal.kernel.exception.NoSuchCompanyException {
 		return getPersistence().findByMx(mx);
 	}
@@ -178,7 +179,7 @@ public class CompanyUtil {
 	* @param mx the mx
 	* @return the matching company, or <code>null</code> if a matching company could not be found
 	*/
-	public static Company fetchByMx(String mx) {
+	public static Company fetchByMx(java.lang.String mx) {
 		return getPersistence().fetchByMx(mx);
 	}
 
@@ -189,7 +190,8 @@ public class CompanyUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching company, or <code>null</code> if a matching company could not be found
 	*/
-	public static Company fetchByMx(String mx, boolean retrieveFromCache) {
+	public static Company fetchByMx(java.lang.String mx,
+		boolean retrieveFromCache) {
 		return getPersistence().fetchByMx(mx, retrieveFromCache);
 	}
 
@@ -199,7 +201,7 @@ public class CompanyUtil {
 	* @param mx the mx
 	* @return the company that was removed
 	*/
-	public static Company removeByMx(String mx)
+	public static Company removeByMx(java.lang.String mx)
 		throws com.liferay.portal.kernel.exception.NoSuchCompanyException {
 		return getPersistence().removeByMx(mx);
 	}
@@ -210,7 +212,7 @@ public class CompanyUtil {
 	* @param mx the mx
 	* @return the number of matching companies
 	*/
-	public static int countByMx(String mx) {
+	public static int countByMx(java.lang.String mx) {
 		return getPersistence().countByMx(mx);
 	}
 
@@ -570,7 +572,7 @@ public class CompanyUtil {
 		return getPersistence().countAll();
 	}
 
-	public static java.util.Set<String> getBadColumnNames() {
+	public static java.util.Set<java.lang.String> getBadColumnNames() {
 		return getPersistence().getBadColumnNames();
 	}
 

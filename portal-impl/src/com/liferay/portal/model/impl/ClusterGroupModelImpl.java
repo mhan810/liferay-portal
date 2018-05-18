@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.ClusterGroup;
 import com.liferay.portal.kernel.model.ClusterGroupModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -134,7 +133,7 @@ public class ClusterGroupModelImpl extends BaseModelImpl<ClusterGroup>
 		attributes.put("clusterGroupId", getClusterGroupId());
 		attributes.put("name", getName());
 		attributes.put("clusterNodeIds", getClusterNodeIds());
-		attributes.put("wholeCluster", isWholeCluster());
+		attributes.put("wholeCluster", getWholeCluster());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -271,7 +270,7 @@ public class ClusterGroupModelImpl extends BaseModelImpl<ClusterGroup>
 		clusterGroupImpl.setClusterGroupId(getClusterGroupId());
 		clusterGroupImpl.setName(getName());
 		clusterGroupImpl.setClusterNodeIds(getClusterNodeIds());
-		clusterGroupImpl.setWholeCluster(isWholeCluster());
+		clusterGroupImpl.setWholeCluster(getWholeCluster());
 
 		clusterGroupImpl.resetOriginalValues();
 
@@ -358,7 +357,7 @@ public class ClusterGroupModelImpl extends BaseModelImpl<ClusterGroup>
 			clusterGroupCacheModel.clusterNodeIds = null;
 		}
 
-		clusterGroupCacheModel.wholeCluster = isWholeCluster();
+		clusterGroupCacheModel.wholeCluster = getWholeCluster();
 
 		return clusterGroupCacheModel;
 	}
@@ -376,7 +375,7 @@ public class ClusterGroupModelImpl extends BaseModelImpl<ClusterGroup>
 		sb.append(", clusterNodeIds=");
 		sb.append(getClusterNodeIds());
 		sb.append(", wholeCluster=");
-		sb.append(isWholeCluster());
+		sb.append(getWholeCluster());
 		sb.append("}");
 
 		return sb.toString();
@@ -408,7 +407,7 @@ public class ClusterGroupModelImpl extends BaseModelImpl<ClusterGroup>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>wholeCluster</column-name><column-value><![CDATA[");
-		sb.append(isWholeCluster());
+		sb.append(getWholeCluster());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -418,7 +417,7 @@ public class ClusterGroupModelImpl extends BaseModelImpl<ClusterGroup>
 
 	private static final ClassLoader _classLoader = ClusterGroup.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			ClusterGroup.class, ModelWrapper.class
+			ClusterGroup.class
 		};
 	private long _mvccVersion;
 	private long _clusterGroupId;

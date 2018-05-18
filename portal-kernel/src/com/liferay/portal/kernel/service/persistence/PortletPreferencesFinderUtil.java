@@ -26,14 +26,14 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
 @ProviderType
 public class PortletPreferencesFinderUtil {
 	public static long countByO_O_P(long ownerId, int ownerType,
-		String portletId, boolean excludeDefaultPreferences) {
+		java.lang.String portletId, boolean excludeDefaultPreferences) {
 		return getFinder()
 				   .countByO_O_P(ownerId, ownerType, portletId,
 			excludeDefaultPreferences);
 	}
 
 	public static long countByO_O_P_P_P(long ownerId, int ownerType, long plid,
-		String portletId, boolean excludeDefaultPreferences) {
+		java.lang.String portletId, boolean excludeDefaultPreferences) {
 		return getFinder()
 				   .countByO_O_P_P_P(ownerId, ownerType, plid, portletId,
 			excludeDefaultPreferences);
@@ -45,13 +45,13 @@ public class PortletPreferencesFinderUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.PortletPreferences> findByPortletId(
-		String portletId) {
+		java.lang.String portletId) {
 		return getFinder().findByPortletId(portletId);
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.PortletPreferences> findByC_G_O_O_P_P(
 		long companyId, long groupId, long ownerId, int ownerType,
-		String portletId, boolean privateLayout) {
+		java.lang.String portletId, boolean privateLayout) {
 		return getFinder()
 				   .findByC_G_O_O_P_P(companyId, groupId, ownerId, ownerType,
 			portletId, privateLayout);

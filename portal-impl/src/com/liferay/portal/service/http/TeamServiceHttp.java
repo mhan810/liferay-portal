@@ -55,8 +55,8 @@ import com.liferay.portal.kernel.util.MethodKey;
 @ProviderType
 public class TeamServiceHttp {
 	public static com.liferay.portal.kernel.model.Team addTeam(
-		HttpPrincipal httpPrincipal, long groupId, String name,
-		String description)
+		HttpPrincipal httpPrincipal, long groupId, java.lang.String name,
+		java.lang.String description)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(TeamServiceUtil.class,
@@ -88,8 +88,8 @@ public class TeamServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.Team addTeam(
-		HttpPrincipal httpPrincipal, long groupId, String name,
-		String description,
+		HttpPrincipal httpPrincipal, long groupId, java.lang.String name,
+		java.lang.String description,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -210,7 +210,7 @@ public class TeamServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.Team getTeam(
-		HttpPrincipal httpPrincipal, long groupId, String name)
+		HttpPrincipal httpPrincipal, long groupId, java.lang.String name)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(TeamServiceUtil.class,
@@ -336,8 +336,9 @@ public class TeamServiceHttp {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Team> search(
-		HttpPrincipal httpPrincipal, long groupId, String name,
-		String description, java.util.LinkedHashMap<String, Object> params,
+		HttpPrincipal httpPrincipal, long groupId, java.lang.String name,
+		java.lang.String description,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
 		int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.Team> obc) {
 		try {
@@ -366,8 +367,8 @@ public class TeamServiceHttp {
 	}
 
 	public static int searchCount(HttpPrincipal httpPrincipal, long groupId,
-		String name, String description,
-		java.util.LinkedHashMap<String, Object> params) {
+		java.lang.String name, java.lang.String description,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params) {
 		try {
 			MethodKey methodKey = new MethodKey(TeamServiceUtil.class,
 					"searchCount", _searchCountParameterTypes10);
@@ -394,8 +395,8 @@ public class TeamServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.Team updateTeam(
-		HttpPrincipal httpPrincipal, long teamId, String name,
-		String description)
+		HttpPrincipal httpPrincipal, long teamId, java.lang.String name,
+		java.lang.String description)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(TeamServiceUtil.class,
@@ -428,10 +429,10 @@ public class TeamServiceHttp {
 
 	private static Log _log = LogFactoryUtil.getLog(TeamServiceHttp.class);
 	private static final Class<?>[] _addTeamParameterTypes0 = new Class[] {
-			long.class, String.class, String.class
+			long.class, java.lang.String.class, java.lang.String.class
 		};
 	private static final Class<?>[] _addTeamParameterTypes1 = new Class[] {
-			long.class, String.class, String.class,
+			long.class, java.lang.String.class, java.lang.String.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _deleteTeamParameterTypes2 = new Class[] {
@@ -444,7 +445,7 @@ public class TeamServiceHttp {
 			long.class
 		};
 	private static final Class<?>[] _getTeamParameterTypes5 = new Class[] {
-			long.class, String.class
+			long.class, java.lang.String.class
 		};
 	private static final Class<?>[] _getUserTeamsParameterTypes6 = new Class[] {
 			long.class
@@ -456,15 +457,15 @@ public class TeamServiceHttp {
 			long.class, long.class
 		};
 	private static final Class<?>[] _searchParameterTypes9 = new Class[] {
-			long.class, String.class, String.class,
+			long.class, java.lang.String.class, java.lang.String.class,
 			java.util.LinkedHashMap.class, int.class, int.class,
 			com.liferay.portal.kernel.util.OrderByComparator.class
 		};
 	private static final Class<?>[] _searchCountParameterTypes10 = new Class[] {
-			long.class, String.class, String.class,
+			long.class, java.lang.String.class, java.lang.String.class,
 			java.util.LinkedHashMap.class
 		};
 	private static final Class<?>[] _updateTeamParameterTypes11 = new Class[] {
-			long.class, String.class, String.class
+			long.class, java.lang.String.class, java.lang.String.class
 		};
 }

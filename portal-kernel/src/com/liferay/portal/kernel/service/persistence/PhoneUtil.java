@@ -111,7 +111,7 @@ public class PhoneUtil {
 	* @param uuid the uuid
 	* @return the matching phones
 	*/
-	public static List<Phone> findByUuid(String uuid) {
+	public static List<Phone> findByUuid(java.lang.String uuid) {
 		return getPersistence().findByUuid(uuid);
 	}
 
@@ -127,7 +127,8 @@ public class PhoneUtil {
 	* @param end the upper bound of the range of phones (not inclusive)
 	* @return the range of matching phones
 	*/
-	public static List<Phone> findByUuid(String uuid, int start, int end) {
+	public static List<Phone> findByUuid(java.lang.String uuid, int start,
+		int end) {
 		return getPersistence().findByUuid(uuid, start, end);
 	}
 
@@ -144,8 +145,8 @@ public class PhoneUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching phones
 	*/
-	public static List<Phone> findByUuid(String uuid, int start, int end,
-		OrderByComparator<Phone> orderByComparator) {
+	public static List<Phone> findByUuid(java.lang.String uuid, int start,
+		int end, OrderByComparator<Phone> orderByComparator) {
 		return getPersistence().findByUuid(uuid, start, end, orderByComparator);
 	}
 
@@ -163,8 +164,9 @@ public class PhoneUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching phones
 	*/
-	public static List<Phone> findByUuid(String uuid, int start, int end,
-		OrderByComparator<Phone> orderByComparator, boolean retrieveFromCache) {
+	public static List<Phone> findByUuid(java.lang.String uuid, int start,
+		int end, OrderByComparator<Phone> orderByComparator,
+		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByUuid(uuid, start, end, orderByComparator,
 			retrieveFromCache);
@@ -178,7 +180,7 @@ public class PhoneUtil {
 	* @return the first matching phone
 	* @throws NoSuchPhoneException if a matching phone could not be found
 	*/
-	public static Phone findByUuid_First(String uuid,
+	public static Phone findByUuid_First(java.lang.String uuid,
 		OrderByComparator<Phone> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchPhoneException {
 		return getPersistence().findByUuid_First(uuid, orderByComparator);
@@ -191,7 +193,7 @@ public class PhoneUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching phone, or <code>null</code> if a matching phone could not be found
 	*/
-	public static Phone fetchByUuid_First(String uuid,
+	public static Phone fetchByUuid_First(java.lang.String uuid,
 		OrderByComparator<Phone> orderByComparator) {
 		return getPersistence().fetchByUuid_First(uuid, orderByComparator);
 	}
@@ -204,7 +206,7 @@ public class PhoneUtil {
 	* @return the last matching phone
 	* @throws NoSuchPhoneException if a matching phone could not be found
 	*/
-	public static Phone findByUuid_Last(String uuid,
+	public static Phone findByUuid_Last(java.lang.String uuid,
 		OrderByComparator<Phone> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchPhoneException {
 		return getPersistence().findByUuid_Last(uuid, orderByComparator);
@@ -217,7 +219,7 @@ public class PhoneUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching phone, or <code>null</code> if a matching phone could not be found
 	*/
-	public static Phone fetchByUuid_Last(String uuid,
+	public static Phone fetchByUuid_Last(java.lang.String uuid,
 		OrderByComparator<Phone> orderByComparator) {
 		return getPersistence().fetchByUuid_Last(uuid, orderByComparator);
 	}
@@ -231,8 +233,8 @@ public class PhoneUtil {
 	* @return the previous, current, and next phone
 	* @throws NoSuchPhoneException if a phone with the primary key could not be found
 	*/
-	public static Phone[] findByUuid_PrevAndNext(long phoneId, String uuid,
-		OrderByComparator<Phone> orderByComparator)
+	public static Phone[] findByUuid_PrevAndNext(long phoneId,
+		java.lang.String uuid, OrderByComparator<Phone> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchPhoneException {
 		return getPersistence()
 				   .findByUuid_PrevAndNext(phoneId, uuid, orderByComparator);
@@ -243,7 +245,7 @@ public class PhoneUtil {
 	*
 	* @param uuid the uuid
 	*/
-	public static void removeByUuid(String uuid) {
+	public static void removeByUuid(java.lang.String uuid) {
 		getPersistence().removeByUuid(uuid);
 	}
 
@@ -253,7 +255,7 @@ public class PhoneUtil {
 	* @param uuid the uuid
 	* @return the number of matching phones
 	*/
-	public static int countByUuid(String uuid) {
+	public static int countByUuid(java.lang.String uuid) {
 		return getPersistence().countByUuid(uuid);
 	}
 
@@ -264,7 +266,7 @@ public class PhoneUtil {
 	* @param companyId the company ID
 	* @return the matching phones
 	*/
-	public static List<Phone> findByUuid_C(String uuid, long companyId) {
+	public static List<Phone> findByUuid_C(java.lang.String uuid, long companyId) {
 		return getPersistence().findByUuid_C(uuid, companyId);
 	}
 
@@ -281,8 +283,8 @@ public class PhoneUtil {
 	* @param end the upper bound of the range of phones (not inclusive)
 	* @return the range of matching phones
 	*/
-	public static List<Phone> findByUuid_C(String uuid, long companyId,
-		int start, int end) {
+	public static List<Phone> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end) {
 		return getPersistence().findByUuid_C(uuid, companyId, start, end);
 	}
 
@@ -300,8 +302,9 @@ public class PhoneUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching phones
 	*/
-	public static List<Phone> findByUuid_C(String uuid, long companyId,
-		int start, int end, OrderByComparator<Phone> orderByComparator) {
+	public static List<Phone> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end,
+		OrderByComparator<Phone> orderByComparator) {
 		return getPersistence()
 				   .findByUuid_C(uuid, companyId, start, end, orderByComparator);
 	}
@@ -321,9 +324,9 @@ public class PhoneUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching phones
 	*/
-	public static List<Phone> findByUuid_C(String uuid, long companyId,
-		int start, int end, OrderByComparator<Phone> orderByComparator,
-		boolean retrieveFromCache) {
+	public static List<Phone> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end,
+		OrderByComparator<Phone> orderByComparator, boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByUuid_C(uuid, companyId, start, end,
 			orderByComparator, retrieveFromCache);
@@ -338,8 +341,8 @@ public class PhoneUtil {
 	* @return the first matching phone
 	* @throws NoSuchPhoneException if a matching phone could not be found
 	*/
-	public static Phone findByUuid_C_First(String uuid, long companyId,
-		OrderByComparator<Phone> orderByComparator)
+	public static Phone findByUuid_C_First(java.lang.String uuid,
+		long companyId, OrderByComparator<Phone> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchPhoneException {
 		return getPersistence()
 				   .findByUuid_C_First(uuid, companyId, orderByComparator);
@@ -353,8 +356,8 @@ public class PhoneUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching phone, or <code>null</code> if a matching phone could not be found
 	*/
-	public static Phone fetchByUuid_C_First(String uuid, long companyId,
-		OrderByComparator<Phone> orderByComparator) {
+	public static Phone fetchByUuid_C_First(java.lang.String uuid,
+		long companyId, OrderByComparator<Phone> orderByComparator) {
 		return getPersistence()
 				   .fetchByUuid_C_First(uuid, companyId, orderByComparator);
 	}
@@ -368,8 +371,8 @@ public class PhoneUtil {
 	* @return the last matching phone
 	* @throws NoSuchPhoneException if a matching phone could not be found
 	*/
-	public static Phone findByUuid_C_Last(String uuid, long companyId,
-		OrderByComparator<Phone> orderByComparator)
+	public static Phone findByUuid_C_Last(java.lang.String uuid,
+		long companyId, OrderByComparator<Phone> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchPhoneException {
 		return getPersistence()
 				   .findByUuid_C_Last(uuid, companyId, orderByComparator);
@@ -383,8 +386,8 @@ public class PhoneUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching phone, or <code>null</code> if a matching phone could not be found
 	*/
-	public static Phone fetchByUuid_C_Last(String uuid, long companyId,
-		OrderByComparator<Phone> orderByComparator) {
+	public static Phone fetchByUuid_C_Last(java.lang.String uuid,
+		long companyId, OrderByComparator<Phone> orderByComparator) {
 		return getPersistence()
 				   .fetchByUuid_C_Last(uuid, companyId, orderByComparator);
 	}
@@ -399,8 +402,9 @@ public class PhoneUtil {
 	* @return the previous, current, and next phone
 	* @throws NoSuchPhoneException if a phone with the primary key could not be found
 	*/
-	public static Phone[] findByUuid_C_PrevAndNext(long phoneId, String uuid,
-		long companyId, OrderByComparator<Phone> orderByComparator)
+	public static Phone[] findByUuid_C_PrevAndNext(long phoneId,
+		java.lang.String uuid, long companyId,
+		OrderByComparator<Phone> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchPhoneException {
 		return getPersistence()
 				   .findByUuid_C_PrevAndNext(phoneId, uuid, companyId,
@@ -413,7 +417,7 @@ public class PhoneUtil {
 	* @param uuid the uuid
 	* @param companyId the company ID
 	*/
-	public static void removeByUuid_C(String uuid, long companyId) {
+	public static void removeByUuid_C(java.lang.String uuid, long companyId) {
 		getPersistence().removeByUuid_C(uuid, companyId);
 	}
 
@@ -424,7 +428,7 @@ public class PhoneUtil {
 	* @param companyId the company ID
 	* @return the number of matching phones
 	*/
-	public static int countByUuid_C(String uuid, long companyId) {
+	public static int countByUuid_C(java.lang.String uuid, long companyId) {
 		return getPersistence().countByUuid_C(uuid, companyId);
 	}
 
@@ -1464,7 +1468,7 @@ public class PhoneUtil {
 		return getPersistence().countAll();
 	}
 
-	public static java.util.Set<String> getBadColumnNames() {
+	public static java.util.Set<java.lang.String> getBadColumnNames() {
 		return getPersistence().getBadColumnNames();
 	}
 

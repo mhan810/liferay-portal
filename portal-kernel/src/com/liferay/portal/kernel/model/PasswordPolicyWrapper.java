@@ -67,14 +67,14 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("defaultPolicy", isDefaultPolicy());
+		attributes.put("defaultPolicy", getDefaultPolicy());
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
-		attributes.put("changeable", isChangeable());
-		attributes.put("changeRequired", isChangeRequired());
+		attributes.put("changeable", getChangeable());
+		attributes.put("changeRequired", getChangeRequired());
 		attributes.put("minAge", getMinAge());
-		attributes.put("checkSyntax", isCheckSyntax());
-		attributes.put("allowDictionaryWords", isAllowDictionaryWords());
+		attributes.put("checkSyntax", getCheckSyntax());
+		attributes.put("allowDictionaryWords", getAllowDictionaryWords());
 		attributes.put("minAlphanumeric", getMinAlphanumeric());
 		attributes.put("minLength", getMinLength());
 		attributes.put("minLowerCase", getMinLowerCase());
@@ -82,16 +82,16 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 		attributes.put("minSymbols", getMinSymbols());
 		attributes.put("minUpperCase", getMinUpperCase());
 		attributes.put("regex", getRegex());
-		attributes.put("history", isHistory());
+		attributes.put("history", getHistory());
 		attributes.put("historyCount", getHistoryCount());
-		attributes.put("expireable", isExpireable());
+		attributes.put("expireable", getExpireable());
 		attributes.put("maxAge", getMaxAge());
 		attributes.put("warningTime", getWarningTime());
 		attributes.put("graceLimit", getGraceLimit());
-		attributes.put("lockout", isLockout());
+		attributes.put("lockout", getLockout());
 		attributes.put("maxFailure", getMaxFailure());
 		attributes.put("lockoutDuration", getLockoutDuration());
-		attributes.put("requireUnlock", isRequireUnlock());
+		attributes.put("requireUnlock", getRequireUnlock());
 		attributes.put("resetFailureCount", getResetFailureCount());
 		attributes.put("resetTicketMaxAge", getResetTicketMaxAge());
 
@@ -313,7 +313,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new PasswordPolicyWrapper((PasswordPolicy)_passwordPolicy.clone());
 	}
 
@@ -398,7 +398,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	* @return the description of this password policy
 	*/
 	@Override
-	public String getDescription() {
+	public java.lang.String getDescription() {
 		return _passwordPolicy.getDescription();
 	}
 
@@ -583,7 +583,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	* @return the name of this password policy
 	*/
 	@Override
-	public String getName() {
+	public java.lang.String getName() {
 		return _passwordPolicy.getName();
 	}
 
@@ -618,7 +618,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	* @return the regex of this password policy
 	*/
 	@Override
-	public String getRegex() {
+	public java.lang.String getRegex() {
 		return _passwordPolicy.getRegex();
 	}
 
@@ -668,7 +668,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	* @return the user name of this password policy
 	*/
 	@Override
-	public String getUserName() {
+	public java.lang.String getUserName() {
 		return _passwordPolicy.getUserName();
 	}
 
@@ -678,7 +678,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	* @return the user uuid of this password policy
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _passwordPolicy.getUserUuid();
 	}
 
@@ -688,7 +688,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	* @return the uuid of this password policy
 	*/
 	@Override
-	public String getUuid() {
+	public java.lang.String getUuid() {
 		return _passwordPolicy.getUuid();
 	}
 
@@ -898,7 +898,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	* @param description the description of this password policy
 	*/
 	@Override
-	public void setDescription(String description) {
+	public void setDescription(java.lang.String description) {
 		_passwordPolicy.setDescription(description);
 	}
 
@@ -1093,7 +1093,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	* @param name the name of this password policy
 	*/
 	@Override
-	public void setName(String name) {
+	public void setName(java.lang.String name) {
 		_passwordPolicy.setName(name);
 	}
 
@@ -1133,7 +1133,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	* @param regex the regex of this password policy
 	*/
 	@Override
-	public void setRegex(String regex) {
+	public void setRegex(java.lang.String regex) {
 		_passwordPolicy.setRegex(regex);
 	}
 
@@ -1183,7 +1183,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	* @param userName the user name of this password policy
 	*/
 	@Override
-	public void setUserName(String userName) {
+	public void setUserName(java.lang.String userName) {
 		_passwordPolicy.setUserName(userName);
 	}
 
@@ -1193,7 +1193,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	* @param userUuid the user uuid of this password policy
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_passwordPolicy.setUserUuid(userUuid);
 	}
 
@@ -1203,7 +1203,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	* @param uuid the uuid of this password policy
 	*/
 	@Override
-	public void setUuid(String uuid) {
+	public void setUuid(java.lang.String uuid) {
 		_passwordPolicy.setUuid(uuid);
 	}
 
@@ -1228,7 +1228,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _passwordPolicy.toString();
 	}
 
@@ -1238,7 +1238,7 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _passwordPolicy.toXmlString();
 	}
 

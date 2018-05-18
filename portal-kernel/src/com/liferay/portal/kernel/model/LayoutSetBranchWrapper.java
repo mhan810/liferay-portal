@@ -65,10 +65,10 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("privateLayout", isPrivateLayout());
+		attributes.put("privateLayout", getPrivateLayout());
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
-		attributes.put("master", isMaster());
+		attributes.put("master", getMaster());
 		attributes.put("logoId", getLogoId());
 		attributes.put("themeId", getThemeId());
 		attributes.put("colorSchemeId", getColorSchemeId());
@@ -76,7 +76,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 		attributes.put("settings", getSettings());
 		attributes.put("layoutSetPrototypeUuid", getLayoutSetPrototypeUuid());
 		attributes.put("layoutSetPrototypeLinkEnabled",
-			isLayoutSetPrototypeLinkEnabled());
+			getLayoutSetPrototypeLinkEnabled());
 
 		return attributes;
 	}
@@ -201,7 +201,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new LayoutSetBranchWrapper((LayoutSetBranch)_layoutSetBranch.clone());
 	}
 
@@ -221,7 +221,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @return the color scheme ID of this layout set branch
 	*/
 	@Override
-	public String getColorSchemeId() {
+	public java.lang.String getColorSchemeId() {
 		return _layoutSetBranch.getColorSchemeId();
 	}
 
@@ -251,7 +251,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @return the css of this layout set branch
 	*/
 	@Override
-	public String getCss() {
+	public java.lang.String getCss() {
 		return _layoutSetBranch.getCss();
 	}
 
@@ -261,7 +261,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @return the description of this layout set branch
 	*/
 	@Override
-	public String getDescription() {
+	public java.lang.String getDescription() {
 		return _layoutSetBranch.getDescription();
 	}
 
@@ -317,7 +317,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @return the layout set prototype uuid of this layout set branch
 	*/
 	@Override
-	public String getLayoutSetPrototypeUuid() {
+	public java.lang.String getLayoutSetPrototypeUuid() {
 		return _layoutSetBranch.getLayoutSetPrototypeUuid();
 	}
 
@@ -377,7 +377,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @return the name of this layout set branch
 	*/
 	@Override
-	public String getName() {
+	public java.lang.String getName() {
 		return _layoutSetBranch.getName();
 	}
 
@@ -412,7 +412,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @return the settings of this layout set branch
 	*/
 	@Override
-	public String getSettings() {
+	public java.lang.String getSettings() {
 		return _layoutSetBranch.getSettings();
 	}
 
@@ -422,7 +422,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	}
 
 	@Override
-	public String getSettingsProperty(String key) {
+	public java.lang.String getSettingsProperty(java.lang.String key) {
 		return _layoutSetBranch.getSettingsProperty(key);
 	}
 
@@ -437,12 +437,13 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @return the theme ID of this layout set branch
 	*/
 	@Override
-	public String getThemeId() {
+	public java.lang.String getThemeId() {
 		return _layoutSetBranch.getThemeId();
 	}
 
 	@Override
-	public String getThemeSetting(String key, String device) {
+	public java.lang.String getThemeSetting(java.lang.String key,
+		java.lang.String device) {
 		return _layoutSetBranch.getThemeSetting(key, device);
 	}
 
@@ -462,7 +463,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @return the user name of this layout set branch
 	*/
 	@Override
-	public String getUserName() {
+	public java.lang.String getUserName() {
 		return _layoutSetBranch.getUserName();
 	}
 
@@ -472,7 +473,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @return the user uuid of this layout set branch
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _layoutSetBranch.getUserUuid();
 	}
 
@@ -552,7 +553,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @param colorSchemeId the color scheme ID of this layout set branch
 	*/
 	@Override
-	public void setColorSchemeId(String colorSchemeId) {
+	public void setColorSchemeId(java.lang.String colorSchemeId) {
 		_layoutSetBranch.setColorSchemeId(colorSchemeId);
 	}
 
@@ -582,7 +583,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @param css the css of this layout set branch
 	*/
 	@Override
-	public void setCss(String css) {
+	public void setCss(java.lang.String css) {
 		_layoutSetBranch.setCss(css);
 	}
 
@@ -592,7 +593,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @param description the description of this layout set branch
 	*/
 	@Override
-	public void setDescription(String description) {
+	public void setDescription(java.lang.String description) {
 		_layoutSetBranch.setDescription(description);
 	}
 
@@ -648,7 +649,8 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @param layoutSetPrototypeUuid the layout set prototype uuid of this layout set branch
 	*/
 	@Override
-	public void setLayoutSetPrototypeUuid(String layoutSetPrototypeUuid) {
+	public void setLayoutSetPrototypeUuid(
+		java.lang.String layoutSetPrototypeUuid) {
 		_layoutSetBranch.setLayoutSetPrototypeUuid(layoutSetPrototypeUuid);
 	}
 
@@ -698,7 +700,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @param name the name of this layout set branch
 	*/
 	@Override
-	public void setName(String name) {
+	public void setName(java.lang.String name) {
 		_layoutSetBranch.setName(name);
 	}
 
@@ -738,7 +740,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @param settings the settings of this layout set branch
 	*/
 	@Override
-	public void setSettings(String settings) {
+	public void setSettings(java.lang.String settings) {
 		_layoutSetBranch.setSettings(settings);
 	}
 
@@ -754,7 +756,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @param themeId the theme ID of this layout set branch
 	*/
 	@Override
-	public void setThemeId(String themeId) {
+	public void setThemeId(java.lang.String themeId) {
 		_layoutSetBranch.setThemeId(themeId);
 	}
 
@@ -774,7 +776,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @param userName the user name of this layout set branch
 	*/
 	@Override
-	public void setUserName(String userName) {
+	public void setUserName(java.lang.String userName) {
 		_layoutSetBranch.setUserName(userName);
 	}
 
@@ -784,7 +786,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	* @param userUuid the user uuid of this layout set branch
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_layoutSetBranch.setUserUuid(userUuid);
 	}
 
@@ -799,7 +801,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _layoutSetBranch.toString();
 	}
 
@@ -809,7 +811,7 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _layoutSetBranch.toXmlString();
 	}
 

@@ -73,7 +73,6 @@ public interface PasswordTrackerLocalService extends BaseLocalService,
 	* @param passwordTrackerId the primary key for the new password tracker
 	* @return the new password tracker
 	*/
-	@Transactional(enabled = false)
 	public PasswordTracker createPasswordTracker(long passwordTrackerId);
 
 	/**
@@ -179,7 +178,7 @@ public interface PasswordTrackerLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	/**
 	* Returns the password tracker with the primary key.
@@ -220,14 +219,14 @@ public interface PasswordTrackerLocalService extends BaseLocalService,
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isSameAsCurrentPassword(long userId, String newClearTextPwd)
-		throws PortalException;
+	public boolean isSameAsCurrentPassword(long userId,
+		java.lang.String newClearTextPwd) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isValidPassword(long userId, String newClearTextPwd)
+	public boolean isValidPassword(long userId, java.lang.String newClearTextPwd)
 		throws PortalException;
 
-	public void trackPassword(long userId, String encPassword)
+	public void trackPassword(long userId, java.lang.String encPassword)
 		throws PortalException;
 
 	/**

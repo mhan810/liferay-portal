@@ -69,7 +69,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("plid", getPlid());
-		attributes.put("privateLayout", isPrivateLayout());
+		attributes.put("privateLayout", getPrivateLayout());
 		attributes.put("friendlyURL", getFriendlyURL());
 		attributes.put("languageId", getLanguageId());
 		attributes.put("lastPublishDate", getLastPublishDate());
@@ -165,7 +165,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new LayoutFriendlyURLWrapper((LayoutFriendlyURL)_layoutFriendlyURL.clone());
 	}
 
@@ -205,7 +205,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 	* @return the friendly url of this layout friendly url
 	*/
 	@Override
-	public String getFriendlyURL() {
+	public java.lang.String getFriendlyURL() {
 		return _layoutFriendlyURL.getFriendlyURL();
 	}
 
@@ -225,7 +225,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 	* @return the language ID of this layout friendly url
 	*/
 	@Override
-	public String getLanguageId() {
+	public java.lang.String getLanguageId() {
 		return _layoutFriendlyURL.getLanguageId();
 	}
 
@@ -320,7 +320,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 	* @return the user name of this layout friendly url
 	*/
 	@Override
-	public String getUserName() {
+	public java.lang.String getUserName() {
 		return _layoutFriendlyURL.getUserName();
 	}
 
@@ -330,7 +330,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 	* @return the user uuid of this layout friendly url
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _layoutFriendlyURL.getUserUuid();
 	}
 
@@ -340,7 +340,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 	* @return the uuid of this layout friendly url
 	*/
 	@Override
-	public String getUuid() {
+	public java.lang.String getUuid() {
 		return _layoutFriendlyURL.getUuid();
 	}
 
@@ -425,7 +425,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 	* @param friendlyURL the friendly url of this layout friendly url
 	*/
 	@Override
-	public void setFriendlyURL(String friendlyURL) {
+	public void setFriendlyURL(java.lang.String friendlyURL) {
 		_layoutFriendlyURL.setFriendlyURL(friendlyURL);
 	}
 
@@ -445,7 +445,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 	* @param languageId the language ID of this layout friendly url
 	*/
 	@Override
-	public void setLanguageId(String languageId) {
+	public void setLanguageId(java.lang.String languageId) {
 		_layoutFriendlyURL.setLanguageId(languageId);
 	}
 
@@ -545,7 +545,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 	* @param userName the user name of this layout friendly url
 	*/
 	@Override
-	public void setUserName(String userName) {
+	public void setUserName(java.lang.String userName) {
 		_layoutFriendlyURL.setUserName(userName);
 	}
 
@@ -555,7 +555,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 	* @param userUuid the user uuid of this layout friendly url
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_layoutFriendlyURL.setUserUuid(userUuid);
 	}
 
@@ -565,7 +565,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 	* @param uuid the uuid of this layout friendly url
 	*/
 	@Override
-	public void setUuid(String uuid) {
+	public void setUuid(java.lang.String uuid) {
 		_layoutFriendlyURL.setUuid(uuid);
 	}
 
@@ -580,7 +580,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _layoutFriendlyURL.toString();
 	}
 
@@ -590,7 +590,7 @@ public class LayoutFriendlyURLWrapper implements LayoutFriendlyURL,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _layoutFriendlyURL.toXmlString();
 	}
 

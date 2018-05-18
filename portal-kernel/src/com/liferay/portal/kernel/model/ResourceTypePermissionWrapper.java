@@ -117,7 +117,7 @@ public class ResourceTypePermissionWrapper implements ResourceTypePermission,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new ResourceTypePermissionWrapper((ResourceTypePermission)_resourceTypePermission.clone());
 	}
 
@@ -177,7 +177,7 @@ public class ResourceTypePermissionWrapper implements ResourceTypePermission,
 	* @return the name of this resource type permission
 	*/
 	@Override
-	public String getName() {
+	public java.lang.String getName() {
 		return _resourceTypePermission.getName();
 	}
 
@@ -322,7 +322,7 @@ public class ResourceTypePermissionWrapper implements ResourceTypePermission,
 	* @param name the name of this resource type permission
 	*/
 	@Override
-	public void setName(String name) {
+	public void setName(java.lang.String name) {
 		_resourceTypePermission.setName(name);
 	}
 
@@ -377,7 +377,7 @@ public class ResourceTypePermissionWrapper implements ResourceTypePermission,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _resourceTypePermission.toString();
 	}
 
@@ -387,7 +387,7 @@ public class ResourceTypePermissionWrapper implements ResourceTypePermission,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _resourceTypePermission.toXmlString();
 	}
 

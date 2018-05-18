@@ -22,7 +22,6 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.SystemEvent;
 import com.liferay.portal.kernel.model.SystemEventModel;
 import com.liferay.portal.kernel.model.User;
@@ -851,7 +850,7 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 	private static final ClassLoader _classLoader = SystemEvent.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			SystemEvent.class, ModelWrapper.class
+			SystemEvent.class
 		};
 	private long _mvccVersion;
 	private long _systemEventId;

@@ -68,7 +68,7 @@ public interface ClassNameLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public ClassName addClassName(ClassName className);
 
-	public ClassName addClassName(String value);
+	public ClassName addClassName(java.lang.String value);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public void checkClassNames();
@@ -79,7 +79,6 @@ public interface ClassNameLocalService extends BaseLocalService,
 	* @param classNameId the primary key for the new class name
 	* @return the new class name
 	*/
-	@Transactional(enabled = false)
 	public ClassName createClassName(long classNameId);
 
 	/**
@@ -175,7 +174,7 @@ public interface ClassNameLocalService extends BaseLocalService,
 	public ClassName fetchClassName(long classNameId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public ClassName fetchClassName(String value);
+	public ClassName fetchClassName(java.lang.String value);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
@@ -192,15 +191,15 @@ public interface ClassNameLocalService extends BaseLocalService,
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public ClassName getClassName(String value);
+	public ClassName getClassName(java.lang.String value);
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public long getClassNameId(Class<?> clazz);
+	public long getClassNameId(java.lang.Class<?> clazz);
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public long getClassNameId(String value);
+	public long getClassNameId(java.lang.String value);
 
 	/**
 	* Returns a range of all the class names.
@@ -232,7 +231,7 @@ public interface ClassNameLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -240,7 +239,7 @@ public interface ClassNameLocalService extends BaseLocalService,
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String getRegistryName();
+	public java.lang.String getRegistryName();
 
 	public void invalidate();
 

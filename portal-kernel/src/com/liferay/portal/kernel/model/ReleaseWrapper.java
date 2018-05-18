@@ -64,7 +64,7 @@ public class ReleaseWrapper implements Release, ModelWrapper<Release> {
 		attributes.put("schemaVersion", getSchemaVersion());
 		attributes.put("buildNumber", getBuildNumber());
 		attributes.put("buildDate", getBuildDate());
-		attributes.put("verified", isVerified());
+		attributes.put("verified", getVerified());
 		attributes.put("state", getState());
 		attributes.put("testString", getTestString());
 
@@ -141,7 +141,7 @@ public class ReleaseWrapper implements Release, ModelWrapper<Release> {
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new ReleaseWrapper((Release)_release.clone());
 	}
 
@@ -171,7 +171,7 @@ public class ReleaseWrapper implements Release, ModelWrapper<Release> {
 	}
 
 	@Override
-	public String getBundleSymbolicName() {
+	public java.lang.String getBundleSymbolicName() {
 		return _release.getBundleSymbolicName();
 	}
 
@@ -241,7 +241,7 @@ public class ReleaseWrapper implements Release, ModelWrapper<Release> {
 	* @return the schema version of this release
 	*/
 	@Override
-	public String getSchemaVersion() {
+	public java.lang.String getSchemaVersion() {
 		return _release.getSchemaVersion();
 	}
 
@@ -251,7 +251,7 @@ public class ReleaseWrapper implements Release, ModelWrapper<Release> {
 	* @return the servlet context name of this release
 	*/
 	@Override
-	public String getServletContextName() {
+	public java.lang.String getServletContextName() {
 		return _release.getServletContextName();
 	}
 
@@ -271,7 +271,7 @@ public class ReleaseWrapper implements Release, ModelWrapper<Release> {
 	* @return the test string of this release
 	*/
 	@Override
-	public String getTestString() {
+	public java.lang.String getTestString() {
 		return _release.getTestString();
 	}
 
@@ -426,7 +426,7 @@ public class ReleaseWrapper implements Release, ModelWrapper<Release> {
 	* @param schemaVersion the schema version of this release
 	*/
 	@Override
-	public void setSchemaVersion(String schemaVersion) {
+	public void setSchemaVersion(java.lang.String schemaVersion) {
 		_release.setSchemaVersion(schemaVersion);
 	}
 
@@ -436,7 +436,7 @@ public class ReleaseWrapper implements Release, ModelWrapper<Release> {
 	* @param servletContextName the servlet context name of this release
 	*/
 	@Override
-	public void setServletContextName(String servletContextName) {
+	public void setServletContextName(java.lang.String servletContextName) {
 		_release.setServletContextName(servletContextName);
 	}
 
@@ -456,7 +456,7 @@ public class ReleaseWrapper implements Release, ModelWrapper<Release> {
 	* @param testString the test string of this release
 	*/
 	@Override
-	public void setTestString(String testString) {
+	public void setTestString(java.lang.String testString) {
 		_release.setTestString(testString);
 	}
 
@@ -481,7 +481,7 @@ public class ReleaseWrapper implements Release, ModelWrapper<Release> {
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _release.toString();
 	}
 
@@ -491,7 +491,7 @@ public class ReleaseWrapper implements Release, ModelWrapper<Release> {
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _release.toXmlString();
 	}
 

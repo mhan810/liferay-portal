@@ -76,7 +76,6 @@ public interface RecentLayoutSetBranchLocalService extends BaseLocalService,
 	* @param recentLayoutSetBranchId the primary key for the new recent layout set branch
 	* @return the new recent layout set branch
 	*/
-	@Transactional(enabled = false)
 	public RecentLayoutSetBranch createRecentLayoutSetBranch(
 		long recentLayoutSetBranchId);
 
@@ -190,7 +189,7 @@ public interface RecentLayoutSetBranchLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

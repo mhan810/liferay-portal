@@ -111,7 +111,7 @@ public class RoleUtil {
 	* @param uuid the uuid
 	* @return the matching roles
 	*/
-	public static List<Role> findByUuid(String uuid) {
+	public static List<Role> findByUuid(java.lang.String uuid) {
 		return getPersistence().findByUuid(uuid);
 	}
 
@@ -127,7 +127,8 @@ public class RoleUtil {
 	* @param end the upper bound of the range of roles (not inclusive)
 	* @return the range of matching roles
 	*/
-	public static List<Role> findByUuid(String uuid, int start, int end) {
+	public static List<Role> findByUuid(java.lang.String uuid, int start,
+		int end) {
 		return getPersistence().findByUuid(uuid, start, end);
 	}
 
@@ -144,8 +145,8 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching roles
 	*/
-	public static List<Role> findByUuid(String uuid, int start, int end,
-		OrderByComparator<Role> orderByComparator) {
+	public static List<Role> findByUuid(java.lang.String uuid, int start,
+		int end, OrderByComparator<Role> orderByComparator) {
 		return getPersistence().findByUuid(uuid, start, end, orderByComparator);
 	}
 
@@ -163,8 +164,9 @@ public class RoleUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching roles
 	*/
-	public static List<Role> findByUuid(String uuid, int start, int end,
-		OrderByComparator<Role> orderByComparator, boolean retrieveFromCache) {
+	public static List<Role> findByUuid(java.lang.String uuid, int start,
+		int end, OrderByComparator<Role> orderByComparator,
+		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByUuid(uuid, start, end, orderByComparator,
 			retrieveFromCache);
@@ -178,7 +180,7 @@ public class RoleUtil {
 	* @return the first matching role
 	* @throws NoSuchRoleException if a matching role could not be found
 	*/
-	public static Role findByUuid_First(String uuid,
+	public static Role findByUuid_First(java.lang.String uuid,
 		OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence().findByUuid_First(uuid, orderByComparator);
@@ -191,7 +193,7 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching role, or <code>null</code> if a matching role could not be found
 	*/
-	public static Role fetchByUuid_First(String uuid,
+	public static Role fetchByUuid_First(java.lang.String uuid,
 		OrderByComparator<Role> orderByComparator) {
 		return getPersistence().fetchByUuid_First(uuid, orderByComparator);
 	}
@@ -204,7 +206,7 @@ public class RoleUtil {
 	* @return the last matching role
 	* @throws NoSuchRoleException if a matching role could not be found
 	*/
-	public static Role findByUuid_Last(String uuid,
+	public static Role findByUuid_Last(java.lang.String uuid,
 		OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence().findByUuid_Last(uuid, orderByComparator);
@@ -217,7 +219,7 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching role, or <code>null</code> if a matching role could not be found
 	*/
-	public static Role fetchByUuid_Last(String uuid,
+	public static Role fetchByUuid_Last(java.lang.String uuid,
 		OrderByComparator<Role> orderByComparator) {
 		return getPersistence().fetchByUuid_Last(uuid, orderByComparator);
 	}
@@ -231,8 +233,8 @@ public class RoleUtil {
 	* @return the previous, current, and next role
 	* @throws NoSuchRoleException if a role with the primary key could not be found
 	*/
-	public static Role[] findByUuid_PrevAndNext(long roleId, String uuid,
-		OrderByComparator<Role> orderByComparator)
+	public static Role[] findByUuid_PrevAndNext(long roleId,
+		java.lang.String uuid, OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence()
 				   .findByUuid_PrevAndNext(roleId, uuid, orderByComparator);
@@ -244,7 +246,7 @@ public class RoleUtil {
 	* @param uuid the uuid
 	* @return the matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindByUuid(String uuid) {
+	public static List<Role> filterFindByUuid(java.lang.String uuid) {
 		return getPersistence().filterFindByUuid(uuid);
 	}
 
@@ -260,7 +262,8 @@ public class RoleUtil {
 	* @param end the upper bound of the range of roles (not inclusive)
 	* @return the range of matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindByUuid(String uuid, int start, int end) {
+	public static List<Role> filterFindByUuid(java.lang.String uuid, int start,
+		int end) {
 		return getPersistence().filterFindByUuid(uuid, start, end);
 	}
 
@@ -277,8 +280,8 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindByUuid(String uuid, int start, int end,
-		OrderByComparator<Role> orderByComparator) {
+	public static List<Role> filterFindByUuid(java.lang.String uuid, int start,
+		int end, OrderByComparator<Role> orderByComparator) {
 		return getPersistence()
 				   .filterFindByUuid(uuid, start, end, orderByComparator);
 	}
@@ -292,8 +295,8 @@ public class RoleUtil {
 	* @return the previous, current, and next role
 	* @throws NoSuchRoleException if a role with the primary key could not be found
 	*/
-	public static Role[] filterFindByUuid_PrevAndNext(long roleId, String uuid,
-		OrderByComparator<Role> orderByComparator)
+	public static Role[] filterFindByUuid_PrevAndNext(long roleId,
+		java.lang.String uuid, OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence()
 				   .filterFindByUuid_PrevAndNext(roleId, uuid, orderByComparator);
@@ -304,7 +307,7 @@ public class RoleUtil {
 	*
 	* @param uuid the uuid
 	*/
-	public static void removeByUuid(String uuid) {
+	public static void removeByUuid(java.lang.String uuid) {
 		getPersistence().removeByUuid(uuid);
 	}
 
@@ -314,7 +317,7 @@ public class RoleUtil {
 	* @param uuid the uuid
 	* @return the number of matching roles
 	*/
-	public static int countByUuid(String uuid) {
+	public static int countByUuid(java.lang.String uuid) {
 		return getPersistence().countByUuid(uuid);
 	}
 
@@ -324,7 +327,7 @@ public class RoleUtil {
 	* @param uuid the uuid
 	* @return the number of matching roles that the user has permission to view
 	*/
-	public static int filterCountByUuid(String uuid) {
+	public static int filterCountByUuid(java.lang.String uuid) {
 		return getPersistence().filterCountByUuid(uuid);
 	}
 
@@ -335,7 +338,7 @@ public class RoleUtil {
 	* @param companyId the company ID
 	* @return the matching roles
 	*/
-	public static List<Role> findByUuid_C(String uuid, long companyId) {
+	public static List<Role> findByUuid_C(java.lang.String uuid, long companyId) {
 		return getPersistence().findByUuid_C(uuid, companyId);
 	}
 
@@ -352,8 +355,8 @@ public class RoleUtil {
 	* @param end the upper bound of the range of roles (not inclusive)
 	* @return the range of matching roles
 	*/
-	public static List<Role> findByUuid_C(String uuid, long companyId,
-		int start, int end) {
+	public static List<Role> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end) {
 		return getPersistence().findByUuid_C(uuid, companyId, start, end);
 	}
 
@@ -371,8 +374,9 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching roles
 	*/
-	public static List<Role> findByUuid_C(String uuid, long companyId,
-		int start, int end, OrderByComparator<Role> orderByComparator) {
+	public static List<Role> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end,
+		OrderByComparator<Role> orderByComparator) {
 		return getPersistence()
 				   .findByUuid_C(uuid, companyId, start, end, orderByComparator);
 	}
@@ -392,9 +396,9 @@ public class RoleUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching roles
 	*/
-	public static List<Role> findByUuid_C(String uuid, long companyId,
-		int start, int end, OrderByComparator<Role> orderByComparator,
-		boolean retrieveFromCache) {
+	public static List<Role> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end,
+		OrderByComparator<Role> orderByComparator, boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByUuid_C(uuid, companyId, start, end,
 			orderByComparator, retrieveFromCache);
@@ -409,8 +413,8 @@ public class RoleUtil {
 	* @return the first matching role
 	* @throws NoSuchRoleException if a matching role could not be found
 	*/
-	public static Role findByUuid_C_First(String uuid, long companyId,
-		OrderByComparator<Role> orderByComparator)
+	public static Role findByUuid_C_First(java.lang.String uuid,
+		long companyId, OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence()
 				   .findByUuid_C_First(uuid, companyId, orderByComparator);
@@ -424,8 +428,8 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching role, or <code>null</code> if a matching role could not be found
 	*/
-	public static Role fetchByUuid_C_First(String uuid, long companyId,
-		OrderByComparator<Role> orderByComparator) {
+	public static Role fetchByUuid_C_First(java.lang.String uuid,
+		long companyId, OrderByComparator<Role> orderByComparator) {
 		return getPersistence()
 				   .fetchByUuid_C_First(uuid, companyId, orderByComparator);
 	}
@@ -439,7 +443,7 @@ public class RoleUtil {
 	* @return the last matching role
 	* @throws NoSuchRoleException if a matching role could not be found
 	*/
-	public static Role findByUuid_C_Last(String uuid, long companyId,
+	public static Role findByUuid_C_Last(java.lang.String uuid, long companyId,
 		OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence()
@@ -454,8 +458,8 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching role, or <code>null</code> if a matching role could not be found
 	*/
-	public static Role fetchByUuid_C_Last(String uuid, long companyId,
-		OrderByComparator<Role> orderByComparator) {
+	public static Role fetchByUuid_C_Last(java.lang.String uuid,
+		long companyId, OrderByComparator<Role> orderByComparator) {
 		return getPersistence()
 				   .fetchByUuid_C_Last(uuid, companyId, orderByComparator);
 	}
@@ -470,8 +474,9 @@ public class RoleUtil {
 	* @return the previous, current, and next role
 	* @throws NoSuchRoleException if a role with the primary key could not be found
 	*/
-	public static Role[] findByUuid_C_PrevAndNext(long roleId, String uuid,
-		long companyId, OrderByComparator<Role> orderByComparator)
+	public static Role[] findByUuid_C_PrevAndNext(long roleId,
+		java.lang.String uuid, long companyId,
+		OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence()
 				   .findByUuid_C_PrevAndNext(roleId, uuid, companyId,
@@ -485,7 +490,8 @@ public class RoleUtil {
 	* @param companyId the company ID
 	* @return the matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindByUuid_C(String uuid, long companyId) {
+	public static List<Role> filterFindByUuid_C(java.lang.String uuid,
+		long companyId) {
 		return getPersistence().filterFindByUuid_C(uuid, companyId);
 	}
 
@@ -502,8 +508,8 @@ public class RoleUtil {
 	* @param end the upper bound of the range of roles (not inclusive)
 	* @return the range of matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindByUuid_C(String uuid, long companyId,
-		int start, int end) {
+	public static List<Role> filterFindByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end) {
 		return getPersistence().filterFindByUuid_C(uuid, companyId, start, end);
 	}
 
@@ -521,8 +527,9 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindByUuid_C(String uuid, long companyId,
-		int start, int end, OrderByComparator<Role> orderByComparator) {
+	public static List<Role> filterFindByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end,
+		OrderByComparator<Role> orderByComparator) {
 		return getPersistence()
 				   .filterFindByUuid_C(uuid, companyId, start, end,
 			orderByComparator);
@@ -539,7 +546,8 @@ public class RoleUtil {
 	* @throws NoSuchRoleException if a role with the primary key could not be found
 	*/
 	public static Role[] filterFindByUuid_C_PrevAndNext(long roleId,
-		String uuid, long companyId, OrderByComparator<Role> orderByComparator)
+		java.lang.String uuid, long companyId,
+		OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence()
 				   .filterFindByUuid_C_PrevAndNext(roleId, uuid, companyId,
@@ -552,7 +560,7 @@ public class RoleUtil {
 	* @param uuid the uuid
 	* @param companyId the company ID
 	*/
-	public static void removeByUuid_C(String uuid, long companyId) {
+	public static void removeByUuid_C(java.lang.String uuid, long companyId) {
 		getPersistence().removeByUuid_C(uuid, companyId);
 	}
 
@@ -563,7 +571,7 @@ public class RoleUtil {
 	* @param companyId the company ID
 	* @return the number of matching roles
 	*/
-	public static int countByUuid_C(String uuid, long companyId) {
+	public static int countByUuid_C(java.lang.String uuid, long companyId) {
 		return getPersistence().countByUuid_C(uuid, companyId);
 	}
 
@@ -574,7 +582,7 @@ public class RoleUtil {
 	* @param companyId the company ID
 	* @return the number of matching roles that the user has permission to view
 	*/
-	public static int filterCountByUuid_C(String uuid, long companyId) {
+	public static int filterCountByUuid_C(java.lang.String uuid, long companyId) {
 		return getPersistence().filterCountByUuid_C(uuid, companyId);
 	}
 
@@ -817,7 +825,7 @@ public class RoleUtil {
 	* @param name the name
 	* @return the matching roles
 	*/
-	public static List<Role> findByName(String name) {
+	public static List<Role> findByName(java.lang.String name) {
 		return getPersistence().findByName(name);
 	}
 
@@ -833,7 +841,8 @@ public class RoleUtil {
 	* @param end the upper bound of the range of roles (not inclusive)
 	* @return the range of matching roles
 	*/
-	public static List<Role> findByName(String name, int start, int end) {
+	public static List<Role> findByName(java.lang.String name, int start,
+		int end) {
 		return getPersistence().findByName(name, start, end);
 	}
 
@@ -850,8 +859,8 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching roles
 	*/
-	public static List<Role> findByName(String name, int start, int end,
-		OrderByComparator<Role> orderByComparator) {
+	public static List<Role> findByName(java.lang.String name, int start,
+		int end, OrderByComparator<Role> orderByComparator) {
 		return getPersistence().findByName(name, start, end, orderByComparator);
 	}
 
@@ -869,8 +878,9 @@ public class RoleUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching roles
 	*/
-	public static List<Role> findByName(String name, int start, int end,
-		OrderByComparator<Role> orderByComparator, boolean retrieveFromCache) {
+	public static List<Role> findByName(java.lang.String name, int start,
+		int end, OrderByComparator<Role> orderByComparator,
+		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByName(name, start, end, orderByComparator,
 			retrieveFromCache);
@@ -884,7 +894,7 @@ public class RoleUtil {
 	* @return the first matching role
 	* @throws NoSuchRoleException if a matching role could not be found
 	*/
-	public static Role findByName_First(String name,
+	public static Role findByName_First(java.lang.String name,
 		OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence().findByName_First(name, orderByComparator);
@@ -897,7 +907,7 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching role, or <code>null</code> if a matching role could not be found
 	*/
-	public static Role fetchByName_First(String name,
+	public static Role fetchByName_First(java.lang.String name,
 		OrderByComparator<Role> orderByComparator) {
 		return getPersistence().fetchByName_First(name, orderByComparator);
 	}
@@ -910,7 +920,7 @@ public class RoleUtil {
 	* @return the last matching role
 	* @throws NoSuchRoleException if a matching role could not be found
 	*/
-	public static Role findByName_Last(String name,
+	public static Role findByName_Last(java.lang.String name,
 		OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence().findByName_Last(name, orderByComparator);
@@ -923,7 +933,7 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching role, or <code>null</code> if a matching role could not be found
 	*/
-	public static Role fetchByName_Last(String name,
+	public static Role fetchByName_Last(java.lang.String name,
 		OrderByComparator<Role> orderByComparator) {
 		return getPersistence().fetchByName_Last(name, orderByComparator);
 	}
@@ -937,8 +947,8 @@ public class RoleUtil {
 	* @return the previous, current, and next role
 	* @throws NoSuchRoleException if a role with the primary key could not be found
 	*/
-	public static Role[] findByName_PrevAndNext(long roleId, String name,
-		OrderByComparator<Role> orderByComparator)
+	public static Role[] findByName_PrevAndNext(long roleId,
+		java.lang.String name, OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence()
 				   .findByName_PrevAndNext(roleId, name, orderByComparator);
@@ -950,7 +960,7 @@ public class RoleUtil {
 	* @param name the name
 	* @return the matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindByName(String name) {
+	public static List<Role> filterFindByName(java.lang.String name) {
 		return getPersistence().filterFindByName(name);
 	}
 
@@ -966,7 +976,8 @@ public class RoleUtil {
 	* @param end the upper bound of the range of roles (not inclusive)
 	* @return the range of matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindByName(String name, int start, int end) {
+	public static List<Role> filterFindByName(java.lang.String name, int start,
+		int end) {
 		return getPersistence().filterFindByName(name, start, end);
 	}
 
@@ -983,8 +994,8 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindByName(String name, int start, int end,
-		OrderByComparator<Role> orderByComparator) {
+	public static List<Role> filterFindByName(java.lang.String name, int start,
+		int end, OrderByComparator<Role> orderByComparator) {
 		return getPersistence()
 				   .filterFindByName(name, start, end, orderByComparator);
 	}
@@ -998,8 +1009,8 @@ public class RoleUtil {
 	* @return the previous, current, and next role
 	* @throws NoSuchRoleException if a role with the primary key could not be found
 	*/
-	public static Role[] filterFindByName_PrevAndNext(long roleId, String name,
-		OrderByComparator<Role> orderByComparator)
+	public static Role[] filterFindByName_PrevAndNext(long roleId,
+		java.lang.String name, OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence()
 				   .filterFindByName_PrevAndNext(roleId, name, orderByComparator);
@@ -1010,7 +1021,7 @@ public class RoleUtil {
 	*
 	* @param name the name
 	*/
-	public static void removeByName(String name) {
+	public static void removeByName(java.lang.String name) {
 		getPersistence().removeByName(name);
 	}
 
@@ -1020,7 +1031,7 @@ public class RoleUtil {
 	* @param name the name
 	* @return the number of matching roles
 	*/
-	public static int countByName(String name) {
+	public static int countByName(java.lang.String name) {
 		return getPersistence().countByName(name);
 	}
 
@@ -1030,7 +1041,7 @@ public class RoleUtil {
 	* @param name the name
 	* @return the number of matching roles that the user has permission to view
 	*/
-	public static int filterCountByName(String name) {
+	public static int filterCountByName(java.lang.String name) {
 		return getPersistence().filterCountByName(name);
 	}
 
@@ -1263,7 +1274,7 @@ public class RoleUtil {
 	* @param subtype the subtype
 	* @return the matching roles
 	*/
-	public static List<Role> findBySubtype(String subtype) {
+	public static List<Role> findBySubtype(java.lang.String subtype) {
 		return getPersistence().findBySubtype(subtype);
 	}
 
@@ -1279,7 +1290,8 @@ public class RoleUtil {
 	* @param end the upper bound of the range of roles (not inclusive)
 	* @return the range of matching roles
 	*/
-	public static List<Role> findBySubtype(String subtype, int start, int end) {
+	public static List<Role> findBySubtype(java.lang.String subtype, int start,
+		int end) {
 		return getPersistence().findBySubtype(subtype, start, end);
 	}
 
@@ -1296,8 +1308,8 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching roles
 	*/
-	public static List<Role> findBySubtype(String subtype, int start, int end,
-		OrderByComparator<Role> orderByComparator) {
+	public static List<Role> findBySubtype(java.lang.String subtype, int start,
+		int end, OrderByComparator<Role> orderByComparator) {
 		return getPersistence()
 				   .findBySubtype(subtype, start, end, orderByComparator);
 	}
@@ -1316,8 +1328,9 @@ public class RoleUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching roles
 	*/
-	public static List<Role> findBySubtype(String subtype, int start, int end,
-		OrderByComparator<Role> orderByComparator, boolean retrieveFromCache) {
+	public static List<Role> findBySubtype(java.lang.String subtype, int start,
+		int end, OrderByComparator<Role> orderByComparator,
+		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findBySubtype(subtype, start, end, orderByComparator,
 			retrieveFromCache);
@@ -1331,7 +1344,7 @@ public class RoleUtil {
 	* @return the first matching role
 	* @throws NoSuchRoleException if a matching role could not be found
 	*/
-	public static Role findBySubtype_First(String subtype,
+	public static Role findBySubtype_First(java.lang.String subtype,
 		OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence().findBySubtype_First(subtype, orderByComparator);
@@ -1344,7 +1357,7 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching role, or <code>null</code> if a matching role could not be found
 	*/
-	public static Role fetchBySubtype_First(String subtype,
+	public static Role fetchBySubtype_First(java.lang.String subtype,
 		OrderByComparator<Role> orderByComparator) {
 		return getPersistence().fetchBySubtype_First(subtype, orderByComparator);
 	}
@@ -1357,7 +1370,7 @@ public class RoleUtil {
 	* @return the last matching role
 	* @throws NoSuchRoleException if a matching role could not be found
 	*/
-	public static Role findBySubtype_Last(String subtype,
+	public static Role findBySubtype_Last(java.lang.String subtype,
 		OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence().findBySubtype_Last(subtype, orderByComparator);
@@ -1370,7 +1383,7 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching role, or <code>null</code> if a matching role could not be found
 	*/
-	public static Role fetchBySubtype_Last(String subtype,
+	public static Role fetchBySubtype_Last(java.lang.String subtype,
 		OrderByComparator<Role> orderByComparator) {
 		return getPersistence().fetchBySubtype_Last(subtype, orderByComparator);
 	}
@@ -1384,8 +1397,8 @@ public class RoleUtil {
 	* @return the previous, current, and next role
 	* @throws NoSuchRoleException if a role with the primary key could not be found
 	*/
-	public static Role[] findBySubtype_PrevAndNext(long roleId, String subtype,
-		OrderByComparator<Role> orderByComparator)
+	public static Role[] findBySubtype_PrevAndNext(long roleId,
+		java.lang.String subtype, OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence()
 				   .findBySubtype_PrevAndNext(roleId, subtype, orderByComparator);
@@ -1397,7 +1410,7 @@ public class RoleUtil {
 	* @param subtype the subtype
 	* @return the matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindBySubtype(String subtype) {
+	public static List<Role> filterFindBySubtype(java.lang.String subtype) {
 		return getPersistence().filterFindBySubtype(subtype);
 	}
 
@@ -1413,8 +1426,8 @@ public class RoleUtil {
 	* @param end the upper bound of the range of roles (not inclusive)
 	* @return the range of matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindBySubtype(String subtype, int start,
-		int end) {
+	public static List<Role> filterFindBySubtype(java.lang.String subtype,
+		int start, int end) {
 		return getPersistence().filterFindBySubtype(subtype, start, end);
 	}
 
@@ -1431,8 +1444,8 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindBySubtype(String subtype, int start,
-		int end, OrderByComparator<Role> orderByComparator) {
+	public static List<Role> filterFindBySubtype(java.lang.String subtype,
+		int start, int end, OrderByComparator<Role> orderByComparator) {
 		return getPersistence()
 				   .filterFindBySubtype(subtype, start, end, orderByComparator);
 	}
@@ -1447,7 +1460,7 @@ public class RoleUtil {
 	* @throws NoSuchRoleException if a role with the primary key could not be found
 	*/
 	public static Role[] filterFindBySubtype_PrevAndNext(long roleId,
-		String subtype, OrderByComparator<Role> orderByComparator)
+		java.lang.String subtype, OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence()
 				   .filterFindBySubtype_PrevAndNext(roleId, subtype,
@@ -1459,7 +1472,7 @@ public class RoleUtil {
 	*
 	* @param subtype the subtype
 	*/
-	public static void removeBySubtype(String subtype) {
+	public static void removeBySubtype(java.lang.String subtype) {
 		getPersistence().removeBySubtype(subtype);
 	}
 
@@ -1469,7 +1482,7 @@ public class RoleUtil {
 	* @param subtype the subtype
 	* @return the number of matching roles
 	*/
-	public static int countBySubtype(String subtype) {
+	public static int countBySubtype(java.lang.String subtype) {
 		return getPersistence().countBySubtype(subtype);
 	}
 
@@ -1479,7 +1492,7 @@ public class RoleUtil {
 	* @param subtype the subtype
 	* @return the number of matching roles that the user has permission to view
 	*/
-	public static int filterCountBySubtype(String subtype) {
+	public static int filterCountBySubtype(java.lang.String subtype) {
 		return getPersistence().filterCountBySubtype(subtype);
 	}
 
@@ -1491,7 +1504,7 @@ public class RoleUtil {
 	* @return the matching role
 	* @throws NoSuchRoleException if a matching role could not be found
 	*/
-	public static Role findByC_N(long companyId, String name)
+	public static Role findByC_N(long companyId, java.lang.String name)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence().findByC_N(companyId, name);
 	}
@@ -1503,7 +1516,7 @@ public class RoleUtil {
 	* @param name the name
 	* @return the matching role, or <code>null</code> if a matching role could not be found
 	*/
-	public static Role fetchByC_N(long companyId, String name) {
+	public static Role fetchByC_N(long companyId, java.lang.String name) {
 		return getPersistence().fetchByC_N(companyId, name);
 	}
 
@@ -1515,7 +1528,7 @@ public class RoleUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching role, or <code>null</code> if a matching role could not be found
 	*/
-	public static Role fetchByC_N(long companyId, String name,
+	public static Role fetchByC_N(long companyId, java.lang.String name,
 		boolean retrieveFromCache) {
 		return getPersistence().fetchByC_N(companyId, name, retrieveFromCache);
 	}
@@ -1527,7 +1540,7 @@ public class RoleUtil {
 	* @param name the name
 	* @return the role that was removed
 	*/
-	public static Role removeByC_N(long companyId, String name)
+	public static Role removeByC_N(long companyId, java.lang.String name)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence().removeByC_N(companyId, name);
 	}
@@ -1539,7 +1552,7 @@ public class RoleUtil {
 	* @param name the name
 	* @return the number of matching roles
 	*/
-	public static int countByC_N(long companyId, String name) {
+	public static int countByC_N(long companyId, java.lang.String name) {
 		return getPersistence().countByC_N(companyId, name);
 	}
 
@@ -1948,7 +1961,7 @@ public class RoleUtil {
 	* @param subtype the subtype
 	* @return the matching roles
 	*/
-	public static List<Role> findByT_S(int type, String subtype) {
+	public static List<Role> findByT_S(int type, java.lang.String subtype) {
 		return getPersistence().findByT_S(type, subtype);
 	}
 
@@ -1965,8 +1978,8 @@ public class RoleUtil {
 	* @param end the upper bound of the range of roles (not inclusive)
 	* @return the range of matching roles
 	*/
-	public static List<Role> findByT_S(int type, String subtype, int start,
-		int end) {
+	public static List<Role> findByT_S(int type, java.lang.String subtype,
+		int start, int end) {
 		return getPersistence().findByT_S(type, subtype, start, end);
 	}
 
@@ -1984,8 +1997,8 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching roles
 	*/
-	public static List<Role> findByT_S(int type, String subtype, int start,
-		int end, OrderByComparator<Role> orderByComparator) {
+	public static List<Role> findByT_S(int type, java.lang.String subtype,
+		int start, int end, OrderByComparator<Role> orderByComparator) {
 		return getPersistence()
 				   .findByT_S(type, subtype, start, end, orderByComparator);
 	}
@@ -2005,8 +2018,8 @@ public class RoleUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching roles
 	*/
-	public static List<Role> findByT_S(int type, String subtype, int start,
-		int end, OrderByComparator<Role> orderByComparator,
+	public static List<Role> findByT_S(int type, java.lang.String subtype,
+		int start, int end, OrderByComparator<Role> orderByComparator,
 		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByT_S(type, subtype, start, end, orderByComparator,
@@ -2022,7 +2035,7 @@ public class RoleUtil {
 	* @return the first matching role
 	* @throws NoSuchRoleException if a matching role could not be found
 	*/
-	public static Role findByT_S_First(int type, String subtype,
+	public static Role findByT_S_First(int type, java.lang.String subtype,
 		OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence().findByT_S_First(type, subtype, orderByComparator);
@@ -2036,7 +2049,7 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching role, or <code>null</code> if a matching role could not be found
 	*/
-	public static Role fetchByT_S_First(int type, String subtype,
+	public static Role fetchByT_S_First(int type, java.lang.String subtype,
 		OrderByComparator<Role> orderByComparator) {
 		return getPersistence()
 				   .fetchByT_S_First(type, subtype, orderByComparator);
@@ -2051,7 +2064,7 @@ public class RoleUtil {
 	* @return the last matching role
 	* @throws NoSuchRoleException if a matching role could not be found
 	*/
-	public static Role findByT_S_Last(int type, String subtype,
+	public static Role findByT_S_Last(int type, java.lang.String subtype,
 		OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence().findByT_S_Last(type, subtype, orderByComparator);
@@ -2065,7 +2078,7 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching role, or <code>null</code> if a matching role could not be found
 	*/
-	public static Role fetchByT_S_Last(int type, String subtype,
+	public static Role fetchByT_S_Last(int type, java.lang.String subtype,
 		OrderByComparator<Role> orderByComparator) {
 		return getPersistence().fetchByT_S_Last(type, subtype, orderByComparator);
 	}
@@ -2081,7 +2094,7 @@ public class RoleUtil {
 	* @throws NoSuchRoleException if a role with the primary key could not be found
 	*/
 	public static Role[] findByT_S_PrevAndNext(long roleId, int type,
-		String subtype, OrderByComparator<Role> orderByComparator)
+		java.lang.String subtype, OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence()
 				   .findByT_S_PrevAndNext(roleId, type, subtype,
@@ -2095,7 +2108,7 @@ public class RoleUtil {
 	* @param subtype the subtype
 	* @return the matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindByT_S(int type, String subtype) {
+	public static List<Role> filterFindByT_S(int type, java.lang.String subtype) {
 		return getPersistence().filterFindByT_S(type, subtype);
 	}
 
@@ -2112,8 +2125,8 @@ public class RoleUtil {
 	* @param end the upper bound of the range of roles (not inclusive)
 	* @return the range of matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindByT_S(int type, String subtype,
-		int start, int end) {
+	public static List<Role> filterFindByT_S(int type,
+		java.lang.String subtype, int start, int end) {
 		return getPersistence().filterFindByT_S(type, subtype, start, end);
 	}
 
@@ -2131,8 +2144,9 @@ public class RoleUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching roles that the user has permission to view
 	*/
-	public static List<Role> filterFindByT_S(int type, String subtype,
-		int start, int end, OrderByComparator<Role> orderByComparator) {
+	public static List<Role> filterFindByT_S(int type,
+		java.lang.String subtype, int start, int end,
+		OrderByComparator<Role> orderByComparator) {
 		return getPersistence()
 				   .filterFindByT_S(type, subtype, start, end, orderByComparator);
 	}
@@ -2148,7 +2162,7 @@ public class RoleUtil {
 	* @throws NoSuchRoleException if a role with the primary key could not be found
 	*/
 	public static Role[] filterFindByT_S_PrevAndNext(long roleId, int type,
-		String subtype, OrderByComparator<Role> orderByComparator)
+		java.lang.String subtype, OrderByComparator<Role> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchRoleException {
 		return getPersistence()
 				   .filterFindByT_S_PrevAndNext(roleId, type, subtype,
@@ -2161,7 +2175,7 @@ public class RoleUtil {
 	* @param type the type
 	* @param subtype the subtype
 	*/
-	public static void removeByT_S(int type, String subtype) {
+	public static void removeByT_S(int type, java.lang.String subtype) {
 		getPersistence().removeByT_S(type, subtype);
 	}
 
@@ -2172,7 +2186,7 @@ public class RoleUtil {
 	* @param subtype the subtype
 	* @return the number of matching roles
 	*/
-	public static int countByT_S(int type, String subtype) {
+	public static int countByT_S(int type, java.lang.String subtype) {
 		return getPersistence().countByT_S(type, subtype);
 	}
 
@@ -2183,7 +2197,7 @@ public class RoleUtil {
 	* @param subtype the subtype
 	* @return the number of matching roles that the user has permission to view
 	*/
-	public static int filterCountByT_S(int type, String subtype) {
+	public static int filterCountByT_S(int type, java.lang.String subtype) {
 		return getPersistence().filterCountByT_S(type, subtype);
 	}
 
@@ -2932,7 +2946,7 @@ public class RoleUtil {
 		getPersistence().setUsers(pk, users);
 	}
 
-	public static java.util.Set<String> getBadColumnNames() {
+	public static java.util.Set<java.lang.String> getBadColumnNames() {
 		return getPersistence().getBadColumnNames();
 	}
 

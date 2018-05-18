@@ -41,8 +41,9 @@ public class PhoneServiceUtil {
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.portal.service.impl.PhoneServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static com.liferay.portal.kernel.model.Phone addPhone(
-		String className, long classPK, String number, String extension,
-		long typeId, boolean primary, ServiceContext serviceContext)
+		java.lang.String className, long classPK, java.lang.String number,
+		java.lang.String extension, long typeId, boolean primary,
+		ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addPhone(className, classPK, number, extension, typeId,
@@ -59,7 +60,7 @@ public class PhoneServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -69,14 +70,14 @@ public class PhoneServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Phone> getPhones(
-		String className, long classPK)
+		java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getPhones(className, classPK);
 	}
 
 	public static com.liferay.portal.kernel.model.Phone updatePhone(
-		long phoneId, String number, String extension, long typeId,
-		boolean primary)
+		long phoneId, java.lang.String number, java.lang.String extension,
+		long typeId, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updatePhone(phoneId, number, extension, typeId, primary);

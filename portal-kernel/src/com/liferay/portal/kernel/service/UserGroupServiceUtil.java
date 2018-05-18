@@ -79,7 +79,7 @@ public class UserGroupServiceUtil {
 	*/
 	@Deprecated
 	public static com.liferay.portal.kernel.model.UserGroup addUserGroup(
-		String name, String description)
+		java.lang.String name, java.lang.String description)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().addUserGroup(name, description);
 	}
@@ -100,7 +100,8 @@ public class UserGroupServiceUtil {
 	* @return the user group
 	*/
 	public static com.liferay.portal.kernel.model.UserGroup addUserGroup(
-		String name, String description, ServiceContext serviceContext)
+		java.lang.String name, java.lang.String description,
+		ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().addUserGroup(name, description, serviceContext);
 	}
@@ -132,7 +133,7 @@ public class UserGroupServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -155,7 +156,8 @@ public class UserGroupServiceUtil {
 	* @return the user group with the name
 	*/
 	public static com.liferay.portal.kernel.model.UserGroup getUserGroup(
-		String name) throws com.liferay.portal.kernel.exception.PortalException {
+		java.lang.String name)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getUserGroup(name);
 	}
 
@@ -210,7 +212,7 @@ public class UserGroupServiceUtil {
 	*/
 	@Deprecated
 	public static com.liferay.portal.kernel.model.UserGroup updateUserGroup(
-		long userGroupId, String name, String description)
+		long userGroupId, java.lang.String name, java.lang.String description)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().updateUserGroup(userGroupId, name, description);
 	}
@@ -227,7 +229,7 @@ public class UserGroupServiceUtil {
 	* @return the user group
 	*/
 	public static com.liferay.portal.kernel.model.UserGroup updateUserGroup(
-		long userGroupId, String name, String description,
+		long userGroupId, java.lang.String name, java.lang.String description,
 		ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()

@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.LayoutFriendlyURL;
 import com.liferay.portal.kernel.model.LayoutFriendlyURLModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -175,7 +174,7 @@ public class LayoutFriendlyURLModelImpl extends BaseModelImpl<LayoutFriendlyURL>
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("plid", getPlid());
-		attributes.put("privateLayout", isPrivateLayout());
+		attributes.put("privateLayout", getPrivateLayout());
 		attributes.put("friendlyURL", getFriendlyURL());
 		attributes.put("languageId", getLanguageId());
 		attributes.put("lastPublishDate", getLastPublishDate());
@@ -583,7 +582,7 @@ public class LayoutFriendlyURLModelImpl extends BaseModelImpl<LayoutFriendlyURL>
 		layoutFriendlyURLImpl.setCreateDate(getCreateDate());
 		layoutFriendlyURLImpl.setModifiedDate(getModifiedDate());
 		layoutFriendlyURLImpl.setPlid(getPlid());
-		layoutFriendlyURLImpl.setPrivateLayout(isPrivateLayout());
+		layoutFriendlyURLImpl.setPrivateLayout(getPrivateLayout());
 		layoutFriendlyURLImpl.setFriendlyURL(getFriendlyURL());
 		layoutFriendlyURLImpl.setLanguageId(getLanguageId());
 		layoutFriendlyURLImpl.setLastPublishDate(getLastPublishDate());
@@ -726,7 +725,7 @@ public class LayoutFriendlyURLModelImpl extends BaseModelImpl<LayoutFriendlyURL>
 
 		layoutFriendlyURLCacheModel.plid = getPlid();
 
-		layoutFriendlyURLCacheModel.privateLayout = isPrivateLayout();
+		layoutFriendlyURLCacheModel.privateLayout = getPrivateLayout();
 
 		layoutFriendlyURLCacheModel.friendlyURL = getFriendlyURL();
 
@@ -781,7 +780,7 @@ public class LayoutFriendlyURLModelImpl extends BaseModelImpl<LayoutFriendlyURL>
 		sb.append(", plid=");
 		sb.append(getPlid());
 		sb.append(", privateLayout=");
-		sb.append(isPrivateLayout());
+		sb.append(getPrivateLayout());
 		sb.append(", friendlyURL=");
 		sb.append(getFriendlyURL());
 		sb.append(", languageId=");
@@ -843,7 +842,7 @@ public class LayoutFriendlyURLModelImpl extends BaseModelImpl<LayoutFriendlyURL>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>privateLayout</column-name><column-value><![CDATA[");
-		sb.append(isPrivateLayout());
+		sb.append(getPrivateLayout());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>friendlyURL</column-name><column-value><![CDATA[");
@@ -865,7 +864,7 @@ public class LayoutFriendlyURLModelImpl extends BaseModelImpl<LayoutFriendlyURL>
 
 	private static final ClassLoader _classLoader = LayoutFriendlyURL.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			LayoutFriendlyURL.class, ModelWrapper.class
+			LayoutFriendlyURL.class
 		};
 	private long _mvccVersion;
 	private String _uuid;

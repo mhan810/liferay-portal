@@ -36,15 +36,12 @@ import com.liferay.portal.kernel.service.persistence.ResourcePermissionPersisten
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.impl.ResourcePermissionImpl;
 import com.liferay.portal.model.impl.ResourcePermissionModelImpl;
 
 import java.io.Serializable;
-
-import java.lang.reflect.InvocationHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -5452,7 +5449,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 							(scope != resourcePermission.getScope()) ||
 							(primKeyId != resourcePermission.getPrimKeyId()) ||
 							(roleId != resourcePermission.getRoleId()) ||
-							(viewActionId != resourcePermission.isViewActionId())) {
+							(viewActionId != resourcePermission.getViewActionId())) {
 						list = null;
 
 						break;
@@ -6069,7 +6066,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 							(primKeyId != resourcePermission.getPrimKeyId()) ||
 							!ArrayUtil.contains(roleIds,
 								resourcePermission.getRoleId()) ||
-							(viewActionId != resourcePermission.isViewActionId())) {
+							(viewActionId != resourcePermission.getViewActionId())) {
 						list = null;
 
 						break;
@@ -6641,6 +6638,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 	@Override
 	protected ResourcePermission removeImpl(
 		ResourcePermission resourcePermission) {
+		resourcePermission = toUnwrappedModel(resourcePermission);
+
 		Session session = null;
 
 		try {
@@ -6671,23 +6670,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 	@Override
 	public ResourcePermission updateImpl(ResourcePermission resourcePermission) {
+		resourcePermission = toUnwrappedModel(resourcePermission);
+
 		boolean isNew = resourcePermission.isNew();
-
-		if (!(resourcePermission instanceof ResourcePermissionModelImpl)) {
-			InvocationHandler invocationHandler = null;
-
-			if (ProxyUtil.isProxyClass(resourcePermission.getClass())) {
-				invocationHandler = ProxyUtil.getInvocationHandler(resourcePermission);
-
-				throw new IllegalArgumentException(
-					"Implement ModelWrapper in resourcePermission proxy " +
-					invocationHandler.getClass());
-			}
-
-			throw new IllegalArgumentException(
-				"Implement ModelWrapper in custom ResourcePermission implementation " +
-				resourcePermission.getClass());
-		}
 
 		ResourcePermissionModelImpl resourcePermissionModelImpl = (ResourcePermissionModelImpl)resourcePermission;
 
@@ -6786,7 +6771,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 					resourcePermissionModelImpl.getScope(),
 					resourcePermissionModelImpl.getPrimKeyId(),
 					resourcePermissionModelImpl.getRoleId(),
-					resourcePermissionModelImpl.isViewActionId()
+					resourcePermissionModelImpl.getViewActionId()
 				};
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_N_S_P_R_V, args);
@@ -6969,7 +6954,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 						resourcePermissionModelImpl.getScope(),
 						resourcePermissionModelImpl.getPrimKeyId(),
 						resourcePermissionModelImpl.getRoleId(),
-						resourcePermissionModelImpl.isViewActionId()
+						resourcePermissionModelImpl.getViewActionId()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_N_S_P_R_V, args);
@@ -6988,6 +6973,32 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		resourcePermission.resetOriginalValues();
 
 		return resourcePermission;
+	}
+
+	protected ResourcePermission toUnwrappedModel(
+		ResourcePermission resourcePermission) {
+		if (resourcePermission instanceof ResourcePermissionImpl) {
+			return resourcePermission;
+		}
+
+		ResourcePermissionImpl resourcePermissionImpl = new ResourcePermissionImpl();
+
+		resourcePermissionImpl.setNew(resourcePermission.isNew());
+		resourcePermissionImpl.setPrimaryKey(resourcePermission.getPrimaryKey());
+
+		resourcePermissionImpl.setMvccVersion(resourcePermission.getMvccVersion());
+		resourcePermissionImpl.setResourcePermissionId(resourcePermission.getResourcePermissionId());
+		resourcePermissionImpl.setCompanyId(resourcePermission.getCompanyId());
+		resourcePermissionImpl.setName(resourcePermission.getName());
+		resourcePermissionImpl.setScope(resourcePermission.getScope());
+		resourcePermissionImpl.setPrimKey(resourcePermission.getPrimKey());
+		resourcePermissionImpl.setPrimKeyId(resourcePermission.getPrimKeyId());
+		resourcePermissionImpl.setRoleId(resourcePermission.getRoleId());
+		resourcePermissionImpl.setOwnerId(resourcePermission.getOwnerId());
+		resourcePermissionImpl.setActionIds(resourcePermission.getActionIds());
+		resourcePermissionImpl.setViewActionId(resourcePermission.isViewActionId());
+
+		return resourcePermissionImpl;
 	}
 
 	/**

@@ -99,7 +99,7 @@ public class UserGroupRoleWrapper implements UserGroupRole,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new UserGroupRoleWrapper((UserGroupRole)_userGroupRole.clone());
 	}
 
@@ -202,7 +202,7 @@ public class UserGroupRoleWrapper implements UserGroupRole,
 	* @return the user uuid of this user group role
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _userGroupRole.getUserUuid();
 	}
 
@@ -328,7 +328,7 @@ public class UserGroupRoleWrapper implements UserGroupRole,
 	* @param userUuid the user uuid of this user group role
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_userGroupRole.setUserUuid(userUuid);
 	}
 
@@ -343,7 +343,7 @@ public class UserGroupRoleWrapper implements UserGroupRole,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _userGroupRole.toString();
 	}
 
@@ -353,7 +353,7 @@ public class UserGroupRoleWrapper implements UserGroupRole,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _userGroupRole.toXmlString();
 	}
 

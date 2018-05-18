@@ -22,7 +22,6 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.PluginSetting;
 import com.liferay.portal.kernel.model.PluginSettingModel;
 import com.liferay.portal.kernel.model.PluginSettingSoap;
@@ -125,7 +124,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 		model.setPluginId(soapModel.getPluginId());
 		model.setPluginType(soapModel.getPluginType());
 		model.setRoles(soapModel.getRoles());
-		model.setActive(soapModel.isActive());
+		model.setActive(soapModel.getActive());
 
 		return model;
 	}
@@ -196,7 +195,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 		attributes.put("pluginId", getPluginId());
 		attributes.put("pluginType", getPluginType());
 		attributes.put("roles", getRoles());
-		attributes.put("active", isActive());
+		attributes.put("active", getActive());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -416,7 +415,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 		pluginSettingImpl.setPluginId(getPluginId());
 		pluginSettingImpl.setPluginType(getPluginType());
 		pluginSettingImpl.setRoles(getRoles());
-		pluginSettingImpl.setActive(isActive());
+		pluginSettingImpl.setActive(getActive());
 
 		pluginSettingImpl.resetOriginalValues();
 
@@ -524,7 +523,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 			pluginSettingCacheModel.roles = null;
 		}
 
-		pluginSettingCacheModel.active = isActive();
+		pluginSettingCacheModel.active = getActive();
 
 		return pluginSettingCacheModel;
 	}
@@ -546,7 +545,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 		sb.append(", roles=");
 		sb.append(getRoles());
 		sb.append(", active=");
-		sb.append(isActive());
+		sb.append(getActive());
 		sb.append("}");
 
 		return sb.toString();
@@ -586,7 +585,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>active</column-name><column-value><![CDATA[");
-		sb.append(isActive());
+		sb.append(getActive());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -596,7 +595,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 
 	private static final ClassLoader _classLoader = PluginSetting.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			PluginSetting.class, ModelWrapper.class
+			PluginSetting.class
 		};
 	private long _mvccVersion;
 	private long _pluginSettingId;

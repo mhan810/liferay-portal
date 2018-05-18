@@ -166,7 +166,7 @@ public class PhonePersistenceTest {
 		Assert.assertEquals(existingPhone.getExtension(),
 			newPhone.getExtension());
 		Assert.assertEquals(existingPhone.getTypeId(), newPhone.getTypeId());
-		Assert.assertEquals(existingPhone.isPrimary(), newPhone.isPrimary());
+		Assert.assertEquals(existingPhone.getPrimary(), newPhone.getPrimary());
 	}
 
 	@Test

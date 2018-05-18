@@ -74,7 +74,6 @@ import com.liferay.portal.kernel.service.persistence.UserGroupRoleFinder;
 import com.liferay.portal.kernel.service.persistence.UserGroupRolePersistence;
 import com.liferay.portal.kernel.service.persistence.UserPersistence;
 import com.liferay.portal.kernel.service.persistence.WebsitePersistence;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 
@@ -127,7 +126,6 @@ public abstract class OrganizationLocalServiceBaseImpl
 	 * @return the new organization
 	 */
 	@Override
-	@Transactional(enabled = false)
 	public Organization createOrganization(long organizationId) {
 		return organizationPersistence.create(organizationId);
 	}

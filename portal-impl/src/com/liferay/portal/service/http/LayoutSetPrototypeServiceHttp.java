@@ -56,9 +56,9 @@ import com.liferay.portal.kernel.util.MethodKey;
 public class LayoutSetPrototypeServiceHttp {
 	public static com.liferay.portal.kernel.model.LayoutSetPrototype addLayoutSetPrototype(
 		HttpPrincipal httpPrincipal,
-		java.util.Map<java.util.Locale, String> nameMap,
-		java.util.Map<java.util.Locale, String> descriptionMap, boolean active,
-		boolean layoutsUpdateable,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		boolean active, boolean layoutsUpdateable,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -93,8 +93,9 @@ public class LayoutSetPrototypeServiceHttp {
 
 	public static com.liferay.portal.kernel.model.LayoutSetPrototype addLayoutSetPrototype(
 		HttpPrincipal httpPrincipal,
-		java.util.Map<java.util.Locale, String> nameMap, String description,
-		boolean active, boolean layoutsUpdateable,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.lang.String description, boolean active,
+		boolean layoutsUpdateable,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -223,7 +224,7 @@ public class LayoutSetPrototypeServiceHttp {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.LayoutSetPrototype> search(
-		HttpPrincipal httpPrincipal, long companyId, Boolean active,
+		HttpPrincipal httpPrincipal, long companyId, java.lang.Boolean active,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.LayoutSetPrototype> obc)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -257,9 +258,9 @@ public class LayoutSetPrototypeServiceHttp {
 
 	public static com.liferay.portal.kernel.model.LayoutSetPrototype updateLayoutSetPrototype(
 		HttpPrincipal httpPrincipal, long layoutSetPrototypeId,
-		java.util.Map<java.util.Locale, String> nameMap,
-		java.util.Map<java.util.Locale, String> descriptionMap, boolean active,
-		boolean layoutsUpdateable,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		boolean active, boolean layoutsUpdateable,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -295,8 +296,9 @@ public class LayoutSetPrototypeServiceHttp {
 
 	public static com.liferay.portal.kernel.model.LayoutSetPrototype updateLayoutSetPrototype(
 		HttpPrincipal httpPrincipal, long layoutSetPrototypeId,
-		java.util.Map<java.util.Locale, String> nameMap, String description,
-		boolean active, boolean layoutsUpdateable,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.lang.String description, boolean active,
+		boolean layoutsUpdateable,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -331,7 +333,8 @@ public class LayoutSetPrototypeServiceHttp {
 	}
 
 	public static com.liferay.portal.kernel.model.LayoutSetPrototype updateLayoutSetPrototype(
-		HttpPrincipal httpPrincipal, long layoutSetPrototypeId, String settings)
+		HttpPrincipal httpPrincipal, long layoutSetPrototypeId,
+		java.lang.String settings)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(LayoutSetPrototypeServiceUtil.class,
@@ -370,7 +373,8 @@ public class LayoutSetPrototypeServiceHttp {
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _addLayoutSetPrototypeParameterTypes1 = new Class[] {
-			java.util.Map.class, String.class, boolean.class, boolean.class,
+			java.util.Map.class, java.lang.String.class, boolean.class,
+			boolean.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _deleteLayoutSetPrototypeParameterTypes2 = new Class[] {
@@ -383,7 +387,7 @@ public class LayoutSetPrototypeServiceHttp {
 			long.class
 		};
 	private static final Class<?>[] _searchParameterTypes5 = new Class[] {
-			long.class, Boolean.class,
+			long.class, java.lang.Boolean.class,
 			com.liferay.portal.kernel.util.OrderByComparator.class
 		};
 	private static final Class<?>[] _updateLayoutSetPrototypeParameterTypes6 = new Class[] {
@@ -392,11 +396,11 @@ public class LayoutSetPrototypeServiceHttp {
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _updateLayoutSetPrototypeParameterTypes7 = new Class[] {
-			long.class, java.util.Map.class, String.class, boolean.class,
-			boolean.class,
+			long.class, java.util.Map.class, java.lang.String.class,
+			boolean.class, boolean.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _updateLayoutSetPrototypeParameterTypes8 = new Class[] {
-			long.class, String.class
+			long.class, java.lang.String.class
 		};
 }

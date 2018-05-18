@@ -153,8 +153,8 @@ public class UserNotificationDeliveryPersistenceTest {
 			newUserNotificationDelivery.getNotificationType());
 		Assert.assertEquals(existingUserNotificationDelivery.getDeliveryType(),
 			newUserNotificationDelivery.getDeliveryType());
-		Assert.assertEquals(existingUserNotificationDelivery.isDeliver(),
-			newUserNotificationDelivery.isDeliver());
+		Assert.assertEquals(existingUserNotificationDelivery.getDeliver(),
+			newUserNotificationDelivery.getDeliver());
 	}
 
 	@Test

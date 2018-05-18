@@ -53,12 +53,12 @@ public class ReleaseLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Release addRelease(
-		String servletContextName, int buildNumber) {
+		java.lang.String servletContextName, int buildNumber) {
 		return getService().addRelease(servletContextName, buildNumber);
 	}
 
 	public static com.liferay.portal.kernel.model.Release addRelease(
-		String servletContextName, String schemaVersion) {
+		java.lang.String servletContextName, java.lang.String schemaVersion) {
 		return getService().addRelease(servletContextName, schemaVersion);
 	}
 
@@ -194,7 +194,7 @@ public class ReleaseLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Release fetchRelease(
-		String servletContextName) {
+		java.lang.String servletContextName) {
 		return getService().fetchRelease(servletContextName);
 	}
 
@@ -216,7 +216,7 @@ public class ReleaseLocalServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -265,7 +265,7 @@ public class ReleaseLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Release updateRelease(
-		long releaseId, String schemaVersion, int buildNumber,
+		long releaseId, java.lang.String schemaVersion, int buildNumber,
 		java.util.Date buildDate, boolean verified)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
@@ -284,7 +284,7 @@ public class ReleaseLocalServiceUtil {
 		return getService().updateRelease(release);
 	}
 
-	public static void updateRelease(String servletContextName,
+	public static void updateRelease(java.lang.String servletContextName,
 		java.util.List<com.liferay.portal.kernel.upgrade.UpgradeProcess> upgradeProcesses,
 		int buildNumber, int previousBuildNumber, boolean indexOnUpgrade)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -293,17 +293,17 @@ public class ReleaseLocalServiceUtil {
 			previousBuildNumber, indexOnUpgrade);
 	}
 
-	public static void updateRelease(String servletContextName,
+	public static void updateRelease(java.lang.String servletContextName,
 		java.util.List<com.liferay.portal.kernel.upgrade.UpgradeProcess> upgradeProcesses,
 		java.util.Properties unfilteredPortalProperties)
-		throws Exception {
+		throws java.lang.Exception {
 		getService()
 			.updateRelease(servletContextName, upgradeProcesses,
 			unfilteredPortalProperties);
 	}
 
-	public static void updateRelease(String servletContextName,
-		String schemaVersion, String previousSchemaVersion) {
+	public static void updateRelease(java.lang.String servletContextName,
+		java.lang.String schemaVersion, java.lang.String previousSchemaVersion) {
 		getService()
 			.updateRelease(servletContextName, schemaVersion,
 			previousSchemaVersion);

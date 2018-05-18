@@ -73,7 +73,6 @@ public interface UserTrackerPathLocalService extends BaseLocalService,
 	* @param userTrackerPathId the primary key for the new user tracker path
 	* @return the new user tracker path
 	*/
-	@Transactional(enabled = false)
 	public UserTrackerPath createUserTrackerPath(long userTrackerPathId);
 
 	/**
@@ -177,7 +176,7 @@ public interface UserTrackerPathLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

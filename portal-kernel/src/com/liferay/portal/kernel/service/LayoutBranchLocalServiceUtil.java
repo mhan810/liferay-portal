@@ -53,8 +53,9 @@ public class LayoutBranchLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.LayoutBranch addLayoutBranch(
-		long layoutSetBranchId, long plid, String name, String description,
-		boolean master, ServiceContext serviceContext)
+		long layoutSetBranchId, long plid, java.lang.String name,
+		java.lang.String description, boolean master,
+		ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addLayoutBranch(layoutSetBranchId, plid, name, description,
@@ -62,7 +63,8 @@ public class LayoutBranchLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.LayoutBranch addLayoutBranch(
-		long layoutRevisionId, String name, String description, boolean master,
+		long layoutRevisionId, java.lang.String name,
+		java.lang.String description, boolean master,
 		ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
@@ -281,7 +283,7 @@ public class LayoutBranchLocalServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -303,8 +305,8 @@ public class LayoutBranchLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.LayoutBranch updateLayoutBranch(
-		long layoutBranchId, String name, String description,
-		ServiceContext serviceContext)
+		long layoutBranchId, java.lang.String name,
+		java.lang.String description, ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateLayoutBranch(layoutBranchId, name, description,

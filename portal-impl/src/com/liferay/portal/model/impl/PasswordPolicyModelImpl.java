@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.PasswordPolicy;
 import com.liferay.portal.kernel.model.PasswordPolicyModel;
 import com.liferay.portal.kernel.model.PasswordPolicySoap;
@@ -191,14 +190,14 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		model.setUserName(soapModel.getUserName());
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
-		model.setDefaultPolicy(soapModel.isDefaultPolicy());
+		model.setDefaultPolicy(soapModel.getDefaultPolicy());
 		model.setName(soapModel.getName());
 		model.setDescription(soapModel.getDescription());
-		model.setChangeable(soapModel.isChangeable());
-		model.setChangeRequired(soapModel.isChangeRequired());
+		model.setChangeable(soapModel.getChangeable());
+		model.setChangeRequired(soapModel.getChangeRequired());
 		model.setMinAge(soapModel.getMinAge());
-		model.setCheckSyntax(soapModel.isCheckSyntax());
-		model.setAllowDictionaryWords(soapModel.isAllowDictionaryWords());
+		model.setCheckSyntax(soapModel.getCheckSyntax());
+		model.setAllowDictionaryWords(soapModel.getAllowDictionaryWords());
 		model.setMinAlphanumeric(soapModel.getMinAlphanumeric());
 		model.setMinLength(soapModel.getMinLength());
 		model.setMinLowerCase(soapModel.getMinLowerCase());
@@ -206,16 +205,16 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		model.setMinSymbols(soapModel.getMinSymbols());
 		model.setMinUpperCase(soapModel.getMinUpperCase());
 		model.setRegex(soapModel.getRegex());
-		model.setHistory(soapModel.isHistory());
+		model.setHistory(soapModel.getHistory());
 		model.setHistoryCount(soapModel.getHistoryCount());
-		model.setExpireable(soapModel.isExpireable());
+		model.setExpireable(soapModel.getExpireable());
 		model.setMaxAge(soapModel.getMaxAge());
 		model.setWarningTime(soapModel.getWarningTime());
 		model.setGraceLimit(soapModel.getGraceLimit());
-		model.setLockout(soapModel.isLockout());
+		model.setLockout(soapModel.getLockout());
 		model.setMaxFailure(soapModel.getMaxFailure());
 		model.setLockoutDuration(soapModel.getLockoutDuration());
-		model.setRequireUnlock(soapModel.isRequireUnlock());
+		model.setRequireUnlock(soapModel.getRequireUnlock());
 		model.setResetFailureCount(soapModel.getResetFailureCount());
 		model.setResetTicketMaxAge(soapModel.getResetTicketMaxAge());
 
@@ -290,14 +289,14 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("defaultPolicy", isDefaultPolicy());
+		attributes.put("defaultPolicy", getDefaultPolicy());
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
-		attributes.put("changeable", isChangeable());
-		attributes.put("changeRequired", isChangeRequired());
+		attributes.put("changeable", getChangeable());
+		attributes.put("changeRequired", getChangeRequired());
 		attributes.put("minAge", getMinAge());
-		attributes.put("checkSyntax", isCheckSyntax());
-		attributes.put("allowDictionaryWords", isAllowDictionaryWords());
+		attributes.put("checkSyntax", getCheckSyntax());
+		attributes.put("allowDictionaryWords", getAllowDictionaryWords());
 		attributes.put("minAlphanumeric", getMinAlphanumeric());
 		attributes.put("minLength", getMinLength());
 		attributes.put("minLowerCase", getMinLowerCase());
@@ -305,16 +304,16 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		attributes.put("minSymbols", getMinSymbols());
 		attributes.put("minUpperCase", getMinUpperCase());
 		attributes.put("regex", getRegex());
-		attributes.put("history", isHistory());
+		attributes.put("history", getHistory());
 		attributes.put("historyCount", getHistoryCount());
-		attributes.put("expireable", isExpireable());
+		attributes.put("expireable", getExpireable());
 		attributes.put("maxAge", getMaxAge());
 		attributes.put("warningTime", getWarningTime());
 		attributes.put("graceLimit", getGraceLimit());
-		attributes.put("lockout", isLockout());
+		attributes.put("lockout", getLockout());
 		attributes.put("maxFailure", getMaxFailure());
 		attributes.put("lockoutDuration", getLockoutDuration());
-		attributes.put("requireUnlock", isRequireUnlock());
+		attributes.put("requireUnlock", getRequireUnlock());
 		attributes.put("resetFailureCount", getResetFailureCount());
 		attributes.put("resetTicketMaxAge", getResetTicketMaxAge());
 
@@ -1111,14 +1110,14 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		passwordPolicyImpl.setUserName(getUserName());
 		passwordPolicyImpl.setCreateDate(getCreateDate());
 		passwordPolicyImpl.setModifiedDate(getModifiedDate());
-		passwordPolicyImpl.setDefaultPolicy(isDefaultPolicy());
+		passwordPolicyImpl.setDefaultPolicy(getDefaultPolicy());
 		passwordPolicyImpl.setName(getName());
 		passwordPolicyImpl.setDescription(getDescription());
-		passwordPolicyImpl.setChangeable(isChangeable());
-		passwordPolicyImpl.setChangeRequired(isChangeRequired());
+		passwordPolicyImpl.setChangeable(getChangeable());
+		passwordPolicyImpl.setChangeRequired(getChangeRequired());
 		passwordPolicyImpl.setMinAge(getMinAge());
-		passwordPolicyImpl.setCheckSyntax(isCheckSyntax());
-		passwordPolicyImpl.setAllowDictionaryWords(isAllowDictionaryWords());
+		passwordPolicyImpl.setCheckSyntax(getCheckSyntax());
+		passwordPolicyImpl.setAllowDictionaryWords(getAllowDictionaryWords());
 		passwordPolicyImpl.setMinAlphanumeric(getMinAlphanumeric());
 		passwordPolicyImpl.setMinLength(getMinLength());
 		passwordPolicyImpl.setMinLowerCase(getMinLowerCase());
@@ -1126,16 +1125,16 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		passwordPolicyImpl.setMinSymbols(getMinSymbols());
 		passwordPolicyImpl.setMinUpperCase(getMinUpperCase());
 		passwordPolicyImpl.setRegex(getRegex());
-		passwordPolicyImpl.setHistory(isHistory());
+		passwordPolicyImpl.setHistory(getHistory());
 		passwordPolicyImpl.setHistoryCount(getHistoryCount());
-		passwordPolicyImpl.setExpireable(isExpireable());
+		passwordPolicyImpl.setExpireable(getExpireable());
 		passwordPolicyImpl.setMaxAge(getMaxAge());
 		passwordPolicyImpl.setWarningTime(getWarningTime());
 		passwordPolicyImpl.setGraceLimit(getGraceLimit());
-		passwordPolicyImpl.setLockout(isLockout());
+		passwordPolicyImpl.setLockout(getLockout());
 		passwordPolicyImpl.setMaxFailure(getMaxFailure());
 		passwordPolicyImpl.setLockoutDuration(getLockoutDuration());
-		passwordPolicyImpl.setRequireUnlock(isRequireUnlock());
+		passwordPolicyImpl.setRequireUnlock(getRequireUnlock());
 		passwordPolicyImpl.setResetFailureCount(getResetFailureCount());
 		passwordPolicyImpl.setResetTicketMaxAge(getResetTicketMaxAge());
 
@@ -1263,7 +1262,7 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 			passwordPolicyCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
-		passwordPolicyCacheModel.defaultPolicy = isDefaultPolicy();
+		passwordPolicyCacheModel.defaultPolicy = getDefaultPolicy();
 
 		passwordPolicyCacheModel.name = getName();
 
@@ -1281,15 +1280,15 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 			passwordPolicyCacheModel.description = null;
 		}
 
-		passwordPolicyCacheModel.changeable = isChangeable();
+		passwordPolicyCacheModel.changeable = getChangeable();
 
-		passwordPolicyCacheModel.changeRequired = isChangeRequired();
+		passwordPolicyCacheModel.changeRequired = getChangeRequired();
 
 		passwordPolicyCacheModel.minAge = getMinAge();
 
-		passwordPolicyCacheModel.checkSyntax = isCheckSyntax();
+		passwordPolicyCacheModel.checkSyntax = getCheckSyntax();
 
-		passwordPolicyCacheModel.allowDictionaryWords = isAllowDictionaryWords();
+		passwordPolicyCacheModel.allowDictionaryWords = getAllowDictionaryWords();
 
 		passwordPolicyCacheModel.minAlphanumeric = getMinAlphanumeric();
 
@@ -1311,11 +1310,11 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 			passwordPolicyCacheModel.regex = null;
 		}
 
-		passwordPolicyCacheModel.history = isHistory();
+		passwordPolicyCacheModel.history = getHistory();
 
 		passwordPolicyCacheModel.historyCount = getHistoryCount();
 
-		passwordPolicyCacheModel.expireable = isExpireable();
+		passwordPolicyCacheModel.expireable = getExpireable();
 
 		passwordPolicyCacheModel.maxAge = getMaxAge();
 
@@ -1323,13 +1322,13 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 
 		passwordPolicyCacheModel.graceLimit = getGraceLimit();
 
-		passwordPolicyCacheModel.lockout = isLockout();
+		passwordPolicyCacheModel.lockout = getLockout();
 
 		passwordPolicyCacheModel.maxFailure = getMaxFailure();
 
 		passwordPolicyCacheModel.lockoutDuration = getLockoutDuration();
 
-		passwordPolicyCacheModel.requireUnlock = isRequireUnlock();
+		passwordPolicyCacheModel.requireUnlock = getRequireUnlock();
 
 		passwordPolicyCacheModel.resetFailureCount = getResetFailureCount();
 
@@ -1359,21 +1358,21 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		sb.append(", modifiedDate=");
 		sb.append(getModifiedDate());
 		sb.append(", defaultPolicy=");
-		sb.append(isDefaultPolicy());
+		sb.append(getDefaultPolicy());
 		sb.append(", name=");
 		sb.append(getName());
 		sb.append(", description=");
 		sb.append(getDescription());
 		sb.append(", changeable=");
-		sb.append(isChangeable());
+		sb.append(getChangeable());
 		sb.append(", changeRequired=");
-		sb.append(isChangeRequired());
+		sb.append(getChangeRequired());
 		sb.append(", minAge=");
 		sb.append(getMinAge());
 		sb.append(", checkSyntax=");
-		sb.append(isCheckSyntax());
+		sb.append(getCheckSyntax());
 		sb.append(", allowDictionaryWords=");
-		sb.append(isAllowDictionaryWords());
+		sb.append(getAllowDictionaryWords());
 		sb.append(", minAlphanumeric=");
 		sb.append(getMinAlphanumeric());
 		sb.append(", minLength=");
@@ -1389,11 +1388,11 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		sb.append(", regex=");
 		sb.append(getRegex());
 		sb.append(", history=");
-		sb.append(isHistory());
+		sb.append(getHistory());
 		sb.append(", historyCount=");
 		sb.append(getHistoryCount());
 		sb.append(", expireable=");
-		sb.append(isExpireable());
+		sb.append(getExpireable());
 		sb.append(", maxAge=");
 		sb.append(getMaxAge());
 		sb.append(", warningTime=");
@@ -1401,13 +1400,13 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		sb.append(", graceLimit=");
 		sb.append(getGraceLimit());
 		sb.append(", lockout=");
-		sb.append(isLockout());
+		sb.append(getLockout());
 		sb.append(", maxFailure=");
 		sb.append(getMaxFailure());
 		sb.append(", lockoutDuration=");
 		sb.append(getLockoutDuration());
 		sb.append(", requireUnlock=");
-		sb.append(isRequireUnlock());
+		sb.append(getRequireUnlock());
 		sb.append(", resetFailureCount=");
 		sb.append(getResetFailureCount());
 		sb.append(", resetTicketMaxAge=");
@@ -1459,7 +1458,7 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>defaultPolicy</column-name><column-value><![CDATA[");
-		sb.append(isDefaultPolicy());
+		sb.append(getDefaultPolicy());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>name</column-name><column-value><![CDATA[");
@@ -1471,11 +1470,11 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>changeable</column-name><column-value><![CDATA[");
-		sb.append(isChangeable());
+		sb.append(getChangeable());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>changeRequired</column-name><column-value><![CDATA[");
-		sb.append(isChangeRequired());
+		sb.append(getChangeRequired());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>minAge</column-name><column-value><![CDATA[");
@@ -1483,11 +1482,11 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>checkSyntax</column-name><column-value><![CDATA[");
-		sb.append(isCheckSyntax());
+		sb.append(getCheckSyntax());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>allowDictionaryWords</column-name><column-value><![CDATA[");
-		sb.append(isAllowDictionaryWords());
+		sb.append(getAllowDictionaryWords());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>minAlphanumeric</column-name><column-value><![CDATA[");
@@ -1519,7 +1518,7 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>history</column-name><column-value><![CDATA[");
-		sb.append(isHistory());
+		sb.append(getHistory());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>historyCount</column-name><column-value><![CDATA[");
@@ -1527,7 +1526,7 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>expireable</column-name><column-value><![CDATA[");
-		sb.append(isExpireable());
+		sb.append(getExpireable());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>maxAge</column-name><column-value><![CDATA[");
@@ -1543,7 +1542,7 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>lockout</column-name><column-value><![CDATA[");
-		sb.append(isLockout());
+		sb.append(getLockout());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>maxFailure</column-name><column-value><![CDATA[");
@@ -1555,7 +1554,7 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>requireUnlock</column-name><column-value><![CDATA[");
-		sb.append(isRequireUnlock());
+		sb.append(getRequireUnlock());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>resetFailureCount</column-name><column-value><![CDATA[");
@@ -1573,7 +1572,7 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 
 	private static final ClassLoader _classLoader = PasswordPolicy.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			PasswordPolicy.class, ModelWrapper.class
+			PasswordPolicy.class
 		};
 	private long _mvccVersion;
 	private String _uuid;

@@ -49,7 +49,6 @@ import com.liferay.portal.kernel.service.persistence.UserGroupPersistence;
 import com.liferay.portal.kernel.service.persistence.UserGroupRoleFinder;
 import com.liferay.portal.kernel.service.persistence.UserGroupRolePersistence;
 import com.liferay.portal.kernel.service.persistence.UserPersistence;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 
@@ -103,7 +102,6 @@ public abstract class MembershipRequestLocalServiceBaseImpl
 	 * @return the new membership request
 	 */
 	@Override
-	@Transactional(enabled = false)
 	public MembershipRequest createMembershipRequest(long membershipRequestId) {
 		return membershipRequestPersistence.create(membershipRequestId);
 	}

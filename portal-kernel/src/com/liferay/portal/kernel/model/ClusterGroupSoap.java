@@ -36,7 +36,7 @@ public class ClusterGroupSoap implements Serializable {
 		soapModel.setClusterGroupId(model.getClusterGroupId());
 		soapModel.setName(model.getName());
 		soapModel.setClusterNodeIds(model.getClusterNodeIds());
-		soapModel.setWholeCluster(model.isWholeCluster());
+		soapModel.setWholeCluster(model.getWholeCluster());
 
 		return soapModel;
 	}

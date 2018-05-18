@@ -238,7 +238,7 @@ public class UserGroupGroupRoleLocalServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -317,7 +317,7 @@ public class UserGroupGroupRoleLocalServiceUtil {
 	}
 
 	public static boolean hasUserGroupGroupRole(long userGroupId, long groupId,
-		String roleName)
+		java.lang.String roleName)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().hasUserGroupGroupRole(userGroupId, groupId, roleName);
 	}

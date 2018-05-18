@@ -56,8 +56,9 @@ import com.liferay.portal.kernel.util.MethodKey;
 public class LayoutPrototypeServiceHttp {
 	public static com.liferay.portal.kernel.model.LayoutPrototype addLayoutPrototype(
 		HttpPrincipal httpPrincipal,
-		java.util.Map<java.util.Locale, String> nameMap,
-		java.util.Map<java.util.Locale, String> descriptionMap, boolean active,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		boolean active,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -91,8 +92,8 @@ public class LayoutPrototypeServiceHttp {
 
 	public static com.liferay.portal.kernel.model.LayoutPrototype addLayoutPrototype(
 		HttpPrincipal httpPrincipal,
-		java.util.Map<java.util.Locale, String> nameMap, String description,
-		boolean active,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.lang.String description, boolean active,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -218,7 +219,7 @@ public class LayoutPrototypeServiceHttp {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.LayoutPrototype> search(
-		HttpPrincipal httpPrincipal, long companyId, Boolean active,
+		HttpPrincipal httpPrincipal, long companyId, java.lang.Boolean active,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.LayoutPrototype> obc)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -252,8 +253,9 @@ public class LayoutPrototypeServiceHttp {
 
 	public static com.liferay.portal.kernel.model.LayoutPrototype updateLayoutPrototype(
 		HttpPrincipal httpPrincipal, long layoutPrototypeId,
-		java.util.Map<java.util.Locale, String> nameMap,
-		java.util.Map<java.util.Locale, String> descriptionMap, boolean active,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		boolean active,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -289,8 +291,8 @@ public class LayoutPrototypeServiceHttp {
 
 	public static com.liferay.portal.kernel.model.LayoutPrototype updateLayoutPrototype(
 		HttpPrincipal httpPrincipal, long layoutPrototypeId,
-		java.util.Map<java.util.Locale, String> nameMap, String description,
-		boolean active,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.lang.String description, boolean active,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -330,7 +332,7 @@ public class LayoutPrototypeServiceHttp {
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _addLayoutPrototypeParameterTypes1 = new Class[] {
-			java.util.Map.class, String.class, boolean.class,
+			java.util.Map.class, java.lang.String.class, boolean.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _deleteLayoutPrototypeParameterTypes2 = new Class[] {
@@ -343,7 +345,7 @@ public class LayoutPrototypeServiceHttp {
 			long.class
 		};
 	private static final Class<?>[] _searchParameterTypes5 = new Class[] {
-			long.class, Boolean.class,
+			long.class, java.lang.Boolean.class,
 			com.liferay.portal.kernel.util.OrderByComparator.class
 		};
 	private static final Class<?>[] _updateLayoutPrototypeParameterTypes6 = new Class[] {
@@ -351,7 +353,8 @@ public class LayoutPrototypeServiceHttp {
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _updateLayoutPrototypeParameterTypes7 = new Class[] {
-			long.class, java.util.Map.class, String.class, boolean.class,
+			long.class, java.util.Map.class, java.lang.String.class,
+			boolean.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 }

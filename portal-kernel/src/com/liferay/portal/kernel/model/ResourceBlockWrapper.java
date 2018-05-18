@@ -115,7 +115,7 @@ public class ResourceBlockWrapper implements ResourceBlock,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new ResourceBlockWrapper((ResourceBlock)_resourceBlock.clone());
 	}
 
@@ -165,7 +165,7 @@ public class ResourceBlockWrapper implements ResourceBlock,
 	* @return the name of this resource block
 	*/
 	@Override
-	public String getName() {
+	public java.lang.String getName() {
 		return _resourceBlock.getName();
 	}
 
@@ -175,7 +175,7 @@ public class ResourceBlockWrapper implements ResourceBlock,
 	* @return the permissions hash of this resource block
 	*/
 	@Override
-	public String getPermissionsHash() {
+	public java.lang.String getPermissionsHash() {
 		return _resourceBlock.getPermissionsHash();
 	}
 
@@ -295,7 +295,7 @@ public class ResourceBlockWrapper implements ResourceBlock,
 	* @param name the name of this resource block
 	*/
 	@Override
-	public void setName(String name) {
+	public void setName(java.lang.String name) {
 		_resourceBlock.setName(name);
 	}
 
@@ -310,7 +310,7 @@ public class ResourceBlockWrapper implements ResourceBlock,
 	* @param permissionsHash the permissions hash of this resource block
 	*/
 	@Override
-	public void setPermissionsHash(String permissionsHash) {
+	public void setPermissionsHash(java.lang.String permissionsHash) {
 		_resourceBlock.setPermissionsHash(permissionsHash);
 	}
 
@@ -360,7 +360,7 @@ public class ResourceBlockWrapper implements ResourceBlock,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _resourceBlock.toString();
 	}
 
@@ -370,7 +370,7 @@ public class ResourceBlockWrapper implements ResourceBlock,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _resourceBlock.toXmlString();
 	}
 

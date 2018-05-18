@@ -45,7 +45,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @param type the type
 	* @return the matching list types
 	*/
-	public java.util.List<ListType> findByType(String type);
+	public java.util.List<ListType> findByType(java.lang.String type);
 
 	/**
 	* Returns a range of all the list types where type = &#63;.
@@ -59,7 +59,8 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @param end the upper bound of the range of list types (not inclusive)
 	* @return the range of matching list types
 	*/
-	public java.util.List<ListType> findByType(String type, int start, int end);
+	public java.util.List<ListType> findByType(java.lang.String type,
+		int start, int end);
 
 	/**
 	* Returns an ordered range of all the list types where type = &#63;.
@@ -74,7 +75,8 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching list types
 	*/
-	public java.util.List<ListType> findByType(String type, int start, int end,
+	public java.util.List<ListType> findByType(java.lang.String type,
+		int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<ListType> orderByComparator);
 
 	/**
@@ -91,7 +93,8 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching list types
 	*/
-	public java.util.List<ListType> findByType(String type, int start, int end,
+	public java.util.List<ListType> findByType(java.lang.String type,
+		int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<ListType> orderByComparator,
 		boolean retrieveFromCache);
 
@@ -103,7 +106,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @return the first matching list type
 	* @throws NoSuchListTypeException if a matching list type could not be found
 	*/
-	public ListType findByType_First(String type,
+	public ListType findByType_First(java.lang.String type,
 		com.liferay.portal.kernel.util.OrderByComparator<ListType> orderByComparator)
 		throws NoSuchListTypeException;
 
@@ -114,7 +117,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching list type, or <code>null</code> if a matching list type could not be found
 	*/
-	public ListType fetchByType_First(String type,
+	public ListType fetchByType_First(java.lang.String type,
 		com.liferay.portal.kernel.util.OrderByComparator<ListType> orderByComparator);
 
 	/**
@@ -125,7 +128,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @return the last matching list type
 	* @throws NoSuchListTypeException if a matching list type could not be found
 	*/
-	public ListType findByType_Last(String type,
+	public ListType findByType_Last(java.lang.String type,
 		com.liferay.portal.kernel.util.OrderByComparator<ListType> orderByComparator)
 		throws NoSuchListTypeException;
 
@@ -136,7 +139,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching list type, or <code>null</code> if a matching list type could not be found
 	*/
-	public ListType fetchByType_Last(String type,
+	public ListType fetchByType_Last(java.lang.String type,
 		com.liferay.portal.kernel.util.OrderByComparator<ListType> orderByComparator);
 
 	/**
@@ -148,7 +151,8 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @return the previous, current, and next list type
 	* @throws NoSuchListTypeException if a list type with the primary key could not be found
 	*/
-	public ListType[] findByType_PrevAndNext(long listTypeId, String type,
+	public ListType[] findByType_PrevAndNext(long listTypeId,
+		java.lang.String type,
 		com.liferay.portal.kernel.util.OrderByComparator<ListType> orderByComparator)
 		throws NoSuchListTypeException;
 
@@ -157,7 +161,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	*
 	* @param type the type
 	*/
-	public void removeByType(String type);
+	public void removeByType(java.lang.String type);
 
 	/**
 	* Returns the number of list types where type = &#63;.
@@ -165,7 +169,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @param type the type
 	* @return the number of matching list types
 	*/
-	public int countByType(String type);
+	public int countByType(java.lang.String type);
 
 	/**
 	* Returns the list type where name = &#63; and type = &#63; or throws a {@link NoSuchListTypeException} if it could not be found.
@@ -175,7 +179,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @return the matching list type
 	* @throws NoSuchListTypeException if a matching list type could not be found
 	*/
-	public ListType findByN_T(String name, String type)
+	public ListType findByN_T(java.lang.String name, java.lang.String type)
 		throws NoSuchListTypeException;
 
 	/**
@@ -185,7 +189,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @param type the type
 	* @return the matching list type, or <code>null</code> if a matching list type could not be found
 	*/
-	public ListType fetchByN_T(String name, String type);
+	public ListType fetchByN_T(java.lang.String name, java.lang.String type);
 
 	/**
 	* Returns the list type where name = &#63; and type = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
@@ -195,7 +199,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching list type, or <code>null</code> if a matching list type could not be found
 	*/
-	public ListType fetchByN_T(String name, String type,
+	public ListType fetchByN_T(java.lang.String name, java.lang.String type,
 		boolean retrieveFromCache);
 
 	/**
@@ -205,7 +209,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @param type the type
 	* @return the list type that was removed
 	*/
-	public ListType removeByN_T(String name, String type)
+	public ListType removeByN_T(java.lang.String name, java.lang.String type)
 		throws NoSuchListTypeException;
 
 	/**
@@ -215,7 +219,7 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	* @param type the type
 	* @return the number of matching list types
 	*/
-	public int countByN_T(String name, String type);
+	public int countByN_T(java.lang.String name, java.lang.String type);
 
 	/**
 	* Caches the list type in the entity cache if it is enabled.
@@ -337,5 +341,5 @@ public interface ListTypePersistence extends BasePersistence<ListType> {
 	public int countAll();
 
 	@Override
-	public java.util.Set<String> getBadColumnNames();
+	public java.util.Set<java.lang.String> getBadColumnNames();
 }

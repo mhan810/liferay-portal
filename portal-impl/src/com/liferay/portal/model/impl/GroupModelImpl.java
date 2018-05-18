@@ -27,7 +27,6 @@ import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupModel;
 import com.liferay.portal.kernel.model.GroupSoap;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -185,13 +184,13 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		model.setDescription(soapModel.getDescription());
 		model.setType(soapModel.getType());
 		model.setTypeSettings(soapModel.getTypeSettings());
-		model.setManualMembership(soapModel.isManualMembership());
+		model.setManualMembership(soapModel.getManualMembership());
 		model.setMembershipRestriction(soapModel.getMembershipRestriction());
 		model.setFriendlyURL(soapModel.getFriendlyURL());
-		model.setSite(soapModel.isSite());
+		model.setSite(soapModel.getSite());
 		model.setRemoteStagingGroupCount(soapModel.getRemoteStagingGroupCount());
-		model.setInheritContent(soapModel.isInheritContent());
-		model.setActive(soapModel.isActive());
+		model.setInheritContent(soapModel.getInheritContent());
+		model.setActive(soapModel.getActive());
 
 		return model;
 	}
@@ -307,13 +306,13 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		attributes.put("description", getDescription());
 		attributes.put("type", getType());
 		attributes.put("typeSettings", getTypeSettings());
-		attributes.put("manualMembership", isManualMembership());
+		attributes.put("manualMembership", getManualMembership());
 		attributes.put("membershipRestriction", getMembershipRestriction());
 		attributes.put("friendlyURL", getFriendlyURL());
-		attributes.put("site", isSite());
+		attributes.put("site", getSite());
 		attributes.put("remoteStagingGroupCount", getRemoteStagingGroupCount());
-		attributes.put("inheritContent", isInheritContent());
-		attributes.put("active", isActive());
+		attributes.put("inheritContent", getInheritContent());
+		attributes.put("active", getActive());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -1253,13 +1252,13 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		groupImpl.setDescription(getDescription());
 		groupImpl.setType(getType());
 		groupImpl.setTypeSettings(getTypeSettings());
-		groupImpl.setManualMembership(isManualMembership());
+		groupImpl.setManualMembership(getManualMembership());
 		groupImpl.setMembershipRestriction(getMembershipRestriction());
 		groupImpl.setFriendlyURL(getFriendlyURL());
-		groupImpl.setSite(isSite());
+		groupImpl.setSite(getSite());
 		groupImpl.setRemoteStagingGroupCount(getRemoteStagingGroupCount());
-		groupImpl.setInheritContent(isInheritContent());
-		groupImpl.setActive(isActive());
+		groupImpl.setInheritContent(getInheritContent());
+		groupImpl.setActive(getActive());
 
 		groupImpl.resetOriginalValues();
 
@@ -1441,7 +1440,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			groupCacheModel.typeSettings = null;
 		}
 
-		groupCacheModel.manualMembership = isManualMembership();
+		groupCacheModel.manualMembership = getManualMembership();
 
 		groupCacheModel.membershipRestriction = getMembershipRestriction();
 
@@ -1453,13 +1452,13 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			groupCacheModel.friendlyURL = null;
 		}
 
-		groupCacheModel.site = isSite();
+		groupCacheModel.site = getSite();
 
 		groupCacheModel.remoteStagingGroupCount = getRemoteStagingGroupCount();
 
-		groupCacheModel.inheritContent = isInheritContent();
+		groupCacheModel.inheritContent = getInheritContent();
 
-		groupCacheModel.active = isActive();
+		groupCacheModel.active = getActive();
 
 		return groupCacheModel;
 	}
@@ -1499,19 +1498,19 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		sb.append(", typeSettings=");
 		sb.append(getTypeSettings());
 		sb.append(", manualMembership=");
-		sb.append(isManualMembership());
+		sb.append(getManualMembership());
 		sb.append(", membershipRestriction=");
 		sb.append(getMembershipRestriction());
 		sb.append(", friendlyURL=");
 		sb.append(getFriendlyURL());
 		sb.append(", site=");
-		sb.append(isSite());
+		sb.append(getSite());
 		sb.append(", remoteStagingGroupCount=");
 		sb.append(getRemoteStagingGroupCount());
 		sb.append(", inheritContent=");
-		sb.append(isInheritContent());
+		sb.append(getInheritContent());
 		sb.append(", active=");
-		sb.append(isActive());
+		sb.append(getActive());
 		sb.append("}");
 
 		return sb.toString();
@@ -1587,7 +1586,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>manualMembership</column-name><column-value><![CDATA[");
-		sb.append(isManualMembership());
+		sb.append(getManualMembership());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>membershipRestriction</column-name><column-value><![CDATA[");
@@ -1599,7 +1598,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>site</column-name><column-value><![CDATA[");
-		sb.append(isSite());
+		sb.append(getSite());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>remoteStagingGroupCount</column-name><column-value><![CDATA[");
@@ -1607,11 +1606,11 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>inheritContent</column-name><column-value><![CDATA[");
-		sb.append(isInheritContent());
+		sb.append(getInheritContent());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>active</column-name><column-value><![CDATA[");
-		sb.append(isActive());
+		sb.append(getActive());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -1621,7 +1620,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 
 	private static final ClassLoader _classLoader = Group.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			Group.class, ModelWrapper.class
+			Group.class
 		};
 	private long _mvccVersion;
 	private String _uuid;

@@ -113,7 +113,7 @@ public class UserIdMapperWrapper implements UserIdMapper,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new UserIdMapperWrapper((UserIdMapper)_userIdMapper.clone());
 	}
 
@@ -138,7 +138,7 @@ public class UserIdMapperWrapper implements UserIdMapper,
 	* @return the description of this user ID mapper
 	*/
 	@Override
-	public String getDescription() {
+	public java.lang.String getDescription() {
 		return _userIdMapper.getDescription();
 	}
 
@@ -153,7 +153,7 @@ public class UserIdMapperWrapper implements UserIdMapper,
 	* @return the external user ID of this user ID mapper
 	*/
 	@Override
-	public String getExternalUserId() {
+	public java.lang.String getExternalUserId() {
 		return _userIdMapper.getExternalUserId();
 	}
 
@@ -188,7 +188,7 @@ public class UserIdMapperWrapper implements UserIdMapper,
 	* @return the type of this user ID mapper
 	*/
 	@Override
-	public String getType() {
+	public java.lang.String getType() {
 		return _userIdMapper.getType();
 	}
 
@@ -218,7 +218,7 @@ public class UserIdMapperWrapper implements UserIdMapper,
 	* @return the user uuid of this user ID mapper
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _userIdMapper.getUserUuid();
 	}
 
@@ -268,7 +268,7 @@ public class UserIdMapperWrapper implements UserIdMapper,
 	* @param description the description of this user ID mapper
 	*/
 	@Override
-	public void setDescription(String description) {
+	public void setDescription(java.lang.String description) {
 		_userIdMapper.setDescription(description);
 	}
 
@@ -293,7 +293,7 @@ public class UserIdMapperWrapper implements UserIdMapper,
 	* @param externalUserId the external user ID of this user ID mapper
 	*/
 	@Override
-	public void setExternalUserId(String externalUserId) {
+	public void setExternalUserId(java.lang.String externalUserId) {
 		_userIdMapper.setExternalUserId(externalUserId);
 	}
 
@@ -333,7 +333,7 @@ public class UserIdMapperWrapper implements UserIdMapper,
 	* @param type the type of this user ID mapper
 	*/
 	@Override
-	public void setType(String type) {
+	public void setType(java.lang.String type) {
 		_userIdMapper.setType(type);
 	}
 
@@ -363,7 +363,7 @@ public class UserIdMapperWrapper implements UserIdMapper,
 	* @param userUuid the user uuid of this user ID mapper
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_userIdMapper.setUserUuid(userUuid);
 	}
 
@@ -378,7 +378,7 @@ public class UserIdMapperWrapper implements UserIdMapper,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _userIdMapper.toString();
 	}
 
@@ -388,7 +388,7 @@ public class UserIdMapperWrapper implements UserIdMapper,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _userIdMapper.toXmlString();
 	}
 

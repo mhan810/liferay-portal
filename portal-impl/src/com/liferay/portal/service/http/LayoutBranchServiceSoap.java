@@ -65,7 +65,8 @@ import java.rmi.RemoteException;
 @ProviderType
 public class LayoutBranchServiceSoap {
 	public static com.liferay.portal.kernel.model.LayoutBranchSoap addLayoutBranch(
-		long layoutRevisionId, String name, String description, boolean master,
+		long layoutRevisionId, java.lang.String name,
+		java.lang.String description, boolean master,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
@@ -94,7 +95,8 @@ public class LayoutBranchServiceSoap {
 	}
 
 	public static com.liferay.portal.kernel.model.LayoutBranchSoap updateLayoutBranch(
-		long layoutBranchId, String name, String description,
+		long layoutBranchId, java.lang.String name,
+		java.lang.String description,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {

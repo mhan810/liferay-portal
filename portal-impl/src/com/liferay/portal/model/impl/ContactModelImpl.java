@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.ContactModel;
 import com.liferay.portal.kernel.model.ContactSoap;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -187,7 +186,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 		model.setLastName(soapModel.getLastName());
 		model.setPrefixId(soapModel.getPrefixId());
 		model.setSuffixId(soapModel.getSuffixId());
-		model.setMale(soapModel.isMale());
+		model.setMale(soapModel.getMale());
 		model.setBirthday(soapModel.getBirthday());
 		model.setSmsSn(soapModel.getSmsSn());
 		model.setFacebookSn(soapModel.getFacebookSn());
@@ -280,7 +279,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 		attributes.put("lastName", getLastName());
 		attributes.put("prefixId", getPrefixId());
 		attributes.put("suffixId", getSuffixId());
-		attributes.put("male", isMale());
+		attributes.put("male", getMale());
 		attributes.put("birthday", getBirthday());
 		attributes.put("smsSn", getSmsSn());
 		attributes.put("facebookSn", getFacebookSn());
@@ -1014,7 +1013,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 		contactImpl.setLastName(getLastName());
 		contactImpl.setPrefixId(getPrefixId());
 		contactImpl.setSuffixId(getSuffixId());
-		contactImpl.setMale(isMale());
+		contactImpl.setMale(getMale());
 		contactImpl.setBirthday(getBirthday());
 		contactImpl.setSmsSn(getSmsSn());
 		contactImpl.setFacebookSn(getFacebookSn());
@@ -1191,7 +1190,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 		contactCacheModel.suffixId = getSuffixId();
 
-		contactCacheModel.male = isMale();
+		contactCacheModel.male = getMale();
 
 		Date birthday = getBirthday();
 
@@ -1324,7 +1323,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 		sb.append(", suffixId=");
 		sb.append(getSuffixId());
 		sb.append(", male=");
-		sb.append(isMale());
+		sb.append(getMale());
 		sb.append(", birthday=");
 		sb.append(getBirthday());
 		sb.append(", smsSn=");
@@ -1430,7 +1429,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>male</column-name><column-value><![CDATA[");
-		sb.append(isMale());
+		sb.append(getMale());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>birthday</column-name><column-value><![CDATA[");
@@ -1484,7 +1483,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	private static final ClassLoader _classLoader = Contact.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			Contact.class, ModelWrapper.class
+			Contact.class
 		};
 	private long _mvccVersion;
 	private long _contactId;

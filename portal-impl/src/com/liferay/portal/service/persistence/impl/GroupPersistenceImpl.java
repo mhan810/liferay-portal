@@ -43,7 +43,6 @@ import com.liferay.portal.kernel.service.persistence.impl.TableMapperFactory;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -55,7 +54,6 @@ import com.liferay.portal.model.impl.GroupModelImpl;
 import java.io.Serializable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -3893,7 +3891,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			if ((list != null) && !list.isEmpty()) {
 				for (Group group : list) {
 					if ((companyId != group.getCompanyId()) ||
-							(site != group.isSite())) {
+							(site != group.getSite())) {
 						list = null;
 
 						break;
@@ -4429,7 +4427,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			if ((list != null) && !list.isEmpty()) {
 				for (Group group : list) {
 					if ((companyId != group.getCompanyId()) ||
-							(active != group.isActive())) {
+							(active != group.getActive())) {
 						list = null;
 
 						break;
@@ -5501,7 +5499,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			if ((list != null) && !list.isEmpty()) {
 				for (Group group : list) {
 					if ((type != group.getType()) ||
-							(active != group.isActive())) {
+							(active != group.getActive())) {
 						list = null;
 
 						break;
@@ -7288,7 +7286,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 				for (Group group : list) {
 					if ((companyId != group.getCompanyId()) ||
 							(parentGroupId != group.getParentGroupId()) ||
-							(site != group.isSite())) {
+							(site != group.getSite())) {
 						list = null;
 
 						break;
@@ -8132,7 +8130,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					if ((companyId != group.getCompanyId()) ||
 							!StringUtil.wildcardMatches(group.getTreePath(),
 								treePath, '_', '%', '\\', true) ||
-							(site != group.isSite())) {
+							(site != group.getSite())) {
 						list = null;
 
 						break;
@@ -9520,8 +9518,8 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 				for (Group group : list) {
 					if ((companyId != group.getCompanyId()) ||
 							(parentGroupId != group.getParentGroupId()) ||
-							(site != group.isSite()) ||
-							(inheritContent != group.isInheritContent())) {
+							(site != group.getSite()) ||
+							(inheritContent != group.getInheritContent())) {
 						list = null;
 
 						break;
@@ -10424,6 +10422,8 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 	@Override
 	protected Group removeImpl(Group group) {
+		group = toUnwrappedModel(group);
+
 		groupToOrganizationTableMapper.deleteLeftPrimaryKeyTableMappings(group.getPrimaryKey());
 
 		groupToRoleTableMapper.deleteLeftPrimaryKeyTableMappings(group.getPrimaryKey());
@@ -10462,23 +10462,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 	@Override
 	public Group updateImpl(Group group) {
+		group = toUnwrappedModel(group);
+
 		boolean isNew = group.isNew();
-
-		if (!(group instanceof GroupModelImpl)) {
-			InvocationHandler invocationHandler = null;
-
-			if (ProxyUtil.isProxyClass(group.getClass())) {
-				invocationHandler = ProxyUtil.getInvocationHandler(group);
-
-				throw new IllegalArgumentException(
-					"Implement ModelWrapper in group proxy " +
-					invocationHandler.getClass());
-			}
-
-			throw new IllegalArgumentException(
-				"Implement ModelWrapper in custom Group implementation " +
-				group.getClass());
-		}
 
 		GroupModelImpl groupModelImpl = (GroupModelImpl)group;
 
@@ -10555,7 +10541,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 				args);
 
 			args = new Object[] {
-					groupModelImpl.getCompanyId(), groupModelImpl.isSite()
+					groupModelImpl.getCompanyId(), groupModelImpl.getSite()
 				};
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_S, args);
@@ -10563,7 +10549,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 				args);
 
 			args = new Object[] {
-					groupModelImpl.getCompanyId(), groupModelImpl.isActive()
+					groupModelImpl.getCompanyId(), groupModelImpl.getActive()
 				};
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_A, args);
@@ -10579,7 +10565,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 				args);
 
 			args = new Object[] {
-					groupModelImpl.getType(), groupModelImpl.isActive()
+					groupModelImpl.getType(), groupModelImpl.getActive()
 				};
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_T_A, args);
@@ -10598,7 +10584,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 			args = new Object[] {
 					groupModelImpl.getCompanyId(),
-					groupModelImpl.getParentGroupId(), groupModelImpl.isSite()
+					groupModelImpl.getParentGroupId(), groupModelImpl.getSite()
 				};
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_P_S, args);
@@ -10607,8 +10593,8 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 			args = new Object[] {
 					groupModelImpl.getCompanyId(),
-					groupModelImpl.getParentGroupId(), groupModelImpl.isSite(),
-					groupModelImpl.isInheritContent()
+					groupModelImpl.getParentGroupId(), groupModelImpl.getSite(),
+					groupModelImpl.getInheritContent()
 				};
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_P_S_I, args);
@@ -10727,7 +10713,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					args);
 
 				args = new Object[] {
-						groupModelImpl.getCompanyId(), groupModelImpl.isSite()
+						groupModelImpl.getCompanyId(), groupModelImpl.getSite()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_S, args);
@@ -10747,7 +10733,8 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					args);
 
 				args = new Object[] {
-						groupModelImpl.getCompanyId(), groupModelImpl.isActive()
+						groupModelImpl.getCompanyId(),
+						groupModelImpl.getActive()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_A, args);
@@ -10788,7 +10775,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					args);
 
 				args = new Object[] {
-						groupModelImpl.getType(), groupModelImpl.isActive()
+						groupModelImpl.getType(), groupModelImpl.getActive()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_T_A, args);
@@ -10834,7 +10821,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 				args = new Object[] {
 						groupModelImpl.getCompanyId(),
 						groupModelImpl.getParentGroupId(),
-						groupModelImpl.isSite()
+						groupModelImpl.getSite()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_P_S, args);
@@ -10858,8 +10845,8 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 				args = new Object[] {
 						groupModelImpl.getCompanyId(),
 						groupModelImpl.getParentGroupId(),
-						groupModelImpl.isSite(),
-						groupModelImpl.isInheritContent()
+						groupModelImpl.getSite(),
+						groupModelImpl.getInheritContent()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_P_S_I, args);
@@ -10877,6 +10864,42 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		group.resetOriginalValues();
 
 		return group;
+	}
+
+	protected Group toUnwrappedModel(Group group) {
+		if (group instanceof GroupImpl) {
+			return group;
+		}
+
+		GroupImpl groupImpl = new GroupImpl();
+
+		groupImpl.setNew(group.isNew());
+		groupImpl.setPrimaryKey(group.getPrimaryKey());
+
+		groupImpl.setMvccVersion(group.getMvccVersion());
+		groupImpl.setUuid(group.getUuid());
+		groupImpl.setGroupId(group.getGroupId());
+		groupImpl.setCompanyId(group.getCompanyId());
+		groupImpl.setCreatorUserId(group.getCreatorUserId());
+		groupImpl.setClassNameId(group.getClassNameId());
+		groupImpl.setClassPK(group.getClassPK());
+		groupImpl.setParentGroupId(group.getParentGroupId());
+		groupImpl.setLiveGroupId(group.getLiveGroupId());
+		groupImpl.setTreePath(group.getTreePath());
+		groupImpl.setGroupKey(group.getGroupKey());
+		groupImpl.setName(group.getName());
+		groupImpl.setDescription(group.getDescription());
+		groupImpl.setType(group.getType());
+		groupImpl.setTypeSettings(group.getTypeSettings());
+		groupImpl.setManualMembership(group.isManualMembership());
+		groupImpl.setMembershipRestriction(group.getMembershipRestriction());
+		groupImpl.setFriendlyURL(group.getFriendlyURL());
+		groupImpl.setSite(group.isSite());
+		groupImpl.setRemoteStagingGroupCount(group.getRemoteStagingGroupCount());
+		groupImpl.setInheritContent(group.isInheritContent());
+		groupImpl.setActive(group.isActive());
+
+		return groupImpl;
 	}
 
 	/**

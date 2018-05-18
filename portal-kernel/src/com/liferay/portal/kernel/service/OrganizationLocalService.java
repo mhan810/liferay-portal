@@ -94,7 +94,7 @@ public interface OrganizationLocalService extends BaseLocalService,
 	* @return the organization
 	*/
 	public Organization addOrganization(long userId, long parentOrganizationId,
-		String name, boolean site) throws PortalException;
+		java.lang.String name, boolean site) throws PortalException;
 
 	/**
 	* Adds an organization.
@@ -123,9 +123,9 @@ public interface OrganizationLocalService extends BaseLocalService,
 	* @return the organization
 	*/
 	public Organization addOrganization(long userId, long parentOrganizationId,
-		String name, String type, long regionId, long countryId, long statusId,
-		String comments, boolean site, ServiceContext serviceContext)
-		throws PortalException;
+		java.lang.String name, java.lang.String type, long regionId,
+		long countryId, long statusId, java.lang.String comments, boolean site,
+		ServiceContext serviceContext) throws PortalException;
 
 	/**
 	* Adds the organization to the database. Also notifies the appropriate model listeners.
@@ -175,7 +175,6 @@ public interface OrganizationLocalService extends BaseLocalService,
 	* @param organizationId the primary key for the new organization
 	* @return the new organization
 	*/
-	@Transactional(enabled = false)
 	public Organization createOrganization(long organizationId);
 
 	public void deleteGroupOrganization(long groupId, long organizationId);
@@ -304,7 +303,7 @@ public interface OrganizationLocalService extends BaseLocalService,
 	organization could be found
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Organization fetchOrganization(long companyId, String name);
+	public Organization fetchOrganization(long companyId, java.lang.String name);
 
 	/**
 	* Returns the organization with the matching UUID and company.
@@ -314,14 +313,14 @@ public interface OrganizationLocalService extends BaseLocalService,
 	* @return the matching organization, or <code>null</code> if a matching organization could not be found
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Organization fetchOrganizationByUuidAndCompanyId(String uuid,
-		long companyId);
+	public Organization fetchOrganizationByUuidAndCompanyId(
+		java.lang.String uuid, long companyId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String[] getChildrenTypes(String type);
+	public java.lang.String[] getChildrenTypes(java.lang.String type);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
@@ -379,7 +378,7 @@ public interface OrganizationLocalService extends BaseLocalService,
 	* @return the organization with the name
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Organization getOrganization(long companyId, String name)
+	public Organization getOrganization(long companyId, java.lang.String name)
 		throws PortalException;
 
 	/**
@@ -391,8 +390,8 @@ public interface OrganizationLocalService extends BaseLocalService,
 	* @throws PortalException if a matching organization could not be found
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Organization getOrganizationByUuidAndCompanyId(String uuid,
-		long companyId) throws PortalException;
+	public Organization getOrganizationByUuidAndCompanyId(
+		java.lang.String uuid, long companyId) throws PortalException;
 
 	/**
 	* Returns the primary key of the organization with the name.
@@ -403,7 +402,7 @@ public interface OrganizationLocalService extends BaseLocalService,
 	<code>0</code> if the organization could not be found
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public long getOrganizationId(long companyId, String name);
+	public long getOrganizationId(long companyId, java.lang.String name);
 
 	/**
 	* Returns a range of all the organizations.
@@ -463,7 +462,8 @@ public interface OrganizationLocalService extends BaseLocalService,
 		long parentOrganizationId, int start, int end);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Organization> getOrganizations(long companyId, String treePath);
+	public List<Organization> getOrganizations(long companyId,
+		java.lang.String treePath);
 
 	/**
 	* Returns the organizations with the primary keys.
@@ -492,7 +492,7 @@ public interface OrganizationLocalService extends BaseLocalService,
 	* @return the organizations and users belonging to the parent organization
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Object> getOrganizationsAndUsers(long companyId,
+	public List<java.lang.Object> getOrganizationsAndUsers(long companyId,
 		long parentOrganizationId, int status, int start, int end,
 		OrderByComparator<?> obc);
 
@@ -535,7 +535,7 @@ public interface OrganizationLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	/**
 	* Returns the parent organizations in order by closest ancestor. The list
@@ -600,7 +600,7 @@ public interface OrganizationLocalService extends BaseLocalService,
 		List<Organization> availableOrganizations);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String[] getTypes();
+	public java.lang.String[] getTypes();
 
 	/**
 	* Returns all the IDs of organizations with which the user is explicitly
@@ -748,13 +748,13 @@ public interface OrganizationLocalService extends BaseLocalService,
 	public boolean hasUserOrganizations(long userId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isCountryEnabled(String type);
+	public boolean isCountryEnabled(java.lang.String type);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isCountryRequired(String type);
+	public boolean isCountryRequired(java.lang.String type);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isRootable(String type);
+	public boolean isRootable(java.lang.String type);
 
 	/**
 	* Rebuilds the organization's tree.
@@ -802,7 +802,8 @@ public interface OrganizationLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Hits search(long companyId, long parentOrganizationId,
-		String keywords, LinkedHashMap<String, Object> params, int start,
+		java.lang.String keywords,
+		LinkedHashMap<java.lang.String, java.lang.Object> params, int start,
 		int end, Sort sort);
 
 	/**
@@ -842,8 +843,10 @@ public interface OrganizationLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Organization> search(long companyId, long parentOrganizationId,
-		String keywords, String type, Long regionId, Long countryId,
-		LinkedHashMap<String, Object> params, int start, int end);
+		java.lang.String keywords, java.lang.String type,
+		java.lang.Long regionId, java.lang.Long countryId,
+		LinkedHashMap<java.lang.String, java.lang.Object> params, int start,
+		int end);
 
 	/**
 	* Returns an ordered range of all the organizations that match the
@@ -885,9 +888,10 @@ public interface OrganizationLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Organization> search(long companyId, long parentOrganizationId,
-		String keywords, String type, Long regionId, Long countryId,
-		LinkedHashMap<String, Object> params, int start, int end,
-		OrderByComparator<Organization> obc);
+		java.lang.String keywords, java.lang.String type,
+		java.lang.Long regionId, java.lang.Long countryId,
+		LinkedHashMap<java.lang.String, java.lang.Object> params, int start,
+		int end, OrderByComparator<Organization> obc);
 
 	/**
 	* Returns a name ordered range of all the organizations with the type,
@@ -933,8 +937,10 @@ public interface OrganizationLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Organization> search(long companyId, long parentOrganizationId,
-		String name, String type, String street, String city, String zip,
-		Long regionId, Long countryId, LinkedHashMap<String, Object> params,
+		java.lang.String name, java.lang.String type, java.lang.String street,
+		java.lang.String city, java.lang.String zip, java.lang.Long regionId,
+		java.lang.Long countryId,
+		LinkedHashMap<java.lang.String, java.lang.Object> params,
 		boolean andOperator, int start, int end);
 
 	/**
@@ -984,8 +990,10 @@ public interface OrganizationLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Organization> search(long companyId, long parentOrganizationId,
-		String name, String type, String street, String city, String zip,
-		Long regionId, Long countryId, LinkedHashMap<String, Object> params,
+		java.lang.String name, java.lang.String type, java.lang.String street,
+		java.lang.String city, java.lang.String zip, java.lang.Long regionId,
+		java.lang.Long countryId,
+		LinkedHashMap<java.lang.String, java.lang.Object> params,
 		boolean andOperator, int start, int end,
 		OrderByComparator<Organization> obc);
 
@@ -1029,9 +1037,11 @@ public interface OrganizationLocalService extends BaseLocalService,
 	* @see com.liferay.portlet.usersadmin.util.OrganizationIndexer
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Hits search(long companyId, long parentOrganizationId, String name,
-		String type, String street, String city, String zip, String region,
-		String country, LinkedHashMap<String, Object> params,
+	public Hits search(long companyId, long parentOrganizationId,
+		java.lang.String name, java.lang.String type, java.lang.String street,
+		java.lang.String city, java.lang.String zip, java.lang.String region,
+		java.lang.String country,
+		LinkedHashMap<java.lang.String, java.lang.Object> params,
 		boolean andSearch, int start, int end, Sort sort);
 
 	/**
@@ -1057,8 +1067,9 @@ public interface OrganizationLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int searchCount(long companyId, long parentOrganizationId,
-		String keywords, String type, Long regionId, Long countryId,
-		LinkedHashMap<String, Object> params);
+		java.lang.String keywords, java.lang.String type,
+		java.lang.Long regionId, java.lang.Long countryId,
+		LinkedHashMap<java.lang.String, java.lang.Object> params);
 
 	/**
 	* Returns the number of organizations with the type, region, and country,
@@ -1090,22 +1101,27 @@ public interface OrganizationLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int searchCount(long companyId, long parentOrganizationId,
-		String name, String type, String street, String city, String zip,
-		Long regionId, Long countryId, LinkedHashMap<String, Object> params,
+		java.lang.String name, java.lang.String type, java.lang.String street,
+		java.lang.String city, java.lang.String zip, java.lang.Long regionId,
+		java.lang.Long countryId,
+		LinkedHashMap<java.lang.String, java.lang.Object> params,
 		boolean andOperator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public BaseModelSearchResult<Organization> searchOrganizations(
-		long companyId, long parentOrganizationId, String keywords,
-		LinkedHashMap<String, Object> params, int start, int end, Sort sort)
-		throws PortalException;
+		long companyId, long parentOrganizationId, java.lang.String keywords,
+		LinkedHashMap<java.lang.String, java.lang.Object> params, int start,
+		int end, Sort sort) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public BaseModelSearchResult<Organization> searchOrganizations(
-		long companyId, long parentOrganizationId, String name, String type,
-		String street, String city, String zip, String region, String country,
-		LinkedHashMap<String, Object> params, boolean andSearch, int start,
-		int end, Sort sort) throws PortalException;
+		long companyId, long parentOrganizationId, java.lang.String name,
+		java.lang.String type, java.lang.String street, java.lang.String city,
+		java.lang.String zip, java.lang.String region,
+		java.lang.String country,
+		LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andSearch, int start, int end, Sort sort)
+		throws PortalException;
 
 	/**
 	* Returns the organizations and users that match the keywords specified for
@@ -1128,9 +1144,9 @@ public interface OrganizationLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Hits searchOrganizationsAndUsers(long companyId,
-		long parentOrganizationId, String keywords, int status,
-		LinkedHashMap<String, Object> params, int start, int end, Sort[] sorts)
-		throws PortalException;
+		long parentOrganizationId, java.lang.String keywords, int status,
+		LinkedHashMap<java.lang.String, java.lang.Object> params, int start,
+		int end, Sort[] sorts) throws PortalException;
 
 	/**
 	* Returns the number of organizations and users that match the keywords
@@ -1149,8 +1165,9 @@ public interface OrganizationLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int searchOrganizationsAndUsersCount(long companyId,
-		long parentOrganizationId, String keywords, int status,
-		LinkedHashMap<String, Object> params) throws PortalException;
+		long parentOrganizationId, java.lang.String keywords, int status,
+		LinkedHashMap<java.lang.String, java.lang.Object> params)
+		throws PortalException;
 
 	public void setGroupOrganizations(long groupId, long[] organizationIds);
 
@@ -1183,7 +1200,7 @@ public interface OrganizationLocalService extends BaseLocalService,
 	* @param assetTagNames the asset tag names
 	*/
 	public void updateAsset(long userId, Organization organization,
-		long[] assetCategoryIds, String[] assetTagNames)
+		long[] assetCategoryIds, java.lang.String[] assetTagNames)
 		throws PortalException;
 
 	/**
@@ -1210,10 +1227,10 @@ public interface OrganizationLocalService extends BaseLocalService,
 	* @return the organization
 	*/
 	public Organization updateOrganization(long companyId, long organizationId,
-		long parentOrganizationId, String name, String type, long regionId,
-		long countryId, long statusId, String comments, boolean logo,
-		byte[] logoBytes, boolean site, ServiceContext serviceContext)
-		throws PortalException;
+		long parentOrganizationId, java.lang.String name,
+		java.lang.String type, long regionId, long countryId, long statusId,
+		java.lang.String comments, boolean logo, byte[] logoBytes,
+		boolean site, ServiceContext serviceContext) throws PortalException;
 
 	/**
 	* Updates the organization.
@@ -1239,11 +1256,12 @@ public interface OrganizationLocalService extends BaseLocalService,
 	long, long, String, String, long, long, long, String,
 	boolean, byte[], boolean, ServiceContext)}
 	*/
-	@Deprecated
+	@java.lang.Deprecated
 	public Organization updateOrganization(long companyId, long organizationId,
-		long parentOrganizationId, String name, String type, long regionId,
-		long countryId, long statusId, String comments, boolean site,
-		ServiceContext serviceContext) throws PortalException;
+		long parentOrganizationId, java.lang.String name,
+		java.lang.String type, long regionId, long countryId, long statusId,
+		java.lang.String comments, boolean site, ServiceContext serviceContext)
+		throws PortalException;
 
 	/**
 	* Updates the organization in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

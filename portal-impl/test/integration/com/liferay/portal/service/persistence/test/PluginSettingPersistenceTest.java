@@ -144,8 +144,8 @@ public class PluginSettingPersistenceTest {
 			newPluginSetting.getPluginType());
 		Assert.assertEquals(existingPluginSetting.getRoles(),
 			newPluginSetting.getRoles());
-		Assert.assertEquals(existingPluginSetting.isActive(),
-			newPluginSetting.isActive());
+		Assert.assertEquals(existingPluginSetting.getActive(),
+			newPluginSetting.getActive());
 	}
 
 	@Test

@@ -21,7 +21,6 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.ServiceComponent;
 import com.liferay.portal.kernel.model.ServiceComponentModel;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
@@ -497,7 +496,7 @@ public class ServiceComponentModelImpl extends BaseModelImpl<ServiceComponent>
 
 	private static final ClassLoader _classLoader = ServiceComponent.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			ServiceComponent.class, ModelWrapper.class
+			ServiceComponent.class
 		};
 	private long _mvccVersion;
 	private long _serviceComponentId;

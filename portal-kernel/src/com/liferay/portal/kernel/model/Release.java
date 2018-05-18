@@ -53,5 +53,5 @@ public interface Release extends ReleaseModel, PersistedModel {
 			}
 		};
 
-	public String getBundleSymbolicName();
+	public java.lang.String getBundleSymbolicName();
 }

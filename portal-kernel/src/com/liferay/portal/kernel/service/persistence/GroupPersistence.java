@@ -45,7 +45,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param uuid the uuid
 	* @return the matching groups
 	*/
-	public java.util.List<Group> findByUuid(String uuid);
+	public java.util.List<Group> findByUuid(java.lang.String uuid);
 
 	/**
 	* Returns a range of all the groups where uuid = &#63;.
@@ -59,7 +59,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param end the upper bound of the range of groups (not inclusive)
 	* @return the range of matching groups
 	*/
-	public java.util.List<Group> findByUuid(String uuid, int start, int end);
+	public java.util.List<Group> findByUuid(java.lang.String uuid, int start,
+		int end);
 
 	/**
 	* Returns an ordered range of all the groups where uuid = &#63;.
@@ -74,7 +75,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching groups
 	*/
-	public java.util.List<Group> findByUuid(String uuid, int start, int end,
+	public java.util.List<Group> findByUuid(java.lang.String uuid, int start,
+		int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator);
 
 	/**
@@ -91,7 +93,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching groups
 	*/
-	public java.util.List<Group> findByUuid(String uuid, int start, int end,
+	public java.util.List<Group> findByUuid(java.lang.String uuid, int start,
+		int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator,
 		boolean retrieveFromCache);
 
@@ -103,7 +106,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the first matching group
 	* @throws NoSuchGroupException if a matching group could not be found
 	*/
-	public Group findByUuid_First(String uuid,
+	public Group findByUuid_First(java.lang.String uuid,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator)
 		throws NoSuchGroupException;
 
@@ -114,7 +117,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching group, or <code>null</code> if a matching group could not be found
 	*/
-	public Group fetchByUuid_First(String uuid,
+	public Group fetchByUuid_First(java.lang.String uuid,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator);
 
 	/**
@@ -125,7 +128,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the last matching group
 	* @throws NoSuchGroupException if a matching group could not be found
 	*/
-	public Group findByUuid_Last(String uuid,
+	public Group findByUuid_Last(java.lang.String uuid,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator)
 		throws NoSuchGroupException;
 
@@ -136,7 +139,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching group, or <code>null</code> if a matching group could not be found
 	*/
-	public Group fetchByUuid_Last(String uuid,
+	public Group fetchByUuid_Last(java.lang.String uuid,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator);
 
 	/**
@@ -148,7 +151,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the previous, current, and next group
 	* @throws NoSuchGroupException if a group with the primary key could not be found
 	*/
-	public Group[] findByUuid_PrevAndNext(long groupId, String uuid,
+	public Group[] findByUuid_PrevAndNext(long groupId, java.lang.String uuid,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator)
 		throws NoSuchGroupException;
 
@@ -157,7 +160,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	*
 	* @param uuid the uuid
 	*/
-	public void removeByUuid(String uuid);
+	public void removeByUuid(java.lang.String uuid);
 
 	/**
 	* Returns the number of groups where uuid = &#63;.
@@ -165,7 +168,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param uuid the uuid
 	* @return the number of matching groups
 	*/
-	public int countByUuid(String uuid);
+	public int countByUuid(java.lang.String uuid);
 
 	/**
 	* Returns the group where uuid = &#63; and groupId = &#63; or throws a {@link NoSuchGroupException} if it could not be found.
@@ -175,7 +178,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the matching group
 	* @throws NoSuchGroupException if a matching group could not be found
 	*/
-	public Group findByUUID_G(String uuid, long groupId)
+	public Group findByUUID_G(java.lang.String uuid, long groupId)
 		throws NoSuchGroupException;
 
 	/**
@@ -185,7 +188,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param groupId the group ID
 	* @return the matching group, or <code>null</code> if a matching group could not be found
 	*/
-	public Group fetchByUUID_G(String uuid, long groupId);
+	public Group fetchByUUID_G(java.lang.String uuid, long groupId);
 
 	/**
 	* Returns the group where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
@@ -195,7 +198,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching group, or <code>null</code> if a matching group could not be found
 	*/
-	public Group fetchByUUID_G(String uuid, long groupId,
+	public Group fetchByUUID_G(java.lang.String uuid, long groupId,
 		boolean retrieveFromCache);
 
 	/**
@@ -205,7 +208,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param groupId the group ID
 	* @return the group that was removed
 	*/
-	public Group removeByUUID_G(String uuid, long groupId)
+	public Group removeByUUID_G(java.lang.String uuid, long groupId)
 		throws NoSuchGroupException;
 
 	/**
@@ -215,7 +218,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param groupId the group ID
 	* @return the number of matching groups
 	*/
-	public int countByUUID_G(String uuid, long groupId);
+	public int countByUUID_G(java.lang.String uuid, long groupId);
 
 	/**
 	* Returns all the groups where uuid = &#63; and companyId = &#63;.
@@ -224,7 +227,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param companyId the company ID
 	* @return the matching groups
 	*/
-	public java.util.List<Group> findByUuid_C(String uuid, long companyId);
+	public java.util.List<Group> findByUuid_C(java.lang.String uuid,
+		long companyId);
 
 	/**
 	* Returns a range of all the groups where uuid = &#63; and companyId = &#63;.
@@ -239,8 +243,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param end the upper bound of the range of groups (not inclusive)
 	* @return the range of matching groups
 	*/
-	public java.util.List<Group> findByUuid_C(String uuid, long companyId,
-		int start, int end);
+	public java.util.List<Group> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end);
 
 	/**
 	* Returns an ordered range of all the groups where uuid = &#63; and companyId = &#63;.
@@ -256,8 +260,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching groups
 	*/
-	public java.util.List<Group> findByUuid_C(String uuid, long companyId,
-		int start, int end,
+	public java.util.List<Group> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator);
 
 	/**
@@ -275,8 +279,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching groups
 	*/
-	public java.util.List<Group> findByUuid_C(String uuid, long companyId,
-		int start, int end,
+	public java.util.List<Group> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator,
 		boolean retrieveFromCache);
 
@@ -289,7 +293,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the first matching group
 	* @throws NoSuchGroupException if a matching group could not be found
 	*/
-	public Group findByUuid_C_First(String uuid, long companyId,
+	public Group findByUuid_C_First(java.lang.String uuid, long companyId,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator)
 		throws NoSuchGroupException;
 
@@ -301,7 +305,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching group, or <code>null</code> if a matching group could not be found
 	*/
-	public Group fetchByUuid_C_First(String uuid, long companyId,
+	public Group fetchByUuid_C_First(java.lang.String uuid, long companyId,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator);
 
 	/**
@@ -313,7 +317,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the last matching group
 	* @throws NoSuchGroupException if a matching group could not be found
 	*/
-	public Group findByUuid_C_Last(String uuid, long companyId,
+	public Group findByUuid_C_Last(java.lang.String uuid, long companyId,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator)
 		throws NoSuchGroupException;
 
@@ -325,7 +329,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching group, or <code>null</code> if a matching group could not be found
 	*/
-	public Group fetchByUuid_C_Last(String uuid, long companyId,
+	public Group fetchByUuid_C_Last(java.lang.String uuid, long companyId,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator);
 
 	/**
@@ -338,8 +342,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the previous, current, and next group
 	* @throws NoSuchGroupException if a group with the primary key could not be found
 	*/
-	public Group[] findByUuid_C_PrevAndNext(long groupId, String uuid,
-		long companyId,
+	public Group[] findByUuid_C_PrevAndNext(long groupId,
+		java.lang.String uuid, long companyId,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator)
 		throws NoSuchGroupException;
 
@@ -349,7 +353,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param uuid the uuid
 	* @param companyId the company ID
 	*/
-	public void removeByUuid_C(String uuid, long companyId);
+	public void removeByUuid_C(java.lang.String uuid, long companyId);
 
 	/**
 	* Returns the number of groups where uuid = &#63; and companyId = &#63;.
@@ -358,7 +362,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param companyId the company ID
 	* @return the number of matching groups
 	*/
-	public int countByUuid_C(String uuid, long companyId);
+	public int countByUuid_C(java.lang.String uuid, long companyId);
 
 	/**
 	* Returns all the groups where companyId = &#63;.
@@ -829,7 +833,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the matching group
 	* @throws NoSuchGroupException if a matching group could not be found
 	*/
-	public Group findByC_GK(long companyId, String groupKey)
+	public Group findByC_GK(long companyId, java.lang.String groupKey)
 		throws NoSuchGroupException;
 
 	/**
@@ -839,7 +843,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param groupKey the group key
 	* @return the matching group, or <code>null</code> if a matching group could not be found
 	*/
-	public Group fetchByC_GK(long companyId, String groupKey);
+	public Group fetchByC_GK(long companyId, java.lang.String groupKey);
 
 	/**
 	* Returns the group where companyId = &#63; and groupKey = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
@@ -849,7 +853,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching group, or <code>null</code> if a matching group could not be found
 	*/
-	public Group fetchByC_GK(long companyId, String groupKey,
+	public Group fetchByC_GK(long companyId, java.lang.String groupKey,
 		boolean retrieveFromCache);
 
 	/**
@@ -859,7 +863,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param groupKey the group key
 	* @return the group that was removed
 	*/
-	public Group removeByC_GK(long companyId, String groupKey)
+	public Group removeByC_GK(long companyId, java.lang.String groupKey)
 		throws NoSuchGroupException;
 
 	/**
@@ -869,7 +873,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param groupKey the group key
 	* @return the number of matching groups
 	*/
-	public int countByC_GK(long companyId, String groupKey);
+	public int countByC_GK(long companyId, java.lang.String groupKey);
 
 	/**
 	* Returns the group where companyId = &#63; and friendlyURL = &#63; or throws a {@link NoSuchGroupException} if it could not be found.
@@ -879,7 +883,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the matching group
 	* @throws NoSuchGroupException if a matching group could not be found
 	*/
-	public Group findByC_F(long companyId, String friendlyURL)
+	public Group findByC_F(long companyId, java.lang.String friendlyURL)
 		throws NoSuchGroupException;
 
 	/**
@@ -889,7 +893,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param friendlyURL the friendly url
 	* @return the matching group, or <code>null</code> if a matching group could not be found
 	*/
-	public Group fetchByC_F(long companyId, String friendlyURL);
+	public Group fetchByC_F(long companyId, java.lang.String friendlyURL);
 
 	/**
 	* Returns the group where companyId = &#63; and friendlyURL = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
@@ -899,7 +903,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching group, or <code>null</code> if a matching group could not be found
 	*/
-	public Group fetchByC_F(long companyId, String friendlyURL,
+	public Group fetchByC_F(long companyId, java.lang.String friendlyURL,
 		boolean retrieveFromCache);
 
 	/**
@@ -909,7 +913,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param friendlyURL the friendly url
 	* @return the group that was removed
 	*/
-	public Group removeByC_F(long companyId, String friendlyURL)
+	public Group removeByC_F(long companyId, java.lang.String friendlyURL)
 		throws NoSuchGroupException;
 
 	/**
@@ -919,7 +923,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param friendlyURL the friendly url
 	* @return the number of matching groups
 	*/
-	public int countByC_F(long companyId, String friendlyURL);
+	public int countByC_F(long companyId, java.lang.String friendlyURL);
 
 	/**
 	* Returns all the groups where companyId = &#63; and site = &#63;.
@@ -2019,8 +2023,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the matching group
 	* @throws NoSuchGroupException if a matching group could not be found
 	*/
-	public Group findByC_L_GK(long companyId, long liveGroupId, String groupKey)
-		throws NoSuchGroupException;
+	public Group findByC_L_GK(long companyId, long liveGroupId,
+		java.lang.String groupKey) throws NoSuchGroupException;
 
 	/**
 	* Returns the group where companyId = &#63; and liveGroupId = &#63; and groupKey = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
@@ -2030,7 +2034,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param groupKey the group key
 	* @return the matching group, or <code>null</code> if a matching group could not be found
 	*/
-	public Group fetchByC_L_GK(long companyId, long liveGroupId, String groupKey);
+	public Group fetchByC_L_GK(long companyId, long liveGroupId,
+		java.lang.String groupKey);
 
 	/**
 	* Returns the group where companyId = &#63; and liveGroupId = &#63; and groupKey = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
@@ -2042,7 +2047,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the matching group, or <code>null</code> if a matching group could not be found
 	*/
 	public Group fetchByC_L_GK(long companyId, long liveGroupId,
-		String groupKey, boolean retrieveFromCache);
+		java.lang.String groupKey, boolean retrieveFromCache);
 
 	/**
 	* Removes the group where companyId = &#63; and liveGroupId = &#63; and groupKey = &#63; from the database.
@@ -2053,7 +2058,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the group that was removed
 	*/
 	public Group removeByC_L_GK(long companyId, long liveGroupId,
-		String groupKey) throws NoSuchGroupException;
+		java.lang.String groupKey) throws NoSuchGroupException;
 
 	/**
 	* Returns the number of groups where companyId = &#63; and liveGroupId = &#63; and groupKey = &#63;.
@@ -2063,7 +2068,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param groupKey the group key
 	* @return the number of matching groups
 	*/
-	public int countByC_L_GK(long companyId, long liveGroupId, String groupKey);
+	public int countByC_L_GK(long companyId, long liveGroupId,
+		java.lang.String groupKey);
 
 	/**
 	* Returns all the groups where companyId = &#63; and treePath LIKE &#63; and site = &#63;.
@@ -2073,8 +2079,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param site the site
 	* @return the matching groups
 	*/
-	public java.util.List<Group> findByC_T_S(long companyId, String treePath,
-		boolean site);
+	public java.util.List<Group> findByC_T_S(long companyId,
+		java.lang.String treePath, boolean site);
 
 	/**
 	* Returns a range of all the groups where companyId = &#63; and treePath LIKE &#63; and site = &#63;.
@@ -2090,8 +2096,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param end the upper bound of the range of groups (not inclusive)
 	* @return the range of matching groups
 	*/
-	public java.util.List<Group> findByC_T_S(long companyId, String treePath,
-		boolean site, int start, int end);
+	public java.util.List<Group> findByC_T_S(long companyId,
+		java.lang.String treePath, boolean site, int start, int end);
 
 	/**
 	* Returns an ordered range of all the groups where companyId = &#63; and treePath LIKE &#63; and site = &#63;.
@@ -2108,8 +2114,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching groups
 	*/
-	public java.util.List<Group> findByC_T_S(long companyId, String treePath,
-		boolean site, int start, int end,
+	public java.util.List<Group> findByC_T_S(long companyId,
+		java.lang.String treePath, boolean site, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator);
 
 	/**
@@ -2128,8 +2134,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching groups
 	*/
-	public java.util.List<Group> findByC_T_S(long companyId, String treePath,
-		boolean site, int start, int end,
+	public java.util.List<Group> findByC_T_S(long companyId,
+		java.lang.String treePath, boolean site, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator,
 		boolean retrieveFromCache);
 
@@ -2143,7 +2149,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the first matching group
 	* @throws NoSuchGroupException if a matching group could not be found
 	*/
-	public Group findByC_T_S_First(long companyId, String treePath,
+	public Group findByC_T_S_First(long companyId, java.lang.String treePath,
 		boolean site,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator)
 		throws NoSuchGroupException;
@@ -2157,7 +2163,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching group, or <code>null</code> if a matching group could not be found
 	*/
-	public Group fetchByC_T_S_First(long companyId, String treePath,
+	public Group fetchByC_T_S_First(long companyId, java.lang.String treePath,
 		boolean site,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator);
 
@@ -2171,7 +2177,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the last matching group
 	* @throws NoSuchGroupException if a matching group could not be found
 	*/
-	public Group findByC_T_S_Last(long companyId, String treePath,
+	public Group findByC_T_S_Last(long companyId, java.lang.String treePath,
 		boolean site,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator)
 		throws NoSuchGroupException;
@@ -2185,7 +2191,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching group, or <code>null</code> if a matching group could not be found
 	*/
-	public Group fetchByC_T_S_Last(long companyId, String treePath,
+	public Group fetchByC_T_S_Last(long companyId, java.lang.String treePath,
 		boolean site,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator);
 
@@ -2201,7 +2207,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @throws NoSuchGroupException if a group with the primary key could not be found
 	*/
 	public Group[] findByC_T_S_PrevAndNext(long groupId, long companyId,
-		String treePath, boolean site,
+		java.lang.String treePath, boolean site,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> orderByComparator)
 		throws NoSuchGroupException;
 
@@ -2212,7 +2218,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param treePath the tree path
 	* @param site the site
 	*/
-	public void removeByC_T_S(long companyId, String treePath, boolean site);
+	public void removeByC_T_S(long companyId, java.lang.String treePath,
+		boolean site);
 
 	/**
 	* Returns the number of groups where companyId = &#63; and treePath LIKE &#63; and site = &#63;.
@@ -2222,7 +2229,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @param site the site
 	* @return the number of matching groups
 	*/
-	public int countByC_T_S(long companyId, String treePath, boolean site);
+	public int countByC_T_S(long companyId, java.lang.String treePath,
+		boolean site);
 
 	/**
 	* Returns all the groups where groupId &gt; &#63; and companyId = &#63; and classNameId = &#63; and parentGroupId = &#63;.
@@ -2390,7 +2398,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @throws NoSuchGroupException if a matching group could not be found
 	*/
 	public Group findByC_C_L_GK(long companyId, long classNameId,
-		long liveGroupId, String groupKey) throws NoSuchGroupException;
+		long liveGroupId, java.lang.String groupKey)
+		throws NoSuchGroupException;
 
 	/**
 	* Returns the group where companyId = &#63; and classNameId = &#63; and liveGroupId = &#63; and groupKey = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
@@ -2402,7 +2411,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the matching group, or <code>null</code> if a matching group could not be found
 	*/
 	public Group fetchByC_C_L_GK(long companyId, long classNameId,
-		long liveGroupId, String groupKey);
+		long liveGroupId, java.lang.String groupKey);
 
 	/**
 	* Returns the group where companyId = &#63; and classNameId = &#63; and liveGroupId = &#63; and groupKey = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
@@ -2415,7 +2424,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the matching group, or <code>null</code> if a matching group could not be found
 	*/
 	public Group fetchByC_C_L_GK(long companyId, long classNameId,
-		long liveGroupId, String groupKey, boolean retrieveFromCache);
+		long liveGroupId, java.lang.String groupKey, boolean retrieveFromCache);
 
 	/**
 	* Removes the group where companyId = &#63; and classNameId = &#63; and liveGroupId = &#63; and groupKey = &#63; from the database.
@@ -2427,7 +2436,8 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the group that was removed
 	*/
 	public Group removeByC_C_L_GK(long companyId, long classNameId,
-		long liveGroupId, String groupKey) throws NoSuchGroupException;
+		long liveGroupId, java.lang.String groupKey)
+		throws NoSuchGroupException;
 
 	/**
 	* Returns the number of groups where companyId = &#63; and classNameId = &#63; and liveGroupId = &#63; and groupKey = &#63;.
@@ -2439,7 +2449,7 @@ public interface GroupPersistence extends BasePersistence<Group> {
 	* @return the number of matching groups
 	*/
 	public int countByC_C_L_GK(long companyId, long classNameId,
-		long liveGroupId, String groupKey);
+		long liveGroupId, java.lang.String groupKey);
 
 	/**
 	* Returns all the groups where companyId = &#63; and parentGroupId = &#63; and site = &#63; and inheritContent = &#63;.
@@ -3395,5 +3405,5 @@ public interface GroupPersistence extends BasePersistence<Group> {
 		java.util.List<com.liferay.portal.kernel.model.User> users);
 
 	@Override
-	public java.util.Set<String> getBadColumnNames();
+	public java.util.Set<java.lang.String> getBadColumnNames();
 }

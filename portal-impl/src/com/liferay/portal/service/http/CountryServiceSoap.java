@@ -65,8 +65,9 @@ import java.rmi.RemoteException;
 @ProviderType
 public class CountryServiceSoap {
 	public static com.liferay.portal.kernel.model.CountrySoap addCountry(
-		String name, String a2, String a3, String number, String idd,
-		boolean active) throws RemoteException {
+		java.lang.String name, java.lang.String a2, java.lang.String a3,
+		java.lang.String number, java.lang.String idd, boolean active)
+		throws RemoteException {
 		try {
 			com.liferay.portal.kernel.model.Country returnValue = CountryServiceUtil.addCountry(name,
 					a2, a3, number, idd, active);
@@ -95,7 +96,7 @@ public class CountryServiceSoap {
 	}
 
 	public static com.liferay.portal.kernel.model.CountrySoap fetchCountryByA2(
-		String a2) throws RemoteException {
+		java.lang.String a2) throws RemoteException {
 		try {
 			com.liferay.portal.kernel.model.Country returnValue = CountryServiceUtil.fetchCountryByA2(a2);
 
@@ -109,7 +110,7 @@ public class CountryServiceSoap {
 	}
 
 	public static com.liferay.portal.kernel.model.CountrySoap fetchCountryByA3(
-		String a3) throws RemoteException {
+		java.lang.String a3) throws RemoteException {
 		try {
 			com.liferay.portal.kernel.model.Country returnValue = CountryServiceUtil.fetchCountryByA3(a3);
 
@@ -165,7 +166,7 @@ public class CountryServiceSoap {
 	}
 
 	public static com.liferay.portal.kernel.model.CountrySoap getCountryByA2(
-		String a2) throws RemoteException {
+		java.lang.String a2) throws RemoteException {
 		try {
 			com.liferay.portal.kernel.model.Country returnValue = CountryServiceUtil.getCountryByA2(a2);
 
@@ -179,7 +180,7 @@ public class CountryServiceSoap {
 	}
 
 	public static com.liferay.portal.kernel.model.CountrySoap getCountryByA3(
-		String a3) throws RemoteException {
+		java.lang.String a3) throws RemoteException {
 		try {
 			com.liferay.portal.kernel.model.Country returnValue = CountryServiceUtil.getCountryByA3(a3);
 
@@ -193,7 +194,7 @@ public class CountryServiceSoap {
 	}
 
 	public static com.liferay.portal.kernel.model.CountrySoap getCountryByName(
-		String name) throws RemoteException {
+		java.lang.String name) throws RemoteException {
 		try {
 			com.liferay.portal.kernel.model.Country returnValue = CountryServiceUtil.getCountryByName(name);
 

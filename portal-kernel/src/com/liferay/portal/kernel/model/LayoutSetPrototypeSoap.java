@@ -45,7 +45,7 @@ public class LayoutSetPrototypeSoap implements Serializable {
 		soapModel.setName(model.getName());
 		soapModel.setDescription(model.getDescription());
 		soapModel.setSettings(model.getSettings());
-		soapModel.setActive(model.isActive());
+		soapModel.setActive(model.getActive());
 
 		return soapModel;
 	}

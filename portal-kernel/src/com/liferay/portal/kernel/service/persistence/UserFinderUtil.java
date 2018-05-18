@@ -25,41 +25,47 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  */
 @ProviderType
 public class UserFinderUtil {
-	public static java.util.Map<Long, Integer> countByGroups(long companyId,
-		int status, long[] groupIds) {
+	public static java.util.Map<java.lang.Long, java.lang.Integer> countByGroups(
+		long companyId, int status, long[] groupIds) {
 		return getFinder().countByGroups(companyId, status, groupIds);
 	}
 
-	public static int countByKeywords(long companyId, String keywords,
-		int status, java.util.LinkedHashMap<String, Object> params) {
+	public static int countByKeywords(long companyId,
+		java.lang.String keywords, int status,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params) {
 		return getFinder().countByKeywords(companyId, keywords, status, params);
 	}
 
 	public static int countBySocialUsers(long companyId, long userId,
-		int socialRelationType, String socialRelationTypeComparator, int status) {
+		int socialRelationType, java.lang.String socialRelationTypeComparator,
+		int status) {
 		return getFinder()
 				   .countBySocialUsers(companyId, userId, socialRelationType,
 			socialRelationTypeComparator, status);
 	}
 
 	public static int countByUser(long userId,
-		java.util.LinkedHashMap<String, Object> params) {
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params) {
 		return getFinder().countByUser(userId, params);
 	}
 
 	public static int countByC_FN_MN_LN_SN_EA_S(long companyId,
-		String firstName, String middleName, String lastName,
-		String screenName, String emailAddress, int status,
-		java.util.LinkedHashMap<String, Object> params, boolean andOperator) {
+		java.lang.String firstName, java.lang.String middleName,
+		java.lang.String lastName, java.lang.String screenName,
+		java.lang.String emailAddress, int status,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andOperator) {
 		return getFinder()
 				   .countByC_FN_MN_LN_SN_EA_S(companyId, firstName, middleName,
 			lastName, screenName, emailAddress, status, params, andOperator);
 	}
 
 	public static int countByC_FN_MN_LN_SN_EA_S(long companyId,
-		String[] firstNames, String[] middleNames, String[] lastNames,
-		String[] screenNames, String[] emailAddresses, int status,
-		java.util.LinkedHashMap<String, Object> params, boolean andOperator) {
+		java.lang.String[] firstNames, java.lang.String[] middleNames,
+		java.lang.String[] lastNames, java.lang.String[] screenNames,
+		java.lang.String[] emailAddresses, int status,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andOperator) {
 		return getFinder()
 				   .countByC_FN_MN_LN_SN_EA_S(companyId, firstNames,
 			middleNames, lastNames, screenNames, emailAddresses, status,
@@ -67,8 +73,9 @@ public class UserFinderUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.User> findByKeywords(
-		long companyId, String keywords, int status,
-		java.util.LinkedHashMap<String, Object> params, int start, int end,
+		long companyId, java.lang.String keywords, int status,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.User> obc) {
 		return getFinder()
 				   .findByKeywords(companyId, keywords, status, params, start,
@@ -76,7 +83,7 @@ public class UserFinderUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.User> findByNoAnnouncementsDeliveries(
-		String type) {
+		java.lang.String type) {
 		return getFinder().findByNoAnnouncementsDeliveries(type);
 	}
 
@@ -90,7 +97,8 @@ public class UserFinderUtil {
 
 	public static java.util.List<com.liferay.portal.kernel.model.User> findBySocialUsers(
 		long companyId, long userId, int socialRelationType,
-		String socialRelationTypeComparator, int status, int start, int end,
+		java.lang.String socialRelationTypeComparator, int status, int start,
+		int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.User> obc) {
 		return getFinder()
 				   .findBySocialUsers(companyId, userId, socialRelationType,
@@ -98,10 +106,11 @@ public class UserFinderUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.User> findByC_FN_MN_LN_SN_EA_S(
-		long companyId, String firstName, String middleName, String lastName,
-		String screenName, String emailAddress, int status,
-		java.util.LinkedHashMap<String, Object> params, boolean andOperator,
-		int start, int end,
+		long companyId, java.lang.String firstName,
+		java.lang.String middleName, java.lang.String lastName,
+		java.lang.String screenName, java.lang.String emailAddress, int status,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andOperator, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.User> obc) {
 		return getFinder()
 				   .findByC_FN_MN_LN_SN_EA_S(companyId, firstName, middleName,
@@ -110,9 +119,11 @@ public class UserFinderUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.User> findByC_FN_MN_LN_SN_EA_S(
-		long companyId, String[] firstNames, String[] middleNames,
-		String[] lastNames, String[] screenNames, String[] emailAddresses,
-		int status, java.util.LinkedHashMap<String, Object> params,
+		long companyId, java.lang.String[] firstNames,
+		java.lang.String[] middleNames, java.lang.String[] lastNames,
+		java.lang.String[] screenNames, java.lang.String[] emailAddresses,
+		int status,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
 		boolean andOperator, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.User> obc) {
 		return getFinder()

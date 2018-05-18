@@ -41,8 +41,8 @@ public class CountryServiceUtil {
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.portal.service.impl.CountryServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static com.liferay.portal.kernel.model.Country addCountry(
-		String name, String a2, String a3, String number, String idd,
-		boolean active)
+		java.lang.String name, java.lang.String a2, java.lang.String a3,
+		java.lang.String number, java.lang.String idd, boolean active)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().addCountry(name, a2, a3, number, idd, active);
 	}
@@ -53,12 +53,12 @@ public class CountryServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Country fetchCountryByA2(
-		String a2) {
+		java.lang.String a2) {
 		return getService().fetchCountryByA2(a2);
 	}
 
 	public static com.liferay.portal.kernel.model.Country fetchCountryByA3(
-		String a3) {
+		java.lang.String a3) {
 		return getService().fetchCountryByA3(a3);
 	}
 
@@ -78,17 +78,20 @@ public class CountryServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Country getCountryByA2(
-		String a2) throws com.liferay.portal.kernel.exception.PortalException {
+		java.lang.String a2)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getCountryByA2(a2);
 	}
 
 	public static com.liferay.portal.kernel.model.Country getCountryByA3(
-		String a3) throws com.liferay.portal.kernel.exception.PortalException {
+		java.lang.String a3)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getCountryByA3(a3);
 	}
 
 	public static com.liferay.portal.kernel.model.Country getCountryByName(
-		String name) throws com.liferay.portal.kernel.exception.PortalException {
+		java.lang.String name)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getCountryByName(name);
 	}
 
@@ -97,7 +100,7 @@ public class CountryServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 

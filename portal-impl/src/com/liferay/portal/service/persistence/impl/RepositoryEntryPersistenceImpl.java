@@ -37,7 +37,6 @@ import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.RepositoryEntryPersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
@@ -48,7 +47,6 @@ import com.liferay.portal.model.impl.RepositoryEntryModelImpl;
 import java.io.Serializable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 
 import java.util.Collections;
 import java.util.Date;
@@ -2515,6 +2513,8 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 
 	@Override
 	protected RepositoryEntry removeImpl(RepositoryEntry repositoryEntry) {
+		repositoryEntry = toUnwrappedModel(repositoryEntry);
+
 		Session session = null;
 
 		try {
@@ -2545,23 +2545,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 
 	@Override
 	public RepositoryEntry updateImpl(RepositoryEntry repositoryEntry) {
+		repositoryEntry = toUnwrappedModel(repositoryEntry);
+
 		boolean isNew = repositoryEntry.isNew();
-
-		if (!(repositoryEntry instanceof RepositoryEntryModelImpl)) {
-			InvocationHandler invocationHandler = null;
-
-			if (ProxyUtil.isProxyClass(repositoryEntry.getClass())) {
-				invocationHandler = ProxyUtil.getInvocationHandler(repositoryEntry);
-
-				throw new IllegalArgumentException(
-					"Implement ModelWrapper in repositoryEntry proxy " +
-					invocationHandler.getClass());
-			}
-
-			throw new IllegalArgumentException(
-				"Implement ModelWrapper in custom RepositoryEntry implementation " +
-				repositoryEntry.getClass());
-		}
 
 		RepositoryEntryModelImpl repositoryEntryModelImpl = (RepositoryEntryModelImpl)repositoryEntry;
 
@@ -2715,6 +2701,33 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 		repositoryEntry.resetOriginalValues();
 
 		return repositoryEntry;
+	}
+
+	protected RepositoryEntry toUnwrappedModel(RepositoryEntry repositoryEntry) {
+		if (repositoryEntry instanceof RepositoryEntryImpl) {
+			return repositoryEntry;
+		}
+
+		RepositoryEntryImpl repositoryEntryImpl = new RepositoryEntryImpl();
+
+		repositoryEntryImpl.setNew(repositoryEntry.isNew());
+		repositoryEntryImpl.setPrimaryKey(repositoryEntry.getPrimaryKey());
+
+		repositoryEntryImpl.setMvccVersion(repositoryEntry.getMvccVersion());
+		repositoryEntryImpl.setUuid(repositoryEntry.getUuid());
+		repositoryEntryImpl.setRepositoryEntryId(repositoryEntry.getRepositoryEntryId());
+		repositoryEntryImpl.setGroupId(repositoryEntry.getGroupId());
+		repositoryEntryImpl.setCompanyId(repositoryEntry.getCompanyId());
+		repositoryEntryImpl.setUserId(repositoryEntry.getUserId());
+		repositoryEntryImpl.setUserName(repositoryEntry.getUserName());
+		repositoryEntryImpl.setCreateDate(repositoryEntry.getCreateDate());
+		repositoryEntryImpl.setModifiedDate(repositoryEntry.getModifiedDate());
+		repositoryEntryImpl.setRepositoryId(repositoryEntry.getRepositoryId());
+		repositoryEntryImpl.setMappedId(repositoryEntry.getMappedId());
+		repositoryEntryImpl.setManualCheckInRequired(repositoryEntry.isManualCheckInRequired());
+		repositoryEntryImpl.setLastPublishDate(repositoryEntry.getLastPublishDate());
+
+		return repositoryEntryImpl;
 	}
 
 	/**

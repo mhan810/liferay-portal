@@ -66,8 +66,8 @@ public class CompanyLocalServiceUtil {
 	* @return the company
 	*/
 	public static com.liferay.portal.kernel.model.Company addCompany(
-		String webId, String virtualHostname, String mx, boolean system,
-		int maxUsers, boolean active)
+		java.lang.String webId, java.lang.String virtualHostname,
+		java.lang.String mx, boolean system, int maxUsers, boolean active)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addCompany(webId, virtualHostname, mx, system, maxUsers,
@@ -84,7 +84,7 @@ public class CompanyLocalServiceUtil {
 	* @return the company with the web domain
 	*/
 	public static com.liferay.portal.kernel.model.Company checkCompany(
-		String webId)
+		java.lang.String webId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().checkCompany(webId);
 	}
@@ -101,7 +101,7 @@ public class CompanyLocalServiceUtil {
 	* @return the company with the web domain and mail domain
 	*/
 	public static com.liferay.portal.kernel.model.Company checkCompany(
-		String webId, String mx)
+		java.lang.String webId, java.lang.String mx)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().checkCompany(webId, mx);
 	}
@@ -278,7 +278,7 @@ public class CompanyLocalServiceUtil {
 	company with the virtual host could not be found
 	*/
 	public static com.liferay.portal.kernel.model.Company fetchCompanyByVirtualHost(
-		String virtualHostname) {
+		java.lang.String virtualHostname) {
 		return getService().fetchCompanyByVirtualHost(virtualHostname);
 	}
 
@@ -391,7 +391,8 @@ public class CompanyLocalServiceUtil {
 	* @return the company with the mail domain
 	*/
 	public static com.liferay.portal.kernel.model.Company getCompanyByMx(
-		String mx) throws com.liferay.portal.kernel.exception.PortalException {
+		java.lang.String mx)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getCompanyByMx(mx);
 	}
 
@@ -402,7 +403,7 @@ public class CompanyLocalServiceUtil {
 	* @return the company with the virtual host name
 	*/
 	public static com.liferay.portal.kernel.model.Company getCompanyByVirtualHost(
-		String virtualHostname)
+		java.lang.String virtualHostname)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getCompanyByVirtualHost(virtualHostname);
 	}
@@ -414,7 +415,7 @@ public class CompanyLocalServiceUtil {
 	* @return the company with the web domain
 	*/
 	public static com.liferay.portal.kernel.model.Company getCompanyByWebId(
-		String webId)
+		java.lang.String webId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getCompanyByWebId(webId);
 	}
@@ -429,7 +430,7 @@ public class CompanyLocalServiceUtil {
 	* @throws Exception if a user with the primary key could not be found
 	*/
 	public static long getCompanyIdByUserId(long userId)
-		throws Exception {
+		throws java.lang.Exception {
 		return getService().getCompanyIdByUserId(userId);
 	}
 
@@ -442,7 +443,7 @@ public class CompanyLocalServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -462,7 +463,7 @@ public class CompanyLocalServiceUtil {
 	* @param companyId the primary key of the company
 	* @param keys the company's preferences keys to be remove
 	*/
-	public static void removePreferences(long companyId, String[] keys) {
+	public static void removePreferences(long companyId, java.lang.String[] keys) {
 		getService().removePreferences(companyId, keys);
 	}
 
@@ -484,7 +485,7 @@ public class CompanyLocalServiceUtil {
 	* @return the matching assets in the company
 	*/
 	public static com.liferay.portal.kernel.search.Hits search(long companyId,
-		long userId, String keywords, int start, int end) {
+		long userId, java.lang.String keywords, int start, int end) {
 		return getService().search(companyId, userId, keywords, start, end);
 	}
 
@@ -507,8 +508,8 @@ public class CompanyLocalServiceUtil {
 	* @return the matching assets in the portlet within the company
 	*/
 	public static com.liferay.portal.kernel.search.Hits search(long companyId,
-		long userId, String portletId, long groupId, String type,
-		String keywords, int start, int end) {
+		long userId, java.lang.String portletId, long groupId,
+		java.lang.String type, java.lang.String keywords, int start, int end) {
 		return getService()
 				   .search(companyId, userId, portletId, groupId, type,
 			keywords, start, end);
@@ -537,8 +538,8 @@ public class CompanyLocalServiceUtil {
 	* @return the company with the primary key
 	*/
 	public static com.liferay.portal.kernel.model.Company updateCompany(
-		long companyId, String virtualHostname, String mx, int maxUsers,
-		boolean active)
+		long companyId, java.lang.String virtualHostname, java.lang.String mx,
+		int maxUsers, boolean active)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateCompany(companyId, virtualHostname, mx, maxUsers,
@@ -572,10 +573,12 @@ public class CompanyLocalServiceUtil {
 	* @return the company with the primary key
 	*/
 	public static com.liferay.portal.kernel.model.Company updateCompany(
-		long companyId, String virtualHostname, String mx, String homeURL,
-		boolean logo, byte[] logoBytes, String name, String legalName,
-		String legalId, String legalType, String sicCode, String tickerSymbol,
-		String industry, String type, String size)
+		long companyId, java.lang.String virtualHostname, java.lang.String mx,
+		java.lang.String homeURL, boolean logo, byte[] logoBytes,
+		java.lang.String name, java.lang.String legalName,
+		java.lang.String legalId, java.lang.String legalType,
+		java.lang.String sicCode, java.lang.String tickerSymbol,
+		java.lang.String industry, java.lang.String type, java.lang.String size)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateCompany(companyId, virtualHostname, mx, homeURL,
@@ -614,10 +617,13 @@ public class CompanyLocalServiceUtil {
 	*/
 	@Deprecated
 	public static com.liferay.portal.kernel.model.Company updateCompany(
-		long companyId, String virtualHostname, String mx, String homeURL,
-		String name, String legalName, String legalId, String legalType,
-		String sicCode, String tickerSymbol, String industry, String type,
-		String size) throws com.liferay.portal.kernel.exception.PortalException {
+		long companyId, java.lang.String virtualHostname, java.lang.String mx,
+		java.lang.String homeURL, java.lang.String name,
+		java.lang.String legalName, java.lang.String legalId,
+		java.lang.String legalType, java.lang.String sicCode,
+		java.lang.String tickerSymbol, java.lang.String industry,
+		java.lang.String type, java.lang.String size)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateCompany(companyId, virtualHostname, mx, homeURL,
 			name, legalName, legalId, legalType, sicCode, tickerSymbol,
@@ -631,8 +637,8 @@ public class CompanyLocalServiceUtil {
 	* @param languageId the ID of the company's default user's language
 	* @param timeZoneId the ID of the company's default user's time zone
 	*/
-	public static void updateDisplay(long companyId, String languageId,
-		String timeZoneId)
+	public static void updateDisplay(long companyId,
+		java.lang.String languageId, java.lang.String timeZoneId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().updateDisplay(companyId, languageId, timeZoneId);
 	}
@@ -712,9 +718,10 @@ public class CompanyLocalServiceUtil {
 	* @param siteLogo whether to allow site administrators to use their own
 	logo instead of the enterprise logo
 	*/
-	public static void updateSecurity(long companyId, String authType,
-		boolean autoLogin, boolean sendPassword, boolean strangers,
-		boolean strangersWithMx, boolean strangersVerify, boolean siteLogo) {
+	public static void updateSecurity(long companyId,
+		java.lang.String authType, boolean autoLogin, boolean sendPassword,
+		boolean strangers, boolean strangersWithMx, boolean strangersVerify,
+		boolean siteLogo) {
 		getService()
 			.updateSecurity(companyId, authType, autoLogin, sendPassword,
 			strangers, strangersWithMx, strangersVerify, siteLogo);

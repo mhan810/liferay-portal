@@ -134,8 +134,8 @@ public class ClusterGroupPersistenceTest {
 			newClusterGroup.getName());
 		Assert.assertEquals(existingClusterGroup.getClusterNodeIds(),
 			newClusterGroup.getClusterNodeIds());
-		Assert.assertEquals(existingClusterGroup.isWholeCluster(),
-			newClusterGroup.isWholeCluster());
+		Assert.assertEquals(existingClusterGroup.getWholeCluster(),
+			newClusterGroup.getWholeCluster());
 	}
 
 	@Test

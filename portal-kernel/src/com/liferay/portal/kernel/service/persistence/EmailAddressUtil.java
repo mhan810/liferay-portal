@@ -114,7 +114,7 @@ public class EmailAddressUtil {
 	* @param uuid the uuid
 	* @return the matching email addresses
 	*/
-	public static List<EmailAddress> findByUuid(String uuid) {
+	public static List<EmailAddress> findByUuid(java.lang.String uuid) {
 		return getPersistence().findByUuid(uuid);
 	}
 
@@ -130,7 +130,8 @@ public class EmailAddressUtil {
 	* @param end the upper bound of the range of email addresses (not inclusive)
 	* @return the range of matching email addresses
 	*/
-	public static List<EmailAddress> findByUuid(String uuid, int start, int end) {
+	public static List<EmailAddress> findByUuid(java.lang.String uuid,
+		int start, int end) {
 		return getPersistence().findByUuid(uuid, start, end);
 	}
 
@@ -147,8 +148,8 @@ public class EmailAddressUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching email addresses
 	*/
-	public static List<EmailAddress> findByUuid(String uuid, int start,
-		int end, OrderByComparator<EmailAddress> orderByComparator) {
+	public static List<EmailAddress> findByUuid(java.lang.String uuid,
+		int start, int end, OrderByComparator<EmailAddress> orderByComparator) {
 		return getPersistence().findByUuid(uuid, start, end, orderByComparator);
 	}
 
@@ -166,8 +167,8 @@ public class EmailAddressUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching email addresses
 	*/
-	public static List<EmailAddress> findByUuid(String uuid, int start,
-		int end, OrderByComparator<EmailAddress> orderByComparator,
+	public static List<EmailAddress> findByUuid(java.lang.String uuid,
+		int start, int end, OrderByComparator<EmailAddress> orderByComparator,
 		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByUuid(uuid, start, end, orderByComparator,
@@ -182,7 +183,7 @@ public class EmailAddressUtil {
 	* @return the first matching email address
 	* @throws NoSuchEmailAddressException if a matching email address could not be found
 	*/
-	public static EmailAddress findByUuid_First(String uuid,
+	public static EmailAddress findByUuid_First(java.lang.String uuid,
 		OrderByComparator<EmailAddress> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchEmailAddressException {
 		return getPersistence().findByUuid_First(uuid, orderByComparator);
@@ -195,7 +196,7 @@ public class EmailAddressUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching email address, or <code>null</code> if a matching email address could not be found
 	*/
-	public static EmailAddress fetchByUuid_First(String uuid,
+	public static EmailAddress fetchByUuid_First(java.lang.String uuid,
 		OrderByComparator<EmailAddress> orderByComparator) {
 		return getPersistence().fetchByUuid_First(uuid, orderByComparator);
 	}
@@ -208,7 +209,7 @@ public class EmailAddressUtil {
 	* @return the last matching email address
 	* @throws NoSuchEmailAddressException if a matching email address could not be found
 	*/
-	public static EmailAddress findByUuid_Last(String uuid,
+	public static EmailAddress findByUuid_Last(java.lang.String uuid,
 		OrderByComparator<EmailAddress> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchEmailAddressException {
 		return getPersistence().findByUuid_Last(uuid, orderByComparator);
@@ -221,7 +222,7 @@ public class EmailAddressUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching email address, or <code>null</code> if a matching email address could not be found
 	*/
-	public static EmailAddress fetchByUuid_Last(String uuid,
+	public static EmailAddress fetchByUuid_Last(java.lang.String uuid,
 		OrderByComparator<EmailAddress> orderByComparator) {
 		return getPersistence().fetchByUuid_Last(uuid, orderByComparator);
 	}
@@ -236,7 +237,7 @@ public class EmailAddressUtil {
 	* @throws NoSuchEmailAddressException if a email address with the primary key could not be found
 	*/
 	public static EmailAddress[] findByUuid_PrevAndNext(long emailAddressId,
-		String uuid, OrderByComparator<EmailAddress> orderByComparator)
+		java.lang.String uuid, OrderByComparator<EmailAddress> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchEmailAddressException {
 		return getPersistence()
 				   .findByUuid_PrevAndNext(emailAddressId, uuid,
@@ -248,7 +249,7 @@ public class EmailAddressUtil {
 	*
 	* @param uuid the uuid
 	*/
-	public static void removeByUuid(String uuid) {
+	public static void removeByUuid(java.lang.String uuid) {
 		getPersistence().removeByUuid(uuid);
 	}
 
@@ -258,7 +259,7 @@ public class EmailAddressUtil {
 	* @param uuid the uuid
 	* @return the number of matching email addresses
 	*/
-	public static int countByUuid(String uuid) {
+	public static int countByUuid(java.lang.String uuid) {
 		return getPersistence().countByUuid(uuid);
 	}
 
@@ -269,7 +270,8 @@ public class EmailAddressUtil {
 	* @param companyId the company ID
 	* @return the matching email addresses
 	*/
-	public static List<EmailAddress> findByUuid_C(String uuid, long companyId) {
+	public static List<EmailAddress> findByUuid_C(java.lang.String uuid,
+		long companyId) {
 		return getPersistence().findByUuid_C(uuid, companyId);
 	}
 
@@ -286,8 +288,8 @@ public class EmailAddressUtil {
 	* @param end the upper bound of the range of email addresses (not inclusive)
 	* @return the range of matching email addresses
 	*/
-	public static List<EmailAddress> findByUuid_C(String uuid, long companyId,
-		int start, int end) {
+	public static List<EmailAddress> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end) {
 		return getPersistence().findByUuid_C(uuid, companyId, start, end);
 	}
 
@@ -305,8 +307,9 @@ public class EmailAddressUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching email addresses
 	*/
-	public static List<EmailAddress> findByUuid_C(String uuid, long companyId,
-		int start, int end, OrderByComparator<EmailAddress> orderByComparator) {
+	public static List<EmailAddress> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end,
+		OrderByComparator<EmailAddress> orderByComparator) {
 		return getPersistence()
 				   .findByUuid_C(uuid, companyId, start, end, orderByComparator);
 	}
@@ -326,8 +329,9 @@ public class EmailAddressUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching email addresses
 	*/
-	public static List<EmailAddress> findByUuid_C(String uuid, long companyId,
-		int start, int end, OrderByComparator<EmailAddress> orderByComparator,
+	public static List<EmailAddress> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end,
+		OrderByComparator<EmailAddress> orderByComparator,
 		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByUuid_C(uuid, companyId, start, end,
@@ -343,8 +347,8 @@ public class EmailAddressUtil {
 	* @return the first matching email address
 	* @throws NoSuchEmailAddressException if a matching email address could not be found
 	*/
-	public static EmailAddress findByUuid_C_First(String uuid, long companyId,
-		OrderByComparator<EmailAddress> orderByComparator)
+	public static EmailAddress findByUuid_C_First(java.lang.String uuid,
+		long companyId, OrderByComparator<EmailAddress> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchEmailAddressException {
 		return getPersistence()
 				   .findByUuid_C_First(uuid, companyId, orderByComparator);
@@ -358,8 +362,8 @@ public class EmailAddressUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching email address, or <code>null</code> if a matching email address could not be found
 	*/
-	public static EmailAddress fetchByUuid_C_First(String uuid, long companyId,
-		OrderByComparator<EmailAddress> orderByComparator) {
+	public static EmailAddress fetchByUuid_C_First(java.lang.String uuid,
+		long companyId, OrderByComparator<EmailAddress> orderByComparator) {
 		return getPersistence()
 				   .fetchByUuid_C_First(uuid, companyId, orderByComparator);
 	}
@@ -373,8 +377,8 @@ public class EmailAddressUtil {
 	* @return the last matching email address
 	* @throws NoSuchEmailAddressException if a matching email address could not be found
 	*/
-	public static EmailAddress findByUuid_C_Last(String uuid, long companyId,
-		OrderByComparator<EmailAddress> orderByComparator)
+	public static EmailAddress findByUuid_C_Last(java.lang.String uuid,
+		long companyId, OrderByComparator<EmailAddress> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchEmailAddressException {
 		return getPersistence()
 				   .findByUuid_C_Last(uuid, companyId, orderByComparator);
@@ -388,8 +392,8 @@ public class EmailAddressUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching email address, or <code>null</code> if a matching email address could not be found
 	*/
-	public static EmailAddress fetchByUuid_C_Last(String uuid, long companyId,
-		OrderByComparator<EmailAddress> orderByComparator) {
+	public static EmailAddress fetchByUuid_C_Last(java.lang.String uuid,
+		long companyId, OrderByComparator<EmailAddress> orderByComparator) {
 		return getPersistence()
 				   .fetchByUuid_C_Last(uuid, companyId, orderByComparator);
 	}
@@ -405,7 +409,7 @@ public class EmailAddressUtil {
 	* @throws NoSuchEmailAddressException if a email address with the primary key could not be found
 	*/
 	public static EmailAddress[] findByUuid_C_PrevAndNext(long emailAddressId,
-		String uuid, long companyId,
+		java.lang.String uuid, long companyId,
 		OrderByComparator<EmailAddress> orderByComparator)
 		throws com.liferay.portal.kernel.exception.NoSuchEmailAddressException {
 		return getPersistence()
@@ -419,7 +423,7 @@ public class EmailAddressUtil {
 	* @param uuid the uuid
 	* @param companyId the company ID
 	*/
-	public static void removeByUuid_C(String uuid, long companyId) {
+	public static void removeByUuid_C(java.lang.String uuid, long companyId) {
 		getPersistence().removeByUuid_C(uuid, companyId);
 	}
 
@@ -430,7 +434,7 @@ public class EmailAddressUtil {
 	* @param companyId the company ID
 	* @return the number of matching email addresses
 	*/
-	public static int countByUuid_C(String uuid, long companyId) {
+	public static int countByUuid_C(java.lang.String uuid, long companyId) {
 		return getPersistence().countByUuid_C(uuid, companyId);
 	}
 
@@ -1485,7 +1489,7 @@ public class EmailAddressUtil {
 		return getPersistence().countAll();
 	}
 
-	public static java.util.Set<String> getBadColumnNames() {
+	public static java.util.Set<java.lang.String> getBadColumnNames() {
 		return getPersistence().getBadColumnNames();
 	}
 

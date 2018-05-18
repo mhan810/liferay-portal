@@ -160,8 +160,8 @@ public class LayoutBranchPersistenceTest {
 			newLayoutBranch.getName());
 		Assert.assertEquals(existingLayoutBranch.getDescription(),
 			newLayoutBranch.getDescription());
-		Assert.assertEquals(existingLayoutBranch.isMaster(),
-			newLayoutBranch.isMaster());
+		Assert.assertEquals(existingLayoutBranch.getMaster(),
+			newLayoutBranch.getMaster());
 	}
 
 	@Test

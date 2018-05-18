@@ -111,7 +111,7 @@ public class ResourceBlockPermissionWrapper implements ResourceBlockPermission,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new ResourceBlockPermissionWrapper((ResourceBlockPermission)_resourceBlockPermission.clone());
 	}
 
@@ -336,7 +336,7 @@ public class ResourceBlockPermissionWrapper implements ResourceBlockPermission,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _resourceBlockPermission.toString();
 	}
 
@@ -346,7 +346,7 @@ public class ResourceBlockPermissionWrapper implements ResourceBlockPermission,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _resourceBlockPermission.toXmlString();
 	}
 

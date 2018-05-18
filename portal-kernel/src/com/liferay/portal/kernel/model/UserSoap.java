@@ -40,11 +40,11 @@ public class UserSoap implements Serializable {
 		soapModel.setCompanyId(model.getCompanyId());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
-		soapModel.setDefaultUser(model.isDefaultUser());
+		soapModel.setDefaultUser(model.getDefaultUser());
 		soapModel.setContactId(model.getContactId());
 		soapModel.setPassword(model.getPassword());
-		soapModel.setPasswordEncrypted(model.isPasswordEncrypted());
-		soapModel.setPasswordReset(model.isPasswordReset());
+		soapModel.setPasswordEncrypted(model.getPasswordEncrypted());
+		soapModel.setPasswordReset(model.getPasswordReset());
 		soapModel.setPasswordModifiedDate(model.getPasswordModifiedDate());
 		soapModel.setDigest(model.getDigest());
 		soapModel.setReminderQueryQuestion(model.getReminderQueryQuestion());
@@ -71,10 +71,10 @@ public class UserSoap implements Serializable {
 		soapModel.setLastLoginIP(model.getLastLoginIP());
 		soapModel.setLastFailedLoginDate(model.getLastFailedLoginDate());
 		soapModel.setFailedLoginAttempts(model.getFailedLoginAttempts());
-		soapModel.setLockout(model.isLockout());
+		soapModel.setLockout(model.getLockout());
 		soapModel.setLockoutDate(model.getLockoutDate());
-		soapModel.setAgreedToTermsOfUse(model.isAgreedToTermsOfUse());
-		soapModel.setEmailAddressVerified(model.isEmailAddressVerified());
+		soapModel.setAgreedToTermsOfUse(model.getAgreedToTermsOfUse());
+		soapModel.setEmailAddressVerified(model.getEmailAddressVerified());
 		soapModel.setStatus(model.getStatus());
 
 		return soapModel;

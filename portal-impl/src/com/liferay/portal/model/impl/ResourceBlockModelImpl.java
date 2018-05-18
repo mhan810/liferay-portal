@@ -22,7 +22,6 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.ResourceBlock;
 import com.liferay.portal.kernel.model.ResourceBlockModel;
 import com.liferay.portal.kernel.model.ResourceBlockSoap;
@@ -598,7 +597,7 @@ public class ResourceBlockModelImpl extends BaseModelImpl<ResourceBlock>
 
 	private static final ClassLoader _classLoader = ResourceBlock.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			ResourceBlock.class, ModelWrapper.class
+			ResourceBlock.class
 		};
 	private long _mvccVersion;
 	private long _resourceBlockId;

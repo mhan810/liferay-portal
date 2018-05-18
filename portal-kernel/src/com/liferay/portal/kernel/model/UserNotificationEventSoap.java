@@ -42,10 +42,10 @@ public class UserNotificationEventSoap implements Serializable {
 		soapModel.setTimestamp(model.getTimestamp());
 		soapModel.setDeliveryType(model.getDeliveryType());
 		soapModel.setDeliverBy(model.getDeliverBy());
-		soapModel.setDelivered(model.isDelivered());
+		soapModel.setDelivered(model.getDelivered());
 		soapModel.setPayload(model.getPayload());
-		soapModel.setActionRequired(model.isActionRequired());
-		soapModel.setArchived(model.isArchived());
+		soapModel.setActionRequired(model.getActionRequired());
+		soapModel.setArchived(model.getArchived());
 
 		return soapModel;
 	}

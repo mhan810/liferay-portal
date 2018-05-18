@@ -47,13 +47,13 @@ public class TeamLocalServiceUtil {
 	*/
 	@Deprecated
 	public static com.liferay.portal.kernel.model.Team addTeam(long userId,
-		long groupId, String name, String description)
+		long groupId, java.lang.String name, java.lang.String description)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().addTeam(userId, groupId, name, description);
 	}
 
 	public static com.liferay.portal.kernel.model.Team addTeam(long userId,
-		long groupId, String name, String description,
+		long groupId, java.lang.String name, java.lang.String description,
 		ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
@@ -283,7 +283,7 @@ public class TeamLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Team fetchTeam(long groupId,
-		String name) {
+		java.lang.String name) {
 		return getService().fetchTeam(groupId, name);
 	}
 
@@ -295,7 +295,7 @@ public class TeamLocalServiceUtil {
 	* @return the matching team, or <code>null</code> if a matching team could not be found
 	*/
 	public static com.liferay.portal.kernel.model.Team fetchTeamByUuidAndGroupId(
-		String uuid, long groupId) {
+		java.lang.String uuid, long groupId) {
 		return getService().fetchTeamByUuidAndGroupId(uuid, groupId);
 	}
 
@@ -322,7 +322,7 @@ public class TeamLocalServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -345,7 +345,8 @@ public class TeamLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Team getTeam(long groupId,
-		String name) throws com.liferay.portal.kernel.exception.PortalException {
+		java.lang.String name)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getTeam(groupId, name);
 	}
 
@@ -358,7 +359,7 @@ public class TeamLocalServiceUtil {
 	* @throws PortalException if a matching team could not be found
 	*/
 	public static com.liferay.portal.kernel.model.Team getTeamByUuidAndGroupId(
-		String uuid, long groupId)
+		java.lang.String uuid, long groupId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getTeamByUuidAndGroupId(uuid, groupId);
 	}
@@ -387,7 +388,7 @@ public class TeamLocalServiceUtil {
 	* @return the matching teams, or an empty list if no matches were found
 	*/
 	public static java.util.List<com.liferay.portal.kernel.model.Team> getTeamsByUuidAndCompanyId(
-		String uuid, long companyId) {
+		java.lang.String uuid, long companyId) {
 		return getService().getTeamsByUuidAndCompanyId(uuid, companyId);
 	}
 
@@ -402,7 +403,7 @@ public class TeamLocalServiceUtil {
 	* @return the range of matching teams, or an empty list if no matches were found
 	*/
 	public static java.util.List<com.liferay.portal.kernel.model.Team> getTeamsByUuidAndCompanyId(
-		String uuid, long companyId, int start, int end,
+		java.lang.String uuid, long companyId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.Team> orderByComparator) {
 		return getService()
 				   .getTeamsByUuidAndCompanyId(uuid, companyId, start, end,
@@ -506,15 +507,17 @@ public class TeamLocalServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Team> search(
-		long groupId, String name, String description,
-		java.util.LinkedHashMap<String, Object> params, int start, int end,
+		long groupId, java.lang.String name, java.lang.String description,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.Team> obc) {
 		return getService()
 				   .search(groupId, name, description, params, start, end, obc);
 	}
 
-	public static int searchCount(long groupId, String name,
-		String description, java.util.LinkedHashMap<String, Object> params) {
+	public static int searchCount(long groupId, java.lang.String name,
+		java.lang.String description,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params) {
 		return getService().searchCount(groupId, name, description, params);
 	}
 
@@ -527,7 +530,7 @@ public class TeamLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Team updateTeam(long teamId,
-		String name, String description)
+		java.lang.String name, java.lang.String description)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().updateTeam(teamId, name, description);
 	}

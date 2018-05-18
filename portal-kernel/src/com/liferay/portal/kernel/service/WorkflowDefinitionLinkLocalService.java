@@ -60,8 +60,8 @@ public interface WorkflowDefinitionLinkLocalService extends BaseLocalService,
 	 * Never modify or reference this interface directly. Always use {@link WorkflowDefinitionLinkLocalServiceUtil} to access the workflow definition link local service. Add custom service methods to {@link com.liferay.portal.service.impl.WorkflowDefinitionLinkLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
 	public WorkflowDefinitionLink addWorkflowDefinitionLink(long userId,
-		long companyId, long groupId, String className, long classPK,
-		long typePK, String workflowDefinitionName,
+		long companyId, long groupId, java.lang.String className, long classPK,
+		long typePK, java.lang.String workflowDefinitionName,
 		int workflowDefinitionVersion) throws PortalException;
 
 	/**
@@ -80,7 +80,6 @@ public interface WorkflowDefinitionLinkLocalService extends BaseLocalService,
 	* @param workflowDefinitionLinkId the primary key for the new workflow definition link
 	* @return the new workflow definition link
 	*/
-	@Transactional(enabled = false)
 	public WorkflowDefinitionLink createWorkflowDefinitionLink(
 		long workflowDefinitionLinkId);
 
@@ -103,7 +102,7 @@ public interface WorkflowDefinitionLinkLocalService extends BaseLocalService,
 		long workflowDefinitionLinkId) throws PortalException;
 
 	public void deleteWorkflowDefinitionLink(long companyId, long groupId,
-		String className, long classPK, long typePK);
+		java.lang.String className, long classPK, long typePK);
 
 	/**
 	* Deletes the workflow definition link from the database. Also notifies the appropriate model listeners.
@@ -176,7 +175,7 @@ public interface WorkflowDefinitionLinkLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public WorkflowDefinitionLink fetchDefaultWorkflowDefinitionLink(
-		long companyId, String className, long classPK, long typePK);
+		long companyId, java.lang.String className, long classPK, long typePK);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public WorkflowDefinitionLink fetchWorkflowDefinitionLink(
@@ -184,11 +183,11 @@ public interface WorkflowDefinitionLinkLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public WorkflowDefinitionLink fetchWorkflowDefinitionLink(long companyId,
-		long groupId, String className, long classPK, long typePK);
+		long groupId, java.lang.String className, long classPK, long typePK);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public WorkflowDefinitionLink fetchWorkflowDefinitionLink(long companyId,
-		long groupId, String className, long classPK, long typePK,
+		long groupId, java.lang.String className, long classPK, long typePK,
 		boolean strict);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -196,7 +195,7 @@ public interface WorkflowDefinitionLinkLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public WorkflowDefinitionLink getDefaultWorkflowDefinitionLink(
-		long companyId, String className, long classPK, long typePK)
+		long companyId, java.lang.String className, long classPK, long typePK)
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -207,7 +206,7 @@ public interface WorkflowDefinitionLinkLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -227,12 +226,12 @@ public interface WorkflowDefinitionLinkLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public WorkflowDefinitionLink getWorkflowDefinitionLink(long companyId,
-		long groupId, String className, long classPK, long typePK)
+		long groupId, java.lang.String className, long classPK, long typePK)
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public WorkflowDefinitionLink getWorkflowDefinitionLink(long companyId,
-		long groupId, String className, long classPK, long typePK,
+		long groupId, java.lang.String className, long classPK, long typePK,
 		boolean strict) throws PortalException;
 
 	/**
@@ -252,7 +251,7 @@ public interface WorkflowDefinitionLinkLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<WorkflowDefinitionLink> getWorkflowDefinitionLinks(
-		long companyId, String workflowDefinitionName,
+		long companyId, java.lang.String workflowDefinitionName,
 		int workflowDefinitionVersion) throws PortalException;
 
 	/**
@@ -265,34 +264,34 @@ public interface WorkflowDefinitionLinkLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getWorkflowDefinitionLinksCount(long companyId, long groupId,
-		String className);
+		java.lang.String className);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getWorkflowDefinitionLinksCount(long companyId,
-		String workflowDefinitionName, int workflowDefinitionVersion);
+		java.lang.String workflowDefinitionName, int workflowDefinitionVersion);
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasWorkflowDefinitionLink(long companyId, long groupId,
-		String className);
+		java.lang.String className);
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasWorkflowDefinitionLink(long companyId, long groupId,
-		String className, long classPK);
+		java.lang.String className, long classPK);
 
 	@Skip
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasWorkflowDefinitionLink(long companyId, long groupId,
-		String className, long classPK, long typePK);
+		java.lang.String className, long classPK, long typePK);
 
 	public void updateWorkflowDefinitionLink(long userId, long companyId,
-		long groupId, String className, long classPK, long typePK,
-		String workflowDefinition) throws PortalException;
+		long groupId, java.lang.String className, long classPK, long typePK,
+		java.lang.String workflowDefinition) throws PortalException;
 
 	public WorkflowDefinitionLink updateWorkflowDefinitionLink(long userId,
-		long companyId, long groupId, String className, long classPK,
-		long typePK, String workflowDefinitionName,
+		long companyId, long groupId, java.lang.String className, long classPK,
+		long typePK, java.lang.String workflowDefinitionName,
 		int workflowDefinitionVersion) throws PortalException;
 
 	/**
@@ -306,7 +305,7 @@ public interface WorkflowDefinitionLinkLocalService extends BaseLocalService,
 		WorkflowDefinitionLink workflowDefinitionLink);
 
 	public void updateWorkflowDefinitionLinks(long userId, long companyId,
-		long groupId, String className, long classPK,
-		List<ObjectValuePair<Long, String>> workflowDefinitionOVPs)
+		long groupId, java.lang.String className, long classPK,
+		List<ObjectValuePair<java.lang.Long, java.lang.String>> workflowDefinitionOVPs)
 		throws PortalException;
 }

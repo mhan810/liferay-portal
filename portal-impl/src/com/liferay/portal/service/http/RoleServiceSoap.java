@@ -87,10 +87,12 @@ public class RoleServiceSoap {
 	* @return the role
 	*/
 	public static com.liferay.portal.kernel.model.RoleSoap addRole(
-		String className, long classPK, String name,
-		String[] titleMapLanguageIds, String[] titleMapValues,
-		String[] descriptionMapLanguageIds, String[] descriptionMapValues,
-		int type, String subtype,
+		java.lang.String className, long classPK, java.lang.String name,
+		java.lang.String[] titleMapLanguageIds,
+		java.lang.String[] titleMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, int type,
+		java.lang.String subtype,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
@@ -182,9 +184,10 @@ public class RoleServiceSoap {
 	}
 
 	public static com.liferay.portal.kernel.model.RoleSoap[] getGroupRolesAndTeamRoles(
-		long companyId, String keywords, java.util.List<String> excludedNames,
-		int[] types, long excludedTeamRoleId, long teamGroupId, int start,
-		int end) throws RemoteException {
+		long companyId, java.lang.String keywords,
+		java.util.List<java.lang.String> excludedNames, int[] types,
+		long excludedTeamRoleId, long teamGroupId, int start, int end)
+		throws RemoteException {
 		try {
 			java.util.List<com.liferay.portal.kernel.model.Role> returnValue = RoleServiceUtil.getGroupRolesAndTeamRoles(companyId,
 					keywords, excludedNames, types, excludedTeamRoleId,
@@ -200,7 +203,8 @@ public class RoleServiceSoap {
 	}
 
 	public static int getGroupRolesAndTeamRolesCount(long companyId,
-		String keywords, java.util.List<String> excludedNames, int[] types,
+		java.lang.String keywords,
+		java.util.List<java.lang.String> excludedNames, int[] types,
 		long excludedTeamRoleId, long teamGroupId) throws RemoteException {
 		try {
 			int returnValue = RoleServiceUtil.getGroupRolesAndTeamRolesCount(companyId,
@@ -249,7 +253,7 @@ public class RoleServiceSoap {
 	* @return the role with the name
 	*/
 	public static com.liferay.portal.kernel.model.RoleSoap getRole(
-		long companyId, String name) throws RemoteException {
+		long companyId, java.lang.String name) throws RemoteException {
 		try {
 			com.liferay.portal.kernel.model.Role returnValue = RoleServiceUtil.getRole(companyId,
 					name);
@@ -264,7 +268,7 @@ public class RoleServiceSoap {
 	}
 
 	public static com.liferay.portal.kernel.model.RoleSoap[] getRoles(
-		int type, String subtype) throws RemoteException {
+		int type, java.lang.String subtype) throws RemoteException {
 		try {
 			java.util.List<com.liferay.portal.kernel.model.Role> returnValue = RoleServiceUtil.getRoles(type,
 					subtype);
@@ -393,8 +397,8 @@ public class RoleServiceSoap {
 	* @return <code>true</code> if the user is associated with the regular
 	role; <code>false</code> otherwise
 	*/
-	public static boolean hasUserRole(long userId, long companyId, String name,
-		boolean inherited) throws RemoteException {
+	public static boolean hasUserRole(long userId, long companyId,
+		java.lang.String name, boolean inherited) throws RemoteException {
 		try {
 			boolean returnValue = RoleServiceUtil.hasUserRole(userId,
 					companyId, name, inherited);
@@ -421,7 +425,7 @@ public class RoleServiceSoap {
 	<code>false</code> otherwise
 	*/
 	public static boolean hasUserRoles(long userId, long companyId,
-		String[] names, boolean inherited) throws RemoteException {
+		java.lang.String[] names, boolean inherited) throws RemoteException {
 		try {
 			boolean returnValue = RoleServiceUtil.hasUserRoles(userId,
 					companyId, names, inherited);
@@ -470,9 +474,11 @@ public class RoleServiceSoap {
 	* @return the role with the primary key
 	*/
 	public static com.liferay.portal.kernel.model.RoleSoap updateRole(
-		long roleId, String name, String[] titleMapLanguageIds,
-		String[] titleMapValues, String[] descriptionMapLanguageIds,
-		String[] descriptionMapValues, String subtype,
+		long roleId, java.lang.String name,
+		java.lang.String[] titleMapLanguageIds,
+		java.lang.String[] titleMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, java.lang.String subtype,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {

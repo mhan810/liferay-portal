@@ -19,7 +19,6 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.UserGroupGroupRole;
 import com.liferay.portal.kernel.model.UserGroupGroupRoleModel;
 import com.liferay.portal.kernel.model.UserGroupGroupRoleSoap;
@@ -485,7 +484,7 @@ public class UserGroupGroupRoleModelImpl extends BaseModelImpl<UserGroupGroupRol
 
 	private static final ClassLoader _classLoader = UserGroupGroupRole.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			UserGroupGroupRole.class, ModelWrapper.class
+			UserGroupGroupRole.class
 		};
 	private long _mvccVersion;
 	private long _userGroupId;

@@ -112,7 +112,7 @@ public class TicketUtil {
 	* @return the matching ticket
 	* @throws NoSuchTicketException if a matching ticket could not be found
 	*/
-	public static Ticket findByKey(String key)
+	public static Ticket findByKey(java.lang.String key)
 		throws com.liferay.portal.kernel.exception.NoSuchTicketException {
 		return getPersistence().findByKey(key);
 	}
@@ -123,7 +123,7 @@ public class TicketUtil {
 	* @param key the key
 	* @return the matching ticket, or <code>null</code> if a matching ticket could not be found
 	*/
-	public static Ticket fetchByKey(String key) {
+	public static Ticket fetchByKey(java.lang.String key) {
 		return getPersistence().fetchByKey(key);
 	}
 
@@ -134,7 +134,8 @@ public class TicketUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching ticket, or <code>null</code> if a matching ticket could not be found
 	*/
-	public static Ticket fetchByKey(String key, boolean retrieveFromCache) {
+	public static Ticket fetchByKey(java.lang.String key,
+		boolean retrieveFromCache) {
 		return getPersistence().fetchByKey(key, retrieveFromCache);
 	}
 
@@ -144,7 +145,7 @@ public class TicketUtil {
 	* @param key the key
 	* @return the ticket that was removed
 	*/
-	public static Ticket removeByKey(String key)
+	public static Ticket removeByKey(java.lang.String key)
 		throws com.liferay.portal.kernel.exception.NoSuchTicketException {
 		return getPersistence().removeByKey(key);
 	}
@@ -155,7 +156,7 @@ public class TicketUtil {
 	* @param key the key
 	* @return the number of matching tickets
 	*/
-	public static int countByKey(String key) {
+	public static int countByKey(java.lang.String key) {
 		return getPersistence().countByKey(key);
 	}
 
@@ -704,7 +705,7 @@ public class TicketUtil {
 		return getPersistence().countAll();
 	}
 
-	public static java.util.Set<String> getBadColumnNames() {
+	public static java.util.Set<java.lang.String> getBadColumnNames() {
 		return getPersistence().getBadColumnNames();
 	}
 

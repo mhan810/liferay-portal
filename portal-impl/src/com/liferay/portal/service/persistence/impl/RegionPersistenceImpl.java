@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.model.Region;
 import com.liferay.portal.kernel.service.persistence.RegionPersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.model.impl.RegionImpl;
@@ -41,7 +40,6 @@ import com.liferay.portal.model.impl.RegionModelImpl;
 import java.io.Serializable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -696,7 +694,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Region region : list) {
-					if ((active != region.isActive())) {
+					if ((active != region.getActive())) {
 						list = null;
 
 						break;
@@ -1462,7 +1460,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			if ((list != null) && !list.isEmpty()) {
 				for (Region region : list) {
 					if ((countryId != region.getCountryId()) ||
-							(active != region.isActive())) {
+							(active != region.getActive())) {
 						list = null;
 
 						break;
@@ -2088,6 +2086,8 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 
 	@Override
 	protected Region removeImpl(Region region) {
+		region = toUnwrappedModel(region);
+
 		Session session = null;
 
 		try {
@@ -2118,23 +2118,9 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 
 	@Override
 	public Region updateImpl(Region region) {
+		region = toUnwrappedModel(region);
+
 		boolean isNew = region.isNew();
-
-		if (!(region instanceof RegionModelImpl)) {
-			InvocationHandler invocationHandler = null;
-
-			if (ProxyUtil.isProxyClass(region.getClass())) {
-				invocationHandler = ProxyUtil.getInvocationHandler(region);
-
-				throw new IllegalArgumentException(
-					"Implement ModelWrapper in region proxy " +
-					invocationHandler.getClass());
-			}
-
-			throw new IllegalArgumentException(
-				"Implement ModelWrapper in custom Region implementation " +
-				region.getClass());
-		}
 
 		RegionModelImpl regionModelImpl = (RegionModelImpl)region;
 
@@ -2172,14 +2158,14 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COUNTRYID,
 				args);
 
-			args = new Object[] { regionModelImpl.isActive() };
+			args = new Object[] { regionModelImpl.getActive() };
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_ACTIVE, args);
 			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE,
 				args);
 
 			args = new Object[] {
-					regionModelImpl.getCountryId(), regionModelImpl.isActive()
+					regionModelImpl.getCountryId(), regionModelImpl.getActive()
 				};
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_A, args);
@@ -2217,7 +2203,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE,
 					args);
 
-				args = new Object[] { regionModelImpl.isActive() };
+				args = new Object[] { regionModelImpl.getActive() };
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_ACTIVE, args);
 				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE,
@@ -2237,7 +2223,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 
 				args = new Object[] {
 						regionModelImpl.getCountryId(),
-						regionModelImpl.isActive()
+						regionModelImpl.getActive()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_A, args);
@@ -2255,6 +2241,26 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 		region.resetOriginalValues();
 
 		return region;
+	}
+
+	protected Region toUnwrappedModel(Region region) {
+		if (region instanceof RegionImpl) {
+			return region;
+		}
+
+		RegionImpl regionImpl = new RegionImpl();
+
+		regionImpl.setNew(region.isNew());
+		regionImpl.setPrimaryKey(region.getPrimaryKey());
+
+		regionImpl.setMvccVersion(region.getMvccVersion());
+		regionImpl.setRegionId(region.getRegionId());
+		regionImpl.setCountryId(region.getCountryId());
+		regionImpl.setRegionCode(region.getRegionCode());
+		regionImpl.setName(region.getName());
+		regionImpl.setActive(region.isActive());
+
+		return regionImpl;
 	}
 
 	/**

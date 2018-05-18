@@ -34,8 +34,8 @@ public class UserNotificationDeliveryLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.model.UserNotificationDelivery addUserNotificationDelivery(
-		long userId, String portletId, long classNameId, int notificationType,
-		int deliveryType, boolean deliver)
+		long userId, java.lang.String portletId, long classNameId,
+		int notificationType, int deliveryType, boolean deliver)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _userNotificationDeliveryLocalService.addUserNotificationDelivery(userId,
 			portletId, classNameId, notificationType, deliveryType, deliver);
@@ -95,8 +95,9 @@ public class UserNotificationDeliveryLocalServiceWrapper
 	}
 
 	@Override
-	public void deleteUserNotificationDelivery(long userId, String portletId,
-		long classNameId, int notificationType, int deliveryType) {
+	public void deleteUserNotificationDelivery(long userId,
+		java.lang.String portletId, long classNameId, int notificationType,
+		int deliveryType) {
 		_userNotificationDeliveryLocalService.deleteUserNotificationDelivery(userId,
 			portletId, classNameId, notificationType, deliveryType);
 	}
@@ -207,8 +208,8 @@ public class UserNotificationDeliveryLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.model.UserNotificationDelivery fetchUserNotificationDelivery(
-		long userId, String portletId, long classNameId, int notificationType,
-		int deliveryType) {
+		long userId, java.lang.String portletId, long classNameId,
+		int notificationType, int deliveryType) {
 		return _userNotificationDeliveryLocalService.fetchUserNotificationDelivery(userId,
 			portletId, classNameId, notificationType, deliveryType);
 	}
@@ -229,7 +230,7 @@ public class UserNotificationDeliveryLocalServiceWrapper
 	* @return the OSGi service identifier
 	*/
 	@Override
-	public String getOSGiServiceIdentifier() {
+	public java.lang.String getOSGiServiceIdentifier() {
 		return _userNotificationDeliveryLocalService.getOSGiServiceIdentifier();
 	}
 
@@ -284,8 +285,8 @@ public class UserNotificationDeliveryLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.model.UserNotificationDelivery getUserNotificationDelivery(
-		long userId, String portletId, long classNameId, int notificationType,
-		int deliveryType, boolean deliver)
+		long userId, java.lang.String portletId, long classNameId,
+		int notificationType, int deliveryType, boolean deliver)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _userNotificationDeliveryLocalService.getUserNotificationDelivery(userId,
 			portletId, classNameId, notificationType, deliveryType, deliver);

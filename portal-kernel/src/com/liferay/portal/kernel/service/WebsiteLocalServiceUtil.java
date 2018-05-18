@@ -41,8 +41,9 @@ public class WebsiteLocalServiceUtil {
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.portal.service.impl.WebsiteLocalServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static com.liferay.portal.kernel.model.Website addWebsite(
-		long userId, String className, long classPK, String url, long typeId,
-		boolean primary, ServiceContext serviceContext)
+		long userId, java.lang.String className, long classPK,
+		java.lang.String url, long typeId, boolean primary,
+		ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addWebsite(userId, className, classPK, url, typeId,
@@ -104,8 +105,8 @@ public class WebsiteLocalServiceUtil {
 		return getService().deleteWebsite(website);
 	}
 
-	public static void deleteWebsites(long companyId, String className,
-		long classPK) {
+	public static void deleteWebsites(long companyId,
+		java.lang.String className, long classPK) {
 		getService().deleteWebsites(companyId, className, classPK);
 	}
 
@@ -200,7 +201,7 @@ public class WebsiteLocalServiceUtil {
 	* @return the matching website, or <code>null</code> if a matching website could not be found
 	*/
 	public static com.liferay.portal.kernel.model.Website fetchWebsiteByUuidAndCompanyId(
-		String uuid, long companyId) {
+		java.lang.String uuid, long companyId) {
 		return getService().fetchWebsiteByUuidAndCompanyId(uuid, companyId);
 	}
 
@@ -222,7 +223,7 @@ public class WebsiteLocalServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -254,7 +255,7 @@ public class WebsiteLocalServiceUtil {
 	* @throws PortalException if a matching website could not be found
 	*/
 	public static com.liferay.portal.kernel.model.Website getWebsiteByUuidAndCompanyId(
-		String uuid, long companyId)
+		java.lang.String uuid, long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getWebsiteByUuidAndCompanyId(uuid, companyId);
 	}
@@ -280,7 +281,7 @@ public class WebsiteLocalServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Website> getWebsites(
-		long companyId, String className, long classPK) {
+		long companyId, java.lang.String className, long classPK) {
 		return getService().getWebsites(companyId, className, classPK);
 	}
 
@@ -294,7 +295,7 @@ public class WebsiteLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Website updateWebsite(
-		long websiteId, String url, long typeId, boolean primary)
+		long websiteId, java.lang.String url, long typeId, boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().updateWebsite(websiteId, url, typeId, primary);
 	}

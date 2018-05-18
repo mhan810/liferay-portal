@@ -54,9 +54,9 @@ public interface ServiceComponent extends ServiceComponentModel, PersistedModel 
 			}
 		};
 
-	public String getIndexesSQL();
+	public java.lang.String getIndexesSQL();
 
-	public String getSequencesSQL();
+	public java.lang.String getSequencesSQL();
 
-	public String getTablesSQL();
+	public java.lang.String getTablesSQL();
 }

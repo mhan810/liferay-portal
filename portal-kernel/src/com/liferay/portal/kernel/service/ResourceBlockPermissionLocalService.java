@@ -82,7 +82,6 @@ public interface ResourceBlockPermissionLocalService extends BaseLocalService,
 	* @param resourceBlockPermissionId the primary key for the new resource block permission
 	* @return the new resource block permission
 	*/
-	@Transactional(enabled = false)
 	public ResourceBlockPermission createResourceBlockPermission(
 		long resourceBlockPermissionId);
 
@@ -187,15 +186,15 @@ public interface ResourceBlockPermissionLocalService extends BaseLocalService,
 	#getAvailableResourceBlockPermissionActionIds(String, long,
 	List)}
 	*/
-	@Deprecated
+	@java.lang.Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Map<Long, Set<String>> getAvailableResourceBlockPermissionActionIds(
-		long[] roleIds, String name, long primKey, List<String> actionIds)
-		throws PortalException;
+	public Map<java.lang.Long, Set<java.lang.String>> getAvailableResourceBlockPermissionActionIds(
+		long[] roleIds, java.lang.String name, long primKey,
+		List<java.lang.String> actionIds) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Map<Long, Set<String>> getAvailableResourceBlockPermissionActionIds(
-		String name, long primKey, List<String> actionIds)
+	public Map<java.lang.Long, Set<java.lang.String>> getAvailableResourceBlockPermissionActionIds(
+		java.lang.String name, long primKey, List<java.lang.String> actionIds)
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -206,7 +205,7 @@ public interface ResourceBlockPermissionLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

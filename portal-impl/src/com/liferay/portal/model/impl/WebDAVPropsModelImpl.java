@@ -21,7 +21,6 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.WebDAVProps;
 import com.liferay.portal.kernel.model.WebDAVPropsModel;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
@@ -575,7 +574,7 @@ public class WebDAVPropsModelImpl extends BaseModelImpl<WebDAVProps>
 
 	private static final ClassLoader _classLoader = WebDAVProps.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			WebDAVProps.class, ModelWrapper.class
+			WebDAVProps.class
 		};
 	private long _mvccVersion;
 	private long _webDavPropsId;

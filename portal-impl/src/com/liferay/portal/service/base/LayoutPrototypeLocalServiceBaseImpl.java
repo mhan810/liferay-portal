@@ -53,7 +53,6 @@ import com.liferay.portal.kernel.service.persistence.PortletPreferencesFinder;
 import com.liferay.portal.kernel.service.persistence.PortletPreferencesPersistence;
 import com.liferay.portal.kernel.service.persistence.UserFinder;
 import com.liferay.portal.kernel.service.persistence.UserPersistence;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 
@@ -106,7 +105,6 @@ public abstract class LayoutPrototypeLocalServiceBaseImpl
 	 * @return the new layout prototype
 	 */
 	@Override
-	@Transactional(enabled = false)
 	public LayoutPrototype createLayoutPrototype(long layoutPrototypeId) {
 		return layoutPrototypePersistence.create(layoutPrototypeId);
 	}

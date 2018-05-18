@@ -73,7 +73,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 		attributes.put("lastName", getLastName());
 		attributes.put("prefixId", getPrefixId());
 		attributes.put("suffixId", getSuffixId());
-		attributes.put("male", isMale());
+		attributes.put("male", getMale());
 		attributes.put("birthday", getBirthday());
 		attributes.put("smsSn", getSmsSn());
 		attributes.put("facebookSn", getFacebookSn());
@@ -267,7 +267,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new ContactWrapper((Contact)_contact.clone());
 	}
 
@@ -302,7 +302,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the fully qualified class name of this contact
 	*/
 	@Override
-	public String getClassName() {
+	public java.lang.String getClassName() {
 		return _contact.getClassName();
 	}
 
@@ -362,7 +362,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the email address of this contact
 	*/
 	@Override
-	public String getEmailAddress() {
+	public java.lang.String getEmailAddress() {
 		return _contact.getEmailAddress();
 	}
 
@@ -372,7 +372,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the employee number of this contact
 	*/
 	@Override
-	public String getEmployeeNumber() {
+	public java.lang.String getEmployeeNumber() {
 		return _contact.getEmployeeNumber();
 	}
 
@@ -382,7 +382,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the employee status ID of this contact
 	*/
 	@Override
-	public String getEmployeeStatusId() {
+	public java.lang.String getEmployeeStatusId() {
 		return _contact.getEmployeeStatusId();
 	}
 
@@ -397,7 +397,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the facebook sn of this contact
 	*/
 	@Override
-	public String getFacebookSn() {
+	public java.lang.String getFacebookSn() {
 		return _contact.getFacebookSn();
 	}
 
@@ -407,12 +407,12 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the first name of this contact
 	*/
 	@Override
-	public String getFirstName() {
+	public java.lang.String getFirstName() {
 		return _contact.getFirstName();
 	}
 
 	@Override
-	public String getFullName() {
+	public java.lang.String getFullName() {
 		return _contact.getFullName();
 	}
 
@@ -422,7 +422,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the hours of operation of this contact
 	*/
 	@Override
-	public String getHoursOfOperation() {
+	public java.lang.String getHoursOfOperation() {
 		return _contact.getHoursOfOperation();
 	}
 
@@ -432,7 +432,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the jabber sn of this contact
 	*/
 	@Override
-	public String getJabberSn() {
+	public java.lang.String getJabberSn() {
 		return _contact.getJabberSn();
 	}
 
@@ -442,7 +442,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the job class of this contact
 	*/
 	@Override
-	public String getJobClass() {
+	public java.lang.String getJobClass() {
 		return _contact.getJobClass();
 	}
 
@@ -452,7 +452,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the job title of this contact
 	*/
 	@Override
-	public String getJobTitle() {
+	public java.lang.String getJobTitle() {
 		return _contact.getJobTitle();
 	}
 
@@ -462,7 +462,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the last name of this contact
 	*/
 	@Override
-	public String getLastName() {
+	public java.lang.String getLastName() {
 		return _contact.getLastName();
 	}
 
@@ -482,7 +482,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the middle name of this contact
 	*/
 	@Override
-	public String getMiddleName() {
+	public java.lang.String getMiddleName() {
 		return _contact.getMiddleName();
 	}
 
@@ -547,7 +547,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the skype sn of this contact
 	*/
 	@Override
-	public String getSkypeSn() {
+	public java.lang.String getSkypeSn() {
 		return _contact.getSkypeSn();
 	}
 
@@ -557,7 +557,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the sms sn of this contact
 	*/
 	@Override
-	public String getSmsSn() {
+	public java.lang.String getSmsSn() {
 		return _contact.getSmsSn();
 	}
 
@@ -577,7 +577,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the twitter sn of this contact
 	*/
 	@Override
-	public String getTwitterSn() {
+	public java.lang.String getTwitterSn() {
 		return _contact.getTwitterSn();
 	}
 
@@ -597,7 +597,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the user name of this contact
 	*/
 	@Override
-	public String getUserName() {
+	public java.lang.String getUserName() {
 		return _contact.getUserName();
 	}
 
@@ -607,7 +607,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @return the user uuid of this contact
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _contact.getUserUuid();
 	}
 
@@ -677,7 +677,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	}
 
 	@Override
-	public void setClassName(String className) {
+	public void setClassName(java.lang.String className) {
 		_contact.setClassName(className);
 	}
 
@@ -737,7 +737,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param emailAddress the email address of this contact
 	*/
 	@Override
-	public void setEmailAddress(String emailAddress) {
+	public void setEmailAddress(java.lang.String emailAddress) {
 		_contact.setEmailAddress(emailAddress);
 	}
 
@@ -747,7 +747,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param employeeNumber the employee number of this contact
 	*/
 	@Override
-	public void setEmployeeNumber(String employeeNumber) {
+	public void setEmployeeNumber(java.lang.String employeeNumber) {
 		_contact.setEmployeeNumber(employeeNumber);
 	}
 
@@ -757,7 +757,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param employeeStatusId the employee status ID of this contact
 	*/
 	@Override
-	public void setEmployeeStatusId(String employeeStatusId) {
+	public void setEmployeeStatusId(java.lang.String employeeStatusId) {
 		_contact.setEmployeeStatusId(employeeStatusId);
 	}
 
@@ -782,7 +782,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param facebookSn the facebook sn of this contact
 	*/
 	@Override
-	public void setFacebookSn(String facebookSn) {
+	public void setFacebookSn(java.lang.String facebookSn) {
 		_contact.setFacebookSn(facebookSn);
 	}
 
@@ -792,7 +792,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param firstName the first name of this contact
 	*/
 	@Override
-	public void setFirstName(String firstName) {
+	public void setFirstName(java.lang.String firstName) {
 		_contact.setFirstName(firstName);
 	}
 
@@ -802,7 +802,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param hoursOfOperation the hours of operation of this contact
 	*/
 	@Override
-	public void setHoursOfOperation(String hoursOfOperation) {
+	public void setHoursOfOperation(java.lang.String hoursOfOperation) {
 		_contact.setHoursOfOperation(hoursOfOperation);
 	}
 
@@ -812,7 +812,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param jabberSn the jabber sn of this contact
 	*/
 	@Override
-	public void setJabberSn(String jabberSn) {
+	public void setJabberSn(java.lang.String jabberSn) {
 		_contact.setJabberSn(jabberSn);
 	}
 
@@ -822,7 +822,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param jobClass the job class of this contact
 	*/
 	@Override
-	public void setJobClass(String jobClass) {
+	public void setJobClass(java.lang.String jobClass) {
 		_contact.setJobClass(jobClass);
 	}
 
@@ -832,7 +832,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param jobTitle the job title of this contact
 	*/
 	@Override
-	public void setJobTitle(String jobTitle) {
+	public void setJobTitle(java.lang.String jobTitle) {
 		_contact.setJobTitle(jobTitle);
 	}
 
@@ -842,7 +842,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param lastName the last name of this contact
 	*/
 	@Override
-	public void setLastName(String lastName) {
+	public void setLastName(java.lang.String lastName) {
 		_contact.setLastName(lastName);
 	}
 
@@ -862,7 +862,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param middleName the middle name of this contact
 	*/
 	@Override
-	public void setMiddleName(String middleName) {
+	public void setMiddleName(java.lang.String middleName) {
 		_contact.setMiddleName(middleName);
 	}
 
@@ -932,7 +932,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param skypeSn the skype sn of this contact
 	*/
 	@Override
-	public void setSkypeSn(String skypeSn) {
+	public void setSkypeSn(java.lang.String skypeSn) {
 		_contact.setSkypeSn(skypeSn);
 	}
 
@@ -942,7 +942,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param smsSn the sms sn of this contact
 	*/
 	@Override
-	public void setSmsSn(String smsSn) {
+	public void setSmsSn(java.lang.String smsSn) {
 		_contact.setSmsSn(smsSn);
 	}
 
@@ -962,7 +962,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param twitterSn the twitter sn of this contact
 	*/
 	@Override
-	public void setTwitterSn(String twitterSn) {
+	public void setTwitterSn(java.lang.String twitterSn) {
 		_contact.setTwitterSn(twitterSn);
 	}
 
@@ -982,7 +982,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param userName the user name of this contact
 	*/
 	@Override
-	public void setUserName(String userName) {
+	public void setUserName(java.lang.String userName) {
 		_contact.setUserName(userName);
 	}
 
@@ -992,7 +992,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	* @param userUuid the user uuid of this contact
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_contact.setUserUuid(userUuid);
 	}
 
@@ -1007,7 +1007,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _contact.toString();
 	}
 
@@ -1017,7 +1017,7 @@ public class ContactWrapper implements Contact, ModelWrapper<Contact> {
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _contact.toXmlString();
 	}
 

@@ -46,7 +46,6 @@ import com.liferay.portal.kernel.service.persistence.impl.TableMapperFactory;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -58,7 +57,6 @@ import com.liferay.portal.model.impl.UserModelImpl;
 import java.io.Serializable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 
 import java.sql.Timestamp;
 
@@ -3007,12 +3005,12 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_CD;
-			finderArgs = new Object[] { companyId, _getTime(createDate) };
+			finderArgs = new Object[] { companyId, createDate };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_CD;
 			finderArgs = new Object[] {
-					companyId, _getTime(createDate),
+					companyId, createDate,
 					
 					start, end, orderByComparator
 				};
@@ -3419,7 +3417,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	public int countByC_CD(long companyId, Date createDate) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_CD;
 
-		Object[] finderArgs = new Object[] { companyId, _getTime(createDate) };
+		Object[] finderArgs = new Object[] { companyId, createDate };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3578,12 +3576,12 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_MD;
-			finderArgs = new Object[] { companyId, _getTime(modifiedDate) };
+			finderArgs = new Object[] { companyId, modifiedDate };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_MD;
 			finderArgs = new Object[] {
-					companyId, _getTime(modifiedDate),
+					companyId, modifiedDate,
 					
 					start, end, orderByComparator
 				};
@@ -3990,7 +3988,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	public int countByC_MD(long companyId, Date modifiedDate) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_MD;
 
-		Object[] finderArgs = new Object[] { companyId, _getTime(modifiedDate) };
+		Object[] finderArgs = new Object[] { companyId, modifiedDate };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4132,7 +4130,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			User user = (User)result;
 
 			if ((companyId != user.getCompanyId()) ||
-					(defaultUser != user.isDefaultUser())) {
+					(defaultUser != user.getDefaultUser())) {
 				result = null;
 			}
 		}
@@ -4186,7 +4184,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 					cacheResult(user);
 
 					if ((user.getCompanyId() != companyId) ||
-							(user.isDefaultUser() != defaultUser)) {
+							(user.getDefaultUser() != defaultUser)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_DU,
 							finderArgs, user);
 					}
@@ -6201,14 +6199,12 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_CD_MD;
-			finderArgs = new Object[] {
-					companyId, _getTime(createDate), _getTime(modifiedDate)
-				};
+			finderArgs = new Object[] { companyId, createDate, modifiedDate };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_CD_MD;
 			finderArgs = new Object[] {
-					companyId, _getTime(createDate), _getTime(modifiedDate),
+					companyId, createDate, modifiedDate,
 					
 					start, end, orderByComparator
 				};
@@ -6664,9 +6660,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	public int countByC_CD_MD(long companyId, Date createDate, Date modifiedDate) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_CD_MD;
 
-		Object[] finderArgs = new Object[] {
-				companyId, _getTime(createDate), _getTime(modifiedDate)
-			};
+		Object[] finderArgs = new Object[] { companyId, createDate, modifiedDate };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -6877,7 +6871,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			if ((list != null) && !list.isEmpty()) {
 				for (User user : list) {
 					if ((companyId != user.getCompanyId()) ||
-							(defaultUser != user.isDefaultUser()) ||
+							(defaultUser != user.getDefaultUser()) ||
 							(status != user.getStatus())) {
 						list = null;
 
@@ -7369,7 +7363,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			new Object[] { user.getCompanyId(), user.getUserId() }, user);
 
 		finderCache.putResult(FINDER_PATH_FETCH_BY_C_DU,
-			new Object[] { user.getCompanyId(), user.isDefaultUser() }, user);
+			new Object[] { user.getCompanyId(), user.getDefaultUser() }, user);
 
 		finderCache.putResult(FINDER_PATH_FETCH_BY_C_SN,
 			new Object[] { user.getCompanyId(), user.getScreenName() }, user);
@@ -7479,7 +7473,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			false);
 
 		args = new Object[] {
-				userModelImpl.getCompanyId(), userModelImpl.isDefaultUser()
+				userModelImpl.getCompanyId(), userModelImpl.getDefaultUser()
 			};
 
 		finderCache.putResult(FINDER_PATH_COUNT_BY_C_DU, args, Long.valueOf(1),
@@ -7587,7 +7581,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		if (clearCurrent) {
 			Object[] args = new Object[] {
-					userModelImpl.getCompanyId(), userModelImpl.isDefaultUser()
+					userModelImpl.getCompanyId(), userModelImpl.getDefaultUser()
 				};
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_DU, args);
@@ -7782,6 +7776,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 	@Override
 	protected User removeImpl(User user) {
+		user = toUnwrappedModel(user);
+
 		userToGroupTableMapper.deleteLeftPrimaryKeyTableMappings(user.getPrimaryKey());
 
 		userToOrganizationTableMapper.deleteLeftPrimaryKeyTableMappings(user.getPrimaryKey());
@@ -7821,23 +7817,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 	@Override
 	public User updateImpl(User user) {
+		user = toUnwrappedModel(user);
+
 		boolean isNew = user.isNew();
-
-		if (!(user instanceof UserModelImpl)) {
-			InvocationHandler invocationHandler = null;
-
-			if (ProxyUtil.isProxyClass(user.getClass())) {
-				invocationHandler = ProxyUtil.getInvocationHandler(user);
-
-				throw new IllegalArgumentException(
-					"Implement ModelWrapper in user proxy " +
-					invocationHandler.getClass());
-			}
-
-			throw new IllegalArgumentException(
-				"Implement ModelWrapper in custom User implementation " +
-				user.getClass());
-		}
 
 		UserModelImpl userModelImpl = (UserModelImpl)user;
 
@@ -7958,7 +7940,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				args);
 
 			args = new Object[] {
-					userModelImpl.getCompanyId(), userModelImpl.isDefaultUser(),
+					userModelImpl.getCompanyId(), userModelImpl.getDefaultUser(),
 					userModelImpl.getStatus()
 				};
 
@@ -8140,7 +8122,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				args = new Object[] {
 						userModelImpl.getCompanyId(),
-						userModelImpl.isDefaultUser(), userModelImpl.getStatus()
+						userModelImpl.getDefaultUser(),
+						userModelImpl.getStatus()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_DU_S, args);
@@ -8158,6 +8141,62 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		user.resetOriginalValues();
 
 		return user;
+	}
+
+	protected User toUnwrappedModel(User user) {
+		if (user instanceof UserImpl) {
+			return user;
+		}
+
+		UserImpl userImpl = new UserImpl();
+
+		userImpl.setNew(user.isNew());
+		userImpl.setPrimaryKey(user.getPrimaryKey());
+
+		userImpl.setMvccVersion(user.getMvccVersion());
+		userImpl.setUuid(user.getUuid());
+		userImpl.setUserId(user.getUserId());
+		userImpl.setCompanyId(user.getCompanyId());
+		userImpl.setCreateDate(user.getCreateDate());
+		userImpl.setModifiedDate(user.getModifiedDate());
+		userImpl.setDefaultUser(user.isDefaultUser());
+		userImpl.setContactId(user.getContactId());
+		userImpl.setPassword(user.getPassword());
+		userImpl.setPasswordEncrypted(user.isPasswordEncrypted());
+		userImpl.setPasswordReset(user.isPasswordReset());
+		userImpl.setPasswordModifiedDate(user.getPasswordModifiedDate());
+		userImpl.setDigest(user.getDigest());
+		userImpl.setReminderQueryQuestion(user.getReminderQueryQuestion());
+		userImpl.setReminderQueryAnswer(user.getReminderQueryAnswer());
+		userImpl.setGraceLoginCount(user.getGraceLoginCount());
+		userImpl.setScreenName(user.getScreenName());
+		userImpl.setEmailAddress(user.getEmailAddress());
+		userImpl.setFacebookId(user.getFacebookId());
+		userImpl.setGoogleUserId(user.getGoogleUserId());
+		userImpl.setLdapServerId(user.getLdapServerId());
+		userImpl.setOpenId(user.getOpenId());
+		userImpl.setPortraitId(user.getPortraitId());
+		userImpl.setLanguageId(user.getLanguageId());
+		userImpl.setTimeZoneId(user.getTimeZoneId());
+		userImpl.setGreeting(user.getGreeting());
+		userImpl.setComments(user.getComments());
+		userImpl.setFirstName(user.getFirstName());
+		userImpl.setMiddleName(user.getMiddleName());
+		userImpl.setLastName(user.getLastName());
+		userImpl.setJobTitle(user.getJobTitle());
+		userImpl.setLoginDate(user.getLoginDate());
+		userImpl.setLoginIP(user.getLoginIP());
+		userImpl.setLastLoginDate(user.getLastLoginDate());
+		userImpl.setLastLoginIP(user.getLastLoginIP());
+		userImpl.setLastFailedLoginDate(user.getLastFailedLoginDate());
+		userImpl.setFailedLoginAttempts(user.getFailedLoginAttempts());
+		userImpl.setLockout(user.isLockout());
+		userImpl.setLockoutDate(user.getLockoutDate());
+		userImpl.setAgreedToTermsOfUse(user.isAgreedToTermsOfUse());
+		userImpl.setEmailAddressVerified(user.isEmailAddressVerified());
+		userImpl.setStatus(user.getStatus());
+
+		return userImpl;
 	}
 
 	/**
@@ -10101,15 +10140,6 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@BeanReference(type = UserGroupPersistence.class)
 	protected UserGroupPersistence userGroupPersistence;
 	protected TableMapper<User, com.liferay.portal.kernel.model.UserGroup> userToUserGroupTableMapper;
-
-	private Long _getTime(Date date) {
-		if (date == null) {
-			return null;
-		}
-
-		return date.getTime();
-	}
-
 	private static final String _SQL_SELECT_USER = "SELECT user FROM User user";
 	private static final String _SQL_SELECT_USER_WHERE_PKS_IN = "SELECT user FROM User user WHERE userId IN (";
 	private static final String _SQL_SELECT_USER_WHERE = "SELECT user FROM User user WHERE ";

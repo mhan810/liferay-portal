@@ -51,7 +51,7 @@ public class ContactSoap implements Serializable {
 		soapModel.setLastName(model.getLastName());
 		soapModel.setPrefixId(model.getPrefixId());
 		soapModel.setSuffixId(model.getSuffixId());
-		soapModel.setMale(model.isMale());
+		soapModel.setMale(model.getMale());
 		soapModel.setBirthday(model.getBirthday());
 		soapModel.setSmsSn(model.getSmsSn());
 		soapModel.setFacebookSn(model.getFacebookSn());

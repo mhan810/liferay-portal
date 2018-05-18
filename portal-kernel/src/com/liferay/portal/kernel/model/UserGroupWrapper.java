@@ -69,7 +69,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 		attributes.put("parentUserGroupId", getParentUserGroupId());
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
-		attributes.put("addedByLDAPImport", isAddedByLDAPImport());
+		attributes.put("addedByLDAPImport", getAddedByLDAPImport());
 
 		return attributes;
 	}
@@ -150,7 +150,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new UserGroupWrapper((UserGroup)_userGroup.clone());
 	}
 
@@ -195,7 +195,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 	* @return the description of this user group
 	*/
 	@Override
-	public String getDescription() {
+	public java.lang.String getDescription() {
 		return _userGroup.getDescription();
 	}
 
@@ -242,7 +242,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 	* @return the name of this user group
 	*/
 	@Override
-	public String getName() {
+	public java.lang.String getName() {
 		return _userGroup.getName();
 	}
 
@@ -309,7 +309,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 	* @return the user name of this user group
 	*/
 	@Override
-	public String getUserName() {
+	public java.lang.String getUserName() {
 		return _userGroup.getUserName();
 	}
 
@@ -319,7 +319,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 	* @return the user uuid of this user group
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _userGroup.getUserUuid();
 	}
 
@@ -329,7 +329,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 	* @return the uuid of this user group
 	*/
 	@Override
-	public String getUuid() {
+	public java.lang.String getUuid() {
 		return _userGroup.getUuid();
 	}
 
@@ -421,7 +421,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 	* @param description the description of this user group
 	*/
 	@Override
-	public void setDescription(String description) {
+	public void setDescription(java.lang.String description) {
 		_userGroup.setDescription(description);
 	}
 
@@ -466,7 +466,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 	* @param name the name of this user group
 	*/
 	@Override
-	public void setName(String name) {
+	public void setName(java.lang.String name) {
 		_userGroup.setName(name);
 	}
 
@@ -526,7 +526,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 	* @param userName the user name of this user group
 	*/
 	@Override
-	public void setUserName(String userName) {
+	public void setUserName(java.lang.String userName) {
 		_userGroup.setUserName(userName);
 	}
 
@@ -536,7 +536,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 	* @param userUuid the user uuid of this user group
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_userGroup.setUserUuid(userUuid);
 	}
 
@@ -546,7 +546,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 	* @param uuid the uuid of this user group
 	*/
 	@Override
-	public void setUuid(String uuid) {
+	public void setUuid(java.lang.String uuid) {
 		_userGroup.setUuid(uuid);
 	}
 
@@ -561,7 +561,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _userGroup.toString();
 	}
 
@@ -571,7 +571,7 @@ public class UserGroupWrapper implements UserGroup, ModelWrapper<UserGroup> {
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _userGroup.toXmlString();
 	}
 

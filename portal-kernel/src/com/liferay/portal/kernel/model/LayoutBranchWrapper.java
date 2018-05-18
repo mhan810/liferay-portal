@@ -66,7 +66,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 		attributes.put("plid", getPlid());
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
-		attributes.put("master", isMaster());
+		attributes.put("master", getMaster());
 
 		return attributes;
 	}
@@ -141,7 +141,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new LayoutBranchWrapper((LayoutBranch)_layoutBranch.clone());
 	}
 
@@ -166,7 +166,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	* @return the description of this layout branch
 	*/
 	@Override
-	public String getDescription() {
+	public java.lang.String getDescription() {
 		return _layoutBranch.getDescription();
 	}
 
@@ -231,7 +231,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	* @return the name of this layout branch
 	*/
 	@Override
-	public String getName() {
+	public java.lang.String getName() {
 		return _layoutBranch.getName();
 	}
 
@@ -276,7 +276,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	* @return the user name of this layout branch
 	*/
 	@Override
-	public String getUserName() {
+	public java.lang.String getUserName() {
 		return _layoutBranch.getUserName();
 	}
 
@@ -286,7 +286,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	* @return the user uuid of this layout branch
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _layoutBranch.getUserUuid();
 	}
 
@@ -346,7 +346,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	* @param description the description of this layout branch
 	*/
 	@Override
-	public void setDescription(String description) {
+	public void setDescription(java.lang.String description) {
 		_layoutBranch.setDescription(description);
 	}
 
@@ -421,7 +421,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	* @param name the name of this layout branch
 	*/
 	@Override
-	public void setName(String name) {
+	public void setName(java.lang.String name) {
 		_layoutBranch.setName(name);
 	}
 
@@ -471,7 +471,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	* @param userName the user name of this layout branch
 	*/
 	@Override
-	public void setUserName(String userName) {
+	public void setUserName(java.lang.String userName) {
 		_layoutBranch.setUserName(userName);
 	}
 
@@ -481,7 +481,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	* @param userUuid the user uuid of this layout branch
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_layoutBranch.setUserUuid(userUuid);
 	}
 
@@ -496,7 +496,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _layoutBranch.toString();
 	}
 
@@ -506,7 +506,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _layoutBranch.toXmlString();
 	}
 

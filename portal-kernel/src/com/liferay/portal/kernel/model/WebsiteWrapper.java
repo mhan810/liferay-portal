@@ -70,7 +70,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 		attributes.put("classPK", getClassPK());
 		attributes.put("url", getUrl());
 		attributes.put("typeId", getTypeId());
-		attributes.put("primary", isPrimary());
+		attributes.put("primary", getPrimary());
 		attributes.put("lastPublishDate", getLastPublishDate());
 
 		return attributes;
@@ -164,7 +164,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new WebsiteWrapper((Website)_website.clone());
 	}
 
@@ -179,7 +179,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	* @return the fully qualified class name of this website
 	*/
 	@Override
-	public String getClassName() {
+	public java.lang.String getClassName() {
 		return _website.getClassName();
 	}
 
@@ -305,7 +305,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	* @return the url of this website
 	*/
 	@Override
-	public String getUrl() {
+	public java.lang.String getUrl() {
 		return _website.getUrl();
 	}
 
@@ -325,7 +325,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	* @return the user name of this website
 	*/
 	@Override
-	public String getUserName() {
+	public java.lang.String getUserName() {
 		return _website.getUserName();
 	}
 
@@ -335,7 +335,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	* @return the user uuid of this website
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _website.getUserUuid();
 	}
 
@@ -345,7 +345,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	* @return the uuid of this website
 	*/
 	@Override
-	public String getUuid() {
+	public java.lang.String getUuid() {
 		return _website.getUuid();
 	}
 
@@ -400,7 +400,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	}
 
 	@Override
-	public void setClassName(String className) {
+	public void setClassName(java.lang.String className) {
 		_website.setClassName(className);
 	}
 
@@ -535,7 +535,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	* @param url the url of this website
 	*/
 	@Override
-	public void setUrl(String url) {
+	public void setUrl(java.lang.String url) {
 		_website.setUrl(url);
 	}
 
@@ -555,7 +555,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	* @param userName the user name of this website
 	*/
 	@Override
-	public void setUserName(String userName) {
+	public void setUserName(java.lang.String userName) {
 		_website.setUserName(userName);
 	}
 
@@ -565,7 +565,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	* @param userUuid the user uuid of this website
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_website.setUserUuid(userUuid);
 	}
 
@@ -575,7 +575,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	* @param uuid the uuid of this website
 	*/
 	@Override
-	public void setUuid(String uuid) {
+	public void setUuid(java.lang.String uuid) {
 		_website.setUuid(uuid);
 	}
 
@@ -600,7 +600,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _website.toString();
 	}
 
@@ -610,7 +610,7 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _website.toXmlString();
 	}
 

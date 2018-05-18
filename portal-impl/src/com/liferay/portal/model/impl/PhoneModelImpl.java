@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.Phone;
 import com.liferay.portal.kernel.model.PhoneModel;
 import com.liferay.portal.kernel.model.PhoneSoap;
@@ -157,7 +156,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 		model.setNumber(soapModel.getNumber());
 		model.setExtension(soapModel.getExtension());
 		model.setTypeId(soapModel.getTypeId());
-		model.setPrimary(soapModel.isPrimary());
+		model.setPrimary(soapModel.getPrimary());
 
 		return model;
 	}
@@ -235,7 +234,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 		attributes.put("number", getNumber());
 		attributes.put("extension", getExtension());
 		attributes.put("typeId", getTypeId());
-		attributes.put("primary", isPrimary());
+		attributes.put("primary", getPrimary());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -672,7 +671,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 		phoneImpl.setNumber(getNumber());
 		phoneImpl.setExtension(getExtension());
 		phoneImpl.setTypeId(getTypeId());
-		phoneImpl.setPrimary(isPrimary());
+		phoneImpl.setPrimary(getPrimary());
 
 		phoneImpl.resetOriginalValues();
 
@@ -828,7 +827,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 
 		phoneCacheModel.typeId = getTypeId();
 
-		phoneCacheModel.primary = isPrimary();
+		phoneCacheModel.primary = getPrimary();
 
 		return phoneCacheModel;
 	}
@@ -864,7 +863,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 		sb.append(", typeId=");
 		sb.append(getTypeId());
 		sb.append(", primary=");
-		sb.append(isPrimary());
+		sb.append(getPrimary());
 		sb.append("}");
 
 		return sb.toString();
@@ -932,7 +931,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>primary</column-name><column-value><![CDATA[");
-		sb.append(isPrimary());
+		sb.append(getPrimary());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -942,7 +941,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 
 	private static final ClassLoader _classLoader = Phone.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			Phone.class, ModelWrapper.class
+			Phone.class
 		};
 	private long _mvccVersion;
 	private String _uuid;

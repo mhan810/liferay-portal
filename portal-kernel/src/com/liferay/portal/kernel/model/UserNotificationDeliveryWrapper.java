@@ -66,7 +66,7 @@ public class UserNotificationDeliveryWrapper implements UserNotificationDelivery
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("notificationType", getNotificationType());
 		attributes.put("deliveryType", getDeliveryType());
-		attributes.put("deliver", isDeliver());
+		attributes.put("deliver", getDeliver());
 
 		return attributes;
 	}
@@ -130,7 +130,7 @@ public class UserNotificationDeliveryWrapper implements UserNotificationDelivery
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new UserNotificationDeliveryWrapper((UserNotificationDelivery)_userNotificationDelivery.clone());
 	}
 
@@ -145,7 +145,7 @@ public class UserNotificationDeliveryWrapper implements UserNotificationDelivery
 	* @return the fully qualified class name of this user notification delivery
 	*/
 	@Override
-	public String getClassName() {
+	public java.lang.String getClassName() {
 		return _userNotificationDelivery.getClassName();
 	}
 
@@ -220,7 +220,7 @@ public class UserNotificationDeliveryWrapper implements UserNotificationDelivery
 	* @return the portlet ID of this user notification delivery
 	*/
 	@Override
-	public String getPortletId() {
+	public java.lang.String getPortletId() {
 		return _userNotificationDelivery.getPortletId();
 	}
 
@@ -265,7 +265,7 @@ public class UserNotificationDeliveryWrapper implements UserNotificationDelivery
 	* @return the user uuid of this user notification delivery
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _userNotificationDelivery.getUserUuid();
 	}
 
@@ -310,7 +310,7 @@ public class UserNotificationDeliveryWrapper implements UserNotificationDelivery
 	}
 
 	@Override
-	public void setClassName(String className) {
+	public void setClassName(java.lang.String className) {
 		_userNotificationDelivery.setClassName(className);
 	}
 
@@ -400,7 +400,7 @@ public class UserNotificationDeliveryWrapper implements UserNotificationDelivery
 	* @param portletId the portlet ID of this user notification delivery
 	*/
 	@Override
-	public void setPortletId(String portletId) {
+	public void setPortletId(java.lang.String portletId) {
 		_userNotificationDelivery.setPortletId(portletId);
 	}
 
@@ -445,7 +445,7 @@ public class UserNotificationDeliveryWrapper implements UserNotificationDelivery
 	* @param userUuid the user uuid of this user notification delivery
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_userNotificationDelivery.setUserUuid(userUuid);
 	}
 
@@ -460,7 +460,7 @@ public class UserNotificationDeliveryWrapper implements UserNotificationDelivery
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _userNotificationDelivery.toString();
 	}
 
@@ -470,7 +470,7 @@ public class UserNotificationDeliveryWrapper implements UserNotificationDelivery
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _userNotificationDelivery.toXmlString();
 	}
 

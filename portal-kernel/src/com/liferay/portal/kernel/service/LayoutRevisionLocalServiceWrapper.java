@@ -48,10 +48,12 @@ public class LayoutRevisionLocalServiceWrapper
 	public com.liferay.portal.kernel.model.LayoutRevision addLayoutRevision(
 		long userId, long layoutSetBranchId, long layoutBranchId,
 		long parentLayoutRevisionId, boolean head, long plid,
-		long portletPreferencesPlid, boolean privateLayout, String name,
-		String title, String description, String keywords, String robots,
-		String typeSettings, boolean iconImage, long iconImageId,
-		String themeId, String colorSchemeId, String css,
+		long portletPreferencesPlid, boolean privateLayout,
+		java.lang.String name, java.lang.String title,
+		java.lang.String description, java.lang.String keywords,
+		java.lang.String robots, java.lang.String typeSettings,
+		boolean iconImage, long iconImageId, java.lang.String themeId,
+		java.lang.String colorSchemeId, java.lang.String css,
 		ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _layoutRevisionLocalService.addLayoutRevision(userId,
@@ -425,7 +427,7 @@ public class LayoutRevisionLocalServiceWrapper
 	* @return the OSGi service identifier
 	*/
 	@Override
-	public String getOSGiServiceIdentifier() {
+	public java.lang.String getOSGiServiceIdentifier() {
 		return _layoutRevisionLocalService.getOSGiServiceIdentifier();
 	}
 
@@ -450,10 +452,12 @@ public class LayoutRevisionLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.model.LayoutRevision updateLayoutRevision(
-		long userId, long layoutRevisionId, long layoutBranchId, String name,
-		String title, String description, String keywords, String robots,
-		String typeSettings, boolean iconImage, long iconImageId,
-		String themeId, String colorSchemeId, String css,
+		long userId, long layoutRevisionId, long layoutBranchId,
+		java.lang.String name, java.lang.String title,
+		java.lang.String description, java.lang.String keywords,
+		java.lang.String robots, java.lang.String typeSettings,
+		boolean iconImage, long iconImageId, java.lang.String themeId,
+		java.lang.String colorSchemeId, java.lang.String css,
 		ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _layoutRevisionLocalService.updateLayoutRevision(userId,

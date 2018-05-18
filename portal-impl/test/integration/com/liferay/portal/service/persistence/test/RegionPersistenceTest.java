@@ -136,7 +136,7 @@ public class RegionPersistenceTest {
 		Assert.assertEquals(existingRegion.getRegionCode(),
 			newRegion.getRegionCode());
 		Assert.assertEquals(existingRegion.getName(), newRegion.getName());
-		Assert.assertEquals(existingRegion.isActive(), newRegion.isActive());
+		Assert.assertEquals(existingRegion.getActive(), newRegion.getActive());
 	}
 
 	@Test

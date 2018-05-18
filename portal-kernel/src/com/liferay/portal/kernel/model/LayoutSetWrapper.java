@@ -62,7 +62,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 		attributes.put("companyId", getCompanyId());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("privateLayout", isPrivateLayout());
+		attributes.put("privateLayout", getPrivateLayout());
 		attributes.put("logoId", getLogoId());
 		attributes.put("themeId", getThemeId());
 		attributes.put("colorSchemeId", getColorSchemeId());
@@ -71,7 +71,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 		attributes.put("settings", getSettings());
 		attributes.put("layoutSetPrototypeUuid", getLayoutSetPrototypeUuid());
 		attributes.put("layoutSetPrototypeLinkEnabled",
-			isLayoutSetPrototypeLinkEnabled());
+			getLayoutSetPrototypeLinkEnabled());
 
 		return attributes;
 	}
@@ -172,7 +172,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new LayoutSetWrapper((LayoutSet)_layoutSet.clone());
 	}
 
@@ -203,12 +203,12 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	* @return the color scheme ID of this layout set
 	*/
 	@Override
-	public String getColorSchemeId() {
+	public java.lang.String getColorSchemeId() {
 		return _layoutSet.getColorSchemeId();
 	}
 
 	@Override
-	public String getCompanyFallbackVirtualHostname() {
+	public java.lang.String getCompanyFallbackVirtualHostname() {
 		return _layoutSet.getCompanyFallbackVirtualHostname();
 	}
 
@@ -238,7 +238,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	* @return the css of this layout set
 	*/
 	@Override
-	public String getCss() {
+	public java.lang.String getCss() {
 		return _layoutSet.getCss();
 	}
 
@@ -311,7 +311,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	* @return the layout set prototype uuid of this layout set
 	*/
 	@Override
-	public String getLayoutSetPrototypeUuid() {
+	public java.lang.String getLayoutSetPrototypeUuid() {
 		return _layoutSet.getLayoutSetPrototypeUuid();
 	}
 
@@ -396,7 +396,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	* @return the settings of this layout set
 	*/
 	@Override
-	public String getSettings() {
+	public java.lang.String getSettings() {
 		return _layoutSet.getSettings();
 	}
 
@@ -406,7 +406,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	}
 
 	@Override
-	public String getSettingsProperty(String key) {
+	public java.lang.String getSettingsProperty(java.lang.String key) {
 		return _layoutSet.getSettingsProperty(key);
 	}
 
@@ -421,12 +421,13 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	* @return the theme ID of this layout set
 	*/
 	@Override
-	public String getThemeId() {
+	public java.lang.String getThemeId() {
 		return _layoutSet.getThemeId();
 	}
 
 	@Override
-	public String getThemeSetting(String key, String device) {
+	public java.lang.String getThemeSetting(java.lang.String key,
+		java.lang.String device) {
 		return _layoutSet.getThemeSetting(key, device);
 	}
 
@@ -442,7 +443,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	layout set has no virtual host configured
 	*/
 	@Override
-	public String getVirtualHostname() {
+	public java.lang.String getVirtualHostname() {
 		return _layoutSet.getVirtualHostname();
 	}
 
@@ -517,13 +518,13 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	* @param colorSchemeId the color scheme ID of this layout set
 	*/
 	@Override
-	public void setColorSchemeId(String colorSchemeId) {
+	public void setColorSchemeId(java.lang.String colorSchemeId) {
 		_layoutSet.setColorSchemeId(colorSchemeId);
 	}
 
 	@Override
 	public void setCompanyFallbackVirtualHostname(
-		String companyFallbackVirtualHostname) {
+		java.lang.String companyFallbackVirtualHostname) {
 		_layoutSet.setCompanyFallbackVirtualHostname(companyFallbackVirtualHostname);
 	}
 
@@ -553,7 +554,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	* @param css the css of this layout set
 	*/
 	@Override
-	public void setCss(String css) {
+	public void setCss(java.lang.String css) {
 		_layoutSet.setCss(css);
 	}
 
@@ -609,7 +610,8 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	* @param layoutSetPrototypeUuid the layout set prototype uuid of this layout set
 	*/
 	@Override
-	public void setLayoutSetPrototypeUuid(String layoutSetPrototypeUuid) {
+	public void setLayoutSetPrototypeUuid(
+		java.lang.String layoutSetPrototypeUuid) {
 		_layoutSet.setLayoutSetPrototypeUuid(layoutSetPrototypeUuid);
 	}
 
@@ -689,7 +691,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	* @param settings the settings of this layout set
 	*/
 	@Override
-	public void setSettings(String settings) {
+	public void setSettings(java.lang.String settings) {
 		_layoutSet.setSettings(settings);
 	}
 
@@ -705,7 +707,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	* @param themeId the theme ID of this layout set
 	*/
 	@Override
-	public void setThemeId(String themeId) {
+	public void setThemeId(java.lang.String themeId) {
 		_layoutSet.setThemeId(themeId);
 	}
 
@@ -716,7 +718,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	* @see #getVirtualHostname()
 	*/
 	@Override
-	public void setVirtualHostname(String virtualHostname) {
+	public void setVirtualHostname(java.lang.String virtualHostname) {
 		_layoutSet.setVirtualHostname(virtualHostname);
 	}
 
@@ -731,7 +733,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _layoutSet.toString();
 	}
 
@@ -741,7 +743,7 @@ public class LayoutSetWrapper implements LayoutSet, ModelWrapper<LayoutSet> {
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _layoutSet.toXmlString();
 	}
 

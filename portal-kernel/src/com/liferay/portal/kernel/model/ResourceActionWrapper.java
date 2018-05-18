@@ -99,7 +99,7 @@ public class ResourceActionWrapper implements ResourceAction,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new ResourceActionWrapper((ResourceAction)_resourceAction.clone());
 	}
 
@@ -114,7 +114,7 @@ public class ResourceActionWrapper implements ResourceAction,
 	* @return the action ID of this resource action
 	*/
 	@Override
-	public String getActionId() {
+	public java.lang.String getActionId() {
 		return _resourceAction.getActionId();
 	}
 
@@ -149,7 +149,7 @@ public class ResourceActionWrapper implements ResourceAction,
 	* @return the name of this resource action
 	*/
 	@Override
-	public String getName() {
+	public java.lang.String getName() {
 		return _resourceAction.getName();
 	}
 
@@ -209,7 +209,7 @@ public class ResourceActionWrapper implements ResourceAction,
 	* @param actionId the action ID of this resource action
 	*/
 	@Override
-	public void setActionId(String actionId) {
+	public void setActionId(java.lang.String actionId) {
 		_resourceAction.setActionId(actionId);
 	}
 
@@ -259,7 +259,7 @@ public class ResourceActionWrapper implements ResourceAction,
 	* @param name the name of this resource action
 	*/
 	@Override
-	public void setName(String name) {
+	public void setName(java.lang.String name) {
 		_resourceAction.setName(name);
 	}
 
@@ -304,7 +304,7 @@ public class ResourceActionWrapper implements ResourceAction,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _resourceAction.toString();
 	}
 
@@ -314,7 +314,7 @@ public class ResourceActionWrapper implements ResourceAction,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _resourceAction.toXmlString();
 	}
 

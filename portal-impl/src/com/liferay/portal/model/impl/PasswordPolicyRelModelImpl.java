@@ -21,7 +21,6 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.PasswordPolicyRel;
 import com.liferay.portal.kernel.model.PasswordPolicyRelModel;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
@@ -502,7 +501,7 @@ public class PasswordPolicyRelModelImpl extends BaseModelImpl<PasswordPolicyRel>
 
 	private static final ClassLoader _classLoader = PasswordPolicyRel.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			PasswordPolicyRel.class, ModelWrapper.class
+			PasswordPolicyRel.class
 		};
 	private long _mvccVersion;
 	private long _passwordPolicyRelId;

@@ -105,8 +105,9 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 		@Property(name = ExceptionRetryAcceptor.EXCEPTION_NAME, value = "org.springframework.dao.DataIntegrityViolationException")
 	}
 	)
-	public void addResourcePermission(long companyId, String name, int scope,
-		String primKey, long roleId, String actionId) throws PortalException;
+	public void addResourcePermission(long companyId, java.lang.String name,
+		int scope, java.lang.String primKey, long roleId,
+		java.lang.String actionId) throws PortalException;
 
 	/**
 	* Adds the resource permission to the database. Also notifies the appropriate model listeners.
@@ -135,8 +136,8 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	* @param scope the scope
 	* @param resourceActionBitwiseValue the bitwise IDs of the actions
 	*/
-	public void addResourcePermissions(String resourceName, String roleName,
-		int scope, long resourceActionBitwiseValue);
+	public void addResourcePermissions(java.lang.String resourceName,
+		java.lang.String roleName, int scope, long resourceActionBitwiseValue);
 
 	/**
 	* Creates a new resource permission with the primary key. Does not add the resource permission to the database.
@@ -144,7 +145,6 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	* @param resourcePermissionId the primary key for the new resource permission
 	* @return the new resource permission
 	*/
-	@Transactional(enabled = false)
 	public ResourcePermission createResourcePermission(
 		long resourcePermissionId);
 
@@ -197,8 +197,9 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	* @param scope the scope
 	* @param primKey the primary key
 	*/
-	public void deleteResourcePermissions(long companyId, String name,
-		int scope, long primKey) throws PortalException;
+	public void deleteResourcePermissions(long companyId,
+		java.lang.String name, int scope, long primKey)
+		throws PortalException;
 
 	/**
 	* Deletes all resource permissions at the scope to resources of the type.
@@ -221,8 +222,9 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	* @param scope the scope
 	* @param primKey the primary key
 	*/
-	public void deleteResourcePermissions(long companyId, String name,
-		int scope, String primKey) throws PortalException;
+	public void deleteResourcePermissions(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey)
+		throws PortalException;
 
 	public DynamicQuery dynamicQuery();
 
@@ -288,15 +290,15 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ResourcePermission fetchResourcePermission(long companyId,
-		String name, int scope, String primKey, long roleId);
+		java.lang.String name, int scope, java.lang.String primKey, long roleId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Map<Long, Set<String>> getAvailableResourcePermissionActionIds(
-		long companyId, String name, int scope, String primKey,
-		Collection<String> actionIds);
+	public Map<java.lang.Long, Set<java.lang.String>> getAvailableResourcePermissionActionIds(
+		long companyId, java.lang.String name, int scope,
+		java.lang.String primKey, Collection<java.lang.String> actionIds);
 
 	/**
 	* Returns the intersection of action IDs the role has permission at the
@@ -313,20 +315,22 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	scope to perform on resources of the type
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<String> getAvailableResourcePermissionActionIds(
-		long companyId, String name, int scope, String primKey, long roleId,
-		Collection<String> actionIds) throws PortalException;
+	public List<java.lang.String> getAvailableResourcePermissionActionIds(
+		long companyId, java.lang.String name, int scope,
+		java.lang.String primKey, long roleId,
+		Collection<java.lang.String> actionIds) throws PortalException;
 
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link
 	#getAvailableResourcePermissionActionIds(long, String, int,
 	String, Collection)}
 	*/
-	@Deprecated
+	@java.lang.Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Map<Long, Set<String>> getAvailableResourcePermissionActionIds(
-		long companyId, String name, int scope, String primKey, long[] roleIds,
-		Collection<String> actionIds);
+	public Map<java.lang.Long, Set<java.lang.String>> getAvailableResourcePermissionActionIds(
+		long companyId, java.lang.String name, int scope,
+		java.lang.String primKey, long[] roleIds,
+		Collection<java.lang.String> actionIds);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
@@ -336,7 +340,7 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -369,7 +373,7 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ResourcePermission getResourcePermission(long companyId,
-		String name, int scope, String primKey, long roleId)
+		java.lang.String name, int scope, java.lang.String primKey, long roleId)
 		throws PortalException;
 
 	/**
@@ -398,7 +402,7 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<ResourcePermission> getResourcePermissions(long companyId,
-		String name, int scope, String primKey);
+		java.lang.String name, int scope, java.lang.String primKey);
 
 	/**
 	* Returns the number of resource permissions.
@@ -419,8 +423,8 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	* @return the number of resource permissions at the scope of the type
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getResourcePermissionsCount(long companyId, String name,
-		int scope, String primKey);
+	public int getResourcePermissionsCount(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey);
 
 	/**
 	* Returns the resource permissions that apply to the resource.
@@ -434,7 +438,8 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<ResourcePermission> getResourceResourcePermissions(
-		long companyId, long groupId, String name, String primKey);
+		long companyId, long groupId, java.lang.String name,
+		java.lang.String primKey);
 
 	/**
 	* Returns all the resource permissions for the role.
@@ -470,8 +475,9 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 		int[] scopes, int start, int end);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Role> getRoles(long companyId, String name, int scope,
-		String primKey, String actionId) throws PortalException;
+	public List<Role> getRoles(long companyId, java.lang.String name,
+		int scope, java.lang.String primKey, java.lang.String actionId)
+		throws PortalException;
 
 	/**
 	* Returns all the resource permissions where scope = any &#63;.
@@ -526,7 +532,7 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasResourcePermission(List<Resource> resources,
-		long[] roleIds, String actionId) throws PortalException;
+		long[] roleIds, java.lang.String actionId) throws PortalException;
 
 	/**
 	* Returns <code>true</code> if the role has permission at the scope to
@@ -549,9 +555,9 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	action on the resource; <code>false</code> otherwise
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean hasResourcePermission(long companyId, String name,
-		int scope, String primKey, long roleId, String actionId)
-		throws PortalException;
+	public boolean hasResourcePermission(long companyId, java.lang.String name,
+		int scope, java.lang.String primKey, long roleId,
+		java.lang.String actionId) throws PortalException;
 
 	/**
 	* Returns <code>true</code> if the roles have permission at the scope to
@@ -574,19 +580,19 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	perform the action on the resource; <code>false</code> otherwise
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean hasResourcePermission(long companyId, String name,
-		int scope, String primKey, long[] roleIds, String actionId)
-		throws PortalException;
+	public boolean hasResourcePermission(long companyId, java.lang.String name,
+		int scope, java.lang.String primKey, long[] roleIds,
+		java.lang.String actionId) throws PortalException;
 
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link #getRoles(long, String, int,
 	String, String}
 	*/
-	@Deprecated
+	@java.lang.Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean[] hasResourcePermissions(long companyId, String name,
-		int scope, String primKey, long[] roleIds, String actionId)
-		throws PortalException;
+	public boolean[] hasResourcePermissions(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey,
+		long[] roleIds, java.lang.String actionId) throws PortalException;
 
 	/**
 	* Returns <code>true</code> if the role has permission at the scope to
@@ -608,8 +614,9 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	action on the resource; <code>false</code> otherwise
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean hasScopeResourcePermission(long companyId, String name,
-		int scope, long roleId, String actionId) throws PortalException;
+	public boolean hasScopeResourcePermission(long companyId,
+		java.lang.String name, int scope, long roleId, java.lang.String actionId)
+		throws PortalException;
 
 	/**
 	* Reassigns all the resource permissions from the source role to the
@@ -652,9 +659,9 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	* @param roleId the primary key of the role
 	* @param actionId the action ID
 	*/
-	public void removeResourcePermission(long companyId, String name,
-		int scope, String primKey, long roleId, String actionId)
-		throws PortalException;
+	public void removeResourcePermission(long companyId, java.lang.String name,
+		int scope, java.lang.String primKey, long roleId,
+		java.lang.String actionId) throws PortalException;
 
 	/**
 	* Revokes all permissions at the scope from the role to perform the action
@@ -669,8 +676,9 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 	* @param roleId the primary key of the role
 	* @param actionId the action ID
 	*/
-	public void removeResourcePermissions(long companyId, String name,
-		int scope, long roleId, String actionId) throws PortalException;
+	public void removeResourcePermissions(long companyId,
+		java.lang.String name, int scope, long roleId, java.lang.String actionId)
+		throws PortalException;
 
 	/**
 	* Updates the role's permissions at the scope, setting the actions that can
@@ -703,8 +711,9 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 		@Property(name = ExceptionRetryAcceptor.EXCEPTION_NAME, value = "org.springframework.dao.DataIntegrityViolationException")
 	}
 	)
-	public void setOwnerResourcePermissions(long companyId, String name,
-		int scope, String primKey, long roleId, long ownerId, String[] actionIds)
+	public void setOwnerResourcePermissions(long companyId,
+		java.lang.String name, int scope, java.lang.String primKey,
+		long roleId, long ownerId, java.lang.String[] actionIds)
 		throws PortalException;
 
 	/**
@@ -735,9 +744,9 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 		@Property(name = ExceptionRetryAcceptor.EXCEPTION_NAME, value = "org.springframework.dao.DataIntegrityViolationException")
 	}
 	)
-	public void setResourcePermissions(long companyId, String name, int scope,
-		String primKey, long roleId, String[] actionIds)
-		throws PortalException;
+	public void setResourcePermissions(long companyId, java.lang.String name,
+		int scope, java.lang.String primKey, long roleId,
+		java.lang.String[] actionIds) throws PortalException;
 
 	/**
 	* Updates the role's permissions at the scope, setting the actions that can
@@ -766,8 +775,9 @@ public interface ResourcePermissionLocalService extends BaseLocalService,
 		@Property(name = ExceptionRetryAcceptor.EXCEPTION_NAME, value = "org.springframework.dao.DataIntegrityViolationException")
 	}
 	)
-	public void setResourcePermissions(long companyId, String name, int scope,
-		String primKey, Map<Long, String[]> roleIdsToActionIds)
+	public void setResourcePermissions(long companyId, java.lang.String name,
+		int scope, java.lang.String primKey,
+		Map<java.lang.Long, java.lang.String[]> roleIdsToActionIds)
 		throws PortalException;
 
 	/**

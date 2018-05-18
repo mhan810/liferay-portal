@@ -37,15 +37,12 @@ import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.LayoutRevisionPersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.impl.LayoutRevisionImpl;
 import com.liferay.portal.model.impl.LayoutRevisionModelImpl;
 
 import java.io.Serializable;
-
-import java.lang.reflect.InvocationHandler;
 
 import java.util.Collections;
 import java.util.Date;
@@ -1240,7 +1237,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			if ((list != null) && !list.isEmpty()) {
 				for (LayoutRevision layoutRevision : list) {
 					if ((layoutSetBranchId != layoutRevision.getLayoutSetBranchId()) ||
-							(head != layoutRevision.isHead())) {
+							(head != layoutRevision.getHead())) {
 						list = null;
 
 						break;
@@ -2870,7 +2867,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 
 			if ((list != null) && !list.isEmpty()) {
 				for (LayoutRevision layoutRevision : list) {
-					if ((head != layoutRevision.isHead()) ||
+					if ((head != layoutRevision.getHead()) ||
 							(plid != layoutRevision.getPlid())) {
 						list = null;
 
@@ -5111,7 +5108,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			LayoutRevision layoutRevision = (LayoutRevision)result;
 
 			if ((layoutSetBranchId != layoutRevision.getLayoutSetBranchId()) ||
-					(head != layoutRevision.isHead()) ||
+					(head != layoutRevision.getHead()) ||
 					(plid != layoutRevision.getPlid())) {
 				result = null;
 			}
@@ -5170,7 +5167,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 					cacheResult(layoutRevision);
 
 					if ((layoutRevision.getLayoutSetBranchId() != layoutSetBranchId) ||
-							(layoutRevision.isHead() != head) ||
+							(layoutRevision.getHead() != head) ||
 							(layoutRevision.getPlid() != plid)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_L_H_P,
 							finderArgs, layoutRevision);
@@ -5419,7 +5416,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			if ((list != null) && !list.isEmpty()) {
 				for (LayoutRevision layoutRevision : list) {
 					if ((layoutSetBranchId != layoutRevision.getLayoutSetBranchId()) ||
-							(head != layoutRevision.isHead()) ||
+							(head != layoutRevision.getHead()) ||
 							(plid != layoutRevision.getPlid())) {
 						list = null;
 
@@ -6578,7 +6575,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 
 			if ((layoutSetBranchId != layoutRevision.getLayoutSetBranchId()) ||
 					(layoutBranchId != layoutRevision.getLayoutBranchId()) ||
-					(head != layoutRevision.isHead()) ||
+					(head != layoutRevision.getHead()) ||
 					(plid != layoutRevision.getPlid())) {
 				result = null;
 			}
@@ -6642,7 +6639,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 
 					if ((layoutRevision.getLayoutSetBranchId() != layoutSetBranchId) ||
 							(layoutRevision.getLayoutBranchId() != layoutBranchId) ||
-							(layoutRevision.isHead() != head) ||
+							(layoutRevision.getHead() != head) ||
 							(layoutRevision.getPlid() != plid)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_L_L_H_P,
 							finderArgs, layoutRevision);
@@ -6778,14 +6775,14 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 
 		finderCache.putResult(FINDER_PATH_FETCH_BY_L_H_P,
 			new Object[] {
-				layoutRevision.getLayoutSetBranchId(), layoutRevision.isHead(),
+				layoutRevision.getLayoutSetBranchId(), layoutRevision.getHead(),
 				layoutRevision.getPlid()
 			}, layoutRevision);
 
 		finderCache.putResult(FINDER_PATH_FETCH_BY_L_L_H_P,
 			new Object[] {
 				layoutRevision.getLayoutSetBranchId(),
-				layoutRevision.getLayoutBranchId(), layoutRevision.isHead(),
+				layoutRevision.getLayoutBranchId(), layoutRevision.getHead(),
 				layoutRevision.getPlid()
 			}, layoutRevision);
 
@@ -6863,7 +6860,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 		LayoutRevisionModelImpl layoutRevisionModelImpl) {
 		Object[] args = new Object[] {
 				layoutRevisionModelImpl.getLayoutSetBranchId(),
-				layoutRevisionModelImpl.isHead(),
+				layoutRevisionModelImpl.getHead(),
 				layoutRevisionModelImpl.getPlid()
 			};
 
@@ -6875,7 +6872,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 		args = new Object[] {
 				layoutRevisionModelImpl.getLayoutSetBranchId(),
 				layoutRevisionModelImpl.getLayoutBranchId(),
-				layoutRevisionModelImpl.isHead(),
+				layoutRevisionModelImpl.getHead(),
 				layoutRevisionModelImpl.getPlid()
 			};
 
@@ -6890,7 +6887,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 		if (clearCurrent) {
 			Object[] args = new Object[] {
 					layoutRevisionModelImpl.getLayoutSetBranchId(),
-					layoutRevisionModelImpl.isHead(),
+					layoutRevisionModelImpl.getHead(),
 					layoutRevisionModelImpl.getPlid()
 				};
 
@@ -6914,7 +6911,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			Object[] args = new Object[] {
 					layoutRevisionModelImpl.getLayoutSetBranchId(),
 					layoutRevisionModelImpl.getLayoutBranchId(),
-					layoutRevisionModelImpl.isHead(),
+					layoutRevisionModelImpl.getHead(),
 					layoutRevisionModelImpl.getPlid()
 				};
 
@@ -7009,6 +7006,8 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 
 	@Override
 	protected LayoutRevision removeImpl(LayoutRevision layoutRevision) {
+		layoutRevision = toUnwrappedModel(layoutRevision);
+
 		Session session = null;
 
 		try {
@@ -7039,23 +7038,9 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 
 	@Override
 	public LayoutRevision updateImpl(LayoutRevision layoutRevision) {
+		layoutRevision = toUnwrappedModel(layoutRevision);
+
 		boolean isNew = layoutRevision.isNew();
-
-		if (!(layoutRevision instanceof LayoutRevisionModelImpl)) {
-			InvocationHandler invocationHandler = null;
-
-			if (ProxyUtil.isProxyClass(layoutRevision.getClass())) {
-				invocationHandler = ProxyUtil.getInvocationHandler(layoutRevision);
-
-				throw new IllegalArgumentException(
-					"Implement ModelWrapper in layoutRevision proxy " +
-					invocationHandler.getClass());
-			}
-
-			throw new IllegalArgumentException(
-				"Implement ModelWrapper in custom LayoutRevision implementation " +
-				layoutRevision.getClass());
-		}
 
 		LayoutRevisionModelImpl layoutRevisionModelImpl = (LayoutRevisionModelImpl)layoutRevision;
 
@@ -7127,7 +7112,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 
 			args = new Object[] {
 					layoutRevisionModelImpl.getLayoutSetBranchId(),
-					layoutRevisionModelImpl.isHead()
+					layoutRevisionModelImpl.getHead()
 				};
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_L_H, args);
@@ -7153,7 +7138,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 				args);
 
 			args = new Object[] {
-					layoutRevisionModelImpl.isHead(),
+					layoutRevisionModelImpl.getHead(),
 					layoutRevisionModelImpl.getPlid()
 				};
 
@@ -7183,7 +7168,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 
 			args = new Object[] {
 					layoutRevisionModelImpl.getLayoutSetBranchId(),
-					layoutRevisionModelImpl.isHead(),
+					layoutRevisionModelImpl.getHead(),
 					layoutRevisionModelImpl.getPlid()
 				};
 
@@ -7258,7 +7243,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 
 				args = new Object[] {
 						layoutRevisionModelImpl.getLayoutSetBranchId(),
-						layoutRevisionModelImpl.isHead()
+						layoutRevisionModelImpl.getHead()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_L_H, args);
@@ -7320,7 +7305,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 					args);
 
 				args = new Object[] {
-						layoutRevisionModelImpl.isHead(),
+						layoutRevisionModelImpl.getHead(),
 						layoutRevisionModelImpl.getPlid()
 					};
 
@@ -7390,7 +7375,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 
 				args = new Object[] {
 						layoutRevisionModelImpl.getLayoutSetBranchId(),
-						layoutRevisionModelImpl.isHead(),
+						layoutRevisionModelImpl.getHead(),
 						layoutRevisionModelImpl.getPlid()
 					};
 
@@ -7434,6 +7419,49 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 		layoutRevision.resetOriginalValues();
 
 		return layoutRevision;
+	}
+
+	protected LayoutRevision toUnwrappedModel(LayoutRevision layoutRevision) {
+		if (layoutRevision instanceof LayoutRevisionImpl) {
+			return layoutRevision;
+		}
+
+		LayoutRevisionImpl layoutRevisionImpl = new LayoutRevisionImpl();
+
+		layoutRevisionImpl.setNew(layoutRevision.isNew());
+		layoutRevisionImpl.setPrimaryKey(layoutRevision.getPrimaryKey());
+
+		layoutRevisionImpl.setMvccVersion(layoutRevision.getMvccVersion());
+		layoutRevisionImpl.setLayoutRevisionId(layoutRevision.getLayoutRevisionId());
+		layoutRevisionImpl.setGroupId(layoutRevision.getGroupId());
+		layoutRevisionImpl.setCompanyId(layoutRevision.getCompanyId());
+		layoutRevisionImpl.setUserId(layoutRevision.getUserId());
+		layoutRevisionImpl.setUserName(layoutRevision.getUserName());
+		layoutRevisionImpl.setCreateDate(layoutRevision.getCreateDate());
+		layoutRevisionImpl.setModifiedDate(layoutRevision.getModifiedDate());
+		layoutRevisionImpl.setLayoutSetBranchId(layoutRevision.getLayoutSetBranchId());
+		layoutRevisionImpl.setLayoutBranchId(layoutRevision.getLayoutBranchId());
+		layoutRevisionImpl.setParentLayoutRevisionId(layoutRevision.getParentLayoutRevisionId());
+		layoutRevisionImpl.setHead(layoutRevision.isHead());
+		layoutRevisionImpl.setMajor(layoutRevision.isMajor());
+		layoutRevisionImpl.setPlid(layoutRevision.getPlid());
+		layoutRevisionImpl.setPrivateLayout(layoutRevision.isPrivateLayout());
+		layoutRevisionImpl.setName(layoutRevision.getName());
+		layoutRevisionImpl.setTitle(layoutRevision.getTitle());
+		layoutRevisionImpl.setDescription(layoutRevision.getDescription());
+		layoutRevisionImpl.setKeywords(layoutRevision.getKeywords());
+		layoutRevisionImpl.setRobots(layoutRevision.getRobots());
+		layoutRevisionImpl.setTypeSettings(layoutRevision.getTypeSettings());
+		layoutRevisionImpl.setIconImageId(layoutRevision.getIconImageId());
+		layoutRevisionImpl.setThemeId(layoutRevision.getThemeId());
+		layoutRevisionImpl.setColorSchemeId(layoutRevision.getColorSchemeId());
+		layoutRevisionImpl.setCss(layoutRevision.getCss());
+		layoutRevisionImpl.setStatus(layoutRevision.getStatus());
+		layoutRevisionImpl.setStatusByUserId(layoutRevision.getStatusByUserId());
+		layoutRevisionImpl.setStatusByUserName(layoutRevision.getStatusByUserName());
+		layoutRevisionImpl.setStatusDate(layoutRevision.getStatusDate());
+
+		return layoutRevisionImpl;
 	}
 
 	/**

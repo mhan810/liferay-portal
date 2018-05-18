@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.CompanyModel;
 import com.liferay.portal.kernel.model.CompanySoap;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -136,9 +135,9 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 		model.setMx(soapModel.getMx());
 		model.setHomeURL(soapModel.getHomeURL());
 		model.setLogoId(soapModel.getLogoId());
-		model.setSystem(soapModel.isSystem());
+		model.setSystem(soapModel.getSystem());
 		model.setMaxUsers(soapModel.getMaxUsers());
-		model.setActive(soapModel.isActive());
+		model.setActive(soapModel.getActive());
 
 		return model;
 	}
@@ -211,9 +210,9 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 		attributes.put("mx", getMx());
 		attributes.put("homeURL", getHomeURL());
 		attributes.put("logoId", getLogoId());
-		attributes.put("system", isSystem());
+		attributes.put("system", getSystem());
 		attributes.put("maxUsers", getMaxUsers());
-		attributes.put("active", isActive());
+		attributes.put("active", getActive());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -502,11 +501,11 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 	public void setKeyObj(java.security.Key keyObj) {
 	}
 
-	public String getVirtualHostname() {
+	public java.lang.String getVirtualHostname() {
 		return null;
 	}
 
-	public void setVirtualHostname(String virtualHostname) {
+	public void setVirtualHostname(java.lang.String virtualHostname) {
 	}
 
 	public long getColumnBitmask() {
@@ -548,9 +547,9 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 		companyImpl.setMx(getMx());
 		companyImpl.setHomeURL(getHomeURL());
 		companyImpl.setLogoId(getLogoId());
-		companyImpl.setSystem(isSystem());
+		companyImpl.setSystem(getSystem());
 		companyImpl.setMaxUsers(getMaxUsers());
-		companyImpl.setActive(isActive());
+		companyImpl.setActive(getActive());
 
 		companyImpl.resetOriginalValues();
 
@@ -678,11 +677,11 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 
 		companyCacheModel.logoId = getLogoId();
 
-		companyCacheModel.system = isSystem();
+		companyCacheModel.system = getSystem();
 
 		companyCacheModel.maxUsers = getMaxUsers();
 
-		companyCacheModel.active = isActive();
+		companyCacheModel.active = getActive();
 
 		companyCacheModel._companySecurityBag = getCompanySecurityBag();
 
@@ -714,11 +713,11 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 		sb.append(", logoId=");
 		sb.append(getLogoId());
 		sb.append(", system=");
-		sb.append(isSystem());
+		sb.append(getSystem());
 		sb.append(", maxUsers=");
 		sb.append(getMaxUsers());
 		sb.append(", active=");
-		sb.append(isActive());
+		sb.append(getActive());
 		sb.append("}");
 
 		return sb.toString();
@@ -766,7 +765,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>system</column-name><column-value><![CDATA[");
-		sb.append(isSystem());
+		sb.append(getSystem());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>maxUsers</column-name><column-value><![CDATA[");
@@ -774,7 +773,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>active</column-name><column-value><![CDATA[");
-		sb.append(isActive());
+		sb.append(getActive());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -784,7 +783,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 
 	private static final ClassLoader _classLoader = Company.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			Company.class, ModelWrapper.class
+			Company.class
 		};
 	private long _mvccVersion;
 	private long _companyId;

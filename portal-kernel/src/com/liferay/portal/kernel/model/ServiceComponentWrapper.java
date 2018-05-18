@@ -106,7 +106,7 @@ public class ServiceComponentWrapper implements ServiceComponent,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new ServiceComponentWrapper((ServiceComponent)_serviceComponent.clone());
 	}
 
@@ -131,7 +131,7 @@ public class ServiceComponentWrapper implements ServiceComponent,
 	* @return the build namespace of this service component
 	*/
 	@Override
-	public String getBuildNamespace() {
+	public java.lang.String getBuildNamespace() {
 		return _serviceComponent.getBuildNamespace();
 	}
 
@@ -151,7 +151,7 @@ public class ServiceComponentWrapper implements ServiceComponent,
 	* @return the data of this service component
 	*/
 	@Override
-	public String getData() {
+	public java.lang.String getData() {
 		return _serviceComponent.getData();
 	}
 
@@ -161,7 +161,7 @@ public class ServiceComponentWrapper implements ServiceComponent,
 	}
 
 	@Override
-	public String getIndexesSQL() {
+	public java.lang.String getIndexesSQL() {
 		return _serviceComponent.getIndexesSQL();
 	}
 
@@ -191,7 +191,7 @@ public class ServiceComponentWrapper implements ServiceComponent,
 	}
 
 	@Override
-	public String getSequencesSQL() {
+	public java.lang.String getSequencesSQL() {
 		return _serviceComponent.getSequencesSQL();
 	}
 
@@ -206,7 +206,7 @@ public class ServiceComponentWrapper implements ServiceComponent,
 	}
 
 	@Override
-	public String getTablesSQL() {
+	public java.lang.String getTablesSQL() {
 		return _serviceComponent.getTablesSQL();
 	}
 
@@ -251,7 +251,7 @@ public class ServiceComponentWrapper implements ServiceComponent,
 	* @param buildNamespace the build namespace of this service component
 	*/
 	@Override
-	public void setBuildNamespace(String buildNamespace) {
+	public void setBuildNamespace(java.lang.String buildNamespace) {
 		_serviceComponent.setBuildNamespace(buildNamespace);
 	}
 
@@ -276,7 +276,7 @@ public class ServiceComponentWrapper implements ServiceComponent,
 	* @param data the data of this service component
 	*/
 	@Override
-	public void setData(String data) {
+	public void setData(java.lang.String data) {
 		_serviceComponent.setData(data);
 	}
 
@@ -346,7 +346,7 @@ public class ServiceComponentWrapper implements ServiceComponent,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _serviceComponent.toString();
 	}
 
@@ -356,7 +356,7 @@ public class ServiceComponentWrapper implements ServiceComponent,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _serviceComponent.toXmlString();
 	}
 

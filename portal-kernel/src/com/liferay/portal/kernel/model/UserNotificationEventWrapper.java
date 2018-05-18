@@ -66,10 +66,10 @@ public class UserNotificationEventWrapper implements UserNotificationEvent,
 		attributes.put("timestamp", getTimestamp());
 		attributes.put("deliveryType", getDeliveryType());
 		attributes.put("deliverBy", getDeliverBy());
-		attributes.put("delivered", isDelivered());
+		attributes.put("delivered", getDelivered());
 		attributes.put("payload", getPayload());
-		attributes.put("actionRequired", isActionRequired());
-		attributes.put("archived", isArchived());
+		attributes.put("actionRequired", getActionRequired());
+		attributes.put("archived", getArchived());
 
 		return attributes;
 	}
@@ -157,7 +157,7 @@ public class UserNotificationEventWrapper implements UserNotificationEvent,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new UserNotificationEventWrapper((UserNotificationEvent)_userNotificationEvent.clone());
 	}
 
@@ -247,7 +247,7 @@ public class UserNotificationEventWrapper implements UserNotificationEvent,
 	* @return the payload of this user notification event
 	*/
 	@Override
-	public String getPayload() {
+	public java.lang.String getPayload() {
 		return _userNotificationEvent.getPayload();
 	}
 
@@ -282,7 +282,7 @@ public class UserNotificationEventWrapper implements UserNotificationEvent,
 	* @return the type of this user notification event
 	*/
 	@Override
-	public String getType() {
+	public java.lang.String getType() {
 		return _userNotificationEvent.getType();
 	}
 
@@ -312,7 +312,7 @@ public class UserNotificationEventWrapper implements UserNotificationEvent,
 	* @return the user uuid of this user notification event
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _userNotificationEvent.getUserUuid();
 	}
 
@@ -322,7 +322,7 @@ public class UserNotificationEventWrapper implements UserNotificationEvent,
 	* @return the uuid of this user notification event
 	*/
 	@Override
-	public String getUuid() {
+	public java.lang.String getUuid() {
 		return _userNotificationEvent.getUuid();
 	}
 
@@ -482,7 +482,7 @@ public class UserNotificationEventWrapper implements UserNotificationEvent,
 	* @param payload the payload of this user notification event
 	*/
 	@Override
-	public void setPayload(String payload) {
+	public void setPayload(java.lang.String payload) {
 		_userNotificationEvent.setPayload(payload);
 	}
 
@@ -517,7 +517,7 @@ public class UserNotificationEventWrapper implements UserNotificationEvent,
 	* @param type the type of this user notification event
 	*/
 	@Override
-	public void setType(String type) {
+	public void setType(java.lang.String type) {
 		_userNotificationEvent.setType(type);
 	}
 
@@ -547,7 +547,7 @@ public class UserNotificationEventWrapper implements UserNotificationEvent,
 	* @param userUuid the user uuid of this user notification event
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_userNotificationEvent.setUserUuid(userUuid);
 	}
 
@@ -557,7 +557,7 @@ public class UserNotificationEventWrapper implements UserNotificationEvent,
 	* @param uuid the uuid of this user notification event
 	*/
 	@Override
-	public void setUuid(String uuid) {
+	public void setUuid(java.lang.String uuid) {
 		_userNotificationEvent.setUuid(uuid);
 	}
 
@@ -572,7 +572,7 @@ public class UserNotificationEventWrapper implements UserNotificationEvent,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _userNotificationEvent.toString();
 	}
 
@@ -582,7 +582,7 @@ public class UserNotificationEventWrapper implements UserNotificationEvent,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _userNotificationEvent.toXmlString();
 	}
 

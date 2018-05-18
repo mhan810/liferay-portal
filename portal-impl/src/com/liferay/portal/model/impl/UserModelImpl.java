@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserModel;
 import com.liferay.portal.kernel.model.UserSoap;
@@ -210,11 +209,11 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		model.setCompanyId(soapModel.getCompanyId());
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
-		model.setDefaultUser(soapModel.isDefaultUser());
+		model.setDefaultUser(soapModel.getDefaultUser());
 		model.setContactId(soapModel.getContactId());
 		model.setPassword(soapModel.getPassword());
-		model.setPasswordEncrypted(soapModel.isPasswordEncrypted());
-		model.setPasswordReset(soapModel.isPasswordReset());
+		model.setPasswordEncrypted(soapModel.getPasswordEncrypted());
+		model.setPasswordReset(soapModel.getPasswordReset());
 		model.setPasswordModifiedDate(soapModel.getPasswordModifiedDate());
 		model.setDigest(soapModel.getDigest());
 		model.setReminderQueryQuestion(soapModel.getReminderQueryQuestion());
@@ -241,10 +240,10 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		model.setLastLoginIP(soapModel.getLastLoginIP());
 		model.setLastFailedLoginDate(soapModel.getLastFailedLoginDate());
 		model.setFailedLoginAttempts(soapModel.getFailedLoginAttempts());
-		model.setLockout(soapModel.isLockout());
+		model.setLockout(soapModel.getLockout());
 		model.setLockoutDate(soapModel.getLockoutDate());
-		model.setAgreedToTermsOfUse(soapModel.isAgreedToTermsOfUse());
-		model.setEmailAddressVerified(soapModel.isEmailAddressVerified());
+		model.setAgreedToTermsOfUse(soapModel.getAgreedToTermsOfUse());
+		model.setEmailAddressVerified(soapModel.getEmailAddressVerified());
 		model.setStatus(soapModel.getStatus());
 
 		return model;
@@ -361,11 +360,11 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		attributes.put("companyId", getCompanyId());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("defaultUser", isDefaultUser());
+		attributes.put("defaultUser", getDefaultUser());
 		attributes.put("contactId", getContactId());
 		attributes.put("password", getPassword());
-		attributes.put("passwordEncrypted", isPasswordEncrypted());
-		attributes.put("passwordReset", isPasswordReset());
+		attributes.put("passwordEncrypted", getPasswordEncrypted());
+		attributes.put("passwordReset", getPasswordReset());
 		attributes.put("passwordModifiedDate", getPasswordModifiedDate());
 		attributes.put("digest", getDigest());
 		attributes.put("reminderQueryQuestion", getReminderQueryQuestion());
@@ -392,10 +391,10 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		attributes.put("lastLoginIP", getLastLoginIP());
 		attributes.put("lastFailedLoginDate", getLastFailedLoginDate());
 		attributes.put("failedLoginAttempts", getFailedLoginAttempts());
-		attributes.put("lockout", isLockout());
+		attributes.put("lockout", getLockout());
 		attributes.put("lockoutDate", getLockoutDate());
-		attributes.put("agreedToTermsOfUse", isAgreedToTermsOfUse());
-		attributes.put("emailAddressVerified", isEmailAddressVerified());
+		attributes.put("agreedToTermsOfUse", getAgreedToTermsOfUse());
+		attributes.put("emailAddressVerified", getEmailAddressVerified());
 		attributes.put("status", getStatus());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
@@ -1472,11 +1471,11 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		userImpl.setCompanyId(getCompanyId());
 		userImpl.setCreateDate(getCreateDate());
 		userImpl.setModifiedDate(getModifiedDate());
-		userImpl.setDefaultUser(isDefaultUser());
+		userImpl.setDefaultUser(getDefaultUser());
 		userImpl.setContactId(getContactId());
 		userImpl.setPassword(getPassword());
-		userImpl.setPasswordEncrypted(isPasswordEncrypted());
-		userImpl.setPasswordReset(isPasswordReset());
+		userImpl.setPasswordEncrypted(getPasswordEncrypted());
+		userImpl.setPasswordReset(getPasswordReset());
 		userImpl.setPasswordModifiedDate(getPasswordModifiedDate());
 		userImpl.setDigest(getDigest());
 		userImpl.setReminderQueryQuestion(getReminderQueryQuestion());
@@ -1503,10 +1502,10 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		userImpl.setLastLoginIP(getLastLoginIP());
 		userImpl.setLastFailedLoginDate(getLastFailedLoginDate());
 		userImpl.setFailedLoginAttempts(getFailedLoginAttempts());
-		userImpl.setLockout(isLockout());
+		userImpl.setLockout(getLockout());
 		userImpl.setLockoutDate(getLockoutDate());
-		userImpl.setAgreedToTermsOfUse(isAgreedToTermsOfUse());
-		userImpl.setEmailAddressVerified(isEmailAddressVerified());
+		userImpl.setAgreedToTermsOfUse(getAgreedToTermsOfUse());
+		userImpl.setEmailAddressVerified(getEmailAddressVerified());
 		userImpl.setStatus(getStatus());
 
 		userImpl.resetOriginalValues();
@@ -1653,7 +1652,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			userCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
-		userCacheModel.defaultUser = isDefaultUser();
+		userCacheModel.defaultUser = getDefaultUser();
 
 		userCacheModel.contactId = getContactId();
 
@@ -1665,9 +1664,9 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			userCacheModel.password = null;
 		}
 
-		userCacheModel.passwordEncrypted = isPasswordEncrypted();
+		userCacheModel.passwordEncrypted = getPasswordEncrypted();
 
-		userCacheModel.passwordReset = isPasswordReset();
+		userCacheModel.passwordReset = getPasswordReset();
 
 		Date passwordModifiedDate = getPasswordModifiedDate();
 
@@ -1853,7 +1852,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 		userCacheModel.failedLoginAttempts = getFailedLoginAttempts();
 
-		userCacheModel.lockout = isLockout();
+		userCacheModel.lockout = getLockout();
 
 		Date lockoutDate = getLockoutDate();
 
@@ -1864,9 +1863,9 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			userCacheModel.lockoutDate = Long.MIN_VALUE;
 		}
 
-		userCacheModel.agreedToTermsOfUse = isAgreedToTermsOfUse();
+		userCacheModel.agreedToTermsOfUse = getAgreedToTermsOfUse();
 
-		userCacheModel.emailAddressVerified = isEmailAddressVerified();
+		userCacheModel.emailAddressVerified = getEmailAddressVerified();
 
 		userCacheModel.status = getStatus();
 
@@ -1890,15 +1889,15 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		sb.append(", modifiedDate=");
 		sb.append(getModifiedDate());
 		sb.append(", defaultUser=");
-		sb.append(isDefaultUser());
+		sb.append(getDefaultUser());
 		sb.append(", contactId=");
 		sb.append(getContactId());
 		sb.append(", password=");
 		sb.append(getPassword());
 		sb.append(", passwordEncrypted=");
-		sb.append(isPasswordEncrypted());
+		sb.append(getPasswordEncrypted());
 		sb.append(", passwordReset=");
-		sb.append(isPasswordReset());
+		sb.append(getPasswordReset());
 		sb.append(", passwordModifiedDate=");
 		sb.append(getPasswordModifiedDate());
 		sb.append(", digest=");
@@ -1952,13 +1951,13 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		sb.append(", failedLoginAttempts=");
 		sb.append(getFailedLoginAttempts());
 		sb.append(", lockout=");
-		sb.append(isLockout());
+		sb.append(getLockout());
 		sb.append(", lockoutDate=");
 		sb.append(getLockoutDate());
 		sb.append(", agreedToTermsOfUse=");
-		sb.append(isAgreedToTermsOfUse());
+		sb.append(getAgreedToTermsOfUse());
 		sb.append(", emailAddressVerified=");
-		sb.append(isEmailAddressVerified());
+		sb.append(getEmailAddressVerified());
 		sb.append(", status=");
 		sb.append(getStatus());
 		sb.append("}");
@@ -2000,7 +1999,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>defaultUser</column-name><column-value><![CDATA[");
-		sb.append(isDefaultUser());
+		sb.append(getDefaultUser());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>contactId</column-name><column-value><![CDATA[");
@@ -2012,11 +2011,11 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>passwordEncrypted</column-name><column-value><![CDATA[");
-		sb.append(isPasswordEncrypted());
+		sb.append(getPasswordEncrypted());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>passwordReset</column-name><column-value><![CDATA[");
-		sb.append(isPasswordReset());
+		sb.append(getPasswordReset());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>passwordModifiedDate</column-name><column-value><![CDATA[");
@@ -2124,7 +2123,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>lockout</column-name><column-value><![CDATA[");
-		sb.append(isLockout());
+		sb.append(getLockout());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>lockoutDate</column-name><column-value><![CDATA[");
@@ -2132,11 +2131,11 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>agreedToTermsOfUse</column-name><column-value><![CDATA[");
-		sb.append(isAgreedToTermsOfUse());
+		sb.append(getAgreedToTermsOfUse());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>emailAddressVerified</column-name><column-value><![CDATA[");
-		sb.append(isEmailAddressVerified());
+		sb.append(getEmailAddressVerified());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>status</column-name><column-value><![CDATA[");
@@ -2150,7 +2149,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	private static final ClassLoader _classLoader = User.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			User.class, ModelWrapper.class
+			User.class
 		};
 	private long _mvccVersion;
 	private String _uuid;

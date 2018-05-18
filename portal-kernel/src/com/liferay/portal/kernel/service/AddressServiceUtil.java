@@ -41,9 +41,10 @@ public class AddressServiceUtil {
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.portal.service.impl.AddressServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static com.liferay.portal.kernel.model.Address addAddress(
-		String className, long classPK, String street1, String street2,
-		String street3, String city, String zip, long regionId, long countryId,
-		long typeId, boolean mailing, boolean primary,
+		java.lang.String className, long classPK, java.lang.String street1,
+		java.lang.String street2, java.lang.String street3,
+		java.lang.String city, java.lang.String zip, long regionId,
+		long countryId, long typeId, boolean mailing, boolean primary,
 		ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
@@ -64,7 +65,7 @@ public class AddressServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Address> getAddresses(
-		String className, long classPK)
+		java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getAddresses(className, classPK);
 	}
@@ -74,14 +75,15 @@ public class AddressServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
 	public static com.liferay.portal.kernel.model.Address updateAddress(
-		long addressId, String street1, String street2, String street3,
-		String city, String zip, long regionId, long countryId, long typeId,
-		boolean mailing, boolean primary)
+		long addressId, java.lang.String street1, java.lang.String street2,
+		java.lang.String street3, java.lang.String city, java.lang.String zip,
+		long regionId, long countryId, long typeId, boolean mailing,
+		boolean primary)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateAddress(addressId, street1, street2, street3, city,

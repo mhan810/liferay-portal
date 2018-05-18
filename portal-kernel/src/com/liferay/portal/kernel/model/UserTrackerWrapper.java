@@ -133,7 +133,7 @@ public class UserTrackerWrapper implements UserTracker,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new UserTrackerWrapper((UserTracker)_userTracker.clone());
 	}
 
@@ -153,7 +153,7 @@ public class UserTrackerWrapper implements UserTracker,
 	}
 
 	@Override
-	public String getEmailAddress() {
+	public java.lang.String getEmailAddress() {
 		return _userTracker.getEmailAddress();
 	}
 
@@ -163,7 +163,7 @@ public class UserTrackerWrapper implements UserTracker,
 	}
 
 	@Override
-	public String getFullName() {
+	public java.lang.String getFullName() {
 		return _userTracker.getFullName();
 	}
 
@@ -218,7 +218,7 @@ public class UserTrackerWrapper implements UserTracker,
 	* @return the remote addr of this user tracker
 	*/
 	@Override
-	public String getRemoteAddr() {
+	public java.lang.String getRemoteAddr() {
 		return _userTracker.getRemoteAddr();
 	}
 
@@ -228,7 +228,7 @@ public class UserTrackerWrapper implements UserTracker,
 	* @return the remote host of this user tracker
 	*/
 	@Override
-	public String getRemoteHost() {
+	public java.lang.String getRemoteHost() {
 		return _userTracker.getRemoteHost();
 	}
 
@@ -238,7 +238,7 @@ public class UserTrackerWrapper implements UserTracker,
 	* @return the session ID of this user tracker
 	*/
 	@Override
-	public String getSessionId() {
+	public java.lang.String getSessionId() {
 		return _userTracker.getSessionId();
 	}
 
@@ -248,7 +248,7 @@ public class UserTrackerWrapper implements UserTracker,
 	* @return the user agent of this user tracker
 	*/
 	@Override
-	public String getUserAgent() {
+	public java.lang.String getUserAgent() {
 		return _userTracker.getUserAgent();
 	}
 
@@ -278,7 +278,7 @@ public class UserTrackerWrapper implements UserTracker,
 	* @return the user uuid of this user tracker
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _userTracker.getUserUuid();
 	}
 
@@ -383,7 +383,7 @@ public class UserTrackerWrapper implements UserTracker,
 	* @param remoteAddr the remote addr of this user tracker
 	*/
 	@Override
-	public void setRemoteAddr(String remoteAddr) {
+	public void setRemoteAddr(java.lang.String remoteAddr) {
 		_userTracker.setRemoteAddr(remoteAddr);
 	}
 
@@ -393,7 +393,7 @@ public class UserTrackerWrapper implements UserTracker,
 	* @param remoteHost the remote host of this user tracker
 	*/
 	@Override
-	public void setRemoteHost(String remoteHost) {
+	public void setRemoteHost(java.lang.String remoteHost) {
 		_userTracker.setRemoteHost(remoteHost);
 	}
 
@@ -403,7 +403,7 @@ public class UserTrackerWrapper implements UserTracker,
 	* @param sessionId the session ID of this user tracker
 	*/
 	@Override
-	public void setSessionId(String sessionId) {
+	public void setSessionId(java.lang.String sessionId) {
 		_userTracker.setSessionId(sessionId);
 	}
 
@@ -413,7 +413,7 @@ public class UserTrackerWrapper implements UserTracker,
 	* @param userAgent the user agent of this user tracker
 	*/
 	@Override
-	public void setUserAgent(String userAgent) {
+	public void setUserAgent(java.lang.String userAgent) {
 		_userTracker.setUserAgent(userAgent);
 	}
 
@@ -443,7 +443,7 @@ public class UserTrackerWrapper implements UserTracker,
 	* @param userUuid the user uuid of this user tracker
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_userTracker.setUserUuid(userUuid);
 	}
 
@@ -458,7 +458,7 @@ public class UserTrackerWrapper implements UserTracker,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _userTracker.toString();
 	}
 
@@ -468,7 +468,7 @@ public class UserTrackerWrapper implements UserTracker,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _userTracker.toXmlString();
 	}
 

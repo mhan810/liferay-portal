@@ -40,7 +40,6 @@ import com.liferay.portal.kernel.service.ServiceComponentLocalService;
 import com.liferay.portal.kernel.service.persistence.ReleasePersistence;
 import com.liferay.portal.kernel.service.persistence.ServiceComponentFinder;
 import com.liferay.portal.kernel.service.persistence.ServiceComponentPersistence;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 
@@ -94,7 +93,6 @@ public abstract class ServiceComponentLocalServiceBaseImpl
 	 * @return the new service component
 	 */
 	@Override
-	@Transactional(enabled = false)
 	public ServiceComponent createServiceComponent(long serviceComponentId) {
 		return serviceComponentPersistence.create(serviceComponentId);
 	}

@@ -18,7 +18,6 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.OrgGroupRole;
 import com.liferay.portal.kernel.model.OrgGroupRoleModel;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
@@ -415,7 +414,7 @@ public class OrgGroupRoleModelImpl extends BaseModelImpl<OrgGroupRole>
 
 	private static final ClassLoader _classLoader = OrgGroupRole.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			OrgGroupRole.class, ModelWrapper.class
+			OrgGroupRole.class
 		};
 	private long _mvccVersion;
 	private long _organizationId;

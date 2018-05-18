@@ -170,7 +170,7 @@ public class SystemEventWrapper implements SystemEvent,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new SystemEventWrapper((SystemEvent)_systemEvent.clone());
 	}
 
@@ -185,7 +185,7 @@ public class SystemEventWrapper implements SystemEvent,
 	* @return the fully qualified class name of this system event
 	*/
 	@Override
-	public String getClassName() {
+	public java.lang.String getClassName() {
 		return _systemEvent.getClassName();
 	}
 
@@ -215,7 +215,7 @@ public class SystemEventWrapper implements SystemEvent,
 	* @return the class uuid of this system event
 	*/
 	@Override
-	public String getClassUuid() {
+	public java.lang.String getClassUuid() {
 		return _systemEvent.getClassUuid();
 	}
 
@@ -250,7 +250,7 @@ public class SystemEventWrapper implements SystemEvent,
 	* @return the extra data of this system event
 	*/
 	@Override
-	public String getExtraData() {
+	public java.lang.String getExtraData() {
 		return _systemEvent.getExtraData();
 	}
 
@@ -300,7 +300,7 @@ public class SystemEventWrapper implements SystemEvent,
 	}
 
 	@Override
-	public String getReferrerClassName() {
+	public java.lang.String getReferrerClassName() {
 		return _systemEvent.getReferrerClassName();
 	}
 
@@ -360,7 +360,7 @@ public class SystemEventWrapper implements SystemEvent,
 	* @return the user name of this system event
 	*/
 	@Override
-	public String getUserName() {
+	public java.lang.String getUserName() {
 		return _systemEvent.getUserName();
 	}
 
@@ -370,7 +370,7 @@ public class SystemEventWrapper implements SystemEvent,
 	* @return the user uuid of this system event
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _systemEvent.getUserUuid();
 	}
 
@@ -405,7 +405,7 @@ public class SystemEventWrapper implements SystemEvent,
 	}
 
 	@Override
-	public void setClassName(String className) {
+	public void setClassName(java.lang.String className) {
 		_systemEvent.setClassName(className);
 	}
 
@@ -435,7 +435,7 @@ public class SystemEventWrapper implements SystemEvent,
 	* @param classUuid the class uuid of this system event
 	*/
 	@Override
-	public void setClassUuid(String classUuid) {
+	public void setClassUuid(java.lang.String classUuid) {
 		_systemEvent.setClassUuid(classUuid);
 	}
 
@@ -480,7 +480,7 @@ public class SystemEventWrapper implements SystemEvent,
 	* @param extraData the extra data of this system event
 	*/
 	@Override
-	public void setExtraData(String extraData) {
+	public void setExtraData(java.lang.String extraData) {
 		_systemEvent.setExtraData(extraData);
 	}
 
@@ -535,7 +535,7 @@ public class SystemEventWrapper implements SystemEvent,
 	}
 
 	@Override
-	public void setReferrerClassName(String referrerClassName) {
+	public void setReferrerClassName(java.lang.String referrerClassName) {
 		_systemEvent.setReferrerClassName(referrerClassName);
 	}
 
@@ -595,7 +595,7 @@ public class SystemEventWrapper implements SystemEvent,
 	* @param userName the user name of this system event
 	*/
 	@Override
-	public void setUserName(String userName) {
+	public void setUserName(java.lang.String userName) {
 		_systemEvent.setUserName(userName);
 	}
 
@@ -605,7 +605,7 @@ public class SystemEventWrapper implements SystemEvent,
 	* @param userUuid the user uuid of this system event
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_systemEvent.setUserUuid(userUuid);
 	}
 
@@ -620,7 +620,7 @@ public class SystemEventWrapper implements SystemEvent,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _systemEvent.toString();
 	}
 
@@ -630,7 +630,7 @@ public class SystemEventWrapper implements SystemEvent,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _systemEvent.toXmlString();
 	}
 

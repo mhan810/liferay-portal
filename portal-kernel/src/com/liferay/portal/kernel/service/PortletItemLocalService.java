@@ -57,8 +57,9 @@ public interface PortletItemLocalService extends BaseLocalService,
 	 *
 	 * Never modify or reference this interface directly. Always use {@link PortletItemLocalServiceUtil} to access the portlet item local service. Add custom service methods to {@link com.liferay.portal.service.impl.PortletItemLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public PortletItem addPortletItem(long userId, long groupId, String name,
-		String portletId, String className) throws PortalException;
+	public PortletItem addPortletItem(long userId, long groupId,
+		java.lang.String name, java.lang.String portletId,
+		java.lang.String className) throws PortalException;
 
 	/**
 	* Adds the portlet item to the database. Also notifies the appropriate model listeners.
@@ -75,7 +76,6 @@ public interface PortletItemLocalService extends BaseLocalService,
 	* @param portletItemId the primary key for the new portlet item
 	* @return the new portlet item
 	*/
-	@Transactional(enabled = false)
 	public PortletItem createPortletItem(long portletItemId);
 
 	/**
@@ -178,7 +178,7 @@ public interface PortletItemLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -197,8 +197,9 @@ public interface PortletItemLocalService extends BaseLocalService,
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public PortletItem getPortletItem(long groupId, String name,
-		String portletId, String className) throws PortalException;
+	public PortletItem getPortletItem(long groupId, java.lang.String name,
+		java.lang.String portletId, java.lang.String className)
+		throws PortalException;
 
 	/**
 	* Returns a range of all the portlet items.
@@ -215,11 +216,12 @@ public interface PortletItemLocalService extends BaseLocalService,
 	public List<PortletItem> getPortletItems(int start, int end);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<PortletItem> getPortletItems(long groupId, String className);
+	public List<PortletItem> getPortletItems(long groupId,
+		java.lang.String className);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<PortletItem> getPortletItems(long groupId, String portletId,
-		String className);
+	public List<PortletItem> getPortletItems(long groupId,
+		java.lang.String portletId, java.lang.String className);
 
 	/**
 	* Returns the number of portlet items.
@@ -230,8 +232,8 @@ public interface PortletItemLocalService extends BaseLocalService,
 	public int getPortletItemsCount();
 
 	public PortletItem updatePortletItem(long userId, long groupId,
-		String name, String portletId, String className)
-		throws PortalException;
+		java.lang.String name, java.lang.String portletId,
+		java.lang.String className) throws PortalException;
 
 	/**
 	* Updates the portlet item in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

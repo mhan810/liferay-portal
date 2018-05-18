@@ -77,7 +77,6 @@ public interface RecentLayoutRevisionLocalService extends BaseLocalService,
 	* @param recentLayoutRevisionId the primary key for the new recent layout revision
 	* @return the new recent layout revision
 	*/
-	@Transactional(enabled = false)
 	public RecentLayoutRevision createRecentLayoutRevision(
 		long recentLayoutRevisionId);
 
@@ -191,7 +190,7 @@ public interface RecentLayoutRevisionLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
