@@ -95,6 +95,7 @@
 		</field>
 		<field name="vocabularyId" type="long" />
 		<field name="lastPublishDate" type="Date" />
+		<field name="externalReferenceCode" type="String" />
 	</model>
 	<model name="com.liferay.asset.kernel.model.AssetCategoryProperty">
 		<field name="categoryPropertyId" type="long" />

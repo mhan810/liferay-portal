@@ -502,6 +502,71 @@ public class AssetCategoryUtil {
 	}
 
 	/**
+	* Returns the asset category where externalReferenceCode = &#63; or throws a {@link NoSuchCategoryException} if it could not be found.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the matching asset category
+	* @throws NoSuchCategoryException if a matching asset category could not be found
+	*/
+	public static AssetCategory findByExternalReferenceCode(
+		java.lang.String externalReferenceCode)
+		throws com.liferay.asset.kernel.exception.NoSuchCategoryException {
+		return getPersistence()
+				   .findByExternalReferenceCode(externalReferenceCode);
+	}
+
+	/**
+	* Returns the asset category where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the matching asset category, or <code>null</code> if a matching asset category could not be found
+	*/
+	public static AssetCategory fetchByExternalReferenceCode(
+		java.lang.String externalReferenceCode) {
+		return getPersistence()
+				   .fetchByExternalReferenceCode(externalReferenceCode);
+	}
+
+	/**
+	* Returns the asset category where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param externalReferenceCode the external reference code
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching asset category, or <code>null</code> if a matching asset category could not be found
+	*/
+	public static AssetCategory fetchByExternalReferenceCode(
+		java.lang.String externalReferenceCode, boolean retrieveFromCache) {
+		return getPersistence()
+				   .fetchByExternalReferenceCode(externalReferenceCode,
+			retrieveFromCache);
+	}
+
+	/**
+	* Removes the asset category where externalReferenceCode = &#63; from the database.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the asset category that was removed
+	*/
+	public static AssetCategory removeByExternalReferenceCode(
+		java.lang.String externalReferenceCode)
+		throws com.liferay.asset.kernel.exception.NoSuchCategoryException {
+		return getPersistence()
+				   .removeByExternalReferenceCode(externalReferenceCode);
+	}
+
+	/**
+	* Returns the number of asset categories where externalReferenceCode = &#63;.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the number of matching asset categories
+	*/
+	public static int countByExternalReferenceCode(
+		java.lang.String externalReferenceCode) {
+		return getPersistence()
+				   .countByExternalReferenceCode(externalReferenceCode);
+	}
+
+	/**
 	* Returns all the asset categories where groupId = &#63;.
 	*
 	* @param groupId the group ID

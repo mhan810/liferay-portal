@@ -96,7 +96,8 @@ create table AssetCategory (
 	title STRING null,
 	description STRING null,
 	vocabularyId LONG,
-	lastPublishDate DATE null
+	lastPublishDate DATE null,
+	externalReferenceCode VARCHAR(75) null
 );
 
 create table AssetEntries_AssetCategories (
