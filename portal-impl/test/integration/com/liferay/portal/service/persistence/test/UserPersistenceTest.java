@@ -199,6 +199,8 @@ public class UserPersistenceTest {
 
 		newUser.setStatus(RandomTestUtil.nextInt());
 
+		newUser.setExternalReferenceCode(RandomTestUtil.randomString());
+
 		_users.add(_persistence.update(newUser));
 
 		User existingUser = _persistence.findByPrimaryKey(newUser.getPrimaryKey());
@@ -277,6 +279,8 @@ public class UserPersistenceTest {
 		Assert.assertEquals(existingUser.getEmailAddressVerified(),
 			newUser.getEmailAddressVerified());
 		Assert.assertEquals(existingUser.getStatus(), newUser.getStatus());
+		Assert.assertEquals(existingUser.getExternalReferenceCode(),
+			newUser.getExternalReferenceCode());
 	}
 
 	@Test
@@ -318,6 +322,15 @@ public class UserPersistenceTest {
 		_persistence.countByEmailAddress("null");
 
 		_persistence.countByEmailAddress((String)null);
+	}
+
+	@Test
+	public void testCountByExternalReferenceCode() throws Exception {
+		_persistence.countByExternalReferenceCode("");
+
+		_persistence.countByExternalReferenceCode("null");
+
+		_persistence.countByExternalReferenceCode((String)null);
 	}
 
 	@Test
@@ -466,7 +479,7 @@ public class UserPersistenceTest {
 			"lastLoginDate", true, "lastLoginIP", true, "lastFailedLoginDate",
 			true, "failedLoginAttempts", true, "lockout", true, "lockoutDate",
 			true, "agreedToTermsOfUse", true, "emailAddressVerified", true,
-			"status", true);
+			"status", true, "externalReferenceCode", true);
 	}
 
 	@Test
@@ -669,6 +682,11 @@ public class UserPersistenceTest {
 			ReflectionTestUtil.<Long>invoke(existingUser,
 				"getOriginalContactId", new Class<?>[0]));
 
+		Assert.assertTrue(Objects.equals(
+				existingUser.getExternalReferenceCode(),
+				ReflectionTestUtil.invoke(existingUser,
+					"getOriginalExternalReferenceCode", new Class<?>[0])));
+
 		Assert.assertEquals(Long.valueOf(existingUser.getPortraitId()),
 			ReflectionTestUtil.<Long>invoke(existingUser,
 				"getOriginalPortraitId", new Class<?>[0]));
@@ -809,6 +827,8 @@ public class UserPersistenceTest {
 		user.setEmailAddressVerified(RandomTestUtil.randomBoolean());
 
 		user.setStatus(RandomTestUtil.nextInt());
+
+		user.setExternalReferenceCode(RandomTestUtil.randomString());
 
 		_users.add(_persistence.update(user));
 

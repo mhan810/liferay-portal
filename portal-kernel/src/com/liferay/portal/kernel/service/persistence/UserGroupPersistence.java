@@ -902,6 +902,53 @@ public interface UserGroupPersistence extends BasePersistence<UserGroup> {
 	public int countByC_N(long companyId, java.lang.String name);
 
 	/**
+	* Returns the user group where externalReferenceCode = &#63; or throws a {@link NoSuchUserGroupException} if it could not be found.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the matching user group
+	* @throws NoSuchUserGroupException if a matching user group could not be found
+	*/
+	public UserGroup findByExternalReferenceCode(
+		java.lang.String externalReferenceCode) throws NoSuchUserGroupException;
+
+	/**
+	* Returns the user group where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the matching user group, or <code>null</code> if a matching user group could not be found
+	*/
+	public UserGroup fetchByExternalReferenceCode(
+		java.lang.String externalReferenceCode);
+
+	/**
+	* Returns the user group where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param externalReferenceCode the external reference code
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching user group, or <code>null</code> if a matching user group could not be found
+	*/
+	public UserGroup fetchByExternalReferenceCode(
+		java.lang.String externalReferenceCode, boolean retrieveFromCache);
+
+	/**
+	* Removes the user group where externalReferenceCode = &#63; from the database.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the user group that was removed
+	*/
+	public UserGroup removeByExternalReferenceCode(
+		java.lang.String externalReferenceCode) throws NoSuchUserGroupException;
+
+	/**
+	* Returns the number of user groups where externalReferenceCode = &#63;.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the number of matching user groups
+	*/
+	public int countByExternalReferenceCode(
+		java.lang.String externalReferenceCode);
+
+	/**
 	* Caches the user group in the entity cache if it is enabled.
 	*
 	* @param userGroup the user group

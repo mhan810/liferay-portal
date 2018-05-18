@@ -2470,6 +2470,258 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_1 = "user.emailAddress IS NULL";
 	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_2 = "user.emailAddress = ?";
 	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3 = "(user.emailAddress IS NULL OR user.emailAddress = '')";
+	public static final FinderPath FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
+			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
+			FINDER_CLASS_NAME_ENTITY, "fetchByExternalReferenceCode",
+			new String[] { String.class.getName() },
+			UserModelImpl.EXTERNALREFERENCECODE_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
+			UserModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByExternalReferenceCode",
+			new String[] { String.class.getName() });
+
+	/**
+	 * Returns the user where externalReferenceCode = &#63; or throws a {@link NoSuchUserException} if it could not be found.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @return the matching user
+	 * @throws NoSuchUserException if a matching user could not be found
+	 */
+	@Override
+	public User findByExternalReferenceCode(String externalReferenceCode)
+		throws NoSuchUserException {
+		User user = fetchByExternalReferenceCode(externalReferenceCode);
+
+		if (user == null) {
+			StringBundler msg = new StringBundler(4);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("externalReferenceCode=");
+			msg.append(externalReferenceCode);
+
+			msg.append("}");
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(msg.toString());
+			}
+
+			throw new NoSuchUserException(msg.toString());
+		}
+
+		return user;
+	}
+
+	/**
+	 * Returns the user where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @return the matching user, or <code>null</code> if a matching user could not be found
+	 */
+	@Override
+	public User fetchByExternalReferenceCode(String externalReferenceCode) {
+		return fetchByExternalReferenceCode(externalReferenceCode, true);
+	}
+
+	/**
+	 * Returns the user where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the matching user, or <code>null</code> if a matching user could not be found
+	 */
+	@Override
+	public User fetchByExternalReferenceCode(String externalReferenceCode,
+		boolean retrieveFromCache) {
+		Object[] finderArgs = new Object[] { externalReferenceCode };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = finderCache.getResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+					finderArgs, this);
+		}
+
+		if (result instanceof User) {
+			User user = (User)result;
+
+			if (!Objects.equals(externalReferenceCode,
+						user.getExternalReferenceCode())) {
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_SELECT_USER_WHERE);
+
+			boolean bindExternalReferenceCode = false;
+
+			if (externalReferenceCode == null) {
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_1);
+			}
+			else if (externalReferenceCode.equals("")) {
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_3);
+			}
+			else {
+				bindExternalReferenceCode = true;
+
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindExternalReferenceCode) {
+					qPos.add(externalReferenceCode);
+				}
+
+				List<User> list = q.list();
+
+				if (list.isEmpty()) {
+					finderCache.putResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+						finderArgs, list);
+				}
+				else {
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"UserPersistenceImpl.fetchByExternalReferenceCode(String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
+					}
+
+					User user = list.get(0);
+
+					result = user;
+
+					cacheResult(user);
+
+					if ((user.getExternalReferenceCode() == null) ||
+							!user.getExternalReferenceCode()
+									 .equals(externalReferenceCode)) {
+						finderCache.putResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+							finderArgs, user);
+					}
+				}
+			}
+			catch (Exception e) {
+				finderCache.removeResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+					finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		if (result instanceof List<?>) {
+			return null;
+		}
+		else {
+			return (User)result;
+		}
+	}
+
+	/**
+	 * Removes the user where externalReferenceCode = &#63; from the database.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @return the user that was removed
+	 */
+	@Override
+	public User removeByExternalReferenceCode(String externalReferenceCode)
+		throws NoSuchUserException {
+		User user = findByExternalReferenceCode(externalReferenceCode);
+
+		return remove(user);
+	}
+
+	/**
+	 * Returns the number of users where externalReferenceCode = &#63;.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @return the number of matching users
+	 */
+	@Override
+	public int countByExternalReferenceCode(String externalReferenceCode) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE;
+
+		Object[] finderArgs = new Object[] { externalReferenceCode };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_USER_WHERE);
+
+			boolean bindExternalReferenceCode = false;
+
+			if (externalReferenceCode == null) {
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_1);
+			}
+			else if (externalReferenceCode.equals("")) {
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_3);
+			}
+			else {
+				bindExternalReferenceCode = true;
+
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindExternalReferenceCode) {
+					qPos.add(externalReferenceCode);
+				}
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_1 =
+		"user.externalReferenceCode IS NULL";
+	private static final String _FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_2 =
+		"user.externalReferenceCode = ?";
+	private static final String _FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_3 =
+		"(user.externalReferenceCode IS NULL OR user.externalReferenceCode = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_PORTRAITID = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByPortraitId",
@@ -7356,6 +7608,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		finderCache.putResult(FINDER_PATH_FETCH_BY_CONTACTID,
 			new Object[] { user.getContactId() }, user);
 
+		finderCache.putResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+			new Object[] { user.getExternalReferenceCode() }, user);
+
 		finderCache.putResult(FINDER_PATH_FETCH_BY_PORTRAITID,
 			new Object[] { user.getPortraitId() }, user);
 
@@ -7456,6 +7711,13 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		finderCache.putResult(FINDER_PATH_FETCH_BY_CONTACTID, args,
 			userModelImpl, false);
 
+		args = new Object[] { userModelImpl.getExternalReferenceCode() };
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE, args,
+			userModelImpl, false);
+
 		args = new Object[] { userModelImpl.getPortraitId() };
 
 		finderCache.putResult(FINDER_PATH_COUNT_BY_PORTRAITID, args,
@@ -7542,6 +7804,29 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_CONTACTID, args);
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_CONTACTID, args);
+		}
+
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					userModelImpl.getExternalReferenceCode()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE,
+				args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+				args);
+		}
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE.getColumnBitmask()) != 0) {
+			Object[] args = new Object[] {
+					userModelImpl.getOriginalExternalReferenceCode()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE,
+				args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+				args);
 		}
 
 		if (clearCurrent) {
@@ -8195,6 +8480,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		userImpl.setAgreedToTermsOfUse(user.isAgreedToTermsOfUse());
 		userImpl.setEmailAddressVerified(user.isEmailAddressVerified());
 		userImpl.setStatus(user.getStatus());
+		userImpl.setExternalReferenceCode(user.getExternalReferenceCode());
 
 		return userImpl;
 	}

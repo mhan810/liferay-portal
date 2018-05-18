@@ -1270,6 +1270,55 @@ public interface OrganizationPersistence extends BasePersistence<Organization> {
 	public int filterCountByC_T(long companyId, java.lang.String treePath);
 
 	/**
+	* Returns the organization where externalReferenceCode = &#63; or throws a {@link NoSuchOrganizationException} if it could not be found.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the matching organization
+	* @throws NoSuchOrganizationException if a matching organization could not be found
+	*/
+	public Organization findByExternalReferenceCode(
+		java.lang.String externalReferenceCode)
+		throws NoSuchOrganizationException;
+
+	/**
+	* Returns the organization where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the matching organization, or <code>null</code> if a matching organization could not be found
+	*/
+	public Organization fetchByExternalReferenceCode(
+		java.lang.String externalReferenceCode);
+
+	/**
+	* Returns the organization where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param externalReferenceCode the external reference code
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching organization, or <code>null</code> if a matching organization could not be found
+	*/
+	public Organization fetchByExternalReferenceCode(
+		java.lang.String externalReferenceCode, boolean retrieveFromCache);
+
+	/**
+	* Removes the organization where externalReferenceCode = &#63; from the database.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the organization that was removed
+	*/
+	public Organization removeByExternalReferenceCode(
+		java.lang.String externalReferenceCode)
+		throws NoSuchOrganizationException;
+
+	/**
+	* Returns the number of organizations where externalReferenceCode = &#63;.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the number of matching organizations
+	*/
+	public int countByExternalReferenceCode(
+		java.lang.String externalReferenceCode);
+
+	/**
 	* Returns the organization where companyId = &#63; and name = &#63; or throws a {@link NoSuchOrganizationException} if it could not be found.
 	*
 	* @param companyId the company ID

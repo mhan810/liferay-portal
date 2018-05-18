@@ -5711,6 +5711,259 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	private static final String _FINDER_COLUMN_C_T_TREEPATH_1 = "organization.treePath IS NULL";
 	private static final String _FINDER_COLUMN_C_T_TREEPATH_2 = "organization.treePath LIKE ?";
 	private static final String _FINDER_COLUMN_C_T_TREEPATH_3 = "(organization.treePath IS NULL OR organization.treePath LIKE '')";
+	public static final FinderPath FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE = new FinderPath(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
+			OrganizationModelImpl.FINDER_CACHE_ENABLED, OrganizationImpl.class,
+			FINDER_CLASS_NAME_ENTITY, "fetchByExternalReferenceCode",
+			new String[] { String.class.getName() },
+			OrganizationModelImpl.EXTERNALREFERENCECODE_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE = new FinderPath(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
+			OrganizationModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByExternalReferenceCode",
+			new String[] { String.class.getName() });
+
+	/**
+	 * Returns the organization where externalReferenceCode = &#63; or throws a {@link NoSuchOrganizationException} if it could not be found.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @return the matching organization
+	 * @throws NoSuchOrganizationException if a matching organization could not be found
+	 */
+	@Override
+	public Organization findByExternalReferenceCode(
+		String externalReferenceCode) throws NoSuchOrganizationException {
+		Organization organization = fetchByExternalReferenceCode(externalReferenceCode);
+
+		if (organization == null) {
+			StringBundler msg = new StringBundler(4);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("externalReferenceCode=");
+			msg.append(externalReferenceCode);
+
+			msg.append("}");
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(msg.toString());
+			}
+
+			throw new NoSuchOrganizationException(msg.toString());
+		}
+
+		return organization;
+	}
+
+	/**
+	 * Returns the organization where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @return the matching organization, or <code>null</code> if a matching organization could not be found
+	 */
+	@Override
+	public Organization fetchByExternalReferenceCode(
+		String externalReferenceCode) {
+		return fetchByExternalReferenceCode(externalReferenceCode, true);
+	}
+
+	/**
+	 * Returns the organization where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the matching organization, or <code>null</code> if a matching organization could not be found
+	 */
+	@Override
+	public Organization fetchByExternalReferenceCode(
+		String externalReferenceCode, boolean retrieveFromCache) {
+		Object[] finderArgs = new Object[] { externalReferenceCode };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = finderCache.getResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+					finderArgs, this);
+		}
+
+		if (result instanceof Organization) {
+			Organization organization = (Organization)result;
+
+			if (!Objects.equals(externalReferenceCode,
+						organization.getExternalReferenceCode())) {
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_SELECT_ORGANIZATION_WHERE);
+
+			boolean bindExternalReferenceCode = false;
+
+			if (externalReferenceCode == null) {
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_1);
+			}
+			else if (externalReferenceCode.equals("")) {
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_3);
+			}
+			else {
+				bindExternalReferenceCode = true;
+
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindExternalReferenceCode) {
+					qPos.add(externalReferenceCode);
+				}
+
+				List<Organization> list = q.list();
+
+				if (list.isEmpty()) {
+					finderCache.putResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+						finderArgs, list);
+				}
+				else {
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"OrganizationPersistenceImpl.fetchByExternalReferenceCode(String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
+					}
+
+					Organization organization = list.get(0);
+
+					result = organization;
+
+					cacheResult(organization);
+
+					if ((organization.getExternalReferenceCode() == null) ||
+							!organization.getExternalReferenceCode()
+											 .equals(externalReferenceCode)) {
+						finderCache.putResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+							finderArgs, organization);
+					}
+				}
+			}
+			catch (Exception e) {
+				finderCache.removeResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+					finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		if (result instanceof List<?>) {
+			return null;
+		}
+		else {
+			return (Organization)result;
+		}
+	}
+
+	/**
+	 * Removes the organization where externalReferenceCode = &#63; from the database.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @return the organization that was removed
+	 */
+	@Override
+	public Organization removeByExternalReferenceCode(
+		String externalReferenceCode) throws NoSuchOrganizationException {
+		Organization organization = findByExternalReferenceCode(externalReferenceCode);
+
+		return remove(organization);
+	}
+
+	/**
+	 * Returns the number of organizations where externalReferenceCode = &#63;.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @return the number of matching organizations
+	 */
+	@Override
+	public int countByExternalReferenceCode(String externalReferenceCode) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE;
+
+		Object[] finderArgs = new Object[] { externalReferenceCode };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_ORGANIZATION_WHERE);
+
+			boolean bindExternalReferenceCode = false;
+
+			if (externalReferenceCode == null) {
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_1);
+			}
+			else if (externalReferenceCode.equals("")) {
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_3);
+			}
+			else {
+				bindExternalReferenceCode = true;
+
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindExternalReferenceCode) {
+					qPos.add(externalReferenceCode);
+				}
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_1 =
+		"organization.externalReferenceCode IS NULL";
+	private static final String _FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_2 =
+		"organization.externalReferenceCode = ?";
+	private static final String _FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_3 =
+		"(organization.externalReferenceCode IS NULL OR organization.externalReferenceCode = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_N = new FinderPath(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
 			OrganizationModelImpl.FINDER_CACHE_ENABLED, OrganizationImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_N",
@@ -6617,6 +6870,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		entityCache.putResult(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
 			OrganizationImpl.class, organization.getPrimaryKey(), organization);
 
+		finderCache.putResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+			new Object[] { organization.getExternalReferenceCode() },
+			organization);
+
 		finderCache.putResult(FINDER_PATH_FETCH_BY_C_N,
 			new Object[] { organization.getCompanyId(), organization.getName() },
 			organization);
@@ -6693,6 +6950,15 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	protected void cacheUniqueFindersCache(
 		OrganizationModelImpl organizationModelImpl) {
 		Object[] args = new Object[] {
+				organizationModelImpl.getExternalReferenceCode()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE, args,
+			organizationModelImpl, false);
+
+		args = new Object[] {
 				organizationModelImpl.getCompanyId(),
 				organizationModelImpl.getName()
 			};
@@ -6705,6 +6971,29 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 	protected void clearUniqueFindersCache(
 		OrganizationModelImpl organizationModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					organizationModelImpl.getExternalReferenceCode()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE,
+				args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+				args);
+		}
+
+		if ((organizationModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE.getColumnBitmask()) != 0) {
+			Object[] args = new Object[] {
+					organizationModelImpl.getOriginalExternalReferenceCode()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE,
+				args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+				args);
+		}
+
 		if (clearCurrent) {
 			Object[] args = new Object[] {
 					organizationModelImpl.getCompanyId(),
@@ -7078,6 +7367,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		organizationImpl.setStatusId(organization.getStatusId());
 		organizationImpl.setComments(organization.getComments());
 		organizationImpl.setLogoId(organization.getLogoId());
+		organizationImpl.setExternalReferenceCode(organization.getExternalReferenceCode());
 
 		return organizationImpl;
 	}

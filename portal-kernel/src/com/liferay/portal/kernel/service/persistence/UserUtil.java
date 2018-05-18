@@ -809,6 +809,71 @@ public class UserUtil {
 	}
 
 	/**
+	* Returns the user where externalReferenceCode = &#63; or throws a {@link NoSuchUserException} if it could not be found.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the matching user
+	* @throws NoSuchUserException if a matching user could not be found
+	*/
+	public static User findByExternalReferenceCode(
+		java.lang.String externalReferenceCode)
+		throws com.liferay.portal.kernel.exception.NoSuchUserException {
+		return getPersistence()
+				   .findByExternalReferenceCode(externalReferenceCode);
+	}
+
+	/**
+	* Returns the user where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the matching user, or <code>null</code> if a matching user could not be found
+	*/
+	public static User fetchByExternalReferenceCode(
+		java.lang.String externalReferenceCode) {
+		return getPersistence()
+				   .fetchByExternalReferenceCode(externalReferenceCode);
+	}
+
+	/**
+	* Returns the user where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param externalReferenceCode the external reference code
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching user, or <code>null</code> if a matching user could not be found
+	*/
+	public static User fetchByExternalReferenceCode(
+		java.lang.String externalReferenceCode, boolean retrieveFromCache) {
+		return getPersistence()
+				   .fetchByExternalReferenceCode(externalReferenceCode,
+			retrieveFromCache);
+	}
+
+	/**
+	* Removes the user where externalReferenceCode = &#63; from the database.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the user that was removed
+	*/
+	public static User removeByExternalReferenceCode(
+		java.lang.String externalReferenceCode)
+		throws com.liferay.portal.kernel.exception.NoSuchUserException {
+		return getPersistence()
+				   .removeByExternalReferenceCode(externalReferenceCode);
+	}
+
+	/**
+	* Returns the number of users where externalReferenceCode = &#63;.
+	*
+	* @param externalReferenceCode the external reference code
+	* @return the number of matching users
+	*/
+	public static int countByExternalReferenceCode(
+		java.lang.String externalReferenceCode) {
+		return getPersistence()
+				   .countByExternalReferenceCode(externalReferenceCode);
+	}
+
+	/**
 	* Returns the user where portraitId = &#63; or throws a {@link NoSuchUserException} if it could not be found.
 	*
 	* @param portraitId the portrait ID

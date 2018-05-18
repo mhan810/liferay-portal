@@ -151,6 +151,8 @@ public class OrganizationPersistenceTest {
 
 		newOrganization.setLogoId(RandomTestUtil.nextLong());
 
+		newOrganization.setExternalReferenceCode(RandomTestUtil.randomString());
+
 		_organizations.add(_persistence.update(newOrganization));
 
 		Organization existingOrganization = _persistence.findByPrimaryKey(newOrganization.getPrimaryKey());
@@ -193,6 +195,8 @@ public class OrganizationPersistenceTest {
 			newOrganization.getComments());
 		Assert.assertEquals(existingOrganization.getLogoId(),
 			newOrganization.getLogoId());
+		Assert.assertEquals(existingOrganization.getExternalReferenceCode(),
+			newOrganization.getExternalReferenceCode());
 	}
 
 	@Test
@@ -245,6 +249,15 @@ public class OrganizationPersistenceTest {
 	}
 
 	@Test
+	public void testCountByExternalReferenceCode() throws Exception {
+		_persistence.countByExternalReferenceCode("");
+
+		_persistence.countByExternalReferenceCode("null");
+
+		_persistence.countByExternalReferenceCode((String)null);
+	}
+
+	@Test
 	public void testCountByC_N() throws Exception {
 		_persistence.countByC_N(RandomTestUtil.nextLong(), "");
 
@@ -290,7 +303,7 @@ public class OrganizationPersistenceTest {
 			true, "modifiedDate", true, "parentOrganizationId", true,
 			"treePath", true, "name", true, "type", true, "recursable", true,
 			"regionId", true, "countryId", true, "statusId", true, "comments",
-			true, "logoId", true);
+			true, "logoId", true, "externalReferenceCode", true);
 	}
 
 	@Test
@@ -495,6 +508,11 @@ public class OrganizationPersistenceTest {
 
 		Organization existingOrganization = _persistence.findByPrimaryKey(newOrganization.getPrimaryKey());
 
+		Assert.assertTrue(Objects.equals(
+				existingOrganization.getExternalReferenceCode(),
+				ReflectionTestUtil.invoke(existingOrganization,
+					"getOriginalExternalReferenceCode", new Class<?>[0])));
+
 		Assert.assertEquals(Long.valueOf(existingOrganization.getCompanyId()),
 			ReflectionTestUtil.<Long>invoke(existingOrganization,
 				"getOriginalCompanyId", new Class<?>[0]));
@@ -541,6 +559,8 @@ public class OrganizationPersistenceTest {
 		organization.setComments(RandomTestUtil.randomString());
 
 		organization.setLogoId(RandomTestUtil.nextLong());
+
+		organization.setExternalReferenceCode(RandomTestUtil.randomString());
 
 		_organizations.add(_persistence.update(organization));
 

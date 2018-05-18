@@ -4079,6 +4079,258 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	private static final String _FINDER_COLUMN_C_N_NAME_1 = "userGroup.name IS NULL";
 	private static final String _FINDER_COLUMN_C_N_NAME_2 = "lower(userGroup.name) = ?";
 	private static final String _FINDER_COLUMN_C_N_NAME_3 = "(userGroup.name IS NULL OR userGroup.name = '')";
+	public static final FinderPath FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE = new FinderPath(UserGroupModelImpl.ENTITY_CACHE_ENABLED,
+			UserGroupModelImpl.FINDER_CACHE_ENABLED, UserGroupImpl.class,
+			FINDER_CLASS_NAME_ENTITY, "fetchByExternalReferenceCode",
+			new String[] { String.class.getName() },
+			UserGroupModelImpl.EXTERNALREFERENCECODE_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE = new FinderPath(UserGroupModelImpl.ENTITY_CACHE_ENABLED,
+			UserGroupModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByExternalReferenceCode",
+			new String[] { String.class.getName() });
+
+	/**
+	 * Returns the user group where externalReferenceCode = &#63; or throws a {@link NoSuchUserGroupException} if it could not be found.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @return the matching user group
+	 * @throws NoSuchUserGroupException if a matching user group could not be found
+	 */
+	@Override
+	public UserGroup findByExternalReferenceCode(String externalReferenceCode)
+		throws NoSuchUserGroupException {
+		UserGroup userGroup = fetchByExternalReferenceCode(externalReferenceCode);
+
+		if (userGroup == null) {
+			StringBundler msg = new StringBundler(4);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("externalReferenceCode=");
+			msg.append(externalReferenceCode);
+
+			msg.append("}");
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(msg.toString());
+			}
+
+			throw new NoSuchUserGroupException(msg.toString());
+		}
+
+		return userGroup;
+	}
+
+	/**
+	 * Returns the user group where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @return the matching user group, or <code>null</code> if a matching user group could not be found
+	 */
+	@Override
+	public UserGroup fetchByExternalReferenceCode(String externalReferenceCode) {
+		return fetchByExternalReferenceCode(externalReferenceCode, true);
+	}
+
+	/**
+	 * Returns the user group where externalReferenceCode = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the matching user group, or <code>null</code> if a matching user group could not be found
+	 */
+	@Override
+	public UserGroup fetchByExternalReferenceCode(
+		String externalReferenceCode, boolean retrieveFromCache) {
+		Object[] finderArgs = new Object[] { externalReferenceCode };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = finderCache.getResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+					finderArgs, this);
+		}
+
+		if (result instanceof UserGroup) {
+			UserGroup userGroup = (UserGroup)result;
+
+			if (!Objects.equals(externalReferenceCode,
+						userGroup.getExternalReferenceCode())) {
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_SELECT_USERGROUP_WHERE);
+
+			boolean bindExternalReferenceCode = false;
+
+			if (externalReferenceCode == null) {
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_1);
+			}
+			else if (externalReferenceCode.equals("")) {
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_3);
+			}
+			else {
+				bindExternalReferenceCode = true;
+
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindExternalReferenceCode) {
+					qPos.add(externalReferenceCode);
+				}
+
+				List<UserGroup> list = q.list();
+
+				if (list.isEmpty()) {
+					finderCache.putResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+						finderArgs, list);
+				}
+				else {
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"UserGroupPersistenceImpl.fetchByExternalReferenceCode(String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
+					}
+
+					UserGroup userGroup = list.get(0);
+
+					result = userGroup;
+
+					cacheResult(userGroup);
+
+					if ((userGroup.getExternalReferenceCode() == null) ||
+							!userGroup.getExternalReferenceCode()
+										  .equals(externalReferenceCode)) {
+						finderCache.putResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+							finderArgs, userGroup);
+					}
+				}
+			}
+			catch (Exception e) {
+				finderCache.removeResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+					finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		if (result instanceof List<?>) {
+			return null;
+		}
+		else {
+			return (UserGroup)result;
+		}
+	}
+
+	/**
+	 * Removes the user group where externalReferenceCode = &#63; from the database.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @return the user group that was removed
+	 */
+	@Override
+	public UserGroup removeByExternalReferenceCode(String externalReferenceCode)
+		throws NoSuchUserGroupException {
+		UserGroup userGroup = findByExternalReferenceCode(externalReferenceCode);
+
+		return remove(userGroup);
+	}
+
+	/**
+	 * Returns the number of user groups where externalReferenceCode = &#63;.
+	 *
+	 * @param externalReferenceCode the external reference code
+	 * @return the number of matching user groups
+	 */
+	@Override
+	public int countByExternalReferenceCode(String externalReferenceCode) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE;
+
+		Object[] finderArgs = new Object[] { externalReferenceCode };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_USERGROUP_WHERE);
+
+			boolean bindExternalReferenceCode = false;
+
+			if (externalReferenceCode == null) {
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_1);
+			}
+			else if (externalReferenceCode.equals("")) {
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_3);
+			}
+			else {
+				bindExternalReferenceCode = true;
+
+				query.append(_FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindExternalReferenceCode) {
+					qPos.add(externalReferenceCode);
+				}
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_1 =
+		"userGroup.externalReferenceCode IS NULL";
+	private static final String _FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_2 =
+		"userGroup.externalReferenceCode = ?";
+	private static final String _FINDER_COLUMN_EXTERNALREFERENCECODE_EXTERNALREFERENCECODE_3 =
+		"(userGroup.externalReferenceCode IS NULL OR userGroup.externalReferenceCode = '')";
 
 	public UserGroupPersistenceImpl() {
 		setModelClass(UserGroup.class);
@@ -4115,6 +4367,9 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 		finderCache.putResult(FINDER_PATH_FETCH_BY_C_N,
 			new Object[] { userGroup.getCompanyId(), userGroup.getName() },
 			userGroup);
+
+		finderCache.putResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+			new Object[] { userGroup.getExternalReferenceCode() }, userGroup);
 
 		userGroup.resetOriginalValues();
 	}
@@ -4194,6 +4449,13 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 			false);
 		finderCache.putResult(FINDER_PATH_FETCH_BY_C_N, args,
 			userGroupModelImpl, false);
+
+		args = new Object[] { userGroupModelImpl.getExternalReferenceCode() };
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE, args,
+			userGroupModelImpl, false);
 	}
 
 	protected void clearUniqueFindersCache(
@@ -4217,6 +4479,29 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_N, args);
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_N, args);
+		}
+
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					userGroupModelImpl.getExternalReferenceCode()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE,
+				args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+				args);
+		}
+
+		if ((userGroupModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE.getColumnBitmask()) != 0) {
+			Object[] args = new Object[] {
+					userGroupModelImpl.getOriginalExternalReferenceCode()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_EXTERNALREFERENCECODE,
+				args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_EXTERNALREFERENCECODE,
+				args);
 		}
 	}
 
@@ -4542,6 +4827,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 		userGroupImpl.setName(userGroup.getName());
 		userGroupImpl.setDescription(userGroup.getDescription());
 		userGroupImpl.setAddedByLDAPImport(userGroup.isAddedByLDAPImport());
+		userGroupImpl.setExternalReferenceCode(userGroup.getExternalReferenceCode());
 
 		return userGroupImpl;
 	}
