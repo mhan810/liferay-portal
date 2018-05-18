@@ -15,28 +15,34 @@
 package com.liferay.portal.search.engine.adapter;
 
 import com.liferay.portal.search.engine.adapter.document.DeleteByQueryDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.DeleteByQueryDocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.DeleteDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.DeleteDocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.IndexDocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.UpdateDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.UpdateDocumentResponse;
 
 /**
  * @author Dylan Rebelak
  */
-public interface DocumentRequestExecutor<T> {
+public interface DocumentRequestExecutor {
 
-	public T executeDocumentRequest(
+	public DeleteByQueryDocumentResponse executeDocumentRequest(
 		DeleteByQueryDocumentRequest deleteByQueryDocumentRequest);
 
-	public T executeDocumentRequest(
+	public DeleteDocumentResponse executeDocumentRequest(
 		DeleteDocumentRequest deleteDocumentRequest);
 
-	public T executeDocumentRequest(IndexDocumentRequest indexDocumentRequest);
+	public IndexDocumentResponse executeDocumentRequest(
+		IndexDocumentRequest indexDocumentRequest);
 
-	public T executeDocumentRequest(
+	public UpdateByQueryDocumentResponse executeDocumentRequest(
 		UpdateByQueryDocumentRequest updateByQueryDocumentRequest);
 
-	public T executeDocumentRequest(
+	public UpdateDocumentResponse executeDocumentRequest(
 		UpdateDocumentRequest updateDocumentRequest);
 
 }

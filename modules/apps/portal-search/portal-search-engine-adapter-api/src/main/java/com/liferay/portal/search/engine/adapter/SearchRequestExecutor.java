@@ -14,8 +14,25 @@
 
 package com.liferay.portal.search.engine.adapter;
 
+import com.liferay.portal.search.engine.adapter.search.CountSearchRequest;
+import com.liferay.portal.search.engine.adapter.search.CountSearchResponse;
+import com.liferay.portal.search.engine.adapter.search.MultisearchSearchRequest;
+import com.liferay.portal.search.engine.adapter.search.MultisearchSearchResponse;
+import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
+import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
+
 /**
  * @author Michael C. Han
  */
-public interface SearchCommandVisitor<T> {
+public interface SearchRequestExecutor<T> {
+
+	public CountSearchResponse executeSearchRequest(
+		CountSearchRequest countSearchRequest);
+
+	public MultisearchSearchResponse executeSearchRequest(
+		MultisearchSearchRequest multisearchSearchRequest);
+
+	public SearchSearchResponse executeSearchRequest(
+		SearchSearchRequest searchSearchRequest);
+
 }

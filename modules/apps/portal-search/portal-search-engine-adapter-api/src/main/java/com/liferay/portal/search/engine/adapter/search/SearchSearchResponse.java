@@ -12,21 +12,12 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
+package com.liferay.portal.search.engine.adapter.search;
+
+import com.liferay.portal.search.engine.adapter.SearchResponse;
 
 /**
  * @author Michael C. Han
  */
-public interface SearchEngineAdapter {
-
-	public <T extends ClusterResponse> T execute(
-		ClusterRequest<T> clusterRequest);
-
-	public <S extends DocumentResponse> S execute(
-		DocumentRequest<S> documentRequest);
-
-	public <U extends IndexResponse> U execute(IndexRequest<U> indexRequest);
-
-	public void execute(SearchRequest searchRequest);
-
+public class SearchSearchResponse implements SearchResponse {
 }

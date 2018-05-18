@@ -17,9 +17,9 @@ package com.liferay.portal.search.engine.adapter;
 /**
  * @author Michael C. Han
  */
-public interface DocumentRequest {
+public interface DocumentRequest<T extends DocumentResponse> {
 
-	public <T> T accept(DocumentRequestExecutor<T> documentRequestExecutor);
+	public T accept(DocumentRequestExecutor documentRequestExecutor);
 
 	public String getIndexName();
 

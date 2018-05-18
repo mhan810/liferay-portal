@@ -20,14 +20,17 @@ import com.liferay.portal.search.engine.adapter.ClusterRequestExecutor;
 /**
  * @author Dylan Rebelak
  */
-public class HealthClusterRequest implements ClusterRequest {
+public class HealthClusterRequest
+	implements ClusterRequest<HealthClusterResponse> {
 
 	public HealthClusterRequest(String indexName) {
 		_indexName = indexName;
 	}
 
 	@Override
-	public <T> T accept(ClusterRequestExecutor<T> clusterRequestExecutor) {
+	public HealthClusterResponse accept(
+		ClusterRequestExecutor clusterRequestExecutor) {
+
 		return clusterRequestExecutor.executeClusterRequest(this);
 	}
 

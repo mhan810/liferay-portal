@@ -14,8 +14,20 @@
 
 package com.liferay.portal.search.engine.adapter.search;
 
+import com.liferay.portal.search.engine.adapter.SearchRequest;
+import com.liferay.portal.search.engine.adapter.SearchRequestExecutor;
+
 /**
  * @author Dylan Rebelak
  */
-public class SearchSearchRequest {
+public class SearchSearchRequest
+	implements SearchRequest<SearchSearchResponse> {
+
+	@Override
+	public SearchSearchResponse accept(
+		SearchRequestExecutor searchRequestExecutor) {
+
+		return searchRequestExecutor.executeSearchRequest(this);
+	}
+
 }

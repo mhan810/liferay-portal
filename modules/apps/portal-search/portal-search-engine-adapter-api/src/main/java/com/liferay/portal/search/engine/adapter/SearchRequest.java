@@ -17,8 +17,8 @@ package com.liferay.portal.search.engine.adapter;
 /**
  * @author Michael C. Han
  */
-public interface SearchRequest {
+public interface SearchRequest<T extends SearchResponse> {
 
-	public <T> T accept(SearchCommandVisitor<T> searchCommandVisitor);
+	public T accept(SearchRequestExecutor searchRequestExecutor);
 
 }

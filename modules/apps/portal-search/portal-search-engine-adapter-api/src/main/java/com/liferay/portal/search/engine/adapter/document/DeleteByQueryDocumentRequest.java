@@ -21,7 +21,8 @@ import com.liferay.portal.search.engine.adapter.DocumentRequestExecutor;
 /**
  * @author Michael C. Han
  */
-public class DeleteByQueryDocumentRequest implements DocumentRequest {
+public class DeleteByQueryDocumentRequest
+	implements DocumentRequest<DeleteByQueryDocumentResponse> {
 
 	public DeleteByQueryDocumentRequest(String indexName, Query query) {
 		_indexName = indexName;
@@ -29,7 +30,9 @@ public class DeleteByQueryDocumentRequest implements DocumentRequest {
 	}
 
 	@Override
-	public <T> T accept(DocumentRequestExecutor<T> documentRequestExecutor) {
+	public DeleteByQueryDocumentResponse accept(
+		DocumentRequestExecutor documentRequestExecutor) {
+
 		return documentRequestExecutor.executeDocumentRequest(this);
 	}
 

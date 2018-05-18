@@ -14,8 +14,19 @@
 
 package com.liferay.portal.search.engine.adapter.search;
 
+import com.liferay.portal.search.engine.adapter.SearchRequest;
+import com.liferay.portal.search.engine.adapter.SearchRequestExecutor;
+
 /**
  * @author Dylan Rebelak
  */
-public class CountSearchRequest {
+public class CountSearchRequest implements SearchRequest<CountSearchResponse> {
+
+	@Override
+	public CountSearchResponse accept(
+		SearchRequestExecutor searchRequestExecutor) {
+
+		return searchRequestExecutor.executeSearchRequest(this);
+	}
+
 }

@@ -20,14 +20,17 @@ import com.liferay.portal.search.engine.adapter.ClusterRequestExecutor;
 /**
  * @author Dylan Rebelak
  */
-public class StateClusterRequest implements ClusterRequest {
+public class StateClusterRequest
+	implements ClusterRequest<StateClusterResponse> {
 
 	public StateClusterRequest(String indexName) {
 		_indexName = indexName;
 	}
 
 	@Override
-	public <T> T accept(ClusterRequestExecutor<T> clusterRequestExecutor) {
+	public StateClusterResponse accept(
+		ClusterRequestExecutor clusterRequestExecutor) {
+
 		return clusterRequestExecutor.executeClusterRequest(this);
 	}
 

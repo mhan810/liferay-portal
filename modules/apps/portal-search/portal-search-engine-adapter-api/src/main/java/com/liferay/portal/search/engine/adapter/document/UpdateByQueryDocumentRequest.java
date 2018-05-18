@@ -22,7 +22,8 @@ import com.liferay.portal.search.engine.adapter.DocumentRequestExecutor;
 /**
  * @author Michael C. Han
  */
-public class UpdateByQueryDocumentRequest implements DocumentRequest {
+public class UpdateByQueryDocumentRequest
+	implements DocumentRequest<UpdateByQueryDocumentResponse> {
 
 	public UpdateByQueryDocumentRequest(
 		String indexName, Query query, JSONObject scriptJSONObject) {
@@ -33,7 +34,9 @@ public class UpdateByQueryDocumentRequest implements DocumentRequest {
 	}
 
 	@Override
-	public <T> T accept(DocumentRequestExecutor<T> documentRequestExecutor) {
+	public UpdateByQueryDocumentResponse accept(
+		DocumentRequestExecutor documentRequestExecutor) {
+
 		return documentRequestExecutor.executeDocumentRequest(this);
 	}
 

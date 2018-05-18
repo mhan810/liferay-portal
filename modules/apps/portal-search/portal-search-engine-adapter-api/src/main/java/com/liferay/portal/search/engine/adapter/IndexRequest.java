@@ -17,9 +17,9 @@ package com.liferay.portal.search.engine.adapter;
 /**
  * @author Michael C. Han
  */
-public interface IndexRequest {
+public interface IndexRequest<T extends IndexResponse> {
 
-	public <T> T accept(IndexRequestExecutor<T> indexRequestExecutor);
+	public T accept(IndexRequestExecutor indexRequestExecutor);
 
 	public String getIndexName();
 

@@ -21,7 +21,8 @@ import com.liferay.portal.search.engine.adapter.DocumentRequestExecutor;
 /**
  * @author Michael C. Han
  */
-public class IndexDocumentRequest implements DocumentRequest {
+public class IndexDocumentRequest
+	implements DocumentRequest<IndexDocumentResponse> {
 
 	public IndexDocumentRequest(String indexName, Document document) {
 		_indexName = indexName;
@@ -29,7 +30,9 @@ public class IndexDocumentRequest implements DocumentRequest {
 	}
 
 	@Override
-	public <T> T accept(DocumentRequestExecutor<T> documentRequestExecutor) {
+	public IndexDocumentResponse accept(
+		DocumentRequestExecutor documentRequestExecutor) {
+
 		return documentRequestExecutor.executeDocumentRequest(this);
 	}
 

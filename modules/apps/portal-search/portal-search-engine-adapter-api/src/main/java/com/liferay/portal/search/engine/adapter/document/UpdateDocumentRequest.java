@@ -21,7 +21,8 @@ import com.liferay.portal.search.engine.adapter.DocumentRequestExecutor;
 /**
  * @author Michael C. Han
  */
-public class UpdateDocumentRequest implements DocumentRequest {
+public class UpdateDocumentRequest
+	implements DocumentRequest<UpdateDocumentResponse> {
 
 	public UpdateDocumentRequest(
 		String indexName, String uid, Document document) {
@@ -32,7 +33,9 @@ public class UpdateDocumentRequest implements DocumentRequest {
 	}
 
 	@Override
-	public <T> T accept(DocumentRequestExecutor<T> documentRequestExecutor) {
+	public UpdateDocumentResponse accept(
+		DocumentRequestExecutor documentRequestExecutor) {
+
 		return documentRequestExecutor.executeDocumentRequest(this);
 	}
 

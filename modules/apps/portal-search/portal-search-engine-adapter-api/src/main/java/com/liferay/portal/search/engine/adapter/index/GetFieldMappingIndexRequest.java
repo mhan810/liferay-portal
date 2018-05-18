@@ -20,7 +20,8 @@ import com.liferay.portal.search.engine.adapter.IndexRequestExecutor;
 /**
  * @author Dylan Rebelak
  */
-public class GetFieldMappingIndexRequest implements IndexRequest {
+public class GetFieldMappingIndexRequest
+	implements IndexRequest<GetFieldMappingIndexResponse> {
 
 	public GetFieldMappingIndexRequest(
 		String indexName, String mappingName, String[] fields) {
@@ -31,7 +32,9 @@ public class GetFieldMappingIndexRequest implements IndexRequest {
 	}
 
 	@Override
-	public <T> T accept(IndexRequestExecutor<T> indexRequestExecutor) {
+	public GetFieldMappingIndexResponse accept(
+		IndexRequestExecutor indexRequestExecutor) {
+
 		return indexRequestExecutor.executeIndexRequest(this);
 	}
 

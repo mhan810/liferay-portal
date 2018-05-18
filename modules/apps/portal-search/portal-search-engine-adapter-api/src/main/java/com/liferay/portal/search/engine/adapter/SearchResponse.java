@@ -17,16 +17,5 @@ package com.liferay.portal.search.engine.adapter;
 /**
  * @author Michael C. Han
  */
-public interface SearchEngineAdapter {
-
-	public <T extends ClusterResponse> T execute(
-		ClusterRequest<T> clusterRequest);
-
-	public <S extends DocumentResponse> S execute(
-		DocumentRequest<S> documentRequest);
-
-	public <U extends IndexResponse> U execute(IndexRequest<U> indexRequest);
-
-	public void execute(SearchRequest searchRequest);
-
+public interface SearchResponse {
 }
