@@ -24,7 +24,6 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -471,7 +470,7 @@ public class AssetTagStatsModelImpl extends BaseModelImpl<AssetTagStats>
 
 	private static final ClassLoader _classLoader = AssetTagStats.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			AssetTagStats.class, ModelWrapper.class
+			AssetTagStats.class
 		};
 	private long _tagStatsId;
 	private long _companyId;

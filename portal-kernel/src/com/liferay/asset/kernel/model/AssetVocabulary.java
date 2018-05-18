@@ -67,10 +67,10 @@ public interface AssetVocabulary extends AssetVocabularyModel, PersistedModel {
 	/**
 	* @deprecated As of 7.0.0, with no direct replacement
 	*/
-	@Deprecated()
+	@java.lang.Deprecated()
 	public com.liferay.portal.kernel.util.UnicodeProperties getSettingsProperties();
 
-	public String getUnambiguousTitle(
+	public java.lang.String getUnambiguousTitle(
 		java.util.List<AssetVocabulary> vocabularies, long groupId,
 		java.util.Locale locale)
 		throws com.liferay.portal.kernel.exception.PortalException;
@@ -90,7 +90,7 @@ public interface AssetVocabulary extends AssetVocabularyModel, PersistedModel {
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link #isRequired(long, long)}
 	*/
-	@Deprecated()
+	@java.lang.Deprecated()
 	public boolean isRequired(long classNameId);
 
 	public boolean isRequired(long classNameId, long classTypePK);
@@ -98,7 +98,7 @@ public interface AssetVocabulary extends AssetVocabularyModel, PersistedModel {
 	/**
 	* @deprecated As of 7.0.0, with no direct replacement
 	*/
-	@Deprecated()
+	@java.lang.Deprecated()
 	public void setSettingsProperties(
 		com.liferay.portal.kernel.util.UnicodeProperties settingsProperties);
 }

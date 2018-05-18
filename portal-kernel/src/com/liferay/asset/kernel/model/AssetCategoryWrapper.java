@@ -180,7 +180,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new AssetCategoryWrapper((AssetCategory)_assetCategory.clone());
 	}
 
@@ -196,7 +196,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	}
 
 	@Override
-	public String[] getAvailableLanguageIds() {
+	public java.lang.String[] getAvailableLanguageIds() {
 		return _assetCategory.getAvailableLanguageIds();
 	}
 
@@ -231,7 +231,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	}
 
 	@Override
-	public String getDefaultLanguageId() {
+	public java.lang.String getDefaultLanguageId() {
 		return _assetCategory.getDefaultLanguageId();
 	}
 
@@ -241,7 +241,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the description of this asset category
 	*/
 	@Override
-	public String getDescription() {
+	public java.lang.String getDescription() {
 		return _assetCategory.getDescription();
 	}
 
@@ -252,7 +252,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the localized description of this asset category
 	*/
 	@Override
-	public String getDescription(java.util.Locale locale) {
+	public java.lang.String getDescription(java.util.Locale locale) {
 		return _assetCategory.getDescription(locale);
 	}
 
@@ -264,7 +264,8 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the localized description of this asset category. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
 	*/
 	@Override
-	public String getDescription(java.util.Locale locale, boolean useDefault) {
+	public java.lang.String getDescription(java.util.Locale locale,
+		boolean useDefault) {
 		return _assetCategory.getDescription(locale, useDefault);
 	}
 
@@ -275,7 +276,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the localized description of this asset category
 	*/
 	@Override
-	public String getDescription(String languageId) {
+	public java.lang.String getDescription(java.lang.String languageId) {
 		return _assetCategory.getDescription(languageId);
 	}
 
@@ -287,17 +288,18 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the localized description of this asset category
 	*/
 	@Override
-	public String getDescription(String languageId, boolean useDefault) {
+	public java.lang.String getDescription(java.lang.String languageId,
+		boolean useDefault) {
 		return _assetCategory.getDescription(languageId, useDefault);
 	}
 
 	@Override
-	public String getDescriptionCurrentLanguageId() {
+	public java.lang.String getDescriptionCurrentLanguageId() {
 		return _assetCategory.getDescriptionCurrentLanguageId();
 	}
 
 	@Override
-	public String getDescriptionCurrentValue() {
+	public java.lang.String getDescriptionCurrentValue() {
 		return _assetCategory.getDescriptionCurrentValue();
 	}
 
@@ -307,7 +309,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the locales and localized descriptions of this asset category
 	*/
 	@Override
-	public Map<java.util.Locale, String> getDescriptionMap() {
+	public Map<java.util.Locale, java.lang.String> getDescriptionMap() {
 		return _assetCategory.getDescriptionMap();
 	}
 
@@ -362,7 +364,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the name of this asset category
 	*/
 	@Override
-	public String getName() {
+	public java.lang.String getName() {
 		return _assetCategory.getName();
 	}
 
@@ -382,13 +384,13 @@ public class AssetCategoryWrapper implements AssetCategory,
 	}
 
 	@Override
-	public String getPath(java.util.Locale locale)
+	public java.lang.String getPath(java.util.Locale locale)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _assetCategory.getPath(locale);
 	}
 
 	@Override
-	public String getPath(java.util.Locale locale, boolean reverse)
+	public java.lang.String getPath(java.util.Locale locale, boolean reverse)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _assetCategory.getPath(locale, reverse);
 	}
@@ -424,7 +426,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the title of this asset category
 	*/
 	@Override
-	public String getTitle() {
+	public java.lang.String getTitle() {
 		return _assetCategory.getTitle();
 	}
 
@@ -435,7 +437,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the localized title of this asset category
 	*/
 	@Override
-	public String getTitle(java.util.Locale locale) {
+	public java.lang.String getTitle(java.util.Locale locale) {
 		return _assetCategory.getTitle(locale);
 	}
 
@@ -447,7 +449,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the localized title of this asset category. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
 	*/
 	@Override
-	public String getTitle(java.util.Locale locale, boolean useDefault) {
+	public java.lang.String getTitle(java.util.Locale locale, boolean useDefault) {
 		return _assetCategory.getTitle(locale, useDefault);
 	}
 
@@ -458,7 +460,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the localized title of this asset category
 	*/
 	@Override
-	public String getTitle(String languageId) {
+	public java.lang.String getTitle(java.lang.String languageId) {
 		return _assetCategory.getTitle(languageId);
 	}
 
@@ -470,17 +472,18 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the localized title of this asset category
 	*/
 	@Override
-	public String getTitle(String languageId, boolean useDefault) {
+	public java.lang.String getTitle(java.lang.String languageId,
+		boolean useDefault) {
 		return _assetCategory.getTitle(languageId, useDefault);
 	}
 
 	@Override
-	public String getTitleCurrentLanguageId() {
+	public java.lang.String getTitleCurrentLanguageId() {
 		return _assetCategory.getTitleCurrentLanguageId();
 	}
 
 	@Override
-	public String getTitleCurrentValue() {
+	public java.lang.String getTitleCurrentValue() {
 		return _assetCategory.getTitleCurrentValue();
 	}
 
@@ -490,7 +493,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the locales and localized titles of this asset category
 	*/
 	@Override
-	public Map<java.util.Locale, String> getTitleMap() {
+	public Map<java.util.Locale, java.lang.String> getTitleMap() {
 		return _assetCategory.getTitleMap();
 	}
 
@@ -510,7 +513,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the user name of this asset category
 	*/
 	@Override
-	public String getUserName() {
+	public java.lang.String getUserName() {
 		return _assetCategory.getUserName();
 	}
 
@@ -520,7 +523,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the user uuid of this asset category
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _assetCategory.getUserUuid();
 	}
 
@@ -530,7 +533,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @return the uuid of this asset category
 	*/
 	@Override
-	public String getUuid() {
+	public java.lang.String getUuid() {
 		return _assetCategory.getUuid();
 	}
 
@@ -628,7 +631,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @param description the description of this asset category
 	*/
 	@Override
-	public void setDescription(String description) {
+	public void setDescription(java.lang.String description) {
 		_assetCategory.setDescription(description);
 	}
 
@@ -639,7 +642,8 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @param locale the locale of the language
 	*/
 	@Override
-	public void setDescription(String description, java.util.Locale locale) {
+	public void setDescription(java.lang.String description,
+		java.util.Locale locale) {
 		_assetCategory.setDescription(description, locale);
 	}
 
@@ -651,13 +655,13 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @param defaultLocale the default locale
 	*/
 	@Override
-	public void setDescription(String description, java.util.Locale locale,
-		java.util.Locale defaultLocale) {
+	public void setDescription(java.lang.String description,
+		java.util.Locale locale, java.util.Locale defaultLocale) {
 		_assetCategory.setDescription(description, locale, defaultLocale);
 	}
 
 	@Override
-	public void setDescriptionCurrentLanguageId(String languageId) {
+	public void setDescriptionCurrentLanguageId(java.lang.String languageId) {
 		_assetCategory.setDescriptionCurrentLanguageId(languageId);
 	}
 
@@ -667,7 +671,8 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @param descriptionMap the locales and localized descriptions of this asset category
 	*/
 	@Override
-	public void setDescriptionMap(Map<java.util.Locale, String> descriptionMap) {
+	public void setDescriptionMap(
+		Map<java.util.Locale, java.lang.String> descriptionMap) {
 		_assetCategory.setDescriptionMap(descriptionMap);
 	}
 
@@ -679,7 +684,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	*/
 	@Override
 	public void setDescriptionMap(
-		Map<java.util.Locale, String> descriptionMap,
+		Map<java.util.Locale, java.lang.String> descriptionMap,
 		java.util.Locale defaultLocale) {
 		_assetCategory.setDescriptionMap(descriptionMap, defaultLocale);
 	}
@@ -746,7 +751,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @param name the name of this asset category
 	*/
 	@Override
-	public void setName(String name) {
+	public void setName(java.lang.String name) {
 		_assetCategory.setName(name);
 	}
 
@@ -796,7 +801,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @param title the title of this asset category
 	*/
 	@Override
-	public void setTitle(String title) {
+	public void setTitle(java.lang.String title) {
 		_assetCategory.setTitle(title);
 	}
 
@@ -807,7 +812,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @param locale the locale of the language
 	*/
 	@Override
-	public void setTitle(String title, java.util.Locale locale) {
+	public void setTitle(java.lang.String title, java.util.Locale locale) {
 		_assetCategory.setTitle(title, locale);
 	}
 
@@ -819,13 +824,13 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @param defaultLocale the default locale
 	*/
 	@Override
-	public void setTitle(String title, java.util.Locale locale,
+	public void setTitle(java.lang.String title, java.util.Locale locale,
 		java.util.Locale defaultLocale) {
 		_assetCategory.setTitle(title, locale, defaultLocale);
 	}
 
 	@Override
-	public void setTitleCurrentLanguageId(String languageId) {
+	public void setTitleCurrentLanguageId(java.lang.String languageId) {
 		_assetCategory.setTitleCurrentLanguageId(languageId);
 	}
 
@@ -835,7 +840,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @param titleMap the locales and localized titles of this asset category
 	*/
 	@Override
-	public void setTitleMap(Map<java.util.Locale, String> titleMap) {
+	public void setTitleMap(Map<java.util.Locale, java.lang.String> titleMap) {
 		_assetCategory.setTitleMap(titleMap);
 	}
 
@@ -846,7 +851,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @param defaultLocale the default locale
 	*/
 	@Override
-	public void setTitleMap(Map<java.util.Locale, String> titleMap,
+	public void setTitleMap(Map<java.util.Locale, java.lang.String> titleMap,
 		java.util.Locale defaultLocale) {
 		_assetCategory.setTitleMap(titleMap, defaultLocale);
 	}
@@ -867,7 +872,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @param userName the user name of this asset category
 	*/
 	@Override
-	public void setUserName(String userName) {
+	public void setUserName(java.lang.String userName) {
 		_assetCategory.setUserName(userName);
 	}
 
@@ -877,7 +882,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @param userUuid the user uuid of this asset category
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_assetCategory.setUserUuid(userUuid);
 	}
 
@@ -887,7 +892,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	* @param uuid the uuid of this asset category
 	*/
 	@Override
-	public void setUuid(String uuid) {
+	public void setUuid(java.lang.String uuid) {
 		_assetCategory.setUuid(uuid);
 	}
 
@@ -912,7 +917,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _assetCategory.toString();
 	}
 
@@ -922,7 +927,7 @@ public class AssetCategoryWrapper implements AssetCategory,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _assetCategory.toXmlString();
 	}
 

@@ -30,7 +30,6 @@ import com.liferay.portal.kernel.exception.LocaleException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -1279,7 +1278,7 @@ public class AssetCategoryModelImpl extends BaseModelImpl<AssetCategory>
 
 	private static final ClassLoader _classLoader = AssetCategory.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			AssetCategory.class, ModelWrapper.class
+			AssetCategory.class
 		};
 	private String _uuid;
 	private String _originalUuid;

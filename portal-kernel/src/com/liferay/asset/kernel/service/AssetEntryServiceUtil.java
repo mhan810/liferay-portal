@@ -78,7 +78,7 @@ public class AssetEntryServiceUtil {
 	*
 	* @return the OSGi service identifier
 	*/
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -89,19 +89,22 @@ public class AssetEntryServiceUtil {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetEntry incrementViewCounter(
-		String className, long classPK)
+		java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().incrementViewCounter(className, classPK);
 	}
 
 	public static com.liferay.asset.kernel.model.AssetEntry updateEntry(
 		long groupId, java.util.Date createDate, java.util.Date modifiedDate,
-		String className, long classPK, String classUuid, long classTypeId,
-		long[] categoryIds, String[] tagNames, boolean listable,
-		boolean visible, java.util.Date startDate, java.util.Date endDate,
-		java.util.Date publishDate, java.util.Date expirationDate,
-		String mimeType, String title, String description, String summary,
-		String url, String layoutUuid, int height, int width, Double priority)
+		java.lang.String className, long classPK, java.lang.String classUuid,
+		long classTypeId, long[] categoryIds, java.lang.String[] tagNames,
+		boolean listable, boolean visible, java.util.Date startDate,
+		java.util.Date endDate, java.util.Date publishDate,
+		java.util.Date expirationDate, java.lang.String mimeType,
+		java.lang.String title, java.lang.String description,
+		java.lang.String summary, java.lang.String url,
+		java.lang.String layoutUuid, int height, int width,
+		java.lang.Double priority)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateEntry(groupId, createDate, modifiedDate, className,
@@ -120,12 +123,14 @@ public class AssetEntryServiceUtil {
 	@Deprecated
 	public static com.liferay.asset.kernel.model.AssetEntry updateEntry(
 		long groupId, java.util.Date createDate, java.util.Date modifiedDate,
-		String className, long classPK, String classUuid, long classTypeId,
-		long[] categoryIds, String[] tagNames, boolean listable,
-		boolean visible, java.util.Date startDate, java.util.Date endDate,
-		java.util.Date expirationDate, String mimeType, String title,
-		String description, String summary, String url, String layoutUuid,
-		int height, int width, Double priority)
+		java.lang.String className, long classPK, java.lang.String classUuid,
+		long classTypeId, long[] categoryIds, java.lang.String[] tagNames,
+		boolean listable, boolean visible, java.util.Date startDate,
+		java.util.Date endDate, java.util.Date expirationDate,
+		java.lang.String mimeType, java.lang.String title,
+		java.lang.String description, java.lang.String summary,
+		java.lang.String url, java.lang.String layoutUuid, int height,
+		int width, java.lang.Double priority)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateEntry(groupId, createDate, modifiedDate, className,
@@ -143,12 +148,14 @@ public class AssetEntryServiceUtil {
 	@Deprecated
 	public static com.liferay.asset.kernel.model.AssetEntry updateEntry(
 		long groupId, java.util.Date createDate, java.util.Date modifiedDate,
-		String className, long classPK, String classUuid, long classTypeId,
-		long[] categoryIds, String[] tagNames, boolean visible,
-		java.util.Date startDate, java.util.Date endDate,
-		java.util.Date expirationDate, String mimeType, String title,
-		String description, String summary, String url, String layoutUuid,
-		int height, int width, Integer priority, boolean sync)
+		java.lang.String className, long classPK, java.lang.String classUuid,
+		long classTypeId, long[] categoryIds, java.lang.String[] tagNames,
+		boolean visible, java.util.Date startDate, java.util.Date endDate,
+		java.util.Date expirationDate, java.lang.String mimeType,
+		java.lang.String title, java.lang.String description,
+		java.lang.String summary, java.lang.String url,
+		java.lang.String layoutUuid, int height, int width,
+		java.lang.Integer priority, boolean sync)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateEntry(groupId, createDate, modifiedDate, className,

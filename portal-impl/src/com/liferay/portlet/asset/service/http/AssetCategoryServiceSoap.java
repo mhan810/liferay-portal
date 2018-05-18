@@ -70,10 +70,12 @@ import java.util.Map;
 @ProviderType
 public class AssetCategoryServiceSoap {
 	public static com.liferay.asset.kernel.model.AssetCategorySoap addCategory(
-		long groupId, long parentCategoryId, String[] titleMapLanguageIds,
-		String[] titleMapValues, String[] descriptionMapLanguageIds,
-		String[] descriptionMapValues, long vocabularyId,
-		String[] categoryProperties,
+		long groupId, long parentCategoryId,
+		java.lang.String[] titleMapLanguageIds,
+		java.lang.String[] titleMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, long vocabularyId,
+		java.lang.String[] categoryProperties,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
@@ -96,7 +98,7 @@ public class AssetCategoryServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetCategorySoap addCategory(
-		long groupId, String title, long vocabularyId,
+		long groupId, java.lang.String title, long vocabularyId,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
@@ -173,7 +175,7 @@ public class AssetCategoryServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetCategorySoap[] getCategories(
-		String className, long classPK) throws RemoteException {
+		java.lang.String className, long classPK) throws RemoteException {
 		try {
 			java.util.List<com.liferay.asset.kernel.model.AssetCategory> returnValue =
 				AssetCategoryServiceUtil.getCategories(className, classPK);
@@ -201,10 +203,10 @@ public class AssetCategoryServiceSoap {
 		}
 	}
 
-	public static String getCategoryPath(long categoryId)
+	public static java.lang.String getCategoryPath(long categoryId)
 		throws RemoteException {
 		try {
-			String returnValue = AssetCategoryServiceUtil.getCategoryPath(categoryId);
+			java.lang.String returnValue = AssetCategoryServiceUtil.getCategoryPath(categoryId);
 
 			return returnValue;
 		}
@@ -304,7 +306,8 @@ public class AssetCategoryServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetCategorySoap[] getVocabularyCategories(
-		long groupId, String name, long vocabularyId, int start, int end,
+		long groupId, java.lang.String name, long vocabularyId, int start,
+		int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.kernel.model.AssetCategory> obc)
 		throws RemoteException {
 		try {
@@ -351,8 +354,8 @@ public class AssetCategoryServiceSoap {
 		}
 	}
 
-	public static int getVocabularyCategoriesCount(long groupId, String name,
-		long vocabularyId) throws RemoteException {
+	public static int getVocabularyCategoriesCount(long groupId,
+		java.lang.String name, long vocabularyId) throws RemoteException {
 		try {
 			int returnValue = AssetCategoryServiceUtil.getVocabularyCategoriesCount(groupId,
 					name, vocabularyId);
@@ -384,7 +387,8 @@ public class AssetCategoryServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetCategoryDisplay getVocabularyCategoriesDisplay(
-		long groupId, String name, long vocabularyId, int start, int end,
+		long groupId, java.lang.String name, long vocabularyId, int start,
+		int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.kernel.model.AssetCategory> obc)
 		throws RemoteException {
 		try {
@@ -451,7 +455,8 @@ public class AssetCategoryServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetCategorySoap[] search(
-		long groupId, String keywords, long vocabularyId, int start, int end,
+		long groupId, java.lang.String keywords, long vocabularyId, int start,
+		int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.kernel.model.AssetCategory> obc)
 		throws RemoteException {
 		try {
@@ -468,8 +473,8 @@ public class AssetCategoryServiceSoap {
 		}
 	}
 
-	public static String search(long groupId, String name,
-		String[] categoryProperties, int start, int end)
+	public static java.lang.String search(long groupId, java.lang.String name,
+		java.lang.String[] categoryProperties, int start, int end)
 		throws RemoteException {
 		try {
 			com.liferay.portal.kernel.json.JSONArray returnValue = AssetCategoryServiceUtil.search(groupId,
@@ -484,8 +489,9 @@ public class AssetCategoryServiceSoap {
 		}
 	}
 
-	public static String search(long[] groupIds, String name,
-		long[] vocabularyIds, int start, int end) throws RemoteException {
+	public static java.lang.String search(long[] groupIds,
+		java.lang.String name, long[] vocabularyIds, int start, int end)
+		throws RemoteException {
 		try {
 			com.liferay.portal.kernel.json.JSONArray returnValue = AssetCategoryServiceUtil.search(groupIds,
 					name, vocabularyIds, start, end);
@@ -500,8 +506,8 @@ public class AssetCategoryServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetCategoryDisplay searchCategoriesDisplay(
-		long groupId, String title, long vocabularyId, int start, int end)
-		throws RemoteException {
+		long groupId, java.lang.String title, long vocabularyId, int start,
+		int end) throws RemoteException {
 		try {
 			com.liferay.asset.kernel.model.AssetCategoryDisplay returnValue = AssetCategoryServiceUtil.searchCategoriesDisplay(groupId,
 					title, vocabularyId, start, end);
@@ -516,8 +522,8 @@ public class AssetCategoryServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetCategoryDisplay searchCategoriesDisplay(
-		long groupId, String title, long parentCategoryId, long vocabularyId,
-		int start, int end) throws RemoteException {
+		long groupId, java.lang.String title, long parentCategoryId,
+		long vocabularyId, int start, int end) throws RemoteException {
 		try {
 			com.liferay.asset.kernel.model.AssetCategoryDisplay returnValue = AssetCategoryServiceUtil.searchCategoriesDisplay(groupId,
 					title, parentCategoryId, vocabularyId, start, end);
@@ -532,9 +538,9 @@ public class AssetCategoryServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetCategoryDisplay searchCategoriesDisplay(
-		long groupId, String title, long vocabularyId, long parentCategoryId,
-		int start, int end, com.liferay.portal.kernel.search.Sort sort)
-		throws RemoteException {
+		long groupId, java.lang.String title, long vocabularyId,
+		long parentCategoryId, int start, int end,
+		com.liferay.portal.kernel.search.Sort sort) throws RemoteException {
 		try {
 			com.liferay.asset.kernel.model.AssetCategoryDisplay returnValue = AssetCategoryServiceUtil.searchCategoriesDisplay(groupId,
 					title, vocabularyId, parentCategoryId, start, end, sort);
@@ -549,8 +555,8 @@ public class AssetCategoryServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetCategoryDisplay searchCategoriesDisplay(
-		long[] groupIds, String title, long[] vocabularyIds, int start, int end)
-		throws RemoteException {
+		long[] groupIds, java.lang.String title, long[] vocabularyIds,
+		int start, int end) throws RemoteException {
 		try {
 			com.liferay.asset.kernel.model.AssetCategoryDisplay returnValue = AssetCategoryServiceUtil.searchCategoriesDisplay(groupIds,
 					title, vocabularyIds, start, end);
@@ -565,7 +571,7 @@ public class AssetCategoryServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetCategoryDisplay searchCategoriesDisplay(
-		long[] groupIds, String title, long[] parentCategoryIds,
+		long[] groupIds, java.lang.String title, long[] parentCategoryIds,
 		long[] vocabularyIds, int start, int end) throws RemoteException {
 		try {
 			com.liferay.asset.kernel.model.AssetCategoryDisplay returnValue = AssetCategoryServiceUtil.searchCategoriesDisplay(groupIds,
@@ -581,7 +587,7 @@ public class AssetCategoryServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetCategoryDisplay searchCategoriesDisplay(
-		long[] groupIds, String title, long[] vocabularyIds,
+		long[] groupIds, java.lang.String title, long[] vocabularyIds,
 		long[] parentCategoryIds, int start, int end,
 		com.liferay.portal.kernel.search.Sort sort) throws RemoteException {
 		try {
@@ -598,10 +604,12 @@ public class AssetCategoryServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetCategorySoap updateCategory(
-		long categoryId, long parentCategoryId, String[] titleMapLanguageIds,
-		String[] titleMapValues, String[] descriptionMapLanguageIds,
-		String[] descriptionMapValues, long vocabularyId,
-		String[] categoryProperties,
+		long categoryId, long parentCategoryId,
+		java.lang.String[] titleMapLanguageIds,
+		java.lang.String[] titleMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, long vocabularyId,
+		java.lang.String[] categoryProperties,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {

@@ -132,7 +132,7 @@ public class AssetCategoryPropertyWrapper implements AssetCategoryProperty,
 	}
 
 	@Override
-	public Object clone() {
+	public java.lang.Object clone() {
 		return new AssetCategoryPropertyWrapper((AssetCategoryProperty)_assetCategoryProperty.clone());
 	}
 
@@ -192,7 +192,7 @@ public class AssetCategoryPropertyWrapper implements AssetCategoryProperty,
 	* @return the key of this asset category property
 	*/
 	@Override
-	public String getKey() {
+	public java.lang.String getKey() {
 		return _assetCategoryProperty.getKey();
 	}
 
@@ -237,7 +237,7 @@ public class AssetCategoryPropertyWrapper implements AssetCategoryProperty,
 	* @return the user name of this asset category property
 	*/
 	@Override
-	public String getUserName() {
+	public java.lang.String getUserName() {
 		return _assetCategoryProperty.getUserName();
 	}
 
@@ -247,7 +247,7 @@ public class AssetCategoryPropertyWrapper implements AssetCategoryProperty,
 	* @return the user uuid of this asset category property
 	*/
 	@Override
-	public String getUserUuid() {
+	public java.lang.String getUserUuid() {
 		return _assetCategoryProperty.getUserUuid();
 	}
 
@@ -257,7 +257,7 @@ public class AssetCategoryPropertyWrapper implements AssetCategoryProperty,
 	* @return the value of this asset category property
 	*/
 	@Override
-	public String getValue() {
+	public java.lang.String getValue() {
 		return _assetCategoryProperty.getValue();
 	}
 
@@ -353,7 +353,7 @@ public class AssetCategoryPropertyWrapper implements AssetCategoryProperty,
 	* @param key the key of this asset category property
 	*/
 	@Override
-	public void setKey(String key) {
+	public void setKey(java.lang.String key) {
 		_assetCategoryProperty.setKey(key);
 	}
 
@@ -403,7 +403,7 @@ public class AssetCategoryPropertyWrapper implements AssetCategoryProperty,
 	* @param userName the user name of this asset category property
 	*/
 	@Override
-	public void setUserName(String userName) {
+	public void setUserName(java.lang.String userName) {
 		_assetCategoryProperty.setUserName(userName);
 	}
 
@@ -413,7 +413,7 @@ public class AssetCategoryPropertyWrapper implements AssetCategoryProperty,
 	* @param userUuid the user uuid of this asset category property
 	*/
 	@Override
-	public void setUserUuid(String userUuid) {
+	public void setUserUuid(java.lang.String userUuid) {
 		_assetCategoryProperty.setUserUuid(userUuid);
 	}
 
@@ -423,7 +423,7 @@ public class AssetCategoryPropertyWrapper implements AssetCategoryProperty,
 	* @param value the value of this asset category property
 	*/
 	@Override
-	public void setValue(String value) {
+	public void setValue(java.lang.String value) {
 		_assetCategoryProperty.setValue(value);
 	}
 
@@ -438,7 +438,7 @@ public class AssetCategoryPropertyWrapper implements AssetCategoryProperty,
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return _assetCategoryProperty.toString();
 	}
 
@@ -448,7 +448,7 @@ public class AssetCategoryPropertyWrapper implements AssetCategoryProperty,
 	}
 
 	@Override
-	public String toXmlString() {
+	public java.lang.String toXmlString() {
 		return _assetCategoryProperty.toXmlString();
 	}
 

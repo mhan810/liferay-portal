@@ -55,7 +55,7 @@ public interface AssetTagService extends BaseService {
 	 *
 	 * Never modify or reference this interface directly. Always use {@link AssetTagServiceUtil} to access the asset tag remote service. Add custom service methods to {@link com.liferay.portlet.asset.service.impl.AssetTagServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public AssetTag addTag(long groupId, String name,
+	public AssetTag addTag(long groupId, java.lang.String name,
 		ServiceContext serviceContext) throws PortalException;
 
 	public void deleteTag(long tagId) throws PortalException;
@@ -76,53 +76,56 @@ public interface AssetTagService extends BaseService {
 	public int getGroupTagsCount(long groupId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public AssetTagDisplay getGroupTagsDisplay(long groupId, String name,
-		int start, int end);
+	public AssetTagDisplay getGroupTagsDisplay(long groupId,
+		java.lang.String name, int start, int end);
 
 	/**
 	* Returns the OSGi service identifier.
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public AssetTag getTag(long tagId) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AssetTag> getTags(long groupId, long classNameId, String name);
+	public List<AssetTag> getTags(long groupId, long classNameId,
+		java.lang.String name);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AssetTag> getTags(long groupId, long classNameId, String name,
+	public List<AssetTag> getTags(long groupId, long classNameId,
+		java.lang.String name, int start, int end,
+		OrderByComparator<AssetTag> obc);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> getTags(long groupId, java.lang.String name,
+		int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> getTags(long groupId, java.lang.String name,
 		int start, int end, OrderByComparator<AssetTag> obc);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AssetTag> getTags(long groupId, String name, int start, int end);
+	public List<AssetTag> getTags(long[] groupIds, java.lang.String name,
+		int start, int end);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AssetTag> getTags(long groupId, String name, int start,
-		int end, OrderByComparator<AssetTag> obc);
+	public List<AssetTag> getTags(long[] groupIds, java.lang.String name,
+		int start, int end, OrderByComparator<AssetTag> obc);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AssetTag> getTags(long[] groupIds, String name, int start,
-		int end);
+	public List<AssetTag> getTags(java.lang.String className, long classPK);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AssetTag> getTags(long[] groupIds, String name, int start,
-		int end, OrderByComparator<AssetTag> obc);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AssetTag> getTags(String className, long classPK);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getTagsCount(long groupId, String name);
+	public int getTagsCount(long groupId, java.lang.String name);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getVisibleAssetsTagsCount(long groupId, long classNameId,
-		String name);
+		java.lang.String name);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getVisibleAssetsTagsCount(long groupId, String name);
+	public int getVisibleAssetsTagsCount(long groupId, java.lang.String name);
 
 	public void mergeTags(long fromTagId, long toTagId)
 		throws PortalException;
@@ -131,11 +134,13 @@ public interface AssetTagService extends BaseService {
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONArray search(long groupId, String name, int start, int end);
+	public JSONArray search(long groupId, java.lang.String name, int start,
+		int end);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONArray search(long[] groupIds, String name, int start, int end);
+	public JSONArray search(long[] groupIds, java.lang.String name, int start,
+		int end);
 
-	public AssetTag updateTag(long tagId, String name,
+	public AssetTag updateTag(long tagId, java.lang.String name,
 		ServiceContext serviceContext) throws PortalException;
 }

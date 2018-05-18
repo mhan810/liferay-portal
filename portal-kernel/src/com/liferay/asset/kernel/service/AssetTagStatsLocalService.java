@@ -88,7 +88,6 @@ public interface AssetTagStatsLocalService extends BaseLocalService,
 	* @param tagStatsId the primary key for the new asset tag stats
 	* @return the new asset tag stats
 	*/
-	@Transactional(enabled = false)
 	public AssetTagStats createAssetTagStats(long tagStatsId);
 
 	/**
@@ -253,7 +252,7 @@ public interface AssetTagStatsLocalService extends BaseLocalService,
 	*
 	* @return the OSGi service identifier
 	*/
-	public String getOSGiServiceIdentifier();
+	public java.lang.String getOSGiServiceIdentifier();
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

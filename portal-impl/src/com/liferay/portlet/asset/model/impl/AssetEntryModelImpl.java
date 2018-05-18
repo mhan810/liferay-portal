@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.exception.LocaleException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -189,8 +188,8 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 		model.setClassPK(soapModel.getClassPK());
 		model.setClassUuid(soapModel.getClassUuid());
 		model.setClassTypeId(soapModel.getClassTypeId());
-		model.setListable(soapModel.isListable());
-		model.setVisible(soapModel.isVisible());
+		model.setListable(soapModel.getListable());
+		model.setVisible(soapModel.getVisible());
 		model.setStartDate(soapModel.getStartDate());
 		model.setEndDate(soapModel.getEndDate());
 		model.setPublishDate(soapModel.getPublishDate());
@@ -303,8 +302,8 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 		attributes.put("classPK", getClassPK());
 		attributes.put("classUuid", getClassUuid());
 		attributes.put("classTypeId", getClassTypeId());
-		attributes.put("listable", isListable());
-		attributes.put("visible", isVisible());
+		attributes.put("listable", getListable());
+		attributes.put("visible", getVisible());
 		attributes.put("startDate", getStartDate());
 		attributes.put("endDate", getEndDate());
 		attributes.put("publishDate", getPublishDate());
@@ -1380,8 +1379,8 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 		assetEntryImpl.setClassPK(getClassPK());
 		assetEntryImpl.setClassUuid(getClassUuid());
 		assetEntryImpl.setClassTypeId(getClassTypeId());
-		assetEntryImpl.setListable(isListable());
-		assetEntryImpl.setVisible(isVisible());
+		assetEntryImpl.setListable(getListable());
+		assetEntryImpl.setVisible(getVisible());
 		assetEntryImpl.setStartDate(getStartDate());
 		assetEntryImpl.setEndDate(getEndDate());
 		assetEntryImpl.setPublishDate(getPublishDate());
@@ -1543,9 +1542,9 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 
 		assetEntryCacheModel.classTypeId = getClassTypeId();
 
-		assetEntryCacheModel.listable = isListable();
+		assetEntryCacheModel.listable = getListable();
 
-		assetEntryCacheModel.visible = isVisible();
+		assetEntryCacheModel.visible = getVisible();
 
 		Date startDate = getStartDate();
 
@@ -1669,9 +1668,9 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 		sb.append(", classTypeId=");
 		sb.append(getClassTypeId());
 		sb.append(", listable=");
-		sb.append(isListable());
+		sb.append(getListable());
 		sb.append(", visible=");
-		sb.append(isVisible());
+		sb.append(getVisible());
 		sb.append(", startDate=");
 		sb.append(getStartDate());
 		sb.append(", endDate=");
@@ -1759,11 +1758,11 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>listable</column-name><column-value><![CDATA[");
-		sb.append(isListable());
+		sb.append(getListable());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>visible</column-name><column-value><![CDATA[");
-		sb.append(isVisible());
+		sb.append(getVisible());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>startDate</column-name><column-value><![CDATA[");
@@ -1829,7 +1828,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 
 	private static final ClassLoader _classLoader = AssetEntry.class.getClassLoader();
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
-			AssetEntry.class, ModelWrapper.class
+			AssetEntry.class
 		};
 	private long _entryId;
 	private long _groupId;

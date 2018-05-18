@@ -114,7 +114,7 @@ public class AssetTagUtil {
 	* @param uuid the uuid
 	* @return the matching asset tags
 	*/
-	public static List<AssetTag> findByUuid(String uuid) {
+	public static List<AssetTag> findByUuid(java.lang.String uuid) {
 		return getPersistence().findByUuid(uuid);
 	}
 
@@ -130,7 +130,8 @@ public class AssetTagUtil {
 	* @param end the upper bound of the range of asset tags (not inclusive)
 	* @return the range of matching asset tags
 	*/
-	public static List<AssetTag> findByUuid(String uuid, int start, int end) {
+	public static List<AssetTag> findByUuid(java.lang.String uuid, int start,
+		int end) {
 		return getPersistence().findByUuid(uuid, start, end);
 	}
 
@@ -147,8 +148,8 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching asset tags
 	*/
-	public static List<AssetTag> findByUuid(String uuid, int start, int end,
-		OrderByComparator<AssetTag> orderByComparator) {
+	public static List<AssetTag> findByUuid(java.lang.String uuid, int start,
+		int end, OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence().findByUuid(uuid, start, end, orderByComparator);
 	}
 
@@ -166,8 +167,9 @@ public class AssetTagUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching asset tags
 	*/
-	public static List<AssetTag> findByUuid(String uuid, int start, int end,
-		OrderByComparator<AssetTag> orderByComparator, boolean retrieveFromCache) {
+	public static List<AssetTag> findByUuid(java.lang.String uuid, int start,
+		int end, OrderByComparator<AssetTag> orderByComparator,
+		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByUuid(uuid, start, end, orderByComparator,
 			retrieveFromCache);
@@ -181,7 +183,7 @@ public class AssetTagUtil {
 	* @return the first matching asset tag
 	* @throws NoSuchTagException if a matching asset tag could not be found
 	*/
-	public static AssetTag findByUuid_First(String uuid,
+	public static AssetTag findByUuid_First(java.lang.String uuid,
 		OrderByComparator<AssetTag> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence().findByUuid_First(uuid, orderByComparator);
@@ -194,7 +196,7 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching asset tag, or <code>null</code> if a matching asset tag could not be found
 	*/
-	public static AssetTag fetchByUuid_First(String uuid,
+	public static AssetTag fetchByUuid_First(java.lang.String uuid,
 		OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence().fetchByUuid_First(uuid, orderByComparator);
 	}
@@ -207,7 +209,7 @@ public class AssetTagUtil {
 	* @return the last matching asset tag
 	* @throws NoSuchTagException if a matching asset tag could not be found
 	*/
-	public static AssetTag findByUuid_Last(String uuid,
+	public static AssetTag findByUuid_Last(java.lang.String uuid,
 		OrderByComparator<AssetTag> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence().findByUuid_Last(uuid, orderByComparator);
@@ -220,7 +222,7 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching asset tag, or <code>null</code> if a matching asset tag could not be found
 	*/
-	public static AssetTag fetchByUuid_Last(String uuid,
+	public static AssetTag fetchByUuid_Last(java.lang.String uuid,
 		OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence().fetchByUuid_Last(uuid, orderByComparator);
 	}
@@ -234,8 +236,8 @@ public class AssetTagUtil {
 	* @return the previous, current, and next asset tag
 	* @throws NoSuchTagException if a asset tag with the primary key could not be found
 	*/
-	public static AssetTag[] findByUuid_PrevAndNext(long tagId, String uuid,
-		OrderByComparator<AssetTag> orderByComparator)
+	public static AssetTag[] findByUuid_PrevAndNext(long tagId,
+		java.lang.String uuid, OrderByComparator<AssetTag> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence()
 				   .findByUuid_PrevAndNext(tagId, uuid, orderByComparator);
@@ -246,7 +248,7 @@ public class AssetTagUtil {
 	*
 	* @param uuid the uuid
 	*/
-	public static void removeByUuid(String uuid) {
+	public static void removeByUuid(java.lang.String uuid) {
 		getPersistence().removeByUuid(uuid);
 	}
 
@@ -256,7 +258,7 @@ public class AssetTagUtil {
 	* @param uuid the uuid
 	* @return the number of matching asset tags
 	*/
-	public static int countByUuid(String uuid) {
+	public static int countByUuid(java.lang.String uuid) {
 		return getPersistence().countByUuid(uuid);
 	}
 
@@ -268,7 +270,7 @@ public class AssetTagUtil {
 	* @return the matching asset tag
 	* @throws NoSuchTagException if a matching asset tag could not be found
 	*/
-	public static AssetTag findByUUID_G(String uuid, long groupId)
+	public static AssetTag findByUUID_G(java.lang.String uuid, long groupId)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence().findByUUID_G(uuid, groupId);
 	}
@@ -280,7 +282,7 @@ public class AssetTagUtil {
 	* @param groupId the group ID
 	* @return the matching asset tag, or <code>null</code> if a matching asset tag could not be found
 	*/
-	public static AssetTag fetchByUUID_G(String uuid, long groupId) {
+	public static AssetTag fetchByUUID_G(java.lang.String uuid, long groupId) {
 		return getPersistence().fetchByUUID_G(uuid, groupId);
 	}
 
@@ -292,7 +294,7 @@ public class AssetTagUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching asset tag, or <code>null</code> if a matching asset tag could not be found
 	*/
-	public static AssetTag fetchByUUID_G(String uuid, long groupId,
+	public static AssetTag fetchByUUID_G(java.lang.String uuid, long groupId,
 		boolean retrieveFromCache) {
 		return getPersistence().fetchByUUID_G(uuid, groupId, retrieveFromCache);
 	}
@@ -304,7 +306,7 @@ public class AssetTagUtil {
 	* @param groupId the group ID
 	* @return the asset tag that was removed
 	*/
-	public static AssetTag removeByUUID_G(String uuid, long groupId)
+	public static AssetTag removeByUUID_G(java.lang.String uuid, long groupId)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence().removeByUUID_G(uuid, groupId);
 	}
@@ -316,7 +318,7 @@ public class AssetTagUtil {
 	* @param groupId the group ID
 	* @return the number of matching asset tags
 	*/
-	public static int countByUUID_G(String uuid, long groupId) {
+	public static int countByUUID_G(java.lang.String uuid, long groupId) {
 		return getPersistence().countByUUID_G(uuid, groupId);
 	}
 
@@ -327,7 +329,8 @@ public class AssetTagUtil {
 	* @param companyId the company ID
 	* @return the matching asset tags
 	*/
-	public static List<AssetTag> findByUuid_C(String uuid, long companyId) {
+	public static List<AssetTag> findByUuid_C(java.lang.String uuid,
+		long companyId) {
 		return getPersistence().findByUuid_C(uuid, companyId);
 	}
 
@@ -344,8 +347,8 @@ public class AssetTagUtil {
 	* @param end the upper bound of the range of asset tags (not inclusive)
 	* @return the range of matching asset tags
 	*/
-	public static List<AssetTag> findByUuid_C(String uuid, long companyId,
-		int start, int end) {
+	public static List<AssetTag> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end) {
 		return getPersistence().findByUuid_C(uuid, companyId, start, end);
 	}
 
@@ -363,8 +366,9 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching asset tags
 	*/
-	public static List<AssetTag> findByUuid_C(String uuid, long companyId,
-		int start, int end, OrderByComparator<AssetTag> orderByComparator) {
+	public static List<AssetTag> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end,
+		OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence()
 				   .findByUuid_C(uuid, companyId, start, end, orderByComparator);
 	}
@@ -384,9 +388,9 @@ public class AssetTagUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching asset tags
 	*/
-	public static List<AssetTag> findByUuid_C(String uuid, long companyId,
-		int start, int end, OrderByComparator<AssetTag> orderByComparator,
-		boolean retrieveFromCache) {
+	public static List<AssetTag> findByUuid_C(java.lang.String uuid,
+		long companyId, int start, int end,
+		OrderByComparator<AssetTag> orderByComparator, boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByUuid_C(uuid, companyId, start, end,
 			orderByComparator, retrieveFromCache);
@@ -401,8 +405,8 @@ public class AssetTagUtil {
 	* @return the first matching asset tag
 	* @throws NoSuchTagException if a matching asset tag could not be found
 	*/
-	public static AssetTag findByUuid_C_First(String uuid, long companyId,
-		OrderByComparator<AssetTag> orderByComparator)
+	public static AssetTag findByUuid_C_First(java.lang.String uuid,
+		long companyId, OrderByComparator<AssetTag> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence()
 				   .findByUuid_C_First(uuid, companyId, orderByComparator);
@@ -416,8 +420,8 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching asset tag, or <code>null</code> if a matching asset tag could not be found
 	*/
-	public static AssetTag fetchByUuid_C_First(String uuid, long companyId,
-		OrderByComparator<AssetTag> orderByComparator) {
+	public static AssetTag fetchByUuid_C_First(java.lang.String uuid,
+		long companyId, OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence()
 				   .fetchByUuid_C_First(uuid, companyId, orderByComparator);
 	}
@@ -431,8 +435,8 @@ public class AssetTagUtil {
 	* @return the last matching asset tag
 	* @throws NoSuchTagException if a matching asset tag could not be found
 	*/
-	public static AssetTag findByUuid_C_Last(String uuid, long companyId,
-		OrderByComparator<AssetTag> orderByComparator)
+	public static AssetTag findByUuid_C_Last(java.lang.String uuid,
+		long companyId, OrderByComparator<AssetTag> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence()
 				   .findByUuid_C_Last(uuid, companyId, orderByComparator);
@@ -446,8 +450,8 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching asset tag, or <code>null</code> if a matching asset tag could not be found
 	*/
-	public static AssetTag fetchByUuid_C_Last(String uuid, long companyId,
-		OrderByComparator<AssetTag> orderByComparator) {
+	public static AssetTag fetchByUuid_C_Last(java.lang.String uuid,
+		long companyId, OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence()
 				   .fetchByUuid_C_Last(uuid, companyId, orderByComparator);
 	}
@@ -462,8 +466,9 @@ public class AssetTagUtil {
 	* @return the previous, current, and next asset tag
 	* @throws NoSuchTagException if a asset tag with the primary key could not be found
 	*/
-	public static AssetTag[] findByUuid_C_PrevAndNext(long tagId, String uuid,
-		long companyId, OrderByComparator<AssetTag> orderByComparator)
+	public static AssetTag[] findByUuid_C_PrevAndNext(long tagId,
+		java.lang.String uuid, long companyId,
+		OrderByComparator<AssetTag> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence()
 				   .findByUuid_C_PrevAndNext(tagId, uuid, companyId,
@@ -476,7 +481,7 @@ public class AssetTagUtil {
 	* @param uuid the uuid
 	* @param companyId the company ID
 	*/
-	public static void removeByUuid_C(String uuid, long companyId) {
+	public static void removeByUuid_C(java.lang.String uuid, long companyId) {
 		getPersistence().removeByUuid_C(uuid, companyId);
 	}
 
@@ -487,7 +492,7 @@ public class AssetTagUtil {
 	* @param companyId the company ID
 	* @return the number of matching asset tags
 	*/
-	public static int countByUuid_C(String uuid, long companyId) {
+	public static int countByUuid_C(java.lang.String uuid, long companyId) {
 		return getPersistence().countByUuid_C(uuid, companyId);
 	}
 
@@ -862,7 +867,7 @@ public class AssetTagUtil {
 	* @param name the name
 	* @return the matching asset tags
 	*/
-	public static List<AssetTag> findByName(String name) {
+	public static List<AssetTag> findByName(java.lang.String name) {
 		return getPersistence().findByName(name);
 	}
 
@@ -878,7 +883,8 @@ public class AssetTagUtil {
 	* @param end the upper bound of the range of asset tags (not inclusive)
 	* @return the range of matching asset tags
 	*/
-	public static List<AssetTag> findByName(String name, int start, int end) {
+	public static List<AssetTag> findByName(java.lang.String name, int start,
+		int end) {
 		return getPersistence().findByName(name, start, end);
 	}
 
@@ -895,8 +901,8 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching asset tags
 	*/
-	public static List<AssetTag> findByName(String name, int start, int end,
-		OrderByComparator<AssetTag> orderByComparator) {
+	public static List<AssetTag> findByName(java.lang.String name, int start,
+		int end, OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence().findByName(name, start, end, orderByComparator);
 	}
 
@@ -914,8 +920,9 @@ public class AssetTagUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching asset tags
 	*/
-	public static List<AssetTag> findByName(String name, int start, int end,
-		OrderByComparator<AssetTag> orderByComparator, boolean retrieveFromCache) {
+	public static List<AssetTag> findByName(java.lang.String name, int start,
+		int end, OrderByComparator<AssetTag> orderByComparator,
+		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByName(name, start, end, orderByComparator,
 			retrieveFromCache);
@@ -929,7 +936,7 @@ public class AssetTagUtil {
 	* @return the first matching asset tag
 	* @throws NoSuchTagException if a matching asset tag could not be found
 	*/
-	public static AssetTag findByName_First(String name,
+	public static AssetTag findByName_First(java.lang.String name,
 		OrderByComparator<AssetTag> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence().findByName_First(name, orderByComparator);
@@ -942,7 +949,7 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching asset tag, or <code>null</code> if a matching asset tag could not be found
 	*/
-	public static AssetTag fetchByName_First(String name,
+	public static AssetTag fetchByName_First(java.lang.String name,
 		OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence().fetchByName_First(name, orderByComparator);
 	}
@@ -955,7 +962,7 @@ public class AssetTagUtil {
 	* @return the last matching asset tag
 	* @throws NoSuchTagException if a matching asset tag could not be found
 	*/
-	public static AssetTag findByName_Last(String name,
+	public static AssetTag findByName_Last(java.lang.String name,
 		OrderByComparator<AssetTag> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence().findByName_Last(name, orderByComparator);
@@ -968,7 +975,7 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching asset tag, or <code>null</code> if a matching asset tag could not be found
 	*/
-	public static AssetTag fetchByName_Last(String name,
+	public static AssetTag fetchByName_Last(java.lang.String name,
 		OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence().fetchByName_Last(name, orderByComparator);
 	}
@@ -982,8 +989,8 @@ public class AssetTagUtil {
 	* @return the previous, current, and next asset tag
 	* @throws NoSuchTagException if a asset tag with the primary key could not be found
 	*/
-	public static AssetTag[] findByName_PrevAndNext(long tagId, String name,
-		OrderByComparator<AssetTag> orderByComparator)
+	public static AssetTag[] findByName_PrevAndNext(long tagId,
+		java.lang.String name, OrderByComparator<AssetTag> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence()
 				   .findByName_PrevAndNext(tagId, name, orderByComparator);
@@ -999,7 +1006,7 @@ public class AssetTagUtil {
 	* @param names the names
 	* @return the matching asset tags
 	*/
-	public static List<AssetTag> findByName(String[] names) {
+	public static List<AssetTag> findByName(java.lang.String[] names) {
 		return getPersistence().findByName(names);
 	}
 
@@ -1015,7 +1022,8 @@ public class AssetTagUtil {
 	* @param end the upper bound of the range of asset tags (not inclusive)
 	* @return the range of matching asset tags
 	*/
-	public static List<AssetTag> findByName(String[] names, int start, int end) {
+	public static List<AssetTag> findByName(java.lang.String[] names,
+		int start, int end) {
 		return getPersistence().findByName(names, start, end);
 	}
 
@@ -1032,8 +1040,8 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching asset tags
 	*/
-	public static List<AssetTag> findByName(String[] names, int start, int end,
-		OrderByComparator<AssetTag> orderByComparator) {
+	public static List<AssetTag> findByName(java.lang.String[] names,
+		int start, int end, OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence().findByName(names, start, end, orderByComparator);
 	}
 
@@ -1051,8 +1059,9 @@ public class AssetTagUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching asset tags
 	*/
-	public static List<AssetTag> findByName(String[] names, int start, int end,
-		OrderByComparator<AssetTag> orderByComparator, boolean retrieveFromCache) {
+	public static List<AssetTag> findByName(java.lang.String[] names,
+		int start, int end, OrderByComparator<AssetTag> orderByComparator,
+		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByName(names, start, end, orderByComparator,
 			retrieveFromCache);
@@ -1063,7 +1072,7 @@ public class AssetTagUtil {
 	*
 	* @param name the name
 	*/
-	public static void removeByName(String name) {
+	public static void removeByName(java.lang.String name) {
 		getPersistence().removeByName(name);
 	}
 
@@ -1073,7 +1082,7 @@ public class AssetTagUtil {
 	* @param name the name
 	* @return the number of matching asset tags
 	*/
-	public static int countByName(String name) {
+	public static int countByName(java.lang.String name) {
 		return getPersistence().countByName(name);
 	}
 
@@ -1083,7 +1092,7 @@ public class AssetTagUtil {
 	* @param names the names
 	* @return the number of matching asset tags
 	*/
-	public static int countByName(String[] names) {
+	public static int countByName(java.lang.String[] names) {
 		return getPersistence().countByName(names);
 	}
 
@@ -1095,7 +1104,7 @@ public class AssetTagUtil {
 	* @return the matching asset tag
 	* @throws NoSuchTagException if a matching asset tag could not be found
 	*/
-	public static AssetTag findByG_N(long groupId, String name)
+	public static AssetTag findByG_N(long groupId, java.lang.String name)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence().findByG_N(groupId, name);
 	}
@@ -1107,7 +1116,7 @@ public class AssetTagUtil {
 	* @param name the name
 	* @return the matching asset tag, or <code>null</code> if a matching asset tag could not be found
 	*/
-	public static AssetTag fetchByG_N(long groupId, String name) {
+	public static AssetTag fetchByG_N(long groupId, java.lang.String name) {
 		return getPersistence().fetchByG_N(groupId, name);
 	}
 
@@ -1119,7 +1128,7 @@ public class AssetTagUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching asset tag, or <code>null</code> if a matching asset tag could not be found
 	*/
-	public static AssetTag fetchByG_N(long groupId, String name,
+	public static AssetTag fetchByG_N(long groupId, java.lang.String name,
 		boolean retrieveFromCache) {
 		return getPersistence().fetchByG_N(groupId, name, retrieveFromCache);
 	}
@@ -1131,7 +1140,7 @@ public class AssetTagUtil {
 	* @param name the name
 	* @return the asset tag that was removed
 	*/
-	public static AssetTag removeByG_N(long groupId, String name)
+	public static AssetTag removeByG_N(long groupId, java.lang.String name)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence().removeByG_N(groupId, name);
 	}
@@ -1143,7 +1152,7 @@ public class AssetTagUtil {
 	* @param name the name
 	* @return the number of matching asset tags
 	*/
-	public static int countByG_N(long groupId, String name) {
+	public static int countByG_N(long groupId, java.lang.String name) {
 		return getPersistence().countByG_N(groupId, name);
 	}
 
@@ -1154,7 +1163,8 @@ public class AssetTagUtil {
 	* @param name the name
 	* @return the matching asset tags
 	*/
-	public static List<AssetTag> findByG_LikeN(long groupId, String name) {
+	public static List<AssetTag> findByG_LikeN(long groupId,
+		java.lang.String name) {
 		return getPersistence().findByG_LikeN(groupId, name);
 	}
 
@@ -1171,8 +1181,8 @@ public class AssetTagUtil {
 	* @param end the upper bound of the range of asset tags (not inclusive)
 	* @return the range of matching asset tags
 	*/
-	public static List<AssetTag> findByG_LikeN(long groupId, String name,
-		int start, int end) {
+	public static List<AssetTag> findByG_LikeN(long groupId,
+		java.lang.String name, int start, int end) {
 		return getPersistence().findByG_LikeN(groupId, name, start, end);
 	}
 
@@ -1190,8 +1200,9 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching asset tags
 	*/
-	public static List<AssetTag> findByG_LikeN(long groupId, String name,
-		int start, int end, OrderByComparator<AssetTag> orderByComparator) {
+	public static List<AssetTag> findByG_LikeN(long groupId,
+		java.lang.String name, int start, int end,
+		OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence()
 				   .findByG_LikeN(groupId, name, start, end, orderByComparator);
 	}
@@ -1211,9 +1222,9 @@ public class AssetTagUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching asset tags
 	*/
-	public static List<AssetTag> findByG_LikeN(long groupId, String name,
-		int start, int end, OrderByComparator<AssetTag> orderByComparator,
-		boolean retrieveFromCache) {
+	public static List<AssetTag> findByG_LikeN(long groupId,
+		java.lang.String name, int start, int end,
+		OrderByComparator<AssetTag> orderByComparator, boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByG_LikeN(groupId, name, start, end, orderByComparator,
 			retrieveFromCache);
@@ -1228,8 +1239,8 @@ public class AssetTagUtil {
 	* @return the first matching asset tag
 	* @throws NoSuchTagException if a matching asset tag could not be found
 	*/
-	public static AssetTag findByG_LikeN_First(long groupId, String name,
-		OrderByComparator<AssetTag> orderByComparator)
+	public static AssetTag findByG_LikeN_First(long groupId,
+		java.lang.String name, OrderByComparator<AssetTag> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence()
 				   .findByG_LikeN_First(groupId, name, orderByComparator);
@@ -1243,8 +1254,8 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching asset tag, or <code>null</code> if a matching asset tag could not be found
 	*/
-	public static AssetTag fetchByG_LikeN_First(long groupId, String name,
-		OrderByComparator<AssetTag> orderByComparator) {
+	public static AssetTag fetchByG_LikeN_First(long groupId,
+		java.lang.String name, OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence()
 				   .fetchByG_LikeN_First(groupId, name, orderByComparator);
 	}
@@ -1258,8 +1269,8 @@ public class AssetTagUtil {
 	* @return the last matching asset tag
 	* @throws NoSuchTagException if a matching asset tag could not be found
 	*/
-	public static AssetTag findByG_LikeN_Last(long groupId, String name,
-		OrderByComparator<AssetTag> orderByComparator)
+	public static AssetTag findByG_LikeN_Last(long groupId,
+		java.lang.String name, OrderByComparator<AssetTag> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence()
 				   .findByG_LikeN_Last(groupId, name, orderByComparator);
@@ -1273,8 +1284,8 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching asset tag, or <code>null</code> if a matching asset tag could not be found
 	*/
-	public static AssetTag fetchByG_LikeN_Last(long groupId, String name,
-		OrderByComparator<AssetTag> orderByComparator) {
+	public static AssetTag fetchByG_LikeN_Last(long groupId,
+		java.lang.String name, OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence()
 				   .fetchByG_LikeN_Last(groupId, name, orderByComparator);
 	}
@@ -1290,7 +1301,8 @@ public class AssetTagUtil {
 	* @throws NoSuchTagException if a asset tag with the primary key could not be found
 	*/
 	public static AssetTag[] findByG_LikeN_PrevAndNext(long tagId,
-		long groupId, String name, OrderByComparator<AssetTag> orderByComparator)
+		long groupId, java.lang.String name,
+		OrderByComparator<AssetTag> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence()
 				   .findByG_LikeN_PrevAndNext(tagId, groupId, name,
@@ -1304,7 +1316,8 @@ public class AssetTagUtil {
 	* @param name the name
 	* @return the matching asset tags that the user has permission to view
 	*/
-	public static List<AssetTag> filterFindByG_LikeN(long groupId, String name) {
+	public static List<AssetTag> filterFindByG_LikeN(long groupId,
+		java.lang.String name) {
 		return getPersistence().filterFindByG_LikeN(groupId, name);
 	}
 
@@ -1321,8 +1334,8 @@ public class AssetTagUtil {
 	* @param end the upper bound of the range of asset tags (not inclusive)
 	* @return the range of matching asset tags that the user has permission to view
 	*/
-	public static List<AssetTag> filterFindByG_LikeN(long groupId, String name,
-		int start, int end) {
+	public static List<AssetTag> filterFindByG_LikeN(long groupId,
+		java.lang.String name, int start, int end) {
 		return getPersistence().filterFindByG_LikeN(groupId, name, start, end);
 	}
 
@@ -1340,8 +1353,9 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching asset tags that the user has permission to view
 	*/
-	public static List<AssetTag> filterFindByG_LikeN(long groupId, String name,
-		int start, int end, OrderByComparator<AssetTag> orderByComparator) {
+	public static List<AssetTag> filterFindByG_LikeN(long groupId,
+		java.lang.String name, int start, int end,
+		OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence()
 				   .filterFindByG_LikeN(groupId, name, start, end,
 			orderByComparator);
@@ -1358,7 +1372,8 @@ public class AssetTagUtil {
 	* @throws NoSuchTagException if a asset tag with the primary key could not be found
 	*/
 	public static AssetTag[] filterFindByG_LikeN_PrevAndNext(long tagId,
-		long groupId, String name, OrderByComparator<AssetTag> orderByComparator)
+		long groupId, java.lang.String name,
+		OrderByComparator<AssetTag> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchTagException {
 		return getPersistence()
 				   .filterFindByG_LikeN_PrevAndNext(tagId, groupId, name,
@@ -1373,7 +1388,7 @@ public class AssetTagUtil {
 	* @return the matching asset tags that the user has permission to view
 	*/
 	public static List<AssetTag> filterFindByG_LikeN(long[] groupIds,
-		String name) {
+		java.lang.String name) {
 		return getPersistence().filterFindByG_LikeN(groupIds, name);
 	}
 
@@ -1391,7 +1406,7 @@ public class AssetTagUtil {
 	* @return the range of matching asset tags that the user has permission to view
 	*/
 	public static List<AssetTag> filterFindByG_LikeN(long[] groupIds,
-		String name, int start, int end) {
+		java.lang.String name, int start, int end) {
 		return getPersistence().filterFindByG_LikeN(groupIds, name, start, end);
 	}
 
@@ -1410,7 +1425,7 @@ public class AssetTagUtil {
 	* @return the ordered range of matching asset tags that the user has permission to view
 	*/
 	public static List<AssetTag> filterFindByG_LikeN(long[] groupIds,
-		String name, int start, int end,
+		java.lang.String name, int start, int end,
 		OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence()
 				   .filterFindByG_LikeN(groupIds, name, start, end,
@@ -1428,7 +1443,8 @@ public class AssetTagUtil {
 	* @param name the name
 	* @return the matching asset tags
 	*/
-	public static List<AssetTag> findByG_LikeN(long[] groupIds, String name) {
+	public static List<AssetTag> findByG_LikeN(long[] groupIds,
+		java.lang.String name) {
 		return getPersistence().findByG_LikeN(groupIds, name);
 	}
 
@@ -1445,8 +1461,8 @@ public class AssetTagUtil {
 	* @param end the upper bound of the range of asset tags (not inclusive)
 	* @return the range of matching asset tags
 	*/
-	public static List<AssetTag> findByG_LikeN(long[] groupIds, String name,
-		int start, int end) {
+	public static List<AssetTag> findByG_LikeN(long[] groupIds,
+		java.lang.String name, int start, int end) {
 		return getPersistence().findByG_LikeN(groupIds, name, start, end);
 	}
 
@@ -1464,8 +1480,9 @@ public class AssetTagUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching asset tags
 	*/
-	public static List<AssetTag> findByG_LikeN(long[] groupIds, String name,
-		int start, int end, OrderByComparator<AssetTag> orderByComparator) {
+	public static List<AssetTag> findByG_LikeN(long[] groupIds,
+		java.lang.String name, int start, int end,
+		OrderByComparator<AssetTag> orderByComparator) {
 		return getPersistence()
 				   .findByG_LikeN(groupIds, name, start, end, orderByComparator);
 	}
@@ -1485,9 +1502,9 @@ public class AssetTagUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching asset tags
 	*/
-	public static List<AssetTag> findByG_LikeN(long[] groupIds, String name,
-		int start, int end, OrderByComparator<AssetTag> orderByComparator,
-		boolean retrieveFromCache) {
+	public static List<AssetTag> findByG_LikeN(long[] groupIds,
+		java.lang.String name, int start, int end,
+		OrderByComparator<AssetTag> orderByComparator, boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByG_LikeN(groupIds, name, start, end,
 			orderByComparator, retrieveFromCache);
@@ -1499,7 +1516,7 @@ public class AssetTagUtil {
 	* @param groupId the group ID
 	* @param name the name
 	*/
-	public static void removeByG_LikeN(long groupId, String name) {
+	public static void removeByG_LikeN(long groupId, java.lang.String name) {
 		getPersistence().removeByG_LikeN(groupId, name);
 	}
 
@@ -1510,7 +1527,7 @@ public class AssetTagUtil {
 	* @param name the name
 	* @return the number of matching asset tags
 	*/
-	public static int countByG_LikeN(long groupId, String name) {
+	public static int countByG_LikeN(long groupId, java.lang.String name) {
 		return getPersistence().countByG_LikeN(groupId, name);
 	}
 
@@ -1521,7 +1538,7 @@ public class AssetTagUtil {
 	* @param name the name
 	* @return the number of matching asset tags
 	*/
-	public static int countByG_LikeN(long[] groupIds, String name) {
+	public static int countByG_LikeN(long[] groupIds, java.lang.String name) {
 		return getPersistence().countByG_LikeN(groupIds, name);
 	}
 
@@ -1532,7 +1549,7 @@ public class AssetTagUtil {
 	* @param name the name
 	* @return the number of matching asset tags that the user has permission to view
 	*/
-	public static int filterCountByG_LikeN(long groupId, String name) {
+	public static int filterCountByG_LikeN(long groupId, java.lang.String name) {
 		return getPersistence().filterCountByG_LikeN(groupId, name);
 	}
 
@@ -1543,7 +1560,8 @@ public class AssetTagUtil {
 	* @param name the name
 	* @return the number of matching asset tags that the user has permission to view
 	*/
-	public static int filterCountByG_LikeN(long[] groupIds, String name) {
+	public static int filterCountByG_LikeN(long[] groupIds,
+		java.lang.String name) {
 		return getPersistence().filterCountByG_LikeN(groupIds, name);
 	}
 
@@ -1897,7 +1915,7 @@ public class AssetTagUtil {
 		getPersistence().setAssetEntries(pk, assetEntries);
 	}
 
-	public static java.util.Set<String> getBadColumnNames() {
+	public static java.util.Set<java.lang.String> getBadColumnNames() {
 		return getPersistence().getBadColumnNames();
 	}
 

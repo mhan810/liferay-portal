@@ -25,17 +25,18 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  */
 @ProviderType
 public class AssetCategoryFinderUtil {
-	public static int countByG_C_N(long groupId, long classNameId, String name) {
+	public static int countByG_C_N(long groupId, long classNameId,
+		java.lang.String name) {
 		return getFinder().countByG_C_N(groupId, classNameId, name);
 	}
 
-	public static int countByG_N_P(long groupId, String name,
-		String[] categoryProperties) {
+	public static int countByG_N_P(long groupId, java.lang.String name,
+		java.lang.String[] categoryProperties) {
 		return getFinder().countByG_N_P(groupId, name, categoryProperties);
 	}
 
 	public static com.liferay.asset.kernel.model.AssetCategory findByG_N(
-		long groupId, String name)
+		long groupId, java.lang.String name)
 		throws com.liferay.asset.kernel.exception.NoSuchCategoryException {
 		return getFinder().findByG_N(groupId, name);
 	}
@@ -46,13 +47,14 @@ public class AssetCategoryFinderUtil {
 	}
 
 	public static java.util.List<com.liferay.asset.kernel.model.AssetCategory> findByG_N_P(
-		long groupId, String name, String[] categoryProperties) {
+		long groupId, java.lang.String name,
+		java.lang.String[] categoryProperties) {
 		return getFinder().findByG_N_P(groupId, name, categoryProperties);
 	}
 
 	public static java.util.List<com.liferay.asset.kernel.model.AssetCategory> findByG_N_P(
-		long groupId, String name, String[] categoryProperties, int start,
-		int end) {
+		long groupId, java.lang.String name,
+		java.lang.String[] categoryProperties, int start, int end) {
 		return getFinder()
 				   .findByG_N_P(groupId, name, categoryProperties, start, end);
 	}

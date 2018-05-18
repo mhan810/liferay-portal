@@ -415,7 +415,7 @@ public class AssetLinkLocalServiceWrapper implements AssetLinkLocalService,
 	* @return the OSGi service identifier
 	*/
 	@Override
-	public String getOSGiServiceIdentifier() {
+	public java.lang.String getOSGiServiceIdentifier() {
 		return _assetLinkLocalService.getOSGiServiceIdentifier();
 	}
 

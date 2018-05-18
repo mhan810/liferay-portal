@@ -42,7 +42,6 @@ import com.liferay.portal.kernel.service.BaseLocalServiceImpl;
 import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
 import com.liferay.portal.kernel.service.persistence.UserFinder;
 import com.liferay.portal.kernel.service.persistence.UserPersistence;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 
@@ -99,7 +98,6 @@ public abstract class AssetCategoryPropertyLocalServiceBaseImpl
 	 * @return the new asset category property
 	 */
 	@Override
-	@Transactional(enabled = false)
 	public AssetCategoryProperty createAssetCategoryProperty(
 		long categoryPropertyId) {
 		return assetCategoryPropertyPersistence.create(categoryPropertyId);

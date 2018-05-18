@@ -115,7 +115,7 @@ public class AssetVocabularyUtil {
 	* @param uuid the uuid
 	* @return the matching asset vocabularies
 	*/
-	public static List<AssetVocabulary> findByUuid(String uuid) {
+	public static List<AssetVocabulary> findByUuid(java.lang.String uuid) {
 		return getPersistence().findByUuid(uuid);
 	}
 
@@ -131,8 +131,8 @@ public class AssetVocabularyUtil {
 	* @param end the upper bound of the range of asset vocabularies (not inclusive)
 	* @return the range of matching asset vocabularies
 	*/
-	public static List<AssetVocabulary> findByUuid(String uuid, int start,
-		int end) {
+	public static List<AssetVocabulary> findByUuid(java.lang.String uuid,
+		int start, int end) {
 		return getPersistence().findByUuid(uuid, start, end);
 	}
 
@@ -149,8 +149,8 @@ public class AssetVocabularyUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching asset vocabularies
 	*/
-	public static List<AssetVocabulary> findByUuid(String uuid, int start,
-		int end, OrderByComparator<AssetVocabulary> orderByComparator) {
+	public static List<AssetVocabulary> findByUuid(java.lang.String uuid,
+		int start, int end, OrderByComparator<AssetVocabulary> orderByComparator) {
 		return getPersistence().findByUuid(uuid, start, end, orderByComparator);
 	}
 
@@ -168,8 +168,9 @@ public class AssetVocabularyUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching asset vocabularies
 	*/
-	public static List<AssetVocabulary> findByUuid(String uuid, int start,
-		int end, OrderByComparator<AssetVocabulary> orderByComparator,
+	public static List<AssetVocabulary> findByUuid(java.lang.String uuid,
+		int start, int end,
+		OrderByComparator<AssetVocabulary> orderByComparator,
 		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByUuid(uuid, start, end, orderByComparator,
@@ -184,7 +185,7 @@ public class AssetVocabularyUtil {
 	* @return the first matching asset vocabulary
 	* @throws NoSuchVocabularyException if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary findByUuid_First(String uuid,
+	public static AssetVocabulary findByUuid_First(java.lang.String uuid,
 		OrderByComparator<AssetVocabulary> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence().findByUuid_First(uuid, orderByComparator);
@@ -197,7 +198,7 @@ public class AssetVocabularyUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching asset vocabulary, or <code>null</code> if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary fetchByUuid_First(String uuid,
+	public static AssetVocabulary fetchByUuid_First(java.lang.String uuid,
 		OrderByComparator<AssetVocabulary> orderByComparator) {
 		return getPersistence().fetchByUuid_First(uuid, orderByComparator);
 	}
@@ -210,7 +211,7 @@ public class AssetVocabularyUtil {
 	* @return the last matching asset vocabulary
 	* @throws NoSuchVocabularyException if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary findByUuid_Last(String uuid,
+	public static AssetVocabulary findByUuid_Last(java.lang.String uuid,
 		OrderByComparator<AssetVocabulary> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence().findByUuid_Last(uuid, orderByComparator);
@@ -223,7 +224,7 @@ public class AssetVocabularyUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching asset vocabulary, or <code>null</code> if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary fetchByUuid_Last(String uuid,
+	public static AssetVocabulary fetchByUuid_Last(java.lang.String uuid,
 		OrderByComparator<AssetVocabulary> orderByComparator) {
 		return getPersistence().fetchByUuid_Last(uuid, orderByComparator);
 	}
@@ -238,7 +239,8 @@ public class AssetVocabularyUtil {
 	* @throws NoSuchVocabularyException if a asset vocabulary with the primary key could not be found
 	*/
 	public static AssetVocabulary[] findByUuid_PrevAndNext(long vocabularyId,
-		String uuid, OrderByComparator<AssetVocabulary> orderByComparator)
+		java.lang.String uuid,
+		OrderByComparator<AssetVocabulary> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence()
 				   .findByUuid_PrevAndNext(vocabularyId, uuid, orderByComparator);
@@ -249,7 +251,7 @@ public class AssetVocabularyUtil {
 	*
 	* @param uuid the uuid
 	*/
-	public static void removeByUuid(String uuid) {
+	public static void removeByUuid(java.lang.String uuid) {
 		getPersistence().removeByUuid(uuid);
 	}
 
@@ -259,7 +261,7 @@ public class AssetVocabularyUtil {
 	* @param uuid the uuid
 	* @return the number of matching asset vocabularies
 	*/
-	public static int countByUuid(String uuid) {
+	public static int countByUuid(java.lang.String uuid) {
 		return getPersistence().countByUuid(uuid);
 	}
 
@@ -271,7 +273,8 @@ public class AssetVocabularyUtil {
 	* @return the matching asset vocabulary
 	* @throws NoSuchVocabularyException if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary findByUUID_G(String uuid, long groupId)
+	public static AssetVocabulary findByUUID_G(java.lang.String uuid,
+		long groupId)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence().findByUUID_G(uuid, groupId);
 	}
@@ -283,7 +286,8 @@ public class AssetVocabularyUtil {
 	* @param groupId the group ID
 	* @return the matching asset vocabulary, or <code>null</code> if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary fetchByUUID_G(String uuid, long groupId) {
+	public static AssetVocabulary fetchByUUID_G(java.lang.String uuid,
+		long groupId) {
 		return getPersistence().fetchByUUID_G(uuid, groupId);
 	}
 
@@ -295,8 +299,8 @@ public class AssetVocabularyUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching asset vocabulary, or <code>null</code> if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary fetchByUUID_G(String uuid, long groupId,
-		boolean retrieveFromCache) {
+	public static AssetVocabulary fetchByUUID_G(java.lang.String uuid,
+		long groupId, boolean retrieveFromCache) {
 		return getPersistence().fetchByUUID_G(uuid, groupId, retrieveFromCache);
 	}
 
@@ -307,7 +311,8 @@ public class AssetVocabularyUtil {
 	* @param groupId the group ID
 	* @return the asset vocabulary that was removed
 	*/
-	public static AssetVocabulary removeByUUID_G(String uuid, long groupId)
+	public static AssetVocabulary removeByUUID_G(java.lang.String uuid,
+		long groupId)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence().removeByUUID_G(uuid, groupId);
 	}
@@ -319,7 +324,7 @@ public class AssetVocabularyUtil {
 	* @param groupId the group ID
 	* @return the number of matching asset vocabularies
 	*/
-	public static int countByUUID_G(String uuid, long groupId) {
+	public static int countByUUID_G(java.lang.String uuid, long groupId) {
 		return getPersistence().countByUUID_G(uuid, groupId);
 	}
 
@@ -330,7 +335,8 @@ public class AssetVocabularyUtil {
 	* @param companyId the company ID
 	* @return the matching asset vocabularies
 	*/
-	public static List<AssetVocabulary> findByUuid_C(String uuid, long companyId) {
+	public static List<AssetVocabulary> findByUuid_C(java.lang.String uuid,
+		long companyId) {
 		return getPersistence().findByUuid_C(uuid, companyId);
 	}
 
@@ -347,7 +353,7 @@ public class AssetVocabularyUtil {
 	* @param end the upper bound of the range of asset vocabularies (not inclusive)
 	* @return the range of matching asset vocabularies
 	*/
-	public static List<AssetVocabulary> findByUuid_C(String uuid,
+	public static List<AssetVocabulary> findByUuid_C(java.lang.String uuid,
 		long companyId, int start, int end) {
 		return getPersistence().findByUuid_C(uuid, companyId, start, end);
 	}
@@ -366,7 +372,7 @@ public class AssetVocabularyUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching asset vocabularies
 	*/
-	public static List<AssetVocabulary> findByUuid_C(String uuid,
+	public static List<AssetVocabulary> findByUuid_C(java.lang.String uuid,
 		long companyId, int start, int end,
 		OrderByComparator<AssetVocabulary> orderByComparator) {
 		return getPersistence()
@@ -388,7 +394,7 @@ public class AssetVocabularyUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching asset vocabularies
 	*/
-	public static List<AssetVocabulary> findByUuid_C(String uuid,
+	public static List<AssetVocabulary> findByUuid_C(java.lang.String uuid,
 		long companyId, int start, int end,
 		OrderByComparator<AssetVocabulary> orderByComparator,
 		boolean retrieveFromCache) {
@@ -406,7 +412,7 @@ public class AssetVocabularyUtil {
 	* @return the first matching asset vocabulary
 	* @throws NoSuchVocabularyException if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary findByUuid_C_First(String uuid,
+	public static AssetVocabulary findByUuid_C_First(java.lang.String uuid,
 		long companyId, OrderByComparator<AssetVocabulary> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence()
@@ -421,7 +427,7 @@ public class AssetVocabularyUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching asset vocabulary, or <code>null</code> if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary fetchByUuid_C_First(String uuid,
+	public static AssetVocabulary fetchByUuid_C_First(java.lang.String uuid,
 		long companyId, OrderByComparator<AssetVocabulary> orderByComparator) {
 		return getPersistence()
 				   .fetchByUuid_C_First(uuid, companyId, orderByComparator);
@@ -436,7 +442,7 @@ public class AssetVocabularyUtil {
 	* @return the last matching asset vocabulary
 	* @throws NoSuchVocabularyException if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary findByUuid_C_Last(String uuid,
+	public static AssetVocabulary findByUuid_C_Last(java.lang.String uuid,
 		long companyId, OrderByComparator<AssetVocabulary> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence()
@@ -451,7 +457,7 @@ public class AssetVocabularyUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching asset vocabulary, or <code>null</code> if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary fetchByUuid_C_Last(String uuid,
+	public static AssetVocabulary fetchByUuid_C_Last(java.lang.String uuid,
 		long companyId, OrderByComparator<AssetVocabulary> orderByComparator) {
 		return getPersistence()
 				   .fetchByUuid_C_Last(uuid, companyId, orderByComparator);
@@ -468,7 +474,7 @@ public class AssetVocabularyUtil {
 	* @throws NoSuchVocabularyException if a asset vocabulary with the primary key could not be found
 	*/
 	public static AssetVocabulary[] findByUuid_C_PrevAndNext(
-		long vocabularyId, String uuid, long companyId,
+		long vocabularyId, java.lang.String uuid, long companyId,
 		OrderByComparator<AssetVocabulary> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence()
@@ -482,7 +488,7 @@ public class AssetVocabularyUtil {
 	* @param uuid the uuid
 	* @param companyId the company ID
 	*/
-	public static void removeByUuid_C(String uuid, long companyId) {
+	public static void removeByUuid_C(java.lang.String uuid, long companyId) {
 		getPersistence().removeByUuid_C(uuid, companyId);
 	}
 
@@ -493,7 +499,7 @@ public class AssetVocabularyUtil {
 	* @param companyId the company ID
 	* @return the number of matching asset vocabularies
 	*/
-	public static int countByUuid_C(String uuid, long companyId) {
+	public static int countByUuid_C(java.lang.String uuid, long companyId) {
 		return getPersistence().countByUuid_C(uuid, companyId);
 	}
 
@@ -1037,7 +1043,7 @@ public class AssetVocabularyUtil {
 	* @return the matching asset vocabulary
 	* @throws NoSuchVocabularyException if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary findByG_N(long groupId, String name)
+	public static AssetVocabulary findByG_N(long groupId, java.lang.String name)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence().findByG_N(groupId, name);
 	}
@@ -1049,7 +1055,7 @@ public class AssetVocabularyUtil {
 	* @param name the name
 	* @return the matching asset vocabulary, or <code>null</code> if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary fetchByG_N(long groupId, String name) {
+	public static AssetVocabulary fetchByG_N(long groupId, java.lang.String name) {
 		return getPersistence().fetchByG_N(groupId, name);
 	}
 
@@ -1061,8 +1067,8 @@ public class AssetVocabularyUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching asset vocabulary, or <code>null</code> if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary fetchByG_N(long groupId, String name,
-		boolean retrieveFromCache) {
+	public static AssetVocabulary fetchByG_N(long groupId,
+		java.lang.String name, boolean retrieveFromCache) {
 		return getPersistence().fetchByG_N(groupId, name, retrieveFromCache);
 	}
 
@@ -1073,7 +1079,8 @@ public class AssetVocabularyUtil {
 	* @param name the name
 	* @return the asset vocabulary that was removed
 	*/
-	public static AssetVocabulary removeByG_N(long groupId, String name)
+	public static AssetVocabulary removeByG_N(long groupId,
+		java.lang.String name)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence().removeByG_N(groupId, name);
 	}
@@ -1085,7 +1092,7 @@ public class AssetVocabularyUtil {
 	* @param name the name
 	* @return the number of matching asset vocabularies
 	*/
-	public static int countByG_N(long groupId, String name) {
+	public static int countByG_N(long groupId, java.lang.String name) {
 		return getPersistence().countByG_N(groupId, name);
 	}
 
@@ -1096,7 +1103,8 @@ public class AssetVocabularyUtil {
 	* @param name the name
 	* @return the matching asset vocabularies
 	*/
-	public static List<AssetVocabulary> findByG_LikeN(long groupId, String name) {
+	public static List<AssetVocabulary> findByG_LikeN(long groupId,
+		java.lang.String name) {
 		return getPersistence().findByG_LikeN(groupId, name);
 	}
 
@@ -1114,7 +1122,7 @@ public class AssetVocabularyUtil {
 	* @return the range of matching asset vocabularies
 	*/
 	public static List<AssetVocabulary> findByG_LikeN(long groupId,
-		String name, int start, int end) {
+		java.lang.String name, int start, int end) {
 		return getPersistence().findByG_LikeN(groupId, name, start, end);
 	}
 
@@ -1133,7 +1141,7 @@ public class AssetVocabularyUtil {
 	* @return the ordered range of matching asset vocabularies
 	*/
 	public static List<AssetVocabulary> findByG_LikeN(long groupId,
-		String name, int start, int end,
+		java.lang.String name, int start, int end,
 		OrderByComparator<AssetVocabulary> orderByComparator) {
 		return getPersistence()
 				   .findByG_LikeN(groupId, name, start, end, orderByComparator);
@@ -1155,7 +1163,7 @@ public class AssetVocabularyUtil {
 	* @return the ordered range of matching asset vocabularies
 	*/
 	public static List<AssetVocabulary> findByG_LikeN(long groupId,
-		String name, int start, int end,
+		java.lang.String name, int start, int end,
 		OrderByComparator<AssetVocabulary> orderByComparator,
 		boolean retrieveFromCache) {
 		return getPersistence()
@@ -1173,7 +1181,8 @@ public class AssetVocabularyUtil {
 	* @throws NoSuchVocabularyException if a matching asset vocabulary could not be found
 	*/
 	public static AssetVocabulary findByG_LikeN_First(long groupId,
-		String name, OrderByComparator<AssetVocabulary> orderByComparator)
+		java.lang.String name,
+		OrderByComparator<AssetVocabulary> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence()
 				   .findByG_LikeN_First(groupId, name, orderByComparator);
@@ -1188,7 +1197,8 @@ public class AssetVocabularyUtil {
 	* @return the first matching asset vocabulary, or <code>null</code> if a matching asset vocabulary could not be found
 	*/
 	public static AssetVocabulary fetchByG_LikeN_First(long groupId,
-		String name, OrderByComparator<AssetVocabulary> orderByComparator) {
+		java.lang.String name,
+		OrderByComparator<AssetVocabulary> orderByComparator) {
 		return getPersistence()
 				   .fetchByG_LikeN_First(groupId, name, orderByComparator);
 	}
@@ -1202,7 +1212,8 @@ public class AssetVocabularyUtil {
 	* @return the last matching asset vocabulary
 	* @throws NoSuchVocabularyException if a matching asset vocabulary could not be found
 	*/
-	public static AssetVocabulary findByG_LikeN_Last(long groupId, String name,
+	public static AssetVocabulary findByG_LikeN_Last(long groupId,
+		java.lang.String name,
 		OrderByComparator<AssetVocabulary> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence()
@@ -1218,7 +1229,8 @@ public class AssetVocabularyUtil {
 	* @return the last matching asset vocabulary, or <code>null</code> if a matching asset vocabulary could not be found
 	*/
 	public static AssetVocabulary fetchByG_LikeN_Last(long groupId,
-		String name, OrderByComparator<AssetVocabulary> orderByComparator) {
+		java.lang.String name,
+		OrderByComparator<AssetVocabulary> orderByComparator) {
 		return getPersistence()
 				   .fetchByG_LikeN_Last(groupId, name, orderByComparator);
 	}
@@ -1234,7 +1246,7 @@ public class AssetVocabularyUtil {
 	* @throws NoSuchVocabularyException if a asset vocabulary with the primary key could not be found
 	*/
 	public static AssetVocabulary[] findByG_LikeN_PrevAndNext(
-		long vocabularyId, long groupId, String name,
+		long vocabularyId, long groupId, java.lang.String name,
 		OrderByComparator<AssetVocabulary> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence()
@@ -1250,7 +1262,7 @@ public class AssetVocabularyUtil {
 	* @return the matching asset vocabularies that the user has permission to view
 	*/
 	public static List<AssetVocabulary> filterFindByG_LikeN(long groupId,
-		String name) {
+		java.lang.String name) {
 		return getPersistence().filterFindByG_LikeN(groupId, name);
 	}
 
@@ -1268,7 +1280,7 @@ public class AssetVocabularyUtil {
 	* @return the range of matching asset vocabularies that the user has permission to view
 	*/
 	public static List<AssetVocabulary> filterFindByG_LikeN(long groupId,
-		String name, int start, int end) {
+		java.lang.String name, int start, int end) {
 		return getPersistence().filterFindByG_LikeN(groupId, name, start, end);
 	}
 
@@ -1287,7 +1299,7 @@ public class AssetVocabularyUtil {
 	* @return the ordered range of matching asset vocabularies that the user has permission to view
 	*/
 	public static List<AssetVocabulary> filterFindByG_LikeN(long groupId,
-		String name, int start, int end,
+		java.lang.String name, int start, int end,
 		OrderByComparator<AssetVocabulary> orderByComparator) {
 		return getPersistence()
 				   .filterFindByG_LikeN(groupId, name, start, end,
@@ -1305,7 +1317,7 @@ public class AssetVocabularyUtil {
 	* @throws NoSuchVocabularyException if a asset vocabulary with the primary key could not be found
 	*/
 	public static AssetVocabulary[] filterFindByG_LikeN_PrevAndNext(
-		long vocabularyId, long groupId, String name,
+		long vocabularyId, long groupId, java.lang.String name,
 		OrderByComparator<AssetVocabulary> orderByComparator)
 		throws com.liferay.asset.kernel.exception.NoSuchVocabularyException {
 		return getPersistence()
@@ -1319,7 +1331,7 @@ public class AssetVocabularyUtil {
 	* @param groupId the group ID
 	* @param name the name
 	*/
-	public static void removeByG_LikeN(long groupId, String name) {
+	public static void removeByG_LikeN(long groupId, java.lang.String name) {
 		getPersistence().removeByG_LikeN(groupId, name);
 	}
 
@@ -1330,7 +1342,7 @@ public class AssetVocabularyUtil {
 	* @param name the name
 	* @return the number of matching asset vocabularies
 	*/
-	public static int countByG_LikeN(long groupId, String name) {
+	public static int countByG_LikeN(long groupId, java.lang.String name) {
 		return getPersistence().countByG_LikeN(groupId, name);
 	}
 
@@ -1341,7 +1353,7 @@ public class AssetVocabularyUtil {
 	* @param name the name
 	* @return the number of matching asset vocabularies that the user has permission to view
 	*/
-	public static int filterCountByG_LikeN(long groupId, String name) {
+	public static int filterCountByG_LikeN(long groupId, java.lang.String name) {
 		return getPersistence().filterCountByG_LikeN(groupId, name);
 	}
 
@@ -1493,7 +1505,7 @@ public class AssetVocabularyUtil {
 		return getPersistence().countAll();
 	}
 
-	public static java.util.Set<String> getBadColumnNames() {
+	public static java.util.Set<java.lang.String> getBadColumnNames() {
 		return getPersistence().getBadColumnNames();
 	}
 

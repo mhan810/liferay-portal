@@ -70,9 +70,11 @@ import java.util.Map;
 @ProviderType
 public class AssetVocabularyServiceSoap {
 	public static com.liferay.asset.kernel.model.AssetVocabularySoap addVocabulary(
-		long groupId, String title, String[] titleMapLanguageIds,
-		String[] titleMapValues, String[] descriptionMapLanguageIds,
-		String[] descriptionMapValues, String settings,
+		long groupId, java.lang.String title,
+		java.lang.String[] titleMapLanguageIds,
+		java.lang.String[] titleMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, java.lang.String settings,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
@@ -94,7 +96,7 @@ public class AssetVocabularyServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetVocabularySoap addVocabulary(
-		long groupId, String title,
+		long groupId, java.lang.String title,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
@@ -189,7 +191,7 @@ public class AssetVocabularyServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetVocabularySoap[] getGroupsVocabularies(
-		long[] groupIds, String className) throws RemoteException {
+		long[] groupIds, java.lang.String className) throws RemoteException {
 		try {
 			java.util.List<com.liferay.asset.kernel.model.AssetVocabulary> returnValue =
 				AssetVocabularyServiceUtil.getGroupsVocabularies(groupIds,
@@ -205,7 +207,7 @@ public class AssetVocabularyServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetVocabularySoap[] getGroupsVocabularies(
-		long[] groupIds, String className, long classTypePK)
+		long[] groupIds, java.lang.String className, long classTypePK)
 		throws RemoteException {
 		try {
 			java.util.List<com.liferay.asset.kernel.model.AssetVocabulary> returnValue =
@@ -290,7 +292,7 @@ public class AssetVocabularyServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetVocabularySoap[] getGroupVocabularies(
-		long groupId, String name, int start, int end,
+		long groupId, java.lang.String name, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.kernel.model.AssetVocabulary> obc)
 		throws RemoteException {
 		try {
@@ -336,8 +338,8 @@ public class AssetVocabularyServiceSoap {
 		}
 	}
 
-	public static int getGroupVocabulariesCount(long groupId, String name)
-		throws RemoteException {
+	public static int getGroupVocabulariesCount(long groupId,
+		java.lang.String name) throws RemoteException {
 		try {
 			int returnValue = AssetVocabularyServiceUtil.getGroupVocabulariesCount(groupId,
 					name);
@@ -366,7 +368,7 @@ public class AssetVocabularyServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetVocabularyDisplay getGroupVocabulariesDisplay(
-		long groupId, String name, int start, int end,
+		long groupId, java.lang.String name, int start, int end,
 		boolean addDefaultVocabulary,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.kernel.model.AssetVocabulary> obc)
 		throws RemoteException {
@@ -384,7 +386,7 @@ public class AssetVocabularyServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetVocabularyDisplay getGroupVocabulariesDisplay(
-		long groupId, String name, int start, int end,
+		long groupId, java.lang.String name, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.kernel.model.AssetVocabulary> obc)
 		throws RemoteException {
 		try {
@@ -435,8 +437,8 @@ public class AssetVocabularyServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetVocabularyDisplay searchVocabulariesDisplay(
-		long groupId, String title, boolean addDefaultVocabulary, int start,
-		int end) throws RemoteException {
+		long groupId, java.lang.String title, boolean addDefaultVocabulary,
+		int start, int end) throws RemoteException {
 		try {
 			com.liferay.asset.kernel.model.AssetVocabularyDisplay returnValue = AssetVocabularyServiceUtil.searchVocabulariesDisplay(groupId,
 					title, addDefaultVocabulary, start, end);
@@ -451,8 +453,8 @@ public class AssetVocabularyServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetVocabularyDisplay searchVocabulariesDisplay(
-		long groupId, String title, boolean addDefaultVocabulary, int start,
-		int end, com.liferay.portal.kernel.search.Sort sort)
+		long groupId, java.lang.String title, boolean addDefaultVocabulary,
+		int start, int end, com.liferay.portal.kernel.search.Sort sort)
 		throws RemoteException {
 		try {
 			com.liferay.asset.kernel.model.AssetVocabularyDisplay returnValue = AssetVocabularyServiceUtil.searchVocabulariesDisplay(groupId,
@@ -468,9 +470,11 @@ public class AssetVocabularyServiceSoap {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetVocabularySoap updateVocabulary(
-		long vocabularyId, String title, String[] titleMapLanguageIds,
-		String[] titleMapValues, String[] descriptionMapLanguageIds,
-		String[] descriptionMapValues, String settings,
+		long vocabularyId, java.lang.String title,
+		java.lang.String[] titleMapLanguageIds,
+		java.lang.String[] titleMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, java.lang.String settings,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
