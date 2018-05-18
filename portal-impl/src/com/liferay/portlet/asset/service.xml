@@ -31,6 +31,7 @@
 		<column localized="true" name="description" type="String" />
 		<column name="vocabularyId" type="long" />
 		<column name="lastPublishDate" type="Date" />
+		<column name="externalReferenceCode" type="String" />
 
 		<!-- Relationships -->
 
@@ -44,6 +45,9 @@
 
 		<!-- Finder methods -->
 
+		<finder name="ExternalReferenceCode" return-type="AssetCategory">
+			<finder-column name="externalReferenceCode" />
+		</finder>
 		<finder name="GroupId" return-type="Collection">
 			<finder-column name="groupId" />
 		</finder>
