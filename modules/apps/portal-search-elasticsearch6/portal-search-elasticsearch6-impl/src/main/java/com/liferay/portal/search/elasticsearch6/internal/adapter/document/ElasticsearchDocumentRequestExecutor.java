@@ -15,13 +15,18 @@
 package com.liferay.portal.search.elasticsearch6.internal.adapter.document;
 
 import com.liferay.portal.search.engine.adapter.document.DeleteByQueryDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.DeleteByQueryDocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.DeleteDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.DeleteDocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.DocumentRequestExecutor;
 import com.liferay.portal.search.engine.adapter.document.DocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.IndexDocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.UpdateDocumentRequest;
 
+import com.liferay.portal.search.engine.adapter.document.UpdateDocumentResponse;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -33,10 +38,10 @@ import org.osgi.service.component.annotations.Reference;
 	service = DocumentRequestExecutor.class
 )
 public class ElasticsearchDocumentRequestExecutor
-	implements DocumentRequestExecutor<DocumentResponse> {
+	implements DocumentRequestExecutor {
 
 	@Override
-	public DocumentResponse executeDocumentRequest(
+	public DeleteByQueryDocumentResponse executeDocumentRequest(
 		DeleteByQueryDocumentRequest deleteByQueryDocumentRequest) {
 
 		return deleteByQueryDocumentRequestExecutor.execute(
@@ -44,21 +49,21 @@ public class ElasticsearchDocumentRequestExecutor
 	}
 
 	@Override
-	public DocumentResponse executeDocumentRequest(
+	public DeleteDocumentResponse executeDocumentRequest(
 		DeleteDocumentRequest deleteDocumentRequest) {
 
 		return deleteDocumentRequestExecutor.execute(deleteDocumentRequest);
 	}
 
 	@Override
-	public DocumentResponse executeDocumentRequest(
+	public IndexDocumentResponse executeDocumentRequest(
 		IndexDocumentRequest indexDocumentRequest) {
 
 		return indexDocumentRequestExecutor.execute(indexDocumentRequest);
 	}
 
 	@Override
-	public DocumentResponse executeDocumentRequest(
+	public UpdateByQueryDocumentResponse executeDocumentRequest(
 		UpdateByQueryDocumentRequest updateByQueryDocumentRequest) {
 
 		return updateByQueryDocumentRequestExecutor.execute(
@@ -66,7 +71,7 @@ public class ElasticsearchDocumentRequestExecutor
 	}
 
 	@Override
-	public DocumentResponse executeDocumentRequest(
+	public UpdateDocumentResponse executeDocumentRequest(
 		UpdateDocumentRequest updateDocumentRequest) {
 
 		return updateDocumentRequestExecutor.execute(updateDocumentRequest);

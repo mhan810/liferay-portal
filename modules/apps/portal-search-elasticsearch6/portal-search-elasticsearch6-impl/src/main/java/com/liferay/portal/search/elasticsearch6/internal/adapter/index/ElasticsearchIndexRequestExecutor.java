@@ -34,7 +34,7 @@ import org.osgi.service.component.annotations.Reference;
 	service = IndexRequestExecutor.class
 )
 public class ElasticsearchIndexRequestExecutor
-	implements IndexRequestExecutor<IndexResponse> {
+	implements IndexRequestExecutor {
 
 	@Override
 	public GetFieldMappingIndexResponse executeIndexRequest(
