@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.adapter.index;
 
-import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexResponse;
 
@@ -24,7 +23,6 @@ import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexRespon
 public interface GetFieldMappingIndexRequestExecutor {
 
 	public GetFieldMappingIndexResponse execute(
-		GetFieldMappingIndexRequest getFieldMappingIndexRequest,
-		ElasticsearchConnectionManager elasticsearchConnectionManager);
+		GetFieldMappingIndexRequest getFieldMappingIndexRequest);
 
 }

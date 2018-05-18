@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.adapter.index;
 
-import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexResponse;
 
@@ -24,7 +23,6 @@ import com.liferay.portal.search.engine.adapter.index.GetMappingIndexResponse;
 public interface GetMappingIndexRequestExecutor {
 
 	public GetMappingIndexResponse execute(
-		GetMappingIndexRequest getMappingIndexRequest,
-		ElasticsearchConnectionManager elasticsearchConnectionManager);
+		GetMappingIndexRequest getMappingIndexRequest);
 
 }

@@ -26,6 +26,7 @@ import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.client.IndicesAdminClient;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Dylan Rebelak
@@ -38,19 +39,18 @@ public class GetFieldMappingIndexRequestExecutorImpl
 
 	@Override
 	public GetFieldMappingIndexResponse execute(
-		GetFieldMappingIndexRequest getFieldMappingIndexRequest,
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+		GetFieldMappingIndexRequest getFieldMappingIndexRequest) {
 
 		GetFieldMappingsRequestBuilder getFieldMappingsRequestBuilder =
-			createBuilder(
-				getFieldMappingIndexRequest, elasticsearchConnectionManager);
+			createGetFieldMappingsRequestBuilder(getFieldMappingIndexRequest);
 
 		GetFieldMappingsResponse getFieldMappingsResponse =
 			getFieldMappingsRequestBuilder.get();
 
-		Map<String, Map<String, Map<String,
-			GetFieldMappingsResponse.FieldMappingMetaData>>>
-				mappings = getFieldMappingsResponse.mappings();
+		Map<String,
+			Map<String,
+				Map<String, GetFieldMappingsResponse.FieldMappingMetaData>>>
+					mappings = getFieldMappingsResponse.mappings();
 
 		//TODO This needs to be broken down to JSON
 		Map<String, Map<String, GetFieldMappingsResponse.FieldMappingMetaData>>
@@ -64,9 +64,9 @@ public class GetFieldMappingIndexRequestExecutorImpl
 		return new GetFieldMappingIndexResponse(fieldMappings.toString());
 	}
 
-	protected GetFieldMappingsRequestBuilder createBuilder(
-		GetFieldMappingIndexRequest getFieldMappingIndexRequest,
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+	protected GetFieldMappingsRequestBuilder
+		createGetFieldMappingsRequestBuilder(
+			GetFieldMappingIndexRequest getFieldMappingIndexRequest) {
 
 		AdminClient adminClient =
 			elasticsearchConnectionManager.getAdminClient();
@@ -85,5 +85,8 @@ public class GetFieldMappingIndexRequestExecutorImpl
 
 		return getFieldMappingsRequestBuilder;
 	}
+
+	@Reference
+	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
 
 }

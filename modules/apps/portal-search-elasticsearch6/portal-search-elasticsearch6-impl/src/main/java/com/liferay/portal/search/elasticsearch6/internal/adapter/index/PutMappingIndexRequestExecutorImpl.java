@@ -25,6 +25,7 @@ import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.common.xcontent.XContentType;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Dylan Rebelak
@@ -35,20 +36,18 @@ public class PutMappingIndexRequestExecutorImpl
 
 	@Override
 	public PutMappingIndexResponse execute(
-		PutMappingIndexRequest putMappingIndexRequest,
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+		PutMappingIndexRequest putMappingIndexRequest) {
 
-		PutMappingRequestBuilder putMappingRequestBuilder = createBuilder(
-			putMappingIndexRequest, elasticsearchConnectionManager);
+		PutMappingRequestBuilder putMappingRequestBuilder =
+			createPutMappingRequestBuilder(putMappingIndexRequest);
 
 		PutMappingResponse putMappingResponse = putMappingRequestBuilder.get();
 
 		return new PutMappingIndexResponse(putMappingResponse.isAcknowledged());
 	}
 
-	protected PutMappingRequestBuilder createBuilder(
-		PutMappingIndexRequest putMappingIndexRequest,
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+	protected PutMappingRequestBuilder createPutMappingRequestBuilder(
+		PutMappingIndexRequest putMappingIndexRequest) {
 
 		AdminClient adminClient =
 			elasticsearchConnectionManager.getAdminClient();
@@ -67,5 +66,8 @@ public class PutMappingIndexRequestExecutorImpl
 
 		return putMappingRequestBuilder;
 	}
+
+	@Reference
+	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
 
 }

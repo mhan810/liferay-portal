@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.adapter.index;
 
-import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexResponse;
 
@@ -24,7 +23,6 @@ import com.liferay.portal.search.engine.adapter.index.PutMappingIndexResponse;
 public interface PutMappingIndexRequestExecutor {
 
 	public PutMappingIndexResponse execute(
-		PutMappingIndexRequest putMappingIndexRequest,
-		ElasticsearchConnectionManager elasticsearchConnectionManager);
+		PutMappingIndexRequest putMappingIndexRequest);
 
 }

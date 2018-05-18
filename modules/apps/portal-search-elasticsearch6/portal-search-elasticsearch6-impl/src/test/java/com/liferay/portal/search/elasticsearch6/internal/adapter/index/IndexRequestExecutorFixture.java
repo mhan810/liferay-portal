@@ -28,20 +28,38 @@ public class IndexRequestExecutorFixture {
 	}
 
 	public ElasticsearchIndexRequestExecutor createExecutor() {
-		ElasticsearchIndexRequestExecutor indexRequestExecutor =
+		ElasticsearchIndexRequestExecutor elasticsearchIndexRequestExecutor =
 			new ElasticsearchIndexRequestExecutor();
 
-		indexRequestExecutor.elasticsearchConnectionManager =
+		GetFieldMappingIndexRequestExecutorImpl
+			getFieldMappingIndexRequestExecutorImpl =
+				new GetFieldMappingIndexRequestExecutorImpl();
+
+		getFieldMappingIndexRequestExecutorImpl.elasticsearchConnectionManager =
 			_elasticsearchConnectionManager;
 
-		indexRequestExecutor.getFieldMappingIndexRequestExecutor =
-			new GetFieldMappingIndexRequestExecutorImpl();
-		indexRequestExecutor.getMappingIndexRequestExecutor =
+		elasticsearchIndexRequestExecutor.getFieldMappingIndexRequestExecutor =
+			getFieldMappingIndexRequestExecutorImpl;
+
+		GetMappingIndexRequestExecutorImpl getMappingIndexRequestExecutorImpl =
 			new GetMappingIndexRequestExecutorImpl();
-		indexRequestExecutor.putMappingIndexRequestExecutor =
+
+		getFieldMappingIndexRequestExecutorImpl.elasticsearchConnectionManager =
+			_elasticsearchConnectionManager;
+
+		elasticsearchIndexRequestExecutor.getMappingIndexRequestExecutor =
+			getMappingIndexRequestExecutorImpl;
+
+		PutMappingIndexRequestExecutorImpl putMappingIndexRequestExecutorImpl =
 			new PutMappingIndexRequestExecutorImpl();
 
-		return indexRequestExecutor;
+		putMappingIndexRequestExecutorImpl.elasticsearchConnectionManager =
+			_elasticsearchConnectionManager;
+
+		elasticsearchIndexRequestExecutor.putMappingIndexRequestExecutor =
+			new PutMappingIndexRequestExecutorImpl();
+
+		return elasticsearchIndexRequestExecutor;
 	}
 
 	private final ElasticsearchConnectionManager

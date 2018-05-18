@@ -55,23 +55,26 @@ public class GetFieldMappingIndexRequestExecutorTest {
 				_INDEX_NAME, _MAPPING_NAME, new String[] {_FIELD_NAME});
 
 		GetFieldMappingIndexRequestExecutorImpl
-			getFieldMappingIndexRequestTranslator =
+			getFieldMappingIndexRequestExecutorImpl =
 				new GetFieldMappingIndexRequestExecutorImpl();
 
-		GetFieldMappingsRequestBuilder getFieldMappingsRequestBuilder =
-			getFieldMappingIndexRequestTranslator.createBuilder(
-				getFieldMappingIndexRequest, _elasticsearchConnectionManager);
+		getFieldMappingIndexRequestExecutorImpl.elasticsearchConnectionManager =
+			_elasticsearchConnectionManager;
 
-		GetFieldMappingsRequest request =
+		GetFieldMappingsRequestBuilder getFieldMappingsRequestBuilder =
+			getFieldMappingIndexRequestExecutorImpl.
+				createGetFieldMappingsRequestBuilder(
+					getFieldMappingIndexRequest);
+
+		GetFieldMappingsRequest getFieldMappingsRequest =
 			getFieldMappingsRequestBuilder.request();
 
-		String[] indices = request.indices();
-		String[] types = request.types();
-		String[] fields = request.fields();
-
-		Assert.assertArrayEquals(new String[] {_INDEX_NAME}, indices);
-		Assert.assertArrayEquals(new String[] {_MAPPING_NAME}, types);
-		Assert.assertArrayEquals(new String[] {_FIELD_NAME}, fields);
+		Assert.assertArrayEquals(
+			new String[] {_INDEX_NAME}, getFieldMappingsRequest.indices());
+		Assert.assertArrayEquals(
+			new String[] {_MAPPING_NAME}, getFieldMappingsRequest.types());
+		Assert.assertArrayEquals(
+			new String[] {_FIELD_NAME}, getFieldMappingsRequest.fields());
 	}
 
 	private static final String _FIELD_NAME = "testField";

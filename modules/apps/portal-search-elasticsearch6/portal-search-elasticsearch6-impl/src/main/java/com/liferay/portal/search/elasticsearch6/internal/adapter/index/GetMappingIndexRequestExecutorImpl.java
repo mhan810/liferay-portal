@@ -27,6 +27,7 @@ import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.compress.CompressedXContent;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Dylan Rebelak
@@ -37,11 +38,10 @@ public class GetMappingIndexRequestExecutorImpl
 
 	@Override
 	public GetMappingIndexResponse execute(
-		GetMappingIndexRequest getMappingIndexRequest,
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+		GetMappingIndexRequest getMappingIndexRequest) {
 
-		GetMappingsRequestBuilder getMappingsRequestBuilder = createdBuilder(
-			getMappingIndexRequest, elasticsearchConnectionManager);
+		GetMappingsRequestBuilder getMappingsRequestBuilder =
+			createGetMappingsRequestBuilder(getMappingIndexRequest);
 
 		GetMappingsResponse getMappingsResponse =
 			getMappingsRequestBuilder.get();
@@ -60,9 +60,8 @@ public class GetMappingIndexRequestExecutorImpl
 		return new GetMappingIndexResponse(mappingContent.toString());
 	}
 
-	protected GetMappingsRequestBuilder createdBuilder(
-		GetMappingIndexRequest getMappingIndexRequest,
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+	protected GetMappingsRequestBuilder createGetMappingsRequestBuilder(
+		GetMappingIndexRequest getMappingIndexRequest) {
 
 		AdminClient adminClient =
 			elasticsearchConnectionManager.getAdminClient();
@@ -78,5 +77,8 @@ public class GetMappingIndexRequestExecutorImpl
 
 		return getMappingsRequestBuilder;
 	}
+
+	@Reference
+	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
 
 }

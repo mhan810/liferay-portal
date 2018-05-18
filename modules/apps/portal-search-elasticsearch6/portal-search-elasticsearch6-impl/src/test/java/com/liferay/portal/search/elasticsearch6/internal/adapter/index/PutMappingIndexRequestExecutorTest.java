@@ -53,22 +53,23 @@ public class PutMappingIndexRequestExecutorTest {
 		PutMappingIndexRequest putMappingIndexRequest =
 			new PutMappingIndexRequest(_INDEX_NAME, _MAPPING_NAME, _FIELD_NAME);
 
-		PutMappingIndexRequestExecutorImpl putMappingIndexRequestTranslator =
+		PutMappingIndexRequestExecutorImpl putMappingIndexRequestExecutorImpl =
 			new PutMappingIndexRequestExecutorImpl();
 
+		putMappingIndexRequestExecutorImpl.elasticsearchConnectionManager =
+			_elasticsearchConnectionManager;
+
 		PutMappingRequestBuilder putMappingRequestBuilder =
-			putMappingIndexRequestTranslator.createBuilder(
-				putMappingIndexRequest, _elasticsearchConnectionManager);
+			putMappingIndexRequestExecutorImpl.createPutMappingRequestBuilder(
+				putMappingIndexRequest);
 
-		PutMappingRequest request = putMappingRequestBuilder.request();
+		PutMappingRequest putMappingRequest =
+			putMappingRequestBuilder.request();
 
-		String[] indices = request.indices();
-		String type = request.type();
-		String source = request.source();
-
-		Assert.assertArrayEquals(new String[] {_INDEX_NAME}, indices);
-		Assert.assertEquals(_MAPPING_NAME, type);
-		Assert.assertEquals(_FIELD_NAME, source);
+		Assert.assertArrayEquals(
+			new String[] {_INDEX_NAME}, putMappingRequest.indices());
+		Assert.assertEquals(_MAPPING_NAME, putMappingRequest.type());
+		Assert.assertEquals(_FIELD_NAME, putMappingRequest.source());
 	}
 
 	private static final String _FIELD_NAME = "testField";

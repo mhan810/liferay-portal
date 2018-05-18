@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.adapter.index;
 
-import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.engine.adapter.IndexRequestExecutor;
 import com.liferay.portal.search.engine.adapter.IndexResponse;
 import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexRequest;
@@ -42,27 +41,22 @@ public class ElasticsearchIndexRequestExecutor
 		GetFieldMappingIndexRequest getFieldMappingIndexRequest) {
 
 		return getFieldMappingIndexRequestExecutor.execute(
-			getFieldMappingIndexRequest, elasticsearchConnectionManager);
+			getFieldMappingIndexRequest);
 	}
 
 	@Override
 	public GetMappingIndexResponse executeIndexRequest(
 		GetMappingIndexRequest getMappingIndexRequest) {
 
-		return getMappingIndexRequestExecutor.execute(
-			getMappingIndexRequest, elasticsearchConnectionManager);
+		return getMappingIndexRequestExecutor.execute(getMappingIndexRequest);
 	}
 
 	@Override
 	public PutMappingIndexResponse executeIndexRequest(
 		PutMappingIndexRequest putMappingIndexRequest) {
 
-		return putMappingIndexRequestExecutor.execute(
-			putMappingIndexRequest, elasticsearchConnectionManager);
+		return putMappingIndexRequestExecutor.execute(putMappingIndexRequest);
 	}
-
-	@Reference
-	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
 
 	@Reference
 	protected GetFieldMappingIndexRequestExecutor

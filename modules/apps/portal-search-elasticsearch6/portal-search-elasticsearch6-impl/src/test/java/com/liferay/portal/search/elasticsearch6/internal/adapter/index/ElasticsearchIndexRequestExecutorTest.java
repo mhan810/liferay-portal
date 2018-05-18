@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.adapter.index;
 
-import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexRequest;
@@ -38,9 +37,6 @@ public class ElasticsearchIndexRequestExecutorTest {
 		_elasticsearchIndexRequestExecutor =
 			new ElasticsearchIndexRequestExecutor();
 
-		_elasticsearchIndexRequestExecutor.elasticsearchConnectionManager =
-			_elasticsearchConnectionManager;
-
 		_elasticsearchIndexRequestExecutor.getFieldMappingIndexRequestExecutor =
 			_getFieldMappingIndexRequestExecutor;
 		_elasticsearchIndexRequestExecutor.getMappingIndexRequestExecutor =
@@ -60,7 +56,7 @@ public class ElasticsearchIndexRequestExecutorTest {
 		Mockito.verify(
 			_getFieldMappingIndexRequestExecutor
 		).execute(
-			getFieldMappingIndexRequest, _elasticsearchConnectionManager
+			getFieldMappingIndexRequest
 		);
 	}
 
@@ -75,7 +71,7 @@ public class ElasticsearchIndexRequestExecutorTest {
 		Mockito.verify(
 			_getMappingIndexRequestExecutor
 		).execute(
-			getMappingIndexRequest, _elasticsearchConnectionManager
+			getMappingIndexRequest
 		);
 	}
 
@@ -90,12 +86,9 @@ public class ElasticsearchIndexRequestExecutorTest {
 		Mockito.verify(
 			_putMappingIndexRequestExecutor
 		).execute(
-			putMappingIndexRequest, _elasticsearchConnectionManager
+			putMappingIndexRequest
 		);
 	}
-
-	@Mock
-	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
 
 	private ElasticsearchIndexRequestExecutor
 		_elasticsearchIndexRequestExecutor;

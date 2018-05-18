@@ -53,20 +53,23 @@ public class GetMappingIndexRequestExecutorTest {
 		GetMappingIndexRequest getMappingIndexRequest =
 			new GetMappingIndexRequest(_INDEX_NAME, _MAPPING_NAME);
 
-		GetMappingIndexRequestExecutorImpl getMappingIndexRequestTranslator =
+		GetMappingIndexRequestExecutorImpl getMappingIndexRequestExecutorImpl =
 			new GetMappingIndexRequestExecutorImpl();
 
+		getMappingIndexRequestExecutorImpl.elasticsearchConnectionManager =
+			_elasticsearchConnectionManager;
+
 		GetMappingsRequestBuilder getMappingsRequestBuilder =
-			getMappingIndexRequestTranslator.createdBuilder(
-				getMappingIndexRequest, _elasticsearchConnectionManager);
+			getMappingIndexRequestExecutorImpl.createGetMappingsRequestBuilder(
+				getMappingIndexRequest);
 
-		GetMappingsRequest request = getMappingsRequestBuilder.request();
+		GetMappingsRequest getMappingsRequest =
+			getMappingsRequestBuilder.request();
 
-		String[] indices = request.indices();
-		String[] types = request.types();
-
-		Assert.assertArrayEquals(new String[] {_INDEX_NAME}, indices);
-		Assert.assertArrayEquals(new String[] {_MAPPING_NAME}, types);
+		Assert.assertArrayEquals(
+			new String[] {_INDEX_NAME}, getMappingsRequest.indices());
+		Assert.assertArrayEquals(
+			new String[] {_MAPPING_NAME}, getMappingsRequest.types());
 	}
 
 	private static final String _INDEX_NAME = "test_request_index";
