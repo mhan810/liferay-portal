@@ -29,11 +29,15 @@ import org.elasticsearch.index.reindex.UpdateByQueryAction;
 import org.elasticsearch.index.reindex.UpdateByQueryRequestBuilder;
 import org.elasticsearch.script.Script;
 
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Dylan Rebelak
  */
+@Component(
+	immediate = true, service = UpdateByQueryDocumentRequestExecutor.class
+)
 public class UpdateByQueryDocumentRequestExecutorImpl
 	implements UpdateByQueryDocumentRequestExecutor {
 
@@ -41,27 +45,28 @@ public class UpdateByQueryDocumentRequestExecutorImpl
 	public UpdateByQueryDocumentResponse execute(
 		UpdateByQueryDocumentRequest updateByQueryDocumentRequest) {
 
-		UpdateByQueryRequestBuilder updateByQueryRequestBuilder = createBuilder(
-			updateByQueryDocumentRequest, elasticsearchConnectionManager);
+		UpdateByQueryRequestBuilder updateByQueryRequestBuilder =
+			createUpdateByQueryRequestBuilder(updateByQueryDocumentRequest);
 
 		BulkByScrollResponse bulkByScrollResponse =
 			updateByQueryRequestBuilder.get();
 
 		TimeValue timeValue = bulkByScrollResponse.getTook();
 
-		return new UpdateByQueryDocumentResponse(
-			bulkByScrollResponse.getUpdated(), timeValue.getMillis());
+		UpdateByQueryDocumentResponse updateByQueryDocumentResponse =
+			new UpdateByQueryDocumentResponse(
+				bulkByScrollResponse.getUpdated(), timeValue.getMillis());
+
+		return updateByQueryDocumentResponse;
 	}
 
-	protected UpdateByQueryRequestBuilder createBuilder(
-		UpdateByQueryDocumentRequest updateByQueryDocumentRequest,
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+	protected UpdateByQueryRequestBuilder createUpdateByQueryRequestBuilder(
+		UpdateByQueryDocumentRequest updateByQueryDocumentRequest) {
 
 		Client client = elasticsearchConnectionManager.getClient();
 
 		UpdateByQueryRequestBuilder updateByQueryRequestBuilder =
-			new UpdateByQueryRequestBuilder(
-				client, UpdateByQueryAction.INSTANCE);
+			UpdateByQueryAction.INSTANCE.newRequestBuilder(client);
 
 		Query query = updateByQueryDocumentRequest.getQuery();
 

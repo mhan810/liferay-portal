@@ -14,8 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.adapter.document;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
@@ -26,17 +25,20 @@ import com.liferay.portal.search.engine.adapter.document.UpdateDocumentResponse;
 
 import java.io.IOException;
 
+import org.elasticsearch.action.update.UpdateAction;
 import org.elasticsearch.action.update.UpdateRequestBuilder;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
 
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Dylan Rebelak
  */
+@Component(immediate = true, service = UpdateDocumentRequestExecutor.class)
 public class UpdateDocumentRequestExecutorImpl
 	implements UpdateDocumentRequestExecutor {
 
@@ -44,35 +46,32 @@ public class UpdateDocumentRequestExecutorImpl
 	public UpdateDocumentResponse execute(
 		UpdateDocumentRequest updateDocumentRequest) {
 
-		UpdateRequestBuilder updateRequestBuilder;
-
 		try {
-			updateRequestBuilder = createBuilder(
-				updateDocumentRequest, elasticsearchConnectionManager);
+			UpdateRequestBuilder updateRequestBuilder =
+				createUpdateRequestBuilder(updateDocumentRequest);
+
+			UpdateResponse updateResponse = updateRequestBuilder.get();
+
+			RestStatus restStatus = updateResponse.status();
+
+			UpdateDocumentResponse updateDocumentResponse =
+				new UpdateDocumentResponse(restStatus.getStatus());
+
+			return updateDocumentResponse;
 		}
 		catch (IOException ioe) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(ioe);
-			}
-
-			return null;
+			throw new SystemException(ioe);
 		}
-
-		UpdateResponse updateResponse = updateRequestBuilder.get();
-
-		RestStatus restStatus = updateResponse.status();
-
-		return new UpdateDocumentResponse(restStatus.getStatus());
 	}
 
-	protected UpdateRequestBuilder createBuilder(
-			UpdateDocumentRequest updateDocumentRequest,
-			ElasticsearchConnectionManager elasticsearchConnectionManager)
+	protected UpdateRequestBuilder createUpdateRequestBuilder(
+			UpdateDocumentRequest updateDocumentRequest)
 		throws IOException {
 
 		Client client = elasticsearchConnectionManager.getClient();
 
-		UpdateRequestBuilder updateRequestBuilder = client.prepareUpdate();
+		UpdateRequestBuilder updateRequestBuilder =
+			UpdateAction.INSTANCE.newRequestBuilder(client);
 
 		Document document = updateDocumentRequest.getDocument();
 
@@ -93,8 +92,5 @@ public class UpdateDocumentRequestExecutorImpl
 
 	@Reference
 	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		UpdateDocumentRequestExecutorImpl.class);
 
 }

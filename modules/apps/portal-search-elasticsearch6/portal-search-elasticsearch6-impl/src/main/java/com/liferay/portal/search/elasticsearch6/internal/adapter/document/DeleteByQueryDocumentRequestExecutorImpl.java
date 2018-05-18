@@ -27,11 +27,15 @@ import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryAction;
 import org.elasticsearch.index.reindex.DeleteByQueryRequestBuilder;
 
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Dylan Rebelak
  */
+@Component(
+	immediate = true, service = DeleteByQueryDocumentRequestExecutor.class
+)
 public class DeleteByQueryDocumentRequestExecutorImpl
 	implements DeleteByQueryDocumentRequestExecutor {
 
@@ -39,27 +43,25 @@ public class DeleteByQueryDocumentRequestExecutorImpl
 	public DeleteByQueryDocumentResponse execute(
 		DeleteByQueryDocumentRequest deleteByQueryDocumentRequest) {
 
-		DeleteByQueryRequestBuilder deleteByQueryRequestBuilder = createBuilder(
-			deleteByQueryDocumentRequest, elasticsearchConnectionManager);
+		DeleteByQueryRequestBuilder deleteByQueryRequestBuilder =
+			createDeleteByQueryRequestBuilder(deleteByQueryDocumentRequest);
 
 		BulkByScrollResponse bulkByScrollResponse =
 			deleteByQueryRequestBuilder.get();
 
 		TimeValue timeValue = bulkByScrollResponse.getTook();
 
-		return new DeleteByQueryDocumentResponse(
-			bulkByScrollResponse.getDeleted(), timeValue.getMillis());
+		DeleteByQueryDocumentResponse deleteByQueryDocumentResponse =
+			new DeleteByQueryDocumentResponse(
+				bulkByScrollResponse.getDeleted(), timeValue.getMillis());
+
+		return deleteByQueryDocumentResponse;
 	}
 
-	protected DeleteByQueryRequestBuilder createBuilder(
-		DeleteByQueryDocumentRequest deleteByQueryDocumentRequest,
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+	protected DeleteByQueryRequestBuilder createDeleteByQueryRequestBuilder(
+		DeleteByQueryDocumentRequest deleteByQueryDocumentRequest) {
 
 		Client client = elasticsearchConnectionManager.getClient();
-
-		/* DeleteByQueryRequestBuilder deleteByQueryRequestBuilder =
-			new DeleteByQueryRequestBuilder(
-				client, DeleteByQueryAction.INSTANCE);*/
 
 		DeleteByQueryRequestBuilder deleteByQueryRequestBuilder =
 			DeleteByQueryAction.INSTANCE.newRequestBuilder(client);

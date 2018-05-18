@@ -52,27 +52,32 @@ public class DeleteByQueryDocumentRequestExecutorTest {
 
 	@Test
 	public void testDocumentRequestTranslation() {
-		BooleanQuery query = new BooleanQueryImpl();
+		BooleanQuery booleanQuery = new BooleanQueryImpl();
 
-		query.addExactTerm(_FIELD_NAME, true);
+		booleanQuery.addExactTerm(_FIELD_NAME, true);
 
 		DeleteByQueryDocumentRequest deleteByQueryDocumentRequest =
-			new DeleteByQueryDocumentRequest(_INDEX_NAME, query);
+			new DeleteByQueryDocumentRequest(_INDEX_NAME, booleanQuery);
 
 		DeleteByQueryDocumentRequestExecutorImpl
-			deleteByQueryDocumentRequestTranslator =
+			deleteByQueryDocumentRequestExecutorImpl =
 				new DeleteByQueryDocumentRequestExecutorImpl();
 
+		deleteByQueryDocumentRequestExecutorImpl.
+			elasticsearchConnectionManager = _elasticsearchConnectionManager;
+
 		DeleteByQueryRequestBuilder deleteByQueryRequestBuilder =
-			deleteByQueryDocumentRequestTranslator.createBuilder(
-				deleteByQueryDocumentRequest, _elasticsearchConnectionManager);
+			deleteByQueryDocumentRequestExecutorImpl.
+				createDeleteByQueryRequestBuilder(deleteByQueryDocumentRequest);
 
-		DeleteByQueryRequest request = deleteByQueryRequestBuilder.request();
+		DeleteByQueryRequest deleteByQueryRequest =
+			deleteByQueryRequestBuilder.request();
 
-		String[] indices = request.indices();
-		String queryString = request.getSearchRequest().toString();
+		Assert.assertArrayEquals(
+			new String[] {_INDEX_NAME}, deleteByQueryRequest.indices());
 
-		Assert.assertArrayEquals(new String[] {_INDEX_NAME}, indices);
+		String queryString = deleteByQueryRequest.getSearchRequest().toString();
+
 		Assert.assertTrue(
 			queryString.contains(
 				"queryTerm={field=" + _FIELD_NAME + ", value=true}"));

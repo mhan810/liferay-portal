@@ -54,30 +54,35 @@ public class UpdateByQueryDocumentRequestExecutorTest {
 
 	@Test
 	public void testDocumentRequestTranslation() {
-		BooleanQuery query = new BooleanQueryImpl();
+		BooleanQuery booleanQuery = new BooleanQueryImpl();
 
-		query.addExactTerm(_FIELD_NAME, true);
+		booleanQuery.addExactTerm(_FIELD_NAME, true);
 
-		//TODO Create script to test with
-		JSONObject script = new JSONObjectImpl();
+		JSONObject jsonObject = new JSONObjectImpl();
 
 		UpdateByQueryDocumentRequest updateByQueryDocumentRequest =
-			new UpdateByQueryDocumentRequest(_INDEX_NAME, query, script);
+			new UpdateByQueryDocumentRequest(
+				_INDEX_NAME, booleanQuery, jsonObject);
 
 		UpdateByQueryDocumentRequestExecutorImpl
-			updateByQueryDocumentRequestTranslator =
+			updateByQueryDocumentRequestExecutorImpl =
 				new UpdateByQueryDocumentRequestExecutorImpl();
 
+		updateByQueryDocumentRequestExecutorImpl.
+			elasticsearchConnectionManager = _elasticsearchConnectionManager;
+
 		UpdateByQueryRequestBuilder updateByQueryRequestBuilder =
-			updateByQueryDocumentRequestTranslator.createBuilder(
-				updateByQueryDocumentRequest, _elasticsearchConnectionManager);
+			updateByQueryDocumentRequestExecutorImpl.
+				createUpdateByQueryRequestBuilder(updateByQueryDocumentRequest);
 
-		UpdateByQueryRequest request = updateByQueryRequestBuilder.request();
+		UpdateByQueryRequest updateByQueryRequest =
+			updateByQueryRequestBuilder.request();
 
-		String[] indices = request.indices();
-		String queryString = request.getSearchRequest().toString();
+		Assert.assertArrayEquals(
+			new String[] {_INDEX_NAME}, updateByQueryRequest.indices());
 
-		Assert.assertArrayEquals(new String[] {_INDEX_NAME}, indices);
+		String queryString = updateByQueryRequest.getSearchRequest().toString();
+
 		Assert.assertTrue(
 			queryString.contains(
 				"queryTerm={field=" + _FIELD_NAME + ", value=true}"));

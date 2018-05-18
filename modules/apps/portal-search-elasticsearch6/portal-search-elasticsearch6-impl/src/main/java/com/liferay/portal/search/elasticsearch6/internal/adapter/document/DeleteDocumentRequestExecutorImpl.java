@@ -18,16 +18,19 @@ import com.liferay.portal.search.elasticsearch6.internal.connection.Elasticsearc
 import com.liferay.portal.search.engine.adapter.document.DeleteDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.DeleteDocumentResponse;
 
+import org.elasticsearch.action.delete.DeleteAction;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.rest.RestStatus;
 
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Dylan Rebelak
  */
+@Component(immediate = true, service = DeleteDocumentRequestExecutor.class)
 public class DeleteDocumentRequestExecutorImpl
 	implements DeleteDocumentRequestExecutor {
 
@@ -35,23 +38,26 @@ public class DeleteDocumentRequestExecutorImpl
 	public DeleteDocumentResponse execute(
 		DeleteDocumentRequest deleteDocumentRequest) {
 
-		DeleteRequestBuilder deleteRequestBuilder = createBuilder(
-			deleteDocumentRequest, elasticsearchConnectionManager);
+		DeleteRequestBuilder deleteRequestBuilder = createDeleteRequestBuilder(
+			deleteDocumentRequest);
 
 		DeleteResponse deleteResponse = deleteRequestBuilder.get();
 
 		RestStatus restStatus = deleteResponse.status();
 
-		return new DeleteDocumentResponse(restStatus.getStatus());
+		DeleteDocumentResponse deleteDocumentResponse =
+			new DeleteDocumentResponse(restStatus.getStatus());
+
+		return deleteDocumentResponse;
 	}
 
-	protected DeleteRequestBuilder createBuilder(
-		DeleteDocumentRequest deleteDocumentRequest,
-		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+	protected DeleteRequestBuilder createDeleteRequestBuilder(
+		DeleteDocumentRequest deleteDocumentRequest) {
 
 		Client client = elasticsearchConnectionManager.getClient();
 
-		DeleteRequestBuilder deleteRequestBuilder = client.prepareDelete();
+		DeleteRequestBuilder deleteRequestBuilder =
+			DeleteAction.INSTANCE.newRequestBuilder(client);
 
 		deleteRequestBuilder.setIndex(deleteDocumentRequest.getIndexName());
 		deleteRequestBuilder.setType(deleteDocumentRequest.getType());

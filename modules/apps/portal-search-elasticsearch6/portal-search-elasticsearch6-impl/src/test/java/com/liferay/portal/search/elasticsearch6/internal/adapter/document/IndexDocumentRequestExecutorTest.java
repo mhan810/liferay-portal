@@ -72,27 +72,27 @@ public class IndexDocumentRequestExecutorTest {
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
 			_INDEX_NAME, document);
 
-		IndexDocumentRequestExecutorImpl indexDocumentRequestTranslator =
+		IndexDocumentRequestExecutorImpl indexDocumentRequestExecutorImpl =
 			new IndexDocumentRequestExecutorImpl();
 
+		indexDocumentRequestExecutorImpl.elasticsearchConnectionManager =
+			_elasticsearchConnectionManager;
+
 		IndexRequestBuilder indexRequestBuilder =
-			indexDocumentRequestTranslator.createBuilder(
-				indexDocumentRequest, _elasticsearchConnectionManager);
+			indexDocumentRequestExecutorImpl.createIndexRequestBuilder(
+				indexDocumentRequest);
 
-		IndexRequest request = indexRequestBuilder.request();
+		IndexRequest indexRequest = indexRequestBuilder.request();
 
-		String index = request.index();
-		String type = request.type();
-		String requestId = request.id();
-		String source = XContentHelper.convertToJson(
-			request.source(), false, XContentType.JSON);
-
-		Assert.assertEquals(_INDEX_NAME, index);
-		Assert.assertEquals(_MAPPING_NAME, type);
-		Assert.assertEquals(id, requestId);
+		Assert.assertEquals(_INDEX_NAME, indexRequest.index());
+		Assert.assertEquals(_MAPPING_NAME, indexRequest.type());
+		Assert.assertEquals(id, indexRequest.id());
 
 		ElasticsearchDocumentFactory elasticsearchDocumentFactory =
 			new DefaultElasticsearchDocumentFactory();
+
+		String source = XContentHelper.convertToJson(
+			indexRequest.source(), false, XContentType.JSON);
 
 		Assert.assertEquals(
 			elasticsearchDocumentFactory.getElasticsearchDocument(document),

@@ -58,19 +58,18 @@ public class DeleteDocumentRequestExecutorTest {
 		DeleteDocumentRequestExecutorImpl deleteDocumentRequestExecutorImpl =
 			new DeleteDocumentRequestExecutorImpl();
 
+		deleteDocumentRequestExecutorImpl.elasticsearchConnectionManager =
+			_elasticsearchConnectionManager;
+
 		DeleteRequestBuilder deleteRequestBuilder =
-			deleteDocumentRequestExecutorImpl.createBuilder(
-				deleteDocumentRequest, _elasticsearchConnectionManager);
+			deleteDocumentRequestExecutorImpl.createDeleteRequestBuilder(
+				deleteDocumentRequest);
 
-		DeleteRequest request = deleteRequestBuilder.request();
+		DeleteRequest deleteRequest = deleteRequestBuilder.request();
 
-		String index = request.index();
-		String requestId = request.id();
-		String type = request.type();
-
-		Assert.assertEquals(_INDEX_NAME, index);
-		Assert.assertEquals(_MAPPING_NAME, type);
-		Assert.assertEquals(id, requestId);
+		Assert.assertEquals(_INDEX_NAME, deleteRequest.index());
+		Assert.assertEquals(_MAPPING_NAME, deleteRequest.type());
+		Assert.assertEquals(id, deleteRequest.id());
 	}
 
 	private static final String _INDEX_NAME = "test_request_index";

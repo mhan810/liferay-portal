@@ -28,8 +28,9 @@ public class DocumentRequestExecutorFixture {
 	}
 
 	public ElasticsearchDocumentRequestExecutor createExecutor() {
-		ElasticsearchDocumentRequestExecutor documentRequestExecutor =
-			new ElasticsearchDocumentRequestExecutor();
+		ElasticsearchDocumentRequestExecutor
+			elasticsearchDocumentRequestExecutor =
+				new ElasticsearchDocumentRequestExecutor();
 
 		DeleteByQueryDocumentRequestExecutorImpl
 			deleteByQueryDocumentRequestExecutorImpl =
@@ -38,8 +39,9 @@ public class DocumentRequestExecutorFixture {
 		deleteByQueryDocumentRequestExecutorImpl.
 			elasticsearchConnectionManager = _elasticsearchConnectionManager;
 
-		documentRequestExecutor.deleteByQueryDocumentRequestExecutor =
-			deleteByQueryDocumentRequestExecutorImpl;
+		elasticsearchDocumentRequestExecutor.
+			deleteByQueryDocumentRequestExecutor =
+				deleteByQueryDocumentRequestExecutorImpl;
 
 		DeleteDocumentRequestExecutorImpl deleteDocumentRequestExecutorImpl =
 			new DeleteDocumentRequestExecutorImpl();
@@ -47,7 +49,7 @@ public class DocumentRequestExecutorFixture {
 		deleteDocumentRequestExecutorImpl.elasticsearchConnectionManager =
 			_elasticsearchConnectionManager;
 
-		documentRequestExecutor.deleteDocumentRequestExecutor =
+		elasticsearchDocumentRequestExecutor.deleteDocumentRequestExecutor =
 			deleteDocumentRequestExecutorImpl;
 
 		IndexDocumentRequestExecutorImpl indexDocumentRequestExecutorImpl =
@@ -56,7 +58,7 @@ public class DocumentRequestExecutorFixture {
 		indexDocumentRequestExecutorImpl.elasticsearchConnectionManager =
 			_elasticsearchConnectionManager;
 
-		documentRequestExecutor.indexDocumentRequestExecutor =
+		elasticsearchDocumentRequestExecutor.indexDocumentRequestExecutor =
 			indexDocumentRequestExecutorImpl;
 
 		UpdateByQueryDocumentRequestExecutorImpl
@@ -66,8 +68,9 @@ public class DocumentRequestExecutorFixture {
 		updateByQueryDocumentRequestExecutorImpl.
 			elasticsearchConnectionManager = _elasticsearchConnectionManager;
 
-		documentRequestExecutor.updateByQueryDocumentRequestExecutor =
-			updateByQueryDocumentRequestExecutorImpl;
+		elasticsearchDocumentRequestExecutor.
+			updateByQueryDocumentRequestExecutor =
+				updateByQueryDocumentRequestExecutorImpl;
 
 		UpdateDocumentRequestExecutorImpl updateDocumentRequestExecutorImpl =
 			new UpdateDocumentRequestExecutorImpl();
@@ -75,10 +78,10 @@ public class DocumentRequestExecutorFixture {
 		updateDocumentRequestExecutorImpl.elasticsearchConnectionManager =
 			_elasticsearchConnectionManager;
 
-		documentRequestExecutor.updateDocumentRequestExecutor =
+		elasticsearchDocumentRequestExecutor.updateDocumentRequestExecutor =
 			updateDocumentRequestExecutorImpl;
 
-		return documentRequestExecutor;
+		return elasticsearchDocumentRequestExecutor;
 	}
 
 	private final ElasticsearchConnectionManager

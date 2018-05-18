@@ -14,8 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.adapter.document;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
@@ -26,17 +25,20 @@ import com.liferay.portal.search.engine.adapter.document.IndexDocumentResponse;
 
 import java.io.IOException;
 
+import org.elasticsearch.action.index.IndexAction;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
 
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Dylan Rebelak
  */
+@Component(immediate = true, service = IndexDocumentRequestExecutor.class)
 public class IndexDocumentRequestExecutorImpl
 	implements IndexDocumentRequestExecutor {
 
@@ -44,35 +46,32 @@ public class IndexDocumentRequestExecutorImpl
 	public IndexDocumentResponse execute(
 		IndexDocumentRequest indexDocumentRequest) {
 
-		IndexRequestBuilder indexRequestBuilder;
-
 		try {
-			indexRequestBuilder = createBuilder(
-				indexDocumentRequest, elasticsearchConnectionManager);
+			IndexRequestBuilder indexRequestBuilder = createIndexRequestBuilder(
+				indexDocumentRequest);
+
+			IndexResponse indexResponse = indexRequestBuilder.get();
+
+			RestStatus restStatus = indexResponse.status();
+
+			IndexDocumentResponse indexDocumentResponse =
+				new IndexDocumentResponse(restStatus.getStatus());
+
+			return indexDocumentResponse;
 		}
 		catch (IOException ioe) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(ioe);
-			}
-
-			return null;
+			throw new SystemException(ioe);
 		}
-
-		IndexResponse indexResponse = indexRequestBuilder.get();
-
-		RestStatus restStatus = indexResponse.status();
-
-		return new IndexDocumentResponse(restStatus.getStatus());
 	}
 
-	protected IndexRequestBuilder createBuilder(
-			IndexDocumentRequest indexDocumentRequest,
-			ElasticsearchConnectionManager elasticsearchConnectionManager)
+	protected IndexRequestBuilder createIndexRequestBuilder(
+			IndexDocumentRequest indexDocumentRequest)
 		throws IOException {
 
 		Client client = elasticsearchConnectionManager.getClient();
 
-		IndexRequestBuilder indexRequestBuilder = client.prepareIndex();
+		IndexRequestBuilder indexRequestBuilder =
+			IndexAction.INSTANCE.newRequestBuilder(client);
 
 		Document document = indexDocumentRequest.getDocument();
 
@@ -93,8 +92,5 @@ public class IndexDocumentRequestExecutorImpl
 
 	@Reference
 	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		IndexDocumentRequestExecutorImpl.class);
 
 }

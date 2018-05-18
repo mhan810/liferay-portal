@@ -72,25 +72,26 @@ public class UpdateDocumentRequestExecutorTest {
 		UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest(
 			_INDEX_NAME, id, document);
 
-		UpdateDocumentRequestExecutorImpl updateDocumentRequestTranslator =
+		UpdateDocumentRequestExecutorImpl updateDocumentRequestExecutorImpl =
 			new UpdateDocumentRequestExecutorImpl();
 
+		updateDocumentRequestExecutorImpl.elasticsearchConnectionManager =
+			_elasticsearchConnectionManager;
+
 		UpdateRequestBuilder updateRequestBuilder =
-			updateDocumentRequestTranslator.createBuilder(
-				updateDocumentRequest, _elasticsearchConnectionManager);
+			updateDocumentRequestExecutorImpl.createUpdateRequestBuilder(
+				updateDocumentRequest);
 
 		UpdateRequest request = updateRequestBuilder.request();
 
-		String index = request.index();
-		String requestId = request.id();
-		String source = XContentHelper.convertToJson(
-			request.doc().source(), false, XContentType.JSON);
-
-		Assert.assertEquals(_INDEX_NAME, index);
-		Assert.assertEquals(id, requestId);
+		Assert.assertEquals(_INDEX_NAME, request.index());
+		Assert.assertEquals(id, request.id());
 
 		ElasticsearchDocumentFactory elasticsearchDocumentFactory =
 			new DefaultElasticsearchDocumentFactory();
+
+		String source = XContentHelper.convertToJson(
+			request.doc().source(), false, XContentType.JSON);
 
 		Assert.assertEquals(
 			elasticsearchDocumentFactory.getElasticsearchDocument(document),
