@@ -12,15 +12,10 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
+package com.liferay.portal.search.engine.adapter.cluster;
 
 /**
- * @author Michael C. Han
+ * @author Dylan Rebelak
  */
-public interface DocumentRequest<T extends DocumentResponse> {
-
-	public T accept(DocumentRequestExecutor documentRequestExecutor);
-
-	public String getIndexName();
-
+public interface ClusterResponse {
 }

@@ -14,8 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.adapter.cluster;
 
-import com.liferay.portal.search.engine.adapter.ClusterRequestExecutor;
-import com.liferay.portal.search.engine.adapter.ClusterResponse;
+import com.liferay.portal.search.engine.adapter.cluster.ClusterRequestExecutor;
 import com.liferay.portal.search.engine.adapter.cluster.HealthClusterRequest;
 import com.liferay.portal.search.engine.adapter.cluster.HealthClusterResponse;
 import com.liferay.portal.search.engine.adapter.cluster.StateClusterRequest;
@@ -34,7 +33,7 @@ import org.osgi.service.component.annotations.Reference;
 	service = ClusterRequestExecutor.class
 )
 public class ElasticsearchClusterRequestExecutor
-	implements ClusterRequestExecutor<ClusterResponse> {
+	implements ClusterRequestExecutor {
 
 	@Override
 	public HealthClusterResponse executeClusterRequest(

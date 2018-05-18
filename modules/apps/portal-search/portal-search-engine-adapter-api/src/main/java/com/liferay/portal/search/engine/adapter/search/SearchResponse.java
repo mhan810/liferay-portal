@@ -12,10 +12,10 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
+package com.liferay.portal.search.engine.adapter.search;
 
 /**
- * @author Dylan Rebelak
+ * @author Michael C. Han
  */
-public interface ClusterResponse {
+public interface SearchResponse {
 }

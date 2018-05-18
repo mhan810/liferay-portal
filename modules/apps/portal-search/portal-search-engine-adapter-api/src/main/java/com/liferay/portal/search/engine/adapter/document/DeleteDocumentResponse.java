@@ -14,8 +14,6 @@
 
 package com.liferay.portal.search.engine.adapter.document;
 
-import com.liferay.portal.search.engine.adapter.DocumentResponse;
-
 /**
  * @author Dylan Rebelak
  */

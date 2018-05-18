@@ -12,10 +12,17 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
+package com.liferay.portal.search.engine.adapter.index;
 
 /**
- * @author Dylan Rebelak
+ * @author Michael C. Han
  */
-public interface IndexResponse {
+public interface IndexRequest<T extends IndexResponse> {
+
+	public T accept(IndexRequestExecutor indexRequestExecutor);
+
+	public String getIndexName();
+
+	public String getMappingName();
+
 }

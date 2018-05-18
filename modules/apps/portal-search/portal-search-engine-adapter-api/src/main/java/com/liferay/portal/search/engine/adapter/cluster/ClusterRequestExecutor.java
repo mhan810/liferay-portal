@@ -12,14 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
-
-import com.liferay.portal.search.engine.adapter.cluster.HealthClusterRequest;
-import com.liferay.portal.search.engine.adapter.cluster.HealthClusterResponse;
-import com.liferay.portal.search.engine.adapter.cluster.StateClusterRequest;
-import com.liferay.portal.search.engine.adapter.cluster.StateClusterResponse;
-import com.liferay.portal.search.engine.adapter.cluster.StatsClusterRequest;
-import com.liferay.portal.search.engine.adapter.cluster.StatsClusterResponse;
+package com.liferay.portal.search.engine.adapter.cluster;
 
 /**
  * @author Dylan Rebelak

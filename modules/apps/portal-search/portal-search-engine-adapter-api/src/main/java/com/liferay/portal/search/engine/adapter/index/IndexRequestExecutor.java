@@ -12,14 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
-
-import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexRequest;
-import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexResponse;
-import com.liferay.portal.search.engine.adapter.index.GetMappingIndexRequest;
-import com.liferay.portal.search.engine.adapter.index.GetMappingIndexResponse;
-import com.liferay.portal.search.engine.adapter.index.PutMappingIndexRequest;
-import com.liferay.portal.search.engine.adapter.index.PutMappingIndexResponse;
+package com.liferay.portal.search.engine.adapter.index;
 
 /**
  * @author Dylan Rebelak

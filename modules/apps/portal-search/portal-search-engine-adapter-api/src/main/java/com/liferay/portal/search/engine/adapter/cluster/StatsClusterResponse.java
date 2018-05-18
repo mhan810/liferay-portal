@@ -14,8 +14,6 @@
 
 package com.liferay.portal.search.engine.adapter.cluster;
 
-import com.liferay.portal.search.engine.adapter.ClusterResponse;
-
 /**
  * @author Dylan Rebelak
  */

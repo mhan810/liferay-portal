@@ -14,10 +14,10 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.adapter.document;
 
-import com.liferay.portal.search.engine.adapter.DocumentRequestExecutor;
-import com.liferay.portal.search.engine.adapter.DocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.DeleteByQueryDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.DeleteDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.DocumentRequestExecutor;
+import com.liferay.portal.search.engine.adapter.document.DocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.UpdateDocumentRequest;

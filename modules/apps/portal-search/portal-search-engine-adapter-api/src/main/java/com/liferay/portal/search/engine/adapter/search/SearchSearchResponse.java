@@ -14,8 +14,6 @@
 
 package com.liferay.portal.search.engine.adapter.search;
 
-import com.liferay.portal.search.engine.adapter.SearchResponse;
-
 /**
  * @author Michael C. Han
  */

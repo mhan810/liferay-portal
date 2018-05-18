@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
+package com.liferay.portal.search.engine.adapter.cluster;
 
 /**
  * @author Michael C. Han

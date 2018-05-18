@@ -14,6 +14,15 @@
 
 package com.liferay.portal.search.engine.adapter;
 
+import com.liferay.portal.search.engine.adapter.cluster.ClusterRequest;
+import com.liferay.portal.search.engine.adapter.cluster.ClusterResponse;
+import com.liferay.portal.search.engine.adapter.document.DocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.DocumentResponse;
+import com.liferay.portal.search.engine.adapter.index.IndexRequest;
+import com.liferay.portal.search.engine.adapter.index.IndexResponse;
+import com.liferay.portal.search.engine.adapter.search.SearchRequest;
+import com.liferay.portal.search.engine.adapter.search.SearchResponse;
+
 /**
  * @author Michael C. Han
  */
@@ -27,6 +36,6 @@ public interface SearchEngineAdapter {
 
 	public <U extends IndexResponse> U execute(IndexRequest<U> indexRequest);
 
-	public void execute(SearchRequest searchRequest);
+	public <V extends SearchResponse> V execute(SearchRequest<V> searchRequest);
 
 }

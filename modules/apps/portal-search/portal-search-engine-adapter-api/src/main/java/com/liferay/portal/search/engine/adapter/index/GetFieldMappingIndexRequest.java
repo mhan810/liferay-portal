@@ -14,9 +14,6 @@
 
 package com.liferay.portal.search.engine.adapter.index;
 
-import com.liferay.portal.search.engine.adapter.IndexRequest;
-import com.liferay.portal.search.engine.adapter.IndexRequestExecutor;
-
 /**
  * @author Dylan Rebelak
  */

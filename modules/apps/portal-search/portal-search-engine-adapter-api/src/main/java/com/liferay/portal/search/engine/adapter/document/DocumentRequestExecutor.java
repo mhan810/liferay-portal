@@ -12,18 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
-
-import com.liferay.portal.search.engine.adapter.document.DeleteByQueryDocumentRequest;
-import com.liferay.portal.search.engine.adapter.document.DeleteByQueryDocumentResponse;
-import com.liferay.portal.search.engine.adapter.document.DeleteDocumentRequest;
-import com.liferay.portal.search.engine.adapter.document.DeleteDocumentResponse;
-import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
-import com.liferay.portal.search.engine.adapter.document.IndexDocumentResponse;
-import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentRequest;
-import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentResponse;
-import com.liferay.portal.search.engine.adapter.document.UpdateDocumentRequest;
-import com.liferay.portal.search.engine.adapter.document.UpdateDocumentResponse;
+package com.liferay.portal.search.engine.adapter.document;
 
 /**
  * @author Dylan Rebelak

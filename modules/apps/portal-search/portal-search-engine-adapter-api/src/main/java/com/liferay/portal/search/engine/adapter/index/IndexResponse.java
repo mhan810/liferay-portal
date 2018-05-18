@@ -12,10 +12,10 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
+package com.liferay.portal.search.engine.adapter.index;
 
 /**
  * @author Dylan Rebelak
  */
-public interface DocumentResponse {
+public interface IndexResponse {
 }

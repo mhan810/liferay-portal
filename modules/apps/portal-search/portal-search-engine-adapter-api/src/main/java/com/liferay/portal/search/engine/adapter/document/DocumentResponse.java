@@ -12,13 +12,10 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter;
+package com.liferay.portal.search.engine.adapter.document;
 
 /**
- * @author Michael C. Han
+ * @author Dylan Rebelak
  */
-public interface SearchRequest<T extends SearchResponse> {
-
-	public T accept(SearchRequestExecutor searchRequestExecutor);
-
+public interface DocumentResponse {
 }
