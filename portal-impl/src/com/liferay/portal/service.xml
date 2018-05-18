@@ -1259,6 +1259,7 @@
 		<column name="statusId" type="long" />
 		<column name="comments" type="String" />
 		<column name="logoId" type="long" />
+		<column name="externalReferenceCode" type="String" />
 
 		<!-- Relationships -->
 
@@ -1286,6 +1287,9 @@
 		<finder db-index="false" name="C_T" return-type="Collection">
 			<finder-column name="companyId" />
 			<finder-column comparator="LIKE" name="treePath" />
+		</finder>
+		<finder name="ExternalReferenceCode" return-type="Organization">
+			<finder-column name="externalReferenceCode" />
 		</finder>
 		<finder name="C_N" return-type="Organization" unique="true">
 			<finder-column name="companyId" />
@@ -2695,6 +2699,7 @@
 		<column name="agreedToTermsOfUse" type="boolean" />
 		<column name="emailAddressVerified" type="boolean" />
 		<column name="status" type="int" />
+		<column name="externalReferenceCode" type="String" />
 
 		<!-- Relationships -->
 
@@ -2714,6 +2719,9 @@
 		</finder>
 		<finder name="EmailAddress" return-type="Collection">
 			<finder-column name="emailAddress" />
+		</finder>
+		<finder name="ExternalReferenceCode" return-type="User">
+			<finder-column name="externalReferenceCode" />
 		</finder>
 		<finder name="PortraitId" return-type="User">
 			<finder-column name="portraitId" />
@@ -2823,6 +2831,7 @@
 		<column accessor="true" name="name" type="String" />
 		<column name="description" type="String" />
 		<column name="addedByLDAPImport" type="boolean" />
+		<column name="externalReferenceCode" type="String" />
 
 		<!-- Relationships -->
 
@@ -2848,6 +2857,9 @@
 		<finder name="C_N" return-type="UserGroup" unique="true">
 			<finder-column name="companyId" />
 			<finder-column case-sensitive="false" name="name" />
+		</finder>
+		<finder name="ExternalReferenceCode" return-type="UserGroup">
+			<finder-column name="externalReferenceCode" />
 		</finder>
 
 		<!-- References -->
