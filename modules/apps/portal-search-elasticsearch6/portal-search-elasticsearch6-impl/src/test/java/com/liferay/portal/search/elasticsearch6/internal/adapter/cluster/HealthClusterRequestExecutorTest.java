@@ -14,7 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.adapter.cluster;
 
-import com.liferay.portal.search.elasticsearch6.internal.adapter.index.GetFieldMappingIndexRequestTranslatorTest;
+import com.liferay.portal.search.elasticsearch6.internal.adapter.index.GetFieldMappingIndexRequestExecutorTest;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch6.internal.connection.TestElasticsearchConnectionManager;
@@ -36,7 +36,7 @@ public class HealthClusterRequestExecutorTest {
 	@Before
 	public void setUp() throws Exception {
 		_elasticsearchFixture = new ElasticsearchFixture(
-			GetFieldMappingIndexRequestTranslatorTest.class.getSimpleName());
+			GetFieldMappingIndexRequestExecutorTest.class.getSimpleName());
 
 		_elasticsearchFixture.setUp();
 

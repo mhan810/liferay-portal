@@ -21,14 +21,14 @@ import com.liferay.portal.search.engine.adapter.ClusterResponse;
  */
 public class StateClusterResponse implements ClusterResponse {
 
-	public StateClusterResponse(String state) {
-		_state = state;
+	public StateClusterResponse(String stateMessage) {
+		_stateMessage = stateMessage;
 	}
 
-	public String getState() {
-		return _state;
+	public String getStateMessage() {
+		return _stateMessage;
 	}
 
-	private final String _state;
+	private final String _stateMessage;
 
 }

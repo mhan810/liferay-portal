@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
@@ -14,29 +14,11 @@
 
 package com.liferay.portal.search.engine.adapter.cluster;
 
-import com.liferay.portal.search.engine.adapter.ClusterResponse;
-
 /**
- * @author Dylan Rebelak
+ * @author Michael C. Han
  */
-public class HealthClusterResponse implements ClusterResponse {
+public enum ClusterHealthStatus {
 
-	public HealthClusterResponse(
-		ClusterHealthStatus clusterHealthStatus, String healthStatusMessage) {
-
-		_clusterHealthStatus = clusterHealthStatus;
-		_healthStatusMessage = healthStatusMessage;
-	}
-
-	public ClusterHealthStatus getClusterHealthStatus() {
-		return _clusterHealthStatus;
-	}
-
-	public String getHealthStatusMessage() {
-		return _healthStatusMessage;
-	}
-
-	private final ClusterHealthStatus _clusterHealthStatus;
-	private final String _healthStatusMessage;
+	GREEN, RED, YELLOW
 
 }

@@ -21,7 +21,7 @@ import com.liferay.portal.search.engine.adapter.cluster.HealthClusterResponse;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequestBuilder;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.client.ClusterAdminClient;
-import org.elasticsearch.rest.RestStatus;
+import org.elasticsearch.cluster.health.ClusterHealthStatus;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -43,10 +43,12 @@ public class HealthClusterRequestExecutorImpl
 		ClusterHealthResponse clusterHealthResponse =
 			clusterHealthRequestBuilder.get();
 
-		RestStatus restStatus = clusterHealthResponse.status();
+		ClusterHealthStatus clusterHealthStatus =
+			clusterHealthResponse.getStatus();
 
 		return new HealthClusterResponse(
-			clusterHealthResponse.toString(), restStatus.getStatus());
+			ClusterHealthStatusTranslator.translate(clusterHealthStatus),
+			clusterHealthResponse.toString());
 	}
 
 	protected ClusterHealthRequestBuilder createClusterHealthRequestBuilder(

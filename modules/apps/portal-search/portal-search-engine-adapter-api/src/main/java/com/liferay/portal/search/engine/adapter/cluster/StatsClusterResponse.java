@@ -21,14 +21,22 @@ import com.liferay.portal.search.engine.adapter.ClusterResponse;
  */
 public class StatsClusterResponse implements ClusterResponse {
 
-	public StatsClusterResponse(String stats) {
-		_stats = stats;
+	public StatsClusterResponse(
+		ClusterHealthStatus clusterHealthStatus, String statsMessage) {
+
+		_clusterHealthStatus = clusterHealthStatus;
+		_statsMessage = statsMessage;
 	}
 
-	public String getStats() {
-		return _stats;
+	public ClusterHealthStatus getClusterHealthStatus() {
+		return _clusterHealthStatus;
 	}
 
-	private final String _stats;
+	public String getStatsMessage() {
+		return _statsMessage;
+	}
+
+	private final ClusterHealthStatus _clusterHealthStatus;
+	private final String _statsMessage;
 
 }

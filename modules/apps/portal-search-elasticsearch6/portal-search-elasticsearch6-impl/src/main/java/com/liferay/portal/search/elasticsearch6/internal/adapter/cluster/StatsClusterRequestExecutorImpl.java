@@ -24,6 +24,7 @@ import java.io.IOException;
 import org.elasticsearch.action.admin.cluster.stats.ClusterStatsRequestBuilder;
 import org.elasticsearch.action.admin.cluster.stats.ClusterStatsResponse;
 import org.elasticsearch.client.ClusterAdminClient;
+import org.elasticsearch.cluster.health.ClusterHealthStatus;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.xpack.watcher.watch.Payload;
@@ -58,8 +59,14 @@ public class StatsClusterRequestExecutorImpl
 
 			xContentBuilder.endObject();
 
+			ClusterHealthStatus clusterHealthStatus =
+				clusterStatsResponse.getStatus();
+
 			StatsClusterResponse statsClusterResponse =
-				new StatsClusterResponse(xContentBuilder.toString());
+				new StatsClusterResponse(
+					ClusterHealthStatusTranslator.translate(
+						clusterHealthStatus),
+					xContentBuilder.toString());
 
 			return statsClusterResponse;
 		}
