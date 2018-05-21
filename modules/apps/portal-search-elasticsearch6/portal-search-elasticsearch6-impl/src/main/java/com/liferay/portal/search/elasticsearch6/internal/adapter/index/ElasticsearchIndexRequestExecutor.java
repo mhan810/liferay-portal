@@ -19,7 +19,6 @@ import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexRespon
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.IndexRequestExecutor;
-import com.liferay.portal.search.engine.adapter.index.IndexResponse;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexResponse;
 
@@ -33,8 +32,7 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true, property = "search.engine.impl=Elasticsearch",
 	service = IndexRequestExecutor.class
 )
-public class ElasticsearchIndexRequestExecutor
-	implements IndexRequestExecutor {
+public class ElasticsearchIndexRequestExecutor implements IndexRequestExecutor {
 
 	@Override
 	public GetFieldMappingIndexResponse executeIndexRequest(
