@@ -670,6 +670,35 @@ public class AssetCategoryLocalServiceImpl
 		return category;
 	}
 
+	@Override
+	public AssetCategory upsertCategory(
+			long userId, long groupId, long parentCategoryId,
+			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
+			long vocabularyId, String[] categoryProperties,
+			String externalReferenceCode, ServiceContext serviceContext)
+		throws PortalException {
+
+		AssetCategory assetCategory =
+			assetCategoryPersistence.fetchByExternalReferenceCode(
+				externalReferenceCode);
+
+		if (Validator.isNull(assetCategory)) {
+			assetCategory = addCategory(userId, groupId, parentCategoryId,
+				titleMap, descriptionMap, vocabularyId, categoryProperties,
+				serviceContext);
+
+			assetCategory.setExternalReferenceCode(externalReferenceCode);
+			assetCategory = assetCategoryPersistence.update(assetCategory);
+		}
+		else {
+			updateCategory(userId, assetCategory.getCategoryId(),
+				parentCategoryId, titleMap, descriptionMap, vocabularyId,
+				categoryProperties, serviceContext);
+		}
+
+		return assetCategory;
+	}
+
 	protected SearchContext buildSearchContext(
 		long companyId, long[] groupIds, String title, long[] parentCategoryIds,
 		long[] vocabularyIds, int start, int end, Sort sort) {

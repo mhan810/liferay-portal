@@ -2052,6 +2052,47 @@ public class OrganizationLocalServiceImpl
 			regionId, countryId, statusId, comments, site, serviceContext);
 	}
 
+	/**
+	 * Adds a new organization or updates an existing organization.
+	 */
+	@Override
+	public Organization upsertOrganization(
+		long userId, long parentOrganizationId, String name, String type,
+		long regionId, long countryId, long statusId, String comments,
+		boolean site, String externalReferenceCode,
+		ServiceContext serviceContext, boolean logo,
+		byte[] logoBytes) throws PortalException {
+
+		Organization organization =
+			organizationPersistence.fetchByExternalReferenceCode(
+				externalReferenceCode);
+
+		if (Validator.isNull(organization)) {
+			organization = addOrganization(
+				userId, parentOrganizationId, name, type, regionId, countryId,
+				statusId, comments, site, serviceContext);
+
+			organization.setExternalReferenceCode(externalReferenceCode);
+
+			PortalUtil.updateImageId(
+				organization, logo, logoBytes, "logoId",
+				_userFileUploadsSettings.getImageMaxSize(),
+				_userFileUploadsSettings.getImageMaxHeight(),
+				_userFileUploadsSettings.getImageMaxWidth());
+
+			organization = organizationPersistence.update(organization);
+		}
+		else {
+			User user = userPersistence.findByPrimaryKey(userId);
+
+			updateOrganization(user.getCompanyId(), organization.getOrganizationId(),
+				parentOrganizationId, name, type, regionId, countryId, statusId,
+				comments, logo, logoBytes, site, serviceContext);
+		}
+
+		return organization;
+	}
+
 	protected void addSuborganizations(
 		List<Organization> allSuborganizations,
 		List<Organization> organizations) {

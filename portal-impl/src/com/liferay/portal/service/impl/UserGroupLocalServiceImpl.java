@@ -1010,6 +1010,34 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 		return userGroup;
 	}
 
+	/**
+	 * Adds a new user group or updates an existing user group.
+	 */
+	@Override
+	public UserGroup upsertUserGroup(
+			long userId, long companyId, String name, String description,
+			String externalReferenceCode, ServiceContext serviceContext)
+		throws PortalException {
+
+		UserGroup userGroup = userGroupPersistence.fetchByExternalReferenceCode(
+			externalReferenceCode);
+
+		if (Validator.isNull(userGroup)) {
+			userGroup = addUserGroup(
+				userId, companyId, name, description, serviceContext);
+
+			userGroup.setExternalReferenceCode(externalReferenceCode);
+			userGroup = userGroupPersistence.update(userGroup);
+		}
+		else {
+			updateUserGroup(
+				companyId, userGroup.getUserGroupId(), name, description,
+				serviceContext);
+		}
+
+		return userGroup;
+	}
+
 	protected SearchContext buildSearchContext(
 		long companyId, String name, String description,
 		LinkedHashMap<String, Object> params, boolean andSearch, int start,

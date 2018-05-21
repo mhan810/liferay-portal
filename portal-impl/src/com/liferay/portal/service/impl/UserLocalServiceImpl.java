@@ -5649,6 +5649,68 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	}
 
 	/**
+	 * Adds a new user or updates an existing user.
+	 */
+	@Override
+	public User upsertUser(
+			long creatorUserId, long companyId, boolean autoPassword,
+			String password1, String password2, boolean autoScreenName,
+			String screenName, String emailAddress, long facebookId,
+			String openId, Locale locale, String firstName, String middleName,
+			String lastName, long prefixId, long suffixId, boolean male,
+			int birthdayMonth, int birthdayDay, int birthdayYear,
+			String jobTitle, long[] groupIds, long[] organizationIds,
+			long[] roleIds, long[] userGroupIds, boolean sendEmail,
+			String externalReferenceCode, ServiceContext serviceContext,
+			String oldPassword, boolean passwordReset,
+			String reminderQueryQuestion, String reminderQueryAnswer,
+			boolean portrait, byte[] portraitBytes, String languageId,
+			String timeZoneId, String greeting, String comments, String smsSn,
+			String facebookSn, String jabberSn, String skypeSn,
+			String twitterSn, List<UserGroupRole> userGroupRoles)
+		throws PortalException {
+
+		User user = userPersistence.fetchByExternalReferenceCode(
+			externalReferenceCode);
+
+		if (Validator.isNull(user)) {
+			user = addUser(creatorUserId, companyId, autoPassword, password1,
+				password2, autoScreenName, screenName, emailAddress, facebookId,
+				openId, locale, firstName, middleName, lastName, prefixId,
+				suffixId, male, birthdayMonth, birthdayDay, birthdayYear,
+				jobTitle, groupIds, organizationIds, roleIds, userGroupIds,
+				sendEmail, serviceContext);
+
+			user = updateUser(user.getUserId(), StringPool.BLANK, StringPool.BLANK,
+				StringPool.BLANK, passwordReset, reminderQueryQuestion,
+				reminderQueryAnswer, screenName, emailAddress, facebookId,
+				openId, portrait, portraitBytes, languageId, timeZoneId,
+				greeting, comments, firstName, middleName, lastName, prefixId,
+				suffixId, male, birthdayMonth, birthdayDay, birthdayYear, smsSn,
+				facebookSn, jabberSn, skypeSn, twitterSn, jobTitle, groupIds,
+				organizationIds, roleIds, userGroupRoles, userGroupIds,
+				serviceContext);
+
+			user.setExternalReferenceCode(externalReferenceCode);
+
+			user = userPersistence.update(user);
+		}
+		else {
+			user = updateUser(user.getUserId(), oldPassword, password1,
+				password2, passwordReset, reminderQueryQuestion,
+				reminderQueryAnswer, screenName, emailAddress, facebookId,
+				openId, portrait, portraitBytes, languageId, timeZoneId,
+				greeting, comments, firstName, middleName, lastName, prefixId,
+				suffixId, male, birthdayMonth, birthdayDay, birthdayYear, smsSn,
+				facebookSn, jabberSn, skypeSn, twitterSn, jobTitle, groupIds,
+				organizationIds, roleIds, userGroupRoles, userGroupIds,
+				serviceContext);
+		}
+
+		return user;
+	}
+
+	/**
 	 * Verifies the email address of the ticket.
 	 *
 	 * @param ticketKey the ticket key
