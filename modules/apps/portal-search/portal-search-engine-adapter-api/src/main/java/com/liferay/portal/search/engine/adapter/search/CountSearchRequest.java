@@ -17,7 +17,7 @@ package com.liferay.portal.search.engine.adapter.search;
 /**
  * @author Dylan Rebelak
  */
-public class CountSearchRequest implements SearchRequest<CountSearchResponse> {
+public class CountSearchRequest extends BaseSearchRequest<CountSearchResponse> {
 
 	@Override
 	public CountSearchResponse accept(

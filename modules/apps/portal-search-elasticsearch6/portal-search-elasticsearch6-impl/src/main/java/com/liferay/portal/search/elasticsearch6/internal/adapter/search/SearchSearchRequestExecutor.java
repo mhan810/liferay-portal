@@ -12,10 +12,17 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter.search;
+package com.liferay.portal.search.elasticsearch6.internal.adapter.search;
+
+import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
+import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
 
 /**
  * @author Michael C. Han
  */
-public class SearchSearchResponse extends BaseSearchResponse {
+public interface SearchSearchRequestExecutor {
+
+	public SearchSearchResponse execute(
+		SearchSearchRequest searchSearchRequest);
+
 }

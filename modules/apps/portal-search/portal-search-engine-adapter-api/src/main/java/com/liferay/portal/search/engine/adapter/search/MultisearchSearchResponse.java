@@ -14,8 +14,22 @@
 
 package com.liferay.portal.search.engine.adapter.search;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Michael C. Han
  */
 public class MultisearchSearchResponse implements SearchResponse {
+
+	public void addSearchResponse(SearchResponse searchResponse) {
+		_searchResponses.add(searchResponse);
+	}
+
+	public List<SearchResponse> getSearchResponses() {
+		return _searchResponses;
+	}
+
+	private final List<SearchResponse> _searchResponses = new ArrayList<>();
+
 }

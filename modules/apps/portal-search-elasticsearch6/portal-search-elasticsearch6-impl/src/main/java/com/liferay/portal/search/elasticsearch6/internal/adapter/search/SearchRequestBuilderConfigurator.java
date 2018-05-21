@@ -12,10 +12,19 @@
  * details.
  */
 
-package com.liferay.portal.search.engine.adapter.search;
+package com.liferay.portal.search.elasticsearch6.internal.adapter.search;
+
+import com.liferay.portal.search.engine.adapter.search.BaseSearchRequest;
+
+import org.elasticsearch.action.search.SearchRequestBuilder;
 
 /**
  * @author Michael C. Han
  */
-public class SearchSearchResponse extends BaseSearchResponse {
+public interface SearchRequestBuilderConfigurator {
+
+	public void configure(
+		SearchRequestBuilder searchRequestBuilder,
+		BaseSearchRequest baseSearchRequest);
+
 }

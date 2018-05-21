@@ -17,5 +17,5 @@ package com.liferay.portal.search.engine.adapter.search;
 /**
  * @author Michael C. Han
  */
-public class CountSearchResponse implements SearchResponse {
+public class CountSearchResponse extends BaseSearchResponse {
 }

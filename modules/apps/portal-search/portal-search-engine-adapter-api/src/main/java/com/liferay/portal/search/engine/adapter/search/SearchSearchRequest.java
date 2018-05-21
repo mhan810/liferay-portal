@@ -14,11 +14,18 @@
 
 package com.liferay.portal.search.engine.adapter.search;
 
+import com.liferay.portal.kernel.search.GroupBy;
+import com.liferay.portal.kernel.search.Stats;
+import com.liferay.portal.kernel.search.facet.Facet;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Dylan Rebelak
  */
 public class SearchSearchRequest
-	implements SearchRequest<SearchSearchResponse> {
+	extends BaseSearchRequest<SearchSearchResponse> {
 
 	@Override
 	public SearchSearchResponse accept(
@@ -26,5 +33,72 @@ public class SearchSearchRequest
 
 		return searchRequestExecutor.executeSearchRequest(this);
 	}
+
+	public Map<String, Facet> getFacets() {
+		return _facets;
+	}
+
+	public GroupBy getGroupBy() {
+		return _groupBy;
+	}
+
+	public int getSize() {
+		return _size;
+	}
+
+	public int getStart() {
+		return _start;
+	}
+
+	public Map<String, Stats> getStats() {
+		return _stats;
+	}
+
+	public boolean isScoreEnabled() {
+		return _scoreEnabled;
+	}
+
+	public void putAllFacets(Map<String, Facet> faects) {
+		_facets.putAll(faects);
+	}
+
+	public void putAllStats(Map<String, Stats> stats) {
+		if (_stats == null) {
+			_stats = new HashMap<>();
+		}
+
+		_stats.putAll(stats);
+	}
+
+	public void putFacet(String fieldName, Facet facet) {
+		_facets.put(fieldName, facet);
+	}
+
+	public void setGroupBy(GroupBy groupBy) {
+		_groupBy = groupBy;
+	}
+
+	public void setScoreEnabled(boolean scoreEnabled) {
+		_scoreEnabled = scoreEnabled;
+	}
+
+	public void setSize(int size) {
+		_size = size;
+	}
+
+	public void setStart(int start) {
+		_start = start;
+	}
+
+	public void setStats(Map<String, Stats> stats) {
+		_stats = stats;
+	}
+
+	private final Map<String, Facet> _facets = new HashMap<>();
+	private GroupBy _groupBy;
+	private boolean _scoreEnabled;
+	private int _size;
+	private int _start;
+	private Map<String, Stats> _stats;
 
 }
