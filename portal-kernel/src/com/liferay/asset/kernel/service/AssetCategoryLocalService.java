@@ -510,4 +510,11 @@ public interface AssetCategoryLocalService extends BaseLocalService,
 		Map<Locale, java.lang.String> descriptionMap, long vocabularyId,
 		java.lang.String[] categoryProperties, ServiceContext serviceContext)
 		throws PortalException;
+
+	public AssetCategory upsertCategory(long userId, long groupId,
+		long parentCategoryId, Map<Locale, java.lang.String> titleMap,
+		Map<Locale, java.lang.String> descriptionMap, long vocabularyId,
+		java.lang.String[] categoryProperties,
+		java.lang.String externalReferenceCode, ServiceContext serviceContext)
+		throws PortalException;
 }

@@ -1271,4 +1271,14 @@ public interface OrganizationLocalService extends BaseLocalService,
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public Organization updateOrganization(Organization organization);
+
+	/**
+	* Adds a new organization or updates an existing organization.
+	*/
+	public Organization upsertOrganization(long userId,
+		long parentOrganizationId, java.lang.String name,
+		java.lang.String type, long regionId, long countryId, long statusId,
+		java.lang.String comments, boolean site,
+		java.lang.String externalReferenceCode, ServiceContext serviceContext,
+		boolean logo, byte[] logoBytes) throws PortalException;
 }

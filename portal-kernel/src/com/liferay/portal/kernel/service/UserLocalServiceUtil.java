@@ -3231,6 +3231,44 @@ public class UserLocalServiceUtil {
 	}
 
 	/**
+	* Adds a new user or updates an existing user.
+	*/
+	public static com.liferay.portal.kernel.model.User upsertUser(
+		long creatorUserId, long companyId, boolean autoPassword,
+		java.lang.String password1, java.lang.String password2,
+		boolean autoScreenName, java.lang.String screenName,
+		java.lang.String emailAddress, long facebookId,
+		java.lang.String openId, java.util.Locale locale,
+		java.lang.String firstName, java.lang.String middleName,
+		java.lang.String lastName, long prefixId, long suffixId, boolean male,
+		int birthdayMonth, int birthdayDay, int birthdayYear,
+		java.lang.String jobTitle, long[] groupIds, long[] organizationIds,
+		long[] roleIds, long[] userGroupIds, boolean sendEmail,
+		java.lang.String externalReferenceCode, ServiceContext serviceContext,
+		java.lang.String oldPassword, boolean passwordReset,
+		java.lang.String reminderQueryQuestion,
+		java.lang.String reminderQueryAnswer, boolean portrait,
+		byte[] portraitBytes, java.lang.String languageId,
+		java.lang.String timeZoneId, java.lang.String greeting,
+		java.lang.String comments, java.lang.String smsSn,
+		java.lang.String facebookSn, java.lang.String jabberSn,
+		java.lang.String skypeSn, java.lang.String twitterSn,
+		java.util.List<com.liferay.portal.kernel.model.UserGroupRole> userGroupRoles)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .upsertUser(creatorUserId, companyId, autoPassword,
+			password1, password2, autoScreenName, screenName, emailAddress,
+			facebookId, openId, locale, firstName, middleName, lastName,
+			prefixId, suffixId, male, birthdayMonth, birthdayDay, birthdayYear,
+			jobTitle, groupIds, organizationIds, roleIds, userGroupIds,
+			sendEmail, externalReferenceCode, serviceContext, oldPassword,
+			passwordReset, reminderQueryQuestion, reminderQueryAnswer,
+			portrait, portraitBytes, languageId, timeZoneId, greeting,
+			comments, smsSn, facebookSn, jabberSn, skypeSn, twitterSn,
+			userGroupRoles);
+	}
+
+	/**
 	* Verifies the email address of the ticket.
 	*
 	* @param ticketKey the ticket key

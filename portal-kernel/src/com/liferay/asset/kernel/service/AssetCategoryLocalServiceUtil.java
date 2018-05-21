@@ -677,6 +677,20 @@ public class AssetCategoryLocalServiceUtil {
 			serviceContext);
 	}
 
+	public static com.liferay.asset.kernel.model.AssetCategory upsertCategory(
+		long userId, long groupId, long parentCategoryId,
+		java.util.Map<java.util.Locale, java.lang.String> titleMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		long vocabularyId, java.lang.String[] categoryProperties,
+		java.lang.String externalReferenceCode,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .upsertCategory(userId, groupId, parentCategoryId, titleMap,
+			descriptionMap, vocabularyId, categoryProperties,
+			externalReferenceCode, serviceContext);
+	}
+
 	public static AssetCategoryLocalService getService() {
 		if (_service == null) {
 			_service = (AssetCategoryLocalService)PortalBeanLocatorUtil.locate(AssetCategoryLocalService.class.getName());

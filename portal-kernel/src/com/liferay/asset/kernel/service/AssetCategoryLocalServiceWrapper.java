@@ -759,6 +759,20 @@ public class AssetCategoryLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.asset.kernel.model.AssetCategory upsertCategory(
+		long userId, long groupId, long parentCategoryId,
+		java.util.Map<java.util.Locale, java.lang.String> titleMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		long vocabularyId, java.lang.String[] categoryProperties,
+		java.lang.String externalReferenceCode,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _assetCategoryLocalService.upsertCategory(userId, groupId,
+			parentCategoryId, titleMap, descriptionMap, vocabularyId,
+			categoryProperties, externalReferenceCode, serviceContext);
+	}
+
+	@Override
 	public AssetCategoryLocalService getWrappedService() {
 		return _assetCategoryLocalService;
 	}

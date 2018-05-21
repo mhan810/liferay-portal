@@ -955,6 +955,19 @@ public class UserGroupLocalServiceUtil {
 		return getService().updateUserGroup(userGroup);
 	}
 
+	/**
+	* Adds a new user group or updates an existing user group.
+	*/
+	public static com.liferay.portal.kernel.model.UserGroup upsertUserGroup(
+		long userId, long companyId, java.lang.String name,
+		java.lang.String description, java.lang.String externalReferenceCode,
+		ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .upsertUserGroup(userId, companyId, name, description,
+			externalReferenceCode, serviceContext);
+	}
+
 	public static UserGroupLocalService getService() {
 		if (_service == null) {
 			_service = (UserGroupLocalService)PortalBeanLocatorUtil.locate(UserGroupLocalService.class.getName());

@@ -1503,6 +1503,22 @@ public class OrganizationLocalServiceUtil {
 		return getService().updateOrganization(organization);
 	}
 
+	/**
+	* Adds a new organization or updates an existing organization.
+	*/
+	public static com.liferay.portal.kernel.model.Organization upsertOrganization(
+		long userId, long parentOrganizationId, java.lang.String name,
+		java.lang.String type, long regionId, long countryId, long statusId,
+		java.lang.String comments, boolean site,
+		java.lang.String externalReferenceCode, ServiceContext serviceContext,
+		boolean logo, byte[] logoBytes)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .upsertOrganization(userId, parentOrganizationId, name,
+			type, regionId, countryId, statusId, comments, site,
+			externalReferenceCode, serviceContext, logo, logoBytes);
+	}
+
 	public static OrganizationLocalService getService() {
 		if (_service == null) {
 			_service = (OrganizationLocalService)PortalBeanLocatorUtil.locate(OrganizationLocalService.class.getName());

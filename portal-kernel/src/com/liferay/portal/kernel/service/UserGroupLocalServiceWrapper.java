@@ -1040,6 +1040,19 @@ public class UserGroupLocalServiceWrapper implements UserGroupLocalService,
 		return _userGroupLocalService.updateUserGroup(userGroup);
 	}
 
+	/**
+	* Adds a new user group or updates an existing user group.
+	*/
+	@Override
+	public com.liferay.portal.kernel.model.UserGroup upsertUserGroup(
+		long userId, long companyId, java.lang.String name,
+		java.lang.String description, java.lang.String externalReferenceCode,
+		ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _userGroupLocalService.upsertUserGroup(userId, companyId, name,
+			description, externalReferenceCode, serviceContext);
+	}
+
 	@Override
 	public UserGroupLocalService getWrappedService() {
 		return _userGroupLocalService;

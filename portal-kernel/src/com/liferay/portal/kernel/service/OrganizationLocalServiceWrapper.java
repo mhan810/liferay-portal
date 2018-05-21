@@ -1600,6 +1600,23 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 		return _organizationLocalService.updateOrganization(organization);
 	}
 
+	/**
+	* Adds a new organization or updates an existing organization.
+	*/
+	@Override
+	public com.liferay.portal.kernel.model.Organization upsertOrganization(
+		long userId, long parentOrganizationId, java.lang.String name,
+		java.lang.String type, long regionId, long countryId, long statusId,
+		java.lang.String comments, boolean site,
+		java.lang.String externalReferenceCode, ServiceContext serviceContext,
+		boolean logo, byte[] logoBytes)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _organizationLocalService.upsertOrganization(userId,
+			parentOrganizationId, name, type, regionId, countryId, statusId,
+			comments, site, externalReferenceCode, serviceContext, logo,
+			logoBytes);
+	}
+
 	@Override
 	public OrganizationLocalService getWrappedService() {
 		return _organizationLocalService;

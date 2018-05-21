@@ -763,4 +763,12 @@ public interface UserGroupLocalService extends BaseLocalService,
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public UserGroup updateUserGroup(UserGroup userGroup);
+
+	/**
+	* Adds a new user group or updates an existing user group.
+	*/
+	public UserGroup upsertUserGroup(long userId, long companyId,
+		java.lang.String name, java.lang.String description,
+		java.lang.String externalReferenceCode, ServiceContext serviceContext)
+		throws PortalException;
 }
