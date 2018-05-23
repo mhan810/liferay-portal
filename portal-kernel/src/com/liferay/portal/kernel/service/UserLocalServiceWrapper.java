@@ -3386,6 +3386,39 @@ public class UserLocalServiceWrapper implements UserLocalService,
 	}
 
 	/**
+	* Adds a new user or updates an existing user.
+	*/
+	@Override
+	public com.liferay.portal.kernel.model.User upsertUser(long creatorUserId,
+		long companyId, boolean autoPassword, String password1,
+		String password2, boolean autoScreenName, String screenName,
+		String emailAddress, long facebookId, String openId,
+		java.util.Locale locale, String firstName, String middleName,
+		String lastName, long prefixId, long suffixId, boolean male,
+		int birthdayMonth, int birthdayDay, int birthdayYear, String jobTitle,
+		long[] groupIds, long[] organizationIds, long[] roleIds,
+		long[] userGroupIds, boolean sendEmail, String externalReferenceCode,
+		ServiceContext serviceContext, String oldPassword,
+		boolean passwordReset, String reminderQueryQuestion,
+		String reminderQueryAnswer, boolean portrait, byte[] portraitBytes,
+		String languageId, String timeZoneId, String greeting, String comments,
+		String smsSn, String facebookSn, String jabberSn, String skypeSn,
+		String twitterSn,
+		java.util.List<com.liferay.portal.kernel.model.UserGroupRole> userGroupRoles)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _userLocalService.upsertUser(creatorUserId, companyId,
+			autoPassword, password1, password2, autoScreenName, screenName,
+			emailAddress, facebookId, openId, locale, firstName, middleName,
+			lastName, prefixId, suffixId, male, birthdayMonth, birthdayDay,
+			birthdayYear, jobTitle, groupIds, organizationIds, roleIds,
+			userGroupIds, sendEmail, externalReferenceCode, serviceContext,
+			oldPassword, passwordReset, reminderQueryQuestion,
+			reminderQueryAnswer, portrait, portraitBytes, languageId,
+			timeZoneId, greeting, comments, smsSn, facebookSn, jabberSn,
+			skypeSn, twitterSn, userGroupRoles);
+	}
+
+	/**
 	* Verifies the email address of the ticket.
 	*
 	* @param ticketKey the ticket key

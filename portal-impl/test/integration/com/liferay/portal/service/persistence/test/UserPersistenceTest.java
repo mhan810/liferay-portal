@@ -199,6 +199,8 @@ public class UserPersistenceTest {
 
 		newUser.setStatus(RandomTestUtil.nextInt());
 
+		newUser.setExternalReferenceCode(RandomTestUtil.randomString());
+
 		_users.add(_persistence.update(newUser));
 
 		User existingUser = _persistence.findByPrimaryKey(newUser.getPrimaryKey());
@@ -277,6 +279,8 @@ public class UserPersistenceTest {
 		Assert.assertEquals(existingUser.isEmailAddressVerified(),
 			newUser.isEmailAddressVerified());
 		Assert.assertEquals(existingUser.getStatus(), newUser.getStatus());
+		Assert.assertEquals(existingUser.getExternalReferenceCode(),
+			newUser.getExternalReferenceCode());
 	}
 
 	@Test
@@ -325,6 +329,15 @@ public class UserPersistenceTest {
 		_persistence.countByPortraitId(RandomTestUtil.nextLong());
 
 		_persistence.countByPortraitId(0L);
+	}
+
+	@Test
+	public void testCountByC_ERC() throws Exception {
+		_persistence.countByC_ERC(RandomTestUtil.nextLong(), "");
+
+		_persistence.countByC_ERC(0L, "null");
+
+		_persistence.countByC_ERC(0L, (String)null);
 	}
 
 	@Test
@@ -466,7 +479,7 @@ public class UserPersistenceTest {
 			"lastLoginDate", true, "lastLoginIP", true, "lastFailedLoginDate",
 			true, "failedLoginAttempts", true, "lockout", true, "lockoutDate",
 			true, "agreedToTermsOfUse", true, "emailAddressVerified", true,
-			"status", true);
+			"status", true, "externalReferenceCode", true);
 	}
 
 	@Test
@@ -676,6 +689,14 @@ public class UserPersistenceTest {
 		Assert.assertEquals(Long.valueOf(existingUser.getCompanyId()),
 			ReflectionTestUtil.<Long>invoke(existingUser,
 				"getOriginalCompanyId", new Class<?>[0]));
+		Assert.assertTrue(Objects.equals(
+				existingUser.getExternalReferenceCode(),
+				ReflectionTestUtil.invoke(existingUser,
+					"getOriginalExternalReferenceCode", new Class<?>[0])));
+
+		Assert.assertEquals(Long.valueOf(existingUser.getCompanyId()),
+			ReflectionTestUtil.<Long>invoke(existingUser,
+				"getOriginalCompanyId", new Class<?>[0]));
 		Assert.assertEquals(Long.valueOf(existingUser.getUserId()),
 			ReflectionTestUtil.<Long>invoke(existingUser, "getOriginalUserId",
 				new Class<?>[0]));
@@ -809,6 +830,8 @@ public class UserPersistenceTest {
 		user.setEmailAddressVerified(RandomTestUtil.randomBoolean());
 
 		user.setStatus(RandomTestUtil.nextInt());
+
+		user.setExternalReferenceCode(RandomTestUtil.randomString());
 
 		_users.add(_persistence.update(user));
 
