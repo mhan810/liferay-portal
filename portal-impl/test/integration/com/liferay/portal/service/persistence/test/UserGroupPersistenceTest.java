@@ -139,6 +139,8 @@ public class UserGroupPersistenceTest {
 
 		newUserGroup.setAddedByLDAPImport(RandomTestUtil.randomBoolean());
 
+		newUserGroup.setExternalReferenceCode(RandomTestUtil.randomString());
+
 		_userGroups.add(_persistence.update(newUserGroup));
 
 		UserGroup existingUserGroup = _persistence.findByPrimaryKey(newUserGroup.getPrimaryKey());
@@ -167,6 +169,8 @@ public class UserGroupPersistenceTest {
 			newUserGroup.getDescription());
 		Assert.assertEquals(existingUserGroup.isAddedByLDAPImport(),
 			newUserGroup.isAddedByLDAPImport());
+		Assert.assertEquals(existingUserGroup.getExternalReferenceCode(),
+			newUserGroup.getExternalReferenceCode());
 	}
 
 	@Test
@@ -192,6 +196,15 @@ public class UserGroupPersistenceTest {
 		_persistence.countByCompanyId(RandomTestUtil.nextLong());
 
 		_persistence.countByCompanyId(0L);
+	}
+
+	@Test
+	public void testCountByC_ERC() throws Exception {
+		_persistence.countByC_ERC(RandomTestUtil.nextLong(), "");
+
+		_persistence.countByC_ERC(0L, "null");
+
+		_persistence.countByC_ERC(0L, (String)null);
 	}
 
 	@Test
@@ -238,7 +251,8 @@ public class UserGroupPersistenceTest {
 			true, "uuid", true, "userGroupId", true, "companyId", true,
 			"userId", true, "userName", true, "createDate", true,
 			"modifiedDate", true, "parentUserGroupId", true, "name", true,
-			"description", true, "addedByLDAPImport", true);
+			"description", true, "addedByLDAPImport", true,
+			"externalReferenceCode", true);
 	}
 
 	@Test
@@ -444,6 +458,14 @@ public class UserGroupPersistenceTest {
 		Assert.assertEquals(Long.valueOf(existingUserGroup.getCompanyId()),
 			ReflectionTestUtil.<Long>invoke(existingUserGroup,
 				"getOriginalCompanyId", new Class<?>[0]));
+		Assert.assertTrue(Objects.equals(
+				existingUserGroup.getExternalReferenceCode(),
+				ReflectionTestUtil.invoke(existingUserGroup,
+					"getOriginalExternalReferenceCode", new Class<?>[0])));
+
+		Assert.assertEquals(Long.valueOf(existingUserGroup.getCompanyId()),
+			ReflectionTestUtil.<Long>invoke(existingUserGroup,
+				"getOriginalCompanyId", new Class<?>[0]));
 		Assert.assertTrue(Objects.equals(existingUserGroup.getName(),
 				ReflectionTestUtil.invoke(existingUserGroup, "getOriginalName",
 					new Class<?>[0])));
@@ -475,6 +497,8 @@ public class UserGroupPersistenceTest {
 		userGroup.setDescription(RandomTestUtil.randomString());
 
 		userGroup.setAddedByLDAPImport(RandomTestUtil.randomBoolean());
+
+		userGroup.setExternalReferenceCode(RandomTestUtil.randomString());
 
 		_userGroups.add(_persistence.update(userGroup));
 

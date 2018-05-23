@@ -2562,6 +2562,25 @@ public interface UserLocalService extends BaseLocalService,
 	public User updateUser(User user);
 
 	/**
+	* Adds a new user or updates an existing user.
+	*/
+	public User upsertUser(long creatorUserId, long companyId,
+		boolean autoPassword, String password1, String password2,
+		boolean autoScreenName, String screenName, String emailAddress,
+		long facebookId, String openId, Locale locale, String firstName,
+		String middleName, String lastName, long prefixId, long suffixId,
+		boolean male, int birthdayMonth, int birthdayDay, int birthdayYear,
+		String jobTitle, long[] groupIds, long[] organizationIds,
+		long[] roleIds, long[] userGroupIds, boolean sendEmail,
+		String externalReferenceCode, ServiceContext serviceContext,
+		String oldPassword, boolean passwordReset,
+		String reminderQueryQuestion, String reminderQueryAnswer,
+		boolean portrait, byte[] portraitBytes, String languageId,
+		String timeZoneId, String greeting, String comments, String smsSn,
+		String facebookSn, String jabberSn, String skypeSn, String twitterSn,
+		List<UserGroupRole> userGroupRoles) throws PortalException;
+
+	/**
 	* Verifies the email address of the ticket.
 	*
 	* @param ticketKey the ticket key
