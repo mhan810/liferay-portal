@@ -4707,14 +4707,6 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 					result = assetVocabulary;
 
 					cacheResult(assetVocabulary);
-
-					if ((assetVocabulary.getCompanyId() != companyId) ||
-							(assetVocabulary.getExternalReferenceCode() == null) ||
-							!assetVocabulary.getExternalReferenceCode()
-												.equals(externalReferenceCode)) {
-						finderCache.putResult(FINDER_PATH_FETCH_BY_C_ERC,
-							finderArgs, assetVocabulary);
-					}
 				}
 			}
 			catch (Exception e) {

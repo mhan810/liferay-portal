@@ -6101,14 +6101,6 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 					result = organization;
 
 					cacheResult(organization);
-
-					if ((organization.getCompanyId() != companyId) ||
-							(organization.getExternalReferenceCode() == null) ||
-							!organization.getExternalReferenceCode()
-											 .equals(externalReferenceCode)) {
-						finderCache.putResult(FINDER_PATH_FETCH_BY_C_ERC,
-							finderArgs, organization);
-					}
 				}
 			}
 			catch (Exception e) {

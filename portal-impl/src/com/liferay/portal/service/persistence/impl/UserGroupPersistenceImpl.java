@@ -4213,14 +4213,6 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 					result = userGroup;
 
 					cacheResult(userGroup);
-
-					if ((userGroup.getCompanyId() != companyId) ||
-							(userGroup.getExternalReferenceCode() == null) ||
-							!userGroup.getExternalReferenceCode()
-										  .equals(externalReferenceCode)) {
-						finderCache.putResult(FINDER_PATH_FETCH_BY_C_ERC,
-							finderArgs, userGroup);
-					}
 				}
 			}
 			catch (Exception e) {

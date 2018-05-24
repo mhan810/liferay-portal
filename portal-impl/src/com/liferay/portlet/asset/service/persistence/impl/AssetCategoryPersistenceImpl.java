@@ -4978,14 +4978,6 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 					result = assetCategory;
 
 					cacheResult(assetCategory);
-
-					if ((assetCategory.getCompanyId() != companyId) ||
-							(assetCategory.getExternalReferenceCode() == null) ||
-							!assetCategory.getExternalReferenceCode()
-											  .equals(externalReferenceCode)) {
-						finderCache.putResult(FINDER_PATH_FETCH_BY_C_ERC,
-							finderArgs, assetCategory);
-					}
 				}
 			}
 			catch (Exception e) {

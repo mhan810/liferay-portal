@@ -6171,14 +6171,6 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 					result = user;
 
 					cacheResult(user);
-
-					if ((user.getCompanyId() != companyId) ||
-							(user.getExternalReferenceCode() == null) ||
-							!user.getExternalReferenceCode()
-									 .equals(externalReferenceCode)) {
-						finderCache.putResult(FINDER_PATH_FETCH_BY_C_ERC,
-							finderArgs, user);
-					}
 				}
 			}
 			catch (Exception e) {
