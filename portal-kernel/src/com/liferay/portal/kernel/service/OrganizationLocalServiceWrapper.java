@@ -409,6 +409,7 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 	* @param externalReferenceCode the organization's external reference code
 	* @return the organization with the name, or <code>null</code> if no
 	organization could be found
+	* @review
 	*/
 	@Override
 	public com.liferay.portal.kernel.model.Organization fetchOrganizationByExternalReferenceCode(
@@ -1618,6 +1619,7 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 	names for the organization, and merge expando bridge
 	attributes for the organization.
 	* @return the organization
+	* @review
 	*/
 	@Override
 	public com.liferay.portal.kernel.model.Organization upsertOrganization(

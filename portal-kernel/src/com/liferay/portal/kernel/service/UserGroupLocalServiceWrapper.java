@@ -447,6 +447,7 @@ public class UserGroupLocalServiceWrapper implements UserGroupLocalService,
 	* @param externalReferenceCode the user group's external reference code
 	* @return the user group with the externalReferenceCode, or
 	<code>null</code> if no user could be found
+	* @review
 	*/
 	@Override
 	public com.liferay.portal.kernel.model.UserGroup fetchUserGroupByExternalReferenceCode(
@@ -1060,6 +1061,7 @@ public class UserGroupLocalServiceWrapper implements UserGroupLocalService,
 	<code>null</code>). Can set expando bridge attributes for the
 	user group.
 	* @return the user group
+	* @review
 	*/
 	@Override
 	public com.liferay.portal.kernel.model.UserGroup upsertUserGroup(

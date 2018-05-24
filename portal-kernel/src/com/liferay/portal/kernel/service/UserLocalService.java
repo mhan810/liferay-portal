@@ -763,6 +763,7 @@ public interface UserLocalService extends BaseLocalService,
 	* @param externalReferenceCode the user's external reference code
 	* @return the user with the externalReferenceCode, or <code>null</code> if
 	no user could be found
+	* @review
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public User fetchUserByExternalReferenceCode(long companyId,
@@ -2610,6 +2611,7 @@ public interface UserLocalService extends BaseLocalService,
 	<code>null</code>). Can set expando bridge attributes for the
 	user.
 	* @return the user
+	* @review
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public User upsertUser(long creatorUserId, long companyId,

@@ -313,6 +313,7 @@ public interface OrganizationLocalService extends BaseLocalService,
 	* @param externalReferenceCode the organization's external reference code
 	* @return the organization with the name, or <code>null</code> if no
 	organization could be found
+	* @review
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Organization fetchOrganizationByExternalReferenceCode(
@@ -1289,6 +1290,7 @@ public interface OrganizationLocalService extends BaseLocalService,
 	names for the organization, and merge expando bridge
 	attributes for the organization.
 	* @return the organization
+	* @review
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public Organization upsertOrganization(long userId,

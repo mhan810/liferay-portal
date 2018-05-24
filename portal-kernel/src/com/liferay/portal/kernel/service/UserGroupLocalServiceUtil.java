@@ -410,6 +410,7 @@ public class UserGroupLocalServiceUtil {
 	* @param externalReferenceCode the user group's external reference code
 	* @return the user group with the externalReferenceCode, or
 	<code>null</code> if no user could be found
+	* @review
 	*/
 	public static com.liferay.portal.kernel.model.UserGroup fetchUserGroupByExternalReferenceCode(
 		long companyId, String externalReferenceCode) {
@@ -975,6 +976,7 @@ public class UserGroupLocalServiceUtil {
 	<code>null</code>). Can set expando bridge attributes for the
 	user group.
 	* @return the user group
+	* @review
 	*/
 	public static com.liferay.portal.kernel.model.UserGroup upsertUserGroup(
 		long userId, long companyId, String name, String description,

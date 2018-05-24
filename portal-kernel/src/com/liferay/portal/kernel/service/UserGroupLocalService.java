@@ -321,6 +321,7 @@ public interface UserGroupLocalService extends BaseLocalService,
 	* @param externalReferenceCode the user group's external reference code
 	* @return the user group with the externalReferenceCode, or
 	<code>null</code> if no user could be found
+	* @review
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public UserGroup fetchUserGroupByExternalReferenceCode(long companyId,
@@ -780,6 +781,7 @@ public interface UserGroupLocalService extends BaseLocalService,
 	<code>null</code>). Can set expando bridge attributes for the
 	user group.
 	* @return the user group
+	* @review
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public UserGroup upsertUserGroup(long userId, long companyId, String name,

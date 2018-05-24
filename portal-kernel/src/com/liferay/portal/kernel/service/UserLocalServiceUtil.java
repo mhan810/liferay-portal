@@ -965,6 +965,7 @@ public class UserLocalServiceUtil {
 	* @param externalReferenceCode the user's external reference code
 	* @return the user with the externalReferenceCode, or <code>null</code> if
 	no user could be found
+	* @review
 	*/
 	public static com.liferay.portal.kernel.model.User fetchUserByExternalReferenceCode(
 		long companyId, String externalReferenceCode) {
@@ -3241,6 +3242,7 @@ public class UserLocalServiceUtil {
 	<code>null</code>). Can set expando bridge attributes for the
 	user.
 	* @return the user
+	* @review
 	*/
 	public static com.liferay.portal.kernel.model.User upsertUser(
 		long creatorUserId, long companyId, boolean autoPassword,

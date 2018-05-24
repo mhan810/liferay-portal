@@ -380,6 +380,7 @@ public class OrganizationLocalServiceUtil {
 	* @param externalReferenceCode the organization's external reference code
 	* @return the organization with the name, or <code>null</code> if no
 	organization could be found
+	* @review
 	*/
 	public static com.liferay.portal.kernel.model.Organization fetchOrganizationByExternalReferenceCode(
 		long companyId, String externalReferenceCode) {
@@ -1521,6 +1522,7 @@ public class OrganizationLocalServiceUtil {
 	names for the organization, and merge expando bridge
 	attributes for the organization.
 	* @return the organization
+	* @review
 	*/
 	public static com.liferay.portal.kernel.model.Organization upsertOrganization(
 		long userId, long parentOrganizationId, String name, String type,
