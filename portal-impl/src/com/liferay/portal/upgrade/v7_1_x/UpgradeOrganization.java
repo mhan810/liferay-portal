@@ -27,7 +27,6 @@ public class UpgradeOrganization extends UpgradeProcess {
 		alter(
 			OrganizationTable.class,
 			new AlterTableAddColumn("externalReferenceCode VARCHAR(75) null"));
-
 	}
 
 }

@@ -27,7 +27,6 @@ public class UpgradeUserGroup extends UpgradeProcess {
 		alter(
 			UserGroupTable.class,
 			new AlterTableAddColumn("externalReferenceCode VARCHAR(75) null"));
-
 	}
 
 }
