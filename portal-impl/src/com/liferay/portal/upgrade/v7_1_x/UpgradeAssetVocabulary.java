@@ -27,7 +27,6 @@ public class UpgradeAssetVocabulary extends UpgradeProcess {
 		alter(
 			AssetVocabularyTable.class,
 			new AlterTableAddColumn("externalReferenceCode VARCHAR(75) null"));
-
 	}
 
 }
