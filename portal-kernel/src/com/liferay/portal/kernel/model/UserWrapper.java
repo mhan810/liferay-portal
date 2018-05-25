@@ -99,8 +99,8 @@ public class UserWrapper implements User, ModelWrapper<User> {
 		attributes.put("lockoutDate", getLockoutDate());
 		attributes.put("agreedToTermsOfUse", isAgreedToTermsOfUse());
 		attributes.put("emailAddressVerified", isEmailAddressVerified());
-		attributes.put("status", getStatus());
 		attributes.put("externalReferenceCode", getExternalReferenceCode());
+		attributes.put("status", getStatus());
 
 		return attributes;
 	}
@@ -358,17 +358,17 @@ public class UserWrapper implements User, ModelWrapper<User> {
 			setEmailAddressVerified(emailAddressVerified);
 		}
 
-		Integer status = (Integer)attributes.get("status");
-
-		if (status != null) {
-			setStatus(status);
-		}
-
 		String externalReferenceCode = (String)attributes.get(
 				"externalReferenceCode");
 
 		if (externalReferenceCode != null) {
 			setExternalReferenceCode(externalReferenceCode);
+		}
+
+		Integer status = (Integer)attributes.get("status");
+
+		if (status != null) {
+			setStatus(status);
 		}
 	}
 

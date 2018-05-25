@@ -1304,8 +1304,8 @@ create table User_ (
 	lockoutDate DATE null,
 	agreedToTermsOfUse BOOLEAN,
 	emailAddressVerified BOOLEAN,
-	status INTEGER,
-	externalReferenceCode VARCHAR(75) null
+	externalReferenceCode VARCHAR(75) null,
+	status INTEGER
 );
 
 create table UserGroup (

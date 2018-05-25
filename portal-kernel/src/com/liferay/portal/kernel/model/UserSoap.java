@@ -75,8 +75,8 @@ public class UserSoap implements Serializable {
 		soapModel.setLockoutDate(model.getLockoutDate());
 		soapModel.setAgreedToTermsOfUse(model.isAgreedToTermsOfUse());
 		soapModel.setEmailAddressVerified(model.isEmailAddressVerified());
-		soapModel.setStatus(model.getStatus());
 		soapModel.setExternalReferenceCode(model.getExternalReferenceCode());
+		soapModel.setStatus(model.getStatus());
 
 		return soapModel;
 	}
@@ -481,20 +481,20 @@ public class UserSoap implements Serializable {
 		_emailAddressVerified = emailAddressVerified;
 	}
 
-	public int getStatus() {
-		return _status;
-	}
-
-	public void setStatus(int status) {
-		_status = status;
-	}
-
 	public String getExternalReferenceCode() {
 		return _externalReferenceCode;
 	}
 
 	public void setExternalReferenceCode(String externalReferenceCode) {
 		_externalReferenceCode = externalReferenceCode;
+	}
+
+	public int getStatus() {
+		return _status;
+	}
+
+	public void setStatus(int status) {
+		_status = status;
 	}
 
 	private long _mvccVersion;
@@ -538,6 +538,6 @@ public class UserSoap implements Serializable {
 	private Date _lockoutDate;
 	private boolean _agreedToTermsOfUse;
 	private boolean _emailAddressVerified;
-	private int _status;
 	private String _externalReferenceCode;
+	private int _status;
 }

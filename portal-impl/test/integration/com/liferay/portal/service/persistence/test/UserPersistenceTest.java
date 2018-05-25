@@ -197,9 +197,9 @@ public class UserPersistenceTest {
 
 		newUser.setEmailAddressVerified(RandomTestUtil.randomBoolean());
 
-		newUser.setStatus(RandomTestUtil.nextInt());
-
 		newUser.setExternalReferenceCode(RandomTestUtil.randomString());
+
+		newUser.setStatus(RandomTestUtil.nextInt());
 
 		_users.add(_persistence.update(newUser));
 
@@ -278,9 +278,9 @@ public class UserPersistenceTest {
 			newUser.isAgreedToTermsOfUse());
 		Assert.assertEquals(existingUser.isEmailAddressVerified(),
 			newUser.isEmailAddressVerified());
-		Assert.assertEquals(existingUser.getStatus(), newUser.getStatus());
 		Assert.assertEquals(existingUser.getExternalReferenceCode(),
 			newUser.getExternalReferenceCode());
+		Assert.assertEquals(existingUser.getStatus(), newUser.getStatus());
 	}
 
 	@Test
@@ -479,7 +479,7 @@ public class UserPersistenceTest {
 			"lastLoginDate", true, "lastLoginIP", true, "lastFailedLoginDate",
 			true, "failedLoginAttempts", true, "lockout", true, "lockoutDate",
 			true, "agreedToTermsOfUse", true, "emailAddressVerified", true,
-			"status", true, "externalReferenceCode", true);
+			"externalReferenceCode", true, "status", true);
 	}
 
 	@Test
@@ -829,9 +829,9 @@ public class UserPersistenceTest {
 
 		user.setEmailAddressVerified(RandomTestUtil.randomBoolean());
 
-		user.setStatus(RandomTestUtil.nextInt());
-
 		user.setExternalReferenceCode(RandomTestUtil.randomString());
+
+		user.setStatus(RandomTestUtil.nextInt());
 
 		_users.add(_persistence.update(user));
 
