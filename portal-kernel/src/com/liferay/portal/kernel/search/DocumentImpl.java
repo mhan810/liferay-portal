@@ -45,7 +45,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -55,6 +54,10 @@ import java.util.Set;
  * @author Bruno Farache
  */
 public class DocumentImpl implements Document {
+
+	public static Set<String> getDefaultSortableTextFields() {
+		return Collections.unmodifiableSet(_defaultSortableTextFields);
+	}
 
 	/**
 	 * @deprecated As of 7.0.0, replaced by {@link
@@ -101,13 +104,8 @@ public class DocumentImpl implements Document {
 		return Field.isSortableFieldName(name);
 	}
 
-	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
-	 *             Field#isSortableTextField(String)}
-	 */
-	@Deprecated
 	public static boolean isSortableTextField(String name) {
-		return Field.isSortableTextField(name);
+		return _defaultSortableTextFields.contains(name);
 	}
 
 	@Override
@@ -1183,9 +1181,11 @@ public class DocumentImpl implements Document {
 	private static final String _UID_PORTLET = "_PORTLET_";
 
 	private static Format _dateFormat;
+	private static final Set<String> _defaultSortableTextFields =
+		SetUtil.fromArray(
+			PropsUtil.getArray(PropsKeys.INDEX_SORTABLE_TEXT_FIELDS));
 
 	private Map<String, Field> _fields = new HashMap<>();
-	private Set<String> _sortableTextFields = new HashSet<>(
-		Field.getDefaultSortableTextFields());
+	private Set<String> _sortableTextFields = _defaultSortableTextFields;
 
 }

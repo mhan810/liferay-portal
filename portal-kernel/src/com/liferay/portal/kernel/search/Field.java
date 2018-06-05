@@ -21,21 +21,16 @@ import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 
 import java.io.Serializable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Bruno Farache
@@ -206,10 +201,6 @@ public class Field implements Serializable {
 	@Deprecated
 	public static final String VIEW_COUNT = "viewCount";
 
-	public static Set<String> getDefaultSortableTextFields() {
-		return Collections.unmodifiableSet(_defaultSortableTextFields);
-	}
-
 	public static String getLocalizedName(Locale locale, String name) {
 		if (locale == null) {
 			return name;
@@ -240,7 +231,7 @@ public class Field implements Serializable {
 		}
 
 		if ((sort.getType() == Sort.STRING_TYPE) &&
-			!isSortableTextField(fieldName)) {
+			!DocumentImpl.isSortableTextField(fieldName)) {
 
 			return scoreFieldName;
 		}
@@ -287,10 +278,6 @@ public class Field implements Serializable {
 
 	public static boolean isSortableFieldName(String name) {
 		return name.endsWith(_SORTABLE_FIELD_SUFFIX);
-	}
-
-	public static boolean isSortableTextField(String name) {
-		return _defaultSortableTextFields.contains(name);
 	}
 
 	public static boolean validateFieldName(String name) {
@@ -607,10 +594,6 @@ public class Field implements Serializable {
 	private static final String _UID_FIELD = "_FIELD_";
 
 	private static final String _UID_PORTLET = "_PORTLET_";
-
-	private static final Set<String> _defaultSortableTextFields =
-		SetUtil.fromArray(
-			PropsUtil.getArray(PropsKeys.INDEX_SORTABLE_TEXT_FIELDS));
 
 	private float _boost = 1;
 	private Date[] _dates;
