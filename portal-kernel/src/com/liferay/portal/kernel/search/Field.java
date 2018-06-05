@@ -245,7 +245,7 @@ public class Field implements Serializable {
 			return scoreFieldName;
 		}
 
-		return Field.getSortableFieldName(fieldName);
+		return getSortableFieldName(fieldName);
 	}
 
 	public static String getUID(String portletId, String field1) {
