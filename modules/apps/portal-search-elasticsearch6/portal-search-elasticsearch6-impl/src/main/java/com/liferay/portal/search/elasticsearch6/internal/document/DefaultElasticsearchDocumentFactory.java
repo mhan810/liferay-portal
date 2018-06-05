@@ -116,7 +116,7 @@ public class DefaultElasticsearchDocumentFactory
 			addField(xContentBuilder, field, name, values);
 
 			if (field.isSortable()) {
-				String sortFieldName = DocumentImpl.getSortableFieldName(name);
+				String sortFieldName = Field.getSortableFieldName(name);
 
 				addField(xContentBuilder, field, sortFieldName, values);
 			}
