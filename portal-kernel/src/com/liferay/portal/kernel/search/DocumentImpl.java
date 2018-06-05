@@ -45,6 +45,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -82,32 +83,31 @@ public class DocumentImpl implements Document {
 		return Field.getSortableFieldName(name);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             Field#getSortFieldName(Sort, String)}
+	 */
+	@Deprecated
 	public static String getSortFieldName(Sort sort, String scoreFieldName) {
-		if (sort.getType() == Sort.SCORE_TYPE) {
-			return scoreFieldName;
-		}
-
-		String fieldName = sort.getFieldName();
-
-		if (isSortableFieldName(fieldName)) {
-			return fieldName;
-		}
-
-		if ((sort.getType() == Sort.STRING_TYPE) &&
-			!isSortableTextField(fieldName)) {
-
-			return scoreFieldName;
-		}
-
-		return Field.getSortableFieldName(fieldName);
+		return Field.getSortFieldName(sort, scoreFieldName);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             Field#isSortableFieldName(String)}
+	 */
+	@Deprecated
 	public static boolean isSortableFieldName(String name) {
-		return name.endsWith(_SORTABLE_FIELD_SUFFIX);
+		return Field.isSortableFieldName(name);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             Field#isSortableTextField(String)}
+	 */
+	@Deprecated
 	public static boolean isSortableTextField(String name) {
-		return _defaultSortableTextFields.contains(name);
+		return Field.isSortableTextField(name);
 	}
 
 	@Override
@@ -1175,23 +1175,17 @@ public class DocumentImpl implements Document {
 	private static final String _INDEX_DATE_FORMAT_PATTERN = PropsUtil.get(
 		PropsKeys.INDEX_DATE_FORMAT_PATTERN);
 
-	private static final String _SORTABLE_FIELD_SUFFIX = "sortable";
-
 	private static final int _SORTABLE_TEXT_FIELDS_TRUNCATED_LENGTH =
 		GetterUtil.getInteger(
 			PropsUtil.get(
 				PropsKeys.INDEX_SORTABLE_TEXT_FIELDS_TRUNCATED_LENGTH));
 
-	private static final String _UID_FIELD = "_FIELD_";
-
 	private static final String _UID_PORTLET = "_PORTLET_";
 
 	private static Format _dateFormat;
-	private static final Set<String> _defaultSortableTextFields =
-		SetUtil.fromArray(
-			PropsUtil.getArray(PropsKeys.INDEX_SORTABLE_TEXT_FIELDS));
 
 	private Map<String, Field> _fields = new HashMap<>();
-	private Set<String> _sortableTextFields = _defaultSortableTextFields;
+	private Set<String> _sortableTextFields = new HashSet<>(
+		Field.getDefaultSortableTextFields());
 
 }
