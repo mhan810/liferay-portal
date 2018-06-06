@@ -50,7 +50,7 @@ public class DefaultFacetsTranslator implements FacetsTranslator {
 			optional.map(
 				aggregationBuilder -> postProcessAggregationBuilder(
 					aggregationBuilder, facetProcessorContext)
-            ).ifPresent(
+			).ifPresent(
 				searchRequestBuilder::addAggregation
 			);
 		}
