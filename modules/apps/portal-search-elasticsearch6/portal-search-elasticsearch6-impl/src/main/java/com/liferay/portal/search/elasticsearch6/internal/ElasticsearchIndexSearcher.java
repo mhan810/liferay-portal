@@ -51,11 +51,8 @@ import com.liferay.portal.search.constants.SearchContextAttributes;
 import com.liferay.portal.search.elasticsearch6.configuration.ElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch6.constants.ElasticsearchSearchContextAttributes;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
-import com.liferay.portal.search.elasticsearch6.internal.facet.AggregationFilteringFacetProcessorContext;
-import com.liferay.portal.search.elasticsearch6.internal.facet.CompositeFacetProcessor;
 import com.liferay.portal.search.elasticsearch6.internal.facet.FacetCollectorFactory;
-import com.liferay.portal.search.elasticsearch6.internal.facet.FacetProcessor;
-import com.liferay.portal.search.elasticsearch6.internal.facet.FacetProcessorContext;
+import com.liferay.portal.search.elasticsearch6.internal.facet.FacetsTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.facet.FacetUtil;
 import com.liferay.portal.search.elasticsearch6.internal.groupby.GroupByTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.highlight.HighlighterTranslator;
@@ -70,7 +67,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.apache.commons.lang.time.StopWatch;
 
@@ -84,7 +80,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.Aggregation;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.tophits.TopHits;
@@ -243,24 +238,12 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 
 		Collection<Facet> facets = facetsMap.values();
 
-		FacetProcessorContext facetProcessorContext = getFacetProcessorContext(
-			facets, searchContext);
+		boolean basicFacetSelection = GetterUtil.getBoolean(
+			searchContext.getAttribute(
+				SearchContextAttributes.ATTRIBUTE_KEY_BASIC_FACET_SELECTION));
 
-		for (Facet facet : facets) {
-			if (facet.isStatic()) {
-				continue;
-			}
-
-			Optional<AggregationBuilder> optional = facetProcessor.processFacet(
-				facet);
-
-			optional.map(
-				aggregationBuilder -> postProcessAggregationBuilder(
-					aggregationBuilder, facetProcessorContext)
-			).ifPresent(
-				searchRequestBuilder::addAggregation
-			);
-		}
+		_facetsTranslator.translate(
+			searchRequestBuilder, facets, basicFacetSelection);
 	}
 
 	protected void addGroupBy(
@@ -483,20 +466,6 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			aggregationsMap.get(FacetUtil.getAggregationName(facet)));
 	}
 
-	protected FacetProcessorContext getFacetProcessorContext(
-		Collection<Facet> facets, SearchContext searchContext) {
-
-		boolean basicFacetSelection = GetterUtil.getBoolean(
-			searchContext.getAttribute(
-				SearchContextAttributes.ATTRIBUTE_KEY_BASIC_FACET_SELECTION));
-
-		if (basicFacetSelection) {
-			return null;
-		}
-
-		return AggregationFilteringFacetProcessorContext.newInstance(facets);
-	}
-
 	protected String[] getSelectedIndexNames(
 		QueryConfig queryConfig, SearchContext searchContext) {
 
@@ -530,18 +499,6 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		}
 
 		return Field.getSortFieldName(sort, scoreFieldName);
-	}
-
-	protected AggregationBuilder postProcessAggregationBuilder(
-		AggregationBuilder aggregationBuilder,
-		FacetProcessorContext facetProcessorContext) {
-
-		if (facetProcessorContext != null) {
-			return facetProcessorContext.postProcessAggregationBuilder(
-				aggregationBuilder);
-		}
-
-		return aggregationBuilder;
 	}
 
 	protected Hits processResponse(
@@ -693,8 +650,8 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 	@Reference
 	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
 
-	@Reference(service = CompositeFacetProcessor.class)
-	protected FacetProcessor<SearchRequestBuilder> facetProcessor;
+	@Reference
+	protected FacetsTranslator _facetsTranslator;
 
 	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	protected FilterTranslator<QueryBuilder> filterTranslator;
