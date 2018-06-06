@@ -22,8 +22,7 @@ import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.search.elasticsearch6.internal.facet.CompositeFacetProcessor;
-import com.liferay.portal.search.elasticsearch6.internal.facet.FacetProcessor;
+import com.liferay.portal.search.elasticsearch6.internal.facet.FacetsTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.groupby.GroupByTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.highlight.HighlighterTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.sort.SortTranslator;
@@ -87,13 +86,9 @@ public class SearchSearchRequestAssemblerImpl
 
 		Map<String, Facet> facetsMap = searchSearchRequest.getFacets();
 
-		for (Facet facet : facetsMap.values()) {
-			if (facet.isStatic()) {
-				continue;
-			}
-
-			facetProcessor.processFacet(searchRequestBuilder, facet);
-		}
+		facetsTranslator.translate(
+			searchRequestBuilder, facetsMap.values(),
+			searchSearchRequest.isBasicFacetSelection());
 	}
 
 	protected void addGroupBy(
@@ -144,8 +139,8 @@ public class SearchSearchRequestAssemblerImpl
 	protected CommonSearchRequestBuilderAssembler
 		commonSearchRequestBuilderAssembler;
 
-	@Reference(service = CompositeFacetProcessor.class)
-	protected FacetProcessor<SearchRequestBuilder> facetProcessor;
+	@Reference
+	protected FacetsTranslator facetsTranslator;
 
 	@Reference
 	protected GroupByTranslator groupByTranslator;
