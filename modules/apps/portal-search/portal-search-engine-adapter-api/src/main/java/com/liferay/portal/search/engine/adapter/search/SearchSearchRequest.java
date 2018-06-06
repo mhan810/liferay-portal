@@ -71,6 +71,10 @@ public class SearchSearchRequest
 		return _stats;
 	}
 
+	public boolean isBasicFacetSelection() {
+		return _basicFacetSelection;
+	}
+
 	public boolean isLuceneSyntax() {
 		return _luceneSyntax;
 	}
@@ -93,6 +97,10 @@ public class SearchSearchRequest
 
 	public void putFacet(String fieldName, Facet facet) {
 		_facets.put(fieldName, facet);
+	}
+
+	public void setBasicFacetSelection(boolean basicFacetSelection) {
+		_basicFacetSelection = basicFacetSelection;
 	}
 
 	public void setGroupBy(GroupBy groupBy) {
@@ -127,12 +135,12 @@ public class SearchSearchRequest
 		_stats = stats;
 	}
 
+	private boolean _basicFacetSelection;
 	private final Map<String, Facet> _facets = new HashMap<>();
 	private GroupBy _groupBy;
 	private boolean _luceneSyntax;
 	private String _preference;
 	private final QueryConfig _queryConfig = new QueryConfig();
-	private boolean _scoreEnabled;
 	private int _size;
 	private Sort[] _sorts;
 	private int _start;
