@@ -52,8 +52,8 @@ import com.liferay.portal.search.elasticsearch6.configuration.ElasticsearchConfi
 import com.liferay.portal.search.elasticsearch6.constants.ElasticsearchSearchContextAttributes;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch6.internal.facet.FacetCollectorFactory;
-import com.liferay.portal.search.elasticsearch6.internal.facet.FacetsTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.facet.FacetUtil;
+import com.liferay.portal.search.elasticsearch6.internal.facet.FacetsTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.groupby.GroupByTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.highlight.HighlighterTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.index.IndexNameBuilder;
