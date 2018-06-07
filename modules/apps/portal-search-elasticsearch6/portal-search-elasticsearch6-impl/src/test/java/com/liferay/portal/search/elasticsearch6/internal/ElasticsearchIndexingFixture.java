@@ -30,6 +30,7 @@ import com.liferay.portal.search.elasticsearch6.internal.document.ElasticsearchU
 import com.liferay.portal.search.elasticsearch6.internal.facet.DefaultFacetProcessor;
 import com.liferay.portal.search.elasticsearch6.internal.facet.DefaultFacetsTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.facet.FacetProcessor;
+import com.liferay.portal.search.elasticsearch6.internal.facet.FacetsTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.filter.BooleanFilterTranslatorImpl;
 import com.liferay.portal.search.elasticsearch6.internal.filter.DateRangeTermFilterTranslatorImpl;
 import com.liferay.portal.search.elasticsearch6.internal.filter.ElasticsearchFilterTranslator;
@@ -191,6 +192,14 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 		};
 	}
 
+	protected static FacetsTranslator createFacetTranslator() {
+		return new DefaultFacetsTranslator() {
+			{
+				facetProcessor = _facetProcessor;
+			}
+		};
+	}
+
 	protected QuerySuggester createElasticsearchQuerySuggester(
 		final ElasticsearchConnectionManager elasticsearchConnectionManager1,
 		final IndexNameBuilder indexNameBuilder1) {
@@ -254,7 +263,7 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 			{
 				elasticsearchConnectionManager =
 					elasticsearchConnectionManager1;
-				facetsTranslator = new DefaultFacetsTranslator();
+				facetsTranslator = createFacetTranslator();
 				filterTranslator = createElasticsearchFilterTranslator();
 				groupByTranslator = new DefaultGroupByTranslator();
 				highlighterTranslator = new DefaultHighlighterTranslator();
@@ -336,10 +345,11 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 
 	}
 
+	private static FacetProcessor<SearchRequestBuilder> _facetProcessor =
+		new DefaultFacetProcessor();
+
 	private final long _companyId;
 	private final ElasticsearchFixture _elasticsearchFixture;
-	private FacetProcessor<SearchRequestBuilder> _facetProcessor =
-		new DefaultFacetProcessor();
 	private final IndexCreator _indexCreator;
 	private final IndexNameBuilder _indexNameBuilder =
 		new TestIndexNameBuilder();
