@@ -261,11 +261,9 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 
 		topHitsAggregationBuilder.size(groupBySize);
 
-		addHighlights(
-			topHitsAggregationBuilder, searchContext.getQueryConfig());
-		addSelectedFields(
-			topHitsAggregationBuilder, searchContext.getQueryConfig());
-		addSorts(topHitsAggregationBuilder, searchContext.getSorts());
+		addHighlights(topHitsAggregationBuilder, queryConfig);
+		addSelectedFields(topHitsAggregationBuilder, queryConfig);
+		addSorts(topHitsAggregationBuilder, sorts);
 
 		return topHitsAggregationBuilder;
 	}
