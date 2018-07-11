@@ -92,7 +92,7 @@ public class SearchSearchRequestAssemblerImpl
 				continue;
 			}
 
-			facetProcessor.processFacet(searchRequestBuilder, facet);
+			facetProcessor.processFacet(facet);
 		}
 	}
 
