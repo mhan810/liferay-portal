@@ -28,6 +28,7 @@ import com.liferay.portal.search.elasticsearch6.internal.connection.TestElastics
 import com.liferay.portal.search.elasticsearch6.internal.document.DefaultElasticsearchDocumentFactory;
 import com.liferay.portal.search.elasticsearch6.internal.document.ElasticsearchUpdateDocumentCommand;
 import com.liferay.portal.search.elasticsearch6.internal.facet.DefaultFacetProcessor;
+import com.liferay.portal.search.elasticsearch6.internal.facet.DefaultFacetTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.facet.FacetProcessor;
 import com.liferay.portal.search.elasticsearch6.internal.filter.BooleanFilterTranslatorImpl;
 import com.liferay.portal.search.elasticsearch6.internal.filter.DateRangeFilterTranslatorImpl;
@@ -139,6 +140,15 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 	@Override
 	public void tearDown() throws Exception {
 		_elasticsearchFixture.tearDown();
+	}
+
+	protected static DefaultFacetTranslator createDefaultFacetTranslator() {
+		return new DefaultFacetTranslator() {
+			{
+				facetProcessor = _facetProcessor;
+				filterTranslator = createElasticsearchFilterTranslator();
+			}
+		};
 	}
 
 	protected static ElasticsearchFilterTranslator
@@ -255,7 +265,7 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 			{
 				elasticsearchConnectionManager =
 					elasticsearchConnectionManager1;
-				facetProcessor = _facetProcessor;
+				facetTranslator = createDefaultFacetTranslator();
 				filterTranslator = createElasticsearchFilterTranslator();
 				groupByTranslator = new DefaultGroupByTranslator();
 				highlighterTranslator = new DefaultHighlighterTranslator();
@@ -337,10 +347,11 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 
 	}
 
+	private static FacetProcessor<SearchRequestBuilder> _facetProcessor =
+		new DefaultFacetProcessor();
+
 	private final long _companyId;
 	private final ElasticsearchFixture _elasticsearchFixture;
-	private FacetProcessor<SearchRequestBuilder> _facetProcessor =
-		new DefaultFacetProcessor();
 	private final IndexCreator _indexCreator;
 	private final IndexNameBuilder _indexNameBuilder =
 		new TestIndexNameBuilder();
