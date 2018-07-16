@@ -33,7 +33,6 @@ import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.Stats;
 import com.liferay.portal.kernel.search.StatsResults;
 import com.liferay.portal.kernel.search.facet.Facet;
@@ -73,7 +72,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang.time.StopWatch;
@@ -567,16 +565,6 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		}
 
 		return new String[] {DocumentTypes.LIFERAY};
-	}
-
-	protected String getSortFieldName(Sort sort, String scoreFieldName) {
-		String sortFieldName = sort.getFieldName();
-
-		if (Objects.equals(sortFieldName, Field.PRIORITY)) {
-			return sortFieldName;
-		}
-
-		return Field.getSortFieldName(sort, scoreFieldName);
 	}
 
 	protected boolean handle(Exception e) {
