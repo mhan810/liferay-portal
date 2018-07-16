@@ -416,10 +416,11 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 
 		addStats(searchRequestBuilder, searchContext);
 
-		List<QueryBuilder> queryBuilders = new ArrayList<>();
+		List<QueryBuilder> postFilterQueryBuilders = new ArrayList<>();
 
 		if (!count) {
-			addFacets(searchRequestBuilder, queryBuilders, searchContext);
+			addFacets(
+				searchRequestBuilder, postFilterQueryBuilders, searchContext);
 			addGroupBy(searchRequestBuilder, searchContext, start, end);
 			addHighlights(searchRequestBuilder, searchContext, queryConfig);
 			addPagination(searchRequestBuilder, start, end);
@@ -436,13 +437,14 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		}
 
 		if (query.getPostFilter() != null) {
-			queryBuilders.add(
+			postFilterQueryBuilders.add(
 				filterTranslator.translate(
 					query.getPostFilter(), searchContext));
 		}
 
-		if (!ListUtil.isEmpty(queryBuilders)) {
-			searchRequestBuilder.setPostFilter(getPostFilter(queryBuilders));
+		if (!ListUtil.isEmpty(postFilterQueryBuilders)) {
+			searchRequestBuilder.setPostFilter(
+				getPostFilter(postFilterQueryBuilders));
 		}
 
 		QueryBuilder queryBuilder = queryTranslator.translate(
