@@ -18,12 +18,9 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.search.GroupBy;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.Stats;
-import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.search.elasticsearch6.internal.facet.CompositeFacetProcessor;
-import com.liferay.portal.search.elasticsearch6.internal.facet.FacetProcessor;
 import com.liferay.portal.search.elasticsearch6.internal.groupby.GroupByTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.highlight.HighlighterTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.sort.SortTranslator;
@@ -60,7 +57,6 @@ public class SearchSearchRequestAssemblerImpl
 					searchRequestBuilder, stat));
 		}
 
-		addFacets(searchRequestBuilder, searchSearchRequest);
 		addGroupBy(searchRequestBuilder, searchSearchRequest);
 
 		QueryConfig queryConfig = searchSearchRequest.getQueryConfig();
@@ -79,21 +75,6 @@ public class SearchSearchRequestAssemblerImpl
 			searchRequestBuilder, searchSearchRequest.getSorts());
 
 		searchRequestBuilder.setTrackScores(queryConfig.isScoreEnabled());
-	}
-
-	protected void addFacets(
-		SearchRequestBuilder searchRequestBuilder,
-		SearchSearchRequest searchSearchRequest) {
-
-		Map<String, Facet> facetsMap = searchSearchRequest.getFacets();
-
-		for (Facet facet : facetsMap.values()) {
-			if (facet.isStatic()) {
-				continue;
-			}
-
-			facetProcessor.processFacet(facet);
-		}
 	}
 
 	protected void addGroupBy(
@@ -143,9 +124,6 @@ public class SearchSearchRequestAssemblerImpl
 	@Reference
 	protected CommonSearchRequestBuilderAssembler
 		commonSearchRequestBuilderAssembler;
-
-	@Reference(service = CompositeFacetProcessor.class)
-	protected FacetProcessor<SearchRequestBuilder> facetProcessor;
 
 	@Reference
 	protected GroupByTranslator groupByTranslator;

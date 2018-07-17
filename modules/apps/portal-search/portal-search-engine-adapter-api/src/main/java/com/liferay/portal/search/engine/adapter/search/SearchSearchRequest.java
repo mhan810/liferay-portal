@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.search.GroupBy;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.Stats;
-import com.liferay.portal.kernel.search.facet.Facet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,10 +36,6 @@ public class SearchSearchRequest
 		SearchRequestExecutor searchRequestExecutor) {
 
 		return searchRequestExecutor.executeSearchRequest(this);
-	}
-
-	public Map<String, Facet> getFacets() {
-		return _facets;
 	}
 
 	public GroupBy getGroupBy() {
@@ -79,20 +74,12 @@ public class SearchSearchRequest
 		return _queryConfig.isScoreEnabled();
 	}
 
-	public void putAllFacets(Map<String, Facet> faects) {
-		_facets.putAll(faects);
-	}
-
 	public void putAllStats(Map<String, Stats> stats) {
 		if (_stats == null) {
 			_stats = new HashMap<>();
 		}
 
 		_stats.putAll(stats);
-	}
-
-	public void putFacet(String fieldName, Facet facet) {
-		_facets.put(fieldName, facet);
 	}
 
 	public void setGroupBy(GroupBy groupBy) {
@@ -127,7 +114,6 @@ public class SearchSearchRequest
 		_stats = stats;
 	}
 
-	private final Map<String, Facet> _facets = new HashMap<>();
 	private GroupBy _groupBy;
 	private boolean _luceneSyntax;
 	private String _preference;
