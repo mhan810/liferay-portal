@@ -181,28 +181,20 @@ public class OpenIdConnectServiceHandlerImpl
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse)
 		throws PortalException {
-		
-		HttpSession httpSession = httpServletRequest.getSession();
-		
-		OpenIdConnectSession openIdConnectSession = null;
 
-		try {
-			openIdConnectSession = getOpenIdConnectSession(httpSession);
-		}
-		catch (OpenIdConnectServiceException.NoOpenIdConnectSessionException oicse) {
-			
-		}
+		HttpSession httpSession = httpServletRequest.getSession();
+
+		OpenIdConnectSession openIdConnectSession = getOpenIdConnectSession(
+			httpSession, openIdConnectProviderName);
 
 		OpenIdConnectProvider openIdConnectProvider =
 			_openIdConnectProviderRegistry.findOpenIdConnectProvider(
 				openIdConnectProviderName);
-		
+
 		State state = null;
 		Nonce nonce = null;
 
-		if (openIdConnectSession != null && openIdProviderNamesMatch(
-				openIdConnectProviderName, openIdConnectSession)) {
-
+		if (openIdConnectSession != null) {
 			state = openIdConnectSession.getState();
 			nonce = openIdConnectSession.getNonce();
 		}
@@ -212,6 +204,10 @@ public class OpenIdConnectServiceHandlerImpl
 
 			openIdConnectSession = new OpenIdConnectSession(
 				openIdConnectProviderName, nonce, state);
+
+			httpSession.setAttribute(
+				OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION,
+				openIdConnectSession);
 		}
 
 		Scope scope = Scope.parse(openIdConnectProvider.getScopes());
@@ -220,9 +216,6 @@ public class OpenIdConnectServiceHandlerImpl
 
 		URI authenticationRequestURI = getAuthenticationRequestURI(
 			loginRedirectURI, openIdConnectProvider, state, nonce, scope);
-
-		httpSession.setAttribute(
-			OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION, openIdConnectSession);
 
 		try {
 			httpServletResponse.sendRedirect(
@@ -339,6 +332,25 @@ public class OpenIdConnectServiceHandlerImpl
 		return openIdConnectSession;
 	}
 
+	protected OpenIdConnectSession getOpenIdConnectSession(
+		HttpSession httpSession, String openIdConnectProviderName) {
+
+		OpenIdConnectSession openIdConnectSession =
+			(OpenIdConnectSession)httpSession.getAttribute(
+				OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION);
+
+		if (openIdConnectSession != null) {
+			String openIdProviderName =
+				openIdConnectSession.getOpenIdProviderName();
+
+			if (openIdConnectProviderName.equals(openIdProviderName)) {
+				return openIdConnectSession;
+			}
+		}
+
+		return null;
+	}
+
 	protected boolean hasValidAccessToken(
 		OpenIdConnectSession openIdConnectSession) {
 
@@ -356,18 +368,6 @@ public class OpenIdConnectServiceHandlerImpl
 			return true;
 		}
 
-		return false;
-	}
-	
-	protected boolean openIdProviderNamesMatch(
-		String openIdConnectProviderName, OpenIdConnectSession openIdConnectSession) {
-		
-		String openIdProviderName = openIdConnectSession.getOpenIdProviderName();
-		
-		if (openIdConnectProviderName.equals(openIdProviderName)) {
-			return true;
-		}
-		
 		return false;
 	}
 
@@ -606,7 +606,7 @@ public class OpenIdConnectServiceHandlerImpl
 				"Unable to validate tokens", e);
 		}
 	}
-	
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		OpenIdConnectServiceHandlerImpl.class);
 
