@@ -25,9 +25,9 @@ import java.io.Serializable;
 /**
  * @author Edward C. Han
  */
-public class OpenIdConnectSession implements Serializable {
+public class NimbusDSOpenIdConnectSessionImpl implements Serializable {
 
-	public OpenIdConnectSession(
+	public NimbusDSOpenIdConnectSessionImpl(
 		String openIdProviderName, Nonce nonce, State state) {
 
 		_openIdProviderName = openIdProviderName;

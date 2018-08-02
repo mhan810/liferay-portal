@@ -24,7 +24,7 @@ import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceHandle
 import com.liferay.portal.security.sso.openid.connect.constants.OpenIdConnectConstants;
 import com.liferay.portal.security.sso.openid.connect.constants.OpenIdConnectWebKeys;
 import com.liferay.portal.security.sso.openid.connect.internal.OpenIdConnectFlowState;
-import com.liferay.portal.security.sso.openid.connect.internal.OpenIdConnectSession;
+import com.liferay.portal.security.sso.openid.connect.internal.NimbusDSOpenIdConnectSessionImpl;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -76,8 +76,8 @@ public class OpenIdConnectFilter extends BaseFilter {
 				return;
 			}
 
-			OpenIdConnectSession openIdConnectSession =
-				(OpenIdConnectSession)httpSession.getAttribute(
+			NimbusDSOpenIdConnectSessionImpl openIdConnectSession =
+				(NimbusDSOpenIdConnectSessionImpl)httpSession.getAttribute(
 					OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION);
 
 			if (openIdConnectSession == null) {

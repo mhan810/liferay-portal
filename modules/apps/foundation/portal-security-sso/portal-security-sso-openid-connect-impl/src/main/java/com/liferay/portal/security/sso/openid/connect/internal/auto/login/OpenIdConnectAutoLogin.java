@@ -22,7 +22,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnect;
 import com.liferay.portal.security.sso.openid.connect.constants.OpenIdConnectWebKeys;
 import com.liferay.portal.security.sso.openid.connect.internal.OpenIdConnectFlowState;
-import com.liferay.portal.security.sso.openid.connect.internal.OpenIdConnectSession;
+import com.liferay.portal.security.sso.openid.connect.internal.NimbusDSOpenIdConnectSessionImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,8 +54,8 @@ public class OpenIdConnectAutoLogin extends BaseAutoLogin {
 			return null;
 		}
 
-		OpenIdConnectSession openIdConnectSession =
-			(OpenIdConnectSession)httpSession.getAttribute(
+		NimbusDSOpenIdConnectSessionImpl openIdConnectSession =
+			(NimbusDSOpenIdConnectSessionImpl)httpSession.getAttribute(
 				OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION);
 
 		if (openIdConnectSession == null) {
