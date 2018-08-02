@@ -16,6 +16,7 @@ package com.liferay.portal.security.sso.openid.connect.internal;
 
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectFlowState;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectSession;
+
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
@@ -27,8 +28,8 @@ import java.io.Serializable;
 /**
  * @author Edward C. Han
  */
-public class NimbusDSOpenIdConnectSessionImpl implements OpenIdConnectSession,
-		Serializable {
+public class NimbusDSOpenIdConnectSessionImpl
+	implements OpenIdConnectSession, Serializable {
 
 	public NimbusDSOpenIdConnectSessionImpl(
 		String openIdProviderName, Nonce nonce, State state) {

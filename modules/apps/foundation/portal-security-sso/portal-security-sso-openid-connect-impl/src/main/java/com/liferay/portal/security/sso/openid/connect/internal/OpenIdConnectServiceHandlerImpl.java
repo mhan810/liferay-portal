@@ -185,8 +185,8 @@ public class OpenIdConnectServiceHandlerImpl
 
 		HttpSession httpSession = httpServletRequest.getSession();
 
-		NimbusDSOpenIdConnectSessionImpl openIdConnectSession = getOpenIdConnectSession(
-			httpSession, openIdConnectProviderName);
+		NimbusDSOpenIdConnectSessionImpl openIdConnectSession =
+			getOpenIdConnectSession(httpSession, openIdConnectProviderName);
 
 		OpenIdConnectProvider openIdConnectProvider =
 			_openIdConnectProviderRegistry.findOpenIdConnectProvider(
@@ -373,7 +373,8 @@ public class OpenIdConnectServiceHandlerImpl
 	}
 
 	protected void processUserInfo(
-			long companyId, NimbusDSOpenIdConnectSessionImpl openIdConnectSession,
+			long companyId,
+			NimbusDSOpenIdConnectSessionImpl openIdConnectSession,
 			OIDCProviderMetadata oidcProviderMetadata)
 		throws PortalException {
 
@@ -565,7 +566,8 @@ public class OpenIdConnectServiceHandlerImpl
 	}
 
 	protected void updateSessionTokens(
-		NimbusDSOpenIdConnectSessionImpl session, Tokens tokens, long loginTime) {
+		NimbusDSOpenIdConnectSessionImpl session, Tokens tokens,
+		long loginTime) {
 
 		session.setAccessToken(tokens.getAccessToken());
 		session.setRefreshToken(tokens.getRefreshToken());
