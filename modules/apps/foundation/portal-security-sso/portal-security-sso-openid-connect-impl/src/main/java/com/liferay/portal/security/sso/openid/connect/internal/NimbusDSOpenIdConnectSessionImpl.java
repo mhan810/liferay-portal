@@ -14,6 +14,7 @@
 
 package com.liferay.portal.security.sso.openid.connect.internal;
 
+import com.liferay.portal.security.sso.openid.connect.OpenIdConnectFlowState;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;

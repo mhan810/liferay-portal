@@ -23,7 +23,7 @@ import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceExcept
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceHandler;
 import com.liferay.portal.security.sso.openid.connect.constants.OpenIdConnectConstants;
 import com.liferay.portal.security.sso.openid.connect.constants.OpenIdConnectWebKeys;
-import com.liferay.portal.security.sso.openid.connect.internal.OpenIdConnectFlowState;
+import com.liferay.portal.security.sso.openid.connect.OpenIdConnectFlowState;
 import com.liferay.portal.security.sso.openid.connect.internal.NimbusDSOpenIdConnectSessionImpl;
 
 import javax.servlet.Filter;

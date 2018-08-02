@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.security.sso.openid.connect.internal;
+package com.liferay.portal.security.sso.openid.connect;
 
 /**
  * @author Edward C. Han
