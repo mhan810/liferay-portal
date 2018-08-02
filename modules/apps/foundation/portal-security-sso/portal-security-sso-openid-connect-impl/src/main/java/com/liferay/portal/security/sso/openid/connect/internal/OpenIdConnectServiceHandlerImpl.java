@@ -102,8 +102,8 @@ public class OpenIdConnectServiceHandlerImpl
 	public boolean hasValidOpenIdConnectSession(HttpSession httpSession)
 		throws OpenIdConnectServiceException.NoOpenIdConnectSessionException {
 
-		NimbusDSOpenIdConnectSessionImpl openIdConnectSession = getOpenIdConnectSession(
-			httpSession);
+		NimbusDSOpenIdConnectSessionImpl openIdConnectSession =
+			getOpenIdConnectSession(httpSession);
 
 		if (!hasValidAccessToken(openIdConnectSession)) {
 			try {
@@ -130,8 +130,8 @@ public class OpenIdConnectServiceHandlerImpl
 
 		HttpSession httpSession = httpServletRequest.getSession();
 
-		NimbusDSOpenIdConnectSessionImpl openIdConnectSession = getOpenIdConnectSession(
-			httpSession);
+		NimbusDSOpenIdConnectSessionImpl openIdConnectSession =
+			getOpenIdConnectSession(httpSession);
 
 		if (!OpenIdConnectFlowState.AUTH_REQUESTED.equals(
 				openIdConnectSession.getOpenIdConnectFlowState())) {

@@ -18,4 +18,7 @@ public interface OpenIdConnectSession {
 
 	public String getStateString();
 
+	public void setOpenIdConnectFlowState(
+		OpenIdConnectFlowState openIdConnectFlowState);
+
 }
