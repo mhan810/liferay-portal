@@ -15,6 +15,7 @@
 package com.liferay.portal.security.sso.openid.connect.internal;
 
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectFlowState;
+import com.liferay.portal.security.sso.openid.connect.OpenIdConnectSession;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
@@ -26,7 +27,8 @@ import java.io.Serializable;
 /**
  * @author Edward C. Han
  */
-public class NimbusDSOpenIdConnectSessionImpl implements Serializable {
+public class NimbusDSOpenIdConnectSessionImpl implements OpenIdConnectSession,
+		Serializable {
 
 	public NimbusDSOpenIdConnectSessionImpl(
 		String openIdProviderName, Nonce nonce, State state) {
@@ -38,6 +40,11 @@ public class NimbusDSOpenIdConnectSessionImpl implements Serializable {
 
 	public AccessToken getAccessToken() {
 		return _accessToken;
+	}
+
+	@Override
+	public String getAccessTokenString() {
+		return _accessToken.getValue();
 	}
 
 	public long getLoginTime() {
@@ -52,6 +59,11 @@ public class NimbusDSOpenIdConnectSessionImpl implements Serializable {
 		return _nonce;
 	}
 
+	@Override
+	public String getNonceString() {
+		return _nonce.getValue();
+	}
+
 	public OpenIdConnectFlowState getOpenIdConnectFlowState() {
 		return _openIdConnectFlowState;
 	}
@@ -64,8 +76,18 @@ public class NimbusDSOpenIdConnectSessionImpl implements Serializable {
 		return _refreshToken;
 	}
 
+	@Override
+	public String getRefreshTokenString() {
+		return _refreshToken.getValue();
+	}
+
 	public State getState() {
 		return _state;
+	}
+
+	@Override
+	public String getStateString() {
+		return _state.getValue();
 	}
 
 	public UserInfo getUserInfo() {

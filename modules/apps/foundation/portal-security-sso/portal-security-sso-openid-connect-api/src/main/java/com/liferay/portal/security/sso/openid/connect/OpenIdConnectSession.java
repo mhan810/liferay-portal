@@ -2,20 +2,20 @@ package com.liferay.portal.security.sso.openid.connect;
 
 public interface OpenIdConnectSession {
 
-	public String getAccessToken();
+	public String getAccessTokenString();
 
 	public long getLoginTime();
 
 	public long getLoginUserId();
 
-	public String getNonce();
+	public String getNonceString();
 
 	public OpenIdConnectFlowState getOpenIdConnectFlowState();
 
-	public String getOpenIdProviderName()
+	public String getOpenIdProviderName();
 
-	public String getRefreshToken();
+	public String getRefreshTokenString();
 
-	public String getState();
+	public String getStateString();
 
 }
