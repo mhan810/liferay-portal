@@ -195,7 +195,7 @@ public class OpenIdConnectServiceHandlerImpl
 
 		if (openIdConnectSession == null) {
 			openIdConnectSession = createAndSetOpenIdConnectSession(
-				httpSession);
+				httpSession, openIdConnectProviderName);
 		}
 
 		State state = openIdConnectSession.getState();
@@ -222,7 +222,7 @@ public class OpenIdConnectServiceHandlerImpl
 	}
 
 	protected OpenIdConnectSessionImpl createAndSetOpenIdConnectSession(
-		HttpSession httpSession) {
+		HttpSession httpSession, String openIdConnectProviderName) {
 
 		State state = new State();
 		Nonce nonce = new Nonce();
