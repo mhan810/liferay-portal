@@ -28,10 +28,10 @@ import java.io.Serializable;
 /**
  * @author Edward C. Han
  */
-public class NimbusDSOpenIdConnectSessionImpl
+public class OpenIdConnectSessionImpl
 	implements OpenIdConnectSession, Serializable {
 
-	public NimbusDSOpenIdConnectSessionImpl(
+	public OpenIdConnectSessionImpl(
 		String openIdProviderName, Nonce nonce, State state) {
 
 		_openIdProviderName = openIdProviderName;
