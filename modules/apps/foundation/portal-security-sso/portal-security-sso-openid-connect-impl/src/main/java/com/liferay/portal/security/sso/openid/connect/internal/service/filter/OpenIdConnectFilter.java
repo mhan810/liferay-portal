@@ -93,15 +93,17 @@ public class OpenIdConnectFilter extends BaseFilter {
 				throw new OpenIdConnectServiceException.AuthenticationException(
 					"OpenId Connect authentication flow not started");
 			}
-			else if (!OpenIdConnectFlowState.AUTH_REQUESTED.equals(
-						 openIdConnectFlowState)) {
-
-				throw new OpenIdConnectServiceException.AuthenticationException(
-					"OpenId Connect session already complete");
+			else if (OpenIdConnectFlowState.AUTH_COMPLETE.equals(
+						 openIdConnectFlowState) ||
+					OpenIdConnectFlowState.PORTAL_AUTH_COMPLETE.equals(openIdConnectFlowState)) {
+				if (_log.isDebugEnabled()) {
+					_log.debug("User has already been logged in");
+				}
 			}
-
-			_openIdConnectServiceHandler.processAuthenticationResponse(
-				httpServletRequest, httpServletResponse);
+			else {
+				_openIdConnectServiceHandler.processAuthenticationResponse(
+					httpServletRequest, httpServletResponse);
+			}
 		}
 		catch (Exception e) {
 			_log.error("Unable to process the OpenID login", e);
