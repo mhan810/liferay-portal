@@ -95,7 +95,9 @@ public class OpenIdConnectFilter extends BaseFilter {
 			}
 			else if (OpenIdConnectFlowState.AUTH_COMPLETE.equals(
 						 openIdConnectFlowState) ||
-					OpenIdConnectFlowState.PORTAL_AUTH_COMPLETE.equals(openIdConnectFlowState)) {
+					 OpenIdConnectFlowState.PORTAL_AUTH_COMPLETE.equals(
+						 openIdConnectFlowState)) {
+
 				if (_log.isDebugEnabled()) {
 					_log.debug("User has already been logged in");
 				}

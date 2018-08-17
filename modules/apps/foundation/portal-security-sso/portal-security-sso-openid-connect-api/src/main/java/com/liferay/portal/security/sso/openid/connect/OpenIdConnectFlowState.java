@@ -19,13 +19,9 @@ package com.liferay.portal.security.sso.openid.connect;
  */
 public enum OpenIdConnectFlowState {
 
-	//	2 - Completed OIDC Auth, Token for OIDC has been validated
-	AUTH_COMPLETE,
-	//	1 - Request for authentication has been sent to OIDC endpoint
-	AUTH_REQUESTED,
-	//	0 - Initial State - OIDC Session initialized
-	INITIALIZED,
-	//	3 - Complete Auth flow - user signed into portal
-	PORTAL_AUTH_COMPLETE
+	AUTH_COMPLETE,			//	2 - Completed OIDC auth flow
+	AUTH_REQUESTED,			//	1 - User has been forwarded to OIDC for auth
+	INITIALIZED,			//	0 - Initial State - OIDC Session initialized
+	PORTAL_AUTH_COMPLETE	//	3 - Complete Auth flow - user signed into portal
 
 }
