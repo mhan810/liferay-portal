@@ -12,13 +12,30 @@
  * details.
  */
 
-package com.liferay.portal.security.sso.openid.connect.internal;
+package com.liferay.portal.security.sso.openid.connect;
 
 /**
- * @author Edward C. Han
+ * @author Jesse Rao
  */
-public enum OpenIdConnectFlowState {
+public interface OpenIdConnectSession {
 
-	AUTH_COMPLETE, AUTH_REQUESTED, INITIALIZED, PORTAL_AUTH_COMPLETE
+	public String getAccessTokenString();
+
+	public long getLoginTime();
+
+	public long getLoginUserId();
+
+	public String getNonceString();
+
+	public OpenIdConnectFlowState getOpenIdConnectFlowState();
+
+	public String getOpenIdProviderName();
+
+	public String getRefreshTokenString();
+
+	public String getStateString();
+
+	public void setOpenIdConnectFlowState(
+		OpenIdConnectFlowState openIdConnectFlowState);
 
 }
