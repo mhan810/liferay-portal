@@ -14,13 +14,13 @@
 
 package com.liferay.portal.security.sso.openid.connect.internal;
 
-import com.liferay.petra.string.StringBundler;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProvider;
@@ -138,8 +138,10 @@ public class OpenIdConnectServiceHandlerImpl
 			throw new OpenIdConnectServiceException.AuthenticationException(
 				StringBundler.concat(
 					"OpenId Connect login flow is not in the ",
-					OpenIdConnectFlowState.AUTH_REQUESTED, " state: ",
-					openIdConnectSession.getOpenIdConnectFlowState()));
+					String.valueOf(OpenIdConnectFlowState.AUTH_REQUESTED),
+					" state: ",
+					String.valueOf(
+						openIdConnectSession.getOpenIdConnectFlowState())));
 		}
 
 		validateState(
@@ -179,16 +181,38 @@ public class OpenIdConnectServiceHandlerImpl
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse)
 		throws PortalException {
+		
+		HttpSession httpSession = httpServletRequest.getSession();
+		
+		OpenIdConnectSession openIdConnectSession = null;
+
+		try {
+			openIdConnectSession = getOpenIdConnectSession(httpSession);
+		}
+		catch (OpenIdConnectServiceException.NoOpenIdConnectSessionException oicse) {
+			
+		}
 
 		OpenIdConnectProvider openIdConnectProvider =
 			_openIdConnectProviderRegistry.findOpenIdConnectProvider(
 				openIdConnectProviderName);
+		
+		State state = null;
+		Nonce nonce = null;
 
-		State state = new State();
-		Nonce nonce = new Nonce();
+		if (openIdConnectSession != null && openIdProviderNamesMatch(
+				openIdConnectProviderName, openIdConnectSession)) {
 
-		OpenIdConnectSession openIdConnectSession = new OpenIdConnectSession(
-			openIdConnectProviderName, nonce, state);
+			state = openIdConnectSession.getState();
+			nonce = openIdConnectSession.getNonce();
+		}
+		else {
+			state = new State();
+			nonce = new Nonce();
+
+			openIdConnectSession = new OpenIdConnectSession(
+				openIdConnectProviderName, nonce, state);
+		}
 
 		Scope scope = Scope.parse(openIdConnectProvider.getScopes());
 
@@ -196,8 +220,6 @@ public class OpenIdConnectServiceHandlerImpl
 
 		URI authenticationRequestURI = getAuthenticationRequestURI(
 			loginRedirectURI, openIdConnectProvider, state, nonce, scope);
-
-		HttpSession httpSession = httpServletRequest.getSession();
 
 		httpSession.setAttribute(
 			OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION, openIdConnectSession);
@@ -334,6 +356,18 @@ public class OpenIdConnectServiceHandlerImpl
 			return true;
 		}
 
+		return false;
+	}
+	
+	protected boolean openIdProviderNamesMatch(
+		String openIdConnectProviderName, OpenIdConnectSession openIdConnectSession) {
+		
+		String openIdProviderName = openIdConnectSession.getOpenIdProviderName();
+		
+		if (openIdConnectProviderName.equals(openIdProviderName)) {
+			return true;
+		}
+		
 		return false;
 	}
 
@@ -572,7 +606,7 @@ public class OpenIdConnectServiceHandlerImpl
 				"Unable to validate tokens", e);
 		}
 	}
-
+	
 	private static final Log _log = LogFactoryUtil.getLog(
 		OpenIdConnectServiceHandlerImpl.class);
 
