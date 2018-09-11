@@ -20,13 +20,19 @@ import com.liferay.portal.search.elasticsearch6.internal.connection.Elasticsearc
 import com.liferay.portal.search.elasticsearch6.internal.connection.TestElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.index.IndexRequestExecutorFixture;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
+import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.DeleteIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.FlushIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.FlushIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexResponse;
+import com.liferay.portal.search.engine.adapter.index.GetIndexIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.GetIndexIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.IndexRequestExecutor;
+import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.RefreshIndexRequest;
@@ -36,6 +42,8 @@ import java.util.Map;
 
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequestBuilder;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequestBuilder;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsRequestBuilder;
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
@@ -86,6 +94,35 @@ public class ElasticsearchSearchEngineAdapterIndexRequestTest {
 	}
 
 	@Test
+	public void testExecuteCreateIndexRequest() {
+		//todo
+	}
+
+	@Test
+	public void testExecuteDeleteIndexRequest() {
+		CreateIndexRequestBuilder createIndexRequestBuilder =
+			_indicesAdminClient.prepareCreate("test_index_2");
+
+		createIndexRequestBuilder.get();
+
+		DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(
+			"test_index_2");
+
+		DeleteIndexResponse deleteIndexResponse = _searchEngineAdapter.execute(
+			deleteIndexRequest);
+
+		Assert.assertTrue(deleteIndexResponse.isAcknowledged());
+
+		IndicesExistsRequestBuilder indicesExistsRequestBuilder =
+			_indicesAdminClient.prepareExists("test_index_2");
+
+		IndicesExistsResponse indicesExistsResponse =
+			indicesExistsRequestBuilder.get();
+
+		Assert.assertFalse(indicesExistsResponse.isExists());
+	}
+
+	@Test
 	public void testExecuteFlushIndexRequest() {
 		FlushIndexRequest flushIndexRequest = new FlushIndexRequest(
 			_INDEX_NAME);
@@ -122,6 +159,19 @@ public class ElasticsearchSearchEngineAdapterIndexRequestTest {
 	}
 
 	@Test
+	public void testExecuteGetIndexIndexRequest() {
+		GetIndexIndexRequest getIndexIndexRequest = new GetIndexIndexRequest(
+			_INDEX_NAME);
+
+		GetIndexIndexResponse getIndexIndexResponse =
+			_searchEngineAdapter.execute(getIndexIndexRequest);
+
+		Assert.assertEquals(1, getIndexIndexResponse.getIndexNames());
+		Assert.assertEquals(
+			_INDEX_NAME, getIndexIndexResponse.getIndexNames()[0]);
+	}
+
+	@Test
 	public void testExecuteGetMappingIndexRequest() throws JSONException {
 		String mappingName = "testGetMapping";
 		String mappingSource =
@@ -141,6 +191,25 @@ public class ElasticsearchSearchEngineAdapterIndexRequestTest {
 		String string = indexMappings.toString();
 
 		Assert.assertTrue(string.contains(mappingSource));
+	}
+
+	@Test
+	public void testExecuteIndicesExistsIndexRequest() {
+		IndicesExistsIndexRequest indicesExistsIndexRequest =
+			new IndicesExistsIndexRequest(_INDEX_NAME);
+
+		IndicesExistsIndexResponse indicesExistsIndexResponse =
+			_searchEngineAdapter.execute(indicesExistsIndexRequest);
+
+		Assert.assertTrue(indicesExistsIndexResponse.isExists());
+
+		IndicesExistsIndexRequest indicesExistsIndexRequest2 =
+			new IndicesExistsIndexRequest("test_index_2");
+
+		IndicesExistsIndexResponse indicesExistsIndexResponse2 =
+			_searchEngineAdapter.execute(indicesExistsIndexRequest2);
+
+		Assert.assertFalse(indicesExistsIndexResponse2.isExists());
 	}
 
 	@Test
@@ -188,6 +257,10 @@ public class ElasticsearchSearchEngineAdapterIndexRequestTest {
 			_searchEngineAdapter.execute(refreshIndexRequest);
 
 		Assert.assertEquals(0, refreshIndexResponse.getFailedShards());
+	}
+
+	@Test
+	public void testExecuteUpdateIndexSettingsIndexRequest() {
 	}
 
 	protected void createIndex() {
