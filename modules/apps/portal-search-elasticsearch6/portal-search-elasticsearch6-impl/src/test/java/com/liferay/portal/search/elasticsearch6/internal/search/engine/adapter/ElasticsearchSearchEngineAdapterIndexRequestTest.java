@@ -166,7 +166,7 @@ public class ElasticsearchSearchEngineAdapterIndexRequestTest {
 		GetIndexIndexResponse getIndexIndexResponse =
 			_searchEngineAdapter.execute(getIndexIndexRequest);
 
-		Assert.assertEquals(1, getIndexIndexResponse.getIndexNames());
+		Assert.assertEquals(1, getIndexIndexResponse.getIndexNames().length);
 		Assert.assertEquals(
 			_INDEX_NAME, getIndexIndexResponse.getIndexNames()[0]);
 	}

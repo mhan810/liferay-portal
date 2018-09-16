@@ -41,6 +41,8 @@ public class DeleteIndexRequestExecutorTest {
 
 		_elasticsearchConnectionManager =
 			new TestElasticsearchConnectionManager(_elasticsearchFixture);
+
+		_indicesOptionsTranslator = new IndicesOptionsTranslatorImpl();
 	}
 
 	@After
@@ -67,6 +69,7 @@ public class DeleteIndexRequestExecutorTest {
 				{
 					elasticsearchConnectionManager =
 						_elasticsearchConnectionManager;
+					indicesOptionsTranslator = _indicesOptionsTranslator;
 				}
 			};
 
@@ -113,5 +116,6 @@ public class DeleteIndexRequestExecutorTest {
 
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
 	private ElasticsearchFixture _elasticsearchFixture;
+	private IndicesOptionsTranslator _indicesOptionsTranslator;
 
 }

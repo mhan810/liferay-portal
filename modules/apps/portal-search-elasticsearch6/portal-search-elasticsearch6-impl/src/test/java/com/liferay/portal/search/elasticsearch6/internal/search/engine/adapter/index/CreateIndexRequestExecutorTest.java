@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.index;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch6.internal.connection.TestElasticsearchConnectionManager;
@@ -51,6 +52,26 @@ public class CreateIndexRequestExecutorTest {
 	public void testIndexRequestTranslation() {
 		CreateIndexRequest createIndexRequest = new CreateIndexRequest(
 			_INDEX_NAME);
+
+		StringBundler sb = new StringBundler(15);
+
+		sb.append("{\n");
+		sb.append("\t\"dynamic_templates\": [\n");
+		sb.append("\t\t{\n");
+		sb.append("\t\t\t\"template_\": {\n");
+		sb.append("\t\t\t\t\"mapping\": {\n");
+		sb.append("\t\t\t\t\t\"index\": \"analyzed\",\n");
+		sb.append("\t\t\t\t\t\"store\": \"true\",\n");
+		sb.append("\t\t\t\t\t\"type\": \"string\"\n");
+		sb.append("\t\t\t\t},\n");
+		sb.append("\t\t\t\t\"match\": \"*\",\n");
+		sb.append("\t\t\t\t\"match_mapping_type\": \"string\"\n");
+		sb.append("\t\t\t}\n");
+		sb.append("\t\t}\n");
+		sb.append("\t]\n");
+		sb.append("}");
+
+		createIndexRequest.setSource(sb.toString());
 
 		CreateIndexRequestExecutorImpl createIndexRequestExecutorImpl =
 			new CreateIndexRequestExecutorImpl() {
