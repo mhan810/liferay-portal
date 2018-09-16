@@ -35,12 +35,14 @@ public class DeleteIndexRequestExecutorTest {
 	@Before
 	public void setUp() throws Exception {
 		_elasticsearchFixture = new ElasticsearchFixture(
-			PutMappingIndexRequestExecutorTest.class.getSimpleName());
+			DeleteIndexRequestExecutorTest.class.getSimpleName());
 
 		_elasticsearchFixture.setUp();
 
 		_elasticsearchConnectionManager =
 			new TestElasticsearchConnectionManager(_elasticsearchFixture);
+
+		_indicesOptionsTranslator = new IndicesOptionsTranslatorImpl();
 	}
 
 	@After
@@ -67,6 +69,7 @@ public class DeleteIndexRequestExecutorTest {
 				{
 					elasticsearchConnectionManager =
 						_elasticsearchConnectionManager;
+					indicesOptionsTranslator = _indicesOptionsTranslator;
 				}
 			};
 
@@ -113,5 +116,6 @@ public class DeleteIndexRequestExecutorTest {
 
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
 	private ElasticsearchFixture _elasticsearchFixture;
+	private IndicesOptionsTranslator _indicesOptionsTranslator;
 
 }

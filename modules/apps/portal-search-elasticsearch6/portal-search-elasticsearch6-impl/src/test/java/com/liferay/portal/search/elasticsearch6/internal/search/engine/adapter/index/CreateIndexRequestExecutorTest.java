@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.index;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch6.internal.connection.TestElasticsearchConnectionManager;
@@ -34,7 +35,7 @@ public class CreateIndexRequestExecutorTest {
 	@Before
 	public void setUp() throws Exception {
 		_elasticsearchFixture = new ElasticsearchFixture(
-			PutMappingIndexRequestExecutorTest.class.getSimpleName());
+			CreateIndexRequestExecutorTest.class.getSimpleName());
 
 		_elasticsearchFixture.setUp();
 
@@ -51,6 +52,21 @@ public class CreateIndexRequestExecutorTest {
 	public void testIndexRequestTranslation() {
 		CreateIndexRequest createIndexRequest = new CreateIndexRequest(
 			_INDEX_NAME);
+
+		StringBundler sb = new StringBundler(15);
+
+		sb.append("{\n");
+		sb.append("  \"analysis\" : {\n");
+		sb.append("    \"analyzer\":{\n");
+		sb.append("      \"content\":{\n");
+		sb.append("        \"type\":\"custom\",\n");
+		sb.append("        \"tokenizer\":\"whitespace\"\n");
+		sb.append("      }\n");
+		sb.append("    }\n");
+		sb.append("  }\n");
+		sb.append("}");
+
+		createIndexRequest.setSource(sb.toString());
 
 		CreateIndexRequestExecutorImpl createIndexRequestExecutorImpl =
 			new CreateIndexRequestExecutorImpl() {

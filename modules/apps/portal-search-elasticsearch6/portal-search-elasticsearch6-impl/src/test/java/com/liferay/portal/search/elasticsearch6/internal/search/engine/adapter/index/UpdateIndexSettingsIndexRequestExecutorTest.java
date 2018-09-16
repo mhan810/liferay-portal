@@ -14,8 +14,86 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.index;
 
+import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
+import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
+import com.liferay.portal.search.elasticsearch6.internal.connection.TestElasticsearchConnectionManager;
+import com.liferay.portal.search.engine.adapter.index.UpdateIndexSettingsIndexRequest;
+import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
+import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequestBuilder;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 /**
  * @author Michael C. Han
  */
 public class UpdateIndexSettingsIndexRequestExecutorTest {
+	@Before
+	public void setUp() throws Exception {
+		_elasticsearchFixture = new ElasticsearchFixture(
+			UpdateIndexSettingsIndexRequestExecutorTest.class.getSimpleName());
+
+		_elasticsearchFixture.setUp();
+
+		_elasticsearchConnectionManager =
+			new TestElasticsearchConnectionManager(_elasticsearchFixture);
+
+		_indicesOptionsTranslator = new IndicesOptionsTranslatorImpl();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		_elasticsearchFixture.tearDown();
+	}
+
+	@Test
+	public void testIndexRequestTranslation() {
+		UpdateIndexSettingsIndexRequest updateIndexSettingsIndexRequest =
+			new UpdateIndexSettingsIndexRequest(_INDEX_NAME);
+
+		StringBundler sb = new StringBundler(15);
+
+		sb.append("{\n");
+		sb.append("  \"analysis\" : {\n");
+		sb.append("    \"analyzer\":{\n");
+		sb.append("      \"content\":{\n");
+		sb.append("        \"type\":\"custom\",\n");
+		sb.append("        \"tokenizer\":\"whitespace\"\n");
+		sb.append("      }\n");
+		sb.append("    }\n");
+		sb.append("  }\n");
+		sb.append("}");
+
+		updateIndexSettingsIndexRequest.setSettings(sb.toString());
+
+		UpdateIndexSettingsIndexRequestExecutorImpl
+			updateIndexSettingsIndexRequestExecutorImpl =
+				new UpdateIndexSettingsIndexRequestExecutorImpl() {
+					{
+						elasticsearchConnectionManager =
+							_elasticsearchConnectionManager;
+						indicesOptionsTranslator = _indicesOptionsTranslator;
+					}
+				};
+
+		UpdateSettingsRequestBuilder updateSettingsRequestBuilder =
+			updateIndexSettingsIndexRequestExecutorImpl.
+				createUpdateSettingsRequestBuilder(
+					updateIndexSettingsIndexRequest);
+
+		UpdateSettingsRequest updateSettingsRequest =
+			updateSettingsRequestBuilder.request();
+
+		Assert.assertEquals(0, updateSettingsRequest.indices().length);
+		Assert.assertEquals(_INDEX_NAME, updateSettingsRequest.indices()[0]);
+	}
+
+	private static final String _INDEX_NAME = "test_request_index";
+
+	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
+	private ElasticsearchFixture _elasticsearchFixture;
+	private IndicesOptionsTranslator _indicesOptionsTranslator;
+
 }
