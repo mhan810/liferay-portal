@@ -83,32 +83,41 @@ public class UserGroupModelListener extends BaseModelListener<UserGroup> {
 	}
 
 	protected void exportToLDAP(
-			final long userId, final long userGroupId,
-			final UserOperation userOperation)
-		throws Exception {
+		final long userId, final long userGroupId,
+		final UserOperation userOperation) {
 
 		if (UserImportTransactionThreadLocal.isOriginatesFromImport()) {
 			return;
 		}
 
-		Callable<Void> callable = () -> {
-			if ((_userLocalService.fetchUser(userId) == null) ||
-				(_userGroupLocalService.fetchUserGroup(userGroupId) == null)) {
+		Callable<Void> callable = CallableUtil.getCallable(
+			expandoBridgeAttributes -> {
+				if ((_userLocalService.fetchUser(userId) == null) ||
+					(_userGroupLocalService.fetchUserGroup(userGroupId) ==
+						null)) {
 
-				return null;
-			}
-
-			_userExporter.exportUser(userId, userGroupId, userOperation);
-
-			if (_log.isDebugEnabled()) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(
-						"Exporting user " + userId + " to user group " +
-							userGroupId + " with user operation " +
-								userOperation.name());
+					return;
 				}
-			}
-		};
+
+				try {
+					_userExporter.exportUser(
+						userId, userGroupId, userOperation);
+				}
+				catch (Exception e) {
+					if (_log.isWarnEnabled()) {
+						_log.warn(e, e);
+					}
+				}
+
+				if (_log.isDebugEnabled()) {
+					if (_log.isDebugEnabled()) {
+						StringBundler.concat(
+							"Exporting user ", userId, " to user group ",
+							userGroupId, " with user operation ",
+							userOperation.name());
+					}
+				}
+			});
 
 		TransactionCommitCallbackUtil.registerCallback(callable);
 	}
