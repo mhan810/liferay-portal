@@ -395,51 +395,49 @@ public class OpenIdConnectServiceHandlerImpl
 			OpenIdConnectSession openIdConnectSession)
 		throws OpenIdConnectServiceException {
 
-		synchronized (openIdConnectSession) {
-			if (hasValidAccessToken(openIdConnectSession)) {
-				return true;
-			}
-
-			if (_log.isInfoEnabled()) {
-				_log.info(
-					"User session auth token is invalid, attempting to use " +
-						"refresh token to obtain a valid auth token");
-			}
-
-			RefreshToken refreshToken = openIdConnectSession.getRefreshToken();
-
-			if (refreshToken == null) {
-				if (_log.isInfoEnabled()) {
-					_log.info(
-						"Unable to refresh auth token because no refresh " +
-							"token is supplied");
-				}
-
-				return false;
-			}
-
-			String openIdConnectProviderName =
-				openIdConnectSession.getOpenIdProviderName();
-
-			OpenIdConnectProvider openIdConnectProvider =
-				_openIdConnectProviderRegistry.findOpenIdConnectProvider(
-					openIdConnectProviderName);
-
-			OIDCProviderMetadata oidcProviderMetadata =
-				openIdConnectProvider.getOIDCProviderMetadata();
-
-			OIDCClientInformation oidcClientInformation =
-				getOIDCClientInformation(openIdConnectProvider);
-
-			Tokens tokens = requestRefreshToken(
-				refreshToken, oidcClientInformation, oidcProviderMetadata,
-				openIdConnectSession.getNonce());
-
-			updateSessionTokens(
-				openIdConnectSession, tokens, System.currentTimeMillis());
-
+		if (hasValidAccessToken(openIdConnectSession)) {
 			return true;
 		}
+
+		if (_log.isInfoEnabled()) {
+			_log.info(
+				"User session auth token is invalid, attempting to use " +
+					"refresh token to obtain a valid auth token");
+		}
+
+		RefreshToken refreshToken = openIdConnectSession.getRefreshToken();
+
+		if (refreshToken == null) {
+			if (_log.isInfoEnabled()) {
+				_log.info(
+					"Unable to refresh auth token because no refresh " +
+						"token is supplied");
+			}
+
+			return false;
+		}
+
+		String openIdConnectProviderName =
+			openIdConnectSession.getOpenIdProviderName();
+
+		OpenIdConnectProvider openIdConnectProvider =
+			_openIdConnectProviderRegistry.findOpenIdConnectProvider(
+				openIdConnectProviderName);
+
+		OIDCProviderMetadata oidcProviderMetadata =
+			openIdConnectProvider.getOIDCProviderMetadata();
+
+		OIDCClientInformation oidcClientInformation =
+			getOIDCClientInformation(openIdConnectProvider);
+
+		Tokens tokens = requestRefreshToken(
+			refreshToken, oidcClientInformation, oidcProviderMetadata,
+			openIdConnectSession.getNonce());
+
+		updateSessionTokens(
+			openIdConnectSession, tokens, System.currentTimeMillis());
+
+		return true;
 	}
 
 	protected Tokens requestIdToken(
