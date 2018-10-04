@@ -14,13 +14,13 @@
 
 package com.liferay.portal.security.sso.openid.connect.internal;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectFlowState;
@@ -139,10 +139,8 @@ public class OpenIdConnectServiceHandlerImpl
 			throw new OpenIdConnectServiceException.AuthenticationException(
 				StringBundler.concat(
 					"OpenId Connect login flow is not in the ",
-					String.valueOf(OpenIdConnectFlowState.AUTH_REQUESTED),
-					" state: ",
-					String.valueOf(
-						openIdConnectSession.getOpenIdConnectFlowState())));
+					OpenIdConnectFlowState.AUTH_REQUESTED, " state: ",
+					openIdConnectSession.getOpenIdConnectFlowState()));
 		}
 
 		validateState(
@@ -183,32 +181,22 @@ public class OpenIdConnectServiceHandlerImpl
 			HttpServletResponse httpServletResponse)
 		throws PortalException {
 
-		HttpSession httpSession = httpServletRequest.getSession();
-
-		OpenIdConnectSessionImpl openIdConnectSession = getOpenIdConnectSession(
-			httpSession, true);
-
 		OpenIdConnectProvider openIdConnectProvider =
 			_openIdConnectProviderRegistry.findOpenIdConnectProvider(
 				openIdConnectProviderName);
 
-		State state = null;
-		Nonce nonce = null;
+		HttpSession httpSession = httpServletRequest.getSession();
 
-		if ((openIdConnectSession != null) &&
-			openIdProviderNamesMatch(
-				openIdConnectProviderName, openIdConnectSession)) {
+		OpenIdConnectSessionImpl openIdConnectSession = getOpenIdConnectSession(
+			httpSession, openIdConnectProviderName);
 
-			state = openIdConnectSession.getState();
-			nonce = openIdConnectSession.getNonce();
+		if (openIdConnectSession == null) {
+			openIdConnectSession = createAndSetOpenIdConnectSession(
+				httpSession, openIdConnectProviderName);
 		}
-		else {
-			state = new State();
-			nonce = new Nonce();
 
-			openIdConnectSession = new OpenIdConnectSessionImpl(
-				openIdConnectProviderName, nonce, state);
-		}
+		State state = openIdConnectSession.getState();
+		Nonce nonce = openIdConnectSession.getNonce();
 
 		Scope scope = Scope.parse(openIdConnectProvider.getScopes());
 
@@ -216,9 +204,6 @@ public class OpenIdConnectServiceHandlerImpl
 
 		URI authenticationRequestURI = getAuthenticationRequestURI(
 			loginRedirectURI, openIdConnectProvider, state, nonce, scope);
-
-		httpSession.setAttribute(
-			OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION, openIdConnectSession);
 
 		try {
 			httpServletResponse.sendRedirect(
@@ -231,6 +216,22 @@ public class OpenIdConnectServiceHandlerImpl
 			throw new SystemException(
 				"Unable to send user to OpenId Connect service", ioe);
 		}
+	}
+
+	protected OpenIdConnectSessionImpl createAndSetOpenIdConnectSession(
+		HttpSession httpSession, String openIdConnectProviderName) {
+
+		State state = new State();
+		Nonce nonce = new Nonce();
+
+		OpenIdConnectSessionImpl openIdConnectSession =
+			new OpenIdConnectSessionImpl(
+				openIdConnectProviderName, nonce, state);
+
+		httpSession.setAttribute(
+			OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION, openIdConnectSession);
+
+		return openIdConnectSession;
 	}
 
 	protected URI getAuthenticationRequestURI(
@@ -322,24 +323,39 @@ public class OpenIdConnectServiceHandlerImpl
 			HttpSession httpSession)
 		throws OpenIdConnectServiceException.NoOpenIdConnectSessionException {
 
-		return getOpenIdConnectSession(httpSession, false);
-	}
+		OpenIdConnectSessionImpl openIdConnectSession = getOpenIdConnectSession(
+			httpSession, null);
 
-	protected OpenIdConnectSessionImpl getOpenIdConnectSession(
-			HttpSession httpSession, boolean silent)
-		throws OpenIdConnectServiceException.NoOpenIdConnectSessionException {
-
-		OpenIdConnectSessionImpl openIdConnectSession =
-			(OpenIdConnectSessionImpl)httpSession.getAttribute(
-				OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION);
-
-		if ((openIdConnectSession == null) && !silent) {
+		if (openIdConnectSession == null) {
 			throw new OpenIdConnectServiceException.
 				NoOpenIdConnectSessionException(
 					"HTTP session does contain an OpenId Connect session");
 		}
 
 		return openIdConnectSession;
+	}
+
+	protected OpenIdConnectSessionImpl getOpenIdConnectSession(
+		HttpSession httpSession, String expectedProviderName) {
+
+		Object openIdConnectSessionObj = httpSession.getAttribute(
+			OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION);
+
+		if (openIdConnectSessionObj instanceof OpenIdConnectSessionImpl) {
+			OpenIdConnectSessionImpl openIdConnectSession =
+				(OpenIdConnectSessionImpl)openIdConnectSessionObj;
+
+			String openIdProviderName =
+				openIdConnectSession.getOpenIdProviderName();
+
+			if (Validator.isNull(expectedProviderName) ||
+				expectedProviderName.equals(openIdProviderName)) {
+
+				return openIdConnectSession;
+			}
+		}
+
+		return null;
 	}
 
 	protected boolean hasValidAccessToken(
@@ -356,20 +372,6 @@ public class OpenIdConnectServiceHandlerImpl
 		long loginTime = openIdConnectSession.getLoginTime();
 
 		if ((currentTime - loginTime) < lifetime) {
-			return true;
-		}
-
-		return false;
-	}
-
-	protected boolean openIdProviderNamesMatch(
-		String openIdConnectProviderName,
-		OpenIdConnectSessionImpl openIdConnectSession) {
-
-		String openIdProviderName =
-			openIdConnectSession.getOpenIdProviderName();
-
-		if (openIdConnectProviderName.equals(openIdProviderName)) {
 			return true;
 		}
 
@@ -411,8 +413,8 @@ public class OpenIdConnectServiceHandlerImpl
 		if (refreshToken == null) {
 			if (_log.isInfoEnabled()) {
 				_log.info(
-					"Unable to refresh auth token because no refresh token is " +
-						"supplied");
+					"Unable to refresh auth token because no refresh token " +
+						"is supplied");
 			}
 
 			return false;
