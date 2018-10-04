@@ -188,8 +188,8 @@ public class OpenIdConnectMetadataFactoryImpl
 					_log.info(
 						StringBundler.concat(
 							"Getting OpenId Connect provider metadata from ",
-							_discoveryEndPointURL, " took ",
-							stopWatch.getTime(), "ms"));
+							String.valueOf(_discoveryEndPointURL), " took ",
+							String.valueOf(stopWatch.getTime()), "ms"));
 				}
 			}
 		}
