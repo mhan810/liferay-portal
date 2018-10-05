@@ -16,9 +16,6 @@ package com.liferay.portal.security.sso.openid.connect.internal;
 
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.security.sso.openid.connect.OpenIdConnectMetadataFactory;
-import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProvider;
-import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderRegistry;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceException;
 import com.liferay.portal.security.sso.openid.connect.internal.configuration.OpenIdConnectProviderConfiguration;
 
@@ -42,7 +39,10 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = Constants.SERVICE_PID + "=com.liferay.portal.security.sso.openid.connect.internal.configuration.OpenIdConnectProviderConfiguration",
-	service = {ManagedServiceFactory.class, OpenIdConnectProviderRegistry.class}
+	service = {
+		com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderRegistry.class,
+		ManagedServiceFactory.class, OpenIdConnectProviderRegistry.class
+	}
 )
 public class OpenIdConnectProviderRegistryImpl
 	implements OpenIdConnectProviderRegistry, ManagedServiceFactory {
