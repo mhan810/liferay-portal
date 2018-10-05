@@ -12,22 +12,22 @@
  * details.
  */
 
-package com.liferay.portal.security.sso.openid.connect;
+package com.liferay.portal.security.sso.openid.connect.internal;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
-import com.nimbusds.openid.connect.sdk.rp.OIDCClientMetadata;
+import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceException;
 
 /**
- * @author Edward C. Han
+ * @author Thuong Dinh
  */
 @ProviderType
-public interface OpenIdConnectMetadataFactory {
+public interface OpenIdConnectProviderRegistry
+	extends com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderRegistry {
 
-	public OIDCClientMetadata getOIDCClientMetadata();
-
-	public OIDCProviderMetadata getOIDCProviderMetadata()
+	public OpenIdConnectProvider findOpenIdConnectProvider(String name)
 		throws OpenIdConnectServiceException.ProviderException;
+
+	public OpenIdConnectProvider getOpenIdConnectProvider(String name);
 
 }
