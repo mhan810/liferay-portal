@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -116,17 +117,22 @@ public class IndexerRegistryImpl implements IndexerRegistry {
 
 		synchronized (_queuedIndexerPostProcessors) {
 			List<IndexerPostProcessor> indexerPostProcessors =
-				_queuedIndexerPostProcessors.get(indexer.getClassName());
+				_queuedIndexerPostProcessors.getOrDefault(
+					clazz.getName(), new ArrayList<IndexerPostProcessor>());
 
-			if (indexerPostProcessors != null) {
-				for (IndexerPostProcessor indexerPostProcessor :
-						indexerPostProcessors) {
+			Optional.ofNullable(
+				_queuedIndexerPostProcessors.get(indexer.getClassName())
+			).ifPresent(
+				indexerPostProcessors::addAll
+			);
 
-					indexer.registerIndexerPostProcessor(indexerPostProcessor);
-				}
+			indexerPostProcessors.forEach(
+				indexerPostProcessor -> indexer.registerIndexerPostProcessor(
+					indexerPostProcessor));
 
-				_queuedIndexerPostProcessors.remove(indexer.getClassName());
-			}
+			_queuedIndexerPostProcessors.remove(clazz.getName());
+
+			_queuedIndexerPostProcessors.remove(indexer.getClassName());
 		}
 	}
 
