@@ -68,10 +68,6 @@ public class OpenIdConnectProviderImpl
 		return _openIdConnectMetadataFactory.getOIDCProviderMetadata();
 	}
 
-	public OpenIdConnectMetadataFactory getOpenIdConnectMetadataFactory() {
-		return _openIdConnectMetadataFactory;
-	}
-
 	@Override
 	public String getScopes() {
 		return _scopes;
