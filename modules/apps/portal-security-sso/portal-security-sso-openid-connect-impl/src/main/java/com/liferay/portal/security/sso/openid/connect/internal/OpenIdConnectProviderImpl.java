@@ -16,6 +16,7 @@ package com.liferay.portal.security.sso.openid.connect.internal;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProvider;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceException;
 
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
@@ -26,7 +27,8 @@ import com.nimbusds.openid.connect.sdk.rp.OIDCClientMetadata;
  * @author Edward C. Han
  */
 @ProviderType
-public class OpenIdConnectProviderImpl {
+public class OpenIdConnectProviderImpl
+	implements OpenIdConnectProvider<OIDCClientMetadata, OIDCProviderMetadata> {
 
 	public OpenIdConnectProviderImpl(
 		String name, String clientId, String clientSecret, String scopes,
@@ -39,22 +41,27 @@ public class OpenIdConnectProviderImpl {
 		_openIdConnectMetadataFactory = openIdConnectMetadataFactory;
 	}
 
+	@Override
 	public String getClientId() {
 		return _clientId;
 	}
 
+	@Override
 	public String getClientSecret() {
 		return _clientSecret;
 	}
 
+	@Override
 	public String getName() {
 		return _name;
 	}
 
+	@Override
 	public OIDCClientMetadata getOIDCClientMetadata() {
 		return _openIdConnectMetadataFactory.getOIDCClientMetadata();
 	}
 
+	@Override
 	public OIDCProviderMetadata getOIDCProviderMetadata()
 		throws OpenIdConnectServiceException.ProviderException {
 
@@ -65,6 +72,7 @@ public class OpenIdConnectProviderImpl {
 		return _openIdConnectMetadataFactory;
 	}
 
+	@Override
 	public String getScopes() {
 		return _scopes;
 	}
