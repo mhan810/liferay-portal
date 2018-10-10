@@ -25,9 +25,9 @@ import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceExcept
 public interface OpenIdConnectProviderRegistry
 	extends com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderRegistry {
 
-	public OpenIdConnectProvider findOpenIdConnectProvider(String name)
+	public OpenIdConnectProviderImpl findOpenIdConnectProvider(String name)
 		throws OpenIdConnectServiceException.ProviderException;
 
-	public OpenIdConnectProvider getOpenIdConnectProvider(String name);
+	public OpenIdConnectProviderImpl getOpenIdConnectProvider(String name);
 
 }

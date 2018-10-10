@@ -144,15 +144,15 @@ public class OpenIdConnectServiceHandlerImpl
 			openIdConnectSessionImpl.getState(),
 			authenticationSuccessResponse.getState());
 
-		OpenIdConnectProvider openIdConnectProvider =
+		OpenIdConnectProviderImpl openIdConnectProviderImpl =
 			_openIdConnectProviderRegistry.findOpenIdConnectProvider(
 				openIdConnectSessionImpl.getOpenIdProviderName());
 
 		OIDCProviderMetadata oidcProviderMetadata =
-			openIdConnectProvider.getOIDCProviderMetadata();
+			openIdConnectProviderImpl.getOIDCProviderMetadata();
 
 		OIDCClientInformation oidcClientInformation = getOIDCClientInformation(
-			openIdConnectProvider);
+			openIdConnectProviderImpl);
 
 		URI redirectURI = getLoginRedirectURI(httpServletRequest);
 
@@ -180,7 +180,7 @@ public class OpenIdConnectServiceHandlerImpl
 			HttpServletResponse httpServletResponse)
 		throws PortalException {
 
-		OpenIdConnectProvider openIdConnectProvider =
+		OpenIdConnectProviderImpl openIdConnectProviderImpl =
 			_openIdConnectProviderRegistry.findOpenIdConnectProvider(
 				openIdConnectProviderName);
 
@@ -195,10 +195,10 @@ public class OpenIdConnectServiceHandlerImpl
 		}
 
 		URI authenticationRequestURI = getAuthenticationRequestURI(
-			getLoginRedirectURI(httpServletRequest), openIdConnectProvider,
+			getLoginRedirectURI(httpServletRequest), openIdConnectProviderImpl,
 			openIdConnectSessionImpl.getNonce(),
 			openIdConnectSessionImpl.getState(),
-			Scope.parse(openIdConnectProvider.getScopes()));
+			Scope.parse(openIdConnectProviderImpl.getScopes()));
 
 		try {
 			httpServletResponse.sendRedirect(
@@ -228,15 +228,15 @@ public class OpenIdConnectServiceHandlerImpl
 	}
 
 	protected URI getAuthenticationRequestURI(
-			URI loginRedirectURI, OpenIdConnectProvider openIdConnectProvider,
+			URI loginRedirectURI, OpenIdConnectProviderImpl openIdConnectProviderImpl,
 			Nonce nonce, State state, Scope scope)
 		throws OpenIdConnectServiceException.ProviderException {
 
 		OIDCProviderMetadata oidcProviderMetadata =
-			openIdConnectProvider.getOIDCProviderMetadata();
+			openIdConnectProviderImpl.getOIDCProviderMetadata();
 
 		OIDCClientInformation oidcClientInformation = getOIDCClientInformation(
-			openIdConnectProvider);
+			openIdConnectProviderImpl);
 
 		ResponseType responseType = new ResponseType(ResponseType.Value.CODE);
 
@@ -301,14 +301,15 @@ public class OpenIdConnectServiceHandlerImpl
 	}
 
 	protected OIDCClientInformation getOIDCClientInformation(
-		OpenIdConnectProvider openIdConnectProvider) {
+		OpenIdConnectProviderImpl openIdConnectProviderImpl) {
 
-		ClientID clientID = new ClientID(openIdConnectProvider.getClientId());
+		ClientID clientID = new ClientID(openIdConnectProviderImpl.getClientId());
 
-		Secret secret = new Secret(openIdConnectProvider.getClientSecret());
+		Secret secret = new Secret(openIdConnectProviderImpl.getClientSecret());
 
 		return new OIDCClientInformation(
-			clientID, new Date(), openIdConnectProvider.getOIDCClientMetadata(),
+			clientID, new Date(), openIdConnectProviderImpl
+			.getOIDCClientMetadata(),
 			secret);
 	}
 
@@ -416,15 +417,15 @@ public class OpenIdConnectServiceHandlerImpl
 		String openIdConnectProviderName =
 			openIdConnectSessionImpl.getOpenIdProviderName();
 
-		OpenIdConnectProvider openIdConnectProvider =
+		OpenIdConnectProviderImpl openIdConnectProviderImpl =
 			_openIdConnectProviderRegistry.findOpenIdConnectProvider(
 				openIdConnectProviderName);
 
 		OIDCProviderMetadata oidcProviderMetadata =
-			openIdConnectProvider.getOIDCProviderMetadata();
+			openIdConnectProviderImpl.getOIDCProviderMetadata();
 
 		OIDCClientInformation oidcClientInformation = getOIDCClientInformation(
-			openIdConnectProvider);
+			openIdConnectProviderImpl);
 
 		Tokens tokens = requestRefreshToken(
 			refreshToken, oidcClientInformation, oidcProviderMetadata,

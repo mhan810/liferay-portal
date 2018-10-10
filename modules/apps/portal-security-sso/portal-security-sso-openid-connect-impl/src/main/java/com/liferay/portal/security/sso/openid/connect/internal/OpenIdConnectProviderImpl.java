@@ -26,9 +26,9 @@ import com.nimbusds.openid.connect.sdk.rp.OIDCClientMetadata;
  * @author Edward C. Han
  */
 @ProviderType
-public class OpenIdConnectProvider {
+public class OpenIdConnectProviderImpl {
 
-	public OpenIdConnectProvider(
+	public OpenIdConnectProviderImpl(
 		String name, String clientId, String clientSecret, String scopes,
 		OpenIdConnectMetadataFactory openIdConnectMetadataFactory) {
 

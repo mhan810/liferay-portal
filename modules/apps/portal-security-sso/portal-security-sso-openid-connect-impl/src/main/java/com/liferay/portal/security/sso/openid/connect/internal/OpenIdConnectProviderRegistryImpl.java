@@ -53,18 +53,18 @@ public class OpenIdConnectProviderRegistryImpl
 	}
 
 	@Override
-	public OpenIdConnectProvider findOpenIdConnectProvider(String name)
+	public OpenIdConnectProviderImpl findOpenIdConnectProvider(String name)
 		throws OpenIdConnectServiceException.ProviderException {
 
-		OpenIdConnectProvider openIdConnectProvider = getOpenIdConnectProvider(
+		OpenIdConnectProviderImpl openIdConnectProviderImpl = getOpenIdConnectProvider(
 			name);
 
-		if (openIdConnectProvider == null) {
+		if (openIdConnectProviderImpl == null) {
 			throw new OpenIdConnectServiceException.ProviderException(
 				"Unable to get OpenId Connect provider with name " + name);
 		}
 
-		return openIdConnectProvider;
+		return openIdConnectProviderImpl;
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class OpenIdConnectProviderRegistryImpl
 	}
 
 	@Override
-	public OpenIdConnectProvider getOpenIdConnectProvider(String name) {
+	public OpenIdConnectProviderImpl getOpenIdConnectProvider(String name) {
 		return _openIdConnectProvidersPerName.get(name);
 	}
 
@@ -96,28 +96,29 @@ public class OpenIdConnectProviderRegistryImpl
 				OpenIdConnectProviderConfiguration.class, properties);
 
 		synchronized (_openIdConnectProvidersPerFactory) {
-			OpenIdConnectProvider openIdConnectProvider =
+			OpenIdConnectProviderImpl openIdConnectProviderImpl =
 				createOpenIdConnectProvider(openIdConnectProviderConfiguration);
 
 			removeOpenConnectIdProvider(factoryPid);
 
-			addOpenConnectIdConnectProvider(factoryPid, openIdConnectProvider);
+			addOpenConnectIdConnectProvider(factoryPid,
+			                                openIdConnectProviderImpl);
 		}
 	}
 
 	protected void addOpenConnectIdConnectProvider(
-		String factoryPid, OpenIdConnectProvider openIdConnectProvider) {
+		String factoryPid, OpenIdConnectProviderImpl openIdConnectProviderImpl) {
 
 		synchronized (_openIdConnectProvidersPerFactory) {
 			_openIdConnectProvidersPerFactory.put(
-				factoryPid, openIdConnectProvider);
+				factoryPid, openIdConnectProviderImpl);
 
 			_openIdConnectProvidersPerName.put(
-				openIdConnectProvider.getName(), openIdConnectProvider);
+				openIdConnectProviderImpl.getName(), openIdConnectProviderImpl);
 		}
 	}
 
-	protected OpenIdConnectProvider createOpenIdConnectProvider(
+	protected OpenIdConnectProviderImpl createOpenIdConnectProvider(
 			OpenIdConnectProviderConfiguration
 				openIdConnectProviderConfiguration)
 		throws ConfigurationException {
@@ -158,31 +159,32 @@ public class OpenIdConnectProviderRegistryImpl
 				e);
 		}
 
-		OpenIdConnectProvider openIdConnectProvider = new OpenIdConnectProvider(
+		OpenIdConnectProviderImpl
+			openIdConnectProviderImpl = new OpenIdConnectProviderImpl(
 			openIdConnectProviderConfiguration.providerName(),
 			openIdConnectProviderConfiguration.openIdConnectClientId(),
 			openIdConnectProviderConfiguration.openIdConnectClientSecret(),
 			openIdConnectProviderConfiguration.scopes(),
 			openIdConnectMetadataFactory);
 
-		return openIdConnectProvider;
+		return openIdConnectProviderImpl;
 	}
 
 	protected void removeOpenConnectIdProvider(String factoryPid) {
 		synchronized (_openIdConnectProvidersPerFactory) {
-			OpenIdConnectProvider openIdConnectProvider =
+			OpenIdConnectProviderImpl openIdConnectProviderImpl =
 				_openIdConnectProvidersPerFactory.remove(factoryPid);
 
-			if (openIdConnectProvider != null) {
+			if (openIdConnectProviderImpl != null) {
 				_openIdConnectProvidersPerName.remove(
-					openIdConnectProvider.getName());
+					openIdConnectProviderImpl.getName());
 			}
 		}
 	}
 
-	private final Map<String, OpenIdConnectProvider>
+	private final Map<String, OpenIdConnectProviderImpl>
 		_openIdConnectProvidersPerFactory = new ConcurrentHashMap<>();
-	private final Map<String, OpenIdConnectProvider>
+	private final Map<String, OpenIdConnectProviderImpl>
 		_openIdConnectProvidersPerName = new ConcurrentHashMap<>();
 
 }
