@@ -185,8 +185,9 @@ public class OpenIdConnectServiceHandlerImpl
 		throws PortalException {
 
 		OpenIdConnectProvider<OIDCClientMetadata, OIDCProviderMetadata>
-			openIdConnectProvider =_openIdConnectProviderRegistry.
-				findOpenIdConnectProvider(openIdConnectProviderName);
+			openIdConnectProvider =
+				_openIdConnectProviderRegistry.findOpenIdConnectProvider(
+					openIdConnectProviderName);
 
 		HttpSession httpSession = httpServletRequest.getSession();
 

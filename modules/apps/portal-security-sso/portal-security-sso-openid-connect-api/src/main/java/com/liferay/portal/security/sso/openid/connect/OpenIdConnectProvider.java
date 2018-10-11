@@ -21,17 +21,18 @@ import aQute.bnd.annotation.ProviderType;
  */
 @ProviderType
 public interface OpenIdConnectProvider<S, T> {
+
 	public String getClientId();
 
 	public String getClientSecret();
 
 	public String getName();
 
-	public String getScopes();
-
 	public S getOIDCClientMetadata();
 
 	public T getOIDCProviderMetadata()
 		throws OpenIdConnectServiceException.ProviderException;
+
+	public String getScopes();
 
 }

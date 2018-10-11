@@ -21,6 +21,9 @@ import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderRegis
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceException;
 import com.liferay.portal.security.sso.openid.connect.internal.configuration.OpenIdConnectProviderConfiguration;
 
+import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
+import com.nimbusds.openid.connect.sdk.rp.OIDCClientMetadata;
+
 import java.net.URL;
 
 import java.util.Collection;
@@ -29,8 +32,6 @@ import java.util.Dictionary;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
-import com.nimbusds.openid.connect.sdk.rp.OIDCClientMetadata;
 import org.osgi.framework.Constants;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedServiceFactory;
@@ -43,14 +44,12 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = Constants.SERVICE_PID + "=com.liferay.portal.security.sso.openid.connect.internal.configuration.OpenIdConnectProviderConfiguration",
-	service = {
-		ManagedServiceFactory.class, OpenIdConnectProviderRegistry.class
-	}
+	service = {ManagedServiceFactory.class, OpenIdConnectProviderRegistry.class}
 )
 public class OpenIdConnectProviderRegistryImpl
 	implements ManagedServiceFactory,
-	           OpenIdConnectProviderRegistry
-		           <OIDCClientMetadata, OIDCProviderMetadata> {
+			OpenIdConnectProviderRegistry
+		<OIDCClientMetadata, OIDCProviderMetadata> {
 
 	@Override
 	public void deleted(String factoryPid) {
@@ -59,11 +58,11 @@ public class OpenIdConnectProviderRegistryImpl
 
 	@Override
 	public OpenIdConnectProvider<OIDCClientMetadata, OIDCProviderMetadata>
-		findOpenIdConnectProvider(String name)
+			findOpenIdConnectProvider(String name)
 		throws OpenIdConnectServiceException.ProviderException {
 
-		OpenIdConnectProvider openIdConnectProvider =
-			getOpenIdConnectProvider(name);
+		OpenIdConnectProvider openIdConnectProvider = getOpenIdConnectProvider(
+			name);
 
 		if (openIdConnectProvider == null) {
 			throw new OpenIdConnectServiceException.ProviderException(
@@ -114,8 +113,7 @@ public class OpenIdConnectProviderRegistryImpl
 	}
 
 	protected void addOpenConnectIdConnectProvider(
-		String factoryPid,
-		OpenIdConnectProvider openIdConnectProvider) {
+		String factoryPid, OpenIdConnectProvider openIdConnectProvider) {
 
 		synchronized (_openIdConnectProvidersPerFactory) {
 			_openIdConnectProvidersPerFactory.put(
@@ -127,9 +125,9 @@ public class OpenIdConnectProviderRegistryImpl
 	}
 
 	protected OpenIdConnectProvider<OIDCClientMetadata, OIDCProviderMetadata>
-		createOpenIdConnectProvider(
-			OpenIdConnectProviderConfiguration
-				openIdConnectProviderConfiguration)
+			createOpenIdConnectProvider(
+				OpenIdConnectProviderConfiguration
+					openIdConnectProviderConfiguration)
 		throws ConfigurationException {
 
 		OpenIdConnectMetadataFactory openIdConnectMetadataFactory = null;
@@ -170,11 +168,11 @@ public class OpenIdConnectProviderRegistryImpl
 
 		OpenIdConnectProvider<OIDCClientMetadata, OIDCProviderMetadata>
 			openIdConnectProvider = new OpenIdConnectProviderImpl(
-			openIdConnectProviderConfiguration.providerName(),
-			openIdConnectProviderConfiguration.openIdConnectClientId(),
-			openIdConnectProviderConfiguration.openIdConnectClientSecret(),
-			openIdConnectProviderConfiguration.scopes(),
-			openIdConnectMetadataFactory);
+				openIdConnectProviderConfiguration.providerName(),
+				openIdConnectProviderConfiguration.openIdConnectClientId(),
+				openIdConnectProviderConfiguration.openIdConnectClientSecret(),
+				openIdConnectProviderConfiguration.scopes(),
+				openIdConnectMetadataFactory);
 
 		return openIdConnectProvider;
 	}
@@ -191,9 +189,13 @@ public class OpenIdConnectProviderRegistryImpl
 		}
 	}
 
-	private final Map<String, OpenIdConnectProvider<OIDCClientMetadata, OIDCProviderMetadata>>
-		_openIdConnectProvidersPerFactory = new ConcurrentHashMap<>();
-	private final Map<String, OpenIdConnectProvider<OIDCClientMetadata, OIDCProviderMetadata>>
-		_openIdConnectProvidersPerName = new ConcurrentHashMap<>();
+	private final Map
+		<String,
+		 OpenIdConnectProvider<OIDCClientMetadata, OIDCProviderMetadata>>
+			_openIdConnectProvidersPerFactory = new ConcurrentHashMap<>();
+	private final Map
+		<String,
+		 OpenIdConnectProvider<OIDCClientMetadata, OIDCProviderMetadata>>
+			_openIdConnectProvidersPerName = new ConcurrentHashMap<>();
 
 }

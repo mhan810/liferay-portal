@@ -24,12 +24,11 @@ import java.util.Collection;
 @ProviderType
 public interface OpenIdConnectProviderRegistry<S, T> {
 
-	public Collection<String> getOpenIdConnectProviderNames();
-
 	public OpenIdConnectProvider<S, T> findOpenIdConnectProvider(String name)
 		throws OpenIdConnectServiceException.ProviderException;
 
 	public OpenIdConnectProvider<S, T> getOpenIdConnectProvider(String name);
 
+	public Collection<String> getOpenIdConnectProviderNames();
 
 }
