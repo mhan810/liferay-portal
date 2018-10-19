@@ -186,7 +186,9 @@ public class SearchRequestExecutorFixture {
 		};
 	}
 
-	protected SearchSearchRequestAssembler createSearchSearchRequestAssembler() {
+	protected SearchSearchRequestAssembler
+		createSearchSearchRequestAssembler() {
+
 		return new SearchSearchRequestAssemblerImpl() {
 			{
 				commonSearchRequestBuilderAssembler =
