@@ -15,6 +15,7 @@
 package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter;
 
 import com.liferay.portal.kernel.search.Query;
+import com.liferay.portal.kernel.search.query.QueryTranslator;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.cluster.ClusterRequest;
 import com.liferay.portal.search.engine.adapter.cluster.ClusterRequestExecutor;
@@ -28,6 +29,8 @@ import com.liferay.portal.search.engine.adapter.index.IndexResponse;
 import com.liferay.portal.search.engine.adapter.search.SearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchRequestExecutor;
 import com.liferay.portal.search.engine.adapter.search.SearchResponse;
+
+import org.elasticsearch.index.query.QueryBuilder;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -70,7 +73,9 @@ public class ElasticsearchSearchEngineAdapterImpl
 
 	@Override
 	public String getQueryString(Query query) {
-		return searchRequestExecutor.getQueryString(query);
+		QueryBuilder queryBuilder = queryTranslator.translate(query, null);
+
+		return queryBuilder.toString();
 	}
 
 	@Reference(target = "(search.engine.impl=Elasticsearch)")
@@ -81,6 +86,9 @@ public class ElasticsearchSearchEngineAdapterImpl
 
 	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	protected IndexRequestExecutor indexRequestExecutor;
+
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
+	protected QueryTranslator<QueryBuilder> queryTranslator;
 
 	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	protected SearchRequestExecutor searchRequestExecutor;
