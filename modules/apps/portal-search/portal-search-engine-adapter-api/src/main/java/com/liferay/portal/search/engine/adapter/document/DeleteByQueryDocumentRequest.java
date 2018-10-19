@@ -25,7 +25,7 @@ import com.liferay.portal.kernel.search.Query;
 public class DeleteByQueryDocumentRequest
 	implements DocumentRequest<DeleteByQueryDocumentResponse> {
 
-	public DeleteByQueryDocumentRequest(Query query, String[] indexNames) {
+	public DeleteByQueryDocumentRequest(Query query, String... indexNames) {
 		_query = query;
 		_indexNames = indexNames;
 	}
