@@ -40,7 +40,16 @@ public class BulkDocumentRequest
 		return _bulkableDocumentRequests;
 	}
 
+	public boolean isRefresh() {
+		return _refresh;
+	}
+
+	public void setRefresh(boolean refresh) {
+		_refresh = refresh;
+	}
+
 	private final List<BulkableDocumentRequest<?>> _bulkableDocumentRequests =
 		new ArrayList<>();
+	private boolean _refresh;
 
 }
