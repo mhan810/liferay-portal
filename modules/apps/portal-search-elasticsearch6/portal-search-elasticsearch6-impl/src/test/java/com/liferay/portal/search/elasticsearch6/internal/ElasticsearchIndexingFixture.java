@@ -25,8 +25,6 @@ import com.liferay.portal.search.elasticsearch6.internal.connection.Elasticsearc
 import com.liferay.portal.search.elasticsearch6.internal.connection.IndexCreator;
 import com.liferay.portal.search.elasticsearch6.internal.connection.IndexName;
 import com.liferay.portal.search.elasticsearch6.internal.connection.TestElasticsearchConnectionManager;
-import com.liferay.portal.search.elasticsearch6.internal.document.DefaultElasticsearchDocumentFactory;
-import com.liferay.portal.search.elasticsearch6.internal.document.ElasticsearchUpdateDocumentCommand;
 import com.liferay.portal.search.elasticsearch6.internal.facet.DefaultFacetProcessor;
 import com.liferay.portal.search.elasticsearch6.internal.facet.FacetProcessor;
 import com.liferay.portal.search.elasticsearch6.internal.index.IndexNameBuilder;
@@ -44,7 +42,7 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.mockito.Mockito;
 
 /**
- * @author André de Oliveira
+ * @author AndrÃ© de Oliveira
  */
 public class ElasticsearchIndexingFixture implements IndexingFixture {
 
@@ -109,9 +107,8 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 		_indexSearcher = createIndexSearcher(
 			elasticsearchConnectionManager, searchEngineAdapter,
 			_indexNameBuilder);
-
 		_indexWriter = createIndexWriter(
-			elasticsearchConnectionManager, _indexNameBuilder);
+			searchEngineAdapter, _indexNameBuilder);
 	}
 
 	@Override
@@ -136,24 +133,15 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 
 	protected ElasticsearchSpellCheckIndexWriter
 		createElasticsearchSpellCheckIndexWriter(
-			final ElasticsearchConnectionManager
-				elasticsearchConnectionManager1,
-			final IndexNameBuilder indexNameBuilder1,
-			final ElasticsearchUpdateDocumentCommand
-				elasticsearchUpdateDocumentCommand1,
-			final IndexWriter indexWriter) {
+			final SearchEngineAdapter searchEngineAdapter1,
+			final IndexNameBuilder indexNameBuilder1) {
 
 		return new ElasticsearchSpellCheckIndexWriter() {
 			{
-				elasticsearchConnectionManager =
-					elasticsearchConnectionManager1;
-				elasticsearchUpdateDocumentCommand =
-					elasticsearchUpdateDocumentCommand1;
 				digester = new DigesterImpl();
 				indexNameBuilder = indexNameBuilder1;
 				localization = _localization;
-
-				setIndexWriter(indexWriter);
+				searchEngineAdapter = searchEngineAdapter1;
 			}
 		};
 	}
@@ -197,37 +185,17 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 	}
 
 	protected IndexWriter createIndexWriter(
-		final ElasticsearchConnectionManager elasticsearchConnectionManager1,
+		SearchEngineAdapter searchEngineAdapter1,
 		final IndexNameBuilder indexNameBuilder1) {
-
-		final ElasticsearchUpdateDocumentCommand
-			elasticsearchUpdateDocumentCommand1 =
-				new ElasticsearchUpdateDocumentCommandImpl() {
-					{
-						elasticsearchConnectionManager =
-							elasticsearchConnectionManager1;
-						elasticsearchDocumentFactory =
-							new DefaultElasticsearchDocumentFactory();
-						indexNameBuilder = indexNameBuilder1;
-
-						activate(
-							_elasticsearchFixture.
-								getElasticsearchConfigurationProperties());
-					}
-				};
 
 		return new ElasticsearchIndexWriter() {
 			{
-				elasticsearchConnectionManager =
-					elasticsearchConnectionManager1;
-				elasticsearchUpdateDocumentCommand =
-					elasticsearchUpdateDocumentCommand1;
 				indexNameBuilder = indexNameBuilder1;
+				searchEngineAdapter = searchEngineAdapter1;
 
 				setSpellCheckIndexWriter(
 					createElasticsearchSpellCheckIndexWriter(
-						elasticsearchConnectionManager1, indexNameBuilder1,
-						elasticsearchUpdateDocumentCommand1, this));
+						searchEngineAdapter1, indexNameBuilder1));
 			}
 		};
 	}

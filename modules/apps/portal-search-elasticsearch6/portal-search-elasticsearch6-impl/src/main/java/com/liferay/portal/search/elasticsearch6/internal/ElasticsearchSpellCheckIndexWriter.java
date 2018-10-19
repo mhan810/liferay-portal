@@ -14,33 +14,31 @@
 
 package com.liferay.portal.search.elasticsearch6.internal;
 
+import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.IndexWriter;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import com.liferay.portal.kernel.search.filter.Filter;
+import com.liferay.portal.kernel.search.filter.TermFilter;
+import com.liferay.portal.kernel.search.generic.MatchAllQuery;
 import com.liferay.portal.kernel.search.suggest.SpellCheckIndexWriter;
 import com.liferay.portal.kernel.search.suggest.SuggestionConstants;
 import com.liferay.portal.kernel.util.Localization;
 import com.liferay.portal.kernel.util.LocalizationUtil;
-import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
-import com.liferay.portal.search.elasticsearch6.internal.document.ElasticsearchUpdateDocumentCommand;
+import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.search.elasticsearch6.internal.index.IndexNameBuilder;
-import com.liferay.portal.search.elasticsearch6.internal.util.DocumentTypes;
+import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
+import com.liferay.portal.search.engine.adapter.document.BulkDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.DeleteByQueryDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
 import com.liferay.portal.search.suggest.BaseGenericSpellCheckIndexWriter;
 
 import java.util.Collection;
 
-import org.elasticsearch.client.Client;
-import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
-import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
@@ -81,21 +79,38 @@ public class ElasticsearchSpellCheckIndexWriter
 
 	@Override
 	protected void addDocument(
-			String documentType, SearchContext searchContext, Document document)
-		throws SearchException {
+		String documentType, SearchContext searchContext, Document document) {
 
-		elasticsearchUpdateDocumentCommand.updateDocument(
-			DocumentTypes.LIFERAY, searchContext, document, false);
+		String indexName = indexNameBuilder.getIndexName(
+			searchContext.getCompanyId());
+
+		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
+			indexName, document);
+
+		searchEngineAdapter.execute(indexDocumentRequest);
 	}
 
 	@Override
 	protected void addDocuments(
-			String documentType, SearchContext searchContext,
-			Collection<Document> documents)
-		throws SearchException {
+		String documentType, SearchContext searchContext,
+		Collection<Document> documents) {
 
-		elasticsearchUpdateDocumentCommand.updateDocuments(
-			DocumentTypes.LIFERAY, searchContext, documents, false);
+		String indexName = indexNameBuilder.getIndexName(
+			searchContext.getCompanyId());
+
+		BulkDocumentRequest bulkDocumentRequest = new BulkDocumentRequest();
+
+		documents.forEach(
+			document -> {
+				IndexDocumentRequest indexDocumentRequest =
+					new IndexDocumentRequest(indexName, document);
+
+				bulkDocumentRequest.addBulkableDocumentRequest(
+					indexDocumentRequest);
+
+			});
+
+		searchEngineAdapter.execute(bulkDocumentRequest);
 	}
 
 	@Override
@@ -129,31 +144,27 @@ public class ElasticsearchSpellCheckIndexWriter
 			SearchContext searchContext, String typeFieldValue)
 		throws Exception {
 
-		if (_searchHitsProcessor == null) {
-			throw new IllegalStateException("Module not properly initialized");
+		String indexName = indexNameBuilder.getIndexName(
+			searchContext.getCompanyId());
+
+		Filter termFilter = new TermFilter(Field.TYPE, typeFieldValue);
+
+		BooleanFilter booleanFilter = new BooleanFilter();
+
+		booleanFilter.add(termFilter, BooleanClauseOccur.MUST);
+
+		MatchAllQuery matchAllQuery = new MatchAllQuery();
+
+		matchAllQuery.setPreBooleanFilter(booleanFilter);
+
+		DeleteByQueryDocumentRequest deleteByQueryDocumentRequest =
+			new DeleteByQueryDocumentRequest(matchAllQuery, indexName);
+
+		if (PortalRunMode.isTestMode() || searchContext.isCommitImmediately()) {
+			deleteByQueryDocumentRequest.setRefresh(true);
 		}
 
-		SearchResponseScroller searchResponseScroller = null;
-
-		try {
-			Client client = elasticsearchConnectionManager.getClient();
-
-			MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(
-				Field.TYPE, typeFieldValue);
-
-			searchResponseScroller = new SearchResponseScroller(
-				client, searchContext, indexNameBuilder, matchQueryBuilder,
-				TimeValue.timeValueSeconds(30), DocumentTypes.LIFERAY);
-
-			searchResponseScroller.prepare();
-
-			searchResponseScroller.scroll(_searchHitsProcessor);
-		}
-		finally {
-			if (searchResponseScroller != null) {
-				searchResponseScroller.close();
-			}
-		}
+		searchEngineAdapter.execute(deleteByQueryDocumentRequest);
 	}
 
 	protected Localization getLocalization() {
@@ -167,33 +178,12 @@ public class ElasticsearchSpellCheckIndexWriter
 		return LocalizationUtil.getLocalization();
 	}
 
-	@Reference(
-		cardinality = ReferenceCardinality.OPTIONAL,
-		policy = ReferencePolicy.DYNAMIC,
-		policyOption = ReferencePolicyOption.GREEDY,
-		target = "(!(search.engine.impl=*))"
-	)
-	protected void setIndexWriter(IndexWriter indexWriter) {
-		_searchHitsProcessor = new DeleteDocumentsSearchHitsProcessor(
-			indexWriter);
-	}
-
-	protected void unsetIndexWriter(IndexWriter indexWriter) {
-		_searchHitsProcessor = null;
-	}
-
-	@Reference(unbind = "-")
-	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
-
-	@Reference(unbind = "-")
-	protected ElasticsearchUpdateDocumentCommand
-		elasticsearchUpdateDocumentCommand;
-
 	@Reference(unbind = "-")
 	protected IndexNameBuilder indexNameBuilder;
 
 	protected Localization localization;
 
-	private volatile SearchHitsProcessor _searchHitsProcessor;
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
+	protected SearchEngineAdapter searchEngineAdapter;
 
 }
