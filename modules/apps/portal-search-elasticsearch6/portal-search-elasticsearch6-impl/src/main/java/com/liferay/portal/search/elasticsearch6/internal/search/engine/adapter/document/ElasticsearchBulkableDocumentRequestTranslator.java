@@ -71,8 +71,6 @@ public class ElasticsearchBulkableDocumentRequestTranslator
 				WriteRequest.RefreshPolicy.IMMEDIATE);
 		}
 
-		deleteRequestBuilder.setType(deleteDocumentRequest.getType());
-
 		if (searchEngineAdapterRequest != null) {
 			searchEngineAdapterRequest.add(deleteRequestBuilder);
 		}

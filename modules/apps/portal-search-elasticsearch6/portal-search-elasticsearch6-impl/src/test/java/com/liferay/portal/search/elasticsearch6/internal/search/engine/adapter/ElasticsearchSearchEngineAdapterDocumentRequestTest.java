@@ -144,7 +144,7 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 		Assert.assertEquals("2", bulkDocumentItemResponse2.getId());
 
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
-			_INDEX_NAME, _MAPPING_NAME, "1");
+			_INDEX_NAME, "1");
 
 		BulkDocumentRequest bulkDocumentRequest2 = new BulkDocumentRequest();
 
@@ -230,7 +230,7 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 		Assert.assertTrue(getResponse1.isExists());
 
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
-			_INDEX_NAME, _MAPPING_NAME, id);
+			_INDEX_NAME, id);
 
 		DeleteDocumentResponse deleteDocumentResponse =
 			_searchEngineAdapter.execute(deleteDocumentRequest);

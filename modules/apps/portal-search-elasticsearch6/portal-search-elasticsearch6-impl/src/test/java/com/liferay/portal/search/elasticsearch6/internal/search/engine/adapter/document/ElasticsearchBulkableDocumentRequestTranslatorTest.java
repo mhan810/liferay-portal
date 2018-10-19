@@ -132,7 +132,7 @@ public class ElasticsearchBulkableDocumentRequestTranslatorTest {
 		String id = "1";
 
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
-			_INDEX_NAME, _MAPPING_NAME, id);
+			_INDEX_NAME, id);
 
 		deleteDocumentRequest.setRefresh(refreshPolicy);
 

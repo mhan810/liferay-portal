@@ -71,7 +71,7 @@ public class ElasticsearchDocumentRequestExecutorTest {
 	@Test
 	public void testExecuteDeleteDocumentRequest() {
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
-			null, null, null);
+			null, null);
 
 		_elasticsearchDocumentRequestExecutor.executeDocumentRequest(
 			deleteDocumentRequest);

@@ -95,7 +95,7 @@ public class BulkDocumentRequestExecutorTest {
 		bulkDocumentRequest.addBulkableDocumentRequest(indexDocumentRequest);
 
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
-			_INDEX_NAME, _MAPPING_NAME, uid);
+			_INDEX_NAME, uid);
 
 		bulkDocumentRequest.addBulkableDocumentRequest(deleteDocumentRequest);
 
