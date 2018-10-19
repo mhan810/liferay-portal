@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.search;
 
+import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.search.engine.adapter.search.CountSearchRequest;
 import com.liferay.portal.search.engine.adapter.search.CountSearchResponse;
 import com.liferay.portal.search.engine.adapter.search.MultisearchSearchRequest;
@@ -55,6 +56,11 @@ public class ElasticsearchSearchRequestExecutor
 		SearchSearchRequest searchSearchRequest) {
 
 		return searchSearchRequestExecutor.execute(searchSearchRequest);
+	}
+
+	@Override
+	public String getQueryString(Query query) {
+		return searchSearchRequestExecutor.getQueryString(query);
 	}
 
 	@Reference
