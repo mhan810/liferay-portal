@@ -30,7 +30,7 @@ import java.util.Map;
  */
 @ProviderType
 public class SearchSearchRequest
-	extends BaseSearchRequest<SearchSearchResponse> {
+	extends BaseSearchRequest implements SearchRequest<SearchSearchResponse> {
 
 	@Override
 	public SearchSearchResponse accept(
