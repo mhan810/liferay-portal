@@ -157,6 +157,11 @@ public class QueryConfig implements Serializable {
 		return selectedIndexNames;
 	}
 
+	/**
+	 * @deprecated since 7.1.  No direct replacement.  Mapping types will no
+	 * longer be supported post 7.1
+	 */
+	@Deprecated
 	public String[] getSelectedTypes() {
 		String[] selectedTypes = (String[])_attributes.get(_SELECTED_TYPES);
 
