@@ -27,11 +27,7 @@ import java.util.Map;
  * @author Michael C. Han
  */
 @ProviderType
-public abstract class BaseSearchRequest<T extends SearchResponse>
-	implements SearchRequest {
-
-	@Override
-	public abstract T accept(SearchRequestExecutor searchRequestExecutor);
+public abstract class BaseSearchRequest {
 
 	public Map<String, Facet> getFacets() {
 		return _facets;
