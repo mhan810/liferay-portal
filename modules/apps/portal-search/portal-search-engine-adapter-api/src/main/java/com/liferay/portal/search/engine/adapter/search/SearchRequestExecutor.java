@@ -16,6 +16,8 @@ package com.liferay.portal.search.engine.adapter.search;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.kernel.search.Query;
+
 /**
  * @author Michael C. Han
  */
@@ -30,5 +32,7 @@ public interface SearchRequestExecutor {
 
 	public SearchSearchResponse executeSearchRequest(
 		SearchSearchRequest searchSearchRequest);
+
+	public String getQueryString(Query query);
 
 }
