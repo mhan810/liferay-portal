@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.search;
 
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
 
@@ -25,7 +24,5 @@ public interface SearchSearchRequestExecutor {
 
 	public SearchSearchResponse execute(
 		SearchSearchRequest searchSearchRequest);
-
-	public String getQueryString(Query query);
 
 }
