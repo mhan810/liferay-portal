@@ -186,7 +186,7 @@ public abstract class BaseGroupByTestCase extends BaseIndexingTestCase {
 
 				indexingTestHelper.verify(
 					hits -> assertGroups(
-						toMap("sixteen", "16|6"), hits, indexingTestHelper));
+						toMap("sixteen", "16|5"), hits, indexingTestHelper));
 			});
 	}
 
