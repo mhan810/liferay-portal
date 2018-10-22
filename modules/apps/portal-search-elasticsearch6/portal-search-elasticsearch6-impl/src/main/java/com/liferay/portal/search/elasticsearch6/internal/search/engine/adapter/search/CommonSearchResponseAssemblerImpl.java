@@ -16,6 +16,7 @@ package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.search.engine.adapter.search.BaseSearchResponse;
 
@@ -53,7 +54,7 @@ public class CommonSearchResponseAssemblerImpl
 
 		baseSearchResponse.setSearchRequestString(searchRequestBuilderString);
 		baseSearchResponse.setTerminatedEarly(
-			searchResponse.isTerminatedEarly());
+			GetterUtil.getBoolean(searchResponse.isTerminatedEarly()));
 		baseSearchResponse.setTimedOut(searchResponse.isTimedOut());
 	}
 
