@@ -59,7 +59,7 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 		Sort[] sorts, Locale locale, String[] selectedFieldNames,
 		String[] highlightFieldNames, boolean highlightEnabled,
 		boolean highlightRequireFieldMatch, int highlightFragmentSize,
-		int highlightSnippetSize, int start, int end) {
+		int highlightSnippetSize, int start, int size) {
 
 		TermsAggregationBuilder termsAggregationBuilder =
 			AggregationBuilders.terms(
@@ -71,7 +71,7 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 		TopHitsAggregationBuilder topHitsAggregationBuilder = getTopHitsBuilder(
 			groupBy, sorts, selectedFieldNames, locale, highlightFieldNames,
 			highlightEnabled, highlightRequireFieldMatch, highlightFragmentSize,
-			highlightSnippetSize, start, end);
+			highlightSnippetSize, start, size);
 
 		termsAggregationBuilder.subAggregation(topHitsAggregationBuilder);
 
@@ -210,7 +210,7 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 		GroupBy groupBy, Sort[] sorts, String[] selectedFieldNames,
 		Locale locale, String[] highlightFieldNames, boolean highlightEnabled,
 		boolean highlightRequireFieldMatch, int highlightFragmentSize,
-		int highlightSnippetSize, int start, int end) {
+		int highlightSnippetSize, int start, int size) {
 
 		TopHitsAggregationBuilder topHitsAggregationBuilder =
 			AggregationBuilders.topHits(TOP_HITS_AGGREGATION_NAME);
@@ -226,7 +226,7 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 		int groupBySize = groupBy.getSize();
 
 		if (groupBySize == 0) {
-			groupBySize = end - start + 1;
+			groupBySize = size;
 		}
 
 		topHitsAggregationBuilder.size(groupBySize);

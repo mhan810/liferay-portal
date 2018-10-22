@@ -105,10 +105,10 @@ public class SearchSearchRequestAssemblerImpl
 	}
 
 	protected void addPagination(
-		SearchRequestBuilder searchRequestBuilder, int start, int end) {
+		SearchRequestBuilder searchRequestBuilder, int start, int size) {
 
 		searchRequestBuilder.setFrom(start);
-		searchRequestBuilder.setSize(end - start);
+		searchRequestBuilder.setSize(size);
 	}
 
 	protected void addPreference(
