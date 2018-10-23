@@ -106,6 +106,13 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 				searchSearchRequest.setAlternateUidFieldName(
 					queryConfig.getAlternateUidFieldName());
 
+				boolean basicFacetSelection = GetterUtil.getBoolean(
+					searchContext.getAttribute(
+						SearchContextAttributes.
+							ATTRIBUTE_KEY_BASIC_FACET_SELECTION));
+
+				searchSearchRequest.setBasicFacetSelection(basicFacetSelection);
+
 				String[] indexNames = getSelectedIndexNames(
 					queryConfig, searchContext);
 
