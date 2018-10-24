@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.util.Localization;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.search.elasticsearch6.internal.index.IndexNameBuilder;
+import com.liferay.portal.search.elasticsearch6.internal.util.DocumentTypes;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.document.BulkDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.DeleteByQueryDocumentRequest;
@@ -87,6 +88,8 @@ public class ElasticsearchSpellCheckIndexWriter
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
 			indexName, document);
 
+		indexDocumentRequest.setType(DocumentTypes.LIFERAY);
+
 		searchEngineAdapter.execute(indexDocumentRequest);
 	}
 
@@ -104,6 +107,8 @@ public class ElasticsearchSpellCheckIndexWriter
 			document -> {
 				IndexDocumentRequest indexDocumentRequest =
 					new IndexDocumentRequest(indexName, document);
+
+				indexDocumentRequest.setType(DocumentTypes.LIFERAY);
 
 				bulkDocumentRequest.addBulkableDocumentRequest(
 					indexDocumentRequest);
@@ -141,8 +146,7 @@ public class ElasticsearchSpellCheckIndexWriter
 	}
 
 	protected void deleteDocuments(
-			SearchContext searchContext, String typeFieldValue)
-		throws Exception {
+		SearchContext searchContext, String typeFieldValue) {
 
 		String indexName = indexNameBuilder.getIndexName(
 			searchContext.getCompanyId());
