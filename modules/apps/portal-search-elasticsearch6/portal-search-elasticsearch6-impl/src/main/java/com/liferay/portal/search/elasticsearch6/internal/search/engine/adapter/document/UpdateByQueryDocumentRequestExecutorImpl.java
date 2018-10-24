@@ -16,6 +16,7 @@ package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.
 
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.search.Query;
+import com.liferay.portal.kernel.search.query.QueryTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentResponse;
@@ -23,7 +24,6 @@ import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentRe
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.UpdateByQueryAction;
 import org.elasticsearch.index.reindex.UpdateByQueryRequestBuilder;
@@ -70,8 +70,7 @@ public class UpdateByQueryDocumentRequestExecutorImpl
 
 		Query query = updateByQueryDocumentRequest.getQuery();
 
-		QueryBuilder queryBuilder = new QueryStringQueryBuilder(
-			query.toString());
+		QueryBuilder queryBuilder = queryTranslator.translate(query, null);
 
 		updateByQueryRequestBuilder.filter(queryBuilder);
 
@@ -95,5 +94,8 @@ public class UpdateByQueryDocumentRequestExecutorImpl
 
 	@Reference
 	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
+
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
+	protected QueryTranslator<QueryBuilder> queryTranslator;
 
 }
