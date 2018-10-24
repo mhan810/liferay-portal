@@ -24,6 +24,7 @@ import java.util.List;
 import org.elasticsearch.common.logging.LogConfigurator;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
+import org.elasticsearch.index.reindex.ReindexPlugin;
 import org.elasticsearch.node.InternalSettingsPreparer;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.plugins.Plugin;
@@ -39,7 +40,7 @@ public class EmbeddedElasticsearchNode extends Node {
 			settings, null);
 
 		List<Class<? extends Plugin>> classpathPlugins = Arrays.asList(
-			Netty4Plugin.class);
+			Netty4Plugin.class, ReindexPlugin.class);
 
 		try {
 			LogConfigurator.configure(environment);
