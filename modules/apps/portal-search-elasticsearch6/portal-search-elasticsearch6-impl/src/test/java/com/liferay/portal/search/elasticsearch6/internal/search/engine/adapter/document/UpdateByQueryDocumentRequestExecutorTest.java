@@ -110,12 +110,8 @@ public class UpdateByQueryDocumentRequestExecutorTest {
 		String queryString = String.valueOf(
 			updateByQueryRequest.getSearchRequest());
 
-		Assert.assertTrue(
-			queryString.contains(
-				"queryTerm={field=" + _FIELD_NAME + ", value=true}"));
-		Assert.assertTrue(
-			queryString.contains(
-				"className=" + BooleanQueryImpl.class.getSimpleName()));
+		Assert.assertTrue(queryString.contains(_FIELD_NAME));
+		Assert.assertTrue(queryString.contains("\"value\":\"true\""));
 	}
 
 	private static final String _FIELD_NAME = "testField";

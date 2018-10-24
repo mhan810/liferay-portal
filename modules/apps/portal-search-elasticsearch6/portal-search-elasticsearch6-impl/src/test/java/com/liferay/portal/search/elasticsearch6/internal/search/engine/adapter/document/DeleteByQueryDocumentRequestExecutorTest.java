@@ -106,12 +106,8 @@ public class DeleteByQueryDocumentRequestExecutorTest {
 		String queryString = String.valueOf(
 			deleteByQueryRequest.getSearchRequest());
 
-		Assert.assertTrue(
-			queryString.contains(
-				"queryTerm={field=" + _FIELD_NAME + ", value=true}"));
-		Assert.assertTrue(
-			queryString.contains(
-				"className=".concat(BooleanQueryImpl.class.getSimpleName())));
+		Assert.assertTrue(queryString.contains(_FIELD_NAME));
+		Assert.assertTrue(queryString.contains("\"value\":\"true\""));
 	}
 
 	private static final String _FIELD_NAME = "testField";
