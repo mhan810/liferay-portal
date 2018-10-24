@@ -27,7 +27,7 @@ public class UpdateByQueryDocumentRequest
 	implements DocumentRequest<UpdateByQueryDocumentResponse> {
 
 	public UpdateByQueryDocumentRequest(
-		Query query, JSONObject scriptJSONObject, String[] indexNames) {
+		Query query, JSONObject scriptJSONObject, String... indexNames) {
 
 		_query = query;
 		_scriptJSONObject = scriptJSONObject;
