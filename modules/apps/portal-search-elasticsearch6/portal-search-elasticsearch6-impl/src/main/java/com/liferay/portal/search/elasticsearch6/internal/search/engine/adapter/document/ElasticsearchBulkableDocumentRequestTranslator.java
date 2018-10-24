@@ -16,7 +16,6 @@ package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.
 
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch6.internal.document.DefaultElasticsearchDocumentFactory;
 import com.liferay.portal.search.elasticsearch6.internal.document.ElasticsearchDocumentFactory;
@@ -102,7 +101,7 @@ public class ElasticsearchBulkableDocumentRequestTranslator
 					WriteRequest.RefreshPolicy.IMMEDIATE);
 			}
 
-			indexRequestBuilder.setType(document.get(Field.TYPE));
+			indexRequestBuilder.setType(indexDocumentRequest.getType());
 
 			ElasticsearchDocumentFactory elasticsearchDocumentFactory =
 				new DefaultElasticsearchDocumentFactory();
@@ -146,7 +145,7 @@ public class ElasticsearchBulkableDocumentRequestTranslator
 					WriteRequest.RefreshPolicy.IMMEDIATE);
 			}
 
-			updateRequestBuilder.setType(document.get(Field.TYPE));
+			updateRequestBuilder.setType(updateDocumentRequest.getType());
 
 			ElasticsearchDocumentFactory elasticsearchDocumentFactory =
 				new DefaultElasticsearchDocumentFactory();

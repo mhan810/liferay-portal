@@ -59,6 +59,8 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
 			indexName, document);
 
+		indexDocumentRequest.setType(DocumentTypes.LIFERAY);
+
 		if (PortalRunMode.isTestMode() || searchContext.isCommitImmediately()) {
 			indexDocumentRequest.setRefresh(true);
 		}
@@ -84,6 +86,8 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 				IndexDocumentRequest indexDocumentRequest =
 					new IndexDocumentRequest(indexName, document);
 
+				indexDocumentRequest.setType(DocumentTypes.LIFERAY);
+
 				bulkDocumentRequest.addBulkableDocumentRequest(
 					indexDocumentRequest);
 
@@ -108,7 +112,9 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			searchContext.getCompanyId());
 
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
-			indexName, DocumentTypes.LIFERAY, uid);
+			indexName, uid);
+
+		deleteDocumentRequest.setType(DocumentTypes.LIFERAY);
 
 		if (PortalRunMode.isTestMode() || searchContext.isCommitImmediately()) {
 			deleteDocumentRequest.setRefresh(true);
@@ -133,8 +139,9 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		uids.forEach(
 			uid -> {
 				DeleteDocumentRequest deleteDocumentRequest =
-					new DeleteDocumentRequest(
-						indexName, DocumentTypes.LIFERAY, uid);
+					new DeleteDocumentRequest(indexName, uid);
+
+				deleteDocumentRequest.setType(DocumentTypes.LIFERAY);
 
 				bulkDocumentRequest.addBulkableDocumentRequest(
 					deleteDocumentRequest);
@@ -181,6 +188,8 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest(
 			indexName, document.getUID(), document);
 
+		updateDocumentRequest.setType(DocumentTypes.LIFERAY);
+
 		if (PortalRunMode.isTestMode() || searchContext.isCommitImmediately()) {
 			updateDocumentRequest.setRefresh(true);
 		}
@@ -206,6 +215,8 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 				UpdateDocumentRequest updateDocumentRequest =
 					new UpdateDocumentRequest(
 						indexName, document.getUID(), document);
+
+				updateDocumentRequest.setType(DocumentTypes.LIFERAY);
 
 				bulkDocumentRequest.addBulkableDocumentRequest(
 					updateDocumentRequest);
@@ -235,12 +246,16 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		}
 
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
-			indexName, DocumentTypes.LIFERAY, document.getUID());
+			indexName, document.getUID());
+
+		deleteDocumentRequest.setType(DocumentTypes.LIFERAY);
 
 		bulkDocumentRequest.addBulkableDocumentRequest(deleteDocumentRequest);
 
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
 			indexName, document);
+
+		indexDocumentRequest.setType(DocumentTypes.LIFERAY);
 
 		bulkDocumentRequest.addBulkableDocumentRequest(indexDocumentRequest);
 
@@ -263,14 +278,17 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		documents.forEach(
 			document -> {
 				DeleteDocumentRequest deleteDocumentRequest =
-					new DeleteDocumentRequest(
-						indexName, DocumentTypes.LIFERAY, document.getUID());
+					new DeleteDocumentRequest(indexName, document.getUID());
+
+				deleteDocumentRequest.setType(DocumentTypes.LIFERAY);
 
 				bulkDocumentRequest.addBulkableDocumentRequest(
 					deleteDocumentRequest);
 
 				IndexDocumentRequest indexDocumentRequest =
 					new IndexDocumentRequest(indexName, document);
+
+				indexDocumentRequest.setType(DocumentTypes.LIFERAY);
 
 				bulkDocumentRequest.addBulkableDocumentRequest(
 					indexDocumentRequest);
