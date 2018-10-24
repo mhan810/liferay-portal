@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch6.internal.connection.TestElasticsearchConnectionManager;
+import com.liferay.portal.search.elasticsearch6.internal.query.ElasticsearchQueryTranslatorFixture;
 import com.liferay.portal.search.engine.adapter.document.DeleteByQueryDocumentRequest;
 
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
@@ -77,6 +78,14 @@ public class DeleteByQueryDocumentRequestExecutorTest {
 					{
 						elasticsearchConnectionManager =
 							_elasticsearchConnectionManager;
+
+						ElasticsearchQueryTranslatorFixture
+							elasticsearchQueryTranslatorFixture =
+								new ElasticsearchQueryTranslatorFixture();
+
+						queryTranslator =
+							elasticsearchQueryTranslatorFixture.
+								getElasticsearchQueryTranslator();
 					}
 				};
 
@@ -97,12 +106,8 @@ public class DeleteByQueryDocumentRequestExecutorTest {
 		String queryString = String.valueOf(
 			deleteByQueryRequest.getSearchRequest());
 
-		Assert.assertTrue(
-			queryString.contains(
-				"queryTerm={field=" + _FIELD_NAME + ", value=true}"));
-		Assert.assertTrue(
-			queryString.contains(
-				"className=".concat(BooleanQueryImpl.class.getSimpleName())));
+		Assert.assertTrue(queryString.contains(_FIELD_NAME));
+		Assert.assertTrue(queryString.contains("\"value\":\"true\""));
 	}
 
 	private static final String _FIELD_NAME = "testField";
