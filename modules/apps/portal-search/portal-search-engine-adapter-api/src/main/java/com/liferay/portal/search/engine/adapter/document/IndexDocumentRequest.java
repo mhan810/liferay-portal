@@ -53,6 +53,10 @@ public class IndexDocumentRequest
 		return _indexName;
 	}
 
+	public String getType() {
+		return _type;
+	}
+
 	public boolean isRefresh() {
 		return _refresh;
 	}
@@ -61,8 +65,13 @@ public class IndexDocumentRequest
 		_refresh = refresh;
 	}
 
+	public void setType(String type) {
+		_type = type;
+	}
+
 	private final Document _document;
 	private final String _indexName;
 	private boolean _refresh;
+	private String _type;
 
 }
