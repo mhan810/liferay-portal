@@ -15,6 +15,7 @@
 package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.document;
 
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
+import com.liferay.portal.search.elasticsearch6.internal.query.ElasticsearchQueryTranslatorFixture;
 import com.liferay.portal.search.engine.adapter.document.DocumentRequestExecutor;
 
 /**
@@ -65,6 +66,14 @@ public class DocumentRequestExecutorFixture {
 			{
 				elasticsearchConnectionManager =
 					_elasticsearchConnectionManager;
+
+				ElasticsearchQueryTranslatorFixture
+					elasticsearchQueryTranslatorFixture =
+						new ElasticsearchQueryTranslatorFixture();
+
+				queryTranslator =
+					elasticsearchQueryTranslatorFixture.
+						getElasticsearchQueryTranslator();
 			}
 		};
 	}
@@ -109,6 +118,14 @@ public class DocumentRequestExecutorFixture {
 			{
 				elasticsearchConnectionManager =
 					_elasticsearchConnectionManager;
+
+				ElasticsearchQueryTranslatorFixture
+					elasticsearchQueryTranslatorFixture =
+						new ElasticsearchQueryTranslatorFixture();
+
+				queryTranslator =
+					elasticsearchQueryTranslatorFixture.
+						getElasticsearchQueryTranslator();
 			}
 		};
 	}

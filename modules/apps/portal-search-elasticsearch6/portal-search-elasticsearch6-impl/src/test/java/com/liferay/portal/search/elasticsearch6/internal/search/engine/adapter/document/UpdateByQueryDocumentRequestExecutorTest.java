@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch6.internal.connection.TestElasticsearchConnectionManager;
+import com.liferay.portal.search.elasticsearch6.internal.query.ElasticsearchQueryTranslatorFixture;
 import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentRequest;
 
 import org.elasticsearch.index.reindex.UpdateByQueryRequest;
@@ -81,6 +82,14 @@ public class UpdateByQueryDocumentRequestExecutorTest {
 					{
 						elasticsearchConnectionManager =
 							_elasticsearchConnectionManager;
+
+						ElasticsearchQueryTranslatorFixture
+							elasticsearchQueryTranslatorFixture =
+								new ElasticsearchQueryTranslatorFixture();
+
+						queryTranslator =
+							elasticsearchQueryTranslatorFixture.
+								getElasticsearchQueryTranslator();
 					}
 				};
 
@@ -101,12 +110,8 @@ public class UpdateByQueryDocumentRequestExecutorTest {
 		String queryString = String.valueOf(
 			updateByQueryRequest.getSearchRequest());
 
-		Assert.assertTrue(
-			queryString.contains(
-				"queryTerm={field=" + _FIELD_NAME + ", value=true}"));
-		Assert.assertTrue(
-			queryString.contains(
-				"className=" + BooleanQueryImpl.class.getSimpleName()));
+		Assert.assertTrue(queryString.contains(_FIELD_NAME));
+		Assert.assertTrue(queryString.contains("\"value\":\"true\""));
 	}
 
 	private static final String _FIELD_NAME = "testField";

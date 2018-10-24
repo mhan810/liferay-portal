@@ -37,19 +37,7 @@ import com.liferay.portal.search.elasticsearch6.internal.filter.TermsFilterTrans
 import com.liferay.portal.search.elasticsearch6.internal.filter.TermsSetFilterTranslatorImpl;
 import com.liferay.portal.search.elasticsearch6.internal.groupby.DefaultGroupByTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.highlight.DefaultHighlighterTranslator;
-import com.liferay.portal.search.elasticsearch6.internal.query.BooleanQueryTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.query.DisMaxQueryTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.query.ElasticsearchQueryTranslator;
-import com.liferay.portal.search.elasticsearch6.internal.query.FuzzyQueryTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.query.MatchAllQueryTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.query.MatchQueryTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.query.MoreLikeThisQueryTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.query.MultiMatchQueryTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.query.NestedQueryTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.query.StringQueryTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.query.TermQueryTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.query.TermRangeQueryTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.query.WildcardQueryTranslatorImpl;
+import com.liferay.portal.search.elasticsearch6.internal.query.ElasticsearchQueryTranslatorFixture;
 import com.liferay.portal.search.elasticsearch6.internal.search.response.DefaultSearchResponseTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.sort.DefaultSortTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.stats.DefaultStatsTranslator;
@@ -93,7 +81,14 @@ public class SearchRequestExecutorFixture {
 			{
 				facetTranslator = createDefaultFacetTranslator();
 				filterTranslator = createElasticsearchFilterTranslator();
-				queryTranslator = createElasticsearchQueryTranslator();
+
+				ElasticsearchQueryTranslatorFixture
+					elasticsearchQueryTranslatorFixture =
+						new ElasticsearchQueryTranslatorFixture();
+
+				queryTranslator =
+					elasticsearchQueryTranslatorFixture.
+						getElasticsearchQueryTranslator();
 			}
 		};
 	}
@@ -145,28 +140,6 @@ public class SearchRequestExecutorFixture {
 				termFilterTranslator = new TermFilterTranslatorImpl();
 				termsFilterTranslator = new TermsFilterTranslatorImpl();
 				termsSetFilterTranslator = new TermsSetFilterTranslatorImpl();
-			}
-		};
-	}
-
-	protected ElasticsearchQueryTranslator
-		createElasticsearchQueryTranslator() {
-
-		return new ElasticsearchQueryTranslator() {
-			{
-				booleanQueryTranslator = new BooleanQueryTranslatorImpl();
-				disMaxQueryTranslator = new DisMaxQueryTranslatorImpl();
-				fuzzyQueryTranslator = new FuzzyQueryTranslatorImpl();
-				matchAllQueryTranslator = new MatchAllQueryTranslatorImpl();
-				matchQueryTranslator = new MatchQueryTranslatorImpl();
-				moreLikeThisQueryTranslator =
-					new MoreLikeThisQueryTranslatorImpl();
-				multiMatchQueryTranslator = new MultiMatchQueryTranslatorImpl();
-				nestedQueryTranslator = new NestedQueryTranslatorImpl();
-				stringQueryTranslator = new StringQueryTranslatorImpl();
-				termQueryTranslator = new TermQueryTranslatorImpl();
-				termRangeQueryTranslator = new TermRangeQueryTranslatorImpl();
-				wildcardQueryTranslator = new WildcardQueryTranslatorImpl();
 			}
 		};
 	}
