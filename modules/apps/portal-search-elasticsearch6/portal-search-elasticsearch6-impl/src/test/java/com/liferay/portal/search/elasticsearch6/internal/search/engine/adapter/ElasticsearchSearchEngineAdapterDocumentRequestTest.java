@@ -38,10 +38,12 @@ import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentRe
 import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.UpdateDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.UpdateDocumentResponse;
+import com.liferay.portal.search.test.util.IdempotentRetryAssert;
 import com.liferay.portal.search.test.util.indexing.DocumentFixture;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequestBuilder;
@@ -57,7 +59,6 @@ import org.elasticsearch.rest.RestStatus;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -99,12 +100,13 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 	public void testExecuteBulkDocumentRequest() {
 		Document document1 = new DocumentImpl();
 
-		document1.addKeyword(Field.TYPE, _MAPPING_NAME);
 		document1.addKeyword(Field.UID, "1");
 		document1.addKeyword(_FIELD_NAME, Boolean.TRUE.toString());
 
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
 			_INDEX_NAME, document1);
+
+		indexDocumentRequest.setType(_MAPPING_NAME);
 
 		BulkDocumentRequest bulkDocumentRequest = new BulkDocumentRequest();
 
@@ -112,12 +114,13 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 
 		Document document2 = new DocumentImpl();
 
-		document2.addKeyword(Field.TYPE, _MAPPING_NAME);
 		document2.addKeyword(Field.UID, "2");
 		document2.addKeyword(_FIELD_NAME, Boolean.FALSE.toString());
 
 		IndexDocumentRequest indexDocumentRequest2 = new IndexDocumentRequest(
 			_INDEX_NAME, document2);
+
+		indexDocumentRequest2.setType(_MAPPING_NAME);
 
 		bulkDocumentRequest.addBulkableDocumentRequest(indexDocumentRequest2);
 
@@ -152,12 +155,13 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 
 		Document document2Update = new DocumentImpl();
 
-		document2Update.addKeyword(Field.TYPE, _MAPPING_NAME);
 		document2Update.addKeyword(Field.UID, "2");
 		document2Update.addKeyword(_FIELD_NAME, Boolean.TRUE.toString());
 
 		UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest(
 			_INDEX_NAME, "2", document2Update);
+
+		updateDocumentRequest.setType(_MAPPING_NAME);
 
 		bulkDocumentRequest2.addBulkableDocumentRequest(updateDocumentRequest);
 
@@ -196,26 +200,32 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 		Assert.assertEquals(Boolean.TRUE.toString(), map2.get(_FIELD_NAME));
 	}
 
-	@Ignore
 	@Test
-	public void testExecuteDeleteByQueryDocumentRequest() {
+	public void testExecuteDeleteByQueryDocumentRequest() throws Exception {
 		String documentSource1 = "{\"" + _FIELD_NAME + "\":\"true\"}";
 		String documentSource2 = "{\"" + _FIELD_NAME + "\":\"false\"}";
 
 		_indexDocument(documentSource1, "1");
 		_indexDocument(documentSource2, "2");
 
-		BooleanQuery query = new BooleanQueryImpl();
+		IdempotentRetryAssert.retryAssert(
+			3, TimeUnit.SECONDS,
+			() -> {
+				BooleanQuery booleanQuery = new BooleanQueryImpl();
 
-		query.addExactTerm(_FIELD_NAME, true);
+				booleanQuery.addExactTerm(_FIELD_NAME, true);
 
-		DeleteByQueryDocumentRequest deleteByQueryDocumentRequest =
-			new DeleteByQueryDocumentRequest(query, new String[] {_INDEX_NAME});
+				DeleteByQueryDocumentRequest deleteByQueryDocumentRequest =
+					new DeleteByQueryDocumentRequest(booleanQuery, _INDEX_NAME);
 
-		DeleteByQueryDocumentResponse deleteByQueryDocumentResponse =
-			_searchEngineAdapter.execute(deleteByQueryDocumentRequest);
+				DeleteByQueryDocumentResponse deleteByQueryDocumentResponse =
+					_searchEngineAdapter.execute(deleteByQueryDocumentRequest);
 
-		Assert.assertEquals(1, deleteByQueryDocumentResponse.getDeleted());
+				Assert.assertEquals(
+					1, deleteByQueryDocumentResponse.getDeleted());
+
+				return null;
+			});
 	}
 
 	@Test
@@ -247,11 +257,12 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 	public void testExecuteIndexDocumentRequest() {
 		Document document = new DocumentImpl();
 
-		document.addKeyword(Field.TYPE, _MAPPING_NAME);
 		document.addKeyword(Field.UID, "1");
 
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
 			_INDEX_NAME, document);
+
+		indexDocumentRequest.setType(_MAPPING_NAME);
 
 		IndexDocumentResponse indexDocumentResponse =
 			_searchEngineAdapter.execute(indexDocumentRequest);
@@ -260,25 +271,30 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 			RestStatus.CREATED.getStatus(), indexDocumentResponse.getStatus());
 	}
 
-	@Ignore
 	@Test
-	public void testExecuteUpdateByQueryDocumentRequest() {
+	public void testExecuteUpdateByQueryDocumentRequest() throws Exception {
 		String documentSource = "{\"" + _FIELD_NAME + "\":\"true\"}";
 
 		_indexDocument(documentSource, "1");
 
-		BooleanQuery query = new BooleanQueryImpl();
+		IdempotentRetryAssert.retryAssert(
+			3, TimeUnit.SECONDS,
+			() -> {
+				BooleanQuery query = new BooleanQueryImpl();
 
-		query.addExactTerm(_FIELD_NAME, true);
+				query.addExactTerm(_FIELD_NAME, true);
 
-		UpdateByQueryDocumentRequest updateByQueryDocumentRequest =
-			new UpdateByQueryDocumentRequest(
-				query, null, new String[] {_INDEX_NAME});
+				UpdateByQueryDocumentRequest updateByQueryDocumentRequest =
+					new UpdateByQueryDocumentRequest(query, null, _INDEX_NAME);
 
-		UpdateByQueryDocumentResponse updateByQueryDocumentResponse =
-			_searchEngineAdapter.execute(updateByQueryDocumentRequest);
+				UpdateByQueryDocumentResponse updateByQueryDocumentResponse =
+					_searchEngineAdapter.execute(updateByQueryDocumentRequest);
 
-		Assert.assertEquals(1, updateByQueryDocumentResponse.getUpdated());
+				Assert.assertEquals(
+					1, updateByQueryDocumentResponse.getUpdated());
+
+				return null;
+			});
 	}
 
 	@Test
@@ -296,12 +312,13 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 
 		Document document = new DocumentImpl();
 
-		document.addKeyword(Field.TYPE, _MAPPING_NAME);
 		document.addKeyword(Field.UID, id);
 		document.addKeyword(_FIELD_NAME, false);
 
 		UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest(
 			_INDEX_NAME, id, document);
+
+		updateDocumentRequest.setType(_MAPPING_NAME);
 
 		UpdateDocumentResponse updateDocumentResponse =
 			_searchEngineAdapter.execute(updateDocumentRequest);
