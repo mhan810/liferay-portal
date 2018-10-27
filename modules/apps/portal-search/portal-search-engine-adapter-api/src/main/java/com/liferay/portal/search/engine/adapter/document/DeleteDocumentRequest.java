@@ -26,6 +26,19 @@ public class DeleteDocumentRequest
 	implements BulkableDocumentRequest<DeleteDocumentRequest>,
 			   DocumentRequest<DeleteDocumentResponse> {
 
+	public DeleteDocumentRequest(String indexName, String uid) {
+		_indexName = indexName;
+		_uid = uid;
+	}
+
+	/**
+	 * @deprecated As of Judson (7.1.x), since 7.1.x, replaced by {@link
+	 *      DeleteDocumentRequest#DeleteDocumentRequest(String, String)}
+	 * @param indexName
+	 * @param type
+	 * @param uid
+	 */
+	@Deprecated
 	public DeleteDocumentRequest(String indexName, String type, String uid) {
 		_indexName = indexName;
 		_type = type;
@@ -64,9 +77,13 @@ public class DeleteDocumentRequest
 		_refresh = refresh;
 	}
 
+	public void setType(String type) {
+		_type = type;
+	}
+
 	private final String _indexName;
 	private boolean _refresh;
-	private final String _type;
+	private String _type;
 	private final String _uid;
 
 }
