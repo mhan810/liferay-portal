@@ -99,12 +99,13 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 	public void testExecuteBulkDocumentRequest() {
 		Document document1 = new DocumentImpl();
 
-		document1.addKeyword(Field.TYPE, _MAPPING_NAME);
 		document1.addKeyword(Field.UID, "1");
 		document1.addKeyword(_FIELD_NAME, Boolean.TRUE.toString());
 
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
 			_INDEX_NAME, document1);
+
+		indexDocumentRequest.setType(_MAPPING_NAME);
 
 		BulkDocumentRequest bulkDocumentRequest = new BulkDocumentRequest();
 
@@ -112,12 +113,13 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 
 		Document document2 = new DocumentImpl();
 
-		document2.addKeyword(Field.TYPE, _MAPPING_NAME);
 		document2.addKeyword(Field.UID, "2");
 		document2.addKeyword(_FIELD_NAME, Boolean.FALSE.toString());
 
 		IndexDocumentRequest indexDocumentRequest2 = new IndexDocumentRequest(
 			_INDEX_NAME, document2);
+
+		indexDocumentRequest2.setType(_MAPPING_NAME);
 
 		bulkDocumentRequest.addBulkableDocumentRequest(indexDocumentRequest2);
 
@@ -144,7 +146,9 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 		Assert.assertEquals("2", bulkDocumentItemResponse2.getId());
 
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
-			_INDEX_NAME, _MAPPING_NAME, "1");
+			_INDEX_NAME, "1");
+
+		deleteDocumentRequest.setType(_MAPPING_NAME);
 
 		BulkDocumentRequest bulkDocumentRequest2 = new BulkDocumentRequest();
 
@@ -152,12 +156,13 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 
 		Document document2Update = new DocumentImpl();
 
-		document2Update.addKeyword(Field.TYPE, _MAPPING_NAME);
 		document2Update.addKeyword(Field.UID, "2");
 		document2Update.addKeyword(_FIELD_NAME, Boolean.TRUE.toString());
 
 		UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest(
 			_INDEX_NAME, "2", document2Update);
+
+		updateDocumentRequest.setType(_MAPPING_NAME);
 
 		bulkDocumentRequest2.addBulkableDocumentRequest(updateDocumentRequest);
 
@@ -230,7 +235,9 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 		Assert.assertTrue(getResponse1.isExists());
 
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
-			_INDEX_NAME, _MAPPING_NAME, id);
+			_INDEX_NAME, id);
+
+		deleteDocumentRequest.setType(_MAPPING_NAME);
 
 		DeleteDocumentResponse deleteDocumentResponse =
 			_searchEngineAdapter.execute(deleteDocumentRequest);
@@ -247,11 +254,12 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 	public void testExecuteIndexDocumentRequest() {
 		Document document = new DocumentImpl();
 
-		document.addKeyword(Field.TYPE, _MAPPING_NAME);
 		document.addKeyword(Field.UID, "1");
 
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
 			_INDEX_NAME, document);
+
+		indexDocumentRequest.setType(_MAPPING_NAME);
 
 		IndexDocumentResponse indexDocumentResponse =
 			_searchEngineAdapter.execute(indexDocumentRequest);
@@ -296,12 +304,13 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 
 		Document document = new DocumentImpl();
 
-		document.addKeyword(Field.TYPE, _MAPPING_NAME);
 		document.addKeyword(Field.UID, id);
 		document.addKeyword(_FIELD_NAME, false);
 
 		UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest(
 			_INDEX_NAME, id, document);
+
+		updateDocumentRequest.setType(_MAPPING_NAME);
 
 		UpdateDocumentResponse updateDocumentResponse =
 			_searchEngineAdapter.execute(updateDocumentRequest);
