@@ -21,6 +21,9 @@ import org.elasticsearch.index.query.QueryBuilder;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
@@ -30,16 +33,19 @@ public class QueryFilterTranslatorImpl implements QueryFilterTranslator {
 
 	@Override
 	public QueryBuilder translate(QueryFilter queryFilter) {
+		if (_queryTranslator == null) {
+			throw new IllegalStateException(
+				"Query translator has not been fully initialized");
+		}
 		return _queryTranslator.translate(queryFilter.getQuery(), null);
 	}
 
-	@Reference(unbind = "-")
-	protected void setQueryTranslator(
-		QueryTranslator<QueryBuilder> queryTranslator) {
-
-		_queryTranslator = queryTranslator;
-	}
-
-	private QueryTranslator<QueryBuilder> _queryTranslator;
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(search.engine.impl=Elasticsearch)"
+	)
+	private volatile QueryTranslator<QueryBuilder> _queryTranslator;
 
 }
