@@ -56,6 +56,10 @@ public class UpdateDocumentRequest
 		return _indexName;
 	}
 
+	public String getType() {
+		return _type;
+	}
+
 	public String getUid() {
 		return _uid;
 	}
@@ -68,9 +72,14 @@ public class UpdateDocumentRequest
 		_refresh = refresh;
 	}
 
+	public void setType(String type) {
+		_type = type;
+	}
+
 	private final Document _document;
 	private final String _indexName;
 	private boolean _refresh;
+	private String _type;
 	private final String _uid;
 
 }

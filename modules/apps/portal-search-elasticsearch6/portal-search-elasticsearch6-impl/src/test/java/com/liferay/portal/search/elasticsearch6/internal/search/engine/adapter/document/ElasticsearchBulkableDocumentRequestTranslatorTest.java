@@ -132,9 +132,10 @@ public class ElasticsearchBulkableDocumentRequestTranslatorTest {
 		String id = "1";
 
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
-			_INDEX_NAME, _MAPPING_NAME, id);
+			_INDEX_NAME, id);
 
 		deleteDocumentRequest.setRefresh(refreshPolicy);
+		deleteDocumentRequest.setType(_MAPPING_NAME);
 
 		DeleteRequestBuilder deleteRequestBuilder =
 			_elasticsearchBulkableDocumentRequestTranslator.translate(
@@ -168,13 +169,13 @@ public class ElasticsearchBulkableDocumentRequestTranslatorTest {
 
 		Document document = new DocumentImpl();
 
-		document.addKeyword(Field.TYPE, _MAPPING_NAME);
 		document.addKeyword(Field.UID, id);
 
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
 			_INDEX_NAME, document);
 
 		indexDocumentRequest.setRefresh(refreshPolicy);
+		indexDocumentRequest.setType(_MAPPING_NAME);
 
 		IndexRequestBuilder indexRequestBuilder =
 			_elasticsearchBulkableDocumentRequestTranslator.translate(
@@ -218,13 +219,13 @@ public class ElasticsearchBulkableDocumentRequestTranslatorTest {
 
 		Document document = new DocumentImpl();
 
-		document.addKeyword(Field.TYPE, _MAPPING_NAME);
 		document.addKeyword(Field.UID, id);
 
 		UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest(
 			_INDEX_NAME, id, document);
 
 		updateDocumentRequest.setRefresh(refreshPolicy);
+		updateDocumentRequest.setType(_MAPPING_NAME);
 
 		UpdateRequestBuilder updateRequestBuilder =
 			_elasticsearchBulkableDocumentRequestTranslator.translate(
