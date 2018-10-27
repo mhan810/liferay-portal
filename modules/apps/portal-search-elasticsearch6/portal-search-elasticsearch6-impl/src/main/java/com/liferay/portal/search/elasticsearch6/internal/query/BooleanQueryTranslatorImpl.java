@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Query;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import com.liferay.portal.kernel.search.filter.FilterTranslator;
 import com.liferay.portal.kernel.search.query.QueryVisitor;
 
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -25,6 +27,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author André de Oliveira
@@ -47,8 +50,20 @@ public class BooleanQueryTranslatorImpl implements BooleanQueryTranslator {
 			boolQueryBuilder.boost(booleanQuery.getBoost());
 		}
 
+		BooleanFilter booleanFilter = booleanQuery.getPreBooleanFilter();
+
+		if (booleanFilter != null) {
+			QueryBuilder filterQueryBuilder = filterTranslator.translate(
+				booleanFilter, null);
+
+			boolQueryBuilder.filter(filterQueryBuilder);
+		}
+
 		return boolQueryBuilder;
 	}
+
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
+	protected FilterTranslator<QueryBuilder> filterTranslator;
 
 	private void _addClause(
 		BooleanClause<Query> clause, BoolQueryBuilder boolQuery,
