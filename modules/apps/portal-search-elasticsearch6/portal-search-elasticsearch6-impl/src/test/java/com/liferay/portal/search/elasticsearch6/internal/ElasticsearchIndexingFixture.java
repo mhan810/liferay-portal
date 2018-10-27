@@ -67,6 +67,10 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 		return _elasticsearchFixture;
 	}
 
+	public IndexNameBuilder getIndexNameBuilder() {
+		return _indexNameBuilder;
+	}
+
 	@Override
 	public IndexSearcher getIndexSearcher() {
 		return _indexSearcher;
