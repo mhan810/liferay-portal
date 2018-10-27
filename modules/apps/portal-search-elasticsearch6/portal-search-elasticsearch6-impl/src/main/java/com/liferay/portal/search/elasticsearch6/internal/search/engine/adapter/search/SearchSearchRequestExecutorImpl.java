@@ -49,6 +49,10 @@ public class SearchSearchRequestExecutorImpl
 
 		SearchSearchResponse searchSearchResponse = new SearchSearchResponse();
 
+		String scrollId = searchResponse.getScrollId();
+
+		searchSearchResponse.setScrollId(scrollId);
+
 		String searchRequestBuilderString = searchRequestBuilder.toString();
 
 		searchSearchResponseAssembler.assemble(

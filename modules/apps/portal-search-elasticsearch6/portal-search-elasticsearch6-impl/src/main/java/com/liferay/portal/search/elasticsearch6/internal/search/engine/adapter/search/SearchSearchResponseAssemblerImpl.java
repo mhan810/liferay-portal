@@ -15,6 +15,7 @@
 package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.search;
 
 import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch6.internal.search.response.SearchResponseTranslator;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
@@ -45,6 +46,10 @@ public class SearchSearchResponseAssemblerImpl
 		SearchHits searchHits = searchResponse.getHits();
 
 		searchSearchResponse.setCount(searchHits.totalHits);
+
+		if (Validator.isNotNull(searchResponse.getScrollId())) {
+			searchSearchResponse.setScrollId(searchResponse.getScrollId());
+		}
 
 		Hits hits = searchResponseTranslator.translate(
 			searchResponse, searchSearchRequest.getFacets(),

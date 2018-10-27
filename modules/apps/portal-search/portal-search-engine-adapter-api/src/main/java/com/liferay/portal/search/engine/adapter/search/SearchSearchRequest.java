@@ -76,6 +76,10 @@ public class SearchSearchRequest
 		throw new UnsupportedOperationException();
 	}
 
+	public int getScrollTimeInSeconds() {
+		return _scrollTimeInSeconds;
+	}
+
 	public String[] getSelectedFieldNames() {
 		return _selectedFieldNames;
 	}
@@ -166,6 +170,10 @@ public class SearchSearchRequest
 		_scoreEnabled = scoreEnabled;
 	}
 
+	public void setScrollTimeInSeconds(int scrollTimeInSeconds) {
+		_scrollTimeInSeconds = scrollTimeInSeconds;
+	}
+
 	public void setSelectedFieldNames(String... selectedFieldNames) {
 		_selectedFieldNames = selectedFieldNames;
 	}
@@ -174,7 +182,7 @@ public class SearchSearchRequest
 		_size = size;
 	}
 
-	public void setSorts(Sort[] sorts) {
+	public void setSorts(Sort... sorts) {
 		_sorts = sorts;
 	}
 
@@ -197,6 +205,7 @@ public class SearchSearchRequest
 	private boolean _luceneSyntax;
 	private String _preference;
 	private boolean _scoreEnabled;
+	private int _scrollTimeInSeconds;
 	private String[] _selectedFieldNames;
 	private int _size;
 	private Sort[] _sorts;

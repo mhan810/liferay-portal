@@ -29,6 +29,7 @@ import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
 import java.util.Map;
 
 import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.common.unit.TimeValue;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -72,6 +73,13 @@ public class SearchSearchRequestAssemblerImpl
 			searchRequestBuilder, searchSearchRequest.getStart(),
 			searchSearchRequest.getSize());
 		addPreference(searchRequestBuilder, searchSearchRequest);
+
+		if (searchSearchRequest.getScrollTimeInSeconds() > 0) {
+			searchRequestBuilder.setScroll(
+				TimeValue.timeValueSeconds(
+					searchSearchRequest.getScrollTimeInSeconds()));
+		}
+
 		addSelectedFields(
 			searchRequestBuilder, searchSearchRequest.getSelectedFieldNames());
 

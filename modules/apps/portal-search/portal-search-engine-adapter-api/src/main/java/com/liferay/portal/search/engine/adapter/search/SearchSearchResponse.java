@@ -28,10 +28,19 @@ public class SearchSearchResponse extends BaseSearchResponse {
 		return _hits;
 	}
 
+	public String getScrollId() {
+		return _scrollId;
+	}
+
 	public void setHits(Hits hits) {
 		_hits = hits;
 	}
 
+	public void setScrollId(String scrollId) {
+		_scrollId = scrollId;
+	}
+
 	private Hits _hits;
+	private String _scrollId;
 
 }
