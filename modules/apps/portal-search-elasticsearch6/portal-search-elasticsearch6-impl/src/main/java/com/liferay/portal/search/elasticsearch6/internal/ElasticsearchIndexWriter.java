@@ -14,15 +14,19 @@
 
 package com.liferay.portal.search.elasticsearch6.internal;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.BaseIndexWriter;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
+import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriter;
+import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.search.filter.TermFilter;
+import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.search.generic.MatchAllQuery;
 import com.liferay.portal.kernel.search.suggest.SpellCheckIndexWriter;
 import com.liferay.portal.kernel.util.PortalRunMode;
@@ -158,24 +162,36 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		String indexName = indexNameBuilder.getIndexName(
 			searchContext.getCompanyId());
 
-		Filter termFilter = new TermFilter(Field.ENTRY_CLASS_NAME, className);
+		try {
+			Filter termFilter = new TermFilter(
+				Field.ENTRY_CLASS_NAME, className);
 
-		BooleanFilter booleanFilter = new BooleanFilter();
+			BooleanFilter booleanFilter = new BooleanFilter();
 
-		booleanFilter.add(termFilter, BooleanClauseOccur.MUST);
+			booleanFilter.add(termFilter, BooleanClauseOccur.MUST);
 
-		MatchAllQuery matchAllQuery = new MatchAllQuery();
+			MatchAllQuery matchAllQuery = new MatchAllQuery();
 
-		matchAllQuery.setPreBooleanFilter(booleanFilter);
+			BooleanQuery booleanQuery = new BooleanQueryImpl();
 
-		DeleteByQueryDocumentRequest deleteByQueryDocumentRequest =
-			new DeleteByQueryDocumentRequest(matchAllQuery, indexName);
+			booleanQuery.setPreBooleanFilter(booleanFilter);
 
-		if (PortalRunMode.isTestMode() || searchContext.isCommitImmediately()) {
-			deleteByQueryDocumentRequest.setRefresh(true);
+			booleanQuery.add(matchAllQuery, BooleanClauseOccur.MUST);
+
+			DeleteByQueryDocumentRequest deleteByQueryDocumentRequest =
+				new DeleteByQueryDocumentRequest(booleanQuery, indexName);
+
+			if (PortalRunMode.isTestMode() ||
+				searchContext.isCommitImmediately()) {
+
+				deleteByQueryDocumentRequest.setRefresh(true);
+			}
+
+			searchEngineAdapter.execute(deleteByQueryDocumentRequest);
 		}
-
-		searchEngineAdapter.execute(deleteByQueryDocumentRequest);
+		catch (ParseException pe) {
+			throw new SystemException(pe);
+		}
 	}
 
 	@Override
