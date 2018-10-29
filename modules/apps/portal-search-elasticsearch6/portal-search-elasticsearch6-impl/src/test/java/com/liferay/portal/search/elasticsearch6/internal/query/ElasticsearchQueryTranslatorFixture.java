@@ -14,6 +14,8 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.query;
 
+import com.liferay.portal.search.elasticsearch6.internal.filter.ElasticsearchFilterTranslatorFixture;
+
 /**
  * @author Michael C. Han
  */
@@ -22,7 +24,18 @@ public class ElasticsearchQueryTranslatorFixture {
 	public ElasticsearchQueryTranslatorFixture() {
 		_elasticsearchQueryTranslator = new ElasticsearchQueryTranslator() {
 			{
-				booleanQueryTranslator = new BooleanQueryTranslatorImpl();
+				booleanQueryTranslator = new BooleanQueryTranslatorImpl() {
+					{
+						ElasticsearchFilterTranslatorFixture
+							elasticsearchFilterTranslatorFixture =
+								new ElasticsearchFilterTranslatorFixture();
+
+						filterTranslator =
+							elasticsearchFilterTranslatorFixture.
+								getElasticsearchFilterTranslator();
+					}
+				};
+
 				disMaxQueryTranslator = new DisMaxQueryTranslatorImpl();
 				fuzzyQueryTranslator = new FuzzyQueryTranslatorImpl();
 				matchAllQueryTranslator = new MatchAllQueryTranslatorImpl();

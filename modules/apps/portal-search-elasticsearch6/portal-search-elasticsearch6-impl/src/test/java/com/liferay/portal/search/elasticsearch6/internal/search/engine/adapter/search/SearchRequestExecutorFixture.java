@@ -19,22 +19,7 @@ import com.liferay.portal.search.elasticsearch6.internal.connection.Elasticsearc
 import com.liferay.portal.search.elasticsearch6.internal.facet.DefaultFacetProcessor;
 import com.liferay.portal.search.elasticsearch6.internal.facet.DefaultFacetTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.facet.FacetProcessor;
-import com.liferay.portal.search.elasticsearch6.internal.filter.BooleanFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.DateRangeFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.DateRangeTermFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.ElasticsearchFilterTranslator;
-import com.liferay.portal.search.elasticsearch6.internal.filter.ExistsFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.GeoBoundingBoxFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.GeoDistanceFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.GeoDistanceRangeFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.GeoPolygonFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.MissingFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.PrefixFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.QueryFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.RangeTermFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.TermFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.TermsFilterTranslatorImpl;
-import com.liferay.portal.search.elasticsearch6.internal.filter.TermsSetFilterTranslatorImpl;
+import com.liferay.portal.search.elasticsearch6.internal.filter.ElasticsearchFilterTranslatorFixture;
 import com.liferay.portal.search.elasticsearch6.internal.groupby.DefaultGroupByTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.highlight.DefaultHighlighterTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.query.ElasticsearchQueryTranslatorFixture;
@@ -80,7 +65,14 @@ public class SearchRequestExecutorFixture {
 		return new CommonSearchRequestBuilderAssemblerImpl() {
 			{
 				facetTranslator = createDefaultFacetTranslator();
-				filterTranslator = createElasticsearchFilterTranslator();
+
+				ElasticsearchFilterTranslatorFixture
+					elasticsearchFilterTranslatorFixture =
+						new ElasticsearchFilterTranslatorFixture();
+
+				filterTranslator =
+					elasticsearchFilterTranslatorFixture.
+						getElasticsearchFilterTranslator();
 
 				ElasticsearchQueryTranslatorFixture
 					elasticsearchQueryTranslatorFixture =
@@ -110,36 +102,14 @@ public class SearchRequestExecutorFixture {
 		return new DefaultFacetTranslator() {
 			{
 				facetProcessor = _facetProcessor;
-				filterTranslator = createElasticsearchFilterTranslator();
-			}
-		};
-	}
 
-	protected ElasticsearchFilterTranslator
-		createElasticsearchFilterTranslator() {
+				ElasticsearchFilterTranslatorFixture
+					elasticsearchFilterTranslatorFixture =
+						new ElasticsearchFilterTranslatorFixture();
 
-		return new ElasticsearchFilterTranslator() {
-			{
-				booleanFilterTranslator = new BooleanFilterTranslatorImpl();
-				dateRangeFilterTranslator = new DateRangeFilterTranslatorImpl();
-				dateRangeTermFilterTranslator =
-					new DateRangeTermFilterTranslatorImpl();
-				existsFilterTranslator = new ExistsFilterTranslatorImpl();
-				geoBoundingBoxFilterTranslator =
-					new GeoBoundingBoxFilterTranslatorImpl();
-				geoDistanceFilterTranslator =
-					new GeoDistanceFilterTranslatorImpl();
-				geoDistanceRangeFilterTranslator =
-					new GeoDistanceRangeFilterTranslatorImpl();
-				geoPolygonFilterTranslator =
-					new GeoPolygonFilterTranslatorImpl();
-				missingFilterTranslator = new MissingFilterTranslatorImpl();
-				prefixFilterTranslator = new PrefixFilterTranslatorImpl();
-				queryFilterTranslator = new QueryFilterTranslatorImpl();
-				rangeTermFilterTranslator = new RangeTermFilterTranslatorImpl();
-				termFilterTranslator = new TermFilterTranslatorImpl();
-				termsFilterTranslator = new TermsFilterTranslatorImpl();
-				termsSetFilterTranslator = new TermsSetFilterTranslatorImpl();
+				filterTranslator =
+					elasticsearchFilterTranslatorFixture.
+						getElasticsearchFilterTranslator();
 			}
 		};
 	}
