@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.search;
 
+import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.filter.FilterTranslator;
 import com.liferay.portal.kernel.search.query.QueryTranslator;
@@ -86,9 +87,19 @@ public class CommonSearchRequestBuilderAssemblerImpl
 
 		QueryBuilder queryBuilder = queryTranslator.translate(query, null);
 
-		if (query.getPreBooleanFilter() == null) {
+		if ((query.getPreBooleanFilter() == null) ||
+			(query instanceof BooleanQuery)) {
+
 			return queryBuilder;
 		}
+
+		//
+		// LPS-86537 the following is only present to allow for backwards
+		// compatibility.  Not all Query should have filters allowed according
+		// to Elasticsearch's API.
+		//
+		// See related note in BooleanQueryTranslatorImpl
+		//
 
 		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
