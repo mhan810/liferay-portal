@@ -86,17 +86,7 @@ public class CommonSearchRequestBuilderAssemblerImpl
 
 		QueryBuilder queryBuilder = queryTranslator.translate(query, null);
 
-		if (query.getPreBooleanFilter() == null) {
-			return queryBuilder;
-		}
-
-		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-		boolQueryBuilder.filter(
-			filterTranslator.translate(query.getPreBooleanFilter(), null));
-		boolQueryBuilder.must(queryBuilder);
-
-		return boolQueryBuilder;
+		return queryBuilder;
 	}
 
 	@Reference
