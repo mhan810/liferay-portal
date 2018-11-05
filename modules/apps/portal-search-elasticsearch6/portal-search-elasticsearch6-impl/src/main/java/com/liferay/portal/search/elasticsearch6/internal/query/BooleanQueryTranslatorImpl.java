@@ -56,11 +56,9 @@ public class BooleanQueryTranslatorImpl implements BooleanQueryTranslator {
 			return boolQueryBuilder;
 		}
 
-		//
 		// LPS-86537 The following conversion is present for backwards
 		// compatibility with how Liferay's Indexer frameworks handles queries.
 		// Ideally, we do not wrap the BooleanQuery with another BooleanQuery
-		//
 
 		BoolQueryBuilder wrapperBoolQueryBuilder = QueryBuilders.boolQuery();
 
