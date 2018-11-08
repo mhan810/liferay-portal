@@ -173,14 +173,16 @@ public class ElasticsearchSpellCheckIndexWriter
 			DeleteByQueryDocumentRequest deleteByQueryDocumentRequest =
 				new DeleteByQueryDocumentRequest(matchAllQuery, indexName);
 
-			if (PortalRunMode.isTestMode() || searchContext.isCommitImmediately()) {
+			if (PortalRunMode.isTestMode() ||
+				searchContext.isCommitImmediately()) {
+
 				deleteByQueryDocumentRequest.setRefresh(true);
 			}
 
 			searchEngineAdapter.execute(deleteByQueryDocumentRequest);
 		}
-		catch (ParseException e) {
-			throw new SystemException(e);
+		catch (ParseException pe) {
+			throw new SystemException(pe);
 		}
 	}
 
