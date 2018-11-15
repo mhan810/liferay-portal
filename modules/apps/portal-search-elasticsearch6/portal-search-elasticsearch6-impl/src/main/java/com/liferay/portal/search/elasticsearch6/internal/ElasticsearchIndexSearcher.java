@@ -34,8 +34,10 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.constants.SearchContextAttributes;
 import com.liferay.portal.search.elasticsearch6.configuration.ElasticsearchConfiguration;
+import com.liferay.portal.search.elasticsearch6.constants.ElasticsearchSearchContextAttributes;
 import com.liferay.portal.search.elasticsearch6.internal.index.IndexNameBuilder;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.search.CountSearchRequest;
@@ -142,6 +144,14 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 
 				searchSearchRequest.setQuery(query);
 				searchSearchRequest.setPostFilter(query.getPostFilter());
+
+				String preference = (String)searchContext.getAttribute(
+					ElasticsearchSearchContextAttributes.
+						ATTRIBUTE_KEY_SEARCH_REQUEST_PREFERENCE);
+
+				if (!Validator.isBlank(preference)) {
+					searchSearchRequest.setPreference(preference);
+				}
 
 				searchSearchRequest.setScoreEnabled(
 					queryConfig.isScoreEnabled());
