@@ -29,6 +29,9 @@ import com.liferay.portal.search.engine.adapter.index.IndexResponse;
 import com.liferay.portal.search.engine.adapter.search.SearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchRequestExecutor;
 import com.liferay.portal.search.engine.adapter.search.SearchResponse;
+import com.liferay.portal.search.engine.adapter.snapshot.SnapshotRequest;
+import com.liferay.portal.search.engine.adapter.snapshot.SnapshotRequestExecutor;
+import com.liferay.portal.search.engine.adapter.snapshot.SnapshotResponse;
 
 import org.elasticsearch.index.query.QueryBuilder;
 
@@ -72,6 +75,13 @@ public class ElasticsearchSearchEngineAdapterImpl
 	}
 
 	@Override
+	public <W extends SnapshotResponse> W execute(
+		SnapshotRequest<W> snapshotRequest) {
+
+		return snapshotRequest.accept(snapshotRequestExecutor);
+	}
+
+	@Override
 	public String getQueryString(Query query) {
 		QueryBuilder queryBuilder = queryTranslator.translate(query, null);
 
@@ -92,5 +102,8 @@ public class ElasticsearchSearchEngineAdapterImpl
 
 	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	protected SearchRequestExecutor searchRequestExecutor;
+
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
+	protected SnapshotRequestExecutor snapshotRequestExecutor;
 
 }
