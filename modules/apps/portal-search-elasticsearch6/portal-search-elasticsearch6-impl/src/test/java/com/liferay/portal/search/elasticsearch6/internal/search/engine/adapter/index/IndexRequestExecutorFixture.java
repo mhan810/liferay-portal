@@ -33,6 +33,7 @@ public class IndexRequestExecutorFixture {
 			{
 				analyzeIndexRequestExecutor =
 					createAnalyzeIndexRequestExecutor();
+				closeIndexRequestExecutor = createCloseIndexRequestExecutor();
 				createIndexRequestExecutor = createCreateIndexRequestExecutor();
 				deleteIndexRequestExecutor = createDeleteIndexRequestExecutor();
 				flushIndexRequestExecutor = createFlushIndexRequestExecutor();
@@ -44,6 +45,7 @@ public class IndexRequestExecutorFixture {
 					createGetMappingIndexRequestExecutor();
 				indicesExistsIndexRequestExecutor =
 					createIndexExistsIndexRequestExecutor();
+				openIndexRequestExecutor = createOpenIndexRequestExecutor();
 				putMappingIndexRequestExecutor =
 					createPutMappingIndexRequestExecutor();
 				refreshIndexRequestExecutor =
@@ -59,6 +61,16 @@ public class IndexRequestExecutorFixture {
 			{
 				elasticsearchConnectionManager =
 					_elasticsearchConnectionManager;
+			}
+		};
+	}
+
+	protected CloseIndexRequestExecutor createCloseIndexRequestExecutor() {
+		return new CloseIndexRequestExecutorImpl() {
+			{
+				elasticsearchConnectionManager =
+					_elasticsearchConnectionManager;
+				indicesOptionsTranslator = new IndicesOptionsTranslatorImpl();
 			}
 		};
 	}
@@ -133,6 +145,16 @@ public class IndexRequestExecutorFixture {
 			{
 				elasticsearchConnectionManager =
 					_elasticsearchConnectionManager;
+			}
+		};
+	}
+
+	protected OpenIndexRequestExecutor createOpenIndexRequestExecutor() {
+		return new OpenIndexRequestExecutorImpl() {
+			{
+				elasticsearchConnectionManager =
+					_elasticsearchConnectionManager;
+				indicesOptionsTranslator = new IndicesOptionsTranslatorImpl();
 			}
 		};
 	}
