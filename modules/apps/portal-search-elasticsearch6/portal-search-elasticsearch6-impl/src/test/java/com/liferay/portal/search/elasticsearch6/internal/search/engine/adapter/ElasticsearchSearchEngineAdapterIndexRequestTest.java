@@ -21,6 +21,8 @@ import com.liferay.portal.search.elasticsearch6.internal.connection.Elasticsearc
 import com.liferay.portal.search.elasticsearch6.internal.connection.TestElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.index.IndexRequestExecutorFixture;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
+import com.liferay.portal.search.engine.adapter.index.CloseIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.CloseIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
@@ -36,6 +38,9 @@ import com.liferay.portal.search.engine.adapter.index.GetMappingIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.IndexRequestExecutor;
 import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexResponse;
+import com.liferay.portal.search.engine.adapter.index.IndicesOptions;
+import com.liferay.portal.search.engine.adapter.index.OpenIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.OpenIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.RefreshIndexRequest;
@@ -45,6 +50,11 @@ import com.liferay.portal.search.engine.adapter.index.UpdateIndexSettingsIndexRe
 
 import java.util.Map;
 
+import org.elasticsearch.action.admin.cluster.state.ClusterStateAction;
+import org.elasticsearch.action.admin.cluster.state.ClusterStateRequestBuilder;
+import org.elasticsearch.action.admin.cluster.state.ClusterStateResponse;
+import org.elasticsearch.action.admin.indices.close.CloseIndexAction;
+import org.elasticsearch.action.admin.indices.close.CloseIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequestBuilder;
@@ -56,7 +66,10 @@ import org.elasticsearch.action.admin.indices.settings.get.GetSettingsRequestBui
 import org.elasticsearch.action.admin.indices.settings.get.GetSettingsResponse;
 import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.client.IndicesAdminClient;
+import org.elasticsearch.cluster.ClusterState;
+import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.cluster.metadata.MappingMetaData;
+import org.elasticsearch.cluster.metadata.MetaData;
 import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.xcontent.XContentType;
 
@@ -98,6 +111,27 @@ public class ElasticsearchSearchEngineAdapterIndexRequestTest {
 		deleteIndex();
 
 		_elasticsearchFixture.tearDown();
+	}
+
+	@Test
+	public void testExecuteCloseIndexRequest() {
+		CloseIndexRequest closeIndexRequest = new CloseIndexRequest(
+			_INDEX_NAME);
+
+		IndicesOptions indicesOptions = new IndicesOptions();
+
+		indicesOptions.setIgnoreUnavailable(true);
+
+		closeIndexRequest.setIndicesOptions(indicesOptions);
+
+		CloseIndexResponse closeIndexResponse = _searchEngineAdapter.execute(
+			closeIndexRequest);
+
+		Assert.assertTrue(
+			"Close request not acknowledged",
+			closeIndexResponse.isAcknowledged());
+
+		assertIndexMetaDataState(_INDEX_NAME, IndexMetaData.State.CLOSE);
 	}
 
 	@Test
@@ -345,6 +379,60 @@ public class ElasticsearchSearchEngineAdapterIndexRequestTest {
 			_indicesAdminClient.prepareDelete("test_index_2");
 
 		deleteIndexRequestBuilder.get();
+	}
+
+	@Test
+	public void testOpenIndexRequest() {
+		CloseIndexRequestBuilder closeIndexRequestBuilder =
+			CloseIndexAction.INSTANCE.newRequestBuilder(
+				_elasticsearchFixture.getClient());
+
+		closeIndexRequestBuilder.setIndices(_INDEX_NAME);
+
+		closeIndexRequestBuilder.get();
+
+		assertIndexMetaDataState(_INDEX_NAME, IndexMetaData.State.CLOSE);
+
+		OpenIndexRequest openIndexRequest = new OpenIndexRequest(_INDEX_NAME);
+
+		IndicesOptions indicesOptions = new IndicesOptions();
+
+		indicesOptions.setIgnoreUnavailable(true);
+
+		openIndexRequest.setIndicesOptions(indicesOptions);
+
+		OpenIndexResponse openIndexResponse = _searchEngineAdapter.execute(
+			openIndexRequest);
+
+		Assert.assertTrue(
+			"Open request not acknowledged",
+			openIndexResponse.isAcknowledged());
+
+		assertIndexMetaDataState(_INDEX_NAME, IndexMetaData.State.OPEN);
+	}
+
+	protected void assertIndexMetaDataState(
+		String indexName, IndexMetaData.State indexMetaDataState) {
+
+		ClusterStateRequestBuilder clusterStateRequestBuilder =
+			ClusterStateAction.INSTANCE.newRequestBuilder(
+				_elasticsearchFixture.getClient());
+
+		clusterStateRequestBuilder.setIndices(indexName);
+
+		ClusterStateResponse clusterStateResponse =
+			clusterStateRequestBuilder.get();
+
+		ClusterState clusterState = clusterStateResponse.getState();
+
+		MetaData metaData = clusterState.getMetaData();
+
+		ImmutableOpenMap<String, IndexMetaData> indexMetaDataMap =
+			metaData.getIndices();
+
+		IndexMetaData indexMetaData = indexMetaDataMap.get(_INDEX_NAME);
+
+		Assert.assertEquals(indexMetaDataState, indexMetaData.getState());
 	}
 
 	protected void createIndex() {
