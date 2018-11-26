@@ -25,6 +25,26 @@ import org.osgi.service.component.annotations.Component;
 public class ClusterHealthStatusTranslatorImpl
 	implements ClusterHealthStatusTranslator {
 
+	@Override
+	public org.elasticsearch.cluster.health.ClusterHealthStatus translate(
+		ClusterHealthStatus clusterHealthStatus) {
+
+		if (clusterHealthStatus == ClusterHealthStatus.GREEN) {
+			return org.elasticsearch.cluster.health.ClusterHealthStatus.GREEN;
+		}
+
+		if (clusterHealthStatus == ClusterHealthStatus.RED) {
+			return org.elasticsearch.cluster.health.ClusterHealthStatus.RED;
+		}
+
+		if (clusterHealthStatus == ClusterHealthStatus.YELLOW) {
+			return org.elasticsearch.cluster.health.ClusterHealthStatus.YELLOW;
+		}
+
+		throw new IllegalArgumentException(
+			"Unknown status: " + clusterHealthStatus);
+	}
+
 	public ClusterHealthStatus translate(
 		org.elasticsearch.cluster.health.ClusterHealthStatus
 			clusterHealthStatus) {
