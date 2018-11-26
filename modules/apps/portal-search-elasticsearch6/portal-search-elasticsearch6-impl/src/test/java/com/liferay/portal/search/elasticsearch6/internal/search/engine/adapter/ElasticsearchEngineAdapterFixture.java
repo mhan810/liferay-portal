@@ -20,6 +20,7 @@ import com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.c
 import com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.document.DocumentRequestExecutorFixture;
 import com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.index.IndexRequestExecutorFixture;
 import com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.search.SearchRequestExecutorFixture;
+import com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.snapshot.SnapshotRequestExecutorFixture;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -69,6 +70,13 @@ public class ElasticsearchEngineAdapterFixture {
 
 				searchRequestExecutor =
 					searchRequestExecutorFixture.createExecutor();
+
+				SnapshotRequestExecutorFixture snapshotRequestExecutorFixture =
+					new SnapshotRequestExecutorFixture(
+						_elasticsearchConnectionManager);
+
+				snapshotRequestExecutor =
+					snapshotRequestExecutorFixture.createExecutor();
 			}
 		};
 	}

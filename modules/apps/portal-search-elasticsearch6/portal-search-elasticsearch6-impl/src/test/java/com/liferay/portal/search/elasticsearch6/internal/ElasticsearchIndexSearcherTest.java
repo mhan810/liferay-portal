@@ -35,6 +35,8 @@ import com.liferay.portal.search.engine.adapter.search.SearchRequestExecutor;
 import com.liferay.portal.search.engine.adapter.search.SearchResponse;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
+import com.liferay.portal.search.engine.adapter.snapshot.SnapshotRequest;
+import com.liferay.portal.search.engine.adapter.snapshot.SnapshotResponse;
 import com.liferay.portal.search.test.util.indexing.DocumentFixture;
 
 import com.vividsolutions.jts.util.Assert;
@@ -162,6 +164,13 @@ public class ElasticsearchIndexSearcherTest {
 			_searchRequest = searchRequest;
 
 			return searchRequest.accept(searchRequestExecutor);
+		}
+
+		@Override
+		public <W extends SnapshotResponse> W execute(
+			SnapshotRequest<W> snapshotRequest) {
+
+			throw new UnsupportedOperationException();
 		}
 
 		@Override
