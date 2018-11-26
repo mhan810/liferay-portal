@@ -24,10 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.client.ClusterAdminClient;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -66,19 +64,6 @@ public class ElasticsearchConnectionManager {
 		}
 
 		return elasticsearchConnection.getClient();
-	}
-
-	public ClusterAdminClient getClusterAdminClient() {
-		AdminClient adminClient = getAdminClient();
-
-		return adminClient.cluster();
-	}
-
-	public ClusterHealthResponse getClusterHealthResponse(long timeout) {
-		ElasticsearchConnection elasticsearchConnection =
-			getElasticsearchConnection();
-
-		return elasticsearchConnection.getClusterHealthResponse(timeout);
 	}
 
 	public ElasticsearchConnection getElasticsearchConnection() {
