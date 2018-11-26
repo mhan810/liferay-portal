@@ -16,6 +16,8 @@ package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.
 
 import com.liferay.portal.search.engine.adapter.index.AnalyzeIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.AnalyzeIndexResponse;
+import com.liferay.portal.search.engine.adapter.index.CloseIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.CloseIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
@@ -31,6 +33,8 @@ import com.liferay.portal.search.engine.adapter.index.GetMappingIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.IndexRequestExecutor;
 import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexResponse;
+import com.liferay.portal.search.engine.adapter.index.OpenIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.OpenIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.RefreshIndexRequest;
@@ -55,6 +59,13 @@ public class ElasticsearchIndexRequestExecutor implements IndexRequestExecutor {
 		AnalyzeIndexRequest analyzeIndexRequest) {
 
 		return analyzeIndexRequestExecutor.execute(analyzeIndexRequest);
+	}
+
+	@Override
+	public CloseIndexResponse executeIndexRequest(
+		CloseIndexRequest closeIndexRequest) {
+
+		return closeIndexRequestExecutor.execute(closeIndexRequest);
 	}
 
 	@Override
@@ -109,6 +120,13 @@ public class ElasticsearchIndexRequestExecutor implements IndexRequestExecutor {
 	}
 
 	@Override
+	public OpenIndexResponse executeIndexRequest(
+		OpenIndexRequest openIndexRequest) {
+
+		return openIndexRequestExecutor.execute(openIndexRequest);
+	}
+
+	@Override
 	public PutMappingIndexResponse executeIndexRequest(
 		PutMappingIndexRequest putMappingIndexRequest) {
 
@@ -134,6 +152,9 @@ public class ElasticsearchIndexRequestExecutor implements IndexRequestExecutor {
 	protected AnalyzeIndexRequestExecutor analyzeIndexRequestExecutor;
 
 	@Reference
+	protected CloseIndexRequestExecutor closeIndexRequestExecutor;
+
+	@Reference
 	protected CreateIndexRequestExecutor createIndexRequestExecutor;
 
 	@Reference
@@ -155,6 +176,9 @@ public class ElasticsearchIndexRequestExecutor implements IndexRequestExecutor {
 	@Reference
 	protected IndicesExistsIndexRequestExecutor
 		indicesExistsIndexRequestExecutor;
+
+	@Reference
+	protected OpenIndexRequestExecutor openIndexRequestExecutor;
 
 	@Reference
 	protected PutMappingIndexRequestExecutor putMappingIndexRequestExecutor;
