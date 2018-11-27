@@ -26,6 +26,7 @@ import com.liferay.portal.search.elasticsearch6.internal.query.ElasticsearchQuer
 import com.liferay.portal.search.elasticsearch6.internal.search.response.DefaultSearchResponseTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.sort.DefaultSortTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.stats.DefaultStatsTranslator;
+import com.liferay.portal.search.elasticsearch6.internal.suggest.ElasticsearchSuggesterTranslatorFixture;
 import com.liferay.portal.search.engine.adapter.search.SearchRequestExecutor;
 
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -49,6 +50,8 @@ public class SearchRequestExecutorFixture {
 					createMultisearchSearchRequestExecutor();
 				searchSearchRequestExecutor =
 					createSearchSearchRequestExecutor();
+				suggestSearchRequestExecutor =
+					createSuggestSearchRequestExecutor();
 			}
 		};
 	}
@@ -172,6 +175,25 @@ public class SearchRequestExecutorFixture {
 							statsTranslator = new DefaultStatsTranslator();
 						}
 					};
+			}
+		};
+	}
+
+	protected SuggestSearchRequestExecutor
+		createSuggestSearchRequestExecutor() {
+
+		return new SuggestSearchRequestExecutorImpl() {
+			{
+				elasticsearchConnectionManager =
+					_elasticsearchConnectionManager;
+
+				ElasticsearchSuggesterTranslatorFixture
+					elasticsearchSuggesterTranslatorFixture =
+						new ElasticsearchSuggesterTranslatorFixture();
+
+				suggesterTranslator =
+					elasticsearchSuggesterTranslatorFixture.
+						getElasticsearchSuggesterTranslator();
 			}
 		};
 	}

@@ -21,6 +21,8 @@ import com.liferay.portal.search.engine.adapter.search.MultisearchSearchResponse
 import com.liferay.portal.search.engine.adapter.search.SearchRequestExecutor;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
+import com.liferay.portal.search.engine.adapter.search.SuggestSearchRequest;
+import com.liferay.portal.search.engine.adapter.search.SuggestSearchResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -57,6 +59,13 @@ public class ElasticsearchSearchRequestExecutor
 		return searchSearchRequestExecutor.execute(searchSearchRequest);
 	}
 
+	@Override
+	public SuggestSearchResponse executeSearchRequest(
+		SuggestSearchRequest suggestSearchRequest) {
+
+		return suggestSearchRequestExecutor.execute(suggestSearchRequest);
+	}
+
 	@Reference
 	protected CountSearchRequestExecutor countSearchRequestExecutor;
 
@@ -65,5 +74,8 @@ public class ElasticsearchSearchRequestExecutor
 
 	@Reference
 	protected SearchSearchRequestExecutor searchSearchRequestExecutor;
+
+	@Reference
+	protected SuggestSearchRequestExecutor suggestSearchRequestExecutor;
 
 }
