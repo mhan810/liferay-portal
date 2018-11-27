@@ -20,7 +20,11 @@ import java.util.List;
 
 /**
  * @author Michael C. Han
+ * @deprecated As of Judson (7.1.x), moved to {@link
+ *             com.liferay.portal.search.engine.adapter.search.
+ *             SuggestSearchResult}
  */
+@Deprecated
 public class SuggesterResult {
 
 	public SuggesterResult(String name) {
