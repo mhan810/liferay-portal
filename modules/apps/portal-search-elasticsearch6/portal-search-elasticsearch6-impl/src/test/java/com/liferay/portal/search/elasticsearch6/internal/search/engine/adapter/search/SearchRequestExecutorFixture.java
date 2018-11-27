@@ -33,6 +33,7 @@ import com.liferay.portal.search.elasticsearch6.internal.sort.ElasticsearchSortF
 import com.liferay.portal.search.elasticsearch6.internal.sort.ElasticsearchSortFieldTranslatorFixture;
 import com.liferay.portal.search.elasticsearch6.internal.stats.DefaultStatsTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.stats.StatsTranslator;
+import com.liferay.portal.search.elasticsearch6.internal.suggest.ElasticsearchSuggesterTranslatorFixture;
 import com.liferay.portal.search.engine.adapter.search.SearchRequestExecutor;
 import com.liferay.portal.search.internal.aggregation.AggregationResultsImpl;
 import com.liferay.portal.search.internal.legacy.stats.StatsRequestBuilderFactoryImpl;
@@ -232,6 +233,9 @@ public class SearchRequestExecutorFixture {
 						elasticsearchClientResolver,
 						searchSearchRequestAssembler,
 						searchSearchResponseAssembler));
+				setSuggestSearchRequestExecutor(
+					createSuggestSearchRequestExecutor(
+						elasticsearchClientResolver));
 			}
 		};
 	}
@@ -302,6 +306,25 @@ public class SearchRequestExecutorFixture {
 							setStatsTranslator(statsTranslator);
 						}
 					});
+			}
+		};
+	}
+
+	protected static SuggestSearchRequestExecutor
+		createSuggestSearchRequestExecutor(
+			ElasticsearchClientResolver elasticsearchClientResolver) {
+
+		return new SuggestSearchRequestExecutorImpl() {
+			{
+				setElasticsearchClientResolver(elasticsearchClientResolver);
+
+				ElasticsearchSuggesterTranslatorFixture
+					elasticsearchSuggesterTranslatorFixture =
+						new ElasticsearchSuggesterTranslatorFixture();
+
+				setSuggesterTranslator(
+					elasticsearchSuggesterTranslatorFixture.
+						getElasticsearchSuggesterTranslator());
 			}
 		};
 	}
