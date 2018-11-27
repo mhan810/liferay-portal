@@ -105,8 +105,7 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 			elasticsearchEngineAdapterFixture.getSearchEngineAdapter();
 
 		_indexSearcher = createIndexSearcher(
-			elasticsearchConnectionManager, searchEngineAdapter,
-			_indexNameBuilder);
+			searchEngineAdapter, _indexNameBuilder);
 
 		_indexWriter = createIndexWriter(
 			searchEngineAdapter, _indexNameBuilder);
@@ -118,16 +117,14 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 	}
 
 	protected QuerySuggester createElasticsearchQuerySuggester(
-		final ElasticsearchConnectionManager elasticsearchConnectionManager1,
+		final SearchEngineAdapter searchEngineAdapter1,
 		final IndexNameBuilder indexNameBuilder1) {
 
 		return new ElasticsearchQuerySuggester() {
 			{
-				elasticsearchConnectionManager =
-					elasticsearchConnectionManager1;
+				searchEngineAdapter = searchEngineAdapter1;
 				indexNameBuilder = indexNameBuilder1;
 				localization = _localization;
-				suggesterTranslator = createElasticsearchSuggesterTranslator();
 			}
 		};
 	}
@@ -164,7 +161,6 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 	}
 
 	protected IndexSearcher createIndexSearcher(
-		final ElasticsearchConnectionManager elasticsearchConnectionManager1,
 		SearchEngineAdapter searchEngineAdapter1,
 		final IndexNameBuilder indexNameBuilder1) {
 
@@ -176,7 +172,7 @@ public class ElasticsearchIndexingFixture implements IndexingFixture {
 
 				setQuerySuggester(
 					createElasticsearchQuerySuggester(
-						elasticsearchConnectionManager1, indexNameBuilder));
+						searchEngineAdapter1, indexNameBuilder));
 
 				activate(
 					_elasticsearchFixture.
