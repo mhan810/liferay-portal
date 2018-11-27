@@ -34,7 +34,10 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Michael C. Han
  */
-@Component(service = SnapshotRequestExecutor.class)
+@Component(
+	property = "search.engine.impl=Elasticsearch",
+	service = SnapshotRequestExecutor.class
+)
 public class ElasticsearchSnapshotRequestExecutor
 	implements SnapshotRequestExecutor {
 
