@@ -20,6 +20,7 @@ import com.liferay.portal.search.engine.adapter.snapshot.DeleteSnapshotResponse;
 
 import org.elasticsearch.action.admin.cluster.snapshots.delete.DeleteSnapshotAction;
 import org.elasticsearch.action.admin.cluster.snapshots.delete.DeleteSnapshotRequestBuilder;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -38,13 +39,11 @@ public class DeleteSnapshotRequestExecutorImpl
 		DeleteSnapshotRequestBuilder deleteSnapshotRequestBuilder =
 			createDeleteSnapshotRequestBuilder(deleteSnapshotRequest);
 
-		org.elasticsearch.action.admin.cluster.snapshots.delete.
-			DeleteSnapshotResponse elasticsearchDeleteSnapshotResponse =
-				deleteSnapshotRequestBuilder.get();
+		AcknowledgedResponse acknowledgedResponse =
+			deleteSnapshotRequestBuilder.get();
 
 		DeleteSnapshotResponse deleteSnapshotResponse =
-			new DeleteSnapshotResponse(
-				elasticsearchDeleteSnapshotResponse.isAcknowledged());
+			new DeleteSnapshotResponse(acknowledgedResponse.isAcknowledged());
 
 		return deleteSnapshotResponse;
 	}

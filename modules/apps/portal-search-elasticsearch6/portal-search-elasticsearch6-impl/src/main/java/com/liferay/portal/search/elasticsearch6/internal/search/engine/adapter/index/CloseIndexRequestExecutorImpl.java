@@ -21,6 +21,7 @@ import com.liferay.portal.search.engine.adapter.index.IndicesOptions;
 
 import org.elasticsearch.action.admin.indices.close.CloseIndexAction;
 import org.elasticsearch.action.admin.indices.close.CloseIndexRequestBuilder;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.common.unit.TimeValue;
 
 import org.osgi.service.component.annotations.Component;
@@ -38,11 +39,11 @@ public class CloseIndexRequestExecutorImpl
 		CloseIndexRequestBuilder closeIndexRequestBuilder =
 			createCloseIndexRequestBuilder(closeIndexRequest);
 
-		org.elasticsearch.action.admin.indices.close.CloseIndexResponse
-			elasticsearchCloseIndexResponse = closeIndexRequestBuilder.get();
+		AcknowledgedResponse acknowledgedResponse =
+			closeIndexRequestBuilder.get();
 
 		CloseIndexResponse closeIndexResponse = new CloseIndexResponse(
-			elasticsearchCloseIndexResponse.isAcknowledged());
+			acknowledgedResponse.isAcknowledged());
 
 		return closeIndexResponse;
 	}
