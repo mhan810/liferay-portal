@@ -21,6 +21,7 @@ import com.liferay.portal.search.engine.adapter.index.OpenIndexResponse;
 
 import org.elasticsearch.action.admin.indices.open.OpenIndexAction;
 import org.elasticsearch.action.admin.indices.open.OpenIndexRequestBuilder;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.common.unit.TimeValue;
 
 import org.osgi.service.component.annotations.Component;
@@ -37,11 +38,11 @@ public class OpenIndexRequestExecutorImpl implements OpenIndexRequestExecutor {
 		OpenIndexRequestBuilder openIndexRequestBuilder =
 			createOpenIndexRequestBuilder(openIndexRequest);
 
-		org.elasticsearch.action.admin.indices.open.OpenIndexResponse
-			elasticsearchOpenIndexResponse = openIndexRequestBuilder.get();
+		AcknowledgedResponse acknowledgedResponse =
+			openIndexRequestBuilder.get();
 
 		OpenIndexResponse openIndexResponse = new OpenIndexResponse(
-			elasticsearchOpenIndexResponse.isAcknowledged());
+			acknowledgedResponse.isAcknowledged());
 
 		return openIndexResponse;
 	}

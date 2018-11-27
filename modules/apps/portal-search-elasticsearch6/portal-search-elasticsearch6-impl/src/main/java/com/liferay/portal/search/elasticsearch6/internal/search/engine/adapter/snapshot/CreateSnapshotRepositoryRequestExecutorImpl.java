@@ -20,7 +20,7 @@ import com.liferay.portal.search.engine.adapter.snapshot.CreateSnapshotRepositor
 
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryAction;
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequestBuilder;
-import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryResponse;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.repositories.fs.FsRepository;
 
@@ -41,11 +41,11 @@ public class CreateSnapshotRepositoryRequestExecutorImpl
 		PutRepositoryRequestBuilder putRepositoryRequestBuilder =
 			createPutRepositoryRequestBuilder(createSnapshotRepositoryRequest);
 
-		PutRepositoryResponse putRepositoryResponse =
+		AcknowledgedResponse acknowledgedResponse =
 			putRepositoryRequestBuilder.get();
 
 		return new CreateSnapshotRepositoryResponse(
-			putRepositoryResponse.isAcknowledged());
+			acknowledgedResponse.isAcknowledged());
 	}
 
 	protected PutRepositoryRequestBuilder createPutRepositoryRequestBuilder(
