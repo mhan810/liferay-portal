@@ -17,10 +17,12 @@ package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch6.internal.connection.TestElasticsearchConnectionManager;
+import com.liferay.portal.search.engine.adapter.cluster.ClusterHealthStatus;
 import com.liferay.portal.search.engine.adapter.cluster.HealthClusterRequest;
 
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequestBuilder;
+import org.elasticsearch.common.unit.TimeValue;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -51,11 +53,17 @@ public class HealthClusterRequestExecutorTest {
 	@Test
 	public void testClusterRequestTranslation() {
 		HealthClusterRequest healthClusterRequest = new HealthClusterRequest(
-			new String[] {_INDEX_NAME});
+			_INDEX_NAME);
+
+		healthClusterRequest.setTimeout(1000);
+		healthClusterRequest.setWaitForClusterHealthStatus(
+			ClusterHealthStatus.GREEN);
 
 		HealthClusterRequestExecutorImpl healthClusterRequestExecutorImpl =
 			new HealthClusterRequestExecutorImpl() {
 				{
+					clusterHealthStatusTranslator =
+						new ClusterHealthStatusTranslatorImpl();
 					elasticsearchConnectionManager =
 						_elasticsearchConnectionManager;
 				}
@@ -71,6 +79,21 @@ public class HealthClusterRequestExecutorTest {
 		String[] indices = clusterHealthRequest.indices();
 
 		Assert.assertArrayEquals(new String[] {_INDEX_NAME}, indices);
+
+		ClusterHealthStatusTranslator clusterHealthStatusTranslator =
+			new ClusterHealthStatusTranslatorImpl();
+
+		Assert.assertEquals(
+			healthClusterRequest.getWaitForClusterHealthStatus(),
+			clusterHealthStatusTranslator.translate(
+				clusterHealthRequest.waitForStatus()));
+
+		Assert.assertEquals(
+			TimeValue.timeValueMillis(1000), clusterHealthRequest.timeout());
+
+		Assert.assertEquals(
+			TimeValue.timeValueMillis(1000),
+			clusterHealthRequest.masterNodeTimeout());
 	}
 
 	private static final String _INDEX_NAME = "test_request_index";
