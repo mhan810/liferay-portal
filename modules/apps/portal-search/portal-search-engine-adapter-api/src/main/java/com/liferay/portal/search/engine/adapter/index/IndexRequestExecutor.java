@@ -25,6 +25,9 @@ public interface IndexRequestExecutor {
 	public AnalyzeIndexResponse executeIndexRequest(
 		AnalyzeIndexRequest analyzeIndexRequest);
 
+	public CloseIndexResponse executeIndexRequest(
+		CloseIndexRequest closeIndexRequest);
+
 	public CreateIndexResponse executeIndexRequest(
 		CreateIndexRequest createIndexRequest);
 
@@ -45,6 +48,9 @@ public interface IndexRequestExecutor {
 
 	public IndicesExistsIndexResponse executeIndexRequest(
 		IndicesExistsIndexRequest indicesExistsIndexRequest);
+
+	public OpenIndexResponse executeIndexRequest(
+		OpenIndexRequest openIndexRequest);
 
 	public PutMappingIndexResponse executeIndexRequest(
 		PutMappingIndexRequest putMappingIndexRequest);

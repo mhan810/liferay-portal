@@ -16,11 +16,53 @@ package com.liferay.portal.search.engine.adapter.index;
 
 import aQute.bnd.annotation.ProviderType;
 
+import java.util.Objects;
+
 /**
  * @author Michael C. Han
  */
 @ProviderType
 public class IndicesOptions {
+
+	@Override
+	public boolean equals(Object object) {
+		if (object == this) {
+			return true;
+		}
+
+		if ((object == null) || (getClass() != object.getClass())) {
+			return false;
+		}
+
+		IndicesOptions indicesOptions = (IndicesOptions)object;
+
+		if (indicesOptions.isAllowNoIndices() != isAllowNoIndices()) {
+			return false;
+		}
+
+		if (indicesOptions.isExpandToClosedIndices() !=
+				isExpandToClosedIndices()) {
+
+			return false;
+		}
+
+		if (indicesOptions.isExpandToOpenIndices() != isExpandToOpenIndices()) {
+			return false;
+		}
+
+		if (indicesOptions.isIgnoreUnavailable() != isIgnoreUnavailable()) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(
+			_allowNoIndices, _expandToClosedIndices, _expandToOpenIndices,
+			_ignoreUnavailable);
+	}
 
 	public boolean isAllowNoIndices() {
 		return _allowNoIndices;
