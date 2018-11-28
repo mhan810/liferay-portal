@@ -21,9 +21,9 @@ import com.liferay.portal.search.engine.adapter.cluster.StateClusterResponse;
 
 import java.io.IOException;
 
+import org.elasticsearch.action.admin.cluster.state.ClusterStateAction;
 import org.elasticsearch.action.admin.cluster.state.ClusterStateRequestBuilder;
 import org.elasticsearch.action.admin.cluster.state.ClusterStateResponse;
-import org.elasticsearch.client.ClusterAdminClient;
 import org.elasticsearch.cluster.ClusterState;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.xcontent.ToXContent;
@@ -72,11 +72,9 @@ public class StateClusterRequestExecutorImpl
 	protected ClusterStateRequestBuilder createClusterStateRequestBuilder(
 		StateClusterRequest stateClusterRequest) {
 
-		ClusterAdminClient clusterAdminClient =
-			elasticsearchConnectionManager.getClusterAdminClient();
-
 		ClusterStateRequestBuilder clusterStateRequestBuilder =
-			clusterAdminClient.prepareState();
+			ClusterStateAction.INSTANCE.newRequestBuilder(
+				elasticsearchConnectionManager.getClient());
 
 		clusterStateRequestBuilder.setIndices(
 			stateClusterRequest.getIndexNames());
