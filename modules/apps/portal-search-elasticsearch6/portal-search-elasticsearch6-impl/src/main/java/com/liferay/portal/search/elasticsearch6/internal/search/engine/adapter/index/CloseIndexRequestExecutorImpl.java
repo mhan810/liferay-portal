@@ -1,0 +1,84 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
+package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.index;
+
+import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnectionManager;
+import com.liferay.portal.search.engine.adapter.index.CloseIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.CloseIndexResponse;
+import com.liferay.portal.search.engine.adapter.index.IndicesOptions;
+
+import org.elasticsearch.action.admin.indices.close.CloseIndexAction;
+import org.elasticsearch.action.admin.indices.close.CloseIndexRequestBuilder;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
+import org.elasticsearch.common.unit.TimeValue;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
+/**
+ * @author Michael C. Han
+ */
+@Component(service = CloseIndexRequestExecutor.class)
+public class CloseIndexRequestExecutorImpl
+	implements CloseIndexRequestExecutor {
+
+	@Override
+	public CloseIndexResponse execute(CloseIndexRequest closeIndexRequest) {
+		CloseIndexRequestBuilder closeIndexRequestBuilder =
+			createCloseIndexRequestBuilder(closeIndexRequest);
+
+		AcknowledgedResponse acknowledgedResponse =
+			closeIndexRequestBuilder.get();
+
+		CloseIndexResponse closeIndexResponse = new CloseIndexResponse(
+			acknowledgedResponse.isAcknowledged());
+
+		return closeIndexResponse;
+	}
+
+	protected CloseIndexRequestBuilder createCloseIndexRequestBuilder(
+		CloseIndexRequest closeIndexRequest) {
+
+		CloseIndexRequestBuilder closeIndexRequestBuilder =
+			CloseIndexAction.INSTANCE.newRequestBuilder(
+				elasticsearchConnectionManager.getClient());
+
+		closeIndexRequestBuilder.setIndices(closeIndexRequest.getIndexNames());
+
+		IndicesOptions indicesOptions = closeIndexRequest.getIndicesOptions();
+
+		if (indicesOptions != null) {
+			closeIndexRequestBuilder.setIndicesOptions(
+				indicesOptionsTranslator.translate(indicesOptions));
+		}
+
+		if (closeIndexRequest.getTimeout() > 0) {
+			TimeValue timeValue = TimeValue.timeValueMillis(
+				closeIndexRequest.getTimeout());
+
+			closeIndexRequestBuilder.setMasterNodeTimeout(timeValue);
+			closeIndexRequestBuilder.setTimeout(timeValue);
+		}
+
+		return closeIndexRequestBuilder;
+	}
+
+	@Reference
+	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
+
+	@Reference
+	protected IndicesOptionsTranslator indicesOptionsTranslator;
+
+}

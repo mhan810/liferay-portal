@@ -45,21 +45,6 @@ public class DeleteIndexRequestExecutorImpl
 		return new DeleteIndexResponse(acknowledgedResponse.isAcknowledged());
 	}
 
-	protected IndicesOptions convert(
-		com.liferay.portal.search.engine.adapter.index.IndicesOptions
-			indicesOptions) {
-
-		if (indicesOptions == null) {
-			return IndicesOptions.fromOptions(false, true, true, true);
-		}
-
-		return IndicesOptions.fromOptions(
-			indicesOptions.isIgnoreUnavailable(),
-			indicesOptions.isAllowNoIndices(),
-			indicesOptions.isExpandToOpenIndices(),
-			indicesOptions.isExpandToClosedIndices());
-	}
-
 	protected DeleteIndexRequestBuilder createDeleteIndexRequestBuilder(
 		DeleteIndexRequest deleteIndexRequest) {
 
