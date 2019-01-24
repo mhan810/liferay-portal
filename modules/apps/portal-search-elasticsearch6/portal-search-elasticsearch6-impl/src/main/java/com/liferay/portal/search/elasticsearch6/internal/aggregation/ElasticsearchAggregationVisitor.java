@@ -368,6 +368,12 @@ public class ElasticsearchAggregationVisitor
 				percentilesAggregation.getKeyed());
 		}
 
+		double[] percents = percentilesAggregation.getPercents();
+
+		if (percents != null) {
+			percentilesAggregationBuilder.percentiles(percents);
+		}
+
 		if (percentilesAggregation.getPercentilesMethod() != null) {
 			PercentilesMethod percentilesMethod =
 				percentilesAggregation.getPercentilesMethod();

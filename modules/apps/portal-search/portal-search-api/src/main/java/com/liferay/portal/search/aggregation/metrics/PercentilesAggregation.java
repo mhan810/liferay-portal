@@ -68,9 +68,18 @@ public class PercentilesAggregation extends BaseFieldAggregation {
 		_percentilesMethod = percentilesMethod;
 	}
 
+	public double[] getPercents() {
+		return _percents;
+	}
+
+	public void setPercents(double... percents) {
+		_percents = percents;
+	}
+
 	private Integer _compression;
 	private Integer _hdrSignificantValueDigits;
 	private Boolean _keyed;
+	private double[] _percents;
 	private PercentilesMethod _percentilesMethod;
 
 }
