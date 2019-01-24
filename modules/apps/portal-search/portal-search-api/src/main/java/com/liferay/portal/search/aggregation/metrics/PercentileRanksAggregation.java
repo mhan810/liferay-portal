@@ -17,12 +17,13 @@ package com.liferay.portal.search.aggregation.metrics;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.search.aggregation.AggregationVisitor;
+import com.liferay.portal.search.aggregation.BaseFieldAggregation;
 
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public class PercentileRanksAggregation extends PercentilesAggregation {
+public class PercentileRanksAggregation extends BaseFieldAggregation {
 
 	public PercentileRanksAggregation(
 		String name, String field, double... values) {
@@ -37,10 +38,48 @@ public class PercentileRanksAggregation extends PercentilesAggregation {
 		return aggregationVisitor.visit(this);
 	}
 
+	public Integer getCompression() {
+		return _compression;
+	}
+
+	public Integer getHdrSignificantValueDigits() {
+		return _hdrSignificantValueDigits;
+	}
+
+	public Boolean getKeyed() {
+		return _keyed;
+	}
+
+	public PercentilesMethod getPercentilesMethod() {
+		return _percentilesMethod;
+	}
+
 	public double[] getValues() {
 		return _values;
 	}
 
+	public void setCompression(Integer compression) {
+		_compression = compression;
+	}
+
+	public void setHdrSignificantValueDigits(
+		Integer hdrSignificantValueDigits) {
+
+		_hdrSignificantValueDigits = hdrSignificantValueDigits;
+	}
+
+	public void setKeyed(Boolean keyed) {
+		_keyed = keyed;
+	}
+
+	public void setPercentilesMethod(PercentilesMethod percentilesMethod) {
+		_percentilesMethod = percentilesMethod;
+	}
+
+	private Integer _compression;
+	private Integer _hdrSignificantValueDigits;
+	private Boolean _keyed;
+	private PercentilesMethod _percentilesMethod;
 	private final double[] _values;
 
 }
