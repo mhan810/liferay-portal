@@ -16,6 +16,7 @@ package com.liferay.portal.search.aggregation.pipeline;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.search.aggregation.AggregationResult;
 import com.liferay.portal.search.script.Script;
 
 /**
@@ -32,6 +33,16 @@ public class BucketScriptPipelineAggregation
 
 		_script = script;
 		_bucketsPaths = bucketsPaths;
+	}
+
+	@Override
+	public <S extends AggregationResult, T> S accept(
+		PipelineAggregationResultTranslator<S, T>
+			pipelineAggregationResultTranslator,
+		T aggregationResult) {
+
+		return pipelineAggregationResultTranslator.translate(
+			this, aggregationResult);
 	}
 
 	@Override

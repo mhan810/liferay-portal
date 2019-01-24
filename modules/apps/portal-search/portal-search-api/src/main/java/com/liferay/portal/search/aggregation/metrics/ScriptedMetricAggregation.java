@@ -16,6 +16,8 @@ package com.liferay.portal.search.aggregation.metrics;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.search.aggregation.AggregationResult;
+import com.liferay.portal.search.aggregation.AggregationResultTranslator;
 import com.liferay.portal.search.aggregation.AggregationVisitor;
 import com.liferay.portal.search.aggregation.BaseAggregation;
 import com.liferay.portal.search.script.Script;
@@ -32,6 +34,14 @@ public class ScriptedMetricAggregation extends BaseAggregation {
 
 	public ScriptedMetricAggregation(String name) {
 		super(name);
+	}
+
+	@Override
+	public <S extends AggregationResult, T> S accept(
+		AggregationResultTranslator<S, T> aggregationResultTranslator,
+		T aggregationResult) {
+
+		return aggregationResultTranslator.translate(this, aggregationResult);
 	}
 
 	@Override

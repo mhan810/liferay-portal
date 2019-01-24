@@ -16,11 +16,18 @@ package com.liferay.portal.search.aggregation.pipeline;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.search.aggregation.AggregationResult;
+
 /**
  * @author Michael C. Han
  */
 @ProviderType
 public interface PipelineAggregation {
+
+	public <S extends AggregationResult, T> S accept(
+		PipelineAggregationResultTranslator<S, T>
+			pipelineAggregationResultTranslator,
+		T aggregationResult);
 
 	public <T> T accept(
 		PipelineAggregationVisitor<T> pipelineAggregationVisitor);

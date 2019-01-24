@@ -16,6 +16,8 @@ package com.liferay.portal.search.aggregation.pipeline;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.search.aggregation.AggregationResult;
+
 /**
  * @author Michael C. Han
  */
@@ -27,6 +29,16 @@ public class DerivativePipelineAggregation
 		super(name);
 
 		_bucketsPath = bucketsPath;
+	}
+
+	@Override
+	public <S extends AggregationResult, T> S accept(
+		PipelineAggregationResultTranslator<S, T>
+			pipelineAggregationResultTranslator,
+		T aggregationResult) {
+
+		return pipelineAggregationResultTranslator.translate(
+			this, aggregationResult);
 	}
 
 	@Override

@@ -26,6 +26,10 @@ import java.util.Collection;
 @ProviderType
 public interface Aggregation {
 
+	public <S extends AggregationResult, T> S accept(
+		AggregationResultTranslator<S, T> aggregationResultTranslator,
+		T aggregationResult);
+
 	public <T> T accept(AggregationVisitor<T> aggregationVisitor);
 
 	public void addChildAggregation(Aggregation aggregation);

@@ -16,6 +16,8 @@ package com.liferay.portal.search.aggregation.bucket;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.search.aggregation.AggregationResult;
+import com.liferay.portal.search.aggregation.AggregationResultTranslator;
 import com.liferay.portal.search.aggregation.AggregationVisitor;
 import com.liferay.portal.search.aggregation.BaseFieldAggregation;
 import com.liferay.portal.search.query.Query;
@@ -32,6 +34,14 @@ public class FiltersAggregation extends BaseFieldAggregation {
 
 	public FiltersAggregation(String name, String field) {
 		super(name, field);
+	}
+
+	@Override
+	public <S extends AggregationResult, T> S accept(
+		AggregationResultTranslator<S, T> aggregationResultTranslator,
+		T aggregationResult) {
+
+		return aggregationResultTranslator.translate(this, aggregationResult);
 	}
 
 	@Override

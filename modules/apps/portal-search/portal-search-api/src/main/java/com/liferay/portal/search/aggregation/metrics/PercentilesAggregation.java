@@ -16,6 +16,8 @@ package com.liferay.portal.search.aggregation.metrics;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.search.aggregation.AggregationResult;
+import com.liferay.portal.search.aggregation.AggregationResultTranslator;
 import com.liferay.portal.search.aggregation.AggregationVisitor;
 import com.liferay.portal.search.aggregation.BaseFieldAggregation;
 
@@ -27,6 +29,14 @@ public class PercentilesAggregation extends BaseFieldAggregation {
 
 	public PercentilesAggregation(String name, String field) {
 		super(name, field);
+	}
+
+	@Override
+	public <S extends AggregationResult, T> S accept(
+		AggregationResultTranslator<S, T> aggregationResultTranslator,
+		T aggregationResult) {
+
+		return aggregationResultTranslator.translate(this, aggregationResult);
 	}
 
 	@Override
@@ -50,6 +60,10 @@ public class PercentilesAggregation extends BaseFieldAggregation {
 		return _percentilesMethod;
 	}
 
+	public double[] getPercents() {
+		return _percents;
+	}
+
 	public void setCompression(Integer compression) {
 		_compression = compression;
 	}
@@ -68,10 +82,6 @@ public class PercentilesAggregation extends BaseFieldAggregation {
 		_percentilesMethod = percentilesMethod;
 	}
 
-	public double[] getPercents() {
-		return _percents;
-	}
-
 	public void setPercents(double... percents) {
 		_percents = percents;
 	}
@@ -79,7 +89,7 @@ public class PercentilesAggregation extends BaseFieldAggregation {
 	private Integer _compression;
 	private Integer _hdrSignificantValueDigits;
 	private Boolean _keyed;
-	private double[] _percents;
 	private PercentilesMethod _percentilesMethod;
+	private double[] _percents;
 
 }

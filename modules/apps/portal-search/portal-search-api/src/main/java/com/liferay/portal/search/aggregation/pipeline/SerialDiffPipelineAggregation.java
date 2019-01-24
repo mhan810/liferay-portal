@@ -16,6 +16,8 @@ package com.liferay.portal.search.aggregation.pipeline;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.search.aggregation.AggregationResult;
+
 /**
  * @author Michael C. Han
  */
@@ -27,6 +29,16 @@ public class SerialDiffPipelineAggregation
 		super(name);
 
 		_bucketsPath = bucketsPath;
+	}
+
+	@Override
+	public <S extends AggregationResult, T> S accept(
+		PipelineAggregationResultTranslator<S, T>
+			pipelineAggregationResultTranslator,
+		T aggregationResult) {
+
+		throw new UnsupportedOperationException(
+			"SerialDiff does not return a separate AggregationResult");
 	}
 
 	@Override

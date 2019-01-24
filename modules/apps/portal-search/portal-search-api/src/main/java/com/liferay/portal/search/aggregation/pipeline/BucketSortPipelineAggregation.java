@@ -16,6 +16,7 @@ package com.liferay.portal.search.aggregation.pipeline;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.search.aggregation.AggregationResult;
 import com.liferay.portal.search.sort.FieldSort;
 
 import java.util.ArrayList;
@@ -31,6 +32,16 @@ public class BucketSortPipelineAggregation
 
 	public BucketSortPipelineAggregation(String name) {
 		super(name);
+	}
+
+	@Override
+	public <S extends AggregationResult, T> S accept(
+		PipelineAggregationResultTranslator<S, T>
+			pipelineAggregationResultTranslator,
+		T aggregationResult) {
+
+		throw new UnsupportedOperationException(
+			"BucketSort does not return a separate AggregationResult");
 	}
 
 	@Override
