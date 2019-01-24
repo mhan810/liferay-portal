@@ -36,7 +36,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Michael C. Han
  */
-@Component(service = FilterAggregationTranslator.class)
+@Component(service = FiltersAggregationTranslator.class)
 public class FiltersAggregationTranslatorImpl
 	implements FiltersAggregationTranslator {
 

@@ -32,7 +32,7 @@ import org.osgi.service.component.annotations.Component;
 /**
  * @author Michael C. Han
  */
-@Component(service = RangeAggregationTranslator.class)
+@Component(service = DateRangeAggregationTranslator.class)
 public class DateRangeAggregationTranslatorImpl
 	implements DateRangeAggregationTranslator {
 

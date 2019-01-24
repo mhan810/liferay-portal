@@ -37,7 +37,7 @@ import org.osgi.service.component.annotations.Component;
 /**
  * @author Michael C. Han
  */
-@Component(service = RangeAggregationTranslator.class)
+@Component(service = GeoDistanceAggregationTranslator.class)
 public class GeoDistanceAggregationTranslatorImpl
 	implements GeoDistanceAggregationTranslator {
 
