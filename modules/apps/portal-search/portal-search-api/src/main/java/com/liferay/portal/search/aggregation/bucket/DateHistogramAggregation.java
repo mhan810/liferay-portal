@@ -56,6 +56,10 @@ public class DateHistogramAggregation extends BaseFieldAggregation {
 		Collections.addAll(_orders, orders);
 	}
 
+	public String getDateHistogramInterval() {
+		return _dateHistogramInterval;
+	}
+
 	public Long getInterval() {
 		return _interval;
 	}
@@ -93,6 +97,10 @@ public class DateHistogramAggregation extends BaseFieldAggregation {
 		_maxBound = maxBound;
 	}
 
+	public void setDateHistogramInterval(String dateHistogramInterval) {
+		_dateHistogramInterval = dateHistogramInterval;
+	}
+
 	public void setInterval(Long interval) {
 		_interval = interval;
 	}
@@ -109,6 +117,7 @@ public class DateHistogramAggregation extends BaseFieldAggregation {
 		_offset = offset;
 	}
 
+	private String _dateHistogramInterval;
 	private Long _interval;
 	private Boolean _keyed;
 	private Long _maxBound;
