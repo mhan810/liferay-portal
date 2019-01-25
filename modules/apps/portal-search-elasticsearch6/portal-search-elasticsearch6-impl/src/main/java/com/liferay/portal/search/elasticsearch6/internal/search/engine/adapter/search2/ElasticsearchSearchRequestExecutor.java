@@ -23,6 +23,7 @@ import com.liferay.portal.search.engine.adapter.search2.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search2.SearchSearchResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
@@ -38,21 +39,31 @@ public class ElasticsearchSearchRequestExecutor
 	public CountSearchResponse executeSearchRequest(
 		CountSearchRequest countSearchRequest) {
 
-		return null;
+		return countSearchRequestExecutor.execute(countSearchRequest);
 	}
 
 	@Override
 	public MultisearchSearchResponse executeSearchRequest(
 		MultisearchSearchRequest multisearchSearchRequest) {
 
-		return null;
+		return multisearchSearchRequestExecutor.execute(
+			multisearchSearchRequest);
 	}
 
 	@Override
 	public SearchSearchResponse executeSearchRequest(
 		SearchSearchRequest searchSearchRequest) {
 
-		return null;
+		return searchSearchRequestExecutor.execute(searchSearchRequest);
 	}
+
+	@Reference
+	protected CountSearchRequestExecutor countSearchRequestExecutor;
+
+	@Reference
+	protected MultisearchSearchRequestExecutor multisearchSearchRequestExecutor;
+
+	@Reference
+	protected SearchSearchRequestExecutor searchSearchRequestExecutor;
 
 }

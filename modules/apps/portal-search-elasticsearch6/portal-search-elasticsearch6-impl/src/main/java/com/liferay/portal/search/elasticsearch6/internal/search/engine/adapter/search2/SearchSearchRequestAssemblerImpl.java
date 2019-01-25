@@ -55,7 +55,7 @@ public class SearchSearchRequestAssemblerImpl
 		}
 
 		if (searchSearchRequest.getHighlight() != null) {
-			HighlightBuilder highlightBuilder = highlightTranslator.translate(
+			HighlightBuilder highlightBuilder = _highlightTranslator.translate(
 				searchSearchRequest.getHighlight(), queryTranslator);
 
 			searchRequestBuilder.highlighter(highlightBuilder);
@@ -122,13 +122,13 @@ public class SearchSearchRequestAssemblerImpl
 	protected CommonSearchRequestBuilderAssembler
 		commonSearchRequestBuilderAssembler;
 
-	protected HighlightTranslator highlightTranslator =
-		new HighlightTranslator();
-
 	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	protected QueryTranslator<QueryBuilder> queryTranslator;
 
 	@Reference
 	protected SortFieldTranslator<SortBuilder> sortFieldTranslator;
+
+	private final HighlightTranslator _highlightTranslator =
+		new HighlightTranslator();
 
 }
