@@ -20,7 +20,7 @@ import com.liferay.portal.search.aggregation.BaseAggregationResult;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -45,6 +45,6 @@ public class BaseBucketAggregationResult extends BaseAggregationResult {
 		return Collections.unmodifiableCollection(_buckets.values());
 	}
 
-	private Map<String, Bucket> _buckets = new HashMap<>();
+	private Map<String, Bucket> _buckets = new LinkedHashMap<>();
 
 }
