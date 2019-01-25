@@ -30,18 +30,33 @@ import java.util.Map;
 @ProviderType
 public abstract class BaseSearchRequest {
 
+	public void addIndexBoost(String index, float boost) {
+		_indexBoosts.put(index, boost);
+	}
+
 	public Map<String, Aggregation> getAggregations() {
 		return Collections.unmodifiableMap(_aggregations);
 	}
 
-	public Map<String, PipelineAggregation> getPipelineAggregations() {
-		return Collections.unmodifiableMap(_pipelineAggregations);
+	public Boolean getExplain() {
+		return _explain;
+	}
+
+	public Map<String, Float> getIndexBoosts() {
+		return Collections.unmodifiableMap(_indexBoosts);
 	}
 
 	public String[] getIndexNames() {
 		return _indexNames;
 	}
 
+	public Float getMinimumScore() {
+		return _minimumScore;
+	}
+
+	public Map<String, PipelineAggregation> getPipelineAggregations() {
+		return Collections.unmodifiableMap(_pipelineAggregations);
+	}
 
 	public Query getPostFilterQuery() {
 		return _postFilterQuery;
@@ -51,8 +66,24 @@ public abstract class BaseSearchRequest {
 		return _query;
 	}
 
+	public Boolean getRequestCache() {
+		return _requestCache;
+	}
+
 	public Query getRescoreQuery() {
 		return _rescoreQuery;
+	}
+
+	public Long getTimeoutInMilliseconds() {
+		return _timeoutInMilliseconds;
+	}
+
+	public Boolean getTrackTotalHits() {
+		return _trackTotalHits;
+	}
+
+	public String[] getTypes() {
+		return _types;
 	}
 
 	public boolean isIncludeResponseString() {
@@ -63,9 +94,15 @@ public abstract class BaseSearchRequest {
 		_aggregations.put(aggregation.getName(), aggregation);
 	}
 
-	public void putPipelineAggregation(PipelineAggregation pipelineAggregation) {
+	public void putPipelineAggregation(
+		PipelineAggregation pipelineAggregation) {
+
 		_pipelineAggregations.put(
 			pipelineAggregation.getName(), pipelineAggregation);
+	}
+
+	public void setExplain(Boolean explain) {
+		_explain = explain;
 	}
 
 	public void setIncludeResponseString(boolean includeResponseString) {
@@ -76,16 +113,16 @@ public abstract class BaseSearchRequest {
 		_indexNames = indexNames;
 	}
 
+	public void setMinimumScore(Float minimumScore) {
+		_minimumScore = minimumScore;
+	}
+
 	public void setPostFilterQuery(Query postFilterQuery) {
 		_postFilterQuery = postFilterQuery;
 	}
 
 	public void setQuery(Query query) {
 		_query = query;
-	}
-
-	public Boolean getRequestCache() {
-		return _requestCache;
 	}
 
 	public void setRequestCache(Boolean requestCache) {
@@ -96,60 +133,23 @@ public abstract class BaseSearchRequest {
 		_rescoreQuery = rescoreQuery;
 	}
 
-	public Boolean getExplain() {
-		return _explain;
-	}
-
-	public void setExplain(Boolean explain) {
-		_explain = explain;
-	}
-
-	public Float getMinimumScore() {
-		return _minimumScore;
-	}
-
-	public void setMinimumScore(Float minimumScore) {
-		_minimumScore = minimumScore;
-	}
-
-	public Long getTimeoutInMilliseconds() {
-		return _timeoutInMilliseconds;
-	}
-
 	public void setTimeoutInMilliseconds(Long timeoutInMilliseconds) {
 		_timeoutInMilliseconds = timeoutInMilliseconds;
-	}
-
-	public Boolean getTrackTotalHits() {
-		return _trackTotalHits;
 	}
 
 	public void setTrackTotalHits(Boolean trackTotalHits) {
 		_trackTotalHits = trackTotalHits;
 	}
 
-	public String[] getTypes() {
-		return _types;
-	}
-
 	public void setTypes(String... types) {
 		_types = types;
 	}
 
-	public void addIndexBoost(String index, float boost) {
-		_indexBoosts.put(index, boost);
-	}
-
-	public Map<String, Float> getIndexBoosts() {
-		return Collections.unmodifiableMap(_indexBoosts);
-	}
-
 	private final Map<String, Aggregation> _aggregations = new HashMap<>();
 	private Boolean _explain;
-	private Map<String, Float> _indexBoosts = new HashMap<>();
 	private boolean _includeResponseString;
+	private final Map<String, Float> _indexBoosts = new HashMap<>();
 	private String[] _indexNames;
-	private String[] _types;
 	private Float _minimumScore;
 	private final Map<String, PipelineAggregation> _pipelineAggregations =
 		new HashMap<>();
@@ -159,5 +159,6 @@ public abstract class BaseSearchRequest {
 	private Query _rescoreQuery;
 	private Long _timeoutInMilliseconds;
 	private Boolean _trackTotalHits;
+	private String[] _types;
 
 }

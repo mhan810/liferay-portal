@@ -38,8 +38,20 @@ public class SearchSearchRequest
 		return searchRequestExecutor.executeSearchRequest(this);
 	}
 
+	public void addSorts(Sort... sorts) {
+		Collections.addAll(_sorts, sorts);
+	}
+
 	public String getAlternateUidFieldName() {
 		return _alternateUidFieldName;
+	}
+
+	public Boolean getFetchSource() {
+		return _fetchSource;
+	}
+
+	public Highlight getHighlight() {
+		return _highlight;
 	}
 
 	public Locale getLocale() {
@@ -58,16 +70,32 @@ public class SearchSearchRequest
 		return _size;
 	}
 
+	public List<Sort> getSorts() {
+		return Collections.unmodifiableList(_sorts);
+	}
+
 	public int getStart() {
 		return _start;
 	}
-	
+
+	public Boolean getVersion() {
+		return _version;
+	}
+
 	public boolean isScoreEnabled() {
 		return _scoreEnabled;
 	}
 
 	public void setAlternateUidFieldName(String alternateUidFieldName) {
 		_alternateUidFieldName = alternateUidFieldName;
+	}
+
+	public void setFetchSource(Boolean fetchSource) {
+		_fetchSource = fetchSource;
+	}
+
+	public void setHighlight(Highlight highlight) {
+		_highlight = highlight;
 	}
 
 	public void setLocale(Locale locale) {
@@ -90,37 +118,8 @@ public class SearchSearchRequest
 		_size = size;
 	}
 
-	public void addSorts(Sort... sorts) {
-		Collections.addAll(_sorts, sorts);
-	}
-
-	public List<Sort> getSorts() {
-		return Collections.unmodifiableList(_sorts);
-	}
-
 	public void setStart(int start) {
 		_start = start;
-	}
-
-	public Highlight getHighlight() {
-		return _highlight;
-	}
-
-	public void setHighlight(Highlight highlight) {
-		_highlight = highlight;
-	}
-
-	public Boolean getFetchSource() {
-		return _fetchSource;
-	}
-
-	public void setFetchSource(Boolean fetchSource) {
-		_fetchSource = fetchSource;
-	}
-
-
-	public Boolean getVersion() {
-		return _version;
 	}
 
 	public void setVersion(Boolean version) {
@@ -134,10 +133,9 @@ public class SearchSearchRequest
 	private String _preference;
 	private boolean _scoreEnabled;
 	private String[] _selectedFieldNames;
-	private List<Sort> _sorts = new ArrayList<>();
 	private int _size;
+	private final List<Sort> _sorts = new ArrayList<>();
 	private int _start;
 	private Boolean _version;
-
 
 }

@@ -23,33 +23,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * @author Michael C. Han
  */
 @ProviderType
 public class SearchSearchResponse extends BaseSearchResponse {
-
-	public SearchHits getSearchHits() {
-		return _searchHits;
-	}
-
-	public void setSearchHits(SearchHits searchHits) {
-		_searchHits = searchHits;
-	}
-
-	public String getScrollId() {
-		return _scrollId;
-	}
-
-	public void setScrollId(String scrollId) {
-		_scrollId = scrollId;
-	}
-
-	private String _scrollId;
-	private SearchHits _searchHits;
-	private Map<String, AggregationResult> _aggregationResultMap =
-		new HashMap<>();
 
 	public void addAggregationResult(AggregationResult aggregationResult) {
 		_aggregationResultMap.put(
@@ -59,5 +37,26 @@ public class SearchSearchResponse extends BaseSearchResponse {
 	public Map<String, AggregationResult> getAggregationResultMap() {
 		return Collections.unmodifiableMap(_aggregationResultMap);
 	}
-	
+
+	public String getScrollId() {
+		return _scrollId;
+	}
+
+	public SearchHits getSearchHits() {
+		return _searchHits;
+	}
+
+	public void setScrollId(String scrollId) {
+		_scrollId = scrollId;
+	}
+
+	public void setSearchHits(SearchHits searchHits) {
+		_searchHits = searchHits;
+	}
+
+	private final Map<String, AggregationResult> _aggregationResultMap =
+		new HashMap<>();
+	private String _scrollId;
+	private SearchHits _searchHits;
+
 }

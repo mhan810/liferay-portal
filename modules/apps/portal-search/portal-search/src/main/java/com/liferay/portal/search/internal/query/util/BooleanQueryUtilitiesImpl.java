@@ -17,11 +17,11 @@ package com.liferay.portal.search.internal.query.util;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.query.BooleanQuery;
-import com.liferay.portal.search.query.util.BooleanQueryUtilities;
 import com.liferay.portal.search.query.Query;
 import com.liferay.portal.search.query.RangeTermQuery;
 import com.liferay.portal.search.query.TermQuery;
 import com.liferay.portal.search.query.field.FieldQueryFactory;
+import com.liferay.portal.search.query.util.BooleanQueryUtilities;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;

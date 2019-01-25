@@ -48,7 +48,6 @@ public abstract class BaseSearchResponse implements SearchResponse {
 		return _timedOut;
 	}
 
-
 	public void setExecutionProfile(Map<String, String> executionProfile) {
 		_executionProfile = executionProfile;
 	}
