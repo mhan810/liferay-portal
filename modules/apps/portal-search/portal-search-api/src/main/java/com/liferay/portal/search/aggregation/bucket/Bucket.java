@@ -16,6 +16,13 @@ package com.liferay.portal.search.aggregation.bucket;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.search.aggregation.AggregationResult;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Michael C. Han
  */
@@ -27,6 +34,24 @@ public class Bucket {
 		_docCount = docCount;
 	}
 
+	public void addChildAggregationResult(AggregationResult aggregationResult) {
+		_childrenAggregationResults.put(
+			aggregationResult.getName(), aggregationResult);
+	}
+
+	public void addChildAggregationResults(
+		List<AggregationResult> aggregationResults) {
+
+		aggregationResults.forEach(
+			aggregationResult ->
+				_childrenAggregationResults.put(
+					aggregationResult.getName(), aggregationResult));
+	}
+
+	public Map<String, AggregationResult> getChildrenAggregationResults() {
+		return Collections.unmodifiableMap(_childrenAggregationResults);
+	}
+
 	public long getDocCount() {
 		return _docCount;
 	}
@@ -35,6 +60,8 @@ public class Bucket {
 		return _key;
 	}
 
+	private Map<String, AggregationResult> _childrenAggregationResults =
+		new HashMap<>();
 	private final long _docCount;
 	private final String _key;
 

@@ -17,7 +17,6 @@ package com.liferay.portal.search.elasticsearch6.internal.aggregation;
 import com.liferay.portal.search.aggregation.AggregationResult;
 import com.liferay.portal.search.aggregation.AggregationResultTranslator;
 import com.liferay.portal.search.aggregation.bucket.BaseBucketAggregationResult;
-import com.liferay.portal.search.aggregation.bucket.BaseHierarchicalAggregationResult;
 import com.liferay.portal.search.aggregation.bucket.Bucket;
 import com.liferay.portal.search.aggregation.bucket.ChildrenAggregation;
 import com.liferay.portal.search.aggregation.bucket.ChildrenAggregationResult;
@@ -81,9 +80,12 @@ import com.liferay.portal.search.aggregation.metrics.ValueCountAggregationResult
 import com.liferay.portal.search.aggregation.metrics.WeightedAvgAggregation;
 import com.liferay.portal.search.aggregation.metrics.WeightedAvgAggregationResult;
 import com.liferay.portal.search.aggregation.pipeline.PercentilesBucketPipelineAggregationResult;
+import com.liferay.portal.search.aggregation.pipeline.PipelineAggregation;
+import com.liferay.portal.search.elasticsearch6.internal.aggregation.pipeline.ElasticsearchPipelineAggregationResultTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.hits.SearchHitsTranslator;
 import com.liferay.portal.search.geolocation.GeoLocationPoint;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -163,12 +165,14 @@ public class ElasticsearchAggregationResultTranslator
 			new ChildrenAggregationResult(
 				children.getName(), children.getDocCount());
 
-		Collection<com.liferay.portal.search.aggregation.Aggregation>
-			childrenAggregations = childrenAggregation.getChildAggregations();
+		List<AggregationResult> subaggregationResults =
+			translateSubAndPipelineAggregation(
+				children.getAggregations(), childrenAggregation);
 
-		return translateSubaggregation(
-			children.getAggregations(), childrenAggregationResult,
-			childrenAggregations);
+		childrenAggregationResult.addChildAggregationResults(
+			subaggregationResults);
+
+		return childrenAggregationResult;
 	}
 
 	@Override
@@ -178,7 +182,8 @@ public class ElasticsearchAggregationResultTranslator
 
 		return translateBuckets(
 			(Histogram)aggregationResult,
-			new DateHistogramAggregationResult(aggregationResult.getName()));
+			new DateHistogramAggregationResult(aggregationResult.getName()),
+			dateHistogramAggregation);
 	}
 
 	@Override
@@ -193,9 +198,14 @@ public class ElasticsearchAggregationResultTranslator
 				new DiversifiedSamplerAggregationResult(
 					sampler.getName(), sampler.getDocCount());
 
-		return translateSubaggregation(
-			sampler.getAggregations(), diversifiedSamplerAggregationResult,
-			diversifiedSamplerAggregation.getChildAggregations());
+		List<AggregationResult> subaggregationResults =
+			translateSubAndPipelineAggregation(
+				sampler.getAggregations(), diversifiedSamplerAggregation);
+
+		diversifiedSamplerAggregationResult.addChildAggregationResults(
+			subaggregationResults);
+
+		return diversifiedSamplerAggregationResult;
 	}
 
 	@Override
@@ -222,9 +232,14 @@ public class ElasticsearchAggregationResultTranslator
 		FilterAggregationResult filterAggregationResult =
 			new FilterAggregationResult(filter.getName(), filter.getDocCount());
 
-		return translateSubaggregation(
-			filter.getAggregations(), filterAggregationResult,
-			filterAggregation.getChildAggregations());
+		List<AggregationResult> subaggregationResults =
+			translateSubAndPipelineAggregation(
+				filter.getAggregations(), filterAggregation);
+
+		filterAggregationResult.addChildAggregationResults(
+			subaggregationResults);
+
+		return filterAggregationResult;
 	}
 
 	@Override
@@ -236,7 +251,8 @@ public class ElasticsearchAggregationResultTranslator
 		FiltersAggregationResult filtersAggregationResult =
 			new FiltersAggregationResult(filters.getName());
 
-		return translateBuckets(filters, filtersAggregationResult);
+		return translateBuckets(
+			filters, filtersAggregationResult, filtersAggregation);
 	}
 
 	@Override
@@ -280,7 +296,8 @@ public class ElasticsearchAggregationResultTranslator
 		GeoDistanceAggregationResult geoDistanceAggregationResult =
 			new GeoDistanceAggregationResult(geoHashGrid.getName());
 
-		return translateBuckets(geoHashGrid, geoDistanceAggregationResult);
+		return translateBuckets(
+			geoHashGrid, geoDistanceAggregationResult, geoDistanceAggregation);
 	}
 
 	@Override
@@ -292,9 +309,14 @@ public class ElasticsearchAggregationResultTranslator
 		GlobalAggregationResult globalAggregationResult =
 			new GlobalAggregationResult(global.getName(), global.getDocCount());
 
-		return translateSubaggregation(
-			global.getAggregations(), globalAggregationResult,
-			globalAggregation.getChildAggregations());
+		List<AggregationResult> subaggregationResults =
+			translateSubAndPipelineAggregation(
+				global.getAggregations(), globalAggregation);
+
+		globalAggregationResult.addChildAggregationResults(
+			subaggregationResults);
+
+		return globalAggregationResult;
 	}
 
 	@Override
@@ -304,7 +326,8 @@ public class ElasticsearchAggregationResultTranslator
 
 		return translateBuckets(
 			(Histogram)aggregationResult,
-			new HistogramAggregationResult(aggregationResult.getName()));
+			new HistogramAggregationResult(aggregationResult.getName()),
+			histogramAggregation);
 	}
 
 	@Override
@@ -335,9 +358,14 @@ public class ElasticsearchAggregationResultTranslator
 			new MissingAggregationResult(
 				missing.getName(), missing.getDocCount());
 
-		return translateSubaggregation(
-			missing.getAggregations(), missingAggregationResult,
-			missingAggregation.getChildAggregations());
+		List<AggregationResult> subaggregationResults =
+			translateSubAndPipelineAggregation(
+				missing.getAggregations(), missingAggregation);
+
+		missingAggregationResult.addChildAggregationResults(
+			subaggregationResults);
+
+		return missingAggregationResult;
 	}
 
 	@Override
@@ -349,9 +377,14 @@ public class ElasticsearchAggregationResultTranslator
 		NestedAggregationResult nestedAggregationResult =
 			new NestedAggregationResult(nested.getName(), nested.getDocCount());
 
-		return translateSubaggregation(
-			nested.getAggregations(), nestedAggregationResult,
-			nestedAggregation.getChildAggregations());
+		List<AggregationResult> subaggregationResults =
+			translateSubAndPipelineAggregation(
+				nested.getAggregations(), nestedAggregation);
+
+		nestedAggregationResult.addChildAggregationResults(
+			subaggregationResults);
+
+		return nestedAggregationResult;
 	}
 
 	@Override
@@ -405,7 +438,8 @@ public class ElasticsearchAggregationResultTranslator
 
 		return translateBuckets(
 			(Range)aggregationResult,
-			new DateRangeAggregationResult(aggregationResult.getName()));
+			new DateRangeAggregationResult(aggregationResult.getName()),
+			rangeAggregation);
 	}
 
 	@Override
@@ -419,9 +453,14 @@ public class ElasticsearchAggregationResultTranslator
 			new ReverseNestedAggregationResult(
 				reverseNested.getName(), reverseNested.getDocCount());
 
-		return translateSubaggregation(
-			reverseNested.getAggregations(), reverseNestedAggregationResult,
-			reverseNestedAggregation.getChildAggregations());
+		List<AggregationResult> subaggregationResults =
+			translateSubAndPipelineAggregation(
+				reverseNested.getAggregations(), reverseNestedAggregation);
+
+		reverseNestedAggregationResult.addChildAggregationResults(
+			subaggregationResults);
+
+		return reverseNestedAggregationResult;
 	}
 
 	@Override
@@ -434,9 +473,14 @@ public class ElasticsearchAggregationResultTranslator
 			new SamplerAggregationResult(
 				sampler.getName(), sampler.getDocCount());
 
-		return translateSubaggregation(
-			sampler.getAggregations(), samplerAggregationResult,
-			samplerAggregation.getChildAggregations());
+		List<AggregationResult> subaggregationResults =
+			translateSubAndPipelineAggregation(
+				sampler.getAggregations(), samplerAggregation);
+
+		samplerAggregationResult.addChildAggregationResults(
+			subaggregationResults);
+
+		return samplerAggregationResult;
 	}
 
 	@Override
@@ -462,7 +506,9 @@ public class ElasticsearchAggregationResultTranslator
 				terms.getName(), terms.getDocCountError(),
 				terms.getSumOfOtherDocCounts());
 
-		return translateBuckets(terms, significantTermsAggregationResult);
+		return translateBuckets(
+			terms, significantTermsAggregationResult,
+			significantTermsAggregation);
 	}
 
 	@Override
@@ -477,7 +523,9 @@ public class ElasticsearchAggregationResultTranslator
 				terms.getName(), terms.getDocCountError(),
 				terms.getSumOfOtherDocCounts());
 
-		return translateBuckets(terms, significantTextsAggregationResult);
+		return translateBuckets(
+			terms, significantTextsAggregationResult,
+			significantTextAggregation);
 	}
 
 	@Override
@@ -511,7 +559,8 @@ public class ElasticsearchAggregationResultTranslator
 				terms.getName(), terms.getDocCountError(),
 				terms.getSumOfOtherDocCounts());
 
-		return translateBuckets(terms, termsAggregationResult);
+		return translateBuckets(
+			terms, termsAggregationResult, termsAggregation);
 	}
 
 	@Override
@@ -550,7 +599,8 @@ public class ElasticsearchAggregationResultTranslator
 
 	protected AggregationResult translateBuckets(
 		MultiBucketsAggregation multiBucketsAggregation,
-		BaseBucketAggregationResult baseBucketAggregationResult) {
+		BaseBucketAggregationResult baseBucketAggregationResult,
+		com.liferay.portal.search.aggregation.Aggregation aggregation) {
 
 		List<? extends MultiBucketsAggregation.Bucket>
 			multiBucketAggregationBuckets =
@@ -563,32 +613,72 @@ public class ElasticsearchAggregationResultTranslator
 					multiBucketAggregationBucket.getDocCount());
 
 				baseBucketAggregationResult.addBucket(bucket);
+
+				Collection<com.liferay.portal.search.aggregation.Aggregation>
+					childAggregations = aggregation.getChildAggregations();
+
+				childAggregations.forEach(
+					childAggregation -> {
+						List<AggregationResult> childAggregationResults =
+							translateSubAndPipelineAggregation(
+								multiBucketAggregationBucket.getAggregations(),
+								childAggregation);
+
+						bucket.addChildAggregationResults(
+							childAggregationResults);
+					});
 			});
 
 		return baseBucketAggregationResult;
 	}
 
-	protected BaseHierarchicalAggregationResult translateSubaggregation(
+	protected List<AggregationResult> translateSubAndPipelineAggregation(
 		Aggregations subaggregationsResults,
-		BaseHierarchicalAggregationResult baseHierarchicalAggregationResult,
+		com.liferay.portal.search.aggregation.Aggregation aggregation) {
+
+		List<AggregationResult> aggregationResults = new ArrayList<>();
+
 		Collection<com.liferay.portal.search.aggregation.Aggregation>
-			childrenAggregations) {
+			childrenAggregationRequests = aggregation.getChildAggregations();
 
-		childrenAggregations.forEach(
+		childrenAggregationRequests.forEach(
 			childAggregation -> {
-				Aggregation subaggregationResult = subaggregationsResults.get(
-					childAggregation.getName());
+				Aggregation elasticsearchAggregation =
+					subaggregationsResults.get(childAggregation.getName());
 
-				AggregationResult childAggregationResult =
-					childAggregation.accept(this, subaggregationResult);
+				if (elasticsearchAggregation != null) {
+					AggregationResult aggregationResult =
+						childAggregation.accept(this, elasticsearchAggregation);
 
-				baseHierarchicalAggregationResult.addChildAggregationResult(
-					childAggregationResult);
+					aggregationResults.add(aggregationResult);
+				}
 			});
 
-		return baseHierarchicalAggregationResult;
+		Collection<PipelineAggregation> pipelineAggregationRequests =
+			aggregation.getPipelineAggregations();
+
+		pipelineAggregationRequests.forEach(
+			pipelineAggregationRequest -> {
+				Aggregation elasticsearchAggregation =
+					subaggregationsResults.get(
+					pipelineAggregationRequest.getName());
+
+				if (elasticsearchAggregation != null) {
+					AggregationResult aggregationResult =
+						pipelineAggregationRequest.accept(
+							_elasticsearchPipelineAggregationResultTranslator,
+							elasticsearchAggregation);
+
+					aggregationResults.add(aggregationResult);
+				}
+			});
+
+		return aggregationResults;
 	}
 
+	private final ElasticsearchPipelineAggregationResultTranslator
+		_elasticsearchPipelineAggregationResultTranslator =
+			new ElasticsearchPipelineAggregationResultTranslator();
 	private final SearchHitsTranslator _searchHitsTranslator =
 		new SearchHitsTranslator();
 

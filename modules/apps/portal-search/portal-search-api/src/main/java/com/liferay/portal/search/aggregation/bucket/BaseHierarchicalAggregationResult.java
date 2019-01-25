@@ -17,7 +17,9 @@ package com.liferay.portal.search.aggregation.bucket;
 import com.liferay.portal.search.aggregation.AggregationResult;
 import com.liferay.portal.search.aggregation.BaseAggregationResult;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,8 +36,17 @@ public class BaseHierarchicalAggregationResult extends BaseAggregationResult {
 			aggregationResult.getName(), aggregationResult);
 	}
 
+	public void addChildAggregationResults(
+		List<AggregationResult> aggregationResults) {
+
+		aggregationResults.forEach(
+			aggregationResult ->
+				_childrenAggregationResults.put(
+					aggregationResult.getName(), aggregationResult));
+	}
+
 	public Map<String, AggregationResult> getChildrenAggregationResults() {
-		return _childrenAggregationResults;
+		return Collections.unmodifiableMap(_childrenAggregationResults);
 	}
 
 	private Map<String, AggregationResult> _childrenAggregationResults =
