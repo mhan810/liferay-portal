@@ -15,6 +15,7 @@
 package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.search2;
 
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.aggregation.Aggregation;
 import com.liferay.portal.search.aggregation.AggregationTranslator;
 import com.liferay.portal.search.aggregation.pipeline.PipelineAggregation;
@@ -121,7 +122,7 @@ public class CommonSearchRequestBuilderAssemblerImpl
 						baseSearchRequest.getRescoreQuery())));
 		}
 
-		if (baseSearchRequest.getTimeoutInMilliseconds() > 0) {
+		if (Validator.isNotNull(baseSearchRequest.getTimeoutInMilliseconds())) {
 			searchRequestBuilder.setTimeout(
 				TimeValue.timeValueMillis(
 					baseSearchRequest.getTimeoutInMilliseconds()));
