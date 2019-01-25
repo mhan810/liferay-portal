@@ -81,6 +81,10 @@ public class DateHistogramAggregation extends BaseFieldAggregation {
 	}
 
 	public List<Order> getOrders() {
+		if (_orders == null) {
+			_orders = new ArrayList<>();
+		}
+
 		return Collections.unmodifiableList(_orders);
 	}
 
