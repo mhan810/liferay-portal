@@ -21,7 +21,7 @@ import com.liferay.portal.search.aggregation.AggregationResultTranslator;
 import com.liferay.portal.search.aggregation.AggregationVisitor;
 import com.liferay.portal.search.aggregation.BaseFieldAggregation;
 import com.liferay.portal.search.query.Query;
-import com.liferay.portal.search.signifiance.SignificanceHeuristic;
+import com.liferay.portal.search.significance.SignificanceHeuristic;
 
 import java.util.ArrayList;
 import java.util.Collections;

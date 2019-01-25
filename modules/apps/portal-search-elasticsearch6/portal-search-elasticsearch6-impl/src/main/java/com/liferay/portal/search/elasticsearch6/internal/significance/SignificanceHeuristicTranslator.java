@@ -15,13 +15,13 @@
 package com.liferay.portal.search.elasticsearch6.internal.significance;
 
 import com.liferay.portal.search.elasticsearch6.internal.script.ScriptTranslator;
-import com.liferay.portal.search.signifiance.ChiSquareSignifanceHeuristic;
-import com.liferay.portal.search.signifiance.GNDSignificanceHeuristic;
-import com.liferay.portal.search.signifiance.JLHScoreSignifanceHeuristic;
-import com.liferay.portal.search.signifiance.MutualInformationSignifanceHeuristic;
-import com.liferay.portal.search.signifiance.PercentageScoreSignifanceHeuristic;
-import com.liferay.portal.search.signifiance.ScriptSignifanceHeuristic;
-import com.liferay.portal.search.signifiance.SignificanceHeuristic;
+import com.liferay.portal.search.significance.ChiSquareSignifanceHeuristic;
+import com.liferay.portal.search.significance.GNDSignificanceHeuristic;
+import com.liferay.portal.search.significance.JLHScoreSignifanceHeuristic;
+import com.liferay.portal.search.significance.MutualInformationSignifanceHeuristic;
+import com.liferay.portal.search.significance.PercentageScoreSignifanceHeuristic;
+import com.liferay.portal.search.significance.ScriptSignifanceHeuristic;
+import com.liferay.portal.search.significance.SignificanceHeuristic;
 
 import org.elasticsearch.script.Script;
 import org.elasticsearch.search.aggregations.bucket.significant.heuristics.ChiSquare;

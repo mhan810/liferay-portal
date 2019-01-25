@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.signifiance;
+package com.liferay.portal.search.significance;
 
 import aQute.bnd.annotation.ProviderType;
 
