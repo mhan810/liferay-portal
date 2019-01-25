@@ -20,6 +20,8 @@ import com.liferay.portal.search.aggregation.AggregationResult;
 import com.liferay.portal.search.aggregation.AggregationResultTranslator;
 import com.liferay.portal.search.aggregation.pipeline.PipelineAggregation;
 import com.liferay.portal.search.aggregation.pipeline.PipelineAggregationResultTranslator;
+import com.liferay.portal.search.elasticsearch6.internal.aggregation.ElasticsearchAggregationResultTranslator;
+import com.liferay.portal.search.elasticsearch6.internal.aggregation.pipeline.ElasticsearchPipelineAggregationResultTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.hits.SearchHitsTranslator;
 import com.liferay.portal.search.engine.adapter.search2.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search2.SearchSearchResponse;
@@ -66,7 +68,7 @@ public class SearchSearchResponseAssemblerImpl
 				if (elasticsearchAggregation != null) {
 					AggregationResult aggregationResult =
 						aggregationRequest.accept(
-							aggregationResultTranslator,
+							_aggregationResultTranslator,
 							elasticsearchAggregation);
 
 					searchSearchResponse.addAggregationResult(
@@ -86,7 +88,7 @@ public class SearchSearchResponseAssemblerImpl
 				if (elasticsearchAggregation != null) {
 					AggregationResult aggregationResult =
 						pipelineAggregationRequest.accept(
-							pipelineAggregationResultTranslator,
+							_pipelineAggregationResultTranslator,
 							elasticsearchAggregation);
 
 					searchSearchResponse.addAggregationResult(
@@ -110,21 +112,19 @@ public class SearchSearchResponseAssemblerImpl
 		}
 	}
 
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	protected AggregationResultTranslator
-		<? extends AggregationResult,
-		 org.elasticsearch.search.aggregations.Aggregation>
-			aggregationResultTranslator;
-
 	@Reference
 	protected CommonSearchResponseAssembler commonSearchResponseAssembler;
 
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	protected PipelineAggregationResultTranslator
+	private final AggregationResultTranslator
 		<? extends AggregationResult,
 		 org.elasticsearch.search.aggregations.Aggregation>
-			pipelineAggregationResultTranslator;
-
+			_aggregationResultTranslator =
+				new ElasticsearchAggregationResultTranslator();
+	private final PipelineAggregationResultTranslator
+		<? extends AggregationResult,
+		 org.elasticsearch.search.aggregations.Aggregation>
+			_pipelineAggregationResultTranslator =
+				new ElasticsearchPipelineAggregationResultTranslator();
 	private final SearchHitsTranslator _searchHitsTranslator =
 		new SearchHitsTranslator();
 

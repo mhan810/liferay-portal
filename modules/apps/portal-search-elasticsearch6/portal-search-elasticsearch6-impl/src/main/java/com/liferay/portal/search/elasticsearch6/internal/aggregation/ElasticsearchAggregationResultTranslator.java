@@ -122,15 +122,9 @@ import org.elasticsearch.search.aggregations.metrics.tophits.TopHits;
 import org.elasticsearch.search.aggregations.metrics.valuecount.ValueCount;
 import org.elasticsearch.search.aggregations.metrics.weighted_avg.WeightedAvg;
 
-import org.osgi.service.component.annotations.Component;
-
 /**
  * @author Michael C. Han
  */
-@Component(
-	property = "search.engine.impl=Elasticsearch",
-	service = AggregationResultTranslator.class
-)
 public class ElasticsearchAggregationResultTranslator
 	implements AggregationResultTranslator<AggregationResult, Aggregation> {
 
@@ -166,7 +160,7 @@ public class ElasticsearchAggregationResultTranslator
 				children.getName(), children.getDocCount());
 
 		List<AggregationResult> subaggregationResults =
-			translateSubAndPipelineAggregation(
+			translateSubaggAndPipelineAggregation(
 				children.getAggregations(), childrenAggregation);
 
 		childrenAggregationResult.addChildAggregationResults(
@@ -199,7 +193,7 @@ public class ElasticsearchAggregationResultTranslator
 					sampler.getName(), sampler.getDocCount());
 
 		List<AggregationResult> subaggregationResults =
-			translateSubAndPipelineAggregation(
+			translateSubaggAndPipelineAggregation(
 				sampler.getAggregations(), diversifiedSamplerAggregation);
 
 		diversifiedSamplerAggregationResult.addChildAggregationResults(
@@ -233,7 +227,7 @@ public class ElasticsearchAggregationResultTranslator
 			new FilterAggregationResult(filter.getName(), filter.getDocCount());
 
 		List<AggregationResult> subaggregationResults =
-			translateSubAndPipelineAggregation(
+			translateSubaggAndPipelineAggregation(
 				filter.getAggregations(), filterAggregation);
 
 		filterAggregationResult.addChildAggregationResults(
@@ -310,7 +304,7 @@ public class ElasticsearchAggregationResultTranslator
 			new GlobalAggregationResult(global.getName(), global.getDocCount());
 
 		List<AggregationResult> subaggregationResults =
-			translateSubAndPipelineAggregation(
+			translateSubaggAndPipelineAggregation(
 				global.getAggregations(), globalAggregation);
 
 		globalAggregationResult.addChildAggregationResults(
@@ -359,7 +353,7 @@ public class ElasticsearchAggregationResultTranslator
 				missing.getName(), missing.getDocCount());
 
 		List<AggregationResult> subaggregationResults =
-			translateSubAndPipelineAggregation(
+			translateSubaggAndPipelineAggregation(
 				missing.getAggregations(), missingAggregation);
 
 		missingAggregationResult.addChildAggregationResults(
@@ -378,7 +372,7 @@ public class ElasticsearchAggregationResultTranslator
 			new NestedAggregationResult(nested.getName(), nested.getDocCount());
 
 		List<AggregationResult> subaggregationResults =
-			translateSubAndPipelineAggregation(
+			translateSubaggAndPipelineAggregation(
 				nested.getAggregations(), nestedAggregation);
 
 		nestedAggregationResult.addChildAggregationResults(
@@ -454,7 +448,7 @@ public class ElasticsearchAggregationResultTranslator
 				reverseNested.getName(), reverseNested.getDocCount());
 
 		List<AggregationResult> subaggregationResults =
-			translateSubAndPipelineAggregation(
+			translateSubaggAndPipelineAggregation(
 				reverseNested.getAggregations(), reverseNestedAggregation);
 
 		reverseNestedAggregationResult.addChildAggregationResults(
@@ -474,7 +468,7 @@ public class ElasticsearchAggregationResultTranslator
 				sampler.getName(), sampler.getDocCount());
 
 		List<AggregationResult> subaggregationResults =
-			translateSubAndPipelineAggregation(
+			translateSubaggAndPipelineAggregation(
 				sampler.getAggregations(), samplerAggregation);
 
 		samplerAggregationResult.addChildAggregationResults(
@@ -620,7 +614,7 @@ public class ElasticsearchAggregationResultTranslator
 				childAggregations.forEach(
 					childAggregation -> {
 						List<AggregationResult> childAggregationResults =
-							translateSubAndPipelineAggregation(
+							translateSubaggAndPipelineAggregation(
 								multiBucketAggregationBucket.getAggregations(),
 								childAggregation);
 
@@ -632,7 +626,7 @@ public class ElasticsearchAggregationResultTranslator
 		return baseBucketAggregationResult;
 	}
 
-	protected List<AggregationResult> translateSubAndPipelineAggregation(
+	protected List<AggregationResult> translateSubaggAndPipelineAggregation(
 		Aggregations subaggregationsResults,
 		com.liferay.portal.search.aggregation.Aggregation aggregation) {
 
@@ -661,7 +655,7 @@ public class ElasticsearchAggregationResultTranslator
 			pipelineAggregationRequest -> {
 				Aggregation elasticsearchAggregation =
 					subaggregationsResults.get(
-					pipelineAggregationRequest.getName());
+						pipelineAggregationRequest.getName());
 
 				if (elasticsearchAggregation != null) {
 					AggregationResult aggregationResult =

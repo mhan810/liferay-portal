@@ -170,7 +170,7 @@ public class ElasticsearchSortFieldTranslator
 			nestedSort.getPath());
 
 		if (nestedSort.getFilterQuery() != null) {
-			QueryBuilder queryBuilder = _queryTranslator.translate(
+			QueryBuilder queryBuilder = queryTranslator.translate(
 				nestedSort.getFilterQuery());
 
 			nestedSortBuilder.setFilter(queryBuilder);
@@ -226,14 +226,13 @@ public class ElasticsearchSortFieldTranslator
 		}
 	}
 
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
+	protected QueryTranslator<QueryBuilder> queryTranslator;
+
 	private final DistanceUnitTranslator _distanceUnitTranslator =
 		new DistanceUnitTranslator();
 	private final GeoDistanceTypeTranslator _geoDistanceTypeTranslator =
 		new GeoDistanceTypeTranslator();
-
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	private QueryTranslator<QueryBuilder> _queryTranslator;
-
 	private final ScriptTranslator _scriptTranslator = new ScriptTranslator();
 
 }

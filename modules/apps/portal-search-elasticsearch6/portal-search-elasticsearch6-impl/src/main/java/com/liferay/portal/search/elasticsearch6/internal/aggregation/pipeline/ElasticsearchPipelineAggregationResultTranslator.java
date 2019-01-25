@@ -47,15 +47,9 @@ import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.stats.StatsB
 import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.stats.extended.ExtendedStatsBucket;
 import org.elasticsearch.search.aggregations.pipeline.derivative.Derivative;
 
-import org.osgi.service.component.annotations.Component;
-
 /**
  * @author Michael C. Han
  */
-@Component(
-	property = "search.engine.impl=Elasticsearch",
-	service = PipelineAggregationResultTranslator.class
-)
 public class ElasticsearchPipelineAggregationResultTranslator
 	implements PipelineAggregationResultTranslator
 		<AggregationResult, Aggregation> {

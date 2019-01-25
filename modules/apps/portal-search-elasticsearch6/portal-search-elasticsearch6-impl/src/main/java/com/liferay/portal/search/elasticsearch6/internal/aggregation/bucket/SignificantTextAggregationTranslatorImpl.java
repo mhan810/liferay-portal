@@ -60,7 +60,7 @@ public class SignificantTextAggregationTranslatorImpl
 
 		if (significantTextAggregation.getBackgroundFilterQuery() != null) {
 			significantTextAggregationBuilder.backgroundFilter(
-				_queryTranslator.translate(
+				queryTranslator.translate(
 					significantTextAggregation.getBackgroundFilterQuery()));
 		}
 
@@ -108,6 +108,9 @@ public class SignificantTextAggregationTranslatorImpl
 		return significantTextAggregationBuilder;
 	}
 
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
+	protected QueryTranslator<QueryBuilder> queryTranslator;
+
 	private final BaseAggregationTranslator _baseAggregationTranslator =
 		new BaseAggregationTranslator();
 	private final BucketCountThresholdsTranslator
@@ -115,10 +118,6 @@ public class SignificantTextAggregationTranslatorImpl
 			new BucketCountThresholdsTranslator();
 	private final IncludeExcludeTranslator _includeExcludeTranslator =
 		new IncludeExcludeTranslator();
-
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	private QueryTranslator<QueryBuilder> _queryTranslator;
-
 	private final SignificanceHeuristicTranslator
 		_significanceHeuristicTranslator =
 			new SignificanceHeuristicTranslator();

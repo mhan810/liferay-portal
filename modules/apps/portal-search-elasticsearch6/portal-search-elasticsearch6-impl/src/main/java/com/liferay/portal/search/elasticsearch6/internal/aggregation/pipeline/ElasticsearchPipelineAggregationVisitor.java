@@ -141,7 +141,7 @@ public class ElasticsearchPipelineAggregationVisitor
 		fieldSorts.forEach(
 			fieldSort -> {
 				FieldSortBuilder fieldSortBuilder =
-					(FieldSortBuilder)_sortFieldTranslator.translate(fieldSort);
+					(FieldSortBuilder)sortFieldTranslator.translate(fieldSort);
 
 				fieldSortBuilders.add(fieldSortBuilder);
 			});
@@ -366,14 +366,14 @@ public class ElasticsearchPipelineAggregationVisitor
 			sumBucketPipelineAggregation);
 	}
 
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
+	protected SortFieldTranslator sortFieldTranslator;
+
 	private final BucketMetricsPipelineAggregationTranslator
 		_bucketMetricsPipelineAggregationTranslator =
 			new BucketMetricsPipelineAggregationTranslator();
 	private final GapPolicyTranslator _gapPolicyTranslator =
 		new GapPolicyTranslator();
 	private final ScriptTranslator _scriptTranslator = new ScriptTranslator();
-
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	private SortFieldTranslator _sortFieldTranslator;
 
 }

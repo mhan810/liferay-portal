@@ -54,7 +54,7 @@ public class FiltersAggregationTranslatorImpl
 
 		keyedQueries.forEach(
 			keyedQuery -> {
-				QueryBuilder filterQueryBuilder = _queryTranslator.translate(
+				QueryBuilder filterQueryBuilder = queryTranslator.translate(
 					keyedQuery.getQuery());
 
 				keyedFilters.add(
@@ -85,10 +85,10 @@ public class FiltersAggregationTranslatorImpl
 		return filtersAggregationBuilder;
 	}
 
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
+	protected QueryTranslator<QueryBuilder> queryTranslator;
+
 	private final BaseAggregationTranslator _baseAggregationTranslator =
 		new BaseAggregationTranslator();
-
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	private QueryTranslator<QueryBuilder> _queryTranslator;
 
 }
