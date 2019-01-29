@@ -29,8 +29,6 @@ Import-Package:\
 	!com.sun.jna.*,\
 	!com.sun.nio.sctp.*,\
 	\
-	!com.tdunning.math.stats.*,\
-	\
 	!com.thoughtworks.qdox.*,\
 	!com.thoughtworks.xstream.*,\
 	\

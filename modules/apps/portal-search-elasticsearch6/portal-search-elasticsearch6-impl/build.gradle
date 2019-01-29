@@ -18,7 +18,7 @@ dependencies {
 	compileInclude group: "com.liferay", name: "org.elasticsearch.plugin.cli", version: elasticsearchVersion
 	compileInclude group: "com.liferay", name: "org.elasticsearch.secure.sm", version: elasticsearchVersion
 	compileInclude group: "com.liferay", name: "org.elasticsearch.xpack.core", version: elasticsearchVersion
-	compileInclude group: "com.tdunning", name: "t-digest", version: "3.0"
+	compileInclude group: "com.tdunning", name: "t-digest", version: "3.2"
 	compileInclude group: "com.twitter", name: "jsr166e", version: "1.1.0"
 	compileInclude group: "com.unboundid", name: "unboundid-ldapsdk", version: "4.0.2"
 	compileInclude group: "com.vividsolutions", name: "jts", version: "1.13"
