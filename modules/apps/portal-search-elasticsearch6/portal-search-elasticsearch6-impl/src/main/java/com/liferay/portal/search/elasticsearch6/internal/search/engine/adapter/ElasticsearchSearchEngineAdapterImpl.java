@@ -26,9 +26,9 @@ import com.liferay.portal.search.engine.adapter.document.DocumentResponse;
 import com.liferay.portal.search.engine.adapter.index.IndexRequest;
 import com.liferay.portal.search.engine.adapter.index.IndexRequestExecutor;
 import com.liferay.portal.search.engine.adapter.index.IndexResponse;
-import com.liferay.portal.search.engine.adapter.search.SearchRequest;
-import com.liferay.portal.search.engine.adapter.search.SearchRequestExecutor;
-import com.liferay.portal.search.engine.adapter.search.SearchResponse;
+import com.liferay.portal.search.engine.adapter.search2.SearchRequest;
+import com.liferay.portal.search.engine.adapter.search2.SearchRequestExecutor;
+import com.liferay.portal.search.engine.adapter.search2.SearchResponse;
 import com.liferay.portal.search.engine.adapter.snapshot.SnapshotRequest;
 import com.liferay.portal.search.engine.adapter.snapshot.SnapshotRequestExecutor;
 import com.liferay.portal.search.engine.adapter.snapshot.SnapshotResponse;
@@ -47,6 +47,17 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class ElasticsearchSearchEngineAdapterImpl
 	implements SearchEngineAdapter {
+
+	@Override
+	public
+		<V extends
+			com.liferay.portal.search.engine.adapter.search.SearchResponse> V
+			execute(
+				com.liferay.portal.search.engine.adapter.search.SearchRequest<V>
+					searchRequest) {
+
+		return searchRequest.accept(searchRequestExecutor);
+	}
 
 	@Override
 	public <T extends ClusterResponse> T execute(
@@ -71,7 +82,7 @@ public class ElasticsearchSearchEngineAdapterImpl
 	public <V extends SearchResponse> V execute(
 		SearchRequest<V> searchRequest) {
 
-		return searchRequest.accept(searchRequestExecutor);
+		return searchRequest.accept(search2SearchRequestExecutor);
 	}
 
 	@Override
@@ -101,7 +112,11 @@ public class ElasticsearchSearchEngineAdapterImpl
 	protected QueryTranslator<QueryBuilder> queryTranslator;
 
 	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	protected SearchRequestExecutor searchRequestExecutor;
+	protected SearchRequestExecutor search2SearchRequestExecutor;
+
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
+	protected com.liferay.portal.search.engine.adapter.search.
+		SearchRequestExecutor searchRequestExecutor;
 
 	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	protected SnapshotRequestExecutor snapshotRequestExecutor;

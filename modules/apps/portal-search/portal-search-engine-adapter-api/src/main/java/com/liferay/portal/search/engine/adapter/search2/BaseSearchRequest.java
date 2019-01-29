@@ -86,6 +86,10 @@ public abstract class BaseSearchRequest {
 		return _types;
 	}
 
+	public boolean isIncludeRequestString() {
+		return _includeRequestString;
+	}
+
 	public boolean isIncludeResponseString() {
 		return _includeResponseString;
 	}
@@ -103,6 +107,10 @@ public abstract class BaseSearchRequest {
 
 	public void setExplain(Boolean explain) {
 		_explain = explain;
+	}
+
+	public void setIncludeRequestString(boolean includeRequestString) {
+		_includeRequestString = includeRequestString;
 	}
 
 	public void setIncludeResponseString(boolean includeResponseString) {
@@ -147,6 +155,7 @@ public abstract class BaseSearchRequest {
 
 	private final Map<String, Aggregation> _aggregations = new HashMap<>();
 	private Boolean _explain;
+	private boolean _includeRequestString;
 	private boolean _includeResponseString;
 	private final Map<String, Float> _indexBoosts = new HashMap<>();
 	private String[] _indexNames;
