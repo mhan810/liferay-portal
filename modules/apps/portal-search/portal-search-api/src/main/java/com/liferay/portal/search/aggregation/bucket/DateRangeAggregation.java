@@ -33,37 +33,28 @@ public class DateRangeAggregation extends RangeAggregation {
 		return aggregationVisitor.visit(this);
 	}
 
-	public void addRange(
-		long fromTimeInMilliseconds, long toTimeInMilliseconds) {
-
-		addRange(
-			new Range(
-				(double)fromTimeInMilliseconds, (double)toTimeInMilliseconds));
+	public void addRange(String fromDate, String toDate) {
+		addRange(new Range(fromDate, toDate));
 	}
 
-	public void addRange(
-		String key, long fromTimeInMilliseconds, long toTimeInMilliseconds) {
-
-		addRange(
-			new Range(
-				key, (double)fromTimeInMilliseconds,
-				(double)toTimeInMilliseconds));
+	public void addRange(String key, String fromDate, String toDate) {
+		addRange(new Range(key, fromDate, toDate));
 	}
 
-	public void addUnboundedFrom(long fromTimeInMilliseconds) {
-		addRange(new Range((double)fromTimeInMilliseconds, null));
+	public void addUnboundedFrom(String fromDate) {
+		addRange(new Range(fromDate, null));
 	}
 
-	public void addUnboundedFrom(String key, long fromTimeInMilliseconds) {
-		addRange(new Range(key, (double)fromTimeInMilliseconds, null));
+	public void addUnboundedFrom(String key, String fromDate) {
+		addRange(new Range(key, fromDate, null));
 	}
 
-	public void addUnboundedTo(String key, long toTimeInMilliseconds) {
-		addRange(new Range(key, null, (double)toTimeInMilliseconds));
+	public void addUnboundedTo(String key, String toDate) {
+		addRange(new Range(key, null, toDate));
 	}
 
-	public void unboundedTo(long toTimeInMilliseconds) {
-		addRange(new Range(null, (double)toTimeInMilliseconds));
+	public void unboundedTo(String toDate) {
+		addRange(new Range(null, toDate));
 	}
 
 }

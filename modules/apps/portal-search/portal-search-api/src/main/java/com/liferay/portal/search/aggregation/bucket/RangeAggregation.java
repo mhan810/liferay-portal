@@ -68,14 +68,32 @@ public class RangeAggregation extends BaseFieldAggregation {
 		addRange(new Range(key, null, to));
 	}
 
+	public String getFormat() {
+		return _format;
+	}
+
+	public Boolean getKeyed() {
+		return _keyed;
+	}
+
 	public List<Range> getRanges() {
 		return Collections.unmodifiableList(_ranges);
+	}
+
+	public void setFormat(String format) {
+		_format = format;
+	}
+
+	public void setKeyed(Boolean keyed) {
+		_keyed = keyed;
 	}
 
 	public void unboundedTo(Double to) {
 		addRange(new Range(null, to));
 	}
 
+	private String _format;
+	private Boolean _keyed;
 	private List<Range> _ranges = new ArrayList<>();
 
 }
