@@ -22,7 +22,6 @@ import com.liferay.portal.search.aggregation.bucket.ChildrenAggregation;
 import com.liferay.portal.search.aggregation.bucket.ChildrenAggregationResult;
 import com.liferay.portal.search.aggregation.bucket.DateHistogramAggregation;
 import com.liferay.portal.search.aggregation.bucket.DateHistogramAggregationResult;
-import com.liferay.portal.search.aggregation.bucket.DateRangeAggregationResult;
 import com.liferay.portal.search.aggregation.bucket.DiversifiedSamplerAggregation;
 import com.liferay.portal.search.aggregation.bucket.DiversifiedSamplerAggregationResult;
 import com.liferay.portal.search.aggregation.bucket.FilterAggregation;
@@ -40,6 +39,7 @@ import com.liferay.portal.search.aggregation.bucket.MissingAggregationResult;
 import com.liferay.portal.search.aggregation.bucket.NestedAggregation;
 import com.liferay.portal.search.aggregation.bucket.NestedAggregationResult;
 import com.liferay.portal.search.aggregation.bucket.RangeAggregation;
+import com.liferay.portal.search.aggregation.bucket.RangeAggregationResult;
 import com.liferay.portal.search.aggregation.bucket.ReverseNestedAggregation;
 import com.liferay.portal.search.aggregation.bucket.ReverseNestedAggregationResult;
 import com.liferay.portal.search.aggregation.bucket.SamplerAggregation;
@@ -425,7 +425,7 @@ public class ElasticsearchAggregationResultTranslator
 
 		return translateBuckets(
 			(Range)aggregationResult,
-			new DateRangeAggregationResult(aggregationResult.getName()),
+			new RangeAggregationResult(aggregationResult.getName()),
 			rangeAggregation);
 	}
 

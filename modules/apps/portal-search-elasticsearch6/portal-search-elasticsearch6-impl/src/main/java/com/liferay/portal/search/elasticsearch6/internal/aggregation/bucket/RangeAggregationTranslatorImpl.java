@@ -25,7 +25,9 @@ import java.util.List;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.PipelineAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.range.AbstractRangeBuilder;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.range.RangeAggregator;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -50,16 +52,37 @@ public class RangeAggregationTranslatorImpl
 				rangeAggregation, aggregationTranslator,
 				pipelineAggregationTranslator);
 
+		populateRangeAggregationBuilder(
+			rangeAggregation, rangeAggregationBuilder);
+
+		return rangeAggregationBuilder;
+	}
+
+	protected void populateRangeAggregationBuilder(
+		RangeAggregation rangeAggregation,
+		AbstractRangeBuilder abstractRangeBuilder) {
+
+		if (rangeAggregation.getFormat() != null) {
+			abstractRangeBuilder.format(rangeAggregation.getFormat());
+		}
+
+		if (rangeAggregation.getKeyed() != null) {
+			abstractRangeBuilder.keyed(rangeAggregation.getKeyed());
+		}
+
 		List<Range> rangeAggregationRanges = rangeAggregation.getRanges();
 
 		rangeAggregationRanges.forEach(
-			rangeAggregationRange ->
-				rangeAggregationBuilder.addRange(
+			rangeAggregationRange -> {
+				RangeAggregator.Range range = new RangeAggregator.Range(
 					rangeAggregationRange.getKey(),
 					rangeAggregationRange.getFrom(),
-					rangeAggregationRange.getTo()));
+					rangeAggregationRange.getFromAsString(),
+					rangeAggregationRange.getTo(),
+					rangeAggregationRange.getToAsString());
 
-		return rangeAggregationBuilder;
+				abstractRangeBuilder.addRange(range);
+			});
 	}
 
 	private final BaseFieldAggregationTranslator

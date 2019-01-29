@@ -16,11 +16,8 @@ package com.liferay.portal.search.elasticsearch6.internal.aggregation.bucket;
 
 import com.liferay.portal.search.aggregation.AggregationTranslator;
 import com.liferay.portal.search.aggregation.bucket.DateRangeAggregation;
-import com.liferay.portal.search.aggregation.bucket.Range;
 import com.liferay.portal.search.aggregation.pipeline.PipelineAggregationTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.aggregation.BaseFieldAggregationTranslator;
-
-import java.util.List;
 
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
@@ -34,6 +31,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(service = DateRangeAggregationTranslator.class)
 public class DateRangeAggregationTranslatorImpl
+	extends RangeAggregationTranslatorImpl
 	implements DateRangeAggregationTranslator {
 
 	@Override
@@ -51,14 +49,8 @@ public class DateRangeAggregationTranslatorImpl
 				dateRangeAggregation, aggregationTranslator,
 				pipelineAggregationTranslator);
 
-		List<Range> rangeAggregationRanges = dateRangeAggregation.getRanges();
-
-		rangeAggregationRanges.forEach(
-			rangeAggregationRange ->
-				dateRangeAggregationBuilder.addRange(
-					rangeAggregationRange.getKey(),
-					rangeAggregationRange.getFrom(),
-					rangeAggregationRange.getTo()));
+		populateRangeAggregationBuilder(
+			dateRangeAggregation, dateRangeAggregationBuilder);
 
 		return dateRangeAggregationBuilder;
 	}
