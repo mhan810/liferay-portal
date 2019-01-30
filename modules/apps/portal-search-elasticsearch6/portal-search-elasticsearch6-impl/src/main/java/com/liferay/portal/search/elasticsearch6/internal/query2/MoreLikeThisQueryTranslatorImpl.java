@@ -57,7 +57,7 @@ public class MoreLikeThisQueryTranslatorImpl
 			for (String documentUID : moreLikeThisQuery.getDocumentUIDs()) {
 				MoreLikeThisQueryBuilder.Item moreLikeThisQueryBuilderItem =
 					new MoreLikeThisQueryBuilder.Item(
-						indexNameBuilder.getIndexName(
+						_indexNameBuilder.getIndexName(
 							moreLikeThisQuery.getCompanyId()),
 						type, documentUID);
 
@@ -134,7 +134,11 @@ public class MoreLikeThisQueryTranslatorImpl
 		return moreLikeThisQueryBuilder;
 	}
 
-	@Reference
-	protected IndexNameBuilder indexNameBuilder;
+	@Reference(unbind = "-")
+	protected void setIndexNameBuilder(IndexNameBuilder indexNameBuilder) {
+		_indexNameBuilder = indexNameBuilder;
+	}
+
+	private IndexNameBuilder _indexNameBuilder;
 
 }

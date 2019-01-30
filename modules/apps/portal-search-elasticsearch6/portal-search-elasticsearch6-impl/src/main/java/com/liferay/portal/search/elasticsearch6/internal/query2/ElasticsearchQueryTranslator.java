@@ -80,235 +80,383 @@ public class ElasticsearchQueryTranslator
 
 	@Override
 	public QueryBuilder visit(BooleanQuery booleanQuery) {
-		return booleanQueryTranslator.translate(booleanQuery, this);
+		return _booleanQueryTranslator.translate(booleanQuery, this);
 	}
 
 	@Override
 	public QueryBuilder visit(BoostingQuery boostingQuery) {
-		return boostingQueryTranslator.translate(boostingQuery, this);
+		return _boostingQueryTranslator.translate(boostingQuery, this);
 	}
 
 	@Override
 	public QueryBuilder visit(CommonTermsQuery commonTermsQuery) {
-		return commonTermsQueryTranslator.translate(commonTermsQuery);
+		return _commonTermsQueryTranslator.translate(commonTermsQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(ConstantScoreQuery constantScoreQuery) {
-		return constantScoreQueryTranslator.translate(constantScoreQuery, this);
+		return _constantScoreQueryTranslator.translate(
+			constantScoreQuery, this);
 	}
 
 	@Override
 	public QueryBuilder visit(DateRangeTermQuery dateRangeTermQuery) {
-		return dateRangeTermQueryTranslator.translate(dateRangeTermQuery);
+		return _dateRangeTermQueryTranslator.translate(dateRangeTermQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(DisMaxQuery disMaxQuery) {
-		return disMaxQueryTranslator.translate(disMaxQuery, this);
+		return _disMaxQueryTranslator.translate(disMaxQuery, this);
 	}
 
 	@Override
 	public QueryBuilder visit(ExistsQuery existsQuery) {
-		return existsQueryTranslator.translate(existsQuery);
+		return _existsQueryTranslator.translate(existsQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(FuzzyQuery fuzzyQuery) {
-		return fuzzyQueryTranslator.translate(fuzzyQuery);
+		return _fuzzyQueryTranslator.translate(fuzzyQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(GeoBoundingBoxQuery geoBoundingBoxQuery) {
-		return geoBoundingBoxQueryTranslator.translate(geoBoundingBoxQuery);
+		return _geoBoundingBoxQueryTranslator.translate(geoBoundingBoxQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(GeoDistanceQuery geoDistanceQuery) {
-		return geoDistanceQueryTranslator.translate(geoDistanceQuery);
+		return _geoDistanceQueryTranslator.translate(geoDistanceQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(GeoDistanceRangeQuery geoDistanceRangeQuery) {
-		return geoDistanceRangeQueryTranslator.translate(geoDistanceRangeQuery);
+		return _geoDistanceRangeQueryTranslator.translate(
+			geoDistanceRangeQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(GeoPolygonQuery geoPolygonQuery) {
-		return geoPolygonQueryTranslator.translate(geoPolygonQuery);
+		return _geoPolygonQueryTranslator.translate(geoPolygonQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(GeoShapeQuery geoShapeQuery) {
-		return geoShapeQueryTranslator.translate(geoShapeQuery);
+		return _geoShapeQueryTranslator.translate(geoShapeQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(IdsQuery idsQuery) {
-		return idsQueryTranslator.translate(idsQuery);
+		return _idsQueryTranslator.translate(idsQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(MatchAllQuery matchAllQuery) {
-		return matchAllQueryTranslator.translate(matchAllQuery);
+		return _matchAllQueryTranslator.translate(matchAllQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(MatchPhrasePrefixQuery matchPhrasePrefixQuery) {
-		return matchPhrasePrefixQueryTranslator.translate(
+		return _matchPhrasePrefixQueryTranslator.translate(
 			matchPhrasePrefixQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(MatchPhraseQuery matchPhraseQuery) {
-		return matchPhraseQueryTranslator.translate(matchPhraseQuery);
+		return _matchPhraseQueryTranslator.translate(matchPhraseQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(MatchQuery matchQuery) {
-		return matchQueryTranslator.translate(matchQuery);
+		return _matchQueryTranslator.translate(matchQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(MoreLikeThisQuery moreLikeThisQuery) {
-		return moreLikeThisQueryTranslator.translate(moreLikeThisQuery);
+		return _moreLikeThisQueryTranslator.translate(moreLikeThisQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(MultiMatchQuery multiMatchQuery) {
-		return multiMatchQueryTranslator.translate(multiMatchQuery);
+		return _multiMatchQueryTranslator.translate(multiMatchQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(NestedQuery nestedQuery) {
-		return nestedQueryTranslator.translate(nestedQuery, this);
+		return _nestedQueryTranslator.translate(nestedQuery, this);
 	}
 
 	@Override
 	public QueryBuilder visit(PrefixQuery prefixQuery) {
-		return prefixQueryTranslator.translate(prefixQuery);
+		return _prefixQueryTranslator.translate(prefixQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(RangeTermQuery rangeTermQuery) {
-		return rangeTermQueryTranslator.translate(rangeTermQuery);
+		return _rangeTermQueryTranslator.translate(rangeTermQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(ScriptQuery scriptQuery) {
-		return scriptQueryTranslator.translate(scriptQuery);
+		return _scriptQueryTranslator.translate(scriptQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(StringQuery stringQuery) {
-		return stringQueryTranslator.translate(stringQuery);
+		return _stringQueryTranslator.translate(stringQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(TermQuery termQuery) {
-		return termQueryTranslator.translate(termQuery);
+		return _termQueryTranslator.translate(termQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(TermsQuery termsQuery) {
-		return termsQueryTranslator.translate(termsQuery);
+		return _termsQueryTranslator.translate(termsQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(TermsSetQuery termsSetQuery) {
-		return termsSetQueryTranslator.translate(termsSetQuery);
+		return _termsSetQueryTranslator.translate(termsSetQuery);
 	}
 
 	@Override
 	public QueryBuilder visit(WildcardQuery wildcardQuery) {
-		return wildcardQueryTranslator.translate(wildcardQuery);
+		return _wildcardQueryTranslator.translate(wildcardQuery);
 	}
 
-	@Reference
-	protected BooleanQueryTranslator booleanQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setBooleanQueryTranslator(
+		BooleanQueryTranslator booleanQueryTranslator) {
 
-	@Reference
-	protected BoostingQueryTranslator boostingQueryTranslator;
+		_booleanQueryTranslator = booleanQueryTranslator;
+	}
 
-	@Reference
-	protected CommonTermsQueryTranslator commonTermsQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setBoostingQueryTranslator(
+		BoostingQueryTranslator boostingQueryTranslator) {
 
-	@Reference
-	protected ConstantScoreQueryTranslator constantScoreQueryTranslator;
+		_boostingQueryTranslator = boostingQueryTranslator;
+	}
 
-	@Reference
-	protected DateRangeTermQueryTranslator dateRangeTermQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setCommonTermsQueryTranslator(
+		CommonTermsQueryTranslator commonTermsQueryTranslator) {
 
-	@Reference
-	protected DisMaxQueryTranslator disMaxQueryTranslator;
+		_commonTermsQueryTranslator = commonTermsQueryTranslator;
+	}
 
-	@Reference
-	protected ExistsQueryTranslator existsQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setConstantScoreQueryTranslator(
+		ConstantScoreQueryTranslator constantScoreQueryTranslator) {
 
-	@Reference
-	protected FuzzyQueryTranslator fuzzyQueryTranslator;
+		_constantScoreQueryTranslator = constantScoreQueryTranslator;
+	}
 
-	@Reference
-	protected GeoBoundingBoxQueryTranslator geoBoundingBoxQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setDateRangeTermQueryTranslator(
+		DateRangeTermQueryTranslator dateRangeTermQueryTranslator) {
 
-	@Reference
-	protected GeoDistanceQueryTranslator geoDistanceQueryTranslator;
+		_dateRangeTermQueryTranslator = dateRangeTermQueryTranslator;
+	}
 
-	@Reference
-	protected GeoDistanceRangeQueryTranslator geoDistanceRangeQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setDisMaxQueryTranslator(
+		DisMaxQueryTranslator disMaxQueryTranslator) {
 
-	@Reference
-	protected GeoPolygonQueryTranslator geoPolygonQueryTranslator;
+		_disMaxQueryTranslator = disMaxQueryTranslator;
+	}
 
-	@Reference
-	protected GeoShapeQueryTranslator geoShapeQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setExistsQueryTranslator(
+		ExistsQueryTranslator existsQueryTranslator) {
 
-	@Reference
-	protected IdsQueryTranslator idsQueryTranslator;
+		_existsQueryTranslator = existsQueryTranslator;
+	}
 
-	@Reference
-	protected MatchAllQueryTranslator matchAllQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setFuzzyQueryTranslator(
+		FuzzyQueryTranslator fuzzyQueryTranslator) {
 
-	@Reference
-	protected MatchPhrasePrefixQueryTranslator matchPhrasePrefixQueryTranslator;
+		_fuzzyQueryTranslator = fuzzyQueryTranslator;
+	}
 
-	@Reference
-	protected MatchPhraseQueryTranslator matchPhraseQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setGeoBoundingBoxQueryTranslator(
+		GeoBoundingBoxQueryTranslator geoBoundingBoxQueryTranslator) {
 
-	@Reference
-	protected MatchQueryTranslator matchQueryTranslator;
+		_geoBoundingBoxQueryTranslator = geoBoundingBoxQueryTranslator;
+	}
 
-	@Reference
-	protected MoreLikeThisQueryTranslator moreLikeThisQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setGeoDistanceQueryTranslator(
+		GeoDistanceQueryTranslator geoDistanceQueryTranslator) {
 
-	@Reference
-	protected MultiMatchQueryTranslator multiMatchQueryTranslator;
+		_geoDistanceQueryTranslator = geoDistanceQueryTranslator;
+	}
 
-	@Reference
-	protected NestedQueryTranslator nestedQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setGeoDistanceRangeQueryTranslator(
+		GeoDistanceRangeQueryTranslator geoDistanceRangeQueryTranslator) {
 
-	@Reference
-	protected PrefixQueryTranslator prefixQueryTranslator;
+		_geoDistanceRangeQueryTranslator = geoDistanceRangeQueryTranslator;
+	}
 
-	@Reference
-	protected RangeTermQueryTranslator rangeTermQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setGeoPolygonQueryTranslator(
+		GeoPolygonQueryTranslator geoPolygonQueryTranslator) {
 
-	@Reference
-	protected ScriptQueryTranslator scriptQueryTranslator;
+		_geoPolygonQueryTranslator = geoPolygonQueryTranslator;
+	}
 
-	@Reference
-	protected StringQueryTranslator stringQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setGeoShapeQueryTranslator(
+		GeoShapeQueryTranslator geoShapeQueryTranslator) {
 
-	@Reference
-	protected TermQueryTranslator termQueryTranslator;
+		_geoShapeQueryTranslator = geoShapeQueryTranslator;
+	}
 
-	@Reference
-	protected TermsQueryTranslator termsQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setIdsQueryTranslator(
+		IdsQueryTranslator idsQueryTranslator) {
 
-	@Reference
-	protected TermsSetQueryTranslator termsSetQueryTranslator;
+		_idsQueryTranslator = idsQueryTranslator;
+	}
 
-	@Reference
-	protected WildcardQueryTranslator wildcardQueryTranslator;
+	@Reference(unbind = "-")
+	protected void setMatchAllQueryTranslator(
+		MatchAllQueryTranslator matchAllQueryTranslator) {
+
+		_matchAllQueryTranslator = matchAllQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setMatchPhrasePrefixQueryTranslator(
+		MatchPhrasePrefixQueryTranslator matchPhrasePrefixQueryTranslator) {
+
+		_matchPhrasePrefixQueryTranslator = matchPhrasePrefixQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setMatchPhraseQueryTranslator(
+		MatchPhraseQueryTranslator matchPhraseQueryTranslator) {
+
+		_matchPhraseQueryTranslator = matchPhraseQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setMatchQueryTranslator(
+		MatchQueryTranslator matchQueryTranslator) {
+
+		_matchQueryTranslator = matchQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setMoreLikeThisQueryTranslator(
+		MoreLikeThisQueryTranslator moreLikeThisQueryTranslator) {
+
+		_moreLikeThisQueryTranslator = moreLikeThisQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setMultiMatchQueryTranslator(
+		MultiMatchQueryTranslator multiMatchQueryTranslator) {
+
+		_multiMatchQueryTranslator = multiMatchQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setNestedQueryTranslator(
+		NestedQueryTranslator nestedQueryTranslator) {
+
+		_nestedQueryTranslator = nestedQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setPrefixQueryTranslator(
+		PrefixQueryTranslator prefixQueryTranslator) {
+
+		_prefixQueryTranslator = prefixQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setRangeTermQueryTranslator(
+		RangeTermQueryTranslator rangeTermQueryTranslator) {
+
+		_rangeTermQueryTranslator = rangeTermQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setScriptQueryTranslator(
+		ScriptQueryTranslator scriptQueryTranslator) {
+
+		_scriptQueryTranslator = scriptQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setStringQueryTranslator(
+		StringQueryTranslator stringQueryTranslator) {
+
+		_stringQueryTranslator = stringQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setTermQueryTranslator(
+		TermQueryTranslator termQueryTranslator) {
+
+		_termQueryTranslator = termQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setTermsQueryTranslator(
+		TermsQueryTranslator termsQueryTranslator) {
+
+		_termsQueryTranslator = termsQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setTermsSetQueryTranslator(
+		TermsSetQueryTranslator termsSetQueryTranslator) {
+
+		_termsSetQueryTranslator = termsSetQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setWildcardQueryTranslator(
+		WildcardQueryTranslator wildcardQueryTranslator) {
+
+		_wildcardQueryTranslator = wildcardQueryTranslator;
+	}
+
+	private BooleanQueryTranslator _booleanQueryTranslator;
+	private BoostingQueryTranslator _boostingQueryTranslator;
+	private CommonTermsQueryTranslator _commonTermsQueryTranslator;
+	private ConstantScoreQueryTranslator _constantScoreQueryTranslator;
+	private DateRangeTermQueryTranslator _dateRangeTermQueryTranslator;
+	private DisMaxQueryTranslator _disMaxQueryTranslator;
+	private ExistsQueryTranslator _existsQueryTranslator;
+	private FuzzyQueryTranslator _fuzzyQueryTranslator;
+	private GeoBoundingBoxQueryTranslator _geoBoundingBoxQueryTranslator;
+	private GeoDistanceQueryTranslator _geoDistanceQueryTranslator;
+	private GeoDistanceRangeQueryTranslator _geoDistanceRangeQueryTranslator;
+	private GeoPolygonQueryTranslator _geoPolygonQueryTranslator;
+	private GeoShapeQueryTranslator _geoShapeQueryTranslator;
+	private IdsQueryTranslator _idsQueryTranslator;
+	private MatchAllQueryTranslator _matchAllQueryTranslator;
+	private MatchPhrasePrefixQueryTranslator _matchPhrasePrefixQueryTranslator;
+	private MatchPhraseQueryTranslator _matchPhraseQueryTranslator;
+	private MatchQueryTranslator _matchQueryTranslator;
+	private MoreLikeThisQueryTranslator _moreLikeThisQueryTranslator;
+	private MultiMatchQueryTranslator _multiMatchQueryTranslator;
+	private NestedQueryTranslator _nestedQueryTranslator;
+	private PrefixQueryTranslator _prefixQueryTranslator;
+	private RangeTermQueryTranslator _rangeTermQueryTranslator;
+	private ScriptQueryTranslator _scriptQueryTranslator;
+	private StringQueryTranslator _stringQueryTranslator;
+	private TermQueryTranslator _termQueryTranslator;
+	private TermsQueryTranslator _termsQueryTranslator;
+	private TermsSetQueryTranslator _termsSetQueryTranslator;
+	private WildcardQueryTranslator _wildcardQueryTranslator;
 
 }

@@ -89,7 +89,7 @@ public class TopHitsAggregationTranslatorImpl
 
 		if (topHitsAggregation.getHighlight() != null) {
 			HighlightBuilder highlightBuilder = _highlightTranslator.translate(
-				topHitsAggregation.getHighlight(), queryTranslator);
+				topHitsAggregation.getHighlight(), _queryTranslator);
 
 			topHitsAggregationBuilder.highlighter(highlightBuilder);
 		}
@@ -131,7 +131,7 @@ public class TopHitsAggregationTranslatorImpl
 			List<SortBuilder<?>> sortBuilders = new ArrayList<>(sorts.size());
 
 			sorts.forEach(
-				sort -> sortBuilders.add(sortFieldTranslator.translate(sort)));
+				sort -> sortBuilders.add(_sortFieldTranslator.translate(sort)));
 
 			topHitsAggregationBuilder.sorts(sortBuilders);
 		}
@@ -150,14 +150,24 @@ public class TopHitsAggregationTranslatorImpl
 		return topHitsAggregationBuilder;
 	}
 
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	protected QueryTranslator<QueryBuilder> queryTranslator;
+	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
+	protected void setQueryTranslator(
+		QueryTranslator<QueryBuilder> queryTranslator) {
 
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	protected SortFieldTranslator<SortBuilder> sortFieldTranslator;
+		_queryTranslator = queryTranslator;
+	}
+
+	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
+	protected void setSortFieldTranslator(
+		SortFieldTranslator<SortBuilder> sortFieldTranslator) {
+
+		_sortFieldTranslator = sortFieldTranslator;
+	}
 
 	private final HighlightTranslator _highlightTranslator =
 		new HighlightTranslator();
+	private QueryTranslator<QueryBuilder> _queryTranslator;
 	private final ScriptTranslator _scriptTranslator = new ScriptTranslator();
+	private SortFieldTranslator<SortBuilder> _sortFieldTranslator;
 
 }

@@ -36,9 +36,9 @@ public class ElasticsearchPipelineAggregationVisitorFixture {
 		_elasticsearchPipelineAggregationVisitor =
 			new ElasticsearchPipelineAggregationVisitor() {
 				{
-					sortFieldTranslator =
+					setSortFieldTranslator(
 						elasticsearchSortFieldTranslatorFixture.
-							getElasticsearchQueryTranslator();
+							getElasticsearchQueryTranslator());
 				}
 			};
 	}

@@ -54,68 +54,68 @@ public class ElasticsearchAggregationVisitorFixture {
 		_elasticsearchAggregationVisitor =
 			new ElasticsearchAggregationVisitor() {
 				{
-					dateHistogramAggregationTranslator =
-						new DateHistogramAggregationTranslatorImpl();
-					dateRangeAggregationTranslator =
-						new DateRangeAggregationTranslatorImpl();
-					filterAggregationTranslator =
+					setDateHistogramAggregationTranslator(
+						new DateHistogramAggregationTranslatorImpl());
+					setDateRangeAggregationTranslator(
+						new DateRangeAggregationTranslatorImpl());
+					setFilterAggregationTranslator(
 						new FilterAggregationTranslatorImpl() {
 							{
-								queryTranslator =
+								setQueryTranslator(
 									elasticsearchQueryTranslatorFixture.
-										getElasticsearchQueryTranslator();
+										getElasticsearchQueryTranslator());
 							}
-						};
-					filtersAggregationTranslator =
+						});
+					setFiltersAggregationTranslator(
 						new FiltersAggregationTranslatorImpl() {
 							{
-								queryTranslator =
+								setQueryTranslator(
 									elasticsearchQueryTranslatorFixture.
-										getElasticsearchQueryTranslator();
+										getElasticsearchQueryTranslator());
 							}
-						};
-					geoDistanceAggregationTranslator =
-						new GeoDistanceAggregationTranslatorImpl();
-					histogramAggregationTranslator =
-						new HistogramAggregationTranslatorImpl();
-					pipelineAggregationTranslator =
+						});
+					setGeoDistanceAggregationTranslator(
+						new GeoDistanceAggregationTranslatorImpl());
+					setHistogramAggregationTranslator(
+						new HistogramAggregationTranslatorImpl());
+					setPipelineAggregationTranslator(
 						pipelineAggregationVisitorFixture.
-							getElasticsearchPipelineAggregationVisitor();
-					rangeAggregationTranslator =
-						new RangeAggregationTranslatorImpl();
-					scriptedMetricAggregationTranslator =
-						new ScriptedMetricAggregationTranslatorImpl();
-					significantTermsAggregationTranslator =
+							getElasticsearchPipelineAggregationVisitor());
+					setRangeAggregationTranslator(
+						new RangeAggregationTranslatorImpl());
+					setScriptedMetricAggregationTranslator(
+						new ScriptedMetricAggregationTranslatorImpl());
+					setSignificantTermsAggregationTranslator(
 						new SignificantTermsAggregationTranslatorImpl() {
 							{
-								queryTranslator =
+								setQueryTranslator(
 									elasticsearchQueryTranslatorFixture.
-										getElasticsearchQueryTranslator();
+										getElasticsearchQueryTranslator());
 							}
-						};
-					significantTextAggregationTranslator =
+						});
+					setSignificantTextAggregationTranslator(
 						new SignificantTextAggregationTranslatorImpl() {
 							{
-								queryTranslator =
+								setQueryTranslator(
 									elasticsearchQueryTranslatorFixture.
-										getElasticsearchQueryTranslator();
+										getElasticsearchQueryTranslator());
 							}
-						};
-					termsAggregationTranslator =
-						new TermsAggregationTranslatorImpl();
-					topHitsAggregationTranslator =
+						});
+					setTermsAggregationTranslator(
+						new TermsAggregationTranslatorImpl());
+					setTopHitsAggregationTranslator(
 						new TopHitsAggregationTranslatorImpl() {
 							{
-								queryTranslator =
+								setQueryTranslator(
 									elasticsearchQueryTranslatorFixture.
-										getElasticsearchQueryTranslator();
-								sortFieldTranslator =
+										getElasticsearchQueryTranslator());
+								setSortFieldTranslator(
 									elasticsearchSortFieldTranslatorFixture.
-										getElasticsearchQueryTranslator();
+										getElasticsearchQueryTranslator());
 							}
-						};
-					weightedAvgAggregationTranslator =
-						new WeightedAvgAggregationTranslatorImpl();
+						});
+					setWeightedAvgAggregationTranslator(
+						new WeightedAvgAggregationTranslatorImpl());
 				}
 			};
 	}

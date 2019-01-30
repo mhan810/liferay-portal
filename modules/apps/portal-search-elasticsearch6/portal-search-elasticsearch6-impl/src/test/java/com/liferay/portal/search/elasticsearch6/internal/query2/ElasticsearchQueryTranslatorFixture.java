@@ -22,51 +22,53 @@ public class ElasticsearchQueryTranslatorFixture {
 	public ElasticsearchQueryTranslatorFixture() {
 		_elasticsearchQueryTranslator = new ElasticsearchQueryTranslator() {
 			{
+				setBooleanQueryTranslator(new BooleanQueryTranslatorImpl());
+				setBoostingQueryTranslator(new BoostingQueryTranslatorImpl());
+				setCommonTermsQueryTranslator(
+					new CommonTermsQueryTranslatorImpl());
+				setConstantScoreQueryTranslator(
+					new ConstantScoreQueryTranslatorImpl());
+				setDateRangeTermQueryTranslator(
+					new DateRangeTermQueryTranslatorImpl());
+				setDisMaxQueryTranslator(new DisMaxQueryTranslatorImpl());
+				setExistsQueryTranslator(new ExistsQueryTranslatorImpl());
+				setFuzzyQueryTranslator(new FuzzyQueryTranslatorImpl());
+				setGeoBoundingBoxQueryTranslator(
+					new GeoBoundingBoxQueryTranslatorImpl());
+				setGeoDistanceQueryTranslator(
+					new GeoDistanceQueryTranslatorImpl());
+				setGeoDistanceRangeQueryTranslator(
+					new GeoDistanceRangeQueryTranslatorImpl());
+				setGeoPolygonQueryTranslator(
+					new GeoPolygonQueryTranslatorImpl());
+				setGeoShapeQueryTranslator(new GeoShapeQueryTranslatorImpl());
+				setIdsQueryTranslator(new IdsQueryTranslatorImpl());
+				setMatchAllQueryTranslator(new MatchAllQueryTranslatorImpl());
+				setMatchPhraseQueryTranslator(
+					new MatchPhraseQueryTranslatorImpl());
+				setMatchPhrasePrefixQueryTranslator(
+					new MatchPhrasePrefixQueryTranslatorImpl());
+				setMatchQueryTranslator(new MatchQueryTranslatorImpl());
 
-				booleanQueryTranslator = new BooleanQueryTranslatorImpl();
-				boostingQueryTranslator = new BoostingQueryTranslatorImpl();
-				commonTermsQueryTranslator =
-					new CommonTermsQueryTranslatorImpl();
-				constantScoreQueryTranslator =
-					new ConstantScoreQueryTranslatorImpl();
-				dateRangeTermQueryTranslator =
-					new DateRangeTermQueryTranslatorImpl();
-				disMaxQueryTranslator = new DisMaxQueryTranslatorImpl();
-				existsQueryTranslator = new ExistsQueryTranslatorImpl();
-				fuzzyQueryTranslator = new FuzzyQueryTranslatorImpl();
-				geoBoundingBoxQueryTranslator =
-					new GeoBoundingBoxQueryTranslatorImpl();
-				geoDistanceQueryTranslator =
-					new GeoDistanceQueryTranslatorImpl();
-				geoDistanceRangeQueryTranslator =
-					new GeoDistanceRangeQueryTranslatorImpl();
-				geoPolygonQueryTranslator = new GeoPolygonQueryTranslatorImpl();
-				geoShapeQueryTranslator = new GeoShapeQueryTranslatorImpl();
-				idsQueryTranslator = new IdsQueryTranslatorImpl();
-				matchAllQueryTranslator = new MatchAllQueryTranslatorImpl();
-				matchPhraseQueryTranslator =
-					new MatchPhraseQueryTranslatorImpl();
-				matchPhrasePrefixQueryTranslator =
-					new MatchPhrasePrefixQueryTranslatorImpl();
-				matchQueryTranslator = new MatchQueryTranslatorImpl();
-
-				moreLikeThisQueryTranslator =
+				setMoreLikeThisQueryTranslator(
 					new MoreLikeThisQueryTranslatorImpl() {
 						{
-							indexNameBuilder = companyId -> "Test_" + companyId;
+							setIndexNameBuilder(
+								companyId -> "Test_" + companyId);
 						}
-					};
+					});
 
-				multiMatchQueryTranslator = new MultiMatchQueryTranslatorImpl();
-				nestedQueryTranslator = new NestedQueryTranslatorImpl();
-				prefixQueryTranslator = new PrefixQueryTranslatorImpl();
-				rangeTermQueryTranslator = new RangeTermQueryTranslatorImpl();
-				scriptQueryTranslator = new ScriptQueryTranslatorImpl();
-				stringQueryTranslator = new StringQueryTranslatorImpl();
-				termQueryTranslator = new TermQueryTranslatorImpl();
-				termsQueryTranslator = new TermsQueryTranslatorImpl();
-				termsSetQueryTranslator = new TermsSetQueryTranslatorImpl();
-				wildcardQueryTranslator = new WildcardQueryTranslatorImpl();
+				setMultiMatchQueryTranslator(
+					new MultiMatchQueryTranslatorImpl());
+				setNestedQueryTranslator(new NestedQueryTranslatorImpl());
+				setPrefixQueryTranslator(new PrefixQueryTranslatorImpl());
+				setRangeTermQueryTranslator(new RangeTermQueryTranslatorImpl());
+				setScriptQueryTranslator(new ScriptQueryTranslatorImpl());
+				setStringQueryTranslator(new StringQueryTranslatorImpl());
+				setTermQueryTranslator(new TermQueryTranslatorImpl());
+				setTermsQueryTranslator(new TermsQueryTranslatorImpl());
+				setTermsSetQueryTranslator(new TermsSetQueryTranslatorImpl());
+				setWildcardQueryTranslator(new WildcardQueryTranslatorImpl());
 			}
 		};
 	}

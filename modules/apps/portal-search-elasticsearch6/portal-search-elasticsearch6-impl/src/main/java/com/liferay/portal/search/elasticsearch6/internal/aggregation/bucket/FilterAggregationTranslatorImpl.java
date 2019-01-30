@@ -42,7 +42,7 @@ public class FilterAggregationTranslatorImpl
 		PipelineAggregationTranslator<PipelineAggregationBuilder>
 			pipelineAggregationTranslator) {
 
-		QueryBuilder filterQueryBuilder = queryTranslator.translate(
+		QueryBuilder filterQueryBuilder = _queryTranslator.translate(
 			filterAggregation.getFilterQuery());
 
 		FilterAggregationBuilder filterAggregationBuilder =
@@ -56,10 +56,15 @@ public class FilterAggregationTranslatorImpl
 		return filterAggregationBuilder;
 	}
 
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	protected QueryTranslator<QueryBuilder> queryTranslator;
+	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
+	protected void setQueryTranslator(
+		QueryTranslator<QueryBuilder> queryTranslator) {
+
+		_queryTranslator = queryTranslator;
+	}
 
 	private final BaseAggregationTranslator _baseAggregationTranslator =
 		new BaseAggregationTranslator();
+	private QueryTranslator<QueryBuilder> _queryTranslator;
 
 }

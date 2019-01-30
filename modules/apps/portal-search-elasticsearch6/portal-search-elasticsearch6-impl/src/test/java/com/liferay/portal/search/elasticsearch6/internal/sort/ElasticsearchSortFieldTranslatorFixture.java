@@ -28,7 +28,7 @@ public class ElasticsearchSortFieldTranslatorFixture {
 
 		_elasticsearchQueryTranslator = new ElasticsearchSortFieldTranslator() {
 			{
-				queryTranslator = queryTranslator;
+				setQueryTranslator(queryTranslator);
 			}
 		};
 	}

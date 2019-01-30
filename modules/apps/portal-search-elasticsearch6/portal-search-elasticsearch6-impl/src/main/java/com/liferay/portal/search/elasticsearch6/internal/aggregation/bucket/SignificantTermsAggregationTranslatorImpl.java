@@ -62,7 +62,7 @@ public class SignificantTermsAggregationTranslatorImpl
 
 		if (significantTermsAggregation.getBackgroundFilterQuery() != null) {
 			significantTermsAggregationBuilder.backgroundFilter(
-				queryTranslator.translate(
+				_queryTranslator.translate(
 					significantTermsAggregation.getBackgroundFilterQuery()));
 		}
 
@@ -101,8 +101,12 @@ public class SignificantTermsAggregationTranslatorImpl
 		return significantTermsAggregationBuilder;
 	}
 
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	protected QueryTranslator<QueryBuilder> queryTranslator;
+	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
+	protected void setQueryTranslator(
+		QueryTranslator<QueryBuilder> queryTranslator) {
+
+		_queryTranslator = queryTranslator;
+	}
 
 	private final BaseFieldAggregationTranslator
 		_baseFieldAggregationTranslator = new BaseFieldAggregationTranslator();
@@ -111,6 +115,7 @@ public class SignificantTermsAggregationTranslatorImpl
 			new BucketCountThresholdsTranslator();
 	private final IncludeExcludeTranslator _includeExcludeTranslator =
 		new IncludeExcludeTranslator();
+	private QueryTranslator<QueryBuilder> _queryTranslator;
 	private final SignificanceHeuristicTranslator
 		_significanceHeuristicTranslator =
 			new SignificanceHeuristicTranslator();
