@@ -2,6 +2,10 @@ Bundle-Name: Liferay Portal Search API
 Bundle-SymbolicName: com.liferay.portal.search.api
 Bundle-Version: 3.0.0
 Export-Package:\
+	com.liferay.portal.search.aggregation,\
+	com.liferay.portal.search.aggregation.bucket,\
+	com.liferay.portal.search.aggregation.metrics,\
+	com.liferay.portal.search.aggregation.pipeline,\
 	com.liferay.portal.search.analysis,\
 	com.liferay.portal.search.batch,\
 	com.liferay.portal.search.buffer,\
@@ -9,6 +13,7 @@ Export-Package:\
 	com.liferay.portal.search.constants,\
 	com.liferay.portal.search.contributor,\
 	com.liferay.portal.search.contributor.sort,\
+	com.liferay.portal.search.document,\
 	com.liferay.portal.search.engine,\
 	com.liferay.portal.search.facet,\
 	com.liferay.portal.search.facet.category,\
@@ -20,13 +25,20 @@ Export-Package:\
 	com.liferay.portal.search.facet.type,\
 	com.liferay.portal.search.facet.user,\
 	com.liferay.portal.search.filter,\
+	com.liferay.portal.search.geolocation,\
+	com.liferay.portal.search.highlight,\
+	com.liferay.portal.search.hits,\
 	com.liferay.portal.search.index,\
 	com.liferay.portal.search.indexer,\
 	com.liferay.portal.search.legacy.searcher,\
 	com.liferay.portal.search.localization,\
 	com.liferay.portal.search.permission,\
 	com.liferay.portal.search.query,\
+	com.liferay.portal.search.query.field,\
+	com.liferay.portal.search.query.util,\
+	com.liferay.portal.search.script,\
 	com.liferay.portal.search.searcher,\
+	com.liferay.portal.search.significance,\
 	com.liferay.portal.search.sort,\
 	com.liferay.portal.search.suggest,\
 	com.liferay.portal.search.summary
