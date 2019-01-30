@@ -40,19 +40,19 @@ public class SearchSearchRequestExecutorImpl
 	public SearchSearchResponse execute(
 		SearchSearchRequest searchSearchRequest) {
 
-		Client client = elasticsearchClientResolver.getClient();
+		Client client = _elasticsearchClientResolver.getClient();
 
 		SearchRequestBuilder searchRequestBuilder =
 			SearchAction.INSTANCE.newRequestBuilder(client);
 
-		searchSearchRequestAssembler.assemble(
+		_searchSearchRequestAssembler.assemble(
 			searchRequestBuilder, searchSearchRequest);
 
 		SearchResponse searchResponse = searchRequestBuilder.get();
 
 		SearchSearchResponse searchSearchResponse = new SearchSearchResponse();
 
-		searchSearchResponseAssembler.assemble(
+		_searchSearchResponseAssembler.assemble(
 			searchRequestBuilder, searchResponse, searchSearchRequest,
 			searchSearchResponse);
 
@@ -67,16 +67,32 @@ public class SearchSearchRequestExecutorImpl
 		return searchSearchResponse;
 	}
 
-	@Reference
-	protected ElasticsearchClientResolver elasticsearchClientResolver;
+	@Reference(unbind = "-")
+	protected void setElasticsearchClientResolver(
+		ElasticsearchClientResolver elasticsearchClientResolver) {
 
-	@Reference
-	protected SearchSearchRequestAssembler searchSearchRequestAssembler;
+		_elasticsearchClientResolver = elasticsearchClientResolver;
+	}
 
-	@Reference
-	protected SearchSearchResponseAssembler searchSearchResponseAssembler;
+	@Reference(unbind = "-")
+	protected void setSearchSearchRequestAssembler(
+		SearchSearchRequestAssembler searchSearchRequestAssembler) {
+
+		_searchSearchRequestAssembler = searchSearchRequestAssembler;
+	}
+
+	@Reference(unbind = "-")
+	protected void setSearchSearchResponseAssembler(
+		SearchSearchResponseAssembler searchSearchResponseAssembler) {
+
+		_searchSearchResponseAssembler = searchSearchResponseAssembler;
+	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		SearchSearchRequestExecutorImpl.class);
+
+	private ElasticsearchClientResolver _elasticsearchClientResolver;
+	private SearchSearchRequestAssembler _searchSearchRequestAssembler;
+	private SearchSearchResponseAssembler _searchSearchResponseAssembler;
 
 }

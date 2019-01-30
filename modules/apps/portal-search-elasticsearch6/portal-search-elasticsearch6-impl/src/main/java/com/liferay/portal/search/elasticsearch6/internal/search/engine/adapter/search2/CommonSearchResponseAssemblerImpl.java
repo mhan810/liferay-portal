@@ -42,12 +42,9 @@ import org.elasticsearch.index.search.MatchQuery;
 import org.elasticsearch.search.profile.ProfileShardResult;
 import org.elasticsearch.search.profile.query.QueryProfileShardResult;
 
-import org.osgi.service.component.annotations.Component;
-
 /**
  * @author Michael C. Han
  */
-@Component(service = CommonSearchResponseAssembler.class)
 public class CommonSearchResponseAssemblerImpl
 	implements CommonSearchResponseAssembler {
 

@@ -46,7 +46,7 @@ public class SearchSearchRequestAssemblerImpl
 		SearchRequestBuilder searchRequestBuilder,
 		SearchSearchRequest searchSearchRequest) {
 
-		commonSearchRequestBuilderAssembler.assemble(
+		_commonSearchRequestBuilderAssembler.assemble(
 			searchRequestBuilder, searchSearchRequest);
 
 		if (searchSearchRequest.getFetchSource() != null) {
@@ -56,7 +56,7 @@ public class SearchSearchRequestAssemblerImpl
 
 		if (searchSearchRequest.getHighlight() != null) {
 			HighlightBuilder highlightBuilder = _highlightTranslator.translate(
-				searchSearchRequest.getHighlight(), queryTranslator);
+				searchSearchRequest.getHighlight(), _queryTranslator);
 
 			searchRequestBuilder.highlighter(highlightBuilder);
 		}
@@ -77,7 +77,7 @@ public class SearchSearchRequestAssemblerImpl
 		if (ListUtil.isNotEmpty(sorts)) {
 			sorts.forEach(
 				sort -> {
-					SortBuilder sortBuilder = sortFieldTranslator.translate(
+					SortBuilder sortBuilder = _sortFieldTranslator.translate(
 						sort);
 
 					searchRequestBuilder.addSort(sortBuilder);
@@ -118,17 +118,34 @@ public class SearchSearchRequestAssemblerImpl
 		}
 	}
 
-	@Reference
-	protected CommonSearchRequestBuilderAssembler
-		commonSearchRequestBuilderAssembler;
+	@Reference(unbind = "-")
+	protected void setCommonSearchRequestBuilderAssembler(
+		CommonSearchRequestBuilderAssembler
+			commonSearchRequestBuilderAssembler) {
 
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	protected QueryTranslator<QueryBuilder> queryTranslator;
+		_commonSearchRequestBuilderAssembler =
+			commonSearchRequestBuilderAssembler;
+	}
 
-	@Reference
-	protected SortFieldTranslator<SortBuilder> sortFieldTranslator;
+	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
+	protected void setQueryTranslator(
+		QueryTranslator<QueryBuilder> queryTranslator) {
 
+		_queryTranslator = queryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setSortFieldTranslator(
+		SortFieldTranslator<SortBuilder> sortFieldTranslator) {
+
+		_sortFieldTranslator = sortFieldTranslator;
+	}
+
+	private CommonSearchRequestBuilderAssembler
+		_commonSearchRequestBuilderAssembler;
 	private final HighlightTranslator _highlightTranslator =
 		new HighlightTranslator();
+	private QueryTranslator<QueryBuilder> _queryTranslator;
+	private SortFieldTranslator<SortBuilder> _sortFieldTranslator;
 
 }

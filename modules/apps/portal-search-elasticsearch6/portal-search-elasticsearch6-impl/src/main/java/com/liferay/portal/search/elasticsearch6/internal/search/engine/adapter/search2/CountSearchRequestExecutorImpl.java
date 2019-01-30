@@ -39,12 +39,12 @@ public class CountSearchRequestExecutorImpl
 
 	@Override
 	public CountSearchResponse execute(CountSearchRequest countSearchRequest) {
-		Client client = elasticsearchClientResolver.getClient();
+		Client client = _elasticsearchClientResolver.getClient();
 
 		SearchRequestBuilder searchRequestBuilder =
 			SearchAction.INSTANCE.newRequestBuilder(client);
 
-		commonSearchRequestBuilderAssembler.assemble(
+		_commonSearchRequestBuilderAssembler.assemble(
 			searchRequestBuilder, countSearchRequest);
 
 		searchRequestBuilder.setSize(0);
@@ -58,7 +58,7 @@ public class CountSearchRequestExecutorImpl
 
 		countSearchResponse.setCount(searchHits.totalHits);
 
-		commonSearchResponseAssembler.assemble(
+		_commonSearchResponseAssembler.assemble(
 			searchRequestBuilder, searchResponse, countSearchRequest,
 			countSearchResponse);
 
@@ -73,17 +73,29 @@ public class CountSearchRequestExecutorImpl
 		return countSearchResponse;
 	}
 
-	@Reference
-	protected CommonSearchRequestBuilderAssembler
-		commonSearchRequestBuilderAssembler;
+	@Reference(unbind = "-")
+	protected void setCommonSearchRequestBuilderAssembler(
+		CommonSearchRequestBuilderAssembler
+			commonSearchRequestBuilderAssembler) {
 
-	@Reference
-	protected CommonSearchResponseAssembler commonSearchResponseAssembler;
+		_commonSearchRequestBuilderAssembler =
+			commonSearchRequestBuilderAssembler;
+	}
 
-	@Reference
-	protected ElasticsearchClientResolver elasticsearchClientResolver;
+	@Reference(unbind = "-")
+	protected void setElasticsearchClientResolver(
+		ElasticsearchClientResolver elasticsearchClientResolver) {
+
+		_elasticsearchClientResolver = elasticsearchClientResolver;
+	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		CountSearchRequestExecutorImpl.class);
+
+	private CommonSearchRequestBuilderAssembler
+		_commonSearchRequestBuilderAssembler;
+	private final CommonSearchResponseAssembler _commonSearchResponseAssembler =
+		new CommonSearchResponseAssemblerImpl();
+	private ElasticsearchClientResolver _elasticsearchClientResolver;
 
 }

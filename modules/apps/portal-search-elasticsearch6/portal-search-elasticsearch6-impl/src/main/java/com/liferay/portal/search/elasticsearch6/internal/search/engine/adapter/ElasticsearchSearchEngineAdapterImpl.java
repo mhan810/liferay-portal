@@ -82,7 +82,7 @@ public class ElasticsearchSearchEngineAdapterImpl
 	public <V extends SearchResponse> V execute(
 		SearchRequest<V> searchRequest) {
 
-		return searchRequest.accept(search2SearchRequestExecutor);
+		return searchRequest.accept(_search2SearchRequestExecutor);
 	}
 
 	@Override
@@ -99,6 +99,13 @@ public class ElasticsearchSearchEngineAdapterImpl
 		return queryBuilder.toString();
 	}
 
+	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
+	protected void setSearch2SearchRequestExecutor(
+		SearchRequestExecutor search2SearchRequestExecutor) {
+
+		_search2SearchRequestExecutor = search2SearchRequestExecutor;
+	}
+
 	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	protected ClusterRequestExecutor clusterRequestExecutor;
 
@@ -112,13 +119,12 @@ public class ElasticsearchSearchEngineAdapterImpl
 	protected QueryTranslator<QueryBuilder> queryTranslator;
 
 	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	protected SearchRequestExecutor search2SearchRequestExecutor;
-
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	protected com.liferay.portal.search.engine.adapter.search.
 		SearchRequestExecutor searchRequestExecutor;
 
 	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	protected SnapshotRequestExecutor snapshotRequestExecutor;
+
+	private SearchRequestExecutor _search2SearchRequestExecutor;
 
 }

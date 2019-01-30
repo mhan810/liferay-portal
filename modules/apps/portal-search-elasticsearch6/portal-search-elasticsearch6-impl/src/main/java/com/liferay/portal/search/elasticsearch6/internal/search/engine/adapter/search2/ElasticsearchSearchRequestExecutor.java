@@ -39,14 +39,14 @@ public class ElasticsearchSearchRequestExecutor
 	public CountSearchResponse executeSearchRequest(
 		CountSearchRequest countSearchRequest) {
 
-		return countSearchRequestExecutor.execute(countSearchRequest);
+		return _countSearchRequestExecutor.execute(countSearchRequest);
 	}
 
 	@Override
 	public MultisearchSearchResponse executeSearchRequest(
 		MultisearchSearchRequest multisearchSearchRequest) {
 
-		return multisearchSearchRequestExecutor.execute(
+		return _multisearchSearchRequestExecutor.execute(
 			multisearchSearchRequest);
 	}
 
@@ -54,16 +54,32 @@ public class ElasticsearchSearchRequestExecutor
 	public SearchSearchResponse executeSearchRequest(
 		SearchSearchRequest searchSearchRequest) {
 
-		return searchSearchRequestExecutor.execute(searchSearchRequest);
+		return _searchSearchRequestExecutor.execute(searchSearchRequest);
 	}
 
-	@Reference
-	protected CountSearchRequestExecutor countSearchRequestExecutor;
+	@Reference(unbind = "-")
+	protected void setCountSearchRequestExecutor(
+		CountSearchRequestExecutor countSearchRequestExecutor) {
 
-	@Reference
-	protected MultisearchSearchRequestExecutor multisearchSearchRequestExecutor;
+		_countSearchRequestExecutor = countSearchRequestExecutor;
+	}
 
-	@Reference
-	protected SearchSearchRequestExecutor searchSearchRequestExecutor;
+	@Reference(unbind = "-")
+	protected void setMultisearchSearchRequestExecutor(
+		MultisearchSearchRequestExecutor multisearchSearchRequestExecutor) {
+
+		_multisearchSearchRequestExecutor = multisearchSearchRequestExecutor;
+	}
+
+	@Reference(unbind = "-")
+	protected void setSearchSearchRequestExecutor(
+		SearchSearchRequestExecutor searchSearchRequestExecutor) {
+
+		_searchSearchRequestExecutor = searchSearchRequestExecutor;
+	}
+
+	private CountSearchRequestExecutor _countSearchRequestExecutor;
+	private MultisearchSearchRequestExecutor _multisearchSearchRequestExecutor;
+	private SearchSearchRequestExecutor _searchSearchRequestExecutor;
 
 }

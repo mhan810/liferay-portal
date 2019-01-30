@@ -35,11 +35,12 @@ public class SearchRequestExecutorFixture {
 	public SearchRequestExecutor createExecutor() {
 		return new ElasticsearchSearchRequestExecutor() {
 			{
-				countSearchRequestExecutor = createCountSearchRequestExecutor();
-				multisearchSearchRequestExecutor =
-					createMultisearchSearchRequestExecutor();
-				searchSearchRequestExecutor =
-					createSearchSearchRequestExecutor();
+				setCountSearchRequestExecutor(
+					createCountSearchRequestExecutor());
+				setMultisearchSearchRequestExecutor(
+					createMultisearchSearchRequestExecutor());
+				setSearchSearchRequestExecutor(
+					createSearchSearchRequestExecutor());
 			}
 		};
 	}
@@ -61,17 +62,17 @@ public class SearchRequestExecutorFixture {
 
 		return new CommonSearchRequestBuilderAssemblerImpl() {
 			{
-				aggregationTranslator =
+				setAggregationTranslator(
 					elasticsearchAggregationVisitorFixture.
-						getElasticsearchAggregationVisitor();
+						getElasticsearchAggregationVisitor());
 
-				pipelineAggregationTranslator =
+				setPipelineAggregationTranslator(
 					elasticsearchPipelineAggregationVisitorFixture.
-						getElasticsearchPipelineAggregationVisitor();
+						getElasticsearchPipelineAggregationVisitor());
 
-				queryTranslator =
+				setQueryTranslator(
 					elasticsearchQueryTranslatorFixture.
-						getElasticsearchQueryTranslator();
+						getElasticsearchQueryTranslator());
 			}
 		};
 	}
@@ -79,11 +80,9 @@ public class SearchRequestExecutorFixture {
 	protected CountSearchRequestExecutor createCountSearchRequestExecutor() {
 		return new CountSearchRequestExecutorImpl() {
 			{
-				commonSearchRequestBuilderAssembler =
-					createCommonSearchRequestBuilderAssembler();
-				commonSearchResponseAssembler =
-					new CommonSearchResponseAssemblerImpl();
-				elasticsearchClientResolver = _elasticsearchClientResolver;
+				setCommonSearchRequestBuilderAssembler(
+					createCommonSearchRequestBuilderAssembler());
+				setElasticsearchClientResolver(_elasticsearchClientResolver);
 			}
 		};
 	}
@@ -93,11 +92,11 @@ public class SearchRequestExecutorFixture {
 
 		return new MultisearchSearchRequestExecutorImpl() {
 			{
-				elasticsearchClientResolver = _elasticsearchClientResolver;
-				searchSearchRequestAssembler =
-					createSearchSearchRequestAssembler();
-				searchSearchResponseAssembler =
-					createSearchSearchResponseAssembler();
+				setElasticsearchClientResolver(_elasticsearchClientResolver);
+				setSearchSearchRequestAssembler(
+					createSearchSearchRequestAssembler());
+				setSearchSearchResponseAssembler(
+					createSearchSearchResponseAssembler());
 			}
 		};
 	}
@@ -117,15 +116,15 @@ public class SearchRequestExecutorFixture {
 
 		return new SearchSearchRequestAssemblerImpl() {
 			{
-				commonSearchRequestBuilderAssembler =
-					createCommonSearchRequestBuilderAssembler();
-				queryTranslator =
-					elasticsearchQueryTranslatorFixture.
-						getElasticsearchQueryTranslator();
 
-				sortFieldTranslator =
+				setCommonSearchRequestBuilderAssembler(
+					createCommonSearchRequestBuilderAssembler());
+				setQueryTranslator(
+					elasticsearchQueryTranslatorFixture.
+						getElasticsearchQueryTranslator());
+				setSortFieldTranslator(
 					elasticsearchSortFieldTranslatorFixture.
-						getElasticsearchQueryTranslator();
+						getElasticsearchQueryTranslator());
 			}
 		};
 	}
@@ -133,11 +132,11 @@ public class SearchRequestExecutorFixture {
 	protected SearchSearchRequestExecutor createSearchSearchRequestExecutor() {
 		return new SearchSearchRequestExecutorImpl() {
 			{
-				elasticsearchClientResolver = _elasticsearchClientResolver;
-				searchSearchRequestAssembler =
-					createSearchSearchRequestAssembler();
-				searchSearchResponseAssembler =
-					createSearchSearchResponseAssembler();
+				setElasticsearchClientResolver(_elasticsearchClientResolver);
+				setSearchSearchRequestAssembler(
+					createSearchSearchRequestAssembler());
+				setSearchSearchResponseAssembler(
+					createSearchSearchResponseAssembler());
 			}
 		};
 	}
@@ -145,12 +144,7 @@ public class SearchRequestExecutorFixture {
 	protected SearchSearchResponseAssembler
 		createSearchSearchResponseAssembler() {
 
-		return new SearchSearchResponseAssemblerImpl() {
-			{
-				commonSearchResponseAssembler =
-					new CommonSearchResponseAssemblerImpl();
-			}
-		};
+		return new SearchSearchResponseAssemblerImpl();
 	}
 
 	private final ElasticsearchClientResolver _elasticsearchClientResolver;

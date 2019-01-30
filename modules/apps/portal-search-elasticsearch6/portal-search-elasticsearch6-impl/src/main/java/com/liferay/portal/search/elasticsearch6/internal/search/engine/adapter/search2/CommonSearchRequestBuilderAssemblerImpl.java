@@ -57,7 +57,7 @@ public class CommonSearchRequestBuilderAssemblerImpl
 			aggregations.forEach(
 				aggregation -> {
 					AggregationBuilder aggregationBuilder =
-						aggregationTranslator.translate(aggregation);
+						_aggregationTranslator.translate(aggregation);
 
 					searchRequestBuilder.addAggregation(aggregationBuilder);
 				});
@@ -90,7 +90,7 @@ public class CommonSearchRequestBuilderAssemblerImpl
 			pipelineAggregations.forEach(
 				pipelineAggregation -> {
 					PipelineAggregationBuilder pipelineAggregationBuilder =
-						pipelineAggregationTranslator.translate(
+						_pipelineAggregationTranslator.translate(
 							pipelineAggregation);
 
 					searchRequestBuilder.addAggregation(
@@ -99,13 +99,13 @@ public class CommonSearchRequestBuilderAssemblerImpl
 		}
 
 		if (baseSearchRequest.getPostFilterQuery() != null) {
-			QueryBuilder postFilterQueryBuilder = queryTranslator.translate(
+			QueryBuilder postFilterQueryBuilder = _queryTranslator.translate(
 				baseSearchRequest.getPostFilterQuery());
 
 			searchRequestBuilder.setPostFilter(postFilterQueryBuilder);
 		}
 
-		QueryBuilder queryBuilder = queryTranslator.translate(
+		QueryBuilder queryBuilder = _queryTranslator.translate(
 			baseSearchRequest.getQuery());
 
 		searchRequestBuilder.setQuery(queryBuilder);
@@ -118,7 +118,7 @@ public class CommonSearchRequestBuilderAssemblerImpl
 		if (baseSearchRequest.getRescoreQuery() != null) {
 			searchRequestBuilder.setRescorer(
 				new QueryRescorerBuilder(
-					queryTranslator.translate(
+					_queryTranslator.translate(
 						baseSearchRequest.getRescoreQuery())));
 		}
 
@@ -138,14 +138,31 @@ public class CommonSearchRequestBuilderAssemblerImpl
 		}
 	}
 
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	protected AggregationTranslator<AggregationBuilder> aggregationTranslator;
+	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
+	protected void setAggregationTranslator(
+		AggregationTranslator<AggregationBuilder> aggregationTranslator) {
 
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	protected PipelineAggregationTranslator<PipelineAggregationBuilder>
-		pipelineAggregationTranslator;
+		_aggregationTranslator = aggregationTranslator;
+	}
 
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
-	protected QueryTranslator<QueryBuilder> queryTranslator;
+	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
+	protected void setPipelineAggregationTranslator(
+		PipelineAggregationTranslator<PipelineAggregationBuilder>
+			pipelineAggregationTranslator) {
+
+		_pipelineAggregationTranslator = pipelineAggregationTranslator;
+	}
+
+	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
+	protected void setQueryTranslator(
+		QueryTranslator<QueryBuilder> queryTranslator) {
+
+		_queryTranslator = queryTranslator;
+	}
+
+	private AggregationTranslator<AggregationBuilder> _aggregationTranslator;
+	private PipelineAggregationTranslator<PipelineAggregationBuilder>
+		_pipelineAggregationTranslator;
+	private QueryTranslator<QueryBuilder> _queryTranslator;
 
 }

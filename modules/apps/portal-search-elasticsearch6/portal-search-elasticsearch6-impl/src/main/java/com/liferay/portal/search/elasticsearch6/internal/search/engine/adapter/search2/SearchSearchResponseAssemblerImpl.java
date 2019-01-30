@@ -34,7 +34,6 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.aggregations.Aggregations;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
@@ -49,7 +48,7 @@ public class SearchSearchResponseAssemblerImpl
 		SearchResponse searchResponse, SearchSearchRequest searchSearchRequest,
 		SearchSearchResponse searchSearchResponse) {
 
-		commonSearchResponseAssembler.assemble(
+		_commonSearchResponseAssembler.assemble(
 			searchRequestBuilder, searchResponse, searchSearchRequest,
 			searchSearchResponse);
 
@@ -112,14 +111,13 @@ public class SearchSearchResponseAssemblerImpl
 		}
 	}
 
-	@Reference
-	protected CommonSearchResponseAssembler commonSearchResponseAssembler;
-
 	private final AggregationResultTranslator
 		<? extends AggregationResult,
 		 org.elasticsearch.search.aggregations.Aggregation>
 			_aggregationResultTranslator =
 				new ElasticsearchAggregationResultTranslator();
+	private final CommonSearchResponseAssembler _commonSearchResponseAssembler =
+		new CommonSearchResponseAssemblerImpl();
 	private final PipelineAggregationResultTranslator
 		<? extends AggregationResult,
 		 org.elasticsearch.search.aggregations.Aggregation>

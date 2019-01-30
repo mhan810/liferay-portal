@@ -113,8 +113,8 @@ public class ElasticsearchEngineAdapterFixture {
 				searchRequestExecutor =
 					searchRequestExecutorFixture.getSearchRequestExecutor();
 
-				search2SearchRequestExecutor =
-					search2SearchRequestExecutorFixture.createExecutor();
+				setSearch2SearchRequestExecutor(
+					search2SearchRequestExecutorFixture.createExecutor());
 
 				snapshotRequestExecutor =
 					snapshotRequestExecutorFixture.getSnapshotRequestExecutor();
