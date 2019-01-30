@@ -30,6 +30,8 @@ import com.liferay.portal.search.aggregation.bucket.FiltersAggregation;
 import com.liferay.portal.search.aggregation.bucket.FiltersAggregationResult;
 import com.liferay.portal.search.aggregation.bucket.GeoDistanceAggregation;
 import com.liferay.portal.search.aggregation.bucket.GeoDistanceAggregationResult;
+import com.liferay.portal.search.aggregation.bucket.GeoHashGridAggregation;
+import com.liferay.portal.search.aggregation.bucket.GeoHashGridAggregationResult;
 import com.liferay.portal.search.aggregation.bucket.GlobalAggregation;
 import com.liferay.portal.search.aggregation.bucket.GlobalAggregationResult;
 import com.liferay.portal.search.aggregation.bucket.HistogramAggregation;
@@ -285,13 +287,23 @@ public class ElasticsearchAggregationResultTranslator
 		GeoDistanceAggregation geoDistanceAggregation,
 		Aggregation aggregationResult) {
 
+		return translateBuckets(
+			(Range)aggregationResult,
+			new GeoDistanceAggregationResult(aggregationResult.getName()),
+			geoDistanceAggregation);
+	}
+
+	@Override
+	public AggregationResult translate(
+		GeoHashGridAggregation geoHashGridAggregation,
+		Aggregation aggregationResult) {
+
 		GeoHashGrid geoHashGrid = (GeoHashGrid)aggregationResult;
 
-		GeoDistanceAggregationResult geoDistanceAggregationResult =
-			new GeoDistanceAggregationResult(geoHashGrid.getName());
-
 		return translateBuckets(
-			geoHashGrid, geoDistanceAggregationResult, geoDistanceAggregation);
+			geoHashGrid,
+			new GeoHashGridAggregationResult(geoHashGrid.getName()),
+			geoHashGridAggregation);
 	}
 
 	@Override

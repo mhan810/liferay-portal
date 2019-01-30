@@ -24,6 +24,7 @@ import com.liferay.portal.search.aggregation.bucket.DiversifiedSamplerAggregatio
 import com.liferay.portal.search.aggregation.bucket.FilterAggregation;
 import com.liferay.portal.search.aggregation.bucket.FiltersAggregation;
 import com.liferay.portal.search.aggregation.bucket.GeoDistanceAggregation;
+import com.liferay.portal.search.aggregation.bucket.GeoHashGridAggregation;
 import com.liferay.portal.search.aggregation.bucket.GlobalAggregation;
 import com.liferay.portal.search.aggregation.bucket.HistogramAggregation;
 import com.liferay.portal.search.aggregation.bucket.MissingAggregation;
@@ -69,6 +70,7 @@ import org.elasticsearch.join.aggregations.ChildrenAggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.PipelineAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.geogrid.GeoGridAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.global.GlobalAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.nested.NestedAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.nested.ReverseNestedAggregationBuilder;
@@ -245,6 +247,34 @@ public class ElasticsearchAggregationVisitor
 
 		return geoDistanceAggregationTranslator.translate(
 			geoDistanceAggregation, this, pipelineAggregationTranslator);
+	}
+
+	@Override
+	public AggregationBuilder visit(
+		GeoHashGridAggregation geoHashGridAggregation) {
+
+		GeoGridAggregationBuilder geoGridAggregationBuilder =
+			_baseFieldAggregationTranslator.translate(
+				baseMetricsAggregation ->
+					AggregationBuilders.geohashGrid(
+						geoHashGridAggregation.getName()),
+				geoHashGridAggregation, this, pipelineAggregationTranslator);
+
+		if (geoHashGridAggregation.getPrecision() != null) {
+			geoGridAggregationBuilder.precision(
+				geoHashGridAggregation.getPrecision());
+		}
+
+		if (geoHashGridAggregation.getShardSize() != null) {
+			geoGridAggregationBuilder.shardSize(
+				geoHashGridAggregation.getShardSize());
+		}
+
+		if (geoHashGridAggregation.getSize() != null) {
+			geoGridAggregationBuilder.size(geoHashGridAggregation.getSize());
+		}
+
+		return geoGridAggregationBuilder;
 	}
 
 	@Override

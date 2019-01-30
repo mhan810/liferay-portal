@@ -22,6 +22,7 @@ import com.liferay.portal.search.aggregation.bucket.DiversifiedSamplerAggregatio
 import com.liferay.portal.search.aggregation.bucket.FilterAggregation;
 import com.liferay.portal.search.aggregation.bucket.FiltersAggregation;
 import com.liferay.portal.search.aggregation.bucket.GeoDistanceAggregation;
+import com.liferay.portal.search.aggregation.bucket.GeoHashGridAggregation;
 import com.liferay.portal.search.aggregation.bucket.GlobalAggregation;
 import com.liferay.portal.search.aggregation.bucket.HistogramAggregation;
 import com.liferay.portal.search.aggregation.bucket.MissingAggregation;
@@ -86,6 +87,9 @@ public interface AggregationResultTranslator<S extends AggregationResult, T> {
 
 	public S translate(
 		GeoDistanceAggregation geoDistanceAggregation, T aggregationResult);
+
+	public S translate(
+		GeoHashGridAggregation geoHashGridAggregation, T aggregationResult);
 
 	public S translate(
 		GlobalAggregation globalAggregation, T aggregationResult);

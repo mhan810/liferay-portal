@@ -23,6 +23,7 @@ import com.liferay.portal.search.aggregation.bucket.DiversifiedSamplerAggregatio
 import com.liferay.portal.search.aggregation.bucket.FilterAggregation;
 import com.liferay.portal.search.aggregation.bucket.FiltersAggregation;
 import com.liferay.portal.search.aggregation.bucket.GeoDistanceAggregation;
+import com.liferay.portal.search.aggregation.bucket.GeoHashGridAggregation;
 import com.liferay.portal.search.aggregation.bucket.GlobalAggregation;
 import com.liferay.portal.search.aggregation.bucket.HistogramAggregation;
 import com.liferay.portal.search.aggregation.bucket.MissingAggregation;
@@ -78,6 +79,8 @@ public interface AggregationVisitor<T> {
 	public T visit(GeoCentroidAggregation geoCentroidAggregation);
 
 	public T visit(GeoDistanceAggregation geoDistanceAggregation);
+
+	public T visit(GeoHashGridAggregation geoHashGridAggregation);
 
 	public T visit(GlobalAggregation globalAggregation);
 

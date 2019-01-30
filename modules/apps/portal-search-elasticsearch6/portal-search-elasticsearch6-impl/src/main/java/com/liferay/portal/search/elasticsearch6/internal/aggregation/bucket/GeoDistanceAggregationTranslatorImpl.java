@@ -83,11 +83,15 @@ public class GeoDistanceAggregationTranslatorImpl
 		List<Range> rangeAggregationRanges = geoDistanceAggregation.getRanges();
 
 		rangeAggregationRanges.forEach(
-			rangeAggregationRange ->
-				geoDistanceAggregationBuilder.addRange(
-					rangeAggregationRange.getKey(),
-					rangeAggregationRange.getFrom(),
-					rangeAggregationRange.getTo()));
+			rangeAggregationRange -> {
+				GeoDistanceAggregationBuilder.Range range =
+					new GeoDistanceAggregationBuilder.Range(
+						rangeAggregationRange.getKey(),
+						rangeAggregationRange.getFrom(),
+						rangeAggregationRange.getTo());
+
+				geoDistanceAggregationBuilder.addRange(range);
+			});
 
 		return geoDistanceAggregationBuilder;
 	}
