@@ -19,16 +19,16 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.portal.search.aggregation.AggregationResult;
 import com.liferay.portal.search.aggregation.AggregationResultTranslator;
 import com.liferay.portal.search.aggregation.AggregationVisitor;
-import com.liferay.portal.search.aggregation.BaseFieldAggregation;
+import com.liferay.portal.search.aggregation.BaseAggregation;
 
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public class GlobalAggregation extends BaseFieldAggregation {
+public class GlobalAggregation extends BaseAggregation {
 
-	public GlobalAggregation(String name, String field) {
-		super(name, field);
+	public GlobalAggregation(String name) {
+		super(name);
 	}
 
 	@Override
