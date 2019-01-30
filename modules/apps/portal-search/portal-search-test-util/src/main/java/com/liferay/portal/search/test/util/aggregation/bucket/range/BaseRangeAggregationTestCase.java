@@ -55,7 +55,7 @@ public abstract class BaseRangeAggregationTestCase
 		List<Bucket> buckets = new ArrayList<>(
 			rangeAggregationResult.getBuckets());
 
-		Assert.assertEquals(buckets.toString(), 2, buckets.size());
+		Assert.assertEquals("Num buckets", 2, buckets.size());
 
 		assertBucket(buckets.get(0), "0.0-11.0", 10);
 		assertBucket(buckets.get(1), "11.0-*", 10);

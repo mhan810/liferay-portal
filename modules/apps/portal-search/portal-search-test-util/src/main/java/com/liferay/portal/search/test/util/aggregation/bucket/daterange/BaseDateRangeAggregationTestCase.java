@@ -63,7 +63,7 @@ public abstract class BaseDateRangeAggregationTestCase
 		List<Bucket> buckets = new ArrayList<>(
 			rangeAggregationResult.getBuckets());
 
-		Assert.assertEquals(buckets.toString(), 3, buckets.size());
+		Assert.assertEquals("Num buckets", 2, buckets.size());
 
 		assertBucket(buckets.get(0), "Before 2017", 2);
 		assertBucket(buckets.get(1), "2017", 2);
