@@ -205,16 +205,10 @@ public class ElasticsearchPipelineAggregationResultTranslator
 		SumBucketPipelineAggregation sumBucketPipelineAggregation,
 		Aggregation aggregationResult) {
 
-		BucketMetricValue bucketMetricValue =
-			(BucketMetricValue)aggregationResult;
+		SimpleValue simpleValue = (SimpleValue)aggregationResult;
 
-		SumBucketPipelineAggregationResult sumBucketPipelineAggregationResult =
-			new SumBucketPipelineAggregationResult(
-				bucketMetricValue.getName(), bucketMetricValue.value());
-
-		sumBucketPipelineAggregationResult.setKeys(bucketMetricValue.keys());
-
-		return sumBucketPipelineAggregationResult;
+		return new SumBucketPipelineAggregationResult(
+			simpleValue.getName(), simpleValue.value());
 	}
 
 }

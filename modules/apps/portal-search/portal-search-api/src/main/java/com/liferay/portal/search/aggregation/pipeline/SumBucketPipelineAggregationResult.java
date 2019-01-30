@@ -16,15 +16,26 @@ package com.liferay.portal.search.aggregation.pipeline;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.search.aggregation.AggregationResult;
+import com.liferay.portal.search.aggregation.BaseAggregationResult;
+
 /**
  * @author Michael C. Han
  */
 @ProviderType
 public class SumBucketPipelineAggregationResult
-	extends BaseBucketPipelineAggregationResult {
+	extends BaseAggregationResult implements AggregationResult {
 
 	public SumBucketPipelineAggregationResult(String name, double value) {
-		super(name, value);
+		super(name);
+
+		_value = value;
 	}
+
+	public double getValue() {
+		return _value;
+	}
+
+	private final double _value;
 
 }

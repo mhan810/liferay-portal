@@ -16,6 +16,7 @@ package com.liferay.portal.search.test.util.aggregation;
 
 import com.liferay.portal.search.aggregation.Aggregation;
 import com.liferay.portal.search.aggregation.AggregationResult;
+import com.liferay.portal.search.aggregation.pipeline.PipelineAggregation;
 import com.liferay.portal.search.engine.adapter.search2.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search2.SearchSearchResponse;
 import com.liferay.portal.search.query.MatchAllQuery;
@@ -31,11 +32,25 @@ import org.junit.Assert;
 public abstract class BaseAggregationTestCase extends BaseIndexingTestCase {
 
 	protected <T extends AggregationResult> T search(Aggregation aggregation) {
+		Map<String, AggregationResult> aggregationResultMap = search(
+			aggregation, null);
+
+		return (T)aggregationResultMap.get(aggregation.getName());
+	}
+
+	protected Map<String, AggregationResult> search(
+		Aggregation aggregation, PipelineAggregation pipelineAggregation) {
+
 		SearchSearchResponse searchSearchResponse =
 			getSearchEngineAdapter().execute(
 				new SearchSearchRequest() {
 					{
 						putAggregation(aggregation);
+
+						if (pipelineAggregation != null) {
+							putPipelineAggregation(pipelineAggregation);
+						}
+
 						setIndexNames(new String[] {"_all"});
 						setQuery(new MatchAllQuery());
 						setSelectedFieldNames();
@@ -47,7 +62,7 @@ public abstract class BaseAggregationTestCase extends BaseIndexingTestCase {
 
 		Assert.assertNotNull(aggregationResultMap);
 
-		return (T)aggregationResultMap.get(aggregation.getName());
+		return aggregationResultMap;
 	}
 
 }
