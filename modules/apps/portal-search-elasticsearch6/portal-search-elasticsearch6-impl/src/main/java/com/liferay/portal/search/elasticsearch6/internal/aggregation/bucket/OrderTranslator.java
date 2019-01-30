@@ -26,11 +26,7 @@ import org.elasticsearch.search.aggregations.BucketOrder;
  */
 public class OrderTranslator {
 
-	public BucketOrder translate(List<Order> orders) {
-		if (orders.size() == 1) {
-			return _convert(orders.get(0));
-		}
-
+	public List<BucketOrder> translate(List<Order> orders) {
 		List<BucketOrder> bucketOrders = new ArrayList<>(orders.size());
 
 		orders.forEach(
@@ -40,11 +36,17 @@ public class OrderTranslator {
 				bucketOrders.add(bucketOrder);
 			});
 
-		return BucketOrder.compound(bucketOrders);
+		return bucketOrders;
 	}
 
 	private BucketOrder _convert(Order order) {
-		if (order.getMetricName() == null) {
+		if (Order.COUNT_METRIC_NAME.equals(order.getMetricName())) {
+			return BucketOrder.count(order.isAscending());
+		}
+		else if (Order.KEY_METRIC_NAME.equals(order.getMetricName())) {
+			return BucketOrder.key(order.isAscending());
+		}
+		else if (order.getMetricName() == null) {
 			return BucketOrder.aggregation(
 				order.getPath(), order.isAscending());
 		}

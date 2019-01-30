@@ -21,6 +21,8 @@ import com.liferay.portal.search.aggregation.bucket.TermsAggregation;
 import com.liferay.portal.search.aggregation.pipeline.PipelineAggregationTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.aggregation.BaseFieldAggregationTranslator;
 
+import java.util.List;
+
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregator;
@@ -82,10 +84,10 @@ public class TermsAggregationTranslatorImpl
 		}
 
 		if (!ListUtil.isEmpty(termsAggregation.getOrders())) {
-			BucketOrder bucketOrder = _orderTranslator.translate(
+			List<BucketOrder> bucketOrders = _orderTranslator.translate(
 				termsAggregation.getOrders());
 
-			termsAggregationBuilder.order(bucketOrder);
+			termsAggregationBuilder.order(bucketOrders);
 		}
 
 		if (termsAggregation.getShardMinDocCount() != null) {

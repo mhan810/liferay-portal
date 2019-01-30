@@ -16,14 +16,65 @@ package com.liferay.portal.search.aggregation.bucket;
 
 import aQute.bnd.annotation.ProviderType;
 
+import java.util.Objects;
+
 /**
  * @author Michael C. Han
  */
 @ProviderType
 public class Order {
 
+	public static final String COUNT_METRIC_NAME = "_count";
+
+	public static final String KEY_METRIC_NAME = "_key";
+
+	public static final Order count(boolean ascending) {
+		Order order = new Order(null);
+
+		order.setMetricName(COUNT_METRIC_NAME);
+		order.setAscending(ascending);
+
+		return order;
+	}
+
+	public static final Order key(boolean ascending) {
+		Order order = new Order(null);
+
+		order.setMetricName(KEY_METRIC_NAME);
+		order.setAscending(ascending);
+
+		return order;
+	}
+
 	public Order(String path) {
 		_path = path;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+
+		if ((object == null) || (getClass() != object.getClass())) {
+			return false;
+		}
+
+		final Order order = (Order)object;
+
+		if (_ascending != order._ascending) {
+			return false;
+		}
+
+		if (!Objects.equals(_metricName, order._metricName)) {
+			return false;
+		}
+
+		if (!Objects.equals(_path, order._path)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public String getMetricName() {
@@ -32,6 +83,11 @@ public class Order {
 
 	public String getPath() {
 		return _path;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(_ascending, _metricName, _path);
 	}
 
 	public boolean isAscending() {

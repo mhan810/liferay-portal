@@ -20,6 +20,8 @@ import com.liferay.portal.search.aggregation.bucket.HistogramAggregation;
 import com.liferay.portal.search.aggregation.pipeline.PipelineAggregationTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.aggregation.BaseFieldAggregationTranslator;
 
+import java.util.List;
+
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.BucketOrder;
@@ -51,10 +53,10 @@ public class HistogramAggregationTranslatorImpl
 				pipelineAggregationTranslator);
 
 		if (!ListUtil.isEmpty(histogramAggregation.getOrders())) {
-			BucketOrder bucketOrder = _orderTranslator.translate(
+			List<BucketOrder> bucketOrders = _orderTranslator.translate(
 				histogramAggregation.getOrders());
 
-			histogramAggregationBuilder.order(bucketOrder);
+			histogramAggregationBuilder.order(bucketOrders);
 		}
 
 		if ((histogramAggregation.getMaxBound() != null) &&
