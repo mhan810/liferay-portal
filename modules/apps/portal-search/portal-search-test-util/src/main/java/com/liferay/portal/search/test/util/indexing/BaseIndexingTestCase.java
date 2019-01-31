@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.search.generic.TermQueryImpl;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.internal.legacy.searcher.SearchRequestBuilderImpl;
 import com.liferay.portal.search.internal.legacy.searcher.SearchResponseBuilderImpl;
 import com.liferay.portal.search.searcher.SearchRequestBuilder;
@@ -203,6 +204,10 @@ public abstract class BaseIndexingTestCase {
 
 	protected IndexWriter getIndexWriter() {
 		return _indexWriter;
+	}
+
+	protected SearchEngineAdapter getSearchEngineAdapter() {
+		return _indexingFixture.getSearchEngineAdapter();
 	}
 
 	protected Hits search(SearchContext searchContext) {
