@@ -32,6 +32,8 @@ public class ElasticsearchQueryTranslatorFixture {
 					new DateRangeTermQueryTranslatorImpl());
 				setDisMaxQueryTranslator(new DisMaxQueryTranslatorImpl());
 				setExistsQueryTranslator(new ExistsQueryTranslatorImpl());
+				setFunctionScoreQueryTranslator(
+					new FunctionScoreQueryTranslatorImpl());
 				setFuzzyQueryTranslator(new FuzzyQueryTranslatorImpl());
 				setGeoBoundingBoxQueryTranslator(
 					new GeoBoundingBoxQueryTranslatorImpl());
@@ -61,9 +63,13 @@ public class ElasticsearchQueryTranslatorFixture {
 				setMultiMatchQueryTranslator(
 					new MultiMatchQueryTranslatorImpl());
 				setNestedQueryTranslator(new NestedQueryTranslatorImpl());
+				setPercolateQueryTranslator(new PercolateQueryTranslatorImpl());
 				setPrefixQueryTranslator(new PrefixQueryTranslatorImpl());
 				setRangeTermQueryTranslator(new RangeTermQueryTranslatorImpl());
+				setRegexQueryTranslator(new RegexQueryTranslatorImpl());
 				setScriptQueryTranslator(new ScriptQueryTranslatorImpl());
+				setSimpleQueryStringQueryTranslator(
+					new SimpleStringQueryTranslatorImpl());
 				setStringQueryTranslator(new StringQueryTranslatorImpl());
 				setTermQueryTranslator(new TermQueryTranslatorImpl());
 				setTermsQueryTranslator(new TermsQueryTranslatorImpl());
