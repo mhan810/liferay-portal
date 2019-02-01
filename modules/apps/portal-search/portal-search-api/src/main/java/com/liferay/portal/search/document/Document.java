@@ -18,6 +18,7 @@ import aQute.bnd.annotation.ProviderType;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +37,26 @@ public class Document {
 
 	public Map<String, Field> getFields() {
 		return Collections.unmodifiableMap(_fields);
+	}
+
+	public Object getFieldValue(String name) {
+		Field field = _fields.get(name);
+
+		if (field == null) {
+			return null;
+		}
+
+		return field.getValue();
+	}
+
+	public List<Object> getFieldValues(String name) {
+		Field field = _fields.get(name);
+
+		if (field == null) {
+			return null;
+		}
+
+		return field.getValues();
 	}
 
 	private final Map<String, Field> _fields = new HashMap<>();
