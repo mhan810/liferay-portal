@@ -47,6 +47,14 @@ public class FuzzyQueryTranslatorImpl implements FuzzyQueryTranslator {
 			fuzzyQueryBuilder.prefixLength(fuzzyQuery.getPrefixLength());
 		}
 
+		if (fuzzyQuery.getRewrite() != null) {
+			fuzzyQueryBuilder.rewrite(fuzzyQuery.getRewrite());
+		}
+
+		if (fuzzyQuery.getTranspositions() != null) {
+			fuzzyQueryBuilder.transpositions(fuzzyQuery.getTranspositions());
+		}
+
 		return fuzzyQueryBuilder;
 	}
 

@@ -15,6 +15,7 @@
 package com.liferay.portal.search.elasticsearch6.internal.query2;
 
 import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
+import com.liferay.portal.search.elasticsearch6.internal.query2.geolocation.GeoValidationMethodTranslator;
 import com.liferay.portal.search.query.GeoDistanceQuery;
 
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
@@ -45,7 +46,21 @@ public class GeoDistanceQueryTranslatorImpl
 			pinGeoLocationPoint.getLatitude(),
 			pinGeoLocationPoint.getLongitude());
 
+		if (geoDistanceQuery.getGeoValidationMethod() != null) {
+			geoDistanceQueryBuilder.setValidationMethod(
+				_geoValidationMethodTranslator.translate(
+					geoDistanceQuery.getGeoValidationMethod()));
+		}
+
+		if (geoDistanceQuery.getIgnoreUnmapped() != null) {
+			geoDistanceQueryBuilder.ignoreUnmapped(
+				geoDistanceQuery.getIgnoreUnmapped());
+		}
+
 		return geoDistanceQueryBuilder;
 	}
+
+	private final GeoValidationMethodTranslator _geoValidationMethodTranslator =
+		new GeoValidationMethodTranslator();
 
 }

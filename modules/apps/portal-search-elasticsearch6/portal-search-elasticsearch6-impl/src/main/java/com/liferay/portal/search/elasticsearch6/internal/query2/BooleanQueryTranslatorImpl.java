@@ -54,6 +54,16 @@ public class BooleanQueryTranslatorImpl implements BooleanQueryTranslator {
 			booleanQuery.getFilterQueryClauses(), queryVisitor,
 			boolQueryBuilder::filter);
 
+		if (booleanQuery.getAdjustPureNegative() != null) {
+			boolQueryBuilder.adjustPureNegative(
+				booleanQuery.getAdjustPureNegative());
+		}
+
+		if (booleanQuery.getMinimumShouldMatch() != null) {
+			boolQueryBuilder.minimumShouldMatch(
+				booleanQuery.getMinimumShouldMatch());
+		}
+
 		return boolQueryBuilder;
 	}
 

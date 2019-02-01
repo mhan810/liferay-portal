@@ -16,10 +16,12 @@ package com.liferay.portal.search.elasticsearch6.internal.query2;
 
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.elasticsearch6.internal.script.ScriptTranslator;
 import com.liferay.portal.search.query.TermsSetQuery;
 
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.TermsSetQueryBuilder;
+import org.elasticsearch.script.Script;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -40,7 +42,16 @@ public class TermsSetQueryTranslatorImpl implements TermsSetQueryTranslator {
 				termsSetQuery.getMinimumShouldMatchField());
 		}
 
+		if (termsSetQuery.getMinimumShouldMatchScript() != null) {
+			Script script = _scriptTranslator.translate(
+				termsSetQuery.getMinimumShouldMatchScript());
+
+			termsSetQueryBuilder.setMinimumShouldMatchScript(script);
+		}
+
 		return termsSetQueryBuilder;
 	}
+
+	private final ScriptTranslator _scriptTranslator = new ScriptTranslator();
 
 }

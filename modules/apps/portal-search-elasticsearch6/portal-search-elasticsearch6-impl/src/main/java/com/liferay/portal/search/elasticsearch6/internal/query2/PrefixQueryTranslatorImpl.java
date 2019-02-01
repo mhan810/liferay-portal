@@ -16,6 +16,7 @@ package com.liferay.portal.search.elasticsearch6.internal.query2;
 
 import com.liferay.portal.search.query.PrefixQuery;
 
+import org.elasticsearch.index.query.PrefixQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
@@ -29,8 +30,14 @@ public class PrefixQueryTranslatorImpl implements PrefixQueryTranslator {
 
 	@Override
 	public QueryBuilder translate(PrefixQuery prefixQuery) {
-		return QueryBuilders.prefixQuery(
+		PrefixQueryBuilder prefixQueryBuilder = QueryBuilders.prefixQuery(
 			prefixQuery.getField(), prefixQuery.getPrefix());
+
+		if (prefixQuery.getRewrite() != null) {
+			prefixQueryBuilder.rewrite(prefixQuery.getRewrite());
+		}
+
+		return prefixQueryBuilder;
 	}
 
 }

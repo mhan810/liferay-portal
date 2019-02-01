@@ -15,6 +15,8 @@
 package com.liferay.portal.search.elasticsearch6.internal.query2;
 
 import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
+import com.liferay.portal.search.elasticsearch6.internal.query2.geolocation.GeoExecTypeTranslator;
+import com.liferay.portal.search.elasticsearch6.internal.query2.geolocation.GeoValidationMethodTranslator;
 import com.liferay.portal.search.query.GeoBoundingBoxQuery;
 
 import org.elasticsearch.common.geo.GeoPoint;
@@ -53,7 +55,29 @@ public class GeoBoundingBoxQueryTranslatorImpl
 		geoBoundingBoxQueryBuilder.setCorners(
 			topLeftGeoPoint, bottomRightGeoPoint);
 
+		if (geoBoundingBoxQuery.getGeoExecType() != null) {
+			geoBoundingBoxQueryBuilder.type(
+				_geoExecTypeTranslator.translate(
+					geoBoundingBoxQuery.getGeoExecType()));
+		}
+
+		if (geoBoundingBoxQuery.getGeoValidationMethod() != null) {
+			geoBoundingBoxQueryBuilder.setValidationMethod(
+				_geoValidationMethodTranslator.translate(
+					geoBoundingBoxQuery.getGeoValidationMethod()));
+		}
+
+		if (geoBoundingBoxQuery.getIgnoreUnmapped() != null) {
+			geoBoundingBoxQueryBuilder.ignoreUnmapped(
+				geoBoundingBoxQuery.getIgnoreUnmapped());
+		}
+
 		return geoBoundingBoxQueryBuilder;
 	}
+
+	private final GeoExecTypeTranslator _geoExecTypeTranslator =
+		new GeoExecTypeTranslator();
+	private final GeoValidationMethodTranslator _geoValidationMethodTranslator =
+		new GeoValidationMethodTranslator();
 
 }

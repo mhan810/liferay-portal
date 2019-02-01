@@ -15,10 +15,12 @@
 package com.liferay.portal.search.elasticsearch6.internal.query2;
 
 import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
+import com.liferay.portal.search.elasticsearch6.internal.query2.geolocation.GeoValidationMethodTranslator;
 import com.liferay.portal.search.query.GeoPolygonQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.index.query.GeoPolygonQueryBuilder;
@@ -36,22 +38,36 @@ public class GeoPolygonQueryTranslatorImpl
 
 	@Override
 	public QueryBuilder translate(GeoPolygonQuery geoPolygonQuery) {
-		List<GeoPoint> geoPoints = new ArrayList<>();
+		Set<GeoLocationPoint> geoLocationPoints =
+			geoPolygonQuery.getGeoLocationPoints();
 
-		for (GeoLocationPoint geoLocationPoint :
-				geoPolygonQuery.getGeoLocationPoints()) {
+		List<GeoPoint> geoPoints = new ArrayList<>(geoLocationPoints.size());
 
-			geoPoints.add(
+		geoLocationPoints.forEach(
+			geoLocationPoint -> geoPoints.add(
 				new GeoPoint(
 					geoLocationPoint.getLatitude(),
-					geoLocationPoint.getLongitude()));
-		}
+					geoLocationPoint.getLongitude())));
 
 		GeoPolygonQueryBuilder geoPolygonQueryBuilder =
 			QueryBuilders.geoPolygonQuery(
 				geoPolygonQuery.getField(), geoPoints);
 
+		if (geoPolygonQuery.getGeoValidationMethod() != null) {
+			geoPolygonQueryBuilder.setValidationMethod(
+				_geoValidationMethodTranslator.translate(
+					geoPolygonQuery.getGeoValidationMethod()));
+		}
+
+		if (geoPolygonQuery.getIgnoreUnmapped() != null) {
+			geoPolygonQueryBuilder.ignoreUnmapped(
+				geoPolygonQuery.getIgnoreUnmapped());
+		}
+
 		return geoPolygonQueryBuilder;
 	}
+
+	private final GeoValidationMethodTranslator _geoValidationMethodTranslator =
+		new GeoValidationMethodTranslator();
 
 }
