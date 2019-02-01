@@ -37,6 +37,8 @@ public interface QueryVisitor<T> {
 
 	public T visit(ExistsQuery existsQuery);
 
+	public T visit(FunctionScoreQuery functionScoreQuery);
+
 	public T visit(FuzzyQuery fuzzyQuery);
 
 	public T visit(GeoBoundingBoxQuery geoBoundingBoxQuery);
@@ -65,11 +67,17 @@ public interface QueryVisitor<T> {
 
 	public T visit(NestedQuery nestedQuery);
 
+	public T visit(PercolateQuery percolateQuery);
+
 	public T visit(PrefixQuery prefixQuery);
 
 	public T visit(RangeTermQuery rangeTermQuery);
 
+	public T visit(RegexQuery regexQuery);
+
 	public T visit(ScriptQuery scriptQuery);
+
+	public T visit(SimpleStringQuery simpleStringQuery);
 
 	public T visit(StringQuery stringQuery);
 
