@@ -20,8 +20,8 @@ import aQute.bnd.annotation.ProviderType;
  * @author Michael C. Han
  */
 @ProviderType
-public enum GeoDistanceType {
+public enum Orientation {
 
-	ARC, PLANE
+	LEFT, RIGHT
 
 }

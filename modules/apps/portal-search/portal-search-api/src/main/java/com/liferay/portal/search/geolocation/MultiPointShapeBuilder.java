@@ -16,12 +16,21 @@ package com.liferay.portal.search.geolocation;
 
 import aQute.bnd.annotation.ProviderType;
 
+import java.util.List;
+
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public enum GeoDistanceType {
+public class MultiPointShapeBuilder extends ShapeBuilder {
 
-	ARC, PLANE
+	public MultiPointShapeBuilder(List<Coordinate> coodinates) {
+		addCoordinates(coodinates);
+	}
+
+	@Override
+	public <T> T accept(ShapeBuilderTranslator<T> shapeBuilderTranslator) {
+		return shapeBuilderTranslator.translate(this);
+	}
 
 }

@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.geolocation;
+package com.liferay.portal.search.query.geolocation;
 
 import aQute.bnd.annotation.ProviderType;
 
@@ -20,8 +20,8 @@ import aQute.bnd.annotation.ProviderType;
  * @author Michael C. Han
  */
 @ProviderType
-public enum GeoDistanceType {
+public enum ShapeRelation {
 
-	ARC, PLANE
+	CONTAINS, DISJOINT, INTERSECTS, WITHIN
 
 }

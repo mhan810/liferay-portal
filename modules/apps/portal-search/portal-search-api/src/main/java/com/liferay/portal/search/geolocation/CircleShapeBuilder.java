@@ -20,8 +20,35 @@ import aQute.bnd.annotation.ProviderType;
  * @author Michael C. Han
  */
 @ProviderType
-public enum GeoDistanceType {
+public class CircleShapeBuilder extends ShapeBuilder {
 
-	ARC, PLANE
+	public CircleShapeBuilder(GeoDistance radius, Coordinate center) {
+		_radius = radius;
+		_center = center;
+	}
+
+	@Override
+	public <T> T accept(ShapeBuilderTranslator<T> shapeBuilderTranslator) {
+		return shapeBuilderTranslator.translate(this);
+	}
+
+	public Coordinate getCenter() {
+		return _center;
+	}
+
+	public GeoDistance getRadius() {
+		return _radius;
+	}
+
+	public void setCenter(Coordinate center) {
+		_center = center;
+	}
+
+	public void setRadius(GeoDistance radius) {
+		_radius = radius;
+	}
+
+	private Coordinate _center;
+	private GeoDistance _radius;
 
 }

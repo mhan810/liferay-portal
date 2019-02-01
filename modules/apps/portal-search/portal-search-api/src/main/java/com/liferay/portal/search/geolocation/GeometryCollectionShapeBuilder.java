@@ -16,12 +16,33 @@ package com.liferay.portal.search.geolocation;
 
 import aQute.bnd.annotation.ProviderType;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public enum GeoDistanceType {
+public class GeometryCollectionShapeBuilder extends ShapeBuilder {
 
-	ARC, PLANE
+	@Override
+	public <T> T accept(ShapeBuilderTranslator<T> shapeBuilderTranslator) {
+		return shapeBuilderTranslator.translate(this);
+	}
+
+	public void addShapeBuilder(ShapeBuilder shapeBuilder) {
+		_shapeBuilders.add(shapeBuilder);
+	}
+
+	public void addShapeBuilders(ShapeBuilder... shapeBuilders) {
+		Collections.addAll(_shapeBuilders, shapeBuilders);
+	}
+
+	public List<ShapeBuilder> getShapeBuilders() {
+		return Collections.unmodifiableList(_shapeBuilders);
+	}
+
+	private final List<ShapeBuilder> _shapeBuilders = new ArrayList<>();
 
 }

@@ -20,8 +20,15 @@ import aQute.bnd.annotation.ProviderType;
  * @author Michael C. Han
  */
 @ProviderType
-public enum GeoDistanceType {
+public class PointShapeBuilder extends ShapeBuilder {
 
-	ARC, PLANE
+	public PointShapeBuilder(Coordinate coordinate) {
+		addCoordinates(coordinate);
+	}
+
+	@Override
+	public <T> T accept(ShapeBuilderTranslator<T> shapeBuilderTranslator) {
+		return shapeBuilderTranslator.translate(this);
+	}
 
 }

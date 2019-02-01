@@ -20,8 +20,27 @@ import aQute.bnd.annotation.ProviderType;
  * @author Michael C. Han
  */
 @ProviderType
-public enum GeoDistanceType {
+public class EnvelopeShapeBuilder extends ShapeBuilder {
 
-	ARC, PLANE
+	public EnvelopeShapeBuilder(Coordinate topLeft, Coordinate bottomRight) {
+		_topLeft = topLeft;
+		_bottomRight = bottomRight;
+	}
+
+	@Override
+	public <T> T accept(ShapeBuilderTranslator<T> shapeBuilderTranslator) {
+		return shapeBuilderTranslator.translate(this);
+	}
+
+	public Coordinate getBottomRight() {
+		return _bottomRight;
+	}
+
+	public Coordinate getTopLeft() {
+		return _topLeft;
+	}
+
+	private final Coordinate _bottomRight;
+	private final Coordinate _topLeft;
 
 }
