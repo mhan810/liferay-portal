@@ -21,6 +21,7 @@ import com.liferay.portal.search.query.ConstantScoreQuery;
 import com.liferay.portal.search.query.DateRangeTermQuery;
 import com.liferay.portal.search.query.DisMaxQuery;
 import com.liferay.portal.search.query.ExistsQuery;
+import com.liferay.portal.search.query.FunctionScoreQuery;
 import com.liferay.portal.search.query.FuzzyQuery;
 import com.liferay.portal.search.query.GeoBoundingBoxQuery;
 import com.liferay.portal.search.query.GeoDistanceQuery;
@@ -35,12 +36,15 @@ import com.liferay.portal.search.query.MatchQuery;
 import com.liferay.portal.search.query.MoreLikeThisQuery;
 import com.liferay.portal.search.query.MultiMatchQuery;
 import com.liferay.portal.search.query.NestedQuery;
+import com.liferay.portal.search.query.PercolateQuery;
 import com.liferay.portal.search.query.PrefixQuery;
 import com.liferay.portal.search.query.Query;
 import com.liferay.portal.search.query.QueryTranslator;
 import com.liferay.portal.search.query.QueryVisitor;
 import com.liferay.portal.search.query.RangeTermQuery;
+import com.liferay.portal.search.query.RegexQuery;
 import com.liferay.portal.search.query.ScriptQuery;
+import com.liferay.portal.search.query.SimpleStringQuery;
 import com.liferay.portal.search.query.StringQuery;
 import com.liferay.portal.search.query.TermQuery;
 import com.liferay.portal.search.query.TermsQuery;
@@ -62,6 +66,13 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class ElasticsearchQueryTranslator
 	implements QueryTranslator<QueryBuilder>, QueryVisitor<QueryBuilder> {
+
+	@Reference(unbind = "-")
+	public void setPercolateQueryTranslator(
+		PercolateQueryTranslator percolateQueryTranslator) {
+
+		_percolateQueryTranslator = percolateQueryTranslator;
+	}
 
 	@Override
 	public QueryBuilder translate(Query query) {
@@ -112,6 +123,12 @@ public class ElasticsearchQueryTranslator
 	@Override
 	public QueryBuilder visit(ExistsQuery existsQuery) {
 		return _existsQueryTranslator.translate(existsQuery);
+	}
+
+	@Override
+	public QueryBuilder visit(FunctionScoreQuery functionScoreQuery) {
+		return _functionScoreQueryTranslator.translate(
+			functionScoreQuery, this);
 	}
 
 	@Override
@@ -187,6 +204,11 @@ public class ElasticsearchQueryTranslator
 	}
 
 	@Override
+	public QueryBuilder visit(PercolateQuery percolateQuery) {
+		return _percolateQueryTranslator.translate(percolateQuery);
+	}
+
+	@Override
 	public QueryBuilder visit(PrefixQuery prefixQuery) {
 		return _prefixQueryTranslator.translate(prefixQuery);
 	}
@@ -197,8 +219,18 @@ public class ElasticsearchQueryTranslator
 	}
 
 	@Override
+	public QueryBuilder visit(RegexQuery regexQuery) {
+		return _regexQueryTranslator.translate(regexQuery);
+	}
+
+	@Override
 	public QueryBuilder visit(ScriptQuery scriptQuery) {
 		return _scriptQueryTranslator.translate(scriptQuery);
+	}
+
+	@Override
+	public QueryBuilder visit(SimpleStringQuery simpleStringQuery) {
+		return _simpleQueryStringQueryTranslator.translate(simpleStringQuery);
 	}
 
 	@Override
@@ -273,6 +305,13 @@ public class ElasticsearchQueryTranslator
 		ExistsQueryTranslator existsQueryTranslator) {
 
 		_existsQueryTranslator = existsQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setFunctionScoreQueryTranslator(
+		FunctionScoreQueryTranslator functionScoreQueryTranslator) {
+
+		_functionScoreQueryTranslator = functionScoreQueryTranslator;
 	}
 
 	@Reference(unbind = "-")
@@ -388,10 +427,24 @@ public class ElasticsearchQueryTranslator
 	}
 
 	@Reference(unbind = "-")
+	protected void setRegexQueryTranslator(
+		RegexQueryTranslator regexQueryTranslator) {
+
+		_regexQueryTranslator = regexQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
 	protected void setScriptQueryTranslator(
 		ScriptQueryTranslator scriptQueryTranslator) {
 
 		_scriptQueryTranslator = scriptQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setSimpleQueryStringQueryTranslator(
+		SimpleStringQueryTranslator simpleQueryStringQueryTranslator) {
+
+		_simpleQueryStringQueryTranslator = simpleQueryStringQueryTranslator;
 	}
 
 	@Reference(unbind = "-")
@@ -436,6 +489,7 @@ public class ElasticsearchQueryTranslator
 	private DateRangeTermQueryTranslator _dateRangeTermQueryTranslator;
 	private DisMaxQueryTranslator _disMaxQueryTranslator;
 	private ExistsQueryTranslator _existsQueryTranslator;
+	private FunctionScoreQueryTranslator _functionScoreQueryTranslator;
 	private FuzzyQueryTranslator _fuzzyQueryTranslator;
 	private GeoBoundingBoxQueryTranslator _geoBoundingBoxQueryTranslator;
 	private GeoDistanceQueryTranslator _geoDistanceQueryTranslator;
@@ -450,9 +504,12 @@ public class ElasticsearchQueryTranslator
 	private MoreLikeThisQueryTranslator _moreLikeThisQueryTranslator;
 	private MultiMatchQueryTranslator _multiMatchQueryTranslator;
 	private NestedQueryTranslator _nestedQueryTranslator;
+	private PercolateQueryTranslator _percolateQueryTranslator;
 	private PrefixQueryTranslator _prefixQueryTranslator;
 	private RangeTermQueryTranslator _rangeTermQueryTranslator;
+	private RegexQueryTranslator _regexQueryTranslator;
 	private ScriptQueryTranslator _scriptQueryTranslator;
+	private SimpleStringQueryTranslator _simpleQueryStringQueryTranslator;
 	private StringQueryTranslator _stringQueryTranslator;
 	private TermQueryTranslator _termQueryTranslator;
 	private TermsQueryTranslator _termsQueryTranslator;
