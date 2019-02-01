@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.analysis.KeywordTokenizer;
 import com.liferay.portal.search.query.BooleanQuery;
 import com.liferay.portal.search.query.Query;
-import com.liferay.portal.search.query.QueryTerm;
 import com.liferay.portal.search.query.WildcardQuery;
 import com.liferay.portal.search.query.field.FieldQueryBuilder;
 
@@ -64,7 +63,7 @@ public class SubstringFieldQueryBuilder implements FieldQueryBuilder {
 				StringUtil.toLowerCase(value), StringPool.STAR);
 		}
 
-		return new WildcardQuery(new QueryTerm(field, value));
+		return new WildcardQuery(field, value);
 	}
 
 	@Reference
