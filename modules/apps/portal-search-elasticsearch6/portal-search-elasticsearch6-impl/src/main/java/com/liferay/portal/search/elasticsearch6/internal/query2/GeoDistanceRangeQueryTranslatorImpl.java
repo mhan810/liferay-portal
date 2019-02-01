@@ -15,13 +15,13 @@
 package com.liferay.portal.search.elasticsearch6.internal.query2;
 
 import com.liferay.portal.kernel.search.geolocation.GeoDistance;
-import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.query.GeoDistanceRangeQuery;
+import com.liferay.portal.search.query.geolocation.ShapeRelation;
 
-import org.elasticsearch.common.geo.GeoPoint;
-import org.elasticsearch.common.unit.DistanceUnit;
-import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -34,26 +34,33 @@ public class GeoDistanceRangeQueryTranslatorImpl
 
 	@Override
 	public QueryBuilder translate(GeoDistanceRangeQuery geoDistanceRangeQuery) {
-		GeoDistanceQueryBuilder geoDistanceQueryBuilder =
-			new GeoDistanceQueryBuilder(geoDistanceRangeQuery.getField());
+		RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery(
+			geoDistanceRangeQuery.getField());
 
-		GeoDistance geoDistance =
+		GeoDistance geoDistanceLowerBound =
+			geoDistanceRangeQuery.getLowerBoundGeoDistance();
+
+		rangeQueryBuilder.from(geoDistanceLowerBound.toString());
+
+		rangeQueryBuilder.includeLower(geoDistanceRangeQuery.isIncludesLower());
+		rangeQueryBuilder.includeUpper(geoDistanceRangeQuery.isIncludesUpper());
+
+		GeoDistance geoDistanceUpperBound =
 			geoDistanceRangeQuery.getUpperBoundGeoDistance();
 
-		geoDistanceQueryBuilder.distance(
-			String.valueOf(geoDistance.getDistance()),
-			DistanceUnit.fromString(
-				String.valueOf(geoDistance.getDistanceUnit())));
+		rangeQueryBuilder.to(geoDistanceUpperBound.toString());
 
-		GeoLocationPoint geoLocationPoint =
-			geoDistanceRangeQuery.getPinGeoLocationPoint();
+		if (geoDistanceRangeQuery.getShapeRelation() != null) {
+			ShapeRelation shapeRelation =
+				geoDistanceRangeQuery.getShapeRelation();
 
-		geoDistanceQueryBuilder.point(
-			new GeoPoint(
-				geoLocationPoint.getLatitude(),
-				geoLocationPoint.getLongitude()));
+			String shapeRelationName = shapeRelation.name();
 
-		return geoDistanceQueryBuilder;
+			rangeQueryBuilder.relation(
+				StringUtil.toLowerCase(shapeRelationName));
+		}
+
+		return rangeQueryBuilder;
 	}
 
 }
