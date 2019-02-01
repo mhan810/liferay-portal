@@ -31,6 +31,8 @@ import java.util.Locale;
 public class SearchSearchRequest
 	extends BaseSearchRequest implements SearchRequest<SearchSearchResponse> {
 
+	public static final int DEFAULT_SEARCH_RESULT_SIZE = 10;
+
 	@Override
 	public SearchSearchResponse accept(
 		SearchRequestExecutor searchRequestExecutor) {
@@ -133,7 +135,7 @@ public class SearchSearchRequest
 	private String _preference;
 	private boolean _scoreEnabled;
 	private String[] _selectedFieldNames;
-	private int _size;
+	private int _size = DEFAULT_SEARCH_RESULT_SIZE;
 	private final List<Sort> _sorts = new ArrayList<>();
 	private int _start;
 	private Boolean _version;
