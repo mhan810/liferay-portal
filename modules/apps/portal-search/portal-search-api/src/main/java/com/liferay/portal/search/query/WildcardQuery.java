@@ -24,12 +24,9 @@ import com.liferay.petra.string.StringBundler;
 @ProviderType
 public class WildcardQuery extends BaseQueryImpl implements Query {
 
-	public WildcardQuery(QueryTerm queryTerm) {
-		_queryTerm = queryTerm;
-	}
-
 	public WildcardQuery(String field, String value) {
-		this(new QueryTerm(field, value));
+		_field = field;
+		_value = value;
 	}
 
 	@Override
@@ -37,13 +34,25 @@ public class WildcardQuery extends BaseQueryImpl implements Query {
 		return queryVisitor.visit(this);
 	}
 
-	public QueryTerm getQueryTerm() {
-		return _queryTerm;
+	public String getField() {
+		return _field;
+	}
+
+	public String getRewrite() {
+		return _rewrite;
+	}
+
+	public String getValue() {
+		return _value;
+	}
+
+	public void setRewrite(String rewrite) {
+		_rewrite = rewrite;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(5);
+		StringBundler sb = new StringBundler(9);
 
 		sb.append("{className=");
 
@@ -51,13 +60,19 @@ public class WildcardQuery extends BaseQueryImpl implements Query {
 
 		sb.append(clazz.getSimpleName());
 
-		sb.append(", queryTerm=");
-		sb.append(_queryTerm);
+		sb.append(", field=");
+		sb.append(_field);
+		sb.append(", rewrite=");
+		sb.append(_rewrite);
+		sb.append(", value=");
+		sb.append(_value);
 		sb.append("}");
 
 		return sb.toString();
 	}
 
-	private final QueryTerm _queryTerm;
+	private final String _field;
+	private String _rewrite;
+	private final String _value;
 
 }

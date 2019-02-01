@@ -24,12 +24,9 @@ import com.liferay.petra.string.StringBundler;
 @ProviderType
 public class TermQuery extends BaseQueryImpl implements Query {
 
-	public TermQuery(QueryTerm queryTerm) {
-		_queryTerm = queryTerm;
-	}
-
 	public TermQuery(String field, Object value) {
-		this(new QueryTerm(field, value));
+		_field = field;
+		_value = value;
 	}
 
 	@Override
@@ -37,13 +34,17 @@ public class TermQuery extends BaseQueryImpl implements Query {
 		return queryVisitor.visit(this);
 	}
 
-	public QueryTerm getQueryTerm() {
-		return _queryTerm;
+	public String getField() {
+		return _field;
+	}
+
+	public Object getValue() {
+		return _value;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(5);
+		StringBundler sb = new StringBundler(7);
 
 		sb.append("{className=");
 
@@ -51,13 +52,16 @@ public class TermQuery extends BaseQueryImpl implements Query {
 
 		sb.append(clazz.getSimpleName());
 
-		sb.append(", queryTerm=");
-		sb.append(_queryTerm);
+		sb.append(", field=");
+		sb.append(_field);
+		sb.append(", value=");
+		sb.append(_value);
 		sb.append("}");
 
 		return sb.toString();
 	}
 
-	private final QueryTerm _queryTerm;
+	private final String _field;
+	private final Object _value;
 
 }
