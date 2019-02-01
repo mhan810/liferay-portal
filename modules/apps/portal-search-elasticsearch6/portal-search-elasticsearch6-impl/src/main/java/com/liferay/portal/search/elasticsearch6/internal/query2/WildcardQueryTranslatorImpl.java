@@ -14,11 +14,11 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.query2;
 
-import com.liferay.portal.search.query.QueryTerm;
 import com.liferay.portal.search.query.WildcardQuery;
 
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.WildcardQueryBuilder;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -30,10 +30,14 @@ public class WildcardQueryTranslatorImpl implements WildcardQueryTranslator {
 
 	@Override
 	public QueryBuilder translate(WildcardQuery wildcardQuery) {
-		QueryTerm queryTerm = wildcardQuery.getQueryTerm();
+		WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery(
+			wildcardQuery.getField(), wildcardQuery.getValue());
 
-		return QueryBuilders.wildcardQuery(
-			queryTerm.getField(), String.valueOf(queryTerm.getValue()));
+		if (wildcardQuery.getRewrite() != null) {
+			wildcardQueryBuilder.rewrite(wildcardQuery.getRewrite());
+		}
+
+		return wildcardQueryBuilder;
 	}
 
 }

@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.query2;
 
-import com.liferay.portal.search.query.QueryTerm;
 import com.liferay.portal.search.query.TermQuery;
 
 import org.elasticsearch.index.query.QueryBuilder;
@@ -31,12 +30,8 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 
 	@Override
 	public QueryBuilder translate(TermQuery termQuery) {
-		QueryTerm queryTerm = termQuery.getQueryTerm();
-
-		String field = queryTerm.getField();
-		Object value = queryTerm.getValue();
-
-		return QueryBuilders.termQuery(field, value);
+		return QueryBuilders.termQuery(
+			termQuery.getField(), termQuery.getValue());
 	}
 
 }
