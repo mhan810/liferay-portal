@@ -42,18 +42,24 @@ public class PrefixQuery extends BaseQueryImpl implements Query {
 		return _prefix;
 	}
 
-	public int getSortOrder() {
-		return 5;
+	public String getRewrite() {
+		return _rewrite;
+	}
+
+	public void setRewrite(String rewrite) {
+		_rewrite = rewrite;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(7);
+		StringBundler sb = new StringBundler(9);
 
 		sb.append("{(");
 		sb.append(_field);
 		sb.append("=");
 		sb.append(_prefix);
+		sb.append(", _rewrite=");
+		sb.append(_rewrite);
 		sb.append("), ");
 		sb.append(super.toString());
 		sb.append("}");
@@ -63,5 +69,6 @@ public class PrefixQuery extends BaseQueryImpl implements Query {
 
 	private final String _field;
 	private final String _prefix;
+	private String _rewrite;
 
 }

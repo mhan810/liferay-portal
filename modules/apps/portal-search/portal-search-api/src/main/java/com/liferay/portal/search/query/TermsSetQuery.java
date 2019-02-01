@@ -17,6 +17,7 @@ package com.liferay.portal.search.query;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.search.script.Script;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,10 +38,6 @@ public class TermsSetQuery extends BaseQueryImpl implements Query {
 		return queryVisitor.visit(this);
 	}
 
-	public String getExecutionOption() {
-		return null;
-	}
-
 	public String getFieldName() {
 		return _fieldName;
 	}
@@ -49,8 +46,8 @@ public class TermsSetQuery extends BaseQueryImpl implements Query {
 		return _minimumShouldMatchField;
 	}
 
-	public int getSortOrder() {
-		return 4;
+	public Script getMinimumShouldMatchScript() {
+		return _minimumShouldMatchScript;
 	}
 
 	public List<Object> getValues() {
@@ -65,11 +62,12 @@ public class TermsSetQuery extends BaseQueryImpl implements Query {
 		_cached = cached;
 	}
 
-	public void setExecutionOption(String executionOption) {
-	}
-
 	public String setMinimumShouldMatchField(String minimumShouldMatchField) {
 		return _minimumShouldMatchField = minimumShouldMatchField;
+	}
+
+	public void setMinimumShouldMatchScript(Script minimumShouldMatchScript) {
+		_minimumShouldMatchScript = minimumShouldMatchScript;
 	}
 
 	@Override
@@ -82,6 +80,7 @@ public class TermsSetQuery extends BaseQueryImpl implements Query {
 	private Boolean _cached = Boolean.TRUE;
 	private final String _fieldName;
 	private String _minimumShouldMatchField;
+	private Script _minimumShouldMatchScript;
 	private final List<Object> _values;
 
 }

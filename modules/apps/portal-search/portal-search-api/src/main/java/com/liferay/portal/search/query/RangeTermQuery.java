@@ -85,11 +85,11 @@ public class RangeTermQuery extends BaseQueryImpl {
 		return _includesUpper;
 	}
 
-	public void setLowerBound(String lowerBound) {
+	public void setLowerBound(Object lowerBound) {
 		_lowerBound = lowerBound;
 	}
 
-	public void setUpperBound(String upperBound) {
+	public void setUpperBound(Object upperBound) {
 		_upperBound = upperBound;
 	}
 

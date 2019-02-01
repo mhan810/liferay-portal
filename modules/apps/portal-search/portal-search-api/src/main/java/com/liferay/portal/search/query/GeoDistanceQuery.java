@@ -18,6 +18,7 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.search.geolocation.GeoDistance;
 import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
+import com.liferay.portal.search.query.geolocation.GeoValidationMethod;
 
 /**
  * @author Michael C. Han
@@ -47,6 +48,14 @@ public class GeoDistanceQuery extends BaseQueryImpl implements Query {
 		return _geoDistance;
 	}
 
+	public GeoValidationMethod getGeoValidationMethod() {
+		return _geoValidationMethod;
+	}
+
+	public Boolean getIgnoreUnmapped() {
+		return _ignoreUnmapped;
+	}
+
 	public GeoLocationPoint getPinGeoLocationPoint() {
 		return _pinGeoLocationPoint;
 	}
@@ -55,8 +64,20 @@ public class GeoDistanceQuery extends BaseQueryImpl implements Query {
 		return 100;
 	}
 
+	public void setGeoValidationMethod(
+		GeoValidationMethod geoValidationMethod) {
+
+		_geoValidationMethod = geoValidationMethod;
+	}
+
+	public void setIgnoreUnmapped(Boolean ignoreUnmapped) {
+		_ignoreUnmapped = ignoreUnmapped;
+	}
+
 	private final String _field;
 	private final GeoDistance _geoDistance;
+	private GeoValidationMethod _geoValidationMethod;
+	private Boolean _ignoreUnmapped;
 	private final GeoLocationPoint _pinGeoLocationPoint;
 
 }

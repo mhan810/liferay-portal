@@ -17,6 +17,7 @@ package com.liferay.portal.search.query;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
+import com.liferay.portal.search.query.geolocation.GeoValidationMethod;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -49,11 +50,31 @@ public class GeoPolygonQuery extends BaseQueryImpl implements Query {
 		return Collections.unmodifiableSet(_geoLocationPoints);
 	}
 
+	public GeoValidationMethod getGeoValidationMethod() {
+		return _geoValidationMethod;
+	}
+
+	public Boolean getIgnoreUnmapped() {
+		return _ignoreUnmapped;
+	}
+
 	public int getSortOrder() {
 		return 140;
 	}
 
+	public void setGeoValidationMethod(
+		GeoValidationMethod geoValidationMethod) {
+
+		_geoValidationMethod = geoValidationMethod;
+	}
+
+	public void setIgnoreUnmapped(Boolean ignoreUnmapped) {
+		_ignoreUnmapped = ignoreUnmapped;
+	}
+
 	private final String _field;
 	private final Set<GeoLocationPoint> _geoLocationPoints = new HashSet<>();
+	private GeoValidationMethod _geoValidationMethod;
+	private Boolean _ignoreUnmapped;
 
 }

@@ -34,6 +34,11 @@ public class DateRangeTermQuery extends RangeTermQuery {
 		super(field, includesLower, includesUpper, startDate, endDate);
 	}
 
+	@Override
+	public <T> T accept(QueryVisitor<T> queryVisitor) {
+		return queryVisitor.visit(this);
+	}
+
 	public String getDateFormat() {
 		return _dateFormat;
 	}

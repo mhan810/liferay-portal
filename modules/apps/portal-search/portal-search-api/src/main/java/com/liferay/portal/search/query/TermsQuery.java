@@ -49,10 +49,6 @@ public class TermsQuery extends BaseQueryImpl implements Query {
 		return _field;
 	}
 
-	public int getSortOrder() {
-		return 4;
-	}
-
 	public String[] getValues() {
 		return _values.toArray(new String[_values.size()]);
 	}

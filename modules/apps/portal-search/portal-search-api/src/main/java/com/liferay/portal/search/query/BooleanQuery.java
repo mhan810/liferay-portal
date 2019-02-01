@@ -75,8 +75,16 @@ public class BooleanQuery extends BaseQueryImpl implements Query {
 		return this;
 	}
 
+	public Boolean getAdjustPureNegative() {
+		return _adjustPureNegative;
+	}
+
 	public List<Query> getFilterQueryClauses() {
 		return Collections.unmodifiableList(_filterQueryClauses);
+	}
+
+	public Integer getMinimumShouldMatch() {
+		return _minimumShouldMatch;
 	}
 
 	public List<Query> getMustNotQueryClauses() {
@@ -89,6 +97,34 @@ public class BooleanQuery extends BaseQueryImpl implements Query {
 
 	public List<Query> getShouldQueryClauses() {
 		return Collections.unmodifiableList(_shouldQueryClauses);
+	}
+
+	public boolean hasClauses() {
+		if (!_filterQueryClauses.isEmpty()) {
+			return true;
+		}
+
+		if (!_mustQueryClauses.isEmpty()) {
+			return true;
+		}
+
+		if (!_mustNotQueryClauses.isEmpty()) {
+			return true;
+		}
+
+		if (!_shouldQueryClauses.isEmpty()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public void setAdjustPureNegative(Boolean adjustPureNegative) {
+		_adjustPureNegative = adjustPureNegative;
+	}
+
+	public void setMinimumShouldMatch(Integer minimumShouldMatch) {
+		_minimumShouldMatch = minimumShouldMatch;
 	}
 
 	@Override
@@ -114,7 +150,9 @@ public class BooleanQuery extends BaseQueryImpl implements Query {
 		return sb.toString();
 	}
 
+	private Boolean _adjustPureNegative;
 	private final List<Query> _filterQueryClauses = new ArrayList<>();
+	private Integer _minimumShouldMatch;
 	private final List<Query> _mustNotQueryClauses = new ArrayList<>();
 	private final List<Query> _mustQueryClauses = new ArrayList<>();
 	private final List<Query> _shouldQueryClauses = new ArrayList<>();

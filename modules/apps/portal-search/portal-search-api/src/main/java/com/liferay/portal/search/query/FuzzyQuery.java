@@ -54,6 +54,14 @@ public class FuzzyQuery extends BaseQueryImpl {
 		return _prefixLength;
 	}
 
+	public String getRewrite() {
+		return _rewrite;
+	}
+
+	public Boolean getTranspositions() {
+		return _transpositions;
+	}
+
 	public String getValue() {
 		return _value;
 	}
@@ -74,9 +82,17 @@ public class FuzzyQuery extends BaseQueryImpl {
 		_prefixLength = prefixLength;
 	}
 
+	public void setRewrite(String rewrite) {
+		_rewrite = rewrite;
+	}
+
+	public void setTranspositions(Boolean transpositions) {
+		_transpositions = transpositions;
+	}
+
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{className=");
 
@@ -94,6 +110,8 @@ public class FuzzyQuery extends BaseQueryImpl {
 		sb.append(_maxExpansions);
 		sb.append(", prefixLength=");
 		sb.append(_prefixLength);
+		sb.append(", transpositions=");
+		sb.append(_transpositions);
 		sb.append(", value=");
 		sb.append(_value);
 		sb.append("}");
@@ -106,6 +124,8 @@ public class FuzzyQuery extends BaseQueryImpl {
 	private Integer _maxEdits;
 	private Integer _maxExpansions;
 	private Integer _prefixLength;
+	private String _rewrite;
+	private Boolean _transpositions;
 	private final String _value;
 
 }

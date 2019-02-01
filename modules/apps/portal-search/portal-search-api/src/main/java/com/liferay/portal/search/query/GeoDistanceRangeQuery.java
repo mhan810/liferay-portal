@@ -18,6 +18,7 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.search.geolocation.GeoDistance;
 import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
+import com.liferay.portal.search.query.geolocation.ShapeRelation;
 
 /**
  * @author Michael C. Han
@@ -50,6 +51,10 @@ public class GeoDistanceRangeQuery extends RangeTermQuery {
 		return _pinGeoLocationPoint;
 	}
 
+	public ShapeRelation getShapeRelation() {
+		return _shapeRelation;
+	}
+
 	@Override
 	public int getSortOrder() {
 		return 110;
@@ -59,8 +64,13 @@ public class GeoDistanceRangeQuery extends RangeTermQuery {
 		return _upperBoundGeoDistance;
 	}
 
+	public void setShapeRelation(ShapeRelation shapeRelation) {
+		_shapeRelation = shapeRelation;
+	}
+
 	private final GeoDistance _lowerBoundGeoDistance;
 	private final GeoLocationPoint _pinGeoLocationPoint;
+	private ShapeRelation _shapeRelation;
 	private final GeoDistance _upperBoundGeoDistance;
 
 }
