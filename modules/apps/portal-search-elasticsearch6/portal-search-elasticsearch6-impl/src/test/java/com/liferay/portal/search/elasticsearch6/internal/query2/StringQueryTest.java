@@ -19,11 +19,35 @@ import com.liferay.portal.search.elasticsearch6.internal.connection.Elasticsearc
 import com.liferay.portal.search.test.util.indexing.BaseIndexingTestCase;
 import com.liferay.portal.search.test.util.indexing.IndexingFixture;
 import com.liferay.portal.search.test.util.query2.BaseStringQueryQueryTestCase;
+import org.junit.Test;
+
+import java.util.Arrays;
 
 /**
  * @author Michael C. Han
  */
 public class StringQueryTest extends BaseStringQueryQueryTestCase {
+
+	@Test
+	public void testBooleanOperatorNotDeepElasticsearch() throws Exception {
+		addDocuments("alpha bravo", "alpha charlie", "charlie delta");
+
+		assertSearch("+(NOT alpha) +charlie", Arrays.asList("charlie delta"));
+	}
+
+	@Test
+	public void testPrefixOperatorMustNotWithBooleanOperatorOrElasticsearch()
+		throws Exception {
+
+		addDocuments("alpha bravo", "alpha charlie", "charlie delta");
+
+		assertSearch(
+			"(-bravo) OR (alpha)",
+			Arrays.asList("alpha charlie", "charlie delta", "alpha bravo"));
+		assertSearch(
+			"(-bravo) OR alpha",
+			Arrays.asList("alpha charlie", "charlie delta", "alpha bravo"));
+	}
 
 	@Override
 	protected IndexingFixture createIndexingFixture() throws Exception {
