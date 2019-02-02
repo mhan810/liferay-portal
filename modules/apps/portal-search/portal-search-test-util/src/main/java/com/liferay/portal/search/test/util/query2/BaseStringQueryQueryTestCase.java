@@ -15,6 +15,8 @@
 package com.liferay.portal.search.test.util.query2;
 
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.search2.SearchSearchRequest;
@@ -24,9 +26,13 @@ import com.liferay.portal.search.hits.SearchHits;
 import com.liferay.portal.search.query.StringQuery;
 import com.liferay.portal.search.sort.FieldSort;
 import com.liferay.portal.search.sort.SortOrder;
+import com.liferay.portal.search.test.util.DocumentsAssert;
 import com.liferay.portal.search.test.util.indexing.BaseIndexingTestCase;
 import com.liferay.portal.search.test.util.indexing.DocumentCreationHelpers;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -37,6 +43,109 @@ import org.junit.Test;
  */
 public abstract class BaseStringQueryQueryTestCase
 	extends BaseIndexingTestCase {
+
+	@Test
+	public void testBooleanOperatorAnd() throws Exception {
+		addDocuments("java eclipse", "java liferay", "java liferay eclipse");
+
+		assertSearch(
+			"java AND eclipse",
+			Arrays.asList("java eclipse", "java liferay eclipse"));
+		assertSearch(
+			"eclipse AND liferay", Arrays.asList("java liferay eclipse"));
+	}
+
+	@Test
+	public void testBooleanOperatorAndWithNot() throws Exception {
+		addDocuments("alpha bravo", "alpha charlie", "charlie delta");
+
+		assertSearch("alpha AND NOT bravo", Arrays.asList("alpha charlie"));
+	}
+
+	@Test
+	public void testBooleanOperatorNot() throws Exception {
+		addDocuments("alpha bravo", "alpha charlie", "charlie delta");
+
+		assertSearch("NOT alpha", Arrays.asList("charlie delta"));
+		assertSearch(
+			"NOT bravo", Arrays.asList("alpha charlie", "charlie delta"));
+	}
+
+	@Test
+	public void testBooleanOperatorNotDeep() throws Exception {
+		addDocuments("alpha bravo", "alpha charlie", "charlie delta");
+
+		assertSearch(
+			"+(*:* NOT alpha) +charlie", Arrays.asList("charlie delta"));
+	}
+
+	@Test
+	public void testBooleanOperatorOr() throws Exception {
+		addDocuments("alpha bravo", "alpha charlie", "charlie delta");
+
+		assertSearch(
+			"alpha OR charlie",
+			Arrays.asList("alpha charlie", "alpha bravo", "charlie delta"));
+		assertSearch(
+			"alpha OR delta",
+			Arrays.asList("charlie delta", "alpha bravo", "alpha charlie"));
+		assertSearch(
+			"bravo OR delta", Arrays.asList("alpha bravo", "charlie delta"));
+	}
+
+	@Test
+	public void testBooleanOperatorOrWithNot() throws Exception {
+		addDocuments("alpha bravo", "alpha charlie", "charlie delta");
+
+		assertSearch("alpha OR NOT bravo", Arrays.asList("alpha charlie"));
+	}
+
+	@Test
+	public void testField() throws Exception {
+		addDocuments("java", "eclipse", "liferay");
+
+		assertSearch(
+			"title:(java OR eclipse)", Arrays.asList("java", "eclipse"));
+		assertSearch("description:(java OR eclipse)", Collections.emptyList());
+	}
+
+	@Test
+	public void testPrefixOperatorMust() throws Exception {
+		addDocuments("alpha bravo", "alpha charlie", "charlie delta");
+
+		assertSearch("+alpha", Arrays.asList("alpha bravo", "alpha charlie"));
+		assertSearch(
+			"+alpha bravo", Arrays.asList("alpha bravo", "alpha charlie"));
+		assertSearch("+alpha +bravo", Arrays.asList("alpha bravo"));
+		assertSearch(
+			"+alpha delta", Arrays.asList("alpha bravo", "alpha charlie"));
+		assertSearch("+alpha +delta", Arrays.asList());
+	}
+
+	@Test
+	public void testPrefixOperatorMustNot() throws Exception {
+		addDocuments("alpha bravo", "alpha charlie", "charlie delta");
+
+		assertSearch("-alpha", Arrays.asList("charlie delta"));
+		assertSearch("-alpha bravo", Arrays.asList());
+		assertSearch("-alpha -bravo", Arrays.asList("charlie delta"));
+		assertSearch("-alpha delta", Arrays.asList("charlie delta"));
+		assertSearch("-alpha -delta", Arrays.asList());
+	}
+
+	@Test
+	public void testPrefixOperatorMustNotWithBooleanOperatorOr()
+		throws Exception {
+
+		addDocuments("alpha bravo", "alpha charlie", "charlie delta");
+
+		assertSearch("(-bravo OR alpha)", Arrays.asList("alpha charlie"));
+		assertSearch("-(bravo OR alpha)", Arrays.asList("charlie delta"));
+		assertSearch("-(bravo) OR (alpha)", Arrays.asList("alpha charlie"));
+		assertSearch("-(bravo) OR alpha", Arrays.asList("alpha charlie"));
+		assertSearch("-bravo OR (alpha)", Arrays.asList("alpha charlie"));
+		assertSearch("-bravo OR alpha", Arrays.asList("alpha charlie"));
+	}
 
 	@Test
 	public void testStringQuery() {
@@ -100,5 +209,63 @@ public abstract class BaseStringQueryQueryTestCase
 					});
 			});
 	}
+
+	protected void addDocuments(String... values) throws Exception {
+		addDocuments(
+			value -> DocumentCreationHelpers.singleText(_FIELD_NAME, value),
+			Arrays.asList(values));
+	}
+
+	protected void assertSearch(
+		String queryString, List<String> expectedValues) {
+
+		assertSearch(
+			indexingTestHelper -> {
+				StringQuery stringQuery = new StringQuery(queryString);
+
+				stringQuery.setDefaultField(_FIELD_NAME);
+
+				SearchSearchRequest searchSearchRequest =
+					new SearchSearchRequest();
+
+				searchSearchRequest.setIndexNames("_all");
+				searchSearchRequest.setQuery(stringQuery);
+				searchSearchRequest.setSize(30);
+
+				SearchEngineAdapter searchEngineAdapter =
+					getSearchEngineAdapter();
+
+				SearchSearchResponse searchSearchResponse =
+					searchEngineAdapter.execute(searchSearchRequest);
+
+				SearchHits searchHits = searchSearchResponse.getSearchHits();
+
+				Assert.assertEquals(
+					"Total hits", expectedValues.size(),
+					searchHits.getTotalHits());
+
+				List<SearchHit> searchHitList = searchHits.getSearchHits();
+
+				Assert.assertEquals(
+					"Retrieved hits", expectedValues.size(),
+					searchHitList.size());
+
+				List<String> actualValues = new ArrayList<>();
+
+				searchHitList.forEach(
+					searchHit -> {
+						Document document = searchHit.getDocument();
+
+						actualValues.add(
+							(String)document.getFieldValue(_FIELD_NAME));
+					});
+
+				Assert.assertEquals(
+					"Retrieved hits ->" + actualValues,
+					expectedValues.toString(), actualValues.toString());
+			});
+	}
+
+	private static final String _FIELD_NAME = "title";
 
 }
