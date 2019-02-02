@@ -15,8 +15,6 @@
 package com.liferay.portal.search.test.util.query2;
 
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.Hits;
-import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.search2.SearchSearchRequest;
@@ -26,7 +24,6 @@ import com.liferay.portal.search.hits.SearchHits;
 import com.liferay.portal.search.query.StringQuery;
 import com.liferay.portal.search.sort.FieldSort;
 import com.liferay.portal.search.sort.SortOrder;
-import com.liferay.portal.search.test.util.DocumentsAssert;
 import com.liferay.portal.search.test.util.indexing.BaseIndexingTestCase;
 import com.liferay.portal.search.test.util.indexing.DocumentCreationHelpers;
 
@@ -41,8 +38,7 @@ import org.junit.Test;
 /**
  * @author Michael C. Han
  */
-public abstract class BaseStringQueryQueryTestCase
-	extends BaseIndexingTestCase {
+public abstract class BaseStringQueryTestCase extends BaseIndexingTestCase {
 
 	@Test
 	public void testBooleanOperatorAnd() throws Exception {

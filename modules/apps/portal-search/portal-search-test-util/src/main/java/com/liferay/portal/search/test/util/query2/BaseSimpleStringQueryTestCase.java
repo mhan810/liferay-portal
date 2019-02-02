@@ -35,7 +35,7 @@ import org.junit.Test;
 /**
  * @author Michael C. Han
  */
-public abstract class BaseSimpleStringQueryQueryTestCase
+public abstract class BaseSimpleStringQueryTestCase
 	extends BaseIndexingTestCase {
 
 	@Test
