@@ -18,15 +18,16 @@ import com.liferay.portal.search.elasticsearch6.internal.ElasticsearchIndexingFi
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.test.util.indexing.BaseIndexingTestCase;
 import com.liferay.portal.search.test.util.indexing.IndexingFixture;
-import com.liferay.portal.search.test.util.query2.BaseStringQueryQueryTestCase;
-import org.junit.Test;
+import com.liferay.portal.search.test.util.query2.BaseStringQueryTestCase;
 
 import java.util.Arrays;
+
+import org.junit.Test;
 
 /**
  * @author Michael C. Han
  */
-public class StringQueryTest extends BaseStringQueryQueryTestCase {
+public class StringQueryTest extends BaseStringQueryTestCase {
 
 	@Test
 	public void testBooleanOperatorNotDeepElasticsearch() throws Exception {

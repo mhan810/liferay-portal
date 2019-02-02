@@ -18,12 +18,12 @@ import com.liferay.portal.search.elasticsearch6.internal.ElasticsearchIndexingFi
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.test.util.indexing.BaseIndexingTestCase;
 import com.liferay.portal.search.test.util.indexing.IndexingFixture;
-import com.liferay.portal.search.test.util.query2.BaseSimpleStringQueryQueryTestCase;
+import com.liferay.portal.search.test.util.query2.BaseSimpleStringQueryTestCase;
 
 /**
  * @author Michael C. Han
  */
-public class SimpleStringQueryTest extends BaseSimpleStringQueryQueryTestCase {
+public class SimpleStringQueryTest extends BaseSimpleStringQueryTestCase {
 
 	@Override
 	protected IndexingFixture createIndexingFixture() throws Exception {
