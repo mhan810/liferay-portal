@@ -36,10 +36,24 @@ public class HighlightTranslator {
 		List<Highlight.FieldConfig> fieldConfigs = highlight.getFieldConfigs();
 
 		fieldConfigs.forEach(
-			fieldConfig -> highlightBuilder.field(
-				fieldConfig.getField(), fieldConfig.getFragmentSize(),
-				fieldConfig.getNumFragments(),
-				fieldConfig.getFragmentOffset()));
+			fieldConfig -> {
+				HighlightBuilder.Field field = new HighlightBuilder.Field(
+					fieldConfig.getField());
+
+				if (fieldConfig.getFragmentOffset() != null) {
+					field.fragmentOffset(fieldConfig.getFragmentOffset());
+				}
+
+				if (fieldConfig.getFragmentSize() != null) {
+					field.fragmentSize(fieldConfig.getFragmentSize());
+				}
+
+				if (fieldConfig.getNumFragments() != null) {
+					field.numOfFragments(fieldConfig.getNumFragments());
+				}
+
+				highlightBuilder.field(field);
+			});
 
 		if (highlight.getForceSource() != null) {
 			highlightBuilder.forceSource(highlight.getForceSource());
