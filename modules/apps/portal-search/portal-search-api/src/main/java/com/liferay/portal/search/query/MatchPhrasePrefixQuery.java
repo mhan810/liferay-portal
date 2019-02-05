@@ -22,7 +22,7 @@ import aQute.bnd.annotation.ProviderType;
 @ProviderType
 public class MatchPhrasePrefixQuery extends BaseQueryImpl implements Query {
 
-	public MatchPhrasePrefixQuery(String field, String value) {
+	public MatchPhrasePrefixQuery(String field, Object value) {
 		_field = field;
 		_value = value;
 	}
@@ -48,7 +48,7 @@ public class MatchPhrasePrefixQuery extends BaseQueryImpl implements Query {
 		return _slop;
 	}
 
-	public String getValue() {
+	public Object getValue() {
 		return _value;
 	}
 
@@ -68,6 +68,6 @@ public class MatchPhrasePrefixQuery extends BaseQueryImpl implements Query {
 	private final String _field;
 	private Integer _maxExpansions;
 	private Integer _slop;
-	private final String _value;
+	private final Object _value;
 
 }

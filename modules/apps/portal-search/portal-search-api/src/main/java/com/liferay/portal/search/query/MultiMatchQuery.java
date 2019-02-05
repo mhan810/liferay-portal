@@ -18,7 +18,6 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.petra.string.StringBundler;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,25 +30,21 @@ import java.util.Set;
 @ProviderType
 public class MultiMatchQuery extends BaseQueryImpl {
 
-	public MultiMatchQuery(Object value) {
+	public MultiMatchQuery(Object value, Set<String> fields) {
 		_value = value;
+
+		_fields.addAll(fields);
+	}
+
+	public MultiMatchQuery(Object value, String... fields) {
+		_value = value;
+
+		Collections.addAll(_fields, fields);
 	}
 
 	@Override
 	public <T> T accept(QueryVisitor<T> queryVisitor) {
 		return queryVisitor.visit(this);
-	}
-
-	public void addField(String field) {
-		_fields.add(field);
-	}
-
-	public void addFields(Collection<String> fields) {
-		_fields.addAll(fields);
-	}
-
-	public void addFields(String... fields) {
-		Collections.addAll(_fields, fields);
 	}
 
 	public String getAnalyzer() {

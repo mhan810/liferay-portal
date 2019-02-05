@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -31,8 +32,12 @@ import java.util.Set;
 @ProviderType
 public class MoreLikeThisQuery extends BaseQueryImpl {
 
-	public MoreLikeThisQuery(long companyId) {
-		_companyId = companyId;
+	public MoreLikeThisQuery(List<String> likeTexts) {
+		_likeTexts.addAll(likeTexts);
+	}
+
+	public MoreLikeThisQuery(String... likeTexts) {
+		Collections.addAll(_likeTexts, likeTexts);
 	}
 
 	@Override
@@ -40,28 +45,32 @@ public class MoreLikeThisQuery extends BaseQueryImpl {
 		return queryVisitor.visit(this);
 	}
 
-	public void addDocumentUID(String documentUID) {
-		_documentUIDs.add(documentUID);
+	public void addDocumentIdentifier(DocumentIdentifier documentIdentifier) {
+		_documentIdentifiers.add(documentIdentifier);
 	}
 
-	public void addDocumentUIDs(Collection<String> documentUIDs) {
-		_documentUIDs.addAll(documentUIDs);
+	public void addDocumentIdentifiers(
+		Collection<DocumentIdentifier> documentIdentifiers) {
+
+		_documentIdentifiers.addAll(documentIdentifiers);
 	}
 
-	public void addDocumentUIDs(String... documentUIDs) {
-		Collections.addAll(_documentUIDs, documentUIDs);
+	public void addDocumentIdentifiers(
+		DocumentIdentifier... documentIdentifiers) {
+
+		Collections.addAll(_documentIdentifiers, documentIdentifiers);
 	}
 
-	public void addField(String field) {
-		_fields.add(field);
+	public void addLikeText(String likeText) {
+		_likeTexts.add(likeText);
 	}
 
-	public void addFields(Collection<String> fields) {
-		_fields.addAll(fields);
+	public void addLikeTexts(Collection<String> likeTexts) {
+		_likeTexts.addAll(likeTexts);
 	}
 
-	public void addFields(String... fields) {
-		Collections.addAll(_fields, fields);
+	public void addLikeTexts(String... likeTexts) {
+		Collections.addAll(_likeTexts, likeTexts);
 	}
 
 	public void addStopWord(String stopWord) {
@@ -80,20 +89,12 @@ public class MoreLikeThisQuery extends BaseQueryImpl {
 		return _analyzer;
 	}
 
-	public long getCompanyId() {
-		return _companyId;
+	public Set<DocumentIdentifier> getDocumentIdentifiers() {
+		return Collections.unmodifiableSet(_documentIdentifiers);
 	}
 
-	public Set<String> getDocumentUIDs() {
-		return Collections.unmodifiableSet(_documentUIDs);
-	}
-
-	public List<String> getFields() {
-		return Collections.unmodifiableList(_fields);
-	}
-
-	public String getLikeText() {
-		return _likeText;
+	public List<String> getLikeTexts() {
+		return Collections.unmodifiableList(_likeTexts);
 	}
 
 	public Integer getMaxDocFrequency() {
@@ -137,11 +138,11 @@ public class MoreLikeThisQuery extends BaseQueryImpl {
 	}
 
 	public boolean isDocumentUIDsEmpty() {
-		return _documentUIDs.isEmpty();
+		return _documentIdentifiers.isEmpty();
 	}
 
 	public boolean isFieldsEmpty() {
-		return _fields.isEmpty();
+		return _likeTexts.isEmpty();
 	}
 
 	public Boolean isIncludeInput() {
@@ -154,10 +155,6 @@ public class MoreLikeThisQuery extends BaseQueryImpl {
 
 	public void setIncludeInput(Boolean includeInput) {
 		_includeInput = includeInput;
-	}
-
-	public void setLikeText(String likeText) {
-		_likeText = likeText;
 	}
 
 	public void setMaxDocFrequency(Integer maxDocFrequency) {
@@ -198,7 +195,7 @@ public class MoreLikeThisQuery extends BaseQueryImpl {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(35);
+		StringBundler sb = new StringBundler(33);
 
 		sb.append("{analyzer=");
 		sb.append(_analyzer);
@@ -208,16 +205,14 @@ public class MoreLikeThisQuery extends BaseQueryImpl {
 
 		sb.append(clazz.getSimpleName());
 
-		sb.append(", companyId=");
-		sb.append(_companyId);
-		sb.append(", documentUIDs=");
-		sb.append(_documentUIDs);
+		sb.append(", documentIdentifiers=");
+		sb.append(_documentIdentifiers);
 		sb.append(", fields=");
-		sb.append(_fields);
+		sb.append(_likeTexts);
 		sb.append(", includeInput=");
 		sb.append(_includeInput);
-		sb.append(", likeText=");
-		sb.append(_likeText);
+		sb.append(", likeTexts=");
+		sb.append(_likeTexts);
 		sb.append(", maxDocFrequency=");
 		sb.append(_maxDocFrequency);
 		sb.append(", maxQueryTerms=");
@@ -243,12 +238,91 @@ public class MoreLikeThisQuery extends BaseQueryImpl {
 		return sb.toString();
 	}
 
+	public class DocumentIdentifier {
+
+		public DocumentIdentifier(String index, String id) {
+			_index = index;
+			_id = id;
+			_type = null;
+		}
+
+		public DocumentIdentifier(String index, String type, String id) {
+			_index = index;
+			_type = type;
+			_id = id;
+		}
+
+		@Override
+		public boolean equals(Object object) {
+			if (this == object) {
+				return true;
+			}
+
+			if ((object == null) || (getClass() != object.getClass())) {
+				return false;
+			}
+
+			DocumentIdentifier documentIdentifier = (DocumentIdentifier)object;
+
+			if (Objects.equals(_index, documentIdentifier._index) &&
+				Objects.equals(_type, documentIdentifier._type) &&
+				Objects.equals(_id, documentIdentifier._id)) {
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public String getId() {
+			return _id;
+		}
+
+		public String getIndex() {
+			return _index;
+		}
+
+		public String getType() {
+			return _type;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(_index, _type, _id);
+		}
+
+		@Override
+		public String toString() {
+			StringBundler sb = new StringBundler(9);
+
+			sb.append("{className=");
+
+			Class<?> clazz = getClass();
+
+			sb.append(clazz.getSimpleName());
+
+			sb.append(", id=");
+			sb.append(_id);
+			sb.append(", index=");
+			sb.append(_index);
+			sb.append(", type=");
+			sb.append(_type);
+			sb.append("}");
+
+			return sb.toString();
+		}
+
+		private final String _id;
+		private final String _index;
+		private final String _type;
+
+	}
+
 	private String _analyzer;
-	private final long _companyId;
-	private final Set<String> _documentUIDs = new HashSet<>();
-	private final List<String> _fields = new ArrayList<>();
+	private final Set<DocumentIdentifier> _documentIdentifiers =
+		new HashSet<>();
 	private Boolean _includeInput;
-	private String _likeText;
+	private final List<String> _likeTexts = new ArrayList<>();
 	private Integer _maxDocFrequency;
 	private Integer _maxQueryTerms;
 	private Integer _maxWordLength;
