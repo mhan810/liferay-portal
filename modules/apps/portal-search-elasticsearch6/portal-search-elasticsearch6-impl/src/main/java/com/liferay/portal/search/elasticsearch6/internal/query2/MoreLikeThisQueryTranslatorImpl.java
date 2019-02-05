@@ -14,21 +14,21 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.query2;
 
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.search.elasticsearch6.internal.index.IndexNameBuilder;
 import com.liferay.portal.search.elasticsearch6.internal.util.DocumentTypes;
 import com.liferay.portal.search.query.MoreLikeThisQuery;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.elasticsearch.index.query.MoreLikeThisQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
@@ -39,35 +39,35 @@ public class MoreLikeThisQueryTranslatorImpl
 
 	@Override
 	public QueryBuilder translate(MoreLikeThisQuery moreLikeThisQuery) {
-		List<String> fields = moreLikeThisQuery.getFields();
-
-		List<String> likeTexts = new ArrayList<>();
-
-		likeTexts.addAll(fields);
-
 		List<MoreLikeThisQueryBuilder.Item> likeItems = new ArrayList<>();
 
-		if (moreLikeThisQuery.getDocumentUIDs() != null) {
-			String type = moreLikeThisQuery.getType();
+		if (!SetUtil.isEmpty(moreLikeThisQuery.getDocumentIdentifiers())) {
+			Set<MoreLikeThisQuery.DocumentIdentifier> documentIdentifiers =
+				moreLikeThisQuery.getDocumentIdentifiers();
 
-			if (Validator.isNotNull(type)) {
-				type = DocumentTypes.LIFERAY;
-			}
+			documentIdentifiers.forEach(
+				documentIdentifier -> {
+					String type = documentIdentifier.getType();
 
-			for (String documentUID : moreLikeThisQuery.getDocumentUIDs()) {
-				MoreLikeThisQueryBuilder.Item moreLikeThisQueryBuilderItem =
-					new MoreLikeThisQueryBuilder.Item(
-						_indexNameBuilder.getIndexName(
-							moreLikeThisQuery.getCompanyId()),
-						type, documentUID);
+					if (Validator.isNull(type)) {
+						type = moreLikeThisQuery.getType();
+					}
 
-				likeItems.add(moreLikeThisQueryBuilderItem);
-			}
+					if (Validator.isNull(type)) {
+						type = DocumentTypes.LIFERAY;
+					}
+
+					MoreLikeThisQueryBuilder.Item moreLikeThisQueryBuilderItem =
+						new MoreLikeThisQueryBuilder.Item(
+							documentIdentifier.getIndex(), type,
+							documentIdentifier.getId());
+
+					likeItems.add(moreLikeThisQueryBuilderItem);
+
+				});
 		}
 
-		if (Validator.isNotNull(moreLikeThisQuery.getLikeText())) {
-			likeTexts.add(moreLikeThisQuery.getLikeText());
-		}
+		List<String> likeTexts = moreLikeThisQuery.getLikeTexts();
 
 		MoreLikeThisQueryBuilder moreLikeThisQueryBuilder =
 			QueryBuilders.moreLikeThisQuery(
@@ -133,12 +133,5 @@ public class MoreLikeThisQueryTranslatorImpl
 
 		return moreLikeThisQueryBuilder;
 	}
-
-	@Reference(unbind = "-")
-	protected void setIndexNameBuilder(IndexNameBuilder indexNameBuilder) {
-		_indexNameBuilder = indexNameBuilder;
-	}
-
-	private IndexNameBuilder _indexNameBuilder;
 
 }

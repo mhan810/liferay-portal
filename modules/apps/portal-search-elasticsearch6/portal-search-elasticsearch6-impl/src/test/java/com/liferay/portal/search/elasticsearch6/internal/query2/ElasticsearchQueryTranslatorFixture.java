@@ -51,15 +51,8 @@ public class ElasticsearchQueryTranslatorFixture {
 				setMatchPhrasePrefixQueryTranslator(
 					new MatchPhrasePrefixQueryTranslatorImpl());
 				setMatchQueryTranslator(new MatchQueryTranslatorImpl());
-
 				setMoreLikeThisQueryTranslator(
-					new MoreLikeThisQueryTranslatorImpl() {
-						{
-							setIndexNameBuilder(
-								companyId -> "Test_" + companyId);
-						}
-					});
-
+					new MoreLikeThisQueryTranslatorImpl());
 				setMultiMatchQueryTranslator(
 					new MultiMatchQueryTranslatorImpl());
 				setNestedQueryTranslator(new NestedQueryTranslatorImpl());
