@@ -47,7 +47,7 @@ public class Highlight {
 		}
 	}
 
-	public void addostTags(String... postTags) {
+	public void addPostTags(String... postTags) {
 		Collections.addAll(_postTags, postTags);
 	}
 
