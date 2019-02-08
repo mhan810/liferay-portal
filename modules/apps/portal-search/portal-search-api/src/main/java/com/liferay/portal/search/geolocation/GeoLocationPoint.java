@@ -16,6 +16,8 @@ package com.liferay.portal.search.geolocation;
 
 import aQute.bnd.annotation.ProviderType;
 
+import java.util.Objects;
+
 /**
  * @author Michael C. Han
  */
@@ -25,29 +27,46 @@ public class GeoLocationPoint {
 	public GeoLocationPoint(double latitude, double longitude) {
 		_latitude = latitude;
 		_longitude = longitude;
+
+		_geoHash = null;
+	}
+
+	public GeoLocationPoint(String geoHash) {
+		_geoHash = geoHash;
+
+		_longitude = 0;
+		_latitude = 0;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof GeoLocationPoint)) {
+		if ((object == null) || (getClass() != object.getClass())) {
 			return false;
 		}
 
-		GeoLocationPoint geoLocationPoint = (GeoLocationPoint)obj;
+		final GeoLocationPoint geoLocationPoint = (GeoLocationPoint)object;
 
-		if (Double.compare(geoLocationPoint.getLatitude(), _latitude) != 0) {
+		if ((_latitude == 0) && (_longitude == 0)) {
+			return Objects.equals(geoLocationPoint.getGeoHash(), getGeoHash());
+		}
+
+		if (Double.compare(geoLocationPoint._latitude, _latitude) != 0) {
 			return false;
 		}
 
-		if (Double.compare(geoLocationPoint.getLongitude(), _longitude) != 0) {
+		if (Double.compare(geoLocationPoint._longitude, _longitude) != 0) {
 			return false;
 		}
 
 		return true;
+	}
+
+	public String getGeoHash() {
+		return _geoHash;
 	}
 
 	public double getLatitude() {
@@ -60,17 +79,10 @@ public class GeoLocationPoint {
 
 	@Override
 	public int hashCode() {
-		long value = Double.doubleToLongBits(_latitude);
-
-		int hashCode = (int)(value ^ (value >>> 32));
-
-		value = Double.doubleToLongBits(_longitude);
-
-		hashCode = 31 * hashCode + (int)(value ^ (value >>> 32));
-
-		return hashCode;
+		return Objects.hash(_latitude, _longitude, _geoHash);
 	}
 
+	private final String _geoHash;
 	private final double _latitude;
 	private final double _longitude;
 
