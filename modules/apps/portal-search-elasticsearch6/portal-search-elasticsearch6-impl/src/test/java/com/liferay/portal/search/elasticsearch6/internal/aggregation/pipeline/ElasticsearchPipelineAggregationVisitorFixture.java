@@ -16,6 +16,8 @@ package com.liferay.portal.search.elasticsearch6.internal.aggregation.pipeline;
 
 import com.liferay.portal.search.elasticsearch6.internal.query2.ElasticsearchQueryTranslatorFixture;
 import com.liferay.portal.search.elasticsearch6.internal.sort.ElasticsearchSortFieldTranslatorFixture;
+import com.liferay.portal.search.spi.aggregation.pipeline.CustomPipelineAggregationTranslatorContributorRegistry;
+import com.liferay.portal.search.test.util.aggregation.pipeline.TestCustomPipelineAggregationTranslatorContributorRegistry;
 
 /**
  * @author Michael C. Han
@@ -33,9 +35,26 @@ public class ElasticsearchPipelineAggregationVisitorFixture {
 					elasticsearchQueryTranslatorFixture.
 						getElasticsearchQueryTranslator());
 
+		CustomPipelineAggregationTranslatorContributorRegistry
+			customPipelineAggregationTranslatorContributorRegistry =
+				TestCustomPipelineAggregationTranslatorContributorRegistry.
+					getInstance();
+
 		_elasticsearchPipelineAggregationVisitor =
 			new ElasticsearchPipelineAggregationVisitor() {
 				{
+					CustomPipelineAggregationTranslator
+						customPipelineAggregationTranslator =
+							new CustomPipelineAggregationTranslatorImpl() {
+								{
+									setCustomPipelineAggregationTranslatorContributorRegistry(
+										customPipelineAggregationTranslatorContributorRegistry);
+								}
+							};
+
+					setCustomPipelineAggregationTranslator(
+						customPipelineAggregationTranslator);
+
 					setSortFieldTranslator(
 						elasticsearchSortFieldTranslatorFixture.
 							getElasticsearchQueryTranslator());

@@ -30,6 +30,7 @@ import com.liferay.portal.search.elasticsearch6.internal.aggregation.metrics.Wei
 import com.liferay.portal.search.elasticsearch6.internal.aggregation.pipeline.ElasticsearchPipelineAggregationVisitorFixture;
 import com.liferay.portal.search.elasticsearch6.internal.query2.ElasticsearchQueryTranslatorFixture;
 import com.liferay.portal.search.elasticsearch6.internal.sort.ElasticsearchSortFieldTranslatorFixture;
+import com.liferay.portal.search.test.util.aggregation.TestCustomAggregationTranslatorContributorRegistry;
 
 /**
  * @author Michael C. Han
@@ -54,6 +55,13 @@ public class ElasticsearchAggregationVisitorFixture {
 		_elasticsearchAggregationVisitor =
 			new ElasticsearchAggregationVisitor() {
 				{
+					setCustomAggregationTranslator(
+						new CustomAggregationTranslatorImpl() {
+							{
+								setCustomAggregationTranslatorContributorRegistry(
+									TestCustomAggregationTranslatorContributorRegistry.getInstance());
+							}
+						});
 					setDateHistogramAggregationTranslator(
 						new DateHistogramAggregationTranslatorImpl());
 					setDateRangeAggregationTranslator(

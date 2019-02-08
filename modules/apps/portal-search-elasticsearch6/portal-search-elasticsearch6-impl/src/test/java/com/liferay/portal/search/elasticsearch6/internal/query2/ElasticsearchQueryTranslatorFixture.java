@@ -14,6 +14,8 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.query2;
 
+import com.liferay.portal.search.test.util.query2.TestCustomQueryTranslatorContributorRegistry;
+
 /**
  * @author Michael C. Han
  */
@@ -28,6 +30,14 @@ public class ElasticsearchQueryTranslatorFixture {
 					new CommonTermsQueryTranslatorImpl());
 				setConstantScoreQueryTranslator(
 					new ConstantScoreQueryTranslatorImpl());
+				setCustomQueryTranslator(
+					new CustomQueryTranslatorImpl() {
+						{
+							setCustomQueryTranslatorContributorRegistry(
+								TestCustomQueryTranslatorContributorRegistry.
+									getInstance());
+						}
+					});
 				setDateRangeTermQueryTranslator(
 					new DateRangeTermQueryTranslatorImpl());
 				setDisMaxQueryTranslator(new DisMaxQueryTranslatorImpl());

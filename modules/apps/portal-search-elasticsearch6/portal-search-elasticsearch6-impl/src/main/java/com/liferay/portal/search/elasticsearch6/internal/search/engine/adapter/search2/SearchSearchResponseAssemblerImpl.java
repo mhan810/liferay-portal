@@ -20,7 +20,9 @@ import com.liferay.portal.search.aggregation.AggregationResult;
 import com.liferay.portal.search.aggregation.AggregationResultTranslator;
 import com.liferay.portal.search.aggregation.pipeline.PipelineAggregation;
 import com.liferay.portal.search.aggregation.pipeline.PipelineAggregationResultTranslator;
+import com.liferay.portal.search.elasticsearch6.internal.aggregation.CustomAggregationResultTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.aggregation.ElasticsearchAggregationResultTranslator;
+import com.liferay.portal.search.elasticsearch6.internal.aggregation.pipeline.CustomPipelineAggregationResultTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.aggregation.pipeline.ElasticsearchPipelineAggregationResultTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.hits.SearchHitsTranslator;
 import com.liferay.portal.search.engine.adapter.search2.SearchSearchRequest;
@@ -33,7 +35,9 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.aggregations.Aggregations;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
@@ -113,18 +117,48 @@ public class SearchSearchResponseAssemblerImpl
 		}
 	}
 
-	private final AggregationResultTranslator
+	@Reference(unbind = "-")
+	public void setCustomPipelineAggregationResultTranslator(
+		CustomPipelineAggregationResultTranslator
+			customPipelineAggregationResultTranslator) {
+
+		_customPipelineAggregationResultTranslator =
+			customPipelineAggregationResultTranslator;
+	}
+
+	@Activate
+	protected void activate() {
+		_pipelineAggregationResultTranslator =
+			new ElasticsearchPipelineAggregationResultTranslator(
+				_customPipelineAggregationResultTranslator);
+
+		_aggregationResultTranslator =
+			new ElasticsearchAggregationResultTranslator(
+				_customAggregationResultTranslator,
+				_pipelineAggregationResultTranslator);
+	}
+
+	@Reference(unbind = "-")
+	protected void setCustomAggregationResultTranslator(
+		CustomAggregationResultTranslator customAggregationResultTranslator) {
+
+		_customAggregationResultTranslator = customAggregationResultTranslator;
+	}
+
+	private AggregationResultTranslator
 		<? extends AggregationResult,
 		 org.elasticsearch.search.aggregations.Aggregation>
-			_aggregationResultTranslator =
-				new ElasticsearchAggregationResultTranslator();
+			_aggregationResultTranslator;
 	private final CommonSearchResponseAssembler _commonSearchResponseAssembler =
 		new CommonSearchResponseAssemblerImpl();
-	private final PipelineAggregationResultTranslator
+	private CustomAggregationResultTranslator
+		_customAggregationResultTranslator;
+	private CustomPipelineAggregationResultTranslator
+		_customPipelineAggregationResultTranslator;
+	private PipelineAggregationResultTranslator
 		<? extends AggregationResult,
 		 org.elasticsearch.search.aggregations.Aggregation>
-			_pipelineAggregationResultTranslator =
-				new ElasticsearchPipelineAggregationResultTranslator();
+			_pipelineAggregationResultTranslator;
 	private final SearchHitsTranslator _searchHitsTranslator =
 		new SearchHitsTranslator();
 
