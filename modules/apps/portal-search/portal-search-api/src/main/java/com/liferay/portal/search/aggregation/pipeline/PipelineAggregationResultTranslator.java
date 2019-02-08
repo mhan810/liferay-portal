@@ -37,6 +37,10 @@ public interface PipelineAggregationResultTranslator
 		T aggregationResult);
 
 	public S translate(
+		CustomPipelineAggregation customPipelineAggregation,
+		T aggregationResult);
+
+	public S translate(
 		DerivativePipelineAggregation derivativePipelineAggregation,
 		T aggregationResult);
 

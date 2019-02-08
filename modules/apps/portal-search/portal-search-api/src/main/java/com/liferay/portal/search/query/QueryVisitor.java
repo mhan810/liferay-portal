@@ -31,6 +31,8 @@ public interface QueryVisitor<T> {
 
 	public T visit(ConstantScoreQuery constantScoreQuery);
 
+	public T visit(CustomQuery customQuery);
+
 	public T visit(DateRangeTermQuery dateRangeTermQuery);
 
 	public T visit(DisMaxQuery disMaxQuery);

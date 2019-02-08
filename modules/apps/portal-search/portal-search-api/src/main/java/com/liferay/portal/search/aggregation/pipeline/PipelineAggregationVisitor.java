@@ -35,6 +35,8 @@ public interface PipelineAggregationVisitor<T> {
 	public T visit(
 		CumulativeSumPipelineAggregation cumulativeSumPipelineAggregation);
 
+	public T visit(CustomPipelineAggregation customPipelineAggregation);
+
 	public T visit(DerivativePipelineAggregation derivativePipelineAggregation);
 
 	public T visit(

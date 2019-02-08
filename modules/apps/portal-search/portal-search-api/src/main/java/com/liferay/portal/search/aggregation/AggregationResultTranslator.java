@@ -64,6 +64,9 @@ public interface AggregationResultTranslator<S extends AggregationResult, T> {
 		ChildrenAggregation childrenAggregation, T aggregationResult);
 
 	public S translate(
+		CustomAggregation customAggregation, T aggregationResult);
+
+	public S translate(
 		DateHistogramAggregation dateHistogramAggregation, T aggregationResult);
 
 	public S translate(

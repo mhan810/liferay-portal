@@ -62,6 +62,8 @@ public interface AggregationVisitor<T> {
 
 	public T visit(ChildrenAggregation childrenAggregation);
 
+	public T visit(CustomAggregation customAggregation);
+
 	public T visit(DateHistogramAggregation dateHistogramAggregation);
 
 	public T visit(DateRangeAggregation dateRangeAggregation);
