@@ -18,6 +18,7 @@ import com.liferay.portal.search.query.BooleanQuery;
 import com.liferay.portal.search.query.BoostingQuery;
 import com.liferay.portal.search.query.CommonTermsQuery;
 import com.liferay.portal.search.query.ConstantScoreQuery;
+import com.liferay.portal.search.query.CustomQuery;
 import com.liferay.portal.search.query.DateRangeTermQuery;
 import com.liferay.portal.search.query.DisMaxQuery;
 import com.liferay.portal.search.query.ExistsQuery;
@@ -67,13 +68,6 @@ import org.osgi.service.component.annotations.Reference;
 public class ElasticsearchQueryTranslator
 	implements QueryTranslator<QueryBuilder>, QueryVisitor<QueryBuilder> {
 
-	@Reference(unbind = "-")
-	public void setPercolateQueryTranslator(
-		PercolateQueryTranslator percolateQueryTranslator) {
-
-		_percolateQueryTranslator = percolateQueryTranslator;
-	}
-
 	@Override
 	public QueryBuilder translate(Query query) {
 		QueryBuilder queryBuilder = query.accept(this);
@@ -108,6 +102,11 @@ public class ElasticsearchQueryTranslator
 	public QueryBuilder visit(ConstantScoreQuery constantScoreQuery) {
 		return _constantScoreQueryTranslator.translate(
 			constantScoreQuery, this);
+	}
+
+	@Override
+	public QueryBuilder visit(CustomQuery customQuery) {
+		return _customQueryTranslator.translate(customQuery, this);
 	}
 
 	@Override
@@ -287,6 +286,13 @@ public class ElasticsearchQueryTranslator
 	}
 
 	@Reference(unbind = "-")
+	protected void setCustomQueryTranslator(
+		CustomQueryTranslator customQueryTranslator) {
+
+		_customQueryTranslator = customQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
 	protected void setDateRangeTermQueryTranslator(
 		DateRangeTermQueryTranslator dateRangeTermQueryTranslator) {
 
@@ -413,6 +419,13 @@ public class ElasticsearchQueryTranslator
 	}
 
 	@Reference(unbind = "-")
+	protected void setPercolateQueryTranslator(
+		PercolateQueryTranslator percolateQueryTranslator) {
+
+		_percolateQueryTranslator = percolateQueryTranslator;
+	}
+
+	@Reference(unbind = "-")
 	protected void setPrefixQueryTranslator(
 		PrefixQueryTranslator prefixQueryTranslator) {
 
@@ -486,6 +499,7 @@ public class ElasticsearchQueryTranslator
 	private BoostingQueryTranslator _boostingQueryTranslator;
 	private CommonTermsQueryTranslator _commonTermsQueryTranslator;
 	private ConstantScoreQueryTranslator _constantScoreQueryTranslator;
+	private CustomQueryTranslator _customQueryTranslator;
 	private DateRangeTermQueryTranslator _dateRangeTermQueryTranslator;
 	private DisMaxQueryTranslator _disMaxQueryTranslator;
 	private ExistsQueryTranslator _existsQueryTranslator;

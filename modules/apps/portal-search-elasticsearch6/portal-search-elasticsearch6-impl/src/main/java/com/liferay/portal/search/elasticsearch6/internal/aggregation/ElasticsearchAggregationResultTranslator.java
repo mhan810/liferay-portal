@@ -16,6 +16,7 @@ package com.liferay.portal.search.elasticsearch6.internal.aggregation;
 
 import com.liferay.portal.search.aggregation.AggregationResult;
 import com.liferay.portal.search.aggregation.AggregationResultTranslator;
+import com.liferay.portal.search.aggregation.CustomAggregation;
 import com.liferay.portal.search.aggregation.bucket.BaseBucketAggregationResult;
 import com.liferay.portal.search.aggregation.bucket.Bucket;
 import com.liferay.portal.search.aggregation.bucket.ChildrenAggregation;
@@ -83,7 +84,7 @@ import com.liferay.portal.search.aggregation.metrics.WeightedAvgAggregation;
 import com.liferay.portal.search.aggregation.metrics.WeightedAvgAggregationResult;
 import com.liferay.portal.search.aggregation.pipeline.PercentilesBucketPipelineAggregationResult;
 import com.liferay.portal.search.aggregation.pipeline.PipelineAggregation;
-import com.liferay.portal.search.elasticsearch6.internal.aggregation.pipeline.ElasticsearchPipelineAggregationResultTranslator;
+import com.liferay.portal.search.aggregation.pipeline.PipelineAggregationResultTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.hits.SearchHitsTranslator;
 import com.liferay.portal.search.geolocation.GeoLocationPoint;
 
@@ -130,6 +131,16 @@ import org.elasticsearch.search.aggregations.metrics.weighted_avg.WeightedAvg;
 public class ElasticsearchAggregationResultTranslator
 	implements AggregationResultTranslator<AggregationResult, Aggregation> {
 
+	public ElasticsearchAggregationResultTranslator(
+		CustomAggregationResultTranslator customAggregationResultTranslator,
+		PipelineAggregationResultTranslator
+			pipelineAggregationResultTranslator) {
+
+		_customAggregationResultTranslator = customAggregationResultTranslator;
+		_pipelineAggregationResultTranslator =
+			pipelineAggregationResultTranslator;
+	}
+
 	@Override
 	public AggregationResult translate(
 		AvgAggregation avgAggregation, Aggregation aggregationResult) {
@@ -169,6 +180,15 @@ public class ElasticsearchAggregationResultTranslator
 			subaggregationResults);
 
 		return childrenAggregationResult;
+	}
+
+	@Override
+	public AggregationResult translate(
+		CustomAggregation customAggregation, Aggregation aggregationResult) {
+
+		return _customAggregationResultTranslator.translate(
+			customAggregation, aggregationResult, this,
+			_pipelineAggregationResultTranslator);
 	}
 
 	@Override
@@ -666,7 +686,7 @@ public class ElasticsearchAggregationResultTranslator
 				if (elasticsearchAggregation != null) {
 					AggregationResult aggregationResult =
 						pipelineAggregationRequest.accept(
-							_elasticsearchPipelineAggregationResultTranslator,
+							_pipelineAggregationResultTranslator,
 							elasticsearchAggregation);
 
 					aggregationResults.add(aggregationResult);
@@ -676,9 +696,10 @@ public class ElasticsearchAggregationResultTranslator
 		return aggregationResults;
 	}
 
-	private final ElasticsearchPipelineAggregationResultTranslator
-		_elasticsearchPipelineAggregationResultTranslator =
-			new ElasticsearchPipelineAggregationResultTranslator();
+	private final CustomAggregationResultTranslator
+		_customAggregationResultTranslator;
+	private final PipelineAggregationResultTranslator
+		_pipelineAggregationResultTranslator;
 	private final SearchHitsTranslator _searchHitsTranslator =
 		new SearchHitsTranslator();
 

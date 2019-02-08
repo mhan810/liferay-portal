@@ -21,6 +21,7 @@ import com.liferay.portal.search.aggregation.pipeline.BucketScriptPipelineAggreg
 import com.liferay.portal.search.aggregation.pipeline.BucketScriptPipelineAggregationResult;
 import com.liferay.portal.search.aggregation.pipeline.CumulativeSumPipelineAggregation;
 import com.liferay.portal.search.aggregation.pipeline.CumulativeSumPipelineAggregationResult;
+import com.liferay.portal.search.aggregation.pipeline.CustomPipelineAggregation;
 import com.liferay.portal.search.aggregation.pipeline.DerivativePipelineAggregation;
 import com.liferay.portal.search.aggregation.pipeline.DerivativePipelineAggregationResult;
 import com.liferay.portal.search.aggregation.pipeline.ExtendedStatsBucketPipelineAggregation;
@@ -56,6 +57,14 @@ public class ElasticsearchPipelineAggregationResultTranslator
 	implements PipelineAggregationResultTranslator
 		<AggregationResult, Aggregation> {
 
+	public ElasticsearchPipelineAggregationResultTranslator(
+		CustomPipelineAggregationResultTranslator
+			customPipelineAggregationResultTranslator) {
+
+		_customPipelineAggregationResultTranslator =
+			customPipelineAggregationResultTranslator;
+	}
+
 	@Override
 	public AggregationResult translate(
 		AvgBucketPipelineAggregation avgAggregation, Aggregation aggregation) {
@@ -89,6 +98,15 @@ public class ElasticsearchPipelineAggregationResultTranslator
 
 		return new CumulativeSumPipelineAggregationResult(
 			simpleValue.getName(), simpleValue.value());
+	}
+
+	@Override
+	public AggregationResult translate(
+		CustomPipelineAggregation customPipelineAggregation,
+		Aggregation aggregationResult) {
+
+		return _customPipelineAggregationResultTranslator.translate(
+			customPipelineAggregation, aggregationResult, this);
 	}
 
 	@Override
@@ -224,5 +242,8 @@ public class ElasticsearchPipelineAggregationResultTranslator
 
 		return sumBucketPipelineAggregationResult;
 	}
+
+	private final CustomPipelineAggregationResultTranslator
+		_customPipelineAggregationResultTranslator;
 
 }

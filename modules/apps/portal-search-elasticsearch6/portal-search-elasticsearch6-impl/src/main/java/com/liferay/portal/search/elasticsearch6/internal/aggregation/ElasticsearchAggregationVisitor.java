@@ -17,6 +17,7 @@ package com.liferay.portal.search.elasticsearch6.internal.aggregation;
 import com.liferay.portal.search.aggregation.Aggregation;
 import com.liferay.portal.search.aggregation.AggregationTranslator;
 import com.liferay.portal.search.aggregation.AggregationVisitor;
+import com.liferay.portal.search.aggregation.CustomAggregation;
 import com.liferay.portal.search.aggregation.bucket.ChildrenAggregation;
 import com.liferay.portal.search.aggregation.bucket.DateHistogramAggregation;
 import com.liferay.portal.search.aggregation.bucket.DateRangeAggregation;
@@ -136,6 +137,12 @@ public class ElasticsearchAggregationVisitor
 					baseMetricsAggregation.getName(),
 					childrenAggregation.getChildType()),
 			childrenAggregation, this, _pipelineAggregationTranslator);
+	}
+
+	@Override
+	public AggregationBuilder visit(CustomAggregation customAggregation) {
+		return _customAggregationTranslator.translate(
+			customAggregation, this, _pipelineAggregationTranslator);
 	}
 
 	@Override
@@ -530,6 +537,13 @@ public class ElasticsearchAggregationVisitor
 	}
 
 	@Reference(unbind = "-")
+	protected void setCustomAggregationTranslator(
+		CustomAggregationTranslator customAggregationTranslator) {
+
+		_customAggregationTranslator = customAggregationTranslator;
+	}
+
+	@Reference(unbind = "-")
 	protected void setDateHistogramAggregationTranslator(
 		DateHistogramAggregationTranslator dateHistogramAggregationTranslator) {
 
@@ -639,6 +653,7 @@ public class ElasticsearchAggregationVisitor
 		new BaseAggregationTranslator();
 	private final BaseFieldAggregationTranslator
 		_baseFieldAggregationTranslator = new BaseFieldAggregationTranslator();
+	private CustomAggregationTranslator _customAggregationTranslator;
 	private DateHistogramAggregationTranslator
 		_dateHistogramAggregationTranslator;
 	private DateRangeAggregationTranslator _dateRangeAggregationTranslator;

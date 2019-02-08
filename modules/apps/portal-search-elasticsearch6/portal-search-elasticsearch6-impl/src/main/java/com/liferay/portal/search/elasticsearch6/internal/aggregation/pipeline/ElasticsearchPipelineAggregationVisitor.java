@@ -20,6 +20,7 @@ import com.liferay.portal.search.aggregation.pipeline.BucketScriptPipelineAggreg
 import com.liferay.portal.search.aggregation.pipeline.BucketSelectorPipelineAggregation;
 import com.liferay.portal.search.aggregation.pipeline.BucketSortPipelineAggregation;
 import com.liferay.portal.search.aggregation.pipeline.CumulativeSumPipelineAggregation;
+import com.liferay.portal.search.aggregation.pipeline.CustomPipelineAggregation;
 import com.liferay.portal.search.aggregation.pipeline.DerivativePipelineAggregation;
 import com.liferay.portal.search.aggregation.pipeline.ExtendedStatsBucketPipelineAggregation;
 import com.liferay.portal.search.aggregation.pipeline.MaxBucketPipelineAggregation;
@@ -186,6 +187,14 @@ public class ElasticsearchPipelineAggregationVisitor
 		}
 
 		return cumulativeSumPipelineAggregationBuilder;
+	}
+
+	@Override
+	public PipelineAggregationBuilder visit(
+		CustomPipelineAggregation customPipelineAggregation) {
+
+		return _customPipelineAggregationTranslator.translate(
+			customPipelineAggregation, this);
 	}
 
 	@Override
@@ -366,6 +375,15 @@ public class ElasticsearchPipelineAggregationVisitor
 			sumBucketPipelineAggregation);
 	}
 
+	@Reference(unbind = "-")
+	protected void setCustomPipelineAggregationTranslator(
+		CustomPipelineAggregationTranslator
+			customPipelineAggregationTranslator) {
+
+		_customPipelineAggregationTranslator =
+			customPipelineAggregationTranslator;
+	}
+
 	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
 	protected void setSortFieldTranslator(
 		SortFieldTranslator sortFieldTranslator) {
@@ -376,6 +394,8 @@ public class ElasticsearchPipelineAggregationVisitor
 	private final BucketMetricsPipelineAggregationTranslator
 		_bucketMetricsPipelineAggregationTranslator =
 			new BucketMetricsPipelineAggregationTranslator();
+	private CustomPipelineAggregationTranslator
+		_customPipelineAggregationTranslator;
 	private final GapPolicyTranslator _gapPolicyTranslator =
 		new GapPolicyTranslator();
 	private final ScriptTranslator _scriptTranslator = new ScriptTranslator();
