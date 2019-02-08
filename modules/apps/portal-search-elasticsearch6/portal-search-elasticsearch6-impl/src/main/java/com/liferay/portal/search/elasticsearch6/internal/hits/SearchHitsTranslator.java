@@ -14,12 +14,12 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.hits;
 
-import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.document.Field;
+import com.liferay.portal.search.geolocation.GeoLocationPoint;
 import com.liferay.portal.search.highlight.HighlightField;
 import com.liferay.portal.search.hits.SearchHit;
 import com.liferay.portal.search.hits.SearchHits;
@@ -73,10 +73,16 @@ public class SearchHitsTranslator {
 						String[] values = StringUtil.split(
 							documentField.getValue());
 
-						GeoLocationPoint geoLocationPoint =
-							new GeoLocationPoint(
+						GeoLocationPoint geoLocationPoint = null;
+
+						if (values.length == 2) {
+							geoLocationPoint = new GeoLocationPoint(
 								Double.valueOf(values[0]),
 								Double.valueOf(values[1]));
+						}
+						else {
+							geoLocationPoint = new GeoLocationPoint(values[0]);
+						}
 
 						field.addValue(geoLocationPoint);
 					}
