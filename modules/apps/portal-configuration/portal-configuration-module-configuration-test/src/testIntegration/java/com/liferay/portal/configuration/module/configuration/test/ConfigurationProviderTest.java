@@ -20,7 +20,7 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
-import com.liferay.portal.configuration.metatype.util.ConfigurationScopedPidUtil;
+import com.liferay.portal.configuration.test.util.ConfigurationTestUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
@@ -28,6 +28,7 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -78,57 +79,46 @@ public class ConfigurationProviderTest {
 	public void testDeleteCompanyConfiguration() throws Exception {
 		long companyId = RandomTestUtil.randomLong();
 
-		String scopedPid =
-			ConfigurationScopedPidUtil.buildConfigurationScopedPid(
-				_PID, ExtendedObjectClassDefinition.Scope.COMPANY,
-				String.valueOf(companyId));
+		_createFactoryConfiguration(
+			_PID, ExtendedObjectClassDefinition.Scope.COMPANY, companyId);
 
-		_createConfiguration(scopedPid);
-
-		Assert.assertEquals(1, _getExistingConfigurationCount(scopedPid));
+		Assert.assertEquals(1, _getExistingFactoryConfigurationsCount(_PID));
 
 		_configurationProvider.deleteCompanyConfiguration(
 			TestConfiguration.class, companyId);
 
-		Assert.assertEquals(0, _getExistingConfigurationCount(scopedPid));
+		Assert.assertEquals(0, _getExistingConfigurationCount(_PID));
 	}
 
 	@Test
 	public void testDeleteGroupConfiguration() throws Exception {
 		long groupId = RandomTestUtil.randomLong();
 
-		String scopedPid =
-			ConfigurationScopedPidUtil.buildConfigurationScopedPid(
-				_PID, ExtendedObjectClassDefinition.Scope.GROUP,
-				String.valueOf(groupId));
+		_createFactoryConfiguration(
+			_PID, ExtendedObjectClassDefinition.Scope.GROUP, groupId);
 
-		_createConfiguration(scopedPid);
-
-		Assert.assertEquals(1, _getExistingConfigurationCount(scopedPid));
+		Assert.assertEquals(1, _getExistingFactoryConfigurationsCount(_PID));
 
 		_configurationProvider.deleteGroupConfiguration(
 			TestConfiguration.class, groupId);
 
-		Assert.assertEquals(0, _getExistingConfigurationCount(scopedPid));
+		Assert.assertEquals(0, _getExistingFactoryConfigurationsCount(_PID));
 	}
 
 	@Test
 	public void testDeletePortletInstanceConfiguration() throws Exception {
 		String portletInstanceId = RandomTestUtil.randomString();
 
-		String scopedPid =
-			ConfigurationScopedPidUtil.buildConfigurationScopedPid(
-				_PID, ExtendedObjectClassDefinition.Scope.PORTLET_INSTANCE,
-				portletInstanceId);
+		_createFactoryConfiguration(
+			_PID, ExtendedObjectClassDefinition.Scope.PORTLET_INSTANCE,
+			portletInstanceId);
 
-		_createConfiguration(scopedPid);
-
-		Assert.assertEquals(1, _getExistingConfigurationCount(scopedPid));
+		Assert.assertEquals(1, _getExistingFactoryConfigurationsCount(_PID));
 
 		_configurationProvider.deletePortletInstanceConfiguration(
 			TestConfiguration.class, portletInstanceId);
 
-		Assert.assertEquals(0, _getExistingConfigurationCount(scopedPid));
+		Assert.assertEquals(0, _getExistingFactoryConfigurationsCount(_PID));
 	}
 
 	@Test
@@ -153,12 +143,7 @@ public class ConfigurationProviderTest {
 		_configurationProvider.saveCompanyConfiguration(
 			TestConfiguration.class, companyId, _properties);
 
-		String scopedPid =
-			ConfigurationScopedPidUtil.buildConfigurationScopedPid(
-				_PID, ExtendedObjectClassDefinition.Scope.COMPANY,
-				String.valueOf(companyId));
-
-		_configuration = _getConfiguration(scopedPid, StringPool.QUESTION);
+		_configuration = _getFactoryConfiguration(_PID);
 
 		assertPropertyValues(_properties, _configuration.getProperties());
 	}
@@ -173,12 +158,7 @@ public class ConfigurationProviderTest {
 		_configurationProvider.saveGroupConfiguration(
 			TestConfiguration.class, groupId, _properties);
 
-		String scopedPid =
-			ConfigurationScopedPidUtil.buildConfigurationScopedPid(
-				_PID, ExtendedObjectClassDefinition.Scope.GROUP,
-				String.valueOf(groupId));
-
-		_configuration = _getConfiguration(scopedPid, StringPool.QUESTION);
+		_configuration = _getFactoryConfiguration(_PID);
 
 		assertPropertyValues(_properties, _configuration.getProperties());
 	}
@@ -193,12 +173,7 @@ public class ConfigurationProviderTest {
 		_configurationProvider.savePortletInstanceConfiguration(
 			TestConfiguration.class, portletInstanceId, _properties);
 
-		String scopedPid =
-			ConfigurationScopedPidUtil.buildConfigurationScopedPid(
-				_PID, ExtendedObjectClassDefinition.Scope.PORTLET_INSTANCE,
-				portletInstanceId);
-
-		_configuration = _getConfiguration(scopedPid, StringPool.QUESTION);
+		_configuration = _getFactoryConfiguration(_PID);
 
 		assertPropertyValues(_properties, _configuration.getProperties());
 	}
@@ -211,24 +186,41 @@ public class ConfigurationProviderTest {
 		_configurationProvider.saveSystemConfiguration(
 			TestConfiguration.class, _properties);
 
-		_configuration = _getConfiguration(_PID, StringPool.QUESTION);
+		_configuration = _getConfiguration(_PID);
 
 		assertPropertyValues(_properties, _configuration.getProperties());
 	}
 
-	private int _getExistingConfigurationCount(String pid) throws Exception {
-		String pidFilter = StringBundler.concat(
-			StringPool.OPEN_PARENTHESIS, Constants.SERVICE_PID,
-			StringPool.EQUAL, pid, StringPool.CLOSE_PARENTHESIS);
+	private int _getExistingConfigurationCount(String pid, String propertyName)
+		throws Exception {
 
-		Configuration[] configurations = _configurationAdmin.listConfigurations(
-			pidFilter);
+		Configuration[] configurations = _getConfigurations(pid, propertyName);
 
 		if (configurations == null) {
 			return 0;
 		}
 
 		return configurations.length;
+	}
+
+	private Configuration[] _getConfigurations(String pid, String propertyName)
+		throws Exception {
+
+		String pidFilter = StringBundler.concat(
+			StringPool.OPEN_PARENTHESIS, propertyName, StringPool.EQUAL, pid,
+			StringPool.CLOSE_PARENTHESIS);
+
+		return _configurationAdmin.listConfigurations(pidFilter);
+	}
+
+	private int _getExistingConfigurationCount(String pid) throws Exception {
+		return _getExistingConfigurationCount(pid, Constants.SERVICE_PID);
+	}
+
+	private int _getExistingFactoryConfigurationsCount(String pid)
+		throws Exception {
+
+		return _getExistingConfigurationCount(pid, "service.factoryPid");
 	}
 
 	protected void assertPropertyValues(
@@ -245,20 +237,44 @@ public class ConfigurationProviderTest {
 		}
 	}
 
-	private Configuration _getConfiguration(String pid, String location)
-		throws IOException {
+	private Configuration _getConfiguration(String pid) throws IOException {
+		return _configurationAdmin.getConfiguration(pid, StringPool.QUESTION);
+	}
 
-		return _configurationAdmin.getConfiguration(pid, location);
+	private Configuration _getFactoryConfiguration(String factoryPid)
+		throws Exception {
+
+		Configuration[] configurations = _getConfigurations(
+			factoryPid, "service.factoryPid");
+
+		if (configurations != null) {
+			return configurations[0];
+		}
+
+		return null;
+	}
+
+	private void _createFactoryConfiguration(
+			String factoryPid, ExtendedObjectClassDefinition.Scope scope,
+			Serializable scopePK)
+		throws Exception {
+
+		_properties.put(scope.getPropertyKey(), scopePK);
+
+		Configuration configuration =
+			_configurationAdmin.createFactoryConfiguration(
+				factoryPid, StringPool.QUESTION);
+
+		ConfigurationTestUtil.saveConfiguration(configuration, _properties);
 	}
 
 	private void _createConfiguration(String pid) throws Exception {
 		_properties.put("key1", "value1");
 		_properties.put("key2", "value2");
 
-		Configuration configuration = _getConfiguration(
-			pid, StringPool.QUESTION);
+		Configuration configuration = _getConfiguration(pid);
 
-		configuration.update(_properties);
+		ConfigurationTestUtil.saveConfiguration(configuration, _properties);
 	}
 
 	private Configuration _configuration;
