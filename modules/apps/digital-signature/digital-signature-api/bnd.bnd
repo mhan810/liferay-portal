@@ -1,0 +1,8 @@
+Bundle-Name: Liferay Digital Signature API
+Bundle-SymbolicName: com.liferay.digital.signature.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.digital.signature,\
+	com.liferay.digital.signature.builder,\
+	com.liferay.digital.signature.request,\
+	com.liferay.digital.signature.response
