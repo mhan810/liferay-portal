@@ -31,6 +31,7 @@ public class ElasticsearchSuggestTest extends BaseSuggestTestCase {
 			{
 				setCompanyId(BaseIndexingTestCase.COMPANY_ID);
 				setElasticsearchFixture(new ElasticsearchFixture(getClass()));
+				setLiferayMappingsAddedToIndex(true);
 			}
 		};
 	}
