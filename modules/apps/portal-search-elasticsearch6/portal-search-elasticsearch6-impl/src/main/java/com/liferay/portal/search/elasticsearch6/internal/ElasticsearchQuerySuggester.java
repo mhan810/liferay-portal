@@ -192,7 +192,7 @@ public class ElasticsearchQuerySuggester implements QuerySuggester {
 		SuggestSearchRequest suggestSearchRequest = new SuggestSearchRequest(
 			_indexNameBuilder.getIndexName(searchContext.getCompanyId()));
 
-		suggestSearchRequest.setSuggester(suggester);
+		suggestSearchRequest.addSuggester(suggester);
 
 		SuggestSearchResponse suggestSearchResponse =
 			_searchEngineAdapter.execute(suggestSearchRequest);
@@ -265,7 +265,7 @@ public class ElasticsearchQuerySuggester implements QuerySuggester {
 		SuggesterResults suggesterResults = new SuggesterResults();
 
 		Collection<SuggestSearchResult> suggestSearchResults =
-			suggestSearchResponse.getSuggestSearchResult();
+			suggestSearchResponse.getSuggestSearchResults();
 
 		suggestSearchResults.forEach(
 			suggestSearchResult -> {
