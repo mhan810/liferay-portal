@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
@@ -12,28 +12,22 @@
  * details.
  */
 
-package com.liferay.digital.signature.request;
+package com.liferay.digital.signature;
 
 import aQute.bnd.annotation.ProviderType;
-
-import java.util.Collection;
-import java.util.Map;
 
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSSignatureRequest {
+public class DSSignatureException extends Exception {
 
-	public Boolean getAuthoritative();
+	public DSSignatureException(String message) {
+		super(message);
+	}
 
-	public Collection<DSDocument> getDSDocuments();
-
-	public DSEmailNotification getDSEmailNotification();
-
-	public Map<DSParticipantRole, Collection<DSParticipant>>
-		getDSParticipants();
-
-	public DSSessionId getDSSessionId();
+	public DSSignatureException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

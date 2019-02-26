@@ -19,6 +19,7 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.digital.signature.request.DSDocument;
 import com.liferay.digital.signature.request.DSEmailNotification;
 import com.liferay.digital.signature.request.DSParticipant;
+import com.liferay.digital.signature.request.DSSessionId;
 import com.liferay.digital.signature.request.DSSignatureRequest;
 
 import java.util.Collection;
@@ -40,7 +41,7 @@ public interface DSSignatureRequestBuilder {
 	public DSSignatureRequestBuilder addDSParticipants(
 		DSParticipant... participants);
 
-	public DSSignatureRequest getDSSignatureRequest();
+	public DSSignatureRequest getDSSignatureRequest(DSSessionId dsSessionId);
 
 	public DSSignatureRequestBuilder setAuthoritative(Boolean authoritative);
 
