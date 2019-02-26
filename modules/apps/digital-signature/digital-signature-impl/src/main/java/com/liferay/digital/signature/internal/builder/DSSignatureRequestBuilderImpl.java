@@ -20,6 +20,7 @@ import com.liferay.digital.signature.request.DSDocument;
 import com.liferay.digital.signature.request.DSEmailNotification;
 import com.liferay.digital.signature.request.DSParticipant;
 import com.liferay.digital.signature.request.DSParticipantRole;
+import com.liferay.digital.signature.request.DSSessionId;
 import com.liferay.digital.signature.request.DSSignatureRequest;
 
 import java.util.Collection;
@@ -72,15 +73,17 @@ public class DSSignatureRequestBuilderImpl
 	}
 
 	@Override
-	public DSSignatureRequest getDSSignatureRequest() {
-		DSSignatureRequestImpl dsRequest = new DSSignatureRequestImpl();
+	public DSSignatureRequest getDSSignatureRequest(DSSessionId dsSessionId) {
+		DSSignatureRequestImpl dsSignatureRequest =
+			new DSSignatureRequestImpl();
 
-		dsRequest.setAuthoritative(_authoritative);
-		dsRequest.setDSEmailNotification(_dsEmailNotification);
-		dsRequest.addDSDocuments(_dsDocuments);
-		dsRequest.setDSParticipantMap(_dsParticipantsMap);
+		dsSignatureRequest.setAuthoritative(_authoritative);
+		dsSignatureRequest.setDSEmailNotification(_dsEmailNotification);
+		dsSignatureRequest.addDSDocuments(_dsDocuments);
+		dsSignatureRequest.setDSParticipantMap(_dsParticipantsMap);
+		dsSignatureRequest.setDSSessionId(dsSessionId);
 
-		return dsRequest;
+		return dsSignatureRequest;
 	}
 
 	@Override

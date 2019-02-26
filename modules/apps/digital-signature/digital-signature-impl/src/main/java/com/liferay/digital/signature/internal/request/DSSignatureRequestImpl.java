@@ -18,6 +18,7 @@ import com.liferay.digital.signature.request.DSDocument;
 import com.liferay.digital.signature.request.DSEmailNotification;
 import com.liferay.digital.signature.request.DSParticipant;
 import com.liferay.digital.signature.request.DSParticipantRole;
+import com.liferay.digital.signature.request.DSSessionId;
 import com.liferay.digital.signature.request.DSSignatureRequest;
 
 import java.util.Collection;
@@ -58,6 +59,11 @@ public class DSSignatureRequestImpl implements DSSignatureRequest {
 		return Collections.unmodifiableMap(_dsParticipantsMap);
 	}
 
+	@Override
+	public DSSessionId getDSSessionId() {
+		return _dsSessionId;
+	}
+
 	public void setAuthoritative(Boolean authoritative) {
 		_authoritative = authoritative;
 	}
@@ -74,10 +80,15 @@ public class DSSignatureRequestImpl implements DSSignatureRequest {
 		_dsParticipantsMap = dsParticipantMap;
 	}
 
+	public void setDSSessionId(DSSessionId dsSessionId) {
+		_dsSessionId = dsSessionId;
+	}
+
 	private Boolean _authoritative;
 	private final Set<DSDocument> _dsDocuments = new HashSet<>();
 	private DSEmailNotification _dsEmailNotification;
 	private Map<DSParticipantRole, Collection<DSParticipant>>
 		_dsParticipantsMap = new HashMap<>();
+	private DSSessionId _dsSessionId;
 
 }
