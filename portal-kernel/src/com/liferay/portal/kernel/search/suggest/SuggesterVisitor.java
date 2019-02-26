@@ -19,6 +19,10 @@ package com.liferay.portal.kernel.search.suggest;
  */
 public interface SuggesterVisitor<T> {
 
+	/**
+	 * @deprecated As of Judson (7.1.x), with no direct replacement
+	 */
+	@Deprecated
 	public T visit(AggregateSuggester aggregateSuggester);
 
 	public T visit(CompletionSuggester completionSuggester);
