@@ -8,5 +8,6 @@ Export-Package:\
 	com.liferay.digital.signature.model.field,\
 	com.liferay.digital.signature.model.field.builder,\
 	com.liferay.digital.signature.request,\
+	com.liferay.digital.signature.request.builder,\
 	com.liferay.digital.signature.response,\
 	com.liferay.digital.signature.response.builder
