@@ -24,10 +24,10 @@ import com.liferay.digital.signature.model.DSSessionId;
 @ProviderType
 public interface DSSignatureRequestBuildersFactory {
 
-	public DSSignaturePackageCreateRequestBuilder
-		createDSSignaturePackageCreateRequestBuilder(DSSessionId dsSessionId);
+	public CreatePackageDSSignatureRequestBuilder
+		createCreatePackageDSSignatureRequestBuilder(DSSessionId dsSessionId);
 
-	public DSSignaturePackageVoidRequestBuilder
-		createDSSignaturePackageVoidRequestBuilder(DSSessionId dsSessionId);
+	public VoidPackageDSSignatureRequestBuilder
+		createVoidPackageDSSignatureRequestBuilder(DSSessionId dsSessionId);
 
 }
