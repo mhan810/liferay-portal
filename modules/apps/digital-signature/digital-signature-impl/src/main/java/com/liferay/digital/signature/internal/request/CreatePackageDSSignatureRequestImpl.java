@@ -17,15 +17,15 @@ package com.liferay.digital.signature.internal.request;
 import com.liferay.digital.signature.DSSignaturePackageStatus;
 import com.liferay.digital.signature.model.DSSessionId;
 import com.liferay.digital.signature.model.DSSignaturePackage;
-import com.liferay.digital.signature.request.DSSignaturePackageCreateRequest;
+import com.liferay.digital.signature.request.CreatePackageDSSignatureRequest;
 
 /**
  * @author Michael C. Han
  */
-public class DSSignaturePackageCreateRequestImpl
-	implements DSSignaturePackageCreateRequest {
+public class CreatePackageDSSignatureRequestImpl
+	implements CreatePackageDSSignatureRequest {
 
-	public DSSignaturePackageCreateRequestImpl(
+	public CreatePackageDSSignatureRequestImpl(
 		DSSessionId dsSessionId, DSSignaturePackage dsSignaturePackage,
 		DSSignaturePackageStatus dsSignaturePackageStatus) {
 

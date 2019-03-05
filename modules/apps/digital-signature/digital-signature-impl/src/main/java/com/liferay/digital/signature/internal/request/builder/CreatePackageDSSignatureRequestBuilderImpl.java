@@ -15,41 +15,41 @@
 package com.liferay.digital.signature.internal.request.builder;
 
 import com.liferay.digital.signature.DSSignaturePackageStatus;
-import com.liferay.digital.signature.internal.request.DSSignaturePackageCreateRequestImpl;
+import com.liferay.digital.signature.internal.request.CreatePackageDSSignatureRequestImpl;
 import com.liferay.digital.signature.model.DSSessionId;
 import com.liferay.digital.signature.model.DSSignaturePackage;
-import com.liferay.digital.signature.request.DSSignaturePackageCreateRequest;
-import com.liferay.digital.signature.request.builder.DSSignaturePackageCreateRequestBuilder;
+import com.liferay.digital.signature.request.CreatePackageDSSignatureRequest;
+import com.liferay.digital.signature.request.builder.CreatePackageDSSignatureRequestBuilder;
 
 /**
  * @author Michael C. Han
  */
-public class DSSignaturePackageCreateRequestBuilderImpl
-	implements DSSignaturePackageCreateRequestBuilder {
+public class CreatePackageDSSignatureRequestBuilderImpl
+	implements CreatePackageDSSignatureRequestBuilder {
 
-	public DSSignaturePackageCreateRequestBuilderImpl(DSSessionId dsSessionId) {
+	public CreatePackageDSSignatureRequestBuilderImpl(DSSessionId dsSessionId) {
 		_dsSessionId = dsSessionId;
 	}
 
 	@Override
-	public DSSignaturePackageCreateRequest
-		createDraftDSSignaturePackageCreateRequest() {
+	public CreatePackageDSSignatureRequest
+		getDraftCreatePackageDSSignatureRequest() {
 
-		return new DSSignaturePackageCreateRequestImpl(
+		return new CreatePackageDSSignatureRequestImpl(
 			_dsSessionId, _dsSignaturePackage,
 			DSSignaturePackageStatus.CREATED);
 	}
 
 	@Override
-	public DSSignaturePackageCreateRequest
-		createDSSignaturePackageCreateRequest() {
+	public CreatePackageDSSignatureRequest
+		getSentCreatePackageDSSignatureRequest() {
 
-		return new DSSignaturePackageCreateRequestImpl(
+		return new CreatePackageDSSignatureRequestImpl(
 			_dsSessionId, _dsSignaturePackage, DSSignaturePackageStatus.SENT);
 	}
 
 	@Override
-	public DSSignaturePackageCreateRequestBuilder setDSSignaturePackage(
+	public CreatePackageDSSignatureRequestBuilder setDSSignaturePackage(
 		DSSignaturePackage dsSignaturePackage) {
 
 		_dsSignaturePackage = dsSignaturePackage;

@@ -14,25 +14,25 @@
 
 package com.liferay.digital.signature.internal.request.builder;
 
-import com.liferay.digital.signature.internal.request.DSSignaturePackageVoidRequestImpl;
+import com.liferay.digital.signature.internal.request.VoidPackageDSSignatureRequestImpl;
 import com.liferay.digital.signature.model.DSSessionId;
-import com.liferay.digital.signature.request.DSSignaturePackageVoidRequest;
-import com.liferay.digital.signature.request.builder.DSSignaturePackageVoidRequestBuilder;
+import com.liferay.digital.signature.request.VoidPackageDSSignatureRequest;
+import com.liferay.digital.signature.request.builder.VoidPackageDSSignatureRequestBuilder;
 
 /**
  * @author Michael C. Han
  */
-public class DSSignaturePackageVoidRequestBuilderImpl
-	implements DSSignaturePackageVoidRequestBuilder {
+public class VoidPackageDSSignatureRequestBuilderImpl
+	implements VoidPackageDSSignatureRequestBuilder {
 
-	public DSSignaturePackageVoidRequestBuilderImpl(DSSessionId dsSessionId) {
+	public VoidPackageDSSignatureRequestBuilderImpl(DSSessionId dsSessionId) {
 		_dsSessionId = dsSessionId;
 	}
 
 	@Override
-	public DSSignaturePackageVoidRequest getDSSignaturePackageVoidRequest() {
-		DSSignaturePackageVoidRequestImpl dsSignaturePackageVoidRequestImpl =
-			new DSSignaturePackageVoidRequestImpl(
+	public VoidPackageDSSignatureRequest getVoidPackageDSSignatureRequest() {
+		VoidPackageDSSignatureRequestImpl dsSignaturePackageVoidRequestImpl =
+			new VoidPackageDSSignatureRequestImpl(
 				_dsSessionId, _dsSignaturePackageId);
 
 		dsSignaturePackageVoidRequestImpl.setExternalReferenceId(
@@ -43,7 +43,7 @@ public class DSSignaturePackageVoidRequestBuilderImpl
 	}
 
 	@Override
-	public DSSignaturePackageVoidRequestBuilder setDSSignaturePackageId(
+	public VoidPackageDSSignatureRequestBuilder setDSSignaturePackageId(
 		String dsSignaturePackageId) {
 
 		_dsSignaturePackageId = dsSignaturePackageId;
@@ -51,7 +51,7 @@ public class DSSignaturePackageVoidRequestBuilderImpl
 		return this;
 	}
 
-	public DSSignaturePackageVoidRequestBuilder setExternalReferenceId(
+	public VoidPackageDSSignatureRequestBuilder setExternalReferenceId(
 		String externalReferenceId) {
 
 		_externalReferenceId = externalReferenceId;
@@ -60,7 +60,7 @@ public class DSSignaturePackageVoidRequestBuilderImpl
 	}
 
 	@Override
-	public DSSignaturePackageVoidRequestBuilder setVoidReason(
+	public VoidPackageDSSignatureRequestBuilder setVoidReason(
 		String voidReason) {
 
 		_voidReason = voidReason;
