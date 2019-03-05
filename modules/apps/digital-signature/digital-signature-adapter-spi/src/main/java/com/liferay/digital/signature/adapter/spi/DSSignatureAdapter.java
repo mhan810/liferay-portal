@@ -16,7 +16,7 @@ package com.liferay.digital.signature.adapter.spi;
 
 import aQute.bnd.annotation.ConsumerType;
 
-import com.liferay.digital.signature.request.DSSignaturePackageRequest;
+import com.liferay.digital.signature.request.PackageDSSignatureRequest;
 import com.liferay.digital.signature.response.DSSignatureResponse;
 
 /**
@@ -26,7 +26,7 @@ import com.liferay.digital.signature.response.DSSignatureResponse;
 public interface DSSignatureAdapter {
 
 	public DSSignatureResponse execute(
-		DSSignaturePackageRequest dsSignaturePackageRequest);
+		PackageDSSignatureRequest packageDSSignatureRequest);
 
 	public String getAdapterProviderName();
 
