@@ -39,14 +39,14 @@ import org.osgi.service.component.annotations.Reference;
 public class DSModelBuildersFactoryImpl implements DSModelBuildersFactory {
 
 	@Override
-	public AgentDSParticipantBuilder createDSAgentParticipantBuilder(
+	public AgentDSParticipantBuilder createAgentDSParticipantBuilder(
 		String name, String email, int routingOrder) {
 
 		return new AgentDSParticipantBuilderImpl(name, email, routingOrder);
 	}
 
 	@Override
-	public CarbonCopyDSParticipantBuilder createDSCarbonCopyParticipantBuilder(
+	public CarbonCopyDSParticipantBuilder createCarbonCopyDSParticipantBuilder(
 		String name, String email, int routingOrder) {
 
 		return new CarbonCopyDSParticipantBuilderImpl(
@@ -55,7 +55,7 @@ public class DSModelBuildersFactoryImpl implements DSModelBuildersFactory {
 
 	@Override
 	public CertifiedDeliveryDSParticipantBuilder
-		createDSCertifiedDeliveryParticipantBuilder(
+		createCertifiedDeliveryDSParticipantBuilder(
 			String name, String email, int routingOrder) {
 
 		return new CertifiedDeliveryDSParticipantBuilderImpl(
@@ -70,13 +70,6 @@ public class DSModelBuildersFactoryImpl implements DSModelBuildersFactory {
 	}
 
 	@Override
-	public EditorDSParticipantBuilder createDSEditorParticipantBuilder(
-		String name, String email, int routingOrder) {
-
-		return new EditorDSParticipantBuilderImpl(name, email, routingOrder);
-	}
-
-	@Override
 	public DSEmailNotificationBuilder createDSEmailNotificationBuilder(
 		String subject, String message) {
 
@@ -84,8 +77,30 @@ public class DSModelBuildersFactoryImpl implements DSModelBuildersFactory {
 	}
 
 	@Override
+	public DSSignaturePackageBuilder createDSSignatureRequestBuilder() {
+		return new DSSignaturePackageBuilderImpl(_portalUUID);
+	}
+
+	@Override
+	public EditorDSParticipantBuilder createEditorDSParticipantBuilder(
+		String name, String email, int routingOrder) {
+
+		return new EditorDSParticipantBuilderImpl(name, email, routingOrder);
+	}
+
+	@Override
+	public InPersonSignerDSParticipantBuilder
+		createInPersonSignerDSParticipantBuilder(
+			String hostName, String hostEmail, String signerName,
+			String signerEmail, int routingOrder) {
+
+		return new InPersonSignerDSParticipantBuilderImpl(
+			hostName, hostEmail, signerName, signerEmail, routingOrder);
+	}
+
+	@Override
 	public InPersonSignerNotaryDSParticipantBuilder
-		createDSInPersonSignerNotaryParticipantBuilder(
+		createInPersonSignerNotaryDSParticipantBuilder(
 			String name, String email, int routingOrder,
 			String notaryParticipantId, String notaryName, String notaryEmail) {
 
@@ -95,18 +110,8 @@ public class DSModelBuildersFactoryImpl implements DSModelBuildersFactory {
 	}
 
 	@Override
-	public InPersonSignerDSParticipantBuilder
-		createDSInPersonSignerParticipantBuilder(
-			String hostName, String hostEmail, String signerName,
-			String signerEmail, int routingOrder) {
-
-		return new InPersonSignerDSParticipantBuilderImpl(
-			hostName, hostEmail, signerName, signerEmail, routingOrder);
-	}
-
-	@Override
 	public IntermediaryDSParticipantBuilder
-		createDSIntermediaryParticipantBuilder(
+		createIntermediaryDSParticipantBuilder(
 			String name, String email, int routingOrder) {
 
 		return new IntermediaryDSParticipantBuilderImpl(
@@ -114,7 +119,7 @@ public class DSModelBuildersFactoryImpl implements DSModelBuildersFactory {
 	}
 
 	@Override
-	public SealDSParticipantBuilder createDSSealParticipantBuilder(
+	public SealDSParticipantBuilder createSealDSParticipantBuilder(
 		String participantId, String name, String email, int routingOrder) {
 
 		return new SealDSParticipantBuilderImpl(
@@ -122,12 +127,7 @@ public class DSModelBuildersFactoryImpl implements DSModelBuildersFactory {
 	}
 
 	@Override
-	public DSSignaturePackageBuilder createDSSignatureRequestBuilder() {
-		return new DSSignaturePackageBuilderImpl(_portalUUID);
-	}
-
-	@Override
-	public SignerDSParticipantBuilder createDSSignerParticipantBuilder(
+	public SignerDSParticipantBuilder createSignerDSParticipantBuilder(
 		String name, String email, int routingOrder) {
 
 		return new SignerDSParticipantBuilderImpl(name, email, routingOrder);
