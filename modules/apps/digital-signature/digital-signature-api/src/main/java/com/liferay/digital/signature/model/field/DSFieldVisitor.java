@@ -24,58 +24,58 @@ public interface DSFieldVisitor<S> {
 
 	public S getObject();
 
-	public S visit(DSApproveField dsApproveField);
+	public S visit(ApproveDSField approveDSField);
 
-	public S visit(DSCheckboxField dsCheckboxField);
+	public S visit(CheckboxDSField checkboxDSField);
 
-	public S visit(DSCompanyNameField dsCompanyNameField);
+	public S visit(CompanyNameDSField companyNameDSField);
 
-	public S visit(DSDateField dsDateField);
+	public S visit(DateDSField dateDSField);
 
-	public S visit(DSDateSignedField dsDateSignedField);
+	public S visit(DateSignedDSField dateSignedDSField);
 
-	public S visit(DSDeclineField dsDeclineField);
+	public S visit(DeclineDSField declineDSField);
 
-	public S visit(DSEmailField dsEmailField);
+	public S visit(EmailDSField emailDSField);
 
-	public S visit(DSFirstNameField dsFirstNameField);
+	public S visit(FirstNameDSField firstNameDSField);
 
-	public S visit(DSFormulaField dsFormulaField);
+	public S visit(FormulaDSField formulaDSField);
 
-	public S visit(DSFullNameField dsFullNameField);
+	public S visit(FullNameDSField fullNameDSField);
 
-	public S visit(DSInitialHereField dsInitialHereField);
+	public S visit(InitialHereDSField initialHereDSField);
 
-	public S visit(DSLastNameField dsLastNameField);
+	public S visit(LastNameDSField lastNameDSField);
 
-	public S visit(DSListField dsListField);
+	public S visit(ListDSField listDSField);
 
-	public S visit(DSNotarizeField dsNotarizeField);
+	public S visit(NotarizeDSField notarizeDSField);
 
-	public S visit(DSNoteField dsNoteField);
+	public S visit(NoteDSField noteDSField);
 
-	public S visit(DSNumberField dsNumberField);
+	public S visit(NumberDSField numberDSField);
 
-	public S visit(DSParticipantEmailField dsParticipantEmailField);
+	public S visit(ParticipantEmailDSField participantEmailDSField);
 
-	public S visit(DSPostalCodeField dsPostalCodeField);
+	public S visit(PostalCodeDSField postalCodeDSField);
 
-	public S visit(DSRadioField dsRadioField);
+	public S visit(RadioDSField radioDSField);
 
-	public S visit(DSRadioGroupField dsRadioGroupField);
+	public S visit(RadioGroupDSField radioGroupDSField);
 
-	public S visit(DSSignaturePackageIdField dsSignaturePackageIdField);
+	public S visit(SignaturePackageIdDSField signaturePackageIdDSField);
 
-	public S visit(DSSignerAttachmentField dsSignerAttachmentField);
+	public S visit(SignerAttachmentDSField signerAttachmentDSField);
 
-	public S visit(DSSignHereField dsSignHereField);
+	public S visit(SignHereDSField signHereDSField);
 
-	public S visit(DSSocialSecurityNumberField dsSocialSecurityNumberField);
+	public S visit(SocialSecurityNumberDSField dsSocialSecurityNumberField);
 
-	public S visit(DSTextField dsTextField);
+	public S visit(TextDSField dsTextField);
 
-	public S visit(DSTitleField dsTitleField);
+	public S visit(TitleDSField dsTitleField);
 
-	public S visit(DSViewField dsViewField);
+	public S visit(ViewDSField dsViewField);
 
 }
