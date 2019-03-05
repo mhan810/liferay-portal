@@ -20,6 +20,6 @@ import aQute.bnd.annotation.ProviderType;
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSIntermediaryParticipantBuilder
-	extends DSParticipantBuilder, ParticipantModifyingDSParticipantBuilder {
+public interface InPersonSignerNotaryDSParticipantBuilder
+	extends SignerDSParticipantBuilder, SigningDSParticipantBuilder {
 }
