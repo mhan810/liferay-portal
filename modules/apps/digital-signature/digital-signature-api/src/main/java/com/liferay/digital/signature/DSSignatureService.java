@@ -16,7 +16,7 @@ package com.liferay.digital.signature;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.digital.signature.request.DSSignaturePackageRequest;
+import com.liferay.digital.signature.request.PackageDSSignatureRequest;
 import com.liferay.digital.signature.response.DSSignatureResponse;
 
 /**
@@ -26,6 +26,6 @@ import com.liferay.digital.signature.response.DSSignatureResponse;
 public interface DSSignatureService {
 
 	public DSSignatureResponse execute(
-		DSSignaturePackageRequest dsSignaturePackageRequest);
+		PackageDSSignatureRequest packageDSSignatureRequest);
 
 }

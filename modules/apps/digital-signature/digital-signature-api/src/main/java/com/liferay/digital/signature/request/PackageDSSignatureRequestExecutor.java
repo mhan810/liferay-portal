@@ -32,6 +32,6 @@ public interface PackageDSSignatureRequestExecutor {
 			updateDocumentPackageDSSignatureRequest);
 
 	public DSSignatureResponse execute(
-		VoidPackageDSSignatureRequest voidPackagedsSignatureRequest);
+		VoidPackageDSSignatureRequest voidPackageDSSignatureRequest);
 
 }
