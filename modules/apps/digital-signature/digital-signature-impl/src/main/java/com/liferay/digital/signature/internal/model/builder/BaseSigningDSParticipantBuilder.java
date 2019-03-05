@@ -15,7 +15,7 @@
 package com.liferay.digital.signature.internal.model.builder;
 
 import com.liferay.digital.signature.internal.model.DSSignatureInfoImpl;
-import com.liferay.digital.signature.internal.model.DSSignerParticipantImpl;
+import com.liferay.digital.signature.internal.model.SignerDSParticipantImpl;
 import com.liferay.digital.signature.model.DSParticipant;
 import com.liferay.digital.signature.model.DSSignatureInfo;
 import com.liferay.digital.signature.model.builder.DSParticipantBuilder;
@@ -114,7 +114,7 @@ public abstract class BaseSigningDSParticipantBuilder<T extends DSParticipant>
 	@Override
 	@SuppressWarnings("unchecked")
 	protected T createDSParticipant() {
-		DSSignerParticipantImpl dsSignerParticipantImpl =
+		SignerDSParticipantImpl dsSignerParticipantImpl =
 			createDSSignerParticipantImpl();
 
 		dsSignerParticipantImpl.setAutoNavigation(getAutoNavigation());
@@ -127,7 +127,7 @@ public abstract class BaseSigningDSParticipantBuilder<T extends DSParticipant>
 		return (T)dsSignerParticipantImpl;
 	}
 
-	protected abstract DSSignerParticipantImpl createDSSignerParticipantImpl();
+	protected abstract SignerDSParticipantImpl createDSSignerParticipantImpl();
 
 	protected Boolean getAutoNavigation() {
 		return _autoNavigation;
