@@ -22,20 +22,16 @@ import com.liferay.digital.signature.response.DSSignatureResponse;
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSSignaturePackageVoidRequest
-	extends DSSignaturePackageRequest {
+public interface PackageDSSignatureRequestExecutor {
 
-	@Override
-	public default DSSignatureResponse execute(
-		DSSignaturePackageRequestExecutor dsSignaturePackageRequestExecutor) {
+	public DSSignatureResponse execute(
+		CreatePackageDSSignatureRequest createPackageDSSignatureRequest);
 
-		return dsSignaturePackageRequestExecutor.execute(this);
-	}
+	public DSSignatureResponse execute(
+		UpdateDocumentPackageDSSignatureRequest
+			updateDocumentPackageDSSignatureRequest);
 
-	public String getDSSignaturePackageId();
-
-	public String getExternalReferenceId();
-
-	public String getVoidReason();
+	public DSSignatureResponse execute(
+		VoidPackageDSSignatureRequest voidPackagedsSignatureRequest);
 
 }

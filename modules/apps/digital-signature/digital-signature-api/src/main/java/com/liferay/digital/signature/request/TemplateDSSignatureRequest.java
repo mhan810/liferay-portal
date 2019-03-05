@@ -16,15 +16,9 @@ package com.liferay.digital.signature.request;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.digital.signature.response.DSSignatureResponse;
-
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSSignaturePackageRequest extends DSSignatureRequest {
-
-	public DSSignatureResponse execute(
-		DSSignaturePackageRequestExecutor dsSignaturePackageRequestExecutor);
-
+public interface TemplateDSSignatureRequest {
 }

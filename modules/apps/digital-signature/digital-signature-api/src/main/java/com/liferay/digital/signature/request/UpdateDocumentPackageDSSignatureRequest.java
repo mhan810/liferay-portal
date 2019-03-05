@@ -25,14 +25,14 @@ import java.util.List;
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSSignaturePackageUpdateDocumentRequest
-	extends DSSignaturePackageRequest {
+public interface UpdateDocumentPackageDSSignatureRequest
+	extends PackageDSSignatureRequest {
 
 	@Override
 	public default DSSignatureResponse execute(
-		DSSignaturePackageRequestExecutor dsSignaturePackageRequestExecutor) {
+		PackageDSSignatureRequestExecutor packageDSSignatureRequestExecutor) {
 
-		return dsSignaturePackageRequestExecutor.execute(this);
+		return packageDSSignatureRequestExecutor.execute(this);
 	}
 
 	public List<DSDocument> getDSDocuments();

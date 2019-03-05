@@ -16,23 +16,22 @@ package com.liferay.digital.signature.request.builder;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.digital.signature.request.DSSignaturePackageVoidRequest;
+import com.liferay.digital.signature.model.DSSignaturePackage;
+import com.liferay.digital.signature.request.CreatePackageDSSignatureRequest;
 
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSSignaturePackageVoidRequestBuilder {
+public interface CreatePackageDSSignatureRequestBuilder {
 
-	public DSSignaturePackageVoidRequest getDSSignaturePackageVoidRequest();
+	public CreatePackageDSSignatureRequest
+		getDraftCreatePackageDSSignatureRequest();
 
-	public DSSignaturePackageVoidRequestBuilder setDSSignaturePackageId(
-		String dsSignaturePackageId);
+	public CreatePackageDSSignatureRequest
+		getSentCreatePackageDSSignatureRequest();
 
-	public DSSignaturePackageVoidRequestBuilder setExternalReferenceId(
-		String externalReferenceId);
-
-	public DSSignaturePackageVoidRequestBuilder setVoidReason(
-		String voidReason);
+	public CreatePackageDSSignatureRequestBuilder setDSSignaturePackage(
+		DSSignaturePackage dsSignaturePackage);
 
 }

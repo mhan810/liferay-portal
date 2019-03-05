@@ -24,14 +24,14 @@ import com.liferay.digital.signature.response.DSSignatureResponse;
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSSignaturePackageCreateRequest
-	extends DSSignaturePackageRequest {
+public interface CreatePackageDSSignatureRequest
+	extends PackageDSSignatureRequest {
 
 	@Override
 	public default DSSignatureResponse execute(
-		DSSignaturePackageRequestExecutor dsSignaturePackageRequestExecutor) {
+		PackageDSSignatureRequestExecutor packageDSSignatureRequestExecutor) {
 
-		return dsSignaturePackageRequestExecutor.execute(this);
+		return packageDSSignatureRequestExecutor.execute(this);
 	}
 
 	public DSSignaturePackage getDSSignaturePackage();
