@@ -22,24 +22,24 @@ import aQute.bnd.annotation.ProviderType;
 @ProviderType
 public interface DSParticipantVisitor<T> {
 
-	public T visit(DSAgentParticipant dsAgentParticipant);
+	public T visit(AgentDSParticipant agentDSParticipant);
 
-	public T visit(DSCarbonCopyParticipant dsCarbonCopyParticipant);
-
-	public T visit(
-		DSCertifiedDeliveryParticipant dsCertifiedDeliveryParticipant);
-
-	public T visit(DSEditorParticipant dsEditorParticipant);
+	public T visit(CarbonCopyDSParticipant carbonCopyDSParticipant);
 
 	public T visit(
-		DSInPersonSignerNotaryParticipant dsInPersonSignerNotaryParticipant);
+		CertifiedDeliveryDSParticipant certifiedDeliveryDSParticipant);
 
-	public T visit(DSInPersonSignerParticipant dsInPersonSignerParticipant);
+	public T visit(EditorDSParticipant editorDSParticipant);
 
-	public T visit(DSIntermediaryParticipant dsIntermediaryParticipant);
+	public T visit(InPersonSignerDSParticipant dsInPersonSignerParticipant);
 
-	public T visit(DSSealParticipant dsSealParticipant);
+	public T visit(
+		InPersonSignerNotaryDSParticipant dsInPersonSignerNotaryParticipant);
 
-	public T visit(DSSignerParticipant dsSignerParticipant);
+	public T visit(IntermediaryDSParticipant intermediaryDSParticipant);
+
+	public T visit(SealDSParticipant sealDSParticipant);
+
+	public T visit(SignerDSParticipant signerDSParticipant);
 
 }

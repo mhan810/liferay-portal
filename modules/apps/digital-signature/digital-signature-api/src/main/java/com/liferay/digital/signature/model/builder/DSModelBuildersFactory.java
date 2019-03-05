@@ -22,45 +22,45 @@ import aQute.bnd.annotation.ProviderType;
 @ProviderType
 public interface DSModelBuildersFactory {
 
-	public DSAgentParticipantBuilder createDSAgentParticipantBuilder(
+	public AgentDSParticipantBuilder createDSAgentParticipantBuilder(
 		String name, String email, int routingOrder);
 
-	public DSCarbonCopyParticipantBuilder createDSCarbonCopyParticipantBuilder(
+	public CarbonCopyDSParticipantBuilder createDSCarbonCopyParticipantBuilder(
 		String name, String email, int routingOrder);
 
-	public DSCertifiedDeliveryParticipantBuilder
+	public CertifiedDeliveryDSParticipantBuilder
 		createDSCertifiedDeliveryParticipantBuilder(
 			String name, String email, int routingOrder);
 
 	public DSDocumentBuilder createDSDocumentBuilder(
 		String documentId, String name);
 
-	public DSEditorParticipantBuilder createDSEditorParticipantBuilder(
+	public EditorDSParticipantBuilder createDSEditorParticipantBuilder(
 		String name, String email, int routingOrder);
 
 	public DSEmailNotificationBuilder createDSEmailNotificationBuilder(
 		String subject, String message);
 
-	public DSInPersonSignerNotaryParticipantBuilder
+	public InPersonSignerNotaryDSParticipantBuilder
 		createDSInPersonSignerNotaryParticipantBuilder(
 			String name, String email, int routingOrder,
 			String notaryParticipantId, String notaryName, String notaryEmail);
 
-	public DSInPersonSignerParticipantBuilder
+	public InPersonSignerDSParticipantBuilder
 		createDSInPersonSignerParticipantBuilder(
 			String hostName, String hostEmail, String signerName,
 			String signerEmail, int routingOrder);
 
-	public DSIntermediaryParticipantBuilder
+	public IntermediaryDSParticipantBuilder
 		createDSIntermediaryParticipantBuilder(
 			String name, String email, int routingOrder);
 
-	public DSSealParticipantBuilder createDSSealParticipantBuilder(
+	public SealDSParticipantBuilder createDSSealParticipantBuilder(
 		String participantId, String name, String email, int routingOrder);
 
 	public DSSignaturePackageBuilder createDSSignatureRequestBuilder();
 
-	public DSSignerParticipantBuilder createDSSignerParticipantBuilder(
+	public SignerDSParticipantBuilder createDSSignerParticipantBuilder(
 		String name, String email, int routingOrder);
 
 }
