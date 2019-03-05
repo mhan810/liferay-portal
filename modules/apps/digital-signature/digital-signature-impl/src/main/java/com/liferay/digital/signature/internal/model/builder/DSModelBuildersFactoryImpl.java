@@ -14,19 +14,19 @@
 
 package com.liferay.digital.signature.internal.model.builder;
 
-import com.liferay.digital.signature.model.builder.DSAgentParticipantBuilder;
-import com.liferay.digital.signature.model.builder.DSCarbonCopyParticipantBuilder;
-import com.liferay.digital.signature.model.builder.DSCertifiedDeliveryParticipantBuilder;
+import com.liferay.digital.signature.model.builder.AgentDSParticipantBuilder;
+import com.liferay.digital.signature.model.builder.CarbonCopyDSParticipantBuilder;
+import com.liferay.digital.signature.model.builder.CertifiedDeliveryDSParticipantBuilder;
 import com.liferay.digital.signature.model.builder.DSDocumentBuilder;
-import com.liferay.digital.signature.model.builder.DSEditorParticipantBuilder;
 import com.liferay.digital.signature.model.builder.DSEmailNotificationBuilder;
-import com.liferay.digital.signature.model.builder.DSInPersonSignerNotaryParticipantBuilder;
-import com.liferay.digital.signature.model.builder.DSInPersonSignerParticipantBuilder;
-import com.liferay.digital.signature.model.builder.DSIntermediaryParticipantBuilder;
 import com.liferay.digital.signature.model.builder.DSModelBuildersFactory;
-import com.liferay.digital.signature.model.builder.DSSealParticipantBuilder;
 import com.liferay.digital.signature.model.builder.DSSignaturePackageBuilder;
-import com.liferay.digital.signature.model.builder.DSSignerParticipantBuilder;
+import com.liferay.digital.signature.model.builder.EditorDSParticipantBuilder;
+import com.liferay.digital.signature.model.builder.InPersonSignerDSParticipantBuilder;
+import com.liferay.digital.signature.model.builder.InPersonSignerNotaryDSParticipantBuilder;
+import com.liferay.digital.signature.model.builder.IntermediaryDSParticipantBuilder;
+import com.liferay.digital.signature.model.builder.SealDSParticipantBuilder;
+import com.liferay.digital.signature.model.builder.SignerDSParticipantBuilder;
 import com.liferay.portal.kernel.uuid.PortalUUID;
 
 import org.osgi.service.component.annotations.Component;
@@ -39,26 +39,26 @@ import org.osgi.service.component.annotations.Reference;
 public class DSModelBuildersFactoryImpl implements DSModelBuildersFactory {
 
 	@Override
-	public DSAgentParticipantBuilder createDSAgentParticipantBuilder(
+	public AgentDSParticipantBuilder createDSAgentParticipantBuilder(
 		String name, String email, int routingOrder) {
 
-		return new DSAgentParticipantBuilderImpl(name, email, routingOrder);
+		return new AgentDSParticipantBuilderImpl(name, email, routingOrder);
 	}
 
 	@Override
-	public DSCarbonCopyParticipantBuilder createDSCarbonCopyParticipantBuilder(
+	public CarbonCopyDSParticipantBuilder createDSCarbonCopyParticipantBuilder(
 		String name, String email, int routingOrder) {
 
-		return new DSCarbonCopyParticipantBuilderImpl(
+		return new CarbonCopyDSParticipantBuilderImpl(
 			name, email, routingOrder);
 	}
 
 	@Override
-	public DSCertifiedDeliveryParticipantBuilder
+	public CertifiedDeliveryDSParticipantBuilder
 		createDSCertifiedDeliveryParticipantBuilder(
 			String name, String email, int routingOrder) {
 
-		return new DSCertifiedDeliveryParticipantBuilderImpl(
+		return new CertifiedDeliveryDSParticipantBuilderImpl(
 			name, email, routingOrder);
 	}
 
@@ -70,10 +70,10 @@ public class DSModelBuildersFactoryImpl implements DSModelBuildersFactory {
 	}
 
 	@Override
-	public DSEditorParticipantBuilder createDSEditorParticipantBuilder(
+	public EditorDSParticipantBuilder createDSEditorParticipantBuilder(
 		String name, String email, int routingOrder) {
 
-		return new DSEditorParticipantBuilderImpl(name, email, routingOrder);
+		return new EditorDSParticipantBuilderImpl(name, email, routingOrder);
 	}
 
 	@Override
@@ -84,40 +84,40 @@ public class DSModelBuildersFactoryImpl implements DSModelBuildersFactory {
 	}
 
 	@Override
-	public DSInPersonSignerNotaryParticipantBuilder
+	public InPersonSignerNotaryDSParticipantBuilder
 		createDSInPersonSignerNotaryParticipantBuilder(
 			String name, String email, int routingOrder,
 			String notaryParticipantId, String notaryName, String notaryEmail) {
 
-		return new DSInPersonSignerNotaryParticipantBuilderImpl(
+		return new InPersonSignerNotaryDSParticipantBuilderImpl(
 			name, email, routingOrder, notaryParticipantId, notaryName,
 			notaryEmail);
 	}
 
 	@Override
-	public DSInPersonSignerParticipantBuilder
+	public InPersonSignerDSParticipantBuilder
 		createDSInPersonSignerParticipantBuilder(
 			String hostName, String hostEmail, String signerName,
 			String signerEmail, int routingOrder) {
 
-		return new DSInPersonSignerParticipantBuilderImpl(
+		return new InPersonSignerDSParticipantBuilderImpl(
 			hostName, hostEmail, signerName, signerEmail, routingOrder);
 	}
 
 	@Override
-	public DSIntermediaryParticipantBuilder
+	public IntermediaryDSParticipantBuilder
 		createDSIntermediaryParticipantBuilder(
 			String name, String email, int routingOrder) {
 
-		return new DSIntermediaryParticipantBuilderImpl(
+		return new IntermediaryDSParticipantBuilderImpl(
 			name, email, routingOrder);
 	}
 
 	@Override
-	public DSSealParticipantBuilder createDSSealParticipantBuilder(
+	public SealDSParticipantBuilder createDSSealParticipantBuilder(
 		String participantId, String name, String email, int routingOrder) {
 
-		return new DSSealParticipantBuilderImpl(
+		return new SealDSParticipantBuilderImpl(
 			participantId, name, email, routingOrder);
 	}
 
@@ -127,10 +127,10 @@ public class DSModelBuildersFactoryImpl implements DSModelBuildersFactory {
 	}
 
 	@Override
-	public DSSignerParticipantBuilder createDSSignerParticipantBuilder(
+	public SignerDSParticipantBuilder createDSSignerParticipantBuilder(
 		String name, String email, int routingOrder) {
 
-		return new DSSignerParticipantBuilderImpl(name, email, routingOrder);
+		return new SignerDSParticipantBuilderImpl(name, email, routingOrder);
 	}
 
 	protected void setPortalUUID(PortalUUID portalUUID) {
