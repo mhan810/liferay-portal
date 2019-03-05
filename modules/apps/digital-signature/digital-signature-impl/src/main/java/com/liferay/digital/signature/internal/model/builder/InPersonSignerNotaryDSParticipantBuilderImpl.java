@@ -43,12 +43,8 @@ public class InPersonSignerNotaryDSParticipantBuilderImpl
 		DSNotaryInfoImpl dsNotaryInfoImpl = new DSNotaryInfoImpl(
 			_notaryParticipantId, _notaryName, _notaryEmail);
 
-		InPersonSignerNotaryDSParticipantImpl
-			dsInPersonSignerNotaryParticipantImpl =
-				new InPersonSignerNotaryDSParticipantImpl(
-					getName(), getEmail(), getRoutingOrder(), dsNotaryInfoImpl);
-
-		return dsInPersonSignerNotaryParticipantImpl;
+		return new InPersonSignerNotaryDSParticipantImpl(
+			getName(), getEmail(), getRoutingOrder(), dsNotaryInfoImpl);
 	}
 
 	private final String _notaryEmail;

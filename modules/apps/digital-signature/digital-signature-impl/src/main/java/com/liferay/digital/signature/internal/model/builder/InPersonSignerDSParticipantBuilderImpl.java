@@ -38,12 +38,8 @@ public class InPersonSignerDSParticipantBuilderImpl
 
 	@Override
 	protected SignerDSParticipantImpl createDSSignerParticipantImpl() {
-		InPersonSignerDSParticipantImpl dsInPersonSignerParticipantImpl =
-			new InPersonSignerDSParticipantImpl(
-				_hostName, _hostEmail, getName(), getEmail(),
-				getRoutingOrder());
-
-		return dsInPersonSignerParticipantImpl;
+		return new InPersonSignerDSParticipantImpl(
+			_hostName, _hostEmail, getName(), getEmail(), getRoutingOrder());
 	}
 
 	private final String _hostEmail;

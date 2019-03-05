@@ -111,12 +111,12 @@ public class SealDSParticipantBuilderImpl
 
 	@Override
 	protected SealDSParticipant createDSParticipant() {
-		SealDSParticipantImpl dsSealParticipantImpl = new SealDSParticipantImpl(
+		SealDSParticipantImpl sealDSParticipantImpl = new SealDSParticipantImpl(
 			getParticipantId(), getName(), getEmail(), getRoutingOrder());
 
-		dsSealParticipantImpl.addDSSealInfos(_dsSealInfos.values());
+		sealDSParticipantImpl.addDSSealInfos(_dsSealInfos.values());
 
-		return dsSealParticipantImpl;
+		return sealDSParticipantImpl;
 	}
 
 	private Map<String, DSSealInfo> _dsSealInfos = new HashMap<>();
