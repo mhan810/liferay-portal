@@ -14,33 +14,33 @@
 
 package com.liferay.digital.signature.internal.model.field.builder;
 
-import com.liferay.digital.signature.model.field.builder.DSApproveFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSCheckboxFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSDateFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSDateSignedFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSDeclineFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSEmailFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.ApproveDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.CheckboxDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.DSFieldBuildersFactory;
-import com.liferay.digital.signature.model.field.builder.DSFirstNameFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSFormulaFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSFullNameFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSInitialHereFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSLastNameFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSListFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSNotarizeFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSNoteFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSNumberFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSParticipantEmailFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSPostalCodeFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSRadioFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSRadioGroupFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSSignHereFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSSignaturePackageIdFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSSignerAttachmentFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSSocialSecurityNumberFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSTextFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSTitleFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.DSViewFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.DateDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.DateSignedDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.DeclineDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.EmailDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.FirstNameDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.FormulaDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.FullNameDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.InitialHereDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.LastNameDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.ListDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.NotarizeDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.NoteDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.NumberDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.ParticipantEmailDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.PostalCodeDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.RadioDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.RadioGroupDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.SignHereDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.SignaturePackageIdDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.SignerAttachmentDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.SocialSecurityNumberDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.TextDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.TitleDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.ViewDSFieldBuilder;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -51,194 +51,194 @@ import org.osgi.service.component.annotations.Component;
 public class DSFieldBuildersFactoryImpl implements DSFieldBuildersFactory {
 
 	@Override
-	public DSApproveFieldBuilder getDSApproveFieldBuilder(
+	public ApproveDSFieldBuilder getApproveDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSApproveFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new ApproveDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSCheckboxFieldBuilder getDSCheckboxFieldBuilder(
+	public CheckboxDSFieldBuilder getCheckboxDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSCheckboxFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new CheckboxDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSDateFieldBuilder getDSDateFieldBuilder(
+	public DateDSFieldBuilder getDateDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSDateFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new DateDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSDateSignedFieldBuilder getDSDateSignedFieldBuilder(
+	public DateSignedDSFieldBuilder getDateSignedDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSDateSignedFieldBuilderImpl(
+		return new DateSignedDSFieldBuilderImpl(
 			documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSDeclineFieldBuilder getDSDeclineFieldBuilder(
+	public DeclineDSFieldBuilder getDeclineDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSDeclineFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new DeclineDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSEmailFieldBuilder getDSEmailFieldBuilder(
+	public EmailDSFieldBuilder getEmailDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSEmailFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new EmailDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSFirstNameFieldBuilder getDSFirstNameFieldBuilder(
+	public FirstNameDSFieldBuilder getFirstNameDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSFirstNameFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new FirstNameDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSFormulaFieldBuilder getDSFormulaFieldBuilder(
+	public FormulaDSFieldBuilder getFormulaDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSFormulaFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new FormulaDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSFullNameFieldBuilder getDSFullNameFieldBuilder(
+	public FullNameDSFieldBuilder getFullNameDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSFullNameFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new FullNameDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSInitialHereFieldBuilder getDSInitialHereFieldBuilder(
+	public InitialHereDSFieldBuilder getInitialHereDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSInitialHereFieldBuilderImpl(
+		return new InitialHereDSFieldBuilderImpl(
 			documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSLastNameFieldBuilder getDSLastNameFieldBuilder(
+	public LastNameDSFieldBuilder getLastNameDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSLastNameFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new LastNameDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSListFieldBuilder getDSListFieldBuilder(
+	public ListDSFieldBuilder getListDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSListFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new ListDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSNotarizeFieldBuilder getDSNotarizeFieldBuilder(
+	public NotarizeDSFieldBuilder getNotarizeDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSNotarizeFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new NotarizeDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSNoteFieldBuilder getDSNoteFieldBuilder(
+	public NoteDSFieldBuilder getNoteDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSNoteFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new NoteDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSNumberFieldBuilder getDSNumberFieldBuilder(
+	public NumberDSFieldBuilder getNumberDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSNumberFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new NumberDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSParticipantEmailFieldBuilder getDSParticipantEmailFieldBuilder(
+	public ParticipantEmailDSFieldBuilder getParticipantEmailDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSParticipantEmailFieldBuilderImpl(
+		return new ParticipantEmailDSFieldBuilderImpl(
 			documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSPostalCodeFieldBuilder getDSPostalCodeFieldBuilder(
+	public PostalCodeDSFieldBuilder getPostalCodeDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSPostalCodeFieldBuilderImpl(
+		return new PostalCodeDSFieldBuilderImpl(
 			documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSRadioFieldBuilder getDSRadioFieldBuilder(
+	public RadioDSFieldBuilder getRadioDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSRadioFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new RadioDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSRadioGroupFieldBuilder getDSRadioGroupFieldBuilder(
+	public RadioGroupDSFieldBuilder getRadioGroupDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSRadioGroupFieldBuilderImpl(
+		return new RadioGroupDSFieldBuilderImpl(
 			documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSSignaturePackageIdFieldBuilder getDSSignaturePackageIdFieldBuilder(
+	public SignaturePackageIdDSFieldBuilder getSignaturePackageIdDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSSignaturePackageIdFieldBuilderImpl(
+		return new SignaturePackageIdDSFieldBuilderImpl(
 			documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSSignerAttachmentFieldBuilder getDSSignerAttachmentFieldBuilder(
+	public SignerAttachmentDSFieldBuilder getSignerAttachmentDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSSignerAttachmentFieldBuilderImpl(
+		return new SignerAttachmentDSFieldBuilderImpl(
 			documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSSignHereFieldBuilder getDSSignHereFieldBuilder(
+	public SignHereDSFieldBuilder getSignHereDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSSignHereFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new SignHereDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSSocialSecurityNumberFieldBuilder
-		getDSSocialSecurityNumberFieldBuilder(
+	public SocialSecurityNumberDSFieldBuilder
+		getSocialSecurityNumberDSFieldBuilder(
 			String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSSocialSecurityNumberFieldBuilderImpl(
+		return new SocialSecurityNumberDSFieldBuilderImpl(
 			documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSTextFieldBuilder getDSTextFieldBuilder(
+	public TextDSFieldBuilder getTextDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSTextFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new TextDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSTitleFieldBuilder getDSTitleFieldBuilder(
+	public TitleDSFieldBuilder getTitleDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSTitleFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new TitleDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSViewFieldBuilder getDSViewFieldBuilder(
+	public ViewDSFieldBuilder getViewDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new DSViewFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new ViewDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 }
