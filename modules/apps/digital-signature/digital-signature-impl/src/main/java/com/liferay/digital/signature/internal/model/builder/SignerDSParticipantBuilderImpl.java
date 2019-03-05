@@ -33,11 +33,8 @@ public class SignerDSParticipantBuilderImpl
 
 	@Override
 	protected SignerDSParticipantImpl createDSSignerParticipantImpl() {
-		SignerDSParticipantImpl dsSignerParticipantImpl =
-			new SignerDSParticipantImpl(
-				getName(), getEmail(), getRoutingOrder());
-
-		return dsSignerParticipantImpl;
+		return new SignerDSParticipantImpl(
+			getName(), getEmail(), getRoutingOrder());
 	}
 
 }
