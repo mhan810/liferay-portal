@@ -12,26 +12,19 @@
  * details.
  */
 
-package com.liferay.digital.signature.request.builder;
+package com.liferay.digital.signature.request;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.digital.signature.model.DSSignaturePackage;
-import com.liferay.digital.signature.request.DSSignaturePackageCreateRequest;
+import com.liferay.digital.signature.response.DSSignatureResponse;
 
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSSignaturePackageCreateRequestBuilder {
+public interface PackageDSSignatureRequest extends DSSignatureRequest {
 
-	public DSSignaturePackageCreateRequest
-		createDraftDSSignaturePackageCreateRequest();
-
-	public DSSignaturePackageCreateRequest
-		createDSSignaturePackageCreateRequest();
-
-	public DSSignaturePackageCreateRequestBuilder setDSSignaturePackage(
-		DSSignaturePackage dsSignaturePackage);
+	public DSSignatureResponse execute(
+		PackageDSSignatureRequestExecutor packageDSSignatureRequestExecutor);
 
 }
