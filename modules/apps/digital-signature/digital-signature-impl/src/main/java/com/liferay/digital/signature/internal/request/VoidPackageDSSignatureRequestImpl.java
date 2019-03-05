@@ -15,15 +15,15 @@
 package com.liferay.digital.signature.internal.request;
 
 import com.liferay.digital.signature.model.DSSessionId;
-import com.liferay.digital.signature.request.DSSignaturePackageVoidRequest;
+import com.liferay.digital.signature.request.VoidPackageDSSignatureRequest;
 
 /**
  * @author Michael C. Han
  */
-public class DSSignaturePackageVoidRequestImpl
-	implements DSSignaturePackageVoidRequest {
+public class VoidPackageDSSignatureRequestImpl
+	implements VoidPackageDSSignatureRequest {
 
-	public DSSignaturePackageVoidRequestImpl(
+	public VoidPackageDSSignatureRequestImpl(
 		DSSessionId dsSessionId, String dsSignaturePackageId) {
 
 		_dsSessionId = dsSessionId;
