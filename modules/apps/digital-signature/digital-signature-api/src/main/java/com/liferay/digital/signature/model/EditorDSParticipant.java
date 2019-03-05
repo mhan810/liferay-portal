@@ -20,7 +20,7 @@ import aQute.bnd.annotation.ProviderType;
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSIntermediaryParticipant extends DSParticipant {
+public interface EditorDSParticipant extends DSParticipant {
 
 	public Boolean getCanEditParticipantEmails();
 

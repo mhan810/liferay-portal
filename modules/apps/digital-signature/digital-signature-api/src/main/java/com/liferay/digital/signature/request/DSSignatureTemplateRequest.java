@@ -12,28 +12,13 @@
  * details.
  */
 
-package com.liferay.digital.signature.model;
+package com.liferay.digital.signature.request;
 
 import aQute.bnd.annotation.ProviderType;
-
-import com.liferay.digital.signature.model.field.DSField;
-
-import java.util.Collection;
 
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSSignerParticipant extends DSParticipant {
-
-	public Boolean getAutoNavigation();
-
-	public Boolean getDefaultParticipant();
-
-	public Collection<DSField> getDSFields();
-
-	public DSSignatureInfo getDSSignatureInfo();
-
-	public Boolean getSignInEachLocation();
-
+public interface DSSignatureTemplateRequest {
 }

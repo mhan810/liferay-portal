@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.digital.signature.model;
+package com.liferay.digital.signature.model.builder;
 
 import aQute.bnd.annotation.ProviderType;
 
@@ -20,16 +20,6 @@ import aQute.bnd.annotation.ProviderType;
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSInPersonSignerParticipant extends DSSignerParticipant {
-
-	public String getHostEmail();
-
-	public String getHostName();
-
-	public DSInPersonSignerType getInPersonSignerType();
-
-	public String getSignerEmail();
-
-	public String getSignerName();
-
+public interface SignerDSParticipantBuilder
+	extends DSParticipantBuilder, SigningDSParticipantBuilder {
 }

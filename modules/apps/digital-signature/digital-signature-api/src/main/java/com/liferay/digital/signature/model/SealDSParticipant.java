@@ -16,14 +16,14 @@ package com.liferay.digital.signature.model;
 
 import aQute.bnd.annotation.ProviderType;
 
+import java.util.Collection;
+
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSInPersonSignerNotaryParticipant extends DSSignerParticipant {
+public interface SealDSParticipant extends DSParticipant {
 
-	public DSInPersonSignerType getDSInPersonSignerType();
-
-	public DSNotaryInfo getDSNotaryInfo();
+	public Collection<DSSealInfo> getDSSealInfos();
 
 }

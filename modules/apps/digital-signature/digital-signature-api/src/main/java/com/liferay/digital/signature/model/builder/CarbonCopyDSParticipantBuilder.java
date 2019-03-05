@@ -12,18 +12,13 @@
  * details.
  */
 
-package com.liferay.digital.signature.model;
+package com.liferay.digital.signature.model.builder;
 
 import aQute.bnd.annotation.ProviderType;
-
-import java.util.Collection;
 
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSSealParticipant extends DSParticipant {
-
-	public Collection<DSSealInfo> getDSSealInfos();
-
+public interface CarbonCopyDSParticipantBuilder extends DSParticipantBuilder {
 }

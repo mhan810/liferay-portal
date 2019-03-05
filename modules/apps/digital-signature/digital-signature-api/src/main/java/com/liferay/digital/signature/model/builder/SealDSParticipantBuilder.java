@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.digital.signature.model;
+package com.liferay.digital.signature.model.builder;
 
 import aQute.bnd.annotation.ProviderType;
 
@@ -20,10 +20,19 @@ import aQute.bnd.annotation.ProviderType;
  * @author Michael C. Han
  */
 @ProviderType
-public interface DSEditorParticipant extends DSParticipant {
+public interface SealDSParticipantBuilder extends DSParticipantBuilder {
 
-	public Boolean getCanEditParticipantEmails();
+	public SealDSParticipantBuilder addDSSealInfo(
+		String sealName, String sealProviderName);
 
-	public Boolean getCanEditParticipantNames();
+	public SealDSParticipantBuilder addDSSealInfo(
+		String sealName, String sealProviderName,
+		Boolean sealDocumentsWithFieldsOnly);
+
+	public SealDSParticipantBuilder addMobilePhoneNumber(
+		String sealName, String mobilePhoneNumber, String signerRole);
+
+	public SealDSParticipantBuilder addOneTimePassword(
+		String sealName, String oneTimePasssword, String signerRole);
 
 }
