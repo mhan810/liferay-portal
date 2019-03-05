@@ -16,6 +16,7 @@ package com.liferay.digital.signature.internal.model.field.builder;
 
 import com.liferay.digital.signature.model.field.builder.ApproveDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.CheckboxDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.CompanyNameDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.DSFieldBuildersFactory;
 import com.liferay.digital.signature.model.field.builder.DateDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.DateSignedDSFieldBuilder;
@@ -51,28 +52,36 @@ import org.osgi.service.component.annotations.Component;
 public class DSFieldBuildersFactoryImpl implements DSFieldBuildersFactory {
 
 	@Override
-	public ApproveDSFieldBuilder getApproveDSFieldBuilder(
+	public ApproveDSFieldBuilder createApproveDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new ApproveDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public CheckboxDSFieldBuilder getCheckboxDSFieldBuilder(
+	public CheckboxDSFieldBuilder createCheckboxDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new CheckboxDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DateDSFieldBuilder getDateDSFieldBuilder(
+	public CompanyNameDSFieldBuilder createCompanyNameDSFieldBuilder(
+		String documentId, String fieldId, Integer pageNumber) {
+
+		return new CompanyNameDSFieldBuilderImpl(
+			documentId, fieldId, pageNumber);
+	}
+
+	@Override
+	public DateDSFieldBuilder createDateDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new DateDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DateSignedDSFieldBuilder getDateSignedDSFieldBuilder(
+	public DateSignedDSFieldBuilder createDateSignedDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new DateSignedDSFieldBuilderImpl(
@@ -80,42 +89,42 @@ public class DSFieldBuildersFactoryImpl implements DSFieldBuildersFactory {
 	}
 
 	@Override
-	public DeclineDSFieldBuilder getDeclineDSFieldBuilder(
+	public DeclineDSFieldBuilder createDeclineDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new DeclineDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public EmailDSFieldBuilder getEmailDSFieldBuilder(
+	public EmailDSFieldBuilder createEmailDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new EmailDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public FirstNameDSFieldBuilder getFirstNameDSFieldBuilder(
+	public FirstNameDSFieldBuilder createFirstNameDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new FirstNameDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public FormulaDSFieldBuilder getFormulaDSFieldBuilder(
+	public FormulaDSFieldBuilder createFormulaDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new FormulaDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public FullNameDSFieldBuilder getFullNameDSFieldBuilder(
+	public FullNameDSFieldBuilder createFullNameDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new FullNameDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public InitialHereDSFieldBuilder getInitialHereDSFieldBuilder(
+	public InitialHereDSFieldBuilder createInitialHereDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new InitialHereDSFieldBuilderImpl(
@@ -123,42 +132,42 @@ public class DSFieldBuildersFactoryImpl implements DSFieldBuildersFactory {
 	}
 
 	@Override
-	public LastNameDSFieldBuilder getLastNameDSFieldBuilder(
+	public LastNameDSFieldBuilder createLastNameDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new LastNameDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public ListDSFieldBuilder getListDSFieldBuilder(
+	public ListDSFieldBuilder createListDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new ListDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public NotarizeDSFieldBuilder getNotarizeDSFieldBuilder(
+	public NotarizeDSFieldBuilder createNotarizeDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new NotarizeDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public NoteDSFieldBuilder getNoteDSFieldBuilder(
+	public NoteDSFieldBuilder createNoteDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new NoteDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public NumberDSFieldBuilder getNumberDSFieldBuilder(
+	public NumberDSFieldBuilder createNumberDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new NumberDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public ParticipantEmailDSFieldBuilder getParticipantEmailDSFieldBuilder(
+	public ParticipantEmailDSFieldBuilder createParticipantEmailDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new ParticipantEmailDSFieldBuilderImpl(
@@ -166,7 +175,7 @@ public class DSFieldBuildersFactoryImpl implements DSFieldBuildersFactory {
 	}
 
 	@Override
-	public PostalCodeDSFieldBuilder getPostalCodeDSFieldBuilder(
+	public PostalCodeDSFieldBuilder createPostalCodeDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new PostalCodeDSFieldBuilderImpl(
@@ -174,14 +183,14 @@ public class DSFieldBuildersFactoryImpl implements DSFieldBuildersFactory {
 	}
 
 	@Override
-	public RadioDSFieldBuilder getRadioDSFieldBuilder(
+	public RadioDSFieldBuilder createRadioDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new RadioDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public RadioGroupDSFieldBuilder getRadioGroupDSFieldBuilder(
+	public RadioGroupDSFieldBuilder createRadioGroupDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new RadioGroupDSFieldBuilderImpl(
@@ -189,15 +198,16 @@ public class DSFieldBuildersFactoryImpl implements DSFieldBuildersFactory {
 	}
 
 	@Override
-	public SignaturePackageIdDSFieldBuilder getSignaturePackageIdDSFieldBuilder(
-		String documentId, String fieldId, Integer pageNumber) {
+	public SignaturePackageIdDSFieldBuilder
+		createSignaturePackageIdDSFieldBuilder(
+			String documentId, String fieldId, Integer pageNumber) {
 
 		return new SignaturePackageIdDSFieldBuilderImpl(
 			documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public SignerAttachmentDSFieldBuilder getSignerAttachmentDSFieldBuilder(
+	public SignerAttachmentDSFieldBuilder createSignerAttachmentDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new SignerAttachmentDSFieldBuilderImpl(
@@ -205,7 +215,7 @@ public class DSFieldBuildersFactoryImpl implements DSFieldBuildersFactory {
 	}
 
 	@Override
-	public SignHereDSFieldBuilder getSignHereDSFieldBuilder(
+	public SignHereDSFieldBuilder createSignHereDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new SignHereDSFieldBuilderImpl(documentId, fieldId, pageNumber);
@@ -213,7 +223,7 @@ public class DSFieldBuildersFactoryImpl implements DSFieldBuildersFactory {
 
 	@Override
 	public SocialSecurityNumberDSFieldBuilder
-		getSocialSecurityNumberDSFieldBuilder(
+		createSocialSecurityNumberDSFieldBuilder(
 			String documentId, String fieldId, Integer pageNumber) {
 
 		return new SocialSecurityNumberDSFieldBuilderImpl(
@@ -221,21 +231,21 @@ public class DSFieldBuildersFactoryImpl implements DSFieldBuildersFactory {
 	}
 
 	@Override
-	public TextDSFieldBuilder getTextDSFieldBuilder(
+	public TextDSFieldBuilder createTextDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new TextDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public TitleDSFieldBuilder getTitleDSFieldBuilder(
+	public TitleDSFieldBuilder createTitleDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new TitleDSFieldBuilderImpl(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public ViewDSFieldBuilder getViewDSFieldBuilder(
+	public ViewDSFieldBuilder createViewDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		return new ViewDSFieldBuilderImpl(documentId, fieldId, pageNumber);
