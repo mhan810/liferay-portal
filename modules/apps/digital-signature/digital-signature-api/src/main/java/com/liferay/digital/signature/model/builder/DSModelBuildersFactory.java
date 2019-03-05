@@ -22,45 +22,45 @@ import aQute.bnd.annotation.ProviderType;
 @ProviderType
 public interface DSModelBuildersFactory {
 
-	public AgentDSParticipantBuilder createDSAgentParticipantBuilder(
+	public AgentDSParticipantBuilder createAgentDSParticipantBuilder(
 		String name, String email, int routingOrder);
 
-	public CarbonCopyDSParticipantBuilder createDSCarbonCopyParticipantBuilder(
+	public CarbonCopyDSParticipantBuilder createCarbonCopyDSParticipantBuilder(
 		String name, String email, int routingOrder);
 
 	public CertifiedDeliveryDSParticipantBuilder
-		createDSCertifiedDeliveryParticipantBuilder(
+		createCertifiedDeliveryDSParticipantBuilder(
 			String name, String email, int routingOrder);
 
 	public DSDocumentBuilder createDSDocumentBuilder(
 		String documentId, String name);
 
-	public EditorDSParticipantBuilder createDSEditorParticipantBuilder(
-		String name, String email, int routingOrder);
-
 	public DSEmailNotificationBuilder createDSEmailNotificationBuilder(
 		String subject, String message);
 
-	public InPersonSignerNotaryDSParticipantBuilder
-		createDSInPersonSignerNotaryParticipantBuilder(
-			String name, String email, int routingOrder,
-			String notaryParticipantId, String notaryName, String notaryEmail);
+	public DSSignaturePackageBuilder createDSSignatureRequestBuilder();
+
+	public EditorDSParticipantBuilder createEditorDSParticipantBuilder(
+		String name, String email, int routingOrder);
 
 	public InPersonSignerDSParticipantBuilder
-		createDSInPersonSignerParticipantBuilder(
+		createInPersonSignerDSParticipantBuilder(
 			String hostName, String hostEmail, String signerName,
 			String signerEmail, int routingOrder);
 
+	public InPersonSignerNotaryDSParticipantBuilder
+		createInPersonSignerNotaryDSParticipantBuilder(
+			String name, String email, int routingOrder,
+			String notaryParticipantId, String notaryName, String notaryEmail);
+
 	public IntermediaryDSParticipantBuilder
-		createDSIntermediaryParticipantBuilder(
+		createIntermediaryDSParticipantBuilder(
 			String name, String email, int routingOrder);
 
-	public SealDSParticipantBuilder createDSSealParticipantBuilder(
+	public SealDSParticipantBuilder createSealDSParticipantBuilder(
 		String participantId, String name, String email, int routingOrder);
 
-	public DSSignaturePackageBuilder createDSSignatureRequestBuilder();
-
-	public SignerDSParticipantBuilder createDSSignerParticipantBuilder(
+	public SignerDSParticipantBuilder createSignerDSParticipantBuilder(
 		String name, String email, int routingOrder);
 
 }
