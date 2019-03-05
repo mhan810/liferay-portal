@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.digital.signature;
+package com.liferay.digital.signature.exception;
 
 import aQute.bnd.annotation.ProviderType;
 
