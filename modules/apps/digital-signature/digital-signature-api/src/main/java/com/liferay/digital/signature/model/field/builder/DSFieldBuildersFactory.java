@@ -22,83 +22,83 @@ import aQute.bnd.annotation.ProviderType;
 @ProviderType
 public interface DSFieldBuildersFactory {
 
-	public DSApproveFieldBuilder getDSApproveFieldBuilder(
+	public ApproveDSFieldBuilder getApproveDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSCheckboxFieldBuilder getDSCheckboxFieldBuilder(
+	public CheckboxDSFieldBuilder getCheckboxDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSDateFieldBuilder getDSDateFieldBuilder(
+	public DateDSFieldBuilder getDateDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSDateSignedFieldBuilder getDSDateSignedFieldBuilder(
+	public DateSignedDSFieldBuilder getDateSignedDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSDeclineFieldBuilder getDSDeclineFieldBuilder(
+	public DeclineDSFieldBuilder getDeclineDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSEmailFieldBuilder getDSEmailFieldBuilder(
+	public EmailDSFieldBuilder getEmailDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSFirstNameFieldBuilder getDSFirstNameFieldBuilder(
+	public FirstNameDSFieldBuilder getFirstNameDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSFormulaFieldBuilder getDSFormulaFieldBuilder(
+	public FormulaDSFieldBuilder getFormulaDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSFullNameFieldBuilder getDSFullNameFieldBuilder(
+	public FullNameDSFieldBuilder getFullNameDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSInitialHereFieldBuilder getDSInitialHereFieldBuilder(
+	public InitialHereDSFieldBuilder getInitialHereDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSLastNameFieldBuilder getDSLastNameFieldBuilder(
+	public LastNameDSFieldBuilder getLastNameDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSListFieldBuilder getDSListFieldBuilder(
+	public ListDSFieldBuilder getListDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSNotarizeFieldBuilder getDSNotarizeFieldBuilder(
+	public NotarizeDSFieldBuilder getNotarizeDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSNoteFieldBuilder getDSNoteFieldBuilder(
+	public NoteDSFieldBuilder getNoteDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSNumberFieldBuilder getDSNumberFieldBuilder(
+	public NumberDSFieldBuilder getNumberDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSParticipantEmailFieldBuilder getDSParticipantEmailFieldBuilder(
+	public ParticipantEmailDSFieldBuilder getParticipantEmailDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSPostalCodeFieldBuilder getDSPostalCodeFieldBuilder(
+	public PostalCodeDSFieldBuilder getPostalCodeDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSRadioFieldBuilder getDSRadioFieldBuilder(
+	public RadioDSFieldBuilder getRadioDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSRadioGroupFieldBuilder getDSRadioGroupFieldBuilder(
+	public RadioGroupDSFieldBuilder getRadioGroupDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSSignaturePackageIdFieldBuilder getDSSignaturePackageIdFieldBuilder(
+	public SignaturePackageIdDSFieldBuilder getSignaturePackageIdDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSSignerAttachmentFieldBuilder getDSSignerAttachmentFieldBuilder(
+	public SignerAttachmentDSFieldBuilder getSignerAttachmentDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSSignHereFieldBuilder getDSSignHereFieldBuilder(
+	public SignHereDSFieldBuilder getSignHereDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSSocialSecurityNumberFieldBuilder
-		getDSSocialSecurityNumberFieldBuilder(
+	public SocialSecurityNumberDSFieldBuilder
+		getSocialSecurityNumberDSFieldBuilder(
 			String documentId, String fieldId, Integer pageNumber);
 
-	public DSTextFieldBuilder getDSTextFieldBuilder(
+	public TextDSFieldBuilder getTextDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSTitleFieldBuilder getDSTitleFieldBuilder(
+	public TitleDSFieldBuilder getTitleDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DSViewFieldBuilder getDSViewFieldBuilder(
+	public ViewDSFieldBuilder getViewDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
 }
