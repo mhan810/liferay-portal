@@ -22,83 +22,87 @@ import aQute.bnd.annotation.ProviderType;
 @ProviderType
 public interface DSFieldBuildersFactory {
 
-	public ApproveDSFieldBuilder getApproveDSFieldBuilder(
+	public ApproveDSFieldBuilder createApproveDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public CheckboxDSFieldBuilder getCheckboxDSFieldBuilder(
+	public CheckboxDSFieldBuilder createCheckboxDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DateDSFieldBuilder getDateDSFieldBuilder(
+	public CompanyNameDSFieldBuilder createCompanyNameDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DateSignedDSFieldBuilder getDateSignedDSFieldBuilder(
+	public DateDSFieldBuilder createDateDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public DeclineDSFieldBuilder getDeclineDSFieldBuilder(
+	public DateSignedDSFieldBuilder createDateSignedDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public EmailDSFieldBuilder getEmailDSFieldBuilder(
+	public DeclineDSFieldBuilder createDeclineDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public FirstNameDSFieldBuilder getFirstNameDSFieldBuilder(
+	public EmailDSFieldBuilder createEmailDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public FormulaDSFieldBuilder getFormulaDSFieldBuilder(
+	public FirstNameDSFieldBuilder createFirstNameDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public FullNameDSFieldBuilder getFullNameDSFieldBuilder(
+	public FormulaDSFieldBuilder createFormulaDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public InitialHereDSFieldBuilder getInitialHereDSFieldBuilder(
+	public FullNameDSFieldBuilder createFullNameDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public LastNameDSFieldBuilder getLastNameDSFieldBuilder(
+	public InitialHereDSFieldBuilder createInitialHereDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public ListDSFieldBuilder getListDSFieldBuilder(
+	public LastNameDSFieldBuilder createLastNameDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public NotarizeDSFieldBuilder getNotarizeDSFieldBuilder(
+	public ListDSFieldBuilder createListDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public NoteDSFieldBuilder getNoteDSFieldBuilder(
+	public NotarizeDSFieldBuilder createNotarizeDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public NumberDSFieldBuilder getNumberDSFieldBuilder(
+	public NoteDSFieldBuilder createNoteDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public ParticipantEmailDSFieldBuilder getParticipantEmailDSFieldBuilder(
+	public NumberDSFieldBuilder createNumberDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public PostalCodeDSFieldBuilder getPostalCodeDSFieldBuilder(
+	public ParticipantEmailDSFieldBuilder createParticipantEmailDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public RadioDSFieldBuilder getRadioDSFieldBuilder(
+	public PostalCodeDSFieldBuilder createPostalCodeDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public RadioGroupDSFieldBuilder getRadioGroupDSFieldBuilder(
+	public RadioDSFieldBuilder createRadioDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public SignaturePackageIdDSFieldBuilder getSignaturePackageIdDSFieldBuilder(
+	public RadioGroupDSFieldBuilder createRadioGroupDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public SignerAttachmentDSFieldBuilder getSignerAttachmentDSFieldBuilder(
+	public SignaturePackageIdDSFieldBuilder
+		createSignaturePackageIdDSFieldBuilder(
+			String documentId, String fieldId, Integer pageNumber);
+
+	public SignerAttachmentDSFieldBuilder createSignerAttachmentDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public SignHereDSFieldBuilder getSignHereDSFieldBuilder(
+	public SignHereDSFieldBuilder createSignHereDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
 	public SocialSecurityNumberDSFieldBuilder
-		getSocialSecurityNumberDSFieldBuilder(
+		createSocialSecurityNumberDSFieldBuilder(
 			String documentId, String fieldId, Integer pageNumber);
 
-	public TextDSFieldBuilder getTextDSFieldBuilder(
+	public TextDSFieldBuilder createTextDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public TitleDSFieldBuilder getTitleDSFieldBuilder(
+	public TitleDSFieldBuilder createTitleDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public ViewDSFieldBuilder getViewDSFieldBuilder(
+	public ViewDSFieldBuilder createViewDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
 }
