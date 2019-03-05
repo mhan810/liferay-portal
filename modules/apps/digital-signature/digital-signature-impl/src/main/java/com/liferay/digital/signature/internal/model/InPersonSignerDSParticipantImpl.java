@@ -14,18 +14,18 @@
 
 package com.liferay.digital.signature.internal.model;
 
-import com.liferay.digital.signature.model.DSInPersonSignerParticipant;
 import com.liferay.digital.signature.model.DSInPersonSignerType;
 import com.liferay.digital.signature.model.DSParticipantRole;
 import com.liferay.digital.signature.model.DSParticipantVisitor;
+import com.liferay.digital.signature.model.InPersonSignerDSParticipant;
 
 /**
  * @author Michael C. Han
  */
-public class DSInPersonSignerParticipantImpl
-	extends DSSignerParticipantImpl implements DSInPersonSignerParticipant {
+public class InPersonSignerDSParticipantImpl
+	extends SignerDSParticipantImpl implements InPersonSignerDSParticipant {
 
-	public DSInPersonSignerParticipantImpl(
+	public InPersonSignerDSParticipantImpl(
 		String hostName, String hostEmail, String signerName,
 		String signerEmail, int routingOrder) {
 

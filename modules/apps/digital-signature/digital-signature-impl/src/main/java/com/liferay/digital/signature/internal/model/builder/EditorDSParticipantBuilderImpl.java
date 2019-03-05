@@ -14,30 +14,36 @@
 
 package com.liferay.digital.signature.internal.model.builder;
 
-import com.liferay.digital.signature.internal.model.DSSignerParticipantImpl;
-import com.liferay.digital.signature.model.DSSignerParticipant;
-import com.liferay.digital.signature.model.builder.DSSignerParticipantBuilder;
+import com.liferay.digital.signature.internal.model.EditorDSParticipantImpl;
+import com.liferay.digital.signature.model.EditorDSParticipant;
+import com.liferay.digital.signature.model.builder.EditorDSParticipantBuilder;
 
 /**
  * @author Michael C. Han
  */
-public class DSSignerParticipantBuilderImpl
-	extends BaseSigningDSParticipantBuilder<DSSignerParticipant>
-	implements DSSignerParticipantBuilder {
+public class EditorDSParticipantBuilderImpl
+	extends BaseParticipantModifyingDSParticipantBuilder<EditorDSParticipant>
+	implements EditorDSParticipantBuilder {
 
-	public DSSignerParticipantBuilderImpl(
+	public EditorDSParticipantBuilderImpl(
 		String name, String email, int routingOrder) {
 
 		super(name, email, routingOrder);
 	}
 
 	@Override
-	protected DSSignerParticipantImpl createDSSignerParticipantImpl() {
-		DSSignerParticipantImpl dsSignerParticipantImpl =
-			new DSSignerParticipantImpl(
+	protected EditorDSParticipant createDSParticipant() {
+		EditorDSParticipantImpl dsEditorParticipantImpl =
+			new EditorDSParticipantImpl(
 				getName(), getEmail(), getRoutingOrder());
 
-		return dsSignerParticipantImpl;
+		dsEditorParticipantImpl.setCanEditParticipantEmails(
+			getCanEditParticipantEmails());
+
+		dsEditorParticipantImpl.setCanEditParticipantNames(
+			getCanEditParticipantNames());
+
+		return dsEditorParticipantImpl;
 	}
 
 }

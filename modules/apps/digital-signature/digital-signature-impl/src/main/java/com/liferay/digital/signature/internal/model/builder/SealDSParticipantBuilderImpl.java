@@ -15,11 +15,11 @@
 package com.liferay.digital.signature.internal.model.builder;
 
 import com.liferay.digital.signature.internal.model.DSSealInfoImpl;
-import com.liferay.digital.signature.internal.model.DSSealParticipantImpl;
 import com.liferay.digital.signature.internal.model.DSSealProviderOptionsImpl;
+import com.liferay.digital.signature.internal.model.SealDSParticipantImpl;
 import com.liferay.digital.signature.model.DSSealInfo;
-import com.liferay.digital.signature.model.DSSealParticipant;
-import com.liferay.digital.signature.model.builder.DSSealParticipantBuilder;
+import com.liferay.digital.signature.model.SealDSParticipant;
+import com.liferay.digital.signature.model.builder.SealDSParticipantBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,11 +27,11 @@ import java.util.Map;
 /**
  * @author Michael C. Han
  */
-public class DSSealParticipantBuilderImpl
-	extends BaseDSParticipantBuilder<DSSealParticipant>
-	implements DSSealParticipantBuilder {
+public class SealDSParticipantBuilderImpl
+	extends BaseDSParticipantBuilder<SealDSParticipant>
+	implements SealDSParticipantBuilder {
 
-	public DSSealParticipantBuilderImpl(
+	public SealDSParticipantBuilderImpl(
 		String participantId, String name, String email, int routingOrder) {
 
 		super(name, email, routingOrder);
@@ -40,7 +40,7 @@ public class DSSealParticipantBuilderImpl
 	}
 
 	@Override
-	public DSSealParticipantBuilder addDSSealInfo(
+	public SealDSParticipantBuilder addDSSealInfo(
 		String sealName, String sealProviderName) {
 
 		DSSealInfoImpl dsSealInfoImpl = new DSSealInfoImpl(
@@ -52,7 +52,7 @@ public class DSSealParticipantBuilderImpl
 	}
 
 	@Override
-	public DSSealParticipantBuilder addDSSealInfo(
+	public SealDSParticipantBuilder addDSSealInfo(
 		String sealName, String sealProviderName,
 		Boolean sealDocumentsWithFieldsOnly) {
 
@@ -65,7 +65,7 @@ public class DSSealParticipantBuilderImpl
 	}
 
 	@Override
-	public DSSealParticipantBuilder addMobilePhoneNumber(
+	public SealDSParticipantBuilder addMobilePhoneNumber(
 		String sealName, String mobilePhoneNumber, String signerRole) {
 
 		DSSealProviderOptionsImpl dsSealProviderOptionsImpl =
@@ -77,7 +77,7 @@ public class DSSealParticipantBuilderImpl
 	}
 
 	@Override
-	public DSSealParticipantBuilder addOneTimePassword(
+	public SealDSParticipantBuilder addOneTimePassword(
 		String sealName, String oneTimePasssword, String signerRole) {
 
 		DSSealProviderOptionsImpl dsSealProviderOptionsImpl =
@@ -110,8 +110,8 @@ public class DSSealParticipantBuilderImpl
 	}
 
 	@Override
-	protected DSSealParticipant createDSParticipant() {
-		DSSealParticipantImpl dsSealParticipantImpl = new DSSealParticipantImpl(
+	protected SealDSParticipant createDSParticipant() {
+		SealDSParticipantImpl dsSealParticipantImpl = new SealDSParticipantImpl(
 			getParticipantId(), getName(), getEmail(), getRoutingOrder());
 
 		dsSealParticipantImpl.addDSSealInfos(_dsSealInfos.values());

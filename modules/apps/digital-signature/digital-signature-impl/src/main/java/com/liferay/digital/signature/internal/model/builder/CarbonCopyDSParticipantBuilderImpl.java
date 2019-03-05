@@ -14,26 +14,26 @@
 
 package com.liferay.digital.signature.internal.model.builder;
 
-import com.liferay.digital.signature.internal.model.DSCarbonCopyParticipantImpl;
-import com.liferay.digital.signature.model.DSCarbonCopyParticipant;
-import com.liferay.digital.signature.model.builder.DSCarbonCopyParticipantBuilder;
+import com.liferay.digital.signature.internal.model.CarbonCopyDSParticipantImpl;
+import com.liferay.digital.signature.model.CarbonCopyDSParticipant;
+import com.liferay.digital.signature.model.builder.CarbonCopyDSParticipantBuilder;
 
 /**
  * @author Michael C. Han
  */
-public class DSCarbonCopyParticipantBuilderImpl
-	extends BaseDSParticipantBuilder<DSCarbonCopyParticipant>
-	implements DSCarbonCopyParticipantBuilder {
+public class CarbonCopyDSParticipantBuilderImpl
+	extends BaseDSParticipantBuilder<CarbonCopyDSParticipant>
+	implements CarbonCopyDSParticipantBuilder {
 
-	public DSCarbonCopyParticipantBuilderImpl(
+	public CarbonCopyDSParticipantBuilderImpl(
 		String name, String email, int routingOrder) {
 
 		super(name, email, routingOrder);
 	}
 
 	@Override
-	protected DSCarbonCopyParticipant createDSParticipant() {
-		return new DSCarbonCopyParticipantImpl(
+	protected CarbonCopyDSParticipant createDSParticipant() {
+		return new CarbonCopyDSParticipantImpl(
 			getName(), getEmail(), getRoutingOrder());
 	}
 

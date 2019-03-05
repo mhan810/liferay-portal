@@ -14,20 +14,20 @@
 
 package com.liferay.digital.signature.internal.model.builder;
 
-import com.liferay.digital.signature.internal.model.DSInPersonSignerNotaryParticipantImpl;
 import com.liferay.digital.signature.internal.model.DSNotaryInfoImpl;
-import com.liferay.digital.signature.internal.model.DSSignerParticipantImpl;
-import com.liferay.digital.signature.model.DSInPersonSignerNotaryParticipant;
-import com.liferay.digital.signature.model.builder.DSInPersonSignerNotaryParticipantBuilder;
+import com.liferay.digital.signature.internal.model.InPersonSignerNotaryDSParticipantImpl;
+import com.liferay.digital.signature.internal.model.SignerDSParticipantImpl;
+import com.liferay.digital.signature.model.InPersonSignerNotaryDSParticipant;
+import com.liferay.digital.signature.model.builder.InPersonSignerNotaryDSParticipantBuilder;
 
 /**
  * @author Michael C. Han
  */
-public class DSInPersonSignerNotaryParticipantBuilderImpl
-	extends BaseSigningDSParticipantBuilder<DSInPersonSignerNotaryParticipant>
-	implements DSInPersonSignerNotaryParticipantBuilder {
+public class InPersonSignerNotaryDSParticipantBuilderImpl
+	extends BaseSigningDSParticipantBuilder<InPersonSignerNotaryDSParticipant>
+	implements InPersonSignerNotaryDSParticipantBuilder {
 
-	public DSInPersonSignerNotaryParticipantBuilderImpl(
+	public InPersonSignerNotaryDSParticipantBuilderImpl(
 		String name, String email, int routingOrder, String notaryParticipantId,
 		String notaryName, String notaryEmail) {
 
@@ -39,13 +39,13 @@ public class DSInPersonSignerNotaryParticipantBuilderImpl
 	}
 
 	@Override
-	protected DSSignerParticipantImpl createDSSignerParticipantImpl() {
+	protected SignerDSParticipantImpl createDSSignerParticipantImpl() {
 		DSNotaryInfoImpl dsNotaryInfoImpl = new DSNotaryInfoImpl(
 			_notaryParticipantId, _notaryName, _notaryEmail);
 
-		DSInPersonSignerNotaryParticipantImpl
+		InPersonSignerNotaryDSParticipantImpl
 			dsInPersonSignerNotaryParticipantImpl =
-				new DSInPersonSignerNotaryParticipantImpl(
+				new InPersonSignerNotaryDSParticipantImpl(
 					getName(), getEmail(), getRoutingOrder(), dsNotaryInfoImpl);
 
 		return dsInPersonSignerNotaryParticipantImpl;
