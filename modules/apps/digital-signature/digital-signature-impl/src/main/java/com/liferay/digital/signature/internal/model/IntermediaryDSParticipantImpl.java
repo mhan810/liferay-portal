@@ -12,29 +12,30 @@
  * details.
  */
 
-package com.liferay.digital.signature.internal.model.builder;
+package com.liferay.digital.signature.internal.model;
 
-import com.liferay.digital.signature.internal.model.DSCertifiedDeliveryParticipantImpl;
-import com.liferay.digital.signature.model.DSCertifiedDeliveryParticipant;
-import com.liferay.digital.signature.model.builder.DSCertifiedDeliveryParticipantBuilder;
+import com.liferay.digital.signature.model.DSParticipantRole;
+import com.liferay.digital.signature.model.DSParticipantVisitor;
+import com.liferay.digital.signature.model.IntermediaryDSParticipant;
 
 /**
  * @author Michael C. Han
  */
-public class DSCertifiedDeliveryParticipantBuilderImpl
-	extends BaseDSParticipantBuilder<DSCertifiedDeliveryParticipant>
-	implements DSCertifiedDeliveryParticipantBuilder {
+public class IntermediaryDSParticipantImpl
+	extends BaseParticipantModifyingDSParticipant
+	implements IntermediaryDSParticipant {
 
-	public DSCertifiedDeliveryParticipantBuilderImpl(
+	public IntermediaryDSParticipantImpl(
 		String name, String email, int routingOrder) {
 
 		super(name, email, routingOrder);
+
+		setDSParticipantRole(DSParticipantRole.INTERMEDIARY);
 	}
 
 	@Override
-	protected DSCertifiedDeliveryParticipant createDSParticipant() {
-		return new DSCertifiedDeliveryParticipantImpl(
-			getName(), getEmail(), getRoutingOrder());
+	public <T> T translate(DSParticipantVisitor<T> dsParticipantVisitor) {
+		return dsParticipantVisitor.visit(this);
 	}
 
 }

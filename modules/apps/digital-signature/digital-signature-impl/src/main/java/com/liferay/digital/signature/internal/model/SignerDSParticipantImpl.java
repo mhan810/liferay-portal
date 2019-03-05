@@ -17,7 +17,7 @@ package com.liferay.digital.signature.internal.model;
 import com.liferay.digital.signature.model.DSParticipantRole;
 import com.liferay.digital.signature.model.DSParticipantVisitor;
 import com.liferay.digital.signature.model.DSSignatureInfo;
-import com.liferay.digital.signature.model.DSSignerParticipant;
+import com.liferay.digital.signature.model.SignerDSParticipant;
 import com.liferay.digital.signature.model.field.DSField;
 
 import java.util.Collection;
@@ -28,10 +28,10 @@ import java.util.Set;
 /**
  * @author Michael C. Han
  */
-public class DSSignerParticipantImpl
-	extends BaseDSParticipantImpl implements DSSignerParticipant {
+public class SignerDSParticipantImpl
+	extends BaseDSParticipantImpl implements SignerDSParticipant {
 
-	public DSSignerParticipantImpl(
+	public SignerDSParticipantImpl(
 		String name, String email, int routingOrder) {
 
 		super(name, email, routingOrder);

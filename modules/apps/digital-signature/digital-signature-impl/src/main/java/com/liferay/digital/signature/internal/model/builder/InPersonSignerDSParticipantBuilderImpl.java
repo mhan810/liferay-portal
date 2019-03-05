@@ -14,19 +14,19 @@
 
 package com.liferay.digital.signature.internal.model.builder;
 
-import com.liferay.digital.signature.internal.model.DSInPersonSignerParticipantImpl;
-import com.liferay.digital.signature.internal.model.DSSignerParticipantImpl;
-import com.liferay.digital.signature.model.DSInPersonSignerParticipant;
-import com.liferay.digital.signature.model.builder.DSInPersonSignerParticipantBuilder;
+import com.liferay.digital.signature.internal.model.InPersonSignerDSParticipantImpl;
+import com.liferay.digital.signature.internal.model.SignerDSParticipantImpl;
+import com.liferay.digital.signature.model.InPersonSignerDSParticipant;
+import com.liferay.digital.signature.model.builder.InPersonSignerDSParticipantBuilder;
 
 /**
  * @author Michael C. Han
  */
-public class DSInPersonSignerParticipantBuilderImpl
-	extends BaseSigningDSParticipantBuilder<DSInPersonSignerParticipant>
-	implements DSInPersonSignerParticipantBuilder {
+public class InPersonSignerDSParticipantBuilderImpl
+	extends BaseSigningDSParticipantBuilder<InPersonSignerDSParticipant>
+	implements InPersonSignerDSParticipantBuilder {
 
-	public DSInPersonSignerParticipantBuilderImpl(
+	public InPersonSignerDSParticipantBuilderImpl(
 		String hostName, String hostEmail, String signerName,
 		String signerEmail, int routingOrder) {
 
@@ -37,9 +37,9 @@ public class DSInPersonSignerParticipantBuilderImpl
 	}
 
 	@Override
-	protected DSSignerParticipantImpl createDSSignerParticipantImpl() {
-		DSInPersonSignerParticipantImpl dsInPersonSignerParticipantImpl =
-			new DSInPersonSignerParticipantImpl(
+	protected SignerDSParticipantImpl createDSSignerParticipantImpl() {
+		InPersonSignerDSParticipantImpl dsInPersonSignerParticipantImpl =
+			new InPersonSignerDSParticipantImpl(
 				_hostName, _hostEmail, getName(), getEmail(),
 				getRoutingOrder());
 

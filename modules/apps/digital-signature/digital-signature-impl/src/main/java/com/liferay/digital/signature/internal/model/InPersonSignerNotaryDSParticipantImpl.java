@@ -14,26 +14,45 @@
 
 package com.liferay.digital.signature.internal.model;
 
-import com.liferay.digital.signature.model.DSAgentParticipant;
+import com.liferay.digital.signature.model.DSInPersonSignerType;
+import com.liferay.digital.signature.model.DSNotaryInfo;
 import com.liferay.digital.signature.model.DSParticipantRole;
 import com.liferay.digital.signature.model.DSParticipantVisitor;
+import com.liferay.digital.signature.model.InPersonSignerNotaryDSParticipant;
 
 /**
  * @author Michael C. Han
  */
-public class DSAgentParticipantImpl
-	extends BaseParticipantModifyingDSParticipant
-	implements DSAgentParticipant {
+public class InPersonSignerNotaryDSParticipantImpl
+	extends SignerDSParticipantImpl
+	implements InPersonSignerNotaryDSParticipant {
 
-	public DSAgentParticipantImpl(String name, String email, int routingOrder) {
+	public InPersonSignerNotaryDSParticipantImpl(
+		String name, String email, int routingOrder,
+		DSNotaryInfo dsNotaryInfo) {
+
 		super(name, email, routingOrder);
 
-		setDSParticipantRole(DSParticipantRole.AGENT);
+		setDSParticipantRole(DSParticipantRole.IN_PERSON_SIGNER);
+
+		_dsNotaryInfo = dsNotaryInfo;
+	}
+
+	@Override
+	public DSInPersonSignerType getDSInPersonSignerType() {
+		return DSInPersonSignerType.NOTARY;
+	}
+
+	@Override
+	public DSNotaryInfo getDSNotaryInfo() {
+		return _dsNotaryInfo;
 	}
 
 	@Override
 	public <T> T translate(DSParticipantVisitor<T> dsParticipantVisitor) {
 		return dsParticipantVisitor.visit(this);
 	}
+
+	private final DSNotaryInfo _dsNotaryInfo;
 
 }

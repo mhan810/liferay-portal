@@ -14,23 +14,20 @@
 
 package com.liferay.digital.signature.internal.model;
 
-import com.liferay.digital.signature.model.DSIntermediaryParticipant;
-import com.liferay.digital.signature.model.DSParticipantRole;
 import com.liferay.digital.signature.model.DSParticipantVisitor;
+import com.liferay.digital.signature.model.EditorDSParticipant;
 
 /**
  * @author Michael C. Han
  */
-public class DSIntermediaryParticipantImpl
+public class EditorDSParticipantImpl
 	extends BaseParticipantModifyingDSParticipant
-	implements DSIntermediaryParticipant {
+	implements EditorDSParticipant {
 
-	public DSIntermediaryParticipantImpl(
+	public EditorDSParticipantImpl(
 		String name, String email, int routingOrder) {
 
 		super(name, email, routingOrder);
-
-		setDSParticipantRole(DSParticipantRole.INTERMEDIARY);
 	}
 
 	@Override

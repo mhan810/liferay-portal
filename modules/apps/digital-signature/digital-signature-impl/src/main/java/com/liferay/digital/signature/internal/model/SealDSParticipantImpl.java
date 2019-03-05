@@ -14,38 +14,38 @@
 
 package com.liferay.digital.signature.internal.model;
 
-import com.liferay.digital.signature.model.DSInPersonSignerNotaryParticipant;
-import com.liferay.digital.signature.model.DSInPersonSignerType;
-import com.liferay.digital.signature.model.DSNotaryInfo;
 import com.liferay.digital.signature.model.DSParticipantRole;
 import com.liferay.digital.signature.model.DSParticipantVisitor;
+import com.liferay.digital.signature.model.DSSealInfo;
+import com.liferay.digital.signature.model.SealDSParticipant;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Michael C. Han
  */
-public class DSInPersonSignerNotaryParticipantImpl
-	extends DSSignerParticipantImpl
-	implements DSInPersonSignerNotaryParticipant {
+public class SealDSParticipantImpl
+	extends BaseDSParticipantImpl implements SealDSParticipant {
 
-	public DSInPersonSignerNotaryParticipantImpl(
-		String name, String email, int routingOrder,
-		DSNotaryInfo dsNotaryInfo) {
+	public SealDSParticipantImpl(
+		String participantId, String name, String email, int routingOrder) {
 
 		super(name, email, routingOrder);
 
-		setDSParticipantRole(DSParticipantRole.IN_PERSON_SIGNER);
+		setDSParticipantRole(DSParticipantRole.SEAL);
+		setParticipantId(participantId);
+	}
 
-		_dsNotaryInfo = dsNotaryInfo;
+	public void addDSSealInfos(Collection<DSSealInfo> dsSealInfos) {
+		_dsSealInfos.addAll(dsSealInfos);
 	}
 
 	@Override
-	public DSInPersonSignerType getDSInPersonSignerType() {
-		return DSInPersonSignerType.NOTARY;
-	}
-
-	@Override
-	public DSNotaryInfo getDSNotaryInfo() {
-		return _dsNotaryInfo;
+	public Collection<DSSealInfo> getDSSealInfos() {
+		return Collections.unmodifiableCollection(_dsSealInfos);
 	}
 
 	@Override
@@ -53,6 +53,6 @@ public class DSInPersonSignerNotaryParticipantImpl
 		return dsParticipantVisitor.visit(this);
 	}
 
-	private final DSNotaryInfo _dsNotaryInfo;
+	private Set<DSSealInfo> _dsSealInfos = new HashSet<>();
 
 }

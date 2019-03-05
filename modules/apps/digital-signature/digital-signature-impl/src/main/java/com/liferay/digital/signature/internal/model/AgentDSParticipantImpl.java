@@ -14,22 +14,21 @@
 
 package com.liferay.digital.signature.internal.model;
 
-import com.liferay.digital.signature.model.DSCertifiedDeliveryParticipant;
+import com.liferay.digital.signature.model.AgentDSParticipant;
 import com.liferay.digital.signature.model.DSParticipantRole;
 import com.liferay.digital.signature.model.DSParticipantVisitor;
 
 /**
  * @author Michael C. Han
  */
-public class DSCertifiedDeliveryParticipantImpl
-	extends BaseDSParticipantImpl implements DSCertifiedDeliveryParticipant {
+public class AgentDSParticipantImpl
+	extends BaseParticipantModifyingDSParticipant
+	implements AgentDSParticipant {
 
-	public DSCertifiedDeliveryParticipantImpl(
-		String name, String email, int routingOrder) {
-
+	public AgentDSParticipantImpl(String name, String email, int routingOrder) {
 		super(name, email, routingOrder);
 
-		setDSParticipantRole(DSParticipantRole.CERTIFIED_DELIVERY);
+		setDSParticipantRole(DSParticipantRole.AGENT);
 	}
 
 	@Override

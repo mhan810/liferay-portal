@@ -14,37 +14,36 @@
 
 package com.liferay.digital.signature.internal.model.builder;
 
-import com.liferay.digital.signature.internal.model.DSIntermediaryParticipantImpl;
-import com.liferay.digital.signature.model.DSIntermediaryParticipant;
-import com.liferay.digital.signature.model.builder.DSIntermediaryParticipantBuilder;
+import com.liferay.digital.signature.internal.model.AgentDSParticipantImpl;
+import com.liferay.digital.signature.model.AgentDSParticipant;
+import com.liferay.digital.signature.model.builder.AgentDSParticipantBuilder;
 
 /**
  * @author Michael C. Han
  */
-public class DSIntermediaryParticipantBuilderImpl
-	extends BaseParticipantModifyingDSParticipantBuilder
-		<DSIntermediaryParticipant>
-	implements DSIntermediaryParticipantBuilder {
+public class AgentDSParticipantBuilderImpl
+	extends BaseParticipantModifyingDSParticipantBuilder<AgentDSParticipant>
+	implements AgentDSParticipantBuilder {
 
-	public DSIntermediaryParticipantBuilderImpl(
+	public AgentDSParticipantBuilderImpl(
 		String name, String email, int routingOrder) {
 
 		super(name, email, routingOrder);
 	}
 
 	@Override
-	protected DSIntermediaryParticipant createDSParticipant() {
-		DSIntermediaryParticipantImpl dsIntermediaryParticipantImpl =
-			new DSIntermediaryParticipantImpl(
+	protected AgentDSParticipant createDSParticipant() {
+		AgentDSParticipantImpl dsAgentParticipantImpl =
+			new AgentDSParticipantImpl(
 				getName(), getEmail(), getRoutingOrder());
 
-		dsIntermediaryParticipantImpl.setCanEditParticipantEmails(
+		dsAgentParticipantImpl.setCanEditParticipantEmails(
 			getCanEditParticipantEmails());
 
-		dsIntermediaryParticipantImpl.setCanEditParticipantNames(
+		dsAgentParticipantImpl.setCanEditParticipantNames(
 			getCanEditParticipantNames());
 
-		return dsIntermediaryParticipantImpl;
+		return dsAgentParticipantImpl;
 	}
 
 }

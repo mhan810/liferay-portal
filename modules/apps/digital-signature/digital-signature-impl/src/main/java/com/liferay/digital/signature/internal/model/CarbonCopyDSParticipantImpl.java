@@ -14,20 +14,22 @@
 
 package com.liferay.digital.signature.internal.model;
 
-import com.liferay.digital.signature.model.DSEditorParticipant;
+import com.liferay.digital.signature.model.CarbonCopyDSParticipant;
+import com.liferay.digital.signature.model.DSParticipantRole;
 import com.liferay.digital.signature.model.DSParticipantVisitor;
 
 /**
  * @author Michael C. Han
  */
-public class DSEditorParticipantImpl
-	extends BaseParticipantModifyingDSParticipant
-	implements DSEditorParticipant {
+public class CarbonCopyDSParticipantImpl
+	extends BaseDSParticipantImpl implements CarbonCopyDSParticipant {
 
-	public DSEditorParticipantImpl(
+	public CarbonCopyDSParticipantImpl(
 		String name, String email, int routingOrder) {
 
 		super(name, email, routingOrder);
+
+		setDSParticipantRole(DSParticipantRole.CARBON_COPY);
 	}
 
 	@Override

@@ -14,45 +14,27 @@
 
 package com.liferay.digital.signature.internal.model;
 
+import com.liferay.digital.signature.model.CertifiedDeliveryDSParticipant;
 import com.liferay.digital.signature.model.DSParticipantRole;
 import com.liferay.digital.signature.model.DSParticipantVisitor;
-import com.liferay.digital.signature.model.DSSealInfo;
-import com.liferay.digital.signature.model.DSSealParticipant;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Michael C. Han
  */
-public class DSSealParticipantImpl
-	extends BaseDSParticipantImpl implements DSSealParticipant {
+public class CertifiedDeliveryDSParticipantImpl
+	extends BaseDSParticipantImpl implements CertifiedDeliveryDSParticipant {
 
-	public DSSealParticipantImpl(
-		String participantId, String name, String email, int routingOrder) {
+	public CertifiedDeliveryDSParticipantImpl(
+		String name, String email, int routingOrder) {
 
 		super(name, email, routingOrder);
 
-		setDSParticipantRole(DSParticipantRole.SEAL);
-		setParticipantId(participantId);
-	}
-
-	public void addDSSealInfos(Collection<DSSealInfo> dsSealInfos) {
-		_dsSealInfos.addAll(dsSealInfos);
-	}
-
-	@Override
-	public Collection<DSSealInfo> getDSSealInfos() {
-		return Collections.unmodifiableCollection(_dsSealInfos);
+		setDSParticipantRole(DSParticipantRole.CERTIFIED_DELIVERY);
 	}
 
 	@Override
 	public <T> T translate(DSParticipantVisitor<T> dsParticipantVisitor) {
 		return dsParticipantVisitor.visit(this);
 	}
-
-	private Set<DSSealInfo> _dsSealInfos = new HashSet<>();
 
 }
