@@ -15,9 +15,9 @@
 package com.liferay.digital.signature.internal.request.builder;
 
 import com.liferay.digital.signature.model.DSSessionId;
-import com.liferay.digital.signature.request.builder.DSSignaturePackageCreateRequestBuilder;
-import com.liferay.digital.signature.request.builder.DSSignaturePackageVoidRequestBuilder;
+import com.liferay.digital.signature.request.builder.CreatePackageDSSignatureRequestBuilder;
 import com.liferay.digital.signature.request.builder.DSSignatureRequestBuildersFactory;
+import com.liferay.digital.signature.request.builder.VoidPackageDSSignatureRequestBuilder;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -29,17 +29,17 @@ public class DSSignatureRequestBuildersFactoryImpl
 	implements DSSignatureRequestBuildersFactory {
 
 	@Override
-	public DSSignaturePackageCreateRequestBuilder
-		createDSSignaturePackageCreateRequestBuilder(DSSessionId dsSessionId) {
+	public CreatePackageDSSignatureRequestBuilder
+		createCreatePackageDSSignatureRequestBuilder(DSSessionId dsSessionId) {
 
-		return new DSSignaturePackageCreateRequestBuilderImpl(dsSessionId);
+		return new CreatePackageDSSignatureRequestBuilderImpl(dsSessionId);
 	}
 
 	@Override
-	public DSSignaturePackageVoidRequestBuilder
-		createDSSignaturePackageVoidRequestBuilder(DSSessionId dsSessionId) {
+	public VoidPackageDSSignatureRequestBuilder
+		createVoidPackageDSSignatureRequestBuilder(DSSessionId dsSessionId) {
 
-		return new DSSignaturePackageVoidRequestBuilderImpl(dsSessionId);
+		return new VoidPackageDSSignatureRequestBuilderImpl(dsSessionId);
 	}
 
 }

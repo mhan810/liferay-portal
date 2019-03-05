@@ -18,7 +18,7 @@ import com.liferay.digital.signature.DSSignaturePackageStatus;
 import com.liferay.digital.signature.DSSignatureService;
 import com.liferay.digital.signature.adapter.spi.DSSignatureAdapter;
 import com.liferay.digital.signature.internal.response.DSSignatureResponseImpl;
-import com.liferay.digital.signature.request.DSSignaturePackageRequest;
+import com.liferay.digital.signature.request.PackageDSSignatureRequest;
 import com.liferay.digital.signature.response.DSSignatureResponse;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -39,13 +39,13 @@ public class DSSignatureServiceImpl implements DSSignatureService {
 
 	@Override
 	public DSSignatureResponse execute(
-		DSSignaturePackageRequest dsSignaturePackageRequest) {
+		PackageDSSignatureRequest packageDSSignatureRequest) {
 
 		Optional<DSSignatureResponse> dsSignatureResponseOptional =
 			validateDSSignatureAdapter();
 
 		return dsSignatureResponseOptional.orElse(
-			_dsSignatureAdapter.execute(dsSignaturePackageRequest));
+			_dsSignatureAdapter.execute(packageDSSignatureRequest));
 	}
 
 	protected void setDSSignatureAdapter(
