@@ -23,8 +23,8 @@ import aQute.bnd.annotation.ProviderType;
 public enum DSSignaturePackageStatus {
 
 	COMPLETED("completed"), CREATED("created"), DECLINED("delined"),
-	DELIVERED("delivered"), FAILED("failed"), SENT("sent"), SIGNED("signed"),
-	VOIDED("voided");
+	DELETED("deleted"), DELIVERED("delivered"), FAILED("failed"), SENT("sent"),
+	SIGNED("signed"), VOIDED("voided");
 
 	public String getStatus() {
 		return _status;
