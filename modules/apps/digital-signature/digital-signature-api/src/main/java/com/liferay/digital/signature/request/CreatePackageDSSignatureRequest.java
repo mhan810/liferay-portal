@@ -16,7 +16,7 @@ package com.liferay.digital.signature.request;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.digital.signature.DSSignaturePackageStatus;
+import com.liferay.digital.signature.common.DSSignaturePackageStatus;
 import com.liferay.digital.signature.model.DSSignaturePackage;
 import com.liferay.digital.signature.response.DSSignatureResponse;
 
