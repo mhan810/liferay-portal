@@ -16,12 +16,12 @@ package com.liferay.digital.signature.model.field.builder;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.digital.signature.model.field.ParticipantEmailDSField;
+import com.liferay.digital.signature.model.field.ParticipantEmailAddressDSField;
 
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public interface ParticipantEmailDSFieldBuilder
-	extends StyledDSFieldBuilder<ParticipantEmailDSField> {
+public interface ParticipantEmailAddressDSFieldBuilder
+	extends StyledDSFieldBuilder<ParticipantEmailAddressDSField> {
 }

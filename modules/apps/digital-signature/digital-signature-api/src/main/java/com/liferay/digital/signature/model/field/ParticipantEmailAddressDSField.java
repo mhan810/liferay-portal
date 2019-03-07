@@ -20,9 +20,8 @@ import aQute.bnd.annotation.ProviderType;
  * @author Michael C. Han
  */
 @ProviderType
-public interface EmailDSField
-	extends UserEntryDSField<EmailDSField>,
-			SenderInputRequiredDSField<EmailDSField> {
+public interface ParticipantEmailAddressDSField
+	extends StyledDSField<ParticipantEmailAddressDSField> {
 
 	@Override
 	public default <S> S visit(DSFieldVisitor<S> dsFieldVisitor) {

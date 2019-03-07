@@ -12,17 +12,21 @@
  * details.
  */
 
-package com.liferay.digital.signature.model.field.builder;
+package com.liferay.digital.signature.model.field;
 
 import aQute.bnd.annotation.ProviderType;
-
-import com.liferay.digital.signature.model.field.EmailDSField;
 
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public interface EmailDSFieldBuilder
-	extends UserEntryDSFieldBuilder<EmailDSField>,
-			SenderInputRequiredDSFieldBuilder<EmailDSFieldBuilder> {
+public interface EmailAddressDSField
+	extends UserEntryDSField<EmailAddressDSField>,
+			SenderInputRequiredDSField<EmailAddressDSField> {
+
+	@Override
+	public default <S> S visit(DSFieldVisitor<S> dsFieldVisitor) {
+		return dsFieldVisitor.visit(this);
+	}
+
 }
