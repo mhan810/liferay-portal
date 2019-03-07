@@ -14,27 +14,27 @@
 
 package com.liferay.digital.signature.internal.model.field.builder;
 
-import com.liferay.digital.signature.internal.model.field.EmailDSFieldImpl;
+import com.liferay.digital.signature.internal.model.field.EmailAddressDSFieldImpl;
 import com.liferay.digital.signature.model.field.DSField;
-import com.liferay.digital.signature.model.field.EmailDSField;
-import com.liferay.digital.signature.model.field.builder.EmailDSFieldBuilder;
+import com.liferay.digital.signature.model.field.EmailAddressDSField;
+import com.liferay.digital.signature.model.field.builder.EmailAddressDSFieldBuilder;
 
 /**
  * @author Michael C. Han
  */
-public class EmailDSFieldBuilderImpl
-	extends UserEntryDSFieldBuilderImpl<EmailDSField>
-	implements EmailDSFieldBuilder {
+public class EmailAddressDSFieldBuilderImpl
+	extends UserEntryDSFieldBuilderImpl<EmailAddressDSField>
+	implements EmailAddressDSFieldBuilder {
 
-	public EmailDSFieldBuilderImpl(
+	public EmailAddressDSFieldBuilderImpl(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		super(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSField<EmailDSField> getDSField() {
-		EmailDSFieldImpl emailDSFieldImpl = new EmailDSFieldImpl(
+	public DSField<EmailAddressDSField> getDSField() {
+		EmailAddressDSFieldImpl emailDSFieldImpl = new EmailAddressDSFieldImpl(
 			getDocumentId(), getFieldId(), getPageNumber());
 
 		emailDSFieldImpl.setSenderRequired(_senderRequired);
@@ -45,7 +45,9 @@ public class EmailDSFieldBuilderImpl
 	}
 
 	@Override
-	public EmailDSFieldBuilder setSenderRequired(Boolean senderRequired) {
+	public EmailAddressDSFieldBuilder setSenderRequired(
+		Boolean senderRequired) {
+
 		_senderRequired = senderRequired;
 
 		return this;

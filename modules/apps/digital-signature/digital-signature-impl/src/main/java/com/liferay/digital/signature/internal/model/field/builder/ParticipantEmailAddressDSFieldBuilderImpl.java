@@ -16,29 +16,29 @@ package com.liferay.digital.signature.internal.model.field.builder;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.digital.signature.internal.model.field.ParticipantEmailDSFieldImpl;
+import com.liferay.digital.signature.internal.model.field.ParticipantEmailAddressDSFieldImpl;
 import com.liferay.digital.signature.model.field.DSField;
-import com.liferay.digital.signature.model.field.ParticipantEmailDSField;
-import com.liferay.digital.signature.model.field.builder.ParticipantEmailDSFieldBuilder;
+import com.liferay.digital.signature.model.field.ParticipantEmailAddressDSField;
+import com.liferay.digital.signature.model.field.builder.ParticipantEmailAddressDSFieldBuilder;
 
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public class ParticipantEmailDSFieldBuilderImpl
-	extends StyledDSFieldBuilderImpl<ParticipantEmailDSField>
-	implements ParticipantEmailDSFieldBuilder {
+public class ParticipantEmailAddressDSFieldBuilderImpl
+	extends StyledDSFieldBuilderImpl<ParticipantEmailAddressDSField>
+	implements ParticipantEmailAddressDSFieldBuilder {
 
-	public ParticipantEmailDSFieldBuilderImpl(
+	public ParticipantEmailAddressDSFieldBuilderImpl(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		super(documentId, fieldId, pageNumber);
 	}
 
 	@Override
-	public DSField<ParticipantEmailDSField> getDSField() {
-		ParticipantEmailDSFieldImpl participantEmailDSFieldImpl =
-			new ParticipantEmailDSFieldImpl(
+	public DSField<ParticipantEmailAddressDSField> getDSField() {
+		ParticipantEmailAddressDSFieldImpl participantEmailDSFieldImpl =
+			new ParticipantEmailAddressDSFieldImpl(
 				getDocumentId(), getFieldId(), getPageNumber());
 
 		populateFields(participantEmailDSFieldImpl);

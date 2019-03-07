@@ -16,30 +16,20 @@ package com.liferay.digital.signature.internal.model.field;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.digital.signature.model.field.EmailDSField;
+import com.liferay.digital.signature.model.field.ParticipantEmailAddressDSField;
 
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public class EmailDSFieldImpl
-	extends UserEntryDSFieldImpl<EmailDSField> implements EmailDSField {
+public class ParticipantEmailAddressDSFieldImpl
+	extends StyledDSFieldImpl<ParticipantEmailAddressDSField>
+	implements ParticipantEmailAddressDSField {
 
-	public EmailDSFieldImpl(
+	public ParticipantEmailAddressDSFieldImpl(
 		String documentId, String fieldId, Integer pageNumber) {
 
 		super(documentId, fieldId, pageNumber);
 	}
-
-	@Override
-	public Boolean getSenderRequired() {
-		return _senderRequired;
-	}
-
-	public void setSenderRequired(Boolean senderRequired) {
-		_senderRequired = senderRequired;
-	}
-
-	private Boolean _senderRequired;
 
 }
