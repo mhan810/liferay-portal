@@ -36,7 +36,7 @@ public interface DSFieldVisitor<S> {
 
 	public S visit(DeclineDSField declineDSField);
 
-	public S visit(EmailDSField emailDSField);
+	public S visit(EmailAddressDSField emailAddressDSField);
 
 	public S visit(FirstNameDSField firstNameDSField);
 
@@ -56,7 +56,8 @@ public interface DSFieldVisitor<S> {
 
 	public S visit(NumberDSField numberDSField);
 
-	public S visit(ParticipantEmailDSField participantEmailDSField);
+	public S visit(
+		ParticipantEmailAddressDSField participantEmailAddressDSField);
 
 	public S visit(PostalCodeDSField postalCodeDSField);
 

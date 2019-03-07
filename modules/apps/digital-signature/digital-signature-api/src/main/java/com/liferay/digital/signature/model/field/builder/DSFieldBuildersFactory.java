@@ -40,7 +40,7 @@ public interface DSFieldBuildersFactory {
 	public DeclineDSFieldBuilder createDeclineDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public EmailDSFieldBuilder createEmailDSFieldBuilder(
+	public EmailAddressDSFieldBuilder createEmailAddressDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
 	public FirstNameDSFieldBuilder createFirstNameDSFieldBuilder(
@@ -70,8 +70,9 @@ public interface DSFieldBuildersFactory {
 	public NumberDSFieldBuilder createNumberDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
 
-	public ParticipantEmailDSFieldBuilder createParticipantEmailDSFieldBuilder(
-		String documentId, String fieldId, Integer pageNumber);
+	public ParticipantEmailAddressDSFieldBuilder
+		createParticipantEmailAddressDSFieldBuilder(
+			String documentId, String fieldId, Integer pageNumber);
 
 	public PostalCodeDSFieldBuilder createPostalCodeDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber);
