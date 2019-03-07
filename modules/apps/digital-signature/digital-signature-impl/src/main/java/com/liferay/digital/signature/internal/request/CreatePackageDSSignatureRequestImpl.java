@@ -14,7 +14,7 @@
 
 package com.liferay.digital.signature.internal.request;
 
-import com.liferay.digital.signature.DSSignaturePackageStatus;
+import com.liferay.digital.signature.common.DSSignaturePackageStatus;
 import com.liferay.digital.signature.model.DSSessionId;
 import com.liferay.digital.signature.model.DSSignaturePackage;
 import com.liferay.digital.signature.request.CreatePackageDSSignatureRequest;

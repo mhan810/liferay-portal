@@ -14,7 +14,7 @@
 
 package com.liferay.digital.signature.internal.response;
 
-import com.liferay.digital.signature.DSSignaturePackageStatus;
+import com.liferay.digital.signature.common.DSSignaturePackageStatus;
 import com.liferay.digital.signature.response.DSSignatureResponse;
 
 import java.time.ZonedDateTime;
