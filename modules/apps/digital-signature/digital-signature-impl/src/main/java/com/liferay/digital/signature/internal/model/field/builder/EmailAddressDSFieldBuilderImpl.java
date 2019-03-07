@@ -34,14 +34,15 @@ public class EmailAddressDSFieldBuilderImpl
 
 	@Override
 	public DSField<EmailAddressDSField> getDSField() {
-		EmailAddressDSFieldImpl emailDSFieldImpl = new EmailAddressDSFieldImpl(
-			getDocumentId(), getFieldId(), getPageNumber());
+		EmailAddressDSFieldImpl emailAddressDSFieldImpl =
+			new EmailAddressDSFieldImpl(
+				getDocumentId(), getFieldId(), getPageNumber());
 
-		emailDSFieldImpl.setSenderRequired(_senderRequired);
+		emailAddressDSFieldImpl.setSenderRequired(_senderRequired);
 
-		populateFields(emailDSFieldImpl);
+		populateFields(emailAddressDSFieldImpl);
 
-		return emailDSFieldImpl;
+		return emailAddressDSFieldImpl;
 	}
 
 	@Override

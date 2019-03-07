@@ -37,13 +37,13 @@ public class ParticipantEmailAddressDSFieldBuilderImpl
 
 	@Override
 	public DSField<ParticipantEmailAddressDSField> getDSField() {
-		ParticipantEmailAddressDSFieldImpl participantEmailDSFieldImpl =
+		ParticipantEmailAddressDSFieldImpl participantEmailAddressDSFieldImpl =
 			new ParticipantEmailAddressDSFieldImpl(
 				getDocumentId(), getFieldId(), getPageNumber());
 
-		populateFields(participantEmailDSFieldImpl);
+		populateFields(participantEmailAddressDSFieldImpl);
 
-		return participantEmailDSFieldImpl;
+		return participantEmailAddressDSFieldImpl;
 	}
 
 }
