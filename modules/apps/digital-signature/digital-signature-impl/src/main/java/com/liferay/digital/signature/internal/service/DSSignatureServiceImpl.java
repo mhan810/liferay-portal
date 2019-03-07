@@ -12,14 +12,14 @@
  * details.
  */
 
-package com.liferay.digital.signature.internal;
+package com.liferay.digital.signature.internal.service;
 
-import com.liferay.digital.signature.DSSignaturePackageStatus;
-import com.liferay.digital.signature.DSSignatureService;
 import com.liferay.digital.signature.adapter.spi.DSSignatureAdapter;
+import com.liferay.digital.signature.common.DSSignaturePackageStatus;
 import com.liferay.digital.signature.internal.response.DSSignatureResponseImpl;
 import com.liferay.digital.signature.request.PackageDSSignatureRequest;
 import com.liferay.digital.signature.response.DSSignatureResponse;
+import com.liferay.digital.signature.service.DSSignatureService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
