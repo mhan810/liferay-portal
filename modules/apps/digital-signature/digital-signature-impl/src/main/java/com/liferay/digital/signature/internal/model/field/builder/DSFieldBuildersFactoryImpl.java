@@ -21,7 +21,7 @@ import com.liferay.digital.signature.model.field.builder.DSFieldBuildersFactory;
 import com.liferay.digital.signature.model.field.builder.DateDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.DateSignedDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.DeclineDSFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.EmailDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.EmailAddressDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.FirstNameDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.FormulaDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.FullNameDSFieldBuilder;
@@ -31,7 +31,7 @@ import com.liferay.digital.signature.model.field.builder.ListDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.NotarizeDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.NoteDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.NumberDSFieldBuilder;
-import com.liferay.digital.signature.model.field.builder.ParticipantEmailDSFieldBuilder;
+import com.liferay.digital.signature.model.field.builder.ParticipantEmailAddressDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.PostalCodeDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.RadioDSFieldBuilder;
 import com.liferay.digital.signature.model.field.builder.RadioGroupDSFieldBuilder;
@@ -96,10 +96,11 @@ public class DSFieldBuildersFactoryImpl implements DSFieldBuildersFactory {
 	}
 
 	@Override
-	public EmailDSFieldBuilder createEmailDSFieldBuilder(
+	public EmailAddressDSFieldBuilder createEmailAddressDSFieldBuilder(
 		String documentId, String fieldId, Integer pageNumber) {
 
-		return new EmailDSFieldBuilderImpl(documentId, fieldId, pageNumber);
+		return new EmailAddressDSFieldBuilderImpl(
+			documentId, fieldId, pageNumber);
 	}
 
 	@Override
@@ -167,10 +168,11 @@ public class DSFieldBuildersFactoryImpl implements DSFieldBuildersFactory {
 	}
 
 	@Override
-	public ParticipantEmailDSFieldBuilder createParticipantEmailDSFieldBuilder(
-		String documentId, String fieldId, Integer pageNumber) {
+	public ParticipantEmailAddressDSFieldBuilder
+		createParticipantEmailAddressDSFieldBuilder(
+			String documentId, String fieldId, Integer pageNumber) {
 
-		return new ParticipantEmailDSFieldBuilderImpl(
+		return new ParticipantEmailAddressDSFieldBuilderImpl(
 			documentId, fieldId, pageNumber);
 	}
 
