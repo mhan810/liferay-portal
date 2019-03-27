@@ -34,7 +34,8 @@ import org.osgi.service.component.annotations.Reference;
  * @author Drew Brokke
  */
 @Component(service = ConfigurationScreen.class)
-public class PortalSettingsConfigurationScreen implements ConfigurationScreen {
+public class LegacyPortalSettingsConfigurationScreen
+	implements ConfigurationScreen {
 
 	@Override
 	public String getCategoryKey() {
@@ -50,7 +51,7 @@ public class PortalSettingsConfigurationScreen implements ConfigurationScreen {
 	public String getName(Locale locale) {
 		return LanguageUtil.get(
 			ResourceBundleUtil.getBundle(
-				locale, PortalSettingsConfigurationScreen.class),
+				locale, LegacyPortalSettingsConfigurationScreen.class),
 			"category.portal-settings");
 	}
 
