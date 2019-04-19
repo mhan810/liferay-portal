@@ -16,17 +16,28 @@ package com.liferay.change.tracking.change.lists.configuration.web.internal.appl
 
 import com.liferay.application.list.BasePanelApp;
 import com.liferay.application.list.PanelApp;
+import com.liferay.change.tracking.change.lists.configuration.web.internal.configuration.ChangeListsConfiguration;
 import com.liferay.change.tracking.constants.CTPanelCategoryKeys;
 import com.liferay.change.tracking.constants.CTPortletKeys;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
 
+import java.util.Map;
+
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Máté Thurzó
+ * @author David Truong
  */
 @Component(
+	configurationPid = "com.liferay.change.tracking.change.lists.configuration.web.internal.configuration.ChangeListsConfiguration",
 	immediate = true,
 	property = {
 		"panel.app.order:Integer=200",
@@ -42,6 +53,13 @@ public class ChangeListsConfigurationPanelApp extends BasePanelApp {
 	}
 
 	@Override
+	public boolean isShow(PermissionChecker permissionChecker, Group group)
+		throws PortalException {
+
+		return _enableChangeLists;
+	}
+
+	@Override
 	@Reference(
 		target = "(javax.portlet.name=" + CTPortletKeys.CHANGE_LISTS_CONFIGURATION + ")",
 		unbind = "-"
@@ -49,5 +67,17 @@ public class ChangeListsConfigurationPanelApp extends BasePanelApp {
 	public void setPortlet(Portlet portlet) {
 		super.setPortlet(portlet);
 	}
+
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		ChangeListsConfiguration changeListsConfiguration =
+			ConfigurableUtil.createConfigurable(
+				ChangeListsConfiguration.class, properties);
+
+		_enableChangeLists = changeListsConfiguration.enableChangeLists();
+	}
+
+	private volatile boolean _enableChangeLists;
 
 }
