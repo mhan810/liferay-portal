@@ -78,7 +78,7 @@ public class VirtualHostCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(11);
+		StringBundler sb = new StringBundler(13);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -90,6 +90,8 @@ public class VirtualHostCacheModel
 		sb.append(layoutSetId);
 		sb.append(", hostname=");
 		sb.append(hostname);
+		sb.append(", priority=");
+		sb.append(priority);
 		sb.append("}");
 
 		return sb.toString();
@@ -111,6 +113,8 @@ public class VirtualHostCacheModel
 			virtualHostImpl.setHostname(hostname);
 		}
 
+		virtualHostImpl.setPriority(priority);
+
 		virtualHostImpl.resetOriginalValues();
 
 		return virtualHostImpl;
@@ -126,6 +130,8 @@ public class VirtualHostCacheModel
 
 		layoutSetId = objectInput.readLong();
 		hostname = objectInput.readUTF();
+
+		priority = objectInput.readInt();
 	}
 
 	@Override
@@ -144,6 +150,8 @@ public class VirtualHostCacheModel
 		else {
 			objectOutput.writeUTF(hostname);
 		}
+
+		objectOutput.writeInt(priority);
 	}
 
 	public long mvccVersion;
@@ -151,5 +159,6 @@ public class VirtualHostCacheModel
 	public long companyId;
 	public long layoutSetId;
 	public String hostname;
+	public int priority;
 
 }

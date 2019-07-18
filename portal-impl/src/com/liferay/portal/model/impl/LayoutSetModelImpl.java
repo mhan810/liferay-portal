@@ -659,11 +659,11 @@ public class LayoutSetModelImpl
 		String companyFallbackVirtualHostname) {
 	}
 
-	public String getVirtualHostname() {
+	public String[] getVirtualHostnames() {
 		return null;
 	}
 
-	public void setVirtualHostname(String virtualHostname) {
+	public void setVirtualHostnames(String[] virtualHostnames) {
 	}
 
 	public long getColumnBitmask() {
@@ -800,7 +800,7 @@ public class LayoutSetModelImpl
 
 		setCompanyFallbackVirtualHostname(null);
 
-		setVirtualHostname(null);
+		setVirtualHostnames(null);
 
 		layoutSetModelImpl._columnBitmask = 0;
 	}
@@ -891,7 +891,7 @@ public class LayoutSetModelImpl
 		layoutSetCacheModel._companyFallbackVirtualHostname =
 			getCompanyFallbackVirtualHostname();
 
-		layoutSetCacheModel._virtualHostname = getVirtualHostname();
+		layoutSetCacheModel._virtualHostnames = getVirtualHostnames();
 
 		return layoutSetCacheModel;
 	}

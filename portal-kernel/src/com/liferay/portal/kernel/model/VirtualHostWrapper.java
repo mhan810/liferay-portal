@@ -48,6 +48,7 @@ public class VirtualHostWrapper
 		attributes.put("companyId", getCompanyId());
 		attributes.put("layoutSetId", getLayoutSetId());
 		attributes.put("hostname", getHostname());
+		attributes.put("priority", getPriority());
 
 		return attributes;
 	}
@@ -82,6 +83,12 @@ public class VirtualHostWrapper
 
 		if (hostname != null) {
 			setHostname(hostname);
+		}
+
+		Integer priority = (Integer)attributes.get("priority");
+
+		if (priority != null) {
+			setPriority(priority);
 		}
 	}
 
@@ -133,6 +140,16 @@ public class VirtualHostWrapper
 	@Override
 	public long getPrimaryKey() {
 		return model.getPrimaryKey();
+	}
+
+	/**
+	 * Returns the priority of this virtual host.
+	 *
+	 * @return the priority of this virtual host
+	 */
+	@Override
+	public int getPriority() {
+		return model.getPriority();
 	}
 
 	/**
@@ -198,6 +215,16 @@ public class VirtualHostWrapper
 	@Override
 	public void setPrimaryKey(long primaryKey) {
 		model.setPrimaryKey(primaryKey);
+	}
+
+	/**
+	 * Sets the priority of this virtual host.
+	 *
+	 * @param priority the priority of this virtual host
+	 */
+	@Override
+	public void setPriority(int priority) {
+		model.setPriority(priority);
 	}
 
 	/**

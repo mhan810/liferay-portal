@@ -128,4 +128,18 @@ public interface VirtualHostModel
 	 */
 	public void setHostname(String hostname);
 
+	/**
+	 * Returns the priority of this virtual host.
+	 *
+	 * @return the priority of this virtual host
+	 */
+	public int getPriority();
+
+	/**
+	 * Sets the priority of this virtual host.
+	 *
+	 * @param priority the priority of this virtual host
+	 */
+	public void setPriority(int priority);
+
 }

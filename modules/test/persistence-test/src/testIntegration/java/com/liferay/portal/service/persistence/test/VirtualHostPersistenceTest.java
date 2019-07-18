@@ -130,6 +130,8 @@ public class VirtualHostPersistenceTest {
 
 		newVirtualHost.setHostname(RandomTestUtil.randomString());
 
+		newVirtualHost.setPriority(RandomTestUtil.nextInt());
+
 		_virtualHosts.add(_persistence.update(newVirtualHost));
 
 		VirtualHost existingVirtualHost = _persistence.findByPrimaryKey(
@@ -148,6 +150,8 @@ public class VirtualHostPersistenceTest {
 			newVirtualHost.getLayoutSetId());
 		Assert.assertEquals(
 			existingVirtualHost.getHostname(), newVirtualHost.getHostname());
+		Assert.assertEquals(
+			existingVirtualHost.getPriority(), newVirtualHost.getPriority());
 	}
 
 	@Test
@@ -193,7 +197,8 @@ public class VirtualHostPersistenceTest {
 	protected OrderByComparator<VirtualHost> getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create(
 			"VirtualHost", "mvccVersion", true, "virtualHostId", true,
-			"companyId", true, "layoutSetId", true, "hostname", true);
+			"companyId", true, "layoutSetId", true, "hostname", true,
+			"priority", true);
 	}
 
 	@Test
@@ -420,16 +425,6 @@ public class VirtualHostPersistenceTest {
 				ReflectionTestUtil.invoke(
 					existingVirtualHost, "getOriginalHostname",
 					new Class<?>[0])));
-
-		Assert.assertEquals(
-			Long.valueOf(existingVirtualHost.getCompanyId()),
-			ReflectionTestUtil.<Long>invoke(
-				existingVirtualHost, "getOriginalCompanyId", new Class<?>[0]));
-		Assert.assertEquals(
-			Long.valueOf(existingVirtualHost.getLayoutSetId()),
-			ReflectionTestUtil.<Long>invoke(
-				existingVirtualHost, "getOriginalLayoutSetId",
-				new Class<?>[0]));
 	}
 
 	protected VirtualHost addVirtualHost() throws Exception {
@@ -444,6 +439,8 @@ public class VirtualHostPersistenceTest {
 		virtualHost.setLayoutSetId(RandomTestUtil.nextLong());
 
 		virtualHost.setHostname(RandomTestUtil.randomString());
+
+		virtualHost.setPriority(RandomTestUtil.nextInt());
 
 		_virtualHosts.add(_persistence.update(virtualHost));
 

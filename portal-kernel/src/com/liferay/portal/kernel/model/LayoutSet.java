@@ -106,17 +106,33 @@ public interface LayoutSet extends LayoutSetModel, PersistedModel {
 	public String getThemeSetting(String key, String device);
 
 	/**
-	 * Returns the name of the layout set's virtual host.
+	 * Returns the name of the layout set's default virtual host.
 	 *
 	 * <p>
 	 * When accessing a layout set that has a the virtual host, the URL elements
 	 * "/web/sitename" or "/group/sitename" can be omitted.
 	 * </p>
 	 *
-	 * @return the layout set's virtual host name, or an empty string if the
-	 layout set has no virtual host configured
+	 * @return the layout set's default virtual host name, or an empty string if
+	 the layout set has no virtual hosts configured
+	 * @deprecated As of (7.3.x), replaced by {@link
+	 #getVirtualHostnames()}
 	 */
+	@Deprecated
 	public String getVirtualHostname();
+
+	/**
+	 * Returns the names of the layout set's virtual hosts.
+	 *
+	 * <p>
+	 * When accessing a layout set that has a the virtual host, the URL elements
+	 * "/web/sitename" or "/group/sitename" can be omitted.
+	 * </p>
+	 *
+	 * @return the layout set's virtual host names, or an empty string if
+	 the layout set has no virtual hosts configured
+	 */
+	public String[] getVirtualHostnames();
 
 	public boolean hasSetModifiedDate();
 
@@ -135,7 +151,18 @@ public interface LayoutSet extends LayoutSetModel, PersistedModel {
 	 *
 	 * @param virtualHostname the name of the layout set's virtual host
 	 * @see #getVirtualHostname()
+	 * @deprecated As of (7.3.x), replaced by {@link
+	 #setVirtualHostnames(String[])}
 	 */
+	@Deprecated
 	public void setVirtualHostname(String virtualHostname);
+
+	/**
+	 * Sets the names of the layout set's virtual hosts.
+	 *
+	 * @param virtualHostnames the names of the layout set's virtual hosts
+	 * @see #getVirtualHostnames()
+	 */
+	public void setVirtualHostnames(String[] virtualHostnames);
 
 }

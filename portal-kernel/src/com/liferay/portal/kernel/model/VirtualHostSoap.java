@@ -38,6 +38,7 @@ public class VirtualHostSoap implements Serializable {
 		soapModel.setCompanyId(model.getCompanyId());
 		soapModel.setLayoutSetId(model.getLayoutSetId());
 		soapModel.setHostname(model.getHostname());
+		soapModel.setPriority(model.getPriority());
 
 		return soapModel;
 	}
@@ -131,10 +132,19 @@ public class VirtualHostSoap implements Serializable {
 		_hostname = hostname;
 	}
 
+	public int getPriority() {
+		return _priority;
+	}
+
+	public void setPriority(int priority) {
+		_priority = priority;
+	}
+
 	private long _mvccVersion;
 	private long _virtualHostId;
 	private long _companyId;
 	private long _layoutSetId;
 	private String _hostname;
+	private int _priority;
 
 }

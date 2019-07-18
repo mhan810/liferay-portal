@@ -304,97 +304,148 @@ public class VirtualHostPersistenceImpl
 	private static final String _FINDER_COLUMN_HOSTNAME_HOSTNAME_3 =
 		"(virtualHost.hostname IS NULL OR virtualHost.hostname = '')";
 
-	private FinderPath _finderPathFetchByC_L;
+	private FinderPath _finderPathWithPaginationFindByC_L;
+	private FinderPath _finderPathWithoutPaginationFindByC_L;
 	private FinderPath _finderPathCountByC_L;
 
 	/**
-	 * Returns the virtual host where companyId = &#63; and layoutSetId = &#63; or throws a <code>NoSuchVirtualHostException</code> if it could not be found.
+	 * Returns all the virtual hosts where companyId = &#63; and layoutSetId = &#63;.
 	 *
 	 * @param companyId the company ID
 	 * @param layoutSetId the layout set ID
-	 * @return the matching virtual host
-	 * @throws NoSuchVirtualHostException if a matching virtual host could not be found
+	 * @return the matching virtual hosts
 	 */
 	@Override
-	public VirtualHost findByC_L(long companyId, long layoutSetId)
-		throws NoSuchVirtualHostException {
+	public List<VirtualHost> findByC_L(long companyId, long layoutSetId) {
+		return findByC_L(
+			companyId, layoutSetId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
 
-		VirtualHost virtualHost = fetchByC_L(companyId, layoutSetId);
+	/**
+	 * Returns a range of all the virtual hosts where companyId = &#63; and layoutSetId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not <code>QueryUtil#ALL_POS</code>), then the query will include the default ORDER BY logic from <code>VirtualHostModelImpl</code>. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param companyId the company ID
+	 * @param layoutSetId the layout set ID
+	 * @param start the lower bound of the range of virtual hosts
+	 * @param end the upper bound of the range of virtual hosts (not inclusive)
+	 * @return the range of matching virtual hosts
+	 */
+	@Override
+	public List<VirtualHost> findByC_L(
+		long companyId, long layoutSetId, int start, int end) {
 
-		if (virtualHost == null) {
-			StringBundler msg = new StringBundler(6);
+		return findByC_L(companyId, layoutSetId, start, end, null);
+	}
 
-			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+	/**
+	 * Returns an ordered range of all the virtual hosts where companyId = &#63; and layoutSetId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not <code>QueryUtil#ALL_POS</code>), then the query will include the default ORDER BY logic from <code>VirtualHostModelImpl</code>. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param companyId the company ID
+	 * @param layoutSetId the layout set ID
+	 * @param start the lower bound of the range of virtual hosts
+	 * @param end the upper bound of the range of virtual hosts (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching virtual hosts
+	 */
+	@Override
+	public List<VirtualHost> findByC_L(
+		long companyId, long layoutSetId, int start, int end,
+		OrderByComparator<VirtualHost> orderByComparator) {
 
-			msg.append("companyId=");
-			msg.append(companyId);
+		return findByC_L(
+			companyId, layoutSetId, start, end, orderByComparator, true);
+	}
 
-			msg.append(", layoutSetId=");
-			msg.append(layoutSetId);
+	/**
+	 * Returns an ordered range of all the virtual hosts where companyId = &#63; and layoutSetId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not <code>QueryUtil#ALL_POS</code>), then the query will include the default ORDER BY logic from <code>VirtualHostModelImpl</code>. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param companyId the company ID
+	 * @param layoutSetId the layout set ID
+	 * @param start the lower bound of the range of virtual hosts
+	 * @param end the upper bound of the range of virtual hosts (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the ordered range of matching virtual hosts
+	 */
+	@Override
+	public List<VirtualHost> findByC_L(
+		long companyId, long layoutSetId, int start, int end,
+		OrderByComparator<VirtualHost> orderByComparator,
+		boolean retrieveFromCache) {
 
-			msg.append("}");
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
 
-			if (_log.isDebugEnabled()) {
-				_log.debug(msg.toString());
-			}
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
 
-			throw new NoSuchVirtualHostException(msg.toString());
+			pagination = false;
+			finderPath = _finderPathWithoutPaginationFindByC_L;
+			finderArgs = new Object[] {companyId, layoutSetId};
+		}
+		else {
+			finderPath = _finderPathWithPaginationFindByC_L;
+			finderArgs = new Object[] {
+				companyId, layoutSetId, start, end, orderByComparator
+			};
 		}
 
-		return virtualHost;
-	}
-
-	/**
-	 * Returns the virtual host where companyId = &#63; and layoutSetId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param companyId the company ID
-	 * @param layoutSetId the layout set ID
-	 * @return the matching virtual host, or <code>null</code> if a matching virtual host could not be found
-	 */
-	@Override
-	public VirtualHost fetchByC_L(long companyId, long layoutSetId) {
-		return fetchByC_L(companyId, layoutSetId, true);
-	}
-
-	/**
-	 * Returns the virtual host where companyId = &#63; and layoutSetId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param companyId the company ID
-	 * @param layoutSetId the layout set ID
-	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the matching virtual host, or <code>null</code> if a matching virtual host could not be found
-	 */
-	@Override
-	public VirtualHost fetchByC_L(
-		long companyId, long layoutSetId, boolean retrieveFromCache) {
-
-		Object[] finderArgs = new Object[] {companyId, layoutSetId};
-
-		Object result = null;
+		List<VirtualHost> list = null;
 
 		if (retrieveFromCache) {
-			result = FinderCacheUtil.getResult(
-				_finderPathFetchByC_L, finderArgs, this);
-		}
+			list = (List<VirtualHost>)FinderCacheUtil.getResult(
+				finderPath, finderArgs, this);
 
-		if (result instanceof VirtualHost) {
-			VirtualHost virtualHost = (VirtualHost)result;
+			if ((list != null) && !list.isEmpty()) {
+				for (VirtualHost virtualHost : list) {
+					if ((companyId != virtualHost.getCompanyId()) ||
+						(layoutSetId != virtualHost.getLayoutSetId())) {
 
-			if ((companyId != virtualHost.getCompanyId()) ||
-				(layoutSetId != virtualHost.getLayoutSetId())) {
+						list = null;
 
-				result = null;
+						break;
+					}
+				}
 			}
 		}
 
-		if (result == null) {
-			StringBundler query = new StringBundler(4);
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(
+					4 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				query = new StringBundler(4);
+			}
 
 			query.append(_SQL_SELECT_VIRTUALHOST_WHERE);
 
 			query.append(_FINDER_COLUMN_C_L_COMPANYID_2);
 
 			query.append(_FINDER_COLUMN_C_L_LAYOUTSETID_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					query, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else if (pagination) {
+				query.append(VirtualHostModelImpl.ORDER_BY_JPQL);
+			}
 
 			String sql = query.toString();
 
@@ -411,22 +462,25 @@ public class VirtualHostPersistenceImpl
 
 				qPos.add(layoutSetId);
 
-				List<VirtualHost> list = q.list();
+				if (!pagination) {
+					list = (List<VirtualHost>)QueryUtil.list(
+						q, getDialect(), start, end, false);
 
-				if (list.isEmpty()) {
-					FinderCacheUtil.putResult(
-						_finderPathFetchByC_L, finderArgs, list);
+					Collections.sort(list);
+
+					list = Collections.unmodifiableList(list);
 				}
 				else {
-					VirtualHost virtualHost = list.get(0);
-
-					result = virtualHost;
-
-					cacheResult(virtualHost);
+					list = (List<VirtualHost>)QueryUtil.list(
+						q, getDialect(), start, end);
 				}
+
+				cacheResult(list);
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
-				FinderCacheUtil.removeResult(_finderPathFetchByC_L, finderArgs);
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
 
 				throw processException(e);
 			}
@@ -435,28 +489,308 @@ public class VirtualHostPersistenceImpl
 			}
 		}
 
-		if (result instanceof List<?>) {
+		return list;
+	}
+
+	/**
+	 * Returns the first virtual host in the ordered set where companyId = &#63; and layoutSetId = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param layoutSetId the layout set ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching virtual host
+	 * @throws NoSuchVirtualHostException if a matching virtual host could not be found
+	 */
+	@Override
+	public VirtualHost findByC_L_First(
+			long companyId, long layoutSetId,
+			OrderByComparator<VirtualHost> orderByComparator)
+		throws NoSuchVirtualHostException {
+
+		VirtualHost virtualHost = fetchByC_L_First(
+			companyId, layoutSetId, orderByComparator);
+
+		if (virtualHost != null) {
+			return virtualHost;
+		}
+
+		StringBundler msg = new StringBundler(6);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("companyId=");
+		msg.append(companyId);
+
+		msg.append(", layoutSetId=");
+		msg.append(layoutSetId);
+
+		msg.append("}");
+
+		throw new NoSuchVirtualHostException(msg.toString());
+	}
+
+	/**
+	 * Returns the first virtual host in the ordered set where companyId = &#63; and layoutSetId = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param layoutSetId the layout set ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching virtual host, or <code>null</code> if a matching virtual host could not be found
+	 */
+	@Override
+	public VirtualHost fetchByC_L_First(
+		long companyId, long layoutSetId,
+		OrderByComparator<VirtualHost> orderByComparator) {
+
+		List<VirtualHost> list = findByC_L(
+			companyId, layoutSetId, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last virtual host in the ordered set where companyId = &#63; and layoutSetId = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param layoutSetId the layout set ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching virtual host
+	 * @throws NoSuchVirtualHostException if a matching virtual host could not be found
+	 */
+	@Override
+	public VirtualHost findByC_L_Last(
+			long companyId, long layoutSetId,
+			OrderByComparator<VirtualHost> orderByComparator)
+		throws NoSuchVirtualHostException {
+
+		VirtualHost virtualHost = fetchByC_L_Last(
+			companyId, layoutSetId, orderByComparator);
+
+		if (virtualHost != null) {
+			return virtualHost;
+		}
+
+		StringBundler msg = new StringBundler(6);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("companyId=");
+		msg.append(companyId);
+
+		msg.append(", layoutSetId=");
+		msg.append(layoutSetId);
+
+		msg.append("}");
+
+		throw new NoSuchVirtualHostException(msg.toString());
+	}
+
+	/**
+	 * Returns the last virtual host in the ordered set where companyId = &#63; and layoutSetId = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param layoutSetId the layout set ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching virtual host, or <code>null</code> if a matching virtual host could not be found
+	 */
+	@Override
+	public VirtualHost fetchByC_L_Last(
+		long companyId, long layoutSetId,
+		OrderByComparator<VirtualHost> orderByComparator) {
+
+		int count = countByC_L(companyId, layoutSetId);
+
+		if (count == 0) {
 			return null;
 		}
+
+		List<VirtualHost> list = findByC_L(
+			companyId, layoutSetId, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the virtual hosts before and after the current virtual host in the ordered set where companyId = &#63; and layoutSetId = &#63;.
+	 *
+	 * @param virtualHostId the primary key of the current virtual host
+	 * @param companyId the company ID
+	 * @param layoutSetId the layout set ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next virtual host
+	 * @throws NoSuchVirtualHostException if a virtual host with the primary key could not be found
+	 */
+	@Override
+	public VirtualHost[] findByC_L_PrevAndNext(
+			long virtualHostId, long companyId, long layoutSetId,
+			OrderByComparator<VirtualHost> orderByComparator)
+		throws NoSuchVirtualHostException {
+
+		VirtualHost virtualHost = findByPrimaryKey(virtualHostId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			VirtualHost[] array = new VirtualHostImpl[3];
+
+			array[0] = getByC_L_PrevAndNext(
+				session, virtualHost, companyId, layoutSetId, orderByComparator,
+				true);
+
+			array[1] = virtualHost;
+
+			array[2] = getByC_L_PrevAndNext(
+				session, virtualHost, companyId, layoutSetId, orderByComparator,
+				false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected VirtualHost getByC_L_PrevAndNext(
+		Session session, VirtualHost virtualHost, long companyId,
+		long layoutSetId, OrderByComparator<VirtualHost> orderByComparator,
+		boolean previous) {
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(
+				5 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
 		else {
-			return (VirtualHost)result;
+			query = new StringBundler(4);
+		}
+
+		query.append(_SQL_SELECT_VIRTUALHOST_WHERE);
+
+		query.append(_FINDER_COLUMN_C_L_COMPANYID_2);
+
+		query.append(_FINDER_COLUMN_C_L_LAYOUTSETID_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(VirtualHostModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(companyId);
+
+		qPos.add(layoutSetId);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(virtualHost)) {
+
+				qPos.add(orderByConditionValue);
+			}
+		}
+
+		List<VirtualHost> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
 		}
 	}
 
 	/**
-	 * Removes the virtual host where companyId = &#63; and layoutSetId = &#63; from the database.
+	 * Removes all the virtual hosts where companyId = &#63; and layoutSetId = &#63; from the database.
 	 *
 	 * @param companyId the company ID
 	 * @param layoutSetId the layout set ID
-	 * @return the virtual host that was removed
 	 */
 	@Override
-	public VirtualHost removeByC_L(long companyId, long layoutSetId)
-		throws NoSuchVirtualHostException {
+	public void removeByC_L(long companyId, long layoutSetId) {
+		for (VirtualHost virtualHost :
+				findByC_L(
+					companyId, layoutSetId, QueryUtil.ALL_POS,
+					QueryUtil.ALL_POS, null)) {
 
-		VirtualHost virtualHost = findByC_L(companyId, layoutSetId);
-
-		return remove(virtualHost);
+			remove(virtualHost);
+		}
 	}
 
 	/**
@@ -545,13 +879,6 @@ public class VirtualHostPersistenceImpl
 			_finderPathFetchByHostname,
 			new Object[] {virtualHost.getHostname()}, virtualHost);
 
-		FinderCacheUtil.putResult(
-			_finderPathFetchByC_L,
-			new Object[] {
-				virtualHost.getCompanyId(), virtualHost.getLayoutSetId()
-			},
-			virtualHost);
-
 		virtualHost.resetOriginalValues();
 	}
 
@@ -634,16 +961,6 @@ public class VirtualHostPersistenceImpl
 			_finderPathCountByHostname, args, Long.valueOf(1), false);
 		FinderCacheUtil.putResult(
 			_finderPathFetchByHostname, args, virtualHostModelImpl, false);
-
-		args = new Object[] {
-			virtualHostModelImpl.getCompanyId(),
-			virtualHostModelImpl.getLayoutSetId()
-		};
-
-		FinderCacheUtil.putResult(
-			_finderPathCountByC_L, args, Long.valueOf(1), false);
-		FinderCacheUtil.putResult(
-			_finderPathFetchByC_L, args, virtualHostModelImpl, false);
 	}
 
 	protected void clearUniqueFindersCache(
@@ -665,28 +982,6 @@ public class VirtualHostPersistenceImpl
 
 			FinderCacheUtil.removeResult(_finderPathCountByHostname, args);
 			FinderCacheUtil.removeResult(_finderPathFetchByHostname, args);
-		}
-
-		if (clearCurrent) {
-			Object[] args = new Object[] {
-				virtualHostModelImpl.getCompanyId(),
-				virtualHostModelImpl.getLayoutSetId()
-			};
-
-			FinderCacheUtil.removeResult(_finderPathCountByC_L, args);
-			FinderCacheUtil.removeResult(_finderPathFetchByC_L, args);
-		}
-
-		if ((virtualHostModelImpl.getColumnBitmask() &
-			 _finderPathFetchByC_L.getColumnBitmask()) != 0) {
-
-			Object[] args = new Object[] {
-				virtualHostModelImpl.getOriginalCompanyId(),
-				virtualHostModelImpl.getOriginalLayoutSetId()
-			};
-
-			FinderCacheUtil.removeResult(_finderPathCountByC_L, args);
-			FinderCacheUtil.removeResult(_finderPathFetchByC_L, args);
 		}
 	}
 
@@ -844,10 +1139,43 @@ public class VirtualHostPersistenceImpl
 				FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 		}
 		else if (isNew) {
+			Object[] args = new Object[] {
+				virtualHostModelImpl.getCompanyId(),
+				virtualHostModelImpl.getLayoutSetId()
+			};
+
+			FinderCacheUtil.removeResult(_finderPathCountByC_L, args);
+			FinderCacheUtil.removeResult(
+				_finderPathWithoutPaginationFindByC_L, args);
+
 			FinderCacheUtil.removeResult(
 				_finderPathCountAll, FINDER_ARGS_EMPTY);
 			FinderCacheUtil.removeResult(
 				_finderPathWithoutPaginationFindAll, FINDER_ARGS_EMPTY);
+		}
+		else {
+			if ((virtualHostModelImpl.getColumnBitmask() &
+				 _finderPathWithoutPaginationFindByC_L.getColumnBitmask()) !=
+					 0) {
+
+				Object[] args = new Object[] {
+					virtualHostModelImpl.getOriginalCompanyId(),
+					virtualHostModelImpl.getOriginalLayoutSetId()
+				};
+
+				FinderCacheUtil.removeResult(_finderPathCountByC_L, args);
+				FinderCacheUtil.removeResult(
+					_finderPathWithoutPaginationFindByC_L, args);
+
+				args = new Object[] {
+					virtualHostModelImpl.getCompanyId(),
+					virtualHostModelImpl.getLayoutSetId()
+				};
+
+				FinderCacheUtil.removeResult(_finderPathCountByC_L, args);
+				FinderCacheUtil.removeResult(
+					_finderPathWithoutPaginationFindByC_L, args);
+			}
 		}
 
 		EntityCacheUtil.putResult(
@@ -1160,13 +1488,24 @@ public class VirtualHostPersistenceImpl
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByHostname",
 			new String[] {String.class.getName()});
 
-		_finderPathFetchByC_L = new FinderPath(
+		_finderPathWithPaginationFindByC_L = new FinderPath(
 			VirtualHostModelImpl.ENTITY_CACHE_ENABLED,
 			VirtualHostModelImpl.FINDER_CACHE_ENABLED, VirtualHostImpl.class,
-			FINDER_CLASS_NAME_ENTITY, "fetchByC_L",
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_L",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+
+		_finderPathWithoutPaginationFindByC_L = new FinderPath(
+			VirtualHostModelImpl.ENTITY_CACHE_ENABLED,
+			VirtualHostModelImpl.FINDER_CACHE_ENABLED, VirtualHostImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByC_L",
 			new String[] {Long.class.getName(), Long.class.getName()},
 			VirtualHostModelImpl.COMPANYID_COLUMN_BITMASK |
-			VirtualHostModelImpl.LAYOUTSETID_COLUMN_BITMASK);
+			VirtualHostModelImpl.LAYOUTSETID_COLUMN_BITMASK |
+			VirtualHostModelImpl.PRIORITY_COLUMN_BITMASK);
 
 		_finderPathCountByC_L = new FinderPath(
 			VirtualHostModelImpl.ENTITY_CACHE_ENABLED,

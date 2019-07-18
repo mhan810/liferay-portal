@@ -1551,6 +1551,7 @@
 			<hint-collection name="HOSTNAME" />
 			<validator name="required" />
 		</field>
+		<field name="priority" type="int" />
 	</model>
 	<model name="com.liferay.portal.kernel.model.WebDAVProps">
 		<field name="mvccVersion" type="long" />

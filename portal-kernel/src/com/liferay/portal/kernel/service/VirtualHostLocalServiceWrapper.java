@@ -292,6 +292,14 @@ public class VirtualHostLocalServiceWrapper
 		return _virtualHostLocalService.getVirtualHosts(start, end);
 	}
 
+	@Override
+	public java.util.List<com.liferay.portal.kernel.model.VirtualHost>
+			getVirtualHosts(long companyId, long layoutSetId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _virtualHostLocalService.getVirtualHosts(companyId, layoutSetId);
+	}
+
 	/**
 	 * Returns the number of virtual hosts.
 	 *
@@ -321,6 +329,15 @@ public class VirtualHostLocalServiceWrapper
 		com.liferay.portal.kernel.model.VirtualHost virtualHost) {
 
 		return _virtualHostLocalService.updateVirtualHost(virtualHost);
+	}
+
+	@Override
+	public java.util.List<com.liferay.portal.kernel.model.VirtualHost>
+		updateVirtualHosts(
+			long companyId, long layoutSetId, String[] hostnames) {
+
+		return _virtualHostLocalService.updateVirtualHosts(
+			companyId, layoutSetId, hostnames);
 	}
 
 	@Override
