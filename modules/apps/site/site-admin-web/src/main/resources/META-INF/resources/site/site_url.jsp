@@ -25,8 +25,8 @@ Long stagingGroupId = (Long)request.getAttribute("site.stagingGroupId");
 LayoutSet publicLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroupId, false);
 LayoutSet privateLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroupId, true);
 
-String publicVirtualHost = ParamUtil.getString(request, "publicVirtualHost", BeanParamUtil.getString(publicLayoutSet, request, "virtualHostname"));
-String privateVirtualHost = ParamUtil.getString(request, "privateVirtualHost", BeanParamUtil.getString(privateLayoutSet, request, "virtualHostname"));
+String[] publicVirtualHosts = ParamUtil.getStringValues(request, "publicVirtualHost", publicLayoutSet.getVirtualHostnames());
+String[] privateVirtualHosts = ParamUtil.getStringValues(request, "privateVirtualHost", privateLayoutSet.getVirtualHostnames());
 %>
 
 <liferay-ui:error-marker
@@ -127,9 +127,9 @@ String privateVirtualHost = ParamUtil.getString(request, "privateVirtualHost", B
 		<liferay-ui:message arguments="<%= new Object[] {HttpUtil.getProtocol(request), themeDisplay.getPortalURL() + themeDisplay.getPathFriendlyURLPublic()} %>" key="for-example,-if-the-public-virtual-host-is-www.helloworld.com-and-the-friendly-url-is-/helloworld" translateArguments="<%= false %>" />
 	</p>
 
-	<aui:input label="public-pages" maxlength="200" name="publicVirtualHost" placeholder="public-pages" type="text" value="<%= publicVirtualHost %>" />
+	<aui:input label="public-pages" maxlength="200" name="publicVirtualHost" placeholder="public-pages" type="text" value='<%= StringUtil.merge(publicVirtualHosts, ",") %>' />
 
-	<aui:input label="private-pages" maxlength="200" name="privateVirtualHost" placeholder="private-pages" type="text" value="<%= privateVirtualHost %>">
+	<aui:input label="private-pages" maxlength="200" name="privateVirtualHost" placeholder="private-pages" type="text" value='<%= StringUtil.merge(privateVirtualHosts, ",") %>'>
 		<aui:validator errorMessage="please-enter-a-unique-virtual-host" name="custom">
 			function(val, fieldNode, ruleValue) {
 				return (val != A.one('#<portlet:namespace />publicVirtualHost').val());
@@ -142,18 +142,18 @@ String privateVirtualHost = ParamUtil.getString(request, "privateVirtualHost", B
 		<%
 		LayoutSet stagingPublicLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(stagingGroupId, false);
 
-		String stagingPublicVirtualHost = ParamUtil.getString(request, "stagingPublicVirtualHost", stagingPublicLayoutSet.getVirtualHostname());
+		String[] stagingPublicVirtualHosts = ParamUtil.getStringValues(request, "stagingPublicVirtualHost", stagingPublicLayoutSet.getVirtualHostnames());
 		%>
 
-		<aui:input label="staging-public-pages" maxlength="200" name="stagingPublicVirtualHost" type="text" value="<%= stagingPublicVirtualHost %>" />
+		<aui:input label="staging-public-pages" maxlength="200" name="stagingPublicVirtualHost" type="text" value='<%= StringUtil.merge(stagingPublicVirtualHosts, ",") %>' />
 
 		<%
 		LayoutSet stagingPrivateLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(stagingGroupId, true);
 
-		String stagingPrivateVirtualHost = ParamUtil.getString(request, "stagingPrivateVirtualHost", stagingPrivateLayoutSet.getVirtualHostname());
+		String[] stagingPrivateVirtualHosts = ParamUtil.getStringValues(request, "stagingPrivateVirtualHost", stagingPrivateLayoutSet.getVirtualHostnames());
 		%>
 
-		<aui:input label="staging-private-pages" maxlength="200" name="stagingPrivateVirtualHost" type="text" value="<%= stagingPrivateVirtualHost %>">
+		<aui:input label="staging-private-pages" maxlength="200" name="stagingPrivateVirtualHost" type="text" value='<%= StringUtil.merge(stagingPrivateVirtualHosts, ",") %>'>
 			<aui:validator errorMessage="please-enter-a-unique-virtual-host" name="custom">
 				function(val, fieldNode, ruleValue) {
 					return (val != A.one('#<portlet:namespace />stagingPublicVirtualHost').val());

@@ -82,6 +82,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.comparator.VirtualHostPriorityComparator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.liveusers.LiveUsers;
 import com.liferay.portal.service.base.CompanyLocalServiceBaseImpl;
@@ -1555,8 +1556,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 			}
 		}
 		else {
-			VirtualHost virtualHost = virtualHostPersistence.fetchByC_L(
-				companyId, 0);
+			VirtualHost virtualHost = virtualHostPersistence.fetchByC_L_First(
+				companyId, 0, new VirtualHostPriorityComparator());
 
 			if (virtualHost != null) {
 				virtualHostPersistence.remove(virtualHost);

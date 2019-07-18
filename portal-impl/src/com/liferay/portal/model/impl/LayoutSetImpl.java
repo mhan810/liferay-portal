@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.kernel.service.ThemeLocalServiceUtil;
 import com.liferay.portal.kernel.service.VirtualHostLocalServiceUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
@@ -38,6 +39,8 @@ import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.IOException;
+
+import java.util.List;
 
 /**
  * Represents a portal layout set, providing access to the layout set's color
@@ -231,33 +234,74 @@ public class LayoutSetImpl extends LayoutSetBaseImpl {
 	}
 
 	/**
-	 * Returns the name of the layout set's virtual host.
+	 * Returns the name of the layout set's default virtual host.
 	 *
 	 * <p>
 	 * When accessing a layout set that has a the virtual host, the URL elements
 	 * "/web/sitename" or "/group/sitename" can be omitted.
 	 * </p>
 	 *
-	 * @return the layout set's virtual host name, or an empty string if the
-	 *         layout set has no virtual host configured
+	 * @return the layout set's default virtual host name, or an empty string if
+	 *         the layout set has no virtual hosts configured
+	 *
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 *             #getVirtualHostnames()}
 	 */
+	@Deprecated
 	@Override
 	public String getVirtualHostname() {
-		if (_virtualHostname != null) {
-			return _virtualHostname;
+		String[] virtualHostnames = getVirtualHostnames();
+
+		if (ArrayUtil.isEmpty(virtualHostnames)) {
+			return StringPool.BLANK;
 		}
 
-		VirtualHost virtualHost = VirtualHostLocalServiceUtil.fetchVirtualHost(
-			getCompanyId(), getLayoutSetId());
+		return virtualHostnames[0];
+	}
 
-		if (virtualHost == null) {
-			_virtualHostname = StringPool.BLANK;
+	/**
+	 * Returns the names of the layout set's virtual hosts.
+	 *
+	 * <p>
+	 * When accessing a layout set that has a the virtual host, the URL elements
+	 * "/web/sitename" or "/group/sitename" can be omitted.
+	 * </p>
+	 *
+	 * @return the layout set's virtual host names, or an empty string if
+	 *         the layout set has no virtual hosts configured
+	 */
+	@Override
+	public String[] getVirtualHostnames() {
+		if (_virtualHostnames != null) {
+			return _virtualHostnames;
+		}
+
+		List<VirtualHost> virtualHosts = null;
+
+		try {
+			virtualHosts = VirtualHostLocalServiceUtil.getVirtualHosts(
+				getCompanyId(), getLayoutSetId());
+		}
+		catch (PortalException pe) {
+			_log.error(pe, pe);
+		}
+
+		if ((virtualHosts == null) || virtualHosts.isEmpty()) {
+			_virtualHostnames = new String[0];
 		}
 		else {
-			_virtualHostname = virtualHost.getHostname();
+			String[] virtualHostNames = new String[virtualHosts.size()];
+
+			for (int i = 0; i < virtualHosts.size(); i++) {
+				VirtualHost virtualHost = virtualHosts.get(i);
+
+				virtualHostNames[i] = virtualHost.getHostname();
+			}
+
+			_virtualHostnames = virtualHostNames;
 		}
 
-		return _virtualHostname;
+		return _virtualHostnames;
 	}
 
 	@Override
@@ -307,10 +351,25 @@ public class LayoutSetImpl extends LayoutSetBaseImpl {
 	 *
 	 * @param virtualHostname the name of the layout set's virtual host
 	 * @see   #getVirtualHostname()
+	 *
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 *             #setVirtualHostnames(String[])}
 	 */
+	@Deprecated
 	@Override
 	public void setVirtualHostname(String virtualHostname) {
-		_virtualHostname = virtualHostname;
+		_virtualHostnames = new String[] {virtualHostname};
+	}
+
+	/**
+	 * Sets the names of the layout set's virtual hosts.
+	 *
+	 * @param virtualHostnames the names of the layout set's virtual hosts
+	 * @see   #getVirtualHostnames()
+	 */
+	@Override
+	public void setVirtualHostnames(String[] virtualHostnames) {
+		_virtualHostnames = virtualHostnames;
 	}
 
 	protected Theme getTheme(String device) {
@@ -343,6 +402,6 @@ public class LayoutSetImpl extends LayoutSetBaseImpl {
 	private UnicodeProperties _settingsProperties;
 
 	@CacheField(propagateToInterface = true)
-	private String _virtualHostname;
+	private String[] _virtualHostnames;
 
 }

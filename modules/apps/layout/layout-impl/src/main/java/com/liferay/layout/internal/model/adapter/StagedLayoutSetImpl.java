@@ -314,6 +314,11 @@ public class StagedLayoutSetImpl implements StagedLayoutSet {
 	}
 
 	@Override
+	public String[] getVirtualHostnames() {
+		return _layoutSet.getVirtualHostnames();
+	}
+
+	@Override
 	public boolean hasSetModifiedDate() {
 		return _layoutSet.hasSetModifiedDate();
 	}
@@ -545,6 +550,11 @@ public class StagedLayoutSetImpl implements StagedLayoutSet {
 	@Override
 	public void setVirtualHostname(String virtualHostname) {
 		_layoutSet.setVirtualHostname(virtualHostname);
+	}
+
+	@Override
+	public void setVirtualHostnames(String[] virtualHostnames) {
+		_layoutSet.setVirtualHostnames(virtualHostnames);
 	}
 
 	@Override

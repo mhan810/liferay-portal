@@ -21,23 +21,30 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.VirtualHost;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.comparator.VirtualHostPriorityComparator;
 import com.liferay.portal.model.impl.LayoutSetImpl;
 import com.liferay.portal.model.impl.LayoutSetModelImpl;
 import com.liferay.portal.service.base.VirtualHostLocalServiceBaseImpl;
 import com.liferay.portal.util.PropsValues;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
  * @author Alexander Chow
+ * @author Raymond Augé
  */
 public class VirtualHostLocalServiceImpl
 	extends VirtualHostLocalServiceBaseImpl {
 
 	@Override
 	public VirtualHost fetchVirtualHost(long companyId, long layoutSetId) {
-		return virtualHostPersistence.fetchByC_L(companyId, layoutSetId);
+		return virtualHostPersistence.fetchByC_L_First(
+			companyId, layoutSetId, new VirtualHostPriorityComparator());
 	}
 
 	@Override
@@ -49,7 +56,8 @@ public class VirtualHostLocalServiceImpl
 	public VirtualHost getVirtualHost(long companyId, long layoutSetId)
 		throws PortalException {
 
-		return virtualHostPersistence.findByC_L(companyId, layoutSetId);
+		return virtualHostPersistence.findByC_L_First(
+			companyId, layoutSetId, new VirtualHostPriorityComparator());
 	}
 
 	@Override
@@ -58,24 +66,83 @@ public class VirtualHostLocalServiceImpl
 	}
 
 	@Override
+	public List<VirtualHost> getVirtualHosts(long companyId, long layoutSetId)
+		throws PortalException {
+
+		return virtualHostPersistence.findByC_L(companyId, layoutSetId);
+	}
+
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 *             #updateVirtualHosts(long, long, String[])}
+	 */
+	@Deprecated
+	@Override
 	public VirtualHost updateVirtualHost(
 		long companyId, final long layoutSetId, String hostname) {
 
-		VirtualHost virtualHost = virtualHostPersistence.fetchByC_L(
-			companyId, layoutSetId);
+		List<VirtualHost> virtualHosts = updateVirtualHosts(
+			companyId, layoutSetId, new String[] {hostname});
 
-		if (virtualHost == null) {
-			long virtualHostId = counterLocalService.increment();
-
-			virtualHost = virtualHostPersistence.create(virtualHostId);
-
-			virtualHost.setCompanyId(companyId);
-			virtualHost.setLayoutSetId(layoutSetId);
+		if (virtualHosts.isEmpty()) {
+			return null;
 		}
 
-		virtualHost.setHostname(hostname);
+		return virtualHosts.get(0);
+	}
 
-		virtualHostPersistence.update(virtualHost);
+	@Override
+	public List<VirtualHost> updateVirtualHosts(
+		long companyId, final long layoutSetId, String[] hostnames) {
+
+		List<VirtualHost> virtualHosts = new ArrayList<>(
+			virtualHostPersistence.findByC_L(companyId, layoutSetId));
+
+		for (int i = 0; i < hostnames.length; i++) {
+			String curHostname = hostnames[i];
+
+			VirtualHost virtualHost = null;
+
+			for (VirtualHost curVirtualHost : virtualHosts) {
+				if (curHostname.equals(curVirtualHost.getHostname())) {
+					virtualHost = curVirtualHost;
+
+					break;
+				}
+			}
+
+			if (virtualHost == null) {
+				long virtualHostId = counterLocalService.increment();
+
+				virtualHost = virtualHostPersistence.create(virtualHostId);
+
+				virtualHost.setCompanyId(companyId);
+				virtualHost.setLayoutSetId(layoutSetId);
+				virtualHost.setHostname(curHostname);
+
+				virtualHosts.add(virtualHost);
+			}
+
+			virtualHost.setPriority(-i);
+
+			virtualHostPersistence.update(virtualHost);
+		}
+
+		Iterator<VirtualHost> itr = virtualHosts.iterator();
+
+		while (itr.hasNext()) {
+			VirtualHost virtualHost = itr.next();
+
+			if (!ArrayUtil.contains(hostnames, virtualHost.getHostname())) {
+				itr.remove();
+
+				virtualHostPersistence.remove(virtualHost);
+			}
+		}
+
+		virtualHosts.sort(new VirtualHostPriorityComparator());
+
+		virtualHostPersistence.cacheResult(virtualHosts);
 
 		final Company company = companyPersistence.fetchByPrimaryKey(companyId);
 
@@ -130,7 +197,7 @@ public class VirtualHostLocalServiceImpl
 				});
 		}
 
-		return virtualHost;
+		return virtualHosts;
 	}
 
 }

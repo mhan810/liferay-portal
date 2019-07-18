@@ -6045,6 +6045,11 @@ public class PortalImpl implements Portal {
 		return userId;
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 *             #getVirtualHostnames(LayoutSet)}
+	 */
+	@Deprecated
 	@Override
 	public String getVirtualHostname(LayoutSet layoutSet) {
 		String virtualHostname = layoutSet.getVirtualHostname();
@@ -6054,6 +6059,19 @@ public class PortalImpl implements Portal {
 		}
 
 		return virtualHostname;
+	}
+
+	@Override
+	public String[] getVirtualHostnames(LayoutSet layoutSet) {
+		String[] virtualHostnames = layoutSet.getVirtualHostnames();
+
+		if (ArrayUtil.isEmpty(virtualHostnames)) {
+			virtualHostnames = new String[] {
+				layoutSet.getCompanyFallbackVirtualHostname()
+			};
+		}
+
+		return virtualHostnames;
 	}
 
 	@Override
@@ -8486,13 +8504,13 @@ public class PortalImpl implements Portal {
 		}
 
 		if (useGroupVirtualHostName) {
-			String virtualHostname = getVirtualHostname(layoutSet);
+			String[] virtualHostnames = getVirtualHostnames(layoutSet);
 
 			String portalDomain = themeDisplay.getPortalDomain();
 
-			if (Validator.isNotNull(virtualHostname) &&
+			if (ArrayUtil.isNotEmpty(virtualHostnames) &&
 				(canonicalURL ||
-				 !StringUtil.equalsIgnoreCase(virtualHostname, _LOCALHOST))) {
+				 !ArrayUtil.contains(virtualHostnames, _LOCALHOST))) {
 
 				if (!controlPanel) {
 					if (canonicalURL) {
@@ -8502,12 +8520,13 @@ public class PortalImpl implements Portal {
 							path = PropsValues.WIDGET_SERVLET_MAPPING;
 						}
 
-						if (!StringUtil.equalsIgnoreCase(
-								virtualHostname, _LOCALHOST) &&
-							!_isSameHostName(virtualHostname, portalDomain)) {
+						if (!ArrayUtil.contains(virtualHostnames, _LOCALHOST) &&
+							!ArrayUtil.contains(
+								virtualHostnames, portalDomain)) {
 
 							portalURL = getPortalURL(
-								virtualHostname, themeDisplay.getServerPort(),
+								virtualHostnames[0],
+								themeDisplay.getServerPort(),
 								themeDisplay.isSecure());
 						}
 
@@ -8518,9 +8537,10 @@ public class PortalImpl implements Portal {
 						);
 					}
 
-					if (_isSameHostName(virtualHostname, portalDomain) &&
-						(virtualHostname.equals(
-							layoutSet.getVirtualHostname()) ||
+					if (ArrayUtil.contains(virtualHostnames, portalDomain) &&
+						(Arrays.equals(
+							virtualHostnames,
+							layoutSet.getVirtualHostnames()) ||
 						 PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME.equals(
 							 group.getGroupKey()))) {
 
@@ -8549,36 +8569,38 @@ public class PortalImpl implements Portal {
 					 (group.getClassPK() != themeDisplay.getUserId()))) {
 
 					if (group.isControlPanel() || controlPanel) {
-						virtualHostname = themeDisplay.getServerName();
+						virtualHostnames = new String[] {
+							themeDisplay.getServerName()
+						};
 
-						if (Validator.isNull(virtualHostname) ||
-							StringUtil.equalsIgnoreCase(
-								virtualHostname, _LOCALHOST)) {
+						if (ArrayUtil.isEmpty(virtualHostnames) ||
+							ArrayUtil.contains(virtualHostnames, _LOCALHOST)) {
 
 							LayoutSet curLayoutSet =
 								LayoutSetLocalServiceUtil.getLayoutSet(
 									themeDisplay.getSiteGroupId(),
 									privateLayoutSet);
 
-							virtualHostname = curLayoutSet.getVirtualHostname();
+							virtualHostnames =
+								curLayoutSet.getVirtualHostnames();
 						}
 					}
 
-					if (Validator.isNull(virtualHostname) ||
-						StringUtil.equalsIgnoreCase(
-							virtualHostname, _LOCALHOST)) {
+					if (ArrayUtil.isEmpty(virtualHostnames) ||
+						ArrayUtil.contains(virtualHostnames, _LOCALHOST)) {
 
 						Company company = themeDisplay.getCompany();
 
-						virtualHostname = company.getVirtualHostname();
+						virtualHostnames = new String[] {
+							company.getVirtualHostname()
+						};
 					}
 
 					if (canonicalURL ||
-						!StringUtil.equalsIgnoreCase(
-							virtualHostname, _LOCALHOST)) {
+						!ArrayUtil.contains(virtualHostnames, _LOCALHOST)) {
 
-						virtualHostname = getCanonicalDomain(
-							virtualHostname, portalDomain);
+						String virtualHostname = getCanonicalDomain(
+							virtualHostnames[0], portalDomain);
 
 						portalURL = getPortalURL(
 							virtualHostname, themeDisplay.getServerPort(),
