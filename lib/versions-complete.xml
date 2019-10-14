@@ -4865,8 +4865,8 @@
 				<project-url>http://java.sun.com/products/jms</project-url>
 				<licenses>
 					<license>
-						<license-name>Sun Binary Code License Agreement</license-name>
-						<license-url>http://www.oracle.com/technetwork/java/javase/downloads/java-se-archive-license-1382604.html</license-url>
+						<license-name>Common Development and Distribution License 1.0</license-name>
+						<license-url>https://opensource.org/licenses/CDDL-1.0</license-url>
 					</license>
 				</licenses>
 			</library>
@@ -4877,8 +4877,8 @@
 				<project-url>http://java.sun.com/products/jndi</project-url>
 				<licenses>
 					<license>
-						<license-name>Sun Binary Code License Agreement</license-name>
-						<license-url>http://www.oracle.com/technetwork/java/javase/downloads/java-se-archive-license-1382604.html</license-url>
+						<license-name>Common Development and Distribution License 1.0</license-name>
+						<license-url>https://opensource.org/licenses/CDDL-1.0</license-url>
 					</license>
 				</licenses>
 			</library>
@@ -4925,8 +4925,8 @@
 				<project-url>http://java.sun.com/products/jsp</project-url>
 				<licenses>
 					<license>
-						<license-name>Sun Binary Code License Agreement</license-name>
-						<license-url>http://www.oracle.com/technetwork/java/javase/downloads/java-se-archive-license-1382604.html</license-url>
+						<license-name>Common Development and Distribution License 1.0</license-name>
+						<license-url>https://opensource.org/licenses/CDDL-1.0</license-url>
 					</license>
 				</licenses>
 			</library>
@@ -4937,8 +4937,8 @@
 				<project-url>http://java.sun.com/products/jta</project-url>
 				<licenses>
 					<license>
-						<license-name>Sun Binary Code License Agreement</license-name>
-						<license-url>http://www.oracle.com/technetwork/java/javase/downloads/java-se-archive-license-1382604.html</license-url>
+						<license-name>Common Development and Distribution License 1.0</license-name>
+						<license-url>https://opensource.org/licenses/CDDL-1.0</license-url>
 					</license>
 				</licenses>
 				<comments>See LPS-27200.</comments>
@@ -4974,8 +4974,8 @@
 				<project-url>http://java.sun.com/products/javamail</project-url>
 				<licenses>
 					<license>
-						<license-name>Sun Binary Code License Agreement</license-name>
-						<license-url>http://www.oracle.com/technetwork/java/javase/downloads/java-se-archive-license-1382604.html</license-url>
+						<license-name>Common Development and Distribution License 1.0</license-name>
+						<license-url>https://opensource.org/licenses/CDDL-1.0</license-url>
 					</license>
 				</licenses>
 			</library>
@@ -5070,8 +5070,8 @@
 				<project-url>http://java.sun.com/javaee/overview/faq/persistence.jsp</project-url>
 				<licenses>
 					<license>
-						<license-name>Sun Binary Code License Agreement</license-name>
-						<license-url>http://www.oracle.com/technetwork/java/javase/downloads/java-se-archive-license-1382604.html</license-url>
+						<license-name>Common Development and Distribution License 1.0</license-name>
+						<license-url>https://opensource.org/licenses/CDDL-1.0</license-url>
 					</license>
 				</licenses>
 			</library>
@@ -5202,8 +5202,8 @@
 				<project-url>http://java.sun.com/products/servlet</project-url>
 				<licenses>
 					<license>
-						<license-name>Sun Binary Code License Agreement</license-name>
-						<license-url>http://www.oracle.com/technetwork/java/javase/downloads/java-se-archive-license-1382604.html</license-url>
+						<license-name>Common Development and Distribution License 1.1</license-name>
+						<license-url>https://oss.oracle.com/licenses/CDDL-1.1</license-url>
 					</license>
 				</licenses>
 			</library>
@@ -5227,8 +5227,8 @@
 				<project-url>http://java.sun.com/products/javamail</project-url>
 				<licenses>
 					<license>
-						<license-name>Sun Binary Code License Agreement</license-name>
-						<license-url>http://www.oracle.com/technetwork/java/javase/downloads/java-se-archive-license-1382604.html</license-url>
+						<license-name>Common Development and Distribution License 1.0</license-name>
+						<license-url>https://opensource.org/licenses/CDDL-1.0</license-url>
 					</license>
 				</licenses>
 			</library>
@@ -5633,8 +5633,8 @@
 				<project-url>http://java.sun.com/j2ee/ccpp</project-url>
 				<licenses>
 					<license>
-						<license-name>Sun Binary Code License Agreement</license-name>
-						<license-url>http://www.oracle.com/technetwork/java/javase/downloads/java-se-archive-license-1382604.html</license-url>
+						<license-name>Common Development and Distribution License 1.0</license-name>
+						<license-url>https://opensource.org/licenses/CDDL-1.0</license-url>
 					</license>
 				</licenses>
 			</library>
@@ -5645,8 +5645,8 @@
 				<project-url>http://java.sun.com/j2ee/ccpp</project-url>
 				<licenses>
 					<license>
-						<license-name>Sun Binary Code License Agreement</license-name>
-						<license-url>http://www.oracle.com/technetwork/java/javase/downloads/java-se-archive-license-1382604.html</license-url>
+						<license-name>Common Development and Distribution License 1.0</license-name>
+						<license-url>https://opensource.org/licenses/CDDL-1.0</license-url>
 					</license>
 				</licenses>
 			</library>
