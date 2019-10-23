@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.expando.util;
+package com.liferay.portal.custom.attributes.expando.internal;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.model.ExpandoColumn;
@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portlet.expando.model.impl.ExpandoValueImpl;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ import java.util.List;
 /**
  * @author Raymond Augé
  */
+@Component(service = ExpandoBridgeIndexer.class)
 public class ExpandoBridgeIndexerImpl implements ExpandoBridgeIndexer {
 
 	@Override

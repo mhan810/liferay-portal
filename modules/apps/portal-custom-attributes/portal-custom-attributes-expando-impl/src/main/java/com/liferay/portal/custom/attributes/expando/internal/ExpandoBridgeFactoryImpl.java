@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.expando.util;
+package com.liferay.portal.custom.attributes.expando.internal;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactory;
