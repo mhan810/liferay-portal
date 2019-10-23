@@ -19,8 +19,8 @@ import com.liferay.expando.kernel.model.ExpandoColumn;
 import com.liferay.expando.kernel.model.ExpandoColumnConstants;
 import com.liferay.expando.kernel.model.ExpandoTableConstants;
 import com.liferay.expando.kernel.model.ExpandoValue;
-import com.liferay.expando.kernel.service.ExpandoColumnLocalServiceUtil;
-import com.liferay.expando.kernel.service.ExpandoValueLocalServiceUtil;
+import com.liferay.expando.kernel.service.ExpandoColumnLocalService;
+import com.liferay.expando.kernel.service.ExpandoValueLocalService;
 import com.liferay.expando.kernel.util.ExpandoBridgeIndexer;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -36,10 +36,12 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portlet.expando.model.impl.ExpandoValueImpl;
-import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Raymond Augé
@@ -265,7 +267,7 @@ public class ExpandoBridgeIndexerImpl implements ExpandoBridgeIndexer {
 		Document document, ExpandoBridge expandoBridge) {
 
 		List<ExpandoColumn> expandoColumns =
-			ExpandoColumnLocalServiceUtil.getDefaultTableColumns(
+			_expandoColumnLocalService.getDefaultTableColumns(
 				expandoBridge.getCompanyId(), expandoBridge.getClassName());
 
 		if ((expandoColumns == null) || expandoColumns.isEmpty()) {
@@ -291,7 +293,7 @@ public class ExpandoBridgeIndexerImpl implements ExpandoBridgeIndexer {
 		}
 
 		List<ExpandoValue> expandoValues =
-			ExpandoValueLocalServiceUtil.getRowValues(
+			_expandoValueLocalService.getRowValues(
 				expandoBridge.getCompanyId(), expandoBridge.getClassName(),
 				ExpandoTableConstants.DEFAULT_TABLE_NAME,
 				expandoBridge.getClassPK(), QueryUtil.ALL_POS,
@@ -311,5 +313,11 @@ public class ExpandoBridgeIndexerImpl implements ExpandoBridgeIndexer {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ExpandoBridgeIndexerImpl.class);
+
+	@Reference
+	private ExpandoColumnLocalService _expandoColumnLocalService;
+
+	@Reference
+	private ExpandoValueLocalService _expandoValueLocalService;
 
 }

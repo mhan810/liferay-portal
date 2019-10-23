@@ -16,6 +16,7 @@ package com.liferay.expando.kernel.util;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 
 /**
  * @author Raymond Augé
@@ -45,12 +46,20 @@ public class ExpandoBridgeIndexerUtil {
 		return _expandoBridgeIndexer;
 	}
 
+	/**
+	 * @deprecated As of 7.3.x, no direct replacement
+	 */
+	@Deprecated
 	public void setExpandoBridgeIndexer(
 		ExpandoBridgeIndexer expandoBridgeIndexer) {
 
 		_expandoBridgeIndexer = expandoBridgeIndexer;
 	}
 
-	private static ExpandoBridgeIndexer _expandoBridgeIndexer;
+	private static volatile ExpandoBridgeIndexer _expandoBridgeIndexer =
+		ServiceProxyFactory.newServiceTrackedInstance(
+			ExpandoBridgeIndexer.class, ExpandoBridgeIndexerUtil.class,
+			"_expandoBridgeIndexer", false);
+
 
 }

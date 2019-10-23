@@ -15,6 +15,7 @@
 package com.liferay.expando.kernel.util;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 
 /**
  * @author Brian Wing Shun Chan
@@ -38,12 +39,19 @@ public class ExpandoBridgeFactoryUtil {
 		return _expandoBridgeFactory;
 	}
 
+	/**
+	 * @deprecated As of 7.3.x, no direct replacement
+	 */
+	@Deprecated
 	public void setExpandoBridgeFactory(
 		ExpandoBridgeFactory expandoBridgeFactory) {
 
 		_expandoBridgeFactory = expandoBridgeFactory;
 	}
 
-	private static ExpandoBridgeFactory _expandoBridgeFactory;
+	private static volatile ExpandoBridgeFactory _expandoBridgeFactory =
+		ServiceProxyFactory.newServiceTrackedInstance(
+			ExpandoBridgeFactory.class, ExpandoBridgeFactoryUtil.class,
+			"_expandoBridgeFactory", false);
 
 }

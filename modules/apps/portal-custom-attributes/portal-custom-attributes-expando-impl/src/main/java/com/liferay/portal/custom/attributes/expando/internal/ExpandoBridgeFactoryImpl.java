@@ -18,9 +18,12 @@ import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactory;
 import com.liferay.portlet.expando.model.impl.ExpandoBridgeImpl;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Raymond Augé
  */
+@Component(service = ExpandoBridgeFactory.class)
 public class ExpandoBridgeFactoryImpl implements ExpandoBridgeFactory {
 
 	@Override
