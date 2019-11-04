@@ -33,7 +33,18 @@ public interface AccountRoleManager {
 			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap)
 		throws PortalException;
 
+	public void addAccountRoleUser(
+			long accountEntryId, long roleId, long userId)
+		throws PortalException;
+
+	public List<AccountRole> getAccountRoles(long accountEntryId, long userId)
+		throws PortalException;
+
 	public List<AccountRole> getAccountRoles(
 		long companyId, long[] accountEntryIds);
+
+	public void removeAccountRoleUser(
+			long accountEntryId, long roleId, long userId)
+		throws PortalException;
 
 }
