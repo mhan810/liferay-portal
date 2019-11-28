@@ -16,9 +16,17 @@ package com.liferay.portal.custom.attributes.expando.internal;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactory;
+import com.liferay.portal.custom.attributes.CustomAttributesDataEngineAware;
 import com.liferay.portlet.expando.model.impl.ExpandoBridgeImpl;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Raymond Augé
@@ -28,14 +36,44 @@ public class ExpandoBridgeFactoryImpl implements ExpandoBridgeFactory {
 
 	@Override
 	public ExpandoBridge getExpandoBridge(long companyId, String className) {
-		return new ExpandoBridgeImpl(companyId, className);
+		if (!_dataEngineClassNames.containsKey(className)) {
+			return new ExpandoBridgeImpl(companyId, className);
+		}
+
+		return new DataEngineExpandoBridgeImpl(companyId, className);
 	}
 
 	@Override
 	public ExpandoBridge getExpandoBridge(
 		long companyId, String className, long classPK) {
 
-		return new ExpandoBridgeImpl(companyId, className, classPK);
+		if (!_dataEngineClassNames.containsKey(className)) {
+			return new ExpandoBridgeImpl(companyId, className, classPK);
+		}
+
+		return new DataEngineExpandoBridgeImpl(companyId, className, classPK);
 	}
 
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		unbind = "unsetCustomAttributesDataEngineAware")
+	protected void setCustomAttributesDataEngineAware(
+		CustomAttributesDataEngineAware customAttributesDataEngineAware) {
+
+		_dataEngineClassNames.put(
+			customAttributesDataEngineAware.getClassName(),
+			customAttributesDataEngineAware.getClassName());
+	}
+
+	protected void unsetCustomAttributesDataEngineAware(
+		CustomAttributesDataEngineAware customAttributesDataEngineAware) {
+
+		_dataEngineClassNames.remove(
+			customAttributesDataEngineAware.getClassName());
+	}
+
+
+	private Map<String, String> _dataEngineClassNames = new HashMap<>();
 }
