@@ -25,4 +25,7 @@ public interface ElasticsearchClientResolver {
 
 	public RestHighLevelClient getRestHighLevelClient(String connectionId);
 
+	public RestHighLevelClient getRestHighLevelClient(
+		String connectionId, boolean preferLocalCluster);
+
 }

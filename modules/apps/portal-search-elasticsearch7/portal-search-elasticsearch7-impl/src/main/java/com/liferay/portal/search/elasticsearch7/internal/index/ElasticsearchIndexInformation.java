@@ -82,7 +82,7 @@ public class ElasticsearchIndexInformation implements IndexInformation {
 
 	protected IndicesClient getIndicesClient() {
 		RestHighLevelClient restHighLevelClient =
-			elasticsearchClientResolver.getRestHighLevelClient();
+			elasticsearchClientResolver.getRestHighLevelClient(null, true);
 
 		return restHighLevelClient.indices();
 	}

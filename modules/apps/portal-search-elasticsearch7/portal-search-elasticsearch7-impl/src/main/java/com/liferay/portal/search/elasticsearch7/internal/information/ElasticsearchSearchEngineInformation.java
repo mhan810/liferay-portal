@@ -16,20 +16,24 @@ package com.liferay.portal.search.elasticsearch7.internal.information;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.configuration.CrossClusterReplicationConfigurationWrapper;
+import com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration;
+import com.liferay.portal.search.elasticsearch7.configuration.OperationMode;
 import com.liferay.portal.search.elasticsearch7.internal.ElasticsearchSearchEngine;
-import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchConnection;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchConnectionManager;
-import com.liferay.portal.search.elasticsearch7.internal.connection.OperationMode;
 import com.liferay.portal.search.engine.SearchEngineInformation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,13 +46,19 @@ import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 
 /**
  * @author Adam Brandizzi
  */
-@Component(immediate = true, service = SearchEngineInformation.class)
+@Component(
+	configurationPid = "com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration",
+	immediate = true, service = SearchEngineInformation.class
+)
 public class ElasticsearchSearchEngineInformation
 	implements SearchEngineInformation {
 
@@ -59,19 +69,67 @@ public class ElasticsearchSearchEngineInformation
 
 	@Override
 	public String getNodesString() {
-		try {
-			RestHighLevelClient restHighLevelClient =
-				elasticsearchConnectionManager.getRestHighLevelClient();
+		String clusterNodesString = getClusterNodesString(
+			elasticsearchConnectionManager.getRestHighLevelClient());
 
+		if (isCrossClusterReplicationEnabled()) {
+			String localClusterNodesString = getClusterNodesString(
+				elasticsearchConnectionManager.getRestHighLevelClient(
+					null, true));
+
+			if (!Validator.isBlank(localClusterNodesString)) {
+				StringBundler sb = new StringBundler(5);
+
+				sb.append("Remote Cluster = ");
+				sb.append(clusterNodesString);
+				sb.append(StringPool.COMMA_AND_SPACE);
+				sb.append("Local Cluster = ");
+				sb.append(localClusterNodesString);
+
+				clusterNodesString = sb.toString();
+			}
+		}
+
+		return clusterNodesString;
+	}
+
+	@Override
+	public String getVendorString() {
+		OperationMode operationMode =
+			elasticsearchConfiguration.operationMode();
+
+		if (Objects.equals(operationMode, OperationMode.EMBEDDED)) {
+			return elasticsearchSearchEngine.getVendor() + StringPool.SPACE +
+				"(Embedded)";
+		}
+
+		return elasticsearchSearchEngine.getVendor();
+	}
+
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		elasticsearchConfiguration = ConfigurableUtil.createConfigurable(
+			ElasticsearchConfiguration.class, properties);
+	}
+
+	protected String getClusterNodesString(
+		RestHighLevelClient restHighLevelClient) {
+
+		try {
 			if (restHighLevelClient == null) {
 				return StringPool.BLANK;
 			}
 
-			List<NodeInfo> nodeInfos = _getClusterNodes(restHighLevelClient);
+			ClusterInfo clusterInfo = _getClusterInfo(restHighLevelClient);
+
+			String clusterName = clusterInfo.getClusterName();
+
+			List<NodeInfo> nodeInfos = clusterInfo.getNodeInfoList();
 
 			Stream<NodeInfo> stream = nodeInfos.stream();
 
-			return stream.map(
+			String nodesString = stream.map(
 				nodeInfo -> {
 					StringBundler sb = new StringBundler(5);
 
@@ -86,9 +144,22 @@ public class ElasticsearchSearchEngineInformation
 			).collect(
 				Collectors.joining(StringPool.COMMA_AND_SPACE)
 			);
+
+			StringBundler sb = new StringBundler(6);
+
+			sb.append(clusterName);
+			sb.append(StringPool.COLON);
+			sb.append(StringPool.SPACE);
+			sb.append(StringPool.OPEN_BRACKET);
+			sb.append(nodesString);
+			sb.append(StringPool.CLOSE_BRACKET);
+
+			return sb.toString();
 		}
 		catch (Exception e) {
-			_log.error("Unable to get node information", e);
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to get node information", e);
+			}
 
 			StringBundler sb = new StringBundler(4);
 
@@ -101,20 +172,19 @@ public class ElasticsearchSearchEngineInformation
 		}
 	}
 
-	@Override
-	public String getVendorString() {
-		ElasticsearchConnection elasticsearchConnection =
-			elasticsearchConnectionManager.getElasticsearchConnection();
-
-		if (elasticsearchConnection.getOperationMode() ==
-				OperationMode.EMBEDDED) {
-
-			return elasticsearchSearchEngine.getVendor() + StringPool.SPACE +
-				"(Embedded)";
+	protected boolean isCrossClusterReplicationEnabled() {
+		if (crossClusterReplicationConfigurationWrapper == null) {
+			return false;
 		}
 
-		return elasticsearchSearchEngine.getVendor();
+		return crossClusterReplicationConfigurationWrapper.isCCREnabled();
 	}
+
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	protected volatile CrossClusterReplicationConfigurationWrapper
+		crossClusterReplicationConfigurationWrapper;
+
+	protected volatile ElasticsearchConfiguration elasticsearchConfiguration;
 
 	@Reference
 	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
@@ -122,10 +192,10 @@ public class ElasticsearchSearchEngineInformation
 	@Reference
 	protected ElasticsearchSearchEngine elasticsearchSearchEngine;
 
-	private List<NodeInfo> _getClusterNodes(
-		RestHighLevelClient restHighLevelClient) {
+	private ClusterInfo _getClusterInfo(RestHighLevelClient restHighLevelClient)
+		throws Exception {
 
-		List<NodeInfo> nodeInfoList = new ArrayList<>();
+		ClusterInfo clusterInfo = new ClusterInfo();
 
 		RestClient restClient = restHighLevelClient.getLowLevelClient();
 
@@ -135,41 +205,66 @@ public class ElasticsearchSearchEngineInformation
 
 		request.addParameter("timeout", "10000ms");
 
-		try {
-			Response response = restClient.performRequest(request);
+		Response response = restClient.performRequest(request);
 
-			String responseBody = EntityUtils.toString(response.getEntity());
+		String responseBody = EntityUtils.toString(response.getEntity());
 
-			JSONObject responseJSONObject = JSONFactoryUtil.createJSONObject(
-				responseBody);
+		JSONObject responseJSONObject = JSONFactoryUtil.createJSONObject(
+			responseBody);
 
-			JSONObject nodesJSONObject = responseJSONObject.getJSONObject(
-				"nodes");
+		String clusterName = GetterUtil.getString(
+			responseJSONObject.get("cluster_name"));
 
-			Set<String> nodes = nodesJSONObject.keySet();
+		clusterInfo.setClusterName(clusterName);
 
-			for (String node : nodes) {
-				JSONObject nodeJSONObject = nodesJSONObject.getJSONObject(node);
+		JSONObject nodesJSONObject = responseJSONObject.getJSONObject("nodes");
 
-				NodeInfo nodeInfo = new NodeInfo();
+		Set<String> nodes = nodesJSONObject.keySet();
 
-				nodeInfo.setName(
-					GetterUtil.getString(nodeJSONObject.get("name")));
-				nodeInfo.setVersion(
-					GetterUtil.getString(nodeJSONObject.get("version")));
+		List<NodeInfo> nodeInfoList = new ArrayList<>();
 
-				nodeInfoList.add(nodeInfo);
-			}
+		for (String node : nodes) {
+			JSONObject nodeJSONObject = nodesJSONObject.getJSONObject(node);
 
-			return nodeInfoList;
+			NodeInfo nodeInfo = new NodeInfo();
+
+			nodeInfo.setName(GetterUtil.getString(nodeJSONObject.get("name")));
+			nodeInfo.setVersion(
+				GetterUtil.getString(nodeJSONObject.get("version")));
+
+			nodeInfoList.add(nodeInfo);
 		}
-		catch (Exception ioe) {
-			throw new SystemException(ioe);
-		}
+
+		clusterInfo.setNodeInfoList(nodeInfoList);
+
+		return clusterInfo;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ElasticsearchSearchEngineInformation.class);
+
+	private class ClusterInfo {
+
+		public String getClusterName() {
+			return _clusterName;
+		}
+
+		public List<NodeInfo> getNodeInfoList() {
+			return _nodeInfoList;
+		}
+
+		public void setClusterName(String clusterName) {
+			_clusterName = clusterName;
+		}
+
+		public void setNodeInfoList(List<NodeInfo> nodeInfoList) {
+			_nodeInfoList = nodeInfoList;
+		}
+
+		private String _clusterName;
+		private List<NodeInfo> _nodeInfoList;
+
+	}
 
 	private class NodeInfo {
 

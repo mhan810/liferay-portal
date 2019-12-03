@@ -19,6 +19,7 @@ import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.configuration.CrossClusterReplicationConfigurationWrapper;
 import com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch7.internal.configuration.ElasticsearchConnectionConfigurationWrapper;
 import com.liferay.portal.search.elasticsearch7.internal.index.IndexFactory;
@@ -56,11 +57,17 @@ public class ElasticsearchConnectionManager
 	implements ElasticsearchClientResolver {
 
 	public ElasticsearchConnection getElasticsearchConnection() {
-		return getElasticsearchConnection(null);
+		return getElasticsearchConnection(null, false);
 	}
 
 	public ElasticsearchConnection getElasticsearchConnection(
 		String connectionId) {
+
+		return getElasticsearchConnection(connectionId, false);
+	}
+
+	public ElasticsearchConnection getElasticsearchConnection(
+		String connectionId, boolean preferLocalCluster) {
 
 		if (!Validator.isBlank(connectionId)) {
 			return _elasticsearchConnections.get(connectionId);
@@ -69,6 +76,12 @@ public class ElasticsearchConnectionManager
 		if (isOperationModeEmbedded()) {
 			return _elasticsearchConnections.get(
 				EmbeddedElasticsearchConnection.CONNECTION_ID);
+		}
+
+		if (preferLocalCluster && isCrossClusterReplicationEnabled()) {
+			return _elasticsearchConnections.get(
+				crossClusterReplicationConfigurationWrapper.
+					getCCRLocalClusterConnectionId());
 		}
 
 		return _elasticsearchConnections.get(
@@ -82,8 +95,15 @@ public class ElasticsearchConnectionManager
 
 	@Override
 	public RestHighLevelClient getRestHighLevelClient(String connectionId) {
+		return getRestHighLevelClient(connectionId, false);
+	}
+
+	@Override
+	public RestHighLevelClient getRestHighLevelClient(
+		String connectionId, boolean preferLocalCluster) {
+
 		ElasticsearchConnection elasticsearchConnection =
-			getElasticsearchConnection(connectionId);
+			getElasticsearchConnection(connectionId, preferLocalCluster);
 
 		if (elasticsearchConnection == null) {
 			throw new ElasticsearchConnectionNotInitializedException();
@@ -194,6 +214,14 @@ public class ElasticsearchConnectionManager
 		_serviceTracker.close();
 	}
 
+	protected boolean isCrossClusterReplicationEnabled() {
+		if (crossClusterReplicationConfigurationWrapper == null) {
+			return false;
+		}
+
+		return crossClusterReplicationConfigurationWrapper.isCCREnabled();
+	}
+
 	protected boolean isOperationModeEmbedded() {
 		return Objects.equals(_operationMode, OperationMode.EMBEDDED);
 	}
@@ -218,6 +246,10 @@ public class ElasticsearchConnectionManager
 
 		return OperationMode.valueOf(operationMode.name());
 	}
+
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	protected volatile CrossClusterReplicationConfigurationWrapper
+		crossClusterReplicationConfigurationWrapper;
 
 	@Reference(unbind = "-")
 	protected IndexFactory indexFactory;
