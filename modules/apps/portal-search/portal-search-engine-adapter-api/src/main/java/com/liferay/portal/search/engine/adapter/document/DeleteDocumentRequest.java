@@ -14,12 +14,15 @@
 
 package com.liferay.portal.search.engine.adapter.document;
 
+import com.liferay.portal.search.engine.adapter.ccr.CrossClusterRequest;
+
 import java.util.function.Consumer;
 
 /**
  * @author Michael C. Han
  */
 public class DeleteDocumentRequest
+	extends CrossClusterRequest
 	implements BulkableDocumentRequest<DeleteDocumentRequest>,
 			   DocumentRequest<DeleteDocumentResponse> {
 

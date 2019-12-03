@@ -15,6 +15,7 @@
 package com.liferay.portal.search.engine.adapter.search;
 
 import com.liferay.portal.kernel.search.suggest.Suggester;
+import com.liferay.portal.search.engine.adapter.ccr.CrossClusterRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,7 @@ import java.util.Map;
  * @author Michael C. Han
  */
 public class SuggestSearchRequest
+	extends CrossClusterRequest
 	implements SearchRequest<SuggestSearchResponse> {
 
 	public SuggestSearchRequest(String... indexNames) {

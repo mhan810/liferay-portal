@@ -15,11 +15,13 @@
 package com.liferay.portal.search.engine.adapter.document;
 
 import com.liferay.portal.kernel.search.Query;
+import com.liferay.portal.search.engine.adapter.ccr.CrossClusterRequest;
 
 /**
  * @author Michael C. Han
  */
 public class DeleteByQueryDocumentRequest
+	extends CrossClusterRequest
 	implements DocumentRequest<DeleteByQueryDocumentResponse> {
 
 	public DeleteByQueryDocumentRequest(Query query, String... indexNames) {

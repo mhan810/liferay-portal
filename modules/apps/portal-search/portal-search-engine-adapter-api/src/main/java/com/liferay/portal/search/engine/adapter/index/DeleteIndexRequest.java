@@ -14,10 +14,13 @@
 
 package com.liferay.portal.search.engine.adapter.index;
 
+import com.liferay.portal.search.engine.adapter.ccr.CrossClusterRequest;
+
 /**
  * @author Michael C. Han
  */
-public class DeleteIndexRequest implements IndexRequest<DeleteIndexResponse> {
+public class DeleteIndexRequest
+	extends CrossClusterRequest implements IndexRequest<DeleteIndexResponse> {
 
 	public DeleteIndexRequest(String... indexNames) {
 		_indexNames = indexNames;

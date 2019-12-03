@@ -14,10 +14,13 @@
 
 package com.liferay.portal.search.engine.adapter.cluster;
 
+import com.liferay.portal.search.engine.adapter.ccr.CrossClusterRequest;
+
 /**
  * @author Dylan Rebelak
  */
 public class HealthClusterRequest
+	extends CrossClusterRequest
 	implements ClusterRequest<HealthClusterResponse> {
 
 	public HealthClusterRequest() {

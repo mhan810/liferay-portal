@@ -14,10 +14,13 @@
 
 package com.liferay.portal.search.engine.adapter.snapshot;
 
+import com.liferay.portal.search.engine.adapter.ccr.CrossClusterRequest;
+
 /**
  * @author Michael C. Han
  */
 public class RestoreSnapshotRequest
+	extends CrossClusterRequest
 	implements SnapshotRequest<RestoreSnapshotResponse> {
 
 	public RestoreSnapshotRequest(String repositoryName, String snapshotName) {

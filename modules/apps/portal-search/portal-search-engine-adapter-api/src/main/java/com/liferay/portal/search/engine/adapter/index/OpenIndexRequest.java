@@ -14,10 +14,13 @@
 
 package com.liferay.portal.search.engine.adapter.index;
 
+import com.liferay.portal.search.engine.adapter.ccr.CrossClusterRequest;
+
 /**
  * @author Michael C. Han
  */
-public class OpenIndexRequest implements IndexRequest<OpenIndexResponse> {
+public class OpenIndexRequest
+	extends CrossClusterRequest implements IndexRequest<OpenIndexResponse> {
 
 	public OpenIndexRequest(String... indexNames) {
 		_indexNames = indexNames;

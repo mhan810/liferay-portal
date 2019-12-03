@@ -15,11 +15,13 @@
 package com.liferay.portal.search.engine.adapter.index;
 
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.search.engine.adapter.ccr.CrossClusterRequest;
 
 /**
  * @author Michael C. Han
  */
-public class RefreshIndexRequest implements IndexRequest<RefreshIndexResponse> {
+public class RefreshIndexRequest
+	extends CrossClusterRequest implements IndexRequest<RefreshIndexResponse> {
 
 	public RefreshIndexRequest() {
 		_indexNames = StringPool.EMPTY_ARRAY;

@@ -17,6 +17,7 @@ package com.liferay.portal.search.engine.adapter.index;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.SetUtil;
+import com.liferay.portal.search.engine.adapter.ccr.CrossClusterRequest;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,7 +26,8 @@ import java.util.Set;
 /**
  * @author Michael C. Han
  */
-public class AnalyzeIndexRequest implements IndexRequest<AnalyzeIndexResponse> {
+public class AnalyzeIndexRequest
+	extends CrossClusterRequest implements IndexRequest<AnalyzeIndexResponse> {
 
 	@Override
 	public AnalyzeIndexResponse accept(

@@ -15,11 +15,13 @@
 package com.liferay.portal.search.engine.adapter.snapshot;
 
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.search.engine.adapter.ccr.CrossClusterRequest;
 
 /**
  * @author Michael C. Han
  */
 public class CreateSnapshotRequest
+	extends CrossClusterRequest
 	implements SnapshotRequest<CreateSnapshotResponse> {
 
 	public CreateSnapshotRequest(String repositoryName, String snapshotName) {

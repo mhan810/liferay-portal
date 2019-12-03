@@ -14,10 +14,13 @@
 
 package com.liferay.portal.search.engine.adapter.index;
 
+import com.liferay.portal.search.engine.adapter.ccr.CrossClusterRequest;
+
 /**
  * @author Dylan Rebelak
  */
 public class GetFieldMappingIndexRequest
+	extends CrossClusterRequest
 	implements IndexRequest<GetFieldMappingIndexResponse> {
 
 	public GetFieldMappingIndexRequest(
