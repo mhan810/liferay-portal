@@ -48,7 +48,7 @@ public class DeleteByQueryDocumentRequestExecutorImpl
 			deleteByQueryDocumentRequest);
 
 		BulkByScrollResponse bulkByScrollResponse = getBulkByScrollResponse(
-			deleteByQueryRequest);
+			deleteByQueryRequest, deleteByQueryDocumentRequest);
 
 		TimeValue timeValue = bulkByScrollResponse.getTook();
 
@@ -76,10 +76,12 @@ public class DeleteByQueryDocumentRequestExecutorImpl
 	}
 
 	protected BulkByScrollResponse getBulkByScrollResponse(
-		DeleteByQueryRequest deleteByQueryRequest) {
+		DeleteByQueryRequest deleteByQueryRequest,
+		DeleteByQueryDocumentRequest deleteByQueryDocumentRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				deleteByQueryDocumentRequest.getConnectionId(), false);
 
 		try {
 			return restHighLevelClient.deleteByQuery(

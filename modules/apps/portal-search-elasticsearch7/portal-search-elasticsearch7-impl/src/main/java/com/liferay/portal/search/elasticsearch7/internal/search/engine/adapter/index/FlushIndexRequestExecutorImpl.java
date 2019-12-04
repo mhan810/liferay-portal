@@ -44,7 +44,8 @@ public class FlushIndexRequestExecutorImpl
 	public FlushIndexResponse execute(FlushIndexRequest flushIndexRequest) {
 		FlushRequest flushRequest = createFlushRequest(flushIndexRequest);
 
-		FlushResponse flushResponse = getFlushResponse(flushRequest);
+		FlushResponse flushResponse = getFlushResponse(
+			flushRequest, flushIndexRequest);
 
 		FlushIndexResponse flushIndexResponse = new FlushIndexResponse();
 
@@ -88,9 +89,12 @@ public class FlushIndexRequestExecutorImpl
 		return flushRequest;
 	}
 
-	protected FlushResponse getFlushResponse(FlushRequest flushRequest) {
+	protected FlushResponse getFlushResponse(
+		FlushRequest flushRequest, FlushIndexRequest flushIndexRequest) {
+
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				flushIndexRequest.getConnectionId(), false);
 
 		IndicesClient indicesClient = restHighLevelClient.indices();
 

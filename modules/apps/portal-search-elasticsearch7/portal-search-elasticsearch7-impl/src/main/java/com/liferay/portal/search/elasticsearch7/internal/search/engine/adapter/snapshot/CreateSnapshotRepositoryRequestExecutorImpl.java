@@ -46,7 +46,7 @@ public class CreateSnapshotRepositoryRequestExecutorImpl
 			createSnapshotRepositoryRequest);
 
 		AcknowledgedResponse acknowledgedResponse = getAcknowledgedResponse(
-			putRepositoryRequest);
+			putRepositoryRequest, createSnapshotRepositoryRequest);
 
 		return new CreateSnapshotRepositoryResponse(
 			acknowledgedResponse.isAcknowledged());
@@ -77,10 +77,12 @@ public class CreateSnapshotRepositoryRequestExecutorImpl
 	}
 
 	protected AcknowledgedResponse getAcknowledgedResponse(
-		PutRepositoryRequest putRepositoryRequest) {
+		PutRepositoryRequest putRepositoryRequest,
+		CreateSnapshotRepositoryRequest createSnapshotRepositoryRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				createSnapshotRepositoryRequest.getConnectionId(), false);
 
 		SnapshotClient snapshotClient = restHighLevelClient.snapshot();
 

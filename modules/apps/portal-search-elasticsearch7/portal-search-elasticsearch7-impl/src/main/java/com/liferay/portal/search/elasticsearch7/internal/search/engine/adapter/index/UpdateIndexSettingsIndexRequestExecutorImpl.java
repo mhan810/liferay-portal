@@ -46,7 +46,7 @@ public class UpdateIndexSettingsIndexRequestExecutorImpl
 			createUpdateSettingsRequest(updateIndexSettingsIndexRequest);
 
 		AcknowledgedResponse acknowledgedResponse = getAcknowledgedResponse(
-			updateSettingsRequest);
+			updateSettingsRequest, updateIndexSettingsIndexRequest);
 
 		return new UpdateIndexSettingsIndexResponse(
 			acknowledgedResponse.isAcknowledged());
@@ -73,10 +73,12 @@ public class UpdateIndexSettingsIndexRequestExecutorImpl
 	}
 
 	protected AcknowledgedResponse getAcknowledgedResponse(
-		UpdateSettingsRequest updateSettingsRequest) {
+		UpdateSettingsRequest updateSettingsRequest,
+		UpdateIndexSettingsIndexRequest updateIndexSettingsIndexRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				updateIndexSettingsIndexRequest.getConnectionId(), false);
 
 		IndicesClient indicesClient = restHighLevelClient.indices();
 

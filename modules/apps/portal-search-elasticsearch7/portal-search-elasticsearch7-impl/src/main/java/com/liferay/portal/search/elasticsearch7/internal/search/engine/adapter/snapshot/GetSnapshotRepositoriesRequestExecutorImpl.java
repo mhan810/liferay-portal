@@ -56,7 +56,8 @@ public class GetSnapshotRepositoriesRequestExecutorImpl
 
 		try {
 			GetRepositoriesResponse elasticsearchGetRepositoriesResponse =
-				getGetRepositoriesResponse(getRepositoriesRequest);
+				getGetRepositoriesResponse(
+					getRepositoriesRequest, getSnapshotRepositoriesRequest);
 
 			List<RepositoryMetaData> repositoriesMetaDatas =
 				elasticsearchGetRepositoriesResponse.repositories();
@@ -100,10 +101,12 @@ public class GetSnapshotRepositoriesRequestExecutorImpl
 	}
 
 	protected GetRepositoriesResponse getGetRepositoriesResponse(
-		GetRepositoriesRequest getRepositoriesRequest) {
+		GetRepositoriesRequest getRepositoriesRequest,
+		GetSnapshotRepositoriesRequest getSnapshotRepositoriesRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				getSnapshotRepositoriesRequest.getConnectionId(), false);
 
 		SnapshotClient snapshotClient = restHighLevelClient.snapshot();
 

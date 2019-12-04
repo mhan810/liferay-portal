@@ -50,7 +50,7 @@ public class UpdateByQueryDocumentRequestExecutorImpl
 			updateByQueryDocumentRequest);
 
 		BulkByScrollResponse bulkByScrollResponse = getBulkByScrollResponse(
-			updateByQueryRequest);
+			updateByQueryRequest, updateByQueryDocumentRequest);
 
 		TimeValue timeValue = bulkByScrollResponse.getTook();
 
@@ -87,10 +87,12 @@ public class UpdateByQueryDocumentRequestExecutorImpl
 	}
 
 	protected BulkByScrollResponse getBulkByScrollResponse(
-		UpdateByQueryRequest updateByQueryRequest) {
+		UpdateByQueryRequest updateByQueryRequest,
+		UpdateByQueryDocumentRequest updateByQueryDocumentRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				updateByQueryDocumentRequest.getConnectionId(), false);
 
 		try {
 			return restHighLevelClient.updateByQuery(

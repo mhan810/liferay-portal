@@ -57,7 +57,8 @@ public class BulkDocumentRequestExecutorImpl
 
 		BulkRequest bulkRequest = createBulkRequest(bulkDocumentRequest);
 
-		BulkResponse bulkResponse = getBulkResponse(bulkRequest);
+		BulkResponse bulkResponse = getBulkResponse(
+			bulkRequest, bulkDocumentRequest);
 
 		LogUtil.logActionResponse(_log, bulkResponse);
 
@@ -146,9 +147,12 @@ public class BulkDocumentRequestExecutorImpl
 		return bulkRequest;
 	}
 
-	protected BulkResponse getBulkResponse(BulkRequest bulkRequest) {
+	protected BulkResponse getBulkResponse(
+		BulkRequest bulkRequest, BulkDocumentRequest bulkDocumentRequest) {
+
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				bulkDocumentRequest.getConnectionId(), false);
 
 		try {
 			return restHighLevelClient.bulk(

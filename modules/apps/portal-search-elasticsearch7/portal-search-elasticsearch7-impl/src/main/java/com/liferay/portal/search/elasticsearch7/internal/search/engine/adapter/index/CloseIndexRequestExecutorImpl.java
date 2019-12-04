@@ -44,7 +44,7 @@ public class CloseIndexRequestExecutorImpl
 				closeIndexRequest);
 
 		AcknowledgedResponse acknowledgedResponse = getAcknowledgedResponse(
-			elasticsearchCloseIndexRequest);
+			elasticsearchCloseIndexRequest, closeIndexRequest);
 
 		return new CloseIndexResponse(acknowledgedResponse.isAcknowledged());
 	}
@@ -77,10 +77,12 @@ public class CloseIndexRequestExecutorImpl
 
 	protected AcknowledgedResponse getAcknowledgedResponse(
 		org.elasticsearch.action.admin.indices.close.CloseIndexRequest
-			elasticsearchCloseIndexRequest) {
+			elasticsearchCloseIndexRequest,
+		CloseIndexRequest closeIndexRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				closeIndexRequest.getConnectionId(), false);
 
 		IndicesClient indicesClient = restHighLevelClient.indices();
 

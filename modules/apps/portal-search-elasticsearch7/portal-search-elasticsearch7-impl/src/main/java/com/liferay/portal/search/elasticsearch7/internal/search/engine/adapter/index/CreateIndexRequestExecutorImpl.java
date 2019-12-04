@@ -47,7 +47,7 @@ public class CreateIndexRequestExecutorImpl
 
 		org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 			elasticsearchCreateIndexResponse = getCreateIndexResponse(
-				elasticsearchCreateIndexRequest);
+				elasticsearchCreateIndexRequest, createIndexRequest);
 
 		LogUtil.logActionResponse(_log, elasticsearchCreateIndexResponse);
 
@@ -79,10 +79,12 @@ public class CreateIndexRequestExecutorImpl
 	protected org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 		getCreateIndexResponse(
 			org.elasticsearch.action.admin.indices.create.CreateIndexRequest
-				elasticsearchCreateIndexRequest) {
+				elasticsearchCreateIndexRequest,
+			CreateIndexRequest createIndexRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				createIndexRequest.getConnectionId(), false);
 
 		IndicesClient indicesClient = restHighLevelClient.indices();
 

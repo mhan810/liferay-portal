@@ -48,7 +48,9 @@ public class RestoreSnapshotRequestExecutorImpl
 
 		org.elasticsearch.action.admin.cluster.snapshots.restore.
 			RestoreSnapshotResponse elasticsearchRestoreSnapshotResponse =
-				getRestoreSnapshotResponse(elasticsearchRestoreSnapshotRequest);
+				getRestoreSnapshotResponse(
+					elasticsearchRestoreSnapshotRequest,
+					restoreSnapshotRequest);
 
 		RestoreInfo restoreInfo =
 			elasticsearchRestoreSnapshotResponse.getRestoreInfo();
@@ -103,10 +105,12 @@ public class RestoreSnapshotRequestExecutorImpl
 	protected org.elasticsearch.action.admin.cluster.snapshots.restore.
 		RestoreSnapshotResponse getRestoreSnapshotResponse(
 			org.elasticsearch.action.admin.cluster.snapshots.restore.
-				RestoreSnapshotRequest elasticsearchRestoreSnapshotRequest) {
+				RestoreSnapshotRequest elasticsearchRestoreSnapshotRequest,
+			RestoreSnapshotRequest restoreSnapshotRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				restoreSnapshotRequest.getConnectionId(), false);
 
 		SnapshotClient snapshotClient = restHighLevelClient.snapshot();
 

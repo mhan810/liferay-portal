@@ -43,7 +43,7 @@ public class OpenIndexRequestExecutorImpl implements OpenIndexRequestExecutor {
 				openIndexRequest);
 
 		AcknowledgedResponse acknowledgedResponse = getAcknowledgedResponse(
-			elasticsearchOpenIndexRequest);
+			elasticsearchOpenIndexRequest, openIndexRequest);
 
 		return new OpenIndexResponse(acknowledgedResponse.isAcknowledged());
 	}
@@ -83,10 +83,12 @@ public class OpenIndexRequestExecutorImpl implements OpenIndexRequestExecutor {
 
 	protected AcknowledgedResponse getAcknowledgedResponse(
 		org.elasticsearch.action.admin.indices.open.OpenIndexRequest
-			elasticsearchOpenIndexRequest) {
+			elasticsearchOpenIndexRequest,
+		OpenIndexRequest openIndexRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				openIndexRequest.getConnectionId(), false);
 
 		IndicesClient indicesClient = restHighLevelClient.indices();
 

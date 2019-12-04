@@ -46,7 +46,8 @@ public class RefreshIndexRequestExecutorImpl
 		RefreshRequest refreshRequest = createRefreshRequest(
 			refreshIndexRequest);
 
-		RefreshResponse refreshResponse = getRefreshResponse(refreshRequest);
+		RefreshResponse refreshResponse = getRefreshResponse(
+			refreshRequest, refreshIndexRequest);
 
 		RefreshIndexResponse refreshIndexResponse = new RefreshIndexResponse();
 
@@ -81,10 +82,12 @@ public class RefreshIndexRequestExecutorImpl
 	}
 
 	protected RefreshResponse getRefreshResponse(
-		RefreshRequest refreshRequest) {
+		RefreshRequest refreshRequest,
+		RefreshIndexRequest refreshIndexRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				refreshIndexRequest.getConnectionId(), false);
 
 		IndicesClient indicesClient = restHighLevelClient.indices();
 

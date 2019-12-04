@@ -47,7 +47,8 @@ public class CreateSnapshotRequestExecutorImpl
 			createCreateSnapshotRequest(createSnapshotRequest);
 
 		CreateSnapshotResponse elasticsearchCreateSnapshotResponse =
-			getCreateSnapshotResponse(elasticsearchCreateSnapshotRequest);
+			getCreateSnapshotResponse(
+				elasticsearchCreateSnapshotRequest, createSnapshotRequest);
 
 		SnapshotDetails snapshotDetails = SnapshotInfoConverter.convert(
 			elasticsearchCreateSnapshotResponse.getSnapshotInfo());
@@ -79,16 +80,19 @@ public class CreateSnapshotRequestExecutorImpl
 	}
 
 	protected CreateSnapshotResponse getCreateSnapshotResponse(
-		CreateSnapshotRequest createSnapshotRequest) {
+		CreateSnapshotRequest elasticsearchCreateSnapshotRequest,
+		com.liferay.portal.search.engine.adapter.snapshot.CreateSnapshotRequest
+			createSnapshotRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				createSnapshotRequest.getConnectionId(), false);
 
 		SnapshotClient snapshotClient = restHighLevelClient.snapshot();
 
 		try {
 			return snapshotClient.create(
-				createSnapshotRequest, RequestOptions.DEFAULT);
+				elasticsearchCreateSnapshotRequest, RequestOptions.DEFAULT);
 		}
 		catch (IOException ioe) {
 			throw new RuntimeException(ioe);
