@@ -54,7 +54,7 @@ public class GetIndexIndexRequestExecutorImpl
 			getIndexIndexRequest);
 
 		GetIndexResponse getIndexResponse = getGetIndexResponse(
-			getIndexRequest);
+			getIndexRequest, getIndexIndexRequest);
 
 		GetIndexIndexResponse getIndexIndexResponse =
 			new GetIndexIndexResponse();
@@ -150,10 +150,12 @@ public class GetIndexIndexRequestExecutorImpl
 	}
 
 	protected GetIndexResponse getGetIndexResponse(
-		GetIndexRequest getIndexRequest) {
+		GetIndexRequest getIndexRequest,
+		GetIndexIndexRequest getIndexIndexRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				getIndexIndexRequest.getConnectionId(), true);
 
 		IndicesClient indicesClient = restHighLevelClient.indices();
 

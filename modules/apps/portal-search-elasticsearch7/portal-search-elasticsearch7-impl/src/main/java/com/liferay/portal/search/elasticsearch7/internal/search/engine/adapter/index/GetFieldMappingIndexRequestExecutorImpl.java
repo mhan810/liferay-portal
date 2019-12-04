@@ -51,7 +51,8 @@ public class GetFieldMappingIndexRequestExecutorImpl
 			createGetFieldMappingsRequest(getFieldMappingIndexRequest);
 
 		GetFieldMappingsResponse getFieldMappingsResponse =
-			getGetFieldMappingsResponse(getFieldMappingsRequest);
+			getGetFieldMappingsResponse(
+				getFieldMappingsRequest, getFieldMappingIndexRequest);
 
 		Map
 			<String,
@@ -104,10 +105,12 @@ public class GetFieldMappingIndexRequestExecutorImpl
 	}
 
 	protected GetFieldMappingsResponse getGetFieldMappingsResponse(
-		GetFieldMappingsRequest getFieldMappingsRequest) {
+		GetFieldMappingsRequest getFieldMappingsRequest,
+		GetFieldMappingIndexRequest getFieldMappingIndexRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				getFieldMappingIndexRequest.getConnectionId(), true);
 
 		IndicesClient indicesClient = restHighLevelClient.indices();
 

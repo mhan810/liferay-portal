@@ -80,7 +80,7 @@ public class MultisearchSearchRequestExecutorImpl
 			});
 
 		MultiSearchResponse multiSearchResponse = getMultiSearchResponse(
-			multiSearchRequest);
+			multiSearchRequest, multisearchSearchRequest);
 
 		Iterator<MultiSearchResponse.Item> multiSearchResponseItems =
 			multiSearchResponse.iterator();
@@ -130,10 +130,12 @@ public class MultisearchSearchRequestExecutorImpl
 	}
 
 	protected MultiSearchResponse getMultiSearchResponse(
-		MultiSearchRequest multiSearchRequest) {
+		MultiSearchRequest multiSearchRequest,
+		MultisearchSearchRequest multisearchSearchRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				multisearchSearchRequest.getConnectionId(), true);
 
 		try {
 			return restHighLevelClient.msearch(

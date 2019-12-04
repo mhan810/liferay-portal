@@ -59,7 +59,8 @@ public class CountSearchRequestExecutorImpl
 		searchSourceBuilder.size(0);
 		searchSourceBuilder.trackScores(false);
 
-		SearchResponse searchResponse = getSearchResponse(searchRequest);
+		SearchResponse searchResponse = getSearchResponse(
+			searchRequest, countSearchRequest);
 
 		SearchHits searchHits = searchResponse.getHits();
 
@@ -84,9 +85,12 @@ public class CountSearchRequestExecutorImpl
 		return countSearchResponse;
 	}
 
-	protected SearchResponse getSearchResponse(SearchRequest searchRequest) {
+	protected SearchResponse getSearchResponse(
+		SearchRequest searchRequest, CountSearchRequest countSearchRequest) {
+
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				countSearchRequest.getConnectionId(), true);
 
 		try {
 			return restHighLevelClient.search(

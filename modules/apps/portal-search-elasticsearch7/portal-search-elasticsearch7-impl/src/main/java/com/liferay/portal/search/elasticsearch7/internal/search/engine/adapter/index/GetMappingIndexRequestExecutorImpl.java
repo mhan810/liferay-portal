@@ -50,7 +50,7 @@ public class GetMappingIndexRequestExecutorImpl
 			getMappingIndexRequest);
 
 		GetMappingsResponse getMappingsResponse = getGetMappingsResponse(
-			getMappingsRequest);
+			getMappingsRequest, getMappingIndexRequest);
 
 		ImmutableOpenMap<String, ImmutableOpenMap<String, MappingMetaData>>
 			mappings = getMappingsResponse.mappings();
@@ -84,10 +84,12 @@ public class GetMappingIndexRequestExecutorImpl
 	}
 
 	protected GetMappingsResponse getGetMappingsResponse(
-		GetMappingsRequest getMappingsRequest) {
+		GetMappingsRequest getMappingsRequest,
+		GetMappingIndexRequest getMappingIndexRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				getMappingIndexRequest.getConnectionId(), true);
 
 		IndicesClient indicesClient = restHighLevelClient.indices();
 

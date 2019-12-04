@@ -44,7 +44,7 @@ public class HealthClusterRequestExecutorImpl
 			healthClusterRequest);
 
 		ClusterHealthResponse clusterHealthResponse = getClusterHealthResponse(
-			clusterHealthRequest);
+			clusterHealthRequest, healthClusterRequest);
 
 		ClusterHealthStatus clusterHealthStatus =
 			clusterHealthResponse.getStatus();
@@ -78,10 +78,12 @@ public class HealthClusterRequestExecutorImpl
 	}
 
 	protected ClusterHealthResponse getClusterHealthResponse(
-		ClusterHealthRequest clusterHealthRequest) {
+		ClusterHealthRequest clusterHealthRequest,
+		HealthClusterRequest healthClusterRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				healthClusterRequest.getConnectionId(), true);
 
 		ClusterClient clusterClient = restHighLevelClient.cluster();
 

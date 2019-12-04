@@ -63,7 +63,8 @@ public class SearchSearchRequestExecutorImpl
 			_log.trace("Search query: " + prettyPrintedRequestString);
 		}
 
-		SearchResponse searchResponse = getSearchResponse(searchRequest);
+		SearchResponse searchResponse = getSearchResponse(
+			searchRequest, searchSearchRequest);
 
 		SearchSearchResponse searchSearchResponse = new SearchSearchResponse();
 
@@ -82,9 +83,12 @@ public class SearchSearchRequestExecutorImpl
 		return searchSearchResponse;
 	}
 
-	protected SearchResponse getSearchResponse(SearchRequest searchRequest) {
+	protected SearchResponse getSearchResponse(
+		SearchRequest searchRequest, SearchSearchRequest searchSearchRequest) {
+
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				searchSearchRequest.getConnectionId(), true);
 
 		try {
 			return restHighLevelClient.search(

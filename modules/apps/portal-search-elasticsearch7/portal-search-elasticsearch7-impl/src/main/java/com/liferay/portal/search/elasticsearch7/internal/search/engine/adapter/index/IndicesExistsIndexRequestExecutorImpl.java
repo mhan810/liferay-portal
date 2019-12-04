@@ -40,7 +40,9 @@ public class IndicesExistsIndexRequestExecutorImpl
 		IndicesExistsIndexRequest indicesExistsIndexRequest) {
 
 		return new IndicesExistsIndexResponse(
-			indicesExists(createGetIndexRequest(indicesExistsIndexRequest)));
+			indicesExists(
+				createGetIndexRequest(indicesExistsIndexRequest),
+				indicesExistsIndexRequest));
 	}
 
 	protected GetIndexRequest createGetIndexRequest(
@@ -53,9 +55,13 @@ public class IndicesExistsIndexRequestExecutorImpl
 		return getIndexRequest;
 	}
 
-	protected boolean indicesExists(GetIndexRequest getIndexRequest) {
+	protected boolean indicesExists(
+		GetIndexRequest getIndexRequest,
+		IndicesExistsIndexRequest indicesExistsIndexRequest) {
+
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				indicesExistsIndexRequest.getConnectionId(), true);
 
 		IndicesClient indicesClient = restHighLevelClient.indices();
 

@@ -54,7 +54,8 @@ public class SuggestSearchRequestExecutorImpl
 
 		SearchRequest searchRequest = createSearchRequest(suggestSearchRequest);
 
-		SearchResponse searchResponse = getSearchResponse(searchRequest);
+		SearchResponse searchResponse = getSearchResponse(
+			searchRequest, suggestSearchRequest);
 
 		Suggest suggest = searchResponse.getSuggest();
 
@@ -112,9 +113,13 @@ public class SuggestSearchRequestExecutorImpl
 		return searchRequest;
 	}
 
-	protected SearchResponse getSearchResponse(SearchRequest searchRequest) {
+	protected SearchResponse getSearchResponse(
+		SearchRequest searchRequest,
+		SuggestSearchRequest suggestSearchRequest) {
+
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				suggestSearchRequest.getConnectionId(), true);
 
 		try {
 			return restHighLevelClient.search(

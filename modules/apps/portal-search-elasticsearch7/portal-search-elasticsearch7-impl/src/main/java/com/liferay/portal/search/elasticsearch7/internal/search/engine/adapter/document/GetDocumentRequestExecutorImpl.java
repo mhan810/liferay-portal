@@ -45,7 +45,8 @@ public class GetDocumentRequestExecutorImpl
 		GetRequest getRequest = _bulkableDocumentRequestTranslator.translate(
 			getDocumentRequest);
 
-		GetResponse getResponse = getGetResponse(getRequest);
+		GetResponse getResponse = getGetResponse(
+			getRequest, getDocumentRequest);
 
 		GetDocumentResponse getDocumentResponse = new GetDocumentResponse(
 			getResponse.isExists());
@@ -70,9 +71,12 @@ public class GetDocumentRequestExecutorImpl
 		return getDocumentResponse;
 	}
 
-	protected GetResponse getGetResponse(GetRequest getRequest) {
+	protected GetResponse getGetResponse(
+		GetRequest getRequest, GetDocumentRequest getDocumentRequest) {
+
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				getDocumentRequest.getConnectionId(), true);
 
 		try {
 			return restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);

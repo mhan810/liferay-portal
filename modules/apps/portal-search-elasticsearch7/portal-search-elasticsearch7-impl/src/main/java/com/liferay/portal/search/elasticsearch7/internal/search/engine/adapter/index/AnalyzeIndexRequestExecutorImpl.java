@@ -50,7 +50,8 @@ public class AnalyzeIndexRequestExecutorImpl
 		AnalyzeRequest analyzeRequest = createAnalyzeRequest(
 			analyzeIndexRequest);
 
-		AnalyzeResponse analyzeResponse = getAnalyzeResponse(analyzeRequest);
+		AnalyzeResponse analyzeResponse = getAnalyzeResponse(
+			analyzeRequest, analyzeIndexRequest);
 
 		AnalyzeIndexResponse analyzeIndexResponse = new AnalyzeIndexResponse();
 
@@ -131,10 +132,12 @@ public class AnalyzeIndexRequestExecutorImpl
 	}
 
 	protected AnalyzeResponse getAnalyzeResponse(
-		AnalyzeRequest analyzeRequest) {
+		AnalyzeRequest analyzeRequest,
+		AnalyzeIndexRequest analyzeIndexRequest) {
 
 		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+			_elasticsearchClientResolver.getRestHighLevelClient(
+				analyzeIndexRequest.getConnectionId(), true);
 
 		IndicesClient indicesClient = restHighLevelClient.indices();
 
