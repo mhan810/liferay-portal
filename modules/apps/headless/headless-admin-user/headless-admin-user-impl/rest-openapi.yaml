@@ -121,7 +121,6 @@ components:
                 comment:
                     description:
                         The text of a comment associated with the organization.
-                    readOnly: true
                     type: string
                 contactInformation:
                     description:
@@ -156,7 +155,6 @@ components:
                                 $ref: "#/components/schemas/WebUrl"
                             readOnly: true
                             type: array
-                    readOnly: true
                     type: object
                 customFields:
                     items:
@@ -191,7 +189,6 @@ components:
                         A list of keywords describing the organization.
                     items:
                         type: string
-                    readOnly: true
                     type: array
                 location:
                     description:
@@ -220,7 +217,6 @@ components:
                 name:
                     description:
                         The organization's name.
-                    readOnly: true
                     type: string
                 numberOfOrganizations:
                     description:
@@ -232,7 +228,6 @@ components:
                         - $ref: "#/components/schemas/Organization"
                     description:
                         The organization's parent organization.
-                    readOnly: true
                 services:
                     description:
                         A list of services the organization provides. This follows the
@@ -249,28 +244,22 @@ components:
                                         closes:
                                             description:
                                                 The organization's closing time (in `HH:MM` format).
-                                            readOnly: true
                                             type: string
                                         dayOfWeek:
                                             description:
                                                 The day of the week.
-                                            readOnly: true
                                             type: string
                                         opens:
                                             description:
                                                 The organization's opening time (in `HH:MM` format).
-                                            readOnly: true
                                             type: string
                                     type: object
-                                readOnly: true
                                 type: array
                             serviceType:
                                 description:
                                     The type of service the organization provides.
-                                readOnly: true
                                 type: string
                         type: object
-                    readOnly: true
                     type: array
             type: object
         OrganizationBrief:
@@ -946,6 +935,26 @@ paths:
                         ""
             tags: ["Subscription"]
     "/organizations":
+        delete:
+            description:
+                Deletes multiple organizations
+            operationId: deleteOrganization
+            parameters:
+                - in: query
+                  name: organizationIds
+                  required: true
+                  schema:
+                      items:
+                          format: int64
+                          type: integer
+                      type: array
+            responses:
+                204:
+                    content:
+                        application/json: {}
+                    description:
+                        ""
+            tags: ["Organization"]
         get:
             description:
                 Retrieves the organizations. Results can be paginated, filtered, searched, and sorted.
@@ -991,7 +1000,124 @@ paths:
                     description:
                         ""
             tags: ["Organization"]
+        patch:
+            description:
+                Updates the organizations. Only the fields in the request body
+                are updated. All others are left unchanged.
+            operationId: patchOrganizationsPage
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            items:
+                                $ref: "#/components/schemas/Organization"
+                            type: array
+                    application/xml:
+                        schema:
+                            items:
+                                $ref: "#/components/schemas/Organization"
+                            type: array
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Organization"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Organization"
+                                type: array
+                    description:
+                        ""
+            tags: ["Organization"]
+        post:
+            description:
+                Creates new organizations
+            operationId: postOrganizationsPage
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            items:
+                                $ref: "#/components/schemas/Organization"
+                            type: array
+                    application/xml:
+                        schema:
+                            items:
+                                $ref: "#/components/schemas/Organization"
+                            type: array
+            responses:
+                201:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Organization"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Organization"
+                                type: array
+                    description:
+                        "Organizations successfully created"
+            tags: ["Organization"]
+        put:
+            description:
+                Replaces the organizations with the information found in the
+                request body. Any missing fields are deleted unless they are
+                required.
+            operationId: putOrganizationsPage
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            items:
+                                $ref: "#/components/schemas/Organization"
+                            type: array
+                    application/xml:
+                        schema:
+                            items:
+                                $ref: "#/components/schemas/Organization"
+                            type: array
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Organization"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Organization"
+                                type: array
+                    description:
+                        ""
+            tags: ["Organization"]
     "/organizations/{organizationId}":
+        delete:
+            description:
+                Deletes the organization
+            operationId: deleteOrganization
+            parameters:
+                - in: path
+                  name: organizationId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            responses:
+                204:
+                    content:
+                        application/json: {}
+                    description:
+                        ""
+            tags: ["Organization"]
         get:
             description:
                 Retrieves the organization.
@@ -1003,6 +1129,73 @@ paths:
                   schema:
                       format: int64
                       type: integer
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Organization"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Organization"
+                    description:
+                        ""
+            tags: ["Organization"]
+        patch:
+            description:
+                Updates the organization. Only the fields in the request body
+                are updated. All others are left unchanged.
+            operationId: patchOrganization
+            parameters:
+                - in: path
+                  name: organizationId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Organization"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/Organization"
+                required: true
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Organization"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Organization"
+                    description:
+                        ""
+            tags: ["Organization"]
+        put:
+            description:
+                Replaces the organization with the information found in the
+                request body. Any missing fields are deleted unless they are
+                required.
+            operationId: putOrganization
+            parameters:
+                - in: path
+                  name: organizationId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Organization"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/Organization"
+                required: true
             responses:
                 200:
                     content:
