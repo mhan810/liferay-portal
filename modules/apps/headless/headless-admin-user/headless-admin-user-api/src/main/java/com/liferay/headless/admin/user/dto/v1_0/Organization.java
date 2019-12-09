@@ -79,7 +79,7 @@ public class Organization {
 	@GraphQLField(
 		description = "The text of a comment associated with the organization."
 	)
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String comment;
 
 	@Schema(
@@ -113,7 +113,7 @@ public class Organization {
 	@GraphQLField(
 		description = "The organization's contact information, which includes email addresses, postal addresses, phone numbers, and web URLs. This is modeled internally as a `Contact`."
 	)
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected ContactInformation contactInformation;
 
 	@Schema
@@ -286,7 +286,7 @@ public class Organization {
 	@GraphQLField(
 		description = "A list of keywords describing the organization."
 	)
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String[] keywords;
 
 	@Schema(
@@ -345,7 +345,7 @@ public class Organization {
 	}
 
 	@GraphQLField(description = "The organization's name.")
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String name;
 
 	@Schema(
@@ -408,7 +408,7 @@ public class Organization {
 	}
 
 	@GraphQLField(description = "The organization's parent organization.")
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Organization parentOrganization;
 
 	@Schema(
@@ -441,7 +441,7 @@ public class Organization {
 	@GraphQLField(
 		description = "A list of services the organization provides. This follows the [`Service`](https://www.schema.org/Service) specification."
 	)
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Service[] services;
 
 	@Override

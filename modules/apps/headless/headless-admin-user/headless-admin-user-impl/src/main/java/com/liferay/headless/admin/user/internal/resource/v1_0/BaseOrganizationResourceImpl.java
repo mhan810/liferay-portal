@@ -43,7 +43,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import javax.validation.constraints.NotNull;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.PATCH;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -59,6 +64,26 @@ import javax.ws.rs.core.UriInfo;
 @Path("/v1.0")
 public abstract class BaseOrganizationResourceImpl
 	implements OrganizationResource {
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'DELETE' 'http://localhost:8080/o/headless-admin-user/v1.0/organizations'  -u 'test@liferay.com:test'
+	 */
+	@Override
+	@DELETE
+	@Operation(description = "Deletes multiple organizations")
+	@Parameters(
+		value = {@Parameter(in = ParameterIn.QUERY, name = "organizationIds")}
+	)
+	@Path("/organizations")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "Organization")})
+	public void deleteOrganization(
+			@NotNull @Parameter(hidden = true) @QueryParam("organizationIds")
+				Long[] organizationIds)
+		throws Exception {
+	}
 
 	/**
 	 * Invoke this method with the command line:
@@ -96,6 +121,86 @@ public abstract class BaseOrganizationResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
+	 * curl -X 'PATCH' 'http://localhost:8080/o/headless-admin-user/v1.0/organizations'  -u 'test@liferay.com:test'
+	 */
+	@Override
+	@Consumes({"application/json", "application/xml"})
+	@Operation(
+		description = "Updates the organizations. Only the fields in the request body are updated. All others are left unchanged."
+	)
+	@PATCH
+	@Path("/organizations")
+	@Produces({"application/json", "application/xml"})
+	@Tags(value = {@Tag(name = "Organization")})
+	public Page<Organization> patchOrganizationsPage(
+			Organization[] organizations)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'POST' 'http://localhost:8080/o/headless-admin-user/v1.0/organizations'  -u 'test@liferay.com:test'
+	 */
+	@Override
+	@Consumes({"application/json", "application/xml"})
+	@Operation(description = "Creates new organizations")
+	@POST
+	@Path("/organizations")
+	@Produces({"application/json", "application/xml"})
+	@Tags(value = {@Tag(name = "Organization")})
+	public Page<Organization> postOrganizationsPage(
+			Organization[] organizations)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'PUT' 'http://localhost:8080/o/headless-admin-user/v1.0/organizations'  -u 'test@liferay.com:test'
+	 */
+	@Override
+	@Consumes({"application/json", "application/xml"})
+	@Operation(
+		description = "Replaces the organizations with the information found in the request body. Any missing fields are deleted unless they are required."
+	)
+	@PUT
+	@Path("/organizations")
+	@Produces({"application/json", "application/xml"})
+	@Tags(value = {@Tag(name = "Organization")})
+	public Page<Organization> putOrganizationsPage(Organization[] organizations)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'DELETE' 'http://localhost:8080/o/headless-admin-user/v1.0/organizations/{organizationId}'  -u 'test@liferay.com:test'
+	 */
+	@Override
+	@DELETE
+	@Operation(description = "Deletes the organization")
+	@Parameters(
+		value = {@Parameter(in = ParameterIn.PATH, name = "organizationId")}
+	)
+	@Path("/organizations/{organizationId}")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "Organization")})
+	public void deleteOrganization(
+			@NotNull @Parameter(hidden = true) @PathParam("organizationId") Long
+				organizationId)
+		throws Exception {
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
 	 * curl -X 'GET' 'http://localhost:8080/o/headless-admin-user/v1.0/organizations/{organizationId}'  -u 'test@liferay.com:test'
 	 */
 	@Override
@@ -110,6 +215,97 @@ public abstract class BaseOrganizationResourceImpl
 	public Organization getOrganization(
 			@NotNull @Parameter(hidden = true) @PathParam("organizationId") Long
 				organizationId)
+		throws Exception {
+
+		return new Organization();
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'PATCH' 'http://localhost:8080/o/headless-admin-user/v1.0/organizations/{organizationId}' -d $'{"comment": ___, "contactInformation": ___, "customFields": ___, "keywords": ___, "name": ___, "parentOrganization": ___, "services": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 */
+	@Override
+	@Consumes({"application/json", "application/xml"})
+	@Operation(
+		description = "Updates the organization. Only the fields in the request body are updated. All others are left unchanged."
+	)
+	@PATCH
+	@Parameters(
+		value = {@Parameter(in = ParameterIn.PATH, name = "organizationId")}
+	)
+	@Path("/organizations/{organizationId}")
+	@Produces({"application/json", "application/xml"})
+	@Tags(value = {@Tag(name = "Organization")})
+	public Organization patchOrganization(
+			@NotNull @Parameter(hidden = true) @PathParam("organizationId") Long
+				organizationId,
+			Organization organization)
+		throws Exception {
+
+		Organization existingOrganization = getOrganization(organizationId);
+
+		if (organization.getComment() != null) {
+			existingOrganization.setComment(organization.getComment());
+		}
+
+		if (organization.getDateCreated() != null) {
+			existingOrganization.setDateCreated(organization.getDateCreated());
+		}
+
+		if (organization.getDateModified() != null) {
+			existingOrganization.setDateModified(
+				organization.getDateModified());
+		}
+
+		if (organization.getImage() != null) {
+			existingOrganization.setImage(organization.getImage());
+		}
+
+		if (organization.getKeywords() != null) {
+			existingOrganization.setKeywords(organization.getKeywords());
+		}
+
+		if (organization.getName() != null) {
+			existingOrganization.setName(organization.getName());
+		}
+
+		if (organization.getNumberOfOrganizations() != null) {
+			existingOrganization.setNumberOfOrganizations(
+				organization.getNumberOfOrganizations());
+		}
+
+		if (organization.getParentOrganization() != null) {
+			existingOrganization.setParentOrganization(
+				organization.getParentOrganization());
+		}
+
+		preparePatch(organization, existingOrganization);
+
+		return putOrganization(organizationId, existingOrganization);
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'PUT' 'http://localhost:8080/o/headless-admin-user/v1.0/organizations/{organizationId}' -d $'{"comment": ___, "contactInformation": ___, "customFields": ___, "keywords": ___, "name": ___, "parentOrganization": ___, "services": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 */
+	@Override
+	@Consumes({"application/json", "application/xml"})
+	@Operation(
+		description = "Replaces the organization with the information found in the request body. Any missing fields are deleted unless they are required."
+	)
+	@PUT
+	@Parameters(
+		value = {@Parameter(in = ParameterIn.PATH, name = "organizationId")}
+	)
+	@Path("/organizations/{organizationId}")
+	@Produces({"application/json", "application/xml"})
+	@Tags(value = {@Tag(name = "Organization")})
+	public Organization putOrganization(
+			@NotNull @Parameter(hidden = true) @PathParam("organizationId") Long
+				organizationId,
+			Organization organization)
 		throws Exception {
 
 		return new Organization();
