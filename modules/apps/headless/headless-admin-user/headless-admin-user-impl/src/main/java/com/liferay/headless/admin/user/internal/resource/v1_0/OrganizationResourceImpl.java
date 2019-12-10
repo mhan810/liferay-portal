@@ -33,12 +33,10 @@ import com.liferay.headless.admin.user.internal.dto.v1_0.util.WebUrlUtil;
 import com.liferay.headless.admin.user.internal.odata.entity.v1_0.OrganizationEntityModel;
 import com.liferay.headless.admin.user.resource.v1_0.OrganizationResource;
 import com.liferay.petra.string.StringBundler;
-import com.liferay.portal.kernel.model.Address;
 import com.liferay.portal.kernel.model.Country;
 import com.liferay.portal.kernel.model.ListType;
 import com.liferay.portal.kernel.model.OrgLabor;
 import com.liferay.portal.kernel.model.Region;
-import com.liferay.portal.kernel.model.Website;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Sort;
@@ -53,7 +51,6 @@ import com.liferay.portal.kernel.service.OrgLaborService;
 import com.liferay.portal.kernel.service.OrganizationService;
 import com.liferay.portal.kernel.service.PhoneService;
 import com.liferay.portal.kernel.service.RegionService;
-import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.WebsiteService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -67,13 +64,14 @@ import com.liferay.portal.vulcan.util.SearchUtil;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
+
 import javax.ws.rs.core.MultivaluedMap;
 
-import com.liferay.portal.vulcan.util.TransformUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -89,13 +87,15 @@ public class OrganizationResourceImpl
 	extends BaseOrganizationResourceImpl implements EntityModelResource {
 
 	@Override
-	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
-		return _entityModel;
+	public void deleteOrganization(@NotNull Long organizationId)
+		throws Exception {
+
+		_organizationService.deleteOrganization(organizationId);
 	}
 
 	@Override
-	public void deleteOrganization(
-		@NotNull Long[] organizationIds) throws Exception {
+	public void deleteOrganization(@NotNull Long[] organizationIds)
+		throws Exception {
 
 		for (Long organizationId : organizationIds) {
 			deleteOrganization(organizationId);
@@ -103,31 +103,14 @@ public class OrganizationResourceImpl
 	}
 
 	@Override
-	public void deleteOrganization(
-		@NotNull Long organizationId) throws Exception {
-
-		_organizationService.deleteOrganization(organizationId);
+	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
+		return _entityModel;
 	}
 
 	@Override
 	public Organization getOrganization(Long organizationId) throws Exception {
 		return _toOrganization(
 			_organizationService.getOrganization(organizationId));
-	}
-
-	@Override
-	public Page<Organization> patchOrganizationsPage(
-		Organization[] organizations) throws Exception {
-
-		List<Organization> organizationList = new ArrayList<>();
-
-		for (Organization organization : organizations) {
-			long id = organization.getId();
-
-			organizationList.add(patchOrganization(id, organization));
-		}
-
-		return Page.of(organizationList);
 	}
 
 	@Override
@@ -148,6 +131,21 @@ public class OrganizationResourceImpl
 
 		return _getOrganizationsPage(
 			0L, flatten, search, filter, pagination, sorts);
+	}
+
+	@Override
+	public Page<Organization> patchOrganizationsPage(
+			Organization[] organizations)
+		throws Exception {
+
+		List<Organization> organizationList = new ArrayList<>();
+
+		for (Organization organization : organizations) {
+			organizationList.add(
+				patchOrganization(organization.getId(), organization));
+		}
+
+		return Page.of(organizationList);
 	}
 
 	private HoursAvailable _createHoursAvailable(
