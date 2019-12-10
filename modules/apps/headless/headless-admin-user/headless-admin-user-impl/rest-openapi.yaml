@@ -939,15 +939,20 @@ paths:
             description:
                 Deletes multiple organizations
             operationId: deleteOrganization
-            parameters:
-                - in: query
-                  name: organizationIds
-                  required: true
-                  schema:
-                      items:
-                          format: int64
-                          type: integer
-                      type: array
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            items:
+                                format: int64
+                                type: array
+                            type: array
+                    application/xml:
+                        schema:
+                            items:
+                                format: int64
+                                type: array
+                            type: array
             responses:
                 204:
                     content:

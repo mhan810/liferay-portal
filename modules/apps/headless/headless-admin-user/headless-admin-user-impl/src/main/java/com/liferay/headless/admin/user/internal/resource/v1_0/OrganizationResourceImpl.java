@@ -33,10 +33,15 @@ import com.liferay.headless.admin.user.internal.dto.v1_0.util.WebUrlUtil;
 import com.liferay.headless.admin.user.internal.odata.entity.v1_0.OrganizationEntityModel;
 import com.liferay.headless.admin.user.resource.v1_0.OrganizationResource;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.model.Address;
 import com.liferay.portal.kernel.model.Country;
+import com.liferay.portal.kernel.model.CountryConstants;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ListType;
 import com.liferay.portal.kernel.model.OrgLabor;
 import com.liferay.portal.kernel.model.Region;
+import com.liferay.portal.kernel.model.RegionConstants;
+import com.liferay.portal.kernel.model.Website;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Sort;
@@ -45,12 +50,14 @@ import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.search.filter.QueryFilter;
 import com.liferay.portal.kernel.search.filter.TermFilter;
 import com.liferay.portal.kernel.search.generic.WildcardQueryImpl;
+import com.liferay.portal.kernel.service.AddressLocalService;
 import com.liferay.portal.kernel.service.CountryService;
 import com.liferay.portal.kernel.service.EmailAddressService;
 import com.liferay.portal.kernel.service.OrgLaborService;
 import com.liferay.portal.kernel.service.OrganizationService;
 import com.liferay.portal.kernel.service.PhoneService;
 import com.liferay.portal.kernel.service.RegionService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.WebsiteService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -67,6 +74,7 @@ import java.text.DecimalFormatSymbols;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
@@ -146,6 +154,90 @@ public class OrganizationResourceImpl
 		}
 
 		return Page.of(organizationList);
+	}
+
+	@Override
+	public Page<Organization> postOrganizationsPage(
+			Organization[] organizations)
+		throws Exception {
+
+		return super.postOrganizationsPage(organizations);
+	}
+
+	@Override
+	public Organization putOrganization(
+			@NotNull Long organizationId, Organization organization)
+		throws Exception {
+
+		Organization parentOrganization = organization.getParentOrganization();
+
+		com.liferay.portal.kernel.model.Organization organizationModel =
+			_organizationService.getOrganization(organizationId);
+
+		Group group = organizationModel.getGroup();
+
+		boolean site = group.isSite();
+
+		ContactInformation contactInformation =
+			organization.getContactInformation();
+
+		List<Address> addresses = null;
+
+		for (PostalAddress postalAddress :
+				contactInformation.getPostalAddresses()) {
+
+			Address address = _addressLocalService.getAddress(
+				postalAddress.getId());
+
+			if (address != null) {
+				addresses.add(address);
+			}
+			else {
+				long countryId = CountryConstants.DEFAULT_COUNTRY_ID;
+				Country country = _countryService.getCountryByName(
+					postalAddress.getAddressCountry());
+
+				if (country != null) {
+				}
+
+				long regionId = RegionConstants.DEFAULT_REGION_ID;
+				List<Region> regions = _regionService.getRegions(
+					country.getCountryId());
+
+				for (Region curRegion : regions) {
+					if (Objects.equals(
+							curRegion.getName(),
+							postalAddress.getAddressRegion())) {
+
+						regionId = curRegion.getRegionId();
+					}
+				}
+
+				address = _addressLocalService.addAddress(
+					contextUser.getUserId(), Organization.class.getName(),
+					organizationId, postalAddress.getStreetAddressLine1(),
+					postalAddress.getStreetAddressLine2(),
+					postalAddress.getStreetAddressLine3(),
+					postalAddress.getAddressLocality(),
+					postalAddress.getPostalCode(), regionId, c)
+			}
+		}
+
+		List<com.liferay.portal.kernel.model.EmailAddress> emailAddresses =
+			null;
+		List<OrgLabor> orgLabors = null;
+		List<com.liferay.portal.kernel.model.Phone> phones = null;
+		List<Website> websites = null;
+		ServiceContext serviceContext = null;
+
+		organizationModel = _organizationService.updateOrganization(
+			organizationId, parentOrganization.getId(), organization.getName(),
+			organizationModel.getType(), organizationModel.getRegionId(),
+			organizationModel.getCountryId(), organizationModel.getStatusId(),
+			organization.getComment(), false, null, site, addresses,
+			emailAddresses, orgLabors, phones, websites, serviceContext);
+
+		return _toOrganization(organizationModel);
 	}
 
 	private HoursAvailable _createHoursAvailable(
@@ -364,6 +456,9 @@ public class OrganizationResourceImpl
 
 	private static final EntityModel _entityModel =
 		new OrganizationEntityModel();
+
+	@Reference
+	private AddressLocalService _addressLocalService;
 
 	@Reference
 	private AssetTagLocalService _assetTagLocalService;
