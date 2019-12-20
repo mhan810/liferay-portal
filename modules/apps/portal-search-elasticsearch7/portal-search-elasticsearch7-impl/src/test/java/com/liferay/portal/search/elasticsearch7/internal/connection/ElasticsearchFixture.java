@@ -154,6 +154,13 @@ public class ElasticsearchFixture implements ElasticsearchClientResolver {
 		return _embeddedElasticsearchConnection.getRestHighLevelClient();
 	}
 
+	@Override
+	public RestHighLevelClient getRestHighLevelClient(
+		String connectionId, boolean preferLocalCluster) {
+
+		return _embeddedElasticsearchConnection.getRestHighLevelClient();
+	}
+
 	public void setClusterSettingsContext(
 		ClusterSettingsContext clusterSettingsContext) {
 
