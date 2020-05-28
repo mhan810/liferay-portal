@@ -20,6 +20,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.CompanyConstants;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.security.ldap.LDAPSettings;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -33,7 +34,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.ldap.PortalLDAP;
 import com.liferay.portal.security.ldap.UserConverterKeys;
-import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.security.ldap.configuration.SystemLDAPConfiguration;
 import com.liferay.portal.security.ldap.util.LDAPUtil;
@@ -136,7 +136,8 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		throws Exception {
 
 		SystemLDAPConfiguration systemLDAPConfiguration =
-			_systemLDAPConfigurationProvider.getConfiguration(companyId);
+			_configurationProvider.getCompanyConfiguration(
+				SystemLDAPConfiguration.class, companyId);
 
 		Properties environmentProperties = new Properties();
 
@@ -437,7 +438,8 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		}
 
 		SystemLDAPConfiguration systemLDAPConfiguration =
-			_systemLDAPConfigurationProvider.getConfiguration(companyId);
+			_configurationProvider.getCompanyConfiguration(
+				SystemLDAPConfiguration.class, companyId);
 
 		String[] attributeIds = {
 			_getNextRange(systemLDAPConfiguration, attribute.getID())
@@ -931,8 +933,8 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		try {
 			if (cookie != null) {
 				SystemLDAPConfiguration systemLDAPConfiguration =
-					_systemLDAPConfigurationProvider.getConfiguration(
-						companyId);
+					_configurationProvider.getCompanyConfiguration(
+						SystemLDAPConfiguration.class, companyId);
 
 				if (cookie.length == 0) {
 					ldapContext.setRequestControls(
@@ -990,8 +992,8 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		unbind = "-"
 	)
 	protected void setLDAPServerConfigurationProvider(
-		ConfigurationProvider<LDAPServerConfiguration>
-			ldapServerConfigurationProvider) {
+		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
+			<LDAPServerConfiguration> ldapServerConfigurationProvider) {
 
 		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
 	}
@@ -1005,17 +1007,6 @@ public class DefaultPortalLDAP implements PortalLDAP {
 	protected void setProps(Props props) {
 		_companySecurityAuthType = GetterUtil.getString(
 			props.get(PropsKeys.COMPANY_SECURITY_AUTH_TYPE));
-	}
-
-	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.configuration.SystemLDAPConfiguration)",
-		unbind = "-"
-	)
-	protected void setSystemLDAPConfigurationProvider(
-		ConfigurationProvider<SystemLDAPConfiguration>
-			systemLDAPConfigurationProvider) {
-
-		_systemLDAPConfigurationProvider = systemLDAPConfigurationProvider;
 	}
 
 	private Attributes _getAttributes(
@@ -1139,16 +1130,17 @@ public class DefaultPortalLDAP implements PortalLDAP {
 
 	private String _companySecurityAuthType;
 
+	@Reference
+	private ConfigurationProvider _configurationProvider;
+
 	@Reference(
 		policy = ReferencePolicy.DYNAMIC,
 		policyOption = ReferencePolicyOption.GREEDY
 	)
 	private volatile LDAPFilterValidator _ldapFilterValidator;
 
-	private ConfigurationProvider<LDAPServerConfiguration>
-		_ldapServerConfigurationProvider;
+	private com.liferay.portal.security.ldap.configuration.ConfigurationProvider
+		<LDAPServerConfiguration> _ldapServerConfigurationProvider;
 	private LDAPSettings _ldapSettings;
-	private ConfigurationProvider<SystemLDAPConfiguration>
-		_systemLDAPConfigurationProvider;
 
 }

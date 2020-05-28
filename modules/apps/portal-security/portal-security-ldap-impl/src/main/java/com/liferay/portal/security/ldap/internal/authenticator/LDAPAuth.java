@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.exception.UserLockoutException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.security.auth.Authenticator;
 import com.liferay.portal.kernel.security.auth.PasswordModificationThreadLocal;
@@ -41,7 +42,6 @@ import com.liferay.portal.security.ldap.SafeLdapFilterTemplate;
 import com.liferay.portal.security.ldap.SafeLdapNameFactory;
 import com.liferay.portal.security.ldap.SafePortalLDAP;
 import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration;
-import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.security.ldap.configuration.SystemLDAPConfiguration;
 import com.liferay.portal.security.ldap.constants.LDAPConstants;
@@ -159,7 +159,8 @@ public class LDAPAuth implements Authenticator {
 		// auth method must be used in order to get the result control codes.
 
 		LDAPAuthConfiguration ldapAuthConfiguration =
-			_ldapAuthConfigurationProvider.getConfiguration(companyId);
+			_configurationProvider.getCompanyConfiguration(
+				LDAPAuthConfiguration.class, companyId);
 
 		String authMethod = ldapAuthConfiguration.method();
 
@@ -168,7 +169,8 @@ public class LDAPAuth implements Authenticator {
 				(Hashtable<String, Object>)ctx.getEnvironment();
 
 			SystemLDAPConfiguration systemLDAPConfiguration =
-				_systemLDAPConfigurationProvider.getConfiguration(companyId);
+				_configurationProvider.getCompanyConfiguration(
+					SystemLDAPConfiguration.class, companyId);
 
 			env.put(Context.REFERRAL, systemLDAPConfiguration.referral());
 
@@ -394,8 +396,8 @@ public class LDAPAuth implements Authenticator {
 
 			if (errorMessage != null) {
 				SystemLDAPConfiguration systemLDAPConfiguration =
-					_systemLDAPConfigurationProvider.getConfiguration(
-						companyId);
+					_configurationProvider.getCompanyConfiguration(
+						SystemLDAPConfiguration.class, companyId);
 
 				for (String errorUserLockoutKeyword :
 						systemLDAPConfiguration.errorUserLockoutKeywords()) {
@@ -473,7 +475,8 @@ public class LDAPAuth implements Authenticator {
 		throws Exception {
 
 		LDAPAuthConfiguration ldapAuthConfiguration =
-			_ldapAuthConfigurationProvider.getConfiguration(companyId);
+			_configurationProvider.getCompanyConfiguration(
+				LDAPAuthConfiguration.class, companyId);
 
 		if (!ldapAuthConfiguration.enabled()) {
 			if (_log.isDebugEnabled()) {
@@ -495,7 +498,8 @@ public class LDAPAuth implements Authenticator {
 			password);
 
 		LDAPImportConfiguration ldapImportConfiguration =
-			_ldapImportConfigurationProvider.getConfiguration(companyId);
+			_configurationProvider.getCompanyConfiguration(
+				LDAPImportConfiguration.class, companyId);
 
 		if (preferredLDAPServerResult == SUCCESS) {
 			if (_log.isDebugEnabled()) {
@@ -645,7 +649,8 @@ public class LDAPAuth implements Authenticator {
 		}
 
 		LDAPAuthConfiguration ldapAuthConfiguration =
-			_ldapAuthConfigurationProvider.getConfiguration(companyId);
+			_configurationProvider.getCompanyConfiguration(
+				LDAPAuthConfiguration.class, companyId);
 
 		if (ldapAuthConfiguration.required()) {
 			return failureCode;
@@ -738,17 +743,6 @@ public class LDAPAuth implements Authenticator {
 		return ldapPassword.substring(y + 1);
 	}
 
-	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration)",
-		unbind = "-"
-	)
-	protected void setConfigurationProvider(
-		ConfigurationProvider<LDAPAuthConfiguration>
-			ldapAuthConfigurationProvider) {
-
-		_ldapAuthConfigurationProvider = ldapAuthConfigurationProvider;
-	}
-
 	protected void setFailedLDAPAuthResult(
 		Map<String, Object> env, LDAPAuthResult ldapAuthResult) {
 
@@ -765,23 +759,12 @@ public class LDAPAuth implements Authenticator {
 	}
 
 	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration)",
-		unbind = "-"
-	)
-	protected void setLDAPImportConfigurationProvider(
-		ConfigurationProvider<LDAPImportConfiguration>
-			ldapImportConfigurationProvider) {
-
-		_ldapImportConfigurationProvider = ldapImportConfigurationProvider;
-	}
-
-	@Reference(
 		target = "(factoryPid=com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration)",
 		unbind = "-"
 	)
 	protected void setLDAPServerConfigurationProvider(
-		ConfigurationProvider<LDAPServerConfiguration>
-			ldapServerConfigurationProvider) {
+		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
+			<LDAPServerConfiguration> ldapServerConfigurationProvider) {
 
 		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
 	}
@@ -806,17 +789,6 @@ public class LDAPAuth implements Authenticator {
 		_props = props;
 	}
 
-	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.configuration.SystemLDAPConfiguration)",
-		unbind = "-"
-	)
-	protected void setSystemLDAPConfigurationProvider(
-		ConfigurationProvider<SystemLDAPConfiguration>
-			systemLDAPConfigurationProvider) {
-
-		_systemLDAPConfigurationProvider = systemLDAPConfigurationProvider;
-	}
-
 	@Reference(unbind = "-")
 	protected void setUserLocalService(UserLocalService userLocalService) {
 		_userLocalService = userLocalService;
@@ -825,11 +797,13 @@ public class LDAPAuth implements Authenticator {
 	private static final Log _log = LogFactoryUtil.getLog(LDAPAuth.class);
 
 	private boolean _authPipelineEnableLiferayCheck;
+
+	@Reference
+	private ConfigurationProvider _configurationProvider;
+
 	private final ThreadLocal<Map<String, LDAPAuthResult>>
 		_failedLDAPAuthResults = new CentralizedThreadLocal<>(
 			LDAPAuth.class + "._failedLDAPAuthResultCache", HashMap::new);
-	private ConfigurationProvider<LDAPAuthConfiguration>
-		_ldapAuthConfigurationProvider;
 
 	@Reference(
 		policy = ReferencePolicy.DYNAMIC,
@@ -837,10 +811,8 @@ public class LDAPAuth implements Authenticator {
 	)
 	private volatile LDAPFilterValidator _ldapFilterValidator;
 
-	private ConfigurationProvider<LDAPImportConfiguration>
-		_ldapImportConfigurationProvider;
-	private ConfigurationProvider<LDAPServerConfiguration>
-		_ldapServerConfigurationProvider;
+	private com.liferay.portal.security.ldap.configuration.ConfigurationProvider
+		<LDAPServerConfiguration> _ldapServerConfigurationProvider;
 	private LDAPSettings _ldapSettings;
 
 	@Reference(
@@ -859,8 +831,6 @@ public class LDAPAuth implements Authenticator {
 	private volatile SafePortalLDAP _portalLDAP;
 
 	private Props _props;
-	private ConfigurationProvider<SystemLDAPConfiguration>
-		_systemLDAPConfigurationProvider;
 	private UserLocalService _userLocalService;
 
 }

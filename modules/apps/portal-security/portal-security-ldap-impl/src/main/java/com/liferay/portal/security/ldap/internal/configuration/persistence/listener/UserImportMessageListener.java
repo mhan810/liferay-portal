@@ -17,12 +17,15 @@ package com.liferay.portal.security.ldap.internal.configuration.persistence.list
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.configuration.persistence.listener.ConfigurationModelListener;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.module.configuration.ConfigurationException;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.scheduler.SchedulerEngineHelper;
 import com.liferay.portal.kernel.scheduler.SchedulerEntry;
 import com.liferay.portal.kernel.scheduler.SchedulerEntryImpl;
@@ -30,7 +33,6 @@ import com.liferay.portal.kernel.scheduler.TimeUnit;
 import com.liferay.portal.kernel.scheduler.Trigger;
 import com.liferay.portal.kernel.scheduler.TriggerFactory;
 import com.liferay.portal.kernel.service.CompanyLocalService;
-import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.exportimport.LDAPUserImporter;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration;
 import com.liferay.portal.security.ldap.internal.constants.LDAPDestinationNames;
@@ -76,10 +78,17 @@ public class UserImportMessageListener
 	@Activate
 	@Modified
 	protected void activate() {
-		LDAPImportConfiguration ldapImportConfiguration =
-			_ldapImportConfigurationProvider.getConfiguration(0L);
+		try {
+			LDAPImportConfiguration ldapImportConfiguration =
+				_configurationProvider.getCompanyConfiguration(
+					LDAPImportConfiguration.class, 0L);
 
-		_updateDefaultImportInterval(ldapImportConfiguration.importInterval());
+			_updateDefaultImportInterval(
+				ldapImportConfiguration.importInterval());
+		}
+		catch (ConfigurationException configurationException) {
+			throw new SystemException(configurationException);
+		}
 	}
 
 	@Deactivate
@@ -100,7 +109,8 @@ public class UserImportMessageListener
 			long companyId = company.getCompanyId();
 
 			LDAPImportConfiguration ldapImportConfiguration =
-				_ldapImportConfigurationProvider.getConfiguration(companyId);
+				_configurationProvider.getCompanyConfiguration(
+					LDAPImportConfiguration.class, companyId);
 
 			if (!ldapImportConfiguration.importEnabled()) {
 				if (_log.isDebugEnabled()) {
@@ -152,17 +162,6 @@ public class UserImportMessageListener
 	protected void setDestination(Destination destination) {
 	}
 
-	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration)",
-		unbind = "-"
-	)
-	protected void setLDAPImportConfigurationProvider(
-		ConfigurationProvider<LDAPImportConfiguration>
-			ldapImportConfigurationProvider) {
-
-		_ldapImportConfigurationProvider = ldapImportConfigurationProvider;
-	}
-
 	@Reference(unbind = "-")
 	protected void setSchedulerEngineHelper(
 		SchedulerEngineHelper schedulerEngineHelper) {
@@ -208,8 +207,9 @@ public class UserImportMessageListener
 		UserImportMessageListener.class);
 
 	private CompanyLocalService _companyLocalService;
-	private ConfigurationProvider<LDAPImportConfiguration>
-		_ldapImportConfigurationProvider;
+
+	@Reference
+	private ConfigurationProvider _configurationProvider;
 
 	@Reference(
 		policy = ReferencePolicy.DYNAMIC,

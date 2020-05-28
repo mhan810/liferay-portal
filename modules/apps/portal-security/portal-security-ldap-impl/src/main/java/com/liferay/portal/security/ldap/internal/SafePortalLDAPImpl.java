@@ -17,9 +17,12 @@ package com.liferay.portal.security.ldap.internal;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.CompanyConstants;
+import com.liferay.portal.kernel.module.configuration.ConfigurationException;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.security.ldap.LDAPSettings;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -37,7 +40,6 @@ import com.liferay.portal.security.ldap.SafeLdapFilterConstraints;
 import com.liferay.portal.security.ldap.SafeLdapName;
 import com.liferay.portal.security.ldap.SafePortalLDAP;
 import com.liferay.portal.security.ldap.UserConverterKeys;
-import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.security.ldap.configuration.SystemLDAPConfiguration;
 import com.liferay.portal.security.ldap.internal.validator.SafeLdapContextImpl;
@@ -343,7 +345,8 @@ public class SafePortalLDAPImpl implements SafePortalLDAP {
 		}
 
 		SystemLDAPConfiguration systemLDAPConfiguration =
-			_systemLDAPConfigurationProvider.getConfiguration(companyId);
+			_configurationProvider.getCompanyConfiguration(
+				SystemLDAPConfiguration.class, companyId);
 
 		String[] attributeIds = {
 			_getNextRange(systemLDAPConfiguration, attribute.getID())
@@ -427,39 +430,48 @@ public class SafePortalLDAPImpl implements SafePortalLDAP {
 		long companyId, String providerURL, String principal,
 		String credentials) {
 
-		SystemLDAPConfiguration systemLDAPConfiguration =
-			_systemLDAPConfigurationProvider.getConfiguration(companyId);
+		Properties environmentProperties = null;
 
-		Properties environmentProperties = new Properties();
+		try {
+			SystemLDAPConfiguration systemLDAPConfiguration =
+				_configurationProvider.getCompanyConfiguration(
+					SystemLDAPConfiguration.class, companyId);
 
-		environmentProperties.put(
-			Context.INITIAL_CONTEXT_FACTORY,
-			systemLDAPConfiguration.factoryInitial());
-		environmentProperties.put(Context.PROVIDER_URL, providerURL);
-		environmentProperties.put(
-			Context.REFERRAL, systemLDAPConfiguration.referral());
-		environmentProperties.put(Context.SECURITY_CREDENTIALS, credentials);
-		environmentProperties.put(Context.SECURITY_PRINCIPAL, principal);
-
-		String[] connectionProperties =
-			systemLDAPConfiguration.connectionProperties();
-
-		for (String connectionPropertyString : connectionProperties) {
-			String[] connectionProperty = StringUtil.split(
-				connectionPropertyString, CharPool.EQUAL);
-
-			if (connectionProperty.length != 2) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(
-						"Invalid LDAP connection property: " +
-							connectionPropertyString);
-
-					continue;
-				}
-			}
+			environmentProperties = new Properties();
 
 			environmentProperties.put(
-				connectionProperty[0], connectionProperty[1]);
+				Context.INITIAL_CONTEXT_FACTORY,
+				systemLDAPConfiguration.factoryInitial());
+			environmentProperties.put(Context.PROVIDER_URL, providerURL);
+			environmentProperties.put(
+				Context.REFERRAL, systemLDAPConfiguration.referral());
+			environmentProperties.put(
+				Context.SECURITY_CREDENTIALS, credentials);
+			environmentProperties.put(Context.SECURITY_PRINCIPAL, principal);
+
+			String[] connectionProperties =
+				systemLDAPConfiguration.connectionProperties();
+
+			for (String connectionPropertyString : connectionProperties) {
+				String[] connectionProperty = StringUtil.split(
+					connectionPropertyString, CharPool.EQUAL);
+
+				if (connectionProperty.length != 2) {
+					if (_log.isWarnEnabled()) {
+						_log.warn(
+							"Invalid LDAP connection property: " +
+								connectionPropertyString);
+
+						continue;
+					}
+				}
+
+				environmentProperties.put(
+					connectionProperty[0], connectionProperty[1]);
+			}
+		}
+		catch (ConfigurationException configurationException) {
+			throw new SystemException(configurationException);
 		}
 
 		if (_log.isDebugEnabled()) {
@@ -900,8 +912,8 @@ public class SafePortalLDAPImpl implements SafePortalLDAP {
 		try {
 			if (cookie != null) {
 				SystemLDAPConfiguration systemLDAPConfiguration =
-					_systemLDAPConfigurationProvider.getConfiguration(
-						companyId);
+					_configurationProvider.getCompanyConfiguration(
+						SystemLDAPConfiguration.class, companyId);
 
 				if (cookie.length == 0) {
 					safeLdapContext.setRequestControls(
@@ -960,8 +972,8 @@ public class SafePortalLDAPImpl implements SafePortalLDAP {
 		unbind = "-"
 	)
 	protected void setLDAPServerConfigurationProvider(
-		ConfigurationProvider<LDAPServerConfiguration>
-			ldapServerConfigurationProvider) {
+		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
+			<LDAPServerConfiguration> ldapServerConfigurationProvider) {
 
 		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
 	}
@@ -975,17 +987,6 @@ public class SafePortalLDAPImpl implements SafePortalLDAP {
 	protected void setProps(Props props) {
 		_companySecurityAuthType = GetterUtil.getString(
 			props.get(PropsKeys.COMPANY_SECURITY_AUTH_TYPE));
-	}
-
-	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.configuration.SystemLDAPConfiguration)",
-		unbind = "-"
-	)
-	protected void setSystemLDAPConfigurationProvider(
-		ConfigurationProvider<SystemLDAPConfiguration>
-			systemLDAPConfigurationProvider) {
-
-		_systemLDAPConfigurationProvider = systemLDAPConfigurationProvider;
 	}
 
 	private Attributes _getAttributes(
@@ -1106,16 +1107,17 @@ public class SafePortalLDAPImpl implements SafePortalLDAP {
 
 	private String _companySecurityAuthType;
 
+	@Reference
+	private ConfigurationProvider _configurationProvider;
+
 	@Reference(
 		policy = ReferencePolicy.DYNAMIC,
 		policyOption = ReferencePolicyOption.GREEDY
 	)
 	private volatile LDAPFilterValidator _ldapFilterValidator;
 
-	private ConfigurationProvider<LDAPServerConfiguration>
-		_ldapServerConfigurationProvider;
+	private com.liferay.portal.security.ldap.configuration.ConfigurationProvider
+		<LDAPServerConfiguration> _ldapServerConfigurationProvider;
 	private LDAPSettings _ldapSettings;
-	private ConfigurationProvider<SystemLDAPConfiguration>
-		_systemLDAPConfigurationProvider;
 
 }

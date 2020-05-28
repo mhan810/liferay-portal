@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserGroup;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.security.ldap.LDAPSettings;
 import com.liferay.portal.kernel.service.UserGroupLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
@@ -32,7 +33,6 @@ import com.liferay.portal.security.ldap.SafeLdapName;
 import com.liferay.portal.security.ldap.SafeLdapNameFactory;
 import com.liferay.portal.security.ldap.SafePortalLDAP;
 import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration;
-import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.exportimport.Modifications;
 import com.liferay.portal.security.ldap.exportimport.PortalToLDAPConverter;
 import com.liferay.portal.security.ldap.internal.PortalLDAPContext;
@@ -372,7 +372,8 @@ public class LDAPUserExporterImpl implements UserExporter {
 		}
 		catch (NameNotFoundException nameNotFoundException) {
 			LDAPAuthConfiguration ldapAuthConfiguration =
-				_ldapAuthConfigurationProvider.getConfiguration(companyId);
+				_configurationProvider.getCompanyConfiguration(
+					LDAPAuthConfiguration.class, companyId);
 
 			if (ldapAuthConfiguration.required()) {
 				throw nameNotFoundException;
@@ -425,17 +426,6 @@ public class LDAPUserExporterImpl implements UserExporter {
 			user.getEmailAddress());
 	}
 
-	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration)",
-		unbind = "-"
-	)
-	protected void setConfigurationProvider(
-		ConfigurationProvider<LDAPAuthConfiguration>
-			ldapAuthConfigurationProvider) {
-
-		_ldapAuthConfigurationProvider = ldapAuthConfigurationProvider;
-	}
-
 	@Reference(unbind = "-")
 	protected void setLdapSettings(LDAPSettings ldapSettings) {
 		_ldapSettings = ldapSettings;
@@ -456,8 +446,9 @@ public class LDAPUserExporterImpl implements UserExporter {
 	private static final Log _log = LogFactoryUtil.getLog(
 		LDAPUserExporterImpl.class);
 
-	private ConfigurationProvider<LDAPAuthConfiguration>
-		_ldapAuthConfigurationProvider;
+	@Reference
+	private ConfigurationProvider _configurationProvider;
+
 	private LDAPSettings _ldapSettings;
 
 	@Reference(
