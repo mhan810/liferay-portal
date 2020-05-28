@@ -12,10 +12,11 @@
  * details.
  */
 
-package com.liferay.portal.security.ldap.internal.verify;
+package com.liferay.portal.security.ldap.internal.upgrade.v3_0_0;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.db.DBProcessContext;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -24,6 +25,8 @@ import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.security.ldap.LDAPSettings;
 import com.liferay.portal.kernel.service.CompanyLocalService;
+import com.liferay.portal.kernel.upgrade.UpgradeException;
+import com.liferay.portal.kernel.upgrade.UpgradeStep;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -39,7 +42,6 @@ import com.liferay.portal.security.ldap.constants.LDAPConstants;
 import com.liferay.portal.security.ldap.constants.LegacyLDAPPropsKeys;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPExportConfiguration;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration;
-import com.liferay.portal.verify.VerifyProcess;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,55 +52,36 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Michael C. Han
  */
-@Component(
-	immediate = true,
-	property = "verify.process.name=com.liferay.portal.security.ldap",
-	service = VerifyProcess.class
-)
-public class LDAPPropertiesVerifyProcess extends VerifyProcess {
+public class UpgradeLDAPProperties implements UpgradeStep {
 
-	@Override
-	protected void doVerify() throws Exception {
-		verifyLDAPProperties();
-	}
-
-	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
+	public UpgradeLDAPProperties(
+		CompanyLocalService companyLocalService,
+		ConfigurationProvider configurationProvider,
+		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
+			<LDAPServerConfiguration> ldapServerConfigurationProvider,
+		LDAPSettings ldapSettings, PrefsProps prefsProps, Props props) {
 
 		_companyLocalService = companyLocalService;
-	}
-
-	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration)",
-		unbind = "-"
-	)
-	protected void setLDAPServerConfigurationProvider(
-		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-			<LDAPServerConfiguration> ldapServerConfigurationProvider) {
-
+		_configurationProvider = configurationProvider;
 		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
-	}
-
-	@Reference(unbind = "-")
-	protected void setLdapSettings(LDAPSettings ldapSettings) {
 		_ldapSettings = ldapSettings;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPrefsProps(PrefsProps prefsProps) {
 		_prefsProps = prefsProps;
+		_props = props;
 	}
 
-	@Reference(unbind = "-")
-	protected void setProps(Props props) {
-		_props = props;
+	@Override
+	public void upgrade(DBProcessContext dbProcessContext)
+		throws UpgradeException {
+
+		try {
+			verifyLDAPProperties();
+		}
+		catch (Exception exception) {
+			throw new UpgradeException(exception);
+		}
 	}
 
 	protected void verifyLDAPAuthProperties(long companyId) {
@@ -542,17 +525,15 @@ public class LDAPPropertiesVerifyProcess extends VerifyProcess {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		LDAPPropertiesVerifyProcess.class);
+		UpgradeLDAPProperties.class);
 
-	private CompanyLocalService _companyLocalService;
-
-	@Reference
-	private ConfigurationProvider _configurationProvider;
-
-	private com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-		<LDAPServerConfiguration> _ldapServerConfigurationProvider;
-	private LDAPSettings _ldapSettings;
-	private PrefsProps _prefsProps;
-	private Props _props;
+	private final CompanyLocalService _companyLocalService;
+	private final ConfigurationProvider _configurationProvider;
+	private final
+		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
+			<LDAPServerConfiguration> _ldapServerConfigurationProvider;
+	private final LDAPSettings _ldapSettings;
+	private final PrefsProps _prefsProps;
+	private final Props _props;
 
 }
