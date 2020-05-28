@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserGroup;
 import com.liferay.portal.kernel.model.role.RoleConstants;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.security.exportimport.UserGroupImportTransactionThreadLocal;
 import com.liferay.portal.kernel.security.ldap.AttributesTransformer;
 import com.liferay.portal.kernel.security.ldap.LDAPSettings;
@@ -71,7 +72,6 @@ import com.liferay.portal.security.ldap.SafeLdapName;
 import com.liferay.portal.security.ldap.SafeLdapNameFactory;
 import com.liferay.portal.security.ldap.SafePortalLDAP;
 import com.liferay.portal.security.ldap.UserConverterKeys;
-import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.security.ldap.exportimport.LDAPGroup;
 import com.liferay.portal.security.ldap.exportimport.LDAPToPortalConverter;
@@ -405,7 +405,8 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		}
 
 		LDAPImportConfiguration ldapImportConfiguration =
-			_ldapImportConfigurationProvider.getConfiguration(companyId);
+			_configurationProvider.getCompanyConfiguration(
+				LDAPImportConfiguration.class, companyId);
 
 		try {
 			long userId = _userLocalService.getDefaultUserId(companyId);
@@ -484,7 +485,8 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		_lastImportTime = System.currentTimeMillis();
 
 		LDAPImportConfiguration ldapImportConfiguration =
-			_ldapImportConfigurationProvider.getConfiguration(companyId);
+			_configurationProvider.getCompanyConfiguration(
+				LDAPImportConfiguration.class, companyId);
 
 		LDAPServerConfiguration ldapServerConfiguration =
 			_ldapServerConfigurationProvider.getConfiguration(
@@ -556,7 +558,8 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		Company company = _companyLocalService.getCompany(companyId);
 
 		LDAPImportConfiguration ldapImportConfiguration =
-			_ldapImportConfigurationProvider.getConfiguration(companyId);
+			_configurationProvider.getCompanyConfiguration(
+				LDAPImportConfiguration.class, companyId);
 
 		if (!ldapImportConfiguration.importCreateRolePerGroup()) {
 			return;
@@ -620,7 +623,8 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		boolean autoPassword = ldapUser.isAutoPassword();
 
 		LDAPImportConfiguration ldapImportConfiguration =
-			_ldapImportConfigurationProvider.getConfiguration(companyId);
+			_configurationProvider.getCompanyConfiguration(
+				LDAPImportConfiguration.class, companyId);
 
 		if (!ldapImportConfiguration.importUserPasswordEnabled()) {
 			autoPassword =
@@ -714,7 +718,8 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 
 	protected User getUser(long companyId, LDAPUser ldapUser) throws Exception {
 		LDAPImportConfiguration ldapImportConfiguration =
-			_ldapImportConfigurationProvider.getConfiguration(companyId);
+			_configurationProvider.getCompanyConfiguration(
+				LDAPImportConfiguration.class, companyId);
 
 		if (Objects.equals(
 				ldapImportConfiguration.importUserSyncStrategy(),
@@ -919,7 +924,8 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		Long userGroupId = null;
 
 		LDAPImportConfiguration ldapImportConfiguration =
-			_ldapImportConfigurationProvider.getConfiguration(
+			_configurationProvider.getCompanyConfiguration(
+				LDAPImportConfiguration.class,
 				ldapImportContext.getCompanyId());
 
 		if (ldapImportConfiguration.importGroupCacheEnabled()) {
@@ -1458,23 +1464,12 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	}
 
 	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration)",
-		unbind = "-"
-	)
-	protected void setLDAPImportConfigurationProvider(
-		ConfigurationProvider<LDAPImportConfiguration>
-			ldapImportConfigurationProvider) {
-
-		_ldapImportConfigurationProvider = ldapImportConfigurationProvider;
-	}
-
-	@Reference(
 		target = "(factoryPid=com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration)",
 		unbind = "-"
 	)
 	protected void setLDAPServerConfigurationProvider(
-		ConfigurationProvider<LDAPServerConfiguration>
-			ldapServerConfigurationProvider) {
+		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
+			<LDAPServerConfiguration> ldapServerConfigurationProvider) {
 
 		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
 	}
@@ -1625,7 +1620,8 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		}
 
 		LDAPImportConfiguration ldapImportConfiguration =
-			_ldapImportConfigurationProvider.getConfiguration(companyId);
+			_configurationProvider.getCompanyConfiguration(
+				LDAPImportConfiguration.class, companyId);
 
 		boolean passwordReset = ldapUser.isPasswordReset();
 
@@ -1840,6 +1836,10 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 
 	private CompanyLocalService _companyLocalService;
 	private String _companySecurityAuthType;
+
+	@Reference
+	private ConfigurationProvider _configurationProvider;
+
 	private ExpandoValueLocalService _expandoValueLocalService;
 	private GroupLocalService _groupLocalService;
 	private long _lastImportTime;
@@ -1847,10 +1847,8 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	@Reference
 	private LDAPFilterValidator _ldapFilterValidator;
 
-	private ConfigurationProvider<LDAPImportConfiguration>
-		_ldapImportConfigurationProvider;
-	private ConfigurationProvider<LDAPServerConfiguration>
-		_ldapServerConfigurationProvider;
+	private com.liferay.portal.security.ldap.configuration.ConfigurationProvider
+		<LDAPServerConfiguration> _ldapServerConfigurationProvider;
 	private LDAPSettings _ldapSettings;
 
 	@Reference(

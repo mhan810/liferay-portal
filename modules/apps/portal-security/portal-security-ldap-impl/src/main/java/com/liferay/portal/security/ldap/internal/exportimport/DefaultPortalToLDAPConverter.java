@@ -19,7 +19,6 @@ import com.liferay.expando.kernel.util.ExpandoConverterUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanPropertiesUtil;
-import com.liferay.portal.kernel.exception.PwdEncryptorException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -27,6 +26,7 @@ import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.Image;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserGroup;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.security.auth.PasswordModificationThreadLocal;
 import com.liferay.portal.kernel.security.ldap.LDAPSettings;
 import com.liferay.portal.kernel.security.pwd.PasswordEncryptor;
@@ -43,7 +43,6 @@ import com.liferay.portal.security.ldap.SafeLdapNameFactory;
 import com.liferay.portal.security.ldap.SafePortalLDAP;
 import com.liferay.portal.security.ldap.UserConverterKeys;
 import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration;
-import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.security.ldap.exportimport.Modifications;
 import com.liferay.portal.security.ldap.exportimport.PortalToLDAPConverter;
@@ -525,16 +524,17 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 			return password;
 		}
 
-		LDAPAuthConfiguration ldapAuthConfiguration =
-			_ldapAuthConfigurationProvider.getConfiguration(
-				user.getCompanyId());
+		try {
+			LDAPAuthConfiguration ldapAuthConfiguration =
+				_configurationProvider.getCompanyConfiguration(
+					LDAPAuthConfiguration.class, user.getCompanyId());
 
-		String algorithm = ldapAuthConfiguration.passwordEncryptionAlgorithm();
+			String algorithm =
+				ldapAuthConfiguration.passwordEncryptionAlgorithm();
 
-		if (Validator.isNotNull(algorithm) &&
-			!algorithm.equals(PasswordEncryptorUtil.TYPE_NONE)) {
+			if (Validator.isNotNull(algorithm) &&
+				!algorithm.equals(PasswordEncryptorUtil.TYPE_NONE)) {
 
-			try {
 				StringBundler sb = new StringBundler(4);
 
 				if (!hasLegacyPasswordEncryptionAlgorithm()) {
@@ -548,9 +548,9 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 
 				password = sb.toString();
 			}
-			catch (PwdEncryptorException pwdEncryptorException) {
-				throw new SystemException(pwdEncryptorException);
-			}
+		}
+		catch (Exception exception) {
+			throw new SystemException(exception);
 		}
 
 		String passwordKey = userMappings.getProperty(
@@ -700,23 +700,12 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 	}
 
 	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration)",
-		unbind = "-"
-	)
-	protected void setLDAPAuthConfigurationProvider(
-		ConfigurationProvider<LDAPAuthConfiguration>
-			ldapAuthConfigurationProvider) {
-
-		_ldapAuthConfigurationProvider = ldapAuthConfigurationProvider;
-	}
-
-	@Reference(
 		target = "(factoryPid=com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration)",
 		unbind = "-"
 	)
 	protected void setLDAPServerConfigurationProvider(
-		ConfigurationProvider<LDAPServerConfiguration>
-			ldapServerConfigurationProvider) {
+		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
+			<LDAPServerConfiguration> ldapServerConfigurationProvider) {
 
 		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
 	}
@@ -738,11 +727,12 @@ public class DefaultPortalToLDAPConverter implements PortalToLDAPConverter {
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultPortalToLDAPConverter.class);
 
+	@Reference
+	private ConfigurationProvider _configurationProvider;
+
 	private ImageLocalService _imageLocalService;
-	private ConfigurationProvider<LDAPAuthConfiguration>
-		_ldapAuthConfigurationProvider;
-	private ConfigurationProvider<LDAPServerConfiguration>
-		_ldapServerConfigurationProvider;
+	private com.liferay.portal.security.ldap.configuration.ConfigurationProvider
+		<LDAPServerConfiguration> _ldapServerConfigurationProvider;
 	private LDAPSettings _ldapSettings;
 	private PasswordEncryptor _passwordEncryptor;
 
