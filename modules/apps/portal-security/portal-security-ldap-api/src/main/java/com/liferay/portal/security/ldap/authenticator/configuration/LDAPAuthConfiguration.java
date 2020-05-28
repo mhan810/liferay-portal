@@ -27,7 +27,6 @@ import com.liferay.portal.security.ldap.configuration.CompanyScopedConfiguration
 	scope = ExtendedObjectClassDefinition.Scope.COMPANY
 )
 @Meta.OCD(
-	factory = true,
 	id = "com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration",
 	localization = "content/Language", name = "ldap-auth-configuration-name"
 )
