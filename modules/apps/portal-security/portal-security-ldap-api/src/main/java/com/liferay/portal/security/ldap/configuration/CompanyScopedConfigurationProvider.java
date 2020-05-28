@@ -37,7 +37,10 @@ import org.osgi.service.cm.Configuration;
 
 /**
  * @author Michael C. Han
+ * @deprecated As of Athanasius (7.3.x), replaced by
+ * 	{@link com.liferay.portal.kernel.module.configuration.ConfigurationProvider}
  */
+@Deprecated
 public abstract class CompanyScopedConfigurationProvider
 	<T extends CompanyScopedConfiguration>
 		extends BaseConfigurationProvider<T>

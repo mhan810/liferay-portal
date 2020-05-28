@@ -24,12 +24,15 @@ import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
+ * @deprecated As of Athanasius (7.3.x), replaced by
+ * 	{@link com.liferay.portal.kernel.module.configuration.ConfigurationProvider}
  */
 @Component(
 	immediate = true,
 	property = "factoryPid=com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration",
 	service = ConfigurationProvider.class
 )
+@Deprecated
 public class LDAPImportConfigurationProviderImpl
 	extends CompanyScopedConfigurationProvider<LDAPImportConfiguration> {
 

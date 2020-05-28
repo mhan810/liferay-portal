@@ -16,7 +16,9 @@ package com.liferay.portal.security.ldap.configuration;
 
 /**
  * @author Michael C. Han
+ * @deprecated As of Athanasius (7.3.x), no direct replacement
  */
+@Deprecated
 public interface CompanyScopedConfiguration {
 
 	public long companyId();
