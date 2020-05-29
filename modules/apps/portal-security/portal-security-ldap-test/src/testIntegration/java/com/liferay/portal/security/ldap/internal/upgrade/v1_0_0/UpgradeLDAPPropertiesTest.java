@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.security.ldap.internal.verify.test;
+package com.liferay.portal.security.ldap.internal.upgrade.v1_0_0;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.petra.string.StringBundler;
@@ -71,7 +71,7 @@ import org.osgi.service.component.runtime.dto.ComponentDescriptionDTO;
  * @author Michael C. Han
  */
 @RunWith(Arquillian.class)
-public class LDAPPropertiesVerifyProcessTest extends BaseVerifyProcessTestCase {
+public class UpgradeLDAPPropertiesTest extends BaseVerifyProcessTestCase {
 
 	@ClassRule
 	@Rule
@@ -81,7 +81,7 @@ public class LDAPPropertiesVerifyProcessTest extends BaseVerifyProcessTestCase {
 	@BeforeClass
 	public static void setUpClass() throws PortalException {
 		Bundle bundle = FrameworkUtil.getBundle(
-			LDAPPropertiesVerifyProcessTest.class);
+			UpgradeLDAPPropertiesTest.class);
 
 		_bundleContext = bundle.getBundleContext();
 
