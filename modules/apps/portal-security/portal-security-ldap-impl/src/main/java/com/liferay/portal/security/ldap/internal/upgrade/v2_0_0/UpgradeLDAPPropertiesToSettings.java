@@ -14,21 +14,20 @@
 
 package com.liferay.portal.security.ldap.internal.upgrade.v2_0_0;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.dao.db.DBProcessContext;
-import com.liferay.portal.kernel.model.Company;
-import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
-import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.upgrade.UpgradeException;
 import com.liferay.portal.kernel.upgrade.UpgradeStep;
 import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration;
-import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.security.ldap.configuration.SystemLDAPConfiguration;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPExportConfiguration;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration;
 
 import java.util.Dictionary;
-import java.util.List;
+
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 
 /**
  * @author Michael C. Han
@@ -36,84 +35,53 @@ import java.util.List;
 public class UpgradeLDAPPropertiesToSettings implements UpgradeStep {
 
 	public UpgradeLDAPPropertiesToSettings(
-		CompanyLocalService companyLocalService,
-		ConfigurationProvider configurationProvider,
-		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-			<LDAPAuthConfiguration> ldapAuthConfigurationProvider,
-		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-			<LDAPExportConfiguration> ldapExportConfigurationProvider,
-		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-			<LDAPImportConfiguration> ldapImportConfigurationProvider,
-		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-			<LDAPServerConfiguration> systemLDAPConfigurationProvider) {
+		ConfigurationAdmin configurationAdmin,
+		ConfigurationProvider configurationProvider) {
 
-		_companyLocalService = companyLocalService;
+		_configurationAdmin = configurationAdmin;
 		_configurationProvider = configurationProvider;
-		_ldapExportConfigurationProvider = ldapExportConfigurationProvider;
-		_ldapImportConfigurationProvider = ldapImportConfigurationProvider;
-		_ldapAuthConfigurationProvider = ldapAuthConfigurationProvider;
-		_systemLDAPConfigurationProvider = systemLDAPConfigurationProvider;
 	}
 
 	@Override
 	public void upgrade(DBProcessContext dbProcessContext)
 		throws UpgradeException {
 
-		List<Company> companies = _companyLocalService.getCompanies();
-
 		try {
-			for (Company company : companies) {
-				long companyId = company.getCompanyId();
+			transferConfigurationProperties(LDAPAuthConfiguration.class);
+			transferConfigurationProperties(LDAPExportConfiguration.class);
+			transferConfigurationProperties(LDAPImportConfiguration.class);
+			transferConfigurationProperties(SystemLDAPConfiguration.class);
+		}
+		catch (Exception exception) {
+			throw new UpgradeException(exception);
+		}
+	}
 
-				transferConfigurationProperties(
-					companyId, _ldapAuthConfigurationProvider,
-					LDAPAuthConfiguration.class);
+	protected void transferConfigurationProperties(Class<?> configurationClass)
+		throws Exception {
 
-				transferConfigurationProperties(
-					companyId, _ldapImportConfigurationProvider,
-					LDAPImportConfiguration.class);
+		String filterString = StringBundler.concat(
+			"(service.factoryPid=", configurationClass.getName(), ")");
 
-				transferConfigurationProperties(
-					companyId, _ldapImportConfigurationProvider,
-					LDAPImportConfiguration.class);
+		Configuration[] configurations = _configurationAdmin.listConfigurations(
+			filterString);
 
-				transferConfigurationProperties(
-					companyId, _systemLDAPConfigurationProvider,
-					SystemLDAPConfiguration.class);
+		for (Configuration configuration : configurations) {
+			Dictionary<String, Object> properties =
+				configuration.getProperties();
+
+			Long companyId = (Long)properties.get("companyId");
+
+			if (companyId == null) {
+				continue;
 			}
-		}
-		catch (ConfigurationException configurationException) {
-			throw new UpgradeException(configurationException);
+
+			_configurationProvider.saveCompanyConfiguration(
+				configurationClass, companyId, properties);
 		}
 	}
 
-	protected void transferConfigurationProperties(
-			long companyId,
-			com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-				<?> configurationProvider,
-			Class<?> configurationClass)
-		throws ConfigurationException {
-
-		Dictionary<String, Object> ldapExportProperties =
-			configurationProvider.getConfigurationProperties(companyId);
-
-		_configurationProvider.saveCompanyConfiguration(
-			configurationClass, companyId, ldapExportProperties);
-	}
-
-	private final CompanyLocalService _companyLocalService;
+	private final ConfigurationAdmin _configurationAdmin;
 	private final ConfigurationProvider _configurationProvider;
-	private final
-		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-			<LDAPAuthConfiguration> _ldapAuthConfigurationProvider;
-	private final
-		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-			<LDAPExportConfiguration> _ldapExportConfigurationProvider;
-	private final
-		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-			<LDAPImportConfiguration> _ldapImportConfigurationProvider;
-	private final
-		com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-			<LDAPServerConfiguration> _systemLDAPConfigurationProvider;
 
 }

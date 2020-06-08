@@ -20,14 +20,12 @@ import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.upgrade.DummyUpgradeStep;
 import com.liferay.portal.kernel.util.PrefsProps;
 import com.liferay.portal.kernel.util.Props;
-import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
-import com.liferay.portal.security.ldap.exportimport.configuration.LDAPExportConfiguration;
-import com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration;
 import com.liferay.portal.security.ldap.internal.upgrade.v1_0_0.UpgradeLDAPProperties;
 import com.liferay.portal.security.ldap.internal.upgrade.v2_0_0.UpgradeLDAPPropertiesToSettings;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
 
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -51,36 +49,17 @@ public class LDAPImplUpgradeStepRegistrator implements UpgradeStepRegistrator {
 		registry.register(
 			"1.0.0", "2.0.0",
 			new UpgradeLDAPPropertiesToSettings(
-				_companyLocalService, _configurationProvider,
-				_ldapAuthConfigurationProvider,
-				_ldapExportConfigurationProvider,
-				_ldapImportConfigurationProvider,
-				_systemLDAPConfigurationProvider));
+				_configurationAdmin, _configurationProvider));
 	}
 
 	@Reference
 	private CompanyLocalService _companyLocalService;
 
 	@Reference
+	private ConfigurationAdmin _configurationAdmin;
+
+	@Reference
 	private ConfigurationProvider _configurationProvider;
-
-	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration)"
-	)
-	private com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-		<LDAPAuthConfiguration> _ldapAuthConfigurationProvider;
-
-	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.exportimport.configuration.LDAPExportConfiguration)"
-	)
-	private com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-		<LDAPExportConfiguration> _ldapExportConfigurationProvider;
-
-	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration)"
-	)
-	private com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-		<LDAPImportConfiguration> _ldapImportConfigurationProvider;
 
 	@Reference(
 		target = "(factoryPid=com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration)"
@@ -96,11 +75,5 @@ public class LDAPImplUpgradeStepRegistrator implements UpgradeStepRegistrator {
 
 	@Reference
 	private Props _props;
-
-	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.configuration.SystemLDAPConfiguration)"
-	)
-	private com.liferay.portal.security.ldap.configuration.ConfigurationProvider
-		<LDAPServerConfiguration> _systemLDAPConfigurationProvider;
 
 }
