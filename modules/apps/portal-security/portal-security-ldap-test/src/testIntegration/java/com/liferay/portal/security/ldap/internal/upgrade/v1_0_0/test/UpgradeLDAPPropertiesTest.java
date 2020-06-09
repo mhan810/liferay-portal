@@ -12,18 +12,20 @@
  * details.
  */
 
-package com.liferay.portal.security.ldap.internal.upgrade.v1_0_0;
+package com.liferay.portal.security.ldap.internal.upgrade.v1_0_0.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
+import com.liferay.portal.kernel.security.ldap.LDAPSettings;
 import com.liferay.portal.kernel.security.ldap.LDAPSettingsUtil;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.ldap.SafePortalLDAP;
@@ -34,11 +36,10 @@ import com.liferay.portal.security.ldap.constants.LDAPConstants;
 import com.liferay.portal.security.ldap.constants.LegacyLDAPPropsKeys;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPExportConfiguration;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration;
+import com.liferay.portal.security.ldap.internal.configuration.LDAPServerConfigurationProviderImpl;
+import com.liferay.portal.security.ldap.internal.upgrade.v1_0_0.UpgradeLDAPProperties;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.verify.VerifyException;
-import com.liferay.portal.verify.VerifyProcess;
-import com.liferay.portal.verify.test.util.BaseVerifyProcessTestCase;
 
 import java.io.IOException;
 
@@ -51,6 +52,7 @@ import javax.portlet.PortletPreferences;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -71,7 +73,7 @@ import org.osgi.service.component.runtime.dto.ComponentDescriptionDTO;
  * @author Michael C. Han
  */
 @RunWith(Arquillian.class)
-public class UpgradeLDAPPropertiesTest extends BaseVerifyProcessTestCase {
+public class UpgradeLDAPPropertiesTest {
 
 	@ClassRule
 	@Rule
@@ -84,6 +86,18 @@ public class UpgradeLDAPPropertiesTest extends BaseVerifyProcessTestCase {
 			UpgradeLDAPPropertiesTest.class);
 
 		_bundleContext = bundle.getBundleContext();
+
+		ServiceReference<ConfigurationProvider>
+			configurationProviderServiceReference =
+				_bundleContext.getServiceReference(ConfigurationProvider.class);
+
+		_configurationProvider = _bundleContext.getService(
+			configurationProviderServiceReference);
+
+		ServiceReference<LDAPSettings> ldapSettingsServiceReference =
+			_bundleContext.getServiceReference(LDAPSettings.class);
+
+		_ldapSettings = _bundleContext.getService(ldapSettingsServiceReference);
 
 		ServiceReference<ConfigurationAdmin>
 			configurationAdminServiceReference =
@@ -118,11 +132,24 @@ public class UpgradeLDAPPropertiesTest extends BaseVerifyProcessTestCase {
 		}
 	}
 
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		super.tearDown();
+	@Before
+	public void setUp() {
+		LDAPServerConfigurationProviderImpl
+			ldapServerConfigurationProviderImpl =
+				new LDAPServerConfigurationProviderImpl() {
+					{
+						setConfigurationAdmin(_configurationAdmin);
+					}
+				};
 
+		_upgradeLDAPProperties = new UpgradeLDAPProperties(
+			CompanyLocalServiceUtil.getService(), _configurationProvider,
+			ldapServerConfigurationProviderImpl, _ldapSettings,
+			PrefsPropsUtil.getPrefsProps(), PropsUtil.getProps());
+	}
+
+	@After
+	public void tearDown() throws Exception {
 		List<Company> companies = CompanyLocalServiceUtil.getCompanies(false);
 
 		for (Company company : companies) {
@@ -135,10 +162,23 @@ public class UpgradeLDAPPropertiesTest extends BaseVerifyProcessTestCase {
 	}
 
 	@Test
-	public void testVerifyConfigurationsNoServers() throws Exception {
-		_configureProperties = false;
+	public void testUpgrade() throws Exception {
+		List<Company> companies = CompanyLocalServiceUtil.getCompanies(false);
 
-		super.testVerify();
+		setUpProperties();
+
+		_upgradeLDAPProperties.upgrade(null);
+
+		verifyConfigurationsWithServers(companies);
+	}
+
+	@Test
+	public void testUpgradeConfigurationsNoServers() throws Exception {
+		List<Company> companies = CompanyLocalServiceUtil.getCompanies(false);
+
+		_upgradeLDAPProperties.upgrade(null);
+
+		verifyConfigurationsNoServers(companies);
 	}
 
 	protected void addLDAPServer(
@@ -231,24 +271,6 @@ public class UpgradeLDAPPropertiesTest extends BaseVerifyProcessTestCase {
 		}
 	}
 
-	@Override
-	protected void doVerify() throws VerifyException {
-		List<Company> companies = CompanyLocalServiceUtil.getCompanies(false);
-
-		if (_configureProperties) {
-			setUpProperties();
-		}
-
-		super.doVerify();
-
-		if (_configureProperties) {
-			verifyConfigurationsWithServers(companies);
-		}
-		else {
-			verifyConfigurationsNoServers(companies);
-		}
-	}
-
 	protected Dictionary<String, Object> getConfigurationProperties(
 		Company company, Class<?> configurationClass) {
 
@@ -327,29 +349,6 @@ public class UpgradeLDAPPropertiesTest extends BaseVerifyProcessTestCase {
 		}
 		catch (Exception exception) {
 			throw new IllegalStateException(exception);
-		}
-	}
-
-	@Override
-	protected VerifyProcess getVerifyProcess() {
-		try {
-			ServiceReference<?>[] serviceReferences =
-				_bundleContext.getAllServiceReferences(
-					VerifyProcess.class.getName(),
-					StringBundler.concat(
-						"(&(objectClass=", VerifyProcess.class.getName(),
-						")(verify.process.name=",
-						"com.liferay.portal.security.ldap))"));
-
-			if (ArrayUtil.isEmpty(serviceReferences)) {
-				throw new IllegalStateException("Unable to get verify process");
-			}
-
-			return (VerifyProcess)_bundleContext.getService(
-				serviceReferences[0]);
-		}
-		catch (InvalidSyntaxException invalidSyntaxException) {
-			throw new IllegalStateException("Unable to get verify process");
 		}
 	}
 
@@ -603,11 +602,13 @@ public class UpgradeLDAPPropertiesTest extends BaseVerifyProcessTestCase {
 	private static BundleContext _bundleContext;
 	private static ComponentDescriptionDTO _componentDescriptionDTO;
 	private static ConfigurationAdmin _configurationAdmin;
+	private static ConfigurationProvider _configurationProvider;
 	private static boolean _enabled;
+	private static LDAPSettings _ldapSettings;
 
 	@Inject
 	private static ServiceComponentRuntime _serviceComponentRuntime;
 
-	private boolean _configureProperties = true;
+	private UpgradeLDAPProperties _upgradeLDAPProperties;
 
 }
