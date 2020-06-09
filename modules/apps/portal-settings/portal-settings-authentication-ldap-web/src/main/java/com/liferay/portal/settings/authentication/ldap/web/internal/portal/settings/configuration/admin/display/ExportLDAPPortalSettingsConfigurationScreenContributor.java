@@ -27,7 +27,6 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Drew Brokke
  */
-@Component(service = PortalSettingsConfigurationScreenContributor.class)
 public class ExportLDAPPortalSettingsConfigurationScreenContributor
 	implements PortalSettingsConfigurationScreenContributor {
 
