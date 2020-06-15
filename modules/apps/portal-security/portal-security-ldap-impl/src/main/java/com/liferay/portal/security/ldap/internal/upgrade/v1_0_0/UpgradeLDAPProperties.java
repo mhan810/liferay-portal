@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.security.ldap.internal.verify;
+package com.liferay.portal.security.ldap.internal.upgrade.v1_0_0;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -61,7 +61,7 @@ import org.osgi.service.component.annotations.Reference;
 	property = "verify.process.name=com.liferay.portal.security.ldap",
 	service = VerifyProcess.class
 )
-public class LDAPPropertiesVerifyProcess extends VerifyProcess {
+public class UpgradeLDAPProperties extends VerifyProcess {
 
 	@Override
 	protected void doVerify() throws Exception {
@@ -544,7 +544,7 @@ public class LDAPPropertiesVerifyProcess extends VerifyProcess {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		LDAPPropertiesVerifyProcess.class);
+		UpgradeLDAPProperties.class);
 
 	private CompanyLocalService _companyLocalService;
 
