@@ -23,11 +23,9 @@ import com.liferay.saml.constants.SamlProviderConfigurationKeys;
  * @author Mika Koivisto
  */
 @ExtendedObjectClassDefinition(
-	category = "sso", factoryInstanceLabelAttribute = "companyId",
-	scope = ExtendedObjectClassDefinition.Scope.COMPANY
+	category = "sso", scope = ExtendedObjectClassDefinition.Scope.COMPANY
 )
 @Meta.OCD(
-	factory = true,
 	id = "com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
 	localization = "content/Language", name = "saml-provider-configuration-name"
 )
