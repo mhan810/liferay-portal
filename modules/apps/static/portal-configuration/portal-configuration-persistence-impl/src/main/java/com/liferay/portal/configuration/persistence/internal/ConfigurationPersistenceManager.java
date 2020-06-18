@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.util.HashMapDictionary;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.File;
@@ -210,6 +211,11 @@ public class ConfigurationPersistenceManager
 
 			if (pidKey == null) {
 				pidKey = pid;
+			}
+
+			if (pidKey.endsWith(".scoped")) {
+				pidKey = StringUtil.replaceLast(
+					pidKey, ".scoped", StringPool.BLANK);
 			}
 
 			configurationModelListener = _getConfigurationModelListener(pidKey);
