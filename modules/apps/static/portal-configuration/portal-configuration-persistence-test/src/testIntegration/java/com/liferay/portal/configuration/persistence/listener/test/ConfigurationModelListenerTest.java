@@ -20,6 +20,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.persistence.listener.ConfigurationModelListener;
 import com.liferay.portal.configuration.persistence.listener.ConfigurationModelListenerException;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -52,10 +53,44 @@ public class ConfigurationModelListenerTest {
 	public void tearDown() throws Exception {
 		_serviceRegistration.unregister();
 
-		Object delegatee = ReflectionTestUtil.getFieldValue(
-			_configuration, "delegatee");
+		if (_configuration != null) {
+			Object delegatee = ReflectionTestUtil.getFieldValue(
+				_configuration, "delegatee");
 
-		ReflectionTestUtil.invoke(delegatee, "delete", new Class<?>[0]);
+			ReflectionTestUtil.invoke(delegatee, "delete", new Class<?>[0]);
+		}
+	}
+
+	@Test(expected = ConfigurationModelListenerException.class)
+	public void testListenForScopedConfiguration() throws Exception {
+		String pid = RandomTestUtil.randomString(20);
+
+		_serviceRegistration = _registerConfigurationModelListener(
+			new ConfigurationModelListener() {
+
+				@Override
+				public void onBeforeSave(
+						String pid, Dictionary<String, Object> properties)
+					throws ConfigurationModelListenerException {
+
+					throw new ConfigurationModelListenerException(
+						new Exception(), Object.class, getClass(), properties);
+				}
+
+			},
+			pid);
+
+		_configuration = OSGiServiceUtil.callService(
+			_bundleContext, ConfigurationAdmin.class,
+			configurationAdmin -> {
+				Configuration configuration =
+					configurationAdmin.createFactoryConfiguration(
+						pid + ".scoped");
+
+				configuration.update(new HashMapDictionary<>());
+
+				return configuration;
+			});
 	}
 
 	@Test
