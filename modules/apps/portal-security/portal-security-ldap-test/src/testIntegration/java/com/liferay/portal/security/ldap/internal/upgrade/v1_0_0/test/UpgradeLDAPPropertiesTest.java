@@ -18,14 +18,13 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Company;
-import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
-import com.liferay.portal.kernel.security.ldap.LDAPSettings;
 import com.liferay.portal.kernel.security.ldap.LDAPSettingsUtil;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.upgrade.UpgradeProcess;
+import com.liferay.portal.kernel.upgrade.UpgradeStep;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
-import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.ldap.SafePortalLDAP;
@@ -36,16 +35,16 @@ import com.liferay.portal.security.ldap.constants.LDAPConstants;
 import com.liferay.portal.security.ldap.constants.LegacyLDAPPropsKeys;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPExportConfiguration;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration;
-import com.liferay.portal.security.ldap.internal.configuration.LDAPServerConfigurationProviderImpl;
-import com.liferay.portal.security.ldap.internal.upgrade.v1_0_0.UpgradeLDAPProperties;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
 
 import java.io.IOException;
 
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.List;
+import java.util.Objects;
 
 import javax.portlet.PortletPreferences;
 
@@ -87,18 +86,6 @@ public class UpgradeLDAPPropertiesTest {
 
 		_bundleContext = bundle.getBundleContext();
 
-		ServiceReference<ConfigurationProvider>
-			configurationProviderServiceReference =
-				_bundleContext.getServiceReference(ConfigurationProvider.class);
-
-		_configurationProvider = _bundleContext.getService(
-			configurationProviderServiceReference);
-
-		ServiceReference<LDAPSettings> ldapSettingsServiceReference =
-			_bundleContext.getServiceReference(LDAPSettings.class);
-
-		_ldapSettings = _bundleContext.getService(ldapSettingsServiceReference);
-
 		ServiceReference<ConfigurationAdmin>
 			configurationAdminServiceReference =
 				_bundleContext.getServiceReference(ConfigurationAdmin.class);
@@ -134,18 +121,7 @@ public class UpgradeLDAPPropertiesTest {
 
 	@Before
 	public void setUp() {
-		LDAPServerConfigurationProviderImpl
-			ldapServerConfigurationProviderImpl =
-				new LDAPServerConfigurationProviderImpl() {
-					{
-						setConfigurationAdmin(_configurationAdmin);
-					}
-				};
-
-		_upgradeLDAPProperties = new UpgradeLDAPProperties(
-			CompanyLocalServiceUtil.getService(), _configurationProvider,
-			ldapServerConfigurationProviderImpl, _ldapSettings,
-			PrefsPropsUtil.getPrefsProps(), PropsUtil.getProps());
+		setUpUpgradeALDAPProperties();
 	}
 
 	@After
@@ -167,7 +143,7 @@ public class UpgradeLDAPPropertiesTest {
 
 		setUpProperties();
 
-		_upgradeLDAPProperties.upgrade(null);
+		_upgradeLDAPProperties.upgrade();
 
 		verifyConfigurationsWithServers(companies);
 	}
@@ -176,7 +152,7 @@ public class UpgradeLDAPPropertiesTest {
 	public void testUpgradeConfigurationsNoServers() throws Exception {
 		List<Company> companies = CompanyLocalServiceUtil.getCompanies(false);
 
-		_upgradeLDAPProperties.upgrade(null);
+		_upgradeLDAPProperties.upgrade();
 
 		verifyConfigurationsNoServers(companies);
 	}
@@ -393,6 +369,19 @@ public class UpgradeLDAPPropertiesTest {
 		}
 	}
 
+	protected void setUpUpgradeALDAPProperties() {
+		_upgradeStepRegistrator.register(
+			(fromSchemaVersionString, toSchemaVersionString, upgradeSteps) -> {
+				for (UpgradeStep upgradeStep : upgradeSteps) {
+					Class<?> clazz = upgradeStep.getClass();
+
+					if (Objects.equals(clazz.getName(), _CLASS_NAME)) {
+						_upgradeLDAPProperties = (UpgradeProcess)upgradeStep;
+					}
+				}
+			});
+	}
+
 	protected void verifyConfigurationsNoServers(List<Company> companies) {
 		for (Company company : companies) {
 			Dictionary<String, Object> ldapAuthProperties =
@@ -599,16 +588,23 @@ public class UpgradeLDAPPropertiesTest {
 			properties.get(LDAPConstants.USERS_DN));
 	}
 
+	private static final String _CLASS_NAME =
+		"com.liferay.portal.security.ldap.internal.upgrade.v1_0_0." +
+			"UpgradeLDAPProperties";
+
 	private static BundleContext _bundleContext;
 	private static ComponentDescriptionDTO _componentDescriptionDTO;
 	private static ConfigurationAdmin _configurationAdmin;
-	private static ConfigurationProvider _configurationProvider;
 	private static boolean _enabled;
-	private static LDAPSettings _ldapSettings;
 
 	@Inject
 	private static ServiceComponentRuntime _serviceComponentRuntime;
 
-	private UpgradeLDAPProperties _upgradeLDAPProperties;
+	@Inject(
+		filter = "(&(objectClass=com.liferay.portal.security.ldap.internal.upgrade.LDAPUpgradeStepRegistrator))"
+	)
+	private static UpgradeStepRegistrator _upgradeStepRegistrator;
+
+	private UpgradeProcess _upgradeLDAPProperties;
 
 }
